@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms.FIAS
+п»їnamespace FreeLibSet.Forms.FIAS
 {
   partial class FiasSearchForm
   {
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms.FIAS
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -77,7 +77,7 @@ namespace FreeLibSet.Forms.FIAS
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -90,7 +90,7 @@ namespace FreeLibSet.Forms.FIAS
       this.groupBox1.Size = new System.Drawing.Size(545, 59);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Что искать";
+      this.groupBox1.Text = "Р§С‚Рѕ РёСЃРєР°С‚СЊ";
       // 
       // cbText
       // 
@@ -108,7 +108,7 @@ namespace FreeLibSet.Forms.FIAS
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(100, 23);
       this.label1.TabIndex = 0;
-      this.label1.Text = "&Текст";
+      this.label1.Text = "&РўРµРєСЃС‚";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // groupBox2
@@ -126,7 +126,7 @@ namespace FreeLibSet.Forms.FIAS
       this.groupBox2.Size = new System.Drawing.Size(545, 144);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Где искать";
+      this.groupBox2.Text = "Р“РґРµ РёСЃРєР°С‚СЊ";
       // 
       // edStartAddress
       // 
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms.FIAS
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(103, 13);
       this.label2.TabIndex = 3;
-      this.label2.Text = "В пределах адреса";
+      this.label2.Text = "Р’ РїСЂРµРґРµР»Р°С… Р°РґСЂРµСЃР°";
       // 
       // cbStreet
       // 
@@ -156,7 +156,7 @@ namespace FreeLibSet.Forms.FIAS
       this.cbStreet.Name = "cbStreet";
       this.cbStreet.Size = new System.Drawing.Size(58, 17);
       this.cbStreet.TabIndex = 2;
-      this.cbStreet.Text = "Улица";
+      this.cbStreet.Text = "РЈР»РёС†Р°";
       this.cbStreet.UseVisualStyleBackColor = true;
       // 
       // cbPlanningStructure
@@ -166,7 +166,7 @@ namespace FreeLibSet.Forms.FIAS
       this.cbPlanningStructure.Name = "cbPlanningStructure";
       this.cbPlanningStructure.Size = new System.Drawing.Size(158, 17);
       this.cbPlanningStructure.TabIndex = 1;
-      this.cbPlanningStructure.Text = "Планировочная структура";
+      this.cbPlanningStructure.Text = "РџР»Р°РЅРёСЂРѕРІРѕС‡РЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°";
       this.cbPlanningStructure.UseVisualStyleBackColor = true;
       // 
       // cbVillage
@@ -176,7 +176,7 @@ namespace FreeLibSet.Forms.FIAS
       this.cbVillage.Name = "cbVillage";
       this.cbVillage.Size = new System.Drawing.Size(121, 17);
       this.cbVillage.TabIndex = 0;
-      this.cbVillage.Text = "Населенный пункт";
+      this.cbVillage.Text = "РќР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚";
       this.cbVillage.UseVisualStyleBackColor = true;
       // 
       // groupBox3
@@ -188,7 +188,7 @@ namespace FreeLibSet.Forms.FIAS
       this.groupBox3.Size = new System.Drawing.Size(545, 52);
       this.groupBox3.TabIndex = 2;
       this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Параметры";
+      this.groupBox3.Text = "РџР°СЂР°РјРµС‚СЂС‹";
       // 
       // cbActual
       // 
@@ -197,7 +197,7 @@ namespace FreeLibSet.Forms.FIAS
       this.cbActual.Name = "cbActual";
       this.cbActual.Size = new System.Drawing.Size(126, 17);
       this.cbActual.TabIndex = 0;
-      this.cbActual.Text = "Только актуальные";
+      this.cbActual.Text = "РўРѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ";
       this.cbActual.UseVisualStyleBackColor = true;
       // 
       // cbDistrict
@@ -207,7 +207,7 @@ namespace FreeLibSet.Forms.FIAS
       this.cbDistrict.Name = "cbDistrict";
       this.cbDistrict.Size = new System.Drawing.Size(57, 17);
       this.cbDistrict.TabIndex = 5;
-      this.cbDistrict.Text = "Район";
+      this.cbDistrict.Text = "Р Р°Р№РѕРЅ";
       this.cbDistrict.UseVisualStyleBackColor = true;
       // 
       // cbCity
@@ -217,7 +217,7 @@ namespace FreeLibSet.Forms.FIAS
       this.cbCity.Name = "cbCity";
       this.cbCity.Size = new System.Drawing.Size(56, 17);
       this.cbCity.TabIndex = 6;
-      this.cbCity.Text = "Город";
+      this.cbCity.Text = "Р“РѕСЂРѕРґ";
       this.cbCity.UseVisualStyleBackColor = true;
       // 
       // FiasSearchForm
@@ -236,7 +236,7 @@ namespace FreeLibSet.Forms.FIAS
       this.MinimizeBox = false;
       this.Name = "FiasSearchForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Поиск адресного объекта";
+      this.Text = "РџРѕРёСЃРє Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°";
       this.panel1.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);

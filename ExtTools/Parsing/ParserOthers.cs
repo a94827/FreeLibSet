@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,16 +10,16 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Parsing
 {
   /// <summary>
-  /// Парсер для распознания пробельных символов 
-  /// Создает лексемы "Space". Если несколько пробелов идут подряд, создается единственная лексема
+  /// РџР°СЂСЃРµСЂ РґР»СЏ СЂР°СЃРїРѕР·РЅР°РЅРёСЏ РїСЂРѕР±РµР»СЊРЅС‹С… СЃРёРјРІРѕР»РѕРІ 
+  /// РЎРѕР·РґР°РµС‚ Р»РµРєСЃРµРјС‹ "Space". Р•СЃР»Рё РЅРµСЃРєРѕР»СЊРєРѕ РїСЂРѕР±РµР»РѕРІ РёРґСѓС‚ РїРѕРґСЂСЏРґ, СЃРѕР·РґР°РµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅР°СЏ Р»РµРєСЃРµРјР°
   /// </summary>
   public class SpaceParser : IParser
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает парсер, распознаюший символы "пробел", "неразрывный пробел", "перевод строки",
-    /// "возврат каретки" и "табуляция"
+    /// РЎРѕР·РґР°РµС‚ РїР°СЂСЃРµСЂ, СЂР°СЃРїРѕР·РЅР°СЋС€РёР№ СЃРёРјРІРѕР»С‹ "РїСЂРѕР±РµР»", "РЅРµСЂР°Р·СЂС‹РІРЅС‹Р№ РїСЂРѕР±РµР»", "РїРµСЂРµРІРѕРґ СЃС‚СЂРѕРєРё",
+    /// "РІРѕР·РІСЂР°С‚ РєР°СЂРµС‚РєРё" Рё "С‚Р°Р±СѓР»СЏС†РёСЏ"
     /// </summary>
     public SpaceParser()
       : this(' ', DataTools.NonBreakSpaceChar, '\r', '\n', 't')
@@ -27,9 +27,9 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Создает парсер, распознающий указанные символы
+    /// РЎРѕР·РґР°РµС‚ РїР°СЂСЃРµСЂ, СЂР°СЃРїРѕР·РЅР°СЋС‰РёР№ СѓРєР°Р·Р°РЅРЅС‹Рµ СЃРёРјРІРѕР»С‹
     /// </summary>
-    /// <param name="spaceChars">Пробельные символы, которые должны распознаваться парсером</param>
+    /// <param name="spaceChars">РџСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ СЂР°СЃРїРѕР·РЅР°РІР°С‚СЊСЃСЏ РїР°СЂСЃРµСЂРѕРј</param>
     public SpaceParser(params char[] spaceChars)
     {
       _SpaceChars = spaceChars;
@@ -37,11 +37,11 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Распознаваемые пробельные символы.
-    /// Задаются в конструкторе
+    /// Р Р°СЃРїРѕР·РЅР°РІР°РµРјС‹Рµ РїСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹.
+    /// Р—Р°РґР°СЋС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public char[] SpaceChars { get { return _SpaceChars; } }
     private char[] _SpaceChars;
@@ -51,9 +51,9 @@ namespace FreeLibSet.Parsing
     #region IParser Members
 
     /// <summary>
-    /// Распознание лексемы
+    /// Р Р°СЃРїРѕР·РЅР°РЅРёРµ Р»РµРєСЃРµРјС‹
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
     public void Parse(ParsingData data)
     {
       int cnt = 0;
@@ -70,10 +70,10 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Возвращает null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
-    /// <param name="leftExpression">Игнорируется</param>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
+    /// <param name="leftExpression">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     /// <returns>null</returns>
     public IExpression CreateExpression(ParsingData data, IExpression leftExpression)
     {
@@ -84,22 +84,22 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Парсер для распознания конца строки
-  /// Используется при преобразовании многострочного текста, когда конец строки является значимым символом,
-  /// отличным от пробела.
-  /// Создает лексему "NewLine" длиной 1 или 2 символа
-  /// Распознает символы CR и LF в любых сочетаниях
-  /// Если конец строки является обычным пробельным символом (как в синтаксисе C#), следует использовать
-  /// SpaceParser, указав символы конца строки в списке пробельных символов
+  /// РџР°СЂСЃРµСЂ РґР»СЏ СЂР°СЃРїРѕР·РЅР°РЅРёСЏ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРё РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅРѕРіРѕ С‚РµРєСЃС‚Р°, РєРѕРіРґР° РєРѕРЅРµС† СЃС‚СЂРѕРєРё СЏРІР»СЏРµС‚СЃСЏ Р·РЅР°С‡РёРјС‹Рј СЃРёРјРІРѕР»РѕРј,
+  /// РѕС‚Р»РёС‡РЅС‹Рј РѕС‚ РїСЂРѕР±РµР»Р°.
+  /// РЎРѕР·РґР°РµС‚ Р»РµРєСЃРµРјСѓ "NewLine" РґР»РёРЅРѕР№ 1 РёР»Рё 2 СЃРёРјРІРѕР»Р°
+  /// Р Р°СЃРїРѕР·РЅР°РµС‚ СЃРёРјРІРѕР»С‹ CR Рё LF РІ Р»СЋР±С‹С… СЃРѕС‡РµС‚Р°РЅРёСЏС…
+  /// Р•СЃР»Рё РєРѕРЅРµС† СЃС‚СЂРѕРєРё СЏРІР»СЏРµС‚СЃСЏ РѕР±С‹С‡РЅС‹Рј РїСЂРѕР±РµР»СЊРЅС‹Рј СЃРёРјРІРѕР»РѕРј (РєР°Рє РІ СЃРёРЅС‚Р°РєСЃРёСЃРµ C#), СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+  /// SpaceParser, СѓРєР°Р·Р°РІ СЃРёРјРІРѕР»С‹ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё РІ СЃРїРёСЃРєРµ РїСЂРѕР±РµР»СЊРЅС‹С… СЃРёРјРІРѕР»РѕРІ
   /// </summary>
   public class NewLineParser : IParser
   {
     #region IParser Members
 
     /// <summary>
-    /// Распознание лексемы
+    /// Р Р°СЃРїРѕР·РЅР°РЅРёРµ Р»РµРєСЃРµРјС‹
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
     public void Parse(ParsingData data)
     {
       switch (data.GetChar(data.CurrPos))
@@ -111,7 +111,7 @@ namespace FreeLibSet.Parsing
           {
             case '\n':
             case '\r':
-              if (data.GetChar(data.CurrPos + 1) != data.GetChar(data.CurrPos)) // только если не два одинаковых символа подряд
+              if (data.GetChar(data.CurrPos + 1) != data.GetChar(data.CurrPos)) // С‚РѕР»СЊРєРѕ РµСЃР»Рё РЅРµ РґРІР° РѕРґРёРЅР°РєРѕРІС‹С… СЃРёРјРІРѕР»Р° РїРѕРґСЂСЏРґ
                 Len++;
               break;
           }
@@ -121,10 +121,10 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Возвращает null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
-    /// <param name="leftExpression">Игнорируется</param>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
+    /// <param name="leftExpression">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     /// <returns>null</returns>
     public IExpression CreateExpression(ParsingData data, IExpression leftExpression)
     {
@@ -135,18 +135,18 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Парсер для распознания комментариев, начинающихся с заданного символа и идущего до конца строки,
-  /// например, в C# - комментарий, начинающийся с двух символов "/", в бейсике - с апострофа
-  /// Маркеры конца строки не входят в лексему
+  /// РџР°СЂСЃРµСЂ РґР»СЏ СЂР°СЃРїРѕР·РЅР°РЅРёСЏ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ, РЅР°С‡РёРЅР°СЋС‰РёС…СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕРіРѕ СЃРёРјРІРѕР»Р° Рё РёРґСѓС‰РµРіРѕ РґРѕ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё,
+  /// РЅР°РїСЂРёРјРµСЂ, РІ C# - РєРѕРјРјРµРЅС‚Р°СЂРёР№, РЅР°С‡РёРЅР°СЋС‰РёР№СЃСЏ СЃ РґРІСѓС… СЃРёРјРІРѕР»РѕРІ "/", РІ Р±РµР№СЃРёРєРµ - СЃ Р°РїРѕСЃС‚СЂРѕС„Р°
+  /// РњР°СЂРєРµСЂС‹ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё РЅРµ РІС…РѕРґСЏС‚ РІ Р»РµРєСЃРµРјСѓ
   /// </summary>
   public class ToEOLCommentParser : IParser
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает парсер
+    /// РЎРѕР·РґР°РµС‚ РїР°СЂСЃРµСЂ
     /// </summary>
-    /// <param name="startString">Начальные символы</param>
+    /// <param name="startString">РќР°С‡Р°Р»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹</param>
     public ToEOLCommentParser(string startString)
     {
       if (String.IsNullOrEmpty(startString))
@@ -156,11 +156,11 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Начальные символы.
-    /// Задаются в конструкторе
+    /// РќР°С‡Р°Р»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹.
+    /// Р—Р°РґР°СЋС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string StartString { get { return _StartString; } }
     private string _StartString;
@@ -170,9 +170,9 @@ namespace FreeLibSet.Parsing
     #region IParser Members
 
     /// <summary>
-    /// Распознание лексемы
+    /// Р Р°СЃРїРѕР·РЅР°РЅРёРµ Р»РµРєСЃРµРјС‹
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
     public void Parse(ParsingData data)
     {
       if (data.StartsWith(_StartString, false))
@@ -184,10 +184,10 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Возвращает null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
-    /// <param name="leftExpression">Игнорируется</param>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
+    /// <param name="leftExpression">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     /// <returns>null</returns>
     public IExpression CreateExpression(ParsingData data, IExpression leftExpression)
     {

@@ -1,8 +1,8 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
-// Это может быть определено в свойствах проекта
-// #define DEBUG_SPLASHWATCHERS // Если определено, то будет выполняться трассировка ServerSplashWatcher и ClientSplashWatcher
+// Р­С‚Рѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕРїСЂРµРґРµР»РµРЅРѕ РІ СЃРІРѕР№СЃС‚РІР°С… РїСЂРѕРµРєС‚Р°
+// #define DEBUG_SPLASHWATCHERS // Р•СЃР»Рё РѕРїСЂРµРґРµР»РµРЅРѕ, С‚Рѕ Р±СѓРґРµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ С‚СЂР°СЃСЃРёСЂРѕРІРєР° ServerSplashWatcher Рё ClientSplashWatcher
 
 using System;
 using System.Collections.Generic;
@@ -15,14 +15,14 @@ namespace FreeLibSet.Remoting
 {
 
   /// <summary>
-  /// Порция данных, передаваемая от сервера к клиенту.
-  /// Это - пустой базовый класс.
-  /// Данные передаются с помощью производных классов 
+  /// РџРѕСЂС†РёСЏ РґР°РЅРЅС‹С…, РїРµСЂРµРґР°РІР°РµРјР°СЏ РѕС‚ СЃРµСЂРІРµСЂР° Рє РєР»РёРµРЅС‚Сѓ.
+  /// Р­С‚Рѕ - РїСѓСЃС‚РѕР№ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ.
+  /// Р”Р°РЅРЅС‹Рµ РїРµСЂРµРґР°СЋС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ РїСЂРѕРёР·РІРѕРґРЅС‹С… РєР»Р°СЃСЃРѕРІ 
   /// </summary>
   [Serializable]
   public abstract class SplashInfoPack
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal SplashInfoPack()
     {
@@ -39,7 +39,7 @@ namespace FreeLibSet.Remoting
   [Serializable]
   internal class SplashInfoPackCurrentPhase : SplashInfoPack
   {
-    #region Поля
+    #region РџРѕР»СЏ
 
     public string PhaseText;
 
@@ -55,13 +55,13 @@ namespace FreeLibSet.Remoting
   [Serializable]
   internal class SplashInfoPackSplash : SplashInfoPackCurrentPhase
   {
-    #region Поля
+    #region РџРѕР»СЏ
 
     public SplashPhaseState[] PhaseStates;
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     public override string ToString()
     {
@@ -84,7 +84,7 @@ namespace FreeLibSet.Remoting
   [Serializable]
   internal class SplashInfoPackStackItem : SplashInfoPackSplash
   {
-    #region Поля
+    #region РџРѕР»СЏ
 
     public string[] Phases;
 
@@ -92,7 +92,7 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     public override string ToString()
     {
@@ -111,23 +111,23 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Информация о полном стеке заставок
+  /// РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїРѕР»РЅРѕРј СЃС‚РµРєРµ Р·Р°СЃС‚Р°РІРѕРє
   /// </summary>
   [Serializable]
   internal class SplashInfoPackStack : SplashInfoPack
   {
-    #region Поля
+    #region РџРѕР»СЏ
 
     /// <summary>
-    /// Описания заставок в стеке.
-    /// Порядок заставок соответствует принятому в  Stack.ToArray().
-    /// Текущая заставка имеет индекс 0.
+    /// РћРїРёСЃР°РЅРёСЏ Р·Р°СЃС‚Р°РІРѕРє РІ СЃС‚РµРєРµ.
+    /// РџРѕСЂСЏРґРѕРє Р·Р°СЃС‚Р°РІРѕРє СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїСЂРёРЅСЏС‚РѕРјСѓ РІ  Stack.ToArray().
+    /// РўРµРєСѓС‰Р°СЏ Р·Р°СЃС‚Р°РІРєР° РёРјРµРµС‚ РёРЅРґРµРєСЃ 0.
     /// </summary>
     public SplashInfoPackStackItem[] Stack;
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     public override string ToString()
     {
@@ -157,7 +157,7 @@ namespace FreeLibSet.Remoting
 #if DEBUG_SPLASHWATCHERS
 
   /// <summary>
-  /// Для отладки передаем не null, а объект-заглушку, когда в заставке нет никаких изменений
+  /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё РїРµСЂРµРґР°РµРј РЅРµ null, Р° РѕР±СЉРµРєС‚-Р·Р°РіР»СѓС€РєСѓ, РєРѕРіРґР° РІ Р·Р°СЃС‚Р°РІРєРµ РЅРµС‚ РЅРёРєР°РєРёС… РёР·РјРµРЅРµРЅРёР№
   /// </summary>
   [Serializable]
   internal class SplashInfoPackNone : SplashInfoPack
@@ -169,13 +169,13 @@ namespace FreeLibSet.Remoting
 
 #if XXX
   /// <summary>
-  /// Очередь для хранения объектов SplashInfoPack.
-  /// Используется при асинхронных запросах.
-  /// Этот класс не является потокобезопасным.
+  /// РћС‡РµСЂРµРґСЊ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РѕР±СЉРµРєС‚РѕРІ SplashInfoPack.
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё Р°СЃРёРЅС…СЂРѕРЅРЅС‹С… Р·Р°РїСЂРѕСЃР°С….
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   public sealed class SplashInfoPackQueue
   {
-  #region Конструктор
+  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public SplashInfoPackQueue()
     {
@@ -184,7 +184,7 @@ namespace FreeLibSet.Remoting
 
   #endregion
 
-  #region Очередь
+  #region РћС‡РµСЂРµРґСЊ
 
     public void Enqueue(SplashInfoPack pack)
     { 
@@ -196,7 +196,7 @@ namespace FreeLibSet.Remoting
       if (pack == null)
         return;
 
-      // TODO: Нужно более интеллектуальное удаление неактуальных объектов
+      // TODO: РќСѓР¶РЅРѕ Р±РѕР»РµРµ РёРЅС‚РµР»Р»РµРєС‚СѓР°Р»СЊРЅРѕРµ СѓРґР°Р»РµРЅРёРµ РЅРµР°РєС‚СѓР°Р»СЊРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
 
       _Queue.Enqueue(pack);
     }
@@ -222,32 +222,32 @@ namespace FreeLibSet.Remoting
 #endif
 
   /// <summary>
-  /// Интерфейс, реализуемый ServerSplashWatcher
+  /// РРЅС‚РµСЂС„РµР№СЃ, СЂРµР°Р»РёР·СѓРµРјС‹Р№ ServerSplashWatcher
   /// </summary>
   public interface IServerSplashWatcher
   {
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Получить очередную порцию данных об изменениях в стеке заставок.
-    /// При первом вызове метода или после ResetSplashIOfo() возвращает полную информацию о стеке.
-    /// При повторных обращениях возвращает неполные данные или даже null, если изменений не было.
-    /// Структура передаваемых данных SplashInfoPack является закрытой и используется исключительно для передачи данных
-    /// от ServerSplashWatcher к ClientSplashWatcher.
+    /// РџРѕР»СѓС‡РёС‚СЊ РѕС‡РµСЂРµРґРЅСѓСЋ РїРѕСЂС†РёСЋ РґР°РЅРЅС‹С… РѕР± РёР·РјРµРЅРµРЅРёСЏС… РІ СЃС‚РµРєРµ Р·Р°СЃС‚Р°РІРѕРє.
+    /// РџСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° РёР»Рё РїРѕСЃР»Рµ ResetSplashIOfo() РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃС‚РµРєРµ.
+    /// РџСЂРё РїРѕРІС‚РѕСЂРЅС‹С… РѕР±СЂР°С‰РµРЅРёСЏС… РІРѕР·РІСЂР°С‰Р°РµС‚ РЅРµРїРѕР»РЅС‹Рµ РґР°РЅРЅС‹Рµ РёР»Рё РґР°Р¶Рµ null, РµСЃР»Рё РёР·РјРµРЅРµРЅРёР№ РЅРµ Р±С‹Р»Рѕ.
+    /// РЎС‚СЂСѓРєС‚СѓСЂР° РїРµСЂРµРґР°РІР°РµРјС‹С… РґР°РЅРЅС‹С… SplashInfoPack СЏРІР»СЏРµС‚СЃСЏ Р·Р°РєСЂС‹С‚РѕР№ Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РёСЃРєР»СЋС‡РёС‚РµР»СЊРЅРѕ РґР»СЏ РїРµСЂРµРґР°С‡Рё РґР°РЅРЅС‹С…
+    /// РѕС‚ ServerSplashWatcher Рє ClientSplashWatcher.
     /// </summary>
-    /// <returns>Порция данных</returns>
+    /// <returns>РџРѕСЂС†РёСЏ РґР°РЅРЅС‹С…</returns>
     SplashInfoPack GetSplashInfoPack();
 
     /// <summary>
-    /// Сброс данных.
-    /// После вызова этого метода, при следующем вызове GetSplashInfoPack() будет возвращена полная информация о стеке заставок.
-    /// Используется для исправления ошибок после разрыва соединения.
+    /// РЎР±СЂРѕСЃ РґР°РЅРЅС‹С….
+    /// РџРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР°, РїСЂРё СЃР»РµРґСѓСЋС‰РµРј РІС‹Р·РѕРІРµ GetSplashInfoPack() Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰РµРЅР° РїРѕР»РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‚РµРєРµ Р·Р°СЃС‚Р°РІРѕРє.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РёСЃРїСЂР°РІР»РµРЅРёСЏ РѕС€РёР±РѕРє РїРѕСЃР»Рµ СЂР°Р·СЂС‹РІР° СЃРѕРµРґРёРЅРµРЅРёСЏ.
     /// </summary>
     void ResetSplashInfo();
 
     /// <summary>
-    /// Прервать выполнение процесса.
-    /// Метод устанавливает свойство ISplash.Cancelled=true, если в стеке есть текущая заставка
+    /// РџСЂРµСЂРІР°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕС†РµСЃСЃР°.
+    /// РњРµС‚РѕРґ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ ISplash.Cancelled=true, РµСЃР»Рё РІ СЃС‚РµРєРµ РµСЃС‚СЊ С‚РµРєСѓС‰Р°СЏ Р·Р°СЃС‚Р°РІРєР°
     /// </summary>
     void Cancel();
 
@@ -255,16 +255,16 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Прослушиватель стека заставок на стороне сервера
+  /// РџСЂРѕСЃР»СѓС€РёРІР°С‚РµР»СЊ СЃС‚РµРєР° Р·Р°СЃС‚Р°РІРѕРє РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР°
   /// </summary>
   public sealed class ServerSplashWatcher : MarshalByRefObject, IServerSplashWatcher
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает прослушиватель для заданного стека заставок
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕСЃР»СѓС€РёРІР°С‚РµР»СЊ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СЃС‚РµРєР° Р·Р°СЃС‚Р°РІРѕРє
     /// </summary>
-    /// <param name="source">Стек заставок</param>
+    /// <param name="source">РЎС‚РµРє Р·Р°СЃС‚Р°РІРѕРє</param>
     public ServerSplashWatcher(ISplashStack source)
     {
       if (source == null)
@@ -281,10 +281,10 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Прослушиваемый стек
+    /// РџСЂРѕСЃР»СѓС€РёРІР°РµРјС‹Р№ СЃС‚РµРє
     /// </summary>
     public ISplashStack Source { get { return _Source; } }
     private ISplashStack _Source;
@@ -292,13 +292,13 @@ namespace FreeLibSet.Remoting
 #if DEBUG_SPLASHWATCHERS
 
     /// <summary>
-    /// Для отладки - идентификатор объекта.
-    /// Неудобно использовать числовые идентификаторы, так объекты создаются в разных AppDomain и разных процессах
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°.
+    /// РќРµСѓРґРѕР±РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‡РёСЃР»РѕРІС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹, С‚Р°Рє РѕР±СЉРµРєС‚С‹ СЃРѕР·РґР°СЋС‚СЃСЏ РІ СЂР°Р·РЅС‹С… AppDomain Рё СЂР°Р·РЅС‹С… РїСЂРѕС†РµСЃСЃР°С…
     /// </summary>
     private Guid _WatcherGuid;
 
     /// <summary>
-    /// Для отладки - счетчик вызовов GetSplashInfoPack()
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё - СЃС‡РµС‚С‡РёРє РІС‹Р·РѕРІРѕРІ GetSplashInfoPack()
     /// </summary>
     private int GetSplashInfoPackCount;
 
@@ -309,28 +309,28 @@ namespace FreeLibSet.Remoting
     #region IServerSplashWatcher Members
 
     /// <summary>
-    /// Используется для вызова метода GetSplashStack()
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° GetSplashStack()
     /// </summary>
     private int _PrevStackVersion;
 
     /// <summary>
-    /// Номер текущей фазы при предыдущем вызове
+    /// РќРѕРјРµСЂ С‚РµРєСѓС‰РµР№ С„Р°Р·С‹ РїСЂРё РїСЂРµРґС‹РґСѓС‰РµРј РІС‹Р·РѕРІРµ
     /// </summary>
     private int _PrevPhase;
 
     /// <summary>
-    /// Информация о текущей фазе
+    /// РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РµРєСѓС‰РµР№ С„Р°Р·Рµ
     /// </summary>
     private SplashInfoPackCurrentPhase _PrevCurrentPhase;
 
     /// <summary>
-    /// Ссылка на текущую заставку.
-    /// Нельзя запрашивать свойство ISplashStack.Splash, т.к. после вызова GetSplashStack() могут быть асинхронные изменения в стеке
+    /// РЎСЃС‹Р»РєР° РЅР° С‚РµРєСѓС‰СѓСЋ Р·Р°СЃС‚Р°РІРєСѓ.
+    /// РќРµР»СЊР·СЏ Р·Р°РїСЂР°С€РёРІР°С‚СЊ СЃРІРѕР№СЃС‚РІРѕ ISplashStack.Splash, С‚.Рє. РїРѕСЃР»Рµ РІС‹Р·РѕРІР° GetSplashStack() РјРѕРіСѓС‚ Р±С‹С‚СЊ Р°СЃРёРЅС…СЂРѕРЅРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РІ СЃС‚РµРєРµ
     /// </summary>
     private ISplash _PrevSplash;
 
     /// <summary>
-    /// Основной метод - получение порции данных
+    /// РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ - РїРѕР»СѓС‡РµРЅРёРµ РїРѕСЂС†РёРё РґР°РЅРЅС‹С…
     /// </summary>
     /// <returns></returns>
     public SplashInfoPack GetSplashInfoPack()
@@ -364,7 +364,7 @@ namespace FreeLibSet.Remoting
       ISplash[] stack = _Source.GetSplashStack(ref _PrevStackVersion);
       if (stack != null)
       {
-        #region 1. Возвращаем полную информацию о состоянии стека
+        #region 1. Р’РѕР·РІСЂР°С‰Р°РµРј РїРѕР»РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃРѕСЃС‚РѕСЏРЅРёРё СЃС‚РµРєР°
 
         SplashInfoPackStack res1 = new SplashInfoPackStack();
 
@@ -396,10 +396,10 @@ namespace FreeLibSet.Remoting
         #endregion
       }
 
-      // Не было добавлено/убрано заставок с предудущего вызова
+      // РќРµ Р±С‹Р»Рѕ РґРѕР±Р°РІР»РµРЅРѕ/СѓР±СЂР°РЅРѕ Р·Р°СЃС‚Р°РІРѕРє СЃ РїСЂРµРґСѓРґСѓС‰РµРіРѕ РІС‹Р·РѕРІР°
       if (_PrevSplash == null)
       {
-        // заставок не было и нет. Возвращать нечего
+        // Р·Р°СЃС‚Р°РІРѕРє РЅРµ Р±С‹Р»Рѕ Рё РЅРµС‚. Р’РѕР·РІСЂР°С‰Р°С‚СЊ РЅРµС‡РµРіРѕ
 #if DEBUG_SPLASHWATCHERS
         return new SplashInfoPackNone();
 #else
@@ -409,7 +409,7 @@ namespace FreeLibSet.Remoting
 
       if (_PrevSplash.Phase != _PrevPhase)
       {
-        #region 2. Возвращаем информацию о текущей заставке
+        #region 2. Р’РѕР·РІСЂР°С‰Р°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµРєСѓС‰РµР№ Р·Р°СЃС‚Р°РІРєРµ
 
         SplashInfoPackSplash res2 = new SplashInfoPackSplash();
         res2.PhaseStates = _PrevSplash.GetPhaseStates();
@@ -421,7 +421,7 @@ namespace FreeLibSet.Remoting
         #endregion
       }
 
-      #region 3. Возвращаем информцию о текущей фазе или null
+      #region 3. Р’РѕР·РІСЂР°С‰Р°РµРј РёРЅС„РѕСЂРјС†РёСЋ Рѕ С‚РµРєСѓС‰РµР№ С„Р°Р·Рµ РёР»Рё null
 
       SplashInfoPackCurrentPhase res3 = new SplashInfoPackCurrentPhase();
       InitCurrentPhase(_PrevSplash, res3);
@@ -431,7 +431,7 @@ namespace FreeLibSet.Remoting
         res3.AllowCancel == _PrevCurrentPhase.AllowCancel &&
         res3.PhaseText == _PrevCurrentPhase.PhaseText)
 
-        // ничего не изменилось
+        // РЅРёС‡РµРіРѕ РЅРµ РёР·РјРµРЅРёР»РѕСЃСЊ
 #if DEBUG_SPLASHWATCHERS
         return new SplashInfoPackNone();
 #else
@@ -439,7 +439,7 @@ namespace FreeLibSet.Remoting
 #endif
       else
       {
-        // что-то изменилось
+        // С‡С‚Рѕ-С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
         _PrevCurrentPhase = res3;
         return res3;
       }
@@ -456,8 +456,8 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// После вызова этого метода, следующий вызов GetSplashInfoPack() вернет полную информацию о стеке заставок.
-    /// Метод используется для восстановления после ошибок соединения клиента с сервером.
+    /// РџРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР°, СЃР»РµРґСѓСЋС‰РёР№ РІС‹Р·РѕРІ GetSplashInfoPack() РІРµСЂРЅРµС‚ РїРѕР»РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃС‚РµРєРµ Р·Р°СЃС‚Р°РІРѕРє.
+    /// РњРµС‚РѕРґ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ РїРѕСЃР»Рµ РѕС€РёР±РѕРє СЃРѕРµРґРёРЅРµРЅРёСЏ РєР»РёРµРЅС‚Р° СЃ СЃРµСЂРІРµСЂРѕРј.
     /// </summary>
     public void ResetSplashInfo()
     {
@@ -465,7 +465,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Устанавливает свойство ISplash.Cancelled=true, если стек заставок не пустой
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ ISplash.Cancelled=true, РµСЃР»Рё СЃС‚РµРє Р·Р°СЃС‚Р°РІРѕРє РЅРµ РїСѓСЃС‚РѕР№
     /// </summary>
     public void Cancel()
     {
@@ -478,20 +478,20 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Парный объект для ServerSplashWatcher.
-  /// Дополнительно позволяет выводить заставку на время, пока ServerSplashWatcher не предоставляет заставки
-  /// Этот объект не является потокобезопасным. Все методы должны вызываться из одного потока, в котором 
-  /// был вызван конструктор объекта
+  /// РџР°СЂРЅС‹Р№ РѕР±СЉРµРєС‚ РґР»СЏ ServerSplashWatcher.
+  /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РїРѕР·РІРѕР»СЏРµС‚ РІС‹РІРѕРґРёС‚СЊ Р·Р°СЃС‚Р°РІРєСѓ РЅР° РІСЂРµРјСЏ, РїРѕРєР° ServerSplashWatcher РЅРµ РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ Р·Р°СЃС‚Р°РІРєРё
+  /// Р­С‚РѕС‚ РѕР±СЉРµРєС‚ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј. Р’СЃРµ РјРµС‚РѕРґС‹ РґРѕР»Р¶РЅС‹ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· РѕРґРЅРѕРіРѕ РїРѕС‚РѕРєР°, РІ РєРѕС‚РѕСЂРѕРј 
+  /// Р±С‹Р» РІС‹Р·РІР°РЅ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РѕР±СЉРµРєС‚Р°
   /// </summary>
   public sealed class ClientSplashWatcher
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект, который подсоединяется к ServerSplashWatcher для получения от него данных и управляющий стеком заставок на стороне клиента
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ РїРѕРґСЃРѕРµРґРёРЅСЏРµС‚СЃСЏ Рє ServerSplashWatcher РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РѕС‚ РЅРµРіРѕ РґР°РЅРЅС‹С… Рё СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЃС‚РµРєРѕРј Р·Р°СЃС‚Р°РІРѕРє РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°
     /// </summary>
-    /// <param name="serverWatcher">Серверная часть, поставляющая данные</param>
-    /// <param name="clientStack">Стек заставок на стороне клиента, которыми нужно управлять</param>
+    /// <param name="serverWatcher">РЎРµСЂРІРµСЂРЅР°СЏ С‡Р°СЃС‚СЊ, РїРѕСЃС‚Р°РІР»СЏСЋС‰Р°СЏ РґР°РЅРЅС‹Рµ</param>
+    /// <param name="clientStack">РЎС‚РµРє Р·Р°СЃС‚Р°РІРѕРє РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°, РєРѕС‚РѕСЂС‹РјРё РЅСѓР¶РЅРѕ СѓРїСЂР°РІР»СЏС‚СЊ</param>
     public ClientSplashWatcher(IServerSplashWatcher serverWatcher, ISplashStack clientStack)
     {
       if (serverWatcher == null)
@@ -518,16 +518,16 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Серверная часть, поставляющая данные
+    /// РЎРµСЂРІРµСЂРЅР°СЏ С‡Р°СЃС‚СЊ, РїРѕСЃС‚Р°РІР»СЏСЋС‰Р°СЏ РґР°РЅРЅС‹Рµ
     /// </summary>
     public IServerSplashWatcher ServerWatcher { get { return _ServerWatcher; } }
     private IServerSplashWatcher _ServerWatcher;
 
     /// <summary>
-    /// Стек заставок на стороне клиента, которыми нужно управлять
+    /// РЎС‚РµРє Р·Р°СЃС‚Р°РІРѕРє РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°, РєРѕС‚РѕСЂС‹РјРё РЅСѓР¶РЅРѕ СѓРїСЂР°РІР»СЏС‚СЊ
     /// </summary>
     public ISplashStack ClientStack { get { return _ClientStack; } }
     private ISplashStack _ClientStack;
@@ -535,12 +535,12 @@ namespace FreeLibSet.Remoting
 #if DEBUG_SPLASHWATCHERS
 
     /// <summary>
-    /// Для отладки - идентификатор объекта
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
     /// </summary>
     private Guid _WatcherGuid;
 
     /// <summary>
-    /// Счетчик вызовов ProcessUpdateStack()
+    /// РЎС‡РµС‚С‡РёРє РІС‹Р·РѕРІРѕРІ ProcessUpdateStack()
     /// </summary>
     private int ProcessUpdateStackCount;
 
@@ -548,12 +548,12 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Метод ProcessSplash
+    #region РњРµС‚РѕРґ ProcessSplash
 
     /// <summary>
-    /// Этот метод должен периодически вызываться по таймеру.
-    /// 1. Вызывает ServerSplashWatcher.GetSplashPackInfo() и обновляет состояние заставок с помощью ISplashStack
-    /// 2. Проверяет ISplashStack.Cancelled и, при необходимости, вызывает ServerSplashWatcher.Cancel()
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РїРµСЂРёРѕРґРёС‡РµСЃРєРё РІС‹Р·С‹РІР°С‚СЊСЃСЏ РїРѕ С‚Р°Р№РјРµСЂСѓ.
+    /// 1. Р’С‹Р·С‹РІР°РµС‚ ServerSplashWatcher.GetSplashPackInfo() Рё РѕР±РЅРѕРІР»СЏРµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°СЃС‚Р°РІРѕРє СЃ РїРѕРјРѕС‰СЊСЋ ISplashStack
+    /// 2. РџСЂРѕРІРµСЂСЏРµС‚ ISplashStack.Cancelled Рё, РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё, РІС‹Р·С‹РІР°РµС‚ ServerSplashWatcher.Cancel()
     /// </summary>
     public void ProcessSplash()
     {
@@ -584,26 +584,26 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Вместо того, чтобы запрашивать заставки вызовом ClientStack.GetSplashStack(), храним копию списка.
-    /// Здесь нет заставки "Идет процесс".
-    /// Активная заставка находится на вершине
+    /// Р’РјРµСЃС‚Рѕ С‚РѕРіРѕ, С‡С‚РѕР±С‹ Р·Р°РїСЂР°С€РёРІР°С‚СЊ Р·Р°СЃС‚Р°РІРєРё РІС‹Р·РѕРІРѕРј ClientStack.GetSplashStack(), С…СЂР°РЅРёРј РєРѕРїРёСЋ СЃРїРёСЃРєР°.
+    /// Р—РґРµСЃСЊ РЅРµС‚ Р·Р°СЃС‚Р°РІРєРё "РРґРµС‚ РїСЂРѕС†РµСЃСЃ".
+    /// РђРєС‚РёРІРЅР°СЏ Р·Р°СЃС‚Р°РІРєР° РЅР°С…РѕРґРёС‚СЃСЏ РЅР° РІРµСЂС€РёРЅРµ
     /// </summary>
     private Stack<ISplash> _ClientSplashes;
 
     private void ProcessUpdateStack()
     {
-      SplashInfoPack pack = GetSplashInfoPack(); // запрос данных по сети
+      SplashInfoPack pack = GetSplashInfoPack(); // Р·Р°РїСЂРѕСЃ РґР°РЅРЅС‹С… РїРѕ СЃРµС‚Рё
 
 #if DEBUG_SPLASHWATCHERS
 
       if (pack == null)
-        throw new NullReferenceException("В отладочном режиме SplashInfoPack не может быть null");
+        throw new NullReferenceException("Р’ РѕС‚Р»Р°РґРѕС‡РЅРѕРј СЂРµР¶РёРјРµ SplashInfoPack РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null");
 
       string sPack = "From " + pack.ServerWatcherGuid + ", CallId=" + pack.ServerCallId + ". " + pack.ToString();
 
       unchecked { ProcessUpdateStackCount++; }
 
-      // Могут быть пустые сообщения в очереди
+      // РњРѕРіСѓС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РІ РѕС‡РµСЂРµРґРё
       //if (ProcessUpdateStackCount != pack.ServerCallId)
       //  throw new BugException("SplashWatcher call missmatch. ServerCallId=" + pack.ServerCallId.ToString() + ", ClientCallId=" + ProcessUpdateStackCount.ToString());
 
@@ -611,29 +611,29 @@ namespace FreeLibSet.Remoting
 #endif
 
       if (pack == null)
-        return; // нет изменений
+        return; // РЅРµС‚ РёР·РјРµРЅРµРЅРёР№
 
       SplashInfoPackStack pack1 = pack as SplashInfoPackStack;
       if (pack1 != null)
       {
-        // получили полный стек заставок 
+        // РїРѕР»СѓС‡РёР»Рё РїРѕР»РЅС‹Р№ СЃС‚РµРє Р·Р°СЃС‚Р°РІРѕРє 
 
-        // Убираем свою заставку
+        // РЈР±РёСЂР°РµРј СЃРІРѕСЋ Р·Р°СЃС‚Р°РІРєСѓ
         if (pack1.Stack.Length > 0 && _DefaultSplash != null)
         {
           _ClientStack.EndSplash();
           _DefaultSplash = null;
         }
 
-        // Убираем закрытые заставки, которых нет в стеке
-        // - по количеству
+        // РЈР±РёСЂР°РµРј Р·Р°РєСЂС‹С‚С‹Рµ Р·Р°СЃС‚Р°РІРєРё, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РІ СЃС‚РµРєРµ
+        // - РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ
         while (_ClientSplashes.Count > pack1.Stack.Length)
         {
           _ClientStack.EndSplash();
           _ClientSplashes.Pop();
         }
 
-        // - по соответствию
+        // - РїРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЋ
         for (int i = (pack1.Stack.Length - _ClientSplashes.Count); i < pack1.Stack.Length; i++)
         {
           if (_ClientSplashes.Peek().StackSerialId == pack1.Stack[i].StackSerialId)
@@ -645,19 +645,19 @@ namespace FreeLibSet.Remoting
           }
         }
 
-        // Добавляем недостающие вкладки
+        // Р”РѕР±Р°РІР»СЏРµРј РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ РІРєР»Р°РґРєРё
         for (int i = pack1.Stack.Length - _ClientSplashes.Count - 1; i >= 0; i--)
         {
           ISplash spl = _ClientStack.BeginSplash(pack1.Stack[i].Phases);
-          spl.StackSerialId = pack1.Stack[i].StackSerialId; // переопределили
+          spl.StackSerialId = pack1.Stack[i].StackSerialId; // РїРµСЂРµРѕРїСЂРµРґРµР»РёР»Рё
           _ClientSplashes.Push(spl);
         }
 
         if (_ClientSplashes.Count != pack1.Stack.Length)
-          throw new BugException("Расхождение количества заставок");
+          throw new BugException("Р Р°СЃС…РѕР¶РґРµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° Р·Р°СЃС‚Р°РІРѕРє");
 
         ISplash[] clientSplashes2 = _ClientSplashes.ToArray();
-        // Инициализируем состояние всех заставок
+        // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РІСЃРµС… Р·Р°СЃС‚Р°РІРѕРє
         for (int i = 0; i < pack1.Stack.Length; i++)
           InitSplashStates(pack1.Stack[i], clientSplashes2[i]);
 
@@ -667,9 +667,9 @@ namespace FreeLibSet.Remoting
       SplashInfoPackSplash pack2 = pack as SplashInfoPackSplash;
       if (pack2 != null)
       {
-        // Получена информация об обновлении одной заставки
+        // РџРѕР»СѓС‡РµРЅР° РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± РѕР±РЅРѕРІР»РµРЅРёРё РѕРґРЅРѕР№ Р·Р°СЃС‚Р°РІРєРё
         if (_ClientSplashes.Count == 0)
-          throw new BugException("Обработка SplashInfoPackSplash. В списке _ClientSplashes нет заставок");
+          throw new BugException("РћР±СЂР°Р±РѕС‚РєР° SplashInfoPackSplash. Р’ СЃРїРёСЃРєРµ _ClientSplashes РЅРµС‚ Р·Р°СЃС‚Р°РІРѕРє");
         InitSplashStates(pack2, _ClientSplashes.Peek());
         return;
       }
@@ -677,25 +677,25 @@ namespace FreeLibSet.Remoting
       SplashInfoPackCurrentPhase pack3 = pack as SplashInfoPackCurrentPhase;
       if (pack3 != null)
       {
-        // Получена информация об обновлении процентного индикатора
+        // РџРѕР»СѓС‡РµРЅР° РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± РѕР±РЅРѕРІР»РµРЅРёРё РїСЂРѕС†РµРЅС‚РЅРѕРіРѕ РёРЅРґРёРєР°С‚РѕСЂР°
         if (_ClientSplashes.Count == 0)
-          throw new BugException("Обработка SplashInfoPackCurrentPhase. В списке _ClientSplashes нет заставок");
+          throw new BugException("РћР±СЂР°Р±РѕС‚РєР° SplashInfoPackCurrentPhase. Р’ СЃРїРёСЃРєРµ _ClientSplashes РЅРµС‚ Р·Р°СЃС‚Р°РІРѕРє");
         InitSplashCurrentPhase(pack3, _ClientSplashes.Peek());
         return;
       }
 
 #if DEBUG_SPLASHWATCHERS
-      if (pack is SplashInfoPackNone) // затычка
+      if (pack is SplashInfoPackNone) // Р·Р°С‚С‹С‡РєР°
         return;
 #endif
 
-      throw new BugException("Получен объект неизвестного типа " + pack.GetType().ToString());
+      throw new BugException("РџРѕР»СѓС‡РµРЅ РѕР±СЉРµРєС‚ РЅРµРёР·РІРµСЃС‚РЅРѕРіРѕ С‚РёРїР° " + pack.GetType().ToString());
     }
 
     /// <summary>
-    /// Вызов IServerSplashWatcher.GetSplashInfoPack().
-    /// Может возникнуть исключение, связанное с сетью.
-    /// В этом случае, надо попытаться сбросить информацию о заставках
+    /// Р’С‹Р·РѕРІ IServerSplashWatcher.GetSplashInfoPack().
+    /// РњРѕР¶РµС‚ РІРѕР·РЅРёРєРЅСѓС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, СЃРІСЏР·Р°РЅРЅРѕРµ СЃ СЃРµС‚СЊСЋ.
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ, РЅР°РґРѕ РїРѕРїС‹С‚Р°С‚СЊСЃСЏ СЃР±СЂРѕСЃРёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ Р·Р°СЃС‚Р°РІРєР°С…
     /// </summary>
     /// <returns></returns>
     [DebuggerStepThrough]
@@ -717,15 +717,15 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Синхронизирует текущую фазу заставки с данными, полученными с сервера
+    /// РЎРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµС‚ С‚РµРєСѓС‰СѓСЋ С„Р°Р·Сѓ Р·Р°СЃС‚Р°РІРєРё СЃ РґР°РЅРЅС‹РјРё, РїРѕР»СѓС‡РµРЅРЅС‹РјРё СЃ СЃРµСЂРІРµСЂР°
     /// </summary>
-    /// <param name="src">Информация о номере текущей фазы заставки</param>
-    /// <param name="dst">Интерфейс заставки, которую требуется синхронизировать</param>
+    /// <param name="src">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РЅРѕРјРµСЂРµ С‚РµРєСѓС‰РµР№ С„Р°Р·С‹ Р·Р°СЃС‚Р°РІРєРё</param>
+    /// <param name="dst">РРЅС‚РµСЂС„РµР№СЃ Р·Р°СЃС‚Р°РІРєРё, РєРѕС‚РѕСЂСѓСЋ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ</param>
     private void InitSplashStates(SplashInfoPackSplash src, ISplash dst)
     {
       SplashPhaseState[] dstStates = dst.GetPhaseStates();
       if (dstStates.Length != src.PhaseStates.Length)
-        throw new BugException("Разное количество фаз в заставке");
+        throw new BugException("Р Р°Р·РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р· РІ Р·Р°СЃС‚Р°РІРєРµ");
       for (int i = 0; i < dst.PhaseCount; i++)
       {
         if (dstStates[i] != src.PhaseStates[i])
@@ -734,7 +734,7 @@ namespace FreeLibSet.Remoting
           {
             if (dstStates[i] == SplashPhaseState.Current || dstStates[i] == SplashPhaseState.None)
             {
-              // требуется перейти на следующую фазу
+              // С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµР№С‚Рё РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ С„Р°Р·Сѓ
               if (src.PhaseStates[i] == SplashPhaseState.Complete)
                 dst.Complete();
               else
@@ -750,14 +750,14 @@ namespace FreeLibSet.Remoting
 
 
     /// <summary>
-    /// Синхронизирует положение индикатора заставки с данными, полученными с сервера
+    /// РЎРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµС‚ РїРѕР»РѕР¶РµРЅРёРµ РёРЅРґРёРєР°С‚РѕСЂР° Р·Р°СЃС‚Р°РІРєРё СЃ РґР°РЅРЅС‹РјРё, РїРѕР»СѓС‡РµРЅРЅС‹РјРё СЃ СЃРµСЂРІРµСЂР°
     /// </summary>
-    /// <param name="src">Информация о номере текущей фазы заставки</param>
-    /// <param name="dst">Интерфейс заставки, которую требуется синхронизировать</param>
+    /// <param name="src">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РЅРѕРјРµСЂРµ С‚РµРєСѓС‰РµР№ С„Р°Р·С‹ Р·Р°СЃС‚Р°РІРєРё</param>
+    /// <param name="dst">РРЅС‚РµСЂС„РµР№СЃ Р·Р°СЃС‚Р°РІРєРё, РєРѕС‚РѕСЂСѓСЋ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ</param>
     private void InitSplashCurrentPhase(SplashInfoPackCurrentPhase src, ISplash dst)
     {
       if (dst.Phase >= dst.PhaseCount)
-        return; // когда последняя фаза выполнена, уже нечего настраивать нельзя
+        return; // РєРѕРіРґР° РїРѕСЃР»РµРґРЅСЏСЏ С„Р°Р·Р° РІС‹РїРѕР»РЅРµРЅР°, СѓР¶Рµ РЅРµС‡РµРіРѕ РЅР°СЃС‚СЂР°РёРІР°С‚СЊ РЅРµР»СЊР·СЏ
       dst.SetPercent(src.Percent, src.PercentMax);
       dst.PhaseText = src.PhaseText;
       dst.AllowCancel = src.AllowCancel;
@@ -765,13 +765,13 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Заставка DefaultSplash
+    #region Р—Р°СЃС‚Р°РІРєР° DefaultSplash
 
     /// <summary>
-    /// Нужно ли выводить заставке "Идет процесс", если ServerSplashWatcher не возвращает ни одной заставки.
-    /// По умолчанию - false - заставка не выводится.
-    /// Если свойство устанавливается в true, то оно должно быть явно сброшено в false по окончании работы процесса,
-    /// иначе заставка по умолчанию останется на экране.
+    /// РќСѓР¶РЅРѕ Р»Рё РІС‹РІРѕРґРёС‚СЊ Р·Р°СЃС‚Р°РІРєРµ "РРґРµС‚ РїСЂРѕС†РµСЃСЃ", РµСЃР»Рё ServerSplashWatcher РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РЅРё РѕРґРЅРѕР№ Р·Р°СЃС‚Р°РІРєРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - Р·Р°СЃС‚Р°РІРєР° РЅРµ РІС‹РІРѕРґРёС‚СЃСЏ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ true, С‚Рѕ РѕРЅРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЏРІРЅРѕ СЃР±СЂРѕС€РµРЅРѕ РІ false РїРѕ РѕРєРѕРЅС‡Р°РЅРёРё СЂР°Р±РѕС‚С‹ РїСЂРѕС†РµСЃСЃР°,
+    /// РёРЅР°С‡Рµ Р·Р°СЃС‚Р°РІРєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РѕСЃС‚Р°РЅРµС‚СЃСЏ РЅР° СЌРєСЂР°РЅРµ.
     /// </summary>
     public bool UseDefaultSplash
     {
@@ -790,12 +790,12 @@ namespace FreeLibSet.Remoting
     private bool _UseDefaultSplash;
 
     /// <summary>
-    /// Заставка "Идет процесс", если нет нормальных заставок
+    /// Р—Р°СЃС‚Р°РІРєР° "РРґРµС‚ РїСЂРѕС†РµСЃСЃ", РµСЃР»Рё РЅРµС‚ РЅРѕСЂРјР°Р»СЊРЅС‹С… Р·Р°СЃС‚Р°РІРѕРє
     /// </summary>
     private ISplash _DefaultSplash;
 
     /// <summary>
-    /// Добавляем заставку "Идет процесс"
+    /// Р”РѕР±Р°РІР»СЏРµРј Р·Р°СЃС‚Р°РІРєСѓ "РРґРµС‚ РїСЂРѕС†РµСЃСЃ"
     /// </summary>
     private void ShowDefaultSplash()
     {
@@ -821,7 +821,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Текст заставки, выводимой по умолчанию при UseDefaultSplash=true.
+    /// РўРµРєСЃС‚ Р·Р°СЃС‚Р°РІРєРё, РІС‹РІРѕРґРёРјРѕР№ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РїСЂРё UseDefaultSplash=true.
     /// </summary>
     public string DefaultSplashPhaseText
     {
@@ -846,15 +846,15 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Нажатие кнопки "Отмена"
+    #region РќР°Р¶Р°С‚РёРµ РєРЅРѕРїРєРё "РћС‚РјРµРЅР°"
 
     /// <summary>
-    /// Устанавливается в true, если был послан сигнал Cancel
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ true, РµСЃР»Рё Р±С‹Р» РїРѕСЃР»Р°РЅ СЃРёРіРЅР°Р» Cancel
     /// </summary>
     private bool _CancelSignalled;
 
     /// <summary>
-    /// Проверка нажатия кнопки "Отмена"
+    /// РџСЂРѕРІРµСЂРєР° РЅР°Р¶Р°С‚РёСЏ РєРЅРѕРїРєРё "РћС‚РјРµРЅР°"
     /// </summary>
     private void ProcessCheckCancelled()
     {
@@ -865,9 +865,9 @@ namespace FreeLibSet.Remoting
       if (spl.AllowCancel && spl.Cancelled)
       {
         if (_CancelSignalled)
-          return; // предотвращение повторной посылки сигнала
+          return; // РїСЂРµРґРѕС‚РІСЂР°С‰РµРЅРёРµ РїРѕРІС‚РѕСЂРЅРѕР№ РїРѕСЃС‹Р»РєРё СЃРёРіРЅР°Р»Р°
 
-        // Посылаем сигнал
+        // РџРѕСЃС‹Р»Р°РµРј СЃРёРіРЅР°Р»
         _ServerWatcher.Cancel();
         _CancelSignalled = true;
       }
@@ -877,11 +877,11 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Очистка стека
+    #region РћС‡РёСЃС‚РєР° СЃС‚РµРєР°
 
     /// <summary>
-    /// Выполняет вызов недостающих EndSplash().
-    /// Перед вызовом этого метода, вероянтно, следует установить UseDefaultSplash=false
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РІС‹Р·РѕРІ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… EndSplash().
+    /// РџРµСЂРµРґ РІС‹Р·РѕРІРѕРј СЌС‚РѕРіРѕ РјРµС‚РѕРґР°, РІРµСЂРѕСЏРЅС‚РЅРѕ, СЃР»РµРґСѓРµС‚ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ UseDefaultSplash=false
     /// </summary>
     public void ClearClientStack()
     {
@@ -899,7 +899,7 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Проверка потока
+    #region РџСЂРѕРІРµСЂРєР° РїРѕС‚РѕРєР°
 
 #if DEBUG
 

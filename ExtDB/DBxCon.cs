@@ -336,7 +336,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Расширение интерфейса IDBxConReadOnlyBase на запросы, принимающие целочисленные идентификаторы первичного ключа.
-  /// Этот интерфейс реализуется также классом DBxGridProducer в ExtDBDocs.dll
+  /// Этот интерфейс реализуется также классом DBxDocProvider в ExtDBDocs.dll
   /// </summary>
   public interface IDBxConReadOnlyPKInt32 : IDBxConReadOnlyBase
   {

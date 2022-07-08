@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgeyevAV.ExtForms;
@@ -23,7 +23,7 @@ namespace TestCulture
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
   }

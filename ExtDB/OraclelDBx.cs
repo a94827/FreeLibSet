@@ -414,7 +414,9 @@ namespace FreeLibSet.Data.OracleClient
     /// </summary>
     public override void ClearPool()
     {
+#if !MONO
       OracleConnection.ClearPool(Connection);
+#endif
       base.ClearPool();
     }
 

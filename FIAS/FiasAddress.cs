@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,23 +11,23 @@ namespace FreeLibSet.FIAS
   #region FiasAbbreviationPlace
 
   /// <summary>
-  /// Положение типа адресного объекта относительно наименования
+  /// РџРѕР»РѕР¶РµРЅРёРµ С‚РёРїР° Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ
   /// </summary>
   [Serializable]
   public enum FiasAOTypePlace
   {
     /// <summary>
-    /// Сокращение не нужно
+    /// РЎРѕРєСЂР°С‰РµРЅРёРµ РЅРµ РЅСѓР¶РЅРѕ
     /// </summary>
     None,
 
     /// <summary>
-    /// Сокращение идет до наименования ("ул. Республики")
+    /// РЎРѕРєСЂР°С‰РµРЅРёРµ РёРґРµС‚ РґРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ ("СѓР». Р РµСЃРїСѓР±Р»РёРєРё")
     /// </summary>
     BeforeName,
 
     /// <summary>
-    /// Сокращение идет после наименования ("Тюменский р-н")
+    /// РЎРѕРєСЂР°С‰РµРЅРёРµ РёРґРµС‚ РїРѕСЃР»Рµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ ("РўСЋРјРµРЅСЃРєРёР№ СЂ-РЅ")
     /// </summary>
     AfterName
   }
@@ -35,16 +35,16 @@ namespace FreeLibSet.FIAS
   #endregion
 
   /// <summary>
-  /// Объект адреса. Содержит адрес, разложенный на компоненты, которые можно задавать по отдельности.
-  /// Этот класс не является потокобезопасным.
+  /// РћР±СЉРµРєС‚ Р°РґСЂРµСЃР°. РЎРѕРґРµСЂР¶РёС‚ Р°РґСЂРµСЃ, СЂР°Р·Р»РѕР¶РµРЅРЅС‹Р№ РЅР° РєРѕРјРїРѕРЅРµРЅС‚С‹, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ РїРѕ РѕС‚РґРµР»СЊРЅРѕСЃС‚Рё.
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   [Serializable]
   public sealed class FiasAddress : ICloneable
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой адрес
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ Р°РґСЂРµСЃ
     /// </summary>
     public FiasAddress()
     {
@@ -53,15 +53,15 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Внутреннее хранилище
+    #region Р’РЅСѓС‚СЂРµРЅРЅРµРµ С…СЂР°РЅРёР»РёС‰Рµ
 
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     private const FiasLevel LevelUnknownGuid = (FiasLevel)301;
     private const FiasLevel LevelAnyAOGuid = (FiasLevel)302;
     private const FiasLevel LevelRegionCode = (FiasLevel)311;
     private const FiasLevel LevelPostalCode = (FiasLevel)312;
-    private const FiasLevel LevelManualPostalCode = (FiasLevel)313; // для инвертированного свойства AutoPostalCode
+    private const FiasLevel LevelManualPostalCode = (FiasLevel)313; // РґР»СЏ РёРЅРІРµСЂС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ СЃРІРѕР№СЃС‚РІР° AutoPostalCode
     private const FiasLevel LevelFiasPostalCode = (FiasLevel)314;
     private const FiasLevel LevelOKATO = (FiasLevel)315;
     private const FiasLevel LevelOKTMO = (FiasLevel)316;
@@ -80,33 +80,33 @@ namespace FreeLibSet.FIAS
     #region FiasItemPart
 
     /// <summary>
-    /// Определяет, какую часть компонента адреса требуется получить/задать: наименование, тип адресного объекта или другую информацию
+    /// РћРїСЂРµРґРµР»СЏРµС‚, РєР°РєСѓСЋ С‡Р°СЃС‚СЊ РєРѕРјРїРѕРЅРµРЅС‚Р° Р°РґСЂРµСЃР° С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ/Р·Р°РґР°С‚СЊ: РЅР°РёРјРµРЅРѕРІР°РЅРёРµ, С‚РёРї Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РёР»Рё РґСЂСѓРіСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ
     /// </summary>
     [Serializable]
     private enum FiasItemPart
     {
       /// <summary>
-      /// Именная часть адреса ("Ленина")
+      /// РРјРµРЅРЅР°СЏ С‡Р°СЃС‚СЊ Р°РґСЂРµСЃР° ("Р›РµРЅРёРЅР°")
       /// </summary>
       Name = 0,
 
       /// <summary>
-      /// Полное наименование типа адресного объекта ("улица")
+      /// РџРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР° Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° ("СѓР»РёС†Р°")
       /// </summary>
       AOType = 1,
 
       /// <summary>
-      /// GUID адресного объекта, дома, квартиры
+      /// GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР°, РєРІР°СЂС‚РёСЂС‹
       /// </summary>
       Guid = 2,
 
       /// <summary>
-      /// Уникальный идентификатор записи в таблице AddrOb, House или Room
+      /// РЈРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ AddrOb, House РёР»Рё Room
       /// </summary>
       RecId = 3,
 
       /// <summary>
-      /// Почтовый индекс, коды, даты
+      /// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ, РєРѕРґС‹, РґР°С‚С‹
       /// </summary>
       Value = 4,
     }
@@ -114,7 +114,7 @@ namespace FreeLibSet.FIAS
     #endregion
 
     /// <summary>
-    /// Здесь хранятся все данные, кроме списка сообщений об ошибках
+    /// Р—РґРµСЃСЊ С…СЂР°РЅСЏС‚СЃСЏ РІСЃРµ РґР°РЅРЅС‹Рµ, РєСЂРѕРјРµ СЃРїРёСЃРєР° СЃРѕРѕР±С‰РµРЅРёР№ РѕР± РѕС€РёР±РєР°С…
     /// </summary>
     private readonly Dictionary<int, string> _Items;
 
@@ -139,13 +139,13 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если объект пустой
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЉРµРєС‚ РїСѓСЃС‚РѕР№
     /// </summary>
     public bool IsEmpty { get { return _Items.Count == 0; } }
 
     /// <summary>
-    /// Очищает объект адреса.
-    /// В том числе устанавливает AutoPostalCode=true.
+    /// РћС‡РёС‰Р°РµС‚ РѕР±СЉРµРєС‚ Р°РґСЂРµСЃР°.
+    /// Р’ С‚РѕРј С‡РёСЃР»Рµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ AutoPostalCode=true.
     /// </summary>
     public void Clear()
     {
@@ -153,12 +153,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Удаляет всю дополнительную информацию, кроме компонентов адреса, GUID'ов
-    /// Очищает почтовый индекс, код региона, ОКАТО, ОКТМО, коды ИФНС.
-    /// GUID'ы не удаляются
-    /// Очищает свойства DivType, Actuality, Live, StartDate и EndDate
+    /// РЈРґР°Р»СЏРµС‚ РІСЃСЋ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ, РєСЂРѕРјРµ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ Р°РґСЂРµСЃР°, GUID'РѕРІ
+    /// РћС‡РёС‰Р°РµС‚ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ, РєРѕРґ СЂРµРіРёРѕРЅР°, РћРљРђРўРћ, РћРљРўРњРћ, РєРѕРґС‹ РР¤РќРЎ.
+    /// GUID'С‹ РЅРµ СѓРґР°Р»СЏСЋС‚СЃСЏ
+    /// РћС‡РёС‰Р°РµС‚ СЃРІРѕР№СЃС‚РІР° DivType, Actuality, Live, StartDate Рё EndDate
     /// 
-    /// Свойство AutoPostalCode не меняется. Если AutoPostalCode=false, то почтовый индекс также не стирается.
+    /// РЎРІРѕР№СЃС‚РІРѕ AutoPostalCode РЅРµ РјРµРЅСЏРµС‚СЃСЏ. Р•СЃР»Рё AutoPostalCode=false, С‚Рѕ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ С‚Р°РєР¶Рµ РЅРµ СЃС‚РёСЂР°РµС‚СЃСЏ.
     /// </summary>
     public void ClearAuxInfo()
     {
@@ -180,11 +180,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Очищает все данные для уровней адресных объектов, кроме зданий и помещений
+    /// РћС‡РёС‰Р°РµС‚ РІСЃРµ РґР°РЅРЅС‹Рµ РґР»СЏ СѓСЂРѕРІРЅРµР№ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, РєСЂРѕРјРµ Р·РґР°РЅРёР№ Рё РїРѕРјРµС‰РµРЅРёР№
     /// </summary>
     internal void ClearAOLevels()
     {
-      AOGuid = Guid.Empty; // очищаем "неопределенный" GUID
+      AOGuid = Guid.Empty; // РѕС‡РёС‰Р°РµРј "РЅРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№" GUID
       AORecId = Guid.Empty;
       for (int i = 0; i < FiasTools.AOLevels.Length; i++)
         ClearLevel(FiasTools.AOLevels[i]);
@@ -193,77 +193,77 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Наименование и тип адресообразующего элемента
+    #region РќР°РёРјРµРЅРѕРІР°РЅРёРµ Рё С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
 
     /// <summary>
-    /// Получить наименование адресообразующего элемента (без типа) для уровня
+    /// РџРѕР»СѓС‡РёС‚СЊ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° (Р±РµР· С‚РёРїР°) РґР»СЏ СѓСЂРѕРІРЅСЏ
     /// </summary>
-    /// <param name="level">Уровень</param>
-    ///<returns>Наименование</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    ///<returns>РќР°РёРјРµРЅРѕРІР°РЅРёРµ</returns>
     public string GetName(FiasLevel level)
     {
       if (!FiasTools.AllLevelIndexer.Contains(level))
-        throw new ArgumentOutOfRangeException("level", level, "Уровень должен быть в списке FiasTools.AllLevels");
+        throw new ArgumentOutOfRangeException("level", level, "РЈСЂРѕРІРµРЅСЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ FiasTools.AllLevels");
       return InternalGetString(level, FiasItemPart.Name);
     }
 
     /// <summary>
-    /// Установить наименование адресообразующего элемента (без типа) для уровня
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° (Р±РµР· С‚РёРїР°) РґР»СЏ СѓСЂРѕРІРЅСЏ
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="value">Наименование</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="value">РќР°РёРјРµРЅРѕРІР°РЅРёРµ</param>
     public void SetName(FiasLevel level, string value)
     {
       if (!FiasTools.AllLevelIndexer.Contains(level))
-        throw new ArgumentOutOfRangeException("level", level, "Уровень должен быть в списке FiasTools.AllLevels");
+        throw new ArgumentOutOfRangeException("level", level, "РЈСЂРѕРІРµРЅСЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ FiasTools.AllLevels");
       InternalSetString(level, FiasItemPart.Name, value);
     }
 
     /// <summary>
-    /// Получить тип адресообразующего элемента для уровня.
-    /// Используется полное наименование типа, то есть "улица", а не "ул.".
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РґР»СЏ СѓСЂРѕРІРЅСЏ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР°, С‚Рѕ РµСЃС‚СЊ "СѓР»РёС†Р°", Р° РЅРµ "СѓР».".
     /// </summary>
-    /// <param name="level">Уровень</param>
-    ///<returns>Тип адресного объекта </returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    ///<returns>РўРёРї Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° </returns>
     public string GetAOType(FiasLevel level)
     {
       if (!FiasTools.AllLevelIndexer.Contains(level))
-        throw new ArgumentOutOfRangeException("level", level, "Уровень должен быть в списке FiasTools.AllLevels");
+        throw new ArgumentOutOfRangeException("level", level, "РЈСЂРѕРІРµРЅСЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ FiasTools.AllLevels");
       return InternalGetString(level, FiasItemPart.AOType);
     }
 
     /// <summary>
-    /// Установить тип адресообразующего элемента для уровня.
-    /// Используется полное наименование типа, то есть "улица", а не "ул.".
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РґР»СЏ СѓСЂРѕРІРЅСЏ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР°, С‚Рѕ РµСЃС‚СЊ "СѓР»РёС†Р°", Р° РЅРµ "СѓР».".
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="value">тип адресного объекта </param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="value">С‚РёРї Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° </param>
     public void SetAOType(FiasLevel level, string value)
     {
       if (!FiasTools.AllLevelIndexer.Contains(level))
-        throw new ArgumentOutOfRangeException("level", level, "Уровень должен быть в списке FiasTools.AllLevels");
+        throw new ArgumentOutOfRangeException("level", level, "РЈСЂРѕРІРµРЅСЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ FiasTools.AllLevels");
       InternalSetString(level, FiasItemPart.AOType, value);
     }
 
     /// <summary>
-    /// Устанавливает тип адресообразующего элемента по умолчанию, используя FiasTools.GetDefaultAOType().
-    /// Если для уровня не определен тип по умолчанию, устанавливается пустая строка.
-    /// Текущее наименование элемента не проверяется.
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, РёСЃРїРѕР»СЊР·СѓСЏ FiasTools.GetDefaultAOType().
+    /// Р•СЃР»Рё РґР»СЏ СѓСЂРѕРІРЅСЏ РЅРµ РѕРїСЂРµРґРµР»РµРЅ С‚РёРї РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
+    /// РўРµРєСѓС‰РµРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ СЌР»РµРјРµРЅС‚Р° РЅРµ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="level">Уровень</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
     public void SetDefaultAOType(FiasLevel level)
     {
       SetAOType(level, FiasTools.GetDefaultAOType(level));
     }
 
     /// <summary>
-    /// Доступ к компонентам адреса в режиме "Имя плюс тип адресообразующего элемента" именно в таком порядке, то есть "Ленина улица".
-    /// Это свойство обычно не следует использовать. Имя и тип удобнее задавать по отдельности.
-    /// Для текстового вывода следует использовать метод FiasHandler.Format(), который обеспечивает правильный порядок имени и типа, 
-    /// и использует сокращения.
+    /// Р”РѕСЃС‚СѓРї Рє РєРѕРјРїРѕРЅРµРЅС‚Р°Рј Р°РґСЂРµСЃР° РІ СЂРµР¶РёРјРµ "РРјСЏ РїР»СЋСЃ С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°" РёРјРµРЅРЅРѕ РІ С‚Р°РєРѕРј РїРѕСЂСЏРґРєРµ, С‚Рѕ РµСЃС‚СЊ "Р›РµРЅРёРЅР° СѓР»РёС†Р°".
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РѕР±С‹С‡РЅРѕ РЅРµ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ. РРјСЏ Рё С‚РёРї СѓРґРѕР±РЅРµРµ Р·Р°РґР°РІР°С‚СЊ РїРѕ РѕС‚РґРµР»СЊРЅРѕСЃС‚Рё.
+    /// Р”Р»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ РІС‹РІРѕРґР° СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РјРµС‚РѕРґ FiasHandler.Format(), РєРѕС‚РѕСЂС‹Р№ РѕР±РµСЃРїРµС‡РёРІР°РµС‚ РїСЂР°РІРёР»СЊРЅС‹Р№ РїРѕСЂСЏРґРѕРє РёРјРµРЅРё Рё С‚РёРїР°, 
+    /// Рё РёСЃРїРѕР»СЊР·СѓРµС‚ СЃРѕРєСЂР°С‰РµРЅРёСЏ.
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <returns>Часть адреса</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <returns>Р§Р°СЃС‚СЊ Р°РґСЂРµСЃР°</returns>
     public string this[FiasLevel level]
     {
       get
@@ -299,11 +299,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Очищает один уровень: наименование, сокращение, GUID и RecId.
-    /// Другие уровни не меняются.
-    /// Уровни House/Building/Structure и Flat/Room различаются.
+    /// РћС‡РёС‰Р°РµС‚ РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ: РЅР°РёРјРµРЅРѕРІР°РЅРёРµ, СЃРѕРєСЂР°С‰РµРЅРёРµ, GUID Рё RecId.
+    /// Р”СЂСѓРіРёРµ СѓСЂРѕРІРЅРё РЅРµ РјРµРЅСЏСЋС‚СЃСЏ.
+    /// РЈСЂРѕРІРЅРё House/Building/Structure Рё Flat/Room СЂР°Р·Р»РёС‡Р°СЋС‚СЃСЏ.
     /// </summary>
-    /// <param name="level">Очищаемый уровень</param>
+    /// <param name="level">РћС‡РёС‰Р°РµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ</param>
     public void ClearLevel(FiasLevel level)
     {
       InternalSetString(level, FiasItemPart.Name, String.Empty);
@@ -314,12 +314,12 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Очищает все уровни, которые находятся ниже заданного.
-    /// Уровень <paramref name="level"/> и вышележащие не меняются.
-    /// Если <paramref name="level"/>=Unknown, очищаются все уровни.
-    /// Уровни House/Building/Structure и Flat/Room различаются.
+    /// РћС‡РёС‰Р°РµС‚ РІСЃРµ СѓСЂРѕРІРЅРё, РєРѕС‚РѕСЂС‹Рµ РЅР°С…РѕРґСЏС‚СЃСЏ РЅРёР¶Рµ Р·Р°РґР°РЅРЅРѕРіРѕ.
+    /// РЈСЂРѕРІРµРЅСЊ <paramref name="level"/> Рё РІС‹С€РµР»РµР¶Р°С‰РёРµ РЅРµ РјРµРЅСЏСЋС‚СЃСЏ.
+    /// Р•СЃР»Рё <paramref name="level"/>=Unknown, РѕС‡РёС‰Р°СЋС‚СЃСЏ РІСЃРµ СѓСЂРѕРІРЅРё.
+    /// РЈСЂРѕРІРЅРё House/Building/Structure Рё Flat/Room СЂР°Р·Р»РёС‡Р°СЋС‚СЃСЏ.
     /// </summary>
-    /// <param name="level">Последний сохраняемый уровень</param>
+    /// <param name="level">РџРѕСЃР»РµРґРЅРёР№ СЃРѕС…СЂР°РЅСЏРµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ</param>
     public void ClearBelow(FiasLevel level)
     {
       int p = FiasTools.AllLevelIndexer.IndexOf(level);
@@ -329,12 +329,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Очищает все уровни, начиная с заданного, и ниже.
-    /// Уровени выше <paramref name="level"/> не меняются.
-    /// Если <paramref name="level"/>=Unknown, выбрасывается исключение.
-    /// Уровни House/Building/Structure и Flat/Room различаются.
+    /// РћС‡РёС‰Р°РµС‚ РІСЃРµ СѓСЂРѕРІРЅРё, РЅР°С‡РёРЅР°СЏ СЃ Р·Р°РґР°РЅРЅРѕРіРѕ, Рё РЅРёР¶Рµ.
+    /// РЈСЂРѕРІРµРЅРё РІС‹С€Рµ <paramref name="level"/> РЅРµ РјРµРЅСЏСЋС‚СЃСЏ.
+    /// Р•СЃР»Рё <paramref name="level"/>=Unknown, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ.
+    /// РЈСЂРѕРІРЅРё House/Building/Structure Рё Flat/Room СЂР°Р·Р»РёС‡Р°СЋС‚СЃСЏ.
     /// </summary>
-    /// <param name="level">Первый очищаемый уровень</param>
+    /// <param name="level">РџРµСЂРІС‹Р№ РѕС‡РёС‰Р°РµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ</param>
     public void ClearStartingWith(FiasLevel level)
     {
       int p = FiasTools.AllLevelIndexer.IndexOf(level);
@@ -346,9 +346,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает последний уровень, для которого есть заполненное наименование.
-    /// Если ни уровень не заполнен, возвращает FiasLevel.Unknown.
-    /// Уровни House/Building/Structure и Flat/Room различаются.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёР№ СѓСЂРѕРІРµРЅСЊ, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РµСЃС‚СЊ Р·Р°РїРѕР»РЅРµРЅРЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ.
+    /// Р•СЃР»Рё РЅРё СѓСЂРѕРІРµРЅСЊ РЅРµ Р·Р°РїРѕР»РЅРµРЅ, РІРѕР·РІСЂР°С‰Р°РµС‚ FiasLevel.Unknown.
+    /// РЈСЂРѕРІРЅРё House/Building/Structure Рё Flat/Room СЂР°Р·Р»РёС‡Р°СЋС‚СЃСЏ.
     /// </summary>
     public FiasLevel NameBottomLevel
     {
@@ -367,16 +367,16 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если в адресе заполнен указанный уровень или уровень ниже заданного.
-    /// Если <paramref name="level"/>=FiasLevel.Unknown, то выбрасывается исключение
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ Р°РґСЂРµСЃРµ Р·Р°РїРѕР»РЅРµРЅ СѓРєР°Р·Р°РЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ РёР»Рё СѓСЂРѕРІРµРЅСЊ РЅРёР¶Рµ Р·Р°РґР°РЅРЅРѕРіРѕ.
+    /// Р•СЃР»Рё <paramref name="level"/>=FiasLevel.Unknown, С‚Рѕ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="level">Проверяемый уровень</param>
-    /// <returns>Наличие уровня</returns>
+    /// <param name="level">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ</param>
+    /// <returns>РќР°Р»РёС‡РёРµ СѓСЂРѕРІРЅСЏ</returns>
     public bool ContainsLevelOrBelow(FiasLevel level)
     {
       int p = FiasTools.AOLevelIndexer.IndexOf(level);
       if (p < 0)
-        throw new ArgumentException("Неизвестный уровень: " + level.ToString(), "level");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ СѓСЂРѕРІРµРЅСЊ: " + level.ToString(), "level");
       for (int i = p; i < FiasTools.AllLevels.Length; i++)
       {
         if (GetName(FiasTools.AllLevels[i]).Length > 0)
@@ -386,11 +386,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает предыдущий заполненный уровень адреса, расположенный выше заданного.
-    /// Если выше заданного уровня нет заполненных уровней, возвращается Unknown.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС‹РґСѓС‰РёР№ Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР°, СЂР°СЃРїРѕР»РѕР¶РµРЅРЅС‹Р№ РІС‹С€Рµ Р·Р°РґР°РЅРЅРѕРіРѕ.
+    /// Р•СЃР»Рё РІС‹С€Рµ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ РЅРµС‚ Р·Р°РїРѕР»РЅРµРЅРЅС‹С… СѓСЂРѕРІРЅРµР№, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Unknown.
     /// </summary>
-    /// <param name="level">Уровень, выше которого выполняется проверка</param>
-    /// <returns>Предыдущий заполненный уровень</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ, РІС‹С€Рµ РєРѕС‚РѕСЂРѕРіРѕ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРѕРІРµСЂРєР°</param>
+    /// <returns>РџСЂРµРґС‹РґСѓС‰РёР№ Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ</returns>
     public FiasLevel GetPrevLevel(FiasLevel level)
     {
       level = CorrectLevel(level);
@@ -417,7 +417,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если заполнено наименование адресного объекат какого-либо уровня от региона до улицы включительно
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·Р°РїРѕР»РЅРµРЅРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєР°С‚ РєР°РєРѕРіРѕ-Р»РёР±Рѕ СѓСЂРѕРІРЅСЏ РѕС‚ СЂРµРіРёРѕРЅР° РґРѕ СѓР»РёС†С‹ РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ
     /// </summary>
     public bool ContainsAddrObName
     {
@@ -433,7 +433,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если задан номер дома, корпуса или строения
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·Р°РґР°РЅ РЅРѕРјРµСЂ РґРѕРјР°, РєРѕСЂРїСѓСЃР° РёР»Рё СЃС‚СЂРѕРµРЅРёСЏ
     /// </summary>
     public bool ContainsHouseNum
     {
@@ -446,7 +446,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если задан номер квартиры или помещения
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·Р°РґР°РЅ РЅРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹ РёР»Рё РїРѕРјРµС‰РµРЅРёСЏ
     /// </summary>
     public bool ContainsRoomNum
     {
@@ -458,8 +458,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает список уровней, для которых заполнено название.
-    /// Уровни House/Buiding/Structure и Flat/Room различаются
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє СѓСЂРѕРІРЅРµР№, РґР»СЏ РєРѕС‚РѕСЂС‹С… Р·Р°РїРѕР»РЅРµРЅРѕ РЅР°Р·РІР°РЅРёРµ.
+    /// РЈСЂРѕРІРЅРё House/Buiding/Structure Рё Flat/Room СЂР°Р·Р»РёС‡Р°СЋС‚СЃСЏ
     /// </summary>
     public FiasLevelSet NameLevels
     {
@@ -476,13 +476,13 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Выполнить копирование наименований и типов адресообразующих элементов из текущего адреса в другой.
-    /// GUIDы, идентификаторы записей, почтовый индекс, сообщения об ошибках не копируются.
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ РєРѕРїРёСЂРѕРІР°РЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ Рё С‚РёРїРѕРІ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ РёР· С‚РµРєСѓС‰РµРіРѕ Р°РґСЂРµСЃР° РІ РґСЂСѓРіРѕР№.
+    /// GUIDС‹, РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРµР№, РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ, СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєР°С… РЅРµ РєРѕРїРёСЂСѓСЋС‚СЃСЏ.
     /// </summary>
-    /// <param name="dest">Заполняемый адресный объект</param>
-    /// <param name="levels">Копируемые уровни. 
-    /// Если в текущем адресе для уровня из набора нет значения, то уровень очищается.
-    /// В заполнямом адресе уровни, не перечисленные в наборе, не заменяются</param>
+    /// <param name="dest">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ Р°РґСЂРµСЃРЅС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="levels">РљРѕРїРёСЂСѓРµРјС‹Рµ СѓСЂРѕРІРЅРё. 
+    /// Р•СЃР»Рё РІ С‚РµРєСѓС‰РµРј Р°РґСЂРµСЃРµ РґР»СЏ СѓСЂРѕРІРЅСЏ РёР· РЅР°Р±РѕСЂР° РЅРµС‚ Р·РЅР°С‡РµРЅРёСЏ, С‚Рѕ СѓСЂРѕРІРµРЅСЊ РѕС‡РёС‰Р°РµС‚СЃСЏ.
+    /// Р’ Р·Р°РїРѕР»РЅСЏРјРѕРј Р°РґСЂРµСЃРµ СѓСЂРѕРІРЅРё, РЅРµ РїРµСЂРµС‡РёСЃР»РµРЅРЅС‹Рµ РІ РЅР°Р±РѕСЂРµ, РЅРµ Р·Р°РјРµРЅСЏСЋС‚СЃСЏ</param>
     public void CopyNamesTo(FiasAddress dest, FiasLevelSet levels)
     {
 #if DEBUG
@@ -502,96 +502,96 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Именные свойства компонентов адреса
+    #region РРјРµРЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР° РєРѕРјРїРѕРЅРµРЅС‚РѕРІ Р°РґСЂРµСЃР°
 #if XXX
     /// <summary>
-    /// Наименование региона ("Тюменская обл")
+    /// РќР°РёРјРµРЅРѕРІР°РЅРёРµ СЂРµРіРёРѕРЅР° ("РўСЋРјРµРЅСЃРєР°СЏ РѕР±Р»")
     /// </summary>    
     public string Region { get { return this[FiasLevel.Region]; } set { this[FiasLevel.Region] = value; } }
 
     /// <summary>
-    /// Автономный округ (устаревшее)
+    /// РђРІС‚РѕРЅРѕРјРЅС‹Р№ РѕРєСЂСѓРі (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     public string AutonomousArea { get { return this[FiasLevel.AutonomousArea]; } set { this[FiasLevel.AutonomousArea] = value; } }
 
     /// <summary>
-    /// Район ("Тюменский р-н")
+    /// Р Р°Р№РѕРЅ ("РўСЋРјРµРЅСЃРєРёР№ СЂ-РЅ")
     /// </summary>
     public string District { get { return this[FiasLevel.District]; } set { this[FiasLevel.District] = value; } }
 
     /// <summary>
-    /// Городское/сельское поселение
+    /// Р“РѕСЂРѕРґСЃРєРѕРµ/СЃРµР»СЊСЃРєРѕРµ РїРѕСЃРµР»РµРЅРёРµ
     /// </summary>
     public string Settlement { get { return this[FiasLevel.Settlement]; } set { this[FiasLevel.Settlement] = value; } }
 
     /// <summary>
-    /// Город
+    /// Р“РѕСЂРѕРґ
     /// </summary>
     public string City { get { return this[FiasLevel.City]; } set { this[FiasLevel.City] = value; } }
 
     /// <summary>
-    /// Внутригородская территория (устаревшее)
+    /// Р’РЅСѓС‚СЂРёРіРѕСЂРѕРґСЃРєР°СЏ С‚РµСЂСЂРёС‚РѕСЂРёСЏ (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     public string InnerCityArea { get { return this[FiasLevel.InnerCityArea]; } set { this[FiasLevel.InnerCityArea] = value; } }
 
     /// <summary>
-    /// Населенный пункт
+    /// РќР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚
     /// </summary>
     public string Village { get { return this[FiasLevel.Village]; } set { this[FiasLevel.Village] = value; } }
 
     /// <summary>
-    /// Планировочная структура
+    /// РџР»Р°РЅРёСЂРѕРІРѕС‡РЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°
     /// </summary>
     public string PlanningStructure { get { return this[FiasLevel.PlanningStructure]; } set { this[FiasLevel.PlanningStructure] = value; } }
 
     /// <summary>
-    /// Улица
+    /// РЈР»РёС†Р°
     /// </summary>
     public string Street { get { return this[FiasLevel.Street]; } set { this[FiasLevel.Street] = value; } }
 
     /// <summary>
-    /// Земельный участок
+    /// Р—РµРјРµР»СЊРЅС‹Р№ СѓС‡Р°СЃС‚РѕРє
     /// </summary>
     public string LandPlot { get { return this[FiasLevel.LandPlot]; } set { this[FiasLevel.LandPlot] = value; } }
 
     /// <summary>
-    /// Здание, сооружение, объект незавершенного строительства
+    /// Р—РґР°РЅРёРµ, СЃРѕРѕСЂСѓР¶РµРЅРёРµ, РѕР±СЉРµРєС‚ РЅРµР·Р°РІРµСЂС€РµРЅРЅРѕРіРѕ СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІР°
     /// </summary>
     public string House { get { return this[FiasLevel.House]; } set { this[FiasLevel.House] = value; } }
 
     /// <summary>
-    /// Помещение в пределах здания, сооружения
+    /// РџРѕРјРµС‰РµРЅРёРµ РІ РїСЂРµРґРµР»Р°С… Р·РґР°РЅРёСЏ, СЃРѕРѕСЂСѓР¶РµРЅРёСЏ
     /// </summary>
     public string Flat { get { return this[FiasLevel.Flat]; } set { this[FiasLevel.Flat] = value; } }
 
     /// <summary>
-    /// Дополнительная территория (устаревшее)
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ С‚РµСЂСЂРёС‚РѕСЂРёСЏ (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     public string AdditionalTerritory { get { return this[FiasLevel.AdditionalTerritory]; } set { this[FiasLevel.AdditionalTerritory] = value; } }
 
     /// <summary>
-    /// Объект на дополнительной территории (устаревшее)
+    /// РћР±СЉРµРєС‚ РЅР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ С‚РµСЂСЂРёС‚РѕСЂРёРё (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     public string AdditionalTerritoryObject { get { return this[FiasLevel.AdditionalTerritoryObject]; } set { this[FiasLevel.AdditionalTerritoryObject] = value; } }
 
     /// <summary>
-    /// Корпус
+    /// РљРѕСЂРїСѓСЃ
     /// </summary>
     public string Buiding { get { return this[FiasLevel.Building]; } set { this[FiasLevel.Building] = value; } }
 
     /// <summary>
-    /// Строение
+    /// РЎС‚СЂРѕРµРЅРёРµ
     /// </summary>
     public string Structure { get { return this[FiasLevel.Structure]; } set { this[FiasLevel.Structure] = value; } }
 
     /// <summary>
-    /// Комната
+    /// РљРѕРјРЅР°С‚Р°
     /// </summary>
     public string Room { get { return this[FiasLevel.Room]; } set { this[FiasLevel.Room] = value; } }
 #endif
     #endregion
 
-    #region Guid'ы
+    #region Guid'С‹
 
     private void InternalSetGuid(FiasLevel level, FiasItemPart part, Guid value)
     {
@@ -611,8 +611,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Для зданий и помещений есть несколько уровней для наименований, но GUIDы у них общие.
-    /// Для зданий возвращается FiasLevel.House, а для помещений - FiasLevel.Flat
+    /// Р”Р»СЏ Р·РґР°РЅРёР№ Рё РїРѕРјРµС‰РµРЅРёР№ РµСЃС‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ СѓСЂРѕРІРЅРµР№ РґР»СЏ РЅР°РёРјРµРЅРѕРІР°РЅРёР№, РЅРѕ GUIDС‹ Сѓ РЅРёС… РѕР±С‰РёРµ.
+    /// Р”Р»СЏ Р·РґР°РЅРёР№ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FiasLevel.House, Р° РґР»СЏ РїРѕРјРµС‰РµРЅРёР№ - FiasLevel.Flat
     /// </summary>
     /// <param name="level"></param>
     /// <returns></returns>
@@ -622,7 +622,7 @@ namespace FreeLibSet.FIAS
         return FiasLevel.Unknown;
 
       if (!FiasTools.AllLevelIndexer.Contains(level))
-        throw new ArgumentOutOfRangeException("level", level, "Уровень должен быть в списке FiasTools.AllLevels");
+        throw new ArgumentOutOfRangeException("level", level, "РЈСЂРѕРІРµРЅСЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ FiasTools.AllLevels");
       switch (level)
       {
         case FiasLevel.House:
@@ -638,10 +638,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Получение GUIDа для уровня адресного объекта, дома или квартиры.
-    /// Возвращает Guid.Empty, если соответствующий GUID не задан
+    /// РџРѕР»СѓС‡РµРЅРёРµ GUIDР° РґР»СЏ СѓСЂРѕРІРЅСЏ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РёР»Рё РєРІР°СЂС‚РёСЂС‹.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Guid.Empty, РµСЃР»Рё СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ GUID РЅРµ Р·Р°РґР°РЅ
     /// </summary>
-    /// <param name="level">Уровень</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
     /// <returns>GUID</returns>
     public Guid GetGuid(FiasLevel level)
     {
@@ -649,11 +649,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Установка GUIDа для уровня адресного объекта, дома или квартиры.
-    /// Следует учитывать, что для уровней <paramref name="level"/>=House, Building и Construction
-    /// храниться единственный GUID, как и для уровней Flat и Room. Установка для одного уровня отражается для всех уровней.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° GUIDР° РґР»СЏ СѓСЂРѕРІРЅСЏ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РёР»Рё РєРІР°СЂС‚РёСЂС‹.
+    /// РЎР»РµРґСѓРµС‚ СѓС‡РёС‚С‹РІР°С‚СЊ, С‡С‚Рѕ РґР»СЏ СѓСЂРѕРІРЅРµР№ <paramref name="level"/>=House, Building Рё Construction
+    /// С…СЂР°РЅРёС‚СЊСЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ GUID, РєР°Рє Рё РґР»СЏ СѓСЂРѕРІРЅРµР№ Flat Рё Room. РЈСЃС‚Р°РЅРѕРІРєР° РґР»СЏ РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ РѕС‚СЂР°Р¶Р°РµС‚СЃСЏ РґР»СЏ РІСЃРµС… СѓСЂРѕРІРЅРµР№.
     /// </summary>
-    /// <param name="level">Уровень</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
     /// <param name="value">GUID</param>
     public void SetGuid(FiasLevel level, Guid value)
     {
@@ -661,9 +661,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// GUID адресного объекта.
-    /// Возвращает GUID объекта самого вложенного уровня (обычно, улицы).
-    /// Установка свойства задает GUID, не привязанный к конкретному уровню
+    /// GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ GUID РѕР±СЉРµРєС‚Р° СЃР°РјРѕРіРѕ РІР»РѕР¶РµРЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ (РѕР±С‹С‡РЅРѕ, СѓР»РёС†С‹).
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° Р·Р°РґР°РµС‚ GUID, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅС‹Р№ Рє РєРѕРЅРєСЂРµС‚РЅРѕРјСѓ СѓСЂРѕРІРЅСЋ
     /// </summary>
     public Guid AOGuid
     {
@@ -687,9 +687,9 @@ namespace FreeLibSet.FIAS
       }
     }
     /// <summary>
-    /// GUID адресного объекта, дома или квартиры.
-    /// Если поиск по устойчивым идентификаторам адресных объектов заканчивается неудачно,
-    /// выполняется поиск по "неустойчивым" идентификаторам AORecId, HouseRecId и RoomRecId.
+    /// GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РёР»Рё РєРІР°СЂС‚РёСЂС‹.
+    /// Р•СЃР»Рё РїРѕРёСЃРє РїРѕ СѓСЃС‚РѕР№С‡РёРІС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°Рј Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ РЅРµСѓРґР°С‡РЅРѕ,
+    /// РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє РїРѕ "РЅРµСѓСЃС‚РѕР№С‡РёРІС‹Рј" РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°Рј AORecId, HouseRecId Рё RoomRecId.
     /// </summary>
     public Guid UnknownGuid
     {
@@ -704,8 +704,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// GUID здания.
-    /// Эквивалентно вызову методов GetGuid()/SetGuid для FiasLevel.House
+    /// GUID Р·РґР°РЅРёСЏ.
+    /// Р­РєРІРёРІР°Р»РµРЅС‚РЅРѕ РІС‹Р·РѕРІСѓ РјРµС‚РѕРґРѕРІ GetGuid()/SetGuid РґР»СЏ FiasLevel.House
     /// </summary>
     public Guid HouseGuid
     {
@@ -714,8 +714,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// GUID помещения.
-    /// Эквивалентно вызову методов GetGuid()/SetGuid для FiasLevel.Room
+    /// GUID РїРѕРјРµС‰РµРЅРёСЏ.
+    /// Р­РєРІРёРІР°Р»РµРЅС‚РЅРѕ РІС‹Р·РѕРІСѓ РјРµС‚РѕРґРѕРІ GetGuid()/SetGuid РґР»СЏ FiasLevel.Room
     /// </summary>
     public Guid RoomGuid
     {
@@ -724,13 +724,13 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает самый вложенный компонент адреса, для которого задан GUID
-    /// (Помещение, Дом, Улица, ...).
-    /// AOGuid и UnknownGuid не считаются.
-    /// Если ни одного GUID'а не определено, возвращается FiasLevel.Unknown
-    /// Если задан Guid для дома, то возвращается FiasLevel.House, а не FiasLevel.Structure, несмотря на то,
-    /// что GetGuid(FiasLevel.Structure) также возвращает значение.
-    /// Аналогично, для помещения возвращается значение FiasLevel.Flat, а не Room
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР°РјС‹Р№ РІР»РѕР¶РµРЅРЅС‹Р№ РєРѕРјРїРѕРЅРµРЅС‚ Р°РґСЂРµСЃР°, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РґР°РЅ GUID
+    /// (РџРѕРјРµС‰РµРЅРёРµ, Р”РѕРј, РЈР»РёС†Р°, ...).
+    /// AOGuid Рё UnknownGuid РЅРµ СЃС‡РёС‚Р°СЋС‚СЃСЏ.
+    /// Р•СЃР»Рё РЅРё РѕРґРЅРѕРіРѕ GUID'Р° РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FiasLevel.Unknown
+    /// Р•СЃР»Рё Р·Р°РґР°РЅ Guid РґР»СЏ РґРѕРјР°, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FiasLevel.House, Р° РЅРµ FiasLevel.Structure, РЅРµСЃРјРѕС‚СЂСЏ РЅР° С‚Рѕ,
+    /// С‡С‚Рѕ GetGuid(FiasLevel.Structure) С‚Р°РєР¶Рµ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ.
+    /// РђРЅР°Р»РѕРіРёС‡РЅРѕ, РґР»СЏ РїРѕРјРµС‰РµРЅРёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ FiasLevel.Flat, Р° РЅРµ Room
     /// </summary>
     public FiasLevel GuidBottomLevel
     {
@@ -750,7 +750,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Очищает все GUIDы, включая UnknownGuid и AOGuid
+    /// РћС‡РёС‰Р°РµС‚ РІСЃРµ GUIDС‹, РІРєР»СЋС‡Р°СЏ UnknownGuid Рё AOGuid
     /// </summary>
     public void ClearGuids()
     {
@@ -758,11 +758,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Стирает GUIDы, начиная с заданного уровня и до уровня Flat включительно.
-    /// Также очищает UnknownGuid и AOGuid
+    /// РЎС‚РёСЂР°РµС‚ GUIDС‹, РЅР°С‡РёРЅР°СЏ СЃ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ Рё РґРѕ СѓСЂРѕРІРЅСЏ Flat РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ.
+    /// РўР°РєР¶Рµ РѕС‡РёС‰Р°РµС‚ UnknownGuid Рё AOGuid
     /// </summary>
-    /// <param name="level">Самый верхний уровень, который нужно очистить. Если FiasLevel.Region,
-    /// то будут очищены все Guidы</param>
+    /// <param name="level">РЎР°РјС‹Р№ РІРµСЂС…РЅРёР№ СѓСЂРѕРІРµРЅСЊ, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РѕС‡РёСЃС‚РёС‚СЊ. Р•СЃР»Рё FiasLevel.Region,
+    /// С‚Рѕ Р±СѓРґСѓС‚ РѕС‡РёС‰РµРЅС‹ РІСЃРµ GuidС‹</param>
     public void ClearGuidsStartingWith(FiasLevel level)
     {
       int p;
@@ -791,10 +791,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Стирает GUIDы, начиная с уровня, ниже заданного, и до уровня Flat включительно.
-    /// Также очищает UnknownGuid и AOGuid
+    /// РЎС‚РёСЂР°РµС‚ GUIDС‹, РЅР°С‡РёРЅР°СЏ СЃ СѓСЂРѕРІРЅСЏ, РЅРёР¶Рµ Р·Р°РґР°РЅРЅРѕРіРѕ, Рё РґРѕ СѓСЂРѕРІРЅСЏ Flat РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ.
+    /// РўР°РєР¶Рµ РѕС‡РёС‰Р°РµС‚ UnknownGuid Рё AOGuid
     /// </summary>
-    /// <param name="level">Самый нижний уровень, который не нужно очищать. Если равно Guid.Unknown, будут очищены все уровни</param>
+    /// <param name="level">РЎР°РјС‹Р№ РЅРёР¶РЅРёР№ СѓСЂРѕРІРµРЅСЊ, РєРѕС‚РѕСЂС‹Р№ РЅРµ РЅСѓР¶РЅРѕ РѕС‡РёС‰Р°С‚СЊ. Р•СЃР»Рё СЂР°РІРЅРѕ Guid.Unknown, Р±СѓРґСѓС‚ РѕС‡РёС‰РµРЅС‹ РІСЃРµ СѓСЂРѕРІРЅРё</param>
     public void ClearGuidsBelow(FiasLevel level)
     {
       switch (level)
@@ -815,7 +815,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает устойчивый идентификатор объекта, если есть заданный, включая AOGuid и UnknownGuid
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°, РµСЃР»Рё РµСЃС‚СЊ Р·Р°РґР°РЅРЅС‹Р№, РІРєР»СЋС‡Р°СЏ AOGuid Рё UnknownGuid
     /// </summary>
     public Guid AnyGuid
     {
@@ -839,12 +839,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает список уровней, для которых заполнен устойчивый идентификатор записи.
-    /// Уровни House/Buiding/Structure и Flat/Room различаются в том смысле, что для них флажки устанавливаются,
-    /// только если заполнена соответствующая именная часть.
-    /// В промежуточном состоянии, до вызова FillAddress(), если, например, установлен HouseGuid, но имена не заполнены,
-    /// устанавливаются все уровни House, Building и Structure.
-    /// Идентификаторы, не привязанные к уровню (UnknownGuid, AOGuid) не учитываются.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє СѓСЂРѕРІРЅРµР№, РґР»СЏ РєРѕС‚РѕСЂС‹С… Р·Р°РїРѕР»РЅРµРЅ СѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё.
+    /// РЈСЂРѕРІРЅРё House/Buiding/Structure Рё Flat/Room СЂР°Р·Р»РёС‡Р°СЋС‚СЃСЏ РІ С‚РѕРј СЃРјС‹СЃР»Рµ, С‡С‚Рѕ РґР»СЏ РЅРёС… С„Р»Р°Р¶РєРё СѓСЃС‚Р°РЅР°РІР»РёРІР°СЋС‚СЃСЏ,
+    /// С‚РѕР»СЊРєРѕ РµСЃР»Рё Р·Р°РїРѕР»РЅРµРЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰Р°СЏ РёРјРµРЅРЅР°СЏ С‡Р°СЃС‚СЊ.
+    /// Р’ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё, РґРѕ РІС‹Р·РѕРІР° FillAddress(), РµСЃР»Рё, РЅР°РїСЂРёРјРµСЂ, СѓСЃС‚Р°РЅРѕРІР»РµРЅ HouseGuid, РЅРѕ РёРјРµРЅР° РЅРµ Р·Р°РїРѕР»РЅРµРЅС‹,
+    /// СѓСЃС‚Р°РЅР°РІР»РёРІР°СЋС‚СЃСЏ РІСЃРµ СѓСЂРѕРІРЅРё House, Building Рё Structure.
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅС‹Рµ Рє СѓСЂРѕРІРЅСЋ (UnknownGuid, AOGuid) РЅРµ СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ.
     /// </summary>
     public FiasLevelSet GuidLevels
     {
@@ -906,37 +906,37 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Идентификаторы записей
+    #region РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРµР№
 
     /// <summary>
-    /// Получение идентификатора записи для уровня адресного объекта (AOID), дома (HOUSEID) или квартиры (ROOMID).
-    /// Возвращает Guid.Empty, если соответствующий GUID не задан.
-    /// В прикладном коде обычно используются "устойчивые" GUIDы адресных объектов, а не идентификаторы записей.
+    /// РџРѕР»СѓС‡РµРЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° Р·Р°РїРёСЃРё РґР»СЏ СѓСЂРѕРІРЅСЏ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° (AOID), РґРѕРјР° (HOUSEID) РёР»Рё РєРІР°СЂС‚РёСЂС‹ (ROOMID).
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Guid.Empty, РµСЃР»Рё СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ GUID РЅРµ Р·Р°РґР°РЅ.
+    /// Р’ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ РѕР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ "СѓСЃС‚РѕР№С‡РёРІС‹Рµ" GUIDС‹ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, Р° РЅРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРµР№.
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <returns>Идентификаторы записи</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРё</returns>
     public Guid GetRecId(FiasLevel level)
     {
       return InternalGetGuid(CorrectLevel(level), FiasItemPart.RecId);
     }
 
     /// <summary>
-    /// Установка идентификатора записи для уровня адресного объекта, дома или квартиры.
-    /// Следует учитывать, что для уровней <paramref name="level"/>=House, Building и Construction
-    /// храниться единственный идентификатор, как и для уровней Flat и Room. Установка для одного уровня отражается для всех уровней.
-    /// В прикладном коде обычно используются "устойчивые" GUIDы адресных объектов, а не идентификаторы записей.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° Р·Р°РїРёСЃРё РґР»СЏ СѓСЂРѕРІРЅСЏ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РёР»Рё РєРІР°СЂС‚РёСЂС‹.
+    /// РЎР»РµРґСѓРµС‚ СѓС‡РёС‚С‹РІР°С‚СЊ, С‡С‚Рѕ РґР»СЏ СѓСЂРѕРІРЅРµР№ <paramref name="level"/>=House, Building Рё Construction
+    /// С…СЂР°РЅРёС‚СЊСЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ, РєР°Рє Рё РґР»СЏ СѓСЂРѕРІРЅРµР№ Flat Рё Room. РЈСЃС‚Р°РЅРѕРІРєР° РґР»СЏ РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ РѕС‚СЂР°Р¶Р°РµС‚СЃСЏ РґР»СЏ РІСЃРµС… СѓСЂРѕРІРЅРµР№.
+    /// Р’ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ РѕР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ "СѓСЃС‚РѕР№С‡РёРІС‹Рµ" GUIDС‹ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, Р° РЅРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРµР№.
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="value">Идентфикатор записи ФИАС</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="value">РРґРµРЅС‚С„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Р¤РРђРЎ</param>
     public void SetRecId(FiasLevel level, Guid value)
     {
       InternalSetGuid(CorrectLevel(level), FiasItemPart.RecId, value);
     }
 
     /// <summary>
-    /// Идкнтификатор записи адресного объекта.
-    /// Возвращает ID объекта самого вложенного уровня (обычно, улицы).
-    /// Установка свойства задает идентификатор, не привязанный к конкретному уровню
+    /// РРґРєРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ ID РѕР±СЉРµРєС‚Р° СЃР°РјРѕРіРѕ РІР»РѕР¶РµРЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ (РѕР±С‹С‡РЅРѕ, СѓР»РёС†С‹).
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° Р·Р°РґР°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅС‹Р№ Рє РєРѕРЅРєСЂРµС‚РЅРѕРјСѓ СѓСЂРѕРІРЅСЋ
     /// </summary>
     public Guid AORecId
     {
@@ -961,7 +961,7 @@ namespace FreeLibSet.FIAS
     }
 
     ///// <summary>
-    ///// GUID адресного объекта, дома или квартиры.
+    ///// GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РёР»Рё РєРІР°СЂС‚РёСЂС‹.
     ///// </summary>
     //public Guid UnknownGuid
     //{
@@ -980,10 +980,10 @@ namespace FreeLibSet.FIAS
     //}
 
     ///// <summary>
-    ///// Возвращает самый вложенный компонент адреса, для которого задан GUID
-    ///// (Помещение, Дом, Улица, ...).
-    ///// AOGuid и UnknownGuid не считаются.
-    ///// Если ни одного GUID'а не определено, возвращается FiasLevel.Unknown
+    ///// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР°РјС‹Р№ РІР»РѕР¶РµРЅРЅС‹Р№ РєРѕРјРїРѕРЅРµРЅС‚ Р°РґСЂРµСЃР°, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РґР°РЅ GUID
+    ///// (РџРѕРјРµС‰РµРЅРёРµ, Р”РѕРј, РЈР»РёС†Р°, ...).
+    ///// AOGuid Рё UnknownGuid РЅРµ СЃС‡РёС‚Р°СЋС‚СЃСЏ.
+    ///// Р•СЃР»Рё РЅРё РѕРґРЅРѕРіРѕ GUID'Р° РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FiasLevel.Unknown
     ///// </summary>
     //public FiasLevel GuidBottomLevel
     //{
@@ -999,8 +999,8 @@ namespace FreeLibSet.FIAS
     //}
 
     /// <summary>
-    /// Очищает все идентификаторы записи.
-    /// Также очищает свойство AORecId.
+    /// РћС‡РёС‰Р°РµС‚ РІСЃРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРё.
+    /// РўР°РєР¶Рµ РѕС‡РёС‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ AORecId.
     /// </summary>
     public void ClearRecIds()
     {
@@ -1008,11 +1008,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Стирает идентификаторы записей, начиная с заданного уровня.
-    /// Также очищает свойство AORecId.
+    /// РЎС‚РёСЂР°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРµР№, РЅР°С‡РёРЅР°СЏ СЃ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ.
+    /// РўР°РєР¶Рµ РѕС‡РёС‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ AORecId.
     /// </summary>
-    /// <param name="level">Уровень, начиная с которого требуется выполнить очистку.
-    /// Если задано значение Region, будут очищены все уровни</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ, РЅР°С‡РёРЅР°СЏ СЃ РєРѕС‚РѕСЂРѕРіРѕ С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹РїРѕР»РЅРёС‚СЊ РѕС‡РёСЃС‚РєСѓ.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ Region, Р±СѓРґСѓС‚ РѕС‡РёС‰РµРЅС‹ РІСЃРµ СѓСЂРѕРІРЅРё</param>
     public void ClearRecIdsStartingWith(FiasLevel level)
     {
       int p;
@@ -1040,11 +1040,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Стирает идентификаторы записей, начиная с заданного уровня.
-    /// Также очищает свойство AORecId.
+    /// РЎС‚РёСЂР°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·Р°РїРёСЃРµР№, РЅР°С‡РёРЅР°СЏ СЃ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ.
+    /// РўР°РєР¶Рµ РѕС‡РёС‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ AORecId.
     /// </summary>
-    /// <param name="level">Уровень, начиная с которого требуется выполнить очистку.
-    /// Если задано значение Region, будут очищены все уровни</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ, РЅР°С‡РёРЅР°СЏ СЃ РєРѕС‚РѕСЂРѕРіРѕ С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹РїРѕР»РЅРёС‚СЊ РѕС‡РёСЃС‚РєСѓ.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ Region, Р±СѓРґСѓС‚ РѕС‡РёС‰РµРЅС‹ РІСЃРµ СѓСЂРѕРІРЅРё</param>
     public void ClearRecIdsBelow(FiasLevel level)
     {
       switch (level)
@@ -1067,10 +1067,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Коды, связанные с адресом
+    #region РљРѕРґС‹, СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ Р°РґСЂРµСЃРѕРј
 
     /// <summary>
-    /// Код региона
+    /// РљРѕРґ СЂРµРіРёРѕРЅР°
     /// </summary>
     public string RegionCode
     {
@@ -1079,8 +1079,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Если true (по умолчанию), то почтовый индекс берется из справочника ФИАС.
-    /// Если false, то индекс задан вручную и не будет перезаписан при загрузке адреса
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ Р±РµСЂРµС‚СЃСЏ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° Р¤РРђРЎ.
+    /// Р•СЃР»Рё false, С‚Рѕ РёРЅРґРµРєСЃ Р·Р°РґР°РЅ РІСЂСѓС‡РЅСѓСЋ Рё РЅРµ Р±СѓРґРµС‚ РїРµСЂРµР·Р°РїРёСЃР°РЅ РїСЂРё Р·Р°РіСЂСѓР·РєРµ Р°РґСЂРµСЃР°
     /// </summary>
     public bool AutoPostalCode
     {
@@ -1089,8 +1089,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Почтовый индекс.
-    /// Установка свойства имеет смысл только при AutoPostalCode=false.
+    /// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РёРјРµРµС‚ СЃРјС‹СЃР» С‚РѕР»СЊРєРѕ РїСЂРё AutoPostalCode=false.
     /// </summary>
     public string PostalCode
     {
@@ -1099,8 +1099,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Почтовый индекс, определенный в классификаторе ФИАС.
-    /// Это свойство может отличаться от PostalCode при AutoPostalCode=false
+    /// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ, РѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂРµ Р¤РРђРЎ.
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ РѕС‚Р»РёС‡Р°С‚СЊСЃСЏ РѕС‚ PostalCode РїСЂРё AutoPostalCode=false
     /// </summary>
     public string FiasPostalCode
     {
@@ -1114,7 +1114,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// ОКАТО
+    /// РћРљРђРўРћ
     /// </summary>
     public string OKATO
     {
@@ -1123,7 +1123,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// ОКТМО
+    /// РћРљРўРњРћ
     /// </summary>
     public string OKTMO
     {
@@ -1132,7 +1132,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ
+    /// РљРѕРґ РР¤РќРЎ Р¤Р›
     /// </summary>
     public string IFNSFL
     {
@@ -1141,7 +1141,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код территориального участка ИФНС ФЛ
+    /// РљРѕРґ С‚РµСЂСЂРёС‚РѕСЂРёР°Р»СЊРЅРѕРіРѕ СѓС‡Р°СЃС‚РєР° РР¤РќРЎ Р¤Р›
     /// </summary>
     public string TerrIFNSFL
     {
@@ -1150,7 +1150,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ
+    /// РљРѕРґ РР¤РќРЎ Р®Р›
     /// </summary>
     public string IFNSUL
     {
@@ -1159,7 +1159,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код территориального участка ИФНС ЮЛ
+    /// РљРѕРґ С‚РµСЂСЂРёС‚РѕСЂРёР°Р»СЊРЅРѕРіРѕ СѓС‡Р°СЃС‚РєР° РР¤РќРЎ Р®Р›
     /// </summary>
     public string TerrIFNSUL
     {
@@ -1169,7 +1169,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Прочие свойства адреса
+    #region РџСЂРѕС‡РёРµ СЃРІРѕР№СЃС‚РІР° Р°РґСЂРµСЃР°
 
     private void InternalSetInt(FiasLevel level, int value)
     {
@@ -1189,7 +1189,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Тип адресного деления
+    /// РўРёРї Р°РґСЂРµСЃРЅРѕРіРѕ РґРµР»РµРЅРёСЏ
     /// </summary>
     public FiasDivType DivType
     {
@@ -1204,8 +1204,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Актуальность адреса.
-    /// Определяется после загрузки адреса
+    /// РђРєС‚СѓР°Р»СЊРЅРѕСЃС‚СЊ Р°РґСЂРµСЃР°.
+    /// РћРїСЂРµРґРµР»СЏРµС‚СЃСЏ РїРѕСЃР»Рµ Р·Р°РіСЂСѓР·РєРё Р°РґСЂРµСЃР°
     /// </summary>
     public FiasActuality Actuality
     {
@@ -1237,7 +1237,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// True, если адресный объект помечен как действующий
+    /// True, РµСЃР»Рё Р°РґСЂРµСЃРЅС‹Р№ РѕР±СЉРµРєС‚ РїРѕРјРµС‡РµРЅ РєР°Рє РґРµР№СЃС‚РІСѓСЋС‰РёР№
     /// </summary>
     public bool? Live
     {
@@ -1250,7 +1250,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Даты действия записи
+    #region Р”Р°С‚С‹ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё
 
     private void InternalSetNullableDate(FiasLevel level, DateTime? value)
     {
@@ -1270,9 +1270,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Дата начала действия записи.
-    /// Возвращается период действия для записи классификатора самого вложенного уровня (определяется GuidBottomLevel)
-    /// Свойство возвращает null, если FiasDBSettings.UseDates=false.
+    /// Р”Р°С‚Р° РЅР°С‡Р°Р»Р° РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїРµСЂРёРѕРґ РґРµР№СЃС‚РІРёСЏ РґР»СЏ Р·Р°РїРёСЃРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° СЃР°РјРѕРіРѕ РІР»РѕР¶РµРЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ GuidBottomLevel)
+    /// РЎРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё FiasDBSettings.UseDates=false.
     /// </summary>
     public DateTime? StartDate
     {
@@ -1285,9 +1285,9 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Дата окончания действия записи.
-    /// Возвращается период действия для записи классификатора самого вложенного уровня (определяется GuidBottomLevel)
-    /// Свойство возвращает null, если FiasDBSettings.UseDates=false.
+    /// Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїРµСЂРёРѕРґ РґРµР№СЃС‚РІРёСЏ РґР»СЏ Р·Р°РїРёСЃРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° СЃР°РјРѕРіРѕ РІР»РѕР¶РµРЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ GuidBottomLevel)
+    /// РЎРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё FiasDBSettings.UseDates=false.
     /// </summary>
     public DateTime? EndDate
     {
@@ -1300,11 +1300,11 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Ошибки
+    #region РћС€РёР±РєРё
 
     /// <summary>
-    /// Полный список сообщений.
-    /// Список заполняется методом FillAddress().
+    /// РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№.
+    /// РЎРїРёСЃРѕРє Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ РјРµС‚РѕРґРѕРј FillAddress().
     /// </summary>
     public ErrorMessageList Messages
     {
@@ -1324,21 +1324,21 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Добавляет сообщение об ошибке, не привязанное к конкретному уровню адреса
+    /// Р”РѕР±Р°РІР»СЏРµС‚ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅРѕРµ Рє РєРѕРЅРєСЂРµС‚РЅРѕРјСѓ СѓСЂРѕРІРЅСЋ Р°РґСЂРµСЃР°
     /// </summary>
-    /// <param name="kind">Серьезность</param>
-    /// <param name="message">Текст сообщения</param>
+    /// <param name="kind">РЎРµСЂСЊРµР·РЅРѕСЃС‚СЊ</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     internal void AddMessage(ErrorMessageKind kind, string message)
     {
       AddMessage(kind, message, FiasLevel.Unknown);
     }
 
     /// <summary>
-    /// Добавляет сообщение об ошибке, привязанное к конкретному уровню адреса
+    /// Р”РѕР±Р°РІР»СЏРµС‚ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ, РїСЂРёРІСЏР·Р°РЅРЅРѕРµ Рє РєРѕРЅРєСЂРµС‚РЅРѕРјСѓ СѓСЂРѕРІРЅСЋ Р°РґСЂРµСЃР°
     /// </summary>
-    /// <param name="kind">Серьезность</param>
-    /// <param name="message">Текст сообщения</param>
-    /// <param name="level">Уровень адреса</param>
+    /// <param name="kind">РЎРµСЂСЊРµР·РЅРѕСЃС‚СЊ</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР°</param>
     internal void AddMessage(ErrorMessageKind kind, string message, FiasLevel level)
     {
       if (_Messages == null)
@@ -1356,7 +1356,7 @@ namespace FreeLibSet.FIAS
         AddMessage(kind, message, FiasLevel.Building);
       else if (GetName(FiasLevel.Structure).Length > 0)
         AddMessage(kind, message, FiasLevel.Structure);
-      else // все поля пустые
+      else // РІСЃРµ РїРѕР»СЏ РїСѓСЃС‚С‹Рµ
         AddMessage(kind, message, FiasLevel.House);
     }
 
@@ -1366,7 +1366,7 @@ namespace FreeLibSet.FIAS
         AddMessage(kind, message, FiasLevel.Flat);
       else if (GetName(FiasLevel.Room).Length > 0)
         AddMessage(kind, message, FiasLevel.Room);
-      else // все поля пустые
+      else // РІСЃРµ РїРѕР»СЏ РїСѓСЃС‚С‹Рµ
         AddMessage(kind, message, FiasLevel.Flat);
     }
 
@@ -1380,11 +1380,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает список сообщений, связанных с заданным уровнем классификатора
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№, СЃРІСЏР·Р°РЅРЅС‹С… СЃ Р·Р°РґР°РЅРЅС‹Рј СѓСЂРѕРІРЅРµРј РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
-    /// <param name="level">Уровень адреса ФИАС из перечня FiasTools.AllLevels.
-    /// Если задано значение FiasLevel.Unknown, возвращаются сообщения, не привязанные ни к какому уровню</param>
-    /// <returns>Выбранные сообщения из списка Messages</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР° Р¤РРђРЎ РёР· РїРµСЂРµС‡РЅСЏ FiasTools.AllLevels.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ FiasLevel.Unknown, РІРѕР·РІСЂР°С‰Р°СЋС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёСЏ, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅС‹Рµ РЅРё Рє РєР°РєРѕРјСѓ СѓСЂРѕРІРЅСЋ</param>
+    /// <returns>Р’С‹Р±СЂР°РЅРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РёР· СЃРїРёСЃРєР° Messages</returns>
     public ErrorMessageList GetMessages(FiasLevel level)
     {
       if (_Messages == null)
@@ -1414,11 +1414,11 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Возвращает список сообщений, связанных с заданными уровнями классификатора.
-    /// Нельзя получить сообщения, не привязанные к уровню
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№, СЃРІСЏР·Р°РЅРЅС‹С… СЃ Р·Р°РґР°РЅРЅС‹РјРё СѓСЂРѕРІРЅСЏРјРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+    /// РќРµР»СЊР·СЏ РїРѕР»СѓС‡РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅС‹Рµ Рє СѓСЂРѕРІРЅСЋ
     /// </summary>
-    /// <param name="levels">Уровни адреса ФИАС из перечня FiasTools.AllLevels.</param>
-    /// <returns>Выбранные сообщения из списка Messages</returns>
+    /// <param name="levels">РЈСЂРѕРІРЅРё Р°РґСЂРµСЃР° Р¤РРђРЎ РёР· РїРµСЂРµС‡РЅСЏ FiasTools.AllLevels.</param>
+    /// <returns>Р’С‹Р±СЂР°РЅРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РёР· СЃРїРёСЃРєР° Messages</returns>
     public ErrorMessageList GetMessages(FiasLevelSet levels)
     {
       if (_Messages == null)
@@ -1448,11 +1448,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает уровень адресного объекта к которому относится сообщение из списка Messages.
-    /// Некоторые сообщения могут быть не привязаны к конкруетному уровню. Для них возвращается FiasLevel.Unknown
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёРµ РёР· СЃРїРёСЃРєР° Messages.
+    /// РќРµРєРѕС‚РѕСЂС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РјРѕРіСѓС‚ Р±С‹С‚СЊ РЅРµ РїСЂРёРІСЏР·Р°РЅС‹ Рє РєРѕРЅРєСЂСѓРµС‚РЅРѕРјСѓ СѓСЂРѕРІРЅСЋ. Р”Р»СЏ РЅРёС… РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FiasLevel.Unknown
     /// </summary>
-    /// <param name="item">Сообщение</param>
-    /// <returns>Уровень адресного объекта</returns>
+    /// <param name="item">РЎРѕРѕР±С‰РµРЅРёРµ</param>
+    /// <returns>РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°</returns>
     public FiasLevel GetMessageFiasLevel(ErrorMessageItem item)
     {
       if (item.Tag is FiasLevel)
@@ -1466,9 +1466,9 @@ namespace FreeLibSet.FIAS
     #region ToString()
 
     /// <summary>
-    /// Текстовое представление для отладки.
-    /// Включает список ошибок
-    /// Используйте метод FiasHandler.GetText()
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РѕС‚Р»Р°РґРєРё.
+    /// Р’РєР»СЋС‡Р°РµС‚ СЃРїРёСЃРѕРє РѕС€РёР±РѕРє
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ FiasHandler.GetText()
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -1533,10 +1533,10 @@ namespace FreeLibSet.FIAS
     #region Clone()
 
     /// <summary>
-    /// Клонирование адреса.
-    /// Копируются все поля адреса и список сообщений.
+    /// РљР»РѕРЅРёСЂРѕРІР°РЅРёРµ Р°РґСЂРµСЃР°.
+    /// РљРѕРїРёСЂСѓСЋС‚СЃСЏ РІСЃРµ РїРѕР»СЏ Р°РґСЂРµСЃР° Рё СЃРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№.
     /// </summary>
-    /// <returns>Новый объект адреса</returns>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ Р°РґСЂРµСЃР°</returns>
     public FiasAddress Clone()
     {
       FiasAddress a = new FiasAddress();
@@ -1558,16 +1558,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Прочее
+    #region РџСЂРѕС‡РµРµ
 
     /// <summary>
-    /// Сравнивает нижний заполненный уровень в текущем адресе с заданным уровнем редактора.
-    /// Возвращает Equal, если заданный уровень соответствует требуемому.
-    /// Возвращает Less, если текущем адрес является недозаполненным или совсем пустым.
-    /// Возвращает true, если текущий адрес содержит лишнюю информацию.
+    /// РЎСЂР°РІРЅРёРІР°РµС‚ РЅРёР¶РЅРёР№ Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ РІ С‚РµРєСѓС‰РµРј Р°РґСЂРµСЃРµ СЃ Р·Р°РґР°РЅРЅС‹Рј СѓСЂРѕРІРЅРµРј СЂРµРґР°РєС‚РѕСЂР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Equal, РµСЃР»Рё Р·Р°РґР°РЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С‚СЂРµР±СѓРµРјРѕРјСѓ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Less, РµСЃР»Рё С‚РµРєСѓС‰РµРј Р°РґСЂРµСЃ СЏРІР»СЏРµС‚СЃСЏ РЅРµРґРѕР·Р°РїРѕР»РЅРµРЅРЅС‹Рј РёР»Рё СЃРѕРІСЃРµРј РїСѓСЃС‚С‹Рј.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚РµРєСѓС‰РёР№ Р°РґСЂРµСЃ СЃРѕРґРµСЂР¶РёС‚ Р»РёС€РЅСЋСЋ РёРЅС„РѕСЂРјР°С†РёСЋ.
     /// </summary>
-    /// <param name="editorLevel">Уровень адреса в редакторе</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="editorLevel">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР° РІ СЂРµРґР°РєС‚РѕСЂРµ</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public FiasLevelCompareResult CompareTo(FiasEditorLevel editorLevel)
     {
       string errorText;
@@ -1575,40 +1575,40 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Сравнивает нижний заполненный уровень в текущем адресе с заданным уровнем редактора.
-    /// Возвращает Equal, если заданный уровень соответствует требуемому.
-    /// Возвращает Less, если текущем адрес является недозаполненным или совсем пустым.
-    /// Возвращает true, если текущий адрес содержит лишнюю информацию.
+    /// РЎСЂР°РІРЅРёРІР°РµС‚ РЅРёР¶РЅРёР№ Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ РІ С‚РµРєСѓС‰РµРј Р°РґСЂРµСЃРµ СЃ Р·Р°РґР°РЅРЅС‹Рј СѓСЂРѕРІРЅРµРј СЂРµРґР°РєС‚РѕСЂР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Equal, РµСЃР»Рё Р·Р°РґР°РЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С‚СЂРµР±СѓРµРјРѕРјСѓ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Less, РµСЃР»Рё С‚РµРєСѓС‰РµРј Р°РґСЂРµСЃ СЏРІР»СЏРµС‚СЃСЏ РЅРµРґРѕР·Р°РїРѕР»РЅРµРЅРЅС‹Рј РёР»Рё СЃРѕРІСЃРµРј РїСѓСЃС‚С‹Рј.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚РµРєСѓС‰РёР№ Р°РґСЂРµСЃ СЃРѕРґРµСЂР¶РёС‚ Р»РёС€РЅСЋСЋ РёРЅС„РѕСЂРјР°С†РёСЋ.
     /// </summary>
-    /// <param name="editorLevel">Уровень адреса в редакторе</param>
-    /// <param name="errorText">Сюда помещается текст сообщения об ошибке</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="editorLevel">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР° РІ СЂРµРґР°РєС‚РѕСЂРµ</param>
+    /// <param name="errorText">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public FiasLevelCompareResult CompareTo(FiasEditorLevel editorLevel, out string errorText)
     {
       FiasLevel bl = this.NameBottomLevel;
       if (bl == FiasLevel.Unknown)
       {
-        errorText = "Адрес не заполнен";
+        errorText = "РђРґСЂРµСЃ РЅРµ Р·Р°РїРѕР»РЅРµРЅ";
         return FiasLevelCompareResult.Less;
       }
       int pBL = FiasTools.AllLevelIndexer.IndexOf(bl);
 #if DEBUG
       if (pBL < 0)
-        throw new BugException("Неправильный NameBottomLevel=" + bl.ToString());
+        throw new BugException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ NameBottomLevel=" + bl.ToString());
 #endif
 
       switch (editorLevel)
       {
         case FiasEditorLevel.Village:
-          // Должен быть задан город или населенный пункт
+          // Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ РіРѕСЂРѕРґ РёР»Рё РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚
           if (pBL < FiasTools.AllLevelIndexer.IndexOf(FiasLevel.City))
           {
-            errorText = "Должен быть заполнен город или населенный пункт";
+            errorText = "Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РіРѕСЂРѕРґ РёР»Рё РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚";
             return FiasLevelCompareResult.Less;
           }
           if (pBL > FiasTools.AllLevelIndexer.IndexOf(FiasLevel.Village))
           {
-            errorText = "Не должны заполняться уровни ниже населенного пункта";
+            errorText = "РќРµ РґРѕР»Р¶РЅС‹ Р·Р°РїРѕР»РЅСЏС‚СЊСЃСЏ СѓСЂРѕРІРЅРё РЅРёР¶Рµ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р°";
             return FiasLevelCompareResult.Greater;
           }
 
@@ -1616,20 +1616,20 @@ namespace FreeLibSet.FIAS
           return FiasLevelCompareResult.Equal;
 
         case FiasEditorLevel.Street:
-          // Должна быть задана улица или населенный пункт, но не в городе
+          // Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ Р·Р°РґР°РЅР° СѓР»РёС†Р° РёР»Рё РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚, РЅРѕ РЅРµ РІ РіРѕСЂРѕРґРµ
           if (pBL < FiasTools.AllLevelIndexer.IndexOf(FiasLevel.Village))
           {
-            errorText = "Должен быть заполнен населенный пункт или улица";
+            errorText = "Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚ РёР»Рё СѓР»РёС†Р°";
             return FiasLevelCompareResult.Less;
           }
           if (pBL > FiasTools.AllLevelIndexer.IndexOf(FiasLevel.Street))
           {
-            errorText = "Не должны заполняться уровни ниже улицы";
+            errorText = "РќРµ РґРѕР»Р¶РЅС‹ Р·Р°РїРѕР»РЅСЏС‚СЊСЃСЏ СѓСЂРѕРІРЅРё РЅРёР¶Рµ СѓР»РёС†С‹";
             return FiasLevelCompareResult.Greater;
           }
           if (bl == FiasLevel.Village && GetName(FiasLevel.City).Length > 0)
           {
-            errorText = "Если заполнен населенный пункт без улицы, то населенный пункт не может располагаться в городе";
+            errorText = "Р•СЃР»Рё Р·Р°РїРѕР»РЅРµРЅ РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚ Р±РµР· СѓР»РёС†С‹, С‚Рѕ РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚ РЅРµ РјРѕР¶РµС‚ СЂР°СЃРїРѕР»Р°РіР°С‚СЊСЃСЏ РІ РіРѕСЂРѕРґРµ";
             return FiasLevelCompareResult.Less;
           }
           errorText = null;
@@ -1638,12 +1638,12 @@ namespace FreeLibSet.FIAS
         case FiasEditorLevel.House:
           if (pBL < FiasTools.AllLevelIndexer.IndexOf(FiasLevel.House))
           {
-            errorText = "Должен быть заполнен дом и/или строение";
+            errorText = "Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РґРѕРј Рё/РёР»Рё СЃС‚СЂРѕРµРЅРёРµ";
             return FiasLevelCompareResult.Less;
           }
           if (pBL >= FiasTools.AllLevelIndexer.IndexOf(FiasLevel.Flat))
           {
-            errorText = "Не должны заполняться уровни ниже дома";
+            errorText = "РќРµ РґРѕР»Р¶РЅС‹ Р·Р°РїРѕР»РЅСЏС‚СЊСЃСЏ СѓСЂРѕРІРЅРё РЅРёР¶Рµ РґРѕРјР°";
             return FiasLevelCompareResult.Greater;
           }
           errorText = null;
@@ -1652,22 +1652,22 @@ namespace FreeLibSet.FIAS
         case FiasEditorLevel.Room:
           if (pBL < FiasTools.AllLevelIndexer.IndexOf(FiasLevel.House))
           {
-            errorText = "Должен быть заполнен дом или помещение";
+            errorText = "Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РґРѕРј РёР»Рё РїРѕРјРµС‰РµРЅРёРµ";
             return FiasLevelCompareResult.Less;
           }
           errorText = null;
           return FiasLevelCompareResult.Equal;
         default:
-          throw new ArgumentException("Неизестный editorLevel=" + editorLevel.ToString(), "editorLevel");
+          throw new ArgumentException("РќРµРёР·РµСЃС‚РЅС‹Р№ editorLevel=" + editorLevel.ToString(), "editorLevel");
       }
     }
 
     /// <summary>
-    /// Выполняет проверку, что верхние уровни адреса выбраны из справочника, а не заданы вручную.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїСЂРѕРІРµСЂРєСѓ, С‡С‚Рѕ РІРµСЂС…РЅРёРµ СѓСЂРѕРІРЅРё Р°РґСЂРµСЃР° РІС‹Р±СЂР°РЅС‹ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°, Р° РЅРµ Р·Р°РґР°РЅС‹ РІСЂСѓС‡РЅСѓСЋ.
     /// </summary>
-    /// <param name="minRefBookLevel">Уровень, выше и включая который, должен использовать справочник.
-    /// Если задано значение Unknown, то проверка не выполняется</param>
-    /// <returns>true, если проверка выполнена</returns>
+    /// <param name="minRefBookLevel">РЈСЂРѕРІРµРЅСЊ, РІС‹С€Рµ Рё РІРєР»СЋС‡Р°СЏ РєРѕС‚РѕСЂС‹Р№, РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРїСЂР°РІРѕС‡РЅРёРє.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ Unknown, С‚Рѕ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅРµРЅР°</returns>
     public bool IsMinRefBookLevel(FiasLevel minRefBookLevel)
     {
       string errorText;
@@ -1675,12 +1675,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Выполняет проверку, что верхние уровни адреса выбраны из справочника, а не заданы вручную.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїСЂРѕРІРµСЂРєСѓ, С‡С‚Рѕ РІРµСЂС…РЅРёРµ СѓСЂРѕРІРЅРё Р°РґСЂРµСЃР° РІС‹Р±СЂР°РЅС‹ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°, Р° РЅРµ Р·Р°РґР°РЅС‹ РІСЂСѓС‡РЅСѓСЋ.
     /// </summary>
-    /// <param name="minRefBookLevel">Уровень, выше и включая который, должен использовать справочник.
-    /// Если задано значение Unknown, то проверка не выполняется</param>
-    /// <param name="errorText">Сюда помещается сообщение об ошибке</param>
-    /// <returns>true, если проверка выполнена</returns>
+    /// <param name="minRefBookLevel">РЈСЂРѕРІРµРЅСЊ, РІС‹С€Рµ Рё РІРєР»СЋС‡Р°СЏ РєРѕС‚РѕСЂС‹Р№, РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРїСЂР°РІРѕС‡РЅРёРє.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ Unknown, С‚Рѕ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
+    /// <param name="errorText">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅРµРЅР°</returns>
     public bool IsMinRefBookLevel(FiasLevel minRefBookLevel, out string errorText)
     {
       errorText = null;
@@ -1694,30 +1694,30 @@ namespace FreeLibSet.FIAS
       FiasLevel nl = this.NameBottomLevel;
 
       if (nl == gl)
-        return true; // нет компонентов, введенных вручную
+        return true; // РЅРµС‚ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ, РІРІРµРґРµРЅРЅС‹С… РІСЂСѓС‡РЅСѓСЋ
 
       minRefBookLevel = CorrectLevel(minRefBookLevel);
       int pMin = FiasTools.AllLevelIndexer.IndexOf(minRefBookLevel);
       if (pMin < 0)
-        throw new ArgumentException("Неизвестный уровень " + minRefBookLevel.ToString(), "minRefBookLevel");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ СѓСЂРѕРІРµРЅСЊ " + minRefBookLevel.ToString(), "minRefBookLevel");
       int pNL = FiasTools.AllLevelIndexer.IndexOf(nl);
       if (pNL < pMin)
       {
-        minRefBookLevel = nl; // для частично заполненного адреса не надо выдавать лишние сообщения
+        minRefBookLevel = nl; // РґР»СЏ С‡Р°СЃС‚РёС‡РЅРѕ Р·Р°РїРѕР»РЅРµРЅРЅРѕРіРѕ Р°РґСЂРµСЃР° РЅРµ РЅР°РґРѕ РІС‹РґР°РІР°С‚СЊ Р»РёС€РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
         pMin = pNL;
       }
 
       if (gl == FiasLevel.Unknown)
       {
-        errorText = "Все адресные элементы заданые вручную. Адресные элементы до уровня \"" + FiasEnumNames.ToString(minRefBookLevel, false) + "\" должны быть выбраны из справочника ФИАС";
+        errorText = "Р’СЃРµ Р°РґСЂРµСЃРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ Р·Р°РґР°РЅС‹Рµ РІСЂСѓС‡РЅСѓСЋ. РђРґСЂРµСЃРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ РґРѕ СѓСЂРѕРІРЅСЏ \"" + FiasEnumNames.ToString(minRefBookLevel, false) + "\" РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅС‹ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° Р¤РРђРЎ";
         return false;
       }
 
       int pGL = FiasTools.AllLevelIndexer.IndexOf(gl);
       if (pGL < pMin)
       {
-        errorText = "Адресные элементы до уровня \"" + FiasEnumNames.ToString(minRefBookLevel, false) + "\" должны быть выбраны из справочника ФИАС. В адресе из справочника выбраны только уровни до \"" +
-          FiasEnumNames.ToString(gl, false) + "\" включительно";
+        errorText = "РђРґСЂРµСЃРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ РґРѕ СѓСЂРѕРІРЅСЏ \"" + FiasEnumNames.ToString(minRefBookLevel, false) + "\" РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅС‹ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° Р¤РРђРЎ. Р’ Р°РґСЂРµСЃРµ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° РІС‹Р±СЂР°РЅС‹ С‚РѕР»СЊРєРѕ СѓСЂРѕРІРЅРё РґРѕ \"" +
+          FiasEnumNames.ToString(gl, false) + "\" РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ";
         return false;
       }
 
@@ -1726,7 +1726,7 @@ namespace FreeLibSet.FIAS
       minRefBookLevel = CorrectLevel(minRefBookLevel);
       int pMin = FiasTools.AllLevelIndexer.IndexOf(minRefBookLevel);
       if (pMin < 0)
-        throw new ArgumentException("Неизвестный уровень " + minRefBookLevel.ToString(), "minRefBookLevel");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ СѓСЂРѕРІРµРЅСЊ " + minRefBookLevel.ToString(), "minRefBookLevel");
       for (int i = 0; i <= pMin; i++)
       {
         FiasLevel lvl = FiasTools.AllLevels[i];
@@ -1734,7 +1734,7 @@ namespace FreeLibSet.FIAS
         Guid g = GetGuid(lvl);
         if (nm.Length > 0 && g == Guid.Empty)
         {
-          errorText = "Адресные элементы до уровня \"" + FiasEnumNames.ToString(minRefBookLevel, false) + "\" должны быть выбраны из справочника ФИАС. Адресного элемента \"" + this[lvl] + "\" уровня \"" + FiasEnumNames.ToString(lvl, false) + "\" нет в ФИАС";
+          errorText = "РђРґСЂРµСЃРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ РґРѕ СѓСЂРѕРІРЅСЏ \"" + FiasEnumNames.ToString(minRefBookLevel, false) + "\" РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅС‹ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° Р¤РРђРЎ. РђРґСЂРµСЃРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° \"" + this[lvl] + "\" СѓСЂРѕРІРЅСЏ \"" + FiasEnumNames.ToString(lvl, false) + "\" РЅРµС‚ РІ Р¤РРђРЎ";
           return false;
         }
       }

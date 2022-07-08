@@ -1,4 +1,4 @@
-namespace EFPCommandItemsDemo
+п»їnamespace EFPCommandItemsDemo
 {
   partial class Form2
   {
@@ -45,7 +45,7 @@ namespace EFPCommandItemsDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(100, 20);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Поле &1";
+      this.label1.Text = "РџРѕР»Рµ &1";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // ed1
@@ -61,7 +61,7 @@ namespace EFPCommandItemsDemo
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(100, 20);
       this.label2.TabIndex = 2;
-      this.label2.Text = "Поле &2";
+      this.label2.Text = "РџРѕР»Рµ &2";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // ed2
@@ -78,7 +78,7 @@ namespace EFPCommandItemsDemo
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(100, 20);
       this.label3.TabIndex = 4;
-      this.label3.Text = "Поле &3";
+      this.label3.Text = "РџРѕР»Рµ &3";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // ed3
@@ -95,7 +95,7 @@ namespace EFPCommandItemsDemo
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(80, 24);
       this.btnCancel.TabIndex = 7;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -105,7 +105,7 @@ namespace EFPCommandItemsDemo
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(80, 24);
       this.btnOk.TabIndex = 6;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnShowDialog
@@ -114,7 +114,7 @@ namespace EFPCommandItemsDemo
       this.btnShowDialog.Name = "btnShowDialog";
       this.btnShowDialog.Size = new System.Drawing.Size(177, 23);
       this.btnShowDialog.TabIndex = 8;
-      this.btnShowDialog.Text = "Показать диалог";
+      this.btnShowDialog.Text = "РџРѕРєР°Р·Р°С‚СЊ РґРёР°Р»РѕРі";
       this.btnShowDialog.UseVisualStyleBackColor = true;
       // 
       // Form2

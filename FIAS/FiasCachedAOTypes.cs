@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,13 +12,13 @@ namespace FreeLibSet.FIAS
 {
 
   /// <summary>
-  /// Буферизованная таблица типов адресных объектов
-  /// Этот класс не используется в пользовательском коде
+  /// Р‘СѓС„РµСЂРёР·РѕРІР°РЅРЅР°СЏ С‚Р°Р±Р»РёС†Р° С‚РёРїРѕРІ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
   /// </summary>
   [Serializable]
   public sealed class FiasCachedAOTypes
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasCachedAOTypes(DataSet ds)
     {
@@ -29,16 +29,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     /// <summary>
-    /// Внутренняя таблица данных.
-    /// Содержит поля "Id", "Level", "SOCRNAME", "SCNAME".
+    /// Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ С‚Р°Р±Р»РёС†Р° РґР°РЅРЅС‹С….
+    /// РЎРѕРґРµСЂР¶РёС‚ РїРѕР»СЏ "Id", "Level", "SOCRNAME", "SCNAME".
     /// </summary>
     private readonly DataSet _DS;
 
     /// <summary>
-    /// Количество строк в таблице на странице (для отладочных целей)
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ РЅР° СЃС‚СЂР°РЅРёС†Рµ (РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№)
     /// </summary>
     public int RowCount
     {
@@ -54,7 +54,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [System.Runtime.Serialization.OnDeserialized]
     private void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
@@ -64,14 +64,14 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает тип адресного объекта по идентификатору.
-    /// Этот метод пригоден только для таблицы адресных объектов до уровня улицы включительно, но не для зданий и помещений.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РёРї Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РїРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РїСЂРёРіРѕРґРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‚Р°Р±Р»РёС†С‹ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РґРѕ СѓСЂРѕРІРЅСЏ СѓР»РёС†С‹ РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ, РЅРѕ РЅРµ РґР»СЏ Р·РґР°РЅРёР№ Рё РїРѕРјРµС‰РµРЅРёР№.
     /// </summary>
-    /// <param name="id">Идентификатор типа адресного объекта</param>
-    /// <param name="typeMode">Полное наименование типа или сокращение</param>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РёРїР° Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°</param>
+    /// <param name="typeMode">РџРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР° РёР»Рё СЃРѕРєСЂР°С‰РµРЅРёРµ</param>
     /// <returns></returns>
     public string GetAOType(Int32 id, FiasAOTypeMode typeMode)
     {
@@ -88,7 +88,7 @@ namespace FreeLibSet.FIAS
       }
     }
 
-    #region Специальные таблицы имен
+    #region РЎРїРµС†РёР°Р»СЊРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ РёРјРµРЅ
 
     [NonSerialized]
     private string[] _EstateStatusAOTypes;
@@ -123,7 +123,7 @@ namespace FreeLibSet.FIAS
       if (ourNames != null)
         return ourNames;
 
-      // Берем весь список, кроме элемента с индексом 0
+      // Р‘РµСЂРµРј РІРµСЃСЊ СЃРїРёСЃРѕРє, РєСЂРѕРјРµ СЌР»РµРјРµРЅС‚Р° СЃ РёРЅРґРµРєСЃРѕРј 0
       string[] a = new string[source.Length - 1];
       Array.Copy(source, 1, a, 0, a.Length);
       ourNames = a;
@@ -134,11 +134,11 @@ namespace FreeLibSet.FIAS
     #endregion
 
     /// <summary>
-    /// Получить список доступных типов адресообразующих элементов или сокращений для заданного уровня
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… С‚РёРїРѕРІ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ РёР»Рё СЃРѕРєСЂР°С‰РµРЅРёР№ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="typeMode">Тип или сокращение</param>
-    /// <returns>Массив имен</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="typeMode">РўРёРї РёР»Рё СЃРѕРєСЂР°С‰РµРЅРёРµ</param>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     public string[] GetAOTypes(FiasLevel level, FiasAOTypeMode typeMode)
     {
       switch (level)
@@ -150,9 +150,9 @@ namespace FreeLibSet.FIAS
           else
             return PrepareSpecialName(ref _EstateStatusAbbrs, FiasEnumNames.EstateStatusAbbrs);
         case FiasLevel.Building:
-          return new string[1] { typeMode == FiasAOTypeMode.Full ? "Корпус" : "корп." };
+          return new string[1] { typeMode == FiasAOTypeMode.Full ? "РљРѕСЂРїСѓСЃ" : "РєРѕСЂРї." };
         case FiasLevel.Structure:
-          //return new string[1] { isLong ? "Строение" : "стр." };
+          //return new string[1] { isLong ? "РЎС‚СЂРѕРµРЅРёРµ" : "СЃС‚СЂ." };
           if (typeMode == FiasAOTypeMode.Full)
             return PrepareSpecialName(ref _StructureStatusAOTypes, FiasEnumNames.StructureStatusAOTypes);
           else
@@ -180,7 +180,7 @@ namespace FreeLibSet.FIAS
         dv.Sort = typeMode == FiasAOTypeMode.Full ? "SOCRNAME" : "SCNAME";
         dv.RowFilter = "LEVEL=" + (int)level;
 
-        // В таблице могут быть провторяющиеся сокращения
+        // Р’ С‚Р°Р±Р»РёС†Рµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РїСЂРѕРІС‚РѕСЂСЏСЋС‰РёРµСЃСЏ СЃРѕРєСЂР°С‰РµРЅРёСЏ
         SingleScopeList<string> lst = new SingleScopeList<string>(dv.Count);
         for (int i = 0; i < dv.Count; i++)
           lst.Add(dv[i].Row[typeMode == FiasAOTypeMode.Full ? "SOCRNAME" : "SCNAME"].ToString());
@@ -201,15 +201,15 @@ namespace FreeLibSet.FIAS
           return;
       }
 
-      throw new ArgumentException("Неправильный уровень " + level.ToString() + " для поиска в таблице сокращений. Допускаются только уровни, относящиеся к таблице адресных объектов", "level");
+      throw new ArgumentException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ " + level.ToString() + " РґР»СЏ РїРѕРёСЃРєР° РІ С‚Р°Р±Р»РёС†Рµ СЃРѕРєСЂР°С‰РµРЅРёР№. Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ СѓСЂРѕРІРЅРё, РѕС‚РЅРѕСЃСЏС‰РёРµСЃСЏ Рє С‚Р°Р±Р»РёС†Рµ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ", "level");
     }
 
     /// <summary>
-    /// Поиск идентификатора в таблице SOCRBASE по длинному или краткому наименованию типа адресного объекта
+    /// РџРѕРёСЃРє РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РІ С‚Р°Р±Р»РёС†Рµ SOCRBASE РїРѕ РґР»РёРЅРЅРѕРјСѓ РёР»Рё РєСЂР°С‚РєРѕРјСѓ РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ С‚РёРїР° Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
-    /// <param name="level">Уровень адресообразующего элемента</param>
-    /// <param name="aoType">Искомый тип элемента</param>
-    /// <returns>Найденный идентификатор или 0</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
+    /// <param name="aoType">РСЃРєРѕРјС‹Р№ С‚РёРї СЌР»РµРјРµРЅС‚Р°</param>
+    /// <returns>РќР°Р№РґРµРЅРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РёР»Рё 0</returns>
     public Int32 FindAOTypeId(FiasLevel level, string aoType)
     {
       if (level != FiasLevel.House)
@@ -229,11 +229,11 @@ namespace FreeLibSet.FIAS
           dv.Sort = "SCNAME";
           p = dv.Find(aoType);
 
-          // Если задано сокращение с точкой, ищем сокращение без точки
+          // Р•СЃР»Рё Р·Р°РґР°РЅРѕ СЃРѕРєСЂР°С‰РµРЅРёРµ СЃ С‚РѕС‡РєРѕР№, РёС‰РµРј СЃРѕРєСЂР°С‰РµРЅРёРµ Р±РµР· С‚РѕС‡РєРё
           if (p < 0 &&
             aoType[aoType.Length - 1] == '.' &&
             aoType.Length > 1 &&
-            aoType.IndexOf('-') < 0 /* без дефисов */)
+            aoType.IndexOf('-') < 0 /* Р±РµР· РґРµС„РёСЃРѕРІ */)
 
             p = dv.Find(aoType.Substring(0, aoType.Length - 1));
         }
@@ -247,12 +247,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если тип адресообразующего элемента или сокращение подходит для заданного уровня.
-    /// Учитываются специальные имена.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РёР»Рё СЃРѕРєСЂР°С‰РµРЅРёРµ РїРѕРґС…РѕРґРёС‚ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ.
+    /// РЈС‡РёС‚С‹РІР°СЋС‚СЃСЏ СЃРїРµС†РёР°Р»СЊРЅС‹Рµ РёРјРµРЅР°.
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="aoType">Проверяемое имя</param>
-    /// <returns>Применимость</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="aoType">РџСЂРѕРІРµСЂСЏРµРјРѕРµ РёРјСЏ</param>
+    /// <returns>РџСЂРёРјРµРЅРёРјРѕСЃС‚СЊ</returns>
     public bool IsValidAOType(FiasLevel level, string aoType)
     {
       string longName;
@@ -261,18 +261,18 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если тип адресообразующего элемента или сокращение подходит для заданного уровня.
-    /// Учитываются специальные имена.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РёР»Рё СЃРѕРєСЂР°С‰РµРЅРёРµ РїРѕРґС…РѕРґРёС‚ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ.
+    /// РЈС‡РёС‚С‹РІР°СЋС‚СЃСЏ СЃРїРµС†РёР°Р»СЊРЅС‹Рµ РёРјРµРЅР°.
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="aoType">Проверяемое имя</param>
-    /// <param name="fullAOType">Сюда помещается правильный полный тип адресообразующего элемента.</param>
-    /// <param name="id">Сюда помещается идентификатор в таблице "AOType".
-    /// Может быть 0, если задано специальное имя</param>
-    /// <returns>Применимость</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="aoType">РџСЂРѕРІРµСЂСЏРµРјРѕРµ РёРјСЏ</param>
+    /// <param name="fullAOType">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РїСЂР°РІРёР»СЊРЅС‹Р№ РїРѕР»РЅС‹Р№ С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°.</param>
+    /// <param name="id">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ С‚Р°Р±Р»РёС†Рµ "AOType".
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ 0, РµСЃР»Рё Р·Р°РґР°РЅРѕ СЃРїРµС†РёР°Р»СЊРЅРѕРµ РёРјСЏ</param>
+    /// <returns>РџСЂРёРјРµРЅРёРјРѕСЃС‚СЊ</returns>
     public bool IsValidAOType(FiasLevel level, string aoType, out string fullAOType, out Int32 id)
     {
-      // При добавлении нестандартных сокращений не забыть про метод CreateAOTypeLevelDict()
+      // РџСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹С… СЃРѕРєСЂР°С‰РµРЅРёР№ РЅРµ Р·Р°Р±С‹С‚СЊ РїСЂРѕ РјРµС‚РѕРґ CreateAOTypeLevelDict()
 
       fullAOType = String.Empty;
       id = 0;
@@ -292,13 +292,13 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(aoType))
         return false;
 
-      // Специальные таблицы
+      // РЎРїРµС†РёР°Р»СЊРЅС‹Рµ С‚Р°Р±Р»РёС†С‹
       switch (level)
       {
-        case FiasLevel.House: // дом
+        case FiasLevel.House: // РґРѕРј
 
           // 27.10.2020
-          // Для домов сначала выполняем стандартную проверку.
+          // Р”Р»СЏ РґРѕРјРѕРІ СЃРЅР°С‡Р°Р»Р° РІС‹РїРѕР»РЅСЏРµРј СЃС‚Р°РЅРґР°СЂС‚РЅСѓСЋ РїСЂРѕРІРµСЂРєСѓ.
           id = FindAOTypeId(level, aoType);
           if (id != 0)
           {
@@ -306,7 +306,7 @@ namespace FreeLibSet.FIAS
             return true;
           }
 
-          // Потом пытаемся проверить нестандартные сокращения, как было
+          // РџРѕС‚РѕРј РїС‹С‚Р°РµРјСЃСЏ РїСЂРѕРІРµСЂРёС‚СЊ РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹Рµ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РєР°Рє Р±С‹Р»Рѕ
           FiasEstateStatus EstStatus = FiasEnumNames.ParseEstateStatus(aoType);
           if (EstStatus == FiasEstateStatus.Unknown)
             return false;
@@ -317,18 +317,18 @@ namespace FreeLibSet.FIAS
           }
 
         //break;
-        case FiasLevel.Building: // корпус
+        case FiasLevel.Building: // РєРѕСЂРїСѓСЃ
           switch (aoType.ToLowerInvariant())
           {
-            case "корпус":
-            case "корп.":
-            case "к.":
-              fullAOType = "Корпус";
+            case "РєРѕСЂРїСѓСЃ":
+            case "РєРѕСЂРї.":
+            case "Рє.":
+              fullAOType = "РљРѕСЂРїСѓСЃ";
               return true;
             default:
               return false;
           }
-        case FiasLevel.Structure: // строение
+        case FiasLevel.Structure: // СЃС‚СЂРѕРµРЅРёРµ
           FiasStructureStatus strStatus = FiasEnumNames.ParseStructureStatus(aoType);
           if (strStatus == FiasStructureStatus.Unknown)
             return false;
@@ -358,14 +358,14 @@ namespace FreeLibSet.FIAS
             return true;
           }
 
-        // Дополнительные сокращения:
+        // Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ СЃРѕРєСЂР°С‰РµРЅРёСЏ:
         case FiasLevel.Village:
           switch (aoType.ToLowerInvariant())
           {
-            case "рп":
-            case "р/п":
-            case "р.п.":
-              fullAOType = "Рабочий поселок";
+            case "СЂРї":
+            case "СЂ/Рї":
+            case "СЂ.Рї.":
+              fullAOType = "Р Р°Р±РѕС‡РёР№ РїРѕСЃРµР»РѕРє";
               return true;
           }
           break;
@@ -373,14 +373,14 @@ namespace FreeLibSet.FIAS
         case FiasLevel.Street:
           switch (aoType.ToLowerInvariant())
           {
-            case "м-н": // 03.11.2020
-              fullAOType = "Микрорайон";
+            case "Рј-РЅ": // 03.11.2020
+              fullAOType = "РњРёРєСЂРѕСЂР°Р№РѕРЅ";
               return true;
           }
           break;
       }
 
-      // Стандартная проверка
+      // РЎС‚Р°РЅРґР°СЂС‚РЅР°СЏ РїСЂРѕРІРµСЂРєР°
       id = FindAOTypeId(level, aoType);
 
       if (id != 0)
@@ -389,11 +389,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает сокращение, соответствующее заданному типу адресообразующего элемента
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРѕРєСЂР°С‰РµРЅРёРµ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ Р·Р°РґР°РЅРЅРѕРјСѓ С‚РёРїСѓ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
-    /// <param name="aoType">Тип адресообразующего элемента</param>
-    /// <param name="level">Уровень</param>
-    /// <returns>Сокращение</returns>
+    /// <param name="aoType">РўРёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <returns>РЎРѕРєСЂР°С‰РµРЅРёРµ</returns>
     public string GetAbbreviation(string aoType, FiasLevel level)
     {
       switch (level)
@@ -403,10 +403,10 @@ namespace FreeLibSet.FIAS
           if (estStatus != FiasEstateStatus.Unknown)
             return FiasEnumNames.EstateStatusAbbrs[(int)estStatus];
           else
-            break; // вдруг есть в справочнике
+            break; // РІРґСЂСѓРі РµСЃС‚СЊ РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ
         case FiasLevel.Building:
-          if (aoType == "Корпус")
-            return "корп.";
+          if (aoType == "РљРѕСЂРїСѓСЃ")
+            return "РєРѕСЂРї.";
           else
             return aoType;
         case FiasLevel.Structure:
@@ -429,12 +429,12 @@ namespace FreeLibSet.FIAS
             return FiasEnumNames.RoomTypeAbbrs[(int)roomType];
       }
 
-      // Общий случай. Используем справочник
+      // РћР±С‰РёР№ СЃР»СѓС‡Р°Р№. РСЃРїРѕР»СЊР·СѓРµРј СЃРїСЂР°РІРѕС‡РЅРёРє
       Int32 id = FindAOTypeId(level, aoType);
       if (id >= 0)
         return GetAOType(id, FiasAOTypeMode.Abbreviation);
       else
-        return aoType; // если не нашли, обойдемся без сокращения
+        return aoType; // РµСЃР»Рё РЅРµ РЅР°С€Р»Рё, РѕР±РѕР№РґРµРјСЃСЏ Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёСЏ
     }
 
     #endregion
@@ -442,31 +442,31 @@ namespace FreeLibSet.FIAS
     #region GetAOTypeLevels()
 
     /// <summary>
-    /// Возвращает уровни, для которых подходит заданный тип адресообразующего элемента.
-    /// Проверяются и сокращения и полные наименования.
-    /// Если строка <paramref name="aoType"/> не является каким-либо типом, возвращается Empty
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓСЂРѕРІРЅРё, РґР»СЏ РєРѕС‚РѕСЂС‹С… РїРѕРґС…РѕРґРёС‚ Р·Р°РґР°РЅРЅС‹Р№ С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°.
+    /// РџСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Рё СЃРѕРєСЂР°С‰РµРЅРёСЏ Рё РїРѕР»РЅС‹Рµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ.
+    /// Р•СЃР»Рё СЃС‚СЂРѕРєР° <paramref name="aoType"/> РЅРµ СЏРІР»СЏРµС‚СЃСЏ РєР°РєРёРј-Р»РёР±Рѕ С‚РёРїРѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Empty
     /// </summary>
-    /// <param name="aoType">Тип адресообразующего элемента</param>
-    /// <returns>Уровни, для которых применим данный тип</returns>
+    /// <param name="aoType">РўРёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
+    /// <returns>РЈСЂРѕРІРЅРё, РґР»СЏ РєРѕС‚РѕСЂС‹С… РїСЂРёРјРµРЅРёРј РґР°РЅРЅС‹Р№ С‚РёРї</returns>
     public FiasLevelSet GetAOTypeLevels(string aoType)
     {
       return GetAOTypeLevels(aoType, FiasAOTypeMode.Full) | GetAOTypeLevels(aoType, FiasAOTypeMode.Abbreviation);
     }
 
     /// <summary>
-    /// Возвращает уровни, для которых подходит заданный тип адресообразующего элемента.
-    /// Проверяются и сокращения и полные наименования.
-    /// Если строка <paramref name="aoType"/> не является каким-либо типом, возвращается Empty
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓСЂРѕРІРЅРё, РґР»СЏ РєРѕС‚РѕСЂС‹С… РїРѕРґС…РѕРґРёС‚ Р·Р°РґР°РЅРЅС‹Р№ С‚РёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°.
+    /// РџСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Рё СЃРѕРєСЂР°С‰РµРЅРёСЏ Рё РїРѕР»РЅС‹Рµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ.
+    /// Р•СЃР»Рё СЃС‚СЂРѕРєР° <paramref name="aoType"/> РЅРµ СЏРІР»СЏРµС‚СЃСЏ РєР°РєРёРј-Р»РёР±Рѕ С‚РёРїРѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Empty
     /// </summary>
-    /// <param name="aoType">Тип адресообразующего элемента. Регистр символов игнорируется</param>
-    /// <param name="typeMode">Тип: полное наименование или сокращение</param>
-    /// <returns>Уровни, для которых применим данный тип</returns>
+    /// <param name="aoType">РўРёРї Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°. Р РµРіРёСЃС‚СЂ СЃРёРјРІРѕР»РѕРІ РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="typeMode">РўРёРї: РїРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РёР»Рё СЃРѕРєСЂР°С‰РµРЅРёРµ</param>
+    /// <returns>РЈСЂРѕРІРЅРё, РґР»СЏ РєРѕС‚РѕСЂС‹С… РїСЂРёРјРµРЅРёРј РґР°РЅРЅС‹Р№ С‚РёРї</returns>
     public FiasLevelSet GetAOTypeLevels(string aoType, FiasAOTypeMode typeMode)
     {
       if (String.IsNullOrEmpty(aoType))
         return FiasLevelSet.Empty;
 
-      // Выполняем создание коллекций
+      // Р’С‹РїРѕР»РЅСЏРµРј СЃРѕР·РґР°РЅРёРµ РєРѕР»Р»РµРєС†РёР№
       TypedStringDictionary<FiasLevelSet> dict = GetAOTypeLevelDict(typeMode);
       FiasLevelSet res;
       if (dict.TryGetValue(aoType, out res))
@@ -513,7 +513,7 @@ namespace FreeLibSet.FIAS
     {
       TypedStringDictionary<FiasLevelSet> dict = new TypedStringDictionary<FiasLevelSet>(true);
 
-      #region Уровни из справочника
+      #region РЈСЂРѕРІРЅРё РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°
 
       foreach (DataRow row in _DS.Tables[0].Rows)
       {
@@ -526,124 +526,124 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Специальные таблицы
+      #region РЎРїРµС†РёР°Р»СЊРЅС‹Рµ С‚Р°Р±Р»РёС†С‹
 
-      #region Населенный пункт
+      #region РќР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚
 
       if (typeMode == FiasAOTypeMode.Abbreviation)
       {
-        AddToAOTypeLevelDict(dict, "рп", FiasLevelSet.FromLevel(FiasLevel.Village));
-        AddToAOTypeLevelDict(dict, "р/п", FiasLevelSet.FromLevel(FiasLevel.Village));
-        AddToAOTypeLevelDict(dict, "р.п.", FiasLevelSet.FromLevel(FiasLevel.Village));
+        AddToAOTypeLevelDict(dict, "СЂРї", FiasLevelSet.FromLevel(FiasLevel.Village));
+        AddToAOTypeLevelDict(dict, "СЂ/Рї", FiasLevelSet.FromLevel(FiasLevel.Village));
+        AddToAOTypeLevelDict(dict, "СЂ.Рї.", FiasLevelSet.FromLevel(FiasLevel.Village));
       }
 
       #endregion
 
-      #region Планировочная структура
+      #region РџР»Р°РЅРёСЂРѕРІРѕС‡РЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°
 
       if (typeMode == FiasAOTypeMode.Abbreviation)
       {
-        AddToAOTypeLevelDict(dict, "м-н", FiasLevelSet.FromLevel(FiasLevel.PlanningStructure));
+        AddToAOTypeLevelDict(dict, "Рј-РЅ", FiasLevelSet.FromLevel(FiasLevel.PlanningStructure));
       }
 
       #endregion
 
-      #region Улица
+      #region РЈР»РёС†Р°
 
       if (typeMode == FiasAOTypeMode.Abbreviation)
       {
-        AddToAOTypeLevelDict(dict, "м-н", FiasLevelSet.FromLevel(FiasLevel.Street));
+        AddToAOTypeLevelDict(dict, "Рј-РЅ", FiasLevelSet.FromLevel(FiasLevel.Street));
       }
 
       #endregion
 
-      #region Дом
+      #region Р”РѕРј
 
       if (typeMode == FiasAOTypeMode.Full)
       {
-        for (int i = 1; i < FiasEnumNames.EstateStatusAOTypes.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.EstateStatusAOTypes.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.EstateStatusAOTypes[i], FiasLevelSet.FromLevel(FiasLevel.House));
       }
       else
       {
-        for (int i = 1; i < FiasEnumNames.EstateStatusAbbrs.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.EstateStatusAbbrs.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.EstateStatusAbbrs[i], FiasLevelSet.FromLevel(FiasLevel.House));
 
-        AddToAOTypeLevelDict(dict, "д.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "влд.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "дв.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "двл.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "двлд.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "двлад.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "гар.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "г-ж", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "гж", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "зд.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "подв.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "кот.", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "пб", FiasLevelSet.FromLevel(FiasLevel.House));
-        AddToAOTypeLevelDict(dict, "онс", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "Рґ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РІР»Рґ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РґРІ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РґРІР».", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РґРІР»Рґ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РґРІР»Р°Рґ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РіР°СЂ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "Рі-Р¶", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РіР¶", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "Р·Рґ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РїРѕРґРІ.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РєРѕС‚.", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РїР±", FiasLevelSet.FromLevel(FiasLevel.House));
+        AddToAOTypeLevelDict(dict, "РѕРЅСЃ", FiasLevelSet.FromLevel(FiasLevel.House));
       }
 
       #endregion
 
-      #region Корпус
+      #region РљРѕСЂРїСѓСЃ
 
       if (typeMode == FiasAOTypeMode.Full)
-        AddToAOTypeLevelDict(dict, "Корпус", FiasLevelSet.FromLevel(FiasLevel.Building));
+        AddToAOTypeLevelDict(dict, "РљРѕСЂРїСѓСЃ", FiasLevelSet.FromLevel(FiasLevel.Building));
       else
       {
-        AddToAOTypeLevelDict(dict, "корпус", FiasLevelSet.FromLevel(FiasLevel.Building));
-        AddToAOTypeLevelDict(dict, "корп.", FiasLevelSet.FromLevel(FiasLevel.Building));
-        AddToAOTypeLevelDict(dict, "к.", FiasLevelSet.FromLevel(FiasLevel.Building));
+        AddToAOTypeLevelDict(dict, "РєРѕСЂРїСѓСЃ", FiasLevelSet.FromLevel(FiasLevel.Building));
+        AddToAOTypeLevelDict(dict, "РєРѕСЂРї.", FiasLevelSet.FromLevel(FiasLevel.Building));
+        AddToAOTypeLevelDict(dict, "Рє.", FiasLevelSet.FromLevel(FiasLevel.Building));
       }
 
       #endregion
 
-      #region Строение
+      #region РЎС‚СЂРѕРµРЅРёРµ
 
       if (typeMode == FiasAOTypeMode.Full)
       {
-        for (int i = 1; i < FiasEnumNames.StructureStatusAOTypes.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.StructureStatusAOTypes.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.StructureStatusAOTypes[i], FiasLevelSet.FromLevel(FiasLevel.Structure));
       }
       else
       {
-        for (int i = 1; i < FiasEnumNames.StructureStatusAbbrs.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.StructureStatusAbbrs.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.StructureStatusAbbrs[i], FiasLevelSet.FromLevel(FiasLevel.Structure));
-        AddToAOTypeLevelDict(dict, "ст.", FiasLevelSet.FromLevel(FiasLevel.Structure));
-        AddToAOTypeLevelDict(dict, "сооруж.", FiasLevelSet.FromLevel(FiasLevel.Structure));
-        AddToAOTypeLevelDict(dict, "соор.", FiasLevelSet.FromLevel(FiasLevel.Structure));
-        AddToAOTypeLevelDict(dict, "лит.", FiasLevelSet.FromLevel(FiasLevel.Structure));
+        AddToAOTypeLevelDict(dict, "СЃС‚.", FiasLevelSet.FromLevel(FiasLevel.Structure));
+        AddToAOTypeLevelDict(dict, "СЃРѕРѕСЂСѓР¶.", FiasLevelSet.FromLevel(FiasLevel.Structure));
+        AddToAOTypeLevelDict(dict, "СЃРѕРѕСЂ.", FiasLevelSet.FromLevel(FiasLevel.Structure));
+        AddToAOTypeLevelDict(dict, "Р»РёС‚.", FiasLevelSet.FromLevel(FiasLevel.Structure));
       }
 
       #endregion
 
-      #region Квартира
+      #region РљРІР°СЂС‚РёСЂР°
 
       if (typeMode == FiasAOTypeMode.Full)
       {
-        for (int i = 1; i < FiasEnumNames.FlatTypeAOTypes.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.FlatTypeAOTypes.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.FlatTypeAOTypes[i], FiasLevelSet.FromLevel(FiasLevel.Flat));
       }
       else
       {
-        for (int i = 1; i < FiasEnumNames.FlatTypeAbbrs.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.FlatTypeAbbrs.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.FlatTypeAbbrs[i], FiasLevelSet.FromLevel(FiasLevel.Flat));
       }
 
       #endregion
 
-      #region Комната
+      #region РљРѕРјРЅР°С‚Р°
 
       if (typeMode == FiasAOTypeMode.Full)
       {
-        for (int i = 1; i < FiasEnumNames.RoomTypeAOTypes.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.RoomTypeAOTypes.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.RoomTypeAOTypes[i], FiasLevelSet.FromLevel(FiasLevel.Room));
       }
       else
       {
-        for (int i = 1; i < FiasEnumNames.RoomTypeAbbrs.Length; i++) // [0] - "Не определено"
+        for (int i = 1; i < FiasEnumNames.RoomTypeAbbrs.Length; i++) // [0] - "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ"
           AddToAOTypeLevelDict(dict, FiasEnumNames.RoomTypeAbbrs[i], FiasLevelSet.FromLevel(FiasLevel.Flat));
       }
 
@@ -674,9 +674,9 @@ namespace FreeLibSet.FIAS
     private volatile int[] _MaxSpaceCounts;
 
     /// <summary>
-    /// Возвращает максимальное количество пробелов типе адресного объекта заданного уровня
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕР±РµР»РѕРІ С‚РёРїРµ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
     /// </summary>
-    /// <param name="level">Уровень адресного объекта из списка FiasTools.AllLevels</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РёР· СЃРїРёСЃРєР° FiasTools.AllLevels</param>
     /// <returns></returns>
     public int GetMaxSpaceCount(FiasLevel level)
     {
@@ -706,96 +706,96 @@ namespace FreeLibSet.FIAS
               }
             }
 
-            _MaxSpaceCounts = a; // присвоение в самом конце, когда все готово
+            _MaxSpaceCounts = a; // РїСЂРёСЃРІРѕРµРЅРёРµ РІ СЃР°РјРѕРј РєРѕРЅС†Рµ, РєРѕРіРґР° РІСЃРµ РіРѕС‚РѕРІРѕ
           }
         }
       }
 
       int pLevel = FiasTools.AllLevelIndexer.IndexOf(level);
       if (pLevel < 0)
-        throw new ArgumentOutOfRangeException("level", level, "Уровень должен быть из списка FiasTools.AllLevels");
+        throw new ArgumentOutOfRangeException("level", level, "РЈСЂРѕРІРµРЅСЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РёР· СЃРїРёСЃРєР° FiasTools.AllLevels");
 
       return _MaxSpaceCounts[pLevel];
     }
 
     #endregion
 
-    #region Точка после сокращения
+    #region РўРѕС‡РєР° РїРѕСЃР»Рµ СЃРѕРєСЂР°С‰РµРЅРёСЏ
 
-    // Взяты значения поля SCNAME из таблицы AOType. 
-    // Добавлены сокращения для домов и помещений из FiasEnumNames
+    // Р’Р·СЏС‚С‹ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ SCNAME РёР· С‚Р°Р±Р»РёС†С‹ AOType. 
+    // Р”РѕР±Р°РІР»РµРЅС‹ СЃРѕРєСЂР°С‰РµРЅРёСЏ РґР»СЏ РґРѕРјРѕРІ Рё РїРѕРјРµС‰РµРЅРёР№ РёР· FiasEnumNames
 
     private static readonly StringArrayIndexer _AbbrWithDotIndexer = new StringArrayIndexer(new string[] { 
-      "ал", // Аллея
-      "взд", // Въезд
-      "влд", // Владение 
-      "г",
-      "д", // Деревня или дом
-      "двлд", // Домовладение
-      "дор", // Дорога
-      "ж/д казарм",
-      "ж/д платф",
-      "ж/д рзд",
-      "ж/д ст",
-      "зд",
-      "ззд", // Заезд
-      "зим", // Зимовье
-      "кв",
-      "киш", // Кишлак
-      "ком", // Комната
-      "корп",
-      "кот", // Котельная
-      "лн", // Линия
-      "м", // Местечко
-      "мгстр", // Магистраль
-      "межсел.тер", // межселенная территория
-      "месторожд",
-      "мкр",
-      "мр", // Месторождение
-      "наб", // Набережная
-      "л", // Литера
-      "лит",
-      "оф", // Офис
-      "п", // Поселение, Поселок
-      "п. ж/д ст", // Поселок при железнодорожной станции
-      "п. ст", // Поселок при станции (поселок станции)
-      "пав", // Павильон
-      "пб", // Погреб
-      "пер",
-      "пл", // Площадь
-      "платф",
-      "подв", // Подвал
-      "пом", // Помещение
-      "пос",
-      "проул", // Проулок
-      "раб.уч",
-      "рзд", // Разъезд
-      "с",
-      "сзд", // Съезд
-      "скл", // Склад
-      "сл", // Слобода
-      "cоор", // Сооружение
-      "сооруж",
-      "ст", // Станция
-      "стр", // Строение
-      "тер", 
-      "туп", // Тупик
-      "у", // Улус
-      "ул",
-      "ус", // Усадьба
-      "х", // Хутор
-      "ш", // Шоссе
-      "ю" // Юрты
+      "Р°Р»", // РђР»Р»РµСЏ
+      "РІР·Рґ", // Р’СЉРµР·Рґ
+      "РІР»Рґ", // Р’Р»Р°РґРµРЅРёРµ 
+      "Рі",
+      "Рґ", // Р”РµСЂРµРІРЅСЏ РёР»Рё РґРѕРј
+      "РґРІР»Рґ", // Р”РѕРјРѕРІР»Р°РґРµРЅРёРµ
+      "РґРѕСЂ", // Р”РѕСЂРѕРіР°
+      "Р¶/Рґ РєР°Р·Р°СЂРј",
+      "Р¶/Рґ РїР»Р°С‚С„",
+      "Р¶/Рґ СЂР·Рґ",
+      "Р¶/Рґ СЃС‚",
+      "Р·Рґ",
+      "Р·Р·Рґ", // Р—Р°РµР·Рґ
+      "Р·РёРј", // Р—РёРјРѕРІСЊРµ
+      "РєРІ",
+      "РєРёС€", // РљРёС€Р»Р°Рє
+      "РєРѕРј", // РљРѕРјРЅР°С‚Р°
+      "РєРѕСЂРї",
+      "РєРѕС‚", // РљРѕС‚РµР»СЊРЅР°СЏ
+      "Р»РЅ", // Р›РёРЅРёСЏ
+      "Рј", // РњРµСЃС‚РµС‡РєРѕ
+      "РјРіСЃС‚СЂ", // РњР°РіРёСЃС‚СЂР°Р»СЊ
+      "РјРµР¶СЃРµР».С‚РµСЂ", // РјРµР¶СЃРµР»РµРЅРЅР°СЏ С‚РµСЂСЂРёС‚РѕСЂРёСЏ
+      "РјРµСЃС‚РѕСЂРѕР¶Рґ",
+      "РјРєСЂ",
+      "РјСЂ", // РњРµСЃС‚РѕСЂРѕР¶РґРµРЅРёРµ
+      "РЅР°Р±", // РќР°Р±РµСЂРµР¶РЅР°СЏ
+      "Р»", // Р›РёС‚РµСЂР°
+      "Р»РёС‚",
+      "РѕС„", // РћС„РёСЃ
+      "Рї", // РџРѕСЃРµР»РµРЅРёРµ, РџРѕСЃРµР»РѕРє
+      "Рї. Р¶/Рґ СЃС‚", // РџРѕСЃРµР»РѕРє РїСЂРё Р¶РµР»РµР·РЅРѕРґРѕСЂРѕР¶РЅРѕР№ СЃС‚Р°РЅС†РёРё
+      "Рї. СЃС‚", // РџРѕСЃРµР»РѕРє РїСЂРё СЃС‚Р°РЅС†РёРё (РїРѕСЃРµР»РѕРє СЃС‚Р°РЅС†РёРё)
+      "РїР°РІ", // РџР°РІРёР»СЊРѕРЅ
+      "РїР±", // РџРѕРіСЂРµР±
+      "РїРµСЂ",
+      "РїР»", // РџР»РѕС‰Р°РґСЊ
+      "РїР»Р°С‚С„",
+      "РїРѕРґРІ", // РџРѕРґРІР°Р»
+      "РїРѕРј", // РџРѕРјРµС‰РµРЅРёРµ
+      "РїРѕСЃ",
+      "РїСЂРѕСѓР»", // РџСЂРѕСѓР»РѕРє
+      "СЂР°Р±.СѓС‡",
+      "СЂР·Рґ", // Р Р°Р·СЉРµР·Рґ
+      "СЃ",
+      "СЃР·Рґ", // РЎСЉРµР·Рґ
+      "СЃРєР»", // РЎРєР»Р°Рґ
+      "СЃР»", // РЎР»РѕР±РѕРґР°
+      "cРѕРѕСЂ", // РЎРѕРѕСЂСѓР¶РµРЅРёРµ
+      "СЃРѕРѕСЂСѓР¶",
+      "СЃС‚", // РЎС‚Р°РЅС†РёСЏ
+      "СЃС‚СЂ", // РЎС‚СЂРѕРµРЅРёРµ
+      "С‚РµСЂ", 
+      "С‚СѓРї", // РўСѓРїРёРє
+      "Сѓ", // РЈР»СѓСЃ
+      "СѓР»",
+      "СѓСЃ", // РЈСЃР°РґСЊР±Р°
+      "С…", // РҐСѓС‚РѕСЂ
+      "С€", // РЁРѕСЃСЃРµ
+      "СЋ" // Р®СЂС‚С‹
      }, true);
 
     /// <summary>
-    /// Возвращает true, если после сокращения должна идти точка.
-    /// Например, для "ул" возвращается true, а для "аул" - false.
-    /// Если сокращение уже заканчивается на точку, возвращается false.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїРѕСЃР»Рµ СЃРѕРєСЂР°С‰РµРЅРёСЏ РґРѕР»Р¶РЅР° РёРґС‚Рё С‚РѕС‡РєР°.
+    /// РќР°РїСЂРёРјРµСЂ, РґР»СЏ "СѓР»" РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true, Р° РґР»СЏ "Р°СѓР»" - false.
+    /// Р•СЃР»Рё СЃРѕРєСЂР°С‰РµРЅРёРµ СѓР¶Рµ Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ РЅР° С‚РѕС‡РєСѓ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
     /// </summary>
-    /// <param name="abbr">Проверяемое сокращение</param>
-    /// <param name="level">Уровень адресного объекта (в текущей реализации не учитывается)</param>
-    /// <returns>Необходимость добавления точки</returns>
+    /// <param name="abbr">РџСЂРѕРІРµСЂСЏРµРјРѕРµ СЃРѕРєСЂР°С‰РµРЅРёРµ</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° (РІ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ)</param>
+    /// <returns>РќРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РґРѕР±Р°РІР»РµРЅРёСЏ С‚РѕС‡РєРё</returns>
     internal bool IsAbbreviationDotRequired(string abbr, FiasLevel level)
     {
       if (String.IsNullOrEmpty(abbr))
@@ -803,16 +803,16 @@ namespace FreeLibSet.FIAS
       if (abbr[abbr.Length - 1] == '.')
         return false;
 
-      // После сокращения должна идти точка с пробелом
-      // http://new.gramota.ru/spravka/buro/search-answer?s=238880 (вопрос № 238880)
-      // После составных сокращений "пгт", "рп", ... точка не нужна
-      // http://new.gramota.ru/spravka/buro/search-answer?s=261380 (вопрос 261380)
+      // РџРѕСЃР»Рµ СЃРѕРєСЂР°С‰РµРЅРёСЏ РґРѕР»Р¶РЅР° РёРґС‚Рё С‚РѕС‡РєР° СЃ РїСЂРѕР±РµР»РѕРј
+      // http://new.gramota.ru/spravka/buro/search-answer?s=238880 (РІРѕРїСЂРѕСЃ в„– 238880)
+      // РџРѕСЃР»Рµ СЃРѕСЃС‚Р°РІРЅС‹С… СЃРѕРєСЂР°С‰РµРЅРёР№ "РїРіС‚", "СЂРї", ... С‚РѕС‡РєР° РЅРµ РЅСѓР¶РЅР°
+      // http://new.gramota.ru/spravka/buro/search-answer?s=261380 (РІРѕРїСЂРѕСЃ 261380)
 
 
-      abbr = abbr.Replace('_', ' '); // бывают с подчеркиваниями
+      abbr = abbr.Replace('_', ' '); // Р±С‹РІР°СЋС‚ СЃ РїРѕРґС‡РµСЂРєРёРІР°РЅРёСЏРјРё
 
-      // Не знаю разумного правила, только тупо перебирать.
-      // Так как точка чаще не нужна, чем нужна, перебираем то, где нужна точка.
+      // РќРµ Р·РЅР°СЋ СЂР°Р·СѓРјРЅРѕРіРѕ РїСЂР°РІРёР»Р°, С‚РѕР»СЊРєРѕ С‚СѓРїРѕ РїРµСЂРµР±РёСЂР°С‚СЊ.
+      // РўР°Рє РєР°Рє С‚РѕС‡РєР° С‡Р°С‰Рµ РЅРµ РЅСѓР¶РЅР°, С‡РµРј РЅСѓР¶РЅР°, РїРµСЂРµР±РёСЂР°РµРј С‚Рѕ, РіРґРµ РЅСѓР¶РЅР° С‚РѕС‡РєР°.
       return _AbbrWithDotIndexer.Contains(abbr);
     }
 

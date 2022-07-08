@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,19 +9,19 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Выражение, дополненное альясом.
-  /// Альяс используется для именования полей в таблице результатов запроса SELECT с помощью конструкции "AS".
+  /// Р’С‹СЂР°Р¶РµРЅРёРµ, РґРѕРїРѕР»РЅРµРЅРЅРѕРµ Р°Р»СЊСЏСЃРѕРј.
+  /// РђР»СЊСЏСЃ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РёРјРµРЅРѕРІР°РЅРёСЏ РїРѕР»РµР№ РІ С‚Р°Р±Р»РёС†Рµ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ Р·Р°РїСЂРѕСЃР° SELECT СЃ РїРѕРјРѕС‰СЊСЋ РєРѕРЅСЃС‚СЂСѓРєС†РёРё "AS".
   /// </summary>
   [Serializable]
   public sealed class DBxNamedExpression : IObjectWithCode
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создать выражение с альясом
+    /// РЎРѕР·РґР°С‚СЊ РІС‹СЂР°Р¶РµРЅРёРµ СЃ Р°Р»СЊСЏСЃРѕРј
     /// </summary>
-    /// <param name="expression">Выражение. Не может быть null</param>
-    /// <param name="alias">Альяс. Должен быть задан</param>
+    /// <param name="expression">Р’С‹СЂР°Р¶РµРЅРёРµ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="alias">РђР»СЊСЏСЃ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
     public DBxNamedExpression(DBxExpression expression, string alias)
     {
       if (expression == null)
@@ -33,10 +33,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создать выражение для поля.
-    /// Альяс устанавливается равным имени поля.
+    /// РЎРѕР·РґР°С‚СЊ РІС‹СЂР°Р¶РµРЅРёРµ РґР»СЏ РїРѕР»СЏ.
+    /// РђР»СЊСЏСЃ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЂР°РІРЅС‹Рј РёРјРµРЅРё РїРѕР»СЏ.
     /// </summary>
-    /// <param name="expression">Выражение DBxColumn. Если передано другое выражение, выбрасывается исключение. Не может быть null.</param>
+    /// <param name="expression">Р’С‹СЂР°Р¶РµРЅРёРµ DBxColumn. Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РґСЂСѓРіРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null.</param>
     public DBxNamedExpression(DBxExpression expression)
     {
       if (expression == null)
@@ -46,29 +46,29 @@ namespace FreeLibSet.Data
       if (expression is DBxColumn)
         _Alias = ((DBxColumn)expression).ColumnName;
       else
-        throw new ArgumentException("Для использования выражения типа " + expression.GetType() + " требуется задавать альяс в явном виде");
+        throw new ArgumentException("Р”Р»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ С‚РёРїР° " + expression.GetType() + " С‚СЂРµР±СѓРµС‚СЃСЏ Р·Р°РґР°РІР°С‚СЊ Р°Р»СЊСЏСЃ РІ СЏРІРЅРѕРј РІРёРґРµ");
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Выражение (имя простого поля, ссылочное поле или функция).
-    /// Не может быть null
+    /// Р’С‹СЂР°Р¶РµРЅРёРµ (РёРјСЏ РїСЂРѕСЃС‚РѕРіРѕ РїРѕР»СЏ, СЃСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ РёР»Рё С„СѓРЅРєС†РёСЏ).
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
     /// </summary>
     public DBxExpression Expression { get { return _Expression; } }
     private DBxExpression _Expression;
 
     /// <summary>
-    /// Альяс (в SQL-запросе используется в инструкции "AS")
-    /// Не может быть пустой строкой
+    /// РђР»СЊСЏСЃ (РІ SQL-Р·Р°РїСЂРѕСЃРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РёРЅСЃС‚СЂСѓРєС†РёРё "AS")
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРѕР№
     /// </summary>
     public string Alias { get { return _Alias; } }
     private string _Alias;
 
     /// <summary>
-    /// Возвращает true, если альяс таблицы требуется обязательно
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р°Р»СЊСЏСЃ С‚Р°Р±Р»РёС†С‹ С‚СЂРµР±СѓРµС‚СЃСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
     /// </summary>
     public bool AliasRequired
     {
@@ -84,9 +84,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает свойство Alias (для отладки)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ Alias (РґР»СЏ РѕС‚Р»Р°РґРєРё)
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return _Alias;
@@ -102,13 +102,13 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Список выражений, которые должны возвращаться оператором SELECT.
-  /// Кроме выражений хранятся альясы имен полей результирующей таблицы.
+  /// РЎРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ РѕРїРµСЂР°С‚РѕСЂРѕРј SELECT.
+  /// РљСЂРѕРјРµ РІС‹СЂР°Р¶РµРЅРёР№ С…СЂР°РЅСЏС‚СЃСЏ Р°Р»СЊСЏСЃС‹ РёРјРµРЅ РїРѕР»РµР№ СЂРµР·СѓР»СЊС‚РёСЂСѓСЋС‰РµР№ С‚Р°Р±Р»РёС†С‹.
   /// </summary>
   [Serializable]
   public sealed class DBxNamedExpressionList : NamedList<DBxNamedExpression>
   {
-    #region Дополнительные методы
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     internal new void SetReadOnly()
     {
@@ -116,29 +116,29 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавить выражение без указания альяса
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹СЂР°Р¶РµРЅРёРµ Р±РµР· СѓРєР°Р·Р°РЅРёСЏ Р°Р»СЊСЏСЃР°
     /// </summary>
-    /// <param name="expression">Объект DBxColumn. Если передано другое выражение, будет выброшено исключение. Не может быть null.</param>
+    /// <param name="expression">РћР±СЉРµРєС‚ DBxColumn. Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РґСЂСѓРіРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, Р±СѓРґРµС‚ РІС‹Р±СЂРѕС€РµРЅРѕ РёСЃРєР»СЋС‡РµРЅРёРµ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null.</param>
     public void Add(DBxExpression expression)
     {
       base.Add(new DBxNamedExpression(expression));
     }
 
     /// <summary>
-    /// Добавить выражение с указанием альяса.
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹СЂР°Р¶РµРЅРёРµ СЃ СѓРєР°Р·Р°РЅРёРµРј Р°Р»СЊСЏСЃР°.
     /// </summary>
-    /// <param name="expression">Выражение. Не может быть null.</param>
-    /// <param name="alias">Альяс. Должен быть задан</param>
+    /// <param name="expression">Р’С‹СЂР°Р¶РµРЅРёРµ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null.</param>
+    /// <param name="alias">РђР»СЊСЏСЃ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
     public void Add(DBxExpression expression, string alias)
     {
       base.Add(new DBxNamedExpression(expression, alias));
     }
 
     /// <summary>
-    /// Создает объект выражения DBxColumn и добавляет его в список.
-    /// Если имя <paramref name="columnNames"/> содержит запятые, создается несколько столбцов.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РІС‹СЂР°Р¶РµРЅРёСЏ DBxColumn Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє.
+    /// Р•СЃР»Рё РёРјСЏ <paramref name="columnNames"/> СЃРѕРґРµСЂР¶РёС‚ Р·Р°РїСЏС‚С‹Рµ, СЃРѕР·РґР°РµС‚СЃСЏ РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚РѕР»Р±С†РѕРІ.
     /// </summary>
-    /// <param name="columnNames">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Может содержать запятые для задания нескольких полей</param>
+    /// <param name="columnNames">РРјСЏ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅС‹С… РїРѕР»РµР№. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ Р·Р°РїСЏС‚С‹Рµ РґР»СЏ Р·Р°РґР°РЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… РїРѕР»РµР№</param>
     public void Add(string columnNames)
     {
       if (String.IsNullOrEmpty(columnNames))
@@ -155,20 +155,20 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Создает объект выражения DBxColumn и добавляет его в список с указанием альяса.
-    /// Можно задать только одно имя поля.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РІС‹СЂР°Р¶РµРЅРёСЏ DBxColumn Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє СЃ СѓРєР°Р·Р°РЅРёРµРј Р°Р»СЊСЏСЃР°.
+    /// РњРѕР¶РЅРѕ Р·Р°РґР°С‚СЊ С‚РѕР»СЊРєРѕ РѕРґРЅРѕ РёРјСЏ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="columnName">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Не может содержать запятые</param>
-    /// <param name="alias">Альяс</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅС‹С… РїРѕР»РµР№. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ. РќРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ Р·Р°РїСЏС‚С‹Рµ</param>
+    /// <param name="alias">РђР»СЊСЏСЃ</param>
     public void Add(string columnName, string alias)
     {
       Add(new DBxColumn(columnName), alias);
     }
 
     /// <summary>
-    /// Создает несколько выражений DBxColumn и добавляет их в список.
+    /// РЎРѕР·РґР°РµС‚ РЅРµСЃРєРѕР»СЊРєРѕ РІС‹СЂР°Р¶РµРЅРёР№ DBxColumn Рё РґРѕР±Р°РІР»СЏРµС‚ РёС… РІ СЃРїРёСЃРѕРє.
     /// </summary>
-    /// <param name="columnNames">Список имен полей. Если null, то никаких действий не выполняется</param>
+    /// <param name="columnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№. Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Add(DBxColumns columnNames)
     {
       if (columnNames == null)
@@ -178,9 +178,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Вызывает DBxExpression.GetColumnNames() для всех выражений, входящих в список.
+    /// Р’С‹Р·С‹РІР°РµС‚ DBxExpression.GetColumnNames() РґР»СЏ РІСЃРµС… РІС‹СЂР°Р¶РµРЅРёР№, РІС…РѕРґСЏС‰РёС… РІ СЃРїРёСЃРѕРє.
     /// </summary>
-    /// <param name="list">Заполняемый список. Не может быть null</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public void GetColumnNames(DBxColumnList list)
     {
 #if DEBUG
@@ -195,31 +195,31 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Данные для запросов SELECT (методы IDBxCon.FillSelect() и IDBxCon.ReaderSelect()
+  /// Р”Р°РЅРЅС‹Рµ РґР»СЏ Р·Р°РїСЂРѕСЃРѕРІ SELECT (РјРµС‚РѕРґС‹ IDBxCon.FillSelect() Рё IDBxCon.ReaderSelect()
   /// </summary>
   [Serializable]
   public sealed class DBxSelectInfo
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой объект.
-    /// Для использования объекта, как минимум, должно быть установлено свойство TableName.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ РѕР±СЉРµРєС‚.
+    /// Р”Р»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РѕР±СЉРµРєС‚Р°, РєР°Рє РјРёРЅРёРјСѓРј, РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ TableName.
     /// </summary>
     public DBxSelectInfo()
     {
       _Expressions = new DBxNamedExpressionList();
-      // Инициализируем при обращении
+      // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РїСЂРё РѕР±СЂР°С‰РµРЅРёРё
       //_GroupBy = new List<DBxExpression>();
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Имя основной таблицы, относительно которой задаются поля.
-    /// Свойство должно быть установлено
+    /// РРјСЏ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹, РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РєРѕС‚РѕСЂРѕР№ Р·Р°РґР°СЋС‚СЃСЏ РїРѕР»СЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ
     /// </summary>
     public string TableName
     {
@@ -229,15 +229,15 @@ namespace FreeLibSet.Data
     private string _TableName;
 
     /// <summary>
-    /// Список выражений (обычно, имен полей), которые требуется выбрать.
-    /// Если список пустой, то будут выбраны все поля таблицы, к которым у пользователя есть доступ.
-    /// Если ограничений на доступ к полям нет, то список будет эквивалентен "SELECT * FROM"
+    /// РЎРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№ (РѕР±С‹С‡РЅРѕ, РёРјРµРЅ РїРѕР»РµР№), РєРѕС‚РѕСЂС‹Рµ С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹Р±СЂР°С‚СЊ.
+    /// Р•СЃР»Рё СЃРїРёСЃРѕРє РїСѓСЃС‚РѕР№, С‚Рѕ Р±СѓРґСѓС‚ РІС‹Р±СЂР°РЅС‹ РІСЃРµ РїРѕР»СЏ С‚Р°Р±Р»РёС†С‹, Рє РєРѕС‚РѕСЂС‹Рј Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РµСЃС‚СЊ РґРѕСЃС‚СѓРї.
+    /// Р•СЃР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёР№ РЅР° РґРѕСЃС‚СѓРї Рє РїРѕР»СЏРј РЅРµС‚, С‚Рѕ СЃРїРёСЃРѕРє Р±СѓРґРµС‚ СЌРєРІРёРІР°Р»РµРЅС‚РµРЅ "SELECT * FROM"
     /// </summary>
     public DBxNamedExpressionList Expressions { get { return _Expressions; } }
     private DBxNamedExpressionList _Expressions;
 
     /// <summary>
-    /// Фильтр для условия WHERE. Если не задан, то будут выбираться все строки таблицы
+    /// Р¤РёР»СЊС‚СЂ РґР»СЏ СѓСЃР»РѕРІРёСЏ WHERE. Р•СЃР»Рё РЅРµ Р·Р°РґР°РЅ, С‚Рѕ Р±СѓРґСѓС‚ РІС‹Р±РёСЂР°С‚СЊСЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹
     /// </summary>
     public DBxFilter Where
     {
@@ -247,8 +247,8 @@ namespace FreeLibSet.Data
     private DBxFilter _Where;
 
     /// <summary>
-    /// Список выражений для GROUP BY.
-    /// По умолчанию список пустой
+    /// РЎРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№ РґР»СЏ GROUP BY.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРїРёСЃРѕРє РїСѓСЃС‚РѕР№
     /// </summary>
     public IList<DBxExpression> GroupBy
     {
@@ -266,23 +266,23 @@ namespace FreeLibSet.Data
       get
       {
         if (_GroupBy == null)
-          return false; // чаще всего так и бывает
+          return false; // С‡Р°С‰Рµ РІСЃРµРіРѕ С‚Р°Рє Рё Р±С‹РІР°РµС‚
         else
           return _GroupBy.Count > 0;
       }
     }
 
     /// <summary>
-    /// Заполняет список GroupBy выражениями из списка выраженийExpressions.
-    /// Предполагается, что список Expressions заполнен и содержит как агрегатные функции, так и обычные выражения
+    /// Р—Р°РїРѕР»РЅСЏРµС‚ СЃРїРёСЃРѕРє GroupBy РІС‹СЂР°Р¶РµРЅРёСЏРјРё РёР· СЃРїРёСЃРєР° РІС‹СЂР°Р¶РµРЅРёР№Expressions.
+    /// РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ СЃРїРёСЃРѕРє Expressions Р·Р°РїРѕР»РЅРµРЅ Рё СЃРѕРґРµСЂР¶РёС‚ РєР°Рє Р°РіСЂРµРіР°С‚РЅС‹Рµ С„СѓРЅРєС†РёРё, С‚Р°Рє Рё РѕР±С‹С‡РЅС‹Рµ РІС‹СЂР°Р¶РµРЅРёСЏ
     /// </summary>
     public void InitGroupBy()
     {
       if (Expressions.Count == 0)
-        throw new InvalidOperationException("Не задан список выражений. Для оператора \"SELECT * FROM xxx\" не может использоваться выражение GROUP BY");
+        throw new InvalidOperationException("РќРµ Р·Р°РґР°РЅ СЃРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№. Р”Р»СЏ РѕРїРµСЂР°С‚РѕСЂР° \"SELECT * FROM xxx\" РЅРµ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІС‹СЂР°Р¶РµРЅРёРµ GROUP BY");
 
       if (GroupBy.Count > 0)
-        throw new InvalidOperationException("Список GroupBy уже заполнен. Повторный вызов метода не допускается");
+        throw new InvalidOperationException("РЎРїРёСЃРѕРє GroupBy СѓР¶Рµ Р·Р°РїРѕР»РЅРµРЅ. РџРѕРІС‚РѕСЂРЅС‹Р№ РІС‹Р·РѕРІ РјРµС‚РѕРґР° РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ");
 
       for (int i = 0; i < Expressions.Count; i++)
       {
@@ -290,7 +290,7 @@ namespace FreeLibSet.Data
         bool hasAgregate;
         GetExpressionInfo(Expressions[i].Expression, out hasColumn, out hasAgregate);
         if (hasColumn && hasAgregate)
-          throw new InvalidOperationException("Выражение Expressions[" + i.ToString() + "] (" + Expressions[i].Expression.ToString() + ") содержит одновременно и агрегатную функцию и ссылку на поле таблицы");
+          throw new InvalidOperationException("Р’С‹СЂР°Р¶РµРЅРёРµ Expressions[" + i.ToString() + "] (" + Expressions[i].Expression.ToString() + ") СЃРѕРґРµСЂР¶РёС‚ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ Рё Р°РіСЂРµРіР°С‚РЅСѓСЋ С„СѓРЅРєС†РёСЋ Рё СЃСЃС‹Р»РєСѓ РЅР° РїРѕР»Рµ С‚Р°Р±Р»РёС†С‹");
         else if (hasColumn)
           GroupBy.Add(Expressions[i].Expression);
       }
@@ -318,15 +318,15 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Фильтр для выражения HAVING.
-    /// По умолчанию - null - фильтр не задан
+    /// Р¤РёР»СЊС‚СЂ РґР»СЏ РІС‹СЂР°Р¶РµРЅРёСЏ HAVING.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - null - С„РёР»СЊС‚СЂ РЅРµ Р·Р°РґР°РЅ
     /// </summary>
     public DBxFilter Having { get { return _Having; } set { _Having = value; } }
     private DBxFilter _Having;
 
     /// <summary>
-    /// Порядок сортировки ORDER BY.
-    /// Если не задан, то порядок возвращаемых строк непредсказуем.
+    /// РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё ORDER BY.
+    /// Р•СЃР»Рё РЅРµ Р·Р°РґР°РЅ, С‚Рѕ РїРѕСЂСЏРґРѕРє РІРѕР·РІСЂР°С‰Р°РµРјС‹С… СЃС‚СЂРѕРє РЅРµРїСЂРµРґСЃРєР°Р·СѓРµРј.
     /// </summary>
     public DBxOrder OrderBy
     {
@@ -336,7 +336,7 @@ namespace FreeLibSet.Data
     private DBxOrder _OrderBy;
 
     /// <summary>
-    /// Если установлено значение, отличное от 0, то используется предикат TOP n
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ Р·РЅР°С‡РµРЅРёРµ, РѕС‚Р»РёС‡РЅРѕРµ РѕС‚ 0, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРµРґРёРєР°С‚ TOP n
     /// </summary>
     public int MaxRecordCount
     {
@@ -351,7 +351,7 @@ namespace FreeLibSet.Data
     private int _MaxRecordCount;
 
     /// <summary>
-    /// Если установить в true, то используется предикат DISTINCT
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІ true, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРµРґРёРєР°С‚ DISTINCT
     /// </summary>
     public bool Unique
     {
@@ -362,13 +362,13 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Получить список имен полей, используемых в выражениях, фильтрах, порядке сортировки.
-    /// Предполагается, что список Expressions заполнен, иначе выбрасывается исключение.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РІ РІС‹СЂР°Р¶РµРЅРёСЏС…, С„РёР»СЊС‚СЂР°С…, РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё.
+    /// РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ СЃРїРёСЃРѕРє Expressions Р·Р°РїРѕР»РЅРµРЅ, РёРЅР°С‡Рµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ.
     /// </summary>
-    /// <param name="list">Заполняемый список. Не может быть null</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public void GetColumnNames(DBxColumnList list)
     {
 #if DEBUG
@@ -377,7 +377,7 @@ namespace FreeLibSet.Data
 #endif
 
       if (Expressions.Count == 0)
-        throw new InvalidOperationException("Список выражений Expressions не заполнен");
+        throw new InvalidOperationException("РЎРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№ Expressions РЅРµ Р·Р°РїРѕР»РЅРµРЅ");
 
       Expressions.GetColumnNames(list);
 
@@ -396,8 +396,8 @@ namespace FreeLibSet.Data
       {
         // OrderBy.GetColumnNames(list);
         // 25.12.2019
-        // В инструкции OrderBy могут идти как ссылки на поля таблицы, так и альясы из списка Expressions
-        // Альясы не надо добавлять в список полей
+        // Р’ РёРЅСЃС‚СЂСѓРєС†РёРё OrderBy РјРѕРіСѓС‚ РёРґС‚Рё РєР°Рє СЃСЃС‹Р»РєРё РЅР° РїРѕР»СЏ С‚Р°Р±Р»РёС†С‹, С‚Р°Рє Рё Р°Р»СЊСЏСЃС‹ РёР· СЃРїРёСЃРєР° Expressions
+        // РђР»СЊСЏСЃС‹ РЅРµ РЅР°РґРѕ РґРѕР±Р°РІР»СЏС‚СЊ РІ СЃРїРёСЃРѕРє РїРѕР»РµР№
         DBxColumnList list2 = new DBxColumnList();
         for (int i = 0; i < OrderBy.Parts.Length; i++)
         {
@@ -405,7 +405,7 @@ namespace FreeLibSet.Data
           OrderBy.Parts[i].Expression.GetColumnNames(list2);
           for (int j = 0; j < list2.Count; j++)
           {
-            if (!Expressions.Contains(list2[j])) // нет такого альяса?
+            if (!Expressions.Contains(list2[j])) // РЅРµС‚ С‚Р°РєРѕРіРѕ Р°Р»СЊСЏСЃР°?
               list.Add(list2[j]);
           }
         }

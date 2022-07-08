@@ -59,7 +59,7 @@ namespace FreeLibSet.Core
       // Используем статический конструктор, чтобы поля инициализировались в правильном порядке,
       // а не как придется
       _IsWine = GetIsWine();
-      _IsMono = Type.GetType("Mono.Runtime") != null;
+      _MonoVersion = GetMonoVersion();
 
       _WinNTProductType = GetWinNTProductType();
       _OSVersionText = GetOSVersionText();
@@ -127,17 +127,61 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает true, если выполнение осуществляется под MONO, а не .NET Framework
     /// </summary>
-    public static bool IsMono { get { return _IsMono; } }
-    private static bool _IsMono;
+    public static bool IsMono { get { return _MonoVersion != null; } }
 
     /// <summary>
-    /// Возвращает читаемое название версии .NET Framework с указанием разрядности
+    /// Возвращает версию Mono.
+    /// Эта версия не совпадает с Environment.Version.
+    /// Если IsMono=false, возвращает версию "0.0.0.0"
+    /// </summary>
+    public static Version MonoVersion
+    {
+      get
+      {
+        if (_MonoVersion == null)
+          return new Version();
+        else
+          return _MonoVersion;
+      }
+    }
+    private static Version _MonoVersion;
+
+
+    private static Version GetMonoVersion()
+    {
+      Type type = Type.GetType("Mono.Runtime");
+      if (type == null)
+        return null; // Net Framework
+
+      try
+      {
+        MethodInfo displayName = type.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+        if (displayName == null)
+          return new Version();
+        string s = (string)(displayName.Invoke(null, null).ToString());
+        if (String.IsNullOrEmpty(s))
+          return new Version();
+        int p = s.IndexOf(' ');
+        if (p >= 0)
+          s = s.Substring(0, p);
+        return new Version(s);
+      }
+      catch
+      {
+        return new Version();
+      }
+    }
+
+
+    /// <summary>
+    /// Возвращает читаемое название версии .NET Framework/Mono с указанием разрядности.
+    /// Для моно возвращается версия mono/версия имитируемой Net framework через дробь.
     /// </summary>
     public static string NetVersionText
     {
       get
       {
-        return (IsMono ? "Mono" : ".NET Framework") + " " + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+        return (IsMono ? ("Mono " + MonoVersion.ToString() + "/") : ".NET Framework ") + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
       }
     }
 

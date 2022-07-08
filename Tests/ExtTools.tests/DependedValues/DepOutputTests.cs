@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -47,7 +47,7 @@ namespace ExtTools_tests.DependedValues
       DepInput<int> dummy = new DepInput<int>(0, Dummy_ValueChanged);
       dummy.Source = sut;
 
-      Assert.AreEqual(1, sut.Value, "Value"); // не должна испортиться
+      Assert.AreEqual(1, sut.Value, "Value"); // РЅРµ РґРѕР»Р¶РЅР° РёСЃРїРѕСЂС‚РёС‚СЊСЃСЏ
       Assert.IsFalse(sut.InsideSetValue, "InsideSetValue");
       Assert.IsFalse(sut.HasValueChanged, "HasValueChanged");
       Assert.IsFalse(sut.HasSource, "HasSource");
@@ -62,10 +62,10 @@ namespace ExtTools_tests.DependedValues
       DepOutput<int> sut = new DepOutput<int>(1);
       DepInput<int> dummy = new DepInput<int>(0, Dummy_ValueChanged);
       dummy.Source = sut;
-      // Теперь отключаем
+      // РўРµРїРµСЂСЊ РѕС‚РєР»СЋС‡Р°РµРј
       dummy.Source = null;
 
-      Assert.AreEqual(1, sut.Value, "Value"); // не должна испортиться
+      Assert.AreEqual(1, sut.Value, "Value"); // РЅРµ РґРѕР»Р¶РЅР° РёСЃРїРѕСЂС‚РёС‚СЊСЃСЏ
       Assert.IsFalse(sut.HasOutputs, "HasOutputs");
       Assert.IsFalse(sut.IsConnected, "IsConnected");
     }
@@ -85,7 +85,7 @@ namespace ExtTools_tests.DependedValues
       Assert.AreEqual("1|2|1", resprod.ToString(), "Value changed again");
     }
 
-    #region Событие ValueChanged
+    #region РЎРѕР±С‹С‚РёРµ ValueChanged
 
     [Test]
     public void ValueChanged()

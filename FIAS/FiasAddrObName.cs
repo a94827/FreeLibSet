@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,12 +9,12 @@ using FreeLibSet.Core;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Хранит наименование адресного объекта, разбитое на лексемы, чтобы его можно было сравнивать при неточном сравнении.
-  /// Например, "МАРКСА", "К.Маркса" и "Карла Маркса" - это одна и та же улица
+  /// РҐСЂР°РЅРёС‚ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, СЂР°Р·Р±РёС‚РѕРµ РЅР° Р»РµРєСЃРµРјС‹, С‡С‚РѕР±С‹ РµРіРѕ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СЃСЂР°РІРЅРёРІР°С‚СЊ РїСЂРё РЅРµС‚РѕС‡РЅРѕРј СЃСЂР°РІРЅРµРЅРёРё.
+  /// РќР°РїСЂРёРјРµСЂ, "РњРђР РљРЎРђ", "Рљ.РњР°СЂРєСЃР°" Рё "РљР°СЂР»Р° РњР°СЂРєСЃР°" - СЌС‚Рѕ РѕРґРЅР° Рё С‚Р° Р¶Рµ СѓР»РёС†Р°
   /// </summary>
   internal sealed class FiasAddrObName : IEquatable<FiasAddrObName>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public FiasAddrObName(string name)
     {
@@ -22,32 +22,32 @@ namespace FreeLibSet.FIAS
         name = String.Empty;
       _Name = name.Trim();
 
-      string[] a = name.ToLowerInvariant().Replace('ё', 'е').Split(' ', '.', '-', '№');
+      string[] a = name.ToLowerInvariant().Replace('С‘', 'Рµ').Split(' ', '.', '-', 'в„–');
       List<string> lst = new List<string>(a.Length);
       for (int i = 0; i < a.Length; i++)
       {
         if (a[i].Length == 0)
-          continue; // пустые лексемы могут встречаться
+          continue; // РїСѓСЃС‚С‹Рµ Р»РµРєСЃРµРјС‹ РјРѕРіСѓС‚ РІСЃС‚СЂРµС‡Р°С‚СЊСЃСЏ
         if (lst.Count > 0 && a[i].Length <= 2)
         {
-          // отбрасываем окончания типа "1-ый", "2-я"
+          // РѕС‚Р±СЂР°СЃС‹РІР°РµРј РѕРєРѕРЅС‡Р°РЅРёСЏ С‚РёРїР° "1-С‹Р№", "2-СЏ"
           switch (a[i])
           {
-            case "ый":
-            case "ой":
-            case "ий":
-            case "й":
-            case "ая":
-            case "яя":
-            case "я":
-            case "ое":
-            case "ее":
-            case "е":
+            case "С‹Р№":
+            case "РѕР№":
+            case "РёР№":
+            case "Р№":
+            case "Р°СЏ":
+            case "СЏСЏ":
+            case "СЏ":
+            case "РѕРµ":
+            case "РµРµ":
+            case "Рµ":
               continue;
           }
         }
 
-        // Добавляем лексему
+        // Р”РѕР±Р°РІР»СЏРµРј Р»РµРєСЃРµРјСѓ
         lst.Add(a[i]);
       }
       _Tokens = lst.ToArray();
@@ -55,16 +55,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Имя, как оно задано в конструкторе
+    /// РРјСЏ, РєР°Рє РѕРЅРѕ Р·Р°РґР°РЅРѕ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string Name { get { return _Name; } }
     private readonly string _Name;
 
     /// <summary>
-    /// Список лексем
+    /// РЎРїРёСЃРѕРє Р»РµРєСЃРµРј
     /// </summary>
     private readonly string[] _Tokens;
 
@@ -75,15 +75,15 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Сравнение
+    #region РЎСЂР°РІРЅРµРЅРёРµ
 
     public static bool operator ==(FiasAddrObName a, FiasAddrObName b)
     {
-      // Флажки использованных лексем
+      // Р¤Р»Р°Р¶РєРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹С… Р»РµРєСЃРµРј
       bool[] flags_a = new bool[a._Tokens.Length];
       bool[] flags_b = new bool[b._Tokens.Length];
 
-      #region Точное сравнение лексем
+      #region РўРѕС‡РЅРѕРµ СЃСЂР°РІРЅРµРЅРёРµ Р»РµРєСЃРµРј
 
       for (int i = 0; i < a._Tokens.Length; i++)
       {
@@ -102,14 +102,14 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Неточное сравнение
+      #region РќРµС‚РѕС‡РЅРѕРµ СЃСЂР°РІРЅРµРЅРёРµ
 
       ComparePartial(a._Tokens, flags_a, b._Tokens, flags_b);
       ComparePartial(b._Tokens, flags_b, a._Tokens, flags_a);
 
       #endregion
 
-      #region Проверка
+      #region РџСЂРѕРІРµСЂРєР°
 
       int za = CalcFalse(flags_a);
       int zb = CalcFalse(flags_b);
@@ -127,8 +127,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Сравниваем лексемы с сокращениями.
-    /// Например, улица "К. Маркса" = "Карла Маркса"
+    /// РЎСЂР°РІРЅРёРІР°РµРј Р»РµРєСЃРµРјС‹ СЃ СЃРѕРєСЂР°С‰РµРЅРёСЏРјРё.
+    /// РќР°РїСЂРёРјРµСЂ, СѓР»РёС†Р° "Рљ. РњР°СЂРєСЃР°" = "РљР°СЂР»Р° РњР°СЂРєСЃР°"
     /// </summary>
     /// <param name="tokens_a"></param>
     /// <param name="flags_a"></param>
@@ -136,10 +136,10 @@ namespace FreeLibSet.FIAS
     /// <param name="flags_b"></param>
     private static void ComparePartial(string[] tokens_a, bool[] flags_a, string[] tokens_b, bool[] flags_b)
     {
-      for (int i = 0; i < (tokens_a.Length - 1); i++) // фамилия должна быть в конце
+      for (int i = 0; i < (tokens_a.Length - 1); i++) // С„Р°РјРёР»РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІ РєРѕРЅС†Рµ
       {
         if (flags_a[i]) continue;
-        if (tokens_a[i].Length == 1 && tokens_a[i][0] >= 'а' && tokens_a[i][0] <= 'я')
+        if (tokens_a[i].Length == 1 && tokens_a[i][0] >= 'Р°' && tokens_a[i][0] <= 'СЏ')
         {
           for (int j = 0; j < tokens_b.Length; j++)
           {
@@ -156,7 +156,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Подсчитывает количество не установленных флажков
+    /// РџРѕРґСЃС‡РёС‚С‹РІР°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… С„Р»Р°Р¶РєРѕРІ
     /// </summary>
     /// <param name="flags"></param>
     /// <returns></returns>
@@ -172,7 +172,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает true, если можно пропустить оставшиеся лексемы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РјРѕР¶РЅРѕ РїСЂРѕРїСѓСЃС‚РёС‚СЊ РѕСЃС‚Р°РІС€РёРµСЃСЏ Р»РµРєСЃРµРјС‹
     /// </summary>
     /// <param name="tokens"></param>
     /// <param name="flags"></param>
@@ -180,11 +180,11 @@ namespace FreeLibSet.FIAS
     private static bool CalcCanSkipToken(string[] tokens, bool[] flags)
     {
       if (tokens.Length < 2 || tokens.Length > 4)
-        return false; // Фамилия может быть с одним дефисом. Может нехватать имени и отчества
+        return false; // Р¤Р°РјРёР»РёСЏ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃ РѕРґРЅРёРј РґРµС„РёСЃРѕРј. РњРѕР¶РµС‚ РЅРµС…РІР°С‚Р°С‚СЊ РёРјРµРЅРё Рё РѕС‚С‡РµСЃС‚РІР°
 
       if (!flags[flags.Length - 1])
-        return false; // последняя лексема значима
-      int zCount = 0; // Количество ненайденных лексем. Ненайденные лексемы могут быть только в конце
+        return false; // РїРѕСЃР»РµРґРЅСЏСЏ Р»РµРєСЃРµРјР° Р·РЅР°С‡РёРјР°
+      int zCount = 0; // РљРѕР»РёС‡РµСЃС‚РІРѕ РЅРµРЅР°Р№РґРµРЅРЅС‹С… Р»РµРєСЃРµРј. РќРµРЅР°Р№РґРµРЅРЅС‹Рµ Р»РµРєСЃРµРјС‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ С‚РѕР»СЊРєРѕ РІ РєРѕРЅС†Рµ
       for (int i = 0; i < (tokens.Length - 1); i++)
       {
         if (flags[i])
@@ -201,8 +201,8 @@ namespace FreeLibSet.FIAS
       }
 
       // 02.10.2020
-      // Есть улица "Ю.-Р.Г.Эрвье"
-      // В ней 4 части, но фамилия не составная
+      // Р•СЃС‚СЊ СѓР»РёС†Р° "Р®.-Р .Р“.Р­СЂРІСЊРµ"
+      // Р’ РЅРµР№ 4 С‡Р°СЃС‚Рё, РЅРѕ С„Р°РјРёР»РёСЏ РЅРµ СЃРѕСЃС‚Р°РІРЅР°СЏ
       if (zCount >= 3)
         return false;
 
@@ -221,11 +221,11 @@ namespace FreeLibSet.FIAS
         string t = tokens[i];
         for (int j = 0; j < t.Length; j++)
         {
-          if (t[j] < 'а' || t[j] > 'я')
-            return false; // небуквенный символ - не может быть именем человека
+          if (t[j] < 'Р°' || t[j] > 'СЏ')
+            return false; // РЅРµР±СѓРєРІРµРЅРЅС‹Р№ СЃРёРјРІРѕР» - РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёРјРµРЅРµРј С‡РµР»РѕРІРµРєР°
         }
         //  if (tokens[i].Length > 1)
-        //    return false; // TODO: А как же сравнение улиц "Маркса" и "Карла Маркса"?
+        //    return false; // TODO: Рђ РєР°Рє Р¶Рµ СЃСЂР°РІРЅРµРЅРёРµ СѓР»РёС† "РњР°СЂРєСЃР°" Рё "РљР°СЂР»Р° РњР°СЂРєСЃР°"?
 
       }
 
@@ -252,7 +252,7 @@ namespace FreeLibSet.FIAS
 
     public override int GetHashCode()
     {
-      // Нет возможности просто посчитать хэш-сумму
+      // РќРµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРѕСЃС‚Рѕ РїРѕСЃС‡РёС‚Р°С‚СЊ С…СЌС€-СЃСѓРјРјСѓ
 
       return 0;
     }

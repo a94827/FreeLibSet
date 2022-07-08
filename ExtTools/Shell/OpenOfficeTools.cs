@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -14,50 +14,50 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.Shell
 {
-  #region Перечисление OpenOfficeKind
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ OpenOfficeKind
 
   /// <summary>
-  /// Вид офиса: OpenOffice или LibreOffice
+  /// Р’РёРґ РѕС„РёСЃР°: OpenOffice РёР»Рё LibreOffice
   /// </summary>
   public enum OpenOfficeKind
   {
     /// <summary>
-    /// Нет установленного офиса
+    /// РќРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРіРѕ РѕС„РёСЃР°
     /// </summary>
     Unknown,
 
     /// <summary>
-    /// Установлен OpenOffice
+    /// РЈСЃС‚Р°РЅРѕРІР»РµРЅ OpenOffice
     /// </summary>
     OpenOffice,
 
     /// <summary>
-    /// Установлен Libre Office
+    /// РЈСЃС‚Р°РЅРѕРІР»РµРЅ Libre Office
     /// </summary>
     LibreOffice
   }
 
   #endregion
 
-  #region Перечисление OpenOfficeArchitecture
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ OpenOfficeArchitecture
 
   /// <summary>
-  /// Разрядность приложений LibreOffice
+  /// Р Р°Р·СЂСЏРґРЅРѕСЃС‚СЊ РїСЂРёР»РѕР¶РµРЅРёР№ LibreOffice
   /// </summary>
   public enum OpenOfficePlatform
   {
     /// <summary>
-    /// Разрядность неизвестна
+    /// Р Р°Р·СЂСЏРґРЅРѕСЃС‚СЊ РЅРµРёР·РІРµСЃС‚РЅР°
     /// </summary>
     Unknown,
 
     /// <summary>
-    /// 32-битное приложение
+    /// 32-Р±РёС‚РЅРѕРµ РїСЂРёР»РѕР¶РµРЅРёРµ
     /// </summary>
     x86,
 
     /// <summary>
-    /// 64-битное приложение
+    /// 64-Р±РёС‚РЅРѕРµ РїСЂРёР»РѕР¶РµРЅРёРµ
     /// </summary>
     x64
   }
@@ -65,38 +65,38 @@ namespace FreeLibSet.Shell
   #endregion
 
   /// <summary>
-  /// Поддержка для OpenOffice / Libre Office.
+  /// РџРѕРґРґРµСЂР¶РєР° РґР»СЏ OpenOffice / Libre Office.
   /// </summary>
   public static class OpenOfficeTools
   {
-    #region Список установленных копий
+    #region РЎРїРёСЃРѕРє СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РєРѕРїРёР№
 
-    #region Перечисление InfoSource
+    #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ InfoSource
 
     /// <summary>
-    /// Откуда получена информация об установленной копии
+    /// РћС‚РєСѓРґР° РїРѕР»СѓС‡РµРЅР° РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ РєРѕРїРёРё
     /// </summary>
     public enum InfoSource
     {
       /// <summary>
-      /// Неизвестно
+      /// РќРµРёР·РІРµСЃС‚РЅРѕ
       /// </summary>
       Unknown,
 
       /// <summary>
-      /// Из записи в реестре Windows.
-      /// В этом случае свойство OfficeInfo.InfoSourceString содержит раздел реестра
+      /// РР· Р·Р°РїРёСЃРё РІ СЂРµРµСЃС‚СЂРµ Windows.
+      /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ СЃРІРѕР№СЃС‚РІРѕ OfficeInfo.InfoSourceString СЃРѕРґРµСЂР¶РёС‚ СЂР°Р·РґРµР» СЂРµРµСЃС‚СЂР°
       /// </summary>
       Registry,
 
       /// <summary>
-      /// Из переменной окружения.
-      /// В этом случае свойство OfficeInfo.InfoSourceString содержит имя переменной ("PATH")
+      /// РР· РїРµСЂРµРјРµРЅРЅРѕР№ РѕРєСЂСѓР¶РµРЅРёСЏ.
+      /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ СЃРІРѕР№СЃС‚РІРѕ OfficeInfo.InfoSourceString СЃРѕРґРµСЂР¶РёС‚ РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ ("PATH")
       /// </summary>
       EnvironmentVariable,
 
       /// <summary>
-      /// Поиск был выполнен по предопределенному пути
+      /// РџРѕРёСЃРє Р±С‹Р» РІС‹РїРѕР»РЅРµРЅ РїРѕ РїСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅРѕРјСѓ РїСѓС‚Рё
       /// </summary>
       PredefinedPath
     }
@@ -104,14 +104,14 @@ namespace FreeLibSet.Shell
     #endregion
 
     /// <summary>
-    /// Информация об одной установленной копии офиса
+    /// РРЅС„РѕСЂРјР°С†РёСЏ РѕР± РѕРґРЅРѕР№ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ РєРѕРїРёРё РѕС„РёСЃР°
     /// </summary>
     public sealed class OfficeInfo
     {
-      #region Конструкторы
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
       /// <summary>
-      /// Версия конструктора без указания источника информации.
+      /// Р’РµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° Р±РµР· СѓРєР°Р·Р°РЅРёСЏ РёСЃС‚РѕС‡РЅРёРєР° РёРЅС„РѕСЂРјР°С†РёРё.
       /// </summary>
       /// <param name="programDir"></param>
       /// <param name="kind"></param>
@@ -121,7 +121,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Версия конструктора с указанием источника информации.
+      /// Р’РµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° СЃ СѓРєР°Р·Р°РЅРёРµРј РёСЃС‚РѕС‡РЅРёРєР° РёРЅС„РѕСЂРјР°С†РёРё.
       /// </summary>
       /// <param name="programDir"></param>
       /// <param name="kind"></param>
@@ -133,19 +133,19 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Версия конструктора с указанием платформы
+      /// Р’РµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° СЃ СѓРєР°Р·Р°РЅРёРµРј РїР»Р°С‚С„РѕСЂРјС‹
       /// </summary>
-      /// <param name="programDir">Каталог с программными файлами (в котором находится soffice.exe или soffice</param>
-      /// <param name="kind">OpenOffice или LibeOffice</param>
-      /// <param name="infoSource">Откуда получена информация об установленной копии</param>
-      /// <param name="infoSourceString">Дополнительная информация, как была найдена эта копия (ключ реестра или имя переменной окружения)</param>
-      /// <param name="platform">32-bit или 64-bit</param>
+      /// <param name="programDir">РљР°С‚Р°Р»РѕРі СЃ РїСЂРѕРіСЂР°РјРјРЅС‹РјРё С„Р°Р№Р»Р°РјРё (РІ РєРѕС‚РѕСЂРѕРј РЅР°С…РѕРґРёС‚СЃСЏ soffice.exe РёР»Рё soffice</param>
+      /// <param name="kind">OpenOffice РёР»Рё LibeOffice</param>
+      /// <param name="infoSource">РћС‚РєСѓРґР° РїРѕР»СѓС‡РµРЅР° РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ РєРѕРїРёРё</param>
+      /// <param name="infoSourceString">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ, РєР°Рє Р±С‹Р»Р° РЅР°Р№РґРµРЅР° СЌС‚Р° РєРѕРїРёСЏ (РєР»СЋС‡ СЂРµРµСЃС‚СЂР° РёР»Рё РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РѕРєСЂСѓР¶РµРЅРёСЏ)</param>
+      /// <param name="platform">32-bit РёР»Рё 64-bit</param>
       public OfficeInfo(AbsPath programDir, OpenOfficeKind kind, InfoSource infoSource, string infoSourceString, OpenOfficePlatform platform)
       {
-        #region Копирование аргументов
+        #region РљРѕРїРёСЂРѕРІР°РЅРёРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ
 
         if (programDir.IsEmpty)
-          throw new ArgumentException("Не задан ProgramDir", "programDir");
+          throw new ArgumentException("РќРµ Р·Р°РґР°РЅ ProgramDir", "programDir");
 
         _ProgramDir = programDir;
         _Kind = kind;
@@ -155,7 +155,7 @@ namespace FreeLibSet.Shell
 
         #endregion
 
-        #region Определение версии
+        #region РћРїСЂРµРґРµР»РµРЅРёРµ РІРµСЂСЃРёРё
 
         try
         {
@@ -171,14 +171,14 @@ namespace FreeLibSet.Shell
         }
         catch
         {
-          _Version = new Version(); // пустая версия
+          _Version = new Version(); // РїСѓСЃС‚Р°СЏ РІРµСЂСЃРёСЏ
         }
         if (_Version == null)
           _Version = new Version();
 
         #endregion
 
-        #region Определение наличия компонентов
+        #region РћРїСЂРµРґРµР»РµРЅРёРµ РЅР°Р»РёС‡РёСЏ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
 
         _HasWriter = IsCompExists("swriter");
         _HasCalc = IsCompExists("scalc");
@@ -191,10 +191,10 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Определение версии OpenOffice/LibreOffice в Linux.
-      /// Понятия не имею, как это сделать правильно.
-      /// Ни один файл не имеет версии, заданной в ресурсах, как в Windows.
-      /// Анализируем текстовый файл.
+      /// РћРїСЂРµРґРµР»РµРЅРёРµ РІРµСЂСЃРёРё OpenOffice/LibreOffice РІ Linux.
+      /// РџРѕРЅСЏС‚РёСЏ РЅРµ РёРјРµСЋ, РєР°Рє СЌС‚Рѕ СЃРґРµР»Р°С‚СЊ РїСЂР°РІРёР»СЊРЅРѕ.
+      /// РќРё РѕРґРёРЅ С„Р°Р№Р» РЅРµ РёРјРµРµС‚ РІРµСЂСЃРёРё, Р·Р°РґР°РЅРЅРѕР№ РІ СЂРµСЃСѓСЂСЃР°С…, РєР°Рє РІ Windows.
+      /// РђРЅР°Р»РёР·РёСЂСѓРµРј С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р».
       /// </summary>
       /// <returns></returns>
       private void InitVersionUnix()
@@ -203,15 +203,15 @@ namespace FreeLibSet.Shell
         if (!File.Exists(textFile.Path))
           return;
 
-        string[] aLines = System.IO.File.ReadAllLines(textFile.Path); // ?? кодировка
+        string[] aLines = System.IO.File.ReadAllLines(textFile.Path); // ?? РєРѕРґРёСЂРѕРІРєР°
         for (int i = 0; i < aLines.Length; i++)
         {
-          // Искомая строка выглядит так:
+          // РСЃРєРѕРјР°СЏ СЃС‚СЂРѕРєР° РІС‹РіР»СЏРґРёС‚ С‚Р°Рє:
           // BuildVersion=1:5.0.3-rc2-0ubuntu1-trusty2
 
           if (aLines[i].StartsWith("BuildVersion="))
           {
-            string s = aLines[i].Substring(13); // после знака равенства
+            string s = aLines[i].Substring(13); // РїРѕСЃР»Рµ Р·РЅР°РєР° СЂР°РІРµРЅСЃС‚РІР°
             int p = s.IndexOf(':');
             if (p < 0)
               return;
@@ -222,7 +222,7 @@ namespace FreeLibSet.Shell
             _Version = FileTools.GetVersionFromStr(s);
           }
         }
-        // не нашли строки
+        // РЅРµ РЅР°С€Р»Рё СЃС‚СЂРѕРєРё
       }
 
       private bool IsCompExists(string appName)
@@ -233,36 +233,36 @@ namespace FreeLibSet.Shell
 
       #endregion
 
-      #region Свойства офиса в-целом
+      #region РЎРІРѕР№СЃС‚РІР° РѕС„РёСЃР° РІ-С†РµР»РѕРј
 
       /// <summary>
-      /// Возвращает тип установленного офиса или Unknown, если не установлен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РёРї СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРіРѕ РѕС„РёСЃР° РёР»Рё Unknown, РµСЃР»Рё РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ
       /// </summary>
       public OpenOfficeKind Kind { get { return _Kind; } }
       private readonly OpenOfficeKind _Kind;
 
       /// <summary>
-      /// Получить каталог с программными файлами (в котором находится soffice.exe или soffice). 
-      /// Возвращает AbsPath.Empty, если офис не установлен.
+      /// РџРѕР»СѓС‡РёС‚СЊ РєР°С‚Р°Р»РѕРі СЃ РїСЂРѕРіСЂР°РјРјРЅС‹РјРё С„Р°Р№Р»Р°РјРё (РІ РєРѕС‚РѕСЂРѕРј РЅР°С…РѕРґРёС‚СЃСЏ soffice.exe РёР»Рё soffice). 
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ AbsPath.Empty, РµСЃР»Рё РѕС„РёСЃ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ.
       /// </summary>
       public AbsPath ProgramDir { get { return _ProgramDir; } }
       private readonly AbsPath _ProgramDir;
 
       /// <summary>
-      /// Возвращает версию офиса
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРµСЂСЃРёСЋ РѕС„РёСЃР°
       /// </summary>
       public Version Version { get { return _Version; } }
       private /*readonly */ Version _Version;
 
       /// <summary>
-      /// Разрядность приложения
+      /// Р Р°Р·СЂСЏРґРЅРѕСЃС‚СЊ РїСЂРёР»РѕР¶РµРЅРёСЏ
       /// </summary>
       public OpenOfficePlatform Platform { get { return _Platform; } }
       private readonly OpenOfficePlatform _Platform;
 
 
       /// <summary>
-      /// Возвращает абсолютный путь к файлу soffice.exe (или soffice под Linux).
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р°Р±СЃРѕР»СЋС‚РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ soffice.exe (РёР»Рё soffice РїРѕРґ Linux).
       /// </summary>
       public AbsPath OfficePath
       {
@@ -273,7 +273,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает "LibreOffice" или "OpenOffice"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "LibreOffice" РёР»Рё "OpenOffice"
       /// </summary>
       public string KindName
       {
@@ -290,18 +290,18 @@ namespace FreeLibSet.Shell
 
       #endregion
 
-      #region Наличие отдельных компонентов
+      #region РќР°Р»РёС‡РёРµ РѕС‚РґРµР»СЊРЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
 
       #region Writer
 
       /// <summary>
-      /// Возвращает true, если компонент "Writer" установлен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚ "Writer" СѓСЃС‚Р°РЅРѕРІР»РµРЅ
       /// </summary>
       public bool HasWriter { get { return _HasWriter; } }
       private readonly bool _HasWriter;
 
       /// <summary>
-      /// Возвращает полный путь к файлу swriter.exe
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ swriter.exe
       /// </summary>
       public AbsPath WriterPath
       {
@@ -315,7 +315,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает "OpenOffice Writer" или "LibreOffice Writer"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "OpenOffice Writer" РёР»Рё "LibreOffice Writer"
       /// </summary>
       public string WriterDisplayName
       {
@@ -327,13 +327,13 @@ namespace FreeLibSet.Shell
       #region Calc
 
       /// <summary>
-      /// Возвращает true, если компонент "Calc" установлен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚ "Calc" СѓСЃС‚Р°РЅРѕРІР»РµРЅ
       /// </summary>
       public bool HasCalc { get { return _HasCalc; } }
       private readonly bool _HasCalc;
 
       /// <summary>
-      /// Возвращает полный путь к файлу scalc.exe
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ scalc.exe
       /// </summary>
       public AbsPath CalcPath
       {
@@ -347,7 +347,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает "OpenOffice Calc" или "LibreOffice Calc"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "OpenOffice Calc" РёР»Рё "LibreOffice Calc"
       /// </summary>
       public string CalcDisplayName
       {
@@ -359,13 +359,13 @@ namespace FreeLibSet.Shell
       #region Impress
 
       /// <summary>
-      /// Возвращает true, если компонент "Impress" установлен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚ "Impress" СѓСЃС‚Р°РЅРѕРІР»РµРЅ
       /// </summary>
       public bool HasImpress { get { return _HasImpress; } }
       private readonly bool _HasImpress;
 
       /// <summary>
-      /// Возвращает полный путь к файлу simpress.exe
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ simpress.exe
       /// </summary>
       public AbsPath ImpressPath
       {
@@ -379,7 +379,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает "OpenOffice Impress" или "LibreOffice Impress"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "OpenOffice Impress" РёР»Рё "LibreOffice Impress"
       /// </summary>
       public string ImpressDisplayName
       {
@@ -391,13 +391,13 @@ namespace FreeLibSet.Shell
       #region Draw
 
       /// <summary>
-      /// Возвращает true, если компонент "Draw" установлен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚ "Draw" СѓСЃС‚Р°РЅРѕРІР»РµРЅ
       /// </summary>
       public bool HasDraw { get { return _HasDraw; } }
       private readonly bool _HasDraw;
 
       /// <summary>
-      /// Возвращает полный путь к файлу sdraw.exe
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ sdraw.exe
       /// </summary>
       public AbsPath DrawPath
       {
@@ -411,7 +411,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает "OpenOffice Draw" или "LibreOffice Draw"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "OpenOffice Draw" РёР»Рё "LibreOffice Draw"
       /// </summary>
       public string DrawDisplayName
       {
@@ -423,13 +423,13 @@ namespace FreeLibSet.Shell
       #region Base
 
       /// <summary>
-      /// Возвращает true, если компонент "Base" установлен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚ "Base" СѓСЃС‚Р°РЅРѕРІР»РµРЅ
       /// </summary>
       public bool HasBase { get { return _HasBase; } }
       private readonly bool _HasBase;
 
       /// <summary>
-      /// Возвращает полный путь к файлу sbase.exe
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ sbase.exe
       /// </summary>
       public AbsPath BasePath
       {
@@ -443,7 +443,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает "OpenOffice Base" или "LibreOffice Base"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "OpenOffice Base" РёР»Рё "LibreOffice Base"
       /// </summary>
       public string BaseDisplayName
       {
@@ -455,13 +455,13 @@ namespace FreeLibSet.Shell
       #region Math
 
       /// <summary>
-      /// Возвращает true, если компонент "Math" установлен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚ "Math" СѓСЃС‚Р°РЅРѕРІР»РµРЅ
       /// </summary>
       public bool HasMath { get { return _HasMath; } }
       private readonly bool _HasMath;
 
       /// <summary>
-      /// Возвращает полный путь к файлу smath.exe
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ smath.exe
       /// </summary>
       public AbsPath MathPath
       {
@@ -475,7 +475,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает "OpenOffice Math" или "LibreOffice Math"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "OpenOffice Math" РёР»Рё "LibreOffice Math"
       /// </summary>
       public string MathDisplayName
       {
@@ -485,8 +485,8 @@ namespace FreeLibSet.Shell
       #endregion
 
       /// <summary>
-      /// Возвращает строку с установленными компонентами, например, "Writer,Calc,Impress". Разделитель-запятые.
-      /// Предназначена для отладочных целей
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹РјРё РєРѕРјРїРѕРЅРµРЅС‚Р°РјРё, РЅР°РїСЂРёРјРµСЂ, "Writer,Calc,Impress". Р Р°Р·РґРµР»РёС‚РµР»СЊ-Р·Р°РїСЏС‚С‹Рµ.
+      /// РџСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№
       /// </summary>
       public string ComponentsCSVString
       {
@@ -514,22 +514,22 @@ namespace FreeLibSet.Shell
 
       #endregion
 
-      #region Прочие свойства
+      #region РџСЂРѕС‡РёРµ СЃРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Как была найдена эта копия офиса (через реестр Windows, переменную окружения ...)
+      /// РљР°Рє Р±С‹Р»Р° РЅР°Р№РґРµРЅР° СЌС‚Р° РєРѕРїРёСЏ РѕС„РёСЃР° (С‡РµСЂРµР· СЂРµРµСЃС‚СЂ Windows, РїРµСЂРµРјРµРЅРЅСѓСЋ РѕРєСЂСѓР¶РµРЅРёСЏ ...)
       /// </summary>
       public InfoSource InfoSource { get { return _InfoSource; } }
       private readonly InfoSource _InfoSource;
 
       /// <summary>
-      /// Дополнительная информация, как была найдена эта копия (ключ реестра или имя переменной окружения)
+      /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ, РєР°Рє Р±С‹Р»Р° РЅР°Р№РґРµРЅР° СЌС‚Р° РєРѕРїРёСЏ (РєР»СЋС‡ СЂРµРµСЃС‚СЂР° РёР»Рё РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РѕРєСЂСѓР¶РµРЅРёСЏ)
       /// </summary>
       public string InfoSourceString { get { return _InfoSourceString; } }
       private readonly string _InfoSourceString;
 
       /// <summary>
-      /// Возвращает название и версию офиса
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р·РІР°РЅРёРµ Рё РІРµСЂСЃРёСЋ РѕС„РёСЃР°
       /// </summary>
       /// <returns></returns>
       public override string ToString()
@@ -555,21 +555,21 @@ namespace FreeLibSet.Shell
 
       #endregion
 
-      #region Открытие файла в Open Office
+      #region РћС‚РєСЂС‹С‚РёРµ С„Р°Р№Р»Р° РІ Open Office
 
       /// <summary>
-      /// Открыть файл текстового документа в редакторе OpenOffice / LibreOffice Writer
+      /// РћС‚РєСЂС‹С‚СЊ С„Р°Р№Р» С‚РµРєСЃС‚РѕРІРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РІ СЂРµРґР°РєС‚РѕСЂРµ OpenOffice / LibreOffice Writer
       /// </summary>
-      /// <param name="fileName">Полный путь к ODT-файлу</param>
-      /// <param name="asTemplate">Если true, то файл используется как шаблон.
-      /// В заголовке не будет показано имя файла, а команда "Сохранить" предложит выбрать имя файла.
-      /// Используется для реализации команд "Отправить"</param>
+      /// <param name="fileName">РџРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє ODT-С„Р°Р№Р»Сѓ</param>
+      /// <param name="asTemplate">Р•СЃР»Рё true, С‚Рѕ С„Р°Р№Р» РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР°Рє С€Р°Р±Р»РѕРЅ.
+      /// Р’ Р·Р°РіРѕР»РѕРІРєРµ РЅРµ Р±СѓРґРµС‚ РїРѕРєР°Р·Р°РЅРѕ РёРјСЏ С„Р°Р№Р»Р°, Р° РєРѕРјР°РЅРґР° "РЎРѕС…СЂР°РЅРёС‚СЊ" РїСЂРµРґР»РѕР¶РёС‚ РІС‹Р±СЂР°С‚СЊ РёРјСЏ С„Р°Р№Р»Р°.
+      /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЂРµР°Р»РёР·Р°С†РёРё РєРѕРјР°РЅРґ "РћС‚РїСЂР°РІРёС‚СЊ"</param>
       public void OpenWithWriter(AbsPath fileName, bool asTemplate)
       {
         ProcessStartInfo psi = new ProcessStartInfo();
         psi.FileName = WriterPath.Path;
         if (String.IsNullOrEmpty(psi.FileName))
-          throw new BugException("Программа Writer не установлена");
+          throw new BugException("РџСЂРѕРіСЂР°РјРјР° Writer РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅР°");
         psi.Arguments = "\"" + fileName.Path + "\"";
         if (asTemplate)
           psi.Arguments = "-n " + psi.Arguments;
@@ -580,18 +580,18 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Открыть файл табличного документа в программе OpenOffice / LibreOffice Calc
+      /// РћС‚РєСЂС‹С‚СЊ С„Р°Р№Р» С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РІ РїСЂРѕРіСЂР°РјРјРµ OpenOffice / LibreOffice Calc
       /// </summary>
-      /// <param name="fileName">Полный путь к ODS-файлу</param>
-      /// <param name="asTemplate">Если true, то файл используется как шаблон.
-      /// В заголовке не будет показано имя файла, а команда "Сохранить" предложит выбрать имя файла.
-      /// Используется для реализации команд "Отправить"</param>
+      /// <param name="fileName">РџРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє ODS-С„Р°Р№Р»Сѓ</param>
+      /// <param name="asTemplate">Р•СЃР»Рё true, С‚Рѕ С„Р°Р№Р» РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР°Рє С€Р°Р±Р»РѕРЅ.
+      /// Р’ Р·Р°РіРѕР»РѕРІРєРµ РЅРµ Р±СѓРґРµС‚ РїРѕРєР°Р·Р°РЅРѕ РёРјСЏ С„Р°Р№Р»Р°, Р° РєРѕРјР°РЅРґР° "РЎРѕС…СЂР°РЅРёС‚СЊ" РїСЂРµРґР»РѕР¶РёС‚ РІС‹Р±СЂР°С‚СЊ РёРјСЏ С„Р°Р№Р»Р°.
+      /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЂРµР°Р»РёР·Р°С†РёРё РєРѕРјР°РЅРґ "РћС‚РїСЂР°РІРёС‚СЊ"</param>
       public void OpenWithCalc(AbsPath fileName, bool asTemplate)
       {
         ProcessStartInfo psi = new ProcessStartInfo();
         psi.FileName = CalcPath.Path;
         if (String.IsNullOrEmpty(psi.FileName))
-          throw new BugException("Программа Calc не установлена");
+          throw new BugException("РџСЂРѕРіСЂР°РјРјР° Calc РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅР°");
         psi.Arguments = "\"" + fileName.Path + "\"";
         if (asTemplate)
           psi.Arguments = "-n " + psi.Arguments;
@@ -606,22 +606,22 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Список обнаруженных копий OpenOffice и LibreOffice.
-    /// Если офис установлен, то обычно массив содержит один элемент.
-    /// Однако, могут быть установлено несколько различных копий офиса.
-    /// В этом случае обычно следует пользоваться "предпочтительной" копией, на которую указывает элемент с индексом 0.
-    /// Если нет установленного офиса, возвращается пустой массив.
-    /// Если приложение использует ExtForms.dll, для определения "действуюшей" копии следует использовать свойство EFPApp.UsedOpenOffice
+    /// РЎРїРёСЃРѕРє РѕР±РЅР°СЂСѓР¶РµРЅРЅС‹С… РєРѕРїРёР№ OpenOffice Рё LibreOffice.
+    /// Р•СЃР»Рё РѕС„РёСЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РѕР±С‹С‡РЅРѕ РјР°СЃСЃРёРІ СЃРѕРґРµСЂР¶РёС‚ РѕРґРёРЅ СЌР»РµРјРµРЅС‚.
+    /// РћРґРЅР°РєРѕ, РјРѕРіСѓС‚ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РЅРµСЃРєРѕР»СЊРєРѕ СЂР°Р·Р»РёС‡РЅС‹С… РєРѕРїРёР№ РѕС„РёСЃР°.
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РѕР±С‹С‡РЅРѕ СЃР»РµРґСѓРµС‚ РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ "РїСЂРµРґРїРѕС‡С‚РёС‚РµР»СЊРЅРѕР№" РєРѕРїРёРµР№, РЅР° РєРѕС‚РѕСЂСѓСЋ СѓРєР°Р·С‹РІР°РµС‚ СЌР»РµРјРµРЅС‚ СЃ РёРЅРґРµРєСЃРѕРј 0.
+    /// Р•СЃР»Рё РЅРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРіРѕ РѕС„РёСЃР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ.
+    /// Р•СЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РёСЃРїРѕР»СЊР·СѓРµС‚ ExtForms.dll, РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ "РґРµР№СЃС‚РІСѓСЋС€РµР№" РєРѕРїРёРё СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРІРѕР№СЃС‚РІРѕ EFPApp.UsedOpenOffice
     /// </summary>
     public static OfficeInfo[] Installations { get { return _Installations; } }
     private static OfficeInfo[] _Installations = InitInstallations();
 
-    #region Поиск установленных копий
+    #region РџРѕРёСЃРє СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РєРѕРїРёР№
 
     private static OfficeInfo[] InitInstallations()
     {
-      // Этот метод не имеет права выбрасывать исключения.
-      // Нельзя даже вывести исключение в log-файл
+      // Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РёРјРµРµС‚ РїСЂР°РІР° РІС‹Р±СЂР°СЃС‹РІР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёСЏ.
+      // РќРµР»СЊР·СЏ РґР°Р¶Рµ РІС‹РІРµСЃС‚Рё РёСЃРєР»СЋС‡РµРЅРёРµ РІ log-С„Р°Р№Р»
       try
       {
         List<OfficeInfo> lst = new List<OfficeInfo>();
@@ -639,7 +639,7 @@ namespace FreeLibSet.Shell
             break;
         }
 
-        FindFromUnoPath(lst); // для Windows и Unix
+        FindFromUnoPath(lst); // РґР»СЏ Windows Рё Unix
 
         return lst.ToArray();
       }
@@ -656,34 +656,34 @@ namespace FreeLibSet.Shell
       FindOrAddItem(srcList, new AbsPath(s), OpenOfficeKind.Unknown, InfoSource.EnvironmentVariable, "UNO_PATH", OpenOfficePlatform.Unknown);
     }
 
-    #region Поиск для Windows
+    #region РџРѕРёСЃРє РґР»СЏ Windows
 
     private static void FindFromRegistry(List<OfficeInfo> lst)
     {
-      // Поиск через реестр
+      // РџРѕРёСЃРє С‡РµСЂРµР· СЂРµРµСЃС‚СЂ
       // 11.01.2012
-      // В 64-разрядной версии Windows ключи реестра расположены в подузле Wow6432Node
+      // Р’ 64-СЂР°Р·СЂСЏРґРЅРѕР№ РІРµСЂСЃРёРё Windows РєР»СЋС‡Рё СЂРµРµСЃС‚СЂР° СЂР°СЃРїРѕР»РѕР¶РµРЅС‹ РІ РїРѕРґСѓР·Р»Рµ Wow6432Node
 
       // 22.05.2016
-      // Ключи могут быть также HKEY_CURRENT_USER
+      // РљР»СЋС‡Рё РјРѕРіСѓС‚ Р±С‹С‚СЊ С‚Р°РєР¶Рµ HKEY_CURRENT_USER
 
       /*
-       * На поиск вляет разрядность:
-       * 1-приложения (Net Framework'а), т.к. в реестре выполняется подстановка ключей
+       * РќР° РїРѕРёСЃРє РІР»СЏРµС‚ СЂР°Р·СЂСЏРґРЅРѕСЃС‚СЊ:
+       * 1-РїСЂРёР»РѕР¶РµРЅРёСЏ (Net Framework'Р°), С‚.Рє. РІ СЂРµРµСЃС‚СЂРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРґСЃС‚Р°РЅРѕРІРєР° РєР»СЋС‡РµР№
        * 2-Windows
        * 3-LibreOffice
        * 
-       * В таблице указаны ключи реестра, которые нужно искать
+       * Р’ С‚Р°Р±Р»РёС†Рµ СѓРєР°Р·Р°РЅС‹ РєР»СЋС‡Рё СЂРµРµСЃС‚СЂР°, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ РёСЃРєР°С‚СЊ
        * 
-       * Приложение  Windows  LibreOffice  Ключ реестра                 Примечание
+       * РџСЂРёР»РѕР¶РµРЅРёРµ  Windows  LibreOffice  РљР»СЋС‡ СЂРµРµСЃС‚СЂР°                 РџСЂРёРјРµС‡Р°РЅРёРµ
        *   32-bit     32-bit     32-bit    HKxx\SOFTWARE\
-       *              64-bit     32-bit    HKxx\SOFTWARE\               Подстановка узла реестра Wow6432Node
-       *                         64-bit    Не знаю, как найти
+       *              64-bit     32-bit    HKxx\SOFTWARE\               РџРѕРґСЃС‚Р°РЅРѕРІРєР° СѓР·Р»Р° СЂРµРµСЃС‚СЂР° Wow6432Node
+       *                         64-bit    РќРµ Р·РЅР°СЋ, РєР°Рє РЅР°Р№С‚Рё
        *   64-bit     64-bit     32-bit    HKxx\SOFTWARE\Wow6432Node\
        *                         64-bit    HKxx\SOFTWARE
        */
 
-      // 32-разрядная версия приложения
+      // 32-СЂР°Р·СЂСЏРґРЅР°СЏ РІРµСЂСЃРёСЏ РїСЂРёР»РѕР¶РµРЅРёСЏ
       if (EnvironmentTools.Is64BitOperatingSystem)
       {
         using (RegistryTree2 tree = new RegistryTree2(true, RegistryView2.Registry64))
@@ -707,7 +707,7 @@ namespace FreeLibSet.Shell
 
     private static void FindFromRegistry2(RegistryTree2 tree, string keyNameBase, List<OfficeInfo> lst, OpenOfficePlatform platform)
     {
-      FindFromRegistry3(tree, keyNameBase + @"OpenOffice\UNO\InstallPath", lst, OpenOfficeKind.OpenOffice, platform); // 18.05.2016 - для OpenOffice 4.1.2
+      FindFromRegistry3(tree, keyNameBase + @"OpenOffice\UNO\InstallPath", lst, OpenOfficeKind.OpenOffice, platform); // 18.05.2016 - РґР»СЏ OpenOffice 4.1.2
       FindFromRegistry3(tree, keyNameBase + @"OpenOffice.org\UNO\InstallPath", lst, OpenOfficeKind.OpenOffice, platform);
       FindFromRegistry3(tree, keyNameBase + @"LibreOffice\UNO\InstallPath", lst, OpenOfficeKind.LibreOffice, platform);
     }
@@ -715,7 +715,7 @@ namespace FreeLibSet.Shell
     private static void FindFromRegistry3(RegistryTree2 tree, string keyName, List<OfficeInfo> lst, OpenOfficeKind kind, OpenOfficePlatform platform)
     {
       // 30.09.2013
-      // Может не быть доступа к ключу реестра
+      // РњРѕР¶РµС‚ РЅРµ Р±С‹С‚СЊ РґРѕСЃС‚СѓРїР° Рє РєР»СЋС‡Сѓ СЂРµРµСЃС‚СЂР°
       try
       {
         AbsPath programDir = new AbsPath(tree.GetString(keyName, String.Empty));
@@ -731,7 +731,7 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Поиск для Linux
+    #region РџРѕРёСЃРє РґР»СЏ Linux
 
     private static void FindFromPath(List<OfficeInfo> lst)
     {
@@ -749,14 +749,14 @@ namespace FreeLibSet.Shell
       AbsPath dir = new AbsPath("/usr/lib/libreoffice/program");
       if (File.Exists(new AbsPath(dir, "soffice").Path))
         FindOrAddItem(lst, dir, OpenOfficeKind.LibreOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
-      dir = new AbsPath("/usr/lib/openoffice/program"); // !! проверить имя папки
+      dir = new AbsPath("/usr/lib/openoffice/program"); // !! РїСЂРѕРІРµСЂРёС‚СЊ РёРјСЏ РїР°РїРєРё
       if (File.Exists(new AbsPath(dir, "soffice").Path))
         FindOrAddItem(lst, dir, OpenOfficeKind.OpenOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
     }
 
     #endregion
 
-    #region Вспомогательные методы поиска
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ РїРѕРёСЃРєР°
 
     private static void FindOrAddItem(List<OfficeInfo> lst, AbsPath programDir, OpenOfficeKind kind, InfoSource infoSource, string infoSourceString, OpenOfficePlatform platform)
     {
@@ -764,7 +764,7 @@ namespace FreeLibSet.Shell
         return;
 
       if (!Directory.Exists(programDir.Path))
-        return; // пустышка
+        return; // РїСѓСЃС‚С‹С€РєР°
 
       AbsPath sofficePath = new AbsPath(programDir, "soffice" + GetExeExtension());
       if (!File.Exists(sofficePath.Path))
@@ -774,10 +774,10 @@ namespace FreeLibSet.Shell
       {
         AbsPath sofficeBinPath = new AbsPath(programDir, "soffice.bin");
         if (!File.Exists(sofficeBinPath.Path))
-          return; // soffice может быть символьной ссылкой. Проверка не реализована
+          return; // soffice РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃРёРјРІРѕР»СЊРЅРѕР№ СЃСЃС‹Р»РєРѕР№. РџСЂРѕРІРµСЂРєР° РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°
       }
 
-      // Во избежание повторов, проверяем наличие в списке такого же пути
+      // Р’Рѕ РёР·Р±РµР¶Р°РЅРёРµ РїРѕРІС‚РѕСЂРѕРІ, РїСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РІ СЃРїРёСЃРєРµ С‚Р°РєРѕРіРѕ Р¶Рµ РїСѓС‚Рё
       for (int i = 0; i < lst.Count; i++)
       {
         if (lst[i].ProgramDir == programDir)
@@ -806,7 +806,7 @@ namespace FreeLibSet.Shell
     #endregion
 
     /// <summary>
-    /// Обновляет массив Installations.
+    /// РћР±РЅРѕРІР»СЏРµС‚ РјР°СЃСЃРёРІ Installations.
     /// </summary>
     public static void RefreshInstalls()
     {
@@ -815,9 +815,9 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Файлы Open Document Format
+    #region Р¤Р°Р№Р»С‹ Open Document Format
 
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     const string nmspcStyle = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
     const string nmspcNumber = "urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0";
@@ -825,9 +825,9 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Форматы чисел и даты в файлах Open Document Format
+    #region Р¤РѕСЂРјР°С‚С‹ С‡РёСЃРµР» Рё РґР°С‚С‹ РІ С„Р°Р№Р»Р°С… Open Document Format
 
-    //  TODO: Это надо делать как-то культурно, используя парсинг формата
+    //  TODO: Р­С‚Рѕ РЅР°РґРѕ РґРµР»Р°С‚СЊ РєР°Рє-С‚Рѕ РєСѓР»СЊС‚СѓСЂРЅРѕ, РёСЃРїРѕР»СЊР·СѓСЏ РїР°СЂСЃРёРЅРі С„РѕСЂРјР°С‚Р°
 
     /// <summary>
     /// 
@@ -861,20 +861,20 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// В Open Document Format, в отличие от файлов Microsoft Office, форматы чисел
-    /// и дат задаются не в виде одной строки, например, "0.00", а в виде множества
-    /// отдельных стилей
-    /// Реализация не полная!
+    /// Р’ Open Document Format, РІ РѕС‚Р»РёС‡РёРµ РѕС‚ С„Р°Р№Р»РѕРІ Microsoft Office, С„РѕСЂРјР°С‚С‹ С‡РёСЃРµР»
+    /// Рё РґР°С‚ Р·Р°РґР°СЋС‚СЃСЏ РЅРµ РІ РІРёРґРµ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё, РЅР°РїСЂРёРјРµСЂ, "0.00", Р° РІ РІРёРґРµ РјРЅРѕР¶РµСЃС‚РІР°
+    /// РѕС‚РґРµР»СЊРЅС‹С… СЃС‚РёР»РµР№
+    /// Р РµР°Р»РёР·Р°С†РёСЏ РЅРµ РїРѕР»РЅР°СЏ!
     /// </summary>
-    /// <param name="elStyles">Узел "office:automatic-styles" для добавления форматов</param>
-    /// <param name="formatText">Исходный формат числа</param>
-    /// <param name="styleName">Имя создаваемого стиля</param>
+    /// <param name="elStyles">РЈР·РµР» "office:automatic-styles" РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ С„РѕСЂРјР°С‚РѕРІ</param>
+    /// <param name="formatText">РСЃС…РѕРґРЅС‹Р№ С„РѕСЂРјР°С‚ С‡РёСЃР»Р°</param>
+    /// <param name="styleName">РРјСЏ СЃРѕР·РґР°РІР°РµРјРѕРіРѕ СЃС‚РёР»СЏ</param>
     /// <param name="NumberFormat"></param>
     /// <param name="DateTimeFormat"></param>
     /// <param name="Language"></param>
     /// <param name="Country"></param>
-    /// <returns>true - стиль добавлен. false - в текущей реализации данный формат
-    /// не преобразуется</returns>
+    /// <returns>true - СЃС‚РёР»СЊ РґРѕР±Р°РІР»РµРЅ. false - РІ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё РґР°РЅРЅС‹Р№ С„РѕСЂРјР°С‚
+    /// РЅРµ РїСЂРµРѕР±СЂР°Р·СѓРµС‚СЃСЏ</returns>
     public static bool ODFAddFormat(XmlElement elStyles, string formatText, string styleName,
       NumberFormatInfo NumberFormat, DateTimeFormatInfo DateTimeFormat, string Language, string Country)
     {
@@ -899,19 +899,19 @@ namespace FreeLibSet.Shell
       SetAttr(elStyle, "style:name", styleName, nmspcStyle);
 
       // 18.11.2016
-      // Запись форматов, состоящих из частей, разделенных запятыми
-      // Последняя часть формата записывается непосредственно внутри блока number:number-style
-      // Для других частей создаются отдельные блоки number:number-style с суффиксами P0, P1, ... 
-      // внутри элемента elStyles, а в основном блоке number:number-style задаются ссылки с условиями
+      // Р—Р°РїРёСЃСЊ С„РѕСЂРјР°С‚РѕРІ, СЃРѕСЃС‚РѕСЏС‰РёС… РёР· С‡Р°СЃС‚РµР№, СЂР°Р·РґРµР»РµРЅРЅС‹С… Р·Р°РїСЏС‚С‹РјРё
+      // РџРѕСЃР»РµРґРЅСЏСЏ С‡Р°СЃС‚СЊ С„РѕСЂРјР°С‚Р° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РІРЅСѓС‚СЂРё Р±Р»РѕРєР° number:number-style
+      // Р”Р»СЏ РґСЂСѓРіРёС… С‡Р°СЃС‚РµР№ СЃРѕР·РґР°СЋС‚СЃСЏ РѕС‚РґРµР»СЊРЅС‹Рµ Р±Р»РѕРєРё number:number-style СЃ СЃСѓС„С„РёРєСЃР°РјРё P0, P1, ... 
+      // РІРЅСѓС‚СЂРё СЌР»РµРјРµРЅС‚Р° elStyles, Р° РІ РѕСЃРЅРѕРІРЅРѕРј Р±Р»РѕРєРµ number:number-style Р·Р°РґР°СЋС‚СЃСЏ СЃСЃС‹Р»РєРё СЃ СѓСЃР»РѕРІРёСЏРјРё
 
       string[] a = formatText.Split(';');
       XmlElement elStyleP0, elStyleP1;
       switch (a.Length)
       {
-        case 1: // обычный формат, как было
+        case 1: // РѕР±С‹С‡РЅС‹Р№ С„РѕСЂРјР°С‚, РєР°Рє Р±С‹Р»Рѕ
           DoWriteNumberFormat(elStyle, formatText);
           break;
-        case 2: // Части >=0 и < 0
+        case 2: // Р§Р°СЃС‚Рё >=0 Рё < 0
           elStyleP0 = elStyles.OwnerDocument.CreateElement("number:number-style", nmspcNumber);
           elStyles.AppendChild(elStyle);
           SetAttr(elStyleP0, "style:name", styleName + "P0", nmspcStyle);
@@ -920,7 +920,7 @@ namespace FreeLibSet.Shell
 
           DoWriteNumberFormat(elStyle, a[1]);
           break;
-        case 3: // Части >0, <0 и =0
+        case 3: // Р§Р°СЃС‚Рё >0, <0 Рё =0
           elStyleP0 = elStyles.OwnerDocument.CreateElement("number:number-style", nmspcNumber);
           elStyles.AppendChild(elStyleP0);
           SetAttr(elStyleP0, "style:name", styleName + "P0", nmspcStyle);
@@ -937,7 +937,7 @@ namespace FreeLibSet.Shell
           break;
 
         default:
-          throw new ArgumentException("Числовой формат \"" + formatText + "\" состоит больше, чем из трех частей", "formatText");
+          throw new ArgumentException("Р§РёСЃР»РѕРІРѕР№ С„РѕСЂРјР°С‚ \"" + formatText + "\" СЃРѕСЃС‚РѕРёС‚ Р±РѕР»СЊС€Рµ, С‡РµРј РёР· С‚СЂРµС… С‡Р°СЃС‚РµР№", "formatText");
       }
 
       return true;
@@ -967,18 +967,18 @@ namespace FreeLibSet.Shell
 
       if (formatText[0] == '-')
       {
-        // Знак числа не является частью формата, а является текстом
+        // Р—РЅР°Рє С‡РёСЃР»Р° РЅРµ СЏРІР»СЏРµС‚СЃСЏ С‡Р°СЃС‚СЊСЋ С„РѕСЂРјР°С‚Р°, Р° СЏРІР»СЏРµС‚СЃСЏ С‚РµРєСЃС‚РѕРј
         DoWriteTextFormat(elStyle, "-");
         formatText = formatText.Substring(1);
       }
 
 
       /*
-       * В Open Document Format не предусмотрено хранение необязательных цифр после запятой.
-       * Если задать формат "0.0#", сохранить документ ODS,  закрыть и открыть заново, то формат заменяется на "0.00"
+       * Р’ Open Document Format РЅРµ РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅРѕ С…СЂР°РЅРµРЅРёРµ РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… С†РёС„СЂ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№.
+       * Р•СЃР»Рё Р·Р°РґР°С‚СЊ С„РѕСЂРјР°С‚ "0.0#", СЃРѕС…СЂР°РЅРёС‚СЊ РґРѕРєСѓРјРµРЅС‚ ODS,  Р·Р°РєСЂС‹С‚СЊ Рё РѕС‚РєСЂС‹С‚СЊ Р·Р°РЅРѕРІРѕ, С‚Рѕ С„РѕСЂРјР°С‚ Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° "0.00"
        */
 
-      // Определяем наличие разделителя тысяч и убираем ведущие #
+      // РћРїСЂРµРґРµР»СЏРµРј РЅР°Р»РёС‡РёРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ С‚С‹СЃСЏС‡ Рё СѓР±РёСЂР°РµРј РІРµРґСѓС‰РёРµ #
       bool thousandSep = false;
       for (int i = 0; i < formatText.Length; i++)
       {
@@ -1032,18 +1032,18 @@ namespace FreeLibSet.Shell
         SetAttr(elNumber, "number:decimal-replacement", "", nmspcNumber);
       }
 
-      if (thousandSep) // по идее, надо проверять, что запятая идет слева от "." и находится между "0#"
+      if (thousandSep) // РїРѕ РёРґРµРµ, РЅР°РґРѕ РїСЂРѕРІРµСЂСЏС‚СЊ, С‡С‚Рѕ Р·Р°РїСЏС‚Р°СЏ РёРґРµС‚ СЃР»РµРІР° РѕС‚ "." Рё РЅР°С…РѕРґРёС‚СЃСЏ РјРµР¶РґСѓ "0#"
         SetAttr(elNumber, "number:grouping", "true", nmspcNumber);
     }
 
     private static string UnquoteText(string s)
     {
-      if (s.Length < 2) // бяка
+      if (s.Length < 2) // Р±СЏРєР°
         return string.Empty;
       s = s.Substring(1, s.Length - 2);
       s = s.Replace("\"\"", "\"");
 
-      // TODO: замена ESC-символов
+      // TODO: Р·Р°РјРµРЅР° ESC-СЃРёРјРІРѕР»РѕРІ
       return s;
     }
 
@@ -1061,7 +1061,7 @@ namespace FreeLibSet.Shell
     private static bool ODFAddDateTimeFormat(XmlElement elStyles, string formatText, string styleName,
       DateTimeFormatInfo formatInfo, string language, string Country)
     {
-      // Заменяем стандартные стили
+      // Р—Р°РјРµРЅСЏРµРј СЃС‚Р°РЅРґР°СЂС‚РЅС‹Рµ СЃС‚РёР»Рё
       switch (formatText)
       {
         case "d": formatText = formatInfo.ShortDatePattern; break;
@@ -1093,15 +1093,15 @@ namespace FreeLibSet.Shell
       XmlElement elPart;
       string AllMaskChars = "yMdhms";
 
-      // Перебираем символы в FormatText
-      // использовать for неудобно, т.к. буду прыгать через символы
+      // РџРµСЂРµР±РёСЂР°РµРј СЃРёРјРІРѕР»С‹ РІ FormatText
+      // РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ for РЅРµСѓРґРѕР±РЅРѕ, С‚.Рє. Р±СѓРґСѓ РїСЂС‹РіР°С‚СЊ С‡РµСЂРµР· СЃРёРјРІРѕР»С‹
       int pos = 0;
       while (pos < formatText.Length)
       {
         if (AllMaskChars.IndexOf(formatText[pos]) >= 0)
         {
-          // один из символов маски
-          // находим все такие же символы
+          // РѕРґРёРЅ РёР· СЃРёРјРІРѕР»РѕРІ РјР°СЃРєРё
+          // РЅР°С…РѕРґРёРј РІСЃРµ С‚Р°РєРёРµ Р¶Рµ СЃРёРјРІРѕР»С‹
           int cnt = 1;
           for (int j = pos + 1; j < formatText.Length; j++)
           {
@@ -1131,16 +1131,16 @@ namespace FreeLibSet.Shell
                   elStyle.AppendChild(elPart);
                   SetAttr(elPart, "number:style", "long", nmspcNumber);
                   break;
-                case 3: // "янв"
+                case 3: // "СЏРЅРІ"
                   elPart = elStyle.OwnerDocument.CreateElement("number:month", nmspcNumber);
                   elStyle.AppendChild(elPart);
                   SetAttr(elPart, "number:textual", "true", nmspcNumber);
                   break;
-                case 4: // "январь"
+                case 4: // "СЏРЅРІР°СЂСЊ"
                   elPart = elStyle.OwnerDocument.CreateElement("number:month", nmspcNumber);
                   elStyle.AppendChild(elPart);
                   SetAttr(elPart, "number:textual", "true", nmspcNumber);
-                  SetAttr(elPart, "number:style", "long", nmspcNumber);  // в чем разница ?????
+                  SetAttr(elPart, "number:style", "long", nmspcNumber);  // РІ С‡РµРј СЂР°Р·РЅРёС†Р° ?????
                   break;
               }
               break;
@@ -1156,11 +1156,11 @@ namespace FreeLibSet.Shell
                   elStyle.AppendChild(elPart);
                   SetAttr(elPart, "number:style", "long", nmspcNumber);
                   break;
-                case 3: // "Чт"
+                case 3: // "Р§С‚"
                   elPart = elStyle.OwnerDocument.CreateElement("day-of-week", nmspcNumber);
                   elStyle.AppendChild(elPart);
                   break;
-                //case 4: // "Четверг"
+                //case 4: // "Р§РµС‚РІРµСЂРі"
                 default:
                   elPart = elStyle.OwnerDocument.CreateElement("day-of-week", nmspcNumber);
                   elStyle.AppendChild(elPart);
@@ -1197,22 +1197,22 @@ namespace FreeLibSet.Shell
 
         if (formatText[pos] == '\'')
         {
-          // Ищем второй апостров
+          // РС‰РµРј РІС‚РѕСЂРѕР№ Р°РїРѕСЃС‚СЂРѕРІ
           int p = formatText.IndexOf('\'', pos + 1);
-          if (p < 0) // ошибка - нет второго апострофа
-            p = formatText.Length; // считаем, что строка идет до конца формата
+          if (p < 0) // РѕС€РёР±РєР° - РЅРµС‚ РІС‚РѕСЂРѕРіРѕ Р°РїРѕСЃС‚СЂРѕС„Р°
+            p = formatText.Length; // СЃС‡РёС‚Р°РµРј, С‡С‚Рѕ СЃС‚СЂРѕРєР° РёРґРµС‚ РґРѕ РєРѕРЅС†Р° С„РѕСЂРјР°С‚Р°
 
           s = formatText.Substring(pos + 1, p - pos - 1);
 
           elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
           elStyle.AppendChild(elPart);
-          elPart.InnerText = s; // !!! преобразование спецсимволов
+          elPart.InnerText = s; // !!! РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃРїРµС†СЃРёРјРІРѕР»РѕРІ
           pos = p;
           continue;
         }
 
-        // Простые символы и специальные символы
-        // Вряд ли будет идти больше одного символа подряд
+        // РџСЂРѕСЃС‚С‹Рµ СЃРёРјРІРѕР»С‹ Рё СЃРїРµС†РёР°Р»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹
+        // Р’СЂСЏРґ Р»Рё Р±СѓРґРµС‚ РёРґС‚Рё Р±РѕР»СЊС€Рµ РѕРґРЅРѕРіРѕ СЃРёРјРІРѕР»Р° РїРѕРґСЂСЏРґ
         switch (formatText[pos])
         {
           case '/':
@@ -1228,7 +1228,7 @@ namespace FreeLibSet.Shell
 
         elPart = elStyle.OwnerDocument.CreateElement("number:text", nmspcNumber);
         elStyle.AppendChild(elPart);
-        elPart.InnerText = s; // !!! преобразование спецсимволов
+        elPart.InnerText = s; // !!! РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃРїРµС†СЃРёРјРІРѕР»РѕРІ
 
         pos++;
       }
@@ -1236,7 +1236,7 @@ namespace FreeLibSet.Shell
       return true;
 
 #if XXX
-      // лень думать
+      // Р»РµРЅСЊ РґСѓРјР°С‚СЊ
       XmlElement elStyle = elStyles.OwnerDocument.CreateElement("number:date-style", nmspcNumber);
       elStyles.AppendChild(elStyle);
       SetAttr(elStyle, "style:name", StyleName, nmspcStyle);
@@ -1330,7 +1330,7 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     private static void SetAttr(XmlElement el, string name, string value, string nmspc)
     {

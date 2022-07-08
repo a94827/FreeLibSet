@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,23 +10,23 @@ using FreeLibSet.DependedValues;
 using System.Data;
 using FreeLibSet.Core;
 
-// TODO: Недоделано. В частности, не реализованы операции с буфером обмена
+// TODO: РќРµРґРѕРґРµР»Р°РЅРѕ. Р’ С‡Р°СЃС‚РЅРѕСЃС‚Рё, РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅС‹ РѕРїРµСЂР°С†РёРё СЃ Р±СѓС„РµСЂРѕРј РѕР±РјРµРЅР°
 
 namespace FreeLibSet.Forms.Docs
 {
-  #region Делегаты
+  #region Р”РµР»РµРіР°С‚С‹
 
   /// <summary>
-  /// Аргументы события EFPAllSubDocComboBox.TextValueNeeded
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ EFPAllSubDocComboBox.TextValueNeeded
   /// </summary>
   public class EFPAllSubDocComboBoxTextValueNeededEventArgs : EFPComboBoxTextValueNeededEventArgs
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создается комбоблоком
+    /// РЎРѕР·РґР°РµС‚СЃСЏ РєРѕРјР±РѕР±Р»РѕРєРѕРј
     /// </summary>
-    /// <param name="owner">Объект-владелец</param>
+    /// <param name="owner">РћР±СЉРµРєС‚-РІР»Р°РґРµР»РµС†</param>
     public EFPAllSubDocComboBoxTextValueNeededEventArgs(EFPAllSubDocComboBox owner)
     {
       _Owner = owner;
@@ -34,41 +34,41 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private EFPAllSubDocComboBox _Owner;
 
-    // Пока нет дополнительных свойств
+    // РџРѕРєР° РЅРµС‚ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… СЃРІРѕР№СЃС‚РІ
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события EFPAllSubDocComboBox.TextValueNeeded
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ EFPAllSubDocComboBox.TextValueNeeded
   /// </summary>
-  /// <param name="sender">Комбоблок</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РљРѕРјР±РѕР±Р»РѕРє</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void EFPAllSubDocComboBoxTextValueNeededEventHandler(object sender,
     EFPAllSubDocComboBoxTextValueNeededEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Провайдер комбоблока, который предназначен для показа таблицы EFPSubDocGridView в редакторе документа.
-  /// Используется, в основном, для поддокументов, предназначенных для создания отношения "многие-ко-многим".
-  /// Комбоблок не используется для выбора чего-либо, а только для замены постоянно присутствующей в редакторе таблички поддокументов.
+  /// РџСЂРѕРІР°Р№РґРµСЂ РєРѕРјР±РѕР±Р»РѕРєР°, РєРѕС‚РѕСЂС‹Р№ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ РїРѕРєР°Р·Р° С‚Р°Р±Р»РёС†С‹ EFPSubDocGridView РІ СЂРµРґР°РєС‚РѕСЂРµ РґРѕРєСѓРјРµРЅС‚Р°.
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РІ РѕСЃРЅРѕРІРЅРѕРј, РґР»СЏ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ, РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРЅС‹С… РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РѕС‚РЅРѕС€РµРЅРёСЏ "РјРЅРѕРіРёРµ-РєРѕ-РјРЅРѕРіРёРј".
+  /// РљРѕРјР±РѕР±Р»РѕРє РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РІС‹Р±РѕСЂР° С‡РµРіРѕ-Р»РёР±Рѕ, Р° С‚РѕР»СЊРєРѕ РґР»СЏ Р·Р°РјРµРЅС‹ РїРѕСЃС‚РѕСЏРЅРЅРѕ РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‰РµР№ РІ СЂРµРґР°РєС‚РѕСЂРµ С‚Р°Р±Р»РёС‡РєРё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ.
   /// </summary>
   public class EFPAllSubDocComboBox : EFPUserSelComboBox
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает провайдер для встраивания в редактор документа
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РІСЃС‚СЂР°РёРІР°РЅРёСЏ РІ СЂРµРґР°РєС‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент комбоблока</param>
-    /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется комбоблок</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ РєРѕРјР±РѕР±Р»РѕРєР°</param>
+    /// <param name="mainEditor">Р РµРґР°РєС‚РѕСЂ РѕСЃРЅРѕРІРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°, РЅР° РІРєР»Р°РґРєСѓ РєРѕС‚РѕСЂРѕРіРѕ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР±РѕР±Р»РѕРє</param>
+    /// <param name="subDocs">РЎРїРёСЃРѕРє РїСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹С… РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     public EFPAllSubDocComboBox(EFPBaseProvider baseProvider, UserSelComboBox control, DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
       : base(baseProvider, control)
     {
@@ -76,12 +76,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер для автономного просмотра списка поддокументов без встраивания в редактор документа.
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ Р°РІС‚РѕРЅРѕРјРЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° СЃРїРёСЃРєР° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Р±РµР· РІСЃС‚СЂР°РёРІР°РЅРёСЏ РІ СЂРµРґР°РєС‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°.
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент комбоблока</param>
-    /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    /// <param name="ui">Пользовательский интерфейс для документов</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ РєРѕРјР±РѕР±Р»РѕРєР°</param>
+    /// <param name="subDocs">РЎРїРёСЃРѕРє РїСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹С… РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="ui">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     public EFPAllSubDocComboBox(EFPBaseProvider baseProvider, UserSelComboBox control, DBxMultiSubDocs subDocs, DBUI ui)
       : base(baseProvider, control)
     {
@@ -100,7 +100,7 @@ namespace FreeLibSet.Forms.Docs
       _MainEditor = mainEditor;
 
       _SubDocs = subDocs;
-      _SubDocTypeUI = ui.DocTypes[subDocs.Owner.DocType.Name].SubDocTypes[subDocs.SubDocType.Name]; // чтобы свойство работало быстро
+      _SubDocTypeUI = ui.DocTypes[subDocs.Owner.DocType.Name].SubDocTypes[subDocs.SubDocType.Name]; // С‡С‚РѕР±С‹ СЃРІРѕР№СЃС‚РІРѕ СЂР°Р±РѕС‚Р°Р»Рѕ Р±С‹СЃС‚СЂРѕ
 
       _ValidateBeforeEdit = false;
 
@@ -116,50 +116,50 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Основной редактор документа, использующий данный просмотр.
-    /// Задается в конструкторе.
-    /// Может быть null, если просмотр используется вне редактора.
+    /// РћСЃРЅРѕРІРЅРѕР№ СЂРµРґР°РєС‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°, РёСЃРїРѕР»СЊР·СѓСЋС‰РёР№ РґР°РЅРЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё РїСЂРѕСЃРјРѕС‚СЂ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІРЅРµ СЂРµРґР°РєС‚РѕСЂР°.
     /// </summary>
     public DocumentEditor MainEditor { get { return _MainEditor; } }
     private DocumentEditor _MainEditor;
 
     /// <summary>
-    /// Тип редактируемых поддокументов. Задается в конструкторе.
+    /// РўРёРї СЂРµРґР°РєС‚РёСЂСѓРµРјС‹С… РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ. Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public DBxSubDocType SubDocType { get { return _SubDocTypeUI.SubDocType; } }
 
     /// <summary>
-    /// Редактируемые поддокументы (объект доступа). Определяется в конструкторе.
+    /// Р РµРґР°РєС‚РёСЂСѓРµРјС‹Рµ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹ (РѕР±СЉРµРєС‚ РґРѕСЃС‚СѓРїР°). РћРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
     private DBxMultiSubDocs _SubDocs;
 
     /// <summary>
-    /// Провайдер для доступа к документам
+    /// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј
     /// </summary>
     public DBxDocProvider DocProvider { get { return _SubDocs.DocSet.DocProvider; } }
 
     /// <summary>
-    /// Интерфейс доступа к поддокументам
+    /// РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°Рј
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocTypeUI; } }
     private SubDocTypeUI _SubDocTypeUI;
 
     /// <summary>
-    /// Интферфейс для доступа к документам.
+    /// РРЅС‚С„РµСЂС„РµР№СЃ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј.
     /// </summary>
     public DBUI UI { get { return _SubDocTypeUI.UI; } }
 
     /// <summary>
-    /// Если установлено в true, то перед добавлением и редактированием записей
-    /// вызывается MainEditor.ValidateDate(). В этом случае редактор поддокумента
-    /// может использовать актуальные значения полей основного документа
-    /// По умолчанию (false) проверка не выполняется. Допускается редактирование
-    /// поддокументов, даже если на какой-либо вкладке редактора основного документа
-    /// есть некорректно заполненные поля.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ РїРµСЂРµРґ РґРѕР±Р°РІР»РµРЅРёРµРј Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµРј Р·Р°РїРёСЃРµР№
+    /// РІС‹Р·С‹РІР°РµС‚СЃСЏ MainEditor.ValidateDate(). Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ СЂРµРґР°РєС‚РѕСЂ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°
+    /// РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№ РѕСЃРЅРѕРІРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (false) РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ. Р”РѕРїСѓСЃРєР°РµС‚СЃСЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
+    /// РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ, РґР°Р¶Рµ РµСЃР»Рё РЅР° РєР°РєРѕР№-Р»РёР±Рѕ РІРєР»Р°РґРєРµ СЂРµРґР°РєС‚РѕСЂР° РѕСЃРЅРѕРІРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
+    /// РµСЃС‚СЊ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕ Р·Р°РїРѕР»РЅРµРЅРЅС‹Рµ РїРѕР»СЏ.
     /// </summary>
     public bool ValidateBeforeEdit
     {
@@ -167,22 +167,22 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         if (value && _MainEditor == null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство ValidateBeforeEdit в true, т.к. просмотр не относится к DocumentEditor"); // 21.01.2022
+          throw new InvalidOperationException("РќРµР»СЊР·СЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ СЃРІРѕР№СЃС‚РІРѕ ValidateBeforeEdit РІ true, С‚.Рє. РїСЂРѕСЃРјРѕС‚СЂ РЅРµ РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє DocumentEditor"); // 21.01.2022
         _ValidateBeforeEdit = value;
       }
     }
     private bool _ValidateBeforeEdit;
 
     /// <summary>
-    /// Если true (по умолчанию), то перед удалением выбранных поддокументов запрашивается подтверждение.
-    /// Если false, то удаление выполняется немедленно без запроса.
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РїРµСЂРµРґ СѓРґР°Р»РµРЅРёРµРј РІС‹Р±СЂР°РЅРЅС‹С… РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Р·Р°РїСЂР°С€РёРІР°РµС‚СЃСЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ.
+    /// Р•СЃР»Рё false, С‚Рѕ СѓРґР°Р»РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РЅРµРјРµРґР»РµРЅРЅРѕ Р±РµР· Р·Р°РїСЂРѕСЃР°.
     /// </summary>
     public bool ConfirmDeletion { get { return _ConfirmDeletion; } set { _ConfirmDeletion = value; } }
     private bool _ConfirmDeletion;
 
     #endregion
 
-    #region Выпадающий список
+    #region Р’С‹РїР°РґР°СЋС‰РёР№ СЃРїРёСЃРѕРє
 
     void Control_PopupClick(object sender, EventArgs args)
     {
@@ -196,7 +196,7 @@ namespace FreeLibSet.Forms.Docs
       else
         efpGrid = new EFPSubDocGridView(form.ControlWithToolBar, MainEditor, SubDocs);
 
-      // Копируем свойства
+      // РљРѕРїРёСЂСѓРµРј СЃРІРѕР№СЃС‚РІР°
       efpGrid.ValidateBeforeEdit = this.ValidateBeforeEdit;
       efpGrid.ConfirmDeletion = this.ConfirmDeletion;
 
@@ -208,12 +208,12 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Событие TextValueNeeded
+    #region РЎРѕР±С‹С‚РёРµ TextValueNeeded
 
     /// <summary>
-    /// Это событие вызывается после редактирования списка поддокументов и позволяет переопределить текст в комбоблоке, текст всплываюующей подсказки
-    /// и изображение. Событие вызывается в том числе и при пустом списке поддокументов.
-    /// Также вызывается при обращении к свойству TextValue
+    /// Р­С‚Рѕ СЃРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЃРїРёСЃРєР° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕР·РІРѕР»СЏРµС‚ РїРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ С‚РµРєСЃС‚ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, С‚РµРєСЃС‚ РІСЃРїР»С‹РІР°СЋСѓСЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё
+    /// Рё РёР·РѕР±СЂР°Р¶РµРЅРёРµ. РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РІ С‚РѕРј С‡РёСЃР»Рµ Рё РїСЂРё РїСѓСЃС‚РѕРј СЃРїРёСЃРєРµ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// РўР°РєР¶Рµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє СЃРІРѕР№СЃС‚РІСѓ TextValue
     /// </summary>
     public event EFPAllSubDocComboBoxTextValueNeededEventHandler TextValueNeeded
     {
@@ -235,7 +235,7 @@ namespace FreeLibSet.Forms.Docs
     #region InitTextAndImage
 
     /// <summary>
-    /// Вызывает InitTextAndImage()
+    /// Р’С‹Р·С‹РІР°РµС‚ InitTextAndImage()
     /// </summary>
     protected override void OnCreated()
     {
@@ -244,22 +244,22 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Чтобы не создавать объект каждый раз, создаем его в конструкторе.
-    /// Также используем для хранения изображения между вызовом InitText() и
-    /// его выводом в комбоблоке
+    /// Р§С‚РѕР±С‹ РЅРµ СЃРѕР·РґР°РІР°С‚СЊ РѕР±СЉРµРєС‚ РєР°Р¶РґС‹Р№ СЂР°Р·, СЃРѕР·РґР°РµРј РµРіРѕ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
+    /// РўР°РєР¶Рµ РёСЃРїРѕР»СЊР·СѓРµРј РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РјРµР¶РґСѓ РІС‹Р·РѕРІРѕРј InitText() Рё
+    /// РµРіРѕ РІС‹РІРѕРґРѕРј РІ РєРѕРјР±РѕР±Р»РѕРєРµ
     /// </summary>
     private EFPAllSubDocComboBoxTextValueNeededEventArgs _TextValueNeededArgs;
 
     /// <summary>
-    /// Установка текста элемента
-    /// EFPDocComboBox доопределяет метод для установки доступности кнопки Edit
+    /// РЈСЃС‚Р°РЅРѕРІРєР° С‚РµРєСЃС‚Р° СЌР»РµРјРµРЅС‚Р°
+    /// EFPDocComboBox РґРѕРѕРїСЂРµРґРµР»СЏРµС‚ РјРµС‚РѕРґ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РєРЅРѕРїРєРё Edit
     /// </summary>
     private void InitTextAndImage()
     {
       try
       {
         _TextValueNeededArgs.Clear();
-        // Стандартные значения текста, подсказки и изображения
+        // РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ С‚РµРєСЃС‚Р°, РїРѕРґСЃРєР°Р·РєРё Рё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         List<DBxSubDoc> viewedSubDocs = new List<DBxSubDoc>();
         foreach (DBxSubDoc sd in SubDocs)
         {
@@ -304,11 +304,11 @@ namespace FreeLibSet.Forms.Docs
             _TextValueNeededArgs.ToolTipText = String.Empty;
         }
 
-        // Пользовательский обработчик
+        // РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє
         if (_TextValueNeeded != null)
           _TextValueNeeded(this, _TextValueNeededArgs);
 
-        // Устанавливаем значения. Изображение используется отдельно
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·РЅР°С‡РµРЅРёСЏ. РР·РѕР±СЂР°Р¶РµРЅРёРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅРѕ
         Control.Text = _TextValueNeededArgs.TextValue;
         if (EFPApp.ShowListImages)
         {
@@ -322,22 +322,22 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        Control.Text = "!!! Ошибка !!! " + e.Message;
+        Control.Text = "!!! РћС€РёР±РєР° !!! " + e.Message;
         if (EFPApp.ShowListImages)
           Control.Image = EFPApp.MainImages.Images["Error"];
-        EFPApp.ShowTempMessage("Ошибка при получении текста: " + e.Message);
+        EFPApp.ShowTempMessage("РћС€РёР±РєР° РїСЂРё РїРѕР»СѓС‡РµРЅРёРё С‚РµРєСЃС‚Р°: " + e.Message);
       }
     }
 
     #endregion
 
-    #region Свойство MaxTextItemCount
+    #region РЎРІРѕР№СЃС‚РІРѕ MaxTextItemCount
 
     /// <summary>
-    /// Максимальное количество идентификаторов, которое может быть выбрано, при котором
-    /// отображаются названия всех элементов через запятую.
-    /// Когда выбрано больше элементов, их количество выводится в скобках.
-    /// По умолчанию равно 1.
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ, РєРѕС‚РѕСЂРѕРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅРѕ, РїСЂРё РєРѕС‚РѕСЂРѕРј
+    /// РѕС‚РѕР±СЂР°Р¶Р°СЋС‚СЃСЏ РЅР°Р·РІР°РЅРёСЏ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ.
+    /// РљРѕРіРґР° РІС‹Р±СЂР°РЅРѕ Р±РѕР»СЊС€Рµ СЌР»РµРјРµРЅС‚РѕРІ, РёС… РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹РІРѕРґРёС‚СЃСЏ РІ СЃРєРѕР±РєР°С….
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ 1.
     /// </summary>
     public int MaxTextItemCount
     {
@@ -354,11 +354,11 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство EmptyText
+    #region РЎРІРѕР№СЃС‚РІРѕ EmptyText
 
     /// <summary>
-    /// Текст, выводимый в комбоблоке, когда нет выбранного значения.
-    /// (по умолчанию "[ нет ]")
+    /// РўРµРєСЃС‚, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ "[ РЅРµС‚ ]")
     /// </summary>
     public string EmptyText
     {
@@ -366,7 +366,7 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         if (value == null)
-          value = String.Empty; // 13.06.2019. Нужно для правильной работы переходника DocValueAnyDocComboBoxBase
+          value = String.Empty; // 13.06.2019. РќСѓР¶РЅРѕ РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ СЂР°Р±РѕС‚С‹ РїРµСЂРµС…РѕРґРЅРёРєР° DocValueAnyDocComboBoxBase
 
         if (value == _EmptyText)
           return;
@@ -379,8 +379,8 @@ namespace FreeLibSet.Forms.Docs
     private string _EmptyText;
 
     /// <summary>
-    /// Текст, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Управляемое свойство для EmptyText.
+    /// РўРµРєСЃС‚, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ EmptyText.
     /// </summary>
     public DepValue<String> EmptyTextEx
     {
@@ -414,12 +414,12 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство EmptyImageKey
+    #region РЎРІРѕР№СЃС‚РІРѕ EmptyImageKey
 
     /// <summary>
-    /// Значок, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Изображение должно быть в коллекции EFPApp.MainImages.
-    /// По умолчанию "" - нет значка.
+    /// Р—РЅР°С‡РѕРє, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РР·РѕР±СЂР°Р¶РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ РєРѕР»Р»РµРєС†РёРё EFPApp.MainImages.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ "" - РЅРµС‚ Р·РЅР°С‡РєР°.
     /// </summary>
     public string EmptyImageKey
     {
@@ -437,8 +437,8 @@ namespace FreeLibSet.Forms.Docs
     private string _EmptyImageKey;
 
     /// <summary>
-    /// Значок, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Управляемое свойство для EmptyImageKey.
+    /// Р—РЅР°С‡РѕРє, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ EmptyImageKey.
     /// </summary>
     public DepValue<String> EmptyImageKeyEx
     {

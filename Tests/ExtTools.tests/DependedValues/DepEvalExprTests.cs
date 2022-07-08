@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -50,11 +50,11 @@ namespace ExtTools_tests.DependedValues
 
     [TestCase(null)]
     [TestCase("")]
-    [TestCase("@0+1")] // неправильный номер аргумента
-    [TestCase("@2+1")] // неправильный номер аргумента
-    [TestCase("@+1")] // номер аргумента не указан
-    [TestCase("SOMETHINGUNKNOWN(@1)")] // неправильное имя функции
-    [TestCase("/@1")] // неправильная операция
+    [TestCase("@0+1")] // РЅРµРїСЂР°РІРёР»СЊРЅС‹Р№ РЅРѕРјРµСЂ Р°СЂРіСѓРјРµРЅС‚Р°
+    [TestCase("@2+1")] // РЅРµРїСЂР°РІРёР»СЊРЅС‹Р№ РЅРѕРјРµСЂ Р°СЂРіСѓРјРµРЅС‚Р°
+    [TestCase("@+1")] // РЅРѕРјРµСЂ Р°СЂРіСѓРјРµРЅС‚Р° РЅРµ СѓРєР°Р·Р°РЅ
+    [TestCase("SOMETHINGUNKNOWN(@1)")] // РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РёРјСЏ С„СѓРЅРєС†РёРё
+    [TestCase("/@1")] // РЅРµРїСЂР°РІРёР»СЊРЅР°СЏ РѕРїРµСЂР°С†РёСЏ
     public void Expression_exception(string expr)
     {
       IDepValue[] args = new IDepValue[1] { new DepConst<int>(0) };

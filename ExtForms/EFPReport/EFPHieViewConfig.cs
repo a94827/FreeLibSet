@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,41 +11,41 @@ using FreeLibSet.Config;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Конфигурация уровней иерархии в просмотре EFPHieView.
-  /// Хранит список отмеченных уровней и их порядок.
-  /// Этот объект не привязан к управляющим элементам и должен хранится
-  /// в параметрах отчета (классе, производном от ReportParams).
-  /// Для редактирования используется класс HieViewLevelConfigHandler
-  /// Текущая конфигурация хранится в таблице, доступ к которой возможен через
-  /// свойство View
+  /// РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё РІ РїСЂРѕСЃРјРѕС‚СЂРµ EFPHieView.
+  /// РҐСЂР°РЅРёС‚ СЃРїРёСЃРѕРє РѕС‚РјРµС‡РµРЅРЅС‹С… СѓСЂРѕРІРЅРµР№ Рё РёС… РїРѕСЂСЏРґРѕРє.
+  /// Р­С‚РѕС‚ РѕР±СЉРµРєС‚ РЅРµ РїСЂРёРІСЏР·Р°РЅ Рє СѓРїСЂР°РІР»СЏСЋС‰РёРј СЌР»РµРјРµРЅС‚Р°Рј Рё РґРѕР»Р¶РµРЅ С…СЂР°РЅРёС‚СЃСЏ
+  /// РІ РїР°СЂР°РјРµС‚СЂР°С… РѕС‚С‡РµС‚Р° (РєР»Р°СЃСЃРµ, РїСЂРѕРёР·РІРѕРґРЅРѕРј РѕС‚ ReportParams).
+  /// Р”Р»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃ HieViewLevelConfigHandler
+  /// РўРµРєСѓС‰Р°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ С…СЂР°РЅРёС‚СЃСЏ РІ С‚Р°Р±Р»РёС†Рµ, РґРѕСЃС‚СѓРї Рє РєРѕС‚РѕСЂРѕР№ РІРѕР·РјРѕР¶РµРЅ С‡РµСЂРµР·
+  /// СЃРІРѕР№СЃС‚РІРѕ View
   /// </summary>
   public class EFPHieViewConfig
   {
-#region Конструктор
+#region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создать настраиваемую конфигурацию уровней иерархии
-    /// Полный список уровней должен быть заполнен в порядке сортировки уровней
-    /// по умолчанию. Нулевым элементом коллекции должен быть наиболее вложенный
-    /// уровень, а последним - самый внешний
+    /// РЎРѕР·РґР°С‚СЊ РЅР°СЃС‚СЂР°РёРІР°РµРјСѓСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
+    /// РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє СѓСЂРѕРІРЅРµР№ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РІ РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё СѓСЂРѕРІРЅРµР№
+    /// РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ. РќСѓР»РµРІС‹Рј СЌР»РµРјРµРЅС‚РѕРј РєРѕР»Р»РµРєС†РёРё РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅР°РёР±РѕР»РµРµ РІР»РѕР¶РµРЅРЅС‹Р№
+    /// СѓСЂРѕРІРµРЅСЊ, Р° РїРѕСЃР»РµРґРЅРёРј - СЃР°РјС‹Р№ РІРЅРµС€РЅРёР№
     /// </summary>
-    /// <param name="AllLevels">Полный список возможных уровней</param>
+    /// <param name="AllLevels">РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє РІРѕР·РјРѕР¶РЅС‹С… СѓСЂРѕРІРЅРµР№</param>
     public EFPHieViewConfig(ICollection<EFPHieViewLevel> AllLevels)
     {
       FAllLevels = new EFPHieViewLevel[AllLevels.Count];
       AllLevels.CopyTo(FAllLevels, 0);
 
       FTable = new DataTable();
-      FTable.Columns.Add("LevelIndex", typeof(int)); // порядок в AllLevels
-      FTable.Columns.Add("Flag", typeof(bool)); // Наличие флажка
-      FTable.Columns.Add("Name", typeof(string)); // название
-      FTable.Columns.Add("ImageKey", typeof(string)); // изображение для просмотра
-      FTable.Columns.Add("FlagIsFixed", typeof(bool)); // true, если флажок нельзя сбрасывать
-      FTable.Columns.Add("Visible", typeof(bool)); // false для скрытых строк
-      FTable.Columns.Add("RowOrder", typeof(int)); // порядок следования уровней
-      FTable.Columns.Add("DefRowOrder", typeof(int)); // порядок следования только видимых уровней по умолчанию
-      FTable.Columns.Add("RowOrderIsFixed", typeof(bool)); // true, если эту строку нельзя передвигать
-      FTable.Columns.Add("ViolatedOrderRuleIndex", typeof(int)); // номер правила, которое было нарушено или DBNull
+      FTable.Columns.Add("LevelIndex", typeof(int)); // РїРѕСЂСЏРґРѕРє РІ AllLevels
+      FTable.Columns.Add("Flag", typeof(bool)); // РќР°Р»РёС‡РёРµ С„Р»Р°Р¶РєР°
+      FTable.Columns.Add("Name", typeof(string)); // РЅР°Р·РІР°РЅРёРµ
+      FTable.Columns.Add("ImageKey", typeof(string)); // РёР·РѕР±СЂР°Р¶РµРЅРёРµ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°
+      FTable.Columns.Add("FlagIsFixed", typeof(bool)); // true, РµСЃР»Рё С„Р»Р°Р¶РѕРє РЅРµР»СЊР·СЏ СЃР±СЂР°СЃС‹РІР°С‚СЊ
+      FTable.Columns.Add("Visible", typeof(bool)); // false РґР»СЏ СЃРєСЂС‹С‚С‹С… СЃС‚СЂРѕРє
+      FTable.Columns.Add("RowOrder", typeof(int)); // РїРѕСЂСЏРґРѕРє СЃР»РµРґРѕРІР°РЅРёСЏ СѓСЂРѕРІРЅРµР№
+      FTable.Columns.Add("DefRowOrder", typeof(int)); // РїРѕСЂСЏРґРѕРє СЃР»РµРґРѕРІР°РЅРёСЏ С‚РѕР»СЊРєРѕ РІРёРґРёРјС‹С… СѓСЂРѕРІРЅРµР№ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+      FTable.Columns.Add("RowOrderIsFixed", typeof(bool)); // true, РµСЃР»Рё СЌС‚Сѓ СЃС‚СЂРѕРєСѓ РЅРµР»СЊР·СЏ РїРµСЂРµРґРІРёРіР°С‚СЊ
+      FTable.Columns.Add("ViolatedOrderRuleIndex", typeof(int)); // РЅРѕРјРµСЂ РїСЂР°РІРёР»Р°, РєРѕС‚РѕСЂРѕРµ Р±С‹Р»Рѕ РЅР°СЂСѓС€РµРЅРѕ РёР»Рё DBNull
 
       DataTools.SetPrimaryKey(FTable, "LevelIndex");
       FTable.DefaultView.Sort = "RowOrder";
@@ -66,22 +66,22 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Свойства
+#region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Список всех возможных уровней иерархии
-    /// Задается в конструкторе. При сортировке по умолчанию AllLevels[0]
-    /// соответствует самому вложенному уровню
+    /// РЎРїРёСЃРѕРє РІСЃРµС… РІРѕР·РјРѕР¶РЅС‹С… СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ. РџСЂРё СЃРѕСЂС‚РёСЂРѕРІРєРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ AllLevels[0]
+    /// СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃР°РјРѕРјСѓ РІР»РѕР¶РµРЅРЅРѕРјСѓ СѓСЂРѕРІРЅСЋ
     /// </summary>
     public EFPHieViewLevel[] AllLevels { get { return FAllLevels; } }
     private EFPHieViewLevel[] FAllLevels;
 
     /// <summary>
-    /// Возвращает объект уровня из массива AllLevels по коду (свойству HieViewLevel.NamePart)
-    /// Возвращает null, если уровень не найден
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ СѓСЂРѕРІРЅСЏ РёР· РјР°СЃСЃРёРІР° AllLevels РїРѕ РєРѕРґСѓ (СЃРІРѕР№СЃС‚РІСѓ HieViewLevel.NamePart)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё СѓСЂРѕРІРµРЅСЊ РЅРµ РЅР°Р№РґРµРЅ
     /// </summary>
-    /// <param name="LevelName">Имя уровня для поиска</param>
-    /// <returns>Объект уровня или null</returns>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ РґР»СЏ РїРѕРёСЃРєР°</param>
+    /// <returns>РћР±СЉРµРєС‚ СѓСЂРѕРІРЅСЏ РёР»Рё null</returns>
     public EFPHieViewLevel this[string LevelName]
     {
       get
@@ -96,12 +96,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает индекс заданного упровня иерерахии (LevelIndex) в массиве
-    /// всех уровней. Индекс не зависит от наличия выбранных уровней и порядка
-    /// сортировки.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ Р·Р°РґР°РЅРЅРѕРіРѕ СѓРїСЂРѕРІРЅСЏ РёРµСЂРµСЂР°С…РёРё (LevelIndex) РІ РјР°СЃСЃРёРІРµ
+    /// РІСЃРµС… СѓСЂРѕРІРЅРµР№. РРЅРґРµРєСЃ РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ РЅР°Р»РёС‡РёСЏ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ Рё РїРѕСЂСЏРґРєР°
+    /// СЃРѕСЂС‚РёСЂРѕРІРєРё.
     /// </summary>
-    /// <param name="LevelName">Имя уровня</param>
-    /// <returns>Индекс в массиве AllLevels</returns>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ</param>
+    /// <returns>РРЅРґРµРєСЃ РІ РјР°СЃСЃРёРІРµ AllLevels</returns>
     public int IndexOf(string LevelName)
     {
       for (int i = 0; i < AllLevels.Length; i++)
@@ -114,7 +114,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// ВОзвращает true, если хотя бы для одного уровня иерархии есть редактор параметра
+    /// Р’РћР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С…РѕС‚СЏ Р±С‹ РґР»СЏ РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё РµСЃС‚СЊ СЂРµРґР°РєС‚РѕСЂ РїР°СЂР°РјРµС‚СЂР°
     /// </summary>
     public bool HasParamEditor
     {
@@ -130,10 +130,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список выбранных уровней в заданном порядке
-    /// Нулевой элемент соответствует самому вложенному уровню (с номерами строк),
-    /// последний элемент - самому внешнему, то есть в порядке, который использует
-    /// свойство HieViewHandler.Levels
+    /// РЎРїРёСЃРѕРє РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ РІ Р·Р°РґР°РЅРЅРѕРј РїРѕСЂСЏРґРєРµ
+    /// РќСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃР°РјРѕРјСѓ РІР»РѕР¶РµРЅРЅРѕРјСѓ СѓСЂРѕРІРЅСЋ (СЃ РЅРѕРјРµСЂР°РјРё СЃС‚СЂРѕРє),
+    /// РїРѕСЃР»РµРґРЅРёР№ СЌР»РµРјРµРЅС‚ - СЃР°РјРѕРјСѓ РІРЅРµС€РЅРµРјСѓ, С‚Рѕ РµСЃС‚СЊ РІ РїРѕСЂСЏРґРєРµ, РєРѕС‚РѕСЂС‹Р№ РёСЃРїРѕР»СЊР·СѓРµС‚
+    /// СЃРІРѕР№СЃС‚РІРѕ HieViewHandler.Levels
     /// </summary>
     public EFPHieViewLevel[] SelectedLevels
     {
@@ -169,9 +169,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список имен выбранных уровней иерархии в заданном порядке
-    /// Свойство может быть использовано для передачи списка уровней серверу
-    /// Нулевой элемент массива соответствует наиболее вложенному уровню
+    /// РЎРїРёСЃРѕРє РёРјРµРЅ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё РІ Р·Р°РґР°РЅРЅРѕРј РїРѕСЂСЏРґРєРµ
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ РґР»СЏ РїРµСЂРµРґР°С‡Рё СЃРїРёСЃРєР° СѓСЂРѕРІРЅРµР№ СЃРµСЂРІРµСЂСѓ
+    /// РќСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ РјР°СЃСЃРёРІР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РЅР°РёР±РѕР»РµРµ РІР»РѕР¶РµРЅРЅРѕРјСѓ СѓСЂРѕРІРЅСЋ
     /// </summary>
     public string[] SelectedNames
     {
@@ -207,9 +207,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Альтернативный доступ к списку имен выбранных уровней (свойство SelectedNames)
-    /// в виде строки с именами, разделенных запятыми
-    /// Уровни задаются от наиболее вложенного к внешнему
+    /// РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹Р№ РґРѕСЃС‚СѓРї Рє СЃРїРёСЃРєСѓ РёРјРµРЅ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ (СЃРІРѕР№СЃС‚РІРѕ SelectedNames)
+    /// РІ РІРёРґРµ СЃС‚СЂРѕРєРё СЃ РёРјРµРЅР°РјРё, СЂР°Р·РґРµР»РµРЅРЅС‹С… Р·Р°РїСЏС‚С‹РјРё
+    /// РЈСЂРѕРІРЅРё Р·Р°РґР°СЋС‚СЃСЏ РѕС‚ РЅР°РёР±РѕР»РµРµ РІР»РѕР¶РµРЅРЅРѕРіРѕ Рє РІРЅРµС€РЅРµРјСѓ
     /// </summary>
     public string SelectedNamesCSV
     {
@@ -227,12 +227,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает отображаемые названия DisplayName выбранных уровней SelectedLevels в виде
-    /// строки, разделенной запятыми.
-    /// Свойство может быть использовано в качестве заголовка поля "Hie_Text" при 
-    /// инициализации столбцов табличного просмотра.
-    /// Порядок элементов является обратным по отношению к SelectedLevels. То есть
-    /// сначала идет самый внешний уровень иерархии, а потом - вложенные
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹Рµ РЅР°Р·РІР°РЅРёСЏ DisplayName РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ SelectedLevels РІ РІРёРґРµ
+    /// СЃС‚СЂРѕРєРё, СЂР°Р·РґРµР»РµРЅРЅРѕР№ Р·Р°РїСЏС‚С‹РјРё.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ РІ РєР°С‡РµСЃС‚РІРµ Р·Р°РіРѕР»РѕРІРєР° РїРѕР»СЏ "Hie_Text" РїСЂРё 
+    /// РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ СЏРІР»СЏРµС‚СЃСЏ РѕР±СЂР°С‚РЅС‹Рј РїРѕ РѕС‚РЅРѕС€РµРЅРёСЋ Рє SelectedLevels. РўРѕ РµСЃС‚СЊ
+    /// СЃРЅР°С‡Р°Р»Р° РёРґРµС‚ СЃР°РјС‹Р№ РІРЅРµС€РЅРёР№ СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё, Р° РїРѕС‚РѕРј - РІР»РѕР¶РµРЅРЅС‹Рµ
     /// </summary>
     public string SelectedLevelsTitle
     {
@@ -252,8 +252,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает количество выбранных уровней SelectedLevels.Length,
-    /// но работает быстрее, чем обращение к SelectedLevels
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ SelectedLevels.Length,
+    /// РЅРѕ СЂР°Р±РѕС‚Р°РµС‚ Р±С‹СЃС‚СЂРµРµ, С‡РµРј РѕР±СЂР°С‰РµРЅРёРµ Рє SelectedLevels
     /// </summary>
     public int SelectedLevelCount
     {
@@ -270,34 +270,34 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Таблица, используемая в редакторе уровней.
-    /// Список строк соответствует текущему порядку уровней (поле "RowOrder").
-    /// В отличие от списка уровней, в таблиц порядок строк обратный. Первой строкой
-    /// идет самый внешний уровень, а последней - самый внутренний. Строка "Итого"
-    /// в таблицу не входит
+    /// РўР°Р±Р»РёС†Р°, РёСЃРїРѕР»СЊР·СѓРµРјР°СЏ РІ СЂРµРґР°РєС‚РѕСЂРµ СѓСЂРѕРІРЅРµР№.
+    /// РЎРїРёСЃРѕРє СЃС‚СЂРѕРє СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С‚РµРєСѓС‰РµРјСѓ РїРѕСЂСЏРґРєСѓ СѓСЂРѕРІРЅРµР№ (РїРѕР»Рµ "RowOrder").
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ СЃРїРёСЃРєР° СѓСЂРѕРІРЅРµР№, РІ С‚Р°Р±Р»РёС† РїРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РѕР±СЂР°С‚РЅС‹Р№. РџРµСЂРІРѕР№ СЃС‚СЂРѕРєРѕР№
+    /// РёРґРµС‚ СЃР°РјС‹Р№ РІРЅРµС€РЅРёР№ СѓСЂРѕРІРµРЅСЊ, Р° РїРѕСЃР»РµРґРЅРµР№ - СЃР°РјС‹Р№ РІРЅСѓС‚СЂРµРЅРЅРёР№. РЎС‚СЂРѕРєР° "РС‚РѕРіРѕ"
+    /// РІ С‚Р°Р±Р»РёС†Сѓ РЅРµ РІС…РѕРґРёС‚
     /// </summary>
     public DataView View { get { return FTable.DefaultView; } }
     private DataTable FTable;
 
     /// <summary>
-    /// true, если в иерархическом просмотре должны быть скрыты лишние строки сумм
-    /// По умолчанию - false
+    /// true, РµСЃР»Рё РІ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЃРєСЂС‹С‚С‹ Р»РёС€РЅРёРµ СЃС‚СЂРѕРєРё СЃСѓРјРј
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false
     /// </summary>
     public bool HideExtraSumRows;
 
     /// <summary>
-    /// Если свойство установлено, то пользователь не может изменять свойство
-    /// HideExtraSumRows в редакторе. Оно также не будет читаться и записываться
-    /// в секции конфигурации
-    /// По умолчанию - false (можно редактировать)
-    /// Установка свойства должна выполняться до вызова ReadConfig() и до создания
-    /// редактора
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РјРѕР¶РµС‚ РёР·РјРµРЅСЏС‚СЊ СЃРІРѕР№СЃС‚РІРѕ
+    /// HideExtraSumRows РІ СЂРµРґР°РєС‚РѕСЂРµ. РћРЅРѕ С‚Р°РєР¶Рµ РЅРµ Р±СѓРґРµС‚ С‡РёС‚Р°С‚СЊСЃСЏ Рё Р·Р°РїРёСЃС‹РІР°С‚СЊСЃСЏ
+    /// РІ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false (РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ)
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РґРѕР»Р¶РЅР° РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РґРѕ РІС‹Р·РѕРІР° ReadConfig() Рё РґРѕ СЃРѕР·РґР°РЅРёСЏ
+    /// СЂРµРґР°РєС‚РѕСЂР°
     /// </summary>
     public bool HideExtraSumRowsFixed;
 
     /// <summary>
-    /// Массив уровней, у которых выставлены признаки Required и Visible, но которые
-    /// не выбраны (ошибки)
+    /// РњР°СЃСЃРёРІ СѓСЂРѕРІРЅРµР№, Сѓ РєРѕС‚РѕСЂС‹С… РІС‹СЃС‚Р°РІР»РµРЅС‹ РїСЂРёР·РЅР°РєРё Required Рё Visible, РЅРѕ РєРѕС‚РѕСЂС‹Рµ
+    /// РЅРµ РІС‹Р±СЂР°РЅС‹ (РѕС€РёР±РєРё)
     /// </summary>
     public EFPHieViewLevel[] UnselectedRequiredLevels
     {
@@ -334,7 +334,7 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Методы
+#region РњРµС‚РѕРґС‹
 
     public void RefreshTable()
     {
@@ -369,7 +369,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Заполнить поля ViolatedOrderRuleIndex
+    /// Р—Р°РїРѕР»РЅРёС‚СЊ РїРѕР»СЏ ViolatedOrderRuleIndex
     /// </summary>
     public void CheckOrderRules()
     {
@@ -392,7 +392,7 @@ namespace FreeLibSet.Forms
         if (RowOrder1 < RowOrder2)
           continue;
 
-        // Устанавливаем признак ошибки для обеих строк
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїСЂРёР·РЅР°Рє РѕС€РёР±РєРё РґР»СЏ РѕР±РµРёС… СЃС‚СЂРѕРє
         Row1["ViolatedOrderRuleIndex"] = i;
         Row2["ViolatedOrderRuleIndex"] = i;
         OrderRules[i].FViolated = true;
@@ -400,7 +400,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Применить установленную конфигурацию к просмотру
+    /// РџСЂРёРјРµРЅРёС‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅСѓСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ Рє РїСЂРѕСЃРјРѕС‚СЂСѓ
     /// </summary>
     /// <param name="HieView"></param>
     public void CopyTo(EFPHieView HieView)
@@ -411,20 +411,20 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Правила для порядка уровней
+#region РџСЂР°РІРёР»Р° РґР»СЏ РїРѕСЂСЏРґРєР° СѓСЂРѕРІРЅРµР№
 
     /// <summary>
-    /// Определение одного правила порядка следования двух уровней
+    /// РћРїСЂРµРґРµР»РµРЅРёРµ РѕРґРЅРѕРіРѕ РїСЂР°РІРёР»Р° РїРѕСЂСЏРґРєР° СЃР»РµРґРѕРІР°РЅРёСЏ РґРІСѓС… СѓСЂРѕРІРЅРµР№
     /// </summary>
     public class OrderRule
     {
-#region Конструктор
+#region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создает новое правило
+      /// РЎРѕР·РґР°РµС‚ РЅРѕРІРѕРµ РїСЂР°РІРёР»Рѕ
       /// </summary>
-      /// <param name="UpperLevelName">Уровень, который дожен быть выше</param>
-      /// <param name="LowerLevelName">Уровень, который дожен быть ниже</param>
+      /// <param name="UpperLevelName">РЈСЂРѕРІРµРЅСЊ, РєРѕС‚РѕСЂС‹Р№ РґРѕР¶РµРЅ Р±С‹С‚СЊ РІС‹С€Рµ</param>
+      /// <param name="LowerLevelName">РЈСЂРѕРІРµРЅСЊ, РєРѕС‚РѕСЂС‹Р№ РґРѕР¶РµРЅ Р±С‹С‚СЊ РЅРёР¶Рµ</param>
       public OrderRule(string UpperLevelName, string LowerLevelName)
       {
 #if DEBUG
@@ -433,7 +433,7 @@ namespace FreeLibSet.Forms
         if (String.IsNullOrEmpty(LowerLevelName))
           throw new ArgumentNullException("LowerLevelName");
         if (UpperLevelName == LowerLevelName)
-          throw new BugException("Верхний и нижний уровни не могут совпадать: " + UpperLevelName);
+          throw new BugException("Р’РµСЂС…РЅРёР№ Рё РЅРёР¶РЅРёР№ СѓСЂРѕРІРЅРё РЅРµ РјРѕРіСѓС‚ СЃРѕРІРїР°РґР°С‚СЊ: " + UpperLevelName);
 #endif
 
         FUpperLevelName = UpperLevelName;
@@ -442,18 +442,18 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Свойства
+#region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Имя уровня иерархии, который дожен быть выше.
-      /// Свойство задается в конструкторе
+      /// РРјСЏ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё, РєРѕС‚РѕСЂС‹Р№ РґРѕР¶РµРЅ Р±С‹С‚СЊ РІС‹С€Рµ.
+      /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
       /// </summary>
       public string UpperLevelName { get { return FUpperLevelName; } }
       private string FUpperLevelName;
 
       /// <summary>
-      /// Имя уровня иерархии, который дожен быть ниже.
-      /// Свойство задается в конструкторе
+      /// РРјСЏ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё, РєРѕС‚РѕСЂС‹Р№ РґРѕР¶РµРЅ Р±С‹С‚СЊ РЅРёР¶Рµ.
+      /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
       /// </summary>
       public string LowerLevelName { get { return FLowerLevelName; } }
       private string FLowerLevelName;
@@ -463,7 +463,7 @@ namespace FreeLibSet.Forms
       internal int LowerLevelIndex;
 
       /// <summary>
-      /// Возвращает true, если правило нарушено
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїСЂР°РІРёР»Рѕ РЅР°СЂСѓС€РµРЅРѕ
       /// </summary>
       public bool Violated { get { return FViolated; } }
       internal bool FViolated;
@@ -472,11 +472,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список правил следования уровней в иерархии
+    /// РЎРїРёСЃРѕРє РїСЂР°РІРёР» СЃР»РµРґРѕРІР°РЅРёСЏ СѓСЂРѕРІРЅРµР№ РІ РёРµСЂР°СЂС…РёРё
     /// </summary>
     public class OrderRuleList : List<OrderRule>
     {
-#region Конструктор
+#region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal OrderRuleList(EFPHieViewConfig Owner)
       {
@@ -485,12 +485,12 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Свойства
+#region РЎРІРѕР№СЃС‚РІР°
 
       private EFPHieViewConfig FOwner;
 
       /// <summary>
-      /// Возвращает true, если хотя бы одно из правил нарушено
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕ РёР· РїСЂР°РІРёР» РЅР°СЂСѓС€РµРЅРѕ
       /// </summary>
       public bool HasViolation
       {
@@ -507,9 +507,9 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Методы
+#region РњРµС‚РѕРґС‹
                   
-      // TODO: !!! Это надо переделать
+      // TODO: !!! Р­С‚Рѕ РЅР°РґРѕ РїРµСЂРµРґРµР»Р°С‚СЊ
 
       public new void Add(OrderRule Rule)
       {
@@ -536,20 +536,20 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список правил взаимного расположения уровней
+    /// РЎРїРёСЃРѕРє РїСЂР°РІРёР» РІР·Р°РёРјРЅРѕРіРѕ СЂР°СЃРїРѕР»РѕР¶РµРЅРёСЏ СѓСЂРѕРІРЅРµР№
     /// </summary>
     public OrderRuleList OrderRules { get { return FOrderRules; } }
     private OrderRuleList FOrderRules;
 
 #endregion
 
-#region Вспомогательные методы установки значений
+#region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёР№
 
     /// <summary>
-    /// Устанавливает свойство "Visible" для уровня, если он существует
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ "Visible" РґР»СЏ СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
-    /// <param name="LevelName">Имя уровня</param>
-    /// <param name="Visible">Видимость уровня</param>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ</param>
+    /// <param name="Visible">Р’РёРґРёРјРѕСЃС‚СЊ СѓСЂРѕРІРЅСЏ</param>
     public void SetVisible(string LevelName, bool Visible)
     {
       EFPHieViewLevel lvl = this[LevelName];
@@ -559,13 +559,13 @@ namespace FreeLibSet.Forms
 
 #if XXX
     /// <summary>
-    /// Устанавливает свойство "Visible" для уровня, если он существует.
-    /// Может быть также сброшено свойство Selected, когда Visible=false,
-    /// а UnselectInvisible=true
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ "Visible" РґР»СЏ СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚.
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ С‚Р°РєР¶Рµ СЃР±СЂРѕС€РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ Selected, РєРѕРіРґР° Visible=false,
+    /// Р° UnselectInvisible=true
     /// </summary>
-    /// <param name="LevelName">Имя уровня иерархии</param>
-    /// <param name="Visible">Значение свойства Visible</param>
-    /// <param name="UnselectInvisible">Если true, то будет установлено Selected=false при Visible=false</param>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё</param>
+    /// <param name="Visible">Р—РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° Visible</param>
+    /// <param name="UnselectInvisible">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ Selected=false РїСЂРё Visible=false</param>
     public void SetVisible(string LevelName, bool Visible, bool UnselectInvisible)
     {
       HieViewLevel lvl = this[LevelName];
@@ -579,10 +579,10 @@ namespace FreeLibSet.Forms
 #endif
 
     /// <summary>
-    /// Возвращает признак видимости уровня, если он существует
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРёР·РЅР°Рє РІРёРґРёРјРѕСЃС‚Рё СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
-    /// <param name="LevelName">Имя уровня</param>
-    /// <returns>Признак видимости</returns>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ</param>
+    /// <returns>РџСЂРёР·РЅР°Рє РІРёРґРёРјРѕСЃС‚Рё</returns>
     public bool GetVisible(string LevelName)
     {
       EFPHieViewLevel lvl = this[LevelName];
@@ -593,10 +593,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает свойство "Required" для уровня, если он существует
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ "Required" РґР»СЏ СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
-    /// <param name="LevelName">Имя уровня</param>
-    /// <param name="Required">Свойство "Required"</param>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ</param>
+    /// <param name="Required">РЎРІРѕР№СЃС‚РІРѕ "Required"</param>
     public void SetRequired(string LevelName, bool Required)
     {
       EFPHieViewLevel lvl = this[LevelName];
@@ -605,10 +605,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает свойство "Required" для уровня, если он существует
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ "Required" РґР»СЏ СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
-    /// <param name="LevelName">Имя уровня</param>
-    /// <returns>Свойство "Required"</returns>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ</param>
+    /// <returns>РЎРІРѕР№СЃС‚РІРѕ "Required"</returns>
     public bool GetRequired(string LevelName)
     {
       EFPHieViewLevel lvl = this[LevelName];
@@ -638,10 +638,10 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Чтение и запись конфигурации
+#region Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 
     /// <summary>
-    /// Установка порядка строк и флажков в значение по умолчанию
+    /// РЈСЃС‚Р°РЅРѕРІРєР° РїРѕСЂСЏРґРєР° СЃС‚СЂРѕРє Рё С„Р»Р°Р¶РєРѕРІ РІ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
     public void SetDefaultConfig()
     {
@@ -714,8 +714,8 @@ namespace FreeLibSet.Forms
           Row["RowOrder"] = Order;
           if (AllLevels[i].ParamEditor != null)
           {
-            // Вызвать метод чтения значения параметра надо, даже если для него
-            // нет секции конфигурации. В этом случае используется пустая секция
+            // Р’С‹Р·РІР°С‚СЊ РјРµС‚РѕРґ С‡С‚РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР° РЅР°РґРѕ, РґР°Р¶Рµ РµСЃР»Рё РґР»СЏ РЅРµРіРѕ
+            // РЅРµС‚ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃРµРєС†РёСЏ
             CfgPart PartParam = null;
             if (PartParams != null)
               PartParam = PartParams.GetChild(AllLevels[i].Name, false);
@@ -729,7 +729,7 @@ namespace FreeLibSet.Forms
       if (!HideExtraSumRowsFixed)
         HideExtraSumRows = Config.GetBool("HideExtraSubTotals");
 
-      RefreshTable(); // мог поменяться текст для поля "Название"
+      RefreshTable(); // РјРѕРі РїРѕРјРµРЅСЏС‚СЊСЃСЏ С‚РµРєСЃС‚ РґР»СЏ РїРѕР»СЏ "РќР°Р·РІР°РЅРёРµ"
     }
 
 #endregion

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,58 +12,58 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Parsing
 {
   /// <summary>
-  /// Метод, выполняющий бинарную операцию
+  /// РњРµС‚РѕРґ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ Р±РёРЅР°СЂРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ
   /// </summary>
-  /// <param name="op">Знак операции</param>
-  /// <param name="arg1">Левый аргумент</param>
-  /// <param name="arg2">Правый аргумент</param>
+  /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+  /// <param name="arg1">Р›РµРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+  /// <param name="arg2">РџСЂР°РІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
   /// <returns></returns>
   public delegate object BinaryOpDelegate(string op, object arg1, object arg2);
 
   /// <summary>
-  /// Описание бинарной операции
-  /// Порядок добавления объектов MathOpDef в списки MathOpParser должен соответствовать
-  /// понижению приоритета операций
+  /// РћРїРёСЃР°РЅРёРµ Р±РёРЅР°СЂРЅРѕР№ РѕРїРµСЂР°С†РёРё
+  /// РџРѕСЂСЏРґРѕРє РґРѕР±Р°РІР»РµРЅРёСЏ РѕР±СЉРµРєС‚РѕРІ MathOpDef РІ СЃРїРёСЃРєРё MathOpParser РґРѕР»Р¶РµРЅ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ
+  /// РїРѕРЅРёР¶РµРЅРёСЋ РїСЂРёРѕСЂРёС‚РµС‚Р° РѕРїРµСЂР°С†РёР№
   /// </summary>
   public class BinaryOpDef : ObjectWithCode
   {
-    #region Константы приоритетов
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹ РїСЂРёРѕСЂРёС‚РµС‚РѕРІ
 
     /// <summary>
-    /// Не используется
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
     /// </summary>
     public const int PriorityPower = 500;
 
     /// <summary>
-    /// Операции умножения и деления имеют высший приоритет
+    /// РћРїРµСЂР°С†РёРё СѓРјРЅРѕР¶РµРЅРёСЏ Рё РґРµР»РµРЅРёСЏ РёРјРµСЋС‚ РІС‹СЃС€РёР№ РїСЂРёРѕСЂРёС‚РµС‚
     /// </summary>
     public const int PriorityMulDiv = 400;
 
     /// <summary>
-    /// Операции сложения и вычитания имеют меньший приоритет
+    /// РћРїРµСЂР°С†РёРё СЃР»РѕР¶РµРЅРёСЏ Рё РІС‹С‡РёС‚Р°РЅРёСЏ РёРјРµСЋС‚ РјРµРЅСЊС€РёР№ РїСЂРёРѕСЂРёС‚РµС‚
     /// </summary>
     public const int PriorityAddSub = 300;
 
     /// <summary>
-    /// Операции сравнения имеют низкий приритет
+    /// РћРїРµСЂР°С†РёРё СЃСЂР°РІРЅРµРЅРёСЏ РёРјРµСЋС‚ РЅРёР·РєРёР№ РїСЂРёСЂРёС‚РµС‚
     /// </summary>
     public const int PriorityCompare = 200;
 
     /// <summary>
-    /// Не используется
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
     /// </summary>
     public const int PriorityLogical = 100;
 
     #endregion
 
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает описание операции
+    /// РЎРѕР·РґР°РµС‚ РѕРїРёСЃР°РЅРёРµ РѕРїРµСЂР°С†РёРё
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="calcMethod">Метод вычисления</param>
-    /// <param name="priority">Приоритет операции. Чем больше значение, тем выше приоритет</param>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="calcMethod">РњРµС‚РѕРґ РІС‹С‡РёСЃР»РµРЅРёСЏ</param>
+    /// <param name="priority">РџСЂРёРѕСЂРёС‚РµС‚ РѕРїРµСЂР°С†РёРё. Р§РµРј Р±РѕР»СЊС€Рµ Р·РЅР°С‡РµРЅРёРµ, С‚РµРј РІС‹С€Рµ РїСЂРёРѕСЂРёС‚РµС‚</param>
     public BinaryOpDef(string op, BinaryOpDelegate calcMethod, int priority)
       : base(op)
     {
@@ -75,27 +75,27 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Знак операции.
-    /// Задается в конструкторе.
+    /// Р—РЅР°Рє РѕРїРµСЂР°С†РёРё.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public string Op { get { return base.Code; } }
 
     /// <summary>
-    /// Метод вычисления операции.
-    /// Задается в конструкторе
+    /// РњРµС‚РѕРґ РІС‹С‡РёСЃР»РµРЅРёСЏ РѕРїРµСЂР°С†РёРё.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public BinaryOpDelegate CalcMethod { get { return _CalcMethod; } }
     private BinaryOpDelegate _CalcMethod;
 
     /// <summary>
-    /// Приоритеты операций.
-    /// Используются, когда несколько операций идут подряд без скобок
-    /// Чем больше значение, тем выше приоритет операции.
-    /// Например, приритет операции умножения больше, чем операции сложения.
-    /// Для стандартных операций используются константы PriorityXXX
+    /// РџСЂРёРѕСЂРёС‚РµС‚С‹ РѕРїРµСЂР°С†РёР№.
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ, РєРѕРіРґР° РЅРµСЃРєРѕР»СЊРєРѕ РѕРїРµСЂР°С†РёР№ РёРґСѓС‚ РїРѕРґСЂСЏРґ Р±РµР· СЃРєРѕР±РѕРє
+    /// Р§РµРј Р±РѕР»СЊС€Рµ Р·РЅР°С‡РµРЅРёРµ, С‚РµРј РІС‹С€Рµ РїСЂРёРѕСЂРёС‚РµС‚ РѕРїРµСЂР°С†РёРё.
+    /// РќР°РїСЂРёРјРµСЂ, РїСЂРёСЂРёС‚РµС‚ РѕРїРµСЂР°С†РёРё СѓРјРЅРѕР¶РµРЅРёСЏ Р±РѕР»СЊС€Рµ, С‡РµРј РѕРїРµСЂР°С†РёРё СЃР»РѕР¶РµРЅРёСЏ.
+    /// Р”Р»СЏ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РѕРїРµСЂР°С†РёР№ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚С‹ PriorityXXX
     /// </summary>
     public int Priority { get { return _Priority; } }
     private int _Priority;
@@ -104,27 +104,27 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Метод, выполняющий унарную операцию
+  /// РњРµС‚РѕРґ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СѓРЅР°СЂРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ
   /// </summary>
-  /// <param name="op">Знак операции</param>
-  /// <param name="arg">Аргумент (справа от операции)</param>
+  /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+  /// <param name="arg">РђСЂРіСѓРјРµРЅС‚ (СЃРїСЂР°РІР° РѕС‚ РѕРїРµСЂР°С†РёРё)</param>
   /// <returns></returns>
   public delegate object UnaryOpDelegate(string op, object arg);
 
   /// <summary>
-  /// Описание унарной операции
-  /// Порядок добавления объектов MathOpDef в списки MathOpParser должен соответствовать
-  /// понижению приоритета операций
+  /// РћРїРёСЃР°РЅРёРµ СѓРЅР°СЂРЅРѕР№ РѕРїРµСЂР°С†РёРё
+  /// РџРѕСЂСЏРґРѕРє РґРѕР±Р°РІР»РµРЅРёСЏ РѕР±СЉРµРєС‚РѕРІ MathOpDef РІ СЃРїРёСЃРєРё MathOpParser РґРѕР»Р¶РµРЅ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ
+  /// РїРѕРЅРёР¶РµРЅРёСЋ РїСЂРёРѕСЂРёС‚РµС‚Р° РѕРїРµСЂР°С†РёР№
   /// </summary>
   public class UnaryOpDef : ObjectWithCode
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает описание операции
+    /// РЎРѕР·РґР°РµС‚ РѕРїРёСЃР°РЅРёРµ РѕРїРµСЂР°С†РёРё
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="calcMethod">Метод для вычисления операции</param>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="calcMethod">РњРµС‚РѕРґ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РѕРїРµСЂР°С†РёРё</param>
     public UnaryOpDef(string op, UnaryOpDelegate calcMethod)
       : base(op)
     {
@@ -135,17 +135,17 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Знако операции.
-    /// Задается в конструкторе.
+    /// Р—РЅР°РєРѕ РѕРїРµСЂР°С†РёРё.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public string Op { get { return base.Code; } }
 
     /// <summary>
-    /// Метод вычисления операции.
-    /// Задается в конструторе.
+    /// РњРµС‚РѕРґ РІС‹С‡РёСЃР»РµРЅРёСЏ РѕРїРµСЂР°С†РёРё.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓС‚РѕСЂРµ.
     /// </summary>
     public UnaryOpDelegate CalcMethod { get { return _CalcMethod; } }
     private UnaryOpDelegate _CalcMethod;
@@ -154,15 +154,15 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Парсер для разбора арифметических операций.
-  /// Создает лексемы, совпадающие с операциями: "+", "-", "*", "/", знаки сравнения, круглые скобки "()".
+  /// РџР°СЂСЃРµСЂ РґР»СЏ СЂР°Р·Р±РѕСЂР° Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… РѕРїРµСЂР°С†РёР№.
+  /// РЎРѕР·РґР°РµС‚ Р»РµРєСЃРµРјС‹, СЃРѕРІРїР°РґР°СЋС‰РёРµ СЃ РѕРїРµСЂР°С†РёСЏРјРё: "+", "-", "*", "/", Р·РЅР°РєРё СЃСЂР°РІРЅРµРЅРёСЏ, РєСЂСѓРіР»С‹Рµ СЃРєРѕР±РєРё "()".
   /// </summary>
   public class MathOpParser : IParser
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает парсер, распознающий стандартные арифметические и логические операции
+    /// РЎРѕР·РґР°РµС‚ РїР°СЂСЃРµСЂ, СЂР°СЃРїРѕР·РЅР°СЋС‰РёР№ СЃС‚Р°РЅРґР°СЂС‚РЅС‹Рµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёРµ Рё Р»РѕРіРёС‡РµСЃРєРёРµ РѕРїРµСЂР°С†РёРё
     /// </summary>
     public MathOpParser()
       : this(true)
@@ -170,10 +170,10 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Создает парсер, с возможностью добавления операций.
+    /// РЎРѕР·РґР°РµС‚ РїР°СЂСЃРµСЂ, СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РґРѕР±Р°РІР»РµРЅРёСЏ РѕРїРµСЂР°С†РёР№.
     /// </summary>
-    /// <param name="useDefaultOps">Надо ли добавлять описания стандартных арифметических и логических операций.
-    /// Если false, то описания всех операций должны быть добавлены вручную</param>
+    /// <param name="useDefaultOps">РќР°РґРѕ Р»Рё РґРѕР±Р°РІР»СЏС‚СЊ РѕРїРёСЃР°РЅРёСЏ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… РѕРїРµСЂР°С†РёР№.
+    /// Р•СЃР»Рё false, С‚Рѕ РѕРїРёСЃР°РЅРёСЏ РІСЃРµС… РѕРїРµСЂР°С†РёР№ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅС‹ РІСЂСѓС‡РЅСѓСЋ</param>
     public MathOpParser(bool useDefaultOps)
     {
       _BinaryOps = new NamedList<BinaryOpDef>();
@@ -185,8 +185,8 @@ namespace FreeLibSet.Parsing
         UnaryOpDelegate unaryD = new UnaryOpDelegate(UnaryCalc);
 
         // 10.10.2017
-        // Сначала должны идти операции из двух символов, а затем - из одного,
-        // иначе, например, операция ">=" будет распознана как ">" и "="
+        // РЎРЅР°С‡Р°Р»Р° РґРѕР»Р¶РЅС‹ РёРґС‚Рё РѕРїРµСЂР°С†РёРё РёР· РґРІСѓС… СЃРёРјРІРѕР»РѕРІ, Р° Р·Р°С‚РµРј - РёР· РѕРґРЅРѕРіРѕ,
+        // РёРЅР°С‡Рµ, РЅР°РїСЂРёРјРµСЂ, РѕРїРµСЂР°С†РёСЏ ">=" Р±СѓРґРµС‚ СЂР°СЃРїРѕР·РЅР°РЅР° РєР°Рє ">" Рё "="
 
         string[] binarySigns = new string[] { 
           "<>", ">=", "<=",
@@ -205,44 +205,44 @@ namespace FreeLibSet.Parsing
         };
 
         for (int i = 0; i < binarySigns.Length; i++)
-          BinaryOps.Add(new BinaryOpDef(binarySigns[i], binaryD, binaryPriorities[i])); // один делегат на все
+          BinaryOps.Add(new BinaryOpDef(binarySigns[i], binaryD, binaryPriorities[i])); // РѕРґРёРЅ РґРµР»РµРіР°С‚ РЅР° РІСЃРµ
 
         string[] unarySigns = new string[] { "+", "-" };
 
         for (int i = 0; i < unarySigns.Length; i++)
-          UnaryOps.Add(new UnaryOpDef(unarySigns[i], unaryD)); // один делегат на все
+          UnaryOps.Add(new UnaryOpDef(unarySigns[i], unaryD)); // РѕРґРёРЅ РґРµР»РµРіР°С‚ РЅР° РІСЃРµ
       }
     }
 
     #endregion
 
-    #region Списки операций
+    #region РЎРїРёСЃРєРё РѕРїРµСЂР°С†РёР№
 
     /// <summary>
-    /// Список допустимых бинарных операций
+    /// РЎРїРёСЃРѕРє РґРѕРїСѓСЃС‚РёРјС‹С… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№
     /// </summary>
     public NamedList<BinaryOpDef> BinaryOps { get { return _BinaryOps; } }
     private NamedList<BinaryOpDef> _BinaryOps;
 
     /// <summary>
-    /// Список допустимых унарных операций
+    /// РЎРїРёСЃРѕРє РґРѕРїСѓСЃС‚РёРјС‹С… СѓРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№
     /// </summary>
     public NamedList<UnaryOpDef> UnaryOps { get { return _UnaryOps; } }
     private NamedList<UnaryOpDef> _UnaryOps;
 
     #endregion
 
-    #region Вычисление
+    #region Р’С‹С‡РёСЃР»РµРЅРёРµ
 
-    #region Бинарные операции
+    #region Р‘РёРЅР°СЂРЅС‹Рµ РѕРїРµСЂР°С†РёРё
 
     /// <summary>
-    /// Стандартное вычисление арифметических и логических бинарных операций
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg1">РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <param name="arg2">Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object BinaryCalc(string op, object arg1, object arg2)
     {
       if (arg1 == null)
@@ -257,7 +257,7 @@ namespace FreeLibSet.Parsing
 
       if (arg1 is DateTime || arg2 is DateTime)
       {
-        // Тут все сложнее. Даты могут складываться с числами
+        // РўСѓС‚ РІСЃРµ СЃР»РѕР¶РЅРµРµ. Р”Р°С‚С‹ РјРѕРіСѓС‚ СЃРєР»Р°РґС‹РІР°С‚СЊСЃСЏ СЃ С‡РёСЃР»Р°РјРё
         if (arg1 is DateTime)
         {
           if (arg2 is DateTime)
@@ -302,19 +302,19 @@ namespace FreeLibSet.Parsing
         return CalcInt(op, DataTools.GetInt(arg1), DataTools.GetInt(arg2));
 
       if (arg1 is string || arg2 is string)
-        //throw new NotSupportedException("Математические операции над строками не поддерживаются. Используйте функции");
+        //throw new NotSupportedException("РњР°С‚РµРјР°С‚РёС‡РµСЃРєРёРµ РѕРїРµСЂР°С†РёРё РЅР°Рґ СЃС‚СЂРѕРєР°РјРё РЅРµ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ. РСЃРїРѕР»СЊР·СѓР№С‚Рµ С„СѓРЅРєС†РёРё");
         return CalcString(op, DataTools.GetString(arg1), DataTools.GetString(arg2));
       if (arg1 is bool && arg2 is bool)
         return CalcBool(op, DataTools.GetBool(arg1), DataTools.GetBool(arg2));
 
-      throw new NotSupportedException("Остальное не реализовано. Тип данных аргумента 1:" + arg1.GetType().ToString() + ", аргумента 2: " + arg2.GetType().ToString());
+      throw new NotSupportedException("РћСЃС‚Р°Р»СЊРЅРѕРµ РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ. РўРёРї РґР°РЅРЅС‹С… Р°СЂРіСѓРјРµРЅС‚Р° 1:" + arg1.GetType().ToString() + ", Р°СЂРіСѓРјРµРЅС‚Р° 2: " + arg2.GetType().ToString());
     }
 
     /// <summary>
-    /// "Вычисляет" унарную операцию для двух аргументов null.
-    /// Для операций сравнение, содержажих знак равенства, возвращает true.
-    /// Для операций "больше", "меньше" и "не равно", возвращает false.
-    /// Для арифметических операций возвращает null.
+    /// "Р’С‹С‡РёСЃР»СЏРµС‚" СѓРЅР°СЂРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ РґР»СЏ РґРІСѓС… Р°СЂРіСѓРјРµРЅС‚РѕРІ null.
+    /// Р”Р»СЏ РѕРїРµСЂР°С†РёР№ СЃСЂР°РІРЅРµРЅРёРµ, СЃРѕРґРµСЂР¶Р°Р¶РёС… Р·РЅР°Рє СЂР°РІРµРЅСЃС‚РІР°, РІРѕР·РІСЂР°С‰Р°РµС‚ true.
+    /// Р”Р»СЏ РѕРїРµСЂР°С†РёР№ "Р±РѕР»СЊС€Рµ", "РјРµРЅСЊС€Рµ" Рё "РЅРµ СЂР°РІРЅРѕ", РІРѕР·РІСЂР°С‰Р°РµС‚ false.
+    /// Р”Р»СЏ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… РѕРїРµСЂР°С†РёР№ РІРѕР·РІСЂР°С‰Р°РµС‚ null.
     /// </summary>
     /// <param name="op"></param>
     /// <returns></returns>
@@ -336,17 +336,17 @@ namespace FreeLibSet.Parsing
         case "<":
           return false;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована для аргументов null");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР° РґР»СЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ null");
       }
     }
 
     /// <summary>
-    /// Стандартное вычисление арифметических и логических бинарных операций для типа Decimal
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№ РґР»СЏ С‚РёРїР° Decimal
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg1">РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <param name="arg2">Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object CalcDecimal(string op, decimal arg1, decimal arg2)
     {
       switch (op)
@@ -363,17 +363,17 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
       }
     }
 
     /// <summary>
-    /// Стандартное вычисление арифметических и логических бинарных операций для типа Double
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№ РґР»СЏ С‚РёРїР° Double
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg1">РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <param name="arg2">Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object CalcDouble(string op, double arg1, double arg2)
     {
       switch (op)
@@ -390,17 +390,17 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
       }
     }
 
     /// <summary>
-    /// Стандартное вычисление арифметических и логических бинарных операций для типа Single
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№ РґР»СЏ С‚РёРїР° Single
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg1">РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <param name="arg2">Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object CalcSingle(string op, float arg1, float arg2)
     {
       switch (op)
@@ -417,25 +417,25 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
       }
     }
 
     /// <summary>
-    /// Стандартное вычисление арифметических и логических бинарных операций для типа Int32
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№ РґР»СЏ С‚РёРїР° Int32
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg1">РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <param name="arg2">Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object CalcInt(string op, int arg1, int arg2)
     {
       // 01.03.2017
-      // Сначала пытаемся вычислить для целочисленного аргумента
+      // РЎРЅР°С‡Р°Р»Р° РїС‹С‚Р°РµРјСЃСЏ РІС‹С‡РёСЃР»РёС‚СЊ РґР»СЏ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ Р°СЂРіСѓРјРµРЅС‚Р°
       int res1;
       try
       {
-        checked // обязательно с контролем переполнения
+        checked // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ СЃ РєРѕРЅС‚СЂРѕР»РµРј РїРµСЂРµРїРѕР»РЅРµРЅРёСЏ
         {
           switch (op)
           {
@@ -443,7 +443,7 @@ namespace FreeLibSet.Parsing
             case "-": return arg1 - arg2;
             case "*": return arg1 * arg2;
             case "/":
-              res1 = arg1 / arg2; // тут может быть существенная потеря точности
+              res1 = arg1 / arg2; // С‚СѓС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃСѓС‰РµСЃС‚РІРµРЅРЅР°СЏ РїРѕС‚РµСЂСЏ С‚РѕС‡РЅРѕСЃС‚Рё
               break;
 
             case "=": return arg1 == arg2;
@@ -453,35 +453,35 @@ namespace FreeLibSet.Parsing
             case ">=": return arg1 >= arg2;
             case "<=": return arg1 <= arg2;
             default:
-              throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+              throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
           }
         }
       }
       catch
       {
-        // В случае переполнения вычисляем тоже самое для типа Double
+        // Р’ СЃР»СѓС‡Р°Рµ РїРµСЂРµРїРѕР»РЅРµРЅРёСЏ РІС‹С‡РёСЃР»СЏРµРј С‚РѕР¶Рµ СЃР°РјРѕРµ РґР»СЏ С‚РёРїР° Double
         return CalcDouble(op, (double)arg1, (double)arg2);
       }
 
-      // Для операции деления вычисляем тоже самое для типа Double
+      // Р”Р»СЏ РѕРїРµСЂР°С†РёРё РґРµР»РµРЅРёСЏ РІС‹С‡РёСЃР»СЏРµРј С‚РѕР¶Рµ СЃР°РјРѕРµ РґР»СЏ С‚РёРїР° Double
       double res2 = (double)CalcDouble(op, (double)arg1, (double)arg2);
 
       if (Math.Abs(res2) > (double)(Int32.MaxValue))
-        return res2; // переполнение целого числа
+        return res2; // РїРµСЂРµРїРѕР»РЅРµРЅРёРµ С†РµР»РѕРіРѕ С‡РёСЃР»Р°
 
       if (res2 == (double)res1)
-        return res1; // нет потери точности
+        return res1; // РЅРµС‚ РїРѕС‚РµСЂРё С‚РѕС‡РЅРѕСЃС‚Рё
       else
-        return res2; // есть потеря точности
+        return res2; // РµСЃС‚СЊ РїРѕС‚РµСЂСЏ С‚РѕС‡РЅРѕСЃС‚Рё
     }
 
     /// <summary>
-    /// Стандартное вычисление арифметических и логических бинарных операций для типа String
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№ РґР»СЏ С‚РёРїР° String
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg1">РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <param name="arg2">Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object CalcString(string op, string arg1, string arg2)
     {
       switch (op)
@@ -490,7 +490,7 @@ namespace FreeLibSet.Parsing
         case "=": return arg1 == arg2;
         case "<>": return arg1 != arg2;
         default:
-          throw new InvalidOperationException("Для строк применимы только операции \"+\", \"=\" и \"<>\". Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException("Р”Р»СЏ СЃС‚СЂРѕРє РїСЂРёРјРµРЅРёРјС‹ С‚РѕР»СЊРєРѕ РѕРїРµСЂР°С†РёРё \"+\", \"=\" Рё \"<>\". РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
       }
     }
 
@@ -501,19 +501,19 @@ namespace FreeLibSet.Parsing
         case "=": return arg1 == arg2;
         case "<>": return arg1 != arg2;
         default:
-          throw new InvalidOperationException("Для логических значений применимы только операции \"=\" и \"<>\". Операция \"" + op + "\" не применима");
+          throw new InvalidOperationException("Р”Р»СЏ Р»РѕРіРёС‡РµСЃРєРёС… Р·РЅР°С‡РµРЅРёР№ РїСЂРёРјРµРЅРёРјС‹ С‚РѕР»СЊРєРѕ РѕРїРµСЂР°С†РёРё \"=\" Рё \"<>\". РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ РїСЂРёРјРµРЅРёРјР°");
       }
     }
 
-    #region DateTime и TimeSpan
+    #region DateTime Рё TimeSpan
 
     /// <summary>
-    /// Стандартное вычисление арифметических и логических бинарных операций для типа DateTime
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёС… Рё Р»РѕРіРёС‡РµСЃРєРёС… Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№ РґР»СЏ С‚РёРїР° DateTime
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg1">Первый аргумент</param>
-    /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg1">РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <param name="arg2">Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object CalcDateTime(string op, DateTime arg1, DateTime arg2)
     {
       switch (op)
@@ -527,7 +527,7 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов DateTime");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РґР»СЏ РґРІСѓС… Р°СЂРіСѓРјРµРЅС‚РѕРІ DateTime");
       }
     }
 
@@ -555,7 +555,7 @@ namespace FreeLibSet.Parsing
         case ">=": return dt1 >= arg2;
         case "<=": return dt1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов DateTime");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РґР»СЏ РґРІСѓС… Р°СЂРіСѓРјРµРЅС‚РѕРІ DateTime");
       }
     }
 
@@ -573,13 +573,13 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов TimeSpan");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РґР»СЏ РґРІСѓС… Р°СЂРіСѓРјРµРЅС‚РѕРІ TimeSpan");
       }
     }
 
     private static object CalcTimeSpanAndDateTime(string op, TimeSpan arg1, DateTime arg2)
     {
-      throw new InvalidOperationException("Операции с аргументами TimeSpan и DateTime невозможны");
+      throw new InvalidOperationException("РћРїРµСЂР°С†РёРё СЃ Р°СЂРіСѓРјРµРЅС‚Р°РјРё TimeSpan Рё DateTime РЅРµРІРѕР·РјРѕР¶РЅС‹");
     }
 
     private static object CalcDateTimeAndTimeSpan(string op, DateTime arg1, TimeSpan arg2)
@@ -589,7 +589,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg1 + arg2;
         case "-": return arg1 - arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов TimeSpan");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РґР»СЏ РґРІСѓС… Р°СЂРіСѓРјРµРЅС‚РѕРІ TimeSpan");
       }
     }
 
@@ -600,7 +600,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg1 + TimeSpan.FromDays(arg2);
         case "-": return arg1 - TimeSpan.FromDays(arg2);
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для аргументов TimeSpan и Double");
+          throw new InvalidOperationException("РћРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РґР»СЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ TimeSpan Рё Double");
       }
     }
 
@@ -609,14 +609,14 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Унарные операции
+    #region РЈРЅР°СЂРЅС‹Рµ РѕРїРµСЂР°С†РёРё
 
     /// <summary>
-    /// Стандартное вычисление унарной операции
+    /// РЎС‚Р°РЅРґР°СЂС‚РЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ СѓРЅР°СЂРЅРѕР№ РѕРїРµСЂР°С†РёРё
     /// </summary>
-    /// <param name="op">Знак операции</param>
-    /// <param name="arg">Аргумент</param>
-    /// <returns>Результат операции</returns>
+    /// <param name="op">Р—РЅР°Рє РѕРїРµСЂР°С†РёРё</param>
+    /// <param name="arg">РђСЂРіСѓРјРµРЅС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё</returns>
     public static object UnaryCalc(string op, object arg)
     {
       if (arg == null)
@@ -637,7 +637,7 @@ namespace FreeLibSet.Parsing
       if (arg is TimeSpan)
         return CalcTimeSpan(op, (TimeSpan)arg);
 
-      throw new NotSupportedException("Унарные операции не реализованы для типа " + arg.GetType().ToString());
+      throw new NotSupportedException("РЈРЅР°СЂРЅС‹Рµ РѕРїРµСЂР°С†РёРё РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅС‹ РґР»СЏ С‚РёРїР° " + arg.GetType().ToString());
     }
 
     private static object CalcDecimal(string op, decimal arg)
@@ -647,7 +647,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Decimal");
+          throw new InvalidOperationException("РЈРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР° РґР»СЏ Decimal");
       }
     }
 
@@ -658,7 +658,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Double");
+          throw new InvalidOperationException("РЈРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР° РґР»СЏ Double");
       }
     }
 
@@ -669,7 +669,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Single");
+          throw new InvalidOperationException("РЈРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР° РґР»СЏ Single");
       }
     }
 
@@ -680,7 +680,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Int32");
+          throw new InvalidOperationException("РЈРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР° РґР»СЏ Int32");
       }
     }
 
@@ -691,7 +691,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для TimeSpan");
+          throw new InvalidOperationException("РЈРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ \"" + op + "\" РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР° РґР»СЏ TimeSpan");
       }
     }
 
@@ -699,22 +699,22 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Классы-вычислители IExperession
+    #region РљР»Р°СЃСЃС‹-РІС‹С‡РёСЃР»РёС‚РµР»Рё IExperession
 
     /// <summary>
-    /// Бинарная операция "+", "-", "*", "/", операции сравнения
+    /// Р‘РёРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ "+", "-", "*", "/", РѕРїРµСЂР°С†РёРё СЃСЂР°РІРЅРµРЅРёСЏ
     /// </summary>
     public class BinaryExpression : IExpression
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создает выражение для бинарной операции
+      /// РЎРѕР·РґР°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ РґР»СЏ Р±РёРЅР°СЂРЅРѕР№ РѕРїРµСЂР°С†РёРё
       /// </summary>
-      /// <param name="opToken">Лексема</param>
-      /// <param name="leftExpression">Выражение слева от операции</param>
-      /// <param name="rightExpression">Выражение справа от операции</param>
-      /// <param name="calcMethod">Вычисляющий метод</param>
+      /// <param name="opToken">Р›РµРєСЃРµРјР°</param>
+      /// <param name="leftExpression">Р’С‹СЂР°Р¶РµРЅРёРµ СЃР»РµРІР° РѕС‚ РѕРїРµСЂР°С†РёРё</param>
+      /// <param name="rightExpression">Р’С‹СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІР° РѕС‚ РѕРїРµСЂР°С†РёРё</param>
+      /// <param name="calcMethod">Р’С‹С‡РёСЃР»СЏСЋС‰РёР№ РјРµС‚РѕРґ</param>
       public BinaryExpression(Token opToken, IExpression leftExpression, IExpression rightExpression, BinaryOpDelegate calcMethod)
       {
         if (opToken == null)
@@ -734,34 +734,34 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Лексема
+      /// Р›РµРєСЃРµРјР°
       /// </summary>
       public Token OpToken { get { return _OpToken; } }
       private Token _OpToken;
 
       /// <summary>
-      /// Выражение слева от операции
+      /// Р’С‹СЂР°Р¶РµРЅРёРµ СЃР»РµРІР° РѕС‚ РѕРїРµСЂР°С†РёРё
       /// </summary>
       public IExpression LeftExpression { get { return _LeftExpression; } }
       private IExpression _LeftExpression;
 
       /// <summary>
-      /// Выражение справа от операции
+      /// Р’С‹СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІР° РѕС‚ РѕРїРµСЂР°С†РёРё
       /// </summary>
       public IExpression RightExpression { get { return _RightExpression; } }
       private IExpression _RightExpression;
 
       /// <summary>
-      /// Вычисляющий метод
+      /// Р’С‹С‡РёСЃР»СЏСЋС‰РёР№ РјРµС‚РѕРґ
       /// </summary>
       public BinaryOpDelegate CalcMethod { get { return _CalcMethod; } }
       private BinaryOpDelegate _CalcMethod;
 
       /// <summary>
-      /// Знак операции "+", "-", "*" или "/"
+      /// Р—РЅР°Рє РѕРїРµСЂР°С†РёРё "+", "-", "*" РёР»Рё "/"
       /// </summary>
       public string Op { get { return OpToken.TokenType; } }
 
@@ -770,10 +770,10 @@ namespace FreeLibSet.Parsing
       #region IExpression Members
 
       /// <summary>
-      /// Выполнить вычисление выражения.
-      /// Вычисляюся левое и правое выражение, затем вычисляется CalcMethod для операции
+      /// Р’С‹РїРѕР»РЅРёС‚СЊ РІС‹С‡РёСЃР»РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ.
+      /// Р’С‹С‡РёСЃР»СЏСЋСЃСЏ Р»РµРІРѕРµ Рё РїСЂР°РІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, Р·Р°С‚РµРј РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ CalcMethod РґР»СЏ РѕРїРµСЂР°С†РёРё
       /// </summary>
-      /// <returns>Результат вычислей</returns>
+      /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµР№</returns>
       public object Calc()
       {
         object v1 = _LeftExpression.Calc();
@@ -782,7 +782,7 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Возвращает true, если и левое и правое выражение являются константами
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Рё Р»РµРІРѕРµ Рё РїСЂР°РІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ СЏРІР»СЏСЋС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚Р°РјРё
       /// </summary>
       public bool IsConst
       {
@@ -793,18 +793,18 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет в список OpToken
+      /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє OpToken
       /// </summary>
-      /// <param name="tokens">Список для заполнения</param>
+      /// <param name="tokens">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetTokens(IList<Token> tokens)
       {
         tokens.Add(_OpToken);
       }
 
       /// <summary>
-      /// Добавляет в список левое и правое выражение
+      /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє Р»РµРІРѕРµ Рё РїСЂР°РІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="expressions">Список для заполнения</param>
+      /// <param name="expressions">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetChildExpressions(IList<IExpression> expressions)
       {
         expressions.Add(_LeftExpression);
@@ -813,12 +813,12 @@ namespace FreeLibSet.Parsing
 
 
       /// <summary>
-      /// Синтезирует выражение
+      /// РЎРёРЅС‚РµР·РёСЂСѓРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="data">Заполняемый объект</param>
+      /// <param name="data">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
       public void Synthesize(SynthesisData data)
       {
-        #region Необходимость определения скобок
+        #region РќРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РѕРїСЂРµРґРµР»РµРЅРёСЏ СЃРєРѕР±РѕРє
 
         bool leftExprWithP = false;
         if (_LeftExpression is UnaryExpression)
@@ -892,12 +892,12 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Текстовое представление
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
       /// <summary>
-      /// Возвращает свойство Op
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ Op
       /// </summary>
-      /// <returns>Текстовое представление</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
       public override string ToString()
       {
         return Op;
@@ -918,18 +918,18 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Унарная операция "+" (ничего не делает) и "-"
+    /// РЈРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ "+" (РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚) Рё "-"
     /// </summary>
     public class UnaryExpression : IExpression
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создает выражение
+      /// РЎРѕР·РґР°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="opToken">Лексема операции</param>
-      /// <param name="rightExpression">Выражение справа от операции. Не может быть null</param>
-      /// <param name="calcMethod">Вычисляющий метод</param>
+      /// <param name="opToken">Р›РµРєСЃРµРјР° РѕРїРµСЂР°С†РёРё</param>
+      /// <param name="rightExpression">Р’С‹СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІР° РѕС‚ РѕРїРµСЂР°С†РёРё. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+      /// <param name="calcMethod">Р’С‹С‡РёСЃР»СЏСЋС‰РёР№ РјРµС‚РѕРґ</param>
       public UnaryExpression(Token opToken, IExpression rightExpression, UnaryOpDelegate calcMethod)
       {
         if (opToken == null)
@@ -946,28 +946,28 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Лексема унарной операции
+      /// Р›РµРєСЃРµРјР° СѓРЅР°СЂРЅРѕР№ РѕРїРµСЂР°С†РёРё
       /// </summary>
       public Token OpToken { get { return _OpToken; } }
       private Token _OpToken;
 
       /// <summary>
-      /// Выражение справа от знака операции
+      /// Р’С‹СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІР° РѕС‚ Р·РЅР°РєР° РѕРїРµСЂР°С†РёРё
       /// </summary>
       public IExpression RightExpression { get { return _RightExpression; } }
       private IExpression _RightExpression;
 
       /// <summary>
-      /// Вычисляющий метод
+      /// Р’С‹С‡РёСЃР»СЏСЋС‰РёР№ РјРµС‚РѕРґ
       /// </summary>
       public UnaryOpDelegate CalcMethod { get { return _CalcMethod; } }
       private UnaryOpDelegate _CalcMethod;
 
       /// <summary>
-      /// Знак операции "+", "-"
+      /// Р—РЅР°Рє РѕРїРµСЂР°С†РёРё "+", "-"
       /// </summary>
       public string Op { get { return OpToken.TokenType; } }
 
@@ -976,9 +976,9 @@ namespace FreeLibSet.Parsing
       #region IExpression Members
 
       /// <summary>
-      /// Вычисляет выражение справа, затем - унарную операцию
+      /// Р’С‹С‡РёСЃР»СЏРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІР°, Р·Р°С‚РµРј - СѓРЅР°СЂРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ
       /// </summary>
-      /// <returns>Результат вычисления</returns>
+      /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ</returns>
       public object Calc()
       {
         object v2 = _RightExpression.Calc();
@@ -986,7 +986,7 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Возвращает true, если выражение справа является константой
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІС‹СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІР° СЏРІР»СЏРµС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РѕР№
       /// </summary>
       public bool IsConst
       {
@@ -997,18 +997,18 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет лексему в список
+      /// Р”РѕР±Р°РІР»СЏРµС‚ Р»РµРєСЃРµРјСѓ РІ СЃРїРёСЃРѕРє
       /// </summary>
-      /// <param name="tokens">Список для заполнения</param>
+      /// <param name="tokens">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetTokens(IList<Token> tokens)
       {
         tokens.Add(_OpToken);
       }
 
       /// <summary>
-      /// Добавляет выражение справа в список
+      /// Р”РѕР±Р°РІР»СЏРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІР° РІ СЃРїРёСЃРѕРє
       /// </summary>
-      /// <param name="expressions">Список для заполнения</param>
+      /// <param name="expressions">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetChildExpressions(IList<IExpression> expressions)
       {
         expressions.Add(_RightExpression);
@@ -1016,9 +1016,9 @@ namespace FreeLibSet.Parsing
 
 
       /// <summary>
-      /// Синтезирует выражение
+      /// РЎРёРЅС‚РµР·РёСЂСѓРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="data">Объект для заполнения</param>
+      /// <param name="data">РћР±СЉРµРєС‚ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void Synthesize(SynthesisData data)
       {
         data.Tokens.Add(new SynthesisToken(data, this, Op));
@@ -1028,12 +1028,12 @@ namespace FreeLibSet.Parsing
       }
       #endregion
 
-      #region Текстовое представление
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
       /// <summary>
-      /// Возвращает знак операции
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє РѕРїРµСЂР°С†РёРё
       /// </summary>
-      /// <returns>Текстовое представление</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
       public override string ToString()
       {
         return Op;
@@ -1051,18 +1051,18 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Круглые скобки "()" для задания порядка вычислений
+    /// РљСЂСѓРіР»С‹Рµ СЃРєРѕР±РєРё "()" РґР»СЏ Р·Р°РґР°РЅРёСЏ РїРѕСЂСЏРґРєР° РІС‹С‡РёСЃР»РµРЅРёР№
     /// </summary>
     public class ParenthesExpression : IExpression
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создает выражение "круглые скобки"
+      /// РЎРѕР·РґР°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ "РєСЂСѓРіР»С‹Рµ СЃРєРѕР±РєРё"
       /// </summary>
-      /// <param name="openToken">Лексема "("</param>
-      /// <param name="closeToken">Лексема ")"</param>
-      /// <param name="expression">Выражение в скобках</param>
+      /// <param name="openToken">Р›РµРєСЃРµРјР° "("</param>
+      /// <param name="closeToken">Р›РµРєСЃРµРјР° ")"</param>
+      /// <param name="expression">Р’С‹СЂР°Р¶РµРЅРёРµ РІ СЃРєРѕР±РєР°С…</param>
       public ParenthesExpression(Token openToken, Token closeToken, IExpression expression)
       {
         if (openToken == null)
@@ -1079,29 +1079,29 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Лексема открывающей скобки
+      /// Р›РµРєСЃРµРјР° РѕС‚РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРё
       /// </summary>
       public Token OpenToken { get { return _OpenToken; } }
       private Token _OpenToken;
 
       /// <summary>
-      /// Лексема закрывающей скобки
+      /// Р›РµРєСЃРµРјР° Р·Р°РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРё
       /// </summary>
       public Token CloseToken { get { return _CloseToken; } }
       private Token _CloseToken;
 
       /// <summary>
-      /// Выражение в скобках
+      /// Р’С‹СЂР°Р¶РµРЅРёРµ РІ СЃРєРѕР±РєР°С…
       /// </summary>
       public IExpression Expression { get { return _Expression; } }
       private IExpression _Expression;
 
       /// <summary>
-      /// Если свойство установить в true, то при получении текстового представления будет выведено
-      /// только текст для Expression, а скобки выводится не будут. То есть данный объект будет бездействующим
+      /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІ true, С‚Рѕ РїСЂРё РїРѕР»СѓС‡РµРЅРёРё С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ Р±СѓРґРµС‚ РІС‹РІРµРґРµРЅРѕ
+      /// С‚РѕР»СЊРєРѕ С‚РµРєСЃС‚ РґР»СЏ Expression, Р° СЃРєРѕР±РєРё РІС‹РІРѕРґРёС‚СЃСЏ РЅРµ Р±СѓРґСѓС‚. РўРѕ РµСЃС‚СЊ РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ Р±СѓРґРµС‚ Р±РµР·РґРµР№СЃС‚РІСѓСЋС‰РёРј
       /// </summary>
       public bool IgnoreParenthes { get { return _IgnoreParenthes; } set { _IgnoreParenthes = value; } }
       private bool _IgnoreParenthes;
@@ -1111,16 +1111,16 @@ namespace FreeLibSet.Parsing
       #region IExpression Members
 
       /// <summary>
-      /// Вычисляет выражение в скобках
+      /// Р’С‹С‡РёСЃР»СЏРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ РІ СЃРєРѕР±РєР°С…
       /// </summary>
-      /// <returns>Результат вычисления выражения</returns>
+      /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ</returns>
       public object Calc()
       {
         return _Expression.Calc();
       }
 
       /// <summary>
-      /// Возвращает true, если выражение является константой
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІС‹СЂР°Р¶РµРЅРёРµ СЏРІР»СЏРµС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РѕР№
       /// </summary>
       public bool IsConst
       {
@@ -1131,9 +1131,9 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет в список лексемы "(" и ")"
+      /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє Р»РµРєСЃРµРјС‹ "(" Рё ")"
       /// </summary>
-      /// <param name="tokens">Список для заполнения</param>
+      /// <param name="tokens">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetTokens(IList<Token> tokens)
       {
         tokens.Add(_OpenToken);
@@ -1141,18 +1141,18 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет в список выражение в скобках
+      /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёРµ РІ СЃРєРѕР±РєР°С…
       /// </summary>
-      /// <param name="expressions">Список для заполнения</param>
+      /// <param name="expressions">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetChildExpressions(IList<IExpression> expressions)
       {
         expressions.Add(_Expression);
       }
 
       /// <summary>
-      /// Синтезирует выражение
+      /// РЎРёРЅС‚РµР·РёСЂСѓРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="data">Заполняемый объект</param>
+      /// <param name="data">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
       public void Synthesize(SynthesisData data)
       {
         if (!IgnoreParenthes)
@@ -1164,10 +1164,10 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Текстовое представление
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
       /// <summary>
-      /// Возвращает "()"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "()"
       /// </summary>
       /// <returns></returns>
       public override string ToString()
@@ -1186,9 +1186,9 @@ namespace FreeLibSet.Parsing
     #region Parse
 
     /// <summary>
-    /// Распознание лексемы
+    /// Р Р°СЃРїРѕР·РЅР°РЅРёРµ Р»РµРєСЃРµРјС‹
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
     public void Parse(ParsingData data)
     {
       if (data.GetChar(data.CurrPos) == '(')
@@ -1202,9 +1202,9 @@ namespace FreeLibSet.Parsing
         return;
       }
 
-      // На первом этапе разбора не важно, будет операция бинарной или унарной
+      // РќР° РїРµСЂРІРѕРј СЌС‚Р°РїРµ СЂР°Р·Р±РѕСЂР° РЅРµ РІР°Р¶РЅРѕ, Р±СѓРґРµС‚ РѕРїРµСЂР°С†РёСЏ Р±РёРЅР°СЂРЅРѕР№ РёР»Рё СѓРЅР°СЂРЅРѕР№
 
-      // Бинарные операции 
+      // Р‘РёРЅР°СЂРЅС‹Рµ РѕРїРµСЂР°С†РёРё 
       foreach (BinaryOpDef opDef in BinaryOps)
       {
         if (data.StartsWith(opDef.Op, false))
@@ -1214,7 +1214,7 @@ namespace FreeLibSet.Parsing
         }
       }
 
-      // Унарные операции 
+      // РЈРЅР°СЂРЅС‹Рµ РѕРїРµСЂР°С†РёРё 
       foreach (UnaryOpDef opDef in UnaryOps)
       {
         if (data.StartsWith(opDef.Op, false))
@@ -1230,29 +1230,29 @@ namespace FreeLibSet.Parsing
     #region CreateExpression
 
     /// <summary>
-    /// Получение вычислимого выражения
+    /// РџРѕР»СѓС‡РµРЅРёРµ РІС‹С‡РёСЃР»РёРјРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
-    /// <param name="leftExpression">Предшествуюшее выражение</param>
-    /// <returns>Вычислимое выражение или null в случае ошибки</returns>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
+    /// <param name="leftExpression">РџСЂРµРґС€РµСЃС‚РІСѓСЋС€РµРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»РёРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ РёР»Рё null РІ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё</returns>
     public IExpression CreateExpression(ParsingData data, IExpression leftExpression)
     {
-      Token opToken = data.CurrToken; // после поиска правого выражения ссылка изменится
-      data.SkipToken(); // Пропускаем знак операции
+      Token opToken = data.CurrToken; // РїРѕСЃР»Рµ РїРѕРёСЃРєР° РїСЂР°РІРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ СЃСЃС‹Р»РєР° РёР·РјРµРЅРёС‚СЃСЏ
+      data.SkipToken(); // РџСЂРѕРїСѓСЃРєР°РµРј Р·РЅР°Рє РѕРїРµСЂР°С†РёРё
 
       if (opToken.TokenType == "(")
         return CreateParenthesExpression(data, leftExpression);
       if (opToken.TokenType == ")")
       {
-        opToken.SetError("Непарная закрывающая скобка");
+        opToken.SetError("РќРµРїР°СЂРЅР°СЏ Р·Р°РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР°");
         return null;
       }
 
-      // TODO: 01.03.2017 использовать приоритеты для разграничения EndTokens
+      // TODO: 01.03.2017 РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїСЂРёРѕСЂРёС‚РµС‚С‹ РґР»СЏ СЂР°Р·РіСЂР°РЅРёС‡РµРЅРёСЏ EndTokens
 
-      // 07.09.2015 Лексемы, которые могут завершать правую часть выражение.
-      // Например, для выражения "a+b*c" правым выражением будет "b*c"?
-      // а для "a+b-c" будет "b", а "-с" вычисляется отдельно
+      // 07.09.2015 Р›РµРєСЃРµРјС‹, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ Р·Р°РІРµСЂС€Р°С‚СЊ РїСЂР°РІСѓСЋ С‡Р°СЃС‚СЊ РІС‹СЂР°Р¶РµРЅРёРµ.
+      // РќР°РїСЂРёРјРµСЂ, РґР»СЏ РІС‹СЂР°Р¶РµРЅРёСЏ "a+b*c" РїСЂР°РІС‹Рј РІС‹СЂР°Р¶РµРЅРёРµРј Р±СѓРґРµС‚ "b*c"?
+      // Р° РґР»СЏ "a+b-c" Р±СѓРґРµС‚ "b", Р° "-СЃ" РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅРѕ
       string[] endTokens;
       switch (opToken.TokenType)
       {
@@ -1273,35 +1273,35 @@ namespace FreeLibSet.Parsing
           endTokens = new string[] { "=", "<>", "<", ">", "<=", ">=" }; // 22.03.2016 ???
           break;
         default:
-          throw new BugException("Неизвестный знак операции \"" + opToken.TokenType + "\"");
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Р·РЅР°Рє РѕРїРµСЂР°С†РёРё \"" + opToken.TokenType + "\"");
       }
 
       if (data.EndTokens != null)
         endTokens = DataTools.MergeArrays<string>(endTokens, data.EndTokens);
-      IExpression rightExpession = data.Parsers.CreateSubExpression(data, endTokens); // получение правого выражения
+      IExpression rightExpession = data.Parsers.CreateSubExpression(data, endTokens); // РїРѕР»СѓС‡РµРЅРёРµ РїСЂР°РІРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
       if (rightExpession == null)
       {
-        opToken.SetError("Не найден правый операнд для операции \"" + opToken.TokenType + "\"");
+        opToken.SetError("РќРµ РЅР°Р№РґРµРЅ РїСЂР°РІС‹Р№ РѕРїРµСЂР°РЅРґ РґР»СЏ РѕРїРµСЂР°С†РёРё \"" + opToken.TokenType + "\"");
         return null;
       }
 
       if (leftExpression == null)
       {
-        // Если левого операнда нет, то может быть только унарная операция
+        // Р•СЃР»Рё Р»РµРІРѕРіРѕ РѕРїРµСЂР°РЅРґР° РЅРµС‚, С‚Рѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ С‚РѕР»СЊРєРѕ СѓРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ
         if (!UnaryOps.Contains(opToken.TokenType))
         {
-          //data.CurrToken. Исправлено 10.01.2022
-          opToken.SetError("Не найден левый операнд для операции \"" + opToken.TokenType + "\". Операция не может быть унарной");
+          //data.CurrToken. РСЃРїСЂР°РІР»РµРЅРѕ 10.01.2022
+          opToken.SetError("РќРµ РЅР°Р№РґРµРЅ Р»РµРІС‹Р№ РѕРїРµСЂР°РЅРґ РґР»СЏ РѕРїРµСЂР°С†РёРё \"" + opToken.TokenType + "\". РћРїРµСЂР°С†РёСЏ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СѓРЅР°СЂРЅРѕР№");
           return null;
         }
         return new UnaryExpression(opToken, rightExpession, UnaryOps[opToken.TokenType].CalcMethod);
       }
 
-      // Формальность
+      // Р¤РѕСЂРјР°Р»СЊРЅРѕСЃС‚СЊ
       if (!BinaryOps.Contains(opToken.TokenType))
       {
-        //data.CurrToken. Исправлено 10.01.2022
-        opToken.SetError("Операция \"" + opToken.TokenType + "\" не может быть бинарной");
+        //data.CurrToken. РСЃРїСЂР°РІР»РµРЅРѕ 10.01.2022
+        opToken.SetError("РћРїРµСЂР°С†РёСЏ \"" + opToken.TokenType + "\" РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РёРЅР°СЂРЅРѕР№");
         return null;
       }
 
@@ -1313,22 +1313,22 @@ namespace FreeLibSet.Parsing
         int currPriority = GetPriority(opToken.TokenType);
         if (currPriority > leftPriority)
         {
-          // Текущая операция ("*") имеет больший приоритет, чем предыдущая ("+")
-          // Выполняем замену
+          // РўРµРєСѓС‰Р°СЏ РѕРїРµСЂР°С†РёСЏ ("*") РёРјРµРµС‚ Р±РѕР»СЊС€РёР№ РїСЂРёРѕСЂРёС‚РµС‚, С‡РµРј РїСЂРµРґС‹РґСѓС‰Р°СЏ ("+")
+          // Р’С‹РїРѕР»РЅСЏРµРј Р·Р°РјРµРЅСѓ
 
-          // Текущая операция
+          // РўРµРєСѓС‰Р°СЏ РѕРїРµСЂР°С†РёСЏ
           BinaryExpression expr2 = new BinaryExpression(opToken, leftExpression2.RightExpression, rightExpession, BinaryOps[opToken.TokenType].CalcMethod);
 
           return new BinaryExpression(leftExpression2.OpToken, leftExpression2.LeftExpression, expr2, leftExpression2.CalcMethod);
         }
       }
 
-      // Обычный порядок операции
+      // РћР±С‹С‡РЅС‹Р№ РїРѕСЂСЏРґРѕРє РѕРїРµСЂР°С†РёРё
       return new BinaryExpression(opToken, leftExpression, rightExpession, BinaryOps[opToken.TokenType].CalcMethod);
     }
 
     /// <summary>
-    /// Получить приоритет для операции
+    /// РџРѕР»СѓС‡РёС‚СЊ РїСЂРёРѕСЂРёС‚РµС‚ РґР»СЏ РѕРїРµСЂР°С†РёРё
     /// </summary>
     /// <param name="op"></param>
     /// <returns></returns>
@@ -1336,7 +1336,7 @@ namespace FreeLibSet.Parsing
     {
       int p = BinaryOps.IndexOf(op);
       if (p < 0)
-        throw new ArgumentException("Операции \"" + op + "\" нет в списке бинарных операций", "op");
+        throw new ArgumentException("РћРїРµСЂР°С†РёРё \"" + op + "\" РЅРµС‚ РІ СЃРїРёСЃРєРµ Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№", "op");
 
       return BinaryOps[p].Priority;
     }
@@ -1345,18 +1345,18 @@ namespace FreeLibSet.Parsing
     private IExpression CreateParenthesExpression(ParsingData data, IExpression leftExpression)
     {
       Token openToken = data.Tokens[data.CurrTokenIndex - 1];
-      //Data.SkipToken(); было пропущено в вызывающем методе
+      //Data.SkipToken(); Р±С‹Р»Рѕ РїСЂРѕРїСѓС‰РµРЅРѕ РІ РІС‹Р·С‹РІР°СЋС‰РµРј РјРµС‚РѕРґРµ
 
       if (leftExpression != null)
       {
-        openToken.SetError("Перед открывающей скобкой должна идти операция");
-        // ? можно продолжить обзор
+        openToken.SetError("РџРµСЂРµРґ РѕС‚РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРѕР№ РґРѕР»Р¶РЅР° РёРґС‚Рё РѕРїРµСЂР°С†РёСЏ");
+        // ? РјРѕР¶РЅРѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ РѕР±Р·РѕСЂ
       }
 
       IExpression expr = data.Parsers.CreateSubExpression(data, new string[] { ")" });
       if (expr == null)
       {
-        openToken.SetError("Выражение в скобках не задано");
+        openToken.SetError("Р’С‹СЂР°Р¶РµРЅРёРµ РІ СЃРєРѕР±РєР°С… РЅРµ Р·Р°РґР°РЅРѕ");
         return null;
       }
 
@@ -1367,7 +1367,7 @@ namespace FreeLibSet.Parsing
         return new ParenthesExpression(openToken, closeToken, expr);
       }
 
-      openToken.SetError("Не найдена парная закрывающая скобка");
+      openToken.SetError("РќРµ РЅР°Р№РґРµРЅР° РїР°СЂРЅР°СЏ Р·Р°РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР°");
       return null;
     }
 
@@ -1377,16 +1377,16 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Парсер для разбора числовых констант
-  /// Научная нотация (1e3) не поддерживается.
-  /// Создает лексему "Const"
+  /// РџР°СЂСЃРµСЂ РґР»СЏ СЂР°Р·Р±РѕСЂР° С‡РёСЃР»РѕРІС‹С… РєРѕРЅСЃС‚Р°РЅС‚
+  /// РќР°СѓС‡РЅР°СЏ РЅРѕС‚Р°С†РёСЏ (1e3) РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ.
+  /// РЎРѕР·РґР°РµС‚ Р»РµРєСЃРµРјСѓ "Const"
   /// </summary>
   public class NumConstParser : IParser
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает парсер
+    /// РЎРѕР·РґР°РµС‚ РїР°СЂСЃРµСЂ
     /// </summary>
     public NumConstParser()
     {
@@ -1402,11 +1402,11 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства, управляющие парсингом
+    #region РЎРІРѕР№СЃС‚РІР°, СѓРїСЂР°РІР»СЏСЋС‰РёРµ РїР°СЂСЃРёРЅРіРѕРј
 
     /// <summary>
-    /// Форматировщик.
-    /// По умолчанию используется CultureInfo.CurrentCulture.NumberFormat
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІС‰РёРє.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ CultureInfo.CurrentCulture.NumberFormat
     /// </summary>
     public NumberFormatInfo NumberFormat
     {
@@ -1421,46 +1421,46 @@ namespace FreeLibSet.Parsing
     private NumberFormatInfo _NumberFormat;
 
     /// <summary>
-    /// Символы замены. Например, если требуется задать распознание в качестве десятичной точки символов
-    /// "," и ".", можно задать FormatProvider=StdConvert.NumberFormat и добавить пару (",":".") в ReplaceChars
-    /// По умолчанию, список замен пустой
+    /// РЎРёРјРІРѕР»С‹ Р·Р°РјРµРЅС‹. РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ Р·Р°РґР°С‚СЊ СЂР°СЃРїРѕР·РЅР°РЅРёРµ РІ РєР°С‡РµСЃС‚РІРµ РґРµСЃСЏС‚РёС‡РЅРѕР№ С‚РѕС‡РєРё СЃРёРјРІРѕР»РѕРІ
+    /// "," Рё ".", РјРѕР¶РЅРѕ Р·Р°РґР°С‚СЊ FormatProvider=StdConvert.NumberFormat Рё РґРѕР±Р°РІРёС‚СЊ РїР°СЂСѓ (",":".") РІ ReplaceChars
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, СЃРїРёСЃРѕРє Р·Р°РјРµРЅ РїСѓСЃС‚РѕР№
     /// </summary>
     public Dictionary<string, string> ReplaceChars { get { return _ReplaceChars; } }
     private Dictionary<string, string> _ReplaceChars;
 
     /// <summary>
-    /// Если true (по умолчанию), разрешается получение констант типа Int32
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ РїРѕР»СѓС‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚ С‚РёРїР° Int32
     /// </summary>
     public bool AllowInt { get { return _AllowInt; } set { _AllowInt = value; } }
     private bool _AllowInt;
 
     /// <summary>
-    /// Если true (по умолчанию), разрешается получение констант типа Single
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ РїРѕР»СѓС‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚ С‚РёРїР° Single
     /// </summary>
     public bool AllowSingle { get { return _AllowSingle; } set { _AllowSingle = value; } }
     private bool _AllowSingle;
 
     /// <summary>
-    /// Если true (по умолчанию), разрешается получение констант типа Double
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ РїРѕР»СѓС‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚ С‚РёРїР° Double
     /// </summary>
     public bool AllowDouble { get { return _AllowDouble; } set { _AllowDouble = value; } }
     private bool _AllowDouble;
 
     /// <summary>
-    /// Если true (по умолчанию), разрешается получение констант типа Decimal
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ РїРѕР»СѓС‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚ С‚РёРїР° Decimal
     /// </summary>
     public bool AllowDecimal { get { return _AllowDecimal; } set { _AllowDecimal = value; } }
     private bool _AllowDecimal;
 
     #endregion
 
-    #region Список допустимых символов
+    #region РЎРїРёСЃРѕРє РґРѕРїСѓСЃС‚РёРјС‹С… СЃРёРјРІРѕР»РѕРІ
 
     private string _ValidChars;
 
     private string GetValidChars()
     {
-      // Парсинг может выполняться асинхронно, поэтому необходима блокировка
+      // РџР°СЂСЃРёРЅРі РјРѕР¶РµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ, РїРѕСЌС‚РѕРјСѓ РЅРµРѕР±С…РѕРґРёРјР° Р±Р»РѕРєРёСЂРѕРІРєР°
 
       lock (_ReplaceChars)
       {
@@ -1473,8 +1473,8 @@ namespace FreeLibSet.Parsing
           foreach (KeyValuePair<string, string> pair in _ReplaceChars)
           {
             if (pair.Value.Length != pair.Key.Length)
-              throw new InvalidOperationException("Задана недопустимая подстановка \"" + pair.Key + "\" -> \"" + pair.Value +
-                "\". Исходный текст и замена должны иметь одинаковую длину");
+              throw new InvalidOperationException("Р—Р°РґР°РЅР° РЅРµРґРѕРїСѓСЃС‚РёРјР°СЏ РїРѕРґСЃС‚Р°РЅРѕРІРєР° \"" + pair.Key + "\" -> \"" + pair.Value +
+                "\". РСЃС…РѕРґРЅС‹Р№ С‚РµРєСЃС‚ Рё Р·Р°РјРµРЅР° РґРѕР»Р¶РЅС‹ РёРјРµС‚СЊ РѕРґРёРЅР°РєРѕРІСѓСЋ РґР»РёРЅСѓ");
 
             for (int j = 0; j < pair.Key.Length; j++)
               chars.Add(pair.Key[j]);
@@ -1497,12 +1497,12 @@ namespace FreeLibSet.Parsing
     #region Parse
 
     /// <summary>
-    /// Выполняет парсинг
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїР°СЂСЃРёРЅРі
     /// </summary>
-    /// <param name="data">Заполняемый объект</param>
+    /// <param name="data">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
     public void Parse(ParsingData data)
     {
-      #region Сначала выполняем быстрый поиск по подходяшим символам
+      #region РЎРЅР°С‡Р°Р»Р° РІС‹РїРѕР»РЅСЏРµРј Р±С‹СЃС‚СЂС‹Р№ РїРѕРёСЃРє РїРѕ РїРѕРґС…РѕРґСЏС€РёРј СЃРёРјРІРѕР»Р°Рј
 
       string validChars = GetValidChars();
       int len = 0;
@@ -1521,16 +1521,16 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Подстановки символов
+      #region РџРѕРґСЃС‚Р°РЅРѕРІРєРё СЃРёРјРІРѕР»РѕРІ
 
       foreach (KeyValuePair<string, string> pair in _ReplaceChars)
         s = s.Replace(pair.Key, pair.Value);
 
       #endregion
 
-      #region Пытаемся выполнить преобразование
+      #region РџС‹С‚Р°РµРјСЃСЏ РІС‹РїРѕР»РЅРёС‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ
 
-      NumberStyles ns = NumberStyles.AllowLeadingSign /*| Нельзя ! NumberStyles.AllowTrailingSign */| NumberStyles.AllowDecimalPoint;
+      NumberStyles ns = NumberStyles.AllowLeadingSign /*| РќРµР»СЊР·СЏ ! NumberStyles.AllowTrailingSign */| NumberStyles.AllowDecimalPoint;
       Token newToken;
 
       for (int len2 = len; len2 > 0; len2--)
@@ -1586,17 +1586,17 @@ namespace FreeLibSet.Parsing
     #region CreateExpression
 
     /// <summary>
-    /// Константное выражение
+    /// РљРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
     /// </summary>
     public class ConstExpression : IExpression
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создает выражение
+      /// РЎРѕР·РґР°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="value">Значение константы</param>
-      /// <param name="token">Лексема</param>
+      /// <param name="value">Р—РЅР°С‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚С‹</param>
+      /// <param name="token">Р›РµРєСЃРµРјР°</param>
       public ConstExpression(object value, Token token)
       {
         //if (Token == null)
@@ -1607,11 +1607,11 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Создает выражение без лексемы.
-      /// Эта версия конструктора применяется только при специальных вариантах парсинга, когда существуют
-      /// неявные выражения.
+      /// РЎРѕР·РґР°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ Р±РµР· Р»РµРєСЃРµРјС‹.
+      /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РїСЂРёРјРµРЅСЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїСЂРё СЃРїРµС†РёР°Р»СЊРЅС‹С… РІР°СЂРёР°РЅС‚Р°С… РїР°СЂСЃРёРЅРіР°, РєРѕРіРґР° СЃСѓС‰РµСЃС‚РІСѓСЋС‚
+      /// РЅРµСЏРІРЅС‹Рµ РІС‹СЂР°Р¶РµРЅРёСЏ.
       /// </summary>
-      /// <param name="value">Значение константы</param>
+      /// <param name="value">Р—РЅР°С‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚С‹</param>
       public ConstExpression(object value)
       {
         _Value = value;
@@ -1620,16 +1620,16 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Константа
+      /// РљРѕРЅСЃС‚Р°РЅС‚Р°
       /// </summary>
       public object Value { get { return _Value; } }
       private object _Value;
 
       /// <summary>
-      /// Лексема, откуда взята константа. Может быть null
+      /// Р›РµРєСЃРµРјР°, РѕС‚РєСѓРґР° РІР·СЏС‚Р° РєРѕРЅСЃС‚Р°РЅС‚Р°. РњРѕР¶РµС‚ Р±С‹С‚СЊ null
       /// </summary>
       public Token Token { get { return _Token; } }
       private Token _Token;
@@ -1639,7 +1639,7 @@ namespace FreeLibSet.Parsing
       #region IExpression Members
 
       /// <summary>
-      /// Возвращает Value
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Value
       /// </summary>
       /// <returns></returns>
       public object Calc()
@@ -1648,7 +1648,7 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Возвращает true - признак константного выражения.
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true - РїСЂРёР·РЅР°Рє РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ.
       /// </summary>
       public bool IsConst
       {
@@ -1659,9 +1659,9 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет лексему в список, если она задана
+      /// Р”РѕР±Р°РІР»СЏРµС‚ Р»РµРєСЃРµРјСѓ РІ СЃРїРёСЃРѕРє, РµСЃР»Рё РѕРЅР° Р·Р°РґР°РЅР°
       /// </summary>
-      /// <param name="tokens">Список для заполнения</param>
+      /// <param name="tokens">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetTokens(IList<Token> tokens)
       {
         if (_Token != null)
@@ -1669,31 +1669,31 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Ничего не делает
+      /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
       /// </summary>
-      /// <param name="expressions">Список для заполнения</param>
+      /// <param name="expressions">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetChildExpressions(IList<IExpression> expressions)
       {
-        // Нет дочерних выражений
+        // РќРµС‚ РґРѕС‡РµСЂРЅРёС… РІС‹СЂР°Р¶РµРЅРёР№
       }
 
 
       /// <summary>
-      /// Синтезирует выражение
+      /// РЎРёРЅС‚РµР·РёСЂСѓРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="data">Заполняемый объект</param>
+      /// <param name="data">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
       public void Synthesize(SynthesisData data)
       {
         data.Tokens.Add(new SynthesisToken(data, this, "Const", data.CreateValueText(_Value), _Value));
       }
       #endregion
 
-      #region Текстовое представление
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
       /// <summary>
-      /// Возвращает Value
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Value
       /// </summary>
-      /// <returns>Текстовое представление</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
       public override string ToString()
       {
         return _Value.ToString();
@@ -1703,19 +1703,19 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Возвращает выражение ConstExpression
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ ConstExpression
     /// </summary>
-    /// <param name="data">Данные парисинга</param>
-    /// <param name="leftExpression">Должно быть null</param>
-    /// <returns>Выражение</returns>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂРёСЃРёРЅРіР°</param>
+    /// <param name="leftExpression">Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ null</param>
+    /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ</returns>
     public IExpression CreateExpression(ParsingData data, IExpression leftExpression)
     {
       Token currToken = data.CurrToken;
       data.SkipToken();
       if (leftExpression != null)
       {
-        currToken.SetError("Константа не должна идти непосредственно после другого выражения. Ожидалась операция");
-        // ? можно продолжить разбор
+        currToken.SetError("РљРѕРЅСЃС‚Р°РЅС‚Р° РЅРµ РґРѕР»Р¶РЅР° РёРґС‚Рё РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РїРѕСЃР»Рµ РґСЂСѓРіРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ. РћР¶РёРґР°Р»Р°СЃСЊ РѕРїРµСЂР°С†РёСЏ");
+        // ? РјРѕР¶РЅРѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ СЂР°Р·Р±РѕСЂ
       }
 
       return new ConstExpression(currToken.AuxData, currToken);
@@ -1725,16 +1725,16 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Парсер для разбора строковых констант, заключенных в кавычки или апострофы.
-  /// Чтобы символ-ограничитель входил в строку, он должен быть задвоен.
-  /// Создает лексему "String"
+  /// РџР°СЂСЃРµСЂ РґР»СЏ СЂР°Р·Р±РѕСЂР° СЃС‚СЂРѕРєРѕРІС‹С… РєРѕРЅСЃС‚Р°РЅС‚, Р·Р°РєР»СЋС‡РµРЅРЅС‹С… РІ РєР°РІС‹С‡РєРё РёР»Рё Р°РїРѕСЃС‚СЂРѕС„С‹.
+  /// Р§С‚РѕР±С‹ СЃРёРјРІРѕР»-РѕРіСЂР°РЅРёС‡РёС‚РµР»СЊ РІС…РѕРґРёР» РІ СЃС‚СЂРѕРєСѓ, РѕРЅ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґРІРѕРµРЅ.
+  /// РЎРѕР·РґР°РµС‚ Р»РµРєСЃРµРјСѓ "String"
   /// </summary>
   public class StrConstParser : IParser
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает сепаратор для строк в двойных кавычках
+    /// РЎРѕР·РґР°РµС‚ СЃРµРїР°СЂР°С‚РѕСЂ РґР»СЏ СЃС‚СЂРѕРє РІ РґРІРѕР№РЅС‹С… РєР°РІС‹С‡РєР°С…
     /// </summary>
     public StrConstParser()
       : this('\"')
@@ -1742,9 +1742,9 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Создает сепаратор для строк, ограниченных указанным символом.
+    /// РЎРѕР·РґР°РµС‚ СЃРµРїР°СЂР°С‚РѕСЂ РґР»СЏ СЃС‚СЂРѕРє, РѕРіСЂР°РЅРёС‡РµРЅРЅС‹С… СѓРєР°Р·Р°РЅРЅС‹Рј СЃРёРјРІРѕР»РѕРј.
     /// </summary>
-    /// <param name="separator">Маркер начала/окончания строки (кавычки или апостроф)</param>
+    /// <param name="separator">РњР°СЂРєРµСЂ РЅР°С‡Р°Р»Р°/РѕРєРѕРЅС‡Р°РЅРёСЏ СЃС‚СЂРѕРєРё (РєР°РІС‹С‡РєРё РёР»Рё Р°РїРѕСЃС‚СЂРѕС„)</param>
     public StrConstParser(char separator)
     {
       _Separator = separator;
@@ -1752,11 +1752,11 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства, управляющие парсингом
+    #region РЎРІРѕР№СЃС‚РІР°, СѓРїСЂР°РІР»СЏСЋС‰РёРµ РїР°СЂСЃРёРЅРіРѕРј
 
     /// <summary>
-    /// Ограничитель строки.
-    /// Задается в конструкторе
+    /// РћРіСЂР°РЅРёС‡РёС‚РµР»СЊ СЃС‚СЂРѕРєРё.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public char Separator { get { return _Separator; } }
     private char _Separator;
@@ -1766,16 +1766,16 @@ namespace FreeLibSet.Parsing
     #region Parse
 
     /// <summary>
-    /// Выполняет парсинг
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїР°СЂСЃРёРЅРі
     /// </summary>
-    /// <param name="data">Объект парсинга</param>
+    /// <param name="data">РћР±СЉРµРєС‚ РїР°СЂСЃРёРЅРіР°</param>
     public void Parse(ParsingData data)
     {
       if (data.GetChar(data.CurrPos) != Separator)
         return;
 
       StringBuilder sb = new StringBuilder();
-      int len = 1; // сама кавычка
+      int len = 1; // СЃР°РјР° РєР°РІС‹С‡РєР°
       for (int p = data.CurrPos + 1; p < data.Text.Text.Length; p++)
       {
         len++;
@@ -1783,25 +1783,25 @@ namespace FreeLibSet.Parsing
         {
           if (data.GetChar(p + 1) == Separator)
           {
-            // Две кавычки подряд - это часть строки
+            // Р”РІРµ РєР°РІС‹С‡РєРё РїРѕРґСЂСЏРґ - СЌС‚Рѕ С‡Р°СЃС‚СЊ СЃС‚СЂРѕРєРё
             p++;
             len++;
             sb.Append(Separator);
           }
           else
           {
-            // Конец строки
+            // РљРѕРЅРµС† СЃС‚СЂРѕРєРё
             data.Tokens.Add(new Token(data, this, "String", data.CurrPos, len, sb.ToString()));
             return;
           }
         }
         else
-          // Обычный символ внутри строки
+          // РћР±С‹С‡РЅС‹Р№ СЃРёРјРІРѕР» РІРЅСѓС‚СЂРё СЃС‚СЂРѕРєРё
           sb.Append(data.GetChar(p));
       }
 
-      // Строка не закончена
-      data.Tokens.Add(new Token(data, this, "String", data.CurrPos, len, sb.ToString(), new ErrorMessageItem(ErrorMessageKind.Error, "Не найден символ завершения строки (" + Separator + ")")));
+      // РЎС‚СЂРѕРєР° РЅРµ Р·Р°РєРѕРЅС‡РµРЅР°
+      data.Tokens.Add(new Token(data, this, "String", data.CurrPos, len, sb.ToString(), new ErrorMessageItem(ErrorMessageKind.Error, "РќРµ РЅР°Р№РґРµРЅ СЃРёРјРІРѕР» Р·Р°РІРµСЂС€РµРЅРёСЏ СЃС‚СЂРѕРєРё (" + Separator + ")")));
     }
 
     #endregion
@@ -1809,18 +1809,18 @@ namespace FreeLibSet.Parsing
     #region CreateExpression
 
     /// <summary>
-    /// Строковая константа
+    /// РЎС‚СЂРѕРєРѕРІР°СЏ РєРѕРЅСЃС‚Р°РЅС‚Р°
     /// </summary>
     public class StringExpression : IExpression
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создает константное выражение
+      /// РЎРѕР·РґР°РµС‚ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="value">Константа</param>
-      /// <param name="token">Лексема</param>
-      /// <param name="separator">Символ разделителя, обычно, кавычки</param>
+      /// <param name="value">РљРѕРЅСЃС‚Р°РЅС‚Р°</param>
+      /// <param name="token">Р›РµРєСЃРµРјР°</param>
+      /// <param name="separator">РЎРёРјРІРѕР» СЂР°Р·РґРµР»РёС‚РµР»СЏ, РѕР±С‹С‡РЅРѕ, РєР°РІС‹С‡РєРё</param>
       public StringExpression(string value, Token token, char separator)
       {
         if (token == null)
@@ -1833,22 +1833,22 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Строковая константа (без кавычек)
+      /// РЎС‚СЂРѕРєРѕРІР°СЏ РєРѕРЅСЃС‚Р°РЅС‚Р° (Р±РµР· РєР°РІС‹С‡РµРє)
       /// </summary>
       public string Value { get { return _Value; } }
       private string _Value;
 
       /// <summary>
-      /// Лексема
+      /// Р›РµРєСЃРµРјР°
       /// </summary>
       public Token Token { get { return _Token; } }
       private Token _Token;
 
       /// <summary>
-      /// Не нужен
+      /// РќРµ РЅСѓР¶РµРЅ
       /// </summary>
       public char Separator { get { return _Separator; } }
       private char _Separator;
@@ -1858,7 +1858,7 @@ namespace FreeLibSet.Parsing
       #region IExpression Members
 
       /// <summary>
-      /// Возвращает Value
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Value
       /// </summary>
       /// <returns></returns>
       public object Calc()
@@ -1867,7 +1867,7 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Возвращает true - признак константного выражения
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true - РїСЂРёР·РЅР°Рє РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
       /// </summary>
       public bool IsConst
       {
@@ -1878,28 +1878,28 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет лексему в список
+      /// Р”РѕР±Р°РІР»СЏРµС‚ Р»РµРєСЃРµРјСѓ РІ СЃРїРёСЃРѕРє
       /// </summary>
-      /// <param name="tokens">Заполняемый список</param>
+      /// <param name="tokens">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє</param>
       public void GetTokens(IList<Token> tokens)
       {
         tokens.Add(_Token);
       }
 
       /// <summary>
-      /// Ничего не делает
+      /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
       /// </summary>
-      /// <param name="expressions">Заполняемый список</param>
+      /// <param name="expressions">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє</param>
       public void GetChildExpressions(IList<IExpression> expressions)
       {
-        // Нет дочерних выражений
+        // РќРµС‚ РґРѕС‡РµСЂРЅРёС… РІС‹СЂР°Р¶РµРЅРёР№
       }
 
 
       /// <summary>
-      /// Синтезирует выражение
+      /// РЎРёРЅС‚РµР·РёСЂСѓРµС‚ РІС‹СЂР°Р¶РµРЅРёРµ
       /// </summary>
-      /// <param name="data">Заполняемый объект</param>
+      /// <param name="data">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
       public void Synthesize(SynthesisData data)
       {
         data.Tokens.Add(new SynthesisToken(data, this, "String", data.CreateValueText(_Value), _Value));
@@ -1907,12 +1907,12 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Текстовое представление
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
       /// <summary>
-      /// Возвращает Value (без кавычек)
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Value (Р±РµР· РєР°РІС‹С‡РµРє)
       /// </summary>
-      /// <returns>Текстовое представление</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
       public override string ToString()
       {
         return _Value.ToString();
@@ -1922,19 +1922,19 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Возвращает StringExpression
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ StringExpression
     /// </summary>
-    /// <param name="data">Объект парсинга</param>
-    /// <param name="leftExpression">Должно быть null</param>
-    /// <returns>Выражение</returns>
+    /// <param name="data">РћР±СЉРµРєС‚ РїР°СЂСЃРёРЅРіР°</param>
+    /// <param name="leftExpression">Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ null</param>
+    /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ</returns>
     public IExpression CreateExpression(ParsingData data, IExpression leftExpression)
     {
       Token currToken = data.CurrToken;
       data.SkipToken();
       if (leftExpression != null)
       {
-        currToken.SetError("Константа не должна идти непосредственно после другого выражения. Ожидалась операция");
-        // ? можно продолжить разбор
+        currToken.SetError("РљРѕРЅСЃС‚Р°РЅС‚Р° РЅРµ РґРѕР»Р¶РЅР° РёРґС‚Рё РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РїРѕСЃР»Рµ РґСЂСѓРіРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ. РћР¶РёРґР°Р»Р°СЃСЊ РѕРїРµСЂР°С†РёСЏ");
+        // ? РјРѕР¶РЅРѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ СЂР°Р·Р±РѕСЂ
       }
 
       return new StringExpression((string)(currToken.AuxData), currToken, Separator);
@@ -1946,24 +1946,24 @@ namespace FreeLibSet.Parsing
   #region FunctionArgExpressionsCreatedEventHandler
 
   /// <summary>
-  /// Делегат для вычисления функции
+  /// Р”РµР»РµРіР°С‚ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ С„СѓРЅРєС†РёРё
   /// </summary>
-  /// <param name="name">Нелокализованное имя функции. Аргумент позволяет использовать один обработчик для множества функций, 
-  /// если так удобнее</param>
-  /// <param name="args">Вычисленные аргументы</param>
-  /// <param name="userData">Произвольные пользовательские данные, передданные в CreateExpression</param>
-  /// <returns>Результат вычисления функции</returns>
+  /// <param name="name">РќРµР»РѕРєР°Р»РёР·РѕРІР°РЅРЅРѕРµ РёРјСЏ С„СѓРЅРєС†РёРё. РђСЂРіСѓРјРµРЅС‚ РїРѕР·РІРѕР»СЏРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РѕРґРёРЅ РѕР±СЂР°Р±РѕС‚С‡РёРє РґР»СЏ РјРЅРѕР¶РµСЃС‚РІР° С„СѓРЅРєС†РёР№, 
+  /// РµСЃР»Рё С‚Р°Рє СѓРґРѕР±РЅРµРµ</param>
+  /// <param name="args">Р’С‹С‡РёСЃР»РµРЅРЅС‹Рµ Р°СЂРіСѓРјРµРЅС‚С‹</param>
+  /// <param name="userData">РџСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ, РїРµСЂРµРґРґР°РЅРЅС‹Рµ РІ CreateExpression</param>
+  /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ С„СѓРЅРєС†РёРё</returns>
   public delegate object FunctionDelegate(string name, object[] args, NamedValues userData);
 
   /// <summary>
-  /// Аргументы события FunctionDef.ArgExpressionsCreated
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ FunctionDef.ArgExpressionsCreated
   /// </summary>
   public class FunctionArgExpressionsCreatedEventArgs : EventArgs
   {
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Выражения для аргументов функции
+    /// Р’С‹СЂР°Р¶РµРЅРёСЏ РґР»СЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё
     /// </summary>
     public IExpression[] ArgExpressions { get { return _ArgExpressions; } set { _ArgExpressions = value; } }
     private IExpression[] _ArgExpressions;
@@ -1972,7 +1972,7 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Делегат события FunctionDef.ArgExpressionsCreated
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ FunctionDef.ArgExpressionsCreated
   /// </summary>
   /// <param name="sender"></param>
   /// <param name="args"></param>
@@ -1981,19 +1981,19 @@ namespace FreeLibSet.Parsing
   #endregion
 
   /// <summary>
-  /// Описание одной функции
+  /// РћРїРёСЃР°РЅРёРµ РѕРґРЅРѕР№ С„СѓРЅРєС†РёРё
   /// </summary>
   public class FunctionDef : ObjectWithCode
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает описание функции
+    /// РЎРѕР·РґР°РµС‚ РѕРїРёСЃР°РЅРёРµ С„СѓРЅРєС†РёРё
     /// </summary>
-    /// <param name="name">Имя функции</param>
-    /// <param name="calcMethod">Вычисляющий метод</param>
-    /// <param name="argCount">Количество аргументов. Если функция может содержать переменное число аргументов,
-    /// задайте здесь максимальное количество, а затем установите MinArgCount</param>
+    /// <param name="name">РРјСЏ С„СѓРЅРєС†РёРё</param>
+    /// <param name="calcMethod">Р’С‹С‡РёСЃР»СЏСЋС‰РёР№ РјРµС‚РѕРґ</param>
+    /// <param name="argCount">РљРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ. Р•СЃР»Рё С„СѓРЅРєС†РёСЏ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РїРµСЂРµРјРµРЅРЅРѕРµ С‡РёСЃР»Рѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ,
+    /// Р·Р°РґР°Р№С‚Рµ Р·РґРµСЃСЊ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ, Р° Р·Р°С‚РµРј СѓСЃС‚Р°РЅРѕРІРёС‚Рµ MinArgCount</param>
     public FunctionDef(string name, FunctionDelegate calcMethod, int argCount)
       : base(name)
     {
@@ -2005,18 +2005,18 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Имя функции, например, "SIN".
-    /// НЕ локализуется. Если требуется локализация, то используется свойство LocalName
+    /// РРјСЏ С„СѓРЅРєС†РёРё, РЅР°РїСЂРёРјРµСЂ, "SIN".
+    /// РќР• Р»РѕРєР°Р»РёР·СѓРµС‚СЃСЏ. Р•СЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ Р»РѕРєР°Р»РёР·Р°С†РёСЏ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ LocalName
     /// </summary>
     public string Name { get { return base.Code; } }
 
     /// <summary>
-    /// Локализованное имя.
-    /// Свойство не является обязательным.
-    /// По умолчанию содержит пустую строку
+    /// Р›РѕРєР°Р»РёР·РѕРІР°РЅРЅРѕРµ РёРјСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рј.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРѕРґРµСЂР¶РёС‚ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
     /// </summary>
     public string LocalName
     {
@@ -2031,13 +2031,13 @@ namespace FreeLibSet.Parsing
     private string _LocalName;
 
     /// <summary>
-    /// Метод, используемый для вычисления функции
+    /// РњРµС‚РѕРґ, РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ С„СѓРЅРєС†РёРё
     /// </summary>
     public FunctionDelegate CalcMethod { get { return _CalcMethod; } }
     private FunctionDelegate _CalcMethod;
 
     /// <summary>
-    /// Минимально допустимое число аргументов
+    /// РњРёРЅРёРјР°Р»СЊРЅРѕ РґРѕРїСѓСЃС‚РёРјРѕРµ С‡РёСЃР»Рѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public int MinArgCount
     {
@@ -2047,7 +2047,7 @@ namespace FreeLibSet.Parsing
     private int _MinArgCount;
 
     /// <summary>
-    /// Максимально допустимое число аргументов
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕ РґРѕРїСѓСЃС‚РёРјРѕРµ С‡РёСЃР»Рѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public int MaxArgCount
     {
@@ -2057,11 +2057,11 @@ namespace FreeLibSet.Parsing
     private int _MaxArgCount;
 
     /// <summary>
-    /// Является ли функция недетерминированной.
-    /// Если false (по умолчанию), то результат функции однозначно зависит от ее аргументов. Справедливо для
-    /// большинства функций, например, "SIN".
-    /// Если функция может возвращать различные значения при одних и тех же аргументов, например "TODAY", то
-    /// свойство должно быть установлено в true
+    /// РЇРІР»СЏРµС‚СЃСЏ Р»Рё С„СѓРЅРєС†РёСЏ РЅРµРґРµС‚РµСЂРјРёРЅРёСЂРѕРІР°РЅРЅРѕР№.
+    /// Р•СЃР»Рё false (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ СЂРµР·СѓР»СЊС‚Р°С‚ С„СѓРЅРєС†РёРё РѕРґРЅРѕР·РЅР°С‡РЅРѕ Р·Р°РІРёСЃРёС‚ РѕС‚ РµРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ. РЎРїСЂР°РІРµРґР»РёРІРѕ РґР»СЏ
+    /// Р±РѕР»СЊС€РёРЅСЃС‚РІР° С„СѓРЅРєС†РёР№, РЅР°РїСЂРёРјРµСЂ, "SIN".
+    /// Р•СЃР»Рё С„СѓРЅРєС†РёСЏ РјРѕР¶РµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ СЂР°Р·Р»РёС‡РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїСЂРё РѕРґРЅРёС… Рё С‚РµС… Р¶Рµ Р°СЂРіСѓРјРµРЅС‚РѕРІ, РЅР°РїСЂРёРјРµСЂ "TODAY", С‚Рѕ
+    /// СЃРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true
     /// </summary>
     public bool IsVolatile
     {
@@ -2071,9 +2071,9 @@ namespace FreeLibSet.Parsing
     private bool _IsVolatile;
 
     /// <summary>
-    /// Возвращает LocalName
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ LocalName
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (String.IsNullOrEmpty(LocalName))
@@ -2084,11 +2084,11 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region События
+    #region РЎРѕР±С‹С‚РёСЏ
 
     /// <summary>
-    /// Событие вызывается на второй стадии парсинга, когда построены выражения для всех аргументов функции,
-    /// но еще не построено само выражение FunctionParser.FunctionExpression
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РЅР° РІС‚РѕСЂРѕР№ СЃС‚Р°РґРёРё РїР°СЂСЃРёРЅРіР°, РєРѕРіРґР° РїРѕСЃС‚СЂРѕРµРЅС‹ РІС‹СЂР°Р¶РµРЅРёСЏ РґР»СЏ РІСЃРµС… Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё,
+    /// РЅРѕ РµС‰Рµ РЅРµ РїРѕСЃС‚СЂРѕРµРЅРѕ СЃР°РјРѕ РІС‹СЂР°Р¶РµРЅРёРµ FunctionParser.FunctionExpression
     /// </summary>
     public event FunctionArgExpressionsCreatedEventHandler ArgExpressionsCreated;
 
@@ -2107,40 +2107,40 @@ namespace FreeLibSet.Parsing
   }
 
   /// <summary>
-  /// Парсер для разбора функций.
-  /// Распознает имя функции (задается список), круглые скобки и разделители аргументов функции 
-  /// (список разделителей можно задать)
+  /// РџР°СЂСЃРµСЂ РґР»СЏ СЂР°Р·Р±РѕСЂР° С„СѓРЅРєС†РёР№.
+  /// Р Р°СЃРїРѕР·РЅР°РµС‚ РёРјСЏ С„СѓРЅРєС†РёРё (Р·Р°РґР°РµС‚СЃСЏ СЃРїРёСЃРѕРє), РєСЂСѓРіР»С‹Рµ СЃРєРѕР±РєРё Рё СЂР°Р·РґРµР»РёС‚РµР»Рё Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё 
+  /// (СЃРїРёСЃРѕРє СЂР°Р·РґРµР»РёС‚РµР»РµР№ РјРѕР¶РЅРѕ Р·Р°РґР°С‚СЊ)
   /// </summary>
   public class FunctionParser : IParser
   {
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     /// <summary>
-    /// Лексема "Имя функции"
+    /// Р›РµРєСЃРµРјР° "РРјСЏ С„СѓРЅРєС†РёРё"
     /// </summary>
     public const string TokenName = "FunctionName";
 
     /// <summary>
-    /// Лексема "("
+    /// Р›РµРєСЃРµРјР° "("
     /// </summary>
     public const string TokenOpen = "FunctionOpen";
 
     /// <summary>
-    /// Лексема ")"
+    /// Р›РµРєСЃРµРјР° ")"
     /// </summary>
     public const string TokenClose = "FunctionClose";
 
     /// <summary>
-    /// Лексема ","
+    /// Р›РµРєСЃРµРјР° ","
     /// </summary>
     public const string TokenArgSep = "FunctionArgSep";
 
     #endregion
 
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создать парсер
+    /// РЎРѕР·РґР°С‚СЊ РїР°СЂСЃРµСЂ
     /// </summary>
     public FunctionParser()
     {
@@ -2156,23 +2156,23 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Список функций
+    #region РЎРїРёСЃРѕРє С„СѓРЅРєС†РёР№
 
     /// <summary>
-    /// Список функций
-    /// Определения могут добавляться вручную. Для добавления функций Excel можно использовать
-    /// метод ExcelFunctions.AddFunctions()
+    /// РЎРїРёСЃРѕРє С„СѓРЅРєС†РёР№
+    /// РћРїСЂРµРґРµР»РµРЅРёСЏ РјРѕРіСѓС‚ РґРѕР±Р°РІР»СЏС‚СЊСЃСЏ РІСЂСѓС‡РЅСѓСЋ. Р”Р»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ С„СѓРЅРєС†РёР№ Excel РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РјРµС‚РѕРґ ExcelFunctions.AddFunctions()
     /// </summary>
     public NamedList<FunctionDef> Functions { get { return _Functions; } }
     private NamedList<FunctionDef> _Functions;
 
     /// <summary>
-    /// Добавить локальные имена функций.
-    /// Просматривает заполненный список функций Functions и ищет соответствующий ключ в коллекции
-    /// <paramref name="localNames"/>. Если ключ найден, то для функции устанавливается свойство LocalName, равным значению коллекции.
-    /// Коллекция <paramref name="localNames"/> может содержать ключи, для которых нет функций в списке Functions
+    /// Р”РѕР±Р°РІРёС‚СЊ Р»РѕРєР°Р»СЊРЅС‹Рµ РёРјРµРЅР° С„СѓРЅРєС†РёР№.
+    /// РџСЂРѕСЃРјР°С‚СЂРёРІР°РµС‚ Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СЃРїРёСЃРѕРє С„СѓРЅРєС†РёР№ Functions Рё РёС‰РµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ РєР»СЋС‡ РІ РєРѕР»Р»РµРєС†РёРё
+    /// <paramref name="localNames"/>. Р•СЃР»Рё РєР»СЋС‡ РЅР°Р№РґРµРЅ, С‚Рѕ РґР»СЏ С„СѓРЅРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ LocalName, СЂР°РІРЅС‹Рј Р·РЅР°С‡РµРЅРёСЋ РєРѕР»Р»РµРєС†РёРё.
+    /// РљРѕР»Р»РµРєС†РёСЏ <paramref name="localNames"/> РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РєР»СЋС‡Рё, РґР»СЏ РєРѕС‚РѕСЂС‹С… РЅРµС‚ С„СѓРЅРєС†РёР№ РІ СЃРїРёСЃРєРµ Functions
     /// </summary>
-    /// <param name="localNames">Локализованные имена. Ключом является глобальное имя, например, "TODAY", а значением - локализованное, например "СЕГОДНЯ"</param>
+    /// <param name="localNames">Р›РѕРєР°Р»РёР·РѕРІР°РЅРЅС‹Рµ РёРјРµРЅР°. РљР»СЋС‡РѕРј СЏРІР»СЏРµС‚СЃСЏ РіР»РѕР±Р°Р»СЊРЅРѕРµ РёРјСЏ, РЅР°РїСЂРёРјРµСЂ, "TODAY", Р° Р·РЅР°С‡РµРЅРёРµРј - Р»РѕРєР°Р»РёР·РѕРІР°РЅРЅРѕРµ, РЅР°РїСЂРёРјРµСЂ "РЎР•Р“РћР”РќРЇ"</param>
     public void SetLocalNames(IDictionary<string, string> localNames)
     {
       for (int i = 0; i < Functions.Count; i++)
@@ -2184,17 +2184,17 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Добавить локальные имена функций.
-    /// Просматривает список заданных глобальных имен <paramref name="names"/> и находит соответствующее определение функции
-    /// в списке Functions. Если найдено, устанавливает свойство FunctionDef.LocalName равным элементу массива <paramref name="localNames"/>
-    /// Список<paramref name="names"/> может содержать имена функций, которых нет в списке Functions
+    /// Р”РѕР±Р°РІРёС‚СЊ Р»РѕРєР°Р»СЊРЅС‹Рµ РёРјРµРЅР° С„СѓРЅРєС†РёР№.
+    /// РџСЂРѕСЃРјР°С‚СЂРёРІР°РµС‚ СЃРїРёСЃРѕРє Р·Р°РґР°РЅРЅС‹С… РіР»РѕР±Р°Р»СЊРЅС‹С… РёРјРµРЅ <paramref name="names"/> Рё РЅР°С…РѕРґРёС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ РѕРїСЂРµРґРµР»РµРЅРёРµ С„СѓРЅРєС†РёРё
+    /// РІ СЃРїРёСЃРєРµ Functions. Р•СЃР»Рё РЅР°Р№РґРµРЅРѕ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ FunctionDef.LocalName СЂР°РІРЅС‹Рј СЌР»РµРјРµРЅС‚Сѓ РјР°СЃСЃРёРІР° <paramref name="localNames"/>
+    /// РЎРїРёСЃРѕРє<paramref name="names"/> РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РёРјРµРЅР° С„СѓРЅРєС†РёР№, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РІ СЃРїРёСЃРєРµ Functions
     /// </summary>
-    /// <param name="names">Глобальные имена</param>
-    /// <param name="localNames">Локализованные имена</param>
+    /// <param name="names">Р“Р»РѕР±Р°Р»СЊРЅС‹Рµ РёРјРµРЅР°</param>
+    /// <param name="localNames">Р›РѕРєР°Р»РёР·РѕРІР°РЅРЅС‹Рµ РёРјРµРЅР°</param>
     public void SetLocalNames(string[] names, string[] localNames)
     {
       if (localNames.Length != names.Length)
-        throw new ArgumentException("Длина массивов не совпадает", "localNames");
+        throw new ArgumentException("Р”Р»РёРЅР° РјР°СЃСЃРёРІРѕРІ РЅРµ СЃРѕРІРїР°РґР°РµС‚", "localNames");
 
       for (int i = 0; i < names.Length; i++)
       {
@@ -2206,14 +2206,14 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Свойства, управляющие парсингом
+    #region РЎРІРѕР№СЃС‚РІР°, СѓРїСЂР°РІР»СЏСЋС‰РёРµ РїР°СЂСЃРёРЅРіРѕРј
 
     /// <summary>
-    /// Символы, которые могут содержаться в имени функции
-    /// По умолчанию содержит заглавные латинские буквы и цифры
-    /// Если используется локализация, то требуется добавить символы в строку.
-    /// Также можно добавить управляющие символы, например, знак "_"
-    /// Если свойство CaseSensitive установлено в true, то требуется также добавить символы неижнего регистра
+    /// РЎРёРјРІРѕР»С‹, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ СЃРѕРґРµСЂР¶Р°С‚СЊСЃСЏ РІ РёРјРµРЅРё С„СѓРЅРєС†РёРё
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРѕРґРµСЂР¶РёС‚ Р·Р°РіР»Р°РІРЅС‹Рµ Р»Р°С‚РёРЅСЃРєРёРµ Р±СѓРєРІС‹ Рё С†РёС„СЂС‹
+    /// Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Р»РѕРєР°Р»РёР·Р°С†РёСЏ, С‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ РґРѕР±Р°РІРёС‚СЊ СЃРёРјРІРѕР»С‹ РІ СЃС‚СЂРѕРєСѓ.
+    /// РўР°РєР¶Рµ РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЃРёРјРІРѕР»С‹, РЅР°РїСЂРёРјРµСЂ, Р·РЅР°Рє "_"
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ CaseSensitive СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ С‚Р°РєР¶Рµ РґРѕР±Р°РІРёС‚СЊ СЃРёРјРІРѕР»С‹ РЅРµРёР¶РЅРµРіРѕ СЂРµРіРёСЃС‚СЂР°
     /// </summary>
     public string ValidNameChars
     {
@@ -2223,8 +2223,8 @@ namespace FreeLibSet.Parsing
     private string _ValidNameChars;
 
     /// <summary>
-    /// Символы из ValidNameChars, которые не могут быть первыми в имени функции/
-    /// По умолчанию содержит цифры от 0 до 9
+    /// РЎРёРјРІРѕР»С‹ РёР· ValidNameChars, РєРѕС‚РѕСЂС‹Рµ РЅРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РїРµСЂРІС‹РјРё РІ РёРјРµРЅРё С„СѓРЅРєС†РёРё/
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРѕРґРµСЂР¶РёС‚ С†РёС„СЂС‹ РѕС‚ 0 РґРѕ 9
     /// </summary>
     public string InvalidFirstChars
     {
@@ -2234,8 +2234,8 @@ namespace FreeLibSet.Parsing
     private string _InvalidFirstChars;
 
     /// <summary>
-    /// Если свойство установлено в true, то имена функций чувстсительны к регистру.
-    /// По умолчанию - false
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ РёРјРµРЅР° С„СѓРЅРєС†РёР№ С‡СѓРІСЃС‚СЃРёС‚РµР»СЊРЅС‹ Рє СЂРµРіРёСЃС‚СЂСѓ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false
     /// </summary>
     public bool CaseSensitive
     {
@@ -2246,18 +2246,18 @@ namespace FreeLibSet.Parsing
 
 
     /// <summary>
-    /// Разделители списка аргументов. По умолчанию содержит один разделитель, заданный в
+    /// Р Р°Р·РґРµР»РёС‚РµР»Рё СЃРїРёСЃРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРѕРґРµСЂР¶РёС‚ РѕРґРёРЅ СЂР°Р·РґРµР»РёС‚РµР»СЊ, Р·Р°РґР°РЅРЅС‹Р№ РІ
     /// CultureInfo.CurrentCulture.TextInfo.ListSeparator.
-    /// При необходимости, список может быть очищен и заполнен нужным значением
+    /// РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё, СЃРїРёСЃРѕРє РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‡РёС‰РµРЅ Рё Р·Р°РїРѕР»РЅРµРЅ РЅСѓР¶РЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј
     /// </summary>
     public List<string> ArgSeparators { get { return _ArgSeparators; } }
     private List<string> _ArgSeparators;
 
     /// <summary>
-    /// Если свойство установлено в true (по умолчанию), то в разбираемых выражениях разрешено использовать
-    /// как локальные имена (LocalName), так и глобавльные (Name).
-    /// Если свойства сброшено в false, то можно использовать только локальные имена (LocalName), кроме функций, у
-    /// которых LocalName="". Для последних используется Name
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РІ СЂР°Р·Р±РёСЂР°РµРјС‹С… РІС‹СЂР°Р¶РµРЅРёСЏС… СЂР°Р·СЂРµС€РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РєР°Рє Р»РѕРєР°Р»СЊРЅС‹Рµ РёРјРµРЅР° (LocalName), С‚Р°Рє Рё РіР»РѕР±Р°РІР»СЊРЅС‹Рµ (Name).
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІР° СЃР±СЂРѕС€РµРЅРѕ РІ false, С‚Рѕ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ Р»РѕРєР°Р»СЊРЅС‹Рµ РёРјРµРЅР° (LocalName), РєСЂРѕРјРµ С„СѓРЅРєС†РёР№, Сѓ
+    /// РєРѕС‚РѕСЂС‹С… LocalName="". Р”Р»СЏ РїРѕСЃР»РµРґРЅРёС… РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Name
     /// </summary>
     public bool UseBothNames
     {
@@ -2268,7 +2268,7 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Словарь имен
+    #region РЎР»РѕРІР°СЂСЊ РёРјРµРЅ
 
     private Dictionary<string, FunctionDef> _NameDict;
 
@@ -2300,27 +2300,27 @@ namespace FreeLibSet.Parsing
     #region Parse
 
     /// <summary>
-    /// Определяет лексемы:
-    /// "Function" - содержит имя функции. В качестве AuxData содержит имя функции, как оно задано в тексте.
-    /// Лексема определяется, даже если не обнаружена открывающая скобка
-    /// "FunctionOpen" и "FunctionClose" задают скобки "(" и ")". 
-    /// Открывающая круглая скобка не распознается, если имя функции не было задано.
-    /// "FunctionSep" - разделитель списка аргументов. Реальный разделитель (разделители), задаются в списке ArgSeparators
+    /// РћРїСЂРµРґРµР»СЏРµС‚ Р»РµРєСЃРµРјС‹:
+    /// "Function" - СЃРѕРґРµСЂР¶РёС‚ РёРјСЏ С„СѓРЅРєС†РёРё. Р’ РєР°С‡РµСЃС‚РІРµ AuxData СЃРѕРґРµСЂР¶РёС‚ РёРјСЏ С„СѓРЅРєС†РёРё, РєР°Рє РѕРЅРѕ Р·Р°РґР°РЅРѕ РІ С‚РµРєСЃС‚Рµ.
+    /// Р›РµРєСЃРµРјР° РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ, РґР°Р¶Рµ РµСЃР»Рё РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅР° РѕС‚РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР°
+    /// "FunctionOpen" Рё "FunctionClose" Р·Р°РґР°СЋС‚ СЃРєРѕР±РєРё "(" Рё ")". 
+    /// РћС‚РєСЂС‹РІР°СЋС‰Р°СЏ РєСЂСѓРіР»Р°СЏ СЃРєРѕР±РєР° РЅРµ СЂР°СЃРїРѕР·РЅР°РµС‚СЃСЏ, РµСЃР»Рё РёРјСЏ С„СѓРЅРєС†РёРё РЅРµ Р±С‹Р»Рѕ Р·Р°РґР°РЅРѕ.
+    /// "FunctionSep" - СЂР°Р·РґРµР»РёС‚РµР»СЊ СЃРїРёСЃРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ. Р РµР°Р»СЊРЅС‹Р№ СЂР°Р·РґРµР»РёС‚РµР»СЊ (СЂР°Р·РґРµР»РёС‚РµР»Рё), Р·Р°РґР°СЋС‚СЃСЏ РІ СЃРїРёСЃРєРµ ArgSeparators
     /// </summary>
     /// <param name="data"></param>
     public void Parse(ParsingData data)
     {
       Token newToken;
 
-      #region Скобки
+      #region РЎРєРѕР±РєРё
 
       char ch = data.GetChar(data.CurrPos);
 
-      // Скобки могут быть частью функции, а могут быть частью математического выражения 
+      // РЎРєРѕР±РєРё РјРѕРіСѓС‚ Р±С‹С‚СЊ С‡Р°СЃС‚СЊСЋ С„СѓРЅРєС†РёРё, Р° РјРѕРіСѓС‚ Р±С‹С‚СЊ С‡Р°СЃС‚СЊСЋ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ 
 
       if (ch == '(')
       {
-        // Проверяем, что до этого была наша функция
+        // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РґРѕ СЌС‚РѕРіРѕ Р±С‹Р»Р° РЅР°С€Р° С„СѓРЅРєС†РёСЏ
         for (int i = data.Tokens.Count - 1; i >= 0; i--)
         {
           switch (data.Tokens[i].TokenType)
@@ -2333,7 +2333,7 @@ namespace FreeLibSet.Parsing
               data.Tokens.Add(newToken);
               return;
             default:
-              return; // 09.02.2017 - не наша скобка
+              return; // 09.02.2017 - РЅРµ РЅР°С€Р° СЃРєРѕР±РєР°
           }
         }
         return;
@@ -2341,8 +2341,8 @@ namespace FreeLibSet.Parsing
 
       if (ch == ')')
       {
-        // Проверяем, подсчитывая скобки
-        int counter = 1; // наша скобка
+        // РџСЂРѕРІРµСЂСЏРµРј, РїРѕРґСЃС‡РёС‚С‹РІР°СЏ СЃРєРѕР±РєРё
+        int counter = 1; // РЅР°С€Р° СЃРєРѕР±РєР°
         for (int j = data.Tokens.Count - 1; j >= 0; j--)
         {
           switch (data.Tokens[j].TokenType)
@@ -2356,7 +2356,7 @@ namespace FreeLibSet.Parsing
               {
                 if (data.Tokens[j].Parser == this)
                 {
-                  // Открывающая скобка наша
+                  // РћС‚РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР° РЅР°С€Р°
                   newToken = new Token(data, this, TokenClose, data.CurrPos, 1);
                   data.Tokens.Add(newToken);
                 }
@@ -2370,14 +2370,14 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Разделитель списка аргументов
+      #region Р Р°Р·РґРµР»РёС‚РµР»СЊ СЃРїРёСЃРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ
 
       for (int i = 0; i < ArgSeparators.Count; i++)
       {
         if (data.StartsWith(ArgSeparators[i], false))
         {
-          // 17.12.2018. Проверяем, подсчитывая скобки
-          int counter = 1; // наша скобка
+          // 17.12.2018. РџСЂРѕРІРµСЂСЏРµРј, РїРѕРґСЃС‡РёС‚С‹РІР°СЏ СЃРєРѕР±РєРё
+          int counter = 1; // РЅР°С€Р° СЃРєРѕР±РєР°
           for (int j = data.Tokens.Count - 1; j >= 0; j--)
           {
             switch (data.Tokens[j].TokenType)
@@ -2391,7 +2391,7 @@ namespace FreeLibSet.Parsing
                 {
                   if (data.Tokens[j].Parser == this)
                   {
-                    // Открывающая скобка наша
+                    // РћС‚РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР° РЅР°С€Р°
                     newToken = new Token(data, this, TokenArgSep, data.CurrPos, ArgSeparators[i].Length);
                     data.Tokens.Add(newToken);
                   }
@@ -2405,7 +2405,7 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Имя функции
+      #region РРјСЏ С„СѓРЅРєС†РёРё
 
       StringComparison sc = CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
@@ -2416,7 +2416,7 @@ namespace FreeLibSet.Parsing
       if (InvalidFirstChars.IndexOf(s1, sc) >= 0)
         return;
 
-      // Начало имени функции найдено
+      // РќР°С‡Р°Р»Рѕ РёРјРµРЅРё С„СѓРЅРєС†РёРё РЅР°Р№РґРµРЅРѕ
       int len = 1;
       for (int p = data.CurrPos + 1; p < data.Text.Text.Length; p++)
       {
@@ -2437,28 +2437,28 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Вычислитель функции
+    #region Р’С‹С‡РёСЃР»РёС‚РµР»СЊ С„СѓРЅРєС†РёРё
 
     /// <summary>
-    /// Выражение для вычисления функции.
-    /// Если функция имеет аргументы, сначала вычисляются по очереди все аргументы слева направо.
-    /// Затем вычисляется функция.
+    /// Р’С‹СЂР°Р¶РµРЅРёРµ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ С„СѓРЅРєС†РёРё.
+    /// Р•СЃР»Рё С„СѓРЅРєС†РёСЏ РёРјРµРµС‚ Р°СЂРіСѓРјРµРЅС‚С‹, СЃРЅР°С‡Р°Р»Р° РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ РїРѕ РѕС‡РµСЂРµРґРё РІСЃРµ Р°СЂРіСѓРјРµРЅС‚С‹ СЃР»РµРІР° РЅР°РїСЂР°РІРѕ.
+    /// Р—Р°С‚РµРј РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ С„СѓРЅРєС†РёСЏ.
     /// </summary>
     public class FunctionExpression : IExpression
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создает объект выражения
+      /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РІС‹СЂР°Р¶РµРЅРёСЏ
       /// </summary>
-      /// <param name="function">Описание функции</param>
-      /// <param name="args">Выражения для аргументов функции</param>
-      /// <param name="nameToken">Лексема для имени функции</param>
-      /// <param name="openToken">Лексема для открывающей скобки</param>
-      /// <param name="closeToken">Лексема для закрывающей скобки</param>
-      /// <param name="argSepTokens">Массив лексем для разделителей аргументов (точки с запятой).
-      /// Количество элементов в массиве дожно быть на одно меньше, чем в массиве <paramref name="args"/>.</param>
-      /// <param name="userData">Произвольные пользовательские данные, которые будут переданы вычислителю функции</param>
+      /// <param name="function">РћРїРёСЃР°РЅРёРµ С„СѓРЅРєС†РёРё</param>
+      /// <param name="args">Р’С‹СЂР°Р¶РµРЅРёСЏ РґР»СЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё</param>
+      /// <param name="nameToken">Р›РµРєСЃРµРјР° РґР»СЏ РёРјРµРЅРё С„СѓРЅРєС†РёРё</param>
+      /// <param name="openToken">Р›РµРєСЃРµРјР° РґР»СЏ РѕС‚РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРё</param>
+      /// <param name="closeToken">Р›РµРєСЃРµРјР° РґР»СЏ Р·Р°РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРё</param>
+      /// <param name="argSepTokens">РњР°СЃСЃРёРІ Р»РµРєСЃРµРј РґР»СЏ СЂР°Р·РґРµР»РёС‚РµР»РµР№ Р°СЂРіСѓРјРµРЅС‚РѕРІ (С‚РѕС‡РєРё СЃ Р·Р°РїСЏС‚РѕР№).
+      /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РјР°СЃСЃРёРІРµ РґРѕР¶РЅРѕ Р±С‹С‚СЊ РЅР° РѕРґРЅРѕ РјРµРЅСЊС€Рµ, С‡РµРј РІ РјР°СЃСЃРёРІРµ <paramref name="args"/>.</param>
+      /// <param name="userData">РџСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РїРµСЂРµРґР°РЅС‹ РІС‹С‡РёСЃР»РёС‚РµР»СЋ С„СѓРЅРєС†РёРё</param>
       public FunctionExpression(FunctionDef function, IExpression[] args, Token nameToken, Token openToken, Token closeToken, Token[] argSepTokens, NamedValues userData)
       {
         if (function == null)
@@ -2495,47 +2495,47 @@ namespace FreeLibSet.Parsing
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Определение функции
+      /// РћРїСЂРµРґРµР»РµРЅРёРµ С„СѓРЅРєС†РёРё
       /// </summary>
       public FunctionDef Function { get { return _Function; } }
       private FunctionDef _Function;
 
 
       /// <summary>
-      /// Вычисляемые аргументы
+      /// Р’С‹С‡РёСЃР»СЏРµРјС‹Рµ Р°СЂРіСѓРјРµРЅС‚С‹
       /// </summary>
       public IExpression[] Args { get { return _Args; } }
       private IExpression[] _Args;
 
       /// <summary>
-      /// Лексема с именем функции
+      /// Р›РµРєСЃРµРјР° СЃ РёРјРµРЅРµРј С„СѓРЅРєС†РёРё
       /// </summary>
       public Token NameToken { get { return _NameToken; } }
       private Token _NameToken;
 
       /// <summary>
-      /// Лексема "("
+      /// Р›РµРєСЃРµРјР° "("
       /// </summary>
       public Token OpenToken { get { return _OpenToken; } }
       private Token _OpenToken;
 
       /// <summary>
-      /// Лексема ")"
+      /// Р›РµРєСЃРµРјР° ")"
       /// </summary>
       public Token CloseToken { get { return _CloseToken; } }
       private Token _CloseToken;
 
       /// <summary>
-      /// Лексемы ","
+      /// Р›РµРєСЃРµРјС‹ ","
       /// </summary>
       public Token[] ArgSepTokens { get { return _ArgSepTokens; } }
       private Token[] _ArgSepTokens;
 
       /// <summary>
-      /// Пользовательские данные, переданные в CreateExpression
+      /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ, РїРµСЂРµРґР°РЅРЅС‹Рµ РІ CreateExpression
       /// </summary>
       public NamedValues UserData { get { return _UserData; } }
       private NamedValues _UserData;
@@ -2545,23 +2545,23 @@ namespace FreeLibSet.Parsing
       #region IExpression Members
 
       /// <summary>
-      /// Вычисляет функцию.
+      /// Р’С‹С‡РёСЃР»СЏРµС‚ С„СѓРЅРєС†РёСЋ.
       /// </summary>
-      /// <returns>Результат вычислений</returns>
+      /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёР№</returns>
       public object Calc()
       {
         object[] argVals = new object[Args.Length];
         for (int i = 0; i < Args.Length; i++)
           argVals[i] = Args[i].Calc();
 
-        return Function.CalcMethod(Function.Name, // не локализованное
+        return Function.CalcMethod(Function.Name, // РЅРµ Р»РѕРєР°Р»РёР·РѕРІР°РЅРЅРѕРµ
           argVals,
           UserData);
       }
 
       /// <summary>
-      /// Возвращает false если FunctionDef.IsVolatile=true.
-      /// Иначе возвращает true, если функция не имеет аргументов или если все аргументы являются константами.
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ false РµСЃР»Рё FunctionDef.IsVolatile=true.
+      /// РРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С„СѓРЅРєС†РёСЏ РЅРµ РёРјРµРµС‚ Р°СЂРіСѓРјРµРЅС‚РѕРІ РёР»Рё РµСЃР»Рё РІСЃРµ Р°СЂРіСѓРјРµРЅС‚С‹ СЏРІР»СЏСЋС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚Р°РјРё.
       /// </summary>
       public bool IsConst
       {
@@ -2581,9 +2581,9 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет в список все лексемы
+      /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє РІСЃРµ Р»РµРєСЃРµРјС‹
       /// </summary>
-      /// <param name="tokens">Список для заполнения</param>
+      /// <param name="tokens">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetTokens(IList<Token> tokens)
       {
         tokens.Add(NameToken);
@@ -2594,9 +2594,9 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Добавляет в список все выражения для вычисления аргументов
+      /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє РІСЃРµ РІС‹СЂР°Р¶РµРЅРёСЏ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ
       /// </summary>
-      /// <param name="expressions">Список для заполнения</param>
+      /// <param name="expressions">РЎРїРёСЃРѕРє РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
       public void GetChildExpressions(IList<IExpression> expressions)
       {
         for (int i = 0; i < Args.Length; i++)
@@ -2604,7 +2604,7 @@ namespace FreeLibSet.Parsing
       }
 
       /// <summary>
-      /// Синтез выражения
+      /// РЎРёРЅС‚РµР· РІС‹СЂР°Р¶РµРЅРёСЏ
       /// </summary>
       /// <param name="data"></param>
       public void Synthesize(SynthesisData data)
@@ -2627,7 +2627,7 @@ namespace FreeLibSet.Parsing
         }
         else
         {
-          // Добавляем константу
+          // Р”РѕР±Р°РІР»СЏРµРј РєРѕРЅСЃС‚Р°РЅС‚Сѓ
           data.Tokens.Add(new SynthesisToken(data, this, "Const", data.CreateValueText(Calc())));
         }
       }
@@ -2637,9 +2637,9 @@ namespace FreeLibSet.Parsing
       #region ToString()
 
       /// <summary>
-      /// Возвращает имя функции и скобки
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С„СѓРЅРєС†РёРё Рё СЃРєРѕР±РєРё
       /// </summary>
-      /// <returns>Текстовое представление</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
       public override string ToString()
       {
         return _Function.Name + "()";
@@ -2653,11 +2653,11 @@ namespace FreeLibSet.Parsing
     #region CreateExpression
 
     /// <summary>
-    /// Создает выражение FunctionExpression
+    /// РЎРѕР·РґР°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ FunctionExpression
     /// </summary>
-    /// <param name="data">Данные парсинга</param>
-    /// <param name="leftExpression">Выражение слева. Должно быть null</param>
-    /// <returns>Выражение</returns>
+    /// <param name="data">Р”Р°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
+    /// <param name="leftExpression">Р’С‹СЂР°Р¶РµРЅРёРµ СЃР»РµРІР°. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ null</param>
+    /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ</returns>
     public IExpression CreateExpression(ParsingData data, IExpression leftExpression)
     {
       switch (data.CurrTokenType)
@@ -2668,12 +2668,12 @@ namespace FreeLibSet.Parsing
 
           if (leftExpression != null)
           {
-            currToken.SetError("Имя функции не может быть продолжением другого выражения. Ожидалась операция");
-            // ? можно продолжить
+            currToken.SetError("РРјСЏ С„СѓРЅРєС†РёРё РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСЂРѕРґРѕР»Р¶РµРЅРёРµРј РґСЂСѓРіРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ. РћР¶РёРґР°Р»Р°СЃСЊ РѕРїРµСЂР°С†РёСЏ");
+            // ? РјРѕР¶РЅРѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ
           }
 
           FunctionDef fd = GetFunction(currToken.AuxData.ToString());
-          // Ищем лексему открывающей функции
+          // РС‰РµРј Р»РµРєСЃРµРјСѓ РѕС‚РєСЂС‹РІР°СЋС‰РµР№ С„СѓРЅРєС†РёРё
           Token openToken = null;
           while ((data.CurrTokenIndex < data.Tokens.Count) && (openToken == null))
           {
@@ -2690,17 +2690,17 @@ namespace FreeLibSet.Parsing
                 break;
 
               default:
-                data.CurrToken.SetError("Ожидалась открывающая скобка после имени функции");
+                data.CurrToken.SetError("РћР¶РёРґР°Р»Р°СЃСЊ РѕС‚РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР° РїРѕСЃР»Рµ РёРјРµРЅРё С„СѓРЅРєС†РёРё");
                 return null;
             }
           }
           if (openToken == null)
           {
-            currToken.SetError("Не найдена открывающая скобка после имени функции");
+            currToken.SetError("РќРµ РЅР°Р№РґРµРЅР° РѕС‚РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР° РїРѕСЃР»Рµ РёРјРµРЅРё С„СѓРЅРєС†РёРё");
             return null;
           }
 
-          // Перебираем аргуметы функции
+          // РџРµСЂРµР±РёСЂР°РµРј Р°СЂРіСѓРјРµС‚С‹ С„СѓРЅРєС†РёРё
           List<IExpression> argExprs = new List<IExpression>();
           Token closeToken = null;
           List<Token> argSepTokens = new List<Token>();
@@ -2711,7 +2711,7 @@ namespace FreeLibSet.Parsing
             {
               if (data.CurrToken == null)
               {
-                currToken.SetError("Не найдена закрывающая скобка для функции");
+                currToken.SetError("РќРµ РЅР°Р№РґРµРЅР° Р·Р°РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР° РґР»СЏ С„СѓРЅРєС†РёРё");
                 return null;
               }
 
@@ -2728,13 +2728,13 @@ namespace FreeLibSet.Parsing
               else
                 errorToken = openToken;
 
-              errorToken.SetError("Ожидался аргумент");
+              errorToken.SetError("РћР¶РёРґР°Р»СЃСЏ Р°СЂРіСѓРјРµРЅС‚");
             }
 
             argExprs.Add(argExpr);
             if (data.CurrToken == null)
             {
-              currToken.SetError("Не найдена закрывающая скобка для функции");
+              currToken.SetError("РќРµ РЅР°Р№РґРµРЅР° Р·Р°РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР° РґР»СЏ С„СѓРЅРєС†РёРё");
               return null;
             }
             if (data.CurrTokenType == TokenClose)
@@ -2745,12 +2745,12 @@ namespace FreeLibSet.Parsing
             }
             if (data.CurrTokenType != TokenArgSep)
             {
-              string errorText = "Ожидалась закрывающая скобка вызова функции";
+              string errorText = "РћР¶РёРґР°Р»Р°СЃСЊ Р·Р°РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР° РІС‹Р·РѕРІР° С„СѓРЅРєС†РёРё";
               if (argSepTokens.Count > 0)
               {
-                errorText += " или разделитель списка аргументов \"" + argSepTokens[0] + "\"";
+                errorText += " РёР»Рё СЂР°Р·РґРµР»РёС‚РµР»СЊ СЃРїРёСЃРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ \"" + argSepTokens[0] + "\"";
                 for (int i = 1; i < argSepTokens.Count; i++)
-                  errorText += " или \"" + argSepTokens[i] + "\"";
+                  errorText += " РёР»Рё \"" + argSepTokens[i] + "\"";
               }
               data.CurrToken.SetError(errorText);
               return null;
@@ -2760,10 +2760,10 @@ namespace FreeLibSet.Parsing
             data.SkipToken();
           }
 
-          // Список аргументов загружен. Скобка получена
+          // РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ Р·Р°РіСЂСѓР¶РµРЅ. РЎРєРѕР±РєР° РїРѕР»СѓС‡РµРЅР°
           if (fd == null)
           {
-            currToken.SetError("Неизвестное имя функции \"" + currToken.AuxData.ToString() + "\"");
+            currToken.SetError("РќРµРёР·РІРµСЃС‚РЅРѕРµ РёРјСЏ С„СѓРЅРєС†РёРё \"" + currToken.AuxData.ToString() + "\"");
             return null;
           }
 
@@ -2772,11 +2772,11 @@ namespace FreeLibSet.Parsing
 
           if (argExprs2.Length < fd.MinArgCount || argExprs2.Length > fd.MaxArgCount)
           {
-            string errorText = "Неправильное количество аргументов функции \"" + fd.ToString() + "\" (" + argExprs2.Length.ToString() + ")";
+            string errorText = "РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё \"" + fd.ToString() + "\" (" + argExprs2.Length.ToString() + ")";
             if (fd.MaxArgCount == fd.MinArgCount)
-              errorText += ". Ожидалось аргументов: " + fd.MaxArgCount.ToString();
+              errorText += ". РћР¶РёРґР°Р»РѕСЃСЊ Р°СЂРіСѓРјРµРЅС‚РѕРІ: " + fd.MaxArgCount.ToString();
             else
-              errorText += ". Ожидалось аргументов: от " + fd.MinArgCount.ToString() + " до " + fd.MaxArgCount.ToString();
+              errorText += ". РћР¶РёРґР°Р»РѕСЃСЊ Р°СЂРіСѓРјРµРЅС‚РѕРІ: РѕС‚ " + fd.MinArgCount.ToString() + " РґРѕ " + fd.MaxArgCount.ToString();
             currToken.SetError(errorText);
             return null;
           }
@@ -2786,20 +2786,20 @@ namespace FreeLibSet.Parsing
           return funcExpr;
 
         default:
-          data.CurrToken.SetError("Неожиданное вхождение \"" + data.CurrToken.Text + "\" вне вызова функции");
+          data.CurrToken.SetError("РќРµРѕР¶РёРґР°РЅРЅРѕРµ РІС…РѕР¶РґРµРЅРёРµ \"" + data.CurrToken.Text + "\" РІРЅРµ РІС‹Р·РѕРІР° С„СѓРЅРєС†РёРё");
           data.SkipToken();
           return null;
       }
     }
 
     /// <summary>
-    /// Возвращает описание функции по заданному имени (как оно задано в выражении)
-    /// Базовая реализация возвращает описание из массива Functions
-    /// Переопределенный метод может возвращать динамически создаваемое описание
-    /// Метод возвращает null, если имя функции неизвестно
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕРїРёСЃР°РЅРёРµ С„СѓРЅРєС†РёРё РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РёРјРµРЅРё (РєР°Рє РѕРЅРѕ Р·Р°РґР°РЅРѕ РІ РІС‹СЂР°Р¶РµРЅРёРё)
+    /// Р‘Р°Р·РѕРІР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚ РѕРїРёСЃР°РЅРёРµ РёР· РјР°СЃСЃРёРІР° Functions
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ РґРёРЅР°РјРёС‡РµСЃРєРё СЃРѕР·РґР°РІР°РµРјРѕРµ РѕРїРёСЃР°РЅРёРµ
+    /// РњРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё РёРјСЏ С„СѓРЅРєС†РёРё РЅРµРёР·РІРµСЃС‚РЅРѕ
     /// </summary>
-    /// <param name="name">Локализованное или нелокализованное имя функции</param>
-    /// <returns>Описание функции</returns>
+    /// <param name="name">Р›РѕРєР°Р»РёР·РѕРІР°РЅРЅРѕРµ РёР»Рё РЅРµР»РѕРєР°Р»РёР·РѕРІР°РЅРЅРѕРµ РёРјСЏ С„СѓРЅРєС†РёРё</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ С„СѓРЅРєС†РёРё</returns>
     protected virtual FunctionDef GetFunction(string name)
     {
       if (String.IsNullOrEmpty(name))

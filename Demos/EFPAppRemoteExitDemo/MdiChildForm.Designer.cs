@@ -1,4 +1,4 @@
-namespace EFPAppRemoteExitDemo
+п»їnamespace EFPAppRemoteExitDemo
 {
   partial class MdiChildForm
   {
@@ -52,7 +52,7 @@ namespace EFPAppRemoteExitDemo
       this.infoLabel1.Name = "infoLabel1";
       this.infoLabel1.Size = new System.Drawing.Size(284, 41);
       this.infoLabel1.TabIndex = 1;
-      this.infoLabel1.Text = "Эмулирует редактор текста, в котором текст мжет быть \"сохранен\"";
+      this.infoLabel1.Text = "Р­РјСѓР»РёСЂСѓРµС‚ СЂРµРґР°РєС‚РѕСЂ С‚РµРєСЃС‚Р°, РІ РєРѕС‚РѕСЂРѕРј С‚РµРєСЃС‚ РјР¶РµС‚ Р±С‹С‚СЊ \"СЃРѕС…СЂР°РЅРµРЅ\"";
       // 
       // edText
       // 
@@ -69,7 +69,7 @@ namespace EFPAppRemoteExitDemo
       this.btnSave.Name = "btnSave";
       this.btnSave.Size = new System.Drawing.Size(132, 24);
       this.btnSave.TabIndex = 2;
-      this.btnSave.Text = "Сохранить";
+      this.btnSave.Text = "РЎРѕС…СЂР°РЅРёС‚СЊ";
       this.btnSave.UseVisualStyleBackColor = true;
       // 
       // MdiChildForm
@@ -80,7 +80,7 @@ namespace EFPAppRemoteExitDemo
       this.Controls.Add(this.edText);
       this.Controls.Add(this.panel1);
       this.Name = "MdiChildForm";
-      this.Text = "Тестовое дочернее окно";
+      this.Text = "РўРµСЃС‚РѕРІРѕРµ РґРѕС‡РµСЂРЅРµРµ РѕРєРЅРѕ";
       this.panel1.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();

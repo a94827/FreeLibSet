@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,18 +13,18 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data.Npgsql
 {
   /// <summary>
-  /// База данных PostGreSQL через провайдер Npgsql.
-  /// Для использования должны быть подключены сборки Npgsql.dll и Mono.Security из подкаталога FreeLibSet/Others
+  /// Р‘Р°Р·Р° РґР°РЅРЅС‹С… PostGreSQL С‡РµСЂРµР· РїСЂРѕРІР°Р№РґРµСЂ Npgsql.
+  /// Р”Р»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РїРѕРґРєР»СЋС‡РµРЅС‹ СЃР±РѕСЂРєРё Npgsql.dll Рё Mono.Security РёР· РїРѕРґРєР°С‚Р°Р»РѕРіР° FreeLibSet/Others
   /// </summary>
   public class NpgsqlDBx : DBx
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// РЎРѕР·РґР°РЅРёРµ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РµС‚СЃСЏ РѕСЃРЅРѕРІРЅР°СЏ С‚РѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ
     /// </summary>
-    /// <param name="connectionStringBuilder">Собранная строка подключения</param>
+    /// <param name="connectionStringBuilder">РЎРѕР±СЂР°РЅРЅР°СЏ СЃС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
     public NpgsqlDBx(NpgsqlConnectionStringBuilder connectionStringBuilder)
     {
       _SyncRoot = new object();
@@ -40,10 +40,10 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// РЎРѕР·РґР°РЅРёРµ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РµС‚СЃСЏ РѕСЃРЅРѕРІРЅР°СЏ С‚РѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ
     /// </summary>
-    /// <param name="connectionString">Строка подключения</param>
+    /// <param name="connectionString">РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
     public NpgsqlDBx(string connectionString)
       : this(new NpgsqlConnectionStringBuilder(connectionString))
     {
@@ -54,29 +54,29 @@ namespace FreeLibSet.Data.Npgsql
       if (!String.IsNullOrEmpty(connectionStringBuilder.Database))
         return connectionStringBuilder.Database;
       else
-        throw new ArgumentException("В строке подключения не задан параметр Database, определяющий базу данных", "connectionStringBuilder");
+        throw new ArgumentException("Р’ СЃС‚СЂРѕРєРµ РїРѕРґРєР»СЋС‡РµРЅРёСЏ РЅРµ Р·Р°РґР°РЅ РїР°СЂР°РјРµС‚СЂ Database, РѕРїСЂРµРґРµР»СЏСЋС‰РёР№ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…", "connectionStringBuilder");
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвразает имя базы данных
+    /// Р’РѕР·РІСЂР°Р·Р°РµС‚ РёРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     public override string DatabaseName { get { return _DatabaseName; } }
     private readonly string _DatabaseName;
 
     /// <summary>
-    /// Главная точка входа в базу данных.
-    /// Не содержит явно назначенных прав пользователя
+    /// Р“Р»Р°РІРЅР°СЏ С‚РѕС‡РєР° РІС…РѕРґР° РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С….
+    /// РќРµ СЃРѕРґРµСЂР¶РёС‚ СЏРІРЅРѕ РЅР°Р·РЅР°С‡РµРЅРЅС‹С… РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     /// </summary>
     public new NpgsqlDBxEntry MainEntry { get { return (NpgsqlDBxEntry)(base.MainEntry); } }
 
     /// <summary>
-    /// Создает точку входа
+    /// РЎРѕР·РґР°РµС‚ С‚РѕС‡РєСѓ РІС…РѕРґР°
     /// </summary>
-    /// <param name="permissions">Разрешения на доступ к базе данных</param>
+    /// <param name="permissions">Р Р°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
     /// <returns></returns>
     public override DBxEntry CreateEntry(DBxPermissions permissions)
     {
@@ -87,7 +87,7 @@ namespace FreeLibSet.Data.Npgsql
     private readonly object _SyncRoot;
 
     /// <summary>
-    /// Текстовое представление версии сервера
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІРµСЂСЃРёРё СЃРµСЂРІРµСЂР°
     /// </summary>
     public override string ServerVersionText
     {
@@ -109,9 +109,9 @@ namespace FreeLibSet.Data.Npgsql
     private string _ServerVersionText;
 
     /// <summary>
-    /// Вызывает встроенную функцию pg_database_size()
+    /// Р’С‹Р·С‹РІР°РµС‚ РІСЃС‚СЂРѕРµРЅРЅСѓСЋ С„СѓРЅРєС†РёСЋ pg_database_size()
     /// </summary>
-    /// <returns>Размер базы данных в байтах</returns>
+    /// <returns>Р Р°Р·РјРµСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РІ Р±Р°Р№С‚Р°С…</returns>
     public override long GetDBSize()
     {
       using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, false))
@@ -121,7 +121,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Возвращает ссылку на NpgsqlFactory
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃСЃС‹Р»РєСѓ РЅР° NpgsqlFactory
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {
@@ -129,16 +129,16 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Возвращает статический экзеипляр менеджера баз данных PostgreSQL
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ СЌРєР·РµРёРїР»СЏСЂ РјРµРЅРµРґР¶РµСЂР° Р±Р°Р· РґР°РЅРЅС‹С… PostgreSQL
     /// </summary>
     public override DBxManager Manager { get { return NpgsqlDBxManager.TheManager; } }
 
     #endregion
 
-    #region Обновление структуры
+    #region РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹
 
     /// <summary>
-    /// Возвращает true, если база данных существует
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р±Р°Р·Р° РґР°РЅРЅС‹С… СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
     public override bool DatabaseExists
     {
@@ -156,7 +156,7 @@ namespace FreeLibSet.Data.Npgsql
       }
     }
     /// <summary>
-    /// Создает базу данных, если ее не существует
+    /// РЎРѕР·РґР°РµС‚ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…, РµСЃР»Рё РµРµ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
     public override void CreateIfRequired()
     {
@@ -164,37 +164,37 @@ namespace FreeLibSet.Data.Npgsql
         return;
       using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, true))
       {
-        con.CommandTimeout = 0; // Бесконечное время выполнения
+        con.CommandTimeout = 0; // Р‘РµСЃРєРѕРЅРµС‡РЅРѕРµ РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ
         con.CreateDatabase();
       }
     }
 
     /// <summary>                               
-    /// Обновляет структуру существующей базы
-    /// данных на основании созданного описание в свойстве DBx.Struct.
-    /// На момент вызова база данных (возможно, пустая) должна существовать.
+    /// РћР±РЅРѕРІР»СЏРµС‚ СЃС‚СЂСѓРєС‚СѓСЂСѓ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р±Р°Р·С‹
+    /// РґР°РЅРЅС‹С… РЅР° РѕСЃРЅРѕРІР°РЅРёРё СЃРѕР·РґР°РЅРЅРѕРіРѕ РѕРїРёСЃР°РЅРёРµ РІ СЃРІРѕР№СЃС‚РІРµ DBx.Struct.
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° Р±Р°Р·Р° РґР°РЅРЅС‹С… (РІРѕР·РјРѕР¶РЅРѕ, РїСѓСЃС‚Р°СЏ) РґРѕР»Р¶РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
-    /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
-    /// не вносится не вносится, сообщения не добавляются</param>
-    /// <param name="options">Опции обновления</param>
-    /// <returns>true, если в базу данных были внесены изменения</returns>
+    /// <param name="splash">Р—РґРµСЃСЊ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ PhaseText РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІС‹РїРѕР»РЅРµРЅСЏРјС‹С… РґРµР№СЃС‚РІРёР№</param>
+    /// <param name="errors">РЎСЋРґР° РїРѕРјРµС‰Р°СЋС‚СЃСЏ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЏ Рё РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ. Р•СЃР»Рё РЅРёРєР°РєРёС… РёР·РјРµРЅРµРЅРёР№
+    /// РЅРµ РІРЅРѕСЃРёС‚СЃСЏ РЅРµ РІРЅРѕСЃРёС‚СЃСЏ, СЃРѕРѕР±С‰РµРЅРёСЏ РЅРµ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ</param>
+    /// <param name="options">РћРїС†РёРё РѕР±РЅРѕРІР»РµРЅРёСЏ</param>
+    /// <returns>true, РµСЃР»Рё РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… Р±С‹Р»Рё РІРЅРµСЃРµРЅС‹ РёР·РјРµРЅРµРЅРёСЏ</returns>
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
-      // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
+      // Р”РµР»РµРіРёСЂСѓРµРј РІСЃРµ РґРµР№СЃС‚РІРёСЏ СЃРѕРµРґРёРЅРµРЅРёСЋ, С‚.Рє. РЅСѓР¶РµРЅ РґРѕСЃС‚СѓРї Рє Р·Р°С‰РёС‰РµРЅРЅС‹Рј РјРµС‚РѕРґР°Рј
       using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, false))
       {
-        con.CommandTimeout = 0; // Бесконечное время выполнения
+        con.CommandTimeout = 0; // Р‘РµСЃРєРѕРЅРµС‡РЅРѕРµ РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ
         return con.UpdateDBStruct(splash, errors, options);
       }
     }
 
 
     /// <summary>
-    /// Удаление базы данных, если она существует
+    /// РЈРґР°Р»РµРЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РµСЃР»Рё РѕРЅР° СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
-    /// <returns>True, если существующая база данных была удалена.
-    /// False, если база данных не зарегистрирована</returns>
+    /// <returns>True, РµСЃР»Рё СЃСѓС‰РµСЃС‚РІСѓСЋС‰Р°СЏ Р±Р°Р·Р° РґР°РЅРЅС‹С… Р±С‹Р»Р° СѓРґР°Р»РµРЅР°.
+    /// False, РµСЃР»Рё Р±Р°Р·Р° РґР°РЅРЅС‹С… РЅРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅР°</returns>
     public override bool DropDatabaseIfExists()
     {
       if (!DatabaseExists)
@@ -209,12 +209,12 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Удаляет таблицу данных, если она существует.
-    /// Этот метод должен вызываться до установки свойства DBx.Struct и вызова UpdateStruct().
-    /// Если обновление структуры не предполагается, после последовательности вызовов этого метода,
-    /// должна быть выполнена установка DB.Struct=null, чтобы обновить список таблиц
+    /// РЈРґР°Р»СЏРµС‚ С‚Р°Р±Р»РёС†Сѓ РґР°РЅРЅС‹С…, РµСЃР»Рё РѕРЅР° СЃСѓС‰РµСЃС‚РІСѓРµС‚.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РґРѕ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° DBx.Struct Рё РІС‹Р·РѕРІР° UpdateStruct().
+    /// Р•СЃР»Рё РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ РЅРµ РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, РїРѕСЃР»Рµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РІС‹Р·РѕРІРѕРІ СЌС‚РѕРіРѕ РјРµС‚РѕРґР°,
+    /// РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅР° СѓСЃС‚Р°РЅРѕРІРєР° DB.Struct=null, С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёС‚СЊ СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС†
     /// </summary>
-    /// <param name="tableName">Имя удаляемой таблицы</param>
+    /// <param name="tableName">РРјСЏ СѓРґР°Р»СЏРµРјРѕР№ С‚Р°Р±Р»РёС†С‹</param>
     public override void DropTableIfExists(string tableName)
     {
       using (DBxConBase con = MainEntry.CreateCon())
@@ -232,14 +232,14 @@ namespace FreeLibSet.Data.Npgsql
   }
 
   /// <summary>
-  /// Точка входа для базы данных PostgreSql
+  /// РўРѕС‡РєР° РІС…РѕРґР° РґР»СЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… PostgreSql
   /// </summary>
   public class NpgsqlDBxEntry : DBxEntry
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Защищенный конструктор для основной точки входа
+    /// Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ РѕСЃРЅРѕРІРЅРѕР№ С‚РѕС‡РєРё РІС…РѕРґР°
     /// </summary>
     /// <param name="db"></param>
     /// <param name="connectionStringBuilder"></param>
@@ -251,22 +251,22 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Версия для подключения к существующей базе данных (повторный вход с другой строкой подключения)
+    /// Р’РµСЂСЃРёСЏ РґР»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р±Р°Р·Рµ РґР°РЅРЅС‹С… (РїРѕРІС‚РѕСЂРЅС‹Р№ РІС…РѕРґ СЃ РґСЂСѓРіРѕР№ СЃС‚СЂРѕРєРѕР№ РїРѕРґРєР»СЋС‡РµРЅРёСЏ)
     /// </summary>
-    /// <param name="db">База данных</param>
-    /// <param name="connectionString">Строка подключения</param>
-    /// <param name="permissions">Разрешения</param>
+    /// <param name="db">Р‘Р°Р·Р° РґР°РЅРЅС‹С…</param>
+    /// <param name="connectionString">РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
+    /// <param name="permissions">Р Р°Р·СЂРµС€РµРЅРёСЏ</param>
     public NpgsqlDBxEntry(NpgsqlDBx db, string connectionString, DBxPermissions permissions)
       : this(db, new NpgsqlConnectionStringBuilder(connectionString), permissions)
     {
     }
 
     /// <summary>
-    /// Версия для подключения к существующей базе данных (повторный вход с другой строкой подключения)
+    /// Р’РµСЂСЃРёСЏ РґР»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р±Р°Р·Рµ РґР°РЅРЅС‹С… (РїРѕРІС‚РѕСЂРЅС‹Р№ РІС…РѕРґ СЃ РґСЂСѓРіРѕР№ СЃС‚СЂРѕРєРѕР№ РїРѕРґРєР»СЋС‡РµРЅРёСЏ)
     /// </summary>
-    /// <param name="db">База данных</param>
-    /// <param name="connectionStringBuilder">Строка подключения</param>
-    /// <param name="permissions">Разрешения</param>
+    /// <param name="db">Р‘Р°Р·Р° РґР°РЅРЅС‹С…</param>
+    /// <param name="connectionStringBuilder">РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
+    /// <param name="permissions">Р Р°Р·СЂРµС€РµРЅРёСЏ</param>
     public NpgsqlDBxEntry(NpgsqlDBx db, NpgsqlConnectionStringBuilder connectionStringBuilder, DBxPermissions permissions)
       : base(db, permissions, false)
     {
@@ -276,14 +276,14 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// База данных
+    /// Р‘Р°Р·Р° РґР°РЅРЅС‹С…
     /// </summary>
     public new NpgsqlDBx DB { get { return (NpgsqlDBx)(base.DB); } }
 
-    // Свойство ConnectionString не стоит делать public. Там может быть пароль
+    // РЎРІРѕР№СЃС‚РІРѕ ConnectionString РЅРµ СЃС‚РѕРёС‚ РґРµР»Р°С‚СЊ public. РўР°Рј РјРѕР¶РµС‚ Р±С‹С‚СЊ РїР°СЂРѕР»СЊ
 
     internal NpgsqlConnectionStringBuilder ConnectionStringBuilder { get { return _ConnectionStringBuilder; } }
     private readonly NpgsqlConnectionStringBuilder _ConnectionStringBuilder;
@@ -293,23 +293,23 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создать новое соединение
-    /// Этот метод может вызываться асинхронно
+    /// РЎРѕР·РґР°С‚СЊ РЅРѕРІРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ
     /// </summary>
-    /// <returns>Соединение с базовй данных</returns>
+    /// <returns>РЎРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕРІР№ РґР°РЅРЅС‹С…</returns>
     public override DBxConBase CreateCon()
     {
       return new NpgsqlDBxCon(this, false);
     }
 
     /// <summary>
-    /// Создает копию точки входа с другим набором прав
+    /// РЎРѕР·РґР°РµС‚ РєРѕРїРёСЋ С‚РѕС‡РєРё РІС…РѕРґР° СЃ РґСЂСѓРіРёРј РЅР°Р±РѕСЂРѕРј РїСЂР°РІ
     /// </summary>
-    /// <param name="newPermissions">Требуемые разрешения на доступ к объектам базы данных</param>
-    /// <returns>Новая точка входа</returns>
+    /// <param name="newPermissions">РўСЂРµР±СѓРµРјС‹Рµ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє РѕР±СЉРµРєС‚Р°Рј Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
+    /// <returns>РќРѕРІР°СЏ С‚РѕС‡РєР° РІС…РѕРґР°</returns>
     public override DBxEntry Clone(DBxPermissions newPermissions)
     {
       return new NpgsqlDBxEntry(DB, ConnectionString, newPermissions);
@@ -317,10 +317,10 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Строка подключения без пароля
+    #region РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Р±РµР· РїР°СЂРѕР»СЏ
 
     /// <summary>
-    /// Возвращает строку подключения, не содержащую пароль.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ РїРѕРґРєР»СЋС‡РµРЅРёСЏ, РЅРµ СЃРѕРґРµСЂР¶Р°С‰СѓСЋ РїР°СЂРѕР»СЊ.
     /// </summary>
     public override string UnpasswordedConnectionString
     {
@@ -331,10 +331,10 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Удаление пароля из строки соединения, если он есть
+    /// РЈРґР°Р»РµРЅРёРµ РїР°СЂРѕР»СЏ РёР· СЃС‚СЂРѕРєРё СЃРѕРµРґРёРЅРµРЅРёСЏ, РµСЃР»Рё РѕРЅ РµСЃС‚СЊ
     /// </summary>
-    /// <param name="cs">Строка подключения с паролем</param>
-    /// <returns>Строка подключения без пароля</returns>
+    /// <param name="cs">РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ СЃ РїР°СЂРѕР»РµРј</param>
+    /// <returns>РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Р±РµР· РїР°СЂРѕР»СЏ</returns>
     internal static string GetUnpasswordedConnectionString(string cs)
     {
       try
@@ -349,7 +349,7 @@ namespace FreeLibSet.Data.Npgsql
       }
       catch (Exception e)
       {
-        return "Ошибка получения строки подключения. " + e.Message;
+        return "РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚СЂРѕРєРё РїРѕРґРєР»СЋС‡РµРЅРёСЏ. " + e.Message;
       }
     }
 
@@ -357,11 +357,11 @@ namespace FreeLibSet.Data.Npgsql
   }
 
   /// <summary>
-  /// Соединение с базой данных PostgreSQL
+  /// РЎРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С… PostgreSQL
   /// </summary>
   public class NpgsqlDBxCon : DBxConBase
   {
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     internal NpgsqlDBxCon(NpgsqlDBxEntry entry, bool serverWide)
       : base(entry)
@@ -370,11 +370,11 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Закрывает соедиенение ADO.NET, если оно было открыто, и возвращает его в пул.
-    /// Удаляет соединение из точки входа.
+    /// Р—Р°РєСЂС‹РІР°РµС‚ СЃРѕРµРґРёРµРЅРµРЅРёРµ ADO.NET, РµСЃР»Рё РѕРЅРѕ Р±С‹Р»Рѕ РѕС‚РєСЂС‹С‚Рѕ, Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РµРіРѕ РІ РїСѓР».
+    /// РЈРґР°Р»СЏРµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ РёР· С‚РѕС‡РєРё РІС…РѕРґР°.
     /// </summary>
-    /// <param name="disposing">True, если был вызван метод Dispose().
-    /// False, если вызван деструктор</param>
+    /// <param name="disposing">True, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose().
+    /// False, РµСЃР»Рё РІС‹Р·РІР°РЅ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool disposing)
     {
       if (_Connection != null)
@@ -388,30 +388,30 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Точка входа
+    /// РўРѕС‡РєР° РІС…РѕРґР°
     /// </summary>
     public new NpgsqlDBxEntry Entry { get { return (NpgsqlDBxEntry)(base.Entry); } }
 
     /// <summary>
-    /// База данных
+    /// Р‘Р°Р·Р° РґР°РЅРЅС‹С…
     /// </summary>
     public new NpgsqlDBx DB { get { return (NpgsqlDBx)(base.DB); } }
 
     /// <summary>
-    /// Если true, то подключение используется для работы со списком баз данных. 
+    /// Р•СЃР»Рё true, С‚Рѕ РїРѕРґРєР»СЋС‡РµРЅРёРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃРѕ СЃРїРёСЃРєРѕРј Р±Р°Р· РґР°РЅРЅС‹С…. 
     /// </summary>
     private readonly bool _ServerWide;
 
     #endregion
 
-    #region Соединение
+    #region РЎРѕРµРґРёРЅРµРЅРёРµ
 
     /// <summary>
-    /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ ADO.NET.
+    /// РћР±СЉРµРєС‚ СЃРѕР·РґР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РѕР±СЂР°С‰РµРЅРёРё Рє СЃРІРѕР№СЃС‚РІСѓ
     /// </summary>
     public NpgsqlConnection Connection
     {
@@ -452,8 +452,8 @@ namespace FreeLibSet.Data.Npgsql
     private NpgsqlConnection _Connection;
 
     /// <summary>
-    /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ ADO.NET.
+    /// РћР±СЉРµРєС‚ СЃРѕР·РґР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РѕР±СЂР°С‰РµРЅРёРё Рє СЃРІРѕР№СЃС‚РІСѓ
     /// </summary>
     protected override DbConnection DbConnection { get { return Connection; } }
 
@@ -469,21 +469,21 @@ namespace FreeLibSet.Data.Npgsql
         e.Data["NpgsqlDBx.DatabaseName"] = DB.DatabaseName;
         e.Data["NpgsqlDBxCon.ServerWide"] = _ServerWide.ToString();
         e.Data["NpgsqlDBxCon.ConnectionString"] = NpgsqlDBxEntry.GetUnpasswordedConnectionString(_Connection.ConnectionString);
-        e.Data["NpgsqlDBxCon.Remark"] = @"Если сообщение об ошибке не читается (сердечки вместо букв), настройте сервер на выдачу сообщений на английском языке в файле postgresql.conf. Задайте строку <lc_messages = 'en_EN.UTF-8'>";
+        e.Data["NpgsqlDBxCon.Remark"] = @"Р•СЃР»Рё СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ РЅРµ С‡РёС‚Р°РµС‚СЃСЏ (СЃРµСЂРґРµС‡РєРё РІРјРµСЃС‚Рѕ Р±СѓРєРІ), РЅР°СЃС‚СЂРѕР№С‚Рµ СЃРµСЂРІРµСЂ РЅР° РІС‹РґР°С‡Сѓ СЃРѕРѕР±С‰РµРЅРёР№ РЅР° Р°РЅРіР»РёР№СЃРєРѕРј СЏР·С‹РєРµ РІ С„Р°Р№Р»Рµ postgresql.conf. Р—Р°РґР°Р№С‚Рµ СЃС‚СЂРѕРєСѓ <lc_messages = 'en_EN.UTF-8'>";
         throw;
       }
     }
 
     #endregion
 
-    #region Выполнение SQL-запросов
+    #region Р’С‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃРѕРІ
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего единственное значение
+    /// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РјРµС‚РѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ SLQ-Р·Р°РїСЂРѕСЃР°, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
-    /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="paramValues">Параметры запроса</param>
-    /// <returns>Значение, возвращаемое запросом</returns>
+    /// <param name="cmdText">РўРµРєСЃС‚ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="paramValues">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ, РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·Р°РїСЂРѕСЃРѕРј</returns>
     protected override object DoSQLExecuteScalar(string cmdText, object[] paramValues)
     {
       NpgsqlCommand cmd = new NpgsqlCommand(cmdText, Connection);
@@ -495,10 +495,10 @@ namespace FreeLibSet.Data.Npgsql
 
 
     /// <summary>
-    /// Выполнение SQL-запроса, не возвращающего значения
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃР°, РЅРµ РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ
     /// </summary>
-    /// <param name="cmdText">SQL-оператор</param>
-    /// <param name="paramValues">Значения параметров запроса</param>
+    /// <param name="cmdText">SQL-РѕРїРµСЂР°С‚РѕСЂ</param>
+    /// <param name="paramValues">Р—РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ Р·Р°РїСЂРѕСЃР°</param>
     protected override void DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
       NpgsqlCommand cmd = new NpgsqlCommand(cmdText, Connection);
@@ -509,12 +509,12 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
+    /// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РјРµС‚РѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ SLQ-Р·Р°РїСЂРѕСЃР°, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ С‚Р°Р±Р»РёС†Сѓ РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="tableName">Имя таблицы для возвращаемого DataTable</param>
-    /// <param name="paramValues">Параметры запроса</param>
-    /// <returns>Заполненная таблица</returns>
+    /// <param name="cmdText">РўРµРєСЃС‚ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґР»СЏ РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ DataTable</param>
+    /// <param name="paramValues">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>Р—Р°РїРѕР»РЅРµРЅРЅР°СЏ С‚Р°Р±Р»РёС†Р°</returns>
     protected override DataTable DoSQLExecuteDataTable(string cmdText, string tableName, object[] paramValues)
     {
       NpgsqlCommand cmd = new NpgsqlCommand(cmdText, Connection);
@@ -530,11 +530,11 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего DbDataReader
+    /// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РјРµС‚РѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ SLQ-Р·Р°РїСЂРѕСЃР°, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ DbDataReader
     /// </summary>
-    /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="paramValues">Параметры запроса</param>
-    /// <returns>Объект для чтения данных</returns>
+    /// <param name="cmdText">РўРµРєСЃС‚ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="paramValues">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>РћР±СЉРµРєС‚ РґР»СЏ С‡С‚РµРЅРёСЏ РґР°РЅРЅС‹С…</returns>
     protected override DbDataReader DoSQLExecuteReader(string cmdText, object[] paramValues)
     {
       NpgsqlCommand cmd = new NpgsqlCommand(cmdText, Connection);
@@ -569,15 +569,15 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Переопределенные реализации выполнения запросов
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ СЂРµР°Р»РёР·Р°С†РёРё РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃРѕРІ
 
-    #region Подсчет строк
+    #region РџРѕРґСЃС‡РµС‚ СЃС‚СЂРѕРє
 
     /// <summary>
-    /// Оптимизированная версия запроса проверки, что таблица пуста.
+    /// РћРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅР°СЏ РІРµСЂСЃРёСЏ Р·Р°РїСЂРѕСЃР° РїСЂРѕРІРµСЂРєРё, С‡С‚Рѕ С‚Р°Р±Р»РёС†Р° РїСѓСЃС‚Р°.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Пустая таблица?</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РџСѓСЃС‚Р°СЏ С‚Р°Р±Р»РёС†Р°?</returns>
     public override bool IsTableEmpty(string tableName)
     {
       Validator.CheckTableName(tableName, DBxAccessMode.ReadOnly);
@@ -592,16 +592,16 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Добавление записей
+    #region Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРµР№
 
     /// <summary>
-    /// Добавить строку с автоматическим присвоением идентификатора.
-    /// Полученный идентификатор возвращается и может быть использован для ссылок на строку
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚СЂРѕРєСѓ СЃ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёРј РїСЂРёСЃРІРѕРµРЅРёРµРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°.
+    /// РџРѕР»СѓС‡РµРЅРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Рё РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅ РґР»СЏ СЃСЃС‹Р»РѕРє РЅР° СЃС‚СЂРѕРєСѓ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
-    /// <param name="values">Значения. Порядок значений должен соответствовать списку столбцов</param>
-    /// <returns>Идентификатор добавленной записи</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ. Р’ СЃРїРёСЃРєРµ РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР»СЏ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°</param>
+    /// <param name="values">Р—РЅР°С‡РµРЅРёСЏ. РџРѕСЂСЏРґРѕРє Р·РЅР°С‡РµРЅРёР№ РґРѕР»Р¶РµРЅ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ СЃРїРёСЃРєСѓ СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕР±Р°РІР»РµРЅРЅРѕР№ Р·Р°РїРёСЃРё</returns>
     public override Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       Buffer.Clear();
@@ -611,7 +611,7 @@ namespace FreeLibSet.Data.Npgsql
       string PrimaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
 
       if (columnNames.Count != values.Length)
-        throw new ArgumentException("Число полей не совпадает с числом значений");
+        throw new ArgumentException("Р§РёСЃР»Рѕ РїРѕР»РµР№ РЅРµ СЃРѕРІРїР°РґР°РµС‚ СЃ С‡РёСЃР»РѕРј Р·РЅР°С‡РµРЅРёР№");
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
@@ -633,55 +633,55 @@ namespace FreeLibSet.Data.Npgsql
       id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
 
       if (id <= 0)
-        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + id.ToString());
+        throw new BugException("РџРѕР»СѓС‡РµРЅ РЅРµРїСЂР°РІРёР»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґР»СЏ РґРѕР±Р°РІР»РµРЅРЅРѕР№ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ \"" + tableName + "\" Id=" + id.ToString());
 
       return id;
     }
 
     /// <summary>
-    /// Добавление строки в таблицу.
-    /// Значения могут содержать, а могут и не содержать первичный ключ
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚СЂРѕРєРё РІ С‚Р°Р±Р»РёС†Сѓ.
+    /// Р—РЅР°С‡РµРЅРёСЏ РјРѕРіСѓС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ, Р° РјРѕРіСѓС‚ Рё РЅРµ СЃРѕРґРµСЂР¶Р°С‚СЊ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Имена столбцов</param>
-    /// <param name="values">Значения</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <param name="values">Р—РЅР°С‡РµРЅРёСЏ</param>
     public override void AddRecord(string tableName, DBxColumns columnNames, object[] values)
     {
       base.AddRecord(tableName, columnNames, values);
 
-      // Корректируем последовательности для первичного ключа
+      // РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РґР»СЏ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°
       int seqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, columnNames);
       if (seqColumnIndex >= 0)
         CorrectPrimaryKeySequence(tableName, DataTools.GetInt(values[seqColumnIndex]));
     }
 
     /// <summary>
-    /// Режимы форматирования значения поля при групповом добавлении записей в AddRecords
+    /// Р РµР¶РёРјС‹ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ РїСЂРё РіСЂСѓРїРїРѕРІРѕРј РґРѕР±Р°РІР»РµРЅРёРё Р·Р°РїРёСЃРµР№ РІ AddRecords
     /// </summary>
     private enum CopyFormattingMode
     {
       /// <summary>
-      /// Форматирование значение выполняется методом NpgsqlDBxSqlFormatter.FormatValue()
+      /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ Р·РЅР°С‡РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РјРµС‚РѕРґРѕРј NpgsqlDBxSqlFormatter.FormatValue()
       /// </summary>
       FormatValue,
 
       /// <summary>
-      /// Форматирование выполняется с помощью NpgsqlCopySerializer.AddString()
+      /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ NpgsqlCopySerializer.AddString()
       /// </summary>
       String,
 
       /// <summary>
-      /// Форматирование выполняется с помощью NpgsqlCopySerializer.AddString(), но сначала строка преобразуется
-      /// в Guid, а затем обратно в строку, чтобы убрать возможное форматирование
+      /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ NpgsqlCopySerializer.AddString(), РЅРѕ СЃРЅР°С‡Р°Р»Р° СЃС‚СЂРѕРєР° РїСЂРµРѕР±СЂР°Р·СѓРµС‚СЃСЏ
+      /// РІ Guid, Р° Р·Р°С‚РµРј РѕР±СЂР°С‚РЅРѕ РІ СЃС‚СЂРѕРєСѓ, С‡С‚РѕР±С‹ СѓР±СЂР°С‚СЊ РІРѕР·РјРѕР¶РЅРѕРµ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ
       /// </summary>
       Guid,
     }
 
     /// <summary>
-    /// Групповое добавление записей с использованием NpgsqlCopyIn и NpgsqlCopySerializer
+    /// Р“СЂСѓРїРїРѕРІРѕРµ РґРѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРµР№ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј NpgsqlCopyIn Рё NpgsqlCopySerializer
     /// </summary>
-    /// <param name="tableName">Имя таблицы, в которую добавляются строки</param>
-    /// <param name="table">Исходная таблица</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹, РІ РєРѕС‚РѕСЂСѓСЋ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ СЃС‚СЂРѕРєРё</param>
+    /// <param name="table">РСЃС…РѕРґРЅР°СЏ С‚Р°Р±Р»РёС†Р°</param>
     protected override void DoAddRecords(string tableName, DataTable table)
     {
       if (table.Rows.Count <= 1)
@@ -698,7 +698,7 @@ namespace FreeLibSet.Data.Npgsql
       Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
       DBxTableStruct ts = DB.Struct.Tables[tableName];
 
-      #region Определяем режимы копирования
+      #region РћРїСЂРµРґРµР»СЏРµРј СЂРµР¶РёРјС‹ РєРѕРїРёСЂРѕРІР°РЅРёСЏ
 
       CopyFormattingMode[] Modes = new CopyFormattingMode[columnNames.Count];
 
@@ -721,20 +721,20 @@ namespace FreeLibSet.Data.Npgsql
           case DBxColumnType.Memo: // 18.12.2020
             Modes[i] = CopyFormattingMode.String;
             break;
-          case DBxColumnType.Guid: // 08.10.2019 - для GUID'а не нужно добавлять апострофы
+          case DBxColumnType.Guid: // 08.10.2019 - РґР»СЏ GUID'Р° РЅРµ РЅСѓР¶РЅРѕ РґРѕР±Р°РІР»СЏС‚СЊ Р°РїРѕСЃС‚СЂРѕС„С‹
             Modes[i] = CopyFormattingMode.Guid;
             break;
           default:
-            // Неизвестный формат.
-            // Используем построчное добавление
-            base.DoAddRecords(tableName, table); // исправлено 18.12.2020
+            // РќРµРёР·РІРµСЃС‚РЅС‹Р№ С„РѕСЂРјР°С‚.
+            // РСЃРїРѕР»СЊР·СѓРµРј РїРѕСЃС‚СЂРѕС‡РЅРѕРµ РґРѕР±Р°РІР»РµРЅРёРµ
+            base.DoAddRecords(tableName, table); // РёСЃРїСЂР°РІР»РµРЅРѕ 18.12.2020
             return;
         }
       }
 
       #endregion
 
-      // Образец использования взял из http://stackoverflow.com/questions/11824967/how-to-use-npgsqlcopyin-with-npgsqlcopyserializer
+      // РћР±СЂР°Р·РµС† РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІР·СЏР» РёР· http://stackoverflow.com/questions/11824967/how-to-use-npgsqlcopyin-with-npgsqlcopyserializer
 
       Buffer.Clear();
       Buffer.SB.Append("COPY ");
@@ -764,12 +764,12 @@ namespace FreeLibSet.Data.Npgsql
             {
               case CopyFormattingMode.FormatValue:
                 Buffer.Clear();
-                Buffer.FormatValue(row[i], colDef.ColumnType); // сами форматируем
+                Buffer.FormatValue(row[i], colDef.ColumnType); // СЃР°РјРё С„РѕСЂРјР°С‚РёСЂСѓРµРј
                 serializer.AddString(Buffer.SB.ToString());
                 break;
               case CopyFormattingMode.String:
                 s = DataTools.GetString(row[i]);
-                serializer.AddString(s); // пусть он форматирует
+                serializer.AddString(s); // РїСѓСЃС‚СЊ РѕРЅ С„РѕСЂРјР°С‚РёСЂСѓРµС‚
                 break;
               case CopyFormattingMode.Guid: // 08.10.2019
                 s = DataTools.GetString(row[i]);
@@ -793,27 +793,27 @@ namespace FreeLibSet.Data.Npgsql
         CorrectPrimaryKeySequence(tableName, DataTools.MaxInt(table, columnNames[seqColumnIndex], true) ?? 0);
     }
 
-    #region Корректировка последовательности
+    #region РљРѕСЂСЂРµРєС‚РёСЂРѕРІРєР° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
 
     // 09.06.2017
-    // Проблема.
-    // В отличие от MS SQL Server, числовой первичный ключ реализуется через "последовательность",
-    // которая является самостоятельной сущностью. Если при добавлении записи задается значение
-    // для поля автинкрементного поля, то последовательность "отстанет". При следующем добавлении
-    // записи без указания поля первичного ключа, возникнет ошибка повторения значения.
+    // РџСЂРѕР±Р»РµРјР°.
+    // Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ MS SQL Server, С‡РёСЃР»РѕРІРѕР№ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡ СЂРµР°Р»РёР·СѓРµС‚СЃСЏ С‡РµСЂРµР· "РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ",
+    // РєРѕС‚РѕСЂР°СЏ СЏРІР»СЏРµС‚СЃСЏ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕР№ СЃСѓС‰РЅРѕСЃС‚СЊСЋ. Р•СЃР»Рё РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё Р·Р°РїРёСЃРё Р·Р°РґР°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ
+    // РґР»СЏ РїРѕР»СЏ Р°РІС‚РёРЅРєСЂРµРјРµРЅС‚РЅРѕРіРѕ РїРѕР»СЏ, С‚Рѕ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ "РѕС‚СЃС‚Р°РЅРµС‚". РџСЂРё СЃР»РµРґСѓСЋС‰РµРј РґРѕР±Р°РІР»РµРЅРёРё
+    // Р·Р°РїРёСЃРё Р±РµР· СѓРєР°Р·Р°РЅРёСЏ РїРѕР»СЏ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°, РІРѕР·РЅРёРєРЅРµС‚ РѕС€РёР±РєР° РїРѕРІС‚РѕСЂРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ.
     //
-    // При выполнении AddRecord() и AddRecords() с полем первичного ключа, вызываем встроенную
-    // функцию setval(), чтобы "подтянуть" значение
+    // РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё AddRecord() Рё AddRecords() СЃ РїРѕР»РµРј РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°, РІС‹Р·С‹РІР°РµРј РІСЃС‚СЂРѕРµРЅРЅСѓСЋ
+    // С„СѓРЅРєС†РёСЋ setval(), С‡С‚РѕР±С‹ "РїРѕРґС‚СЏРЅСѓС‚СЊ" Р·РЅР°С‡РµРЅРёРµ
 
     /// <summary>
-    /// Ключ - имя таблицы
-    /// Значение - имя последовательности, используемой полем первичного ключа
+    /// РљР»СЋС‡ - РёРјСЏ С‚Р°Р±Р»РёС†С‹
+    /// Р—РЅР°С‡РµРЅРёРµ - РёРјСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё, РёСЃРїРѕР»СЊР·СѓРµРјРѕР№ РїРѕР»РµРј РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°
     /// </summary>
     private Dictionary<string, string> _TablePKSequenceNames;
 
 
     /// <summary>
-    /// "Подтягивание" идентификатора для последовательности
+    /// "РџРѕРґС‚СЏРіРёРІР°РЅРёРµ" РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РґР»СЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
     /// </summary>
     /// <param name="tableName"></param>
     /// <param name="usedId"></param>
@@ -847,9 +847,9 @@ namespace FreeLibSet.Data.Npgsql
       string primaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
       StringBuilder sb = new StringBuilder();
 
-      // Имя таблицы идет и в апострофах и в кавычках
-      // А имя столбца - только в апострофах
-      // Х.З. почему
+      // РРјСЏ С‚Р°Р±Р»РёС†С‹ РёРґРµС‚ Рё РІ Р°РїРѕСЃС‚СЂРѕС„Р°С… Рё РІ РєР°РІС‹С‡РєР°С…
+      // Рђ РёРјСЏ СЃС‚РѕР»Р±С†Р° - С‚РѕР»СЊРєРѕ РІ Р°РїРѕСЃС‚СЂРѕС„Р°С…
+      // РҐ.Р—. РїРѕС‡РµРјСѓ
       sb.Append("SELECT pg_get_serial_sequence(\'\"");
       sb.Append(tableName);
       sb.Append("\"\', \'");
@@ -865,12 +865,12 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Удаление записей
+    #region РЈРґР°Р»РµРЅРёРµ Р·Р°РїРёСЃРµР№
 
     /// <summary>
-    /// Удаление всех строк таблицы. Выполняет SQL-запрос "TRUNCATE TABLE".
+    /// РЈРґР°Р»РµРЅРёРµ РІСЃРµС… СЃС‚СЂРѕРє С‚Р°Р±Р»РёС†С‹. Р’С‹РїРѕР»РЅСЏРµС‚ SQL-Р·Р°РїСЂРѕСЃ "TRUNCATE TABLE".
     /// </summary>
-    /// <param name="tableName">Имя очищаемой таблицы</param>
+    /// <param name="tableName">РРјСЏ РѕС‡РёС‰Р°РµРјРѕР№ С‚Р°Р±Р»РёС†С‹</param>
     public override void DeleteAll(string tableName)
     {
       Buffer.Clear();
@@ -885,10 +885,10 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Транзакция
+    #region РўСЂР°РЅР·Р°РєС†РёСЏ
 
     /// <summary>
-    /// Текущая транзакция, если был вызов метода TransactionBegin(), или null, если нет активной транзакции
+    /// РўРµРєСѓС‰Р°СЏ С‚СЂР°РЅР·Р°РєС†РёСЏ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РѕРІ РјРµС‚РѕРґР° TransactionBegin(), РёР»Рё null, РµСЃР»Рё РЅРµС‚ Р°РєС‚РёРІРЅРѕР№ С‚СЂР°РЅР·Р°РєС†РёРё
     /// </summary>
     public new NpgsqlTransaction CurrentTransaction
     {
@@ -897,10 +897,10 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Извлечение схемы данных
+    #region РР·РІР»РµС‡РµРЅРёРµ СЃС…РµРјС‹ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Получить полный список таблиц
+    /// РџРѕР»СѓС‡РёС‚СЊ РїРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС†
     /// </summary>
     /// <returns></returns>
     internal protected override string[] GetAllTableNamesFromSchema()
@@ -914,18 +914,18 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Получить реальное описание структуры таблицы
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂРµР°Р»СЊРЅРѕРµ РѕРїРёСЃР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Структура</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РЎС‚СЂСѓРєС‚СѓСЂР°</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
       DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
-      #region Список столбцов, тип, MaxLen, Nullable
+      #region РЎРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ, С‚РёРї, MaxLen, Nullable
 
       DataTable table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, "public", tableName });
-      table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
+      table.DefaultView.Sort = "ordinal_position"; // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РїРѕ РїРѕСЂСЏРґРєСѓ, РёРЅР°С‡Рµ РєР»СЋС‡РµРІРѕРµ РїРѕР»Рµ Р±СѓРґРµС‚ РЅРµ РїРµСЂРІС‹Рј
 
       foreach (DataRowView drv in table.DefaultView)
       {
@@ -968,14 +968,14 @@ namespace FreeLibSet.Data.Npgsql
           case "float":
           case "float4":
             colStr.ColumnType = DBxColumnType.Float;
-            // TODO: Использовать длину поля для разделения float/double
+            // TODO: РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»РёРЅСѓ РїРѕР»СЏ РґР»СЏ СЂР°Р·РґРµР»РµРЅРёСЏ float/double
             colStr.MinValue = Double.MinValue;
             colStr.MaxValue = Double.MaxValue;
             break;
           case "real":
           case "float8":
             colStr.ColumnType = DBxColumnType.Float;
-            // TODO: Использовать длину поля для разделения float/double
+            // TODO: РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»РёРЅСѓ РїРѕР»СЏ РґР»СЏ СЂР°Р·РґРµР»РµРЅРёСЏ float/double
             colStr.MinValue = Single.MinValue;
             colStr.MaxValue = Single.MaxValue;
             break;
@@ -1051,7 +1051,7 @@ namespace FreeLibSet.Data.Npgsql
 
       #endregion
 
-      #region Определение ссылочных полей (ограничения FOREIGN KEY)
+      #region РћРїСЂРµРґРµР»РµРЅРёРµ СЃСЃС‹Р»РѕС‡РЅС‹С… РїРѕР»РµР№ (РѕРіСЂР°РЅРёС‡РµРЅРёСЏ FOREIGN KEY)
 
       //DataTable Table2 = Connection.GetSchema();
       //string[]aaa=DataTools.GetStringsFromField(Table2, "CollectionName");
@@ -1064,7 +1064,7 @@ namespace FreeLibSet.Data.Npgsql
 
       int tableOID = GetTableOID(tableName);
       if (tableOID == 0)
-        throw new BugException("Не удалось получить идентификатор object_id таблицы \"" + tableName + "\"");
+        throw new BugException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ object_id С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"");
 
       Buffer.Clear();
       Buffer.SB.Append(@"SELECT confrelid,confdeltype,conkey FROM pg_catalog.pg_constraint WHERE contype='f' AND conrelid=");
@@ -1075,12 +1075,12 @@ namespace FreeLibSet.Data.Npgsql
         Int32 refTableOID = DataTools.GetInt(row, "confrelid");
         string refTableName = GetTableNameFromOID(refTableOID);
         if (String.IsNullOrEmpty(refTableName))
-          throw new BugException("Не найдено имя для мастер-таблицы с OID=" + refTableOID);
+          throw new BugException("РќРµ РЅР°Р№РґРµРЅРѕ РёРјСЏ РґР»СЏ РјР°СЃС‚РµСЂ-С‚Р°Р±Р»РёС†С‹ СЃ OID=" + refTableOID);
 
         Int16[] detColPoss = (Int16[])(row["conkey"]);
-        // не нужен Int16[] RefColPoss = (Int16[])(Row["confkey"]);
+        // РЅРµ РЅСѓР¶РµРЅ Int16[] RefColPoss = (Int16[])(Row["confkey"]);
         if (detColPoss.Length != 1 /*|| RefColPoss.Length != 1*/)
-          continue; // FOREIGN KEY по нескольким полям не поддерживаются
+          continue; // FOREIGN KEY РїРѕ РЅРµСЃРєРѕР»СЊРєРёРј РїРѕР»СЏРј РЅРµ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ
 
         DBxColumnStruct colStr = tableStr.Columns[detColPoss[0] - 1];
         colStr.MasterTableName = refTableName; // 01.10.2019
@@ -1103,27 +1103,27 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Получение информации
+    #region РџРѕР»СѓС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё
 
     /// <summary>
-    /// Возвращает идентификатор таблицы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Идентификатор OID</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ OID</returns>
     public Int32 GetTableOID(string tableName)
     {
       if (String.IsNullOrEmpty(tableName))
         throw new ArgumentNullException("tableName");
 
-      // Имя таблицы идет в апострофах, а не в кавычках, т.к. это - строка
+      // РРјСЏ С‚Р°Р±Р»РёС†С‹ РёРґРµС‚ РІ Р°РїРѕСЃС‚СЂРѕС„Р°С…, Р° РЅРµ РІ РєР°РІС‹С‡РєР°С…, С‚.Рє. СЌС‚Рѕ - СЃС‚СЂРѕРєР°
       return DataTools.GetInt(SQLExecuteScalar("SELECT oid FROM pg_catalog.pg_class WHERE relname=\'" + tableName + "\' AND relkind=\'r\'"));
     }
 
     /// <summary>
-    /// Возвращает имя таблицы по идентификатору
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С‚Р°Р±Р»РёС†С‹ РїРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ
     /// </summary>
-    /// <param name="oid">Идентификатор OID</param>
-    /// <returns>Имя таблицы</returns>
+    /// <param name="oid">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ OID</param>
+    /// <returns>РРјСЏ С‚Р°Р±Р»РёС†С‹</returns>
     public string GetTableNameFromOID(Int32 oid)
     {
       if (oid == 0)
@@ -1158,28 +1158,28 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Обновление структуры
+    #region РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹
 
-    #region Основной метод UpdateDBStruct
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ UpdateDBStruct
 
     internal bool UpdateDBStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       bool modified = false;
 
-      // Индексы и ограничения.
-      // В отличие от MS SQL Server, требуется, чтобы имена индексов были уникальны в пределах
-      // базы данных, а не в пределах таблицы
-      // В официальной документации рекомендуется давать простым индексам имена "ИмяТаблицы_ИмяПоля_index"
-      // В тоже время, правило нарушается для составных индексов, например "test2_mm_idx".
-      // К тому же, ограничение на 31 символ никто не отменял
+      // РРЅРґРµРєСЃС‹ Рё РѕРіСЂР°РЅРёС‡РµРЅРёСЏ.
+      // Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ MS SQL Server, С‚СЂРµР±СѓРµС‚СЃСЏ, С‡С‚РѕР±С‹ РёРјРµРЅР° РёРЅРґРµРєСЃРѕРІ Р±С‹Р»Рё СѓРЅРёРєР°Р»СЊРЅС‹ РІ РїСЂРµРґРµР»Р°С…
+      // Р±Р°Р·С‹ РґР°РЅРЅС‹С…, Р° РЅРµ РІ РїСЂРµРґРµР»Р°С… С‚Р°Р±Р»РёС†С‹
+      // Р’ РѕС„РёС†РёР°Р»СЊРЅРѕР№ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РґР°РІР°С‚СЊ РїСЂРѕСЃС‚С‹Рј РёРЅРґРµРєСЃР°Рј РёРјРµРЅР° "РРјСЏРўР°Р±Р»РёС†С‹_РРјСЏРџРѕР»СЏ_index"
+      // Р’ С‚РѕР¶Рµ РІСЂРµРјСЏ, РїСЂР°РІРёР»Рѕ РЅР°СЂСѓС€Р°РµС‚СЃСЏ РґР»СЏ СЃРѕСЃС‚Р°РІРЅС‹С… РёРЅРґРµРєСЃРѕРІ, РЅР°РїСЂРёРјРµСЂ "test2_mm_idx".
+      // Рљ С‚РѕРјСѓ Р¶Рµ, РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅР° 31 СЃРёРјРІРѕР» РЅРёРєС‚Рѕ РЅРµ РѕС‚РјРµРЅСЏР»
       //
-      // Поэтому, используем правила:
-      // 1. Для первичных ключей используем стандартное имя ограничения "ИмяТаблицы_pkey".
-      //    Отдельный индекс не создается
-      // 2. Для внешних ключей создаются индексы с произвольными именами, назначаемыми СУБД,
-      //    а поиск выполняем в системной таблице pg_constraitns по имени таблицы и поля
-      // 3. Для индексов используем имена, назначаемые СУБД "ИмяТаблицы_ИмяПоля".
-      //    Свойство DBxIndexDef.IndexName не учитывается
+      // РџРѕСЌС‚РѕРјСѓ, РёСЃРїРѕР»СЊР·СѓРµРј РїСЂР°РІРёР»Р°:
+      // 1. Р”Р»СЏ РїРµСЂРІРёС‡РЅС‹С… РєР»СЋС‡РµР№ РёСЃРїРѕР»СЊР·СѓРµРј СЃС‚Р°РЅРґР°СЂС‚РЅРѕРµ РёРјСЏ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ "РРјСЏРўР°Р±Р»РёС†С‹_pkey".
+      //    РћС‚РґРµР»СЊРЅС‹Р№ РёРЅРґРµРєСЃ РЅРµ СЃРѕР·РґР°РµС‚СЃСЏ
+      // 2. Р”Р»СЏ РІРЅРµС€РЅРёС… РєР»СЋС‡РµР№ СЃРѕР·РґР°СЋС‚СЃСЏ РёРЅРґРµРєСЃС‹ СЃ РїСЂРѕРёР·РІРѕР»СЊРЅС‹РјРё РёРјРµРЅР°РјРё, РЅР°Р·РЅР°С‡Р°РµРјС‹РјРё РЎРЈР‘Р”,
+      //    Р° РїРѕРёСЃРє РІС‹РїРѕР»РЅСЏРµРј РІ СЃРёСЃС‚РµРјРЅРѕР№ С‚Р°Р±Р»РёС†Рµ pg_constraitns РїРѕ РёРјРµРЅРё С‚Р°Р±Р»РёС†С‹ Рё РїРѕР»СЏ
+      // 3. Р”Р»СЏ РёРЅРґРµРєСЃРѕРІ РёСЃРїРѕР»СЊР·СѓРµРј РёРјРµРЅР°, РЅР°Р·РЅР°С‡Р°РµРјС‹Рµ РЎРЈР‘Р” "РРјСЏРўР°Р±Р»РёС†С‹_РРјСЏРџРѕР»СЏ".
+      //    РЎРІРѕР№СЃС‚РІРѕ DBxIndexDef.IndexName РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ
 
       if (UpdateDBStructTables(splash, errors))
         modified = true;
@@ -1200,63 +1200,63 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Добавление таблиц, столбцов и первичных ключей
+    #region Р”РѕР±Р°РІР»РµРЅРёРµ С‚Р°Р±Р»РёС†, СЃС‚РѕР»Р±С†РѕРІ Рё РїРµСЂРІРёС‡РЅС‹С… РєР»СЋС‡РµР№
 
     private bool UpdateDBStructTables(ISplash splash, ErrorMessageList errors)
     {
       bool modified = false;
 
-      #region Извлечение информации из существующей схемы данных
+      #region РР·РІР»РµС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ СЃС…РµРјС‹ РґР°РЅРЅС‹С…
 
       DataTable tableTables = Connection.GetSchema("Tables");
       DataView dvTables = new DataView(tableTables);
       dvTables.Sort = "TABLE_NAME";
 
-      // Столбцы
+      // РЎС‚РѕР»Р±С†С‹
       DataTable tableColumns = Connection.GetSchema("Columns");
       DataView dvColumns = new DataView(tableColumns);
-      dvColumns.Sort = "TABLE_NAME,COLUMN_NAME"; // нужен такой порядок
+      dvColumns.Sort = "TABLE_NAME,COLUMN_NAME"; // РЅСѓР¶РµРЅ С‚Р°РєРѕР№ РїРѕСЂСЏРґРѕРє
 
-      // Данные по индексам 
+      // Р”Р°РЅРЅС‹Рµ РїРѕ РёРЅРґРµРєСЃР°Рј 
       DataTable TableIndexColumns = Connection.GetSchema("IndexColumns");
       DataView dvIndexColumns = new DataView(TableIndexColumns);
       dvIndexColumns.Sort = "TABLE_NAME,INDEX_NAME";
-      //DebugTools.DebugDataView(dvIndexColumns, "Столбцы индексов базы данных "+DB.DisplayName);
+      //DebugTools.DebugDataView(dvIndexColumns, "РЎС‚РѕР»Р±С†С‹ РёРЅРґРµРєСЃРѕРІ Р±Р°Р·С‹ РґР°РЅРЅС‹С… "+DB.DisplayName);
 
       #endregion
 
       splash.PercentMax = DB.Struct.Tables.Count;
-      // Цикл по таблицам
+      // Р¦РёРєР» РїРѕ С‚Р°Р±Р»РёС†Р°Рј
       foreach (DBxTableStruct table in DB.Struct.Tables)
       {
         if (!table.AutoCreate)
           continue;
 
         if (table.Columns.Count == 0)
-          throw new DBxStructException(table, "Не задано ни одного столбца");
+          throw new DBxStructException(table, "РќРµ Р·Р°РґР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°");
         //CheckPrimaryKeyColumn(Table, Table.PrimaryKeyColumns[0]);
 
         if (dvTables.Find(table.TableName) < 0)
         {
-          #region Требуется полное создание таблицы
+          #region РўСЂРµР±СѓРµС‚СЃСЏ РїРѕР»РЅРѕРµ СЃРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
 
-          splash.PhaseText = "Создается таблица \"" + table.TableName + "\"";
+          splash.PhaseText = "РЎРѕР·РґР°РµС‚СЃСЏ С‚Р°Р±Р»РёС†Р° \"" + table.TableName + "\"";
           CreateTable(table);
-          errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
+          errors.AddInfo("РЎРѕР·РґР°РЅР° С‚Р°Р±Р»РёС†Р° \"" + table.TableName + "\"");
           modified = true;
 
           #endregion
         }
         else
         {
-          #region Проверяем правильность первичного ключа
+          #region РџСЂРѕРІРµСЂСЏРµРј РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°
 
           if (CorrectPrimaryKey(table, dvIndexColumns, errors))
             modified = true;
 
           #endregion
 
-          #region Проверяем наличие недостающих полей
+          #region РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… РїРѕР»РµР№
 
           DBxSqlBuffer buffer2 = new DBxSqlBuffer(Buffer.Formatter);
 
@@ -1265,22 +1265,22 @@ namespace FreeLibSet.Data.Npgsql
             int columnRowIndex = dvColumns.Find(new object[] { table.TableName, colDef.ColumnName });
             if (columnRowIndex < 0)
             {
-              // Поля не существует
-              splash.PhaseText = "Добавление поля \"" + colDef.ColumnName + "\"в таблицу \"" + table.TableName + "\"";
+              // РџРѕР»СЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+              splash.PhaseText = "Р”РѕР±Р°РІР»РµРЅРёРµ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Сѓ \"" + table.TableName + "\"";
               Buffer.Clear();
               Buffer.SB.Append("ALTER TABLE ");
               Buffer.FormatTableName(table.TableName);
-              Buffer.SB.Append(" ADD "); // а не ADD COLUMN
+              Buffer.SB.Append(" ADD "); // Р° РЅРµ ADD COLUMN
               AppendColumnDef(/*Table, */colDef, false, true);
               SQLExecuteNonQuery(Buffer.SB.ToString());
-              errors.AddInfo("Создано поле \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName + "\"");
+              errors.AddInfo("РЎРѕР·РґР°РЅРѕ РїРѕР»Рµ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\"");
               modified = true;
             }
             else
             {
-              // Проверяем соответствие поля
+              // РџСЂРѕРІРµСЂСЏРµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РїРѕР»СЏ
               DataRow columnRow = dvColumns[columnRowIndex].Row;
-              // Проверяем соответствие типа столбца объявлению
+              // РџСЂРѕРІРµСЂСЏРµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїР° СЃС‚РѕР»Р±С†Р° РѕР±СЉСЏРІР»РµРЅРёСЋ
               string realType = DataTools.GetString(columnRow, "DATA_TYPE").ToUpperInvariant();
               realType = ReplaceSynonymousPostGreSqlServerType(realType);
               buffer2.Clear();
@@ -1292,14 +1292,14 @@ namespace FreeLibSet.Data.Npgsql
 
               if (realType != wantedType)
               {
-                errors.AddError("Несоответствие типа поля \"" + colDef.ColumnName + "\" таблицы \"" +
-                    table.TableName + "\". Объявление поля типа " + colDef.ColumnType.ToString() +
-                    " предполагает тип " + wantedType +
-                    " в то время как реальный тип поля " + realType);
+                errors.AddError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїР° РїРѕР»СЏ \"" + colDef.ColumnName + "\" С‚Р°Р±Р»РёС†С‹ \"" +
+                    table.TableName + "\". РћР±СЉСЏРІР»РµРЅРёРµ РїРѕР»СЏ С‚РёРїР° " + colDef.ColumnType.ToString() +
+                    " РїСЂРµРґРїРѕР»Р°РіР°РµС‚ С‚РёРї " + wantedType +
+                    " РІ С‚Рѕ РІСЂРµРјСЏ РєР°Рє СЂРµР°Р»СЊРЅС‹Р№ С‚РёРї РїРѕР»СЏ " + realType);
               }
               else
               {
-                #region Проверка длины строкового поля
+                #region РџСЂРѕРІРµСЂРєР° РґР»РёРЅС‹ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ
 
                 if (colDef.ColumnType == DBxColumnType.String)
                 {
@@ -1308,34 +1308,34 @@ namespace FreeLibSet.Data.Npgsql
                   {
                     if (realLen > colDef.MaxLength)
                     {
-                      // !!! Проверка, нельзя ли укоротить поле
-                      errors.AddWarning("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
-                          table.TableName + "\" должно иметь длину " + colDef.MaxLength.ToString() +
-                          " символов, в то время, как реальное поле длиннее:  " + realLen.ToString() + " символов");
+                      // !!! РџСЂРѕРІРµСЂРєР°, РЅРµР»СЊР·СЏ Р»Рё СѓРєРѕСЂРѕС‚РёС‚СЊ РїРѕР»Рµ
+                      errors.AddWarning("РџРѕР»Рµ \"" + colDef.ColumnName + "\" С‚Р°Р±Р»РёС†С‹ \"" +
+                          table.TableName + "\" РґРѕР»Р¶РЅРѕ РёРјРµС‚СЊ РґР»РёРЅСѓ " + colDef.MaxLength.ToString() +
+                          " СЃРёРјРІРѕР»РѕРІ, РІ С‚Рѕ РІСЂРµРјСЏ, РєР°Рє СЂРµР°Р»СЊРЅРѕРµ РїРѕР»Рµ РґР»РёРЅРЅРµРµ:  " + realLen.ToString() + " СЃРёРјРІРѕР»РѕРІ");
                       //DisallowFieldChange = true;
                     }
                     else
                     {
-                      // Лучше пересоздать все индексы
-                      errors.AddInfo("Все существующие индексы таблицы \"" + table.TableName + "\" будут удалены из-за изменения размера поля \"" + colDef.ColumnName + "\"");
+                      // Р›СѓС‡С€Рµ РїРµСЂРµСЃРѕР·РґР°С‚СЊ РІСЃРµ РёРЅРґРµРєСЃС‹
+                      errors.AddInfo("Р’СЃРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РёРЅРґРµРєСЃС‹ С‚Р°Р±Р»РёС†С‹ \"" + table.TableName + "\" Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РёР·-Р·Р° РёР·РјРµРЅРµРЅРёСЏ СЂР°Р·РјРµСЂР° РїРѕР»СЏ \"" + colDef.ColumnName + "\"");
                       if (DeleteAllIndices(table.TableName, splash, errors))
                         modified = true;
 
-                      // Увеличиваем длину поля
-                      splash.PhaseText = "Изменение длины поля \"" + colDef.ColumnName + "\" в таблице \"" + table.TableName + "\"";
+                      // РЈРІРµР»РёС‡РёРІР°РµРј РґР»РёРЅСѓ РїРѕР»СЏ
+                      splash.PhaseText = "РР·РјРµРЅРµРЅРёРµ РґР»РёРЅС‹ РїРѕР»СЏ \"" + colDef.ColumnName + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\"";
                       AlterColumn(table, colDef, true, false);
-                      errors.AddInfo("Длина поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                        "\" увеличена с " + realLen.ToString() + " до " + colDef.MaxLength.ToString() + " символов");
+                      errors.AddInfo("Р”Р»РёРЅР° РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+                        "\" СѓРІРµР»РёС‡РµРЅР° СЃ " + realLen.ToString() + " РґРѕ " + colDef.MaxLength.ToString() + " СЃРёРјРІРѕР»РѕРІ");
                       modified = true;
                     }
                   }
-                } // Строковое поле
+                } // РЎС‚СЂРѕРєРѕРІРѕРµ РїРѕР»Рµ
 
                 #endregion
 
-                #region Проверка Default
+                #region РџСЂРѕРІРµСЂРєР° Default
 
-                // Установка свойства DEFAULT должна выполняться до установки NOT NULL, иначе возникнет ошибка
+                // РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° DEFAULT РґРѕР»Р¶РЅР° РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РґРѕ СѓСЃС‚Р°РЅРѕРІРєРё NOT NULL, РёРЅР°С‡Рµ РІРѕР·РЅРёРєРЅРµС‚ РѕС€РёР±РєР°
 
                 string wantedDefExpr = String.Empty;
                 if (colDef.DefaultExpression != null)
@@ -1346,10 +1346,10 @@ namespace FreeLibSet.Data.Npgsql
                 }
                 string realDefExpr = DataTools.GetString(columnRow, "COLUMN_DEFAULT");
                 if (realDefExpr.StartsWith("nextval(", StringComparison.OrdinalIgnoreCase))
-                  realDefExpr = String.Empty; // иначе изгадим первичный ключ
+                  realDefExpr = String.Empty; // РёРЅР°С‡Рµ РёР·РіР°РґРёРј РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
                 if (realDefExpr != wantedDefExpr)
                 {
-                  // Вседа сначала убираем старое правило, потом добавляем новое
+                  // Р’СЃРµРґР° СЃРЅР°С‡Р°Р»Р° СѓР±РёСЂР°РµРј СЃС‚Р°СЂРѕРµ РїСЂР°РІРёР»Рѕ, РїРѕС‚РѕРј РґРѕР±Р°РІР»СЏРµРј РЅРѕРІРѕРµ
                   if (realDefExpr.Length > 0)
                   {
                     Buffer.Clear();
@@ -1360,8 +1360,8 @@ namespace FreeLibSet.Data.Npgsql
                     Buffer.SB.Append(" DROP DEFAULT");
 
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                        "\" очищен признак DEFAULT");
+                    errors.AddInfo("Р”Р»СЏ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+                        "\" РѕС‡РёС‰РµРЅ РїСЂРёР·РЅР°Рє DEFAULT");
                   }
                   if (wantedDefExpr.Length > 0)
                   {
@@ -1374,17 +1374,17 @@ namespace FreeLibSet.Data.Npgsql
                     Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
                     SQLExecuteNonQuery(Buffer.SB.ToString());
 
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" установлен признак DEFAULT " + wantedDefExpr);
+                    errors.AddInfo("Р”Р»СЏ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+                      "\" СѓСЃС‚Р°РЅРѕРІР»РµРЅ РїСЂРёР·РЅР°Рє DEFAULT " + wantedDefExpr);
                   }
                   modified = true;
                 }
 
                 #endregion
 
-                #region Проверка признака Nullable
+                #region РџСЂРѕРІРµСЂРєР° РїСЂРёР·РЅР°РєР° Nullable
 
-                // Проверяем Nullable
+                // РџСЂРѕРІРµСЂСЏРµРј Nullable
                 string s1 = DataTools.GetString(columnRow, "IS_NULLABLE").ToUpperInvariant();
 
                 bool realNullable;
@@ -1406,12 +1406,12 @@ namespace FreeLibSet.Data.Npgsql
                   if (DeleteAllIndices(table.TableName, splash, errors))
                     modified = true;
 
-                  #region Замена NULL'ов на DEFAULT
+                  #region Р—Р°РјРµРЅР° NULL'РѕРІ РЅР° DEFAULT
 
                   if ((!colDef.Nullable) && colDef.DefaultExpression != null && (!IsTableEmpty(table.TableName)))
                   {
                     //SetValue(Table.TableName, new ValueFilter(Column.ColumnName, null, CompareKind.Equal, Column.ColumnType),Column.ColumnName, Column.Default)
-                    // Заменяем значения NULL на значение по умолчанию
+                    // Р—Р°РјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёСЏ NULL РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
                     Buffer.Clear();
                     Buffer.SB.Append("UPDATE ");
                     Buffer.FormatTableName(table.TableName);
@@ -1423,30 +1423,30 @@ namespace FreeLibSet.Data.Npgsql
                     Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append(" IS NULL");
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" значения NULL заменены на значение по умолчанию");
+                    errors.AddInfo("Р”Р»СЏ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+                      "\" Р·РЅР°С‡РµРЅРёСЏ NULL Р·Р°РјРµРЅРµРЅС‹ РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ");
                   }
 
                   #endregion
 
-                  // Делаем поле NULLABLE
+                  // Р”РµР»Р°РµРј РїРѕР»Рµ NULLABLE
                   AlterColumn(table, colDef, false, true);
-                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                    "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
+                  errors.AddInfo("Р”Р»СЏ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+                    "\" СѓСЃС‚Р°РЅРѕРІР»РµРЅ РїСЂРёР·РЅР°Рє " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
                   modified = true;
                 }
 
                 #endregion
               }
-            } // поле существует
-          } // Цикл по столбцам
+            } // РїРѕР»Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+          } // Р¦РёРєР» РїРѕ СЃС‚РѕР»Р±С†Р°Рј
 
           #endregion
         }
 
-        // Таблица существует
+        // РўР°Р±Р»РёС†Р° СЃСѓС‰РµСЃС‚РІСѓРµС‚
 
-        #region Комментарии
+        #region РљРѕРјРјРµРЅС‚Р°СЂРёРё
 
         SetTableComment(table.TableName, table.Comment);
         for (int i = 0; i < table.Columns.Count; i++)
@@ -1457,7 +1457,7 @@ namespace FreeLibSet.Data.Npgsql
 
         splash.PhaseText = String.Empty;
         splash.IncPercent();
-      } // Цикл по таблицам
+      } // Р¦РёРєР» РїРѕ С‚Р°Р±Р»РёС†Р°Рј
 
       return modified;
     }
@@ -1498,9 +1498,9 @@ namespace FreeLibSet.Data.Npgsql
         {
           case DBxColumnType.Int:
             if (column.MinValue == 0 && column.MaxValue == 0)
-              buffer.SB.Append("SERIAL"); // с автоинкрементом
+              buffer.SB.Append("SERIAL"); // СЃ Р°РІС‚РѕРёРЅРєСЂРµРјРµРЅС‚РѕРј
             else if (column.MinValue >= Int32.MinValue && column.MaxValue <= Int32.MaxValue)
-              buffer.SB.Append("SERIAL"); // с автоинкрементом
+              buffer.SB.Append("SERIAL"); // СЃ Р°РІС‚РѕРёРЅРєСЂРµРјРµРЅС‚РѕРј
             else
               buffer.SB.Append("BIGSERIAL");
             return;
@@ -1509,11 +1509,11 @@ namespace FreeLibSet.Data.Npgsql
       buffer.FormatValueType(column);
     }
 
-    #region Синонимы типы данных
+    #region РЎРёРЅРѕРЅРёРјС‹ С‚РёРїС‹ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Ключ - тип данных, который может возвращать PostGreSQL
-    /// Значение - "основной" тип данных, который мы используем в библиотеке
+    /// РљР»СЋС‡ - С‚РёРї РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ PostGreSQL
+    /// Р—РЅР°С‡РµРЅРёРµ - "РѕСЃРЅРѕРІРЅРѕР№" С‚РёРї РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Р№ РјС‹ РёСЃРїРѕР»СЊР·СѓРµРј РІ Р±РёР±Р»РёРѕС‚РµРєРµ
     /// </summary>
     private static readonly Dictionary<string, string> _SynonymousPostGreSqlServerTypeReplaces =
       CreateSynonymousPostGreSqlServerTypeReplaces();
@@ -1526,7 +1526,7 @@ namespace FreeLibSet.Data.Npgsql
       d.Add("INT8", "BIGINT");
       d.Add("BOOL", "BOOLEAN");
       //d.Add("BPCHAR", "CHARACTER"); // blank-padded char
-      d.Add("BPCHAR", "CHAR"); // исправлено 20.09.2019
+      d.Add("BPCHAR", "CHAR"); // РёСЃРїСЂР°РІР»РµРЅРѕ 20.09.2019
       d.Add("CHARACTER", "CHAR"); // 30.12.2019
       return d;
     }
@@ -1561,7 +1561,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Выполнение ALTER TABLE ALTER COLUMN
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ ALTER TABLE ALTER COLUMN
     /// </summary>
     private void AlterColumn(DBxTableStruct table, DBxColumnStruct column, bool setType, bool setNullable)
     {
@@ -1596,28 +1596,28 @@ namespace FreeLibSet.Data.Npgsql
         case DBxColumnType.Guid:
           break;
         default:
-          throw new DBxStructException(Table, "Первым столбцом таблицы должен быть объявлен первичный ключ. Столбец \"" +
-            Column.ColumnName + "\" имеет недопустимый тип \"" + Column.ColumnType.ToString() + "\"");
+          throw new DBxStructException(Table, "РџРµСЂРІС‹Рј СЃС‚РѕР»Р±С†РѕРј С‚Р°Р±Р»РёС†С‹ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЉСЏРІР»РµРЅ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. РЎС‚РѕР»Р±РµС† \"" +
+            Column.ColumnName + "\" РёРјРµРµС‚ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Р№ С‚РёРї \"" + Column.ColumnType.ToString() + "\"");
       }
 
       if (Column.Nullable)
-        throw new DBxStructException(Table, "Первым столбцом таблицы должен быть объявлен первичный ключ. Столбец \"" +
-          Column.ColumnName + "\" не может быть объявлен как Nullable");
+        throw new DBxStructException(Table, "РџРµСЂРІС‹Рј СЃС‚РѕР»Р±С†РѕРј С‚Р°Р±Р»РёС†С‹ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЉСЏРІР»РµРЅ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. РЎС‚РѕР»Р±РµС† \"" +
+          Column.ColumnName + "\" РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±СЉСЏРІР»РµРЅ РєР°Рє Nullable");
 
     } */
 
     /// <summary>
-    /// Проверяет наличие первичного ключа. Неправильное ограничение первичного ключа удаляется,
-    /// новое ограничение создается
+    /// РџСЂРѕРІРµСЂСЏРµС‚ РЅР°Р»РёС‡РёРµ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°. РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р° СѓРґР°Р»СЏРµС‚СЃСЏ,
+    /// РЅРѕРІРѕРµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ СЃРѕР·РґР°РµС‚СЃСЏ
     /// </summary>
     /// <param name="table"></param>
     /// <param name="dvIndexColumns"></param>
     /// <param name="errors"></param>
-    /// <returns>true, если были внесены изменения</returns>
+    /// <returns>true, РµСЃР»Рё Р±С‹Р»Рё РІРЅРµСЃРµРЅС‹ РёР·РјРµРЅРµРЅРёСЏ</returns>
     private bool CorrectPrimaryKey(DBxTableStruct table, DataView dvIndexColumns, ErrorMessageList errors)
     {
       if (table.PrimaryKey.Count != 1)
-        throw new NotSupportedException("В таблице должен быть первичный ключ из одного поля");
+        throw new NotSupportedException("Р’ С‚Р°Р±Р»РёС†Рµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡ РёР· РѕРґРЅРѕРіРѕ РїРѕР»СЏ");
 
       bool modified = false;
       bool found = false;
@@ -1632,15 +1632,15 @@ namespace FreeLibSet.Data.Npgsql
         else
         {
           // 13.10.2021.
-          // Ограничение может иметь имя в любом регистре.
-          // ALTER TABLE DROP CONSTRAINT требует указания имени ограничения с учетом регистра.
-          // Берем имя, как оно записано в базе данных.
+          // РћРіСЂР°РЅРёС‡РµРЅРёРµ РјРѕР¶РµС‚ РёРјРµС‚СЊ РёРјСЏ РІ Р»СЋР±РѕРј СЂРµРіРёСЃС‚СЂРµ.
+          // ALTER TABLE DROP CONSTRAINT С‚СЂРµР±СѓРµС‚ СѓРєР°Р·Р°РЅРёСЏ РёРјРµРЅРё РѕРіСЂР°РЅРёС‡РµРЅРёСЏ СЃ СѓС‡РµС‚РѕРј СЂРµРіРёСЃС‚СЂР°.
+          // Р‘РµСЂРµРј РёРјСЏ, РєР°Рє РѕРЅРѕ Р·Р°РїРёСЃР°РЅРѕ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
           string pkName2 = DataTools.GetString(drvCol.Row, "INDEX_NAME"); 
 
           //if (IndexName.StartsWith("Index"))
-          //  continue; // составной пользовательский индекс, в который входит поле "Id"
+          //  continue; // СЃРѕСЃС‚Р°РІРЅРѕР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅРґРµРєСЃ, РІ РєРѕС‚РѕСЂС‹Р№ РІС…РѕРґРёС‚ РїРѕР»Рµ "Id"
           SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" DROP CONSTRAINT \"" + pkName2 + "\"");
-          errors.AddInfo("Удалено неправильное ограничение первичного ключа \"" + pkName2 + "\" в таблице \"" + table.TableName + "\"");
+          errors.AddInfo("РЈРґР°Р»РµРЅРѕ РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р° \"" + pkName2 + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\"");
           modified = true;
           break;
         }
@@ -1649,7 +1649,7 @@ namespace FreeLibSet.Data.Npgsql
       if (!found)
       {
         SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" ADD CONSTRAINT \"" + pkName + "\" PRIMARY KEY (\"" + table.PrimaryKey[0] + "\")");
-        errors.AddInfo("Добавлено ограничение первичного ключа \"" + pkName + "\" в таблице \"" + table.TableName + "\"");
+        errors.AddInfo("Р”РѕР±Р°РІР»РµРЅРѕ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р° \"" + pkName + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\"");
         modified = true;
       }
 
@@ -1658,7 +1658,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Комментарии
+    #region РљРѕРјРјРµРЅС‚Р°СЂРёРё
 
     private void SetTableComment(string tableName, string comment)
     {
@@ -1679,7 +1679,7 @@ namespace FreeLibSet.Data.Npgsql
       if (!String.IsNullOrEmpty(comment))
       {
         Buffer.Clear();
-        Buffer.SB.Append("COMMENT ON COLUMN "); // а не ADD COLUMN
+        Buffer.SB.Append("COMMENT ON COLUMN "); // Р° РЅРµ ADD COLUMN
         Buffer.FormatTableName(tableName);
         Buffer.SB.Append(".");
         Buffer.FormatColumnName(columnName);
@@ -1691,33 +1691,33 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Внешние ключи
+    #region Р’РЅРµС€РЅРёРµ РєР»СЋС‡Рё
 
     private bool UpdateDBStructForeignKeys(ISplash splash, ErrorMessageList errors)
     {
       bool modified = false;
 
-      #region Создаем TableForeignKeys
+      #region РЎРѕР·РґР°РµРј TableForeignKeys
 
-      // Внешние ключи можно создавать только после создания всех таблиц
-      // Так нельзя получить столбцы для ограничения
-      //// Данные по внешним ключам
+      // Р’РЅРµС€РЅРёРµ РєР»СЋС‡Рё РјРѕР¶РЅРѕ СЃРѕР·РґР°РІР°С‚СЊ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РІСЃРµС… С‚Р°Р±Р»РёС†
+      // РўР°Рє РЅРµР»СЊР·СЏ РїРѕР»СѓС‡РёС‚СЊ СЃС‚РѕР»Р±С†С‹ РґР»СЏ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ
+      //// Р”Р°РЅРЅС‹Рµ РїРѕ РІРЅРµС€РЅРёРј РєР»СЋС‡Р°Рј
       //DataTable TableForeignKeys = Connection.GetSchema("ForeignKeys");
       //DataView dvForeignKeys = new DataView(TableForeignKeys);
       //dvForeignKeys.Sort = "CONSTRAINT_NAME";
 
-      // Столбцы
+      // РЎС‚РѕР»Р±С†С‹
       DataTable tableColumns = Connection.GetSchema("Columns");
       DataView dvColumns = new DataView(tableColumns);
       dvColumns.Sort = "TABLE_NAME,ORDINAL_POSITION";
 
-      // Используем системную таблицу pg_constraint
-      // 0: conname - имя ограчения (для удаления, если надо будет)
-      // 1: conrelid::regclass - имя таблицы в кавычках
-      // 2: conkey - массив индексов столбцов ссылочных полей (нас интересуют только ограничения из одного элемента)
-      // contype='f' - фильтр по ограничениям внешнего ключа
+      // РСЃРїРѕР»СЊР·СѓРµРј СЃРёСЃС‚РµРјРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ pg_constraint
+      // 0: conname - РёРјСЏ РѕРіСЂР°С‡РµРЅРёСЏ (РґР»СЏ СѓРґР°Р»РµРЅРёСЏ, РµСЃР»Рё РЅР°РґРѕ Р±СѓРґРµС‚)
+      // 1: conrelid::regclass - РёРјСЏ С‚Р°Р±Р»РёС†С‹ РІ РєР°РІС‹С‡РєР°С…
+      // 2: conkey - РјР°СЃСЃРёРІ РёРЅРґРµРєСЃРѕРІ СЃС‚РѕР»Р±С†РѕРІ СЃСЃС‹Р»РѕС‡РЅС‹С… РїРѕР»РµР№ (РЅР°СЃ РёРЅС‚РµСЂРµСЃСѓСЋС‚ С‚РѕР»СЊРєРѕ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РёР· РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°)
+      // contype='f' - С„РёР»СЊС‚СЂ РїРѕ РѕРіСЂР°РЅРёС‡РµРЅРёСЏРј РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р°
       DataTable tablePGC = DoSQLExecuteDataTable(@"SELECT conname, conrelid::regclass, conkey FROM pg_catalog.pg_constraint WHERE contype='f'", "pg_constraint", null);
-      // Собираем руками
+      // РЎРѕР±РёСЂР°РµРј СЂСѓРєР°РјРё
       DataTable tableForeignKeys = new DataTable();
       tableForeignKeys.Columns.Add("CONSTRAINT_NAME", typeof(string));
       tableForeignKeys.Columns.Add("TABLE_NAME", typeof(string));
@@ -1727,15 +1727,15 @@ namespace FreeLibSet.Data.Npgsql
         Array aColIdxs = rowPGC[2] as Array;
         if (aColIdxs == null)
         {
-          errors.AddWarning("В системной таблице \"pg_constraint\" задано ограничение внешнего ключа с неправильным полем \"conkey\"");
+          errors.AddWarning("Р’ СЃРёСЃС‚РµРјРЅРѕР№ С‚Р°Р±Р»РёС†Рµ \"pg_constraint\" Р·Р°РґР°РЅРѕ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р° СЃ РЅРµРїСЂР°РІРёР»СЊРЅС‹Рј РїРѕР»РµРј \"conkey\"");
           continue;
         }
         if (aColIdxs.Length != 1)
-          continue; // явно не наше ограничение
+          continue; // СЏРІРЅРѕ РЅРµ РЅР°С€Рµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ
 
         string constraintName = (string)(rowPGC[0]);
         string tableName = (string)(rowPGC[1]);
-        if (tableName[0] == '\"') // убираем кавычки
+        if (tableName[0] == '\"') // СѓР±РёСЂР°РµРј РєР°РІС‹С‡РєРё
           tableName = tableName.Substring(1, tableName.Length - 2);
 
         object oColIdx = aColIdxs.GetValue(0);
@@ -1743,8 +1743,8 @@ namespace FreeLibSet.Data.Npgsql
         int p = dvColumns.Find(new object[2] { tableName, colIdx });
         if (p < 0)
         {
-          errors.AddWarning("В системной таблице \"pg_constraint\" задано ограничение внешнего ключа для таблицы \"" + tableName + "\" и столюца с индексом " + colIdx.ToString() +
-            ". Для этих таблицы+поле не найдено записи в таблице столбцов. Существующее ограничение не рассматривается, но возможна ошибка повторного добавления ограничения");
+          errors.AddWarning("Р’ СЃРёСЃС‚РµРјРЅРѕР№ С‚Р°Р±Р»РёС†Рµ \"pg_constraint\" Р·Р°РґР°РЅРѕ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р° РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\" Рё СЃС‚РѕР»СЋС†Р° СЃ РёРЅРґРµРєСЃРѕРј " + colIdx.ToString() +
+            ". Р”Р»СЏ СЌС‚РёС… С‚Р°Р±Р»РёС†С‹+РїРѕР»Рµ РЅРµ РЅР°Р№РґРµРЅРѕ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ СЃС‚РѕР»Р±С†РѕРІ. РЎСѓС‰РµСЃС‚РІСѓСЋС‰РµРµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ СЂР°СЃСЃРјР°С‚СЂРёРІР°РµС‚СЃСЏ, РЅРѕ РІРѕР·РјРѕР¶РЅР° РѕС€РёР±РєР° РїРѕРІС‚РѕСЂРЅРѕРіРѕ РґРѕР±Р°РІР»РµРЅРёСЏ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ");
           continue;
         }
         string colName = DataTools.GetString(dvColumns[p].Row, "COLUMN_NAME");
@@ -1758,7 +1758,7 @@ namespace FreeLibSet.Data.Npgsql
 
       #endregion
 
-      splash.PhaseText = "Проверка внешних ключей";
+      splash.PhaseText = "РџСЂРѕРІРµСЂРєР° РІРЅРµС€РЅРёС… РєР»СЋС‡РµР№";
       splash.PercentMax = DB.Struct.Tables.Count;
       foreach (DBxTableStruct table in DB.Struct.Tables)
       {
@@ -1788,8 +1788,8 @@ namespace FreeLibSet.Data.Npgsql
           continue;
         }
 
-        // Создаем внешний ключ
-        splash.PhaseText = "Создание внешнего ключа для таблицы \"" + table.TableName + "\", столбца \"" + column.ColumnName + "\"";
+        // РЎРѕР·РґР°РµРј РІРЅРµС€РЅРёР№ РєР»СЋС‡
+        splash.PhaseText = "РЎРѕР·РґР°РЅРёРµ РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р° РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + table.TableName + "\", СЃС‚РѕР»Р±С†Р° \"" + column.ColumnName + "\"";
 
         Buffer.Clear();
         Buffer.SB.Append("ALTER TABLE ");
@@ -1802,7 +1802,7 @@ namespace FreeLibSet.Data.Npgsql
         Buffer.FormatRefColumnDeleteAction(column.RefType);
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Создан внешний ключ в таблице \"" + table.TableName + "\" для столбца \"" + column.ColumnName + "\"");
+        errors.AddInfo("РЎРѕР·РґР°РЅ РІРЅРµС€РЅРёР№ РєР»СЋС‡ РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\" РґР»СЏ СЃС‚РѕР»Р±С†Р° \"" + column.ColumnName + "\"");
         modified = true;
       }
 
@@ -1811,39 +1811,39 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Индексы
+    #region РРЅРґРµРєСЃС‹
 
     private bool UpdateDBStructIndices(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
-      // Индексы удаляем и создаем отдельно, не пытаясь объединить это с созданием таблицы
+      // РРЅРґРµРєСЃС‹ СѓРґР°Р»СЏРµРј Рё СЃРѕР·РґР°РµРј РѕС‚РґРµР»СЊРЅРѕ, РЅРµ РїС‹С‚Р°СЏСЃСЊ РѕР±СЉРµРґРёРЅРёС‚СЊ СЌС‚Рѕ СЃ СЃРѕР·РґР°РЅРёРµРј С‚Р°Р±Р»РёС†С‹
 
       bool modified = false;
 
-      splash.PhaseText = "Проверка индексов";
+      splash.PhaseText = "РџСЂРѕРІРµСЂРєР° РёРЅРґРµРєСЃРѕРІ";
 
-      #region Загружаем существующие индексы и столбцы
+      #region Р—Р°РіСЂСѓР¶Р°РµРј СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РёРЅРґРµРєСЃС‹ Рё СЃС‚РѕР»Р±С†С‹
 
-      // Индексы тоже лучше создавать не в цикле таблиц, а отдельно, чтобы загрузить системные таблицы один раз
+      // РРЅРґРµРєСЃС‹ С‚РѕР¶Рµ Р»СѓС‡С€Рµ СЃРѕР·РґР°РІР°С‚СЊ РЅРµ РІ С†РёРєР»Рµ С‚Р°Р±Р»РёС†, Р° РѕС‚РґРµР»СЊРЅРѕ, С‡С‚РѕР±С‹ Р·Р°РіСЂСѓР·РёС‚СЊ СЃРёСЃС‚РµРјРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ РѕРґРёРЅ СЂР°Р·
       // 12.05.2017
-      // Использовать NpgsqlConnection.GetSchema() для индексов сложно.
-      // - GetSchema("Indexes") возвращает иногда(?) строки с повторами. Это можно было бы обойти, но:
-      // - GetSchema("IndexColumns") не возвращает порядок столбца в индексе и таблица не отсортирована
-      // Порядок столбцов в индексе важен.
-      // Если в БД есть индекс с теми же полями, что и требуется, но порядок полей отличается,
-      // старый индекс надо удалить, и создать новый
-      // Кроме того, могут быть всякие вычисляемые индексы
-      // Поэтому, делаем все руками, кроме списка столбцов
+      // РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ NpgsqlConnection.GetSchema() РґР»СЏ РёРЅРґРµРєСЃРѕРІ СЃР»РѕР¶РЅРѕ.
+      // - GetSchema("Indexes") РІРѕР·РІСЂР°С‰Р°РµС‚ РёРЅРѕРіРґР°(?) СЃС‚СЂРѕРєРё СЃ РїРѕРІС‚РѕСЂР°РјРё. Р­С‚Рѕ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹ РѕР±РѕР№С‚Рё, РЅРѕ:
+      // - GetSchema("IndexColumns") РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРѕРє СЃС‚РѕР»Р±С†Р° РІ РёРЅРґРµРєСЃРµ Рё С‚Р°Р±Р»РёС†Р° РЅРµ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅР°
+      // РџРѕСЂСЏРґРѕРє СЃС‚РѕР»Р±С†РѕРІ РІ РёРЅРґРµРєСЃРµ РІР°Р¶РµРЅ.
+      // Р•СЃР»Рё РІ Р‘Р” РµСЃС‚СЊ РёРЅРґРµРєСЃ СЃ С‚РµРјРё Р¶Рµ РїРѕР»СЏРјРё, С‡С‚Рѕ Рё С‚СЂРµР±СѓРµС‚СЃСЏ, РЅРѕ РїРѕСЂСЏРґРѕРє РїРѕР»РµР№ РѕС‚Р»РёС‡Р°РµС‚СЃСЏ,
+      // СЃС‚Р°СЂС‹Р№ РёРЅРґРµРєСЃ РЅР°РґРѕ СѓРґР°Р»РёС‚СЊ, Рё СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№
+      // РљСЂРѕРјРµ С‚РѕРіРѕ, РјРѕРіСѓС‚ Р±С‹С‚СЊ РІСЃСЏРєРёРµ РІС‹С‡РёСЃР»СЏРµРјС‹Рµ РёРЅРґРµРєСЃС‹
+      // РџРѕСЌС‚РѕРјСѓ, РґРµР»Р°РµРј РІСЃРµ СЂСѓРєР°РјРё, РєСЂРѕРјРµ СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ
 
       DataTable tableColumns = Connection.GetSchema("Columns");
       DataView dvColumns = new DataView(tableColumns);
-      dvColumns.Sort = "TABLE_NAME,ORDINAL_POSITION"; // нумерация с 1
+      dvColumns.Sort = "TABLE_NAME,ORDINAL_POSITION"; // РЅСѓРјРµСЂР°С†РёСЏ СЃ 1
 
-      // Используем хитрый запрос.
-      // См. исходные тексты Npgsql (модуль NpgsqlSchema.cs, метод GetIndexColumns()) с изменениями
-      // Получаем столбцы
-      // 0 "tablename": - имя таблицы
-      // 1 "indexname" - имя индекса
-      // 2 "indexcolumns" - массив номеров столбцов (нумерация с 1), 0- вычисляемый индекс
+      // РСЃРїРѕР»СЊР·СѓРµРј С…РёС‚СЂС‹Р№ Р·Р°РїСЂРѕСЃ.
+      // РЎРј. РёСЃС…РѕРґРЅС‹Рµ С‚РµРєСЃС‚С‹ Npgsql (РјРѕРґСѓР»СЊ NpgsqlSchema.cs, РјРµС‚РѕРґ GetIndexColumns()) СЃ РёР·РјРµРЅРµРЅРёСЏРјРё
+      // РџРѕР»СѓС‡Р°РµРј СЃС‚РѕР»Р±С†С‹
+      // 0 "tablename": - РёРјСЏ С‚Р°Р±Р»РёС†С‹
+      // 1 "indexname" - РёРјСЏ РёРЅРґРµРєСЃР°
+      // 2 "indexcolumns" - РјР°СЃСЃРёРІ РЅРѕРјРµСЂРѕРІ СЃС‚РѕР»Р±С†РѕРІ (РЅСѓРјРµСЂР°С†РёСЏ СЃ 1), 0- РІС‹С‡РёСЃР»СЏРµРјС‹Р№ РёРЅРґРµРєСЃ
       DataTable tableIdx = DoSQLExecuteDataTable(
 @"SELECT 
     t.relname AS tablename, 
@@ -1861,33 +1861,33 @@ namespace FreeLibSet.Data.Npgsql
 
 , "pg_index", null);
 
-      // в оригинале последний фильтр был "n.nspname not in ('pg_catalog', 'pg_toast')"
-      // добавлен фильтр, чтобы убрать первичный ключ
+      // РІ РѕСЂРёРіРёРЅР°Р»Рµ РїРѕСЃР»РµРґРЅРёР№ С„РёР»СЊС‚СЂ Р±С‹Р» "n.nspname not in ('pg_catalog', 'pg_toast')"
+      // РґРѕР±Р°РІР»РµРЅ С„РёР»СЊС‚СЂ, С‡С‚РѕР±С‹ СѓР±СЂР°С‚СЊ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
 
       #endregion
 
       splash.PercentMax = DB.Struct.Tables.Count;
-      // Цикл по таблицам
+      // Р¦РёРєР» РїРѕ С‚Р°Р±Р»РёС†Р°Рј
       foreach (DBxTableStruct table in DB.Struct.Tables)
       {
         if (!table.AutoCreate)
           continue;
 
-        #region Словарь для поиска нужных индексов
+        #region РЎР»РѕРІР°СЂСЊ РґР»СЏ РїРѕРёСЃРєР° РЅСѓР¶РЅС‹С… РёРЅРґРµРєСЃРѕРІ
 
-        // Создаем словарь "СписокСтолбцовВВерхнемРегистре - НомерИндекса"
+        // РЎРѕР·РґР°РµРј СЃР»РѕРІР°СЂСЊ "РЎРїРёСЃРѕРєРЎС‚РѕР»Р±С†РѕРІР’Р’РµСЂС…РЅРµРјР РµРіРёСЃС‚СЂРµ - РќРѕРјРµСЂРРЅРґРµРєСЃР°"
         Dictionary<string, int> dict = new Dictionary<string, int>(table.Indexes.Count);
         for (int i = 0; i < table.Indexes.Count; i++)
           dict.Add(table.Indexes[i].Columns.AsString.ToUpperInvariant(), i);
 
         #endregion
 
-        #region Просмотр существующих индексов и удаление ненужных
+        #region РџСЂРѕСЃРјРѕС‚СЂ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РёРЅРґРµРєСЃРѕРІ Рё СѓРґР°Р»РµРЅРёРµ РЅРµРЅСѓР¶РЅС‹С…
 
-        // Для каждого описания индекса устанавливается флаг, если такой индекс есть
+        // Р”Р»СЏ РєР°Р¶РґРѕРіРѕ РѕРїРёСЃР°РЅРёСЏ РёРЅРґРµРєСЃР° СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ С„Р»Р°Рі, РµСЃР»Рё С‚Р°РєРѕР№ РёРЅРґРµРєСЃ РµСЃС‚СЊ
         bool[] indexFlags = new bool[table.Indexes.Count];
 
-        // Существующие индексы для текущей таблицы
+        // РЎСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РёРЅРґРµРєСЃС‹ РґР»СЏ С‚РµРєСѓС‰РµР№ С‚Р°Р±Р»РёС†С‹
         tableIdx.DefaultView.RowFilter = new ValueFilter("tablename", table.TableName).ToString();
 
         //object[] a = TableIdx.Rows[1].ItemArray;
@@ -1896,14 +1896,14 @@ namespace FreeLibSet.Data.Npgsql
         {
           string indexName = DataTools.GetString(drvIdx.Row, "indexname");
 
-          // Первичные ключи не проверяем, т.к. их отфильтровали в запросе
+          // РџРµСЂРІРёС‡РЅС‹Рµ РєР»СЋС‡Рё РЅРµ РїСЂРѕРІРµСЂСЏРµРј, С‚.Рє. РёС… РѕС‚С„РёР»СЊС‚СЂРѕРІР°Р»Рё РІ Р·Р°РїСЂРѕСЃРµ
           //if (IndexName.EndsWith("_PKEY", StringComparison.OrdinalIgnoreCase))
           //  continue;
 
-          #region Столбцы существующего индекса
+          #region РЎС‚РѕР»Р±С†С‹ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ РёРЅРґРµРєСЃР°
 
-          // Поле "indexname" имеет противный тип int2vector
-          // Х.З., как с ним правильно работать. Net Framework делает из него строку вида"1 3 5"
+          // РџРѕР»Рµ "indexname" РёРјРµРµС‚ РїСЂРѕС‚РёРІРЅС‹Р№ С‚РёРї int2vector
+          // РҐ.Р—., РєР°Рє СЃ РЅРёРј РїСЂР°РІРёР»СЊРЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ. Net Framework РґРµР»Р°РµС‚ РёР· РЅРµРіРѕ СЃС‚СЂРѕРєСѓ РІРёРґР°"1 3 5"
 
           string sColIdxs = drvIdx.Row[2].ToString();
           string[] aColIdxs = sColIdxs.Split(' ');
@@ -1914,7 +1914,7 @@ namespace FreeLibSet.Data.Npgsql
             int colIdx = int.Parse(aColIdxs[j]);
             if (colIdx == 0)
             {
-              // Индекс с выражением не обрабатываем
+              // РРЅРґРµРєСЃ СЃ РІС‹СЂР°Р¶РµРЅРёРµРј РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј
               colNames = null;
               break;
             }
@@ -1923,7 +1923,7 @@ namespace FreeLibSet.Data.Npgsql
               int p = dvColumns.Find(new object[] { table.TableName, colIdx });
               if (p < 0)
               {
-                errors.AddError("Для индекса \"" + indexName + "\" задан столбец с номером " + colIdx.ToString() + ", которого нет в таблице \"" + table.TableName + "\"");
+                errors.AddError("Р”Р»СЏ РёРЅРґРµРєСЃР° \"" + indexName + "\" Р·Р°РґР°РЅ СЃС‚РѕР»Р±РµС† СЃ РЅРѕРјРµСЂРѕРј " + colIdx.ToString() + ", РєРѕС‚РѕСЂРѕРіРѕ РЅРµС‚ РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\"");
                 colNames = null;
                 break;
               }
@@ -1939,19 +1939,19 @@ namespace FreeLibSet.Data.Npgsql
 
           int indexIdx;
           if (dict.TryGetValue(thisColumns, out indexIdx))
-            indexFlags[indexIdx] = true; // нашли индекс
+            indexFlags[indexIdx] = true; // РЅР°С€Р»Рё РёРЅРґРµРєСЃ
           else if (options.DropUnusedIndices)
           {
-            splash.PhaseText = "Удаление индекса " + indexName;
+            splash.PhaseText = "РЈРґР°Р»РµРЅРёРµ РёРЅРґРµРєСЃР° " + indexName;
             DropIndex(/*Table.TableName, */indexName);
             modified = true;
-            errors.AddInfo("Удален индекс \"" + indexName + "\" в таблице \"" + table.TableName + "\", т.к. он не соответствует объявленному в структуре данных");
+            errors.AddInfo("РЈРґР°Р»РµРЅ РёРЅРґРµРєСЃ \"" + indexName + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\", С‚.Рє. РѕРЅ РЅРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РѕР±СЉСЏРІР»РµРЅРЅРѕРјСѓ РІ СЃС‚СЂСѓРєС‚СѓСЂРµ РґР°РЅРЅС‹С…");
           }
-        } // цикл по существующим индексам
+        } // С†РёРєР» РїРѕ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРј РёРЅРґРµРєСЃР°Рј
 
         #endregion
 
-        #region Создание новых индексов
+        #region РЎРѕР·РґР°РЅРёРµ РЅРѕРІС‹С… РёРЅРґРµРєСЃРѕРІ
 
         for (int i = 0; i < table.Indexes.Count; i++)
         {
@@ -1959,7 +1959,7 @@ namespace FreeLibSet.Data.Npgsql
           {
             CreateIndex(table.TableName, table.Indexes[i].Columns);
             modified = true;
-            errors.AddInfo("Добавлен индекс для таблицы \"" + table.TableName + "\", по полям " + table.Indexes[i].Columns.AsString);
+            errors.AddInfo("Р”РѕР±Р°РІР»РµРЅ РёРЅРґРµРєСЃ РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + table.TableName + "\", РїРѕ РїРѕР»СЏРј " + table.Indexes[i].Columns.AsString);
           }
         }
 
@@ -1983,7 +1983,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Добавление одного индекса
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ РѕРґРЅРѕРіРѕ РёРЅРґРµРєСЃР°
     /// </summary>
     private void CreateIndex(string tableName, DBxColumns columns)
     {
@@ -2011,15 +2011,15 @@ namespace FreeLibSet.Data.Npgsql
       DBStruct.Field FieldDef = TableDef.Fields["DocId"];
       string FKName = "FK_" + TableDef.TableName + "_DocId";
 
-      SetPhaseText("Создание внешнего ключа таблицы \"" + TableDef.TableName + "\"");
+      SetPhaseText("РЎРѕР·РґР°РЅРёРµ РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р° С‚Р°Р±Р»РёС†С‹ \"" + TableDef.TableName + "\"");
 
 #if DEBUG
       if (FieldDef.FieldType != DBStruct.AccDepFieldType.Reference)
-        throw new InvalidOperationException("Поле \"" + FieldDef.FieldName + "\" не является ссылочным");
+        throw new InvalidOperationException("РџРѕР»Рµ \"" + FieldDef.FieldName + "\" РЅРµ СЏРІР»СЏРµС‚СЃСЏ СЃСЃС‹Р»РѕС‡РЅС‹Рј");
 
-      // Если имя Primary таблицы не задано, то возникает ошибка доступа к памяти в OLE DB
+      // Р•СЃР»Рё РёРјСЏ Primary С‚Р°Р±Р»РёС†С‹ РЅРµ Р·Р°РґР°РЅРѕ, С‚Рѕ РІРѕР·РЅРёРєР°РµС‚ РѕС€РёР±РєР° РґРѕСЃС‚СѓРїР° Рє РїР°РјСЏС‚Рё РІ OLE DB
       if (String.IsNullOrEmpty(FieldDef.MasterTableName))
-        throw new InvalidOperationException("Для поля \"" + FieldDef.FieldName + "\" не задана мастер-таблица");
+        throw new InvalidOperationException("Р”Р»СЏ РїРѕР»СЏ \"" + FieldDef.FieldName + "\" РЅРµ Р·Р°РґР°РЅР° РјР°СЃС‚РµСЂ-С‚Р°Р±Р»РёС†Р°");
 #endif
 
       sb.Length = 0;
@@ -2032,15 +2032,15 @@ namespace FreeLibSet.Data.Npgsql
       sb.Append("]");
 
       DB.SQLExecuteNonQuery(sb.ToString());
-      Actions.Add("Создан внешний ключ \"" + FKName + "\" в таблице \"" + TableDef.TableName + "\"");
+      Actions.Add("РЎРѕР·РґР°РЅ РІРЅРµС€РЅРёР№ РєР»СЋС‡ \"" + FKName + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + TableDef.TableName + "\"");
     }
 #endif
 
     private bool DeleteAllIndices(string tableName, ISplash splash, ErrorMessageList errors)
     {
-      // Перебираем все существующие индексы
-      // Один индекс может занимать несколько строк
-      // Создаем список индексов для удаления
+      // РџРµСЂРµР±РёСЂР°РµРј РІСЃРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РёРЅРґРµРєСЃС‹
+      // РћРґРёРЅ РёРЅРґРµРєСЃ РјРѕР¶РµС‚ Р·Р°РЅРёРјР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚СЂРѕРє
+      // РЎРѕР·РґР°РµРј СЃРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ
       List<string> indexNames = null;
 
       DataTable tableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, tableName });
@@ -2050,7 +2050,7 @@ namespace FreeLibSet.Data.Npgsql
         if (indexName.EndsWith("_PKEY", StringComparison.OrdinalIgnoreCase))
           continue;
 
-        // Добавляем индекс в список на удаление
+        // Р”РѕР±Р°РІР»СЏРµРј РёРЅРґРµРєСЃ РІ СЃРїРёСЃРѕРє РЅР° СѓРґР°Р»РµРЅРёРµ
         if (indexNames == null)
           indexNames = new List<string>();
         if (!indexNames.Contains(indexName))
@@ -2060,7 +2060,7 @@ namespace FreeLibSet.Data.Npgsql
       if (indexNames == null)
         return false;
 
-      splash.PhaseText = "Удаление индексов таблицы \"" + tableName + "\"";
+      splash.PhaseText = "РЈРґР°Р»РµРЅРёРµ РёРЅРґРµРєСЃРѕРІ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"";
       for (int i = 0; i < indexNames.Count; i++)
       {
         Buffer.Clear();
@@ -2069,7 +2069,7 @@ namespace FreeLibSet.Data.Npgsql
         Buffer.SB.Append("\"");
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Удален индекс \"" + indexNames[i] + "\" в таблице \"" + tableName + "\"");
+        errors.AddInfo("РЈРґР°Р»РµРЅ РёРЅРґРµРєСЃ \"" + indexNames[i] + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + tableName + "\"");
       }
       return true;
     }
@@ -2081,7 +2081,7 @@ namespace FreeLibSet.Data.Npgsql
 
   internal class NpgsqlDBxManager : DBxManager
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     private NpgsqlDBxManager()
       : base(DBxProviderNames.Npgsql)
@@ -2092,7 +2092,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     public override DBx CreateDBObject(string connectionString)
     {
@@ -2112,7 +2112,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Возвращает ссылку на NpgsqlFactory
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃСЃС‹Р»РєСѓ РЅР° NpgsqlFactory
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {

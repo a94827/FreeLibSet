@@ -1,4 +1,4 @@
-namespace ClientAccDep
+п»їnamespace ClientAccDep
 {
   partial class HieViewLevelEditForm
   {
@@ -69,7 +69,7 @@ namespace ClientAccDep
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -79,7 +79,7 @@ namespace ClientAccDep
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // MainPanel
@@ -109,7 +109,7 @@ namespace ClientAccDep
       this.cbHideExtraSumRows.Name = "cbHideExtraSumRows";
       this.cbHideExtraSumRows.Size = new System.Drawing.Size(316, 17);
       this.cbHideExtraSumRows.TabIndex = 0;
-      this.cbHideExtraSumRows.Text = "Скрывать итоговые строки для уровней с одной строкой";
+      this.cbHideExtraSumRows.Text = "РЎРєСЂС‹РІР°С‚СЊ РёС‚РѕРіРѕРІС‹Рµ СЃС‚СЂРѕРєРё РґР»СЏ СѓСЂРѕРІРЅРµР№ СЃ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРѕР№";
       this.cbHideExtraSumRows.UseVisualStyleBackColor = true;
       // 
       // splitContainer1
@@ -139,7 +139,7 @@ namespace ClientAccDep
       this.groupBox1.Size = new System.Drawing.Size(354, 222);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Настройка наличия и порядка уровней";
+      this.groupBox1.Text = "РќР°СЃС‚СЂРѕР№РєР° РЅР°Р»РёС‡РёСЏ Рё РїРѕСЂСЏРґРєР° СѓСЂРѕРІРЅРµР№";
       // 
       // MainGrid
       // 
@@ -167,7 +167,7 @@ namespace ClientAccDep
       this.groupBox2.Size = new System.Drawing.Size(159, 222);
       this.groupBox2.TabIndex = 0;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Образец";
+      this.groupBox2.Text = "РћР±СЂР°Р·РµС†";
       // 
       // SampleGrid
       // 
@@ -190,7 +190,7 @@ namespace ClientAccDep
       this.MinimizeBox = false;
       this.Name = "HieViewLevelEditForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Уровни иерархии";
+      this.Text = "РЈСЂРѕРІРЅРё РёРµСЂР°СЂС…РёРё";
       this.panel2.ResumeLayout(false);
       this.MainPanel.ResumeLayout(false);
       this.panel3.ResumeLayout(false);

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -10,7 +10,7 @@ namespace ExtDB_tests.Data
   [TestFixture]
   public class DBxColumnListTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_without_args()
@@ -79,7 +79,7 @@ namespace ExtDB_tests.Data
     [TestCase("", "", "")]
     public void Add(string original, string removed, string expected)
     {
-      // Проверяем сразу 3 перегрузки
+      // РџСЂРѕРІРµСЂСЏРµРј СЃСЂР°Р·Сѓ 3 РїРµСЂРµРіСЂСѓР·РєРё
       DBxColumnList sut1 = new DBxColumnList(original);
       sut1.Add(removed);
       Assert.AreEqual(expected, sut1.AsString, "String");
@@ -105,7 +105,7 @@ namespace ExtDB_tests.Data
     [TestCase("", "", "")]
     public void Remove(string original, string removed, string expected)
     {
-      // Проверяем сразу 3 перегрузки
+      // РџСЂРѕРІРµСЂСЏРµРј СЃСЂР°Р·Сѓ 3 РїРµСЂРµРіСЂСѓР·РєРё
       DBxColumnList sut1 = new DBxColumnList(original);
       sut1.Remove(removed);
       Assert.AreEqual(expected, sut1.AsString, "String");

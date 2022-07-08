@@ -1,4 +1,4 @@
-//#define OLD_TOTYPE
+п»ї//#define OLD_TOTYPE
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace ExtTools_tests.DependedValues
   [TestFixture]
   public class DepToolsTests_String
   {
-    #region Строковые функции
+    #region РЎС‚СЂРѕРєРѕРІС‹Рµ С„СѓРЅРєС†РёРё
 
     [TestCase("ABC", 3)]
     [TestCase("", 0)]
@@ -136,7 +136,7 @@ namespace ExtTools_tests.DependedValues
   [TestFixture]
   public class DepToolsTests_DateTime
   {
-    #region Компоненты
+    #region РљРѕРјРїРѕРЅРµРЅС‚С‹
 
     [TestCase(null, 0)]
     [TestCase("20211201", 2021)]
@@ -192,7 +192,7 @@ namespace ExtTools_tests.DependedValues
     }
 
 
-    // [TestCase(null, "Sunday")] // Это значение не является регламентированным
+    // [TestCase(null, "Sunday")] // Р­С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ СЏРІР»СЏРµС‚СЃСЏ СЂРµРіР»Р°РјРµРЅС‚РёСЂРѕРІР°РЅРЅС‹Рј
     [TestCase("20211201", "Wednesday")]
     public void DayOfWeekEx_NDate(string sDate, string sWanted)
     {
@@ -1023,7 +1023,7 @@ namespace ExtTools_tests.DependedValues
       Assert.IsNull(v4.Value, "After set value String.Empty - Nullable<Double>");
       Assert.AreEqual("", v5.Value, "After set value String.Empty - String");
 
-      ((IDepOutput)src).OwnerSetValue("XXX"); // непреобразуемое значение
+      ((IDepOutput)src).OwnerSetValue("XXX"); // РЅРµРїСЂРµРѕР±СЂР°Р·СѓРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ
       Assert.AreEqual(0, v1.Value, "After set value to wrong text - Int32");
       Assert.AreEqual(0.0, v2.Value, "After set value to wrong text - Double");
       Assert.IsNull(v3.Value, "After set value value to wrong text  - Nullable<Int32>");
@@ -1033,7 +1033,7 @@ namespace ExtTools_tests.DependedValues
       ((IDepOutput)src).OwnerSetValue(null);
       Assert.AreEqual(0, v1.Value, "After set value null - Int32");
       Assert.AreEqual(0.0, v2.Value, "After set value null - Double");
-      Assert.IsNull(v3.Value, "After set value null - Nullable<Ште32>");
+      Assert.IsNull(v3.Value, "After set value null - Nullable<РЁС‚Рµ32>");
       Assert.IsNull(v4.Value, "After set value null - Nullable<Double>");
       Assert.IsNull(v5.Value, "After set value null - String");
     }

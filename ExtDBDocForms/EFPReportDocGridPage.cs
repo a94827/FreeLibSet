@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,18 +11,18 @@ using System.Windows.Forms;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Страница отчета, содержащая таблицу со списком документов одного вида
+  /// РЎС‚СЂР°РЅРёС†Р° РѕС‚С‡РµС‚Р°, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ С‚Р°Р±Р»РёС†Сѓ СЃРѕ СЃРїРёСЃРєРѕРј РґРѕРєСѓРјРµРЅС‚РѕРІ РѕРґРЅРѕРіРѕ РІРёРґР°
   /// </summary>
   public class EFPReportDocGridPage : EFPReportDBxGridPage /* 06.07.2021 */
   {
-    // TODO: 06.07.2021. Пока не знаю как быть со свойством DataSource. Его установка, вероятно, будет несовместима с возможностью выбора конфигурации
+    // TODO: 06.07.2021. РџРѕРєР° РЅРµ Р·РЅР°СЋ РєР°Рє Р±С‹С‚СЊ СЃРѕ СЃРІРѕР№СЃС‚РІРѕРј DataSource. Р•РіРѕ СѓСЃС‚Р°РЅРѕРІРєР°, РІРµСЂРѕСЏС‚РЅРѕ, Р±СѓРґРµС‚ РЅРµСЃРѕРІРјРµСЃС‚РёРјР° СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РІС‹Р±РѕСЂР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает страницу отчета
+    /// РЎРѕР·РґР°РµС‚ СЃС‚СЂР°РЅРёС†Сѓ РѕС‚С‡РµС‚Р°
     /// </summary>
-    /// <param name="docTypeUI">Интерфейс для вида документа</param>
+    /// <param name="docTypeUI">РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚Р°</param>
     public EFPReportDocGridPage(DocTypeUI docTypeUI)
       : base(docTypeUI.UI)
     {
@@ -35,16 +35,16 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс для вида документа
+    /// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
     private DocTypeUI _DocTypeUI;
 
     /// <summary>
-    /// Альтернативный метод присоединения источника данных.
+    /// РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹Р№ РјРµС‚РѕРґ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЏ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С….
     /// </summary>
     public IdList FixedDocIds
     {
@@ -63,10 +63,10 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Табличный просмотр
+    #region РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ
 
     /// <summary>
-    /// Провайдер табличного просмотра
+    /// РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public new EFPDocGridView ControlProvider
     {
@@ -74,24 +74,24 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает EFPDocGridView                 
+    /// РЎРѕР·РґР°РµС‚ EFPDocGridView                 
     /// </summary>
-    /// <param name="control">Табличный просмотр Windows Forms</param>
-    /// <returns>Провайдер управляющего элемента</returns>
+    /// <param name="control">РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ Windows Forms</param>
+    /// <returns>РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</returns>
     protected override EFPDataGridView DoCreateControlProvider(DataGridView control)
     {
       EFPDocGridView res = new EFPDocGridView(BaseProvider, control, _DocTypeUI);
       res.Filters = new GridFilters();
       res.CommandItems.CanEditFilters = false; // 19.10.2015
       // 06.07.2021
-      // Можно задавать порядок сортировки
+      // РњРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё
       //Res.UseGridProducerOrders = false;
       //Res.CustomOrderAllowed = false; // 05.07.2021
       return res;
     }
 
     /// <summary>
-    /// Устанавливает свойство EFPDocGridView.FixedDocIds
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ EFPDocGridView.FixedDocIds
     /// </summary>
     protected override void InitData()
     {

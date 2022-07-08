@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,49 +13,49 @@ using FreeLibSet.Data;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 
-// Блоки диалога для выбора документов и поддокументов
+// Р‘Р»РѕРєРё РґРёР°Р»РѕРіР° РґР»СЏ РІС‹Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ
 
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Режимы выбора документов и поддокументов в диалогах DocSelectDialog и SubDocSelectDialog 
+  /// Р РµР¶РёРјС‹ РІС‹Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ РІ РґРёР°Р»РѕРіР°С… DocSelectDialog Рё SubDocSelectDialog 
   /// </summary>
   public enum DocSelectionMode
   {
     /// <summary>
-    /// Разрешается выбор только одного документа или поддокумента.
-    /// Этот режим задан по умолчанию
+    /// Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РІС‹Р±РѕСЂ С‚РѕР»СЊРєРѕ РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°.
+    /// Р­С‚РѕС‚ СЂРµР¶РёРј Р·Р°РґР°РЅ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
     Single,
 
     /// <summary>
-    /// Выбор нескольких документов или поддокументов выделением нескольких строк мышью или клавиши Shift/Control+стрелочки.
-    /// Этот режим удобен, только если есть простая возможность выводить диалог выбора несколько раз подряд.
+    /// Р’С‹Р±РѕСЂ РЅРµСЃРєРѕР»СЊРєРёС… РґРѕРєСѓРјРµРЅС‚РѕРІ РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ РІС‹РґРµР»РµРЅРёРµРј РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚СЂРѕРє РјС‹С€СЊСЋ РёР»Рё РєР»Р°РІРёС€Рё Shift/Control+СЃС‚СЂРµР»РѕС‡РєРё.
+    /// Р­С‚РѕС‚ СЂРµР¶РёРј СѓРґРѕР±РµРЅ, С‚РѕР»СЊРєРѕ РµСЃР»Рё РµСЃС‚СЊ РїСЂРѕСЃС‚Р°СЏ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РІС‹РІРѕРґРёС‚СЊ РґРёР°Р»РѕРі РІС‹Р±РѕСЂР° РЅРµСЃРєРѕР»СЊРєРѕ СЂР°Р· РїРѕРґСЂСЏРґ.
     /// </summary>
     MultiSelect,
 
     /// <summary>
-    /// Выбор с помощью флажков
+    /// Р’С‹Р±РѕСЂ СЃ РїРѕРјРѕС‰СЊСЋ С„Р»Р°Р¶РєРѕРІ
     /// </summary>
     MultiCheckBoxes,
 
     /// <summary>
-    /// Показывается список с выбранными документами. В него можно добавлять документы из полного списка.
+    /// РџРѕРєР°Р·С‹РІР°РµС‚СЃСЏ СЃРїРёСЃРѕРє СЃ РІС‹Р±СЂР°РЅРЅС‹РјРё РґРѕРєСѓРјРµРЅС‚Р°РјРё. Р’ РЅРµРіРѕ РјРѕР¶РЅРѕ РґРѕР±Р°РІР»СЏС‚СЊ РґРѕРєСѓРјРµРЅС‚С‹ РёР· РїРѕР»РЅРѕРіРѕ СЃРїРёСЃРєР°.
     /// </summary>
     MultiList
   }
 
   /// <summary>
-  /// Диалог выбора одного или нескольких документов заданного вида
+  /// Р”РёР°Р»РѕРі РІС‹Р±РѕСЂР° РѕРґРЅРѕРіРѕ РёР»Рё РЅРµСЃРєРѕР»СЊРєРёС… РґРѕРєСѓРјРµРЅС‚РѕРІ Р·Р°РґР°РЅРЅРѕРіРѕ РІРёРґР°
   /// </summary>
   public sealed class DocSelectDialog
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает диалог со значениями по умолчанию
+    /// РЎРѕР·РґР°РµС‚ РґРёР°Р»РѕРі СЃРѕ Р·РЅР°С‡РµРЅРёСЏРјРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
-    /// <param name="docTypeUI">Интерфейс для вида документа. Ссылка должна быть задана</param>
+    /// <param name="docTypeUI">РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚Р°. РЎСЃС‹Р»РєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р·Р°РґР°РЅР°</param>
     public DocSelectDialog(DocTypeUI docTypeUI)
     {
       if (docTypeUI == null)
@@ -72,19 +72,19 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс для доступа к документам.
-    /// Задается в конструкторе.
-    /// Не может быть null
+    /// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
     private DocTypeUI _DocTypeUI;
 
     /// <summary>
-    /// Режим выбора документа Single, MultiSelect, MultiCheckBoxes, MultiList.
-    /// По умолчанию - Single
+    /// Р РµР¶РёРј РІС‹Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚Р° Single, MultiSelect, MultiCheckBoxes, MultiList.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Single
     /// </summary>
     public DocSelectionMode SelectionMode
     {
@@ -107,8 +107,8 @@ namespace FreeLibSet.Forms.Docs
     private DocSelectionMode _SelectionMode;
 
     /// <summary>
-    /// Альтернативное значение для свойства SelectionMode.
-    /// Содержит true, если разрешен выбор нескольких документов
+    /// РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЃРІРѕР№СЃС‚РІР° SelectionMode.
+    /// РЎРѕРґРµСЂР¶РёС‚ true, РµСЃР»Рё СЂР°Р·СЂРµС€РµРЅ РІС‹Р±РѕСЂ РЅРµСЃРєРѕР»СЊРєРёС… РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public bool MultiSelect
     {
@@ -117,7 +117,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификатор выбранного документа при MultiSelect=false
+    /// Р’С…РѕРґ-РІС‹С…РѕРґ. РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РїСЂРё MultiSelect=false
     /// </summary>
     public Int32 DocId
     {
@@ -138,7 +138,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификаторы выбранных документов при MultiSelect=true.
+    /// Р’С…РѕРґ-РІС‹С…РѕРґ. РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РІС‹Р±СЂР°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ РїСЂРё MultiSelect=true.
     /// </summary>
     public Int32[] DocIds
     {
@@ -154,8 +154,8 @@ namespace FreeLibSet.Forms.Docs
     private Int32[] _DocIds;
 
     /// <summary>
-    /// Заголовок блока диалога.
-    /// По умолчанию: "Выбор документа XXX" или "Выбор документов XXX" при MultiSelect=true
+    /// Р—Р°РіРѕР»РѕРІРѕРє Р±Р»РѕРєР° РґРёР°Р»РѕРіР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ: "Р’С‹Р±РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° XXX" РёР»Рё "Р’С‹Р±РѕСЂ РґРѕРєСѓРјРµРЅС‚РѕРІ XXX" РїСЂРё MultiSelect=true
     /// </summary>
     public string Title
     {
@@ -164,9 +164,9 @@ namespace FreeLibSet.Forms.Docs
         if (_Title == null)
         {
           if (MultiSelect)
-            return "Выбор документов \"" + DocTypeUI.DocType.PluralTitle + "\"";
+            return "Р’С‹Р±РѕСЂ РґРѕРєСѓРјРµРЅС‚РѕРІ \"" + DocTypeUI.DocType.PluralTitle + "\"";
           else
-            return "Выбор документа \"" + DocTypeUI.DocType.SingularTitle + "\"";
+            return "Р’С‹Р±РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° \"" + DocTypeUI.DocType.SingularTitle + "\"";
         }
         else
           return _Title;
@@ -176,25 +176,25 @@ namespace FreeLibSet.Forms.Docs
     private string _Title;
 
     /// <summary>
-    /// Определяет наличие в диалоге кнопки "Нет", чтобы можно было установить DocId=0.
-    /// По умолчанию - false;
+    /// РћРїСЂРµРґРµР»СЏРµС‚ РЅР°Р»РёС‡РёРµ РІ РґРёР°Р»РѕРіРµ РєРЅРѕРїРєРё "РќРµС‚", С‡С‚РѕР±С‹ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ DocId=0.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false;
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
     private bool _CanBeEmpty;
 
     /// <summary>
-    /// Набор фиксированных фильтров табличного просмотра.
-    /// Значение null (по умолчанию) приводит к использованию текущего набора
-    /// установленных пользователем фильтров.
-    /// Действует только при FixedDocIds=null.
+    /// РќР°Р±РѕСЂ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С… С„РёР»СЊС‚СЂРѕРІ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// Р—РЅР°С‡РµРЅРёРµ null (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ) РїСЂРёРІРѕРґРёС‚ Рє РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЋ С‚РµРєСѓС‰РµРіРѕ РЅР°Р±РѕСЂР°
+    /// СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј С„РёР»СЊС‚СЂРѕРІ.
+    /// Р”РµР№СЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ РїСЂРё FixedDocIds=null.
     /// </summary>
     public GridFilters Filters { get { return _Filters; } set { _Filters = value; } }
     private GridFilters _Filters;
 
     /// <summary>
-    /// Массив фиксированных идентификаторов для выбора.
-    /// Если null (по умолчанию), то выбор осуществляется с помощью формы DocTableViewForm, включая табличку фильтров.
-    /// Если свойство установлено, то выбор осуществляется с помощью упрощенной формы
+    /// РњР°СЃСЃРёРІ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С… РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґР»СЏ РІС‹Р±РѕСЂР°.
+    /// Р•СЃР»Рё null (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РІС‹Р±РѕСЂ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ С„РѕСЂРјС‹ DocTableViewForm, РІРєР»СЋС‡Р°СЏ С‚Р°Р±Р»РёС‡РєСѓ С„РёР»СЊС‚СЂРѕРІ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РІС‹Р±РѕСЂ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ СѓРїСЂРѕС‰РµРЅРЅРѕР№ С„РѕСЂРјС‹
     /// </summary>
     public IdList FixedDocIds
     {
@@ -204,19 +204,19 @@ namespace FreeLibSet.Forms.Docs
     private IdList _FixedDocIds;
 
     /// <summary>
-    /// Внешний объект, определяющий начальные значения при создании документа внутри этого диалога.
-    /// Если задан, то должен определять все значения, чтобы документ прошел условия фильтров, если заданы фильтры в свойстве Filters,
-    /// т.к. сами фильтры не используются для установки значений.
-    /// По умолчанию - null.
-    /// Действует только при FixedDocIds=null.
+    /// Р’РЅРµС€РЅРёР№ РѕР±СЉРµРєС‚, РѕРїСЂРµРґРµР»СЏСЋС‰РёР№ РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїСЂРё СЃРѕР·РґР°РЅРёРё РґРѕРєСѓРјРµРЅС‚Р° РІРЅСѓС‚СЂРё СЌС‚РѕРіРѕ РґРёР°Р»РѕРіР°.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅ, С‚Рѕ РґРѕР»Р¶РµРЅ РѕРїСЂРµРґРµР»СЏС‚СЊ РІСЃРµ Р·РЅР°С‡РµРЅРёСЏ, С‡С‚РѕР±С‹ РґРѕРєСѓРјРµРЅС‚ РїСЂРѕС€РµР» СѓСЃР»РѕРІРёСЏ С„РёР»СЊС‚СЂРѕРІ, РµСЃР»Рё Р·Р°РґР°РЅС‹ С„РёР»СЊС‚СЂС‹ РІ СЃРІРѕР№СЃС‚РІРµ Filters,
+    /// С‚.Рє. СЃР°РјРё С„РёР»СЊС‚СЂС‹ РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёР№.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - null.
+    /// Р”РµР№СЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ РїСЂРё FixedDocIds=null.
     /// </summary>
     public DocumentViewHandler EditorCaller { get { return _EditorCaller; } set { _EditorCaller = value; } }
     private DocumentViewHandler _EditorCaller;
 
     /// <summary>
-    /// Позиция вывода блока диалога.
-    /// Может либо меняться существующий объект, либо быть передана ссылка на новый объкт EFPDialogPosition.
-    /// Используется в комбоблоках
+    /// РџРѕР·РёС†РёСЏ РІС‹РІРѕРґР° Р±Р»РѕРєР° РґРёР°Р»РѕРіР°.
+    /// РњРѕР¶РµС‚ Р»РёР±Рѕ РјРµРЅСЏС‚СЊСЃСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РѕР±СЉРµРєС‚, Р»РёР±Рѕ Р±С‹С‚СЊ РїРµСЂРµРґР°РЅР° СЃСЃС‹Р»РєР° РЅР° РЅРѕРІС‹Р№ РѕР±СЉРєС‚ EFPDialogPosition.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РєРѕРјР±РѕР±Р»РѕРєР°С…
     /// </summary>
     public EFPDialogPosition DialogPosition
     {
@@ -231,10 +231,10 @@ namespace FreeLibSet.Forms.Docs
     }
     private EFPDialogPosition _DialogPosition;
 
-    // Пока не уверен, что надо
+    // РџРѕРєР° РЅРµ СѓРІРµСЂРµРЅ, С‡С‚Рѕ РЅР°РґРѕ
     /*
     /// <summary>
-    /// Имя фиксированной настройки табличного про
+    /// РРјСЏ С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕ
     /// </summary>
     public string DefaultGridConfigName { get { return _DefaultGridConfigName; } set { _DefaultGridConfigName = value; } }
     private string _DefaultGridConfigName;
@@ -248,13 +248,13 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Вывод блока диалога
+    #region Р’С‹РІРѕРґ Р±Р»РѕРєР° РґРёР°Р»РѕРіР°
 
-    #region Основной метод ShowDialog()
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ ShowDialog()
 
     /// <summary>
-    /// Выводит блок диалога.
-    /// Возвращает Ok, если пользователь сделал выбор, в том числе нажал кнопку "Нет"
+    /// Р’С‹РІРѕРґРёС‚ Р±Р»РѕРє РґРёР°Р»РѕРіР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Ok, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРґРµР»Р°Р» РІС‹Р±РѕСЂ, РІ С‚РѕРј С‡РёСЃР»Рµ РЅР°Р¶Р°Р» РєРЅРѕРїРєСѓ "РќРµС‚"
     /// </summary>
     /// <returns></returns>
     public DialogResult ShowDialog()
@@ -274,7 +274,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Обычный диалог с DocTableViewForm
+    #region РћР±С‹С‡РЅС‹Р№ РґРёР°Р»РѕРі СЃ DocTableViewForm
 
     private DialogResult ShowDialogNormal()
     {
@@ -294,9 +294,9 @@ namespace FreeLibSet.Forms.Docs
         catch (Exception e)
         {
           if (MultiSelect)
-            EFPApp.ShowException(e, "Не удалось установить выбранные документы \"" + DocTypeUI.DocType.PluralTitle + "\"");
+            EFPApp.ShowException(e, "РќРµ СѓРґР°Р»РѕСЃСЊ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ \"" + DocTypeUI.DocType.PluralTitle + "\"");
           else
-            EFPApp.ShowException(e, "Не удалось установить выбранный документ \"" + DocTypeUI.DocType.SingularTitle + "\" с DocId=" + DocId.ToString());
+            EFPApp.ShowException(e, "РќРµ СѓРґР°Р»РѕСЃСЊ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚ \"" + DocTypeUI.DocType.SingularTitle + "\" СЃ DocId=" + DocId.ToString());
         }
         form.ExternalFilters = Filters;
         form.ExternalEditorCaller = EditorCaller;
@@ -345,7 +345,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Диалог с текстовым представлением документов EFPDocSelTextGridView
+    #region Р”РёР°Р»РѕРі СЃ С‚РµРєСЃС‚РѕРІС‹Рј РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµРј РґРѕРєСѓРјРµРЅС‚РѕРІ EFPDocSelTextGridView
 
     private DialogResult ShowDialogMultiList()
     {
@@ -377,7 +377,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Диалог выбора из фиксированного списка
+    #region Р”РёР°Р»РѕРі РІС‹Р±РѕСЂР° РёР· С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕРіРѕ СЃРїРёСЃРєР°
 
     private DialogResult ShowDialogFixedIds()
     {
@@ -403,7 +403,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось установить выбранный документ \"" + DocTypeUI.DocType.SingularTitle + "\" с DocId=" + DocId.ToString());
+          EFPApp.ShowException(e, "РќРµ СѓРґР°Р»РѕСЃСЊ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚ \"" + DocTypeUI.DocType.SingularTitle + "\" СЃ DocId=" + DocId.ToString());
         }
 
         switch (EFPApp.ShowDialog(form, false, DialogPosition))
@@ -430,21 +430,21 @@ namespace FreeLibSet.Forms.Docs
       if (MultiSelect)
       {
         if (gh.SelectedRowCount == 0)
-          args.SetError("Документы должны быть выбраны");
+          args.SetError("Р”РѕРєСѓРјРµРЅС‚С‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅС‹");
       }
       else
       {
         if (gh.CurrentId == 0)
-          args.SetError("Документ должен быть выбран");
+          args.SetError("Р”РѕРєСѓРјРµРЅС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ");
       }
     }
 
     #endregion
 
-    #region Диалог выбора группы
+    #region Р”РёР°Р»РѕРі РІС‹Р±РѕСЂР° РіСЂСѓРїРїС‹
 
     /// <summary>
-    /// Возвращает true, если можно использовать диалог выбора группы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґРёР°Р»РѕРі РІС‹Р±РѕСЂР° РіСЂСѓРїРїС‹
     /// </summary>
     /// <returns></returns>
     private bool CanBeUsedGroupDialog()
@@ -454,7 +454,7 @@ namespace FreeLibSet.Forms.Docs
       if (SelectionMode != DocSelectionMode.MultiSelect)
         return false;
       if (DocIds.Length > 0)
-        return false; // ?? может быть, можно выбрать группу
+        return false; // ?? РјРѕР¶РµС‚ Р±С‹С‚СЊ, РјРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РіСЂСѓРїРїСѓ
       if (_Filters != null)
       {
         if (_Filters.Count != 0)
@@ -484,17 +484,17 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
   /// <summary>
-  /// Диалог выбора одного или нескольких поддокументов заданного вида
+  /// Р”РёР°Р»РѕРі РІС‹Р±РѕСЂР° РѕРґРЅРѕРіРѕ РёР»Рё РЅРµСЃРєРѕР»СЊРєРёС… РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Р·Р°РґР°РЅРЅРѕРіРѕ РІРёРґР°
   /// </summary>
   public sealed class SubDocSelectDialog
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает диалог со значениями по умолчанию
+    /// РЎРѕР·РґР°РµС‚ РґРёР°Р»РѕРі СЃРѕ Р·РЅР°С‡РµРЅРёСЏРјРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
-    /// <param name="subDocTypeUI">Интерфейс для вида поддокумента. Ссылка должна быть задана</param>
-    /// <param name="subDocs">Список поддокументов, из которых можно выбирать. Ссылка должна быть задана</param>
+    /// <param name="subDocTypeUI">РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РІРёРґР° РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°. РЎСЃС‹Р»РєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р·Р°РґР°РЅР°</param>
+    /// <param name="subDocs">РЎРїРёСЃРѕРє РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ, РёР· РєРѕС‚РѕСЂС‹С… РјРѕР¶РЅРѕ РІС‹Р±РёСЂР°С‚СЊ. РЎСЃС‹Р»РєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р·Р°РґР°РЅР°</param>
     public SubDocSelectDialog(SubDocTypeUI subDocTypeUI, DBxMultiSubDocs subDocs)
     {
       if (subDocTypeUI == null)
@@ -502,7 +502,7 @@ namespace FreeLibSet.Forms.Docs
       if (subDocs == null)
         throw new ArgumentNullException("subDocs");
       //if (!Object.ReferenceEquals(subDocTypeUI.SubDocType, subDocs.SubDocType))
-      //  throw new ArgumentException("SubDocTypeUI и SubDocs относятся к разным объектам SubDocType", "subDocs");
+      //  throw new ArgumentException("SubDocTypeUI Рё SubDocs РѕС‚РЅРѕСЃСЏС‚СЃСЏ Рє СЂР°Р·РЅС‹Рј РѕР±СЉРµРєС‚Р°Рј SubDocType", "subDocs");
 
       _SubDocTypeUI = subDocTypeUI;
       _SubDocs = subDocs;
@@ -514,28 +514,28 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс для доступа к документам.
-    /// Задается в конструкторе.
-    /// Не может быть null
+    /// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocTypeUI; } }
     private SubDocTypeUI _SubDocTypeUI;
 
     /// <summary>
-    /// Список поддокументов, из которых можно выбирать.
-    /// Задается в конструкторе.
-    /// Не может быть null
+    /// РЎРїРёСЃРѕРє РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ, РёР· РєРѕС‚РѕСЂС‹С… РјРѕР¶РЅРѕ РІС‹Р±РёСЂР°С‚СЊ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
     private DBxMultiSubDocs _SubDocs;
 
     /// <summary>
-    /// Режим выбора документа Single, MultiSelect или MultiCheckBoxes.
-    /// Режим MultiList не поддерживается
-    /// По умолчанию - Single.
+    /// Р РµР¶РёРј РІС‹Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚Р° Single, MultiSelect РёР»Рё MultiCheckBoxes.
+    /// Р РµР¶РёРј MultiList РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Single.
     /// </summary>
     public DocSelectionMode SelectionMode
     {
@@ -557,8 +557,8 @@ namespace FreeLibSet.Forms.Docs
     private DocSelectionMode _SelectionMode;
 
     /// <summary>
-    /// Альтернативное значение для свойства SelectionMode.
-    /// Содержит true, если разрешен выбор нескольких документов
+    /// РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЃРІРѕР№СЃС‚РІР° SelectionMode.
+    /// РЎРѕРґРµСЂР¶РёС‚ true, РµСЃР»Рё СЂР°Р·СЂРµС€РµРЅ РІС‹Р±РѕСЂ РЅРµСЃРєРѕР»СЊРєРёС… РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public bool MultiSelect
     {
@@ -567,7 +567,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификатор выбранного поддокумента при MultiSelect=false
+    /// Р’С…РѕРґ-РІС‹С…РѕРґ. РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° РїСЂРё MultiSelect=false
     /// </summary>
     public Int32 SubDocId
     {
@@ -588,7 +588,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификаторы выбранных документов при MultiSelect=true.
+    /// Р’С…РѕРґ-РІС‹С…РѕРґ. РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РІС‹Р±СЂР°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ РїСЂРё MultiSelect=true.
     /// </summary>
     public Int32[] SubDocIds
     {
@@ -604,8 +604,8 @@ namespace FreeLibSet.Forms.Docs
     private Int32[] _SubDocIds;
 
     /// <summary>
-    /// Заголовок блока диалога.
-    /// По умолчанию: "Выбор поддокумента XXX" или "Выбор поддокументов XXX" при MultiSelect=true
+    /// Р—Р°РіРѕР»РѕРІРѕРє Р±Р»РѕРєР° РґРёР°Р»РѕРіР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ: "Р’С‹Р±РѕСЂ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° XXX" РёР»Рё "Р’С‹Р±РѕСЂ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ XXX" РїСЂРё MultiSelect=true
     /// </summary>
     public string Title
     {
@@ -614,9 +614,9 @@ namespace FreeLibSet.Forms.Docs
         if (_Title == null)
         {
           if (MultiSelect)
-            return "Выбор поддокументов \"" + SubDocTypeUI.SubDocType.PluralTitle + "\"";
+            return "Р’С‹Р±РѕСЂ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ \"" + SubDocTypeUI.SubDocType.PluralTitle + "\"";
           else
-            return "Выбор поддокумента \"" + SubDocTypeUI.SubDocType.SingularTitle + "\"";
+            return "Р’С‹Р±РѕСЂ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° \"" + SubDocTypeUI.SubDocType.SingularTitle + "\"";
         }
         else
           return _Title;
@@ -626,25 +626,25 @@ namespace FreeLibSet.Forms.Docs
     private string _Title;
 
     /// <summary>
-    /// Определяет наличие в диалоге кнопки "Нет", чтобы можно было установить SubDocId=0.
-    /// По умолчанию - false;
+    /// РћРїСЂРµРґРµР»СЏРµС‚ РЅР°Р»РёС‡РёРµ РІ РґРёР°Р»РѕРіРµ РєРЅРѕРїРєРё "РќРµС‚", С‡С‚РѕР±С‹ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ SubDocId=0.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false;
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
     private bool _CanBeEmpty;
 
     ///// <summary>
-    ///// Набор фиксированных фильтров табличного просмотра.
-    ///// Значение null (по умолчанию) приводит к использованию текущего набора
-    ///// установленных пользователем фильтров.
-    ///// Действует только при FixedDocIds=null.
+    ///// РќР°Р±РѕСЂ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С… С„РёР»СЊС‚СЂРѕРІ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    ///// Р—РЅР°С‡РµРЅРёРµ null (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ) РїСЂРёРІРѕРґРёС‚ Рє РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЋ С‚РµРєСѓС‰РµРіРѕ РЅР°Р±РѕСЂР°
+    ///// СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј С„РёР»СЊС‚СЂРѕРІ.
+    ///// Р”РµР№СЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ РїСЂРё FixedDocIds=null.
     ///// </summary>
     //public GridFilters Filters { get { return _Filters; } set { _Filters = value; } }
     //private GridFilters _Filters;
 
     ///// <summary>
-    ///// Массив фиксированных идентификаторов для выбора.
-    ///// Если null (по умолчанию), то выбор осуществляется с помощью формы DocTableViewForm, включая табличку фильтров.
-    ///// Если свойство установлено, то выбор осуществляется с помощью упрощенной формы
+    ///// РњР°СЃСЃРёРІ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С… РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґР»СЏ РІС‹Р±РѕСЂР°.
+    ///// Р•СЃР»Рё null (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РІС‹Р±РѕСЂ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ С„РѕСЂРјС‹ DocTableViewForm, РІРєР»СЋС‡Р°СЏ С‚Р°Р±Р»РёС‡РєСѓ С„РёР»СЊС‚СЂРѕРІ.
+    ///// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РІС‹Р±РѕСЂ РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ СѓРїСЂРѕС‰РµРЅРЅРѕР№ С„РѕСЂРјС‹
     ///// </summary>
     //public IdList FixedDocIds
     //{
@@ -654,9 +654,9 @@ namespace FreeLibSet.Forms.Docs
     //private IdList _FixedDocIds;
 
     /// <summary>
-    /// Позиция вывода блока диалога.
-    /// Может либо меняться существующий объект, либо быть передана ссылка на новый объкт EFPDialogPosition.
-    /// Используется в комбоблоках
+    /// РџРѕР·РёС†РёСЏ РІС‹РІРѕРґР° Р±Р»РѕРєР° РґРёР°Р»РѕРіР°.
+    /// РњРѕР¶РµС‚ Р»РёР±Рѕ РјРµРЅСЏС‚СЊСЃСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РѕР±СЉРµРєС‚, Р»РёР±Рѕ Р±С‹С‚СЊ РїРµСЂРµРґР°РЅР° СЃСЃС‹Р»РєР° РЅР° РЅРѕРІС‹Р№ РѕР±СЉРєС‚ EFPDialogPosition.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РєРѕРјР±РѕР±Р»РѕРєР°С…
     /// </summary>
     public EFPDialogPosition DialogPosition
     {
@@ -673,11 +673,11 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Вывод блока диалога
+    #region Р’С‹РІРѕРґ Р±Р»РѕРєР° РґРёР°Р»РѕРіР°
 
     /// <summary>
-    /// Выводит блок диалога.
-    /// Возвращает Ok, если пользователь сделал выбор, в том числе нажал кнопку "Нет"
+    /// Р’С‹РІРѕРґРёС‚ Р±Р»РѕРє РґРёР°Р»РѕРіР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Ok, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРґРµР»Р°Р» РІС‹Р±РѕСЂ, РІ С‚РѕРј С‡РёСЃР»Рµ РЅР°Р¶Р°Р» РєРЅРѕРїРєСѓ "РќРµС‚"
     /// </summary>
     /// <returns></returns>
     public DialogResult ShowDialog()
@@ -697,9 +697,9 @@ namespace FreeLibSet.Forms.Docs
         catch (Exception e)
         {
           if (MultiSelect)
-            EFPApp.ShowException(e, "Не удалось установить выбранные поддокументы \"" + SubDocTypeUI.SubDocType.PluralTitle + "\"");
+            EFPApp.ShowException(e, "РќРµ СѓРґР°Р»РѕСЃСЊ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹ \"" + SubDocTypeUI.SubDocType.PluralTitle + "\"");
           else
-            EFPApp.ShowException(e, "Не удалось установить выбранный поддокумент \"" + SubDocTypeUI.SubDocType.SingularTitle + "\" с SubDocId=" + SubDocId.ToString());
+            EFPApp.ShowException(e, "РќРµ СѓРґР°Р»РѕСЃСЊ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Р№ РїРѕРґРґРѕРєСѓРјРµРЅС‚ \"" + SubDocTypeUI.SubDocType.SingularTitle + "\" СЃ SubDocId=" + SubDocId.ToString());
         }
         //Form.ExternalFilters = Filters;
 

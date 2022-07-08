@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.Collections
   [TestFixture]
   public class ArrayIndexerTests
   {
-    #region Основные методы
+    #region РћСЃРЅРѕРІРЅС‹Рµ РјРµС‚РѕРґС‹
 
     [Test]
     public void Constructor_simple()
@@ -88,13 +88,13 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Внешний сравниватель
+    #region Р’РЅРµС€РЅРёР№ СЃСЂР°РІРЅРёРІР°С‚РµР»СЊ
 
-    #region Тестовый класс и компаратор
+    #region РўРµСЃС‚РѕРІС‹Р№ РєР»Р°СЃСЃ Рё РєРѕРјРїР°СЂР°С‚РѕСЂ
 
     private class TestObject
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public TestObject(int value)
       {
@@ -103,7 +103,7 @@ namespace ExtTools_tests.Collections
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public int Value { get { return _Value; } }
       private int _Value;

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -10,7 +10,7 @@ namespace ExtTools_tests.Calendar
   public class MonthDayTests
   {
     /// <summary>
-    /// Номер дня в году для 8 марта
+    /// РќРѕРјРµСЂ РґРЅСЏ РІ РіРѕРґСѓ РґР»СЏ 8 РјР°СЂС‚Р°
     /// </summary>
     const int March8Day = 31 + 28 + 8;
     const int February28Day = 31 + 28;
@@ -37,9 +37,9 @@ namespace ExtTools_tests.Calendar
 
     private void DoTestConstructor(MonthDay sut)
     {
-      // Здесь проверяем установленные свойства поштучно.
-      // Не пытаемся использовать Assert.AreEquals(CreateMonthDay("0308"), sut),
-      // вдруг операция сравнения неправильно работает
+      // Р—РґРµСЃСЊ РїСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР° РїРѕС€С‚СѓС‡РЅРѕ.
+      // РќРµ РїС‹С‚Р°РµРјСЃСЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Assert.AreEquals(CreateMonthDay("0308"), sut),
+      // РІРґСЂСѓРі РѕРїРµСЂР°С†РёСЏ СЃСЂР°РІРЅРµРЅРёСЏ РЅРµРїСЂР°РІРёР»СЊРЅРѕ СЂР°Р±РѕС‚Р°РµС‚
 
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
       Assert.AreEqual(March8Day, sut.DayOfYear, "DayOfYear");

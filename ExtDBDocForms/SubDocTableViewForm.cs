@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -18,16 +18,16 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Форма для просмотра или выбора поддокументов.
-  /// Содержит табличный просмотр, иерархический просмотр (если поддерживается видом поддокументов)
-  /// и кнопки (в режиме выбора)
+  /// Р¤РѕСЂРјР° РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РёР»Рё РІС‹Р±РѕСЂР° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ.
+  /// РЎРѕРґРµСЂР¶РёС‚ С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ, РёРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РїСЂРѕСЃРјРѕС‚СЂ (РµСЃР»Рё РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РІРёРґРѕРј РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ)
+  /// Рё РєРЅРѕРїРєРё (РІ СЂРµР¶РёРјРµ РІС‹Р±РѕСЂР°)
   /// </summary>
   public partial class SubDocTableViewForm : Form
   {
-    #region Конструктор и Disposing
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Disposing
 
     /// <summary>
-    /// Конструктор используется в EFPSubDocTableView, когда требуется перетащить контроли на родительскую панель
+    /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ EFPSubDocTableView, РєРѕРіРґР° С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµС‚Р°С‰РёС‚СЊ РєРѕРЅС‚СЂРѕР»Рё РЅР° СЂРѕРґРёС‚РµР»СЊСЃРєСѓСЋ РїР°РЅРµР»СЊ
     /// </summary>
     internal SubDocTableViewForm()
     {
@@ -35,11 +35,11 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает форму
+    /// РЎРѕР·РґР°РµС‚ С„РѕСЂРјСѓ
     /// </summary>
-    /// <param name="subDocTypeUI">Интерфейс пользователя для доступа к поддокументам</param>
-    /// <param name="mode">Режим просмотра или выбора</param>
-    /// <param name="subDocs">Список поддокументов</param>
+    /// <param name="subDocTypeUI">РРЅС‚РµСЂС„РµР№СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°Рј</param>
+    /// <param name="mode">Р РµР¶РёРј РїСЂРѕСЃРјРѕС‚СЂР° РёР»Рё РІС‹Р±РѕСЂР°</param>
+    /// <param name="subDocs">РЎРїРёСЃРѕРє РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     public SubDocTableViewForm(SubDocTypeUI subDocTypeUI, DocTableViewMode mode, DBxMultiSubDocs subDocs)
     {
       InitializeComponent();
@@ -57,72 +57,72 @@ namespace FreeLibSet.Forms.Docs
 
       _FormProvider.ConfigSectionName = SubDocTypeName;
 
-      _ViewProvider.SaveFormConfig = false; // сами делаем, т.к. требуется запись от корневого тега формы
+      _ViewProvider.SaveFormConfig = false; // СЃР°РјРё РґРµР»Р°РµРј, С‚.Рє. С‚СЂРµР±СѓРµС‚СЃСЏ Р·Р°РїРёСЃСЊ РѕС‚ РєРѕСЂРЅРµРІРѕРіРѕ С‚РµРіР° С„РѕСЂРјС‹
       _FormProvider.ConfigHandler.Sources.Add(new FormConfigurable(this));
     }
 
     /// <summary>
-    /// Обработчик закрытия формы
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РєСЂС‹С‚РёСЏ С„РѕСЂРјС‹
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected override void OnFormClosing(FormClosingEventArgs args)
     {
-      _FormProvider.ConfigHandler.Changed[EFPConfigCategories.Form] = true; // может быть, не всегда
+      _FormProvider.ConfigHandler.Changed[EFPConfigCategories.Form] = true; // РјРѕР¶РµС‚ Р±С‹С‚СЊ, РЅРµ РІСЃРµРіРґР°
 
       base.OnFormClosing(args);
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Основной управляющий элемент
+    /// РћСЃРЅРѕРІРЅРѕР№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚
     /// </summary>
     public EFPSubDocTableView ViewProvider { get { return _ViewProvider; } }
     private EFPSubDocTableView _ViewProvider;
 
     /// <summary>
-    /// Обработчик формы
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє С„РѕСЂРјС‹
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
     private EFPFormProvider _FormProvider;
 
     /// <summary>
-    /// Иерархический просмотр. Если для вида поддокумента не определено поле ParentId, 
-    /// содержит значение null
+    /// РРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РїСЂРѕСЃРјРѕС‚СЂ. Р•СЃР»Рё РґР»СЏ РІРёРґР° РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ РїРѕР»Рµ ParentId, 
+    /// СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёРµ null
     /// </summary>
     public EFPSubDocTreeView SubDocTreeView { get { return ViewProvider.SubDocTreeView; } }
 
     /// <summary>
-    /// Основной табличный просмотр документов
+    /// РћСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public EFPSubDocGridView SubDocGridView { get { return ViewProvider.SubDocGridView; } }
 
     /// <summary>
-    /// Табличка фильтров (управляется основным просмотром DocView)
+    /// РўР°Р±Р»РёС‡РєР° С„РёР»СЊС‚СЂРѕРІ (СѓРїСЂР°РІР»СЏРµС‚СЃСЏ РѕСЃРЅРѕРІРЅС‹Рј РїСЂРѕСЃРјРѕС‚СЂРѕРј DocView)
     /// </summary>
     public EFPGridFilterGridView FilterView { get { return ViewProvider.FilterView; } }
 
     /// <summary>
-    /// Интерфейс пользователя для доступа к поддокументам
+    /// РРЅС‚РµСЂС„РµР№СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°Рј
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return ViewProvider.SubDocTypeUI; } }
 
     /// <summary>
-    /// Интерфейс пользователя для доступа к поддокументам
+    /// РРЅС‚РµСЂС„РµР№СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°Рј
     /// </summary>
     public string SubDocTypeName { get { return ViewProvider.SubDocTypeName; } }
 
     /// <summary>
-    /// Режим работы формы
-    /// Не все режимы реализованы
+    /// Р РµР¶РёРј СЂР°Р±РѕС‚С‹ С„РѕСЂРјС‹
+    /// РќРµ РІСЃРµ СЂРµР¶РёРјС‹ СЂРµР°Р»РёР·РѕРІР°РЅС‹
     /// </summary>
     public DocTableViewMode Mode { get { return ViewProvider.Mode; } }
 
     /// <summary>
-    /// Действительно в режиме выбора 
-    /// Если установлено в true, то доступна кнопка "Нет"
+    /// Р”РµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ РІ СЂРµР¶РёРјРµ РІС‹Р±РѕСЂР° 
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ РґРѕСЃС‚СѓРїРЅР° РєРЅРѕРїРєР° "РќРµС‚"
     /// </summary>
     public bool CanBeEmpty
     {
@@ -135,8 +135,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
-    /// будут использованы эти фильтры. Пользователь не может их редактировать
+    /// Р•СЃР»Рё СЌС‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РІРјРµСЃС‚Рѕ С„РёР»СЊС‚СЂРѕРІ, РІС‹Р±РёСЂР°РµРјС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј,
+    /// Р±СѓРґСѓС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅС‹ СЌС‚Рё С„РёР»СЊС‚СЂС‹. РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РјРѕР¶РµС‚ РёС… СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ
     /// </summary>
     public GridFilters ExternalFilters
     {
@@ -145,7 +145,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выбор активная вкладка формы, когда вид поддокумента поддерживает иерархический просмотр в дереве
+    /// Р’С‹Р±РѕСЂ Р°РєС‚РёРІРЅР°СЏ РІРєР»Р°РґРєР° С„РѕСЂРјС‹, РєРѕРіРґР° РІРёРґ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РёРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РїСЂРѕСЃРјРѕС‚СЂ РІ РґРµСЂРµРІРµ
     /// </summary>
     public DocViewFormActiveTab ActiveTab
     {
@@ -155,7 +155,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификатор текущего документа
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РµРєСѓС‰РµРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
     public Int32 CurrentSubDocId
     {
@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификаторы выбранных документов
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РІС‹Р±СЂР°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public Int32[] SelectedSubDocIds
     {
@@ -174,7 +174,7 @@ namespace FreeLibSet.Forms.Docs
     }
     #endregion
 
-    #region Обработчики кнопок
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РєРЅРѕРїРѕРє
 
 #if XXX
     private void FormOKButton_Click(object sender, EventArgs args)
@@ -207,50 +207,50 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Обработчики формы
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё С„РѕСЂРјС‹
 
     /// <summary>
-    /// Обработчик события активации формы
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Р°РєС‚РёРІР°С†РёРё С„РѕСЂРјС‹
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected override void OnActivated(EventArgs args)
     {
       base.OnActivated(args);
 
       try
       {
-        // Тут у меня несчастье. Если засунуть вызовы ActiveControl и Select() в
-        // другое место, то появляются глюки. Например, если сделать в VisibleChanged
-        // (при VisibleEx=true), то первый раз нормально, а после повторной активации
-        // формы фокус сбрасывается на дерево иерархии.
-        // Если сделать в конструкторе (как было бы логично), то еще хуже: при активации
-        // формы после закрытия другой, она "пружинит" и делает активной другую форму
-        // Юзер просто одуреет от такого интерфейса.
+        // РўСѓС‚ Сѓ РјРµРЅСЏ РЅРµСЃС‡Р°СЃС‚СЊРµ. Р•СЃР»Рё Р·Р°СЃСѓРЅСѓС‚СЊ РІС‹Р·РѕРІС‹ ActiveControl Рё Select() РІ
+        // РґСЂСѓРіРѕРµ РјРµСЃС‚Рѕ, С‚Рѕ РїРѕСЏРІР»СЏСЋС‚СЃСЏ РіР»СЋРєРё. РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё СЃРґРµР»Р°С‚СЊ РІ VisibleChanged
+        // (РїСЂРё VisibleEx=true), С‚Рѕ РїРµСЂРІС‹Р№ СЂР°Р· РЅРѕСЂРјР°Р»СЊРЅРѕ, Р° РїРѕСЃР»Рµ РїРѕРІС‚РѕСЂРЅРѕР№ Р°РєС‚РёРІР°С†РёРё
+        // С„РѕСЂРјС‹ С„РѕРєСѓСЃ СЃР±СЂР°СЃС‹РІР°РµС‚СЃСЏ РЅР° РґРµСЂРµРІРѕ РёРµСЂР°СЂС…РёРё.
+        // Р•СЃР»Рё СЃРґРµР»Р°С‚СЊ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ (РєР°Рє Р±С‹Р»Рѕ Р±С‹ Р»РѕРіРёС‡РЅРѕ), С‚Рѕ РµС‰Рµ С…СѓР¶Рµ: РїСЂРё Р°РєС‚РёРІР°С†РёРё
+        // С„РѕСЂРјС‹ РїРѕСЃР»Рµ Р·Р°РєСЂС‹С‚РёСЏ РґСЂСѓРіРѕР№, РѕРЅР° "РїСЂСѓР¶РёРЅРёС‚" Рё РґРµР»Р°РµС‚ Р°РєС‚РёРІРЅРѕР№ РґСЂСѓРіСѓСЋ С„РѕСЂРјСѓ
+        // Р®Р·РµСЂ РїСЂРѕСЃС‚Рѕ РѕРґСѓСЂРµРµС‚ РѕС‚ С‚Р°РєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°.
         //
-        // Так, конечно, коряво, но работает. Все равно из дерева и кнопок никаких 
-        // других MDI-форм не появляется, поэтому лишней активации не происходит и
-        // фокус не прыгает
+        // РўР°Рє, РєРѕРЅРµС‡РЅРѕ, РєРѕСЂСЏРІРѕ, РЅРѕ СЂР°Р±РѕС‚Р°РµС‚. Р’СЃРµ СЂР°РІРЅРѕ РёР· РґРµСЂРµРІР° Рё РєРЅРѕРїРѕРє РЅРёРєР°РєРёС… 
+        // РґСЂСѓРіРёС… MDI-С„РѕСЂРј РЅРµ РїРѕСЏРІР»СЏРµС‚СЃСЏ, РїРѕСЌС‚РѕРјСѓ Р»РёС€РЅРµР№ Р°РєС‚РёРІР°С†РёРё РЅРµ РїСЂРѕРёСЃС…РѕРґРёС‚ Рё
+        // С„РѕРєСѓСЃ РЅРµ РїСЂС‹РіР°РµС‚
 
         ViewProvider.ActiveTab = ActiveTab;
       }
       catch (Exception e)
       {
-        // Не стоит вызывать EFPApp.ShowException(), чтобы не провоцировать 
-        // повторную активацию
+        // РќРµ СЃС‚РѕРёС‚ РІС‹Р·С‹РІР°С‚СЊ EFPApp.ShowException(), С‡С‚РѕР±С‹ РЅРµ РїСЂРѕРІРѕС†РёСЂРѕРІР°С‚СЊ 
+        // РїРѕРІС‚РѕСЂРЅСѓСЋ Р°РєС‚РёРІР°С†РёСЋ
         LogoutTools.LogoutException(e, "SubDocTableViewForm.OnActivated()");
       }
     }
 
     #endregion
 
-    #region Сохранение внешнего вида формы
+    #region РЎРѕС…СЂР°РЅРµРЅРёРµ РІРЅРµС€РЅРµРіРѕ РІРёРґР° С„РѕСЂРјС‹
 
     /// <summary>
-    /// Не хочется реализовывать IEFPConfigurable непосредственно в DocTableViewForm
+    /// РќРµ С…РѕС‡РµС‚СЃСЏ СЂРµР°Р»РёР·РѕРІС‹РІР°С‚СЊ IEFPConfigurable РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РІ DocTableViewForm
     /// </summary>
     private class FormConfigurable : IEFPConfigurable
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public FormConfigurable(SubDocTableViewForm form)
       {
@@ -291,12 +291,12 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Провайдер составного управляющего элемента для табличного просмотра или выбора поддокументов.
-  /// Кроме основной таблицы, может содержать табличку фильтров и просмотр в виде дерева.
+  /// РџСЂРѕРІР°Р№РґРµСЂ СЃРѕСЃС‚Р°РІРЅРѕРіРѕ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РёР»Рё РІС‹Р±РѕСЂР° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ.
+  /// РљСЂРѕРјРµ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹, РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚Р°Р±Р»РёС‡РєСѓ С„РёР»СЊС‚СЂРѕРІ Рё РїСЂРѕСЃРјРѕС‚СЂ РІ РІРёРґРµ РґРµСЂРµРІР°.
   /// </summary>
   public class EFPSubDocTableView : EFPControl<Control>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     internal EFPSubDocTableView(SubDocTableViewForm form, SubDocTypeUI subDocTypeUI, DocTableViewMode mode, DBxMultiSubDocs subDocs)
       : base(form.FormProvider, form.ControlPanel, false)
@@ -305,18 +305,18 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер для составного элемента
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ СЃРѕСЃС‚Р°РІРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="parentControl">Пустая панель для добавления составного элемента</param>
-    /// <param name="subDocTypeUI">Интерфейс доступа к поддокументам</param>
-    /// <param name="mode">Режим просмотра или выбора поддокументов</param>
-    /// <param name="subDocs">Список поддокументов</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="parentControl">РџСѓСЃС‚Р°СЏ РїР°РЅРµР»СЊ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕСЃС‚Р°РІРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
+    /// <param name="subDocTypeUI">РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°Рј</param>
+    /// <param name="mode">Р РµР¶РёРј РїСЂРѕСЃРјРѕС‚СЂР° РёР»Рё РІС‹Р±РѕСЂР° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="subDocs">РЎРїРёСЃРѕРє РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     public EFPSubDocTableView(EFPBaseProvider baseProvider, Control parentControl, SubDocTypeUI subDocTypeUI, DocTableViewMode mode, DBxMultiSubDocs subDocs)
       : base(baseProvider, parentControl, false)
     {
       if (parentControl.HasChildren)
-        throw new ArgumentException("В панели не должно быть управляющих элементов", "parentControl");
+        throw new ArgumentException("Р’ РїР°РЅРµР»Рё РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ", "parentControl");
 
       SubDocTableViewForm dummyForm = new SubDocTableViewForm();
 
@@ -325,7 +325,7 @@ namespace FreeLibSet.Forms.Docs
       Init(dummyForm, baseProvider, subDocTypeUI, mode, subDocs);
 
       base.InitConfigHandler();
-      base.ConfigSectionName = SubDocTypeName; // после InitConfigHandler
+      base.ConfigSectionName = SubDocTypeName; // РїРѕСЃР»Рµ InitConfigHandler
     }
 
 
@@ -336,13 +336,13 @@ namespace FreeLibSet.Forms.Docs
       if (subDocs == null)
         throw new ArgumentNullException("subDocs");
       
-      // Убрано 28.04.2022
-      // В процессе показа редактора документа может быть заменен DocTypeUI.DocProvider.
-      // После этого subDocTypeUI.SubDocType будет указывать на новый объект, полученный от сервера,
-      // а subDocs.SubDocType - на старый.
+      // РЈР±СЂР°РЅРѕ 28.04.2022
+      // Р’ РїСЂРѕС†РµСЃСЃРµ РїРѕРєР°Р·Р° СЂРµРґР°РєС‚РѕСЂР° РґРѕРєСѓРјРµРЅС‚Р° РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РјРµРЅРµРЅ DocTypeUI.DocProvider.
+      // РџРѕСЃР»Рµ СЌС‚РѕРіРѕ subDocTypeUI.SubDocType Р±СѓРґРµС‚ СѓРєР°Р·С‹РІР°С‚СЊ РЅР° РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚, РїРѕР»СѓС‡РµРЅРЅС‹Р№ РѕС‚ СЃРµСЂРІРµСЂР°,
+      // Р° subDocs.SubDocType - РЅР° СЃС‚Р°СЂС‹Р№.
 
       //if (!Object.ReferenceEquals(subDocTypeUI.SubDocType, subDocs.SubDocType))
-      //  throw new ArgumentException("SubDocTypeUI и SubDocs относятся к разным объектам SubDocType", "subDocs");
+      //  throw new ArgumentException("SubDocTypeUI Рё SubDocs РѕС‚РЅРѕСЃСЏС‚СЃСЏ Рє СЂР°Р·РЅС‹Рј РѕР±СЉРµРєС‚Р°Рј SubDocType", "subDocs");
 
       _Form = form;
 
@@ -354,7 +354,7 @@ namespace FreeLibSet.Forms.Docs
         _TheTabControl.ImageList = EFPApp.MainImages;
         form.MainPanel.Controls.Add(_TheTabControl);
 
-        TabPage tpTree = new TabPage("Дерево");
+        TabPage tpTree = new TabPage("Р”РµСЂРµРІРѕ");
         _TheTabControl.Controls.Add(tpTree);
         tpTree.ImageKey = "TreeView";
 
@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms.Docs
         _SubDocTreeSpeedPanel.Dock = DockStyle.Top;
         tpTree.Controls.Add(_SubDocTreeSpeedPanel);
 
-        TabPage tpTable = new TabPage("Таблица");
+        TabPage tpTable = new TabPage("РўР°Р±Р»РёС†Р°");
         _TheTabControl.Controls.Add(tpTable);
         tpTable.ImageKey = "Table";
 
@@ -416,7 +416,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       if (_SubDocTreeView != null)
-        // Синхронизатор
+        // РЎРёРЅС…СЂРѕРЅРёР·Р°С‚РѕСЂ
         new EFPDBxViewSync(_SubDocGridView, _SubDocTreeView);
 
 
@@ -428,12 +428,12 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private SubDocTableViewForm _Form;
 
     /// <summary>
-    /// Существует, если есть древовидный просмотр
+    /// РЎСѓС‰РµСЃС‚РІСѓРµС‚, РµСЃР»Рё РµСЃС‚СЊ РґСЂРµРІРѕРІРёРґРЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ
     /// </summary>
     private TabControl _TheTabControl;
 
@@ -444,44 +444,44 @@ namespace FreeLibSet.Forms.Docs
     private Panel _SubDocGridSpeedPanel;
 
     /// <summary>
-    /// Иерархический просмотр. Если для вида поддокумента не определено поле ParentId, 
-    /// содержит значение null
+    /// РРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РїСЂРѕСЃРјРѕС‚СЂ. Р•СЃР»Рё РґР»СЏ РІРёРґР° РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ РїРѕР»Рµ ParentId, 
+    /// СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёРµ null
     /// </summary>
     public EFPSubDocTreeView SubDocTreeView { get { return _SubDocTreeView; } }
     private EFPSubDocTreeView _SubDocTreeView;
 
     /// <summary>
-    /// Основной табличный просмотр документов
+    /// РћСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public EFPSubDocGridView SubDocGridView { get { return _SubDocGridView; } }
     private EFPSubDocGridView _SubDocGridView;
 
     /// <summary>
-    /// Табличка фильтров (управляется основным просмотром DocView)
+    /// РўР°Р±Р»РёС‡РєР° С„РёР»СЊС‚СЂРѕРІ (СѓРїСЂР°РІР»СЏРµС‚СЃСЏ РѕСЃРЅРѕРІРЅС‹Рј РїСЂРѕСЃРјРѕС‚СЂРѕРј DocView)
     /// </summary>
     public EFPGridFilterGridView FilterView { get { return _FilterView; } }
     private EFPGridFilterGridView _FilterView;
 
     /// <summary>
-    /// Интерфейс доступа к поддокументам
+    /// РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°Рј
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocGridView.SubDocTypeUI; } }
 
     /// <summary>
-    /// Имя вида просматриваемых поддокументов
+    /// РРјСЏ РІРёРґР° РїСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹С… РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public string SubDocTypeName { get { return _SubDocGridView.SubDocType.Name; } }
 
     /// <summary>
-    /// Режим работы формы
-    /// Не все режимы реализованы
+    /// Р РµР¶РёРј СЂР°Р±РѕС‚С‹ С„РѕСЂРјС‹
+    /// РќРµ РІСЃРµ СЂРµР¶РёРјС‹ СЂРµР°Р»РёР·РѕРІР°РЅС‹
     /// </summary>
     public DocTableViewMode Mode { get { return _Mode; } }
     private DocTableViewMode _Mode;
 
     /// <summary>
-    /// Действительно в режиме выбора 
-    /// Если установлено в true, то доступна кнопка "Нет"
+    /// Р”РµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ РІ СЂРµР¶РёРјРµ РІС‹Р±РѕСЂР° 
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ РґРѕСЃС‚СѓРїРЅР° РєРЅРѕРїРєР° "РќРµС‚"
     /// </summary>
     public bool CanBeEmpty
     {
@@ -491,8 +491,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _CanBeEmpty;
 
     /// <summary>
-    /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
-    /// будут использованы эти фильтры. Пользователь не может их редактировать
+    /// Р•СЃР»Рё СЌС‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РІРјРµСЃС‚Рѕ С„РёР»СЊС‚СЂРѕРІ, РІС‹Р±РёСЂР°РµРјС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј,
+    /// Р±СѓРґСѓС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅС‹ СЌС‚Рё С„РёР»СЊС‚СЂС‹. РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РјРѕР¶РµС‚ РёС… СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ
     /// </summary>
     public GridFilters ExternalFilters
     {
@@ -510,14 +510,14 @@ namespace FreeLibSet.Forms.Docs
     private GridFilters _ExternalFilters;
 
     ///// <summary>
-    ///// Если это событие установлено, то оно будет вызвано после того, как будут
-    ///// прочитаны значения фильтров, сохраненные в конфигурации
+    ///// Р•СЃР»Рё СЌС‚Рѕ СЃРѕР±С‹С‚РёРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РѕРЅРѕ Р±СѓРґРµС‚ РІС‹Р·РІР°РЅРѕ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє Р±СѓРґСѓС‚
+    ///// РїСЂРѕС‡РёС‚Р°РЅС‹ Р·РЅР°С‡РµРЅРёСЏ С„РёР»СЊС‚СЂРѕРІ, СЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РІ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     ///// </summary>
     //public event InitEFPDBxViewEventHandler InitFilters;
 
 
     /// <summary>
-    /// Выбор активной вкладка формы, когда вид поддокумента поддерживает иерархический просмотр в дереве
+    /// Р’С‹Р±РѕСЂ Р°РєС‚РёРІРЅРѕР№ РІРєР»Р°РґРєР° С„РѕСЂРјС‹, РєРѕРіРґР° РІРёРґ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РёРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РїСЂРѕСЃРјРѕС‚СЂ РІ РґРµСЂРµРІРµ
     /// </summary>
     public DocViewFormActiveTab ActiveTab
     {
@@ -539,7 +539,7 @@ namespace FreeLibSet.Forms.Docs
         {
           case DocViewFormActiveTab.Tree:
             if (_SubDocTreeView == null)
-              throw new InvalidOperationException("Форма не содержит вкладки иерархического просмотра");
+              throw new InvalidOperationException("Р¤РѕСЂРјР° РЅРµ СЃРѕРґРµСЂР¶РёС‚ РІРєР»Р°РґРєРё РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°");
             else
               _TheTabControl.SelectedIndex = 0;
             break;
@@ -555,7 +555,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификатор текущего документа
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РµРєСѓС‰РµРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
     public Int32 CurrentSubDocId
     {
@@ -580,7 +580,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификаторы выбранных документов
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РІС‹Р±СЂР°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public Int32[] SelectedSubDocIds
     {
@@ -605,10 +605,10 @@ namespace FreeLibSet.Forms.Docs
     }
     #endregion
 
-    #region Обработчики формы
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё С„РѕСЂРјС‹
 
     /// <summary>
-    /// Метод вызывается при первом появлении элемента на экране
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РїРѕСЏРІР»РµРЅРёРё СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РЅРµ
     /// </summary>
     protected override void OnCreated()
     {
@@ -628,17 +628,17 @@ namespace FreeLibSet.Forms.Docs
 
     //  try
     //  {
-    //    // Тут у меня несчастье. Если засунуть вызовы ActiveControl и Select() в
-    //    // другое место, то появляются глюки. Например, если сделать в VisibleChanged
-    //    // (при VisibleEx=true), то первый раз нормально, а после повторной активации
-    //    // формы фокус сбрасывается на дерево иерархии.
-    //    // Если сделать в конструкторе (как было бы логично), то еще хуже: при активации
-    //    // формы после закрытия другой, она "пружинит" и делает активной другую форму
-    //    // Юзер просто одуреет от такого интерфейса.
+    //    // РўСѓС‚ Сѓ РјРµРЅСЏ РЅРµСЃС‡Р°СЃС‚СЊРµ. Р•СЃР»Рё Р·Р°СЃСѓРЅСѓС‚СЊ РІС‹Р·РѕРІС‹ ActiveControl Рё Select() РІ
+    //    // РґСЂСѓРіРѕРµ РјРµСЃС‚Рѕ, С‚Рѕ РїРѕСЏРІР»СЏСЋС‚СЃСЏ РіР»СЋРєРё. РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё СЃРґРµР»Р°С‚СЊ РІ VisibleChanged
+    //    // (РїСЂРё VisibleEx=true), С‚Рѕ РїРµСЂРІС‹Р№ СЂР°Р· РЅРѕСЂРјР°Р»СЊРЅРѕ, Р° РїРѕСЃР»Рµ РїРѕРІС‚РѕСЂРЅРѕР№ Р°РєС‚РёРІР°С†РёРё
+    //    // С„РѕСЂРјС‹ С„РѕРєСѓСЃ СЃР±СЂР°СЃС‹РІР°РµС‚СЃСЏ РЅР° РґРµСЂРµРІРѕ РёРµСЂР°СЂС…РёРё.
+    //    // Р•СЃР»Рё СЃРґРµР»Р°С‚СЊ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ (РєР°Рє Р±С‹Р»Рѕ Р±С‹ Р»РѕРіРёС‡РЅРѕ), С‚Рѕ РµС‰Рµ С…СѓР¶Рµ: РїСЂРё Р°РєС‚РёРІР°С†РёРё
+    //    // С„РѕСЂРјС‹ РїРѕСЃР»Рµ Р·Р°РєСЂС‹С‚РёСЏ РґСЂСѓРіРѕР№, РѕРЅР° "РїСЂСѓР¶РёРЅРёС‚" Рё РґРµР»Р°РµС‚ Р°РєС‚РёРІРЅРѕР№ РґСЂСѓРіСѓСЋ С„РѕСЂРјСѓ
+    //    // Р®Р·РµСЂ РїСЂРѕСЃС‚Рѕ РѕРґСѓСЂРµРµС‚ РѕС‚ С‚Р°РєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°.
     //    //
-    //    // Так, конечно, коряво, но работает. Все равно из дерева и кнопок никаких 
-    //    // других MDI-форм не появляется, поэтому лишней активации не происходит и
-    //    // фокус не прыгает
+    //    // РўР°Рє, РєРѕРЅРµС‡РЅРѕ, РєРѕСЂСЏРІРѕ, РЅРѕ СЂР°Р±РѕС‚Р°РµС‚. Р’СЃРµ СЂР°РІРЅРѕ РёР· РґРµСЂРµРІР° Рё РєРЅРѕРїРѕРє РЅРёРєР°РєРёС… 
+    //    // РґСЂСѓРіРёС… MDI-С„РѕСЂРј РЅРµ РїРѕСЏРІР»СЏРµС‚СЃСЏ, РїРѕСЌС‚РѕРјСѓ Р»РёС€РЅРµР№ Р°РєС‚РёРІР°С†РёРё РЅРµ РїСЂРѕРёСЃС…РѕРґРёС‚ Рё
+    //    // С„РѕРєСѓСЃ РЅРµ РїСЂС‹РіР°РµС‚
 
     //    switch (ActiveTab)
     //    {
@@ -648,14 +648,14 @@ namespace FreeLibSet.Forms.Docs
     //  }
     //  catch (Exception e)
     //  {
-    //    // Не стоит вызывать EFPApp.ShowException(), чтобы не провоцировать 
-    //    // повторную активацию
+    //    // РќРµ СЃС‚РѕРёС‚ РІС‹Р·С‹РІР°С‚СЊ EFPApp.ShowException(), С‡С‚РѕР±С‹ РЅРµ РїСЂРѕРІРѕС†РёСЂРѕРІР°С‚СЊ 
+    //    // РїРѕРІС‚РѕСЂРЅСѓСЋ Р°РєС‚РёРІР°С†РёСЋ
     //    LogoutTools.LogoutException(e, "DocTableViewForm.OnActivated()");
     //  }
     //}
 
     /// <summary>
-    /// Вызывается, когда форма с управляющим элементом закрывается.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° С„РѕСЂРјР° СЃ СѓРїСЂР°РІР»СЏСЋС‰РёРј СЌР»РµРјРµРЅС‚РѕРј Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
     /// </summary>
     protected override void OnSaveConfig()
     {
@@ -666,7 +666,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Проверяет наличие выбранного поддокумента, если свойство CanBeEmpty=false.
+    /// РџСЂРѕРІРµСЂСЏРµС‚ РЅР°Р»РёС‡РёРµ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°, РµСЃР»Рё СЃРІРѕР№СЃС‚РІРѕ CanBeEmpty=false.
     /// </summary>
     protected override void OnValidate()
     {
@@ -680,31 +680,31 @@ namespace FreeLibSet.Forms.Docs
           if (!CanBeEmpty)
           {
             if (CurrentSubDocId == 0)
-              base.SetError("Поддокумент не выбран");
+              base.SetError("РџРѕРґРґРѕРєСѓРјРµРЅС‚ РЅРµ РІС‹Р±СЂР°РЅ");
           }
           break;
       }
     }
 
     /// <summary>
-    /// Предотвращает раскраску панели при отсутствии выбранного поддокумента
+    /// РџСЂРµРґРѕС‚РІСЂР°С‰Р°РµС‚ СЂР°СЃРєСЂР°СЃРєСѓ РїР°РЅРµР»Рё РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РІС‹Р±СЂР°РЅРЅРѕРіРѕ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
     protected override void InitControlColors()
     {
-      // 07.12.2018 Не надо раскрашивать панель, пугая пользователя красным цветом в табличке фильтров
+      // 07.12.2018 РќРµ РЅР°РґРѕ СЂР°СЃРєСЂР°С€РёРІР°С‚СЊ РїР°РЅРµР»СЊ, РїСѓРіР°СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј РІ С‚Р°Р±Р»РёС‡РєРµ С„РёР»СЊС‚СЂРѕРІ
     }
 
     #endregion
 
-    #region Сохранение конфигурации
+    #region РЎРѕС…СЂР°РЅРµРЅРёРµ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 
     /// <summary>
-    /// Надо ли сохранять конфигурацию в секции "Form".
-    /// Записывается параметр "ActiveTab".
-    /// Если свойство установлено в true (по умолчанию), то элемент будет сам сохранять свои данные.
-    /// Если свойство сбосить в false, то предполагается, что параметры должны записываться на уровне формы.
-    /// В этом случае можно использовать методы WriteFormConfigPart() и ReadFormConfigPart().
-    /// Свойство может устанавливаться только до вывода элемента на экран
+    /// РќР°РґРѕ Р»Рё СЃРѕС…СЂР°РЅСЏС‚СЊ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ РІ СЃРµРєС†РёРё "Form".
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РїР°СЂР°РјРµС‚СЂ "ActiveTab".
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ СЌР»РµРјРµРЅС‚ Р±СѓРґРµС‚ СЃР°Рј СЃРѕС…СЂР°РЅСЏС‚СЊ СЃРІРѕРё РґР°РЅРЅС‹Рµ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СЃР±РѕСЃРёС‚СЊ РІ false, С‚Рѕ РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РїР°СЂР°РјРµС‚СЂС‹ РґРѕР»Р¶РЅС‹ Р·Р°РїРёСЃС‹РІР°С‚СЊСЃСЏ РЅР° СѓСЂРѕРІРЅРµ С„РѕСЂРјС‹.
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РјРµС‚РѕРґС‹ WriteFormConfigPart() Рё ReadFormConfigPart().
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РґРѕ РІС‹РІРѕРґР° СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РЅ
     /// </summary>
     public bool SaveFormConfig
     {
@@ -718,11 +718,11 @@ namespace FreeLibSet.Forms.Docs
     private bool _SaveFormConfig;
 
     /// <summary>
-    /// Добавляет в список категорию "Form"
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёСЋ "Form"
     /// </summary>
-    /// <param name="categories">Список для добавления категорий</param>
-    /// <param name="rwMode">Чтение или запись</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="categories">РЎРїРёСЃРѕРє РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РєР°С‚РµРіРѕСЂРёР№</param>
+    /// <param name="rwMode">Р§С‚РµРЅРёРµ РёР»Рё Р·Р°РїРёСЃСЊ</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     public override void GetConfigCategories(ICollection<string> categories, EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
     {
       base.GetConfigCategories(categories, rwMode, actionInfo);
@@ -731,12 +731,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполняет запись секции конфигурации "Form", если свойство SaveFormConfig=true.
-    /// Для этого вызывается метод WriteFormConfigPart().
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ Р·Р°РїРёСЃСЊ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё "Form", РµСЃР»Рё СЃРІРѕР№СЃС‚РІРѕ SaveFormConfig=true.
+    /// Р”Р»СЏ СЌС‚РѕРіРѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ РјРµС‚РѕРґ WriteFormConfigPart().
     /// </summary>
-    /// <param name="category">Категория</param>
-    /// <param name="cfg">Секция конфигурации</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     public override void WriteConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo)
     {
       base.WriteConfigPart(category, cfg, actionInfo);
@@ -750,12 +750,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполняет чтение секции конфигурации "Form", если свойство SaveFormConfig=true.
-    /// Для этого вызывается метод ReadFormConfigPart().
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ С‡С‚РµРЅРёРµ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё "Form", РµСЃР»Рё СЃРІРѕР№СЃС‚РІРѕ SaveFormConfig=true.
+    /// Р”Р»СЏ СЌС‚РѕРіРѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ РјРµС‚РѕРґ ReadFormConfigPart().
     /// </summary>
-    /// <param name="category">Категория записываемой секции</param>
-    /// <param name="cfg">Секция конфигурации</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ Р·Р°РїРёСЃС‹РІР°РµРјРѕР№ СЃРµРєС†РёРё</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     public override void ReadConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo)
     {
       base.ReadConfigPart(category, cfg, actionInfo);
@@ -769,9 +769,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполняет запись секции конфигурации "Form".
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ Р·Р°РїРёСЃСЊ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё "Form".
     /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     public void WriteFormConfigPart(CfgPart cfg)
     {
       if (SubDocTreeView != null)
@@ -784,9 +784,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполняет чтение секции конфигурации "Form".
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ С‡С‚РµРЅРёРµ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё "Form".
     /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     public void ReadFormConfigPart(CfgPart cfg)
     {
       if (SubDocTreeView != null)

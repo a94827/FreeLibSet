@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using FreeLibSet.Forms;
@@ -42,14 +42,14 @@ namespace ManualOrderColumnDemo
           {
             case 0: orderDataType = typeof(Int16); break;
             case 1: orderDataType = typeof(Int32); break;
-            // пока не поддерживается // case 2: orderDataType = typeof(Int64); break;
+            // РїРѕРєР° РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ // case 2: orderDataType = typeof(Int64); break;
             default: throw new BugException();
           }
           DataTable table = CreateTestTable(useTree, orderDataType);
           switch (parForm.efpOrderStartMode.SelectedIndex)
           {
             case 0: InitOrder123(table); break;
-            case 1: break; // нули
+            case 1: break; // РЅСѓР»Рё
             case 2: InitOrderRandom(table); break;
           }
 
@@ -60,21 +60,21 @@ namespace ManualOrderColumnDemo
           EFPDataTreeView tv2 = null;
           switch (parForm.efpView.SelectedIndex)
           {
-            case 0: // простая таблица
+            case 0: // РїСЂРѕСЃС‚Р°СЏ С‚Р°Р±Р»РёС†Р°
               testForm = new SimpleGridForm();
               gr1 = new EFPDataGridView(((SimpleGridForm)testForm).ControlWithToolBar);
               break;
 
-            case 1: // дерево
+            case 1: // РґРµСЂРµРІРѕ
               testForm = new SimpleForm<TreeViewAdv>();
               tv2 = new EFPDataTreeView(((SimpleForm<TreeViewAdv>)testForm).ControlWithToolBar);
               break;
 
-            case 2: // таблица плюс дерево
+            case 2: // С‚Р°Р±Р»РёС†Р° РїР»СЋСЃ РґРµСЂРµРІРѕ
               testForm = CreateTestForm2(out gr1, out tv2);
               break;
 
-            case 3: // таблица для ввода по месту
+            case 3: // С‚Р°Р±Р»РёС†Р° РґР»СЏ РІРІРѕРґР° РїРѕ РјРµСЃС‚Сѓ
               testForm = new SimpleGridForm();
               gr1 = new EFPInputDataGridView(((SimpleGridForm)testForm).ControlWithToolBar);
               UIInputGridData idata = new UIInputGridData(table);
@@ -94,7 +94,7 @@ namespace ManualOrderColumnDemo
             if (parForm.efpDefaultManualOrderColumn.Checked)
               gr1.CommandItems.DefaultManualOrderColumn = "Text";
 
-            if (parForm.efpView.SelectedIndex != 3) // не EFPInputDataGridView
+            if (parForm.efpView.SelectedIndex != 3) // РЅРµ EFPInputDataGridView
             {
               gr1.ReadOnly = parForm.efpReadOnly.Checked;
               gr1.CanView = false;
@@ -117,12 +117,12 @@ namespace ManualOrderColumnDemo
               tv2.CommandItems.DefaultManualOrderColumn = "Text";
 
             DataTableTreeModel treeModel = new DataTableTreeModel(table, "Id", "ParentId");
-            // не требуется. // treeModel.Sort = "Order";
+            // РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ. // treeModel.Sort = "Order";
             tv2.Control.Model = treeModel;
 
             if (gr1 != null)
-              // В режиме "Дерево плюс таблица" нужно, чтобы в таблице тоже использовался DataTableTreeReorderHelper,
-              // а не стандартный объект. Иначе иерархия не будет учитываться при перестановке строк в таблице
+              // Р’ СЂРµР¶РёРјРµ "Р”РµСЂРµРІРѕ РїР»СЋСЃ С‚Р°Р±Р»РёС†Р°" РЅСѓР¶РЅРѕ, С‡С‚РѕР±С‹ РІ С‚Р°Р±Р»РёС†Рµ С‚РѕР¶Рµ РёСЃРїРѕР»СЊР·РѕРІР°Р»СЃСЏ DataTableTreeReorderHelper,
+              // Р° РЅРµ СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РѕР±СЉРµРєС‚. РРЅР°С‡Рµ РёРµСЂР°СЂС…РёСЏ РЅРµ Р±СѓРґРµС‚ СѓС‡РёС‚С‹РІР°С‚СЊСЃСЏ РїСЂРё РїРµСЂРµСЃС‚Р°РЅРѕРІРєРµ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ
               gr1.CommandItems.DataReorderHelperNeeded += tv2.CommandItems.CreateDataReorderHelper;
           }
 
@@ -131,11 +131,11 @@ namespace ManualOrderColumnDemo
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
 
-    #region Создание тестовой таблицы
+    #region РЎРѕР·РґР°РЅРёРµ С‚РµСЃС‚РѕРІРѕР№ С‚Р°Р±Р»РёС†С‹
 
     private static DataTable CreateTestTable(bool useTree, Type orderDataType)
     {
@@ -184,7 +184,7 @@ namespace ManualOrderColumnDemo
 
     #endregion
 
-    #region Инициализация поля Order
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРѕР»СЏ Order
 
     private static void InitOrder123(DataTable table)
     {
@@ -201,7 +201,7 @@ namespace ManualOrderColumnDemo
 
     #endregion
 
-    #region Тестовая форма с двумя вкладками
+    #region РўРµСЃС‚РѕРІР°СЏ С„РѕСЂРјР° СЃ РґРІСѓРјСЏ РІРєР»Р°РґРєР°РјРё
 
     private static Form CreateTestForm2(out EFPDataGridView gr1, out EFPDataTreeView tv2)
     {

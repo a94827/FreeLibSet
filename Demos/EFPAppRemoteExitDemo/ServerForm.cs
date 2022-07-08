@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,7 +11,7 @@ namespace EFPAppRemoteExitDemo
 {
   public partial class ServerForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public ServerForm()
     {
@@ -32,19 +32,19 @@ namespace EFPAppRemoteExitDemo
       efpResume = new EFPButton(efpForm, btnResume);
       efpResume.Click += new EventHandler(efpResume_Click);
 
-      DebugFormDispose.SetPersist(this); // чтобы не ругался
+      DebugFormDispose.SetPersist(this); // С‡С‚РѕР±С‹ РЅРµ СЂСѓРіР°Р»СЃСЏ
     }
 
     #endregion
 
-    #region Текущее состояние
+    #region РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
 
     /// <summary>
-    /// Этот метод вызывается клиентом
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РєР»РёРµРЅС‚РѕРј
     /// </summary>
-    /// <param name="Exit">true - надо прекратить работу</param>
-    /// <param name="Message">false - надо возобновлить работу</param>
-    /// <returns>Наличие сигнала на прекращение / продолжение работы</returns>
+    /// <param name="Exit">true - РЅР°РґРѕ РїСЂРµРєСЂР°С‚РёС‚СЊ СЂР°Р±РѕС‚Сѓ</param>
+    /// <param name="Message">false - РЅР°РґРѕ РІРѕР·РѕР±РЅРѕРІР»РёС‚СЊ СЂР°Р±РѕС‚Сѓ</param>
+    /// <returns>РќР°Р»РёС‡РёРµ СЃРёРіРЅР°Р»Р° РЅР° РїСЂРµРєСЂР°С‰РµРЅРёРµ / РїСЂРѕРґРѕР»Р¶РµРЅРёРµ СЂР°Р±РѕС‚С‹</returns>
     public bool ClientQuery(out bool Exit, out string Message)
     {
       bool Res;
@@ -69,9 +69,9 @@ namespace EFPAppRemoteExitDemo
     private string FExitMessage;
 
     /// <summary>
-    /// Этим методом клиент показывает свое состояние
+    /// Р­С‚РёРј РјРµС‚РѕРґРѕРј РєР»РёРµРЅС‚ РїРѕРєР°Р·С‹РІР°РµС‚ СЃРІРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
     /// </summary>
-    /// <param name="Text">Состояние клиента</param>
+    /// <param name="Text">РЎРѕСЃС‚РѕСЏРЅРёРµ РєР»РёРµРЅС‚Р°</param>
     public void SetClientStatus(string Text)
     {
       if (!IsDisposed)
@@ -80,7 +80,7 @@ namespace EFPAppRemoteExitDemo
 
     #endregion
 
-    #region Обработчики формы
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё С„РѕСЂРјС‹
 
     EFPTextBox efpMessage;
 

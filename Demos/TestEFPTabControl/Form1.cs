@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,20 +17,20 @@ namespace TestEFPTabControl
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
       EFPCommandItem ci;
-      ci = new EFPCommandItem("Тест", "Т0");
-      ci.MenuText = "Команда Form";
+      ci = new EFPCommandItem("РўРµСЃС‚", "Рў0");
+      ci.MenuText = "РљРѕРјР°РЅРґР° Form";
       ci.Click += new EventHandler(ciTest_Click);
       efpForm.CommandItems.Add(ci);
 
       efpTC = new EFPTabControl(efpForm, TheTC);
-      ci = new EFPCommandItem("Тест", "Т1");
-      ci.MenuText = "Команда TabControl";
+      ci = new EFPCommandItem("РўРµСЃС‚", "Рў1");
+      ci.MenuText = "РљРѕРјР°РЅРґР° TabControl";
       ci.Click += new EventHandler(ciTest_Click);
       efpTC.CommandItems.Add(ci);
 
 
       ci = new EFPCommandItem("View", "CloseAll");
-      ci.MenuText = "Закрыть все вкладки";
+      ci.MenuText = "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ РІРєР»Р°РґРєРё";
       ci.Click += new EventHandler(ciCloseAll_Click);
       efpTC.CommandItems.Add(ci);
 
@@ -49,7 +49,7 @@ namespace TestEFPTabControl
 
     private EFPTabControl efpTC;
 
-    #region Создание вкладки
+    #region РЎРѕР·РґР°РЅРёРµ РІРєР»Р°РґРєРё
 
     private int TabCounter = 0;
 
@@ -60,27 +60,27 @@ namespace TestEFPTabControl
       EFPCommandItem ci;
 
       EFPTabPage efpTP = efpTC.TabPages.Add(TabCounter.ToString());
-      ci = new EFPCommandItem("Тест", "Т2");
-      ci.MenuText = "Команда TabPage " + efpTP.Text;
+      ci = new EFPCommandItem("РўРµСЃС‚", "Рў2");
+      ci.MenuText = "РљРѕРјР°РЅРґР° TabPage " + efpTP.Text;
       ci.Click += new EventHandler(ciTest_Click);
       efpTP.CommandItems.Add(ci);
 
       ci = new EFPCommandItem("View", "Close");
-      ci.MenuText = "Закрыть вкладку";
+      ci.MenuText = "Р—Р°РєСЂС‹С‚СЊ РІРєР»Р°РґРєСѓ";
       ci.Tag = efpTP;
       ci.Click += new EventHandler(ciCloseTab_Click);
       efpTP.CommandItems.Add(ci);
 
       ci = new EFPCommandItem("View", "CloseAllButThis");
-      ci.MenuText = "Закрыть все вкладки, кроме текущей";
+      ci.MenuText = "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ РІРєР»Р°РґРєРё, РєСЂРѕРјРµ С‚РµРєСѓС‰РµР№";
       ci.Tag = efpTP;
       ci.Click += new EventHandler(ciCloseAllButThis_Click);
       efpTP.CommandItems.Add(ci);
 
-      #region Текстовое поле
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїРѕР»Рµ
 
       Label lbl = new Label();
-      lbl.Text = "Поле ввода " + efpTP.Text;
+      lbl.Text = "РџРѕР»Рµ РІРІРѕРґР° " + efpTP.Text;
       lbl.Location = new Point(10, 10);
       lbl.AutoSize = true;
       efpTP.Control.Controls.Add(lbl);
@@ -98,7 +98,7 @@ namespace TestEFPTabControl
 
     #endregion
 
-    #region Обработчики команд меню
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РєРѕРјР°РЅРґ РјРµРЅСЋ
 
     void ciCloseTab_Click(object Sender, EventArgs Args)
     {
@@ -128,7 +128,7 @@ namespace TestEFPTabControl
     void ciTest_Click(object Sender, EventArgs Args)
     {
       EFPCommandItem ci = (EFPCommandItem)Sender;
-      EFPApp.MessageBox("Команда \"" + ci.MenuTextWithoutMnemonic + "\"");
+      EFPApp.MessageBox("РљРѕРјР°РЅРґР° \"" + ci.MenuTextWithoutMnemonic + "\"");
     }
 
     #endregion

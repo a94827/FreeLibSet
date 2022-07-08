@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,18 +13,18 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Провайдер табличного просмотра детальной информации по адресу
+  /// РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РґРµС‚Р°Р»СЊРЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё РїРѕ Р°РґСЂРµСЃСѓ
   /// </summary>
   public class EFPFiasAddressDetailGridView : EFPDataGridView
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Неинициализированный табличный просмотр</param>
-    /// <param name="ui">Ссылка на описатель интерфейса ФИАС</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РќРµРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ</param>
+    /// <param name="ui">РЎСЃС‹Р»РєР° РЅР° РѕРїРёСЃР°С‚РµР»СЊ РёРЅС‚РµСЂС„РµР№СЃР° Р¤РРђРЎ</param>
     public EFPFiasAddressDetailGridView(EFPBaseProvider baseProvider, DataGridView control, FiasUI ui)
       : base(baseProvider, control)
     {
@@ -32,10 +32,10 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="controlWithToolbar">Табличный просмотр и панели инструментов</param>
-    /// <param name="ui">Ссылка на описатель интерфейса ФИАС</param>
+    /// <param name="controlWithToolbar">РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ Рё РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="ui">РЎСЃС‹Р»РєР° РЅР° РѕРїРёСЃР°С‚РµР»СЊ РёРЅС‚РµСЂС„РµР№СЃР° Р¤РРђРЎ</param>
     public EFPFiasAddressDetailGridView(IEFPControlWithToolBar<DataGridView> controlWithToolbar, FiasUI ui)
       : base(controlWithToolbar)
     {
@@ -81,26 +81,26 @@ namespace FreeLibSet.Forms.FIAS
       Control.Columns.Clear();
       Control.AutoGenerateColumns = false;
       Columns.AddImage("Image");
-      Columns.AddText("LevelName", true, "Уровень", 10);
-      Columns.AddText("Name", true, "Наименование", 20, 10);
-      Columns.AddText("Abbreviation", true, "Сокращение", 10, 5);
+      Columns.AddText("LevelName", true, "РЈСЂРѕРІРµРЅСЊ", 10);
+      Columns.AddText("Name", true, "РќР°РёРјРµРЅРѕРІР°РЅРёРµ", 20, 10);
+      Columns.AddText("Abbreviation", true, "РЎРѕРєСЂР°С‰РµРЅРёРµ", 10, 5);
       if (ui.ShowGuids)
         Columns.AddText("Guid", true, "GUID", 36, 36);
-      Columns.AddText("PostalCode", true, "Почтовый индекс", 6, 6);
+      Columns.AddText("PostalCode", true, "РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ", 6, 6);
       if (ui.DBSettings.UseOKATO)
-        Columns.AddText("OKATO", true, "ОКАТО", 11, 11);
+        Columns.AddText("OKATO", true, "РћРљРђРўРћ", 11, 11);
       if (ui.DBSettings.UseOKTMO)
-        Columns.AddText("OKTMO", true, "ОКТМО", 11, 11);
+        Columns.AddText("OKTMO", true, "РћРљРўРњРћ", 11, 11);
       if (ui.DBSettings.UseIFNS)
       {
-        Columns.AddText("IFNSFL", true, "Код ИФНС ФЛ", 4, 4);
-        Columns.AddText("IFNSUL", true, "Код ИФНС ЮЛ", 4, 4);
+        Columns.AddText("IFNSFL", true, "РљРѕРґ РР¤РќРЎ Р¤Р›", 4, 4);
+        Columns.AddText("IFNSUL", true, "РљРѕРґ РР¤РќРЎ Р®Р›", 4, 4);
       }
       if (ui.ShowGuids)
-        Columns.AddText("RecId", true, "RecId (неустойчивый идентификатор записи)", 36, 36);
+        Columns.AddText("RecId", true, "RecId (РЅРµСѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё)", 36, 36);
       if (ui.DBSettings.UseHistory)
       {
-        Columns.AddBool("Actual", false, "Актуальность");
+        Columns.AddBool("Actual", false, "РђРєС‚СѓР°Р»СЊРЅРѕСЃС‚СЊ");
         Columns.AddBool("Live", false, "Live");
       }
       if (ui.ShowDates)
@@ -120,10 +120,10 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Пользовательский интерфейс ФИАС
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ Р¤РРђРЎ
     /// </summary>
     public FiasUI UI { get { return _UI; } }
     private FiasUI _UI;
@@ -133,19 +133,19 @@ namespace FreeLibSet.Forms.FIAS
     private DataTable _Table;
 
     /// <summary>
-    /// Возвращает "Детальная информация об адресе"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "Р”РµС‚Р°Р»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± Р°РґСЂРµСЃРµ"
     /// </summary>
     protected override string DefaultDisplayName
     {
-      get { return "Детальная информация об адресе"; }
+      get { return "Р”РµС‚Р°Р»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± Р°РґСЂРµСЃРµ"; }
     }
 
     #endregion
 
-    #region Отображаемый адрес
+    #region РћС‚РѕР±СЂР°Р¶Р°РµРјС‹Р№ Р°РґСЂРµСЃ
 
     /// <summary>
-    /// Основное свойство - Отображаемый адрес.
+    /// РћСЃРЅРѕРІРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ - РћС‚РѕР±СЂР°Р¶Р°РµРјС‹Р№ Р°РґСЂРµСЃ.
     /// </summary>
     public FiasAddress Address
     {
@@ -177,7 +177,7 @@ namespace FreeLibSet.Forms.FIAS
             {
               case FiasLevel.House:
                 if ((Address.GetName(FiasLevel.House) + Address.GetName(FiasLevel.Building) + Address.GetName(FiasLevel.Structure)).Length == 0)
-                  // Если ничего не задано, выводим для здания
+                  // Р•СЃР»Рё РЅРёС‡РµРіРѕ РЅРµ Р·Р°РґР°РЅРѕ, РІС‹РІРѕРґРёРј РґР»СЏ Р·РґР°РЅРёСЏ
                   AddLevelRow(a2, FiasLevel.House);
                 else
                 {
@@ -195,7 +195,7 @@ namespace FreeLibSet.Forms.FIAS
 
               case FiasLevel.Flat:
                 if ((Address.GetName(FiasLevel.Flat) + Address.GetName(FiasLevel.Room)).Length == 0)
-                  // Если ничего не задано, выводим для квартиры
+                  // Р•СЃР»Рё РЅРёС‡РµРіРѕ РЅРµ Р·Р°РґР°РЅРѕ, РІС‹РІРѕРґРёРј РґР»СЏ РєРІР°СЂС‚РёСЂС‹
                   AddLevelRow(a2, FiasLevel.Flat);
                 else
                 {
@@ -208,7 +208,7 @@ namespace FreeLibSet.Forms.FIAS
               case FiasLevel.Room:
                 break;
 
-              default: // адресный объект
+              default: // Р°РґСЂРµСЃРЅС‹Р№ РѕР±СЉРµРєС‚
                 AddLevelRow(a2, level);
                 break;
             }
@@ -256,10 +256,10 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Оформление просмотра
+    #region РћС„РѕСЂРјР»РµРЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР°
 
     /// <summary>
-    /// Получение атрибутов строки
+    /// РџРѕР»СѓС‡РµРЅРёРµ Р°С‚СЂРёР±СѓС‚РѕРІ СЃС‚СЂРѕРєРё
     /// </summary>
     /// <param name="args"></param>
     protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
@@ -282,7 +282,7 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Получение атрибутов ячейки
+    /// РџРѕР»СѓС‡РµРЅРёРµ Р°С‚СЂРёР±СѓС‚РѕРІ СЏС‡РµР№РєРё
     /// </summary>
     /// <param name="args"></param>
     protected override void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
@@ -296,7 +296,7 @@ namespace FreeLibSet.Forms.FIAS
             if (_UI.DBSettings.UseHistory) // 28.04.2020
             {
               actuality = (FiasActuality)DataTools.GetInt(args.DataRow, "Actuality");
-              args.ToolTipText = "Актуальность: " + FiasEnumNames.ToString(actuality);
+              args.ToolTipText = "РђРєС‚СѓР°Р»СЊРЅРѕСЃС‚СЊ: " + FiasEnumNames.ToString(actuality);
             }
             else
               actuality = FiasActuality.Actual;
@@ -334,10 +334,10 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Просмотр истории
+    #region РџСЂРѕСЃРјРѕС‚СЂ РёСЃС‚РѕСЂРёРё
 
     /// <summary>
-    /// Просмотр истории изменений адресного выбранного адресного объекта
+    /// РџСЂРѕСЃРјРѕС‚СЂ РёСЃС‚РѕСЂРёРё РёР·РјРµРЅРµРЅРёР№ Р°РґСЂРµСЃРЅРѕРіРѕ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>

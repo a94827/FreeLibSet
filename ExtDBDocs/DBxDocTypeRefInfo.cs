@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -7,20 +7,20 @@ using System.Text;
 
 namespace FreeLibSet.Data.Docs
 {
-  #region Перечисление DBxDocTypeRefType
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ DBxDocTypeRefType
 
   /// <summary>
-  /// Тип ссылки между документами (свойство DBxDocTypeRefInfo.RefType)
+  /// РўРёРї СЃСЃС‹Р»РєРё РјРµР¶РґСѓ РґРѕРєСѓРјРµРЅС‚Р°РјРё (СЃРІРѕР№СЃС‚РІРѕ DBxDocTypeRefInfo.RefType)
   /// </summary>
   public enum DBxDocTypeRefType
   {
     /// <summary>
-    /// Обычное ссылочное поле
+    /// РћР±С‹С‡РЅРѕРµ СЃСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ
     /// </summary>
     Column,
 
     /// <summary>
-    /// Переменная ссылка VTReference
+    /// РџРµСЂРµРјРµРЅРЅР°СЏ СЃСЃС‹Р»РєР° VTReference
     /// </summary>
     VTRefernce
   }
@@ -28,40 +28,40 @@ namespace FreeLibSet.Data.Docs
   #endregion
 
   /// <summary>
-  /// Описание ссылочной зависимости между двумя типами документов
+  /// РћРїРёСЃР°РЅРёРµ СЃСЃС‹Р»РѕС‡РЅРѕР№ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РјРµР¶РґСѓ РґРІСѓРјСЏ С‚РёРїР°РјРё РґРѕРєСѓРјРµРЅС‚РѕРІ
   /// </summary>
   public sealed class DBxDocTypeRefInfo
   {
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Документ, в котором есть ссылочное поле или есть поддокумент со ссылочным полем
+    /// Р”РѕРєСѓРјРµРЅС‚, РІ РєРѕС‚РѕСЂРѕРј РµСЃС‚СЊ СЃСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ РёР»Рё РµСЃС‚СЊ РїРѕРґРґРѕРєСѓРјРµРЅС‚ СЃРѕ СЃСЃС‹Р»РѕС‡РЅС‹Рј РїРѕР»РµРј
     /// </summary>
     public DBxDocType FromDocType { get { return _FromDocType; } internal set { _FromDocType = value; } }
     private DBxDocType _FromDocType;
 
     /// <summary>
-    /// Поддокумент, в котором есть ссылочное поле. Если ссылочное поле находится в основном документе, то
-    /// свойство содержит null
+    /// РџРѕРґРґРѕРєСѓРјРµРЅС‚, РІ РєРѕС‚РѕСЂРѕРј РµСЃС‚СЊ СЃСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ. Р•СЃР»Рё СЃСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ РЅР°С…РѕРґРёС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕРј РґРѕРєСѓРјРµРЅС‚Рµ, С‚Рѕ
+    /// СЃРІРѕР№СЃС‚РІРѕ СЃРѕРґРµСЂР¶РёС‚ null
     /// </summary>
     public DBxSubDocType FromSubDocType { get { return _FromSubDocType; } internal set { _FromSubDocType = value; } }
     private DBxSubDocType _FromSubDocType;
 
     /// <summary>
-    /// Документ, на который идет ссылка или содержит поддокумент, на который идет ссылка
+    /// Р”РѕРєСѓРјРµРЅС‚, РЅР° РєРѕС‚РѕСЂС‹Р№ РёРґРµС‚ СЃСЃС‹Р»РєР° РёР»Рё СЃРѕРґРµСЂР¶РёС‚ РїРѕРґРґРѕРєСѓРјРµРЅС‚, РЅР° РєРѕС‚РѕСЂС‹Р№ РёРґРµС‚ СЃСЃС‹Р»РєР°
     /// </summary>
     public DBxDocType ToDocType { get { return _ToDocType; } internal set { _ToDocType = value; } }
     private DBxDocType _ToDocType;
 
     /// <summary>
-    /// Поддокумент, на который идет ссылка.
-    /// Если ссылка идет на основной документ, то свойство содержит null
+    /// РџРѕРґРґРѕРєСѓРјРµРЅС‚, РЅР° РєРѕС‚РѕСЂС‹Р№ РёРґРµС‚ СЃСЃС‹Р»РєР°.
+    /// Р•СЃР»Рё СЃСЃС‹Р»РєР° РёРґРµС‚ РЅР° РѕСЃРЅРѕРІРЅРѕР№ РґРѕРєСѓРјРµРЅС‚, С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СЃРѕРґРµСЂР¶РёС‚ null
     /// </summary>
     public DBxSubDocType ToSubDocType { get { return _ToSubDocType; } internal set { _ToSubDocType = value; } }
     private DBxSubDocType _ToSubDocType;
 
     /// <summary>
-    /// Вид ссылки (ссылочное поле или переменная ссылка)
+    /// Р’РёРґ СЃСЃС‹Р»РєРё (СЃСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ РёР»Рё РїРµСЂРµРјРµРЅРЅР°СЏ СЃСЃС‹Р»РєР°)
     /// </summary>
     public DBxDocTypeRefType RefType
     {
@@ -75,30 +75,30 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Ссылочное поле в FromDocType или FromSubDocType.
-    /// Свойство используется если RefType=Column
+    /// РЎСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ РІ FromDocType РёР»Рё FromSubDocType.
+    /// РЎРІРѕР№СЃС‚РІРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РµСЃР»Рё RefType=Column
     /// </summary>
     public DBxColumnStruct FromColumn { get { return _FromColumn; } internal set { _FromColumn = value; } }
     private DBxColumnStruct _FromColumn;
 
     /// <summary>
-    /// Переменная ссылка в FromDocType или FromSubDocType.
-    /// Свойство используется если RefType=VTReference
+    /// РџРµСЂРµРјРµРЅРЅР°СЏ СЃСЃС‹Р»РєР° РІ FromDocType РёР»Рё FromSubDocType.
+    /// РЎРІРѕР№СЃС‚РІРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РµСЃР»Рё RefType=VTReference
     /// </summary>
     public DBxVTReference FromVTReference { get { return _FromVTReference; } internal set { _FromVTReference = value; } }
     private DBxVTReference _FromVTReference;
 
     #endregion
 
-    #region Вспомогательные свойства
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает свойство ToDocType или ToSubDocType
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ ToDocType РёР»Рё ToSubDocType
     /// </summary>
     public DBxDocTypeBase ToDocTypeBase { get { return ToSubDocType == null ? (DBxDocTypeBase)ToDocType : (DBxDocTypeBase)ToSubDocType; } }
 
     /// <summary>
-    /// Возвращает свойство FromDocType или FromSubDocType
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ FromDocType РёР»Рё FromSubDocType
     /// </summary>
     public DBxDocTypeBase FromDocTypeBase { get { return FromSubDocType == null ? (DBxDocTypeBase)FromDocType : (DBxDocTypeBase)FromSubDocType; } }
 
@@ -107,9 +107,9 @@ namespace FreeLibSet.Data.Docs
     #region ToString()
 
     /// <summary>
-    /// Текстовое представление (для отладки)
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ (РґР»СЏ РѕС‚Р»Р°РґРєРё)
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (_FromDocType == null)
@@ -137,7 +137,7 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Статические методы для DBxDocTypes
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ РјРµС‚РѕРґС‹ РґР»СЏ DBxDocTypes
 
     internal static DBxDocTypeRefInfo[] GetToDocTypeRefs(DBxDocTypes docTypes, string docTypeName)
     {
@@ -145,16 +145,16 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("docTypeName");
       DBxDocType ToDocType = docTypes[docTypeName];
       if (ToDocType == null)
-        throw new ArgumentException("Неизвестный вид документа: \"" + docTypeName + "\"", "docTypeName");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ РІРёРґ РґРѕРєСѓРјРµРЅС‚Р°: \"" + docTypeName + "\"", "docTypeName");
 
 
       List<DBxDocTypeRefInfo> lst = new List<DBxDocTypeRefInfo>();
       for (int i = 0; i < docTypes.Count; i++)
       {
         DBxDocType fromDocType = docTypes[i];
-        // Ищем ссылки из основного документа
+        // РС‰РµРј СЃСЃС‹Р»РєРё РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
         GetToDocTypeRefs2(lst, ToDocType, fromDocType, fromDocType);
-        // Ищем ссылки из поддокументов
+        // РС‰РµРј СЃСЃС‹Р»РєРё РёР· РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ
         for (int j = 0; j < fromDocType.SubDocs.Count; j++)
           GetToDocTypeRefs2(lst, ToDocType, fromDocType, fromDocType.SubDocs[j]);
       }
@@ -164,9 +164,9 @@ namespace FreeLibSet.Data.Docs
 
     private static void GetToDocTypeRefs2(List<DBxDocTypeRefInfo> lst, DBxDocType toDocType, DBxDocType fromDocType, DBxDocTypeBase fromDTB)
     {
-      // Ссылки на основной документ
+      // РЎСЃС‹Р»РєРё РЅР° РѕСЃРЅРѕРІРЅРѕР№ РґРѕРєСѓРјРµРЅС‚
       GetToDocTypeRefs3(lst, toDocType, toDocType, fromDocType, fromDTB);
-      // Ссылки на поддокументы
+      // РЎСЃС‹Р»РєРё РЅР° РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹
       for (int i = 0; i < toDocType.SubDocs.Count; i++)
         GetToDocTypeRefs3(lst, toDocType, toDocType.SubDocs[i], fromDocType, fromDTB);
 
@@ -185,7 +185,7 @@ namespace FreeLibSet.Data.Docs
           Info.FromVTReference = vtr;
           lst.Add(Info);
         }
-        // VTReference на поддокументы не бывает
+        // VTReference РЅР° РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹ РЅРµ Р±С‹РІР°РµС‚
       }
     }
 

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,34 +10,34 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Базовый класс "выражения", которое может быть обычным полем, ссылочным полем (получаемым через JOIN), константой, функцией или математическим выражением.
-  /// Выражения должны сериализоваться.
-  /// Должен быть переопределен оператор Equals
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ "РІС‹СЂР°Р¶РµРЅРёСЏ", РєРѕС‚РѕСЂРѕРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±С‹С‡РЅС‹Рј РїРѕР»РµРј, СЃСЃС‹Р»РѕС‡РЅС‹Рј РїРѕР»РµРј (РїРѕР»СѓС‡Р°РµРјС‹Рј С‡РµСЂРµР· JOIN), РєРѕРЅСЃС‚Р°РЅС‚РѕР№, С„СѓРЅРєС†РёРµР№ РёР»Рё РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёРј РІС‹СЂР°Р¶РµРЅРёРµРј.
+  /// Р’С‹СЂР°Р¶РµРЅРёСЏ РґРѕР»Р¶РЅС‹ СЃРµСЂРёР°Р»РёР·РѕРІР°С‚СЊСЃСЏ.
+  /// Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅ РѕРїРµСЂР°С‚РѕСЂ Equals
   /// </summary>
   [Serializable]
   public abstract class DBxExpression
   {
     /// <summary>
-    /// Получить список используемых полей
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РїРѕР»РµР№
     /// </summary>
-    /// <param name="list">Заполняемый список. Не может быть null</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public abstract void GetColumnNames(DBxColumnList list);
 
     /// <summary>
-    /// Получить значение выражения из произвольного источника данных
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ РёР· РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="rowValues">Источник данных</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
-    /// <returns>Значение</returns>
+    /// <param name="rowValues">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…</param>
+    /// <param name="nullAsDefaultValue">Р•СЃР»Рё true, С‚Рѕ Р·РЅР°С‡РµРЅРёРµ null РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РјРµРЅРµРЅРѕ РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public abstract object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue);
 
     /// <summary>
-    /// Сравнение двух выражений на равенство.
-    /// Возвращает true, если выражения одинаковы.
+    /// РЎСЂР°РІРЅРµРЅРёРµ РґРІСѓС… РІС‹СЂР°Р¶РµРЅРёР№ РЅР° СЂР°РІРµРЅСЃС‚РІРѕ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІС‹СЂР°Р¶РµРЅРёСЏ РѕРґРёРЅР°РєРѕРІС‹.
     /// </summary>
-    /// <param name="a">Первое сравниваемое выражение</param>
-    /// <param name="b">Второе сравниваемое выражение</param>
-    /// <returns>Результат сравнени</returns>
+    /// <param name="a">РџРµСЂРІРѕРµ СЃСЂР°РІРЅРёРІР°РµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <param name="b">Р’С‚РѕСЂРѕРµ СЃСЂР°РІРЅРёРІР°РµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРё</returns>
     public static bool operator ==(DBxExpression a, DBxExpression b)
     {
       if (Object.ReferenceEquals(a, null) && Object.ReferenceEquals(b, null))
@@ -48,96 +48,96 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Сравнение двух выражений на равенство.
-    /// Возвращает true, если выражения разные.
+    /// РЎСЂР°РІРЅРµРЅРёРµ РґРІСѓС… РІС‹СЂР°Р¶РµРЅРёР№ РЅР° СЂР°РІРµРЅСЃС‚РІРѕ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІС‹СЂР°Р¶РµРЅРёСЏ СЂР°Р·РЅС‹Рµ.
     /// </summary>
-    /// <param name="a">Первое сравниваемое выражение</param>
-    /// <param name="b">Второе сравниваемое выражение</param>
-    /// <returns>Результат сравнени</returns>
+    /// <param name="a">РџРµСЂРІРѕРµ СЃСЂР°РІРЅРёРІР°РµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <param name="b">Р’С‚РѕСЂРѕРµ СЃСЂР°РІРЅРёРІР°РµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРё</returns>
     public static bool operator !=(DBxExpression a, DBxExpression b)
     {
       return !(a == b);
     }
 
     /// <summary>
-    /// Этот метод должен быть обязательно переопределен.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅ.
     /// </summary>
-    /// <param name="obj">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="obj">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public abstract override bool Equals(object obj);
 
     /// <summary>
-    /// Этот метод должен быть обязательно переопределен в производном классе.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅ РІ РїСЂРѕРёР·РІРѕРґРЅРѕРј РєР»Р°СЃСЃРµ.
     /// </summary>
-    /// <returns>Числовое значение для размещения в коллекции выражений</returns>
+    /// <returns>Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РІ РєРѕР»Р»РµРєС†РёРё РІС‹СЂР°Р¶РµРЅРёР№</returns>
     public abstract override int GetHashCode();
 
     /// <summary>
-    /// Возвращает константу, если выражение является константой.
-    /// Для обычных выражений возвращается null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕРЅСЃС‚Р°РЅС‚Сѓ, РµСЃР»Рё РІС‹СЂР°Р¶РµРЅРёРµ СЏРІР»СЏРµС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РѕР№.
+    /// Р”Р»СЏ РѕР±С‹С‡РЅС‹С… РІС‹СЂР°Р¶РµРЅРёР№ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <returns>Константа или null</returns>
+    /// <returns>РљРѕРЅСЃС‚Р°РЅС‚Р° РёР»Рё null</returns>
     public abstract DBxConst GetConst();
 
     /// <summary>
-    /// Добавляет префикс ко всем полям, которые входят в выражение.
-    /// Если метод вызывается для создания ссылочных полей, не забудьте добавить точку в конце префикса.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РїСЂРµС„РёРєСЃ РєРѕ РІСЃРµРј РїРѕР»СЏРј, РєРѕС‚РѕСЂС‹Рµ РІС…РѕРґСЏС‚ РІ РІС‹СЂР°Р¶РµРЅРёРµ.
+    /// Р•СЃР»Рё РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ СЃСЃС‹Р»РѕС‡РЅС‹С… РїРѕР»РµР№, РЅРµ Р·Р°Р±СѓРґСЊС‚Рµ РґРѕР±Р°РІРёС‚СЊ С‚РѕС‡РєСѓ РІ РєРѕРЅС†Рµ РїСЂРµС„РёРєСЃР°.
     /// </summary>
-    /// <param name="prefix">Добавляемый префикс</param>
-    /// <returns>Новое выражение. Для константы возвращается текущий объект</returns>
+    /// <param name="prefix">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РїСЂРµС„РёРєСЃ</param>
+    /// <returns>РќРѕРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ. Р”Р»СЏ РєРѕРЅСЃС‚Р°РЅС‚С‹ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‚РµРєСѓС‰РёР№ РѕР±СЉРµРєС‚</returns>
     public abstract DBxExpression SetColumnNamePrefix(string prefix);
   }
 
   /// <summary>
-  /// Выражение - поле
+  /// Р’С‹СЂР°Р¶РµРЅРёРµ - РїРѕР»Рµ
   /// </summary>
   [Serializable]
   public sealed class DBxColumn : DBxExpression
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект для простого или составного поля.
-    /// Не проверяется корректность имени, так как объект используется и для DataView, где ограничений на имя практически нет 
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґР»СЏ РїСЂРѕСЃС‚РѕРіРѕ РёР»Рё СЃРѕСЃС‚Р°РІРЅРѕРіРѕ РїРѕР»СЏ.
+    /// РќРµ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ РёРјРµРЅРё, С‚Р°Рє РєР°Рє РѕР±СЉРµРєС‚ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Рё РґР»СЏ DataView, РіРґРµ РѕРіСЂР°РЅРёС‡РµРЅРёР№ РЅР° РёРјСЏ РїСЂР°РєС‚РёС‡РµСЃРєРё РЅРµС‚ 
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
     public DBxColumn(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
       if (columnName.IndexOf(',') >= 0)
-        throw new ArgumentException("Имя поля не может содержать запятую", "columnName");
+        throw new ArgumentException("РРјСЏ РїРѕР»СЏ РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ Р·Р°РїСЏС‚СѓСЋ", "columnName");
 
       _ColumnName = columnName;
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает имя поля
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РїРѕР»СЏ
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
     private readonly string _ColumnName;
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает имя поля
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РїРѕР»СЏ
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return ColumnName;
     }
 
     /// <summary>
-    /// Сравнение с другим объектом DBxColumn.
+    /// РЎСЂР°РІРЅРµРЅРёРµ СЃ РґСЂСѓРіРёРј РѕР±СЉРµРєС‚РѕРј DBxColumn.
     /// </summary>
-    /// <param name="obj">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="obj">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public override bool Equals(object obj)
     {
       DBxColumn obj2 = obj as DBxColumn;
@@ -148,31 +148,31 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Хэш-значение.
+    /// РҐСЌС€-Р·РЅР°С‡РµРЅРёРµ.
     /// </summary>
-    /// <returns>Числовое значение для размещения в коллекции выражений</returns>
+    /// <returns>Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РІ РєРѕР»Р»РµРєС†РёРё РІС‹СЂР°Р¶РµРЅРёР№</returns>
     public override int GetHashCode()
     {
       return _ColumnName.GetHashCode();
     }
 
     /// <summary>
-    /// Получить список используемых полей.
-    /// Добавляет в список имя поля ColumnName.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РїРѕР»РµР№.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє РёРјСЏ РїРѕР»СЏ ColumnName.
     /// </summary>
-    /// <param name="list">Заполняемый список. Не может быть null</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public override void GetColumnNames(DBxColumnList list)
     {
       list.Add(ColumnName);
     }
 
     /// <summary>
-    /// Получить значение выражения из произвольного источника данных.
-    /// Извлекает значение ColumnName из <paramref name="rowValues"/>.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ РёР· РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С….
+    /// РР·РІР»РµРєР°РµС‚ Р·РЅР°С‡РµРЅРёРµ ColumnName РёР· <paramref name="rowValues"/>.
     /// </summary>
-    /// <param name="rowValues">Источник данных</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
-    /// <returns>Значение</returns>
+    /// <param name="rowValues">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…</param>
+    /// <param name="nullAsDefaultValue">Р•СЃР»Рё true, С‚Рѕ Р·РЅР°С‡РµРЅРёРµ null РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РјРµРЅРµРЅРѕ РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
     {
       object v = rowValues.GetValue(ColumnName);
@@ -183,7 +183,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
     /// <returns>null</returns>
     public override DBxConst GetConst()
@@ -192,10 +192,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавляет префикс к имени поля.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РїСЂРµС„РёРєСЃ Рє РёРјРµРЅРё РїРѕР»СЏ.
     /// </summary>
-    /// <param name="prefix">Добавляемый префикс</param>
-    /// <returns>Новое выражение DBxColumn</returns>
+    /// <param name="prefix">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РїСЂРµС„РёРєСЃ</param>
+    /// <returns>РќРѕРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ DBxColumn</returns>
     public override DBxExpression SetColumnNamePrefix(string prefix)
     {
       return new DBxColumn(prefix + ColumnName);
@@ -205,19 +205,19 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Константное выражение
+  /// РљРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
   /// </summary>
   [Serializable]
   public sealed class DBxConst : DBxExpression
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает константу с заданным значением.
-    /// Нельзя использовать значение null или DBNull.
-    /// Тип данных определяется из константы.
+    /// РЎРѕР·РґР°РµС‚ РєРѕРЅСЃС‚Р°РЅС‚Сѓ СЃ Р·Р°РґР°РЅРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј.
+    /// РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ null РёР»Рё DBNull.
+    /// РўРёРї РґР°РЅРЅС‹С… РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РёР· РєРѕРЅСЃС‚Р°РЅС‚С‹.
     /// </summary>
-    /// <param name="value">Значение</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
     public DBxConst(object value)
     : this(value, DBxColumnType.Unknown)
     {
@@ -225,27 +225,27 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Создает константу с заданным значением и типом данных.
-    /// Значение DBNull заменяется на null.
+    /// РЎРѕР·РґР°РµС‚ РєРѕРЅСЃС‚Р°РЅС‚Сѓ СЃ Р·Р°РґР°РЅРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј Рё С‚РёРїРѕРј РґР°РЅРЅС‹С….
+    /// Р—РЅР°С‡РµРЅРёРµ DBNull Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° null.
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <param name="columnType">Тип данных. Должен быть обязательно задан, если <paramref name="value"/>=null или DBNull</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="columnType">РўРёРї РґР°РЅРЅС‹С…. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Р·Р°РґР°РЅ, РµСЃР»Рё <paramref name="value"/>=null РёР»Рё DBNull</param>
     public DBxConst(object value, DBxColumnType columnType)
     {
       if (columnType == DBxColumnType.Unknown)
       {
         if (value == null || value is DBNull)
-          throw new ArgumentNullException("value", "Используйте конструктор, принимающий 2 аргумента");
+          throw new ArgumentNullException("value", "РСЃРїРѕР»СЊР·СѓР№С‚Рµ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ, РїСЂРёРЅРёРјР°СЋС‰РёР№ 2 Р°СЂРіСѓРјРµРЅС‚Р°");
         _Value = value;
 
         _ColumnType = DBxTools.ValueToColumnType(value);
         if (_ColumnType == DBxColumnType.Unknown)
-          throw new ArgumentException("Не удалось определить тип столбца из типа " + value.GetType().ToString(), "value");
+          throw new ArgumentException("РќРµ СѓРґР°Р»РѕСЃСЊ РѕРїСЂРµРґРµР»РёС‚СЊ С‚РёРї СЃС‚РѕР»Р±С†Р° РёР· С‚РёРїР° " + value.GetType().ToString(), "value");
       }
       else
       {
         if (value is DBNull)
-          _Value = null; // DBNull заменяем на null
+          _Value = null; // DBNull Р·Р°РјРµРЅСЏРµРј РЅР° null
         else
           _Value = value;
         _ColumnType = columnType;
@@ -271,36 +271,36 @@ namespace FreeLibSet.Data
       if (value is Guid)
         return;
 
-      throw new ArgumentException("Значение константы имеет недопустимый тип: " + value.GetType().ToString(), "value");
+      throw new ArgumentException("Р—РЅР°С‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚С‹ РёРјРµРµС‚ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Р№ С‚РёРї: " + value.GetType().ToString(), "value");
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Значение константы.
-    /// Значение DBNull заменено на null.
+    /// Р—РЅР°С‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚С‹.
+    /// Р—РЅР°С‡РµРЅРёРµ DBNull Р·Р°РјРµРЅРµРЅРѕ РЅР° null.
     /// </summary>
     public object Value { get { return _Value; } }
     private readonly object _Value;
 
     /// <summary>
-    /// Тип данных для константы.
-    /// Нужен при использовании в функции ISNULL.
-    /// Всегда определен, не может быть Unknown.
+    /// РўРёРї РґР°РЅРЅС‹С… РґР»СЏ РєРѕРЅСЃС‚Р°РЅС‚С‹.
+    /// РќСѓР¶РµРЅ РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё РІ С„СѓРЅРєС†РёРё ISNULL.
+    /// Р’СЃРµРіРґР° РѕРїСЂРµРґРµР»РµРЅ, РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Unknown.
     /// </summary>
     public DBxColumnType ColumnType { get { return _ColumnType; } }
     private readonly DBxColumnType _ColumnType;
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Текстовое представление в виде "Значение (ТипПоля)" (для отладки)
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІ РІРёРґРµ "Р—РЅР°С‡РµРЅРёРµ (РўРёРїРџРѕР»СЏ)" (РґР»СЏ РѕС‚Р»Р°РґРєРё)
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       string s;
@@ -317,10 +317,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Сравнение с другим объектом DBxConst.
+    /// РЎСЂР°РІРЅРµРЅРёРµ СЃ РґСЂСѓРіРёРј РѕР±СЉРµРєС‚РѕРј DBxConst.
     /// </summary>
-    /// <param name="obj">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="obj">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public override bool Equals(object obj)
     {
       DBxConst obj2 = obj as DBxConst;
@@ -331,9 +331,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Хэш-значение.
+    /// РҐСЌС€-Р·РЅР°С‡РµРЅРёРµ.
     /// </summary>
-    /// <returns>Числовое значение для размещения в коллекции выражений</returns>
+    /// <returns>Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РІ РєРѕР»Р»РµРєС†РёРё РІС‹СЂР°Р¶РµРЅРёР№</returns>
     public override int GetHashCode()
     {
       if (_Value == null)
@@ -343,21 +343,21 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить список используемых полей
-    /// Ничего не добавляется
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РїРѕР»РµР№
+    /// РќРёС‡РµРіРѕ РЅРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ
     /// </summary>
-    /// <param name="list">Заполняемый список. Не может быть null</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public override void GetColumnNames(DBxColumnList list)
     {
     }
 
     /// <summary>
-    /// Получить значение выражения из произвольного источника данных.
-    /// Возвращает значение константы или пустое значение при Value=null и <paramref name="nullAsDefaultValue"/>=true.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ РёР· РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С….
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РєРѕРЅСЃС‚Р°РЅС‚С‹ РёР»Рё РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРё Value=null Рё <paramref name="nullAsDefaultValue"/>=true.
     /// </summary>
-    /// <param name="rowValues">Игнорируется</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
-    /// <returns>Значение</returns>
+    /// <param name="rowValues">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="nullAsDefaultValue">Р•СЃР»Рё true, С‚Рѕ Р·РЅР°С‡РµРЅРёРµ null РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РјРµРЅРµРЅРѕ РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
     {
       if (Value == null && nullAsDefaultValue)
@@ -367,105 +367,105 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает текущий объект
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰РёР№ РѕР±СЉРµРєС‚
     /// </summary>
-    /// <returns>Константа</returns>
+    /// <returns>РљРѕРЅСЃС‚Р°РЅС‚Р°</returns>
     public override DBxConst GetConst()
     {
       return this;
     }
 
     /// <summary>
-    /// Возвращает текущий объект без изменений
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰РёР№ РѕР±СЉРµРєС‚ Р±РµР· РёР·РјРµРЅРµРЅРёР№
     /// </summary>
-    /// <param name="prefix">Игнорируется</param>
-    /// <returns>Текущий объект</returns>
+    /// <param name="prefix">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <returns>РўРµРєСѓС‰РёР№ РѕР±СЉРµРєС‚</returns>
     public override DBxExpression SetColumnNamePrefix(string prefix)
     {
-      return this; // не требуется изменений
+      return this; // РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ РёР·РјРµРЅРµРЅРёР№
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Список функций и операторов
+  /// РЎРїРёСЃРѕРє С„СѓРЅРєС†РёР№ Рё РѕРїРµСЂР°С‚РѕСЂРѕРІ
   /// </summary>
   [Serializable]
   public enum DBxFunctionKind
   {
-    #region Псевдофункции - операции
+    #region РџСЃРµРІРґРѕС„СѓРЅРєС†РёРё - РѕРїРµСЂР°С†РёРё
 
     /// <summary>
-    /// Операция "+"
+    /// РћРїРµСЂР°С†РёСЏ "+"
     /// </summary>
     Add,
 
     /// <summary>
-    /// Операция "-"
+    /// РћРїРµСЂР°С†РёСЏ "-"
     /// </summary>
     Substract,
 
     /// <summary>
-    /// Операция "*"
+    /// РћРїРµСЂР°С†РёСЏ "*"
     /// </summary>
     Multiply,
 
     /// <summary>
-    /// Операция "/"
+    /// РћРїРµСЂР°С†РёСЏ "/"
     /// </summary>
     Divide,
 
     /// <summary>
-    /// Унарный минус
+    /// РЈРЅР°СЂРЅС‹Р№ РјРёРЅСѓСЃ
     /// </summary>
     Neg,
 
     #endregion
 
-    #region Функции
+    #region Р¤СѓРЅРєС†РёРё
 
     /// <summary>
-    /// Модуль числа
+    /// РњРѕРґСѓР»СЊ С‡РёСЃР»Р°
     /// </summary>
     Abs,
 
     /// <summary>
-    /// Замена NULL.
-    /// Для некоторых баз данных, в том числе MS SQL Server, используется функция ISNULL
+    /// Р—Р°РјРµРЅР° NULL.
+    /// Р”Р»СЏ РЅРµРєРѕС‚РѕСЂС‹С… Р±Р°Р· РґР°РЅРЅС‹С…, РІ С‚РѕРј С‡РёСЃР»Рµ MS SQL Server, РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С„СѓРЅРєС†РёСЏ ISNULL
     /// </summary>
     Coalesce,
 
     /// <summary>
-    /// Возвращает длину строки
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ СЃС‚СЂРѕРєРё
     /// </summary>
     Length,
 
     /// <summary>
-    /// Перевод строки в нижний регистр
+    /// РџРµСЂРµРІРѕРґ СЃС‚СЂРѕРєРё РІ РЅРёР¶РЅРёР№ СЂРµРіРёСЃС‚СЂ
     /// </summary>
     Lower,
 
     /// <summary>
-    /// Перевод строки в верхний регистр
+    /// РџРµСЂРµРІРѕРґ СЃС‚СЂРѕРєРё РІ РІРµСЂС…РЅРёР№ СЂРµРіРёСЃС‚СЂ
     /// </summary>
     Upper,
 
     /// <summary>
-    /// Возвращает подстроку
-    /// Первый аргумент - исходное строковое выражение
-    /// Второй аргумент - начальная позиция подстроки. Нумерация с единицы, а не с нуля!
-    /// Третий аргумент - длина строки в символах
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕРґСЃС‚СЂРѕРєСѓ
+    /// РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚ - РёСЃС…РѕРґРЅРѕРµ СЃС‚СЂРѕРєРѕРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
+    /// Р’С‚РѕСЂРѕР№ Р°СЂРіСѓРјРµРЅС‚ - РЅР°С‡Р°Р»СЊРЅР°СЏ РїРѕР·РёС†РёСЏ РїРѕРґСЃС‚СЂРѕРєРё. РќСѓРјРµСЂР°С†РёСЏ СЃ РµРґРёРЅРёС†С‹, Р° РЅРµ СЃ РЅСѓР»СЏ!
+    /// РўСЂРµС‚РёР№ Р°СЂРіСѓРјРµРЅС‚ - РґР»РёРЅР° СЃС‚СЂРѕРєРё РІ СЃРёРјРІРѕР»Р°С…
     /// </summary>
     Substring,
 
     /// <summary>
-    /// Минимальное значение из списка аргументов
+    /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРїРёСЃРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ
     /// </summary>
     Min,
 
     /// <summary>
-    /// Максимальное значение из списка аргументов
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРїРёСЃРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ
     /// </summary>
     Max,
 
@@ -473,18 +473,18 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Функция (кроме агрегатной) или арифметическая операция
+  /// Р¤СѓРЅРєС†РёСЏ (РєСЂРѕРјРµ Р°РіСЂРµРіР°С‚РЅРѕР№) РёР»Рё Р°СЂРёС„РјРµС‚РёС‡РµСЃРєР°СЏ РѕРїРµСЂР°С†РёСЏ
   /// </summary>
   [Serializable]
   public sealed class DBxFunction : DBxExpression
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект функции, принимающей список аргументов DBxExpression
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ С„СѓРЅРєС†РёРё, РїСЂРёРЅРёРјР°СЋС‰РµР№ СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ DBxExpression
     /// </summary>
-    /// <param name="function">Функция</param>
-    /// <param name="args">Аргументы функции - другие выражения</param>
+    /// <param name="function">Р¤СѓРЅРєС†РёСЏ</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ С„СѓРЅРєС†РёРё - РґСЂСѓРіРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
     public DBxFunction(DBxFunctionKind function, params DBxExpression[] args)
     {
       if (args == null)
@@ -492,7 +492,7 @@ namespace FreeLibSet.Data
       int minArgCount, maxArgCount;
       GetArgCount(function, out minArgCount, out maxArgCount);
       if (args.Length < minArgCount || args.Length > maxArgCount)
-        throw new ArgumentException("Неправильное количество аргументов: " + args.Length.ToString() + ". Для функции " + function.ToString() + " требуются аргументы в количестве от " + minArgCount.ToString() + " до " + maxArgCount.ToString());
+        throw new ArgumentException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ: " + args.Length.ToString() + ". Р”Р»СЏ С„СѓРЅРєС†РёРё " + function.ToString() + " С‚СЂРµР±СѓСЋС‚СЃСЏ Р°СЂРіСѓРјРµРЅС‚С‹ РІ РєРѕР»РёС‡РµСЃС‚РІРµ РѕС‚ " + minArgCount.ToString() + " РґРѕ " + maxArgCount.ToString());
       for (int i = 0; i < args.Length; i++)
       {
         if (args[i] == null)
@@ -505,11 +505,11 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Создает объект функции, принимающей список аргументов - имен полей.
-    /// Удобно для простых функций вида "UPPER()"
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ С„СѓРЅРєС†РёРё, РїСЂРёРЅРёРјР°СЋС‰РµР№ СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ - РёРјРµРЅ РїРѕР»РµР№.
+    /// РЈРґРѕР±РЅРѕ РґР»СЏ РїСЂРѕСЃС‚С‹С… С„СѓРЅРєС†РёР№ РІРёРґР° "UPPER()"
     /// </summary>
-    /// <param name="function">Функция</param>
-    /// <param name="columnNames">Аргументы функции - имена полей, для которых создаются DBxColumn</param>
+    /// <param name="function">Р¤СѓРЅРєС†РёСЏ</param>
+    /// <param name="columnNames">РђСЂРіСѓРјРµРЅС‚С‹ С„СѓРЅРєС†РёРё - РёРјРµРЅР° РїРѕР»РµР№, РґР»СЏ РєРѕС‚РѕСЂС‹С… СЃРѕР·РґР°СЋС‚СЃСЏ DBxColumn</param>
     public DBxFunction(DBxFunctionKind function, params string[] columnNames)
       : this(function, DBxTools.GetColumnNameExpressions(columnNames))
     {
@@ -517,19 +517,19 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Проверка аргументов
+    #region РџСЂРѕРІРµСЂРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ
 
     /// <summary>
-    /// Возвращает количество аргументов, которое может иметь функция
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ, РєРѕС‚РѕСЂРѕРµ РјРѕР¶РµС‚ РёРјРµС‚СЊ С„СѓРЅРєС†РёСЏ
     /// </summary>
-    /// <param name="function">Функция</param>
-    /// <param name="minArgCount">Результат - минимальное количество аргументов</param>
-    /// <param name="maxArgCount">Результат - максимальное количество аргументов</param>
+    /// <param name="function">Р¤СѓРЅРєС†РёСЏ</param>
+    /// <param name="minArgCount">Р РµР·СѓР»СЊС‚Р°С‚ - РјРёРЅРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="maxArgCount">Р РµР·СѓР»СЊС‚Р°С‚ - РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
     public static void GetArgCount(DBxFunctionKind function, out int minArgCount, out int maxArgCount)
     {
       switch (function)
       {
-        #region Псевдофункции - операции
+        #region РџСЃРµРІРґРѕС„СѓРЅРєС†РёРё - РѕРїРµСЂР°С†РёРё
 
         case DBxFunctionKind.Add:
         case DBxFunctionKind.Substract:
@@ -546,7 +546,7 @@ namespace FreeLibSet.Data
 
         #endregion
 
-        #region Обычные функции
+        #region РћР±С‹С‡РЅС‹Рµ С„СѓРЅРєС†РёРё
 
         case DBxFunctionKind.Abs:
           minArgCount = 1;
@@ -571,7 +571,7 @@ namespace FreeLibSet.Data
 
         #endregion
 
-        #region Агрегатные функции
+        #region РђРіСЂРµРіР°С‚РЅС‹Рµ С„СѓРЅРєС†РёРё
 
         case DBxFunctionKind.Min:
         case DBxFunctionKind.Max:
@@ -585,32 +585,32 @@ namespace FreeLibSet.Data
         #endregion
 
         default:
-          throw new ArgumentException("Неизвестная функция " + function.ToString());
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅР°СЏ С„СѓРЅРєС†РёСЏ " + function.ToString());
       }
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Вид функции
+    /// Р’РёРґ С„СѓРЅРєС†РёРё
     /// </summary>
     public DBxFunctionKind Function { get { return _Function; } }
     private readonly DBxFunctionKind _Function;
 
     /// <summary>
-    /// Аргументы функции - список выражений
+    /// РђСЂРіСѓРјРµРЅС‚С‹ С„СѓРЅРєС†РёРё - СЃРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№
     /// </summary>
     public DBxExpression[] Arguments { get { return _Arguments; } }
     private readonly DBxExpression[] _Arguments;
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Текстовое предсталение для отладки
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°Р»РµРЅРёРµ РґР»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -629,10 +629,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Сравнение с другим объектом DBxFunction.
+    /// РЎСЂР°РІРЅРµРЅРёРµ СЃ РґСЂСѓРіРёРј РѕР±СЉРµРєС‚РѕРј DBxFunction.
     /// </summary>
-    /// <param name="obj">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="obj">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public override bool Equals(object obj)
     {
       DBxFunction obj2 = obj as DBxFunction;
@@ -651,19 +651,19 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Хэш-значение.
+    /// РҐСЌС€-Р·РЅР°С‡РµРЅРёРµ.
     /// </summary>
-    /// <returns>Числовое значение для размещения в коллекции выражений</returns>
+    /// <returns>Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РІ РєРѕР»Р»РµРєС†РёРё РІС‹СЂР°Р¶РµРЅРёР№</returns>
     public override int GetHashCode()
     {
       return (int)_Function;
     }
 
     /// <summary>
-    /// Получить список используемых полей.
-    /// Рекурсивно вызывает метод для всех аргументов
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РїРѕР»РµР№.
+    /// Р РµРєСѓСЂСЃРёРІРЅРѕ РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ РґР»СЏ РІСЃРµС… Р°СЂРіСѓРјРµРЅС‚РѕРІ
     /// </summary>
-    /// <param name="list">Заполняемый список. Не может быть null</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public override void GetColumnNames(DBxColumnList list)
     {
       for (int i = 0; i < _Arguments.Length; i++)
@@ -671,12 +671,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение выражения из произвольного источника данных.
-    /// Выполняет рекурсивный вызов метода для всех аргументов. Затем выполняется вычисление функции.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ РёР· РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С….
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ РјРµС‚РѕРґР° РґР»СЏ РІСЃРµС… Р°СЂРіСѓРјРµРЅС‚РѕРІ. Р—Р°С‚РµРј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІС‹С‡РёСЃР»РµРЅРёРµ С„СѓРЅРєС†РёРё.
     /// </summary>
-    /// <param name="rowValues">Источник данных</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
-    /// <returns>Значение</returns>
+    /// <param name="rowValues">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…</param>
+    /// <param name="nullAsDefaultValue">Р•СЃР»Рё true, С‚Рѕ Р·РЅР°С‡РµРЅРёРµ null РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РјРµРЅРµРЅРѕ РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
     {
       object[] a = new object[_Arguments.Length];
@@ -721,29 +721,29 @@ namespace FreeLibSet.Data
         //case DBxFunctionKind.Sum:
         //  return DataTools.SumValue(a);
         default:
-          throw new BugException("Неизвестная функция " + _Function.ToString());
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅР°СЏ С„СѓРЅРєС†РёСЏ " + _Function.ToString());
       }
     }
 
     /// <summary>
-    /// В текущей реализации возвращает null.
-    /// Вычисление составных констант не реализовано
+    /// Р’ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё РІРѕР·РІСЂР°С‰Р°РµС‚ null.
+    /// Р’С‹С‡РёСЃР»РµРЅРёРµ СЃРѕСЃС‚Р°РІРЅС‹С… РєРѕРЅСЃС‚Р°РЅС‚ РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ
     /// </summary>
     /// <returns>null</returns>
     public override DBxConst GetConst()
     {
       // TODO:
-      // Если все аргументы - константы, то можно вычислить и создать новый DBxConst
+      // Р•СЃР»Рё РІСЃРµ Р°СЂРіСѓРјРµРЅС‚С‹ - РєРѕРЅСЃС‚Р°РЅС‚С‹, С‚Рѕ РјРѕР¶РЅРѕ РІС‹С‡РёСЃР»РёС‚СЊ Рё СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ DBxConst
       return null;
     }
 
     /// <summary>
-    /// Добавляет префикс ко всем полям, которые входят в выражение.
-    /// Рекурсивно вызывает метод для всех аргументов.
-    /// Затем создается новый объект DBxFunction.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РїСЂРµС„РёРєСЃ РєРѕ РІСЃРµРј РїРѕР»СЏРј, РєРѕС‚РѕСЂС‹Рµ РІС…РѕРґСЏС‚ РІ РІС‹СЂР°Р¶РµРЅРёРµ.
+    /// Р РµРєСѓСЂСЃРёРІРЅРѕ РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ РґР»СЏ РІСЃРµС… Р°СЂРіСѓРјРµРЅС‚РѕРІ.
+    /// Р—Р°С‚РµРј СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ DBxFunction.
     /// </summary>
-    /// <param name="prefix">Добавляемый префикс</param>
-    /// <returns>Новое выражение</returns>
+    /// <param name="prefix">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РїСЂРµС„РёРєСЃ</param>
+    /// <returns>РќРѕРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public override DBxExpression SetColumnNamePrefix(string prefix)
     {
       bool hasDiff = false;
@@ -758,7 +758,7 @@ namespace FreeLibSet.Data
       if (hasDiff)
         return new DBxFunction(Function, args2);
       else
-        return this; // реально никогда не будет
+        return this; // СЂРµР°Р»СЊРЅРѕ РЅРёРєРѕРіРґР° РЅРµ Р±СѓРґРµС‚
     }
 
     #endregion
@@ -766,35 +766,35 @@ namespace FreeLibSet.Data
 
 
   /// <summary>
-  /// Список функций и операторов
+  /// РЎРїРёСЃРѕРє С„СѓРЅРєС†РёР№ Рё РѕРїРµСЂР°С‚РѕСЂРѕРІ
   /// </summary>
   [Serializable]
   public enum DBxAgregateFunctionKind
   {
-    #region Агрегатные функции
+    #region РђРіСЂРµРіР°С‚РЅС‹Рµ С„СѓРЅРєС†РёРё
 
     /// <summary>
-    /// Минимальное значение
+    /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     Min,
 
     /// <summary>
-    /// Максимальное значение
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     Max,
 
     /// <summary>
-    /// Среднее значение
+    /// РЎСЂРµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     Avg,
 
     /// <summary>
-    /// Количество строк
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
     /// </summary>
     Count,
 
     /// <summary>
-    /// Суммарное значение
+    /// РЎСѓРјРјР°СЂРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     Sum,
 
@@ -802,22 +802,22 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Агрегатная функция 
+  /// РђРіСЂРµРіР°С‚РЅР°СЏ С„СѓРЅРєС†РёСЏ 
   /// </summary>
   [Serializable]
   public sealed class DBxAgregateFunction : DBxExpression
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект функции, принимающей один аргумент DBxExpression или null (только для COUNT(*) )
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ С„СѓРЅРєС†РёРё, РїСЂРёРЅРёРјР°СЋС‰РµР№ РѕРґРёРЅ Р°СЂРіСѓРјРµРЅС‚ DBxExpression РёР»Рё null (С‚РѕР»СЊРєРѕ РґР»СЏ COUNT(*) )
     /// </summary>
-    /// <param name="function">Функция</param>
-    /// <param name="arg">Аргумент функции - другое выражение, обычно, имя поля. Может быть null для COUNT</param>
+    /// <param name="function">Р¤СѓРЅРєС†РёСЏ</param>
+    /// <param name="arg">РђСЂРіСѓРјРµРЅС‚ С„СѓРЅРєС†РёРё - РґСЂСѓРіРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РѕР±С‹С‡РЅРѕ, РёРјСЏ РїРѕР»СЏ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null РґР»СЏ COUNT</param>
     public DBxAgregateFunction(DBxAgregateFunctionKind function, DBxExpression arg)
     {
       if (arg == null && function != DBxAgregateFunctionKind.Count)
-        throw new ArgumentNullException("arg", "Аргумент (обычно, имя поля) должен быть задан для всех агрегатных функций, кроме COUNT(*)");
+        throw new ArgumentNullException("arg", "РђСЂРіСѓРјРµРЅС‚ (РѕР±С‹С‡РЅРѕ, РёРјСЏ РїРѕР»СЏ) РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ РґР»СЏ РІСЃРµС… Р°РіСЂРµРіР°С‚РЅС‹С… С„СѓРЅРєС†РёР№, РєСЂРѕРјРµ COUNT(*)");
 
       _Function = function;
       _Argument = arg;
@@ -825,11 +825,11 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Создает объект функции, принимающей список аргументов - имен полей.
-    /// Удобно для простых функций вида "UPPER()"
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ С„СѓРЅРєС†РёРё, РїСЂРёРЅРёРјР°СЋС‰РµР№ СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ - РёРјРµРЅ РїРѕР»РµР№.
+    /// РЈРґРѕР±РЅРѕ РґР»СЏ РїСЂРѕСЃС‚С‹С… С„СѓРЅРєС†РёР№ РІРёРґР° "UPPER()"
     /// </summary>
-    /// <param name="function">Функция</param>
-    /// <param name="columnName">Аргументы функции - имена полей, для которых создаются DBxColumn</param>
+    /// <param name="function">Р¤СѓРЅРєС†РёСЏ</param>
+    /// <param name="columnName">РђСЂРіСѓРјРµРЅС‚С‹ С„СѓРЅРєС†РёРё - РёРјРµРЅР° РїРѕР»РµР№, РґР»СЏ РєРѕС‚РѕСЂС‹С… СЃРѕР·РґР°СЋС‚СЃСЏ DBxColumn</param>
     public DBxAgregateFunction(DBxAgregateFunctionKind function, string columnName)
       : this(function, String.IsNullOrEmpty(columnName) ? (DBxExpression)null : (DBxExpression)(new DBxColumn(columnName)))
     {
@@ -837,28 +837,28 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Вид функции
+    /// Р’РёРґ С„СѓРЅРєС†РёРё
     /// </summary>
     public DBxAgregateFunctionKind Function { get { return _Function; } }
     private readonly DBxAgregateFunctionKind _Function;
 
     /// <summary>
-    /// Аргументы функции - список выражений
+    /// РђСЂРіСѓРјРµРЅС‚С‹ С„СѓРЅРєС†РёРё - СЃРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№
     /// </summary>
     public DBxExpression Argument { get { return _Argument; } }
     private readonly DBxExpression _Argument;
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Текстовое представление для отладки
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       StringBuilder sb = new StringBuilder();
@@ -873,10 +873,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Сравнение с другим объектом DBxFunction.
+    /// РЎСЂР°РІРЅРµРЅРёРµ СЃ РґСЂСѓРіРёРј РѕР±СЉРµРєС‚РѕРј DBxFunction.
     /// </summary>
-    /// <param name="obj">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="obj">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public override bool Equals(object obj)
     {
       DBxAgregateFunction obj2 = obj as DBxAgregateFunction;
@@ -890,19 +890,19 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Хэш-значение.
+    /// РҐСЌС€-Р·РЅР°С‡РµРЅРёРµ.
     /// </summary>
-    /// <returns>Числовое значение для размещения в коллекции выражений</returns>
+    /// <returns>Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РІ РєРѕР»Р»РµРєС†РёРё РІС‹СЂР°Р¶РµРЅРёР№</returns>
     public override int GetHashCode()
     {
       return (int)_Function;
     }
 
     /// <summary>
-    /// Получить список используемых полей.
-    /// Рекурсивно вызывает метод для всех аргументов
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РїРѕР»РµР№.
+    /// Р РµРєСѓСЂСЃРёРІРЅРѕ РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ РґР»СЏ РІСЃРµС… Р°СЂРіСѓРјРµРЅС‚РѕРІ
     /// </summary>
-    /// <param name="list">Заполняемый список. Не может быть null</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public override void GetColumnNames(DBxColumnList list)
     {
       if (_Argument != null)
@@ -910,19 +910,19 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Выбрасывает исключение
+    /// Р’С‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="rowValues">Игнорируется</param>
-    /// <param name="nullAsDefaultValue">Игнорируется</param>
-    /// <returns>Значение</returns>
+    /// <param name="rowValues">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="nullAsDefaultValue">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
     {
-      throw new NotSupportedException("Для агрегатных функций вычисление на основании строки данных невозможно");
+      throw new NotSupportedException("Р”Р»СЏ Р°РіСЂРµРіР°С‚РЅС‹С… С„СѓРЅРєС†РёР№ РІС‹С‡РёСЃР»РµРЅРёРµ РЅР° РѕСЃРЅРѕРІР°РЅРёРё СЃС‚СЂРѕРєРё РґР°РЅРЅС‹С… РЅРµРІРѕР·РјРѕР¶РЅРѕ");
     }
 
     /// <summary>
-    /// В текущей реализации возвращает null.
-    /// Вычисление составных констант не реализовано
+    /// Р’ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё РІРѕР·РІСЂР°С‰Р°РµС‚ null.
+    /// Р’С‹С‡РёСЃР»РµРЅРёРµ СЃРѕСЃС‚Р°РІРЅС‹С… РєРѕРЅСЃС‚Р°РЅС‚ РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ
     /// </summary>
     /// <returns>null</returns>
     public override DBxConst GetConst()
@@ -931,20 +931,20 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавляет префикс ко всем полям, которые входят в выражение.
-    /// Рекурсивно вызывает метод для всех аргументов.
-    /// Затем создается новый объект DBxFunction.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РїСЂРµС„РёРєСЃ РєРѕ РІСЃРµРј РїРѕР»СЏРј, РєРѕС‚РѕСЂС‹Рµ РІС…РѕРґСЏС‚ РІ РІС‹СЂР°Р¶РµРЅРёРµ.
+    /// Р РµРєСѓСЂСЃРёРІРЅРѕ РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ РґР»СЏ РІСЃРµС… Р°СЂРіСѓРјРµРЅС‚РѕРІ.
+    /// Р—Р°С‚РµРј СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ DBxFunction.
     /// </summary>
-    /// <param name="prefix">Добавляемый префикс</param>
-    /// <returns>Новое выражение</returns>
+    /// <param name="prefix">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РїСЂРµС„РёРєСЃ</param>
+    /// <returns>РќРѕРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public override DBxExpression SetColumnNamePrefix(string prefix)
     {
       if (_Argument == null)
-        return this; // функция COUNT(*)
+        return this; // С„СѓРЅРєС†РёСЏ COUNT(*)
 
       DBxExpression arg2 = _Argument.SetColumnNamePrefix(prefix);
       if (Object.ReferenceEquals(arg2, _Argument))
-        return this; // реально никогда не будет
+        return this; // СЂРµР°Р»СЊРЅРѕ РЅРёРєРѕРіРґР° РЅРµ Р±СѓРґРµС‚
       else
         return new DBxAgregateFunction(Function, arg2);
     }
@@ -953,18 +953,18 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Список выражений.
-  /// Класс не используется в прикладном коде.
+  /// РЎРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№.
+  /// РљР»Р°СЃСЃ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
   /// </summary>
   [Serializable]
   public sealed class DBxExpressions : IList<DBxExpression>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает список выражений из массива
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№ РёР· РјР°СЃСЃРёРІР°
     /// </summary>
-    /// <param name="items">Массив выражений.</param>
+    /// <param name="items">РњР°СЃСЃРёРІ РІС‹СЂР°Р¶РµРЅРёР№.</param>
     public DBxExpressions(DBxExpression[] items)
     {
       if (items == null)
@@ -978,10 +978,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает массив выражений DBxColumn и DBxRefColumn из списка столбцов.
-    /// Ссылочные поля определяются по наличию разделителя - точки
+    /// РЎРѕР·РґР°РµС‚ РјР°СЃСЃРёРІ РІС‹СЂР°Р¶РµРЅРёР№ DBxColumn Рё DBxRefColumn РёР· СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ.
+    /// РЎСЃС‹Р»РѕС‡РЅС‹Рµ РїРѕР»СЏ РѕРїСЂРµРґРµР»СЏСЋС‚СЃСЏ РїРѕ РЅР°Р»РёС‡РёСЋ СЂР°Р·РґРµР»РёС‚РµР»СЏ - С‚РѕС‡РєРё
     /// </summary>
-    /// <param name="columns">Имена столбцов</param>
+    /// <param name="columns">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ</param>
     public DBxExpressions(DBxColumns columns)
     {
       _Items = new DBxExpression[columns.Count];
@@ -990,10 +990,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает массив выражений DBxColumn и DBxRefColumn из списка столбцов.
-    /// Ссылочные поля определяются по наличию разделителя - точки
+    /// РЎРѕР·РґР°РµС‚ РјР°СЃСЃРёРІ РІС‹СЂР°Р¶РµРЅРёР№ DBxColumn Рё DBxRefColumn РёР· СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ.
+    /// РЎСЃС‹Р»РѕС‡РЅС‹Рµ РїРѕР»СЏ РѕРїСЂРµРґРµР»СЏСЋС‚СЃСЏ РїРѕ РЅР°Р»РёС‡РёСЋ СЂР°Р·РґРµР»РёС‚РµР»СЏ - С‚РѕС‡РєРё
     /// </summary>
-    /// <param name="columns">Имена столбцов</param>
+    /// <param name="columns">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ</param>
     public DBxExpressions(DBxColumnList columns)
     {
       _Items = new DBxExpression[columns.Count];
@@ -1002,12 +1002,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает список выражений DBxColumn из списка столбцов.
-    /// Ссылочные поля определяются по наличию разделителя - точки.
-    /// Если <paramref name="columns"/>=null, возвращается null.
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№ DBxColumn РёР· СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ.
+    /// РЎСЃС‹Р»РѕС‡РЅС‹Рµ РїРѕР»СЏ РѕРїСЂРµРґРµР»СЏСЋС‚СЃСЏ РїРѕ РЅР°Р»РёС‡РёСЋ СЂР°Р·РґРµР»РёС‚РµР»СЏ - С‚РѕС‡РєРё.
+    /// Р•СЃР»Рё <paramref name="columns"/>=null, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="columns">Список имен полей или null</param>
-    /// <returns>Объект DBxExpressions или null</returns>
+    /// <param name="columns">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№ РёР»Рё null</param>
+    /// <returns>РћР±СЉРµРєС‚ DBxExpressions РёР»Рё null</returns>
     public static DBxExpressions FromColumns(DBxColumns columns)
     {
       if (columns == null)
@@ -1017,12 +1017,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает список выражений DBxColumn из списка столбцов.
-    /// Ссылочные поля определяются по наличию разделителя - точки.
-    /// Если <paramref name="columns"/>=null, возвращается null.
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє РІС‹СЂР°Р¶РµРЅРёР№ DBxColumn РёР· СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ.
+    /// РЎСЃС‹Р»РѕС‡РЅС‹Рµ РїРѕР»СЏ РѕРїСЂРµРґРµР»СЏСЋС‚СЃСЏ РїРѕ РЅР°Р»РёС‡РёСЋ СЂР°Р·РґРµР»РёС‚РµР»СЏ - С‚РѕС‡РєРё.
+    /// Р•СЃР»Рё <paramref name="columns"/>=null, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="columns">Список имен полей или null</param>
-    /// <returns>Объект DBxExpressions или null</returns>
+    /// <param name="columns">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№ РёР»Рё null</param>
+    /// <returns>РћР±СЉРµРєС‚ DBxExpressions РёР»Рё null</returns>
     public static DBxExpressions FromColumns(DBxColumnList columns)
     {
       if (columns == null)
@@ -1033,31 +1033,31 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Доступ к отдельным выражениям
+    #region Р”РѕСЃС‚СѓРї Рє РѕС‚РґРµР»СЊРЅС‹Рј РІС‹СЂР°Р¶РµРЅРёСЏРј
 
     private DBxExpression[] _Items;
 
     /// <summary>
-    /// Возвращает количество элементов в списке
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃРїРёСЃРєРµ
     /// </summary>
     public int Count { get { return _Items.Length; } }
 
     /// <summary>
-    /// Возвращает выражение по индексу
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІС‹СЂР°Р¶РµРЅРёРµ РїРѕ РёРЅРґРµРєСЃСѓ
     /// </summary>
-    /// <param name="index">Индекс выражения</param>
-    /// <returns>Выражение</returns>
+    /// <param name="index">РРЅРґРµРєСЃ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+    /// <returns>Р’С‹СЂР°Р¶РµРЅРёРµ</returns>
     public DBxExpression this[int index]
     {
       get { return _Items[index]; }
     }
 
     /// <summary>
-    /// Возвращает перечислитель выражений.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РІС‹СЂР°Р¶РµРЅРёР№.
     /// 
-    /// Тип возвращаемого значения (ArrayEnumerator) может измениться в будущем, 
-    /// гарантируется только реализация интерфейса перечислителя.
-    /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
+    /// РўРёРї РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ (ArrayEnumerator) РјРѕР¶РµС‚ РёР·РјРµРЅРёС‚СЊСЃСЏ РІ Р±СѓРґСѓС‰РµРј, 
+    /// РіР°СЂР°РЅС‚РёСЂСѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ СЂРµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЏ.
+    /// РџРѕСЌС‚РѕРјСѓ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РёСЃРєР»СЋС‡РёС‚РµР»СЊРЅРѕ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РѕРїРµСЂР°С‚РѕСЂРµ foreach.
     /// </summary>
     /// <returns></returns>
     public ArrayEnumerable<DBxExpression>.Enumerator GetEnumerator()
@@ -1143,12 +1143,12 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Добавляет в список <paramref name="list"/> все имена полей, входящие в выражения
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє <paramref name="list"/> РІСЃРµ РёРјРµРЅР° РїРѕР»РµР№, РІС…РѕРґСЏС‰РёРµ РІ РІС‹СЂР°Р¶РµРЅРёСЏ
     /// </summary>
-    /// <param name="list">Заполняемый список</param>
+    /// <param name="list">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє</param>
     public void GetColumnNames(DBxColumnList list)
     {
       for (int i = 0; i < _Items.Length; i++)

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +13,7 @@ namespace Bmp2Png
 {
   public partial class ParamForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public ParamForm()
     {
@@ -36,18 +36,18 @@ namespace Bmp2Png
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public EFPTextBox efpSrcDir, efpResDir;
     public EFPCheckBox efpSubDirs;
 
     #endregion
 
-    #region Статический метод запуска
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°
 
     public static void PerformConvert()
     {
-      #region Запрос параметров
+      #region Р—Р°РїСЂРѕСЃ РїР°СЂР°РјРµС‚СЂРѕРІ
 
       RegistryCfg Cfg = new RegistryCfg(@"HKEY_CURRENT_USER\Software\FreeLibSet\Bmp2Png");
       ParamForm frm = new ParamForm();
@@ -64,7 +64,7 @@ namespace Bmp2Png
 
       int cnt=0;
       int InvalidFFCount = 0;
-      using (Splash spl = new Splash(new string[] { "Поиск файлов", "Преобразование" }))
+      using (Splash spl = new Splash(new string[] { "РџРѕРёСЃРє С„Р°Р№Р»РѕРІ", "РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ" }))
       {
         AbsPath SrcDir=new AbsPath(frm.efpSrcDir.Text);
         AbsPath ResDir = new AbsPath(frm.efpResDir.Text);
@@ -86,12 +86,12 @@ namespace Bmp2Png
         }
       }
 
-      EFPApp.MessageBox("Преобразовано файлов: " + cnt.ToString()+". Имеют неподходящий формат: "+InvalidFFCount.ToString());
+      EFPApp.MessageBox("РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРѕ С„Р°Р№Р»РѕРІ: " + cnt.ToString()+". РРјРµСЋС‚ РЅРµРїРѕРґС…РѕРґСЏС‰РёР№ С„РѕСЂРјР°С‚: "+InvalidFFCount.ToString());
     }
 
     #endregion
 
-    #region Преобразование одного файла
+    #region РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°
 
     private static bool ConvertOneFile(AbsPath SrcFile, AbsPath ResFile)
     {

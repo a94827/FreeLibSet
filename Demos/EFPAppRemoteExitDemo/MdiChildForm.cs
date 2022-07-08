@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,7 +31,7 @@ namespace EFPAppRemoteExitDemo
 
     void efpSave_Click(object sender, EventArgs e)
     {
-      // Это всего лишь эмуляция
+      // Р­С‚Рѕ РІСЃРµРіРѕ Р»РёС€СЊ СЌРјСѓР»СЏС†РёСЏ
       ChangeInfo.Changed = false;
     }
 
@@ -41,7 +41,7 @@ namespace EFPAppRemoteExitDemo
     }
 
     /// <summary>
-    /// Отслеживание изменений
+    /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РёР·РјРµРЅРµРЅРёР№
     /// </summary>
     private DepChangeInfoItem ChangeInfo;
 
@@ -54,12 +54,12 @@ namespace EFPAppRemoteExitDemo
       if (!ChangeInfo.Changed)
         return;
 
-      switch (EFPApp.MessageBox("Данные в редакторе не были сохранены. Сохранить изменения?",
-        "Подтверждение",
+      switch (EFPApp.MessageBox("Р”Р°РЅРЅС‹Рµ РІ СЂРµРґР°РєС‚РѕСЂРµ РЅРµ Р±С‹Р»Рё СЃРѕС…СЂР°РЅРµРЅС‹. РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ?",
+        "РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ",
         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
       { 
         case DialogResult.Yes:
-          ChangeInfo.Changed = false;  // как бы сохранили
+          ChangeInfo.Changed = false;  // РєР°Рє Р±С‹ СЃРѕС…СЂР°РЅРёР»Рё
           break;
         case DialogResult.No:
           break;

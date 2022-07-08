@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,15 +10,15 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализации стандартных команд главного меню.
-  /// Класс содержит методы для добавления команд и методы выполнения команд
+  /// Р РµР°Р»РёР·Р°С†РёРё СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РєРѕРјР°РЅРґ РіР»Р°РІРЅРѕРіРѕ РјРµРЅСЋ.
+  /// РљР»Р°СЃСЃ СЃРѕРґРµСЂР¶РёС‚ РјРµС‚РѕРґС‹ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјР°РЅРґ Рё РјРµС‚РѕРґС‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РєРѕРјР°РЅРґ
   /// </summary>
   public class EFPAppCommandItemHelpers
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой объект
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ РѕР±СЉРµРєС‚
     /// </summary>
     public EFPAppCommandItemHelpers()
     {
@@ -40,31 +40,31 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка инициализации состояния команд главного меню при переключении интерфейса");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃРѕСЃС‚РѕСЏРЅРёСЏ РєРѕРјР°РЅРґ РіР»Р°РІРЅРѕРіРѕ РјРµРЅСЋ РїСЂРё РїРµСЂРµРєР»СЋС‡РµРЅРёРё РёРЅС‚РµСЂС„РµР№СЃР°");
       }
     }
 
     /// <summary>
-    /// Дублирует свойство EFPApp.CommandItems
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ EFPApp.CommandItems
     /// </summary>
     public EFPAppCommandItems CommandItems { get { return _CommandItems; } }
     private EFPAppCommandItems _CommandItems;
 
     #endregion
 
-    #region Меню "Файл"
+    #region РњРµРЅСЋ "Р¤Р°Р№Р»"
 
     /// <summary>
-    /// Команда "Файл"-"Выход".
-    /// Свойство задано, если был вызван метод AddExit()
+    /// РљРѕРјР°РЅРґР° "Р¤Р°Р№Р»"-"Р’С‹С…РѕРґ".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddExit()
     /// </summary>
     public EFPCommandItem Exit { get { return _Exit; } }
     private EFPCommandItem _Exit;
 
     /// <summary>
-    /// Добавление команды "Файл"-"Выход"
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјР°РЅРґС‹ "Р¤Р°Р№Р»"-"Р’С‹С…РѕРґ"
     /// </summary>
-    /// <param name="menuFile">Меню "Файл"</param>
+    /// <param name="menuFile">РњРµРЅСЋ "Р¤Р°Р№Р»"</param>
     public void AddExit(EFPCommandItem menuFile)
     {
       _Exit = CommandItems.Add(EFPAppStdCommandItems.Exit, menuFile);
@@ -72,10 +72,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Завершение работы приложения вызовом EFPApp.Exit()
+    /// Р—Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹ РїСЂРёР»РѕР¶РµРЅРёСЏ РІС‹Р·РѕРІРѕРј EFPApp.Exit()
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void Exit_Click(object sender, EventArgs args)
     {
       Application.Exit();
@@ -83,13 +83,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Меню "Вид"
+    #region РњРµРЅСЋ "Р’РёРґ"
 
     /// <summary>
-    /// Добавляет подменю "Панели инструментов" и команду "Статусная строка"
-    /// в меню "Вид"
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РїРѕРґРјРµРЅСЋ "РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ" Рё РєРѕРјР°РЅРґСѓ "РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°"
+    /// РІ РјРµРЅСЋ "Р’РёРґ"
     /// </summary>
-    /// <param name="menuView">Созданное меню "Вид" в главном меню</param>
+    /// <param name="menuView">РЎРѕР·РґР°РЅРЅРѕРµ РјРµРЅСЋ "Р’РёРґ" РІ РіР»Р°РІРЅРѕРј РјРµРЅСЋ</param>
     public void AddViewMenuCommands(EFPCommandItem menuView)
     {
       if (EFPApp.ToolBars.Count > 0)
@@ -97,20 +97,20 @@ namespace FreeLibSet.Forms
       AddStatusBarVisible(menuView);
     }
 
-    #region "Панели инструментов"
+    #region "РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ"
 
     /// <summary>
-    /// Добавляет подменю "Панели инструментов".
-    /// В подменю создается по одной команде на каждую панель инструментов.
-    /// Также добавляется команда "Восстановить"
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РїРѕРґРјРµРЅСЋ "РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ".
+    /// Р’ РїРѕРґРјРµРЅСЋ СЃРѕР·РґР°РµС‚СЃСЏ РїРѕ РѕРґРЅРѕР№ РєРѕРјР°РЅРґРµ РЅР° РєР°Р¶РґСѓСЋ РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ.
+    /// РўР°РєР¶Рµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР° "Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ"
     /// </summary>
-    /// <param name="menuView">Созданное меню "Вид" в главном меню</param>
-    /// <returns>Подменю "Панели инструментов"</returns>
+    /// <param name="menuView">РЎРѕР·РґР°РЅРЅРѕРµ РјРµРЅСЋ "Р’РёРґ" РІ РіР»Р°РІРЅРѕРј РјРµРЅСЋ</param>
+    /// <returns>РџРѕРґРјРµРЅСЋ "РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ"</returns>
     public EFPCommandItem AddToolBarSubMenu(EFPCommandItem menuView)
     {
-      //// Вид - Панели инструментов
+      //// Р’РёРґ - РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
       EFPCommandItem menuViewToolBars = new EFPCommandItem("View", "ToolBars");
-      menuViewToolBars.MenuText = "Панели инструментов";
+      menuViewToolBars.MenuText = "РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ";
       menuViewToolBars.Parent = menuView;
       menuViewToolBars.GroupBegin = true;
       _CommandItems.Add(menuViewToolBars);
@@ -124,14 +124,14 @@ namespace FreeLibSet.Forms
       return menuViewToolBars;
     }
 
-    #region Видимость панели инструментов
+    #region Р’РёРґРёРјРѕСЃС‚СЊ РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
 
     /// <summary>
-    /// Добавляет команду управления видимостью одной панелью инструментов
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РєРѕРјР°РЅРґСѓ СѓРїСЂР°РІР»РµРЅРёСЏ РІРёРґРёРјРѕСЃС‚СЊСЋ РѕРґРЅРѕР№ РїР°РЅРµР»СЊСЋ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
     /// </summary>
-    /// <param name="menuViewToolBars">Созданное меню "Панели инструментов"</param>
-    /// <param name="toolBar">Панель инструментов, которая будет скрываться / показываться командой</param>
-    /// <returns>Созданная команда меню</returns>
+    /// <param name="menuViewToolBars">РЎРѕР·РґР°РЅРЅРѕРµ РјРµРЅСЋ "РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ"</param>
+    /// <param name="toolBar">РџР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ, РєРѕС‚РѕСЂР°СЏ Р±СѓРґРµС‚ СЃРєСЂС‹РІР°С‚СЊСЃСЏ / РїРѕРєР°Р·С‹РІР°С‚СЊСЃСЏ РєРѕРјР°РЅРґРѕР№</param>
+    /// <returns>РЎРѕР·РґР°РЅРЅР°СЏ РєРѕРјР°РЅРґР° РјРµРЅСЋ</returns>
     public EFPCommandItem AddToolBarVisible(EFPCommandItem menuViewToolBars, EFPAppToolBarCommandItems toolBar)
     {
       EFPCommandItem ci = new EFPCommandItem("ToolBar", toolBar.Name);
@@ -146,9 +146,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавленные команды видимости панелей инструментов.
-    /// Ключ - свойство EFPAppToolBarCommandItems.Name, 
-    /// Значение - команда управления видимостью
+    /// Р”РѕР±Р°РІР»РµРЅРЅС‹Рµ РєРѕРјР°РЅРґС‹ РІРёРґРёРјРѕСЃС‚Рё РїР°РЅРµР»РµР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ.
+    /// РљР»СЋС‡ - СЃРІРѕР№СЃС‚РІРѕ EFPAppToolBarCommandItems.Name, 
+    /// Р—РЅР°С‡РµРЅРёРµ - РєРѕРјР°РЅРґР° СѓРїСЂР°РІР»РµРЅРёСЏ РІРёРґРёРјРѕСЃС‚СЊСЋ
     /// </summary>
     public IDictionary<string, EFPCommandItem> ToolBarVisibleItems
     {
@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms
       {
         EFPAppToolBar tb = EFPApp.Interface.CurrentMainWindowLayout.ToolBars[name];
         if (tb == null)
-          return; // бяка какая-то
+          return; // Р±СЏРєР° РєР°РєР°СЏ-С‚Рѕ
         tb.Visible = !tb.Visible;
         ci.Checked = tb.Visible;
       }
@@ -173,25 +173,25 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Команда "Восстановить"
+    #region РљРѕРјР°РЅРґР° "Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ"
 
     /// <summary>
-    /// Команда "Вид - Панели инструментов - Восстановить".
-    /// Свойство инициализируется методом AddRestoreToolBars()
+    /// РљРѕРјР°РЅРґР° "Р’РёРґ - РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ - Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ".
+    /// РЎРІРѕР№СЃС‚РІРѕ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ РјРµС‚РѕРґРѕРј AddRestoreToolBars()
     /// </summary>
     public EFPCommandItem RestoreToolBars { get { return _RestoreToolBars; } }
     private EFPCommandItem _RestoreToolBars;
 
     /// <summary>
-    /// Создает команду "Вид - Панели инструментов - Восстановить"
+    /// РЎРѕР·РґР°РµС‚ РєРѕРјР°РЅРґСѓ "Р’РёРґ - РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ - Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ"
     /// </summary>
-    /// <param name="menuViewToolBars">Подменю "Вид - Панели инструментов" для
-    /// добавления команды</param>
+    /// <param name="menuViewToolBars">РџРѕРґРјРµРЅСЋ "Р’РёРґ - РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ" РґР»СЏ
+    /// РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјР°РЅРґС‹</param>
     public void AddToolBarsRestore(EFPCommandItem menuViewToolBars)
     {
       _RestoreToolBars = new EFPCommandItem("View", "RestoreToolBars");
       _RestoreToolBars.Parent = menuViewToolBars;
-      _RestoreToolBars.MenuText = "Восстановить";
+      _RestoreToolBars.MenuText = "Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ";
       _RestoreToolBars.Click += new EventHandler(RestoreToolBars_Click);
       CommandItems.Add(_RestoreToolBars);
     }
@@ -207,8 +207,8 @@ namespace FreeLibSet.Forms
       if (EFPApp.Interface.MainWindowCount > 1)
       {
         RadioSelectDialog dlg = new RadioSelectDialog();
-        dlg.Title = "Восстановление панелей инструментов";
-        dlg.Items = new string[] { "Только для текущего окна", "Для всех открытых окон" };
+        dlg.Title = "Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ РїР°РЅРµР»РµР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ";
+        dlg.Items = new string[] { "РўРѕР»СЊРєРѕ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РѕРєРЅР°", "Р”Р»СЏ РІСЃРµС… РѕС‚РєСЂС‹С‚С‹С… РѕРєРѕРЅ" };
         dlg.SelectedIndex = _RestoreToolBarsAllWindowsMode;
         if (dlg.ShowDialog() != DialogResult.OK)
           return;
@@ -228,29 +228,29 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Статусная строка"
+    #region "РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°"
 
     /// <summary>
-    /// Команда "Вид - Статусная строка"
+    /// РљРѕРјР°РЅРґР° "Р’РёРґ - РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°"
     /// </summary>
     public EFPCommandItem StatusBarVisible { get { return _StatusBarVisible; } }
     private EFPCommandItem _StatusBarVisible;
 
     /// <summary>
-    /// Создает команду "Вид - Статусная строка"
+    /// РЎРѕР·РґР°РµС‚ РєРѕРјР°РЅРґСѓ "Р’РёРґ - РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°"
     /// </summary>
-    /// <param name="menuView">Созданное меню "Вид"</param>
+    /// <param name="menuView">РЎРѕР·РґР°РЅРЅРѕРµ РјРµРЅСЋ "Р’РёРґ"</param>
     public void AddStatusBarVisible(EFPCommandItem menuView)
     {
       _StatusBarVisible = new EFPCommandItem("View", "StatusBar");
-      _StatusBarVisible.MenuText = "Статусная строка";
+      _StatusBarVisible.MenuText = "РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°";
       _StatusBarVisible.Parent = menuView;
       _StatusBarVisible.Click += new EventHandler(StatusBarVisible_Click);
       _CommandItems.Add(_StatusBarVisible);
     }
 
     /// <summary>
-    /// Переключение видимости статусной строки
+    /// РџРµСЂРµРєР»СЋС‡РµРЅРёРµ РІРёРґРёРјРѕСЃС‚Рё СЃС‚Р°С‚СѓСЃРЅРѕР№ СЃС‚СЂРѕРєРё
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -259,13 +259,13 @@ namespace FreeLibSet.Forms
       EFPCommandItem ci = (EFPCommandItem)sender;
       if (MainWindowActive)
       {
-        //EFPApp.MessageBox(WinFormsTools.GetControls<StatusStrip>(EFPApp.Interface.CurrentMainWindowLayout.MainWindow).Length.ToString(), "До");
+        //EFPApp.MessageBox(WinFormsTools.GetControls<StatusStrip>(EFPApp.Interface.CurrentMainWindowLayout.MainWindow).Length.ToString(), "Р”Рѕ");
 
         //DebugTools.DebugControls(EFPApp.Interface.CurrentMainWindowLayout.MainWindow);
 
         EFPApp.Interface.CurrentMainWindowLayout.StatusBar.Visible = !EFPApp.Interface.CurrentMainWindowLayout.StatusBar.Visible;
 
-        //EFPApp.MessageBox(WinFormsTools.GetControls<StatusStrip>(EFPApp.Interface.CurrentMainWindowLayout.MainWindow).Length.ToString(), "После");
+        //EFPApp.MessageBox(WinFormsTools.GetControls<StatusStrip>(EFPApp.Interface.CurrentMainWindowLayout.MainWindow).Length.ToString(), "РџРѕСЃР»Рµ");
 
         ci.Checked = EFPApp.Interface.CurrentMainWindowLayout.StatusBar.Visible;
       }
@@ -284,7 +284,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Инициализация видимости
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІРёРґРёРјРѕСЃС‚Рё
 
     private void InitCommandsView()
     {
@@ -316,14 +316,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Меню "Окно"
+    #region РњРµРЅСЋ "РћРєРЅРѕ"
 
     /// <summary>
-    /// Добавляет команды "Сверху вниз", "Слева направо", "Каскадом", "Упорядочить значки", 
-    /// "Новое главное окно", "Сохраненные положения окон" и список для переключения окон в меню "Окно"
-    /// Наличие и видимость команд определяется используемым интерфейсом
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РєРѕРјР°РЅРґС‹ "РЎРІРµСЂС…Сѓ РІРЅРёР·", "РЎР»РµРІР° РЅР°РїСЂР°РІРѕ", "РљР°СЃРєР°РґРѕРј", "РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ Р·РЅР°С‡РєРё", 
+    /// "РќРѕРІРѕРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ", "РЎРѕС…СЂР°РЅРµРЅРЅС‹Рµ РїРѕР»РѕР¶РµРЅРёСЏ РѕРєРѕРЅ" Рё СЃРїРёСЃРѕРє РґР»СЏ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ РѕРєРѕРЅ РІ РјРµРЅСЋ "РћРєРЅРѕ"
+    /// РќР°Р»РёС‡РёРµ Рё РІРёРґРёРјРѕСЃС‚СЊ РєРѕРјР°РЅРґ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РёСЃРїРѕР»СЊР·СѓРµРјС‹Рј РёРЅС‚РµСЂС„РµР№СЃРѕРј
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляются команды</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РєРѕРјР°РЅРґС‹</param>
     public void AddWindowMenuCommands(EFPCommandItem menuWindow)
     {
       AddTileHorizontal(menuWindow);
@@ -339,7 +339,7 @@ namespace FreeLibSet.Forms
       AddCloseAllButThis(menuWindow);
       AddNewMainWindow(menuWindow);
       //if (EFPApp.CompositionHistoryCount > 0)
-      // всегда добавляем
+      // РІСЃРµРіРґР° РґРѕР±Р°РІР»СЏРµРј
       AddSavedCompositions(menuWindow);
 
       if (menuWindow != null)
@@ -352,19 +352,19 @@ namespace FreeLibSet.Forms
     }
 
 
-    #region "Сверху вниз"
+    #region "РЎРІРµСЂС…Сѓ РІРЅРёР·"
 
     /// <summary>
-    /// Команда "Сверху вниз".
-    /// Свойство задано, если был вызван метод AddTileHorizontal()
+    /// РљРѕРјР°РЅРґР° "РЎРІРµСЂС…Сѓ РІРЅРёР·".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddTileHorizontal()
     /// </summary>
     public EFPCommandItem TileHorizontal { get { return _TileHorizontal; } }
     private EFPCommandItem _TileHorizontal;
 
     /// <summary>
-    /// Создать команду "Сверху вниз"
+    /// РЎРѕР·РґР°С‚СЊ РєРѕРјР°РЅРґСѓ "РЎРІРµСЂС…Сѓ РІРЅРёР·"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddTileHorizontal(EFPCommandItem menuWindow)
     {
       _TileHorizontal = CommandItems.Add(EFPAppStdCommandItems.TileHorizontal, menuWindow);
@@ -372,10 +372,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Размещение окон сверху вниз
+    /// Р Р°Р·РјРµС‰РµРЅРёРµ РѕРєРѕРЅ СЃРІРµСЂС…Сѓ РІРЅРёР·
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void TileHorizontal_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
@@ -384,19 +384,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Слева направо"
+    #region "РЎР»РµРІР° РЅР°РїСЂР°РІРѕ"
 
     /// <summary>
-    /// Команда "Слева направо".
-    /// Свойство задано, если был вызван метод AddTileVertical()
+    /// РљРѕРјР°РЅРґР° "РЎР»РµРІР° РЅР°РїСЂР°РІРѕ".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddTileVertical()
     /// </summary>
     public EFPCommandItem TileVertical { get { return _TileVertical; } }
     private EFPCommandItem _TileVertical;
 
     /// <summary>
-    /// Создать команду "Слева направо"
+    /// РЎРѕР·РґР°С‚СЊ РєРѕРјР°РЅРґСѓ "РЎР»РµРІР° РЅР°РїСЂР°РІРѕ"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddTileVertical(EFPCommandItem menuWindow)
     {
       _TileVertical = CommandItems.Add(EFPAppStdCommandItems.TileVertical, menuWindow);
@@ -404,10 +404,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Размещение окон слева направо
+    /// Р Р°Р·РјРµС‰РµРЅРёРµ РѕРєРѕРЅ СЃР»РµРІР° РЅР°РїСЂР°РІРѕ
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void TileVertical_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
@@ -416,19 +416,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Каскадом"
+    #region "РљР°СЃРєР°РґРѕРј"
 
     /// <summary>
-    /// Команда "Каскадом".
-    /// Свойство задано, если был вызван метод AddCascade()
+    /// РљРѕРјР°РЅРґР° "РљР°СЃРєР°РґРѕРј".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddCascade()
     /// </summary>
     public EFPCommandItem Cascade { get { return _Cascade; } }
     private EFPCommandItem _Cascade;
 
     /// <summary>
-    /// Создать команду "Каскадом"
+    /// РЎРѕР·РґР°С‚СЊ РєРѕРјР°РЅРґСѓ "РљР°СЃРєР°РґРѕРј"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddCascade(EFPCommandItem menuWindow)
     {
       _Cascade = CommandItems.Add(EFPAppStdCommandItems.Cascade, menuWindow);
@@ -436,10 +436,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Размещение окон каскадом
+    /// Р Р°Р·РјРµС‰РµРЅРёРµ РѕРєРѕРЅ РєР°СЃРєР°РґРѕРј
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void Cascade_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
@@ -448,19 +448,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Упорядочить значки"
+    #region "РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ Р·РЅР°С‡РєРё"
 
     /// <summary>
-    /// Команда "Упорядочить значки"
-    /// Свойство задано, если был вызван метод AddArrangeIcons()
+    /// РљРѕРјР°РЅРґР° "РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ Р·РЅР°С‡РєРё"
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddArrangeIcons()
     /// </summary>
     public EFPCommandItem ArrangeIcons { get { return _ArrangeIcons; } }
     private EFPCommandItem _ArrangeIcons;
 
     /// <summary>
-    /// Добавление команды "Упорядочить значки"
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјР°РЅРґС‹ "РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ Р·РЅР°С‡РєРё"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddArrangeIcons(EFPCommandItem menuWindow)
     {
       _ArrangeIcons = CommandItems.Add(EFPAppStdCommandItems.ArrangeIcons, menuWindow);
@@ -468,10 +468,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Упорядочение значков свернутых окон
+    /// РЈРїРѕСЂСЏРґРѕС‡РµРЅРёРµ Р·РЅР°С‡РєРѕРІ СЃРІРµСЂРЅСѓС‚С‹С… РѕРєРѕРЅ
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void ArrangeIcons_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
@@ -480,19 +480,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Закрыть все"
+    #region "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ"
 
     /// <summary>
-    /// Команда "Закрыть все".
-    /// Свойство задано, если был вызван метод AddCloseAll()
+    /// РљРѕРјР°РЅРґР° "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddCloseAll()
     /// </summary>
     public EFPCommandItem CloseAll { get { return _CloseAll; } }
     private EFPCommandItem _CloseAll;
 
     /// <summary>
-    /// Добавить команду "Закрыть все"
+    /// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddCloseAll(EFPCommandItem menuWindow)
     {
       _CloseAll = CommandItems.Add(EFPAppStdCommandItems.CloseAll, menuWindow);
@@ -500,10 +500,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Закрытие дочерних окон MDI
+    /// Р—Р°РєСЂС‹С‚РёРµ РґРѕС‡РµСЂРЅРёС… РѕРєРѕРЅ MDI
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void CloseAll_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
@@ -512,19 +512,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Закрыть все кроме текущего окна"
+    #region "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ РєСЂРѕРјРµ С‚РµРєСѓС‰РµРіРѕ РѕРєРЅР°"
 
     /// <summary>
-    /// Команда "Закрыть все кроме текущего окна".
-    /// Свойство задано, если был вызван метод AddCloseAllButThis()
+    /// РљРѕРјР°РЅРґР° "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ РєСЂРѕРјРµ С‚РµРєСѓС‰РµРіРѕ РѕРєРЅР°".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddCloseAllButThis()
     /// </summary>
     public EFPCommandItem CloseAllButThis { get { return _CloseAllButThis; } }
     private EFPCommandItem _CloseAllButThis;
 
     /// <summary>
-    /// Добавить команду "Закрыть все кроме текущего окна"
+    /// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ "Р—Р°РєСЂС‹С‚СЊ РІСЃРµ РєСЂРѕРјРµ С‚РµРєСѓС‰РµРіРѕ РѕРєРЅР°"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddCloseAllButThis(EFPCommandItem menuWindow)
     {
       _CloseAllButThis = CommandItems.Add(EFPAppStdCommandItems.CloseAllButThis, menuWindow);
@@ -532,10 +532,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Закрытие всех окон, кроме текущего
+    /// Р—Р°РєСЂС‹С‚РёРµ РІСЃРµС… РѕРєРѕРЅ, РєСЂРѕРјРµ С‚РµРєСѓС‰РµРіРѕ
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void CloseAllButThis_Click(object sender, EventArgs args)
     {
       if (MainWindowActive)
@@ -543,7 +543,7 @@ namespace FreeLibSet.Forms
         Form curr = EFPApp.Interface.CurrentChildForm;
         if (curr == null)
         {
-          EFPApp.ShowTempMessage("Нет текущего окна");
+          EFPApp.ShowTempMessage("РќРµС‚ С‚РµРєСѓС‰РµРіРѕ РѕРєРЅР°");
           return;
         }
 
@@ -575,19 +575,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Новое главное окно"
+    #region "РќРѕРІРѕРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ"
 
     /// <summary>
-    /// Команда "Новое главное окно".
-    /// Свойство задано, если был вызван метод AddNewMainWindow()
+    /// РљРѕРјР°РЅРґР° "РќРѕРІРѕРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddNewMainWindow()
     /// </summary>
     public EFPCommandItem NewMainWindow { get { return _NewMainWindow; } }
     private EFPCommandItem _NewMainWindow;
 
     /// <summary>
-    /// Добавить команду "Новое главное окно"
+    /// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ "РќРѕРІРѕРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddNewMainWindow(EFPCommandItem menuWindow)
     {
       _NewMainWindow = CommandItems.Add(EFPAppStdCommandItems.NewMainWindow, menuWindow);
@@ -595,10 +595,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Обработчик команды "Новое главное окно.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹ "РќРѕРІРѕРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ.
     /// </summary>
-    /// <param name="sender">Не используется</param>
-    /// <param name="args">Не используется</param>
+    /// <param name="sender">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
+    /// <param name="args">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
     public static void NewMainWindow_Click(object sender, EventArgs args)
     {
       if (EFPApp.Interface != null)
@@ -607,19 +607,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Сохраненные положения окон"
+    #region "РЎРѕС…СЂР°РЅРµРЅРЅС‹Рµ РїРѕР»РѕР¶РµРЅРёСЏ РѕРєРѕРЅ"
 
     /// <summary>
-    /// Команда "Сохраненные положения оконвниз".
-    /// Свойство задано, если был вызван метод AddSavedCompositions()
+    /// РљРѕРјР°РЅРґР° "РЎРѕС…СЂР°РЅРµРЅРЅС‹Рµ РїРѕР»РѕР¶РµРЅРёСЏ РѕРєРѕРЅРІРЅРёР·".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddSavedCompositions()
     /// </summary>
     public EFPCommandItem SavedCompositions { get { return _SavedCompositions; } }
     private EFPCommandItem _SavedCompositions;
 
     /// <summary>
-    /// Добавить команду "Сохраненные положения окон"
+    /// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ "РЎРѕС…СЂР°РЅРµРЅРЅС‹Рµ РїРѕР»РѕР¶РµРЅРёСЏ РѕРєРѕРЅ"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddSavedCompositions(EFPCommandItem menuWindow)
     {
       _SavedCompositions = CommandItems.Add(EFPAppStdCommandItems.SavedCompositions, menuWindow);
@@ -627,17 +627,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Контекст справки для диалога "Композиции рабочего стола" 
+    /// РљРѕРЅС‚РµРєСЃС‚ СЃРїСЂР°РІРєРё РґР»СЏ РґРёР°Р»РѕРіР° "РљРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°" 
     /// </summary>
     public string SelectCompositionDialogHelpContext { get { return _SelectCompositionDialogHelpContext; } set { _SelectCompositionDialogHelpContext = value; } }
     private string _SelectCompositionDialogHelpContext;
 
     /// <summary>
-    /// Вывод диалога "Композиции рабочего стола" с помощью SelectCompositionDialog.
-    /// Устанавливается свойство HelpContext = SelectCompositionDialogHelpContext
+    /// Р’С‹РІРѕРґ РґРёР°Р»РѕРіР° "РљРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°" СЃ РїРѕРјРѕС‰СЊСЋ SelectCompositionDialog.
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ HelpContext = SelectCompositionDialogHelpContext
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     private void SavedCompositions_Click(object sender, EventArgs args)
     {
       SelectCompositionDialog dlg = new SelectCompositionDialog();
@@ -647,11 +647,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Список открытых окон
+    #region РЎРїРёСЃРѕРє РѕС‚РєСЂС‹С‚С‹С… РѕРєРѕРЅ
 
     /// <summary>
-    /// Количество команд для переключения между окнами в меню "Окно".
-    /// По умолчанию - 9 команд. Менять это значение не следует, т.к. оно принято для интерфейса MDI
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјР°РЅРґ РґР»СЏ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ РјРµР¶РґСѓ РѕРєРЅР°РјРё РІ РјРµРЅСЋ "РћРєРЅРѕ".
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - 9 РєРѕРјР°РЅРґ. РњРµРЅСЏС‚СЊ СЌС‚Рѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ СЃР»РµРґСѓРµС‚, С‚.Рє. РѕРЅРѕ РїСЂРёРЅСЏС‚Рѕ РґР»СЏ РёРЅС‚РµСЂС„РµР№СЃР° MDI
     /// </summary>
     public int WindowListCount
     {
@@ -659,7 +659,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (_WindowListItems != null)
-          throw new InvalidOperationException("Список уже был создан");
+          throw new InvalidOperationException("РЎРїРёСЃРѕРє СѓР¶Рµ Р±С‹Р» СЃРѕР·РґР°РЅ");
         if (value < 0 || value > 100)
           throw new ArgumentOutOfRangeException();
       }
@@ -667,18 +667,18 @@ namespace FreeLibSet.Forms
     private int _WindowListCount;
 
     /// <summary>
-    /// Команды для переключения между окнами для меню "Окно".
-    /// После создания команд длина массива будет равна WindowListCount
+    /// РљРѕРјР°РЅРґС‹ РґР»СЏ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ РјРµР¶РґСѓ РѕРєРЅР°РјРё РґР»СЏ РјРµРЅСЋ "РћРєРЅРѕ".
+    /// РџРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РєРѕРјР°РЅРґ РґР»РёРЅР° РјР°СЃСЃРёРІР° Р±СѓРґРµС‚ СЂР°РІРЅР° WindowListCount
     /// </summary>
     public EFPCommandItem[] WindowListItems { get { return _WindowListItems; } }
     private EFPCommandItem[] _WindowListItems;
 
     /// <summary>
-    /// Добавить команды переключания между окнами.
-    /// Количество команд определяется свойством WindowListCount.
-    /// Если WindowListCount=0, то метод ничего не делает.
+    /// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґС‹ РїРµСЂРµРєР»СЋС‡Р°РЅРёСЏ РјРµР¶РґСѓ РѕРєРЅР°РјРё.
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјР°РЅРґ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕРј WindowListCount.
+    /// Р•СЃР»Рё WindowListCount=0, С‚Рѕ РјРµС‚РѕРґ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚.
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddWindowList(EFPCommandItem menuWindow)
     {
       if (WindowListCount == 0)
@@ -689,8 +689,8 @@ namespace FreeLibSet.Forms
         _WindowListItems[i] = new EFPCommandItem("Window", "WindowItem" + (i + 1).ToString());
 
         // 07.06.2021
-        // Префикс с номером окна "&1" - "&9" (и дальше) с пробелом является фиксированным.
-        // Он сохраняется при обновлении текста команды
+        // РџСЂРµС„РёРєСЃ СЃ РЅРѕРјРµСЂРѕРј РѕРєРЅР° "&1" - "&9" (Рё РґР°Р»СЊС€Рµ) СЃ РїСЂРѕР±РµР»РѕРј СЏРІР»СЏРµС‚СЃСЏ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рј.
+        // РћРЅ СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё С‚РµРєСЃС‚Р° РєРѕРјР°РЅРґС‹
         string s = (i + 1).ToString() + " Unknown window";
         if (i < 9)
           s = "&" + s;
@@ -698,15 +698,15 @@ namespace FreeLibSet.Forms
 
         _WindowListItems[i].Parent = menuWindow;
         _WindowListItems[i].Click += WindowListItem_Click;
-        _WindowListItems[i].Usage = EFPCommandItemUsage.Menu; // на случай значков
+        _WindowListItems[i].Usage = EFPCommandItemUsage.Menu; // РЅР° СЃР»СѓС‡Р°Р№ Р·РЅР°С‡РєРѕРІ
         _WindowListItems[i].MenuOpening += new EventHandler(WindowListItem_MenuOpening); // 07.06.2021
         CommandItems.Add(_WindowListItems[i]);
       }
     }
 
     /// <summary>
-    /// Отладочный режим для показа идентификаторов окон в списке.
-    /// По умолчанию - false - выключен
+    /// РћС‚Р»Р°РґРѕС‡РЅС‹Р№ СЂРµР¶РёРј РґР»СЏ РїРѕРєР°Р·Р° РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РѕРєРѕРЅ РІ СЃРїРёСЃРєРµ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - РІС‹РєР»СЋС‡РµРЅ
     /// </summary>
     public bool DebugShowHWND
     {
@@ -730,7 +730,7 @@ namespace FreeLibSet.Forms
       Form frm = ci.Tag as Form;
 
       if (frm == null)
-        EFPApp.ErrorMessageBox("Форма не присоединена к команде");
+        EFPApp.ErrorMessageBox("Р¤РѕСЂРјР° РЅРµ РїСЂРёСЃРѕРµРґРёРЅРµРЅР° Рє РєРѕРјР°РЅРґРµ");
       else
         EFPApp.Activate(frm); // 07.06.2021
     }
@@ -739,10 +739,10 @@ namespace FreeLibSet.Forms
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
 
-      int p = ci.MenuText.IndexOf(' '); // номерок и пробел
+      int p = ci.MenuText.IndexOf(' '); // РЅРѕРјРµСЂРѕРє Рё РїСЂРѕР±РµР»
 #if DEBUG
       if (p < 0 || p > 3)
-        throw new BugException("Несанкционированное изменение текста команды меню");
+        throw new BugException("РќРµСЃР°РЅРєС†РёРѕРЅРёСЂРѕРІР°РЅРЅРѕРµ РёР·РјРµРЅРµРЅРёРµ С‚РµРєСЃС‚Р° РєРѕРјР°РЅРґС‹ РјРµРЅСЋ");
 #endif
 
 
@@ -754,9 +754,9 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        string s = ci.MenuText.Substring(0, p + 1) + frm.Text; // Цифра и пробел сохранены
+        string s = ci.MenuText.Substring(0, p + 1) + frm.Text; // Р¦РёС„СЂР° Рё РїСЂРѕР±РµР» СЃРѕС…СЂР°РЅРµРЅС‹
         if (EFPApp.IsMinimized(frm))
-          s += " (свернуто)";
+          s += " (СЃРІРµСЂРЅСѓС‚Рѕ)";
 
         if (DebugShowHWND)
           s += " (HWND=" + frm.Handle.ToString() + ")";
@@ -771,18 +771,18 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Другие окна"
+    #region "Р”СЂСѓРіРёРµ РѕРєРЅР°"
 
     /// <summary>
-    /// Команда "Другие окна"
+    /// РљРѕРјР°РЅРґР° "Р”СЂСѓРіРёРµ РѕРєРЅР°"
     /// </summary>
     public EFPCommandItem OtherWindows { get { return _OtherWindows; } }
     private EFPCommandItem _OtherWindows;
 
     /// <summary>
-    /// Добавить команду "Другие окна"
+    /// Р”РѕР±Р°РІРёС‚СЊ РєРѕРјР°РЅРґСѓ "Р”СЂСѓРіРёРµ РѕРєРЅР°"
     /// </summary>
-    /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
+    /// <param name="menuWindow">РњРµРЅСЋ "РћРєРЅРѕ", РІ РєРѕС‚РѕСЂРѕРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР°</param>
     public void AddOtherWindows(EFPCommandItem menuWindow)
     {
       _OtherWindows = CommandItems.Add(EFPAppStdCommandItems.OtherWindows, menuWindow);
@@ -798,7 +798,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Инициализация видимости
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІРёРґРёРјРѕСЃС‚Рё
 
     private void InitCommandsWindow()
     {
@@ -879,7 +879,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Инициализация списка в меню "Окно", включая команду "Другие окна"
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРїРёСЃРєР° РІ РјРµРЅСЋ "РћРєРЅРѕ", РІРєР»СЋС‡Р°СЏ РєРѕРјР°РЅРґСѓ "Р”СЂСѓРіРёРµ РѕРєРЅР°"
     /// </summary>
     private void InitWindowListItems()
     {
@@ -907,7 +907,7 @@ namespace FreeLibSet.Forms
             }
           }
 
-          // Как принято в MDI, если текущая форма не попала в список, ее надо сделать последним элементом
+          // РљР°Рє РїСЂРёРЅСЏС‚Рѕ РІ MDI, РµСЃР»Рё С‚РµРєСѓС‰Р°СЏ С„РѕСЂРјР° РЅРµ РїРѕРїР°Р»Р° РІ СЃРїРёСЃРѕРє, РµРµ РЅР°РґРѕ СЃРґРµР»Р°С‚СЊ РїРѕСЃР»РµРґРЅРёРј СЌР»РµРјРµРЅС‚РѕРј
           if ((!currFound) && WindowListItems.Length > 0 && (!Object.ReferenceEquals(curr, null)))
           {
             int i = WindowListItems.Length - 1;
@@ -948,9 +948,9 @@ namespace FreeLibSet.Forms
       WindowListItems[i].Visible = true;
       WindowListItems[i].Tag = form;
 
-      // 07.06.2021 Текст и значок обновляется при открытии меню
-      // Только, событие MenuStrip.MenuActivate, похоже, не всегда вызывается.
-      // Продублируем инициализацию
+      // 07.06.2021 РўРµРєСЃС‚ Рё Р·РЅР°С‡РѕРє РѕР±РЅРѕРІР»СЏРµС‚СЃСЏ РїСЂРё РѕС‚РєСЂС‹С‚РёРё РјРµРЅСЋ
+      // РўРѕР»СЊРєРѕ, СЃРѕР±С‹С‚РёРµ MenuStrip.MenuActivate, РїРѕС…РѕР¶Рµ, РЅРµ РІСЃРµРіРґР° РІС‹Р·С‹РІР°РµС‚СЃСЏ.
+      // РџСЂРѕРґСѓР±Р»РёСЂСѓРµРј РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ
       WindowListItem_MenuOpening(WindowListItems[i], null);
     }
 
@@ -964,19 +964,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Меню "Справка"
+    #region РњРµРЅСЋ "РЎРїСЂР°РІРєР°"
 
     /// <summary>
-    /// Команда "Справка"-"О программе".
-    /// Свойство задано, если был вызван метод AddAbout()
+    /// РљРѕРјР°РЅРґР° "РЎРїСЂР°РІРєР°"-"Рћ РїСЂРѕРіСЂР°РјРјРµ".
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РЅРѕ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ AddAbout()
     /// </summary>
     public EFPCommandItem About { get { return _About; } }
     private EFPCommandItem _About;
 
     /// <summary>
-    /// Добавление команды "Справка"-"О программе"
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјР°РЅРґС‹ "РЎРїСЂР°РІРєР°"-"Рћ РїСЂРѕРіСЂР°РјРјРµ"
     /// </summary>
-    /// <param name="menuHelp">Меню "Справка"</param>
+    /// <param name="menuHelp">РњРµРЅСЋ "РЎРїСЂР°РІРєР°"</param>
     public void AddAbout(EFPCommandItem menuHelp)
     {
       _About = CommandItems.Add(EFPAppStdCommandItems.About, menuHelp);
@@ -984,10 +984,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Показ диалога "О программе" с помошью EFPApp.ShowAboutDialog()
+    /// РџРѕРєР°Р· РґРёР°Р»РѕРіР° "Рћ РїСЂРѕРіСЂР°РјРјРµ" СЃ РїРѕРјРѕС€СЊСЋ EFPApp.ShowAboutDialog()
     /// </summary>
-    /// <param name="sender">Игнорируется</param>
-    /// <param name="args">Игнорируется</param>
+    /// <param name="sender">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public static void About_Click(object sender, EventArgs args)
     {
       EFPApp.ShowAboutDialog();

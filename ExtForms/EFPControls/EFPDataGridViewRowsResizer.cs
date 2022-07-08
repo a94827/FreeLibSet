@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,11 +10,11 @@ using FreeLibSet.Logging;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация автоподбора высоты строки
+  /// Р РµР°Р»РёР·Р°С†РёСЏ Р°РІС‚РѕРїРѕРґР±РѕСЂР° РІС‹СЃРѕС‚С‹ СЃС‚СЂРѕРєРё
   /// </summary>
   internal class EFPDataGridViewRowsResizer
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public EFPDataGridViewRowsResizer(EFPDataGridView controlProvider)
     {
@@ -28,13 +28,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private DataGridView Control;
 
     /// <summary>
-    /// Индекс первой отображаемой строки просмотра, который был при последнем вызове CalcRowHeights().
-    /// Если он не изменился с момента последнего вызова, никаих действий не выполняется
+    /// РРЅРґРµРєСЃ РїРµСЂРІРѕР№ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°, РєРѕС‚РѕСЂС‹Р№ Р±С‹Р» РїСЂРё РїРѕСЃР»РµРґРЅРµРј РІС‹Р·РѕРІРµ CalcRowHeights().
+    /// Р•СЃР»Рё РѕРЅ РЅРµ РёР·РјРµРЅРёР»СЃСЏ СЃ РјРѕРјРµРЅС‚Р° РїРѕСЃР»РµРґРЅРµРіРѕ РІС‹Р·РѕРІР°, РЅРёРєР°РёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
     /// </summary>
     private int _FirstDisplayedRowIndex;
 
@@ -42,7 +42,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё
 
     void Control_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs args)
     {
@@ -66,21 +66,21 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Подбор высоты
+    #region РџРѕРґР±РѕСЂ РІС‹СЃРѕС‚С‹
 
     /// <summary>
-    /// Расчет высоты строк, видимых в просмотре
+    /// Р Р°СЃС‡РµС‚ РІС‹СЃРѕС‚С‹ СЃС‚СЂРѕРє, РІРёРґРёРјС‹С… РІ РїСЂРѕСЃРјРѕС‚СЂРµ
     /// </summary>
     private void CalcRowHeights()
     {
       if (Control.FirstDisplayedScrollingRowIndex == _FirstDisplayedRowIndex)
-        return; // ничего не изменилось
+        return; // РЅРёС‡РµРіРѕ РЅРµ РёР·РјРµРЅРёР»РѕСЃСЊ
 
-      EFPApp.BeginWait("Вычисление высоты строк");
+      EFPApp.BeginWait("Р’С‹С‡РёСЃР»РµРЅРёРµ РІС‹СЃРѕС‚С‹ СЃС‚СЂРѕРє");
       try
       {
-        // Нельзя использовать цикл for, так как в процессе расчета может меняться высота строк и,
-        // соответственно, число отображаемых строк.
+        // РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С†РёРєР» for, С‚Р°Рє РєР°Рє РІ РїСЂРѕС†РµСЃСЃРµ СЂР°СЃС‡РµС‚Р° РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊСЃСЏ РІС‹СЃРѕС‚Р° СЃС‚СЂРѕРє Рё,
+        // СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ, С‡РёСЃР»Рѕ РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹С… СЃС‚СЂРѕРє.
         int rowIndex = Control.FirstDisplayedScrollingRowIndex;
         if (rowIndex < 0)
           rowIndex = 0;
@@ -101,7 +101,7 @@ namespace FreeLibSet.Forms
         if (!_CalcRowHeightsExceptionHandled)
         {
           _CalcRowHeightsExceptionHandled = true;
-          LogoutTools.LogoutException(e, "Ошибка расчета высоты строк табличного просмотра. Повторные ошибки не регистрируются");
+          LogoutTools.LogoutException(e, "РћС€РёР±РєР° СЂР°СЃС‡РµС‚Р° РІС‹СЃРѕС‚С‹ СЃС‚СЂРѕРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°. РџРѕРІС‚РѕСЂРЅС‹Рµ РѕС€РёР±РєРё РЅРµ СЂРµРіРёСЃС‚СЂРёСЂСѓСЋС‚СЃСЏ");
         }
       }
       EFPApp.EndWait();

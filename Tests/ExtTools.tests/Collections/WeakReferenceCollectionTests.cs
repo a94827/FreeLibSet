@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -13,7 +13,7 @@ namespace ExtTools_tests.Collections
   {
     private class TestObject
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public TestObject(int value)
       {
@@ -22,7 +22,7 @@ namespace ExtTools_tests.Collections
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public int Value { get { return _Value; } }
       private int _Value;
@@ -63,7 +63,7 @@ namespace ExtTools_tests.Collections
 
     private class AsyncAddTester
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public const int ObjCount = 1000;
 
@@ -79,7 +79,7 @@ namespace ExtTools_tests.Collections
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       private WeakReferenceCollection<TestObject> _SUT;
 
@@ -89,7 +89,7 @@ namespace ExtTools_tests.Collections
 
       #endregion
 
-      #region Выполнение
+      #region Р’С‹РїРѕР»РЅРµРЅРёРµ
 
       public void Execute()
       {
@@ -113,14 +113,14 @@ namespace ExtTools_tests.Collections
       for (int i = 0; i < a.Length; i++)
         a[i] = new AsyncAddTester(sut, useGCCollect);
 
-      // Асинхронный вызов Add()
+      // РђСЃРёРЅС…СЂРѕРЅРЅС‹Р№ РІС‹Р·РѕРІ Add()
       Thread[] trds = new Thread[a.Length];
       for (int i = 0; i < a.Length; i++)
         trds[i] = new Thread(a[i].Execute);
       for (int i = 0; i < a.Length; i++)
         trds[i].Start();
 
-      // Ожидаем завершения всех процедур
+      // РћР¶РёРґР°РµРј Р·Р°РІРµСЂС€РµРЅРёСЏ РІСЃРµС… РїСЂРѕС†РµРґСѓСЂ
       for (int i = 0; i < a.Length; i++)
         trds[i].Join();
 
@@ -212,14 +212,14 @@ namespace ExtTools_tests.Collections
     [Repeat(10)]
     public void Vanish_reference(int checkedItem)
     {
-      // Проверяем исчезновение ссылки из списка
-      // Должны убраться все ссылки, кроме проверяемой.
-      // При вызове WeakReferenceCollection.ToArray() выполняется автоматическая очистка списка, которая должна правильно работать, независимо от порядка удаляемых элементов
+      // РџСЂРѕРІРµСЂСЏРµРј РёСЃС‡РµР·РЅРѕРІРµРЅРёРµ СЃСЃС‹Р»РєРё РёР· СЃРїРёСЃРєР°
+      // Р”РѕР»Р¶РЅС‹ СѓР±СЂР°С‚СЊСЃСЏ РІСЃРµ СЃСЃС‹Р»РєРё, РєСЂРѕРјРµ РїСЂРѕРІРµСЂСЏРµРјРѕР№.
+      // РџСЂРё РІС‹Р·РѕРІРµ WeakReferenceCollection.ToArray() РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєР°СЏ РѕС‡РёСЃС‚РєР° СЃРїРёСЃРєР°, РєРѕС‚РѕСЂР°СЏ РґРѕР»Р¶РЅР° РїСЂР°РІРёР»СЊРЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ, РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РїРѕСЂСЏРґРєР° СѓРґР°Р»СЏРµРјС‹С… СЌР»РµРјРµРЅС‚РѕРІ
 
       WeakReferenceCollection<TestObject> sut = new WeakReferenceCollection<TestObject>();
-      TestObject obj = DoAddRefs(sut, checkedItem); // Отдельный метод, чтобы можно было очистить список
+      TestObject obj = DoAddRefs(sut, checkedItem); // РћС‚РґРµР»СЊРЅС‹Р№ РјРµС‚РѕРґ, С‡С‚РѕР±С‹ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РѕС‡РёСЃС‚РёС‚СЊ СЃРїРёСЃРѕРє
 
-      // Чистим ненужное
+      // Р§РёСЃС‚РёРј РЅРµРЅСѓР¶РЅРѕРµ
       GC.Collect();
 
       TestObject[] a = sut.ToArray();

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using AgeyevAV.ExtForms;
@@ -12,14 +12,14 @@ namespace FIASDemo
 {
   public class SelectDBForm : OKCancelGridForm
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public SelectDBForm()
     {
-      Text = "Выбор базы данных";
+      Text = "Р’С‹Р±РѕСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С…";
       efpGrid = new EFPDataGridView(base.ControlWithToolBar);
       efpGrid.Control.AutoGenerateColumns = false;
-      efpGrid.Columns.AddTextFill("Name", true, "Условное имя базы данных", 100, 10);
+      efpGrid.Columns.AddTextFill("Name", true, "РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…", 100, 10);
       efpGrid.Columns.LastAdded.CanIncSearch = true;
       efpGrid.ReadOnly = false;
       efpGrid.Control.ReadOnly = true;
@@ -27,9 +27,9 @@ namespace FIASDemo
       efpGrid.EditData += new EventHandler(efpGrid_EditData);
       efpGrid.CommandItems.EnterAsOk = true;
       InfoLabel lbl = AddInfoLabel(System.Windows.Forms.DockStyle.Bottom);
-      lbl.Text = "Демо-приложение позволяет создать несколько баз данных классификаторов разных форматов и с разными настройками." + Environment.NewLine +
-        "Чтобы создать базу данных нажмите кнопку [+]. Или выберите базу данных из списка" + Environment.NewLine +
-        "В реальном приложении обычно используется единственная база данных с предопределенными настройками";
+      lbl.Text = "Р”РµРјРѕ-РїСЂРёР»РѕР¶РµРЅРёРµ РїРѕР·РІРѕР»СЏРµС‚ СЃРѕР·РґР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ Р±Р°Р· РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂРѕРІ СЂР°Р·РЅС‹С… С„РѕСЂРјР°С‚РѕРІ Рё СЃ СЂР°Р·РЅС‹РјРё РЅР°СЃС‚СЂРѕР№РєР°РјРё." + Environment.NewLine +
+        "Р§С‚РѕР±С‹ СЃРѕР·РґР°С‚СЊ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… РЅР°Р¶РјРёС‚Рµ РєРЅРѕРїРєСѓ [+]. РР»Рё РІС‹Р±РµСЂРёС‚Рµ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… РёР· СЃРїРёСЃРєР°" + Environment.NewLine +
+        "Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РѕР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅР°СЏ Р±Р°Р·Р° РґР°РЅРЅС‹С… СЃ РїСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅС‹РјРё РЅР°СЃС‚СЂРѕР№РєР°РјРё";
       lbl.Icon = System.Windows.Forms.MessageBoxIcon.Information;
       lbl.IconSize = MessageBoxIconSize.Large;
 
@@ -40,7 +40,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Загрузка и сохранение списка
+    #region Р—Р°РіСЂСѓР·РєР° Рё СЃРѕС…СЂР°РЅРµРЅРёРµ СЃРїРёСЃРєР°
 
     public CfgPart Cfg;
 
@@ -97,13 +97,13 @@ namespace FIASDemo
     private void CheckForm(object sender, EFPValidatingEventArgs args)
     {
       if (efpGrid.CurrentDataRow == null)
-        args.SetError("База данных должна быть выбрана");
+        args.SetError("Р‘Р°Р·Р° РґР°РЅРЅС‹С… РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹Р±СЂР°РЅР°");
     }
 
 
     #endregion
 
-    #region Редактирование списка
+    #region Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЃРїРёСЃРєР°
 
     void efpGrid_EditData(object sender, EventArgs args)
     {
@@ -143,7 +143,7 @@ namespace FIASDemo
           break;
 
         case EFPDataGridViewState.Delete:
-          EFPApp.ErrorMessageBox("Не реализовано");
+          EFPApp.ErrorMessageBox("РќРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ");
           break;
       }
     }

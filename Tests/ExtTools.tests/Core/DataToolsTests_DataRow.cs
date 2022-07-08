@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
@@ -16,7 +16,7 @@ namespace ExtTools_tests.Core
     {
       DataRow row = table.Rows.Add("AAA");
 
-      #region Подготовка состояния строки
+      #region РџРѕРґРіРѕС‚РѕРІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ СЃС‚СЂРѕРєРё
 
       switch (state)
       {
@@ -60,7 +60,7 @@ namespace ExtTools_tests.Core
         DataRowState.Deleted)] DataRowState newState)
     {
       DataTable table = new DataTable();
-      table.Columns.Add("Text", typeof(string)); // непосредственно в тесте не используется
+      table.Columns.Add("Text", typeof(string)); // РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РІ С‚РµСЃС‚Рµ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
       DataRow row = CreateRowWithRowState(table, oldState);
 
       DataTools.SetRowState(row, newState);
@@ -80,7 +80,7 @@ namespace ExtTools_tests.Core
     public void GetRowValues(DataRowState state, DataRowVersion rowVersion, string result)
     {
       DataTable table = new DataTable();
-      table.Columns.Add("Text", typeof(string)); // непосредственно в тесте не используется
+      table.Columns.Add("Text", typeof(string)); // РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РІ С‚РµСЃС‚Рµ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
       DataRow row = CreateRowWithRowState(table, state);
 
       object[] res1 = DataTools.GetRowValues(row, rowVersion);
@@ -140,7 +140,7 @@ namespace ExtTools_tests.Core
       DataTable tbl = Creators.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
 
-      // Пока для DataRow есть только GetNullableDateTime
+      // РџРѕРєР° РґР»СЏ DataRow РµСЃС‚СЊ С‚РѕР»СЊРєРѕ GetNullableDateTime
 
       // Assert.AreEqual(1, DataTools.GetNullableInt(row, "FInt32"), "GetNullableInt()");
       //Assert.AreEqual(1L, DataTools.GetNullableInt64(row, "FInt64"), "GetNullableInt64()");
@@ -159,7 +159,7 @@ namespace ExtTools_tests.Core
       DataTable tbl = Creators.CreateTestDataTable();
       DataRow row = tbl.Rows[0];
 
-      // Пока для DataRow есть только GetNullableDateTime
+      // РџРѕРєР° РґР»СЏ DataRow РµСЃС‚СЊ С‚РѕР»СЊРєРѕ GetNullableDateTime
 
       // Assert.IsNull(DataTools.GetNullableInt(row, "FInt32"), "GetNullableInt()");
       //Assert.IsNull(DataTools.GetNullableInt64(row, "FInt64"), "GetNullableInt64()");

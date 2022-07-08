@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,7 +16,7 @@ namespace FIASDemo
 {
   public partial class CreateDBForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public CreateDBForm()
     {
@@ -26,7 +26,7 @@ namespace FIASDemo
       EFPFormProvider efpForm=new EFPFormProvider(this);
       TheTabControl.ImageList = EFPApp.MainImages;
 
-      #region База данных
+      #region Р‘Р°Р·Р° РґР°РЅРЅС‹С…
 
       tpDatabase.ImageKey = "Database";
 
@@ -45,7 +45,7 @@ namespace FIASDemo
 
       #endregion
 
-      #region Настройки
+      #region РќР°СЃС‚СЂРѕР№РєРё
 
       tpSettings.ImageKey = "Settings";
 
@@ -56,7 +56,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region База данных
+    #region Р‘Р°Р·Р° РґР°РЅРЅС‹С…
 
     public EFPTextBox efpName;
 
@@ -69,7 +69,7 @@ namespace FIASDemo
       switch (efpProvider.SelectedItemString)
       { 
         case "":
-          EFPApp.ShowTempMessage("Провайдер не выбран");
+          EFPApp.ShowTempMessage("РџСЂРѕРІР°Р№РґРµСЂ РЅРµ РІС‹Р±СЂР°РЅ");
           break;
         case DBxProviderNames.SQLite:
           BuildSQLiteConnection();
@@ -78,7 +78,7 @@ namespace FIASDemo
           BuildSqlExpressConnection();
           break;
         default:
-          EFPApp.ErrorMessageBox("Не реализовано для этого провайдера");
+          EFPApp.ErrorMessageBox("РќРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РґР»СЏ СЌС‚РѕРіРѕ РїСЂРѕРІР°Р№РґРµСЂР°");
           break;
       }
     }
@@ -92,7 +92,7 @@ namespace FIASDemo
       }
       catch { }
       OpenFileDialog dlg = new OpenFileDialog();
-      dlg.Title = "База данных SQLite";
+      dlg.Title = "Р‘Р°Р·Р° РґР°РЅРЅС‹С… SQLite";
       object x;
       csb.TryGetValue("Data Source", out x);
       string s=DataTools.GetString(x);
@@ -104,12 +104,12 @@ namespace FIASDemo
         if (!String.IsNullOrEmpty(efpName.Text))
           dlg.FileName = new AbsPath(FileTools.ApplicationBaseDir, efpName.Text + ".db").Path;
       }
-      dlg.Filter = "Файлы базы данных|*.db";
+      dlg.Filter = "Р¤Р°Р№Р»С‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С…|*.db";
       dlg.CheckFileExists = false;
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
       csb["data source"] = dlg.FileName;
-      csb["page size"] = 65536; // максимальный размер страницы
+      csb["page size"] = 65536; // РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ СЃС‚СЂР°РЅРёС†С‹
       efpConnectionString.Text = csb.ConnectionString;
     }
 
@@ -122,7 +122,7 @@ namespace FIASDemo
       }
       catch { }
       OpenFileDialog dlg = new OpenFileDialog();
-      dlg.Title = "База данных mdf (MS SQL Server Express)";
+      dlg.Title = "Р‘Р°Р·Р° РґР°РЅРЅС‹С… mdf (MS SQL Server Express)";
       object x;
       csb.TryGetValue("AttachDbFilename", out x);
       string s = DataTools.GetString(x);
@@ -134,7 +134,7 @@ namespace FIASDemo
         if (!String.IsNullOrEmpty(efpName.Text))
           dlg.FileName = new AbsPath(FileTools.ApplicationBaseDir, efpName.Text + ".mdf").Path;
       }
-      dlg.Filter = "Файлы базы данных MS SQL|*.mdf";
+      dlg.Filter = "Р¤Р°Р№Р»С‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С… MS SQL|*.mdf";
       dlg.CheckFileExists = false;
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
@@ -146,7 +146,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Настройки
+    #region РќР°СЃС‚СЂРѕР№РєРё
 
     public EFPFiasDBSettingsPanel efpDBSettings;
 

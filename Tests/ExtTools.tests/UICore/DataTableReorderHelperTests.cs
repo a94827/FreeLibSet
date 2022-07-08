@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.UICore
   [TestFixture]
   public class DataTableReorderHelperTests
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     [Test]
     public void Constructor()
@@ -22,7 +22,7 @@ namespace ExtTools_tests.UICore
       DataTableReorderHelper sut = new DataTableReorderHelper(tbl.DefaultView, "Order");
 
       Assert.AreSame(tbl.DefaultView, sut.DV, "DV");
-      Assert.AreEqual("Order", sut.OrderColumnName, "OrderColumnName"); // а не "Text"
+      Assert.AreEqual("Order", sut.OrderColumnName, "OrderColumnName"); // Р° РЅРµ "Text"
       Assert.AreEqual("AAA,DDD,CCC,BBB", GetOrderedText(tbl), "Order unchanged");
     }
 
@@ -52,7 +52,7 @@ namespace ExtTools_tests.UICore
     [TestCase("", false, "AAA,DDD,CCC,BBB")]
     public void MoveDown(string sRowValues, bool wantedRes, string sWantedValues)
     {
-      // Перемещение для нескольких строк должно работать независимо от порядка задания выбранных строк
+      // РџРµСЂРµРјРµС‰РµРЅРёРµ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚СЂРѕРє РґРѕР»Р¶РЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РїРѕСЂСЏРґРєР° Р·Р°РґР°РЅРёСЏ РІС‹Р±СЂР°РЅРЅС‹С… СЃС‚СЂРѕРє
       for (int i = 1; i <= 2; i++)
       {
         DataTable tbl = CreateTestTable();
@@ -82,7 +82,7 @@ namespace ExtTools_tests.UICore
     [TestCase("", false, "AAA,DDD,CCC,BBB")]
     public void MoveUp(string sRowValues, bool wantedRes, string sWantedValues)
     {
-      // Перемещение для нескольких строк должно работать независимо от порядка задания выбранных строк
+      // РџРµСЂРµРјРµС‰РµРЅРёРµ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚СЂРѕРє РґРѕР»Р¶РЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РїРѕСЂСЏРґРєР° Р·Р°РґР°РЅРёСЏ РІС‹Р±СЂР°РЅРЅС‹С… СЃС‚СЂРѕРє
       for (int i = 1; i <= 2; i++)
       {
         DataTable tbl = CreateTestTable();
@@ -129,7 +129,7 @@ namespace ExtTools_tests.UICore
       bool res = sut.InitRows(new DataRow[] { rowCCC }, out otherRowChanged);
       Assert.IsFalse(res, "Result");
       Assert.IsFalse(otherRowChanged, "otherRowChanged");
-      Assert.AreEqual("AAA,DDD,CCC,BBB", GetOrderedText(tbl), "Rows"); // ничего не поменялось
+      Assert.AreEqual("AAA,DDD,CCC,BBB", GetOrderedText(tbl), "Rows"); // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
     }
 
     [Test]
@@ -144,7 +144,7 @@ namespace ExtTools_tests.UICore
       bool res = sut.InitRows(new DataRow[] { rowDDD, rowCCC }, out otherRowChanged);
       Assert.IsTrue(res, "Result");
       Assert.IsFalse(otherRowChanged, "otherRowChanged");
-      Assert.AreEqual("AAA,DDD,BBB,CCC", GetOrderedText(tbl), "Rows"); // только "CCC" переместилось
+      Assert.AreEqual("AAA,DDD,BBB,CCC", GetOrderedText(tbl), "Rows"); // С‚РѕР»СЊРєРѕ "CCC" РїРµСЂРµРјРµСЃС‚РёР»РѕСЃСЊ
     }
 
     #endregion
@@ -159,11 +159,11 @@ namespace ExtTools_tests.UICore
 
       bool res1 = sut.Reorder();
       Assert.IsTrue(res1, "Result #1");
-      Assert.AreEqual("AAA,DDD,CCC,BBB", GetOrderedText(tbl), "Rows #1"); // ничего не поменялось
+      Assert.AreEqual("AAA,DDD,CCC,BBB", GetOrderedText(tbl), "Rows #1"); // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
 
       bool res2 = sut.Reorder();
       Assert.IsFalse(res2, "Result #2");
-      Assert.AreEqual("AAA,DDD,CCC,BBB", GetOrderedText(tbl), "Rows #2"); // ничего не поменялось
+      Assert.AreEqual("AAA,DDD,CCC,BBB", GetOrderedText(tbl), "Rows #2"); // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
     }
 
     [Test]
@@ -184,12 +184,12 @@ namespace ExtTools_tests.UICore
 
       bool res2 = sut.Reorder(rows);
       Assert.IsFalse(res2, "Result #2");
-      Assert.AreEqual("DDD,CCC,BBB,AAA", GetOrderedText(tbl), "Rows #2"); // ничего не поменялось
+      Assert.AreEqual("DDD,CCC,BBB,AAA", GetOrderedText(tbl), "Rows #2"); // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
     }
 
     #endregion
 
-    #region Тестовая таблица
+    #region РўРµСЃС‚РѕРІР°СЏ С‚Р°Р±Р»РёС†Р°
 
     private static DataTable CreateTestTable()
     {
@@ -202,7 +202,7 @@ namespace ExtTools_tests.UICore
       tbl.Rows.Add("DDD", 20); // [3]
       tbl.DefaultView.Sort = "Order";
 
-      // Текущий порядок сортировки: "AAA,DDD,CCC,BBB" (10,20,30,40)
+      // РўРµРєСѓС‰РёР№ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё: "AAA,DDD,CCC,BBB" (10,20,30,40)
       return tbl;
     }
 
@@ -221,7 +221,7 @@ namespace ExtTools_tests.UICore
       {
         int p = Array.IndexOf<string>(orgRowValues, aValues[i]);
         if (p < 0)
-          throw new BugException("Значения \"" + aValues[i] + "\" нет в таблице");
+          throw new BugException("Р—РЅР°С‡РµРЅРёСЏ \"" + aValues[i] + "\" РЅРµС‚ РІ С‚Р°Р±Р»РёС†Рµ");
         rows[i] = tbl.Rows[p];
       }
       return rows;

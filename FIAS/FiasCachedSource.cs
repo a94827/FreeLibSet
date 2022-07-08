@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -15,13 +15,13 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.FIAS
 {
 
-  // Первоначально предполагалось хранить простой словарь по ключам-GUIDам дочерних объектов (зданий, помещений)
-  // К сожалению, в базе данных ФИАС могут повторяться идентификаторы. То есть идентификаторы AOID и AOGUID могут совпадать
-  // Нужно либо хранить отдельные словари, либо использовать различающиеся ключи
+  // РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕ РїСЂРµРґРїРѕР»Р°РіР°Р»РѕСЃСЊ С…СЂР°РЅРёС‚СЊ РїСЂРѕСЃС‚РѕР№ СЃР»РѕРІР°СЂСЊ РїРѕ РєР»СЋС‡Р°Рј-GUIDР°Рј РґРѕС‡РµСЂРЅРёС… РѕР±СЉРµРєС‚РѕРІ (Р·РґР°РЅРёР№, РїРѕРјРµС‰РµРЅРёР№)
+  // Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ, РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С… Р¤РРђРЎ РјРѕРіСѓС‚ РїРѕРІС‚РѕСЂСЏС‚СЊСЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹. РўРѕ РµСЃС‚СЊ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ AOID Рё AOGUID РјРѕРіСѓС‚ СЃРѕРІРїР°РґР°С‚СЊ
+  // РќСѓР¶РЅРѕ Р»РёР±Рѕ С…СЂР°РЅРёС‚СЊ РѕС‚РґРµР»СЊРЅС‹Рµ СЃР»РѕРІР°СЂРё, Р»РёР±Рѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЂР°Р·Р»РёС‡Р°СЋС‰РёРµСЃСЏ РєР»СЋС‡Рё
 
   internal struct FiasGuidKey : IEquatable<FiasGuidKey>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public FiasGuidKey(Guid guid, FiasTableType tableType, bool isRecId)
     {
@@ -32,7 +32,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     private readonly Guid _Guid;
     private readonly FiasTableType _TableType;
@@ -40,7 +40,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Для словаря
+    #region Р”Р»СЏ СЃР»РѕРІР°СЂСЏ
 
     public static bool operator ==(FiasGuidKey a, FiasGuidKey b)
     {
@@ -80,16 +80,16 @@ namespace FreeLibSet.FIAS
 
 
   /// <summary>
-  /// Информация для словаря адресных объектов, домов и помещений.
-  /// Не используется в прикладном коде
+  /// РРЅС„РѕСЂРјР°С†РёСЏ РґР»СЏ СЃР»РѕРІР°СЂСЏ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, РґРѕРјРѕРІ Рё РїРѕРјРµС‰РµРЅРёР№.
+  /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
   /// </summary>
   [Serializable]
   public struct FiasGuidInfo
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация структуры
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃС‚СЂСѓРєС‚СѓСЂС‹
     /// </summary>
     /// <param name="level"></param>
     /// <param name="parentGuid"></param>
@@ -101,33 +101,33 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Уровень данного адресного объекта.
-    /// Для домов возвращается FiasLevel.House
-    /// Для помещений возвращается FiasLevel.Flat
+    /// РЈСЂРѕРІРµРЅСЊ РґР°РЅРЅРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р”Р»СЏ РґРѕРјРѕРІ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FiasLevel.House
+    /// Р”Р»СЏ РїРѕРјРµС‰РµРЅРёР№ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FiasLevel.Flat
     /// </summary>
     public FiasLevel Level { get { return _Level; } }
     private readonly FiasLevel _Level;
 
     /// <summary>
-    /// Идентификатор родительского адресного объекта.
-    /// Если Level=FiasLevel.Flat, то идентификатор дома.
-    /// Для регионов возвращается Guid.Empty.
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р•СЃР»Рё Level=FiasLevel.Flat, С‚Рѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРјР°.
+    /// Р”Р»СЏ СЂРµРіРёРѕРЅРѕРІ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Guid.Empty.
     /// </summary>
     public Guid ParentGuid { get { return _ParentGuid; } }
     private readonly Guid _ParentGuid;
 
     /// <summary>
-    /// Экземпляр "GUID не найден"
+    /// Р­РєР·РµРјРїР»СЏСЂ "GUID РЅРµ РЅР°Р№РґРµРЅ"
     /// </summary>
     public static readonly FiasGuidInfo NotFound = new FiasGuidInfo((FiasLevel)0, FiasTools.GuidNotFound);
 
     /// <summary>
-    /// Текстовое представление для отладки
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return _ParentGuid.ToString() + " (" + FiasEnumNames.ToString(_Level, false) + ")";
@@ -139,148 +139,148 @@ namespace FreeLibSet.FIAS
   #region IFiasSource
 
   /// <summary>
-  /// Интерфейс для получения страниц классификатора.
-  /// Методы интерфейса не должны использоваться в прикладном коде
+  /// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚СЂР°РЅРёС† РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+  /// РњРµС‚РѕРґС‹ РёРЅС‚РµСЂС„РµР№СЃР° РЅРµ РґРѕР»Р¶РЅС‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
   /// </summary>
   public interface IFiasSource
   {
     /// <summary>
-    /// Идентификатор базы данных.
-    /// Используется в качестве части ключа при кэшировании данных.
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РєР°С‡РµСЃС‚РІРµ С‡Р°СЃС‚Рё РєР»СЋС‡Р° РїСЂРё РєСЌС€РёСЂРѕРІР°РЅРёРё РґР°РЅРЅС‹С….
     /// </summary>
     string DBIdentity { get; }
 
     /// <summary>
-    /// Настройки базы данных
+    /// РќР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     FiasDBSettings DBSettings { get; }
 
     /// <summary>
-    /// Внутренние настройки классификатора
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёРµ РЅР°СЃС‚СЂРѕР№РєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     FiasInternalSettings InternalSettings { get; }
 
     /// <summary>
-    /// Дата актуальности классификатора
+    /// Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     DateTime ActualDate { get; }
 
 
     /// <summary>
-    /// Проверить изменение даты актуальности.
-    /// Этот метод может вызываться клиентом, если есть предположение, что дата актуальности могла измениться
+    /// РџСЂРѕРІРµСЂРёС‚СЊ РёР·РјРµРЅРµРЅРёРµ РґР°С‚С‹ Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РєР»РёРµРЅС‚РѕРј, РµСЃР»Рё РµСЃС‚СЊ РїСЂРµРґРїРѕР»РѕР¶РµРЅРёРµ, С‡С‚Рѕ РґР°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РјРѕРіР»Р° РёР·РјРµРЅРёС‚СЊСЃСЏ
     /// </summary>
     void UpdateActualDate();
 
     /// <summary>
-    /// Создает пакет данных для передачи от сервера к клиенту для конструктора FiasCachedSource для получения фиксированной информации за один вызов по сети,
-    /// а не по частям
+    /// РЎРѕР·РґР°РµС‚ РїР°РєРµС‚ РґР°РЅРЅС‹С… РґР»СЏ РїРµСЂРµРґР°С‡Рё РѕС‚ СЃРµСЂРІРµСЂР° Рє РєР»РёРµРЅС‚Сѓ РґР»СЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° FiasCachedSource РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё Р·Р° РѕРґРёРЅ РІС‹Р·РѕРІ РїРѕ СЃРµС‚Рё,
+    /// Р° РЅРµ РїРѕ С‡Р°СЃС‚СЏРј
     /// </summary>
     /// <returns></returns>
     FiasSourceProxy CreateProxy();
 
     /// <summary>
-    /// Получить словарь отношений адресных объектов.
-    /// В словаре ключ - GUID дочернего адресного объекта, дома помещения, значение уровень этого объекта и GUID родительского адресного объекта
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃР»РѕРІР°СЂСЊ РѕС‚РЅРѕС€РµРЅРёР№ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ.
+    /// Р’ СЃР»РѕРІР°СЂРµ РєР»СЋС‡ - GUID РґРѕС‡РµСЂРЅРµРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РїРѕРјРµС‰РµРЅРёСЏ, Р·РЅР°С‡РµРЅРёРµ СѓСЂРѕРІРµРЅСЊ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р° Рё GUID СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
-    /// <param name="guids">Идентификаторы дочерних объектов, для которых выполняется поиск</param>
-    /// <param name="tableType">Тип таблицы. Если тип интересующих объектов неизвестен, можно задавать Unknown</param>
-    /// <returns>Словарь отношений</returns>
+    /// <param name="guids">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕС‡РµСЂРЅРёС… РѕР±СЉРµРєС‚РѕРІ, РґР»СЏ РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє</param>
+    /// <param name="tableType">РўРёРї С‚Р°Р±Р»РёС†С‹. Р•СЃР»Рё С‚РёРї РёРЅС‚РµСЂРµСЃСѓСЋС‰РёС… РѕР±СЉРµРєС‚РѕРІ РЅРµРёР·РІРµСЃС‚РµРЅ, РјРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ Unknown</param>
+    /// <returns>РЎР»РѕРІР°СЂСЊ РѕС‚РЅРѕС€РµРЅРёР№</returns>
     IDictionary<Guid, FiasGuidInfo> GetGuidInfo(Guid[] guids, FiasTableType tableType);
 
     /// <summary>
-    /// Получить словарь записей объектов.
-    /// В словаре ключ - ID записи дочернего адресного объекта, дома помещения, значение уровень этого объекта и GUID родительского адресного объекта
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃР»РѕРІР°СЂСЊ Р·Р°РїРёСЃРµР№ РѕР±СЉРµРєС‚РѕРІ.
+    /// Р’ СЃР»РѕРІР°СЂРµ РєР»СЋС‡ - ID Р·Р°РїРёСЃРё РґРѕС‡РµСЂРЅРµРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РїРѕРјРµС‰РµРЅРёСЏ, Р·РЅР°С‡РµРЅРёРµ СѓСЂРѕРІРµРЅСЊ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р° Рё GUID СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
-    /// <param name="recIds">Идентификаторы дочерних объектов, для которых выполняется поиск</param>
-    /// <param name="tableType">Тип таблицы. Если тип интересующих объектов неизвестен, можно задавать Unknown</param>
-    /// <returns>Словарь отношений</returns>
+    /// <param name="recIds">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕС‡РµСЂРЅРёС… РѕР±СЉРµРєС‚РѕРІ, РґР»СЏ РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє</param>
+    /// <param name="tableType">РўРёРї С‚Р°Р±Р»РёС†С‹. Р•СЃР»Рё С‚РёРї РёРЅС‚РµСЂРµСЃСѓСЋС‰РёС… РѕР±СЉРµРєС‚РѕРІ РЅРµРёР·РІРµСЃС‚РµРЅ, РјРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ Unknown</param>
+    /// <returns>РЎР»РѕРІР°СЂСЊ РѕС‚РЅРѕС€РµРЅРёР№</returns>
     IDictionary<Guid, FiasGuidInfo> GetRecIdInfo(Guid[] recIds, FiasTableType tableType);
 
     /// <summary>
-    /// Получить страницы классификатора для заданных идентификаторов адресных объектов.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚СЂР°РЅРёС†С‹ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ.
     /// </summary>
-    /// <param name="level">Уровень адресных объектов, которые будут загружены в таблицы</param>
-    /// <param name="pageAOGuids">Идентификаторы родительских объектов, для которых выполняется поиск</param>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ Р·Р°РіСЂСѓР¶РµРЅС‹ РІ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="pageAOGuids">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЂРѕРґРёС‚РµР»СЊСЃРєРёС… РѕР±СЉРµРєС‚РѕРІ, РґР»СЏ РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє</param>
     /// <returns></returns>
     IDictionary<Guid, FiasCachedPageAddrOb> GetAddrObPages(FiasLevel level, Guid[] pageAOGuids);
 
     /// <summary>
-    /// Получить специальную страницу классификатора.
-    /// Используется редактором адреса
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРµС†РёР°Р»СЊРЅСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµРґР°РєС‚РѕСЂРѕРј Р°РґСЂРµСЃР°
     /// </summary>
-    /// <param name="pageType">Тип страницы</param>
-    /// <param name="pageAOGuid">Идентификатор родительского объекта</param>
+    /// <param name="pageType">РўРёРї СЃС‚СЂР°РЅРёС†С‹</param>
+    /// <param name="pageAOGuid">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РѕР±СЉРµРєС‚Р°</param>
     /// <returns></returns>
     FiasCachedPageSpecialAddrOb GetSpecialAddrObPage(FiasSpecialPageType pageType, Guid pageAOGuid);
 
     /// <summary>
-    /// Получить страницы классификатора домов для заданных идентификаторов адресных объектов.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚СЂР°РЅРёС†С‹ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґРѕРјРѕРІ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ.
     /// </summary>
-    /// <param name="pageAOGuids">Идентификаторы родительских объектов, для которых выполняется поиск</param>
+    /// <param name="pageAOGuids">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЂРѕРґРёС‚РµР»СЊСЃРєРёС… РѕР±СЉРµРєС‚РѕРІ, РґР»СЏ РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє</param>
     /// <returns></returns>
     IDictionary<Guid, FiasCachedPageHouse> GetHousePages(Guid[] pageAOGuids);
 
     /// <summary>
-    /// Получить страницы классификатора помещений для заданных идентификаторов домов.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚СЂР°РЅРёС†С‹ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РїРѕРјРµС‰РµРЅРёР№ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґРѕРјРѕРІ.
     /// </summary>
-    /// <param name="pageHouseGuids">Идентификаторы родительских объектов (домов), для которых выполняется поиск</param>
+    /// <param name="pageHouseGuids">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЂРѕРґРёС‚РµР»СЊСЃРєРёС… РѕР±СЉРµРєС‚РѕРІ (РґРѕРјРѕРІ), РґР»СЏ РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє</param>
     /// <returns></returns>
     IDictionary<Guid, FiasCachedPageRoom> GetRoomPages(Guid[] pageHouseGuids);
 
     /// <summary>
-    /// Загрузить буферизованную таблицу сокращений
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ СЃРѕРєСЂР°С‰РµРЅРёР№
     /// </summary>
-    /// <returns>Буферизованный объект</returns>
+    /// <returns>Р‘СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚</returns>
     FiasCachedAOTypes GetAOTypes();
 
     /// <summary>
-    /// Выполняет поиск адресов
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїРѕРёСЃРє Р°РґСЂРµСЃРѕРІ
     /// </summary>
-    /// <param name="searchParams">Параметры поиска</param>
-    /// <returns>Результаты поиска</returns>
+    /// <param name="searchParams">РџР°СЂР°РјРµС‚СЂС‹ РїРѕРёСЃРєР°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР°</returns>
     DataSet FindAddresses(FiasAddressSearchParams searchParams);
 
     /// <summary>
-    /// Загрузить таблицу для заданного "устойчивого" адресного объекта, дома или помещения
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ "СѓСЃС‚РѕР№С‡РёРІРѕРіРѕ" Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РёР»Рё РїРѕРјРµС‰РµРЅРёСЏ
     /// </summary>
-    /// <param name="guid">Значение AOGUID, HOUSEGUID или ROOMGUID</param>
-    /// <param name="tableType">Тип таблицы</param>
-    /// <returns>Таблица данных</returns>
+    /// <param name="guid">Р—РЅР°С‡РµРЅРёРµ AOGUID, HOUSEGUID РёР»Рё ROOMGUID</param>
+    /// <param name="tableType">РўРёРї С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С…</returns>
     DataSet GetTableForGuid(Guid guid, FiasTableType tableType);
 
     /// <summary>
-    /// Возвращает статистику по базе данных классификатора.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ Р±Р°Р·Рµ РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
     /// </summary>
     FiasDBStat DBStat { get; }
 
     /// <summary>
-    /// Загружает таблицу истории обновлений классификатора
+    /// Р—Р°РіСЂСѓР¶Р°РµС‚ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РѕР±РЅРѕРІР»РµРЅРёР№ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     /// <returns></returns>
     DataTable GetClassifUpdateTable();
 
     /// <summary>
-    /// Начинает "разделенный" запуск процедуры на сервере.
-    /// Используется FiasDistributedSource
+    /// РќР°С‡РёРЅР°РµС‚ "СЂР°Р·РґРµР»РµРЅРЅС‹Р№" Р·Р°РїСѓСЃРє РїСЂРѕС†РµРґСѓСЂС‹ РЅР° СЃРµСЂРІРµСЂРµ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ FiasDistributedSource
     /// </summary>
-    /// <param name="args">Упакованные данные запроса</param>
-    /// <param name="userData">Свойство FiasDistributedSource.UserData</param>
-    /// <returns>Результаты разделенного запуска</returns>
+    /// <param name="args">РЈРїР°РєРѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="userData">РЎРІРѕР№СЃС‚РІРѕ FiasDistributedSource.UserData</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚С‹ СЂР°Р·РґРµР»РµРЅРЅРѕРіРѕ Р·Р°РїСѓСЃРєР°</returns>
     DistributedCallData StartDistributedCall(NamedValues args, object userData);
   }
 
   #endregion
 
   /// <summary>
-  /// Передача классификатора от сервера к клиенту.
-  /// Требуется конструктору FiasCachedSource. Создается вызовом IFiasSource.CreateProxy().
-  /// Не содержит свойств, доступных из прикладного кода
+  /// РџРµСЂРµРґР°С‡Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РѕС‚ СЃРµСЂРІРµСЂР° Рє РєР»РёРµРЅС‚Сѓ.
+  /// РўСЂРµР±СѓРµС‚СЃСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂСѓ FiasCachedSource. РЎРѕР·РґР°РµС‚СЃСЏ РІС‹Р·РѕРІРѕРј IFiasSource.CreateProxy().
+  /// РќРµ СЃРѕРґРµСЂР¶РёС‚ СЃРІРѕР№СЃС‚РІ, РґРѕСЃС‚СѓРїРЅС‹С… РёР· РїСЂРёРєР»Р°РґРЅРѕРіРѕ РєРѕРґР°
   /// </summary>
   [Serializable]
   public sealed class FiasSourceProxy
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasSourceProxy(IFiasSource source, string dbIdentity, FiasDBSettings dbSettings,
       FiasInternalSettings internalSettings, FiasDBStat dbStat)
@@ -294,7 +294,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     internal IFiasSource Source { get { return (IFiasSource)_Source; } }
     private readonly object _Source;
@@ -315,22 +315,22 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Буферизация страниц классификатора.
-  /// Создается пользовательским кодом в одном экземпляре на стороне клиента. Клиент отвечает за удаление этого объекта.
-  /// На стороне сервера создается автоматически в FiasDB
-  /// Самоспонсируемый объект для net remoting.
-  /// Класс является потокобезопасным.
+  /// Р‘СѓС„РµСЂРёР·Р°С†РёСЏ СЃС‚СЂР°РЅРёС† РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+  /// РЎРѕР·РґР°РµС‚СЃСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРј РєРѕРґРѕРј РІ РѕРґРЅРѕРј СЌРєР·РµРјРїР»СЏСЂРµ РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°. РљР»РёРµРЅС‚ РѕС‚РІРµС‡Р°РµС‚ Р·Р° СѓРґР°Р»РµРЅРёРµ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р°.
+  /// РќР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР° СЃРѕР·РґР°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РІ FiasDB
+  /// РЎР°РјРѕСЃРїРѕРЅСЃРёСЂСѓРµРјС‹Р№ РѕР±СЉРµРєС‚ РґР»СЏ net remoting.
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   public class FiasCachedSource : MarshalByRefDisposableObject, IFiasSource
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект, присоединенный к другому источнику.
-    /// При создании на стороне клиента, в качестве источника <paramref name="proxy"/> должен использоваться
-    /// объект, создаваемый вызовом FiasDB.Source.CreateProxy(), переданный по сети.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Р№ Рє РґСЂСѓРіРѕРјСѓ РёСЃС‚РѕС‡РЅРёРєСѓ.
+    /// РџСЂРё СЃРѕР·РґР°РЅРёРё РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°, РІ РєР°С‡РµСЃС‚РІРµ РёСЃС‚РѕС‡РЅРёРєР° <paramref name="proxy"/> РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ
+    /// РѕР±СЉРµРєС‚, СЃРѕР·РґР°РІР°РµРјС‹Р№ РІС‹Р·РѕРІРѕРј FiasDB.Source.CreateProxy(), РїРµСЂРµРґР°РЅРЅС‹Р№ РїРѕ СЃРµС‚Рё.
     /// </summary>
-    /// <param name="proxy">Данные для конструктора. Не может быть null</param>
+    /// <param name="proxy">Р”Р°РЅРЅС‹Рµ РґР»СЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public FiasCachedSource(FiasSourceProxy proxy)
     {
 #if DEBUG
@@ -346,7 +346,7 @@ namespace FreeLibSet.FIAS
       _DBStat = proxy.DBStat;
 
 
-      _CacheFirstKey = DataTools.MD5SumFromString(_DBIdentity); // тут могут быть нехорошие символы
+      _CacheFirstKey = DataTools.MD5SumFromString(_DBIdentity); // С‚СѓС‚ РјРѕРіСѓС‚ Р±С‹С‚СЊ РЅРµС…РѕСЂРѕС€РёРµ СЃРёРјРІРѕР»С‹
       _CacheFirstKeySimpleArray = new string[1] { _CacheFirstKey };
 
       _GuidDict = new DictionaryWithMRU<FiasGuidKey, FiasGuidInfo>();
@@ -358,12 +358,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Обычно следует использовать перегрузку конструктора, принимающую FiasSourceProxy.
-    /// Этот вариант конструктора используется, когда на клиенте загрузка модуля FIAS.dll является отложенной
-    /// и нежелательно передавать объект FiasSourceProxy заранее.
-    /// Напротив, передача интерфейса IFiasSource клиенту как System.Object, не приводит к загрузке FIAS.dll, 
-    /// если не приводить его сразу к правильному типу. Когда клиенту потребуется FiasCachedSource, вызывается этот
-    /// конструктор. При этом, однако, будет выполнено лишнее обращение к серверу для получения недостающей информации
+    /// РћР±С‹С‡РЅРѕ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїРµСЂРµРіСЂСѓР·РєСѓ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°, РїСЂРёРЅРёРјР°СЋС‰СѓСЋ FiasSourceProxy.
+    /// Р­С‚РѕС‚ РІР°СЂРёР°РЅС‚ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РєРѕРіРґР° РЅР° РєР»РёРµРЅС‚Рµ Р·Р°РіСЂСѓР·РєР° РјРѕРґСѓР»СЏ FIAS.dll СЏРІР»СЏРµС‚СЃСЏ РѕС‚Р»РѕР¶РµРЅРЅРѕР№
+    /// Рё РЅРµР¶РµР»Р°С‚РµР»СЊРЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РѕР±СЉРµРєС‚ FiasSourceProxy Р·Р°СЂР°РЅРµРµ.
+    /// РќР°РїСЂРѕС‚РёРІ, РїРµСЂРµРґР°С‡Р° РёРЅС‚РµСЂС„РµР№СЃР° IFiasSource РєР»РёРµРЅС‚Сѓ РєР°Рє System.Object, РЅРµ РїСЂРёРІРѕРґРёС‚ Рє Р·Р°РіСЂСѓР·РєРµ FIAS.dll, 
+    /// РµСЃР»Рё РЅРµ РїСЂРёРІРѕРґРёС‚СЊ РµРіРѕ СЃСЂР°Р·Сѓ Рє РїСЂР°РІРёР»СЊРЅРѕРјСѓ С‚РёРїСѓ. РљРѕРіРґР° РєР»РёРµРЅС‚Сѓ РїРѕС‚СЂРµР±СѓРµС‚СЃСЏ FiasCachedSource, РІС‹Р·С‹РІР°РµС‚СЃСЏ СЌС‚РѕС‚
+    /// РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ. РџСЂРё СЌС‚РѕРј, РѕРґРЅР°РєРѕ, Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅРѕ Р»РёС€РЅРµРµ РѕР±СЂР°С‰РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РЅРµРґРѕСЃС‚Р°СЋС‰РµР№ РёРЅС„РѕСЂРјР°С†РёРё
     /// </summary>
     /// <param name="source"></param>
     public FiasCachedSource(IFiasSource source)
@@ -373,49 +373,49 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private readonly IFiasSource _BaseSource;
 
     /// <summary>
-    /// Идентификатор базы данных.
-    /// Используется в качестве части ключа при кэшировании данных.
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РєР°С‡РµСЃС‚РІРµ С‡Р°СЃС‚Рё РєР»СЋС‡Р° РїСЂРё РєСЌС€РёСЂРѕРІР°РЅРёРё РґР°РЅРЅС‹С….
     /// </summary>
     public string DBIdentity { get { return _DBIdentity; } }
     private readonly string _DBIdentity;
 
     /// <summary>
-    /// Первый ключ для кэширования.
-    /// Задает имена подкаталогов второго уровня в Cache.Params.PersistDir.
+    /// РџРµСЂРІС‹Р№ РєР»СЋС‡ РґР»СЏ РєСЌС€РёСЂРѕРІР°РЅРёСЏ.
+    /// Р—Р°РґР°РµС‚ РёРјРµРЅР° РїРѕРґРєР°С‚Р°Р»РѕРіРѕРІ РІС‚РѕСЂРѕРіРѕ СѓСЂРѕРІРЅСЏ РІ Cache.Params.PersistDir.
     /// </summary>
     public string CacheFirstKey { get { return _CacheFirstKey; } }
     private readonly string _CacheFirstKey;
 
     /// <summary>
-    /// Массив из одного элемента _CacheFirstKey
+    /// РњР°СЃСЃРёРІ РёР· РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° _CacheFirstKey
     /// </summary>
     private readonly string[] _CacheFirstKeySimpleArray;
 
     /// <summary>
-    /// Настройки базы данных
+    /// РќР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     public FiasDBSettings DBSettings { get { return _DBSettings; } }
     private readonly FiasDBSettings _DBSettings;
 
     /// <summary>
-    /// Внутренние настройки классификатора
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёРµ РЅР°СЃС‚СЂРѕР№РєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     public FiasInternalSettings InternalSettings { get { return _InternalSettings; } }
     private readonly FiasInternalSettings _InternalSettings;
 
     #endregion
 
-    #region Словари GUID'ов
+    #region РЎР»РѕРІР°СЂРё GUID'РѕРІ
 
     private readonly DictionaryWithMRU<FiasGuidKey, FiasGuidInfo> _GuidDict;
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="guids"></param>
     /// <param name="tableType"></param>
@@ -436,7 +436,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="recIds"></param>
     /// <param name="tableType"></param>
@@ -460,7 +460,7 @@ namespace FreeLibSet.FIAS
     {
       Dictionary<Guid, FiasGuidInfo> dict = new Dictionary<Guid, FiasGuidInfo>(guids.Length);
 
-      #region Поиск в кэше
+      #region РџРѕРёСЃРє РІ РєСЌС€Рµ
 
       SingleScopeList<Guid> wanted = null;
 
@@ -471,10 +471,10 @@ namespace FreeLibSet.FIAS
           FiasGuidKey key = new FiasGuidKey(guids[i], tableType, isRecIds);
           FiasGuidInfo info;
           if (_GuidDict.TryGetValue(key, out info))
-            dict[guids[i]] = info; // не используем dict.Add(), так как в массиве guids могут быть повторы
+            dict[guids[i]] = info; // РЅРµ РёСЃРїРѕР»СЊР·СѓРµРј dict.Add(), С‚Р°Рє РєР°Рє РІ РјР°СЃСЃРёРІРµ guids РјРѕРіСѓС‚ Р±С‹С‚СЊ РїРѕРІС‚РѕСЂС‹
           else
           {
-            // нет в кэше
+            // РЅРµС‚ РІ РєСЌС€Рµ
             if (wanted == null)
               wanted = new SingleScopeList<Guid>();
             wanted.Add(guids[i]);
@@ -484,7 +484,7 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Запрос недостающих значений
+      #region Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… Р·РЅР°С‡РµРЅРёР№
 
       if (wanted != null)
       {
@@ -523,7 +523,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Буферизованные страницы
+    #region Р‘СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Рµ СЃС‚СЂР°РЅРёС†С‹
 
     #region FiasCachedPageAddrOb
 
@@ -533,7 +533,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="level"></param>
     /// <param name="pageAOGuids"></param>
@@ -546,13 +546,13 @@ namespace FreeLibSet.FIAS
       Dictionary<Guid, FiasCachedPageAddrOb> dict = new Dictionary<Guid, FiasCachedPageAddrOb>();
 
       ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(new string[]{
-        "Поиск страниц адресных объектов \""+FiasEnumNames.ToString(level, false)+"\" ("+pageAOGuids.Length.ToString()+") в кэше",
-        "Запрос недостающих страниц в базе данных",
-        "Запись страниц в кэш"});
+        "РџРѕРёСЃРє СЃС‚СЂР°РЅРёС† Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ \""+FiasEnumNames.ToString(level, false)+"\" ("+pageAOGuids.Length.ToString()+") РІ РєСЌС€Рµ",
+        "Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…",
+        "Р—Р°РїРёСЃСЊ СЃС‚СЂР°РЅРёС† РІ РєСЌС€"});
       try
       {
 
-        #region Поиск в кэше
+        #region РџРѕРёСЃРє РІ РєСЌС€Рµ
 
         SingleScopeList<Guid> wanted = null;
 
@@ -576,11 +576,11 @@ namespace FreeLibSet.FIAS
 
         #endregion
 
-        #region Запрос недостающих страниц
+        #region Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС†
 
         if (wanted != null)
         {
-          spl.PhaseText = "Запрос недостающих страниц в базе данных (" + wanted.Count.ToString() + ")";
+          spl.PhaseText = "Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С… (" + wanted.Count.ToString() + ")";
           if (FiasTools.TraceSwitch.Enabled)
             Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasCachedSource.GetAddrObPages(). Pages found in cache: " + (pageAOGuids.Length - wanted.Count).ToString() + ", required from BaseSource: " + wanted.Count.ToString());
 
@@ -632,7 +632,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="pageType"></param>
     /// <param name="pageAOGuid"></param>
@@ -687,7 +687,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="pageAOGuids"></param>
     /// <returns></returns>
@@ -699,12 +699,12 @@ namespace FreeLibSet.FIAS
       Dictionary<Guid, FiasCachedPageHouse> dict = new Dictionary<Guid, FiasCachedPageHouse>();
 
       ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(new string[]{
-        "Поиск страниц зданий ("+pageAOGuids.Length.ToString()+") в кэше",
-        "Запрос недостающих страниц в базе данных",
-        "Запись страниц в кэш"});
+        "РџРѕРёСЃРє СЃС‚СЂР°РЅРёС† Р·РґР°РЅРёР№ ("+pageAOGuids.Length.ToString()+") РІ РєСЌС€Рµ",
+        "Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…",
+        "Р—Р°РїРёСЃСЊ СЃС‚СЂР°РЅРёС† РІ РєСЌС€"});
       try
       {
-        #region Поиск в кэше
+        #region РџРѕРёСЃРє РІ РєСЌС€Рµ
 
         SingleScopeList<Guid> wanted = null;
 
@@ -728,11 +728,11 @@ namespace FreeLibSet.FIAS
 
         #endregion
 
-        #region Запрос недостающих страниц
+        #region Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС†
 
         if (wanted != null)
         {
-          spl.PhaseText = "Запрос недостающих страниц в базе данных (" + wanted.Count.ToString() + ")";
+          spl.PhaseText = "Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С… (" + wanted.Count.ToString() + ")";
           if (FiasTools.TraceSwitch.Enabled)
             Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasCachedSource.GetHousePages(). Pages found in cache: " + (pageAOGuids.Length - wanted.Count).ToString() + ", required from BaseSource: " + wanted.Count.ToString());
 
@@ -793,7 +793,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="pageHouseGuids"></param>
     /// <returns></returns>
@@ -805,12 +805,12 @@ namespace FreeLibSet.FIAS
       Dictionary<Guid, FiasCachedPageRoom> dict = new Dictionary<Guid, FiasCachedPageRoom>();
 
       ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(new string[]{
-        "Поиск страниц помещений ("+pageHouseGuids.Length.ToString()+") в кэше",
-        "Запрос недостающих страниц в базе данных",
-        "Запись страниц в кэш"});
+        "РџРѕРёСЃРє СЃС‚СЂР°РЅРёС† РїРѕРјРµС‰РµРЅРёР№ ("+pageHouseGuids.Length.ToString()+") РІ РєСЌС€Рµ",
+        "Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…",
+        "Р—Р°РїРёСЃСЊ СЃС‚СЂР°РЅРёС† РІ РєСЌС€"});
       try
       {
-        #region Поиск в кэше
+        #region РџРѕРёСЃРє РІ РєСЌС€Рµ
 
         SingleScopeList<Guid> wanted = null;
 
@@ -834,11 +834,11 @@ namespace FreeLibSet.FIAS
 
         #endregion
 
-        #region Запрос недостающих страниц
+        #region Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС†
 
         if (wanted != null)
         {
-          spl.PhaseText = "Запрос недостающих страниц в базе данных (" + wanted.Count.ToString() + ")";
+          spl.PhaseText = "Р—Р°РїСЂРѕСЃ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂР°РЅРёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С… (" + wanted.Count.ToString() + ")";
           if (FiasTools.TraceSwitch.Enabled)
             Trace.WriteLine(FiasTools.GetTracePrefix() + "FiasCachedSource.GetRoomPages(). Pages found in cache: " + (pageHouseGuids.Length - wanted.Count).ToString() + ", required from BaseSource: " + wanted.Count.ToString());
 
@@ -894,10 +894,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Таблица сокращений
+    #region РўР°Р±Р»РёС†Р° СЃРѕРєСЂР°С‰РµРЅРёР№
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <returns></returns>
     public FiasCachedAOTypes GetAOTypes()
@@ -936,21 +936,21 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Текстовое представление адреса
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ Р°РґСЂРµСЃР°
 
     /// <summary>
-    /// Кэширование текстовых представлений для кодированных строк адреса
+    /// РљСЌС€РёСЂРѕРІР°РЅРёРµ С‚РµРєСЃС‚РѕРІС‹С… РїСЂРµРґСЃС‚Р°РІР»РµРЅРёР№ РґР»СЏ РєРѕРґРёСЂРѕРІР°РЅРЅС‹С… СЃС‚СЂРѕРє Р°РґСЂРµСЃР°
     /// </summary>
     public FiasAddressTextCache TextCache { get { return _TextCache; } }
     private FiasAddressTextCache _TextCache;
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Выполняет очистку кэша.
-    /// Очищается кэш только для текущего объекта. Для BaseSource очистка не выполняется
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕС‡РёСЃС‚РєСѓ РєСЌС€Р°.
+    /// РћС‡РёС‰Р°РµС‚СЃСЏ РєСЌС€ С‚РѕР»СЊРєРѕ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РѕР±СЉРµРєС‚Р°. Р”Р»СЏ BaseSource РѕС‡РёСЃС‚РєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
     /// </summary>
     public void ClearCache()
     {
@@ -974,7 +974,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="searchParams"></param>
     /// <returns></returns>
@@ -984,7 +984,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Не используется в прикладном коде.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
     /// <param name="guid"></param>
     /// <param name="tableType"></param>
@@ -995,7 +995,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Создает объект, который может быть передан конструктору FiasCachedSource при организации сложной цепочки
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРµСЂРµРґР°РЅ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂСѓ FiasCachedSource РїСЂРё РѕСЂРіР°РЅРёР·Р°С†РёРё СЃР»РѕР¶РЅРѕР№ С†РµРїРѕС‡РєРё
     /// </summary>
     /// <returns></returns>
     public FiasSourceProxy CreateProxy()
@@ -1005,7 +1005,7 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Загружает таблицу истории обновлений классификатора
+    /// Р—Р°РіСЂСѓР¶Р°РµС‚ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РѕР±РЅРѕРІР»РµРЅРёР№ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     /// <returns></returns>
     public DataTable GetClassifUpdateTable()
@@ -1014,7 +1014,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Вызывает метод базового источника
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ Р±Р°Р·РѕРІРѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР°
     /// </summary>
     /// <param name="args"></param>
     /// <param name="userData"></param>
@@ -1026,16 +1026,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Дата актуальности и статистика
+    #region Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё Рё СЃС‚Р°С‚РёСЃС‚РёРєР°
 
     /// <summary>
-    /// Возвращает статистику по базе данных
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     /// </summary>
     public FiasDBStat DBStat { get { return _DBStat; } }
     private FiasDBStat _DBStat;
 
     /// <summary>
-    /// Дата актульности
+    /// Р”Р°С‚Р° Р°РєС‚СѓР»СЊРЅРѕСЃС‚Рё
     /// </summary>
     public DateTime ActualDate { get { return DBStat.ActualDate; } }
 
@@ -1061,11 +1061,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Обновление версии в процессе работы.
-    /// Используется приложением клиента. Клиент может, например, по таймеру запрашивать у сервера дату актуальности классификатора
-    /// и вызывать этот метод, если дата изменилась.
-    /// Метод запрашивает у источника свойство ActualDate. Если дата актульности совпадает с текущей, никаких действий не выполняется.
-    /// Иначе выполняется очистка кэша и обновляются свойства FiasCachedSource.ActualDate и DBStat
+    /// РћР±РЅРѕРІР»РµРЅРёРµ РІРµСЂСЃРёРё РІ РїСЂРѕС†РµСЃСЃРµ СЂР°Р±РѕС‚С‹.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРёР»РѕР¶РµРЅРёРµРј РєР»РёРµРЅС‚Р°. РљР»РёРµРЅС‚ РјРѕР¶РµС‚, РЅР°РїСЂРёРјРµСЂ, РїРѕ С‚Р°Р№РјРµСЂСѓ Р·Р°РїСЂР°С€РёРІР°С‚СЊ Сѓ СЃРµСЂРІРµСЂР° РґР°С‚Сѓ Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+    /// Рё РІС‹Р·С‹РІР°С‚СЊ СЌС‚РѕС‚ РјРµС‚РѕРґ, РµСЃР»Рё РґР°С‚Р° РёР·РјРµРЅРёР»Р°СЃСЊ.
+    /// РњРµС‚РѕРґ Р·Р°РїСЂР°С€РёРІР°РµС‚ Сѓ РёСЃС‚РѕС‡РЅРёРєР° СЃРІРѕР№СЃС‚РІРѕ ActualDate. Р•СЃР»Рё РґР°С‚Р° Р°РєС‚СѓР»СЊРЅРѕСЃС‚Рё СЃРѕРІРїР°РґР°РµС‚ СЃ С‚РµРєСѓС‰РµР№, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РРЅР°С‡Рµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕС‡РёСЃС‚РєР° РєСЌС€Р° Рё РѕР±РЅРѕРІР»СЏСЋС‚СЃСЏ СЃРІРѕР№СЃС‚РІР° FiasCachedSource.ActualDate Рё DBStat
     /// </summary>
     public void UpdateActualDate()
     {
@@ -1094,27 +1094,27 @@ namespace FreeLibSet.FIAS
     #endregion
   }
 
-  #region Перечисление FiasSpecialPageType
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ FiasSpecialPageType
 
   /// <summary>
-  /// Специальные типы страниц, которые можно загружать из классификатора
+  /// РЎРїРµС†РёР°Р»СЊРЅС‹Рµ С‚РёРїС‹ СЃС‚СЂР°РЅРёС†, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р·Р°РіСЂСѓР¶Р°С‚СЊ РёР· РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
   /// </summary>
   [Serializable]
   public enum FiasSpecialPageType
   {
     /// <summary>
-    /// Все города (в пределах РФ)
+    /// Р’СЃРµ РіРѕСЂРѕРґР° (РІ РїСЂРµРґРµР»Р°С… Р Р¤)
     /// </summary>
     AllCities,
 
     /// <summary>
-    /// Районы всех регионов (в пределах РФ)
+    /// Р Р°Р№РѕРЅС‹ РІСЃРµС… СЂРµРіРёРѕРЅРѕРІ (РІ РїСЂРµРґРµР»Р°С… Р Р¤)
     /// </summary>
     AllDistricts,
 
 
     /// <summary>
-    /// Населенные пункты - столицы районов (в пределах региона)
+    /// РќР°СЃРµР»РµРЅРЅС‹Рµ РїСѓРЅРєС‚С‹ - СЃС‚РѕР»РёС†С‹ СЂР°Р№РѕРЅРѕРІ (РІ РїСЂРµРґРµР»Р°С… СЂРµРіРёРѕРЅР°)
     /// </summary>
     DistrictCapitals,
   }
@@ -1122,14 +1122,14 @@ namespace FreeLibSet.FIAS
   #endregion
 
   /// <summary>
-  /// Кэширование текстового представления для кодированных строк адреса.
-  /// На входе передается строка адреса в формате FiasAddressConvert, а на выходе получается строка FiasHander.Format().
-  /// Класс является потокобезопасным.
-  /// Перехватываются ошибки преобразования. Для них возвращаются пустые строки.
+  /// РљСЌС€РёСЂРѕРІР°РЅРёРµ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РґР»СЏ РєРѕРґРёСЂРѕРІР°РЅРЅС‹С… СЃС‚СЂРѕРє Р°РґСЂРµСЃР°.
+  /// РќР° РІС…РѕРґРµ РїРµСЂРµРґР°РµС‚СЃСЏ СЃС‚СЂРѕРєР° Р°РґСЂРµСЃР° РІ С„РѕСЂРјР°С‚Рµ FiasAddressConvert, Р° РЅР° РІС‹С…РѕРґРµ РїРѕР»СѓС‡Р°РµС‚СЃСЏ СЃС‚СЂРѕРєР° FiasHander.Format().
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
+  /// РџРµСЂРµС…РІР°С‚С‹РІР°СЋС‚СЃСЏ РѕС€РёР±РєРё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ. Р”Р»СЏ РЅРёС… РІРѕР·РІСЂР°С‰Р°СЋС‚СЃСЏ РїСѓСЃС‚С‹Рµ СЃС‚СЂРѕРєРё.
   /// </summary>
   public sealed class FiasAddressTextCache : MarshalByRefObject
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasAddressTextCache(FiasCachedSource source)
     {
@@ -1147,20 +1147,20 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private FiasCachedSource _Source;
 
     /// <summary>
-    /// Основная таблица кэша.
-    /// Ключ - строка вида "КодАдреса|Формат", значение - текстовое представление.
-    /// При всех обращениях используется блокировка этого объекта
+    /// РћСЃРЅРѕРІРЅР°СЏ С‚Р°Р±Р»РёС†Р° РєСЌС€Р°.
+    /// РљР»СЋС‡ - СЃС‚СЂРѕРєР° РІРёРґР° "РљРѕРґРђРґСЂРµСЃР°|Р¤РѕСЂРјР°С‚", Р·РЅР°С‡РµРЅРёРµ - С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ.
+    /// РџСЂРё РІСЃРµС… РѕР±СЂР°С‰РµРЅРёСЏС… РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Р±Р»РѕРєРёСЂРѕРІРєР° СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
     private DictionaryWithMRU<string, string> _Dict;
 
     /// <summary>
-    /// Емкость списка.
-    /// По умолчанию равна 10000 записей
+    /// Р•РјРєРѕСЃС‚СЊ СЃРїРёСЃРєР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅР° 10000 Р·Р°РїРёСЃРµР№
     /// </summary>
     public int Capacity
     {
@@ -1169,37 +1169,37 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Используется для преобразования кодированной строки в FiasAddress.
-    /// Свойство FiasAddressConvert.FillAddress=false.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РєРѕРґРёСЂРѕРІР°РЅРЅРѕР№ СЃС‚СЂРѕРєРё РІ FiasAddress.
+    /// РЎРІРѕР№СЃС‚РІРѕ FiasAddressConvert.FillAddress=false.
     /// </summary>
     private FiasAddressConvert _ConvertWithoutFill;
 
     /// <summary>
-    /// Используется для вызова метода Format
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° Format
     /// </summary>
     private FiasHandler _Handler;
 
     /// <summary>
-    /// Для вывода форматированного текста
+    /// Р”Р»СЏ РІС‹РІРѕРґР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅРѕРіРѕ С‚РµРєСЃС‚Р°
     /// </summary>
     private StringBuilder _SB;
 
     #endregion
 
-    #region Получение данных
+    #region РџРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Получение текста для одного адреса
+    /// РџРѕР»СѓС‡РµРЅРёРµ С‚РµРєСЃС‚Р° РґР»СЏ РѕРґРЅРѕРіРѕ Р°РґСЂРµСЃР°
     /// </summary>
-    /// <param name="addressCode">Кодированная строка адреса</param>
-    /// <param name="format">Формат</param>
-    /// <returns>Кэшированное текстовое представление</returns>
+    /// <param name="addressCode">РљРѕРґРёСЂРѕРІР°РЅРЅР°СЏ СЃС‚СЂРѕРєР° Р°РґСЂРµСЃР°</param>
+    /// <param name="format">Р¤РѕСЂРјР°С‚</param>
+    /// <returns>РљСЌС€РёСЂРѕРІР°РЅРЅРѕРµ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public string Format(string addressCode, string format)
     {
       if (String.IsNullOrEmpty(addressCode))
         return String.Empty;
 
-      string dictKey = addressCode + "|" + format; // ключ для словаря
+      string dictKey = addressCode + "|" + format; // РєР»СЋС‡ РґР»СЏ СЃР»РѕРІР°СЂСЏ
 
       string text;
       lock (_Dict)
@@ -1225,24 +1225,24 @@ namespace FreeLibSet.FIAS
 
       lock (_Dict)
       {
-        _Dict[dictKey] = text; // мог быть реентрантный вызов
+        _Dict[dictKey] = text; // РјРѕРі Р±С‹С‚СЊ СЂРµРµРЅС‚СЂР°РЅС‚РЅС‹Р№ РІС‹Р·РѕРІ
       }
 
       return text;
     }
 
     /// <summary>
-    /// Получение текстового представления для нескольких адресов.
-    /// Для всех адресов используется один формат для текстового представления
+    /// РџРѕР»СѓС‡РµРЅРёРµ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… Р°РґСЂРµСЃРѕРІ.
+    /// Р”Р»СЏ РІСЃРµС… Р°РґСЂРµСЃРѕРІ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РѕРґРёРЅ С„РѕСЂРјР°С‚ РґР»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ
     /// </summary>
-    /// <param name="addressCodes">Массив кодированных строк адреса</param>
-    /// <param name="format">Формат</param>
-    /// <returns>Массив кэшированных текстовых представлений</returns>
+    /// <param name="addressCodes">РњР°СЃСЃРёРІ РєРѕРґРёСЂРѕРІР°РЅРЅС‹С… СЃС‚СЂРѕРє Р°РґСЂРµСЃР°</param>
+    /// <param name="format">Р¤РѕСЂРјР°С‚</param>
+    /// <returns>РњР°СЃСЃРёРІ РєСЌС€РёСЂРѕРІР°РЅРЅС‹С… С‚РµРєСЃС‚РѕРІС‹С… РїСЂРµРґСЃС‚Р°РІР»РµРЅРёР№</returns>
     public string[] Format(string[] addressCodes, string format)
     {
       string[] textArray = new string[addressCodes.Length];
 
-      // Ненайденные адреса
+      // РќРµРЅР°Р№РґРµРЅРЅС‹Рµ Р°РґСЂРµСЃР°
       SingleScopeStringList notFound = null;
 
       lock (_Dict)
@@ -1253,7 +1253,7 @@ namespace FreeLibSet.FIAS
             textArray[i] = String.Empty;
           else
           {
-            string dictKey = addressCodes[i] + "|" + format; // ключ для словаря
+            string dictKey = addressCodes[i] + "|" + format; // РєР»СЋС‡ РґР»СЏ СЃР»РѕРІР°СЂСЏ
             string text;
             if (_Dict.TryGetValue(dictKey, out text))
               textArray[i] = text;
@@ -1277,13 +1277,13 @@ namespace FreeLibSet.FIAS
           foreach (string s in notFound)
           {
             FiasAddress address;
-            if (_ConvertWithoutFill.TryParse(s, out address)) // Не вызываем метод FillAddress()
+            if (_ConvertWithoutFill.TryParse(s, out address)) // РќРµ РІС‹Р·С‹РІР°РµРј РјРµС‚РѕРґ FillAddress()
               addrDict.Add(s, address);
           }
         }
 
-        // Групповой вызов FillAddresses()
-        if (addrDict.Count > 0) // проверка нужна, т.к. все адреса могут быть с ошибками
+        // Р“СЂСѓРїРїРѕРІРѕР№ РІС‹Р·РѕРІ FillAddresses()
+        if (addrDict.Count > 0) // РїСЂРѕРІРµСЂРєР° РЅСѓР¶РЅР°, С‚.Рє. РІСЃРµ Р°РґСЂРµСЃР° РјРѕРіСѓС‚ Р±С‹С‚СЊ СЃ РѕС€РёР±РєР°РјРё
         {
           FiasAddress[] a = new FiasAddress[addrDict.Count];
           addrDict.Values.CopyTo(a, 0);
@@ -1307,8 +1307,8 @@ namespace FreeLibSet.FIAS
               else
                 textArray[i] = String.Empty;
             }
-            string dictKey = addressCodes[i] + "|" + format; // ключ для словаря
-            _Dict[dictKey] = textArray[i]; // мог быть реентрантный вызов
+            string dictKey = addressCodes[i] + "|" + format; // РєР»СЋС‡ РґР»СЏ СЃР»РѕРІР°СЂСЏ
+            _Dict[dictKey] = textArray[i]; // РјРѕРі Р±С‹С‚СЊ СЂРµРµРЅС‚СЂР°РЅС‚РЅС‹Р№ РІС‹Р·РѕРІ
           }
         }
       }
@@ -1317,10 +1317,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Очищает кэш
+    /// РћС‡РёС‰Р°РµС‚ РєСЌС€
     /// </summary>
     public void Clear()
     {

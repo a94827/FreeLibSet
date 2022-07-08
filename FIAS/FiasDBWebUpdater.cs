@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -17,17 +17,17 @@ using FreeLibSet.Core;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Отвечает за периодическое обновление классификатора, Метод PerformUpdate() вызывается приложением сервера по таймеру.
-  /// Проверяет наличие обновлений с помощью WEB-службы. Выполняет распаковку полученных обновлений и вызывает методы FiasDBUpdater для их загрузки
+  /// РћС‚РІРµС‡Р°РµС‚ Р·Р° РїРµСЂРёРѕРґРёС‡РµСЃРєРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°, РњРµС‚РѕРґ PerformUpdate() РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРёР»РѕР¶РµРЅРёРµРј СЃРµСЂРІРµСЂР° РїРѕ С‚Р°Р№РјРµСЂСѓ.
+  /// РџСЂРѕРІРµСЂСЏРµС‚ РЅР°Р»РёС‡РёРµ РѕР±РЅРѕРІР»РµРЅРёР№ СЃ РїРѕРјРѕС‰СЊСЋ WEB-СЃР»СѓР¶Р±С‹. Р’С‹РїРѕР»РЅСЏРµС‚ СЂР°СЃРїР°РєРѕРІРєСѓ РїРѕР»СѓС‡РµРЅРЅС‹С… РѕР±РЅРѕРІР»РµРЅРёР№ Рё РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґС‹ FiasDBUpdater РґР»СЏ РёС… Р·Р°РіСЂСѓР·РєРё
   /// </summary>
   public sealed class FiasDBWebUpdater
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает экземпляр объекта
+    /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ РѕР±СЉРµРєС‚Р°
     /// </summary>
-    /// <param name="fiasDB">База данных ФИАС</param>
+    /// <param name="fiasDB">Р‘Р°Р·Р° РґР°РЅРЅС‹С… Р¤РРђРЎ</param>
     public FiasDBWebUpdater(FiasDB fiasDB)
     {
 #if DEBUG
@@ -41,20 +41,20 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// База данных ФИАС. Задается в конструкторе
+    /// Р‘Р°Р·Р° РґР°РЅРЅС‹С… Р¤РРђРЎ. Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public FiasDB FiasDB { get { return _FiasDB; } }
     private FiasDB _FiasDB;
 
 
     /// <summary>
-    /// Заставка.
-    /// Если свойство установлено, то используется во время загрузки файлов.
-    /// Может не задаваться.
-    /// Если значение не установлено, возвращается фиктивная заставка, а не null.
+    /// Р—Р°СЃС‚Р°РІРєР°.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІРѕ РІСЂРµРјСЏ Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ.
+    /// РњРѕР¶РµС‚ РЅРµ Р·Р°РґР°РІР°С‚СЊСЃСЏ.
+    /// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С„РёРєС‚РёРІРЅР°СЏ Р·Р°СЃС‚Р°РІРєР°, Р° РЅРµ null.
     /// </summary>
     public ISplash Splash
     {
@@ -70,17 +70,17 @@ namespace FreeLibSet.FIAS
     private ISplash _Splash;
 
     /// <summary>
-    /// Счетчик установленных обновлений
+    /// РЎС‡РµС‚С‡РёРє СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РѕР±РЅРѕРІР»РµРЅРёР№
     /// </summary>
     public int UpdateCount { get { return _UpdateCount; } }
     private int _UpdateCount;
 
     #endregion
 
-    #region Основной метод
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ
 
     /// <summary>
-    /// Выполнить поиск и загрузку недостающих обновлений, исходя из даты актуальности FiasDB.ActualDate.
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ РїРѕРёСЃРє Рё Р·Р°РіСЂСѓР·РєСѓ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… РѕР±РЅРѕРІР»РµРЅРёР№, РёСЃС…РѕРґСЏ РёР· РґР°С‚С‹ Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё FiasDB.ActualDate.
     /// </summary>
     public void PerformUpdate()
     {
@@ -91,7 +91,7 @@ namespace FreeLibSet.FIAS
 
     private void DoPerformUpdate()
     {
-      Splash.PhaseText = "Получение списка обновлений";
+      Splash.PhaseText = "РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РѕР±РЅРѕРІР»РµРЅРёР№";
 
       Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBWebUpdater. Start loading update list from " + FiasWebLoader.HttpBase);
 
@@ -109,37 +109,37 @@ namespace FreeLibSet.FIAS
         firstDate.ToString("d") + " to " + lastDate.ToString("d") + ". The actual update date is " + _FiasDB.ActualDate.ToString("d"));
 
       if (firstDate.Year < 2011)
-        throw new BugException("Неправильная первая дата в списке обновлений: " + firstDate.ToString("d"));
+        throw new BugException("РќРµРїСЂР°РІРёР»СЊРЅР°СЏ РїРµСЂРІР°СЏ РґР°С‚Р° РІ СЃРїРёСЃРєРµ РѕР±РЅРѕРІР»РµРЅРёР№: " + firstDate.ToString("d"));
 
       if (firstDate > _FiasDB.ActualDate)
-        throw new BugException("Первая дата в списке обновлений : " + firstDate.ToString("d") + " больше актуальной даты классификатора " +
+        throw new BugException("РџРµСЂРІР°СЏ РґР°С‚Р° РІ СЃРїРёСЃРєРµ РѕР±РЅРѕРІР»РµРЅРёР№ : " + firstDate.ToString("d") + " Р±РѕР»СЊС€Рµ Р°РєС‚СѓР°Р»СЊРЅРѕР№ РґР°С‚С‹ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° " +
           _FiasDB.ActualDate.ToString("d"));
 
       if (lastDate <= _FiasDB.ActualDate)
       {
         Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBWebUpdater. There are no suitable updates");
-        return; // Нет свежих обновлений
+        return; // РќРµС‚ СЃРІРµР¶РёС… РѕР±РЅРѕРІР»РµРЅРёР№
       }
 
       using (FiasDBUpdater updater = new FiasDBUpdater(_FiasDB))
       {
         updater.Splash = Splash;
 
-        // Перебираем обновления
+        // РџРµСЂРµР±РёСЂР°РµРј РѕР±РЅРѕРІР»РµРЅРёСЏ
         foreach (DataRowView drv in table.DefaultView)
         {
           DateTime dt = (DateTime)(drv.Row["Date"]);
           if (dt <= _FiasDB.ActualDate)
             continue;
 
-          // Нужно поставить обновление
+          // РќСѓР¶РЅРѕ РїРѕСЃС‚Р°РІРёС‚СЊ РѕР±РЅРѕРІР»РµРЅРёРµ
           string uri = drv.Row["FiasDeltaXmlUrl"].ToString();
           if (uri.Length == 0)
             continue;
           if (uri[0] == '0')
             continue;
 
-          Splash.PhaseText = "Загрузка файла обновления от " + dt.ToString("d") + " из " + uri;
+          Splash.PhaseText = "Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РѕС‚ " + dt.ToString("d") + " РёР· " + uri;
           Splash.AllowCancel = true;
           Splash.CheckCancelled();
 
@@ -153,7 +153,7 @@ namespace FreeLibSet.FIAS
             Splash.CheckCancelled();
             Splash.AllowCancel = false;
             if (!File.Exists(path.Path))
-              throw new FileNotFoundException("Не найден файл, скачанный с сайта ФИАС", path.Path);
+              throw new FileNotFoundException("РќРµ РЅР°Р№РґРµРЅ С„Р°Р№Р», СЃРєР°С‡Р°РЅРЅС‹Р№ СЃ СЃР°Р№С‚Р° Р¤РРђРЎ", path.Path);
 
             FileInfo fi = new FileInfo(path.Path);
             TimeSpan downloadTime = DateTime.Now - singleStartTime;
@@ -171,17 +171,17 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Загрузка обновлений классификатора без их установки
+  /// Р—Р°РіСЂСѓР·РєР° РѕР±РЅРѕРІР»РµРЅРёР№ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р±РµР· РёС… СѓСЃС‚Р°РЅРѕРІРєРё
   /// </summary>
   public sealed class FiasWebLoader
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект, инициализируя свойства
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РёРЅРёС†РёР°Р»РёР·РёСЂСѓСЏ СЃРІРѕР№СЃС‚РІР°
     /// </summary>
-    /// <param name="dir">Каталог, куда должны сохраняться обновления. Должен быть задан</param>
-    /// <param name="actualDate">Дата актуальности</param>
+    /// <param name="dir">РљР°С‚Р°Р»РѕРі, РєСѓРґР° РґРѕР»Р¶РЅС‹ СЃРѕС…СЂР°РЅСЏС‚СЊСЃСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
+    /// <param name="actualDate">Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё</param>
     public FiasWebLoader(AbsPath dir, DateTime actualDate)
     {
       if (dir.IsEmpty)
@@ -196,35 +196,35 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Каталог для записи файлов. Задается в конструкторе.
-    /// В нем будут созданы подкаталоги с именами в формате ГГГГММДД.
-    /// В каждом подкаталоге будет по одному архиву обновления.
+    /// РљР°С‚Р°Р»РѕРі РґР»СЏ Р·Р°РїРёСЃРё С„Р°Р№Р»РѕРІ. Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
+    /// Р’ РЅРµРј Р±СѓРґСѓС‚ СЃРѕР·РґР°РЅС‹ РїРѕРґРєР°С‚Р°Р»РѕРіРё СЃ РёРјРµРЅР°РјРё РІ С„РѕСЂРјР°С‚Рµ Р“Р“Р“Р“РњРњР”Р”.
+    /// Р’ РєР°Р¶РґРѕРј РїРѕРґРєР°С‚Р°Р»РѕРіРµ Р±СѓРґРµС‚ РїРѕ РѕРґРЅРѕРјСѓ Р°СЂС…РёРІСѓ РѕР±РЅРѕРІР»РµРЅРёСЏ.
     /// </summary>
     public AbsPath Dir { get { return _Dir; } }
     private AbsPath _Dir;
 
     /// <summary>
-    /// Дата актуальности.
-    /// Будут загружаться только более новый обновления.
-    /// Задается в конструкторе
+    /// Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё.
+    /// Р‘СѓРґСѓС‚ Р·Р°РіСЂСѓР¶Р°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ Р±РѕР»РµРµ РЅРѕРІС‹Р№ РѕР±РЅРѕРІР»РµРЅРёСЏ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public DateTime ActualDate { get { return _ActualDate; } }
     private DateTime _ActualDate;
 
     /// <summary>
-    /// Формат обновлений. По умолчанию - XML
+    /// Р¤РѕСЂРјР°С‚ РѕР±РЅРѕРІР»РµРЅРёР№. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - XML
     /// </summary>
     public FiasDBUpdateSource Format { get { return _Format; } set { _Format = value; } }
     private FiasDBUpdateSource _Format;
 
     /// <summary>
-    /// Заставка.
-    /// Если свойство установлено, то используется во время загрузки файлов.
-    /// Может не задаваться.
-    /// Если значение не установлено, возвращается фиктивная заставка, а не null.
+    /// Р—Р°СЃС‚Р°РІРєР°.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІРѕ РІСЂРµРјСЏ Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ.
+    /// РњРѕР¶РµС‚ РЅРµ Р·Р°РґР°РІР°С‚СЊСЃСЏ.
+    /// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С„РёРєС‚РёРІРЅР°СЏ Р·Р°СЃС‚Р°РІРєР°, Р° РЅРµ null.
     /// </summary>
     public ISplash Splash
     {
@@ -241,17 +241,17 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Загрузка файлов обновлений
+    #region Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ РѕР±РЅРѕРІР»РµРЅРёР№
 
     /// <summary>
-    /// Пути к скачанным файлам обновлениям.
-    /// Свойство действительно после вызова метода DownloadFiles()
+    /// РџСѓС‚Рё Рє СЃРєР°С‡Р°РЅРЅС‹Рј С„Р°Р№Р»Р°Рј РѕР±РЅРѕРІР»РµРЅРёСЏРј.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ РїРѕСЃР»Рµ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° DownloadFiles()
     /// </summary>
     public AbsPath[] Files { get { return _Files; } }
     private AbsPath[] _Files;
 
     /// <summary>
-    /// Количество скачанных файлов
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРєР°С‡Р°РЅРЅС‹С… С„Р°Р№Р»РѕРІ
     /// </summary>
     public int FileCount
     {
@@ -265,7 +265,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Загрузка файлов обновлений в указанный каталог
+    /// Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ РѕР±РЅРѕРІР»РµРЅРёР№ РІ СѓРєР°Р·Р°РЅРЅС‹Р№ РєР°С‚Р°Р»РѕРі
     /// </summary>
     public void DownloadFiles()
     {
@@ -282,7 +282,7 @@ namespace FreeLibSet.FIAS
 
     private void DoDownloadFiles(List<AbsPath> files)
     {
-      Splash.PhaseText = "Получение списка обновлений";
+      Splash.PhaseText = "РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РѕР±РЅРѕРІР»РµРЅРёР№";
 
       DataTable table = GetUpdateTable();
       table.DefaultView.Sort = "Date";
@@ -293,15 +293,15 @@ namespace FreeLibSet.FIAS
       DateTime lastDate = (DateTime)(table.DefaultView[table.DefaultView.Count - 1].Row["Date"]);
 
       if (firstDate.Year < 2011)
-        throw new BugException("Неправильная первая дата в списке обновлений: " + firstDate.ToString("d"));
+        throw new BugException("РќРµРїСЂР°РІРёР»СЊРЅР°СЏ РїРµСЂРІР°СЏ РґР°С‚Р° РІ СЃРїРёСЃРєРµ РѕР±РЅРѕРІР»РµРЅРёР№: " + firstDate.ToString("d"));
 
       if (firstDate > ActualDate)
         return;
 
       if (lastDate <= ActualDate)
-        return; // Нет свежих обновлений
+        return; // РќРµС‚ СЃРІРµР¶РёС… РѕР±РЅРѕРІР»РµРЅРёР№
 
-      // Перебираем обновления
+      // РџРµСЂРµР±РёСЂР°РµРј РѕР±РЅРѕРІР»РµРЅРёСЏ
       Splash.AllowCancel = true;
       foreach (DataRowView drv in table.DefaultView)
       {
@@ -309,14 +309,14 @@ namespace FreeLibSet.FIAS
         if (dt <= ActualDate)
           continue;
 
-        // Нужно поставить обновление
+        // РќСѓР¶РЅРѕ РїРѕСЃС‚Р°РІРёС‚СЊ РѕР±РЅРѕРІР»РµРЅРёРµ
         string uri = drv.Row[Format == FiasDBUpdateSource.Xml ? "FiasDeltaXmlUrl" : "FiasDeltaDbfUrl"].ToString();
         if (uri.Length == 0)
           continue;
         if (uri[0] == '0')
           continue;
 
-        Splash.PhaseText = "Загрузка файла обновления от " + dt.ToString("d") + " из " + uri;
+        Splash.PhaseText = "Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РѕС‚ " + dt.ToString("d") + " РёР· " + uri;
         Splash.CheckCancelled();
 
         string fileName = GetFileNameFromUrl(uri);
@@ -327,20 +327,20 @@ namespace FreeLibSet.FIAS
         client.DownloadFile(uri, path.Path);
         Splash.CheckCancelled();
         if (!File.Exists(path.Path))
-          throw new FileNotFoundException("Не найден файл, скачанный с сайта ФИАС", path.Path);
+          throw new FileNotFoundException("РќРµ РЅР°Р№РґРµРЅ С„Р°Р№Р», СЃРєР°С‡Р°РЅРЅС‹Р№ СЃ СЃР°Р№С‚Р° Р¤РРђРЎ", path.Path);
       }
     }
 
     #endregion
 
-    #region Получение списка обновлений
+    #region РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РѕР±РЅРѕРІР»РµРЅРёР№
 
     private class Record
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
 #pragma warning disable 649 // Field is never assigned to, and will always have its default value.
-      // Поля устанавливаются с помощью Reflection
+      // РџРѕР»СЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°СЋС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ Reflection
 
       public string Date;
       public string TextVersion;
@@ -357,18 +357,18 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Получить список обновлений в виде таблицы DataTable.
-    /// Строки таблицы могут быть неотсортированными, так как их порядок определятся сайтом ФИАС.
-    /// Выполните сортировку по полю Date.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РѕР±РЅРѕРІР»РµРЅРёР№ РІ РІРёРґРµ С‚Р°Р±Р»РёС†С‹ DataTable.
+    /// РЎС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ РЅРµРѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹РјРё, С‚Р°Рє РєР°Рє РёС… РїРѕСЂСЏРґРѕРє РѕРїСЂРµРґРµР»СЏС‚СЃСЏ СЃР°Р№С‚РѕРј Р¤РРђРЎ.
+    /// Р’С‹РїРѕР»РЅРёС‚Рµ СЃРѕСЂС‚РёСЂРѕРІРєСѓ РїРѕ РїРѕР»СЋ Date.
     /// </summary>
-    /// <returns>Таблица данных</returns>
+    /// <returns>РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С…</returns>
     public static DataTable GetUpdateTable()
     {
       string sFile = LoadJsonFile();
 
       DataTable table = new DataTable();
-      // Список тегов JSON-файла GetAllDownloadFileInfo взят по состоянию на 20.02.2021
-      // Он может и поменяться.
+      // РЎРїРёСЃРѕРє С‚РµРіРѕРІ JSON-С„Р°Р№Р»Р° GetAllDownloadFileInfo РІР·СЏС‚ РїРѕ СЃРѕСЃС‚РѕСЏРЅРёСЋ РЅР° 20.02.2021
+      // РћРЅ РјРѕР¶РµС‚ Рё РїРѕРјРµРЅСЏС‚СЊСЃСЏ.
       table.Columns.Add("Date", typeof(DateTime));
       //table.Columns.Add("VersionId", typeof(string));
       table.Columns.Add("TextVersion", typeof(string));
@@ -379,15 +379,15 @@ namespace FreeLibSet.FIAS
       table.Columns.Add("GarXMLFullURL", typeof(string));
       table.Columns.Add("GarXMLDeltaURL", typeof(string));
 
-      // Для обработки JSON-файла используем JSon.NET
+      // Р”Р»СЏ РѕР±СЂР°Р±РѕС‚РєРё JSON-С„Р°Р№Р»Р° РёСЃРїРѕР»СЊР·СѓРµРј JSon.NET
       // https://www.newtonsoft.com/json
 
-      // Коротко о JSON-формате:
-      // В квадратных скобках идет массив
-      // В фигургных скобках идет объект
-      // В объекте идут свойства в виде "Имя"=Значение
+      // РљРѕСЂРѕС‚РєРѕ Рѕ JSON-С„РѕСЂРјР°С‚Рµ:
+      // Р’ РєРІР°РґСЂР°С‚РЅС‹С… СЃРєРѕР±РєР°С… РёРґРµС‚ РјР°СЃСЃРёРІ
+      // Р’ С„РёРіСѓСЂРіРЅС‹С… СЃРєРѕР±РєР°С… РёРґРµС‚ РѕР±СЉРµРєС‚
+      // Р’ РѕР±СЉРµРєС‚Рµ РёРґСѓС‚ СЃРІРѕР№СЃС‚РІР° РІ РІРёРґРµ "РРјСЏ"=Р—РЅР°С‡РµРЅРёРµ
 
-      // Наш файл является массивом
+      // РќР°С€ С„Р°Р№Р» СЏРІР»СЏРµС‚СЃСЏ РјР°СЃСЃРёРІРѕРј
 
       Record[] a = JsonConvert.DeserializeObject<Record[]>(sFile);
 
@@ -415,16 +415,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Дополнительно
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ
 
     /// <summary>
-    /// Возвращает имя арихива файла с расширением из url для загрузки файла.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ Р°СЂРёС…РёРІР° С„Р°Р№Р»Р° СЃ СЂР°СЃС€РёСЂРµРЅРёРµРј РёР· url РґР»СЏ Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»Р°.
     /// </summary>
-    /// <param name="uri">Запрос</param>
+    /// <param name="uri">Р—Р°РїСЂРѕСЃ</param>
     /// <returns></returns>
     public static string GetFileNameFromUrl(string uri)
     {
-      // Запрос имеет вид "https://fias.nalog.ru/DownloadUpdates?file=fias_delta_dbf.zip&version=20210223"
+      // Р—Р°РїСЂРѕСЃ РёРјРµРµС‚ РІРёРґ "https://fias.nalog.ru/DownloadUpdates?file=fias_delta_dbf.zip&version=20210223"
 
 
       if (String.IsNullOrEmpty(uri))
@@ -434,16 +434,16 @@ namespace FreeLibSet.FIAS
         int p = uri.IndexOf('?');
         if (p < 0)
         {
-          // throw new ArgumentException("Не найден символ \"?\"");
+          // throw new ArgumentException("РќРµ РЅР°Р№РґРµРЅ СЃРёРјРІРѕР» \"?\"");
           // 21.03.2021
-          // Теперь путь имеет вид: "https://fias.nalog.ru/downloads/2021.02.26/fias_delta_xml.zip"
-          // Достали они со своими изменениями...
+          // РўРµРїРµСЂСЊ РїСѓС‚СЊ РёРјРµРµС‚ РІРёРґ: "https://fias.nalog.ru/downloads/2021.02.26/fias_delta_xml.zip"
+          // Р”РѕСЃС‚Р°Р»Рё РѕРЅРё СЃРѕ СЃРІРѕРёРјРё РёР·РјРµРЅРµРЅРёСЏРјРё...
           p = uri.LastIndexOf('/');
           if (p < 0)
-            throw new ArgumentException("Не найдены символы \"?\" и \"/\"");
+            throw new ArgumentException("РќРµ РЅР°Р№РґРµРЅС‹ СЃРёРјРІРѕР»С‹ \"?\" Рё \"/\"");
           string sFileName = uri.Substring(p + 1);
           if (sFileName.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0)
-            throw new ArgumentException("Имя файла \"" + sFileName + "\" содержит недопустимые символы");
+            throw new ArgumentException("РРјСЏ С„Р°Р№Р»Р° \"" + sFileName + "\" СЃРѕРґРµСЂР¶РёС‚ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Рµ СЃРёРјРІРѕР»С‹");
           return sFileName;
         }
         string[] a = uri.Substring(p + 1).Split('&');
@@ -452,7 +452,7 @@ namespace FreeLibSet.FIAS
           if (a[i].StartsWith("file=", StringComparison.OrdinalIgnoreCase))
             return a[i].Substring(5);
         }
-        throw new ArgumentException("Не найден параметр file");
+        throw new ArgumentException("РќРµ РЅР°Р№РґРµРЅ РїР°СЂР°РјРµС‚СЂ file");
       }
       catch (Exception e)
       {

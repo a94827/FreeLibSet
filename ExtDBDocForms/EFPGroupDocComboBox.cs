@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -15,20 +15,20 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Провайдер комбоблока выбора группы документов
+  /// РџСЂРѕРІР°Р№РґРµСЂ РєРѕРјР±РѕР±Р»РѕРєР° РІС‹Р±РѕСЂР° РіСЂСѓРїРїС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ
   /// </summary>
   public class EFPGroupDocComboBox : EFPControl<ComboBox>
   {
-    // Класс нельзя выводить ни из EFPDocComboBox, ни из EFPListComboBox
+    // РљР»Р°СЃСЃ РЅРµР»СЊР·СЏ РІС‹РІРѕРґРёС‚СЊ РЅРё РёР· EFPDocComboBox, РЅРё РёР· EFPListComboBox
 
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
-    /// <param name="docTypeUI">Вид документа групп</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
+    /// <param name="docTypeUI">Р’РёРґ РґРѕРєСѓРјРµРЅС‚Р° РіСЂСѓРїРї</param>
     public EFPGroupDocComboBox(EFPBaseProvider baseProvider, ComboBox control, GroupDocTypeUI docTypeUI)
       : base(baseProvider, control, true)
     {
@@ -50,21 +50,21 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Прочие свойства
+    #region РџСЂРѕС‡РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Вид документа групп
+    /// Р’РёРґ РґРѕРєСѓРјРµРЅС‚Р° РіСЂСѓРїРї
     /// </summary>
     public GroupDocTypeUI DocTypeUI { get { return _DocTypeUI; } }
     private GroupDocTypeUI _DocTypeUI;
 
     #endregion
 
-    #region Свойство DocId
+    #region РЎРІРѕР№СЃС‚РІРѕ DocId
 
     /// <summary>
-    /// Идентификатор выбранной группы.
-    /// Значение DocTypeUi.RootNodeDocId означает "Все документы"
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІС‹Р±СЂР°РЅРЅРѕР№ РіСЂСѓРїРїС‹.
+    /// Р—РЅР°С‡РµРЅРёРµ DocTypeUi.RootNodeDocId РѕР·РЅР°С‡Р°РµС‚ "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹"
     /// </summary>
     public Int32 DocId
     {
@@ -94,7 +94,7 @@ namespace FreeLibSet.Forms.Docs
     private Int32 _DocId;
 
     /// <summary>
-    /// Управляемое свойство для DocId
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ DocId
     /// </summary>
     public DepValue<Int32> DocIdEx
     {
@@ -127,13 +127,13 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство IncludeNested
+    #region РЎРІРѕР№СЃС‚РІРѕ IncludeNested
 
     /// <summary>
-    /// Признак "Включая вложенные папки".
-    /// Это свойство влияет только на отображение элемента при DocId=DocTypeUI.RootNodeDocId.
-    /// Если true (по умолчанию), то отображается строка "Все документы",
-    /// иначе отображается "Документы без иерархии"
+    /// РџСЂРёР·РЅР°Рє "Р’РєР»СЋС‡Р°СЏ РІР»РѕР¶РµРЅРЅС‹Рµ РїР°РїРєРё".
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РІР»РёСЏРµС‚ С‚РѕР»СЊРєРѕ РЅР° РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РїСЂРё DocId=DocTypeUI.RootNodeDocId.
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ СЃС‚СЂРѕРєР° "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹",
+    /// РёРЅР°С‡Рµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ "Р”РѕРєСѓРјРµРЅС‚С‹ Р±РµР· РёРµСЂР°СЂС…РёРё"
     /// </summary>
     public bool IncludeNested
     {
@@ -151,8 +151,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _IncludeNested;
 
     /// <summary>
-    /// Управляемое свойство IncludeNested.
-    /// Обычно его делают равным свойству EFPCheckBox.CheckedEx для флажка "Включая вложенные группы"
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ IncludeNested.
+    /// РћР±С‹С‡РЅРѕ РµРіРѕ РґРµР»Р°СЋС‚ СЂР°РІРЅС‹Рј СЃРІРѕР№СЃС‚РІСѓ EFPCheckBox.CheckedEx РґР»СЏ С„Р»Р°Р¶РєР° "Р’РєР»СЋС‡Р°СЏ РІР»РѕР¶РµРЅРЅС‹Рµ РіСЂСѓРїРїС‹"
     /// </summary>
     public DepValue<bool> IncludeNestedEx
     {
@@ -185,11 +185,11 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Модель дерева
+    #region РњРѕРґРµР»СЊ РґРµСЂРµРІР°
 
     /// <summary>
-    /// Модель дерева.
-    /// При первом обращении к свойству создает DBxDocTreeModel.
+    /// РњРѕРґРµР»СЊ РґРµСЂРµРІР°.
+    /// РџСЂРё РїРµСЂРІРѕРј РѕР±СЂР°С‰РµРЅРёРё Рє СЃРІРѕР№СЃС‚РІСѓ СЃРѕР·РґР°РµС‚ DBxDocTreeModel.
     /// </summary>
     public DBxDocTreeModel Model
     {
@@ -205,7 +205,7 @@ namespace FreeLibSet.Forms.Docs
     private DBxDocTreeModel _Model;
 
     /// <summary>
-    /// Обновление модели дерева
+    /// РћР±РЅРѕРІР»РµРЅРёРµ РјРѕРґРµР»Рё РґРµСЂРµРІР°
     /// </summary>
     public void PerformRefresh()
     {
@@ -217,14 +217,14 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство AuxFilterGroupIds
+    #region РЎРІРѕР№СЃС‚РІРѕ AuxFilterGroupIds
 
     /// <summary>
-    /// Возвращает массив идентификаторов отфильтрованных групп документов.
-    /// Если выбраны "Все документы", возвращает null.
-    /// Если выбраны "Документы без групп", возвращает массив нулевой длины.
-    /// Если есть выбранная группа, возвращает массив из одного или нескольких элементов,
-    /// в зависимости от IncludeNested
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РѕС‚С„РёР»СЊС‚СЂРѕРІР°РЅРЅС‹С… РіСЂСѓРїРї РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р•СЃР»Рё РІС‹Р±СЂР°РЅС‹ "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹", РІРѕР·РІСЂР°С‰Р°РµС‚ null.
+    /// Р•СЃР»Рё РІС‹Р±СЂР°РЅС‹ "Р”РѕРєСѓРјРµРЅС‚С‹ Р±РµР· РіСЂСѓРїРї", РІРѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РЅСѓР»РµРІРѕР№ РґР»РёРЅС‹.
+    /// Р•СЃР»Рё РµСЃС‚СЊ РІС‹Р±СЂР°РЅРЅР°СЏ РіСЂСѓРїРїР°, РІРѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· РѕРґРЅРѕРіРѕ РёР»Рё РЅРµСЃРєРѕР»СЊРєРёС… СЌР»РµРјРµРЅС‚РѕРІ,
+    /// РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ IncludeNested
     /// </summary>
     public Int32[] AuxFilterGroupIds
     {
@@ -249,18 +249,18 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Элементы в выпадающем списке
+    #region Р­Р»РµРјРµРЅС‚С‹ РІ РІС‹РїР°РґР°СЋС‰РµРј СЃРїРёСЃРєРµ
 
     /// <summary>
-    /// Элементы, добавляемые в комбоблок.
-    /// Не имеет смысла делать структурой, т.к. при добавлении в комбоблок элементы преобразуются в Object
+    /// Р­Р»РµРјРµРЅС‚С‹, РґРѕР±Р°РІР»СЏРµРјС‹Рµ РІ РєРѕРјР±РѕР±Р»РѕРє.
+    /// РќРµ РёРјРµРµС‚ СЃРјС‹СЃР»Р° РґРµР»Р°С‚СЊ СЃС‚СЂСѓРєС‚СѓСЂРѕР№, С‚.Рє. РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РІ РєРѕРјР±РѕР±Р»РѕРє СЌР»РµРјРµРЅС‚С‹ РїСЂРµРѕР±СЂР°Р·СѓСЋС‚СЃСЏ РІ Object
     /// </summary>
     private class ItemObject
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Создание корневого узла
+      /// РЎРѕР·РґР°РЅРёРµ РєРѕСЂРЅРµРІРѕРіРѕ СѓР·Р»Р°
       /// </summary>
       public ItemObject()
         : this(0, 0 , true)
@@ -276,16 +276,16 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Идентификатор группы
+      /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РіСЂСѓРїРїС‹
       /// </summary>
       public Int32 DocId { get { return _DocId; } }
       private Int32 _DocId;
 
       /// <summary>
-      /// Уровень вложения
+      /// РЈСЂРѕРІРµРЅСЊ РІР»РѕР¶РµРЅРёСЏ
       /// </summary>
       public int IndentLevel { get { return _IndentLevel; } }
       private int _IndentLevel;
@@ -295,7 +295,7 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Текстовое представление
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
       public override string ToString()
       {
@@ -306,7 +306,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Флажок устанавливается на время заполнения выпадающего списка
+    /// Р¤Р»Р°Р¶РѕРє СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РЅР° РІСЂРµРјСЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР°
     /// </summary>
     private bool _InsideInitList;
 
@@ -314,14 +314,14 @@ namespace FreeLibSet.Forms.Docs
     {
       List<ItemObject> items = new List<ItemObject>();
 
-      // 1. Корневой узел
+      // 1. РљРѕСЂРЅРµРІРѕР№ СѓР·РµР»
       items.Add(new ItemObject());
       selIndex = 0;
 
-      int indentLevel = 1; // Отступ для текущего узла
+      int indentLevel = 1; // РћС‚СЃС‚СѓРї РґР»СЏ С‚РµРєСѓС‰РµРіРѕ СѓР·Р»Р°
 
 
-      // 2. Иерархия до текущего узла, не включая его (испр. 17.11.2017)
+      // 2. РРµСЂР°СЂС…РёСЏ РґРѕ С‚РµРєСѓС‰РµРіРѕ СѓР·Р»Р°, РЅРµ РІРєР»СЋС‡Р°СЏ РµРіРѕ (РёСЃРїСЂ. 17.11.2017)
       if (DocId != 0)
       {
         object[] rows = Model.TreePathFromId(DocId).FullPath;
@@ -338,7 +338,7 @@ namespace FreeLibSet.Forms.Docs
         indentLevel = rows.Length;
       }
 
-      // 3. Список узлов, находящихся на одном уровне с текущим, включая текущий
+      // 3. РЎРїРёСЃРѕРє СѓР·Р»РѕРІ, РЅР°С…РѕРґСЏС‰РёС…СЃСЏ РЅР° РѕРґРЅРѕРј СѓСЂРѕРІРЅРµ СЃ С‚РµРєСѓС‰РёРј, РІРєР»СЋС‡Р°СЏ С‚РµРєСѓС‰РёР№
       TreePath parentPath = Model.TreePathFromId(DocId).Parent;
       foreach (object row in Model.GetChildren(parentPath))
       {
@@ -349,7 +349,7 @@ namespace FreeLibSet.Forms.Docs
         {
           selIndex = items.Count - 1;
 
-          // 4. Список дочерних узлов
+          // 4. РЎРїРёСЃРѕРє РґРѕС‡РµСЂРЅРёС… СѓР·Р»РѕРІ
           foreach (object row2 in Model.GetChildren(thisPath))
           {
             TreePath thisPath2 = new TreePath(thisPath, row2);
@@ -364,7 +364,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Обработчики комбоблока
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РєРѕРјР±РѕР±Р»РѕРєР°
 
     void Control_DropDown(object sender, EventArgs args)
     {
@@ -386,12 +386,12 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "EFPGroupDocComboBox. Ошибка обработки DropDownClosed");
+        EFPApp.ShowException(e, "EFPGroupDocComboBox. РћС€РёР±РєР° РѕР±СЂР°Р±РѕС‚РєРё DropDownClosed");
       }
     }
 
-    // Следует учитывать разный порядок вызова событий SelectedValueChanged и DropDownClosed
-    // при работе с мыщью и с клавиатурой
+    // РЎР»РµРґСѓРµС‚ СѓС‡РёС‚С‹РІР°С‚СЊ СЂР°Р·РЅС‹Р№ РїРѕСЂСЏРґРѕРє РІС‹Р·РѕРІР° СЃРѕР±С‹С‚РёР№ SelectedValueChanged Рё DropDownClosed
+    // РїСЂРё СЂР°Р±РѕС‚Рµ СЃ РјС‹С‰СЊСЋ Рё СЃ РєР»Р°РІРёР°С‚СѓСЂРѕР№
 
     //void Control_DropDownClosed(object Sender, EventArgs Args)
     //{
@@ -401,8 +401,8 @@ namespace FreeLibSet.Forms.Docs
     //    try
     //    {
     //      Control.SelectedItem = null;
-    //      Control.Items.Clear(); // чтобы нельзя было переключать непонятно что нажатием стрелочек 
-    //                             // "вверх/вниз" при закрытом списке
+    //      Control.Items.Clear(); // С‡С‚РѕР±С‹ РЅРµР»СЊР·СЏ Р±С‹Р»Рѕ РїРµСЂРµРєР»СЋС‡Р°С‚СЊ РЅРµРїРѕРЅСЏС‚РЅРѕ С‡С‚Рѕ РЅР°Р¶Р°С‚РёРµРј СЃС‚СЂРµР»РѕС‡РµРє 
+    //                             // "РІРІРµСЂС…/РІРЅРёР·" РїСЂРё Р·Р°РєСЂС‹С‚РѕРј СЃРїРёСЃРєРµ
     //    }
     //    finally
     //    {
@@ -411,7 +411,7 @@ namespace FreeLibSet.Forms.Docs
     //  }
     //  catch (Exception e)
     //  {
-    //    EFPApp.ShowException(e, "EFPGroupDocComboBox. Ошибка обработки DropDownClosed");
+    //    EFPApp.ShowException(e, "EFPGroupDocComboBox. РћС€РёР±РєР° РѕР±СЂР°Р±РѕС‚РєРё DropDownClosed");
     //  }
     //}
 
@@ -428,19 +428,19 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "EFPGroupDocComboBox. Ошибка обработки SelectedValueChanged");
+        EFPApp.ShowException(e, "EFPGroupDocComboBox. РћС€РёР±РєР° РѕР±СЂР°Р±РѕС‚РєРё SelectedValueChanged");
       }
     }
 
     /// <summary>
-    /// Метод обработки события Idle().
-    /// Вызывается периодически, когда приложение ничем не занято.
+    /// РњРµС‚РѕРґ РѕР±СЂР°Р±РѕС‚РєРё СЃРѕР±С‹С‚РёСЏ Idle().
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРёРѕРґРёС‡РµСЃРєРё, РєРѕРіРґР° РїСЂРёР»РѕР¶РµРЅРёРµ РЅРёС‡РµРј РЅРµ Р·Р°РЅСЏС‚Рѕ.
     /// </summary>
     public override void HandleIdle()
     {
       // 18.11.2017
-      // Нельзя выполнять очистку списка в DropDownClosed, т.к. при работе с мышью сначала закрывается список,
-      // а затем вызывается SelectedValueChanged
+      // РќРµР»СЊР·СЏ РІС‹РїРѕР»РЅСЏС‚СЊ РѕС‡РёСЃС‚РєСѓ СЃРїРёСЃРєР° РІ DropDownClosed, С‚.Рє. РїСЂРё СЂР°Р±РѕС‚Рµ СЃ РјС‹С€СЊСЋ СЃРЅР°С‡Р°Р»Р° Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ СЃРїРёСЃРѕРє,
+      // Р° Р·Р°С‚РµРј РІС‹Р·С‹РІР°РµС‚СЃСЏ SelectedValueChanged
       if ((!Control.DroppedDown) && Control.SelectedItem != null)
       {
         try
@@ -449,8 +449,8 @@ namespace FreeLibSet.Forms.Docs
           try
           {
             Control.SelectedItem = null;
-            Control.Items.Clear(); // чтобы нельзя было переключать непонятно что нажатием стрелочек 
-            // "вверх/вниз" при закрытом списке
+            Control.Items.Clear(); // С‡С‚РѕР±С‹ РЅРµР»СЊР·СЏ Р±С‹Р»Рѕ РїРµСЂРµРєР»СЋС‡Р°С‚СЊ РЅРµРїРѕРЅСЏС‚РЅРѕ С‡С‚Рѕ РЅР°Р¶Р°С‚РёРµРј СЃС‚СЂРµР»РѕС‡РµРє 
+            // "РІРІРµСЂС…/РІРЅРёР·" РїСЂРё Р·Р°РєСЂС‹С‚РѕРј СЃРїРёСЃРєРµ
           }
           finally
           {
@@ -466,7 +466,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Рисование списка
+    #region Р РёСЃРѕРІР°РЅРёРµ СЃРїРёСЃРєР°
 
     private void ControlPainter(object sender, ListControlImageEventArgs args)
     {
@@ -514,15 +514,15 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Реализация DocumentViewHandler
+    #region Р РµР°Р»РёР·Р°С†РёСЏ DocumentViewHandler
 
     private class IntDocumentViewHandler : DocumentViewHandler
     {
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public EFPGroupDocComboBox Owner;
 
-#pragma warning disable 0649 // TODO: Убрать лишние переменные
+#pragma warning disable 0649 // TODO: РЈР±СЂР°С‚СЊ Р»РёС€РЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 
       public DocumentViewHandler ExternalEditorCaller;
 
@@ -531,7 +531,7 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Переопределенные методы и свойства
+      #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹ Рё СЃРІРѕР№СЃС‚РІР°
 
       public override DocTypeUI DocTypeUI
       {
@@ -567,7 +567,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Обновление табличного просмотра
+      /// РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
       /// </summary>
       /// <param name="dataSet"></param>
       /// <param name="isCaller"></param>
@@ -578,9 +578,9 @@ namespace FreeLibSet.Forms.Docs
 
 
         if (!dataSet.Tables.Contains(Owner.DocTypeUI.DocType.Name))
-          return; // Нет таблицы
+          return; // РќРµС‚ С‚Р°Р±Р»РёС†С‹
 
-        // Просто обновляем модель
+        // РџСЂРѕСЃС‚Рѕ РѕР±РЅРѕРІР»СЏРµРј РјРѕРґРµР»СЊ
         Owner._Model = null;
         Owner.Control.Invalidate();
       }
@@ -589,7 +589,7 @@ namespace FreeLibSet.Forms.Docs
       //{
       //  if (Owner != null)
       //  {
-      //    // Просто обновляем модель
+      //    // РџСЂРѕСЃС‚Рѕ РѕР±РЅРѕРІР»СЏРµРј РјРѕРґРµР»СЊ
       //    Owner.FModel = null;
       //    Owner.Control.Invalidate();
       //  }
@@ -620,13 +620,13 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Возвращает Owner.ToString(), если объект присоединен к просмотру
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Owner.ToString(), РµСЃР»Рё РѕР±СЉРµРєС‚ РїСЂРёСЃРѕРµРґРёРЅРµРЅ Рє РїСЂРѕСЃРјРѕС‚СЂСѓ
       /// </summary>
-      /// <returns>Текстовое представление для табличного просмотра</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</returns>
       public override string ToString()
       {
         if (Owner == null)
-          return "[ Отключен от просмотра ]";
+          return "[ РћС‚РєР»СЋС‡РµРЅ РѕС‚ РїСЂРѕСЃРјРѕС‚СЂР° ]";
         else
           return Owner.ToString();
       }
@@ -635,15 +635,15 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Обработчик просмотра документов, связанный с текущим просмотром.
-    /// Свойство имеет значение не null, когда просмотр выведен на экран
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РїСЂРѕСЃРјРѕС‚СЂР° РґРѕРєСѓРјРµРЅС‚РѕРІ, СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ С‚РµРєСѓС‰РёРј РїСЂРѕСЃРјРѕС‚СЂРѕРј.
+    /// РЎРІРѕР№СЃС‚РІРѕ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ РЅРµ null, РєРѕРіРґР° РїСЂРѕСЃРјРѕС‚СЂ РІС‹РІРµРґРµРЅ РЅР° СЌРєСЂР°РЅ
     /// </summary>
     public DocumentViewHandler ViewHandler { get { return _ViewHandler; } }
     private IntDocumentViewHandler _ViewHandler;
 
     /// <summary>
-    /// Уникальный идентификатор табличного просмотра.
-    /// Используется DocumentViewHandler.
+    /// РЈРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ DocumentViewHandler.
     /// </summary>
     public Guid BrowserGuid
     {
@@ -653,8 +653,8 @@ namespace FreeLibSet.Forms.Docs
     private Guid _BrowserGuid;
 
     /// <summary>
-    /// Метод вызывается при первом появлении элемента на экране.
-    /// Инициализирует свойство ViewHandler
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РїРѕСЏРІР»РµРЅРёРё СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РЅРµ.
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ ViewHandler
     /// </summary>
     protected override void OnCreated()
     {
@@ -667,14 +667,14 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Вызывается, когда форма с управляющим элементом закрывается.
-    /// Удаляет свойство ViewHandler.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° С„РѕСЂРјР° СЃ СѓРїСЂР°РІР»СЏСЋС‰РёРј СЌР»РµРјРµРЅС‚РѕРј Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
+    /// РЈРґР°Р»СЏРµС‚ СЃРІРѕР№СЃС‚РІРѕ ViewHandler.
     /// </summary>
     protected override void OnDetached()
     {
       if (_ViewHandler != null)
       {
-        _ViewHandler.Owner = null; // разрыв ссылки, чтобы текущий просмотр мог быть удален
+        _ViewHandler.Owner = null; // СЂР°Р·СЂС‹РІ СЃСЃС‹Р»РєРё, С‡С‚РѕР±С‹ С‚РµРєСѓС‰РёР№ РїСЂРѕСЃРјРѕС‚СЂ РјРѕРі Р±С‹С‚СЊ СѓРґР°Р»РµРЅ
         DocTypeUI.Browsers.Remove(_ViewHandler);
         _ViewHandler = null;
       }
@@ -683,14 +683,14 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Локальное меню
+    #region Р›РѕРєР°Р»СЊРЅРѕРµ РјРµРЅСЋ
 
     /// <summary>
-    /// Вложенный класс команд локального меню
+    /// Р’Р»РѕР¶РµРЅРЅС‹Р№ РєР»Р°СЃСЃ РєРѕРјР°РЅРґ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
     /// </summary>
     private class ControlItems : EFPControlCommandItems
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public ControlItems(EFPGroupDocComboBox controlProvider)
         :base(controlProvider)
@@ -710,7 +710,7 @@ namespace FreeLibSet.Forms.Docs
         Add(ciPaste);
 
         ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
-        ciShowDocInfo.MenuText = "Информация о документе";
+        ciShowDocInfo.MenuText = "РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РґРѕРєСѓРјРµРЅС‚Рµ";
         ciShowDocInfo.ShortCut = Keys.F12;
         ciShowDocInfo.ImageKey = "Information";
         ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
@@ -721,13 +721,13 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public new EFPGroupDocComboBox ControlProvider { get { return (EFPGroupDocComboBox)(base.ControlProvider); } }
 
       #endregion
 
-      #region Инициализация доступности команд
+      #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РєРѕРјР°РЅРґ
 
       public void InitEnabled()
       {
@@ -739,7 +739,7 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Команды буфера обмена
+      #region РљРѕРјР°РЅРґС‹ Р±СѓС„РµСЂР° РѕР±РјРµРЅР°
 
       private EFPCommandItem ciCut, ciCopy, ciPaste;
 
@@ -753,7 +753,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (ControlProvider.DocId == 0)
         {
-          EFPApp.ShowTempMessage("Документ группы не выбран");
+          EFPApp.ShowTempMessage("Р”РѕРєСѓРјРµРЅС‚ РіСЂСѓРїРїС‹ РЅРµ РІС‹Р±СЂР°РЅ");
           return;
         }
         DBxDocSelection docSel = new DBxDocSelection(ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
@@ -770,14 +770,14 @@ namespace FreeLibSet.Forms.Docs
         DBxDocSelection docSel = ControlProvider.DocTypeUI.UI.PasteDocSel();
         if (docSel == null)
         {
-          EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
+          EFPApp.ShowTempMessage("Р‘СѓС„РµСЂ РѕР±РјРµРЅР° РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РѕРє РЅР° РґРѕРєСѓРјРµРЅС‚С‹");
           return;
         }
 
         Int32[] ids = docSel[ControlProvider.DocTypeUI.DocType.Name];
         if (ids.Length == 0)
         {
-          EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы \"" + ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
+          EFPApp.ShowTempMessage("Р‘СѓС„РµСЂ РѕР±РјРµРЅР° РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РѕРє РЅР° РґРѕРєСѓРјРµРЅС‚С‹ \"" + ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
           return;
         }
         ControlProvider.DocId = ids[0];
@@ -785,7 +785,7 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Информация о документе
+      #region РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РґРѕРєСѓРјРµРЅС‚Рµ
 
       EFPCommandItem ciShowDocInfo;
 
@@ -793,7 +793,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (ControlProvider.DocId == 0)
         {
-          EFPApp.ShowTempMessage("Группа не выбрана");
+          EFPApp.ShowTempMessage("Р“СЂСѓРїРїР° РЅРµ РІС‹Р±СЂР°РЅР°");
           return;
         }
 
@@ -804,9 +804,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает команды локального меню
+    /// РЎРѕР·РґР°РµС‚ РєРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
     /// </summary>
-    /// <returns>Созданный объект EFPControlCommandItems</returns>
+    /// <returns>РЎРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ EFPControlCommandItems</returns>
     protected override EFPControlCommandItems GetCommandItems()
     {
       ControlItems items = new ControlItems(this);

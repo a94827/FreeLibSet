@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -16,12 +16,12 @@ namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>
-  /// Расширение DocProvider для использования в DBUI
-  /// Выполняет обновление табличных просмотров в ответ на ApplyChanges()
+  /// Р Р°СЃС€РёСЂРµРЅРёРµ DocProvider РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ DBUI
+  /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС‡РЅС‹С… РїСЂРѕСЃРјРѕС‚СЂРѕРІ РІ РѕС‚РІРµС‚ РЅР° ApplyChanges()
   /// </summary>
   public sealed class DocProviderUI : DBxChainDocProvider
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal DocProviderUI(DBxDocProviderProxy sourceProxy, DBUI ui)
       : base(sourceProxy, true)
@@ -33,17 +33,17 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс доступа к документам, к которому относится провайдер
+    /// РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
     public DBUI UI { get { return _UI; } }
     private DBUI _UI;
 
     #endregion
 
-    #region Внутренние методы для выдачи заставок
+    #region Р’РЅСѓС‚СЂРµРЅРЅРёРµ РјРµС‚РѕРґС‹ РґР»СЏ РІС‹РґР°С‡Рё Р·Р°СЃС‚Р°РІРѕРє
 
     private string GetTableImageKey(string tableName)
     {
@@ -70,26 +70,26 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Переопределение методов для выдачи заставок
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРёРµ РјРµС‚РѕРґРѕРІ РґР»СЏ РІС‹РґР°С‡Рё Р·Р°СЃС‚Р°РІРѕРє
 
     /// <summary>
-    /// Выполнение SQL-запроса SELECT с заданием всех возможных параметров
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃР° SELECT СЃ Р·Р°РґР°РЅРёРµРј РІСЃРµС… РІРѕР·РјРѕР¶РЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <param name="info">Параметры для запроса</param>
-    /// <returns>Таблица данных</returns>
-    public override DataTable FillSelect(DBxSelectInfo info)
+    /// <param name="info">РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С…</returns>
+    protected override DataTable DoFillSelect(DBxSelectInfo info)
     {
       DataTable table;
-      BeginWait("Запрос таблицы \"" + info.TableName + "\"", GetTableImageKey(info.TableName));
+      BeginWait("Р—Р°РїСЂРѕСЃ С‚Р°Р±Р»РёС†С‹ \"" + info.TableName + "\"", GetTableImageKey(info.TableName));
       try
       {
         // 29.08.2020
-        // Используем процедуру на случай длительного вызова
+        // РСЃРїРѕР»СЊР·СѓРµРј РїСЂРѕС†РµРґСѓСЂСѓ РЅР° СЃР»СѓС‡Р°Р№ РґР»РёС‚РµР»СЊРЅРѕРіРѕ РІС‹Р·РѕРІР°
 
         NamedValues DispArgs = new NamedValues();
         DispArgs["Action"] = "FillSelect";
         DispArgs["SelectInfo"] = info;
-        NamedValues DispRes = ExecuteServerAsync(DispArgs, "SELECT для таблицы \"" + info.TableName + "\"");
+        NamedValues DispRes = ExecuteServerAsync(DispArgs, "SELECT РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + info.TableName + "\"");
         table = (DataTable)(DispRes["Table"]);
       }
       finally
@@ -100,109 +100,109 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получение списка уникальных значений поля SELECT DISTINCT
-    /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю
+    /// РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° СѓРЅРёРєР°Р»СЊРЅС‹С… Р·РЅР°С‡РµРЅРёР№ РїРѕР»СЏ SELECT DISTINCT
+    /// Р’ РїРѕР»СѓС‡РµРЅРЅРѕР№ С‚Р°Р±Р»РёС†Рµ Р±СѓРґРµС‚ РѕРґРЅРѕ РїРѕР»Рµ. РўР°Р±Р»РёС†Р° Р±СѓРґРµС‚ СѓРїРѕСЂСЏРґРѕС‡РµРЅР° РїРѕ СЌС‚РѕРјСѓ РїРѕР»СЋ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="where">Необязательный фильтр записей</param>
-    /// <returns>Таблица с единственной колонкой</returns>
-    public override DataTable FillUniqueColumnValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <param name="where">РќРµРѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ С„РёР»СЊС‚СЂ Р·Р°РїРёСЃРµР№</param>
+    /// <returns>РўР°Р±Р»РёС†Р° СЃ РµРґРёРЅСЃС‚РІРµРЅРЅРѕР№ РєРѕР»РѕРЅРєРѕР№</returns>
+    protected override DataTable DoFillUniqueColumnValues(string tableName, string columnName, DBxFilter where)
     {
       DataTable table;
-      BeginWait("Получение списка значений для таблицы \"" + tableName + "\"", GetTableImageKey(tableName));
-      try { table = base.FillUniqueColumnValues(tableName, columnName, where); }
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° Р·РЅР°С‡РµРЅРёР№ РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"", GetTableImageKey(tableName));
+      try { table = base.DoFillUniqueColumnValues(tableName, columnName, where); }
       finally { EndWait(); }
       return table;
     }
 
     /// <summary>
-    /// Получить таблицу истории для документа
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документа</param>
-    /// <param name="docId">Идентификатор документа</param>
-    /// <returns>Таблица истории</returns>
-    public override DataTable GetDocHistTable(string docTypeName, Int32 docId)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РёСЃС‚РѕСЂРёРё</returns>
+    protected override DataTable DoGetDocHistTable(string docTypeName, Int32 docId)
     {
       DataTable table;
-      BeginWait("Получение таблицы истории документа", "Information");
-      try { table = base.GetDocHistTable(docTypeName, docId); }
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РёСЃС‚РѕСЂРёРё РґРѕРєСѓРјРµРЅС‚Р°", "Information");
+      try { table = base.DoGetDocHistTable(docTypeName, docId); }
       finally { EndWait(); }
       return table;
     }
 
     /// <summary>
-    /// Получить набор таблиц для просмотра ссылок на один документ.
+    /// РџРѕР»СѓС‡РёС‚СЊ РЅР°Р±РѕСЂ С‚Р°Р±Р»РёС† РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° СЃСЃС‹Р»РѕРє РЅР° РѕРґРёРЅ РґРѕРєСѓРјРµРЅС‚.
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документа, на который ищутся ссылки</param>
-    /// <param name="docId">Идентификатор документа, на который ищутся ссылки</param>
-    /// <param name="showDeleted">Надо ли включать в таблицу ссылки из удаленных документов и поддокументов,
-    /// а также ссылки на удаленные поддокументы выбранного документа.
-    /// Не имеет значение, помечен ли сам документ <paramref name="docId"/> на удаление (за исключением ссылок документа на самого себя</param>
-    /// <param name="unique">Если true, то будет возвращено только по одной ссылке из каждого документа.
-    /// Это рекомендуемый вариант для показа таблицы ссылок. Если false, то в таблице может быть несколько ссылок из одного исходного документа</param>
-    /// <param name="fromSingleDocTypeName">Единственный вид документа, из которого берутся ссылки. Если не задано, то берутся ссылки из всех документов</param>
-    /// <param name="fromSingleDocId">Идентификатор единственного документа, из которого берутся ссылки. Если 0, то берутся ссылки из всех документов</param>
-    /// <returns>Таблица ссылок</returns>
-    public override DataTable GetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°, РЅР° РєРѕС‚РѕСЂС‹Р№ РёС‰СѓС‚СЃСЏ СЃСЃС‹Р»РєРё</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°, РЅР° РєРѕС‚РѕСЂС‹Р№ РёС‰СѓС‚СЃСЏ СЃСЃС‹Р»РєРё</param>
+    /// <param name="showDeleted">РќР°РґРѕ Р»Рё РІРєР»СЋС‡Р°С‚СЊ РІ С‚Р°Р±Р»РёС†Сѓ СЃСЃС‹Р»РєРё РёР· СѓРґР°Р»РµРЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ,
+    /// Р° С‚Р°РєР¶Рµ СЃСЃС‹Р»РєРё РЅР° СѓРґР°Р»РµРЅРЅС‹Рµ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°.
+    /// РќРµ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ, РїРѕРјРµС‡РµРЅ Р»Рё СЃР°Рј РґРѕРєСѓРјРµРЅС‚ <paramref name="docId"/> РЅР° СѓРґР°Р»РµРЅРёРµ (Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј СЃСЃС‹Р»РѕРє РґРѕРєСѓРјРµРЅС‚Р° РЅР° СЃР°РјРѕРіРѕ СЃРµР±СЏ</param>
+    /// <param name="unique">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰РµРЅРѕ С‚РѕР»СЊРєРѕ РїРѕ РѕРґРЅРѕР№ СЃСЃС‹Р»РєРµ РёР· РєР°Р¶РґРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°.
+    /// Р­С‚Рѕ СЂРµРєРѕРјРµРЅРґСѓРµРјС‹Р№ РІР°СЂРёР°РЅС‚ РґР»СЏ РїРѕРєР°Р·Р° С‚Р°Р±Р»РёС†С‹ СЃСЃС‹Р»РѕРє. Р•СЃР»Рё false, С‚Рѕ РІ С‚Р°Р±Р»РёС†Рµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ СЃСЃС‹Р»РѕРє РёР· РѕРґРЅРѕРіРѕ РёСЃС…РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="fromSingleDocTypeName">Р•РґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РІРёРґ РґРѕРєСѓРјРµРЅС‚Р°, РёР· РєРѕС‚РѕСЂРѕРіРѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё. Р•СЃР»Рё РЅРµ Р·Р°РґР°РЅРѕ, С‚Рѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё РёР· РІСЃРµС… РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="fromSingleDocId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°, РёР· РєРѕС‚РѕСЂРѕРіРѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё. Р•СЃР»Рё 0, С‚Рѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё РёР· РІСЃРµС… РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° СЃСЃС‹Р»РѕРє</returns>
+    protected override DataTable DoGetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId)
     {
       DataTable table;
-      BeginWait("Получение таблицы ссылок для документа", "DocRefs");
-      try { table = base.GetDocRefTable(docTypeName, docId, showDeleted, unique, fromSingleDocTypeName, fromSingleDocId); }
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ СЃСЃС‹Р»РѕРє РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р°", "DocRefs");
+      try { table = base.DoGetDocRefTable(docTypeName, docId, showDeleted, unique, fromSingleDocTypeName, fromSingleDocId); }
       finally { EndWait(); }
       return table;
     }
 
     /// <summary>
-    /// Получить таблицу действий пользователя или всех пользователей за определенный период
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РґРµР№СЃС‚РІРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Р·Р° РѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РїРµСЂРёРѕРґ
     /// </summary>
-    /// <param name="firstDate">Начальная дата</param>
-    /// <param name="lastDate">Конечная дата</param>
-    /// <param name="userId">Идентификатор пользователя. 0-все пользователи</param>
-    /// <param name="singleDocTypeName">Имя таблицы документа. Пустая строка - документы всех видов</param>
-    /// <returns>Таблица действий</returns>
-    public override DataTable GetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName)
+    /// <param name="firstDate">РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°</param>
+    /// <param name="lastDate">РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р°</param>
+    /// <param name="userId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ. 0-РІСЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</param>
+    /// <param name="singleDocTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°. РџСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР° - РґРѕРєСѓРјРµРЅС‚С‹ РІСЃРµС… РІРёРґРѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРµР№СЃС‚РІРёР№</returns>
+    protected override DataTable DoGetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName)
     {
       DataTable table;
-      BeginWait("Получение списка действий пользователя", "UserActions");
-      try { table = base.GetUserActionsTable(firstDate, lastDate, userId, singleDocTypeName); }
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РґРµР№СЃС‚РІРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ", "UserActions");
+      try { table = base.DoGetUserActionsTable(firstDate, lastDate, userId, singleDocTypeName); }
       finally { EndWait(); }
       return table;
     }
 
     /// <summary>
-    /// Получить таблицу документов для одного действия пользователя
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РґРѕРєСѓРјРµРЅС‚РѕРІ РґР»СЏ РѕРґРЅРѕРіРѕ РґРµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     /// </summary>
-    /// <param name="actionId">Идентификатор действия в таблице UserActions</param>
-    /// <returns>Таблица документов</returns>
-    public override DataTable GetUserActionDocTable(Int32 actionId)
+    /// <param name="actionId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРµР№СЃС‚РІРёСЏ РІ С‚Р°Р±Р»РёС†Рµ UserActions</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoGetUserActionDocTable(Int32 actionId)
     {
       DataTable table;
-      BeginWait("Получение таблицы документов для действия пользователя", "UserActions");
-      try { table = base.GetUserActionDocTable(actionId); }
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ РґР»СЏ РґРµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ", "UserActions");
+      try { table = base.DoGetUserActionDocTable(actionId); }
       finally { EndWait(); }
       return table;
     }
 
     /// <summary>
-    /// Метод получения двоичных данных, реализуемый в DBxRealDocProvider.
-    /// Этот метод не должен использоваться в прикладном коде.
+    /// РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…, СЂРµР°Р»РёР·СѓРµРјС‹Р№ РІ DBxRealDocProvider.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="columnName">Имя числового столбца, содержащего идентификатор двоичных данных</param>
-    /// <param name="wantedId">Идентификатор документа, поддокумента и двочных данных, которые нужно получить</param>
-    /// <param name="docVersion">Версия документа. 0 - текущая версия</param>
-    /// <param name="preloadIds">Идентификаторы документов, поддокументов и двочных данных,
-    /// которые желательно загрузить</param>
-    /// <returns>Словарь загруженных данных. Ключ - идентификатор двоичных данных. Значение - загруженные данные</returns>
-    public override Dictionary<Int32, byte[]> InternalGetBinData2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="columnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…</param>
+    /// <param name="wantedId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°, РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° Рё РґРІРѕС‡РЅС‹С… РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+    /// <param name="docVersion">Р’РµСЂСЃРёСЏ РґРѕРєСѓРјРµРЅС‚Р°. 0 - С‚РµРєСѓС‰Р°СЏ РІРµСЂСЃРёСЏ</param>
+    /// <param name="preloadIds">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Рё РґРІРѕС‡РЅС‹С… РґР°РЅРЅС‹С…,
+    /// РєРѕС‚РѕСЂС‹Рµ Р¶РµР»Р°С‚РµР»СЊРЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ</param>
+    /// <returns>РЎР»РѕРІР°СЂСЊ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… РґР°РЅРЅС‹С…. РљР»СЋС‡ - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…. Р—РЅР°С‡РµРЅРёРµ - Р·Р°РіСЂСѓР¶РµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ</returns>
+    protected override Dictionary<Int32, byte[]> DoInternalGetBinData2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
     {
       Dictionary<Int32, byte[]> res;
-      BeginWait("Получение двоичных данных", GetTableImageKey(tableName));
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…", GetTableImageKey(tableName));
       try
       {
         // 14.10.2020
-        // Используем процедуру на случай длительного вызова
+        // РСЃРїРѕР»СЊР·СѓРµРј РїСЂРѕС†РµРґСѓСЂСѓ РЅР° СЃР»СѓС‡Р°Р№ РґР»РёС‚РµР»СЊРЅРѕРіРѕ РІС‹Р·РѕРІР°
         //res = base.InternalGetBinData2(tableName, columnName, wantedId, docVersion, preloadIds); 
         NamedValues DispArgs = new NamedValues();
         DispArgs["Action"] = "InternalGetBinData2";
@@ -211,7 +211,7 @@ namespace FreeLibSet.Forms.Docs
         DispArgs["WantedId"] = wantedId;
         DispArgs["DocVersion"] = docVersion;
         DispArgs["PreloadIds"] = preloadIds;
-        NamedValues DispRes = ExecuteServerAsync(DispArgs, "Получение двоичных данных");
+        NamedValues DispRes = ExecuteServerAsync(DispArgs, "РџРѕР»СѓС‡РµРЅРёРµ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…");
         res = (Dictionary<Int32, byte[]>)(DispRes["Data"]);
       }
       finally
@@ -222,24 +222,24 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Внутренний метод получения хранимого файла
-    /// Этот метод не должен использоваться в прикладном коде.
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёР№ РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ С…СЂР°РЅРёРјРѕРіРѕ С„Р°Р№Р»Р°
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="columnName">Имя числового столбца, содержащего идентификатор файла</param>
-    /// <param name="wantedId">Идентификатор документа, поддокумента и файла, который нужно получить</param>
-    /// <param name="docVersion">Версия документа. 0 - текущая версия</param>
-    /// <param name="preloadIds">Идентификаторы документов, поддокументов и файлов,
-    /// которые желательно загрузить</param>
-    /// <returns>Словарь загруженных данных. Ключ - идентификатор файла. Значение - контейнер с файлом</returns>
-    public override Dictionary<Int32, FreeLibSet.IO.FileContainer> InternalGetDBFile2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="columnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С„Р°Р№Р»Р°</param>
+    /// <param name="wantedId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°, РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° Рё С„Р°Р№Р»Р°, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+    /// <param name="docVersion">Р’РµСЂСЃРёСЏ РґРѕРєСѓРјРµРЅС‚Р°. 0 - С‚РµРєСѓС‰Р°СЏ РІРµСЂСЃРёСЏ</param>
+    /// <param name="preloadIds">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Рё С„Р°Р№Р»РѕРІ,
+    /// РєРѕС‚РѕСЂС‹Рµ Р¶РµР»Р°С‚РµР»СЊРЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ</param>
+    /// <returns>РЎР»РѕРІР°СЂСЊ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… РґР°РЅРЅС‹С…. РљР»СЋС‡ - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С„Р°Р№Р»Р°. Р—РЅР°С‡РµРЅРёРµ - РєРѕРЅС‚РµР№РЅРµСЂ СЃ С„Р°Р№Р»РѕРј</returns>
+    protected override Dictionary<Int32, FreeLibSet.IO.FileContainer> DoInternalGetDBFile2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
     {
       Dictionary<Int32, FreeLibSet.IO.FileContainer> res;
-      BeginWait("Получение файла из базы данных", GetTableImageKey(tableName));
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ С„Р°Р№Р»Р° РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С…", GetTableImageKey(tableName));
       try
       {
         // 14.10.2020
-        // Используем процедуру на случай длительного вызова
+        // РСЃРїРѕР»СЊР·СѓРµРј РїСЂРѕС†РµРґСѓСЂСѓ РЅР° СЃР»СѓС‡Р°Р№ РґР»РёС‚РµР»СЊРЅРѕРіРѕ РІС‹Р·РѕРІР°
         //res = base.InternalGetDBFile2(tableName, columnName, wantedId, docVersion, preloadIds);
         NamedValues DispArgs = new NamedValues();
         DispArgs["Action"] = "InternalGetDBFile2";
@@ -248,7 +248,7 @@ namespace FreeLibSet.Forms.Docs
         DispArgs["WantedId"] = wantedId;
         DispArgs["DocVersion"] = docVersion;
         DispArgs["PreloadIds"] = preloadIds;
-        NamedValues DispRes = ExecuteServerAsync(DispArgs, "Получение содержимого файла");
+        NamedValues DispRes = ExecuteServerAsync(DispArgs, "РџРѕР»СѓС‡РµРЅРёРµ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ С„Р°Р№Р»Р°");
         res = (Dictionary<Int32, FreeLibSet.IO.FileContainer>)(DispRes["Data"]);
       }
       finally
@@ -259,93 +259,93 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Загрузить страницу таблицы кэша
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ С‚Р°Р±Р»РёС†С‹ РєСЌС€Р°
     /// </summary>
-    /// <param name="request">Параметры запроса</param>
-    /// <returns>Кэш страницы</returns>
-    public override DBxCacheLoadResponse LoadCachePages(DBxCacheLoadRequest request)
+    /// <param name="request">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>РљСЌС€ СЃС‚СЂР°РЅРёС†С‹</returns>
+    protected override DBxCacheLoadResponse DoLoadCachePages(DBxCacheLoadRequest request)
     {
       DBxCacheLoadResponse res;
-      BeginWait("Получение кэшированных страниц для " + request.ToString(), "Database");
-      try { res = base.LoadCachePages(request); }
+      BeginWait("РџРѕР»СѓС‡РµРЅРёРµ РєСЌС€РёСЂРѕРІР°РЅРЅС‹С… СЃС‚СЂР°РЅРёС† РґР»СЏ " + request.ToString(), "Database");
+      try { res = base.DoLoadCachePages(request); }
       finally { EndWait(); }
       return res;
     }
 
     /// <summary>
-    /// Загрузить документы (без поддокументов)
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ РґРѕРєСѓРјРµРЅС‚С‹ (Р±РµР· РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ)
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документов</param>
-    /// <param name="filter">Условия для отбора документов</param>
-    /// <returns>Таблица документов</returns>
-    public override DataTable LoadDocData(string docTypeName, DBxFilter filter)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="filter">РЈСЃР»РѕРІРёСЏ РґР»СЏ РѕС‚Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoLoadDocData(string docTypeName, DBxFilter filter)
     {
       DataTable table;
-      BeginWait("Загрузка документов \"" + DocTypes[docTypeName].PluralTitle + "\"", GetTableImageKey(docTypeName));
-      try { table = base.LoadDocData(docTypeName, filter); }
+      BeginWait("Р—Р°РіСЂСѓР·РєР° РґРѕРєСѓРјРµРЅС‚РѕРІ \"" + DocTypes[docTypeName].PluralTitle + "\"", GetTableImageKey(docTypeName));
+      try { table = base.DoLoadDocData(docTypeName, filter); }
       finally { EndWait(); }
       return table;
     }
 
     /// <summary>
-    /// Загрузить документы (без поддокументов)
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ РґРѕРєСѓРјРµРЅС‚С‹ (Р±РµР· РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ)
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документов</param>
-    /// <param name="docIds">Массив идентификаторов</param>
-    /// <returns>Таблица документов</returns>
-    public override DataTable LoadDocData(string docTypeName, Int32[] docIds)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="docIds">РњР°СЃСЃРёРІ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoLoadDocData(string docTypeName, Int32[] docIds)
     {
       DataTable table;
-      BeginWait("Загрузка документов \"" + DocTypes[docTypeName].PluralTitle + "\" по фильтру", GetTableImageKey(docTypeName));
-      try { table = base.LoadDocData(docTypeName, docIds); }
+      BeginWait("Р—Р°РіСЂСѓР·РєР° РґРѕРєСѓРјРµРЅС‚РѕРІ \"" + DocTypes[docTypeName].PluralTitle + "\" РїРѕ С„РёР»СЊС‚СЂСѓ", GetTableImageKey(docTypeName));
+      try { table = base.DoLoadDocData(docTypeName, docIds); }
       finally { EndWait(); }
       return table;
     }
 
     /// <summary>
-    /// Загрузить поддокументы.
-    /// Предполагается, что таблица документов уже загружена
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹.
+    /// РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ С‚Р°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ СѓР¶Рµ Р·Р°РіСЂСѓР¶РµРЅР°
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документов</param>
-    /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
-    /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
-    /// <returns>Таблица поддокументов</returns>
-    public override DataTable LoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="subDocTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="docIds">РњР°СЃСЃРёРІ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґРѕРєСѓРјРµРЅС‚РѕРІ, РґР»СЏ РєРѕС‚РѕСЂС‹С… Р·Р°РіСЂСѓР¶Р°СЋС‚СЃСЏ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
     {
       DataTable table;
-      BeginWait("Загрузка поддокументов", GetTableImageKey(subDocTypeName));
-      try { table = base.LoadSubDocData(docTypeName, subDocTypeName, docIds); }
+      BeginWait("Р—Р°РіСЂСѓР·РєР° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ", GetTableImageKey(subDocTypeName));
+      try { table = base.DoLoadSubDocData(docTypeName, subDocTypeName, docIds); }
       finally { EndWait(); }
       return table;
     }
 
     #endregion
 
-    #region OnApplyChanges()
+    #region ApplyChanges()
 
     /// <summary>
-    /// Применение изменений.
-    /// Выполняется создание, изменение и удаление документов и поддокументов.
-    /// Если <paramref name="reloadData"/>=true, то выполняется обновление открытых просмотров
-    /// документов вызовами DocumnetViewHandler.ApplyChanges()
+    /// РџСЂРёРјРµРЅРµРЅРёРµ РёР·РјРµРЅРµРЅРёР№.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃРѕР·РґР°РЅРёРµ, РёР·РјРµРЅРµРЅРёРµ Рё СѓРґР°Р»РµРЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р•СЃР»Рё <paramref name="reloadData"/>=true, С‚Рѕ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕР±РЅРѕРІР»РµРЅРёРµ РѕС‚РєСЂС‹С‚С‹С… РїСЂРѕСЃРјРѕС‚СЂРѕРІ
+    /// РґРѕРєСѓРјРµРЅС‚РѕРІ РІС‹Р·РѕРІР°РјРё DocumnetViewHandler.ApplyChanges()
     /// </summary>
-    /// <param name="dataSet">Набор данных</param>
-    /// <param name="reloadData">Если true, то будет возвращен тот же набор данных.
-    /// В нем фиктивные идентификаторы новых документов и поддокументов будут заменены на реальные,
-    /// а перекрестные ссылки на них исправлены. Это требуется в интерфейсе пользователя, когда
-    /// пользователь нажимает кнопку "Применить", чтобы можно было продолжить сеанс редактирования.
-    /// Если false, то исправленный набор данных не возвращается</param>
-    /// <returns>Набор с исправленными ссылками или null</returns>
-    protected override DataSet OnApplyChanges(DataSet dataSet, bool reloadData)
+    /// <param name="dataSet">РќР°Р±РѕСЂ РґР°РЅРЅС‹С…</param>
+    /// <param name="reloadData">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰РµРЅ С‚РѕС‚ Р¶Рµ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С….
+    /// Р’ РЅРµРј С„РёРєС‚РёРІРЅС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РЅРѕРІС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Р±СѓРґСѓС‚ Р·Р°РјРµРЅРµРЅС‹ РЅР° СЂРµР°Р»СЊРЅС‹Рµ,
+    /// Р° РїРµСЂРµРєСЂРµСЃС‚РЅС‹Рµ СЃСЃС‹Р»РєРё РЅР° РЅРёС… РёСЃРїСЂР°РІР»РµРЅС‹. Р­С‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ РІ РёРЅС‚РµСЂС„РµР№СЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РєРѕРіРґР°
+    /// РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР°Р¶РёРјР°РµС‚ РєРЅРѕРїРєСѓ "РџСЂРёРјРµРЅРёС‚СЊ", С‡С‚РѕР±С‹ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ СЃРµР°РЅСЃ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ.
+    /// Р•СЃР»Рё false, С‚Рѕ РёСЃРїСЂР°РІР»РµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ</param>
+    /// <returns>РќР°Р±РѕСЂ СЃ РёСЃРїСЂР°РІР»РµРЅРЅС‹РјРё СЃСЃС‹Р»РєР°РјРё РёР»Рё null</returns>
+    protected override DataSet DoApplyChanges(DataSet dataSet, bool reloadData)
     {
       DataSet res;
-      BeginWait("Запись изменений в документах", "Save");
-      try { res = DoOnApplyChanges(dataSet, reloadData); }
+      BeginWait("Р—Р°РїРёСЃСЊ РёР·РјРµРЅРµРЅРёР№ РІ РґРѕРєСѓРјРµРЅС‚Р°С…", "Save");
+      try { res = DoApplyChanges2(dataSet, reloadData); }
       finally { EndWait(); }
       return res;
     }
 
-    private DataSet DoOnApplyChanges(DataSet dataSet, bool reloadData)
+    private DataSet DoApplyChanges2(DataSet dataSet, bool reloadData)
     {
       if (dataSet == null)
         throw new ArgumentNullException("dataSet");
@@ -355,23 +355,23 @@ namespace FreeLibSet.Forms.Docs
       DataSet dataSet2;
       if (UseAsyncCall)
       {
-        // Асинхронный вызов
+        // РђСЃРёРЅС…СЂРѕРЅРЅС‹Р№ РІС‹Р·РѕРІ
         NamedValues dispArgs = new NamedValues();
         dispArgs["Action"] = "ApplyChanges";
         dispArgs["DataSet"] = dataSet;
         dispArgs["ReloadData"] = reloadData;
-        NamedValues DispRes = ExecuteServerAsync(dispArgs, "Запись изменений документов");
+        NamedValues DispRes = ExecuteServerAsync(dispArgs, "Р—Р°РїРёСЃСЊ РёР·РјРµРЅРµРЅРёР№ РґРѕРєСѓРјРµРЅС‚РѕРІ");
         dataSet2 = (DataSet)(DispRes["DataSet"]);
       }
       else
       {
-        // Синхронный вызов, который используется чаще всего
-        dataSet2 = base.OnApplyChanges(dataSet, reloadData);
+        // РЎРёРЅС…СЂРѕРЅРЅС‹Р№ РІС‹Р·РѕРІ, РєРѕС‚РѕСЂС‹Р№ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‡Р°С‰Рµ РІСЃРµРіРѕ
+        dataSet2 = base.DoApplyChanges(dataSet, reloadData);
       }
 
-      // Сброс буферизации выполняем независимо от того, выполняется ли возврат строк от сервера
-      // (признака ReloadData)
-      // Сброс кэша выполняется до обновления табличных просмотров
+      // РЎР±СЂРѕСЃ Р±СѓС„РµСЂРёР·Р°С†РёРё РІС‹РїРѕР»РЅСЏРµРј РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ С‚РѕРіРѕ, РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р»Рё РІРѕР·РІСЂР°С‚ СЃС‚СЂРѕРє РѕС‚ СЃРµСЂРІРµСЂР°
+      // (РїСЂРёР·РЅР°РєР° ReloadData)
+      // РЎР±СЂРѕСЃ РєСЌС€Р° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РґРѕ РѕР±РЅРѕРІР»РµРЅРёСЏ С‚Р°Р±Р»РёС‡РЅС‹С… РїСЂРѕСЃРјРѕС‚СЂРѕРІ
       DBxDocProvider.ClearCache(dataSet, UI.TextHandlers.DBCache);
 
       if (reloadData)
@@ -382,7 +382,7 @@ namespace FreeLibSet.Forms.Docs
         {
           try
           {
-            NullReferenceException e = new NullReferenceException("При вызове OnApplyChanges() не получен ответный набор данных при ReloadData=true");
+            NullReferenceException e = new NullReferenceException("РџСЂРё РІС‹Р·РѕРІРµ OnApplyChanges() РЅРµ РїРѕР»СѓС‡РµРЅ РѕС‚РІРµС‚РЅС‹Р№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РїСЂРё ReloadData=true");
             e.Data["UseAsyncCall"] = UseAsyncCall;
           }
           catch (Exception e2)
@@ -403,12 +403,12 @@ namespace FreeLibSet.Forms.Docs
         DocTypeUI docTypeUI;
         SubDocTypeUI subDocTypeUI;
         if (!_UI.DocTypes.FindByTableName(table.TableName, out docTypeUI, out subDocTypeUI))
-          continue; // Недоразумение
+          continue; // РќРµРґРѕСЂР°Р·СѓРјРµРЅРёРµ
 
         docTypeUIs.Add(docTypeUI);
       }
 
-      // Обновление табличных просмотров
+      // РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС‡РЅС‹С… РїСЂРѕСЃРјРѕС‚СЂРѕРІ
       Guid browserGuid;
       if (DocumentViewHandler.CurrentHandler == null)
         browserGuid = Guid.Empty;
@@ -431,24 +431,24 @@ namespace FreeLibSet.Forms.Docs
             e.Data["DocumentViewHandler"] = dvh.ToString();
             e.Data["BrowserGuid"] = dvh.BrowserGuid;
             e.Data["IsCaller"] = IsCaller;
-            EFPApp.ShowException(e, "Ошибка обновления просмотра после записи изменений для документов \"" + docTypeUI.DocType.PluralTitle+"\"");
+            EFPApp.ShowException(e, "РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїСЂРѕСЃРјРѕС‚СЂР° РїРѕСЃР»Рµ Р·Р°РїРёСЃРё РёР·РјРµРЅРµРЅРёР№ РґР»СЏ РґРѕРєСѓРјРµРЅС‚РѕРІ \"" + docTypeUI.DocType.PluralTitle+"\"");
           }
         }
         docTypeUI.RefreshBufferedData(); // 03.02.2022
       }
-      //DebugTools.DebugDataSet(DataSet, "Обновленный");
+      //DebugTools.DebugDataSet(DataSet, "РћР±РЅРѕРІР»РµРЅРЅС‹Р№");
     }
 
     #endregion
 
-    #region Асинхронное выполнение
+    #region РђСЃРёРЅС…СЂРѕРЅРЅРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ
 
     /// <summary>
-    /// Вызывает серверную процедуру, получаемую CreateServerExecProc()
+    /// Р’С‹Р·С‹РІР°РµС‚ СЃРµСЂРІРµСЂРЅСѓСЋ РїСЂРѕС†РµРґСѓСЂСѓ, РїРѕР»СѓС‡Р°РµРјСѓСЋ CreateServerExecProc()
     /// </summary>
-    /// <param name="dispArgs">Аргументы вызова</param>
-    /// <param name="displayName">Отображаемое имя в списке процедур</param>
-    /// <returns>Результаты</returns>
+    /// <param name="dispArgs">РђСЂРіСѓРјРµРЅС‚С‹ РІС‹Р·РѕРІР°</param>
+    /// <param name="displayName">РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ РІ СЃРїРёСЃРєРµ РїСЂРѕС†РµРґСѓСЂ</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚С‹</returns>
     private NamedValues ExecuteServerAsync(NamedValues dispArgs, string displayName)
     {
       DistributedCallData startData = base.StartServerExecProc(dispArgs);
@@ -461,23 +461,23 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Прочее
+    #region РџСЂРѕС‡РµРµ
 
     /// <summary>
-    /// Возвращает текстовое представление документа или поддокумента,
-    /// используя DBUI.TextHandlers
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°,
+    /// РёСЃРїРѕР»СЊР·СѓСЏ DBUI.TextHandlers
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="id">Идентификатор</param>
-    /// <returns>Текстовое представление</returns>
-    public override string GetTextValue(string tableName, Int32 id)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
+    protected override string DoGetTextValue(string tableName, Int32 id)
     {
       return _UI.TextHandlers.GetTextValue(tableName, id);
     }
 
     #endregion
 
-    #region Обработка исключений
+    #region РћР±СЂР°Р±РѕС‚РєР° РёСЃРєР»СЋС‡РµРЅРёР№
 
     void DocProviderUI_ExceptionCaught(object sender, FreeLibSet.Data.Docs.DBxRetriableExceptionEventArgs args)
     {

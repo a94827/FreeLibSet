@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms.Diagnostics
+п»їnamespace FreeLibSet.Forms.Diagnostics
 {
   partial class ShowExceptionMsgBoxForm
   {
@@ -98,7 +98,7 @@ namespace FreeLibSet.Forms.Diagnostics
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnMore
@@ -108,7 +108,7 @@ namespace FreeLibSet.Forms.Diagnostics
       this.btnMore.Name = "btnMore";
       this.btnMore.Size = new System.Drawing.Size(132, 24);
       this.btnMore.TabIndex = 1;
-      this.btnMore.Text = "Подробности";
+      this.btnMore.Text = "РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё";
       this.btnMore.UseVisualStyleBackColor = true;
       // 
       // ShowExceptionMsgBoxForm

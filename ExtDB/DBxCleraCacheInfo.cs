@@ -1,17 +1,17 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace AgeyevAV.ExtDB
 {
   /// <summary>
-  /// Хранилище идентификаторов строк таблиц, которые должны быть очищены в результате изменения или удаления строк
-  /// Этот класс НЕ ЯВЛЯЕТСЯ потокобезопасным в режиме записи (пока IsReadOnly=false).
+  /// РҐСЂР°РЅРёР»РёС‰Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ СЃС‚СЂРѕРє С‚Р°Р±Р»РёС†, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РѕС‡РёС‰РµРЅС‹ РІ СЂРµР·СѓР»СЊС‚Р°С‚Рµ РёР·РјРµРЅРµРЅРёСЏ РёР»Рё СѓРґР°Р»РµРЅРёСЏ СЃС‚СЂРѕРє
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РќР• РЇР’Р›РЇР•РўРЎРЇ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј РІ СЂРµР¶РёРјРµ Р·Р°РїРёСЃРё (РїРѕРєР° IsReadOnly=false).
   /// </summary>
   [Serializable]
   public sealed class DBxClearCacheInfo : IReadOnlyObject, IEnumerable<KeyValuePair<string, IdList>>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public DBxClearCacheInfo()
     {
@@ -21,7 +21,7 @@ namespace AgeyevAV.ExtDB
 
     #endregion
 
-    #region Добавление данных
+    #region Р”РѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
 
     public void Add(string TableName, Int32[] Ids)
     {
@@ -68,7 +68,7 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
-    /// Вызов этого метода означает, что все кэшированные данные должны быть удалены
+    /// Р’С‹Р·РѕРІ СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РѕР·РЅР°С‡Р°РµС‚, С‡С‚Рѕ РІСЃРµ РєСЌС€РёСЂРѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓРґР°Р»РµРЅС‹
     /// </summary>
     public void AddAllTables()
     {
@@ -78,23 +78,23 @@ namespace AgeyevAV.ExtDB
         return;
 
       FAreAllTables = true;
-      FItems.Clear(); // коллекция идентифификаторов больше не нужна
+      FItems.Clear(); // РєРѕР»Р»РµРєС†РёСЏ РёРґРµРЅС‚РёС„РёС„РёРєР°С‚РѕСЂРѕРІ Р±РѕР»СЊС€Рµ РЅРµ РЅСѓР¶РЅР°
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private Dictionary<string, IdList> FItems;
 
     /// <summary>
-    /// Возвращает true, ели был вызов AddAllTables()
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµР»Рё Р±С‹Р» РІС‹Р·РѕРІ AddAllTables()
     /// </summary>
     public bool AreAllTables { get { return FAreAllTables; } }
     private bool FAreAllTables;
 
     /// <summary>
-    /// Возвращает true, если в объект не было добавлено изменений
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ РѕР±СЉРµРєС‚ РЅРµ Р±С‹Р»Рѕ РґРѕР±Р°РІР»РµРЅРѕ РёР·РјРµРЅРµРЅРёР№
     /// </summary>
     public bool IsEmpty
     {
@@ -109,14 +109,14 @@ namespace AgeyevAV.ExtDB
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если набор находится в режиме просмотра.
-    /// В этом случае вызовы методов Add() не допускаются
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РЅР°Р±РѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РІ СЂРµР¶РёРјРµ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РІС‹Р·РѕРІС‹ РјРµС‚РѕРґРѕРІ Add() РЅРµ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ
     /// </summary>
     public bool IsReadOnly { get { return FIsReadOnly; } }
     private bool FIsReadOnly;
 
     /// <summary>
-    /// Проверка режима IsReadOnly
+    /// РџСЂРѕРІРµСЂРєР° СЂРµР¶РёРјР° IsReadOnly
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -125,7 +125,7 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
-    /// Установка свойства IsReadOnly=true
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° IsReadOnly=true
     /// </summary>
     public void SetReadOnly()
     {
@@ -150,12 +150,12 @@ namespace AgeyevAV.ExtDB
   }
 
   /// <summary>
-  /// Держатель списка на очистку кэша.
-  /// Этот класс является потокобезопасным
+  /// Р”РµСЂР¶Р°С‚РµР»СЊ СЃРїРёСЃРєР° РЅР° РѕС‡РёСЃС‚РєСѓ РєСЌС€Р°.
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј
   /// </summary>
   public sealed class DBxClearCacheHolder
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public DBxClearCacheHolder()
     {
@@ -165,21 +165,21 @@ namespace AgeyevAV.ExtDB
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Текущий накапливаемый список изменений
+    /// РўРµРєСѓС‰РёР№ РЅР°РєР°РїР»РёРІР°РµРјС‹Р№ СЃРїРёСЃРѕРє РёР·РјРµРЅРµРЅРёР№
     /// </summary>
     private DBxClearCacheInfo FCurrent;
 
     /// <summary>
-    /// Объект синхронизации
+    /// РћР±СЉРµРєС‚ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё
     /// </summary>
     private object SyncRoot;
 
     #endregion
 
-    #region Методы установки
+    #region РњРµС‚РѕРґС‹ СѓСЃС‚Р°РЅРѕРІРєРё
 
     public void Add(string TableName, Int32[] Ids)
     {
@@ -207,14 +207,14 @@ namespace AgeyevAV.ExtDB
 
     #endregion
 
-    #region Переключение на новый набор
+    #region РџРµСЂРµРєР»СЋС‡РµРЅРёРµ РЅР° РЅРѕРІС‹Р№ РЅР°Р±РѕСЂ
 
     /// <summary>
-    /// Переключается на новый список изменений.
-    /// Возращает предыдущий список.
-    /// Метод не выполняет переключение и возращает null, если в текущем списке не зарегистрировано изменений
+    /// РџРµСЂРµРєР»СЋС‡Р°РµС‚СЃСЏ РЅР° РЅРѕРІС‹Р№ СЃРїРёСЃРѕРє РёР·РјРµРЅРµРЅРёР№.
+    /// Р’РѕР·СЂР°С‰Р°РµС‚ РїСЂРµРґС‹РґСѓС‰РёР№ СЃРїРёСЃРѕРє.
+    /// РњРµС‚РѕРґ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµРєР»СЋС‡РµРЅРёРµ Рё РІРѕР·СЂР°С‰Р°РµС‚ null, РµСЃР»Рё РІ С‚РµРєСѓС‰РµРј СЃРїРёСЃРєРµ РЅРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРѕ РёР·РјРµРЅРµРЅРёР№
     /// </summary>
-    /// <returns>Предыдуший список</returns>
+    /// <returns>РџСЂРµРґС‹РґСѓС€РёР№ СЃРїРёСЃРѕРє</returns>
     public DBxClearCacheInfo Swap()
     {
       DBxClearCacheInfo Prev;
@@ -236,17 +236,17 @@ namespace AgeyevAV.ExtDB
   }
 
   /// <summary>
-  /// Хранит несколько последних DBxClearCacheInfo. Также содержит объект DBxClearCacheHolder.
-  /// Класс является потокобезопасным
+  /// РҐСЂР°РЅРёС‚ РЅРµСЃРєРѕР»СЊРєРѕ РїРѕСЃР»РµРґРЅРёС… DBxClearCacheInfo. РўР°РєР¶Рµ СЃРѕРґРµСЂР¶РёС‚ РѕР±СЉРµРєС‚ DBxClearCacheHolder.
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј
   /// </summary>
   public sealed class DBxClearCacheBuffer
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает кольцевой буфер, содержащий <paramref name="BufferSize"/> элементов.
+    /// РЎРѕР·РґР°РµС‚ РєРѕР»СЊС†РµРІРѕР№ Р±СѓС„РµСЂ, СЃРѕРґРµСЂР¶Р°С‰РёР№ <paramref name="BufferSize"/> СЌР»РµРјРµРЅС‚РѕРІ.
     /// </summary>
-    /// <param name="BufferSize">Количество элементов в буфере</param>
+    /// <param name="BufferSize">РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ Р±СѓС„РµСЂРµ</param>
     public DBxClearCacheBuffer(int BufferSize)
     {
       if (BufferSize < 2 || BufferSize > 1000)
@@ -258,18 +258,18 @@ namespace AgeyevAV.ExtDB
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Держатель текущего накопителя.
-    /// Для регистрации запроса очистки данных должны вызываться его методы Add()
+    /// Р”РµСЂР¶Р°С‚РµР»СЊ С‚РµРєСѓС‰РµРіРѕ РЅР°РєРѕРїРёС‚РµР»СЏ.
+    /// Р”Р»СЏ СЂРµРіРёСЃС‚СЂР°С†РёРё Р·Р°РїСЂРѕСЃР° РѕС‡РёСЃС‚РєРё РґР°РЅРЅС‹С… РґРѕР»Р¶РЅС‹ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РµРіРѕ РјРµС‚РѕРґС‹ Add()
     /// </summary>
     public DBxClearCacheHolder Holder { get { return FHolder; } }
     private DBxClearCacheHolder FHolder;
 
     private struct BufferItem
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public int Version;
       public DBxClearCacheInfo Info;
@@ -278,7 +278,7 @@ namespace AgeyevAV.ExtDB
     }
 
     /// <summary>
-    /// Кольцевой буфер для хранения списков
+    /// РљРѕР»СЊС†РµРІРѕР№ Р±СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃРїРёСЃРєРѕРІ
     /// </summary>
     private RingBuffer<BufferItem> FItems;
 

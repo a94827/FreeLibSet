@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,16 +11,16 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Построитель для свойства DataView.Sort.
-  /// Удобно использовать для создания сортировки по нескольким полям, когда имена полей извлекаются откуда-нибудь.
-  /// Используйте методы Add() и SetSort() для добавления частей сортировки. Затем присвойте свойству DataView.Sort значение DataViewSortBuilder.ToString()
+  /// РџРѕСЃС‚СЂРѕРёС‚РµР»СЊ РґР»СЏ СЃРІРѕР№СЃС‚РІР° DataView.Sort.
+  /// РЈРґРѕР±РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ РЅРµСЃРєРѕР»СЊРєРёРј РїРѕР»СЏРј, РєРѕРіРґР° РёРјРµРЅР° РїРѕР»РµР№ РёР·РІР»РµРєР°СЋС‚СЃСЏ РѕС‚РєСѓРґР°-РЅРёР±СѓРґСЊ.
+  /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґС‹ Add() Рё SetSort() РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ С‡Р°СЃС‚РµР№ СЃРѕСЂС‚РёСЂРѕРІРєРё. Р—Р°С‚РµРј РїСЂРёСЃРІРѕР№С‚Рµ СЃРІРѕР№СЃС‚РІСѓ DataView.Sort Р·РЅР°С‡РµРЅРёРµ DataViewSortBuilder.ToString()
   /// </summary>
   public sealed class DataViewSortBuilder
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект, готовый для вызова метода Add()
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РіРѕС‚РѕРІС‹Р№ РґР»СЏ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° Add()
     /// </summary>
     public DataViewSortBuilder()
     {
@@ -30,11 +30,11 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     private struct PartInfo
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public string Name;
 
@@ -51,10 +51,10 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Методы создания
+    #region РњРµС‚РѕРґС‹ СЃРѕР·РґР°РЅРёСЏ
 
     /// <summary>
-    /// Очищает все данные и делает DataViewSortBuilder готовым к созданию нового объекта
+    /// РћС‡РёС‰Р°РµС‚ РІСЃРµ РґР°РЅРЅС‹Рµ Рё РґРµР»Р°РµС‚ DataViewSortBuilder РіРѕС‚РѕРІС‹Рј Рє СЃРѕР·РґР°РЅРёСЋ РЅРѕРІРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
     public void Clear()
     {
@@ -63,9 +63,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавляет новое поле для сортировки.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РЅРѕРІРѕРµ РїРѕР»Рµ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё.
     /// </summary>
-    /// <param name="name">Имя поля</param>
+    /// <param name="name">РРјСЏ РїРѕР»СЏ</param>
     public void Add(string name)
     {
       ValidateName(name);
@@ -85,25 +85,25 @@ namespace FreeLibSet.Data
 
       int pBad = DataTools.IndexOfAny(name, _BadChars);
       if (pBad >= 0)
-        throw new ArgumentException("Недопустимый символ \"" + name[pBad] + "\"", "name");
+        throw new ArgumentException("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ СЃРёРјРІРѕР» \"" + name[pBad] + "\"", "name");
 
       if (name[0] == '.' || name[name.Length - 1] == '.')
-        throw new ArgumentException("Имя не может начинаться или заканчиваться точкой", "name");
+        throw new ArgumentException("РРјСЏ РЅРµ РјРѕР¶РµС‚ РЅР°С‡РёРЅР°С‚СЊСЃСЏ РёР»Рё Р·Р°РєР°РЅС‡РёРІР°С‚СЊСЃСЏ С‚РѕС‡РєРѕР№", "name");
 
       if (name.IndexOf("..") >= 0)
-        throw new ArgumentException("Имя не может содержать 2 точки подряд", "name");
+        throw new ArgumentException("РРјСЏ РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ 2 С‚РѕС‡РєРё РїРѕРґСЂСЏРґ", "name");
     }
 
     /// <summary>
-    /// Добавляет к только что добавленному имени точку и имя ссылочного поля.
-    /// Непосредственно перед вызовом метода должен быть вызов Add() или другой вызов AddSubName()
+    /// Р”РѕР±Р°РІР»СЏРµС‚ Рє С‚РѕР»СЊРєРѕ С‡С‚Рѕ РґРѕР±Р°РІР»РµРЅРЅРѕРјСѓ РёРјРµРЅРё С‚РѕС‡РєСѓ Рё РёРјСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ.
+    /// РќРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РїРµСЂРµРґ РІС‹Р·РѕРІРѕРј РјРµС‚РѕРґР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РѕРІ Add() РёР»Рё РґСЂСѓРіРѕР№ РІС‹Р·РѕРІ AddSubName()
     /// </summary>
     /// <param name="subName"></param>
     public void AddSubName(string subName)
     {
       ValidateName(subName);
       if (_State != StateValue.NameSet)
-        throw new InvalidOperationException("Перед этим вызовом непосредственно должен быть вызов метода Add() или AddSubName()");
+        throw new InvalidOperationException("РџРµСЂРµРґ СЌС‚РёРј РІС‹Р·РѕРІРѕРј РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РѕРІ РјРµС‚РѕРґР° Add() РёР»Рё AddSubName()");
 
       PartInfo pi = _Parts[_Parts.Count - 1];
       pi.Name += "." + subName;
@@ -111,15 +111,15 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Устанавливает порядок сортировки для последнего добавленного поля.
-    /// Перед вызовом метода должен быть вызов Add() или AddSubName().
-    /// Если метод не вызывается, то используется сортировка по возрастанию
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ РїРѕСЃР»РµРґРЅРµРіРѕ РґРѕР±Р°РІР»РµРЅРЅРѕРіРѕ РїРѕР»СЏ.
+    /// РџРµСЂРµРґ РІС‹Р·РѕРІРѕРј РјРµС‚РѕРґР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РѕРІ Add() РёР»Рё AddSubName().
+    /// Р•СЃР»Рё РјРµС‚РѕРґ РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ
     /// </summary>
     /// <param name="sortOrder"></param>
     public void SetSort(ListSortDirection sortOrder)
     {
       if (_State != StateValue.NameSet)
-        throw new InvalidOperationException("Перед этим вызовом непосредственно должен быть вызов метода Add() или AddSubName()");
+        throw new InvalidOperationException("РџРµСЂРµРґ СЌС‚РёРј РІС‹Р·РѕРІРѕРј РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РѕРІ РјРµС‚РѕРґР° Add() РёР»Рё AddSubName()");
 
       PartInfo pi = _Parts[_Parts.Count - 1];
       pi.SortOrder = sortOrder;
@@ -133,10 +133,10 @@ namespace FreeLibSet.Data
     #region ToString()
 
     /// <summary>
-    /// Возвращает текстовое значение, которое можно присвоить свойству DataView.Sort.
-    /// Если не были добавлены поля, то возвращает пустую строку
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ РјРѕР¶РЅРѕ РїСЂРёСЃРІРѕРёС‚СЊ СЃРІРѕР№СЃС‚РІСѓ DataView.Sort.
+    /// Р•СЃР»Рё РЅРµ Р±С‹Р»Рё РґРѕР±Р°РІР»РµРЅС‹ РїРѕР»СЏ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
     /// </summary>
-    /// <returns>Порядок сортировки</returns>
+    /// <returns>РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё</returns>
     public override string ToString()
     {
       if (_Parts.Count == 0)

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -12,7 +12,7 @@ namespace ExtTools_tests.Collections
     [Test]
     public void Constructor()
     {
-      // Используем ссылку на интерфейс, т.к. наличие видимых свойств и методов может быть изменено
+      // РСЃРїРѕР»СЊР·СѓРµРј СЃСЃС‹Р»РєСѓ РЅР° РёРЅС‚РµСЂС„РµР№СЃ, С‚.Рє. РЅР°Р»РёС‡РёРµ РІРёРґРёРјС‹С… СЃРІРѕР№СЃС‚РІ Рё РјРµС‚РѕРґРѕРІ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёР·РјРµРЅРµРЅРѕ
 
       IList<int> sut = new DummyList<int>();
 
@@ -28,7 +28,7 @@ namespace ExtTools_tests.Collections
       Assert.Catch(delegate() { sut.Add(1); }, "Add()");
       Assert.Catch(delegate() { sut.Insert(0, 1); }, "Insert()");
 
-      // Для этих методов не определено, должны ли они выбрасывать исключение, или ничего не делать.
+      // Р”Р»СЏ СЌС‚РёС… РјРµС‚РѕРґРѕРІ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ, РґРѕР»Р¶РЅС‹ Р»Рё РѕРЅРё РІС‹Р±СЂР°СЃС‹РІР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, РёР»Рё РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°С‚СЊ.
       // Assert.Catch(delegate() { sut.Clear(); }, "Clear()");
       // Assert.Catch(delegate() { sut.Remove(123); }, "Remove()");
       // Assert.Catch(delegate() { sut.RemoveAt(0); }, "RemoveAt()");

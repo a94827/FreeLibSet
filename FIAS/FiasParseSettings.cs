@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,16 +10,16 @@ using FreeLibSet.Core;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Параметры парсинга адресов из текста (без колонок).
+  /// РџР°СЂР°РјРµС‚СЂС‹ РїР°СЂСЃРёРЅРіР° Р°РґСЂРµСЃРѕРІ РёР· С‚РµРєСЃС‚Р° (Р±РµР· РєРѕР»РѕРЅРѕРє).
   /// </summary>                
   public class OldFiasParseSettings
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает набор параметров
+    /// РЎРѕР·РґР°РµС‚ РЅР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <param name="source">Источник данных ФИАС. Не может быть null</param>
+    /// <param name="source">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… Р¤РРђРЎ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public OldFiasParseSettings(IFiasSource source)
     {
       if (source == null)
@@ -31,17 +31,17 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Источник данных ФИАС. Не может быть null.
+    /// РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… Р¤РРђРЎ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null.
     /// </summary>
     public IFiasSource Source { get { return _Handler.Source; } }
     private FiasHandler _Handler;
 
     /// <summary>
-    /// Базовый адрес, от которого выполняется поиск.
-    /// По умолчанию - пустой адрес - вся РФ
+    /// Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ, РѕС‚ РєРѕС‚РѕСЂРѕРіРѕ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РїСѓСЃС‚РѕР№ Р°РґСЂРµСЃ - РІСЃСЏ Р Р¤
     /// </summary>
     public FiasAddress BaseAddress
     {
@@ -57,8 +57,8 @@ namespace FreeLibSet.FIAS
     private FiasAddress _BaseAddress;
 
     /// <summary>
-    /// Последний уровень, до которого выполняется парсинг.
-    /// По умолчанию - до уровня квартиры/помещения включительно
+    /// РџРѕСЃР»РµРґРЅРёР№ СѓСЂРѕРІРµРЅСЊ, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїР°СЂСЃРёРЅРі.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РґРѕ СѓСЂРѕРІРЅСЏ РєРІР°СЂС‚РёСЂС‹/РїРѕРјРµС‰РµРЅРёСЏ РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ
     /// </summary>
     public FiasEditorLevel EditorLevel
     {
@@ -71,7 +71,7 @@ namespace FreeLibSet.FIAS
     private FiasEditorLevel _EditorLevel;
 
     /// <summary>
-    /// Заменяет уровень для домов и помещений
+    /// Р—Р°РјРµРЅСЏРµС‚ СѓСЂРѕРІРµРЅСЊ РґР»СЏ РґРѕРјРѕРІ Рё РїРѕРјРµС‰РµРЅРёР№
     /// </summary>
     internal FiasLevel InternalBottomLevel
     {
@@ -96,19 +96,19 @@ namespace FreeLibSet.FIAS
     }
 
     ///// <summary>
-    ///// Список доступных уровней для свойства BottomLevel
+    ///// РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… СѓСЂРѕРІРЅРµР№ РґР»СЏ СЃРІРѕР№СЃС‚РІР° BottomLevel
     ///// </summary>
     //public FiasLevel[] AvailableBottomLevels    {     }
     //private static readonly FiasLevel[]_AvailableBottomLevels    =new FiasLevel[]{FiasLevel.Village, FiasLevel.Street, FiasLevel.Structure, FIAS}
 
     #endregion
 
-    #region Текстовое представление
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
     /// <summary>
-    /// Текстовое представление набора параметров
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РЅР°Р±РѕСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (_BaseAddress.IsEmpty)
@@ -119,12 +119,12 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Чтение и запись настроек
+    #region Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ РЅР°СЃС‚СЂРѕРµРє
 
     /// <summary>
-    /// Запись набора параметров в секцию конфигурации
+    /// Р—Р°РїРёСЃСЊ РЅР°Р±РѕСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Секция для записи</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РґР»СЏ Р·Р°РїРёСЃРё</param>
     public void WriteConfig(CfgPart cfg)
     {
       FiasAddressConvert convert = new FiasAddressConvert(_Handler.Source);
@@ -133,7 +133,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Чтение набора параметров из секции конфигурации
+    /// Р§С‚РµРЅРёРµ РЅР°Р±РѕСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
     /// <param name="cfg"></param>
     public void ReadConfig(CfgPart cfg)
@@ -146,16 +146,16 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Параметры парсинга адресов из текста, разбитого на колонки.
+  /// РџР°СЂР°РјРµС‚СЂС‹ РїР°СЂСЃРёРЅРіР° Р°РґСЂРµСЃРѕРІ РёР· С‚РµРєСЃС‚Р°, СЂР°Р·Р±РёС‚РѕРіРѕ РЅР° РєРѕР»РѕРЅРєРё.
   /// </summary>                
   public class FiasParseSettings
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает набор параметров
+    /// РЎРѕР·РґР°РµС‚ РЅР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <param name="source">Источник данных ФИАС. Не может быть null</param>
+    /// <param name="source">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… Р¤РРђРЎ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public FiasParseSettings(IFiasSource source)
     {
       if (source == null)
@@ -166,17 +166,17 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Источник данных ФИАС. Не может быть null.
+    /// РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… Р¤РРђРЎ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null.
     /// </summary>
     public IFiasSource Source { get { return _Handler.Source; } }
     private FiasHandler _Handler;
 
     /// <summary>
-    /// Базовый адрес, от которого выполняется поиск.
-    /// По умолчанию - пустой адрес - вся РФ
+    /// Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ, РѕС‚ РєРѕС‚РѕСЂРѕРіРѕ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РїСѓСЃС‚РѕР№ Р°РґСЂРµСЃ - РІСЃСЏ Р Р¤
     /// </summary>
     public FiasAddress BaseAddress
     {
@@ -192,7 +192,7 @@ namespace FreeLibSet.FIAS
     private FiasAddress _BaseAddress;
 
     /// <summary>
-    /// Уровни для колонок
+    /// РЈСЂРѕРІРЅРё РґР»СЏ РєРѕР»РѕРЅРѕРє
     /// </summary>
     public FiasLevelSet[] CellLevels
     {
@@ -203,12 +203,12 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Дополнительные методы
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Устанавливает массив CellLevels равным одному элементу, исходя из уже установленного свойства BaseAddress
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РјР°СЃСЃРёРІ CellLevels СЂР°РІРЅС‹Рј РѕРґРЅРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ, РёСЃС…РѕРґСЏ РёР· СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРіРѕ СЃРІРѕР№СЃС‚РІР° BaseAddress
     /// </summary>
-    /// <param name="editorLevel">Уровень редактора</param>
+    /// <param name="editorLevel">РЈСЂРѕРІРµРЅСЊ СЂРµРґР°РєС‚РѕСЂР°</param>
     public void SetSingle(FiasEditorLevel editorLevel)
     {
       FiasLevelSet set1 = FiasLevelSet.FromBottomLevel(_BaseAddress.NameBottomLevel, true);
@@ -218,12 +218,12 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Текстовое представление
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
     /// <summary>
-    /// Текстовое представление набора параметров
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РЅР°Р±РѕСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (_BaseAddress.IsEmpty)
@@ -234,12 +234,12 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Чтение и запись настроек
+    #region Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ РЅР°СЃС‚СЂРѕРµРє
 
     /// <summary>
-    /// Запись набора параметров в секцию конфигурации
+    /// Р—Р°РїРёСЃСЊ РЅР°Р±РѕСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Секция для записи</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РґР»СЏ Р·Р°РїРёСЃРё</param>
     public void WriteConfig(CfgPart cfg)
     {
       FiasAddressConvert convert = new FiasAddressConvert(_Handler.Source);
@@ -256,7 +256,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Чтение набора параметров из секции конфигурации
+    /// Р§С‚РµРЅРёРµ РЅР°Р±РѕСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
     /// <param name="cfg"></param>
     public void ReadConfig(CfgPart cfg)

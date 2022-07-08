@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,32 +12,32 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Потокобезопасный класс, хранящий общие данные для базы данных в-целом
-  /// Этот класс не сериализуется и существует только на стороне сервера, 
-  /// т.к. содержит точки подключения к базе данных без ограничения доступа
+  /// РџРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Р№ РєР»Р°СЃСЃ, С…СЂР°РЅСЏС‰РёР№ РѕР±С‰РёРµ РґР°РЅРЅС‹Рµ РґР»СЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РІ-С†РµР»РѕРј
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ СЃРµСЂРёР°Р»РёР·СѓРµС‚СЃСЏ Рё СЃСѓС‰РµСЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР°, 
+  /// С‚.Рє. СЃРѕРґРµСЂР¶РёС‚ С‚РѕС‡РєРё РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… Р±РµР· РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РґРѕСЃС‚СѓРїР°
   /// </summary>
   public class DBxRealDocProviderGlobal : IDBxCacheSource, IReadOnlyObject
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Эта версия конструктура используется, когда в программе не используются таблицы BinData и FileNames
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚СѓСЂР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РєРѕРіРґР° РІ РїСЂРѕРіСЂР°РјРјРµ РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ С‚Р°Р±Р»РёС†С‹ BinData Рё FileNames
     /// </summary>
-    /// <param name="docTypes">Описания видов документов. Список переводится в режим "Только чтение"</param>
-    /// <param name="mainDBEntry">Главная точка входа</param>
-    /// <param name="undoDBEntry">Точка входа в базу данных. Может быть null</param>
+    /// <param name="docTypes">РћРїРёСЃР°РЅРёСЏ РІРёРґРѕРІ РґРѕРєСѓРјРµРЅС‚РѕРІ. РЎРїРёСЃРѕРє РїРµСЂРµРІРѕРґРёС‚СЃСЏ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ"</param>
+    /// <param name="mainDBEntry">Р“Р»Р°РІРЅР°СЏ С‚РѕС‡РєР° РІС…РѕРґР°</param>
+    /// <param name="undoDBEntry">РўРѕС‡РєР° РІС…РѕРґР° РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…. РњРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public DBxRealDocProviderGlobal(DBxDocTypes docTypes, DBxEntry mainDBEntry, DBxEntry undoDBEntry)
       : this(docTypes, mainDBEntry, undoDBEntry, null)
     {
     }
 
     /// <summary>
-    /// Эта версия конструктура дает возможность использовать таблицы BinData и FileNames
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚СѓСЂР° РґР°РµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚Р°Р±Р»РёС†С‹ BinData Рё FileNames
     /// </summary>
-    /// <param name="docTypes">Описания видов документов. Список переводится в режим "Только чтение"</param>
-    /// <param name="mainDBEntry">Главная точка входа</param>
-    /// <param name="undoDBEntry">Точка входа в базу данных. Может быть null</param>
-    /// <param name="binDataHandler">Обработчик двоичных данных. Переводится в режим "Только чтение". Может быть null</param>
+    /// <param name="docTypes">РћРїРёСЃР°РЅРёСЏ РІРёРґРѕРІ РґРѕРєСѓРјРµРЅС‚РѕРІ. РЎРїРёСЃРѕРє РїРµСЂРµРІРѕРґРёС‚СЃСЏ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ"</param>
+    /// <param name="mainDBEntry">Р“Р»Р°РІРЅР°СЏ С‚РѕС‡РєР° РІС…РѕРґР°</param>
+    /// <param name="undoDBEntry">РўРѕС‡РєР° РІС…РѕРґР° РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…. РњРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="binDataHandler">РћР±СЂР°Р±РѕС‚С‡РёРє РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…. РџРµСЂРµРІРѕРґРёС‚СЃСЏ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ". РњРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public DBxRealDocProviderGlobal(DBxDocTypes docTypes, DBxEntry mainDBEntry, DBxEntry undoDBEntry, DBxBinDataHandler binDataHandler)
     {
       if (docTypes == null)
@@ -54,23 +54,23 @@ namespace FreeLibSet.Data.Docs
       if (undoDBEntry != null)
       {
         if (!docTypes.UseDeleted)
-          throw new ArgumentException("Ведение истории невозможно, если свойство DBxDocTypes.UseDeleted=false", "undoDBEntry");
+          throw new ArgumentException("Р’РµРґРµРЅРёРµ РёСЃС‚РѕСЂРёРё РЅРµРІРѕР·РјРѕР¶РЅРѕ, РµСЃР»Рё СЃРІРѕР№СЃС‚РІРѕ DBxDocTypes.UseDeleted=false", "undoDBEntry");
         if (!docTypes.UseVersions)
-          throw new ArgumentException("Ведение истории невозможно, если свойство DBxDocTypes.UseVersions=false", "undoDBEntry");
+          throw new ArgumentException("Р’РµРґРµРЅРёРµ РёСЃС‚РѕСЂРёРё РЅРµРІРѕР·РјРѕР¶РЅРѕ, РµСЃР»Рё СЃРІРѕР№СЃС‚РІРѕ DBxDocTypes.UseVersions=false", "undoDBEntry");
         if (!docTypes.UseTime)
-          throw new ArgumentException("Ведение истории невозможно, если свойство DBxDocTypes.UseTime=false", "undoDBEntry");
+          throw new ArgumentException("Р’РµРґРµРЅРёРµ РёСЃС‚РѕСЂРёРё РЅРµРІРѕР·РјРѕР¶РЅРѕ, РµСЃР»Рё СЃРІРѕР№СЃС‚РІРѕ DBxDocTypes.UseTime=false", "undoDBEntry");
       }
       else
       {
         if (docTypes.UseSessionId)
-          throw new ArgumentException("Нельзя устанавливать свойство DBxDocTypes.UseSessionId, если история документов не ведется", "undoDBEntry");
+          throw new ArgumentException("РќРµР»СЊР·СЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ СЃРІРѕР№СЃС‚РІРѕ DBxDocTypes.UseSessionId, РµСЃР»Рё РёСЃС‚РѕСЂРёСЏ РґРѕРєСѓРјРµРЅС‚РѕРІ РЅРµ РІРµРґРµС‚СЃСЏ", "undoDBEntry");
       }
       _UndoDBEntry = undoDBEntry;
 
       if (binDataHandler == null)
       {
         if (docTypes.HasBinDataRefs || docTypes.HasFileRefs)
-          throw new ArgumentNullException("binDataHandler", "Так как в DocTypes задано использование ссылок на двоичные данные, аргумент BinDataHandler должен быть задан");
+          throw new ArgumentNullException("binDataHandler", "РўР°Рє РєР°Рє РІ DocTypes Р·Р°РґР°РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЃСЃС‹Р»РѕРє РЅР° РґРІРѕРёС‡РЅС‹Рµ РґР°РЅРЅС‹Рµ, Р°СЂРіСѓРјРµРЅС‚ BinDataHandler РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ");
       }
       else
         binDataHandler.SetReadOnly();
@@ -93,7 +93,7 @@ namespace FreeLibSet.Data.Docs
 
       _TextHandlers = new DBxDocTextHandlers(docTypes, DBCache);
 
-      #region MainDocTableServiceColumns и SubDocTableServiceColumns
+      #region MainDocTableServiceColumns Рё SubDocTableServiceColumns
 
       DBxColumnList cols;
 
@@ -115,7 +115,7 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region AllDocServiceColumns и AllSubDocServiceColumns
+      #region AllDocServiceColumns Рё AllSubDocServiceColumns
 
       cols = new DBxColumnList();
       cols.Add("Id");
@@ -161,16 +161,16 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Размер кольцевого буфера для хранения обновлений.
-    /// При необходимости, свойство может быть изменено до вызова конструктора DBxRealDocProviderGlobal.
-    /// Оптимальное значение зависит от соотношения частоты вызова метода Swap() по таймеру на стороне 
-    /// сервера к частоте опроса изменений клиентами.
-    /// Если буфер маленький, то клиенты будут получать сигнал полной очистки, т.к. между опросами буфер
-    /// будет убегать. Если буфер излишне большой, то будет лишний расход памяти
-    /// Значение по умолчанию равно 10
+    /// Р Р°Р·РјРµСЂ РєРѕР»СЊС†РµРІРѕРіРѕ Р±СѓС„РµСЂР° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РѕР±РЅРѕРІР»РµРЅРёР№.
+    /// РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё, СЃРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёР·РјРµРЅРµРЅРѕ РґРѕ РІС‹Р·РѕРІР° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° DBxRealDocProviderGlobal.
+    /// РћРїС‚РёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Р·Р°РІРёСЃРёС‚ РѕС‚ СЃРѕРѕС‚РЅРѕС€РµРЅРёСЏ С‡Р°СЃС‚РѕС‚С‹ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° Swap() РїРѕ С‚Р°Р№РјРµСЂСѓ РЅР° СЃС‚РѕСЂРѕРЅРµ 
+    /// СЃРµСЂРІРµСЂР° Рє С‡Р°СЃС‚РѕС‚Рµ РѕРїСЂРѕСЃР° РёР·РјРµРЅРµРЅРёР№ РєР»РёРµРЅС‚Р°РјРё.
+    /// Р•СЃР»Рё Р±СѓС„РµСЂ РјР°Р»РµРЅСЊРєРёР№, С‚Рѕ РєР»РёРµРЅС‚С‹ Р±СѓРґСѓС‚ РїРѕР»СѓС‡Р°С‚СЊ СЃРёРіРЅР°Р» РїРѕР»РЅРѕР№ РѕС‡РёСЃС‚РєРё, С‚.Рє. РјРµР¶РґСѓ РѕРїСЂРѕСЃР°РјРё Р±СѓС„РµСЂ
+    /// Р±СѓРґРµС‚ СѓР±РµРіР°С‚СЊ. Р•СЃР»Рё Р±СѓС„РµСЂ РёР·Р»РёС€РЅРµ Р±РѕР»СЊС€РѕР№, С‚Рѕ Р±СѓРґРµС‚ Р»РёС€РЅРёР№ СЂР°СЃС…РѕРґ РїР°РјСЏС‚Рё
+    /// Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ 10
     /// </summary>
     public static int DefaultClearCacheBuffer
     {
@@ -180,95 +180,95 @@ namespace FreeLibSet.Data.Docs
     private static int _DefaultClearCacheBuffer = 10;
 
     /// <summary>
-    /// Объявления для документов
+    /// РћР±СЉСЏРІР»РµРЅРёСЏ РґР»СЏ РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public DBxDocTypes DocTypes { get { return _DocTypes; } }
     private DBxDocTypes _DocTypes;
 
 
     /// <summary>
-    /// Подключение к основной базе данных.
-    /// Это подключение не содержит ограничений пользователя
-    /// Не может быть null
+    /// РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// Р­С‚Рѕ РїРѕРґРєР»СЋС‡РµРЅРёРµ РЅРµ СЃРѕРґРµСЂР¶РёС‚ РѕРіСЂР°РЅРёС‡РµРЅРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
     /// </summary>
     public DBxEntry MainDBEntry { get { return _MainDBEntry; } }
     private DBxEntry _MainDBEntry;
 
     /// <summary>
-    /// Подключение к базе данных undo.
-    /// Точка подключения не должна содержать ограничений пользователя, иначе при копировании данных документа 
-    /// из базы Main в Undo будут возникать ошибки
-    /// Может быть null, если база данных предназначена для чтения, или история не должна храниться. При этом не будет работать доступ к
-    /// версиям документов. Однако в документах по-прежнему могут быть служебные поля Version и другие.
-    /// Наличие служебных полей определяется управляющими свойствами в DBxDocTypes.
+    /// РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… undo.
+    /// РўРѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ РЅРµ РґРѕР»Р¶РЅР° СЃРѕРґРµСЂР¶Р°С‚СЊ РѕРіСЂР°РЅРёС‡РµРЅРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РёРЅР°С‡Рµ РїСЂРё РєРѕРїРёСЂРѕРІР°РЅРёРё РґР°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚Р° 
+    /// РёР· Р±Р°Р·С‹ Main РІ Undo Р±СѓРґСѓС‚ РІРѕР·РЅРёРєР°С‚СЊ РѕС€РёР±РєРё
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё Р±Р°Р·Р° РґР°РЅРЅС‹С… РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ С‡С‚РµРЅРёСЏ, РёР»Рё РёСЃС‚РѕСЂРёСЏ РЅРµ РґРѕР»Р¶РЅР° С…СЂР°РЅРёС‚СЊСЃСЏ. РџСЂРё СЌС‚РѕРј РЅРµ Р±СѓРґРµС‚ СЂР°Р±РѕС‚Р°С‚СЊ РґРѕСЃС‚СѓРї Рє
+    /// РІРµСЂСЃРёСЏРј РґРѕРєСѓРјРµРЅС‚РѕРІ. РћРґРЅР°РєРѕ РІ РґРѕРєСѓРјРµРЅС‚Р°С… РїРѕ-РїСЂРµР¶РЅРµРјСѓ РјРѕРіСѓС‚ Р±С‹С‚СЊ СЃР»СѓР¶РµР±РЅС‹Рµ РїРѕР»СЏ Version Рё РґСЂСѓРіРёРµ.
+    /// РќР°Р»РёС‡РёРµ СЃР»СѓР¶РµР±РЅС‹С… РїРѕР»РµР№ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ СѓРїСЂР°РІР»СЏСЋС‰РёРјРё СЃРІРѕР№СЃС‚РІР°РјРё РІ DBxDocTypes.
     /// </summary>
     public DBxEntry UndoDBEntry { get { return _UndoDBEntry; } }
     private DBxEntry _UndoDBEntry;
 
     /// <summary>
-    /// Обработчик двоичных данных (таблиц BinData и FileNames)
-    /// Может быть null, если хранение таких данных не предусмотрено
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С… (С‚Р°Р±Р»РёС† BinData Рё FileNames)
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё С…СЂР°РЅРµРЅРёРµ С‚Р°РєРёС… РґР°РЅРЅС‹С… РЅРµ РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅРѕ
     /// </summary>
     public DBxBinDataHandler BinDataHandler { get { return _BinDataHandler; } }
     private DBxBinDataHandler _BinDataHandler;
 
     /// <summary>
-    /// Структура, содержащая объявления таблиц "BinData" и "FileNames".
-    /// Одна из таблиц может отсутствовать, если свойства BinDataHandler.UseBinData
-    /// или UseFiles не установлено.
-    /// Если BinDataHandler=null, содержит пустое объявление структуры, а не null.
+    /// РЎС‚СЂСѓРєС‚СѓСЂР°, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ РѕР±СЉСЏРІР»РµРЅРёСЏ С‚Р°Р±Р»РёС† "BinData" Рё "FileNames".
+    /// РћРґРЅР° РёР· С‚Р°Р±Р»РёС† РјРѕР¶РµС‚ РѕС‚СЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ, РµСЃР»Рё СЃРІРѕР№СЃС‚РІР° BinDataHandler.UseBinData
+    /// РёР»Рё UseFiles РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
+    /// Р•СЃР»Рё BinDataHandler=null, СЃРѕРґРµСЂР¶РёС‚ РїСѓСЃС‚РѕРµ РѕР±СЉСЏРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹, Р° РЅРµ null.
     /// </summary>
     internal DBxStruct BinDataDBStruct { get { return _BinDataDBStruct; } }
     private DBxStruct _BinDataDBStruct;
 
     /// <summary>
-    /// Идентификатор основной базы данных
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     public string DBIdentity { get { return MainDBEntry.DB.DBIdentity; } }
 
 
     /// <summary>
-    /// Служебные поля в начале таблицы документов, загружаемых в таблицу DBxMultiDocs
+    /// РЎР»СѓР¶РµР±РЅС‹Рµ РїРѕР»СЏ РІ РЅР°С‡Р°Р»Рµ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, Р·Р°РіСЂСѓР¶Р°РµРјС‹С… РІ С‚Р°Р±Р»РёС†Сѓ DBxMultiDocs
     /// </summary>
     internal DBxColumns MainDocTableServiceColumns { get { return _MainDocTableServiceColumns; } }
     private DBxColumns _MainDocTableServiceColumns;
 
     /// <summary>
-    /// Служебные поля в начале таблицы поддокументов, загружаемых в таблицу DBxMultiSubDocs
+    /// РЎР»СѓР¶РµР±РЅС‹Рµ РїРѕР»СЏ РІ РЅР°С‡Р°Р»Рµ С‚Р°Р±Р»РёС†С‹ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ, Р·Р°РіСЂСѓР¶Р°РµРјС‹С… РІ С‚Р°Р±Р»РёС†Сѓ DBxMultiSubDocs
     /// </summary>
     internal DBxColumns SubDocTableServiceColumns { get { return _SubDocTableServiceColumns; } }
     private DBxColumns _SubDocTableServiceColumns;
 
     /// <summary>
-    /// Все служебные поля в таблицах документов
+    /// Р’СЃРµ СЃР»СѓР¶РµР±РЅС‹Рµ РїРѕР»СЏ РІ С‚Р°Р±Р»РёС†Р°С… РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     internal DBxColumns AllDocServiceColumns { get { return _AllDocServiceColumns; } }
     private DBxColumns _AllDocServiceColumns;
 
     /// <summary>
-    /// Все служебные поля в таблицах поддокументов
+    /// Р’СЃРµ СЃР»СѓР¶РµР±РЅС‹Рµ РїРѕР»СЏ РІ С‚Р°Р±Р»РёС†Р°С… РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     internal DBxColumns AllSubDocServiceColumns { get { return _AllSubDocServiceColumns; } }
     private DBxColumns _AllSubDocServiceColumns;
 
     /// <summary>
-    /// Описание межтабличных ссылок с возможностью быстрого поиска для мастер-таблицы
+    /// РћРїРёСЃР°РЅРёРµ РјРµР¶С‚Р°Р±Р»РёС‡РЅС‹С… СЃСЃС‹Р»РѕРє СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р±С‹СЃС‚СЂРѕРіРѕ РїРѕРёСЃРєР° РґР»СЏ РјР°СЃС‚РµСЂ-С‚Р°Р±Р»РёС†С‹
     /// </summary>
     internal DBxExtRefs MasterRefs { get { return _MasterRefs; } }
     private DBxExtRefs _MasterRefs;
 
     #endregion
 
-    #region Получение идентификаторов для INSERT
+    #region РџРѕР»СѓС‡РµРЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґР»СЏ INSERT
 
     /// <summary>
-    /// Последние идентификаторы, использованные для каждой таблицы документов
-    /// При обращении этот объект блокируется
+    /// РџРѕСЃР»РµРґРЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹, РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹Рµ РґР»СЏ РєР°Р¶РґРѕР№ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ
+    /// РџСЂРё РѕР±СЂР°С‰РµРЅРёРё СЌС‚РѕС‚ РѕР±СЉРµРєС‚ Р±Р»РѕРєРёСЂСѓРµС‚СЃСЏ
     /// </summary>
     private Dictionary<string, Int32> _LastUsedTableIds;
 
     /// <summary>
-    /// Получить следующий свободный идентификатор для нового документа или поддокумента
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰РёР№ СЃРІРѕР±РѕРґРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґР»СЏ РЅРѕРІРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
     /// <param name="tableName"></param>
     /// <param name="mainDBEntry"></param>
@@ -296,29 +296,29 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Блокировка
+    #region Р‘Р»РѕРєРёСЂРѕРІРєР°
 
-    #region Кратковременная
+    #region РљСЂР°С‚РєРѕРІСЂРµРјРµРЅРЅР°СЏ
 
     /// <summary>
-    /// Список активных кратковременных блокировок базы данных
-    /// При работе с элементами списка должен блокироваться список
+    /// РЎРїРёСЃРѕРє Р°РєС‚РёРІРЅС‹С… РєСЂР°С‚РєРѕРІСЂРµРјРµРЅРЅС‹С… Р±Р»РѕРєРёСЂРѕРІРѕРє Р±Р°Р·С‹ РґР°РЅРЅС‹С…
+    /// РџСЂРё СЂР°Р±РѕС‚Рµ СЃ СЌР»РµРјРµРЅС‚Р°РјРё СЃРїРёСЃРєР° РґРѕР»Р¶РµРЅ Р±Р»РѕРєРёСЂРѕРІР°С‚СЊСЃСЏ СЃРїРёСЃРѕРє
     /// </summary>
     internal List<DBxShortDocsLock> ActiveLocks { get { return _ActiveLocks; } }
     private List<DBxShortDocsLock> _ActiveLocks;
 
     #endregion
 
-    #region Длительная
+    #region Р”Р»РёС‚РµР»СЊРЅР°СЏ
 
     /// <summary>
-    /// Список активных длительных блокировок базы данных, используемых в процессе 
-    /// редактирования документов пользователем.
-    /// Класс является потокобезопасным.
+    /// РЎРїРёСЃРѕРє Р°РєС‚РёРІРЅС‹С… РґР»РёС‚РµР»СЊРЅС‹С… Р±Р»РѕРєРёСЂРѕРІРѕРє Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РІ РїСЂРѕС†РµСЃСЃРµ 
+    /// СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґРѕРєСѓРјРµРЅС‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј.
+    /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
     /// </summary>
     public class LongTermLockList : SyncCollection<DBxLongDocsLock>
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal LongTermLockList(DBxDocTextHandlers textHandlers)
       {
@@ -327,8 +327,8 @@ namespace FreeLibSet.Data.Docs
       }
 
       /// <summary>
-      /// Чтобы быстрее обращаться без преобразования.
-      /// На момент вызова обязательно должно быть lock(SyncRoot).
+      /// Р§С‚РѕР±С‹ Р±С‹СЃС‚СЂРµРµ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ Р±РµР· РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ.
+      /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ lock(SyncRoot).
       /// </summary>
       private /*new*/ List<DBxLongDocsLock> _Source;
 
@@ -336,13 +336,13 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region Добавление и удаление блокировки
+      #region Р”РѕР±Р°РІР»РµРЅРёРµ Рё СѓРґР°Р»РµРЅРёРµ Р±Р»РѕРєРёСЂРѕРІРєРё
 
       /// <summary>
-      /// Устанавливает блокировку.
-      /// Если блокировка конфликтует с уже установленными, выбрасывается DBxDocsLockException
+      /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р±Р»РѕРєРёСЂРѕРІРєСѓ.
+      /// Р•СЃР»Рё Р±Р»РѕРєРёСЂРѕРІРєР° РєРѕРЅС„Р»РёРєС‚СѓРµС‚ СЃ СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹РјРё, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ DBxDocsLockException
       /// </summary>
-      /// <param name="item">Блокировка</param>
+      /// <param name="item">Р‘Р»РѕРєРёСЂРѕРІРєР°</param>
       public new void Add(DBxLongDocsLock item)
       {
         if (item == null)
@@ -366,9 +366,9 @@ namespace FreeLibSet.Data.Docs
       }
 
       /// <summary>
-      /// Добавляет блокировки из списка
+      /// Р”РѕР±Р°РІР»СЏРµС‚ Р±Р»РѕРєРёСЂРѕРІРєРё РёР· СЃРїРёСЃРєР°
       /// </summary>
-      /// <param name="collection">Блокировки</param>
+      /// <param name="collection">Р‘Р»РѕРєРёСЂРѕРІРєРё</param>
       public new void AddRange(IEnumerable<DBxLongDocsLock> collection)
       {
 #if DEBUG
@@ -376,17 +376,17 @@ namespace FreeLibSet.Data.Docs
           throw new ArgumentException("collection");
 #endif
         if (Object.ReferenceEquals(collection, this))
-          throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+          throw new ArgumentException("РќРµР»СЊР·СЏ РґРѕР±Р°РІРёС‚СЊ СЌР»РµРјРµРЅС‚С‹ РёР· СЃР°РјРѕРіРѕ СЃРµР±СЏ", "collection");
 
         foreach (DBxLongDocsLock item in collection)
           Add(item);
       }
 
       /// <summary>
-      /// Удаляет блокировку с заданным идентификатором
+      /// РЈРґР°Р»СЏРµС‚ Р±Р»РѕРєРёСЂРѕРІРєСѓ СЃ Р·Р°РґР°РЅРЅС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј
       /// </summary>
-      /// <param name="lockGuid">Идентификатор длительной блокировки</param>
-      /// <returns>true, если блокировка найдена и снята</returns>
+      /// <param name="lockGuid">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґР»РёС‚РµР»СЊРЅРѕР№ Р±Р»РѕРєРёСЂРѕРІРєРё</param>
+      /// <returns>true, РµСЃР»Рё Р±Р»РѕРєРёСЂРѕРІРєР° РЅР°Р№РґРµРЅР° Рё СЃРЅСЏС‚Р°</returns>
       public bool Remove(Guid lockGuid)
       {
         if (lockGuid == Guid.Empty)
@@ -412,7 +412,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Список установленных длительных блокировок
+    /// РЎРїРёСЃРѕРє СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РґР»РёС‚РµР»СЊРЅС‹С… Р±Р»РѕРєРёСЂРѕРІРѕРє
     /// </summary>
     public LongTermLockList LongLocks { get { return _LongLocks; } }
     private LongTermLockList _LongLocks;
@@ -421,28 +421,28 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Кэширование данных
+    #region РљСЌС€РёСЂРѕРІР°РЅРёРµ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Объект кэширования данных "без ограничений".
+    /// РћР±СЉРµРєС‚ РєСЌС€РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С… "Р±РµР· РѕРіСЂР°РЅРёС‡РµРЅРёР№".
     /// </summary>
     public DBxCache DBCache { get { return _DBCache; } }
     private DBxCache _DBCache;
 
     #endregion
 
-    #region Список данных для очистки буферизации клиентов
+    #region РЎРїРёСЃРѕРє РґР°РЅРЅС‹С… РґР»СЏ РѕС‡РёСЃС‚РєРё Р±СѓС„РµСЂРёР·Р°С†РёРё РєР»РёРµРЅС‚РѕРІ
 
     /// <summary>
-    /// Буфер для отслеживания изменений в таблицах.
-    /// Приложение сервера должно вызывать по таймеру метод ClearCacheBuffer.Swap()
+    /// Р‘СѓС„РµСЂ РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РёР·РјРµРЅРµРЅРёР№ РІ С‚Р°Р±Р»РёС†Р°С….
+    /// РџСЂРёР»РѕР¶РµРЅРёРµ СЃРµСЂРІРµСЂР° РґРѕР»Р¶РЅРѕ РІС‹Р·С‹РІР°С‚СЊ РїРѕ С‚Р°Р№РјРµСЂСѓ РјРµС‚РѕРґ ClearCacheBuffer.Swap()
     /// </summary>
     public DBxClearCacheBuffer ClearCacheBuffer { get { return _ClearCacheBuffer; } }
     private DBxClearCacheBuffer _ClearCacheBuffer;
 
     /// <summary>
-    /// Очищает кэш DBCache.
-    /// В буфер ClearCacheBuffer добавляет сигнал на сброс буферизации всех таблиц
+    /// РћС‡РёС‰Р°РµС‚ РєСЌС€ DBCache.
+    /// Р’ Р±СѓС„РµСЂ ClearCacheBuffer РґРѕР±Р°РІР»СЏРµС‚ СЃРёРіРЅР°Р» РЅР° СЃР±СЂРѕСЃ Р±СѓС„РµСЂРёР·Р°С†РёРё РІСЃРµС… С‚Р°Р±Р»РёС†
     /// </summary>
     public void ClearCache()
     {
@@ -451,9 +451,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Очищает кэш для заданной таблицы и посылает сигнал в ClearCacheBuffer
+    /// РћС‡РёС‰Р°РµС‚ РєСЌС€ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ С‚Р°Р±Р»РёС†С‹ Рё РїРѕСЃС‹Р»Р°РµС‚ СЃРёРіРЅР°Р» РІ ClearCacheBuffer
     /// </summary>
-    /// <param name="tableName">Имя таблицы базы данных</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
     public void ClearCache(string tableName)
     {
       DBCache.Clear(tableName);
@@ -461,10 +461,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Очищает кэш для заданного списка идентификаторов и посылает сигнал в ClearCacheBuffer
+    /// РћС‡РёС‰Р°РµС‚ РєСЌС€ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СЃРїРёСЃРєР° РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ Рё РїРѕСЃС‹Р»Р°РµС‚ СЃРёРіРЅР°Р» РІ ClearCacheBuffer
     /// </summary>
-    /// <param name="tableName">Имя таблицы базы данных</param>
-    /// <param name="ids">Список идентификаторов</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
+    /// <param name="ids">РЎРїРёСЃРѕРє РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ</param>
     public void ClearCache(string tableName, IdList ids)
     {
       DBCache.Clear(tableName, ids);
@@ -472,10 +472,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Очищает кэш для заданных таблиц и идентификаторов и посылает сигнал в ClearCacheBuffer.
+    /// РћС‡РёС‰Р°РµС‚ РєСЌС€ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… С‚Р°Р±Р»РёС† Рё РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ Рё РїРѕСЃС‹Р»Р°РµС‚ СЃРёРіРЅР°Р» РІ ClearCacheBuffer.
     /// </summary>
-    /// <param name="ds">Набор данных таблиц, в которых учитываются строки в состоянии
-    /// DataRowState.Added, Modified и Deleted</param>
+    /// <param name="ds">РќР°Р±РѕСЂ РґР°РЅРЅС‹С… С‚Р°Р±Р»РёС†, РІ РєРѕС‚РѕСЂС‹С… СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ СЃС‚СЂРѕРєРё РІ СЃРѕСЃС‚РѕСЏРЅРёРё
+    /// DataRowState.Added, Modified Рё Deleted</param>
     public void ClearCache(DataSet ds)
     {
       foreach (DataTable table in ds.Tables)
@@ -514,12 +514,12 @@ namespace FreeLibSet.Data.Docs
     #region IDBxCacheSource Members
 
     /// <summary>
-    /// Реализация DBxStructSource, возвращающая только те таблицы и поля, к которым у пользователя
-    /// есть доступ на чтение или на запись
+    /// Р РµР°Р»РёР·Р°С†РёСЏ DBxStructSource, РІРѕР·РІСЂР°С‰Р°СЋС‰Р°СЏ С‚РѕР»СЊРєРѕ С‚Рµ С‚Р°Р±Р»РёС†С‹ Рё РїРѕР»СЏ, Рє РєРѕС‚РѕСЂС‹Рј Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    /// РµСЃС‚СЊ РґРѕСЃС‚СѓРї РЅР° С‡С‚РµРЅРёРµ РёР»Рё РЅР° Р·Р°РїРёСЃСЊ
     /// </summary>
     private class InternalStructSource : MarshalByRefObject, IDBxStructSource
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public InternalStructSource(DBxRealDocProviderGlobal owner)
       {
@@ -528,13 +528,13 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       private DBxRealDocProviderGlobal _Owner;
 
       #endregion
 
-      #region Переопределенные методы
+      #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
       public string[] GetAllTableNames()
       {
@@ -555,9 +555,9 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Коллекция описаний полей таблиц для буферизации.
-    /// Ключ - имя таблицы.
-    /// На момент обращения коллекция блокируется для обеспечения потокобезопасности
+    /// РљРѕР»Р»РµРєС†РёСЏ РѕРїРёСЃР°РЅРёР№ РїРѕР»РµР№ С‚Р°Р±Р»РёС† РґР»СЏ Р±СѓС„РµСЂРёР·Р°С†РёРё.
+    /// РљР»СЋС‡ - РёРјСЏ С‚Р°Р±Р»РёС†С‹.
+    /// РќР° РјРѕРјРµРЅС‚ РѕР±СЂР°С‰РµРЅРёСЏ РєРѕР»Р»РµРєС†РёСЏ Р±Р»РѕРєРёСЂСѓРµС‚СЃСЏ РґР»СЏ РѕР±РµСЃРїРµС‡РµРЅРёСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
     /// </summary>
     private Dictionary<string, DBxTableCacheInfo> _TableCacheInfos;
 
@@ -570,7 +570,7 @@ namespace FreeLibSet.Data.Docs
         {
           DBxDocTypeBase docTypeBase;
           if (!DocTypes.FindByTableName(tableName, out docTypeBase))
-            throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
+            throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅРѕРµ РёРјСЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"", "tableName");
 
           if (docTypeBase.IndividualCacheColumns.AreAllDefaults)
             info = null;
@@ -582,7 +582,7 @@ namespace FreeLibSet.Data.Docs
               string columnName = info.TableStruct.Columns[i].ColumnName;
               if (docTypeBase.Struct.Columns.Contains(columnName))
                 info.IndividualColumnFlags[i] = docTypeBase.IndividualCacheColumns[columnName];
-              // Для полей типа "Id" нет соответствующего описания в структуре полей DBxDocTypeBase.Struct
+              // Р”Р»СЏ РїРѕР»РµР№ С‚РёРїР° "Id" РЅРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ РѕРїРёСЃР°РЅРёСЏ РІ СЃС‚СЂСѓРєС‚СѓСЂРµ РїРѕР»РµР№ DBxDocTypeBase.Struct
             }
             info.SetReadOnly();
           }
@@ -602,16 +602,16 @@ namespace FreeLibSet.Data.Docs
 
     void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
     {
-      // Ничего не делаем
+      // РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
     }
 
     #endregion
 
-    #region Текстовое представление документов
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ
 
     /// <summary>
-    /// Генераторы текстового представления документа.
-    /// Список должен быть заполнен (вызовами Add()) до создания первого объекта DBxRealDocProviderSource
+    /// Р“РµРЅРµСЂР°С‚РѕСЂС‹ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РґРѕРєСѓРјРµРЅС‚Р°.
+    /// РЎРїРёСЃРѕРє РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ (РІС‹Р·РѕРІР°РјРё Add()) РґРѕ СЃРѕР·РґР°РЅРёСЏ РїРµСЂРІРѕРіРѕ РѕР±СЉРµРєС‚Р° DBxRealDocProviderSource
     /// </summary>
     public DBxDocTextHandlers TextHandlers { get { return _TextHandlers; } }
     private DBxDocTextHandlers _TextHandlers;
@@ -621,14 +621,14 @@ namespace FreeLibSet.Data.Docs
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если объект был переведен в режим "только чтения".
-    /// Режим означает, что объект уже используется DBxRealDocProviderSource, а
-    /// не режим просмотра данных.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЉРµРєС‚ Р±С‹Р» РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёСЏ".
+    /// Р РµР¶РёРј РѕР·РЅР°С‡Р°РµС‚, С‡С‚Рѕ РѕР±СЉРµРєС‚ СѓР¶Рµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ DBxRealDocProviderSource, Р°
+    /// РЅРµ СЂРµР¶РёРј РїСЂРѕСЃРјРѕС‚СЂР° РґР°РЅРЅС‹С….
     /// </summary>
     public bool IsReadOnly { get { return _TextHandlers.IsReadOnly; } }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Р“РµРЅРµСЂРёСЂСѓРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё IsReadOnly=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -637,8 +637,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Переводит объект в режим "Только чтение".
-    /// Метод не должен использоваться в пользовательском коде.
+    /// РџРµСЂРµРІРѕРґРёС‚ РѕР±СЉРµРєС‚ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// РњРµС‚РѕРґ РЅРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ.
     /// </summary>
     public void SetReadOnly()
     {
@@ -647,10 +647,10 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Методы работы со списком баз данных
+    #region РњРµС‚РѕРґС‹ СЂР°Р±РѕС‚С‹ СЃРѕ СЃРїРёСЃРєРѕРј Р±Р°Р· РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Возвращает массив используемых баз данных (без повторов)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёСЃРїРѕР»СЊР·СѓРµРјС‹С… Р±Р°Р· РґР°РЅРЅС‹С… (Р±РµР· РїРѕРІС‚РѕСЂРѕРІ)
     /// </summary>
     /// <returns></returns>
     public DBx[] GetDBs()
@@ -673,8 +673,8 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Вызывает для всех объектов DBx метод Dispose().
-    /// Сам DBxRealDocProviderGlobal не является Disposable-объектом
+    /// Р’С‹Р·С‹РІР°РµС‚ РґР»СЏ РІСЃРµС… РѕР±СЉРµРєС‚РѕРІ DBx РјРµС‚РѕРґ Dispose().
+    /// РЎР°Рј DBxRealDocProviderGlobal РЅРµ СЏРІР»СЏРµС‚СЃСЏ Disposable-РѕР±СЉРµРєС‚РѕРј
     /// </summary>
     public void DisposeDBs()
     {
@@ -691,7 +691,7 @@ namespace FreeLibSet.Data.Docs
 
   internal static class DBxDocDebugTools
   {
-    #region Статический метод инициализации
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
 
     public static void InitLogout()
     {
@@ -712,14 +712,14 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Дополнительная отладочная информация
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РѕС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ
 
     static void LogoutTools_LogoutInfoNeeded(object sender, LogoutInfoNeededEventArgs args)
     {
 #if DEBUG
       if (DBxDocProvider.DebugDocProviderList != null)
       {
-        GC.Collect(); // надо ли?
+        GC.Collect(); // РЅР°РґРѕ Р»Рё?
 
         DBxDocProvider[] a = DBxDocProvider.DebugDocProviderList.ToArray();
         args.WriteHeader("DBxDocProvider list (" + a.Length.ToString() + ")");
@@ -730,7 +730,7 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Блокировка вывода свойств
+    #region Р‘Р»РѕРєРёСЂРѕРІРєР° РІС‹РІРѕРґР° СЃРІРѕР№СЃС‚РІ
 
     static void LogoutTools_LogoutProp(object sender, LogoutPropEventArgs args)
     {

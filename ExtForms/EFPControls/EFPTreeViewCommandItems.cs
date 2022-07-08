@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,17 +10,17 @@ namespace FreeLibSet.Forms
 {
                              
   /// <summary>
-  /// Команды локального меню для TreeView и TreeViewAdv.
-  /// Базовый класс для EFPTreeViewCommandItems и EFPTreeViewAdvCommandItemsBase
+  /// РљРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ РґР»СЏ TreeView Рё TreeViewAdv.
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ EFPTreeViewCommandItems Рё EFPTreeViewAdvCommandItemsBase
   /// </summary>
   public class EFPTreeViewCommandItemsBase : EFPControlCommandItems, IEFPClipboardCommandItems
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    /// <param name="controlProvider">РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
     protected EFPTreeViewCommandItemsBase(IEFPTreeView controlProvider)
       :base((EFPControlBase)controlProvider)
     {
@@ -30,11 +30,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавление команд в список
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјР°РЅРґ РІ СЃРїРёСЃРѕРє
     /// </summary>
     protected void AddCommands()
     {
-      #region Буфер обмена
+      #region Р‘СѓС„РµСЂ РѕР±РјРµРЅР°
 
       AddSeparator();
 
@@ -43,7 +43,7 @@ namespace FreeLibSet.Forms
       Add(ciCut);
 
       ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
-      ciCopy.MenuText = "Копировать ячейки";
+      ciCopy.MenuText = "РљРѕРїРёСЂРѕРІР°С‚СЊ СЏС‡РµР№РєРё";
       ciCopy.Enabled = true;
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
@@ -51,8 +51,8 @@ namespace FreeLibSet.Forms
       /*
       if (EFPApp.ShowToolTips)
       {
-        ciCopyToolTip = new EFPCommandItem("Правка", "КопироватьПодсказку");
-        ciCopyToolTip.MenuText = "Копировать всплывающую подсказку";
+        ciCopyToolTip = new EFPCommandItem("РџСЂР°РІРєР°", "РљРѕРїРёСЂРѕРІР°С‚СЊРџРѕРґСЃРєР°Р·РєСѓ");
+        ciCopyToolTip.MenuText = "РљРѕРїРёСЂРѕРІР°С‚СЊ РІСЃРїР»С‹РІР°СЋС‰СѓСЋ РїРѕРґСЃРєР°Р·РєСѓ";
         ciCopyToolTip.Click += new EventHandler(DoCopyToolTip);
         Add(ciCopyToolTip);
       } */
@@ -62,7 +62,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Поиск
+      #region РџРѕРёСЃРє
 
       AddSeparator();
 
@@ -84,11 +84,11 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Установка отметок
+      #region РЈСЃС‚Р°РЅРѕРІРєР° РѕС‚РјРµС‚РѕРє
 
       ciCheckAll = new EFPCommandItem("Edit", "SetAllCheckMarks");
       //ciCheckAll.Parent = MenuCheck;
-      ciCheckAll.MenuText = "Установить отметки для всех строк";
+      ciCheckAll.MenuText = "РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РѕС‚РјРµС‚РєРё РґР»СЏ РІСЃРµС… СЃС‚СЂРѕРє";
       ciCheckAll.ImageKey = "CheckListAll";
       ciCheckAll.ShortCut = Keys.Control | Keys.A;
       ciCheckAll.Click += new EventHandler(ciCheckAll_Click);
@@ -96,7 +96,7 @@ namespace FreeLibSet.Forms
 
       ciUncheckAll = new EFPCommandItem("Edit", "DeleteAllCheckmarks");
       //ciUncheckAll.Parent = MenuCheck;
-      ciUncheckAll.MenuText = "Снять отметки для всех строк";
+      ciUncheckAll.MenuText = "РЎРЅСЏС‚СЊ РѕС‚РјРµС‚РєРё РґР»СЏ РІСЃРµС… СЃС‚СЂРѕРє";
       ciUncheckAll.ImageKey = "CheckListNone";
       ciUncheckAll.ShortCut = Keys.Control | Keys.Shift | Keys.A;
       ciUncheckAll.Click += new EventHandler(ciUncheckAll_Click);
@@ -109,20 +109,20 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер управляющего элемента
+    /// РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
     public IEFPTreeView Owner { get { return _Owner; } }
     private IEFPTreeView _Owner;
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Инициализация свойств EFPCommandItem.Usage
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІ EFPCommandItem.Usage
     /// </summary>
     protected override void OnPrepare()
     {
@@ -143,15 +143,15 @@ namespace FreeLibSet.Forms
       ciCopy.Usage = clipboardUsage;
 
 
-      // Добавляем форматы вставки текста после пользовательских форматов
-      // (если уже не были добавлены явно)
+      // Р”РѕР±Р°РІР»СЏРµРј С„РѕСЂРјР°С‚С‹ РІСЃС‚Р°РІРєРё С‚РµРєСЃС‚Р° РїРѕСЃР»Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… С„РѕСЂРјР°С‚РѕРІ
+      // (РµСЃР»Рё СѓР¶Рµ РЅРµ Р±С‹Р»Рё РґРѕР±Р°РІР»РµРЅС‹ СЏРІРЅРѕ)
       //AddTextPasteFormats();
 
       _PasteHandler.InitCommandUsage(ClipboardInToolBar);
       _PasteHandler.PasteApplied += new EventHandler(FPasteHandler_PasteApplied);
 
 
-      ciIncSearch.Usage = EFPCommandItemUsage.None; // TODO: Команды поиска по первым буквам
+      ciIncSearch.Usage = EFPCommandItemUsage.None; // TODO: РљРѕРјР°РЅРґС‹ РїРѕРёСЃРєР° РїРѕ РїРµСЂРІС‹Рј Р±СѓРєРІР°Рј
       if (Owner.TextSearchContext == null)
       {
         ciFind.Usage = EFPCommandItemUsage.None;
@@ -167,12 +167,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Буфер обмена
+    #region Р‘СѓС„РµСЂ РѕР±РјРµРЅР°
 
     /// <summary>
-    /// Нужно ли показывать кнопки "Вырезать", "Копировать" и "Вставить" в панели
-    /// инструментов (если она есть).
-    /// По умолчанию - false (только в меню и горячие клавиши)
+    /// РќСѓР¶РЅРѕ Р»Рё РїРѕРєР°Р·С‹РІР°С‚СЊ РєРЅРѕРїРєРё "Р’С‹СЂРµР·Р°С‚СЊ", "РљРѕРїРёСЂРѕРІР°С‚СЊ" Рё "Р’СЃС‚Р°РІРёС‚СЊ" РІ РїР°РЅРµР»Рё
+    /// РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ (РµСЃР»Рё РѕРЅР° РµСЃС‚СЊ).
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false (С‚РѕР»СЊРєРѕ РІ РјРµРЅСЋ Рё РіРѕСЂСЏС‡РёРµ РєР»Р°РІРёС€Рё)
     /// </summary>
     public bool ClipboardInToolBar 
     { 
@@ -185,14 +185,14 @@ namespace FreeLibSet.Forms
     }
     private bool _ClipboardInToolBar;
 
-    #region Вырезать
+    #region Р’С‹СЂРµР·Р°С‚СЊ
 
     private EFPCommandItem ciCut;
 
     /// <summary>
-    /// Если обработчик установлен, то в локальное меню добавляется команда "Вырезать"
-    /// Если обработчик не установлен, то поддерживается вырезка текста ячеек.
-    /// При необходимости обработчик Cut может вызывать метод PerformCutText() или
+    /// Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РІ Р»РѕРєР°Р»СЊРЅРѕРµ РјРµРЅСЋ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР° "Р’С‹СЂРµР·Р°С‚СЊ"
+    /// Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РІС‹СЂРµР·РєР° С‚РµРєСЃС‚Р° СЏС‡РµРµРє.
+    /// РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РѕР±СЂР°Р±РѕС‚С‡РёРє Cut РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґ PerformCutText() РёР»Рё
     /// TryPerformCutText()
     /// </summary>
     public event EventHandler Cut;
@@ -209,7 +209,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Копировать
+    #region РљРѕРїРёСЂРѕРІР°С‚СЊ
 
     private EFPCommandItem ciCopy;
 
@@ -220,14 +220,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Обработчик может добавить при копировании в буфер обмена дополнительные форматы
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РјРѕР¶РµС‚ РґРѕР±Р°РІРёС‚СЊ РїСЂРё РєРѕРїРёСЂРѕРІР°РЅРёРё РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ С„РѕСЂРјР°С‚С‹
     /// </summary>
     public event DataObjectEventHandler AddCopyFormats;
 
     /// <summary>
-    /// Вызывает событие AddCopyFormats.
+    /// Р’С‹Р·С‹РІР°РµС‚ СЃРѕР±С‹С‚РёРµ AddCopyFormats.
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected virtual void OnAddCopyFormats(DataObjectEventArgs args)
     {
       if (AddCopyFormats != null)
@@ -235,16 +235,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Выполнить копирование выделенных ячеек табличного просмотра в буфер обмена.
-    /// В случае ошибки выдает сообщение на экран и возвращает false
-    /// Метод может использоваться внутри реализации обработчика Cut
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ РєРѕРїРёСЂРѕРІР°РЅРёРµ РІС‹РґРµР»РµРЅРЅС‹С… СЏС‡РµРµРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°.
+    /// Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё РІС‹РґР°РµС‚ СЃРѕРѕР±С‰РµРЅРёРµ РЅР° СЌРєСЂР°РЅ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ false
+    /// РњРµС‚РѕРґ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІРЅСѓС‚СЂРё СЂРµР°Р»РёР·Р°С†РёРё РѕР±СЂР°Р±РѕС‚С‡РёРєР° Cut
     /// </summary>
-    /// <returns>true, если копирование успешно выполнено. false - в случае ошибки</returns>
+    /// <returns>true, РµСЃР»Рё РєРѕРїРёСЂРѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅРѕ. false - РІ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё</returns>
     public bool PerformCopy()
     {
       try
       {
-        EFPApp.BeginWait("Копирование ячеек в буфер обмена", "Copy");
+        EFPApp.BeginWait("РљРѕРїРёСЂРѕРІР°РЅРёРµ СЏС‡РµРµРє РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°", "Copy");
         try
         {
           DataObject dobj2 = new DataObject();
@@ -261,7 +261,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.MessageBox(e.Message, "Ошибка при копировании в буфер обмена",
+        EFPApp.MessageBox(e.Message, "РћС€РёР±РєР° РїСЂРё РєРѕРїРёСЂРѕРІР°РЅРёРё РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°",
           MessageBoxButtons.OK, MessageBoxIcon.Error);
         return false;
       }
@@ -269,10 +269,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Вставить
+    #region Р’СЃС‚Р°РІРёС‚СЊ
 
     /// <summary>
-    /// Обработчик для команд "Вставка" и "Специальная вставка"
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РґР»СЏ РєРѕРјР°РЅРґ "Р’СЃС‚Р°РІРєР°" Рё "РЎРїРµС†РёР°Р»СЊРЅР°СЏ РІСЃС‚Р°РІРєР°"
     /// </summary>
     public EFPPasteHandler PasteHandler { get { return _PasteHandler; } }
     private EFPPasteHandler _PasteHandler;
@@ -287,24 +287,24 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Команды поиска
+    #region РљРѕРјР°РЅРґС‹ РїРѕРёСЃРєР°
 
     EFPCommandItem ciIncSearch, ciFind, ciFindNext;
 
     private void IncSearch(object sender, EventArgs args)
     {
       /*
-      // Начать / закончить поиск по первым буквам
+      // РќР°С‡Р°С‚СЊ / Р·Р°РєРѕРЅС‡РёС‚СЊ РїРѕРёСЃРє РїРѕ РїРµСЂРІС‹Рј Р±СѓРєРІР°Рј
       if (Owner.CurrentIncSearchColumn == null)
       {
         if (Owner.CurrentColumn == null)
         {
-          EFPApp.ShowTempMessage("Столбец не выбран");
+          EFPApp.ShowTempMessage("РЎС‚РѕР»Р±РµС† РЅРµ РІС‹Р±СЂР°РЅ");
           return;
         }
         if (!Owner.CurrentColumn.CanIncSearch)
         {
-          EFPApp.ShowTempMessage("Текущий столбец не поддерживает поиск по первым буквам");
+          EFPApp.ShowTempMessage("РўРµРєСѓС‰РёР№ СЃС‚РѕР»Р±РµС† РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РїРѕРёСЃРє РїРѕ РїРµСЂРІС‹Рј Р±СѓРєРІР°Рј");
           return;
         }
         Owner.CurrentIncSearchColumn = Owner.CurrentColumn;
@@ -332,7 +332,7 @@ namespace FreeLibSet.Forms
       //}
       //else
       //  if (!Owner.CurrentIncSearchColumn.PerformIncSearch(Owner.CurrentIncSearchChars.ToUpper(), true))
-      //    EFPApp.ShowTempMessage("Нет больше строк, в которых значение поля начинается с \"" +
+      //    EFPApp.ShowTempMessage("РќРµС‚ Р±РѕР»СЊС€Рµ СЃС‚СЂРѕРє, РІ РєРѕС‚РѕСЂС‹С… Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ \"" +
       //      Owner.CurrentIncSearchChars + "\"");
     }
 
@@ -353,9 +353,9 @@ namespace FreeLibSet.Forms
 
       if (Owner.CurrentIncSearchColumn != null)
       {
-        // Поиск по буквам выполняется
+        // РџРѕРёСЃРє РїРѕ Р±СѓРєРІР°Рј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
         Enabled = true;
-        MenuText = "Закончить поиск по буквам";
+        MenuText = "Р—Р°РєРѕРЅС‡РёС‚СЊ РїРѕРёСЃРє РїРѕ Р±СѓРєРІР°Рј";
         string s = Owner.CurrentIncSearchChars;
         s = s.Replace(' ', (char)(0x00B7));
         s = s.PadRight(20);
@@ -364,29 +364,29 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        // Поиск по буквам не выполняется
+        // РџРѕРёСЃРє РїРѕ Р±СѓРєРІР°Рј РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
         if (Owner.CanIncSearch)
         {
-          MenuText = "Начать поиск по буквам";
+          MenuText = "РќР°С‡Р°С‚СЊ РїРѕРёСЃРє РїРѕ Р±СѓРєРІР°Рј";
           if (Owner.CurrentColumn == null)
           {
             Enabled = false;
-            StatusBarText = "<Столбец не выбран>";
+            StatusBarText = "<РЎС‚РѕР»Р±РµС† РЅРµ РІС‹Р±СЂР°РЅ>";
           }
           else
           {
             Enabled = Owner.CurrentColumn.CanIncSearch;
             if (Enabled)
-              StatusBarText = "<Поиск не начат>";
+              StatusBarText = "<РџРѕРёСЃРє РЅРµ РЅР°С‡Р°С‚>";
             else
-              StatusBarText = "<Неподходящий столбец>";
+              StatusBarText = "<РќРµРїРѕРґС…РѕРґСЏС‰РёР№ СЃС‚РѕР»Р±РµС†>";
           }
         }
         else
         {
-          MenuText = "Поиск по буквам";
+          MenuText = "РџРѕРёСЃРє РїРѕ Р±СѓРєРІР°Рј";
           Enabled = false;
-          StatusBarText = "<Поиск невозможен>";
+          StatusBarText = "<РџРѕРёСЃРє РЅРµРІРѕР·РјРѕР¶РµРЅ>";
         }
       }
 
@@ -405,7 +405,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Команды установки отметок
+    #region РљРѕРјР°РЅРґС‹ СѓСЃС‚Р°РЅРѕРІРєРё РѕС‚РјРµС‚РѕРє
 
     private EFPCommandItem ciCheckAll, ciUncheckAll;
 
@@ -421,32 +421,32 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обновление состояния команд
+    #region РћР±РЅРѕРІР»РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ РєРѕРјР°РЅРґ
 
     /// <summary>
-    /// Вызывается при изменении текущей позиции в управляющем элементе или
-    /// при вызове PerformRefreshItems()
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РёР·РјРµРЅРµРЅРёРё С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРё РІ СѓРїСЂР°РІР»СЏСЋС‰РµРј СЌР»РµРјРµРЅС‚Рµ РёР»Рё
+    /// РїСЂРё РІС‹Р·РѕРІРµ PerformRefreshItems()
     /// </summary>
     public event EventHandler RefreshItems;
 
     /// <summary>
-    /// Обновление доступности команд локального меню после внешнего изменения
-    /// выбранных ячеек просмотра
+    /// РћР±РЅРѕРІР»РµРЅРёРµ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РєРѕРјР°РЅРґ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ РїРѕСЃР»Рµ РІРЅРµС€РЅРµРіРѕ РёР·РјРµРЅРµРЅРёСЏ
+    /// РІС‹Р±СЂР°РЅРЅС‹С… СЏС‡РµРµРє РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public void PerformRefreshItems()
     {
       if (Owner == null)
         return;
 
-      // Вызываем виртуальный метод
+      // Р’С‹Р·С‹РІР°РµРј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ
       DoRefreshItems();
-      // Посылаем извещения
+      // РџРѕСЃС‹Р»Р°РµРј РёР·РІРµС‰РµРЅРёСЏ
       if (RefreshItems != null)
         RefreshItems(this, EventArgs.Empty);
     }
 
     /// <summary>
-    /// Обновление видимости и доступности команд
+    /// РћР±РЅРѕРІР»РµРЅРёРµ РІРёРґРёРјРѕСЃС‚Рё Рё РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РєРѕРјР°РЅРґ
     /// </summary>
     protected virtual void DoRefreshItems()
     {
@@ -457,16 +457,16 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Команды для просмотра EFPTreeView
+  /// РљРѕРјР°РЅРґС‹ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° EFPTreeView
   /// </summary>
   public class EFPTreeViewCommandItems : EFPTreeViewCommandItemsBase
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
+    /// <param name="owner">РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
     public EFPTreeViewCommandItems(EFPTreeView owner)
       : base(owner)
     {
@@ -475,22 +475,22 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайлер управляющего элемента
+    /// РџСЂРѕРІР°Р№Р»РµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
     public new EFPTreeView Owner { get { return (EFPTreeView)(base.Owner); } }
 
     #endregion
 
-    #region Буфер обмена
+    #region Р‘СѓС„РµСЂ РѕР±РјРµРЅР°
 
     /// <summary>
-    /// Добавляет в буфер обмена текстое представление для текущего узла.
-    /// Затем вызывается событие AddCopyFormats.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° С‚РµРєСЃС‚РѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ СѓР·Р»Р°.
+    /// Р—Р°С‚РµРј РІС‹Р·С‹РІР°РµС‚СЃСЏ СЃРѕР±С‹С‚РёРµ AddCopyFormats.
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
       if (Owner.Control.SelectedNode != null)

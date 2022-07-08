@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -7,13 +7,13 @@ using FreeLibSet.DependedValues;
 namespace ExtTools_tests.DependedValues
 {
   /// <summary>
-  /// Генератор строки результатов для проверки вывода DepValue.Value.
-  /// В момент вызова добавляет к строке текущее значение. Затем, при получении ValueChanged, добавляет к строке новое значение, отделяя его вертикальной чертой "|".
+  /// Р“РµРЅРµСЂР°С‚РѕСЂ СЃС‚СЂРѕРєРё СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РґР»СЏ РїСЂРѕРІРµСЂРєРё РІС‹РІРѕРґР° DepValue.Value.
+  /// Р’ РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° РґРѕР±Р°РІР»СЏРµС‚ Рє СЃС‚СЂРѕРєРµ С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ. Р—Р°С‚РµРј, РїСЂРё РїРѕР»СѓС‡РµРЅРёРё ValueChanged, РґРѕР±Р°РІР»СЏРµС‚ Рє СЃС‚СЂРѕРєРµ РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ, РѕС‚РґРµР»СЏСЏ РµРіРѕ РІРµСЂС‚РёРєР°Р»СЊРЅРѕР№ С‡РµСЂС‚РѕР№ "|".
   /// </summary>
   /// <typeparam name="T"></typeparam>
   internal class DepResultProducer<T>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public DepResultProducer(DepValue<T> tested)
     {
@@ -46,14 +46,14 @@ namespace ExtTools_tests.DependedValues
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private DepValue<T> _Tested;
 
     private StringBuilder _SB;
 
     /// <summary>
-    /// Собранная строка, используемая для проверки результатов теста.
+    /// РЎРѕР±СЂР°РЅРЅР°СЏ СЃС‚СЂРѕРєР°, РёСЃРїРѕР»СЊР·СѓРµРјР°СЏ РґР»СЏ РїСЂРѕРІРµСЂРєРё СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ С‚РµСЃС‚Р°.
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -65,7 +65,7 @@ namespace ExtTools_tests.DependedValues
   }
 
   /// <summary>
-  /// Компаратор, возвращающий результат сравнения в обратном порядке
+  /// РљРѕРјРїР°СЂР°С‚РѕСЂ, РІРѕР·РІСЂР°С‰Р°СЋС‰РёР№ СЂРµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ
   /// </summary>
   internal class InvertedTestComparer : IComparer<int>
   {

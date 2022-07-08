@@ -1,4 +1,4 @@
-namespace EFPAppRemoteExitDemo
+п»їnamespace EFPAppRemoteExitDemo
 {
   partial class ServerForm
   {
@@ -51,7 +51,7 @@ namespace EFPAppRemoteExitDemo
       this.groupBox1.Size = new System.Drawing.Size(352, 134);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Управление клиентом";
+      this.groupBox1.Text = "РЈРїСЂР°РІР»РµРЅРёРµ РєР»РёРµРЅС‚РѕРј";
       // 
       // label1
       // 
@@ -60,7 +60,7 @@ namespace EFPAppRemoteExitDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(115, 13);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Причина завершения";
+      this.label1.Text = "РџСЂРёС‡РёРЅР° Р·Р°РІРµСЂС€РµРЅРёСЏ";
       // 
       // btnResume
       // 
@@ -70,7 +70,7 @@ namespace EFPAppRemoteExitDemo
       this.btnResume.Name = "btnResume";
       this.btnResume.Size = new System.Drawing.Size(326, 24);
       this.btnResume.TabIndex = 3;
-      this.btnResume.Text = "Разрешить продолжить работу";
+      this.btnResume.Text = "Р Р°Р·СЂРµС€РёС‚СЊ РїСЂРѕРґРѕР»Р¶РёС‚СЊ СЂР°Р±РѕС‚Сѓ";
       this.btnResume.UseVisualStyleBackColor = true;
       // 
       // btnExit
@@ -81,7 +81,7 @@ namespace EFPAppRemoteExitDemo
       this.btnExit.Name = "btnExit";
       this.btnExit.Size = new System.Drawing.Size(326, 24);
       this.btnExit.TabIndex = 2;
-      this.btnExit.Text = "Завершить";
+      this.btnExit.Text = "Р—Р°РІРµСЂС€РёС‚СЊ";
       this.btnExit.UseVisualStyleBackColor = true;
       // 
       // edMessage
@@ -102,7 +102,7 @@ namespace EFPAppRemoteExitDemo
       this.groupBox2.Size = new System.Drawing.Size(352, 75);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Состояние клиента";
+      this.groupBox2.Text = "РЎРѕСЃС‚РѕСЏРЅРёРµ РєР»РёРµРЅС‚Р°";
       // 
       // lblClientStatus
       // 
@@ -123,7 +123,7 @@ namespace EFPAppRemoteExitDemo
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
       this.Name = "ServerForm";
-      this.Text = "Эиуляция окна сервера";
+      this.Text = "Р­РёСѓР»СЏС†РёСЏ РѕРєРЅР° СЃРµСЂРІРµСЂР°";
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.groupBox2.ResumeLayout(false);

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgeyevAV.IO;
@@ -19,8 +19,8 @@ namespace TestPE
       while (true)
       {
         OpenFileDialog dlg = new OpenFileDialog();
-        dlg.Title = "Выбор PE файла для извлечения информации";
-        dlg.Filter = "EXE-файлы|*.exe|DLL-файлы|*.dll|Все файлы|*.*";
+        dlg.Title = "Р’С‹Р±РѕСЂ PE С„Р°Р№Р»Р° РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё";
+        dlg.Filter = "EXE-С„Р°Р№Р»С‹|*.exe|DLL-С„Р°Р№Р»С‹|*.dll|Р’СЃРµ С„Р°Р№Р»С‹|*.*";
         if (dlg.ShowDialog() != DialogResult.OK)
           return;
 
@@ -30,10 +30,10 @@ namespace TestPE
         if (Res.HasValue)
           Text = Res.Value ? "64 bit" : "32 bit";
         else
-          Text = "Не удалось определить";
+          Text = "РќРµ СѓРґР°Р»РѕСЃСЊ РѕРїСЂРµРґРµР»РёС‚СЊ";
 
-        MessageBox.Show("Файл: " + Path.Path + Environment.NewLine +
-          "FileTools.Is64bitPE() - Разрядность в заголовке PE: " + Text);
+        MessageBox.Show("Р¤Р°Р№Р»: " + Path.Path + Environment.NewLine +
+          "FileTools.Is64bitPE() - Р Р°Р·СЂСЏРґРЅРѕСЃС‚СЊ РІ Р·Р°РіРѕР»РѕРІРєРµ PE: " + Text);
       }
     }
   }

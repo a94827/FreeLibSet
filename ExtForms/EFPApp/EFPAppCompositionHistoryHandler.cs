@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,20 +11,20 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
-  #region Перечисление EFPAppCompositionHistoryItemKind
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ EFPAppCompositionHistoryItemKind
 
   /// <summary>
-  /// Возможные значения свойства EFPAppCompositionHistoryItem.Kind
+  /// Р’РѕР·РјРѕР¶РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° EFPAppCompositionHistoryItem.Kind
   /// </summary>
   public enum EFPAppCompositionHistoryItemKind
   {
     /// <summary>
-    /// Автоматически созданная запись в списке истории
+    /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РЅРЅР°СЏ Р·Р°РїРёСЃСЊ РІ СЃРїРёСЃРєРµ РёСЃС‚РѕСЂРёРё
     /// </summary>
     History,
 
     /// <summary>
-    /// Именная запись, созданная пользователем
+    /// РРјРµРЅРЅР°СЏ Р·Р°РїРёСЃСЊ, СЃРѕР·РґР°РЅРЅР°СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј
     /// </summary>
     User,
   }
@@ -32,12 +32,12 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Информация о сохраненной композиции пользовательского интерфейса в списке истории.
-  /// Объекты создаются в классе EFPAppCompositionHistoryHandler
+  /// РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР° РІ СЃРїРёСЃРєРµ РёСЃС‚РѕСЂРёРё.
+  /// РћР±СЉРµРєС‚С‹ СЃРѕР·РґР°СЋС‚СЃСЏ РІ РєР»Р°СЃСЃРµ EFPAppCompositionHistoryHandler
   /// </summary>
   public sealed class EFPAppCompositionHistoryItem
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPAppCompositionHistoryItem(EFPAppCompositionHistoryItemKind kind,
       string userSetName, string displayName, DateTime time, string md5)
@@ -60,45 +60,45 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Вид композиции: из списка истории или именная пользовательская
+    /// Р’РёРґ РєРѕРјРїРѕР·РёС†РёРё: РёР· СЃРїРёСЃРєР° РёСЃС‚РѕСЂРёРё РёР»Рё РёРјРµРЅРЅР°СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєР°СЏ
     /// </summary>
     public EFPAppCompositionHistoryItemKind Kind { get { return _Kind; } }
     private EFPAppCompositionHistoryItemKind _Kind;
 
     /// <summary>
-    /// Внутреннее имя, например "Hist1", "User1".
-    /// Может быть пустой строкой для последней сохраненной композиции
+    /// Р’РЅСѓС‚СЂРµРЅРЅРµРµ РёРјСЏ, РЅР°РїСЂРёРјРµСЂ "Hist1", "User1".
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРѕР№ РґР»СЏ РїРѕСЃР»РµРґРЅРµР№ СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё
     /// </summary>
     public string UserSetName { get { return _UserSetName; } }
     private string _UserSetName;
 
     /// <summary>
-    /// Отображаемое имя.
-    /// Для именнной пользовательской композиции - заданное пользователем имя.
-    /// Для композиции из истории - текст в виде "Последний", "Предпоследний", ...
+    /// РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ.
+    /// Р”Р»СЏ РёРјРµРЅРЅРЅРѕР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕР№ РєРѕРјРїРѕР·РёС†РёРё - Р·Р°РґР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј РёРјСЏ.
+    /// Р”Р»СЏ РєРѕРјРїРѕР·РёС†РёРё РёР· РёСЃС‚РѕСЂРёРё - С‚РµРєСЃС‚ РІ РІРёРґРµ "РџРѕСЃР»РµРґРЅРёР№", "РџСЂРµРґРїРѕСЃР»РµРґРЅРёР№", ...
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
     private string _DisplayName;
 
     /// <summary>
-    /// Время сохранения интерфейса
+    /// Р’СЂРµРјСЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РёРЅС‚РµСЂС„РµР№СЃР°
     /// </summary>
     public DateTime Time { get { return _Time; } }
     private DateTime _Time;
 
     /// <summary>
-    /// Контрольная сумма, используемая для сравнения композиций
+    /// РљРѕРЅС‚СЂРѕР»СЊРЅР°СЏ СЃСѓРјРјР°, РёСЃРїРѕР»СЊР·СѓРµРјР°СЏ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ РєРѕРјРїРѕР·РёС†РёР№
     /// </summary>
     public string MD5 { get { return _MD5; } }
     private string _MD5;
 
     /// <summary>
-    /// Возвращает свойство DisplayName.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ DisplayName.
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return DisplayName;
@@ -108,30 +108,30 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Вспомогательный класс для хранения истории сохранения композиций пользовательского интерфейса
-  /// и именных сохраненных композиций.
-  /// Используется в EFPApp.SaveComposition(), в диалоге выбора сохраненной композиции.
-  /// Также может использоваться в пользовательском коде.
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РєР»Р°СЃСЃ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РёСЃС‚РѕСЂРёРё СЃРѕС…СЂР°РЅРµРЅРёСЏ РєРѕРјРїРѕР·РёС†РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
+  /// Рё РёРјРµРЅРЅС‹С… СЃРѕС…СЂР°РЅРµРЅРЅС‹С… РєРѕРјРїРѕР·РёС†РёР№.
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ EFPApp.SaveComposition(), РІ РґРёР°Р»РѕРіРµ РІС‹Р±РѕСЂР° СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё.
+  /// РўР°РєР¶Рµ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ.
   /// </summary>
   public static class EFPAppCompositionHistoryHandler
   {
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает список последних сохраненных композиций.
-    /// Список отсортирован от новых к старым
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РїРѕСЃР»РµРґРЅРёС… СЃРѕС…СЂР°РЅРµРЅРЅС‹С… РєРѕРјРїРѕР·РёС†РёР№.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ РѕС‚ РЅРѕРІС‹С… Рє СЃС‚Р°СЂС‹Рј
     /// </summary>
-    /// <returns>Массив описаний композиций</returns>
+    /// <returns>РњР°СЃСЃРёРІ РѕРїРёСЃР°РЅРёР№ РєРѕРјРїРѕР·РёС†РёР№</returns>
     public static EFPAppCompositionHistoryItem[] GetHistoryItems()
     {
-      // Требуется промежуточная таблица для сортировки записей
+      // РўСЂРµР±СѓРµС‚СЃСЏ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅР°СЏ С‚Р°Р±Р»РёС†Р° РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё Р·Р°РїРёСЃРµР№
       DataTable table = new DataTable();
       table.Columns.Add("UserSetName", typeof(string)); // "Hist1", "Hist2", ...
       table.Columns.Add("Time", typeof(DateTime));
       table.Columns.Add("MD5", typeof(string));
       DataTools.SetPrimaryKey(table, "UserSetName");
 
-      #region Чтение данных
+      #region Р§С‚РµРЅРёРµ РґР°РЅРЅС‹С…
 
       EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIHistory, String.Empty);
@@ -153,9 +153,9 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      table.DefaultView.Sort = "Time DESC"; // по убыванию
+      table.DefaultView.Sort = "Time DESC"; // РїРѕ СѓР±С‹РІР°РЅРёСЋ
 
-      #region Создание записей
+      #region РЎРѕР·РґР°РЅРёРµ Р·Р°РїРёСЃРµР№
 
       EFPAppCompositionHistoryItem[] items = new EFPAppCompositionHistoryItem[table.DefaultView.Count];
       for (int i = 0; i < table.DefaultView.Count; i++)
@@ -176,9 +176,9 @@ namespace FreeLibSet.Forms
       string prefix;
       switch (itemIndex)
       {
-        case 0: prefix = "Последняя"; break;
-        case 1: prefix = "Предпоследняя"; break;
-        default: prefix = "Предыдущая №" + (itemIndex + 1).ToString(); break;
+        case 0: prefix = "РџРѕСЃР»РµРґРЅСЏСЏ"; break;
+        case 1: prefix = "РџСЂРµРґРїРѕСЃР»РµРґРЅСЏСЏ"; break;
+        default: prefix = "РџСЂРµРґС‹РґСѓС‰Р°СЏ в„–" + (itemIndex + 1).ToString(); break;
       }
 
       return new EFPAppCompositionHistoryItem(EFPAppCompositionHistoryItemKind.History,
@@ -188,21 +188,21 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает список именных композиций.
-    /// Список отсортирован по алфавиту (свойство DisplayName)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РёРјРµРЅРЅС‹С… РєРѕРјРїРѕР·РёС†РёР№.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ РїРѕ Р°Р»С„Р°РІРёС‚Сѓ (СЃРІРѕР№СЃС‚РІРѕ DisplayName)
     /// </summary>
-    /// <returns>Массив описаний композиций</returns>
+    /// <returns>РњР°СЃСЃРёРІ РѕРїРёСЃР°РЅРёР№ РєРѕРјРїРѕР·РёС†РёР№</returns>
     public static EFPAppCompositionHistoryItem[] GetUserItems()
     {
-      // Требуется промежуточная таблица для сортировки записей
+      // РўСЂРµР±СѓРµС‚СЃСЏ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅР°СЏ С‚Р°Р±Р»РёС†Р° РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё Р·Р°РїРёСЃРµР№
       DataTable table = new DataTable();
       table.Columns.Add("UserSetName", typeof(string)); // "User1", "User2", ...
-      table.Columns.Add("Name", typeof(string)); // имя, заданное пользователем
+      table.Columns.Add("Name", typeof(string)); // РёРјСЏ, Р·Р°РґР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј
       table.Columns.Add("Time", typeof(DateTime));
       table.Columns.Add("MD5", typeof(string));
       DataTools.SetPrimaryKey(table, "UserSetName");
 
-      #region Чтение данных
+      #region Р§С‚РµРЅРёРµ РґР°РЅРЅС‹С…
 
       EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIUserHistory, String.Empty);
@@ -227,7 +227,7 @@ namespace FreeLibSet.Forms
 
       table.DefaultView.Sort = "Name";
 
-      #region Создание записей
+      #region РЎРѕР·РґР°РЅРёРµ Р·Р°РїРёСЃРµР№
 
       EFPAppCompositionHistoryItem[] items = new EFPAppCompositionHistoryItem[table.DefaultView.Count];
       for (int i = 0; i < table.DefaultView.Count; i++)
@@ -251,18 +251,18 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает описание для пользовательской композиции с заданным именем.
-    /// Если имя <paramref name="name"/> не задано или нет пользовательской конфигурации с таким
-    /// именем (например, была удалена), возвращает null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕРїРёСЃР°РЅРёРµ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕР№ РєРѕРјРїРѕР·РёС†РёРё СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј.
+    /// Р•СЃР»Рё РёРјСЏ <paramref name="name"/> РЅРµ Р·Р°РґР°РЅРѕ РёР»Рё РЅРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё СЃ С‚Р°РєРёРј
+    /// РёРјРµРЅРµРј (РЅР°РїСЂРёРјРµСЂ, Р±С‹Р»Р° СѓРґР°Р»РµРЅР°), РІРѕР·РІСЂР°С‰Р°РµС‚ null.
     /// </summary>
-    /// <param name="name">Имя конфигурации, заданное пользователем. Не путать с UserSetName</param>
-    /// <returns>Найденное описание или null</returns>
+    /// <param name="name">РРјСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё, Р·Р°РґР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј. РќРµ РїСѓС‚Р°С‚СЊ СЃ UserSetName</param>
+    /// <returns>РќР°Р№РґРµРЅРЅРѕРµ РѕРїРёСЃР°РЅРёРµ РёР»Рё null</returns>
     public static EFPAppCompositionHistoryItem GetUserItem(string name)
     {
       if (String.IsNullOrEmpty(name))
         return null;
 
-      #region Чтение данных
+      #region Р§С‚РµРЅРёРµ РґР°РЅРЅС‹С…
 
       EFPAppCompositionHistoryItem item = null;
 
@@ -295,11 +295,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить описание секции конфигурации для выбранной сохраненной композиции.
-    /// Полученный объект может быть передан методу EFPApp.ConfigManager.GetConfig() для загрузки данных
+    /// РџРѕР»СѓС‡РёС‚СЊ РѕРїРёСЃР°РЅРёРµ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґР»СЏ РІС‹Р±СЂР°РЅРЅРѕР№ СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё.
+    /// РџРѕР»СѓС‡РµРЅРЅС‹Р№ РѕР±СЉРµРєС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРµСЂРµРґР°РЅ РјРµС‚РѕРґСѓ EFPApp.ConfigManager.GetConfig() РґР»СЏ Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="item">Сохраненный элемент истории</param>
-    /// <returns>Имя, категория и пользовательский набор секции конфигурации</returns>
+    /// <param name="item">РЎРѕС…СЂР°РЅРµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ РёСЃС‚РѕСЂРёРё</param>
+    /// <returns>РРјСЏ, РєР°С‚РµРіРѕСЂРёСЏ Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РЅР°Р±РѕСЂ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё</returns>
     public static EFPConfigSectionInfo GetConfigInfo(EFPAppCompositionHistoryItem item)
     {
       switch (item.Kind)
@@ -311,17 +311,17 @@ namespace FreeLibSet.Forms
           return new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
             EFPConfigCategories.UIUser, item.UserSetName);
         default:
-          throw new ArgumentException("Неизвестный Kind=" + item.Kind.ToString(), "item");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Kind=" + item.Kind.ToString(), "item");
       }
     }
 
 
     /// <summary>
-    /// Получить описание секции конфигурации со снимком для выбранной сохраненной композиции.
-    /// Полученный объект может быть передан методу EFPApp.ConfigManager.GetConfig() для загрузки данных
+    /// РџРѕР»СѓС‡РёС‚СЊ РѕРїРёСЃР°РЅРёРµ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё СЃРѕ СЃРЅРёРјРєРѕРј РґР»СЏ РІС‹Р±СЂР°РЅРЅРѕР№ СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё.
+    /// РџРѕР»СѓС‡РµРЅРЅС‹Р№ РѕР±СЉРµРєС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРµСЂРµРґР°РЅ РјРµС‚РѕРґСѓ EFPApp.ConfigManager.GetConfig() РґР»СЏ Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="item">Сохраненный элемент истории</param>
-    /// <returns>Имя, категория и пользовательский набор секции конфигурации</returns>
+    /// <param name="item">РЎРѕС…СЂР°РЅРµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ РёСЃС‚РѕСЂРёРё</param>
+    /// <returns>РРјСЏ, РєР°С‚РµРіРѕСЂРёСЏ Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РЅР°Р±РѕСЂ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё</returns>
     public static EFPConfigSectionInfo GetSnapshotConfigInfo(EFPAppCompositionHistoryItem item)
     {
       switch (item.Kind)
@@ -333,42 +333,42 @@ namespace FreeLibSet.Forms
           return new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
             EFPConfigCategories.UIUserSnapshot, item.UserSetName);
         default:
-          throw new ArgumentException("Неизвестный Kind=" + item.Kind.ToString(), "item");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Kind=" + item.Kind.ToString(), "item");
       }
     }
 
     /// <summary>
-    /// Сохранить композицию окна, полученную вызовом EFPAppInterface.SaveComposition().
-    /// При записи проверяется наличие секции с такой MD5. Если уже есть такая секция, то она
-    /// "продвигается" наверх списка.
-    /// Этот метод вызывается в EFPApp.SaveComposition().
+    /// РЎРѕС…СЂР°РЅРёС‚СЊ РєРѕРјРїРѕР·РёС†РёСЋ РѕРєРЅР°, РїРѕР»СѓС‡РµРЅРЅСѓСЋ РІС‹Р·РѕРІРѕРј EFPAppInterface.SaveComposition().
+    /// РџСЂРё Р·Р°РїРёСЃРё РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ РЅР°Р»РёС‡РёРµ СЃРµРєС†РёРё СЃ С‚Р°РєРѕР№ MD5. Р•СЃР»Рё СѓР¶Рµ РµСЃС‚СЊ С‚Р°РєР°СЏ СЃРµРєС†РёСЏ, С‚Рѕ РѕРЅР°
+    /// "РїСЂРѕРґРІРёРіР°РµС‚СЃСЏ" РЅР°РІРµСЂС… СЃРїРёСЃРєР°.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РІ EFPApp.SaveComposition().
     /// </summary>
-    /// <param name="cfg">Записанная секция</param>
-    /// <param name="snapshot">Изображение</param>
-    /// <returns>Описание композиции</returns>
+    /// <param name="cfg">Р—Р°РїРёСЃР°РЅРЅР°СЏ СЃРµРєС†РёСЏ</param>
+    /// <param name="snapshot">РР·РѕР±СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ РєРѕРјРїРѕР·РёС†РёРё</returns>
     public static EFPAppCompositionHistoryItem SaveHistory(CfgPart cfg, Bitmap snapshot)
     {
       if (cfg == null)
         throw new ArgumentNullException("cfg");
       if (cfg.IsEmpty)
-        throw new ArgumentException("Композиция не записана", "cfg");
+        throw new ArgumentException("РљРѕРјРїРѕР·РёС†РёСЏ РЅРµ Р·Р°РїРёСЃР°РЅР°", "cfg");
 
       if (EFPApp.CompositionHistoryCount == 0)
         throw new InvalidOperationException("EFPApp.CompositionHistoryCount=0");
 
       string md5 = cfg.MD5Sum();
 
-      string userSetName = null; // Название набора для секции истории. 
-      // Если не надо добавлять секцию, остается null.
+      string userSetName = null; // РќР°Р·РІР°РЅРёРµ РЅР°Р±РѕСЂР° РґР»СЏ СЃРµРєС†РёРё РёСЃС‚РѕСЂРёРё. 
+      // Р•СЃР»Рё РЅРµ РЅР°РґРѕ РґРѕР±Р°РІР»СЏС‚СЊ СЃРµРєС†РёСЋ, РѕСЃС‚Р°РµС‚СЃСЏ null.
 
       EFPAppCompositionHistoryItem item = null;
 
-      #region Секция UIHistory
+      #region РЎРµРєС†РёСЏ UIHistory
 
       EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIHistory, String.Empty);
       CfgPart cfgHist;
-      int currentIndex = -1; // поиск совпадения по MD5
+      int currentIndex = -1; // РїРѕРёСЃРє СЃРѕРІРїР°РґРµРЅРёСЏ РїРѕ MD5
       using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Write, out cfgHist))
       {
         string[] names = cfgHist.GetChildNames();
@@ -391,22 +391,22 @@ namespace FreeLibSet.Forms
             if (row["MD5"].ToString() == md5)
             {
               currentIndex = i;
-              cfgOne.SetDateTime("Time", time); // просто заменяем
+              cfgOne.SetDateTime("Time", time); // РїСЂРѕСЃС‚Рѕ Р·Р°РјРµРЅСЏРµРј
               item = CreateHistItem(0, names[i], time, md5);
             }
-            // перебираем все break;
+            // РїРµСЂРµР±РёСЂР°РµРј РІСЃРµ break;
           }
         }
 
         if (currentIndex < 0)
         {
-          // Требуется добавить новую запись в историю
-          // Убираем самую старую секцию
-          table.DefaultView.Sort = "Time"; // по возрастанию
+          // РўСЂРµР±СѓРµС‚СЃСЏ РґРѕР±Р°РІРёС‚СЊ РЅРѕРІСѓСЋ Р·Р°РїРёСЃСЊ РІ РёСЃС‚РѕСЂРёСЋ
+          // РЈР±РёСЂР°РµРј СЃР°РјСѓСЋ СЃС‚Р°СЂСѓСЋ СЃРµРєС†РёСЋ
+          table.DefaultView.Sort = "Time"; // РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ
           while (table.DefaultView.Count >= EFPApp.CompositionHistoryCount)
             table.DefaultView[0].Row.Delete();
 
-          // Придумываем новое имя секции
+          // РџСЂРёРґСѓРјС‹РІР°РµРј РЅРѕРІРѕРµ РёРјСЏ СЃРµРєС†РёРё
           for (int i = 1; i <= EFPApp.CompositionHistoryCount; i++)
           {
             string UserSetName2 = "Hist" + i.ToString();
@@ -418,11 +418,11 @@ namespace FreeLibSet.Forms
           }
 
           if (userSetName == null)
-            throw new BugException("Не нашли имени набора для записи истории");
+            throw new BugException("РќРµ РЅР°С€Р»Рё РёРјРµРЅРё РЅР°Р±РѕСЂР° РґР»СЏ Р·Р°РїРёСЃРё РёСЃС‚РѕСЂРёРё");
           table.Rows.Add(userSetName, DateTime.Now, md5);
           table.AcceptChanges();
 
-          // Заново записываем всю секцию
+          // Р—Р°РЅРѕРІРѕ Р·Р°РїРёСЃС‹РІР°РµРј РІСЃСЋ СЃРµРєС†РёСЋ
           cfgHist.Clear();
           foreach (DataRow row in table.Rows)
           {
@@ -438,7 +438,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Секция UI для истории
+      #region РЎРµРєС†РёСЏ UI РґР»СЏ РёСЃС‚РѕСЂРёРё
 
       if (userSetName != null)
       {
@@ -456,7 +456,7 @@ namespace FreeLibSet.Forms
 
       #region Snapshot
 
-      // Записываем Snapshot, только если секция новая
+      // Р—Р°РїРёСЃС‹РІР°РµРј Snapshot, С‚РѕР»СЊРєРѕ РµСЃР»Рё СЃРµРєС†РёСЏ РЅРѕРІР°СЏ
       if (userSetName != null)
       {
         try
@@ -467,7 +467,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось сохранить изображение для предварительного просмотра");
+          EFPApp.ShowException(e, "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РґР»СЏ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°");
         }
       }
 
@@ -482,13 +482,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Сохранение именной пользователькой композиции.
-    /// Если композиция с таким именем уже существует, она перезаписывается
+    /// РЎРѕС…СЂР°РЅРµРЅРёРµ РёРјРµРЅРЅРѕР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊРєРѕР№ РєРѕРјРїРѕР·РёС†РёРё.
+    /// Р•СЃР»Рё РєРѕРјРїРѕР·РёС†РёСЏ СЃ С‚Р°РєРёРј РёРјРµРЅРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚, РѕРЅР° РїРµСЂРµР·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ
     /// </summary>
-    /// <param name="name">Имя композиции, заданное пользователем. Должно быть задано обязательно</param>
-    /// <param name="cfg">Записанная секция</param>
-    /// <param name="snapshot">Изображение</param>
-    /// <returns>Описание композиции</returns>
+    /// <param name="name">РРјСЏ РєРѕРјРїРѕР·РёС†РёРё, Р·Р°РґР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ</param>
+    /// <param name="cfg">Р—Р°РїРёСЃР°РЅРЅР°СЏ СЃРµРєС†РёСЏ</param>
+    /// <param name="snapshot">РР·РѕР±СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ РєРѕРјРїРѕР·РёС†РёРё</returns>
     public static EFPAppCompositionHistoryItem SaveUser(string name, CfgPart cfg, Bitmap snapshot)
     {
       if (String.IsNullOrEmpty(name))
@@ -496,27 +496,27 @@ namespace FreeLibSet.Forms
       if (cfg == null)
         throw new ArgumentNullException("cfg");
       if (cfg.IsEmpty)
-        throw new ArgumentException("Композиция не записана", "cfg");
+        throw new ArgumentException("РљРѕРјРїРѕР·РёС†РёСЏ РЅРµ Р·Р°РїРёСЃР°РЅР°", "cfg");
 
       string md5 = cfg.MD5Sum();
 
-      string userSetName = null; // Название набора для секции истории. 
+      string userSetName = null; // РќР°Р·РІР°РЅРёРµ РЅР°Р±РѕСЂР° РґР»СЏ СЃРµРєС†РёРё РёСЃС‚РѕСЂРёРё. 
 
       EFPAppCompositionHistoryItem item = null;
 
-      #region Секция UIHistory
+      #region РЎРµРєС†РёСЏ UIHistory
 
       EFPConfigSectionInfo configInfoHist = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIUserHistory, String.Empty);
       CfgPart cfgHist;
-      int currentIndex = -1; // поиск совпадения по имени
+      int currentIndex = -1; // РїРѕРёСЃРє СЃРѕРІРїР°РґРµРЅРёСЏ РїРѕ РёРјРµРЅРё
       using (EFPApp.ConfigManager.GetConfig(configInfoHist, EFPConfigMode.Write, out cfgHist))
       {
         string[] names = cfgHist.GetChildNames();
 
         DataTable table = new DataTable();
         table.Columns.Add("UserSetName", typeof(string)); // "User1", "User2", ...
-        table.Columns.Add("Name", typeof(string)); // пользовательское имя
+        table.Columns.Add("Name", typeof(string)); // РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРµ РёРјСЏ
         table.Columns.Add("Time", typeof(DateTime));
         table.Columns.Add("MD5", typeof(string));
         DataTools.SetPrimaryKey(table, "UserSetName");
@@ -535,17 +535,17 @@ namespace FreeLibSet.Forms
             if (String.Equals(row["Name"].ToString(), name, StringComparison.OrdinalIgnoreCase))
             {
               currentIndex = i;
-              cfgOne.SetDateTime("Time", time); // просто заменяем
+              cfgOne.SetDateTime("Time", time); // РїСЂРѕСЃС‚Рѕ Р·Р°РјРµРЅСЏРµРј
               item = CreateUserItem(names[i], row["Name"].ToString(), time, md5);
               userSetName = names[i];
             }
-            // перебираем все break;
+            // РїРµСЂРµР±РёСЂР°РµРј РІСЃРµ break;
           }
         }
 
         if (currentIndex < 0)
         {
-          // Придумываем новое имя секции
+          // РџСЂРёРґСѓРјС‹РІР°РµРј РЅРѕРІРѕРµ РёРјСЏ СЃРµРєС†РёРё
           for (int i = 1; i <= int.MaxValue; i++)
           {
             string userSetName2 = "User" + i.ToString();
@@ -556,12 +556,12 @@ namespace FreeLibSet.Forms
             }
           }
           if (userSetName == null)
-            throw new BugException("Не нашли имени набора для записи истории");
+            throw new BugException("РќРµ РЅР°С€Р»Рё РёРјРµРЅРё РЅР°Р±РѕСЂР° РґР»СЏ Р·Р°РїРёСЃРё РёСЃС‚РѕСЂРёРё");
 
           table.Rows.Add(userSetName, name, DateTime.Now, md5);
           table.AcceptChanges();
 
-          // Заново записываем всю секцию
+          // Р—Р°РЅРѕРІРѕ Р·Р°РїРёСЃС‹РІР°РµРј РІСЃСЋ СЃРµРєС†РёСЋ
           cfgHist.Clear();
           foreach (DataRow row in table.Rows)
           {
@@ -578,7 +578,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Секция UI для истории
+      #region РЎРµРєС†РёСЏ UI РґР»СЏ РёСЃС‚РѕСЂРёРё
 
       EFPConfigSectionInfo configInfo2 = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
         EFPConfigCategories.UIUser, userSetName);
@@ -593,7 +593,7 @@ namespace FreeLibSet.Forms
 
       #region Snapshot
 
-      // Записываем Snapshot, только если секция новая
+      // Р—Р°РїРёСЃС‹РІР°РµРј Snapshot, С‚РѕР»СЊРєРѕ РµСЃР»Рё СЃРµРєС†РёСЏ РЅРѕРІР°СЏ
       try
       {
         EFPConfigSectionInfo configInfoSnapshot = new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
@@ -602,7 +602,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Не удалось сохранить изображение для предварительного просмотра");
+        EFPApp.ShowException(e, "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РґР»СЏ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°");
       }
 
       #endregion
@@ -616,9 +616,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Удаляет сохраненную композицию из истории или именную пользовательскую композицию.
+    /// РЈРґР°Р»СЏРµС‚ СЃРѕС…СЂР°РЅРµРЅРЅСѓСЋ РєРѕРјРїРѕР·РёС†РёСЋ РёР· РёСЃС‚РѕСЂРёРё РёР»Рё РёРјРµРЅРЅСѓСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєСѓСЋ РєРѕРјРїРѕР·РёС†РёСЋ.
     /// </summary>
-    /// <param name="item">Описание сохраненной композиции</param>
+    /// <param name="item">РћРїРёСЃР°РЅРёРµ СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё</param>
     public static void Delete(EFPAppCompositionHistoryItem item)
     {
 #if DEBUG
@@ -649,7 +649,7 @@ namespace FreeLibSet.Forms
           break;
 
         default:
-          throw new ArgumentException("Неизвестный Kind=" + item.Kind.ToString(), "item");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Kind=" + item.Kind.ToString(), "item");
       }
     }
 

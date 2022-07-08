@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -16,11 +16,11 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Форма выбора сохраненной композиции рабочего стола
+  /// Р¤РѕСЂРјР° РІС‹Р±РѕСЂР° СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°
   /// </summary>
   internal partial class SelectCompositionForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public SelectCompositionForm()
     {
@@ -34,18 +34,18 @@ namespace FreeLibSet.Forms
 
       efpSelCB = new EFPTextComboBox(efpForm, cbParamSet.TheCB);
       efpSelCB.CanBeEmpty = true;
-      efpSelCB.DisplayName = "Готовые наборы";
+      efpSelCB.DisplayName = "Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹";
 
       efpSaveButton = new EFPButton(efpForm, cbParamSet.SaveButton);
-      efpSaveButton.DisplayName = "Сохранить набор";
-      efpSaveButton.ToolTipText = "Сохранить установленные значения как новый пользовательский набор" + Environment.NewLine +
-        "Перед нажатием кнопки в поле слева должно быть введено имя набора";
+      efpSaveButton.DisplayName = "РЎРѕС…СЂР°РЅРёС‚СЊ РЅР°Р±РѕСЂ";
+      efpSaveButton.ToolTipText = "РЎРѕС…СЂР°РЅРёС‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РєР°Рє РЅРѕРІС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РЅР°Р±РѕСЂ" + Environment.NewLine +
+        "РџРµСЂРµРґ РЅР°Р¶Р°С‚РёРµРј РєРЅРѕРїРєРё РІ РїРѕР»Рµ СЃР»РµРІР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІРІРµРґРµРЅРѕ РёРјСЏ РЅР°Р±РѕСЂР°";
       //efpSaveButton.Click += new EventHandler(efpSaveButton_Click);
       cbParamSet.SaveClick += new ParamSetComboBoxSaveEventHandler(cbParamSet_SaveClick);
 
       efpDelButton = new EFPButton(efpForm, cbParamSet.DeleteButton);
-      efpDelButton.DisplayName = "Удалить набор";
-      efpDelButton.ToolTipText = "Удалить пользовательский набор значений, имя которого задано в списке слева";
+      efpDelButton.DisplayName = "РЈРґР°Р»РёС‚СЊ РЅР°Р±РѕСЂ";
+      efpDelButton.ToolTipText = "РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РЅР°Р±РѕСЂ Р·РЅР°С‡РµРЅРёР№, РёРјСЏ РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РґР°РЅРѕ РІ СЃРїРёСЃРєРµ СЃР»РµРІР°";
       //efpDelButton.Click += new EventHandler(efpDelButton_Click);
       cbParamSet.DeleteClick += new ParamSetComboBoxItemEventHandler(cbParamSet_DeleteClick);
 
@@ -57,8 +57,8 @@ namespace FreeLibSet.Forms
       btnXml.Image = EFPApp.MainImages.Images["XML"];
       btnXml.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpXml = new EFPButton(efpForm, btnXml);
-      efpXml.DisplayName = "Просмотр XML";
-      efpXml.ToolTipText = "Просмотр данных выбранной композиции";
+      efpXml.DisplayName = "РџСЂРѕСЃРјРѕС‚СЂ XML";
+      efpXml.ToolTipText = "РџСЂРѕСЃРјРѕС‚СЂ РґР°РЅРЅС‹С… РІС‹Р±СЂР°РЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё";
       efpXml.Click += new EventHandler(efpXml_Click);
     }
 
@@ -68,7 +68,7 @@ namespace FreeLibSet.Forms
 
       try
       {
-        #region Текущая композиция
+        #region РўРµРєСѓС‰Р°СЏ РєРѕРјРїРѕР·РёС†РёСЏ
 
         _CurrPart = new TempCfg();
         EFPApp.Interface.SaveComposition(_CurrPart);
@@ -83,7 +83,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка OnLoad");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° OnLoad");
       }
 
       cbParamSet.Select();
@@ -93,15 +93,15 @@ namespace FreeLibSet.Forms
     {
       cbParamSet.Items.Clear();
 
-      #region Текущая композиция
+      #region РўРµРєСѓС‰Р°СЏ РєРѕРјРїРѕР·РёС†РёСЏ
 
-      ParamSetComboBoxItem currItem = new ParamSetComboBoxItem("Current", "[ Текущая композиция ]",
+      ParamSetComboBoxItem currItem = new ParamSetComboBoxItem("Current", "[ РўРµРєСѓС‰Р°СЏ РєРѕРјРїРѕР·РёС†РёСЏ ]",
         "ArrowRight", /*DateTime.Now*/null, 1, _CurrPart.MD5Sum());
       cbParamSet.Items.Add(currItem);
 
       #endregion
 
-      #region Именные секции
+      #region РРјРµРЅРЅС‹Рµ СЃРµРєС†РёРё
 
       EFPAppCompositionHistoryItem[] items;
       items = EFPAppCompositionHistoryHandler.GetUserItems();
@@ -116,7 +116,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region История
+      #region РСЃС‚РѕСЂРёСЏ
 
       items = EFPAppCompositionHistoryHandler.GetHistoryItems();
       for (int i = 0; i < items.Length; i++)
@@ -135,7 +135,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Текущая композиция
+    #region РўРµРєСѓС‰Р°СЏ РєРѕРјРїРѕР·РёС†РёСЏ
 
     private TempCfg _CurrPart;
 
@@ -143,7 +143,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Изображение и сообщение об ошибке
+    #region РР·РѕР±СЂР°Р¶РµРЅРёРµ Рё СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
 
     private EFPPictureBox efpPreview;
 
@@ -151,7 +151,7 @@ namespace FreeLibSet.Forms
     {
       if (image == null)
       {
-        SetWarning("Нет изображения");
+        SetWarning("РќРµС‚ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ");
         return;
       }
       try
@@ -162,7 +162,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        SetError("Не удалось вывести изображение. " + e.Message);
+        SetError("РќРµ СѓРґР°Р»РѕСЃСЊ РІС‹РІРµСЃС‚Рё РёР·РѕР±СЂР°Р¶РµРЅРёРµ. " + e.Message);
       }
     }
 
@@ -184,7 +184,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Комбоблок истории
+    #region РљРѕРјР±РѕР±Р»РѕРє РёСЃС‚РѕСЂРёРё
 
     private EFPTextComboBox efpSelCB;
 
@@ -193,8 +193,8 @@ namespace FreeLibSet.Forms
     private EFPButton efpDelButton;
 
     /// <summary>
-    /// Текущая выбранная композиция.
-    /// null, если выбраная текущая композиция
+    /// РўРµРєСѓС‰Р°СЏ РІС‹Р±СЂР°РЅРЅР°СЏ РєРѕРјРїРѕР·РёС†РёСЏ.
+    /// null, РµСЃР»Рё РІС‹Р±СЂР°РЅР°СЏ С‚РµРєСѓС‰Р°СЏ РєРѕРјРїРѕР·РёС†РёСЏ
     /// </summary>
     public EFPAppCompositionHistoryItem SelectedItem;
 
@@ -242,8 +242,8 @@ namespace FreeLibSet.Forms
       {
         if (Name.Length == 0)
         {
-          if (EFPApp.MessageBox("Сохранить текущую композицию в списке истории, а не как \"именную\" композицию?",
-            "Сохранение текущей композиции", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+          if (EFPApp.MessageBox("РЎРѕС…СЂР°РЅРёС‚СЊ С‚РµРєСѓС‰СѓСЋ РєРѕРјРїРѕР·РёС†РёСЋ РІ СЃРїРёСЃРєРµ РёСЃС‚РѕСЂРёРё, Р° РЅРµ РєР°Рє \"РёРјРµРЅРЅСѓСЋ\" РєРѕРјРїРѕР·РёС†РёСЋ?",
+            "РЎРѕС…СЂР°РЅРµРЅРёРµ С‚РµРєСѓС‰РµР№ РєРѕРјРїРѕР·РёС†РёРё", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
             return;
           UserSetName = EFPAppCompositionHistoryHandler.SaveHistory(_CurrPart, _CurrSnapshot).UserSetName;
         }
@@ -254,7 +254,7 @@ namespace FreeLibSet.Forms
       {
         if (Name.Length == 0)
         {
-          EFPApp.ShowTempMessage("Должно быть задано название сохраняемой композиции");
+          EFPApp.ShowTempMessage("Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ РЅР°Р·РІР°РЅРёРµ СЃРѕС…СЂР°РЅСЏРµРјРѕР№ РєРѕРјРїРѕР·РёС†РёРё");
           return;
         }
         UserSetName = EFPAppCompositionHistoryHandler.SaveUser(Name, _CurrPart, _CurrSnapshot).UserSetName;
@@ -267,11 +267,11 @@ namespace FreeLibSet.Forms
     {
       if (SelectedItem == null)
       {
-        EFPApp.ShowTempMessage("Нельзя удалить текущую композицию");
+        EFPApp.ShowTempMessage("РќРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РєРѕРјРїРѕР·РёС†РёСЋ");
         return;
       }
-      if (EFPApp.MessageBox("Удалить композицию \"" + SelectedItem.DisplayName + "\"?",
-        "Подтверждение удаления", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+      if (EFPApp.MessageBox("РЈРґР°Р»РёС‚СЊ РєРѕРјРїРѕР·РёС†РёСЋ \"" + SelectedItem.DisplayName + "\"?",
+        "РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ СѓРґР°Р»РµРЅРёСЏ", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         return;
 
       EFPAppCompositionHistoryHandler.Delete(SelectedItem);
@@ -280,12 +280,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Кнопка XML
+    #region РљРЅРѕРїРєР° XML
 
     void efpXml_Click(object sender, EventArgs args)
     {
       if (SelectedItem == null)
-        EFPApp.ShowTextView(DataTools.XmlDocumentToString(_CurrPart.Document), "Текущая композиция");
+        EFPApp.ShowTextView(DataTools.XmlDocumentToString(_CurrPart.Document), "РўРµРєСѓС‰Р°СЏ РєРѕРјРїРѕР·РёС†РёСЏ");
       else
       {
         CfgPart cfg;
@@ -303,16 +303,16 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Выводит диалог загрузки сохраненной композиции рабочего стола.
-  /// Если пользователь нажал [OK], автоматически вызывается EFPApp.LoadComposition().
-  /// Свойство EFPApp.CompositionHistoryCount должно быть установлено в значение, отличное от 0
+  /// Р’С‹РІРѕРґРёС‚ РґРёР°Р»РѕРі Р·Р°РіСЂСѓР·РєРё СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ РєРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°.
+  /// Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР°Р¶Р°Р» [OK], Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РІС‹Р·С‹РІР°РµС‚СЃСЏ EFPApp.LoadComposition().
+  /// РЎРІРѕР№СЃС‚РІРѕ EFPApp.CompositionHistoryCount РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ Р·РЅР°С‡РµРЅРёРµ, РѕС‚Р»РёС‡РЅРѕРµ РѕС‚ 0
   /// </summary>
   public sealed class SelectCompositionDialog
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Конструктор задает параметры диалога по умолчанию
+    /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Р·Р°РґР°РµС‚ РїР°СЂР°РјРµС‚СЂС‹ РґРёР°Р»РѕРіР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
     public SelectCompositionDialog()
     {
@@ -320,22 +320,22 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Контекст справки, вызываемой по F1
+    /// РљРѕРЅС‚РµРєСЃС‚ СЃРїСЂР°РІРєРё, РІС‹Р·С‹РІР°РµРјРѕР№ РїРѕ F1
     /// </summary>
     public string HelpContext { get { return _HelpContext; } set { _HelpContext = value; } }
     private string _HelpContext;
 
     #endregion
 
-    #region Вывод диалога
+    #region Р’С‹РІРѕРґ РґРёР°Р»РѕРіР°
 
     /// <summary>
-    /// Основной метод - вывод формы диалога
+    /// РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ - РІС‹РІРѕРґ С„РѕСЂРјС‹ РґРёР°Р»РѕРіР°
     /// </summary>
-    /// <returns>true, если пользователь выполнил загрузку композиции рабочего стола</returns>
+    /// <returns>true, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹РїРѕР»РЅРёР» Р·Р°РіСЂСѓР·РєСѓ РєРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°</returns>
     public DialogResult ShowDialog()
     {
       SelectCompositionForm frm = new SelectCompositionForm();

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,14 +13,14 @@ namespace FreeLibSet.Data.Docs
   #region InitDBxEventHandler
 
   /// <summary>
-  /// Аргументы события DBxDocDBConnectionHelper.BeforeInitDB
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ DBxDocDBConnectionHelper.BeforeInitDB
   /// </summary>
   public sealed class DBxDocDBConnectionHelperInitDBxEventArgs : EventArgs
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Конструктор вызывается из DBxDocDBConnectionHelper.InitDB()
+    /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· DBxDocDBConnectionHelper.InitDB()
     /// </summary>
     internal DBxDocDBConnectionHelperInitDBxEventArgs(DBx db, DBxStruct dbStruct, string dbName)
     {
@@ -42,24 +42,24 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Созданное описание базы данных.
-    /// Свойство DBx.Struct не установлено
+    /// РЎРѕР·РґР°РЅРЅРѕРµ РѕРїРёСЃР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РЎРІРѕР№СЃС‚РІРѕ DBx.Struct РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ
     /// </summary>
     public DBx DB { get { return _DB; } }
     private DBx _DB;
 
     /// <summary>
-    /// Структура базы данных.
-    /// Пользовательский код может добавить описания таблиц и полей.
+    /// РЎС‚СЂСѓРєС‚СѓСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РєРѕРґ РјРѕР¶РµС‚ РґРѕР±Р°РІРёС‚СЊ РѕРїРёСЃР°РЅРёСЏ С‚Р°Р±Р»РёС† Рё РїРѕР»РµР№.
     /// </summary>
     public DBxStruct Struct { get { return _Struct; } }
     private DBxStruct _Struct;
 
     /// <summary>
-    /// Имя базы данных, переданное при вызове InitDB() ("db", "undo", "files", "files2", ...)
+    /// РРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РїРµСЂРµРґР°РЅРЅРѕРµ РїСЂРё РІС‹Р·РѕРІРµ InitDB() ("db", "undo", "files", "files2", ...)
     /// </summary>
     public string DBName { get { return _DBName; } }
     private string _DBName;
@@ -68,25 +68,25 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Делегат события DBxDocDBConnectionHelper.BeforeInitDB
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ DBxDocDBConnectionHelper.BeforeInitDB
   /// </summary>
-  /// <param name="sender">Объект DBxDocDBConnectionHelper</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РћР±СЉРµРєС‚ DBxDocDBConnectionHelper</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void DBxDocDBConnectionHelperInitDBxEventHandler(object sender,
     DBxDocDBConnectionHelperInitDBxEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Вспомогательный класс для создания объектов DBx для поддержки работы с документами.
-  /// После создания экземпляра и настройки управляющих свойств, следует вызвать метод CreateRealDocProviderGlobal().
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РєР»Р°СЃСЃ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ DBx РґР»СЏ РїРѕРґРґРµСЂР¶РєРё СЂР°Р±РѕС‚С‹ СЃ РґРѕРєСѓРјРµРЅС‚Р°РјРё.
+  /// РџРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ СЌРєР·РµРјРїР»СЏСЂР° Рё РЅР°СЃС‚СЂРѕР№РєРё СѓРїСЂР°РІР»СЏСЋС‰РёС… СЃРІРѕР№СЃС‚РІ, СЃР»РµРґСѓРµС‚ РІС‹Р·РІР°С‚СЊ РјРµС‚РѕРґ CreateRealDocProviderGlobal().
   /// </summary>
   public class DBxDocDBConnectionHelper
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой объект
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ РѕР±СЉРµРєС‚
     /// </summary>
     public DBxDocDBConnectionHelper()
     {
@@ -98,42 +98,42 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Управляющие параметры для создания БД
+    #region РЈРїСЂР°РІР»СЏСЋС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Р‘Р”
 
     /// <summary>
-    /// Имя провайдера базы данных.
+    /// РРјСЏ РїСЂРѕРІР°Р№РґРµСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С….
     /// </summary>
     public string ProviderName { get { return _ProviderName; } set { _ProviderName = value; } }
     private string _ProviderName;
 
     /// <summary>
-    /// Строка соединения с основной базой данных
+    /// РЎС‚СЂРѕРєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…
     /// </summary>
     public string ConnectionString { get { return _ConnectionString; } set { _ConnectionString = value; } }
     private string _ConnectionString;
 
 #if UNUSED
 
-    // Использование ConnectionStringSettings требует подключения System.Configuration.dll,
-    // что вряд ли оправдано.
-    // Если приложение хочет читать строку из app.config, пусть выполняет инициализацию свойств
-    // ProviderName и ConnectionString вручную
+    // РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ ConnectionStringSettings С‚СЂРµР±СѓРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёСЏ System.Configuration.dll,
+    // С‡С‚Рѕ РІСЂСЏРґ Р»Рё РѕРїСЂР°РІРґР°РЅРѕ.
+    // Р•СЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ С…РѕС‡РµС‚ С‡РёС‚Р°С‚СЊ СЃС‚СЂРѕРєСѓ РёР· app.config, РїСѓСЃС‚СЊ РІС‹РїРѕР»РЅСЏРµС‚ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ СЃРІРѕР№СЃС‚РІ
+    // ProviderName Рё ConnectionString РІСЂСѓС‡РЅСѓСЋ
 
     /// <summary>
-    /// Имя провайдера базы данных и строка подключения.
-    /// Объект может быть прочитан из конфигурационного файла приложения.
-    /// Объект задает подключение для основной базы данных ("db"). Подключения к остальным базам
-    /// определяются автоматически. В этой строке подключения имя базы данных может содержать 
-    /// произвольный префикс, который используется и для других баз данных. Например, если в 
-    /// строке подключения задано "DATABASE=myprog_db", то для базы данных undo будет использовано
+    /// РРјСЏ РїСЂРѕРІР°Р№РґРµСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С… Рё СЃС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ.
+    /// РћР±СЉРµРєС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСЂРѕС‡РёС‚Р°РЅ РёР· РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р° РїСЂРёР»РѕР¶РµРЅРёСЏ.
+    /// РћР±СЉРµРєС‚ Р·Р°РґР°РµС‚ РїРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С… ("db"). РџРѕРґРєР»СЋС‡РµРЅРёСЏ Рє РѕСЃС‚Р°Р»СЊРЅС‹Рј Р±Р°Р·Р°Рј
+    /// РѕРїСЂРµРґРµР»СЏСЋС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё. Р’ СЌС‚РѕР№ СЃС‚СЂРѕРєРµ РїРѕРґРєР»СЋС‡РµРЅРёСЏ РёРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ 
+    /// РїСЂРѕРёР·РІРѕР»СЊРЅС‹Р№ РїСЂРµС„РёРєСЃ, РєРѕС‚РѕСЂС‹Р№ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Рё РґР»СЏ РґСЂСѓРіРёС… Р±Р°Р· РґР°РЅРЅС‹С…. РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё РІ 
+    /// СЃС‚СЂРѕРєРµ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Р·Р°РґР°РЅРѕ "DATABASE=myprog_db", С‚Рѕ РґР»СЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… undo Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ
     /// "DATABASE=myprog_undo"
-    /// Если свойство не установлено (по умолчанию),
-    /// то используется провайдер Microsoft SQL Server Express с размещением в DBDir.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ),
+    /// С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРѕРІР°Р№РґРµСЂ Microsoft SQL Server Express СЃ СЂР°Р·РјРµС‰РµРЅРёРµРј РІ DBDir.
     /// </summary>
     /// <remarks>
-    /// Это свойство не хранится в явном виде. Вместо этого оно собирается из свойств
-    /// ProviderName и ConnectionString.
-    /// При каждом чтении свойства создается новый объект
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РЅРµ С…СЂР°РЅРёС‚СЃСЏ РІ СЏРІРЅРѕРј РІРёРґРµ. Р’РјРµСЃС‚Рѕ СЌС‚РѕРіРѕ РѕРЅРѕ СЃРѕР±РёСЂР°РµС‚СЃСЏ РёР· СЃРІРѕР№СЃС‚РІ
+    /// ProviderName Рё ConnectionString.
+    /// РџСЂРё РєР°Р¶РґРѕРј С‡С‚РµРЅРёРё СЃРІРѕР№СЃС‚РІР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚
     /// </remarks>
     public System.Configuration.ConnectionStringSettings ConnectionStringSettings
     {
@@ -160,57 +160,57 @@ namespace FreeLibSet.Data.Docs
 #endif
 
     /// <summary>
-    /// Каталог для размещения баз данных MS SQL Server Express.
-    /// Свойство используется, если не задано ConnectionStringSettings
+    /// РљР°С‚Р°Р»РѕРі РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ Р±Р°Р· РґР°РЅРЅС‹С… MS SQL Server Express.
+    /// РЎРІРѕР№СЃС‚РІРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РµСЃР»Рё РЅРµ Р·Р°РґР°РЅРѕ ConnectionStringSettings
     /// </summary>
     public AbsPath DBDir { get { return _DBDir; } set { _DBDir = value; } }
     private AbsPath _DBDir;
 
     /// <summary>
-    /// Время, отведенное на выполнение SQL-запроса в секундах.
-    /// По умолчанию - 30с.
-    /// 0 - бесконечное время выполнения
+    /// Р’СЂРµРјСЏ, РѕС‚РІРµРґРµРЅРЅРѕРµ РЅР° РІС‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃР° РІ СЃРµРєСѓРЅРґР°С….
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - 30СЃ.
+    /// 0 - Р±РµСЃРєРѕРЅРµС‡РЅРѕРµ РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ
     /// </summary>
     public int CommandTimeout { get { return _CommandTimeout; } set { _CommandTimeout = value; } }
     private int _CommandTimeout;
 
     /// <summary>
-    /// Управление заставкой на время создания/обновления структуры базы данных.
-    /// Может быть не задано
+    /// РЈРїСЂР°РІР»РµРЅРёРµ Р·Р°СЃС‚Р°РІРєРѕР№ РЅР° РІСЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ/РѕР±РЅРѕРІР»РµРЅРёСЏ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ Р·Р°РґР°РЅРѕ
     /// </summary>
     public ISplash Splash { get { return _Splash; } set { _Splash = value; } }
     private ISplash _Splash;
 
     /// <summary>
-    /// Сюда добавляются сообщения об ошибках при обновлении структуры базы данных.
-    /// После обноввления структуры баз данных, программа может выгрузить список сообщений в log-файл или отправить администратору
+    /// РЎСЋРґР° РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєР°С… РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё СЃС‚СЂСѓРєС‚СѓСЂС‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РџРѕСЃР»Рµ РѕР±РЅРѕРІРІР»РµРЅРёСЏ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р±Р°Р· РґР°РЅРЅС‹С…, РїСЂРѕРіСЂР°РјРјР° РјРѕР¶РµС‚ РІС‹РіСЂСѓР·РёС‚СЊ СЃРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№ РІ log-С„Р°Р№Р» РёР»Рё РѕС‚РїСЂР°РІРёС‚СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ
     /// </summary>
     public ErrorMessageList Errors { get { return _Errors; } }
     private ErrorMessageList _Errors;
 
     /// <summary>
-    /// Параметры обновления структуры баз данных.
+    /// РџР°СЂР°РјРµС‚СЂС‹ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р±Р°Р· РґР°РЅРЅС‹С….
     /// </summary>
     public DBxUpdateStructOptions UpdateStructOptions { get { return _UpdateStructOptions; } }
     private DBxUpdateStructOptions _UpdateStructOptions;
 
     #endregion
 
-    #region События
+    #region РЎРѕР±С‹С‚РёСЏ
 
     /// <summary>
-    /// Событие вызывается методом InitDB().
-    /// Обработчик события может выполнить дополнительную инициализацию объекта DBx перед его использованием.
-    /// На момент вызова установлены свойства DBx.DisplayName и CommandTimeout,
-    /// но свойство DBStruct не установлено. 
-    /// Проверка существования преальной базы данных не выполнена.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РјРµС‚РѕРґРѕРј InitDB().
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РјРѕР¶РµС‚ РІС‹РїРѕР»РЅРёС‚СЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅСѓСЋ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ РѕР±СЉРµРєС‚Р° DBx РїРµСЂРµРґ РµРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј.
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ СЃРІРѕР№СЃС‚РІР° DBx.DisplayName Рё CommandTimeout,
+    /// РЅРѕ СЃРІРѕР№СЃС‚РІРѕ DBStruct РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ. 
+    /// РџСЂРѕРІРµСЂРєР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ РїСЂРµР°Р»СЊРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РЅРµ РІС‹РїРѕР»РЅРµРЅР°.
     /// </summary>
     public event DBxDocDBConnectionHelperInitDBxEventHandler BeforeInitDB;
 
     /// <summary>
-    /// Вызов события BeforeInitDB
+    /// Р’С‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ BeforeInitDB
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected void OnBeforeInitDB(DBxDocDBConnectionHelperInitDBxEventArgs args)
     {
       if (BeforeInitDB != null)
@@ -219,19 +219,19 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Создание произвольных подключений
+    #region РЎРѕР·РґР°РЅРёРµ РїСЂРѕРёР·РІРѕР»СЊРЅС‹С… РїРѕРґРєР»СЋС‡РµРЅРёР№
 
     /// <summary>
-    /// Создание произвольной базы данных с заданным именем на основании управляющих параметров.
-    /// Если базы данных не существует, она создается. Структура базы данных обновляется для
-    /// добавления недостающих элементов структуры, если она задана
+    /// РЎРѕР·РґР°РЅРёРµ РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С… СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј РЅР° РѕСЃРЅРѕРІР°РЅРёРё СѓРїСЂР°РІР»СЏСЋС‰РёС… РїР°СЂР°РјРµС‚СЂРѕРІ.
+    /// Р•СЃР»Рё Р±Р°Р·С‹ РґР°РЅРЅС‹С… РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚, РѕРЅР° СЃРѕР·РґР°РµС‚СЃСЏ. РЎС‚СЂСѓРєС‚СѓСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С… РѕР±РЅРѕРІР»СЏРµС‚СЃСЏ РґР»СЏ
+    /// РґРѕР±Р°РІР»РµРЅРёСЏ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ СЃС‚СЂСѓРєС‚СѓСЂС‹, РµСЃР»Рё РѕРЅР° Р·Р°РґР°РЅР°
     /// </summary>
-    /// <param name="dbName">Имя базы данных, например, "db", "undo"</param>
-    /// <param name="dbStruct">Структура базы данных. Если null, то создание базы данных и обновление структуры не выполняется</param>
-    /// <returns>Объект подключения к базе данных</returns>
+    /// <param name="dbName">РРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РЅР°РїСЂРёРјРµСЂ, "db", "undo"</param>
+    /// <param name="dbStruct">РЎС‚СЂСѓРєС‚СѓСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С…. Р•СЃР»Рё null, С‚Рѕ СЃРѕР·РґР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… Рё РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
+    /// <returns>РћР±СЉРµРєС‚ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…</returns>
     public DBx InitDB(string dbName, DBxStruct dbStruct)
     {
-      #region Проверка аргументов
+      #region РџСЂРѕРІРµСЂРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ
 
       if (String.IsNullOrEmpty(dbName))
         throw new ArgumentNullException("dbName");
@@ -246,18 +246,18 @@ namespace FreeLibSet.Data.Docs
       if (Splash != null)
       {
         oldSplashText = Splash.PhaseText;
-        Splash.PhaseText = "Обновление базы данных " + dbName;
+        Splash.PhaseText = "РћР±РЅРѕРІР»РµРЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… " + dbName;
       }
       try
       {
         if (String.IsNullOrEmpty(ConnectionString))
         {
-          // TODO: Учет ProviderName для выбора формата базы данных
+          // TODO: РЈС‡РµС‚ ProviderName РґР»СЏ РІС‹Р±РѕСЂР° С„РѕСЂРјР°С‚Р° Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 
           if (DBDir.IsEmpty)
-            throw new NullReferenceException("Не установлено свойство DBDir");
+            throw new NullReferenceException("РќРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DBDir");
 
-          // Строка подключения не задана
+          // РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ РЅРµ Р·Р°РґР°РЅР°
           System.Data.SqlClient.SqlConnectionStringBuilder csb = new System.Data.SqlClient.SqlConnectionStringBuilder();
           csb.DataSource = @".\SQLEXPRESS";
           csb.AttachDBFilename = DBDir.SlashedPath + dbName + ".mdf";
@@ -268,14 +268,14 @@ namespace FreeLibSet.Data.Docs
         else
         {
           if (String.IsNullOrEmpty(ProviderName))
-            throw new NullReferenceException("Не установлено свойство \"ProviderName\"");
+            throw new NullReferenceException("РќРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ \"ProviderName\"");
           DBxManager dbMan = DBxManager.Managers[ProviderName];
           if (dbMan == null)
           {
             if (DBxManager.Managers.Count == 0)
-              throw new NullReferenceException("Список менеджеров баз данных DBxManager.Managers пуст");
+              throw new NullReferenceException("РЎРїРёСЃРѕРє РјРµРЅРµРґР¶РµСЂРѕРІ Р±Р°Р· РґР°РЅРЅС‹С… DBxManager.Managers РїСѓСЃС‚");
             else
-              throw new NullReferenceException("Свойство ProviderName содержит неизвестный провайдер \"" + ProviderName + "\". Допустимые значения: " +
+              throw new NullReferenceException("РЎРІРѕР№СЃС‚РІРѕ ProviderName СЃРѕРґРµСЂР¶РёС‚ РЅРµРёР·РІРµСЃС‚РЅС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ \"" + ProviderName + "\". Р”РѕРїСѓСЃС‚РёРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ: " +
                 String.Join(", ", DBxManager.Managers.GetCodes()));
           }
           string conStr = dbMan.ReplaceDBName(ConnectionString, "db", dbName);
@@ -297,17 +297,17 @@ namespace FreeLibSet.Data.Docs
         if (dbStruct != null)
         {
           // 08.10.2018
-          // Пользовательская инициализация
+          // РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
           DBxDocDBConnectionHelperInitDBxEventArgs Args = new DBxDocDBConnectionHelperInitDBxEventArgs(db, dbStruct, dbName);
           OnBeforeInitDB(Args);
 
           db.CreateIfRequired();
-          db.Struct = dbStruct; // возможно, была изменена пользовательским обработчиком
+          db.Struct = dbStruct; // РІРѕР·РјРѕР¶РЅРѕ, Р±С‹Р»Р° РёР·РјРµРЅРµРЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРј РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј
 
           ISplash spl = this.Splash ?? new DummySplash();
           int oldErrorCount = Errors.Count;
           db.UpdateStruct(spl, Errors, UpdateStructOptions);
-          Errors.SetPrefix("Обновление структуры " + dbName + ". ", oldErrorCount);
+          Errors.SetPrefix("РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ " + dbName + ". ", oldErrorCount);
         }
       }
       finally
@@ -319,10 +319,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если база данных с заданным именем существует
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р±Р°Р·Р° РґР°РЅРЅС‹С… СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
-    /// <param name="dbName">Имя базы данных</param>
-    /// <returns>Существование базы данных</returns>
+    /// <param name="dbName">РРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
+    /// <returns>РЎСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…</returns>
     public bool DatabaseExists(string dbName)
     {
       using (DBx DB = InitDB(dbName, null))
@@ -333,11 +333,11 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Создание DBxRealDocProviderGlobal
+    #region РЎРѕР·РґР°РЅРёРµ DBxRealDocProviderGlobal
 
     /// <summary>
-    /// Сюда должна быть присоединена заполненная структура с объявлениями документов.
-    /// Установка свойства приводит к инициализации свойств MainDBStruct и UndoDBStruct
+    /// РЎСЋРґР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїСЂРёСЃРѕРµРґРёРЅРµРЅР° Р·Р°РїРѕР»РЅРµРЅРЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР° СЃ РѕР±СЉСЏРІР»РµРЅРёСЏРјРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РїСЂРёРІРѕРґРёС‚ Рє РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃРІРѕР№СЃС‚РІ MainDBStruct Рё UndoDBStruct
     /// </summary>
     public DBxDocTypes DocTypes
     {
@@ -347,9 +347,9 @@ namespace FreeLibSet.Data.Docs
         if (value == null)
           throw new ArgumentNullException();
         if (value.Count == 0)
-          throw new ArgumentException("Список объявлений не заполнен");
+          throw new ArgumentException("РЎРїРёСЃРѕРє РѕР±СЉСЏРІР»РµРЅРёР№ РЅРµ Р·Р°РїРѕР»РЅРµРЅ");
         if (_DocTypes != null)
-          throw new InvalidOperationException("Повторная установка свойства");
+          throw new InvalidOperationException("РџРѕРІС‚РѕСЂРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР°");
         value.SetReadOnly();
         _DocTypes = value;
 
@@ -360,9 +360,9 @@ namespace FreeLibSet.Data.Docs
     private DBxDocTypes _DocTypes;
 
     /// <summary>
-    /// Должна ли создаваться база данных истории.
-    /// Если свойство не задано в явном виде, значение определяется автоматически, исходя
-    /// из свойств DBxDocTypes
+    /// Р”РѕР»Р¶РЅР° Р»Рё СЃРѕР·РґР°РІР°С‚СЊСЃСЏ Р±Р°Р·Р° РґР°РЅРЅС‹С… РёСЃС‚РѕСЂРёРё.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ Р·Р°РґР°РЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, Р·РЅР°С‡РµРЅРёРµ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё, РёСЃС…РѕРґСЏ
+    /// РёР· СЃРІРѕР№СЃС‚РІ DBxDocTypes
     /// </summary>
     public bool UseUndo
     {
@@ -383,8 +383,8 @@ namespace FreeLibSet.Data.Docs
     private bool? _UseUndo;
 
     /// <summary>
-    /// Управление фрагментацией в DBxBinDataHandler.
-    /// Если null (по умолчанию, то определяется автоматически)
+    /// РЈРїСЂР°РІР»РµРЅРёРµ С„СЂР°РіРјРµРЅС‚Р°С†РёРµР№ РІ DBxBinDataHandler.
+    /// Р•СЃР»Рё null (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, С‚Рѕ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё)
     /// </summary>
     public bool? UseBinDataFragmentation
     {
@@ -395,42 +395,42 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Структура основной базы данных.
-    /// Свойство инициализируется после установки DocTypes.
-    /// Прикладной код может добавить собственные таблицы, не связанные с документами
+    /// РЎС‚СЂСѓРєС‚СѓСЂР° РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РЎРІРѕР№СЃС‚РІРѕ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ РїРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё DocTypes.
+    /// РџСЂРёРєР»Р°РґРЅРѕР№ РєРѕРґ РјРѕР¶РµС‚ РґРѕР±Р°РІРёС‚СЊ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹, РЅРµ СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ РґРѕРєСѓРјРµРЅС‚Р°РјРё
     /// </summary>
     public DBxStruct MainDBStruct { get { return _MainDBStruct; } }
     private DBxStruct _MainDBStruct;
 
     /// <summary>
-    /// Структура базы данных истории.
-    /// Свойство инициализируется после установки DocTypes.
-    /// Может быть null, если история не может вестить
+    /// РЎС‚СЂСѓРєС‚СѓСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С… РёСЃС‚РѕСЂРёРё.
+    /// РЎРІРѕР№СЃС‚РІРѕ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ РїРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё DocTypes.
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё РёСЃС‚РѕСЂРёСЏ РЅРµ РјРѕР¶РµС‚ РІРµСЃС‚РёС‚СЊ
     /// </summary>
     public DBxStruct UndoDBStruct { get { return _UndoDBStruct; } }
     private DBxStruct _UndoDBStruct;
 
     /// <summary>
-    /// Управляющее свойство для CreateRealDocProviderGlobal().
-    /// Если true (по умолчанию), то будет выполнен вызов DBxDocTypes.InitDocTableIds()
+    /// РЈРїСЂР°РІР»СЏСЋС‰РµРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ CreateRealDocProviderGlobal().
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅ РІС‹Р·РѕРІ DBxDocTypes.InitDocTableIds()
     /// </summary>
     public bool InitDocTableIds { get { return _InitDocTableIds; } set { _InitDocTableIds = value; } }
     private bool _InitDocTableIds;
 
     /// <summary>
-    /// Создает корневой объект для доступа к документам.
-    /// Предварительно создаются объекты:
-    /// - BinDataHandler, если есть двоичные данные и/или хранимые файлы
-    /// - Базы данных DBx "db", "undo" (при UseUndo=true) и "files" (при необходимости)
+    /// РЎРѕР·РґР°РµС‚ РєРѕСЂРЅРµРІРѕР№ РѕР±СЉРµРєС‚ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј.
+    /// РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕ СЃРѕР·РґР°СЋС‚СЃСЏ РѕР±СЉРµРєС‚С‹:
+    /// - BinDataHandler, РµСЃР»Рё РµСЃС‚СЊ РґРІРѕРёС‡РЅС‹Рµ РґР°РЅРЅС‹Рµ Рё/РёР»Рё С…СЂР°РЅРёРјС‹Рµ С„Р°Р№Р»С‹
+    /// - Р‘Р°Р·С‹ РґР°РЅРЅС‹С… DBx "db", "undo" (РїСЂРё UseUndo=true) Рё "files" (РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё)
     /// </summary>
-    /// <returns>Новый DBxRealDocProviderGlobal</returns>
+    /// <returns>РќРѕРІС‹Р№ DBxRealDocProviderGlobal</returns>
     public DBxRealDocProviderGlobal CreateRealDocProviderGlobal()
     {
       if (DocTypes == null)
-        throw new NullReferenceException("Свойство DocTypes не установлено");
+        throw new NullReferenceException("РЎРІРѕР№СЃС‚РІРѕ DocTypes РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ");
 
       DBxBinDataHandler binDataHandler;
-      DBxStruct filesDBStruct; // Структура баз данных files. Используется, если DBxBinDataHandler.UseFragmentation=true.
+      DBxStruct filesDBStruct; // РЎС‚СЂСѓРєС‚СѓСЂР° Р±Р°Р· РґР°РЅРЅС‹С… files. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РµСЃР»Рё DBxBinDataHandler.UseFragmentation=true.
       InitBinDataHandler(out binDataHandler, out filesDBStruct);
 
       DBx mainDB = InitDB("db", MainDBStruct);
@@ -438,7 +438,7 @@ namespace FreeLibSet.Data.Docs
       if (UseUndo)
       {
         if (UndoDBStruct == null)
-          throw new InvalidOperationException("При заданных настройках объекта DBxDocTypes, ведение истории невозможно");
+          throw new InvalidOperationException("РџСЂРё Р·Р°РґР°РЅРЅС‹С… РЅР°СЃС‚СЂРѕР№РєР°С… РѕР±СЉРµРєС‚Р° DBxDocTypes, РІРµРґРµРЅРёРµ РёСЃС‚РѕСЂРёРё РЅРµРІРѕР·РјРѕР¶РЅРѕ");
         undoDB = InitDB("undo", UndoDBStruct);
       }
 
@@ -450,7 +450,7 @@ namespace FreeLibSet.Data.Docs
           DBx filesDB = InitDB("files", filesDBStruct.Clone());
           binDataHandler.AddSectionEntry(filesDB.MainEntry);
 
-          // Подключаем дополнительные базы данных
+          // РџРѕРґРєР»СЋС‡Р°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
           for (int i = 2; i <= int.MaxValue; i++)
           {
             if (DatabaseExists("files" + i.ToString()))
@@ -471,7 +471,7 @@ namespace FreeLibSet.Data.Docs
       if (InitDocTableIds)
         DocTypes.InitDocTableIds(mainDB.MainEntry);
 
-      this.Splash = null; // Объект может остаться "прицепленным" к DBxBinDataHelper
+      this.Splash = null; // РћР±СЉРµРєС‚ РјРѕР¶РµС‚ РѕСЃС‚Р°С‚СЊСЃСЏ "РїСЂРёС†РµРїР»РµРЅРЅС‹Рј" Рє DBxBinDataHelper
 
       DBxEntry mainDBEntry = mainDB.MainEntry;
       DBxEntry undoDBEntry = null;
@@ -510,19 +510,19 @@ namespace FreeLibSet.Data.Docs
       {
         filesDBStruct = new DBxStruct();
         binDataHandler.AddSectionTableStructs(filesDBStruct);
-        filesDBStruct.SetReadOnly(); // потом все равно будут создаваться копии
+        filesDBStruct.SetReadOnly(); // РїРѕС‚РѕРј РІСЃРµ СЂР°РІРЅРѕ Р±СѓРґСѓС‚ СЃРѕР·РґР°РІР°С‚СЊСЃСЏ РєРѕРїРёРё
       }
     }
 
     #endregion
 
-    #region Создание БД files2, files3
+    #region РЎРѕР·РґР°РЅРёРµ Р‘Р” files2, files3
 
     /// <summary>
-    /// Обработчик события добавляет базу данных "files2", "files3"
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РґРѕР±Р°РІР»СЏРµС‚ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… "files2", "files3"
     /// </summary>
-    /// <param name="sender">Объект DBxBinDataHandler</param>
-    /// <param name="args">Не используется</param>
+    /// <param name="sender">РћР±СЉРµРєС‚ DBxBinDataHandler</param>
+    /// <param name="args">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
     void BinDataHandler_DBSizeLimitExceeded(object sender, EventArgs args)
     {
       DBxBinDataHandler binDataHandler = (DBxBinDataHandler)sender;

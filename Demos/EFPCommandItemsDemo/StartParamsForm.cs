@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,7 +11,7 @@ namespace EFPCommandItemsDemo
 {
   public partial class StartParamsForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public StartParamsForm()
     {
@@ -24,7 +24,7 @@ namespace EFPCommandItemsDemo
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public EFPRadioButtons efpUIType;
 

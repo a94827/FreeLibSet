@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -15,7 +15,7 @@ namespace FreeLibSet.Forms.Docs
 {
   internal partial class GroupGridFilterForm : OKCancelForm
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public GroupGridFilterForm(GroupDocTypeUI groupDocTypeUI)
     {
@@ -40,7 +40,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public EFPGroupDocTreeView efpGroup;
 
@@ -48,7 +48,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Статический метод установки фильтра
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ СѓСЃС‚Р°РЅРѕРІРєРё С„РёР»СЊС‚СЂР°
 
     public static bool PerformEdit(GroupDocTypeUI groupDocTypeUI, string title, string imageKey, ref Int32 groupId, ref bool includeNestedGroups, bool canBeRoot, EFPDialogPosition dialogPosition)
     {
@@ -87,25 +87,25 @@ namespace FreeLibSet.Forms.Docs
       if (args.ValidateState == UIValidateState.Error)
         return;
       if (efpGroup.CurrentId == 0)
-        args.SetError("Должна быть выбрана какая-либо группа, а не корневой узел");
+        args.SetError("Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹Р±СЂР°РЅР° РєР°РєР°СЏ-Р»РёР±Рѕ РіСЂСѓРїРїР°, Р° РЅРµ РєРѕСЂРЅРµРІРѕР№ СѓР·РµР»");
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Фильтр табличного просмотра или фильтр отчета по группе документов.
-  /// Обычно используется только в отчетах, так как табличные просмотры с группами реализуются в DocTableViewForm без необходимости ручного создания фильтра по группе
+  /// Р¤РёР»СЊС‚СЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РёР»Рё С„РёР»СЊС‚СЂ РѕС‚С‡РµС‚Р° РїРѕ РіСЂСѓРїРїРµ РґРѕРєСѓРјРµРЅС‚РѕРІ.
+  /// РћР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ РѕС‚С‡РµС‚Р°С…, С‚Р°Рє РєР°Рє С‚Р°Р±Р»РёС‡РЅС‹Рµ РїСЂРѕСЃРјРѕС‚СЂС‹ СЃ РіСЂСѓРїРїР°РјРё СЂРµР°Р»РёР·СѓСЋС‚СЃСЏ РІ DocTableViewForm Р±РµР· РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё СЂСѓС‡РЅРѕРіРѕ СЃРѕР·РґР°РЅРёСЏ С„РёР»СЊС‚СЂР° РїРѕ РіСЂСѓРїРїРµ
   /// </summary>
   public class RefGroupDocGridFilter : RefGroupDocCommonFilter, IEFPGridFilterWithImageKey
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает фильтр 
+    /// РЎРѕР·РґР°РµС‚ С„РёР»СЊС‚СЂ 
     /// </summary>
-    /// <param name="groupDocTypeUI">Интерфейс вида документов групп</param>
-    /// <param name="groupRefColumnName">Ссылочное поле на группу</param>
+    /// <param name="groupDocTypeUI">РРЅС‚РµСЂС„РµР№СЃ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ РіСЂСѓРїРї</param>
+    /// <param name="groupRefColumnName">РЎСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ РЅР° РіСЂСѓРїРїСѓ</param>
     public RefGroupDocGridFilter(GroupDocTypeUI groupDocTypeUI, string groupRefColumnName)
       : base(groupDocTypeUI.UI.DocProvider, groupDocTypeUI.DocType, groupRefColumnName)
     {
@@ -113,25 +113,25 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает фильтр
+    /// РЎРѕР·РґР°РµС‚ С„РёР»СЊС‚СЂ
     /// </summary>
-    /// <param name="ui">Интефрейс пользователя для базы данных</param>
-    /// <param name="groupDocTypeName">Имя вида документов групп</param>
-    /// <param name="groupRefColumnName">Ссылочное поле на группу</param>
+    /// <param name="ui">РРЅС‚РµС„СЂРµР№СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
+    /// <param name="groupDocTypeName">РРјСЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ РіСЂСѓРїРї</param>
+    /// <param name="groupRefColumnName">РЎСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ РЅР° РіСЂСѓРїРїСѓ</param>
     public RefGroupDocGridFilter(DBUI ui, string groupDocTypeName, string groupRefColumnName)
       : base(ui.DocProvider, groupDocTypeName, groupRefColumnName)
     {
       _GroupDocTypeUI = ui.DocTypes[groupDocTypeName] as GroupDocTypeUI;
       if (_GroupDocTypeUI == null)
-        throw new ArgumentException("Вид документов \"" + groupDocTypeName + "\" не является деревом групп", "groupDocTypeName");
+        throw new ArgumentException("Р’РёРґ РґРѕРєСѓРјРµРЅС‚РѕРІ \"" + groupDocTypeName + "\" РЅРµ СЏРІР»СЏРµС‚СЃСЏ РґРµСЂРµРІРѕРј РіСЂСѓРїРї", "groupDocTypeName");
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс вида документов групп
+    /// РРЅС‚РµСЂС„РµР№СЃ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ РіСЂСѓРїРї
     /// </summary>
     public GroupDocTypeUI GroupDocTypeUI { get { return _GroupDocTypeUI; } }
     private GroupDocTypeUI _GroupDocTypeUI;
@@ -141,7 +141,7 @@ namespace FreeLibSet.Forms.Docs
     #region IEFPGridFilter Members
 
     /// <summary>
-    /// Текстовое представление для значения фильтра
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ С„РёР»СЊС‚СЂР°
     /// </summary>
     public string FilterText
     {
@@ -152,7 +152,7 @@ namespace FreeLibSet.Forms.Docs
           if (IncludeNestedGroups)
             return String.Empty;
           else
-            return "Документы без групп";
+            return "Р”РѕРєСѓРјРµРЅС‚С‹ Р±РµР· РіСЂСѓРїРї";
         }
         else
         {
@@ -161,7 +161,7 @@ namespace FreeLibSet.Forms.Docs
           {
             if (AuxFilterGroupIdList.Count > 1)
             {
-              s += " и вложенные группы";
+              s += " Рё РІР»РѕР¶РµРЅРЅС‹Рµ РіСЂСѓРїРїС‹";
             }
           }
           return s;
@@ -170,7 +170,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Значок для значения фильтра
+    /// Р—РЅР°С‡РѕРє РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ С„РёР»СЊС‚СЂР°
     /// </summary>
     public string FilterImageKey
     {
@@ -194,7 +194,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Показывает диалог установки фильтра
+    /// РџРѕРєР°Р·С‹РІР°РµС‚ РґРёР°Р»РѕРі СѓСЃС‚Р°РЅРѕРІРєРё С„РёР»СЊС‚СЂР°
     /// </summary>
     /// <returns></returns>
     public bool ShowFilterDialog(EFPDialogPosition dialogPosition)

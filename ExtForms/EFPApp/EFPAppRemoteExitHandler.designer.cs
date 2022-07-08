@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+п»їnamespace FreeLibSet.Forms
 {
   partial class EFPAppRemoteExitForm
   {
@@ -92,7 +92,7 @@ namespace FreeLibSet.Forms
       this.grpMessage.Size = new System.Drawing.Size(390, 71);
       this.grpMessage.TabIndex = 1;
       this.grpMessage.TabStop = false;
-      this.grpMessage.Text = "Сообщение";
+      this.grpMessage.Text = "РЎРѕРѕР±С‰РµРЅРёРµ";
       // 
       // edMessage
       // 
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(21, 21);
       this.label4.TabIndex = 2;
-      this.label4.Text = "с.";
+      this.label4.Text = "СЃ.";
       this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // lblTime
@@ -140,7 +140,7 @@ namespace FreeLibSet.Forms
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(300, 21);
       this.label2.TabIndex = 0;
-      this.label2.Text = "Попытка закрытия программы будет выполнена через";
+      this.label2.Text = "РџРѕРїС‹С‚РєР° Р·Р°РєСЂС‹С‚РёСЏ РїСЂРѕРіСЂР°РјРјС‹ Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅР° С‡РµСЂРµР·";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // groupBox2
@@ -168,7 +168,7 @@ namespace FreeLibSet.Forms
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(176, 24);
       this.btnClose.TabIndex = 1;
-      this.btnClose.Text = "Закрыть сейчас";
+      this.btnClose.Text = "Р—Р°РєСЂС‹С‚СЊ СЃРµР№С‡Р°СЃ";
       this.btnClose.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -179,7 +179,7 @@ namespace FreeLibSet.Forms
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(176, 24);
       this.btnCancel.TabIndex = 2;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // EFPAppRemoteExitForm
@@ -197,7 +197,7 @@ namespace FreeLibSet.Forms
       this.MinimizeBox = false;
       this.Name = "EFPAppRemoteExitForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Завершение работы";
+      this.Text = "Р—Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹";
       this.groupBox1.ResumeLayout(false);
       this.grpMessage.ResumeLayout(false);
       this.grpMessage.PerformLayout();

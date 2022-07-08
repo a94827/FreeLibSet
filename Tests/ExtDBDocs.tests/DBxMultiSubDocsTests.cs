@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -9,13 +9,13 @@ using FreeLibSet.Core;
 namespace ExtDBDocs_tests.Data_Docs
 {
   /// <summary>
-  /// Тестирование объекта DBxMultiSubDocs в режиме, используемом для редактирования поддокументов из таблицы DBxSubDocGridView в редакторе документа.
-  /// Конструктор DBxMultiSubDocsTests создает отдельный набор на время редактирования поддокумента(ов), который затем сливается с основным набором.
+  /// РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РѕР±СЉРµРєС‚Р° DBxMultiSubDocs РІ СЂРµР¶РёРјРµ, РёСЃРїРѕР»СЊР·СѓРµРјРѕРј РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ РёР· С‚Р°Р±Р»РёС†С‹ DBxSubDocGridView РІ СЂРµРґР°РєС‚РѕСЂРµ РґРѕРєСѓРјРµРЅС‚Р°.
+  /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ DBxMultiSubDocsTests СЃРѕР·РґР°РµС‚ РѕС‚РґРµР»СЊРЅС‹Р№ РЅР°Р±РѕСЂ РЅР° РІСЂРµРјСЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°(РѕРІ), РєРѕС‚РѕСЂС‹Р№ Р·Р°С‚РµРј СЃР»РёРІР°РµС‚СЃСЏ СЃ РѕСЃРЅРѕРІРЅС‹Рј РЅР°Р±РѕСЂРѕРј.
   /// </summary>
   [TestFixture]
   public class DBxMultiSubDocsTests : DBxDocSetTestsBase
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_DataRows([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
@@ -25,11 +25,11 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Edit(docId);
-      doc.SubDocs["SD11"][0].Values["F111"].SetString("DDD"); // меняем значение
+      doc.SubDocs["SD11"][0].Values["F111"].SetString("DDD"); // РјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ
 
       DataView dv = ds[0].SubDocs["SD11"].SubDocsView;
       Assert.AreEqual(3, dv.Count, "SubDocsView.Count");
-      DataRow[] rows = new DataRow[2] { dv[0].Row, dv[2].Row }; // одну пропустили
+      DataRow[] rows = new DataRow[2] { dv[0].Row, dv[2].Row }; // РѕРґРЅСѓ РїСЂРѕРїСѓСЃС‚РёР»Рё
 
       DBxMultiSubDocs sut = new DBxMultiSubDocs(ds[0].SubDocs["SD11"], rows);
 
@@ -37,8 +37,8 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreNotSame(dv.Table, sut.SubDocsView.Table, "Table");
       Assert.AreEqual(2, sut.SubDocCount, "SubDocCount");
       Assert.AreEqual(sut[0].SubDocId, rows[0]["Id"], "SubDocId[0]");
-      Assert.AreEqual("DDD", sut[0].Values["F111"].AsString, "Value[0]"); // Значение изменено
-      Assert.AreEqual(DBxDocState.View, sut[0].SubDocState, "SubDocState[0]"); // а не Edit, как у оригинала поддокумента
+      Assert.AreEqual("DDD", sut[0].Values["F111"].AsString, "Value[0]"); // Р—РЅР°С‡РµРЅРёРµ РёР·РјРµРЅРµРЅРѕ
+      Assert.AreEqual(DBxDocState.View, sut[0].SubDocState, "SubDocState[0]"); // Р° РЅРµ Edit, РєР°Рє Сѓ РѕСЂРёРіРёРЅР°Р»Р° РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°
 
       Assert.AreEqual(sut[1].SubDocId, rows[1]["Id"], "SubDocId[1]");
       Assert.AreEqual("CCC", sut[1].Values["F111"].AsString, "Value[1]");
@@ -53,7 +53,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Edit(docId);
-      doc.SubDocs["SD11"][0].Values["F111"].SetString("DDD"); // меняем значение
+      doc.SubDocs["SD11"][0].Values["F111"].SetString("DDD"); // РјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ
 
       DataView dv = ds[0].SubDocs["SD11"].SubDocsView;
       Assert.AreEqual(3, dv.Count, "SubDocsView.Count");
@@ -65,8 +65,8 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreNotSame(dv.Table, sut.SubDocsView.Table, "Table");
       Assert.AreEqual(2, sut.SubDocCount, "SubDocCount");
       Assert.AreEqual(sut[0].SubDocId, subDocIds[0], "SubDocId[0]");
-      Assert.AreEqual("DDD", sut[0].Values["F111"].AsString, "Value[0]"); // Значение изменено
-      Assert.AreEqual(DBxDocState.View, sut[0].SubDocState, "SubDocState[0]"); // а не Edit, как у оригинала поддокумента
+      Assert.AreEqual("DDD", sut[0].Values["F111"].AsString, "Value[0]"); // Р—РЅР°С‡РµРЅРёРµ РёР·РјРµРЅРµРЅРѕ
+      Assert.AreEqual(DBxDocState.View, sut[0].SubDocState, "SubDocState[0]"); // Р° РЅРµ Edit, РєР°Рє Сѓ РѕСЂРёРіРёРЅР°Р»Р° РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°
 
       Assert.AreEqual(sut[1].SubDocId, subDocIds[1], "SubDocId[1]");
       Assert.AreEqual("CCC", sut[1].Values["F111"].AsString, "Value[1]");
@@ -99,7 +99,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #endregion
 
-    #region Сценарии использования
+    #region РЎС†РµРЅР°СЂРёРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ
 
     [Test]
     public void Scenario_Insert_Insert([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
@@ -108,7 +108,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Insert();
-      doc.Values["F101"].SetBoolean(false); // обязательное поле
+      doc.Values["F101"].SetBoolean(false); // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕРµ РїРѕР»Рµ
 
       DBxMultiSubDocs sut = new DBxMultiSubDocs(ds[0].SubDocs["SD11"], DataTools.EmptyIds);
       DBxSubDoc sdoc = sut.Insert();
@@ -143,9 +143,9 @@ namespace ExtDBDocs_tests.Data_Docs
 
       ds[0].SubDocs["SD11"].MergeSubSet(sut);
       Assert.AreEqual(4, doc.SubDocs["SD11"].SubDocCount, "SubDocCount");
-      // После добавления, поддокументы могли оказаться в другом порядке.
-      // Если сортировка по умолчанию выполняется по идентификатору поддокумента, то он будет первым по
-      // счету, но на это не стоит полагаться
+      // РџРѕСЃР»Рµ РґРѕР±Р°РІР»РµРЅРёСЏ, РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹ РјРѕРіР»Рё РѕРєР°Р·Р°С‚СЊСЃСЏ РІ РґСЂСѓРіРѕРј РїРѕСЂСЏРґРєРµ.
+      // Р•СЃР»Рё СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°, С‚Рѕ РѕРЅ Р±СѓРґРµС‚ РїРµСЂРІС‹Рј РїРѕ
+      // СЃС‡РµС‚Сѓ, РЅРѕ РЅР° СЌС‚Рѕ РЅРµ СЃС‚РѕРёС‚ РїРѕР»Р°РіР°С‚СЊСЃСЏ
 
       DBxSubDoc sd = doc.SubDocs["SD11"].GetSubDocById(orgSubDocIds[0]);
       Assert.AreEqual("AAA", sd.Values["F111"].AsString, "Value[0]");
@@ -166,7 +166,7 @@ namespace ExtDBDocs_tests.Data_Docs
       ds.ApplyChanges(false);
       ds = new DBxDocSet(info.Provider);
       doc = ds["D1"].View(docId);
-      // После повторного открытия документа, поддокументы будут идти в предсказуемом порядке
+      // РџРѕСЃР»Рµ РїРѕРІС‚РѕСЂРЅРѕРіРѕ РѕС‚РєСЂС‹С‚РёСЏ РґРѕРєСѓРјРµРЅС‚Р°, РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹ Р±СѓРґСѓС‚ РёРґС‚Рё РІ РїСЂРµРґСЃРєР°Р·СѓРµРјРѕРј РїРѕСЂСЏРґРєРµ
       Assert.AreEqual("AAA", doc.SubDocs["SD11"][0].Values["F111"].AsString, "Saved Value[0]");
       Assert.AreEqual("BBB", doc.SubDocs["SD11"][1].Values["F111"].AsString, "Saved Value[1]");
       Assert.AreEqual("CCC", doc.SubDocs["SD11"][2].Values["F111"].AsString, "Saved Value[2]");

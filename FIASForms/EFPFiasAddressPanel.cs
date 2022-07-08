@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -16,19 +16,19 @@ using FreeLibSet.Controls.FIAS;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Провайдер панели редактора адреса
+  /// РџСЂРѕРІР°Р№РґРµСЂ РїР°РЅРµР»Рё СЂРµРґР°РєС‚РѕСЂР° Р°РґСЂРµСЃР°
   /// </summary>
   public class EFPFiasAddressPanel : EFPControl<FiasAddressPanel>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
-    /// <param name="ui">Ссылка на пользовательский интерфейс ФИАС</param>
-    /// <param name="editorLevel">Уровень адреса, до которого можно редактировать</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
+    /// <param name="ui">РЎСЃС‹Р»РєР° РЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ Р¤РРђРЎ</param>
+    /// <param name="editorLevel">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР°, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</param>
     public EFPFiasAddressPanel(EFPBaseProvider baseProvider, FiasAddressPanel control, FiasUI ui, FiasEditorLevel editorLevel)
       : base(baseProvider, control, false)
     {
@@ -36,11 +36,11 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="ui">Ссылка на пользовательский интерфейс ФИАС</param>
-    /// <param name="editorLevel">Уровень адреса, до которого можно редактировать</param>
+    /// <param name="controlWithToolBar">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="ui">РЎСЃС‹Р»РєР° РЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ Р¤РРђРЎ</param>
+    /// <param name="editorLevel">РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР°, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</param>
     public EFPFiasAddressPanel(EFPControlWithToolBar<FiasAddressPanel> controlWithToolBar, FiasUI ui, FiasEditorLevel editorLevel)
       : base(controlWithToolBar, false)
     {
@@ -74,7 +74,7 @@ namespace FreeLibSet.Forms.FIAS
         case FiasEditorLevel.Street: HasStreet = true; HasHouse = false; HasRoom = false; break;
         case FiasEditorLevel.House: HasStreet = true; HasHouse = true; HasRoom = false; break;
         case FiasEditorLevel.Room: HasStreet = true; HasHouse = true; HasRoom = true; break;
-        default: throw new BugException("Неправильный EditorSettings.Level");
+        default: throw new BugException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ EditorSettings.Level");
       }
 
       if (HasStreet)
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       efpManualPostalCode = new EFPCheckBox(BaseProvider, Control.cbManualPostalCode);
-      efpManualPostalCode.ToolTipText = "Позволяет переопределить почтовый индекс, если он не определяется или задан неправильно в классификаторе ФИАС";
+      efpManualPostalCode.ToolTipText = "РџРѕР·РІРѕР»СЏРµС‚ РїРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ, РµСЃР»Рё РѕРЅ РЅРµ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РёР»Рё Р·Р°РґР°РЅ РЅРµРїСЂР°РІРёР»СЊРЅРѕ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂРµ Р¤РРђРЎ";
 
       efpPostalCode = new EFPMaskedTextBox(BaseProvider, Control.edPostalCode);
       efpPostalCode.CanBeEmptyMode = UIValidateState.Warning;
@@ -123,21 +123,21 @@ namespace FreeLibSet.Forms.FIAS
       _TextView = new EFPTextBox(this.BaseProvider, this.Control.edTextView);
       _TextView.CommandItems.UseStatusBarRC = false;
 
-      #region Кнопки
+      #region РљРЅРѕРїРєРё
 
       Control.btnCopy.Image = EFPApp.MainImages.Images["Copy"];
       Control.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
       efpCopy = new EFPButton(this.BaseProvider, Control.btnCopy);
-      efpCopy.DisplayName = "Копировать адрес";
-      efpCopy.ToolTipText = "Копирует адрес в буфер обмена в кодированном текстовом формате";
+      efpCopy.DisplayName = "РљРѕРїРёСЂРѕРІР°С‚СЊ Р°РґСЂРµСЃ";
+      efpCopy.ToolTipText = "РљРѕРїРёСЂСѓРµС‚ Р°РґСЂРµСЃ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° РІ РєРѕРґРёСЂРѕРІР°РЅРЅРѕРј С‚РµРєСЃС‚РѕРІРѕРј С„РѕСЂРјР°С‚Рµ";
       efpCopy.Click += new EventHandler(efpCopy_Click);
 
       Control.btnPaste.Image = EFPApp.MainImages.Images["Paste"];
       Control.btnPaste.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
       efpPaste = new EFPButton(this.BaseProvider, Control.btnPaste);
-      efpPaste.DisplayName = "Вставить адрес";
-      efpPaste.ToolTipText = "Вставляет ранее скопированный адрес из буфера обмена." + Environment.NewLine +
-        "Все адресные элементы будут заменены или очищены";
+      efpPaste.DisplayName = "Р’СЃС‚Р°РІРёС‚СЊ Р°РґСЂРµСЃ";
+      efpPaste.ToolTipText = "Р’СЃС‚Р°РІР»СЏРµС‚ СЂР°РЅРµРµ СЃРєРѕРїРёСЂРѕРІР°РЅРЅС‹Р№ Р°РґСЂРµСЃ РёР· Р±СѓС„РµСЂР° РѕР±РјРµРЅР°." + Environment.NewLine +
+        "Р’СЃРµ Р°РґСЂРµСЃРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ Р±СѓРґСѓС‚ Р·Р°РјРµРЅРµРЅС‹ РёР»Рё РѕС‡РёС‰РµРЅС‹";
       efpPaste.Click += new EventHandler(efpPaste_Click);
 
 
@@ -146,32 +146,32 @@ namespace FreeLibSet.Forms.FIAS
       _ErrorButton.AutoImageKey = true;
 
       _MoreButton = new EFPButtonWithMenu(this.BaseProvider, this.Control.btnMore);
-      _MoreButton.DisplayName = "Еще";
-      _MoreButton.ToolTipText = "Меню с дополнительными командами";
+      _MoreButton.DisplayName = "Р•С‰Рµ";
+      _MoreButton.ToolTipText = "РњРµРЅСЋ СЃ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹РјРё РєРѕРјР°РЅРґР°РјРё";
 
       _CmdSearch = new EFPCommandItem("View", "Search");
-      _CmdSearch.MenuText = "Найти адресный объект";
+      _CmdSearch.MenuText = "РќР°Р№С‚Рё Р°РґСЂРµСЃРЅС‹Р№ РѕР±СЉРµРєС‚";
       _CmdSearch.ImageKey = "Find";
-      _CmdSearch.ToolTipText = "Поиск адресного объекта";
+      _CmdSearch.ToolTipText = "РџРѕРёСЃРє Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°";
       _CmdSearch.Click += new EventHandler(CmdSearch_Click);
       _CmdSearch.Enabled = _Handler.AddressSearchEnabled;
       _MoreButton.CommandItems.Add(_CmdSearch);
 
       _CmdDetails = new EFPCommandItem("View", "Details");
-      _CmdDetails.MenuText = "Подробности";
+      _CmdDetails.MenuText = "РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё";
       _CmdDetails.ImageKey = "Fias.Details";
-      _CmdDetails.ToolTipText = "Подробная информация по каждому уровню классификатора ФИАС";
+      _CmdDetails.ToolTipText = "РџРѕРґСЂРѕР±РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РїРѕ РєР°Р¶РґРѕРјСѓ СѓСЂРѕРІРЅСЋ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ";
       _CmdDetails.Click += new EventHandler(CmdDetails_Click);
       _MoreButton.CommandItems.Add(_CmdDetails);
 
       _CmdClear = new EFPCommandItem("Edit", "Clear");
-      _CmdClear.MenuText = "Очистить адрес";
+      _CmdClear.MenuText = "РћС‡РёСЃС‚РёС‚СЊ Р°РґСЂРµСЃ";
       _CmdClear.ImageKey = "No";
       _CmdClear.Click += new EventHandler(CmdClear_Click);
       _MoreButton.CommandItems.Add(_CmdClear);
 
       EFPCommandItem CmdDBSettings = new EFPCommandItem("View", "DBSettings");
-      CmdDBSettings.MenuText = "Посмотреть настройки классификатора ФИАС";
+      CmdDBSettings.MenuText = "РџРѕСЃРјРѕС‚СЂРµС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ";
       CmdDBSettings.Click += new EventHandler(CmdDBSettings_Click);
       CmdDBSettings.GroupBegin = true;
       CmdDBSettings.GroupEnd = true;
@@ -186,7 +186,7 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Выполняет первое обновление полей адреса
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїРµСЂРІРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ РїРѕР»РµР№ Р°РґСЂРµСЃР°
     /// </summary>
     protected override void OnAttached()
     {
@@ -196,15 +196,15 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает "Адрес".
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "РђРґСЂРµСЃ".
     /// </summary>
-    protected override string DefaultDisplayName { get { return "Адрес"; } }
+    protected override string DefaultDisplayName { get { return "РђРґСЂРµСЃ"; } }
 
     /// <summary>
-    /// Пользовательский интерфейс
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ
     /// </summary>
     public FiasUI UI { get { return _UI; } }
     private FiasUI _UI;
@@ -212,8 +212,8 @@ namespace FreeLibSet.Forms.FIAS
     private FiasHandler _Handler;
 
     /// <summary>
-    /// Уровень, до которого можно вводить адрес.
-    /// Задается в конструкторе
+    /// РЈСЂРѕРІРµРЅСЊ, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ РІРІРѕРґРёС‚СЊ Р°РґСЂРµСЃ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public FiasEditorLevel EditorLevel { get { return _EditorLevel; } }
     private FiasEditorLevel _EditorLevel;
@@ -228,8 +228,8 @@ namespace FreeLibSet.Forms.FIAS
     private EFPMaskedTextBox efpPostalCode;
 
     /// <summary>
-    /// Можно ли редактировать почтовый индекс?
-    /// По умолчанию - true
+    /// РњРѕР¶РЅРѕ Р»Рё СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true
     /// </summary>
     public bool PostalCodeEditable
     {
@@ -244,12 +244,12 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Задает минимальный уровень адреса, который должен быть выбран из справочника, а не задан вручную.
-    /// По умолчанию - FiasLevel.City, то есть регион, район и город должны быть в справочнике ФИАС, а населенный пункт,
-    /// при необходимости - введен вручную, если его нет в справочнике.
-    /// Значение Unknown отключает все проверки. 
-    /// Допускаются любые значения, включая House и Room, если они не выходят за пределы FiasEditorLevel.
-    /// Свойство можно устанавливать только до вывода элемента на экран. 
+    /// Р—Р°РґР°РµС‚ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР°, РєРѕС‚РѕСЂС‹Р№ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°, Р° РЅРµ Р·Р°РґР°РЅ РІСЂСѓС‡РЅСѓСЋ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FiasLevel.City, С‚Рѕ РµСЃС‚СЊ СЂРµРіРёРѕРЅ, СЂР°Р№РѕРЅ Рё РіРѕСЂРѕРґ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ Р¤РРђРЎ, Р° РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚,
+    /// РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё - РІРІРµРґРµРЅ РІСЂСѓС‡РЅСѓСЋ, РµСЃР»Рё РµРіРѕ РЅРµС‚ РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ.
+    /// Р—РЅР°С‡РµРЅРёРµ Unknown РѕС‚РєР»СЋС‡Р°РµС‚ РІСЃРµ РїСЂРѕРІРµСЂРєРё. 
+    /// Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ Р»СЋР±С‹Рµ Р·РЅР°С‡РµРЅРёСЏ, РІРєР»СЋС‡Р°СЏ House Рё Room, РµСЃР»Рё РѕРЅРё РЅРµ РІС‹С…РѕРґСЏС‚ Р·Р° РїСЂРµРґРµР»С‹ FiasEditorLevel.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ С‚РѕР»СЊРєРѕ РґРѕ РІС‹РІРѕРґР° СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РЅ. 
     /// </summary>
     public FiasLevel MinRefBookLevel
     {
@@ -264,7 +264,7 @@ namespace FreeLibSet.Forms.FIAS
             switch (EditorLevel)
             {
               case FiasEditorLevel.Village:
-                throw new ArgumentOutOfRangeException("value", value, "Несовместимо с EditorLevel=" + EditorLevel.ToString());
+                throw new ArgumentOutOfRangeException("value", value, "РќРµСЃРѕРІРјРµСЃС‚РёРјРѕ СЃ EditorLevel=" + EditorLevel.ToString());
             }
             break;
           case FiasLevel.House:
@@ -275,7 +275,7 @@ namespace FreeLibSet.Forms.FIAS
             {
               case FiasEditorLevel.Village:
               case FiasEditorLevel.Street:
-                throw new ArgumentOutOfRangeException("value", value, "Несовместимо с EditorLevel=" + EditorLevel.ToString());
+                throw new ArgumentOutOfRangeException("value", value, "РќРµСЃРѕРІРјРµСЃС‚РёРјРѕ СЃ EditorLevel=" + EditorLevel.ToString());
             }
             break;
           case FiasLevel.Flat:
@@ -286,7 +286,7 @@ namespace FreeLibSet.Forms.FIAS
               case FiasEditorLevel.Village:
               case FiasEditorLevel.Street:
               case FiasEditorLevel.House:
-                throw new ArgumentOutOfRangeException("value", value, "Несовместимо с EditorLevel=" + EditorLevel.ToString());
+                throw new ArgumentOutOfRangeException("value", value, "РќРµСЃРѕРІРјРµСЃС‚РёРјРѕ СЃ EditorLevel=" + EditorLevel.ToString());
             }
             break;
         }
@@ -297,15 +297,15 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Адресные объекты
+    #region РђРґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹
 
     /// <summary>
-    /// Расширение провайдера текстовых полей наименований и сокращений.
-    /// Поддерживают отложенную обработку события TextBox.Leave
+    /// Р Р°СЃС€РёСЂРµРЅРёРµ РїСЂРѕРІР°Р№РґРµСЂР° С‚РµРєСЃС‚РѕРІС‹С… РїРѕР»РµР№ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ Рё СЃРѕРєСЂР°С‰РµРЅРёР№.
+    /// РџРѕРґРґРµСЂР¶РёРІР°СЋС‚ РѕС‚Р»РѕР¶РµРЅРЅСѓСЋ РѕР±СЂР°Р±РѕС‚РєСѓ СЃРѕР±С‹С‚РёСЏ TextBox.Leave
     /// </summary>
     private class EFPTextBox2 : EFPTextBox
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public EFPTextBox2(EFPBaseProvider baseProvider, TextBox control)
         : base(baseProvider, control)
@@ -319,7 +319,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Событие Leave
+      #region РЎРѕР±С‹С‚РёРµ Leave
 
       private bool _LeaveFlag;
 
@@ -348,12 +348,12 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Отслеживание изменений в тексте
+      #region РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РёР·РјРµРЅРµРЅРёР№ РІ С‚РµРєСЃС‚Рµ
 
       private string _OrgText;
 
       /// <summary>
-      /// Вызывается при обновлении свойства Address()
+      /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё СЃРІРѕР№СЃС‚РІР° Address()
       /// </summary>
       public void SetText(string value)
       {
@@ -366,24 +366,24 @@ namespace FreeLibSet.Forms.FIAS
       //#region DisabledText
 
       ///// <summary>
-      ///// Для полей сокращений
-      ///// Свойство ReadOnly не приводит к установке текста "[xxx]".
-      ///// Возвращаем свойство, как оно определено в EFPTextBoxBase
+      ///// Р”Р»СЏ РїРѕР»РµР№ СЃРѕРєСЂР°С‰РµРЅРёР№
+      ///// РЎРІРѕР№СЃС‚РІРѕ ReadOnly РЅРµ РїСЂРёРІРѕРґРёС‚ Рє СѓСЃС‚Р°РЅРѕРІРєРµ С‚РµРєСЃС‚Р° "[xxx]".
+      ///// Р’РѕР·РІСЂР°С‰Р°РµРј СЃРІРѕР№СЃС‚РІРѕ, РєР°Рє РѕРЅРѕ РѕРїСЂРµРґРµР»РµРЅРѕ РІ EFPTextBoxBase
       ///// </summary>
       //public override bool IsDisabledText
       //{
       //  get
       //  {
-      //    return AllowDisabledText && (!Enabled); // без ReadOnly
+      //    return AllowDisabledText && (!Enabled); // Р±РµР· ReadOnly
       //  }
       //}
 
       //#endregion
 
-      #region Проверка текущего значения
+      #region РџСЂРѕРІРµСЂРєР° С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ
 
       /// <summary>
-      /// Список сообщений, относящихся к этому уровню
+      /// РЎРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№, РѕС‚РЅРѕСЃСЏС‰РёС…СЃСЏ Рє СЌС‚РѕРјСѓ СѓСЂРѕРІРЅСЋ
       /// </summary>
       public ErrorMessageList Errors
       {
@@ -391,7 +391,7 @@ namespace FreeLibSet.Forms.FIAS
         set
         {
           if (Object.ReferenceEquals(value, _Errors))
-            return; // оба списка равны ErrorMessageList.Empty
+            return; // РѕР±Р° СЃРїРёСЃРєР° СЂР°РІРЅС‹ ErrorMessageList.Empty
           _Errors = value;
           Validate();
         }
@@ -418,7 +418,7 @@ namespace FreeLibSet.Forms.FIAS
 
         if (_OrgText == base.Text)
         {
-          // Ошибки показываем только когда текст не изменился
+          // РћС€РёР±РєРё РїРѕРєР°Р·С‹РІР°РµРј С‚РѕР»СЊРєРѕ РєРѕРіРґР° С‚РµРєСЃС‚ РЅРµ РёР·РјРµРЅРёР»СЃСЏ
           switch (_Errors.Severity)
           {
             case ErrorMessageKind.Error:
@@ -435,12 +435,12 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Расширение провайдера текстовых полей наименований и сокращений.
-    /// Поддерживают отложенную обработку события TextBox.Leave
+    /// Р Р°СЃС€РёСЂРµРЅРёРµ РїСЂРѕРІР°Р№РґРµСЂР° С‚РµРєСЃС‚РѕРІС‹С… РїРѕР»РµР№ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ Рё СЃРѕРєСЂР°С‰РµРЅРёР№.
+    /// РџРѕРґРґРµСЂР¶РёРІР°СЋС‚ РѕС‚Р»РѕР¶РµРЅРЅСѓСЋ РѕР±СЂР°Р±РѕС‚РєСѓ СЃРѕР±С‹С‚РёСЏ TextBox.Leave
     /// </summary>
     private class EFPComboBox2 : EFPTextComboBox
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public EFPComboBox2(EFPBaseProvider baseProvider, ComboBox control)
         : base(baseProvider, control)
@@ -455,7 +455,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Событие Leave
+      #region РЎРѕР±С‹С‚РёРµ Leave
 
       private bool _LeaveFlag;
 
@@ -484,12 +484,12 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Отслеживание изменений в тексте
+      #region РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РёР·РјРµРЅРµРЅРёР№ РІ С‚РµРєСЃС‚Рµ
 
       private string _OrgText;
 
       /// <summary>
-      /// Вызывается при обновлении свойства Address()
+      /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё СЃРІРѕР№СЃС‚РІР° Address()
       /// </summary>
       public void SetText(string value)
       {
@@ -498,16 +498,16 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       /// <summary>
-      /// Свойство DroppedDown работает с задержкой
+      /// РЎРІРѕР№СЃС‚РІРѕ DroppedDown СЂР°Р±РѕС‚Р°РµС‚ СЃ Р·Р°РґРµСЂР¶РєРѕР№
       /// </summary>
       private bool _HideErrors;
 
       void Control_DropDown(object sender, EventArgs args)
       {
-        // Отключаем подсветку ошибок при открытии выпадающего списка.
-        // Зачем нам красный список?
+        // РћС‚РєР»СЋС‡Р°РµРј РїРѕРґСЃРІРµС‚РєСѓ РѕС€РёР±РѕРє РїСЂРё РѕС‚РєСЂС‹С‚РёРё РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР°.
+        // Р—Р°С‡РµРј РЅР°Рј РєСЂР°СЃРЅС‹Р№ СЃРїРёСЃРѕРє?
         _HideErrors = true;
-        Control.ForeColor = System.Drawing.SystemColors.ControlText; // вдруг OnValidate() будет вызван с задержкой в будущих версиях
+        Control.ForeColor = System.Drawing.SystemColors.ControlText; // РІРґСЂСѓРі OnValidate() Р±СѓРґРµС‚ РІС‹Р·РІР°РЅ СЃ Р·Р°РґРµСЂР¶РєРѕР№ РІ Р±СѓРґСѓС‰РёС… РІРµСЂСЃРёСЏС…
         Validate();
       }
 
@@ -520,10 +520,10 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Проверка текущего значения
+      #region РџСЂРѕРІРµСЂРєР° С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ
 
       /// <summary>
-      /// Список сообщений, относящихся к этому уровню
+      /// РЎРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№, РѕС‚РЅРѕСЃСЏС‰РёС…СЃСЏ Рє СЌС‚РѕРјСѓ СѓСЂРѕРІРЅСЋ
       /// </summary>
       public ErrorMessageList Errors
       {
@@ -531,7 +531,7 @@ namespace FreeLibSet.Forms.FIAS
         set
         {
           if (Object.ReferenceEquals(value, _Errors))
-            return; // оба списка равны ErrorMessageList.Empty
+            return; // РѕР±Р° СЃРїРёСЃРєР° СЂР°РІРЅС‹ ErrorMessageList.Empty
           _Errors = value;
           Validate();
         }
@@ -561,7 +561,7 @@ namespace FreeLibSet.Forms.FIAS
 
         if (_OrgText == base.Text)
         {
-          // Ошибки показываем только когда текст не изменился
+          // РћС€РёР±РєРё РїРѕРєР°Р·С‹РІР°РµРј С‚РѕР»СЊРєРѕ РєРѕРіРґР° С‚РµРєСЃС‚ РЅРµ РёР·РјРµРЅРёР»СЃСЏ
           switch (_Errors.Severity)
           {
             case ErrorMessageKind.Error:
@@ -578,11 +578,11 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Обработчики для пары полей наименования и типа адресообразующего элемента
+    /// РћР±СЂР°Р±РѕС‚С‡РёРєРё РґР»СЏ РїР°СЂС‹ РїРѕР»РµР№ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ Рё С‚РёРїР° Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
     private class NameAndAOType
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public NameAndAOType(EFPFiasAddressPanel owner, TextBox edName, ComboBox cbAOType, FiasLevel level)
       {
@@ -592,7 +592,7 @@ namespace FreeLibSet.Forms.FIAS
         _Name = new EFPTextBox2(owner.BaseProvider, edName);
         _Name.Control.AutoCompleteMode = AutoCompleteMode.Append;
         _Name.Control.AutoCompleteSource = AutoCompleteSource.CustomSource;
-        _Name.DisplayName = "Наименование для уровня " + FiasEnumNames.ToString(level, true);
+        _Name.DisplayName = "РќР°РёРјРµРЅРѕРІР°РЅРёРµ РґР»СЏ СѓСЂРѕРІРЅСЏ " + FiasEnumNames.ToString(level, true);
         _Name.CommandItems.UseStatusBarRC = false;
         _Name.ReadOnlyEx = _Owner.ReadOnlyEx;
         _Name.Validating += new UIValidatingEventHandler(Name_Validating); // 03.03.2021
@@ -600,7 +600,7 @@ namespace FreeLibSet.Forms.FIAS
         _AOType = new EFPComboBox2(owner.BaseProvider, cbAOType);
         _AOType.Control.AutoCompleteMode = AutoCompleteMode.Append;
         _AOType.Control.AutoCompleteSource = AutoCompleteSource.CustomSource;
-        _AOType.DisplayName = "Сокращение для уровня " + FiasEnumNames.ToString(level, true);
+        _AOType.DisplayName = "РЎРѕРєСЂР°С‰РµРЅРёРµ РґР»СЏ СѓСЂРѕРІРЅСЏ " + FiasEnumNames.ToString(level, true);
         _AOType.CommandItems.UseStatusBarRC = false;
 
         _AllAOTypes = _Owner._Handler.AOTypes.GetAOTypes(level, FiasAOTypeMode.Full);
@@ -612,7 +612,7 @@ namespace FreeLibSet.Forms.FIAS
         EFPCommandItem ci;
 
         ci = new EFPCommandItem("Edit", "SelectAOType");
-        ci.MenuText = "Список возможных типов";
+        ci.MenuText = "РЎРїРёСЃРѕРє РІРѕР·РјРѕР¶РЅС‹С… С‚РёРїРѕРІ";
         ci.Click += new EventHandler(ciSelectAOType_Click);
         ci.EnabledEx = new DepNot(_Owner.ReadOnlyEx);
         ci.GroupBegin = true;
@@ -657,7 +657,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public EFPFiasAddressPanel Owner { get { return _Owner; } }
       private EFPFiasAddressPanel _Owner;
@@ -666,27 +666,27 @@ namespace FreeLibSet.Forms.FIAS
       private FiasLevel _Level;
 
       /// <summary>
-      /// Провайдер поля наименования
+      /// РџСЂРѕРІР°Р№РґРµСЂ РїРѕР»СЏ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ
       /// </summary>
       public EFPTextBox2 Name { get { return _Name; } }
       private EFPTextBox2 _Name;
 
       /// <summary>
-      /// Провайдер поля типа адресообразующего элемента.
-      /// Используется полное наименование типа ("улица"), а не сокращение
+      /// РџСЂРѕРІР°Р№РґРµСЂ РїРѕР»СЏ С‚РёРїР° Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°.
+      /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР° ("СѓР»РёС†Р°"), Р° РЅРµ СЃРѕРєСЂР°С‰РµРЅРёРµ
       /// </summary>
       public EFPComboBox2 AOType { get { return _AOType; } }
       private EFPComboBox2 _AOType;
 
       /// <summary>
-      /// Список всех возможных типов адресообразующих элементов для данного уровня
+      /// РЎРїРёСЃРѕРє РІСЃРµС… РІРѕР·РјРѕР¶РЅС‹С… С‚РёРїРѕРІ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ РґР»СЏ РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
       /// </summary>
       public string[] AllAOTypes { get { return _AllAOTypes; } }
       private string[] _AllAOTypes;
 
       #endregion
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       public void AddressUpdated()
       {
@@ -712,7 +712,7 @@ namespace FreeLibSet.Forms.FIAS
         else
           _AOType.SetText(String.Empty);
 
-        //_Name.ReadOnly = _Owner.ReadOnly;  сделано в конструкторе через ReadOnlyEx
+        //_Name.ReadOnly = _Owner.ReadOnly;  СЃРґРµР»Р°РЅРѕ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ С‡РµСЂРµР· ReadOnlyEx
         //_AOType.ReadOnly = _Owner.ReadOnly;
 
         ErrorMessageList errors = _Owner.Address.GetMessages(Level);
@@ -729,14 +729,14 @@ namespace FreeLibSet.Forms.FIAS
       #endregion
 
 #if XXX
-      #region Выбор типа элемента из списка
+      #region Р’С‹Р±РѕСЂ С‚РёРїР° СЌР»РµРјРµРЅС‚Р° РёР· СЃРїРёСЃРєР°
 
       void ciSelectAOType_Click(object sender, EventArgs args)
       {
         ListSelectDialog dlg = new ListSelectDialog();
-        dlg.Title = "Выбор типа адресообразующего элемента";
+        dlg.Title = "Р’С‹Р±РѕСЂ С‚РёРїР° Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°";
         dlg.Items = AllAOTypes;
-        dlg.ListTitle = "Типы";
+        dlg.ListTitle = "РўРёРїС‹";
         dlg.SelectedItem = _AOType.Text;
         dlg.DialogPosition.PopupOwnerControl = _AOType.Control;
         if (dlg.ShowDialog() != DialogResult.OK)
@@ -750,11 +750,11 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Содержит один или несколько объектов NameAndAOType (текстовые поля) и пару кнопок "Выбор" и "Очистить"
+    /// РЎРѕРґРµСЂР¶РёС‚ РѕРґРёРЅ РёР»Рё РЅРµСЃРєРѕР»СЊРєРѕ РѕР±СЉРµРєС‚РѕРІ NameAndAOType (С‚РµРєСЃС‚РѕРІС‹Рµ РїРѕР»СЏ) Рё РїР°СЂСѓ РєРЅРѕРїРѕРє "Р’С‹Р±РѕСЂ" Рё "РћС‡РёСЃС‚РёС‚СЊ"
     /// </summary>
     private abstract class ItemBase
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public ItemBase(NameAndAOType[] nas, Button btnSel, Button btnClear)
       {
@@ -762,14 +762,14 @@ namespace FreeLibSet.Forms.FIAS
 
         btnSel.Image = EFPApp.MainImages.Images["DropDown"];
         efpButtonSel = new EFPButton(this.Owner.BaseProvider, btnSel);
-        efpButtonSel.DisplayName = "Выбор";
-        efpButtonSel.ToolTipText = "Выбор из справочника " + FiasEnumNames.ToString(this.Level, true);
+        efpButtonSel.DisplayName = "Р’С‹Р±РѕСЂ";
+        efpButtonSel.ToolTipText = "Р’С‹Р±РѕСЂ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° " + FiasEnumNames.ToString(this.Level, true);
         efpButtonSel.Click += new EventHandler(efpButtonSel_Click);
 
         btnClear.Image = EFPApp.MainImages.Images["Clear"];
         efpButtonClear = new EFPButton(this.Owner.BaseProvider, btnClear);
-        efpButtonClear.DisplayName = "Очистка";
-        efpButtonClear.ToolTipText = "Очистка поля " + FiasEnumNames.ToString(this.Level, true);
+        efpButtonClear.DisplayName = "РћС‡РёСЃС‚РєР°";
+        efpButtonClear.ToolTipText = "РћС‡РёСЃС‚РєР° РїРѕР»СЏ " + FiasEnumNames.ToString(this.Level, true);
 
         DepValue<bool>[] aNotEmpty = new DepValue<bool>[nas.Length];
         for (int i = 0; i < nas.Length; i++)
@@ -778,7 +778,7 @@ namespace FreeLibSet.Forms.FIAS
         efpButtonClear.Click += new EventHandler(efpButtonClear_Click);
 
         _PageIsEmpty = true;
-        _ParentGuid = new Guid("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"); // чтобы обновилось в конструкторе
+        _ParentGuid = new Guid("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"); // С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёР»РѕСЃСЊ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
 
         for (int i = 0; i < nas.Length; i++)
         {
@@ -789,10 +789,10 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Обработчики текстовых полей
+      /// РћР±СЂР°Р±РѕС‚С‡РёРєРё С‚РµРєСЃС‚РѕРІС‹С… РїРѕР»РµР№
       /// </summary>
       protected NameAndAOType[] NAs { get { return _NAs; } }
       private NameAndAOType[] _NAs;
@@ -802,13 +802,13 @@ namespace FreeLibSet.Forms.FIAS
       public FiasLevel Level { get { return _NAs[0].Level; } }
 
       /// <summary>
-      /// Возвращает true, если страница классификатора не присоединена или не содержит строк.
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂР°РЅРёС†Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РЅРµ РїСЂРёСЃРѕРµРґРёРЅРµРЅР° РёР»Рё РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃС‚СЂРѕРє.
       /// </summary>
       protected bool PageIsEmpty { get { return _PageIsEmpty; } }
       private bool _PageIsEmpty;
 
       /// <summary>
-      /// Возвращает true, если текст не заполнен
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚РµРєСЃС‚ РЅРµ Р·Р°РїРѕР»РЅРµРЅ
       /// </summary>
       public bool IsEmpty
       {
@@ -830,10 +830,10 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       /// <summary>
-      /// Вызывается при смене или начальной установке адреса
+      /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё СЃРјРµРЅРµ РёР»Рё РЅР°С‡Р°Р»СЊРЅРѕР№ СѓСЃС‚Р°РЅРѕРІРєРµ Р°РґСЂРµСЃР°
       /// </summary>
       internal void AddressUpdated()
       {
@@ -847,8 +847,8 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       /// <summary>
-      /// Вызывается при выходе из текстового поля.
-      /// Переопределяется в AddrObItem для обработки специальных страниц
+      /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РІС‹С…РѕРґРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ.
+      /// РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІ AddrObItem РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё СЃРїРµС†РёР°Р»СЊРЅС‹С… СЃС‚СЂР°РЅРёС†
       /// </summary>
       protected virtual void OnTextBoxLeave()
       {
@@ -873,16 +873,16 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Свойство ParentGiud
+      #region РЎРІРѕР№СЃС‚РІРѕ ParentGiud
 
       /// <summary>
-      /// Идентификатор родительского адресного объекта
+      /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
       /// </summary>
       public Guid ParentGuid { get { return _ParentGuid; } }
       private Guid _ParentGuid;
 
       /// <summary>
-      /// Уровень родительского объекта, для которого задан ParentGuid
+      /// РЈСЂРѕРІРµРЅСЊ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РґР°РЅ ParentGuid
       /// </summary>
       public FiasLevel ParentLevel { get { return _ParentLevel; } }
       private FiasLevel _ParentLevel;
@@ -918,16 +918,16 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       /// <summary>
-      /// Вызывается при изменении свойства ParentGuid.
-      /// Переопределенный метод должен извлечь 
+      /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РёР·РјРµРЅРµРЅРёРё СЃРІРѕР№СЃС‚РІР° ParentGuid.
+      /// РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РёР·РІР»РµС‡СЊ 
       /// </summary>
-      /// <param name="isInheritable">True, если допускается наследование от предыдущего заданного уровня</param>
+      /// <param name="isInheritable">True, РµСЃР»Рё РґРѕРїСѓСЃРєР°РµС‚СЃСЏ РЅР°СЃР»РµРґРѕРІР°РЅРёРµ РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ</param>
       /// <param name="isPageEmpty"></param>
       protected abstract void OnParentGuidChanged(bool isInheritable, out bool isPageEmpty);
 
       #endregion
 
-      #region Обработчики кнопок
+      #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РєРЅРѕРїРѕРє
 
       private EFPButton efpButtonSel;
 
@@ -938,9 +938,9 @@ namespace FreeLibSet.Forms.FIAS
         if (PageIsEmpty)
         {
           if (ParentGuid == Guid.Empty)
-            EFPApp.ShowTempMessage("Сначала должен быть выбран элемент более высокого уровня");
+            EFPApp.ShowTempMessage("РЎРЅР°С‡Р°Р»Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ СЌР»РµРјРµРЅС‚ Р±РѕР»РµРµ РІС‹СЃРѕРєРѕРіРѕ СѓСЂРѕРІРЅСЏ");
           else
-            EFPApp.ShowTempMessage("Нет элементов уровня " + FiasEnumNames.ToString(Level, true));
+            EFPApp.ShowTempMessage("РќРµС‚ СЌР»РµРјРµРЅС‚РѕРІ СѓСЂРѕРІРЅСЏ " + FiasEnumNames.ToString(Level, true));
           return;
         }
 
@@ -976,7 +976,7 @@ namespace FreeLibSet.Forms.FIAS
 
     private class AddrObItem : ItemBase
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public AddrObItem(EFPFiasAddressPanel owner, TextBox edName, ComboBox cbAOType, Button btnSel, Button btnClear, FiasLevel level)
         : base(new NameAndAOType[1] { new NameAndAOType(owner, edName, cbAOType, level) }, btnSel, btnClear)
@@ -985,7 +985,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Корневой узел для выбора
+      #region РљРѕСЂРЅРµРІРѕР№ СѓР·РµР» РґР»СЏ РІС‹Р±РѕСЂР°
 
       protected override void OnParentGuidChanged(bool isInheritable, out bool pageIsEmpty)
       {
@@ -994,18 +994,18 @@ namespace FreeLibSet.Forms.FIAS
           switch (Level)
           {
             case FiasLevel.Region:
-              EFPApp.BeginWait("Получение справочника регионов", "FiasAddress", true);
+              EFPApp.BeginWait("РџРѕР»СѓС‡РµРЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° СЂРµРіРёРѕРЅРѕРІ", "FiasAddress", true);
               try { _Page = Owner._Handler.GetAddrObPage(Level, ParentGuid); }
               finally { EFPApp.EndWait(); }
               break;
             case FiasLevel.City:
-              EFPApp.BeginWait("Получение полного справочника городов", "FiasAddress", true);
+              EFPApp.BeginWait("РџРѕР»СѓС‡РµРЅРёРµ РїРѕР»РЅРѕРіРѕ СЃРїСЂР°РІРѕС‡РЅРёРєР° РіРѕСЂРѕРґРѕРІ", "FiasAddress", true);
               try
               { _Page = Owner._Handler.Source.GetSpecialAddrObPage(FiasSpecialPageType.AllCities, Guid.Empty); }
               finally { EFPApp.EndWait(); }
               break;
             case FiasLevel.District:
-              EFPApp.BeginWait("Получение справочника всех районов", "FiasAddress", true);
+              EFPApp.BeginWait("РџРѕР»СѓС‡РµРЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° РІСЃРµС… СЂР°Р№РѕРЅРѕРІ", "FiasAddress", true);
               try { _Page = Owner._Handler.Source.GetSpecialAddrObPage(FiasSpecialPageType.AllDistricts, Guid.Empty); }
               finally { EFPApp.EndWait(); }
               break;
@@ -1016,7 +1016,7 @@ namespace FreeLibSet.Forms.FIAS
         }
         else if (isInheritable)
         {
-          EFPApp.BeginWait("Получение адресных объектов для уровня \"" + FiasEnumNames.ToString(Level, true) + "\"", "FiasAddress", true);
+          EFPApp.BeginWait("РџРѕР»СѓС‡РµРЅРёРµ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РґР»СЏ СѓСЂРѕРІРЅСЏ \"" + FiasEnumNames.ToString(Level, true) + "\"", "FiasAddress", true);
           try
           { _Page = Owner._Handler.GetAddrObPage(Level, ParentGuid); }
           finally { EFPApp.EndWait(); }
@@ -1035,14 +1035,14 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       /// <summary>
-      /// Таблица, из которой можно делать выбор
+      /// РўР°Р±Р»РёС†Р°, РёР· РєРѕС‚РѕСЂРѕР№ РјРѕР¶РЅРѕ РґРµР»Р°С‚СЊ РІС‹Р±РѕСЂ
       /// </summary>
       private FiasCachedPageAddrOb _Page;
 
 
       #endregion
 
-      #region Выбор из справочника
+      #region Р’С‹Р±РѕСЂ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°
 
       protected override void OnButtonSelClick()
       {
@@ -1050,18 +1050,18 @@ namespace FreeLibSet.Forms.FIAS
         {
           using (OKCancelGridForm form = new OKCancelGridForm())
           {
-            form.Text = "Выбор из справочника уровня [" + FiasEnumNames.ToString(this.Level, false) + "]";
+            form.Text = "Р’С‹Р±РѕСЂ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° СѓСЂРѕРІРЅСЏ [" + FiasEnumNames.ToString(this.Level, false) + "]";
             //if (Level != FiasLevel.Region)
             if (ParentGuid != Guid.Empty)
             {
-              #region Табличка фильтров
+              #region РўР°Р±Р»РёС‡РєР° С„РёР»СЊС‚СЂРѕРІ
 
               //InfoLabel lbl = form.AddInfoLabel(DockStyle.Top);
               //lbl.Text = "PARENTGUID=" + ParentGuid.ToString();
 
               List<EFPReportFilterItem> filtItems = new List<EFPReportFilterItem>();
 
-              EFPReportFilterItem fi1 = new EFPReportFilterItem("Родительский объект");
+              EFPReportFilterItem fi1 = new EFPReportFilterItem("Р РѕРґРёС‚РµР»СЊСЃРєРёР№ РѕР±СЉРµРєС‚");
               FiasAddress a1 = new FiasAddress();
               a1.AOGuid = ParentGuid;
               Owner._Handler.FillAddress(a1);
@@ -1100,7 +1100,7 @@ namespace FreeLibSet.Forms.FIAS
               case DialogResult.OK:
                 row = efpGrid.CurrentDataRow;
                 if (row == null)
-                  EFPApp.ErrorMessageBox("Строка не выбрана");
+                  EFPApp.ErrorMessageBox("РЎС‚СЂРѕРєР° РЅРµ РІС‹Р±СЂР°РЅР°");
                 else
                 {
                   Guid recId = DataTools.GetGuid(row, "AOID");
@@ -1127,7 +1127,7 @@ namespace FreeLibSet.Forms.FIAS
       private void PerformUpdateAddress()
       {
         // 26.10.2020
-        // Можно в поле названия региона ввести код региона
+        // РњРѕР¶РЅРѕ РІ РїРѕР»Рµ РЅР°Р·РІР°РЅРёСЏ СЂРµРіРёРѕРЅР° РІРІРµСЃС‚Рё РєРѕРґ СЂРµРіРёРѕРЅР°
         if (Level == FiasLevel.Region)
         {
           int nRegion;
@@ -1180,11 +1180,11 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Дома
+    #region Р”РѕРјР°
 
     private class HouseItem : ItemBase
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public HouseItem(EFPFiasAddressPanel owner,
         TextBox edHouseName, ComboBox cbHouseAOType,
@@ -1203,7 +1203,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Корневой узел для выбора
+      #region РљРѕСЂРЅРµРІРѕР№ СѓР·РµР» РґР»СЏ РІС‹Р±РѕСЂР°
 
       protected override void OnParentGuidChanged(bool isInheritable, out bool pageIsEmpty)
       {
@@ -1214,7 +1214,7 @@ namespace FreeLibSet.Forms.FIAS
         }
         else
         {
-          EFPApp.BeginWait("Получение справочника зданий", "FiasAddress", true);
+          EFPApp.BeginWait("РџРѕР»СѓС‡РµРЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р·РґР°РЅРёР№", "FiasAddress", true);
           try { _Page = Owner._Handler.GetHousePage(ParentGuid); }
           finally { EFPApp.EndWait(); }
           pageIsEmpty = _Page.IsEmpty;
@@ -1225,13 +1225,13 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       /// <summary>
-      /// Таблица, из которой можно делать выбор
+      /// РўР°Р±Р»РёС†Р°, РёР· РєРѕС‚РѕСЂРѕР№ РјРѕР¶РЅРѕ РґРµР»Р°С‚СЊ РІС‹Р±РѕСЂ
       /// </summary>
       private FiasCachedPageHouse _Page;
 
       #endregion
 
-      #region Выбор из справочника
+      #region Р’С‹Р±РѕСЂ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°
 
       protected override void OnButtonSelClick()
       {
@@ -1239,14 +1239,14 @@ namespace FreeLibSet.Forms.FIAS
         {
           using (OKCancelGridForm form = new OKCancelGridForm())
           {
-            form.Text = "Выбор из справочника зданий";
+            form.Text = "Р’С‹Р±РѕСЂ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° Р·РґР°РЅРёР№";
             form.NoButtonProvider.Visible = true;
 
-            #region Табличка фильтров
+            #region РўР°Р±Р»РёС‡РєР° С„РёР»СЊС‚СЂРѕРІ
 
             List<EFPReportFilterItem> filtItems = new List<EFPReportFilterItem>();
 
-            EFPReportFilterItem fi1 = new EFPReportFilterItem("Адресный объект");
+            EFPReportFilterItem fi1 = new EFPReportFilterItem("РђРґСЂРµСЃРЅС‹Р№ РѕР±СЉРµРєС‚");
             FiasAddress a1 = new FiasAddress();
             a1.AOGuid = ParentGuid;
             Owner._Handler.FillAddress(a1);
@@ -1277,7 +1277,7 @@ namespace FreeLibSet.Forms.FIAS
             DataRow row = _Page.FindRow(NAs[0].Name.Text, estStatus, NAs[1].Name.Text, NAs[2].Name.Text, strStatus);
             if (row == null)
             {
-              #region Пытаемся найти хоть что-нибудь похожее
+              #region РџС‹С‚Р°РµРјСЃСЏ РЅР°Р№С‚Рё С…РѕС‚СЊ С‡С‚Рѕ-РЅРёР±СѓРґСЊ РїРѕС…РѕР¶РµРµ
 
               // 03.11.2020
 
@@ -1297,7 +1297,7 @@ namespace FreeLibSet.Forms.FIAS
               case DialogResult.OK:
                 row = efpGrid.CurrentDataRow;
                 if (row == null)
-                  EFPApp.ErrorMessageBox("Строка не выбрана");
+                  EFPApp.ErrorMessageBox("РЎС‚СЂРѕРєР° РЅРµ РІС‹Р±СЂР°РЅР°");
                 else
                 {
                   Guid recId = DataTools.GetGuid(row, "HOUSEID");
@@ -1317,7 +1317,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Обработчики поля "Наименование"
+      #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РїРѕР»СЏ "РќР°РёРјРµРЅРѕРІР°РЅРёРµ"
 
       //protected override void OnLeave(FiasLevel level)
       //{
@@ -1331,15 +1331,15 @@ namespace FreeLibSet.Forms.FIAS
       #endregion
     }
 
-    #region Вспомогательные функции
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ С„СѓРЅРєС†РёРё
 
     /// <summary>
-    /// Поиск подходящей строки в просмотре для номера дома, строения или квартиры, если нет точного совпадения
+    /// РџРѕРёСЃРє РїРѕРґС…РѕРґСЏС‰РµР№ СЃС‚СЂРѕРєРё РІ РїСЂРѕСЃРјРѕС‚СЂРµ РґР»СЏ РЅРѕРјРµСЂР° РґРѕРјР°, СЃС‚СЂРѕРµРЅРёСЏ РёР»Рё РєРІР°СЂС‚РёСЂС‹, РµСЃР»Рё РЅРµС‚ С‚РѕС‡РЅРѕРіРѕ СЃРѕРІРїР°РґРµРЅРёСЏ
     /// </summary>
-    /// <param name="dv">Данные для выводимого на экран просмотра</param>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="value">Значение для поиска</param>
-    /// <returns>Найденная строка таблицы или null, если совсем ничего не найдено</returns>
+    /// <param name="dv">Р”Р°РЅРЅС‹Рµ РґР»СЏ РІС‹РІРѕРґРёРјРѕРіРѕ РЅР° СЌРєСЂР°РЅ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ РґР»СЏ РїРѕРёСЃРєР°</param>
+    /// <returns>РќР°Р№РґРµРЅРЅР°СЏ СЃС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РёР»Рё null, РµСЃР»Рё СЃРѕРІСЃРµРј РЅРёС‡РµРіРѕ РЅРµ РЅР°Р№РґРµРЅРѕ</returns>
     internal static DataRow FindSomeNumRow(DataView dv, string columnName, string value)
     {
       if (string.IsNullOrEmpty(value))
@@ -1353,7 +1353,7 @@ namespace FreeLibSet.Forms.FIAS
         row = dv[0].Row;
       else
       {
-        // если есть буквы на конце, пытаемся найти без них
+        // РµСЃР»Рё РµСЃС‚СЊ Р±СѓРєРІС‹ РЅР° РєРѕРЅС†Рµ, РїС‹С‚Р°РµРјСЃСЏ РЅР°Р№С‚Рё Р±РµР· РЅРёС…
         if (DoGetFirstNumPart(ref value))
         {
           dv.RowFilter = OldFilter;
@@ -1368,19 +1368,19 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Пытаемся извлечь числовую часть номера
+    /// РџС‹С‚Р°РµРјСЃСЏ РёР·РІР»РµС‡СЊ С‡РёСЃР»РѕРІСѓСЋ С‡Р°СЃС‚СЊ РЅРѕРјРµСЂР°
     /// </summary>
-    /// <param name="value">Номер чего-нибудь. Если удалось найти начальную числовую часть, сюда по ссылке помещается обрезанная часть номера</param>
-    /// <returns>true, если удалось что-то обрезать</returns>
+    /// <param name="value">РќРѕРјРµСЂ С‡РµРіРѕ-РЅРёР±СѓРґСЊ. Р•СЃР»Рё СѓРґР°Р»РѕСЃСЊ РЅР°Р№С‚Рё РЅР°С‡Р°Р»СЊРЅСѓСЋ С‡РёСЃР»РѕРІСѓСЋ С‡Р°СЃС‚СЊ, СЃСЋРґР° РїРѕ СЃСЃС‹Р»РєРµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РѕР±СЂРµР·Р°РЅРЅР°СЏ С‡Р°СЃС‚СЊ РЅРѕРјРµСЂР°</param>
+    /// <returns>true, РµСЃР»Рё СѓРґР°Р»РѕСЃСЊ С‡С‚Рѕ-С‚Рѕ РѕР±СЂРµР·Р°С‚СЊ</returns>
     private static bool DoGetFirstNumPart(ref string value)
     {
       if (value[0] < '0' || value[0] > '9')
-        return false; // нечисловой номер не обрабатываем
+        return false; // РЅРµС‡РёСЃР»РѕРІРѕР№ РЅРѕРјРµСЂ РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј
       for (int i = 1; i < value.Length; i++)
       {
         if (value[i] < '0' || value[i] > '9')
         {
-          // нашли не-цифру
+          // РЅР°С€Р»Рё РЅРµ-С†РёС„СЂСѓ
           value = value.Substring(0, i);
           return true;
         }
@@ -1392,11 +1392,11 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Квартиры (помещения) и комнаты
+    #region РљРІР°СЂС‚РёСЂС‹ (РїРѕРјРµС‰РµРЅРёСЏ) Рё РєРѕРјРЅР°С‚С‹
 
     private class RoomItem : ItemBase
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public RoomItem(EFPFiasAddressPanel owner,
         TextBox edFlatName, ComboBox cbFlatAOType,
@@ -1413,7 +1413,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Корневой узел для выбора
+      #region РљРѕСЂРЅРµРІРѕР№ СѓР·РµР» РґР»СЏ РІС‹Р±РѕСЂР°
 
       protected override void OnParentGuidChanged(bool isInheritable, out bool isPageEmpty)
       {
@@ -1424,7 +1424,7 @@ namespace FreeLibSet.Forms.FIAS
         }
         else
         {
-          EFPApp.BeginWait("Получение справочника помещений", "FiasAddress", true);
+          EFPApp.BeginWait("РџРѕР»СѓС‡РµРЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° РїРѕРјРµС‰РµРЅРёР№", "FiasAddress", true);
           try { _Page = Owner._Handler.GetRoomPage(ParentGuid); }
           finally { EFPApp.EndWait(); }
           NAs[0].Name.Control.AutoCompleteCustomSource.AddRange(_Page.GetFlatNums());
@@ -1434,13 +1434,13 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       /// <summary>
-      /// Таблица, из которой можно делать выбор
+      /// РўР°Р±Р»РёС†Р°, РёР· РєРѕС‚РѕСЂРѕР№ РјРѕР¶РЅРѕ РґРµР»Р°С‚СЊ РІС‹Р±РѕСЂ
       /// </summary>
       private FiasCachedPageRoom _Page;
 
       #endregion
 
-      #region Выбор из справочника
+      #region Р’С‹Р±РѕСЂ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°
 
       protected override void OnButtonSelClick()
       {
@@ -1448,14 +1448,14 @@ namespace FreeLibSet.Forms.FIAS
         {
           using (OKCancelGridForm form = new OKCancelGridForm())
           {
-            form.Text = "Выбор из справочника помещений";
+            form.Text = "Р’С‹Р±РѕСЂ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° РїРѕРјРµС‰РµРЅРёР№";
             form.NoButtonProvider.Visible = true;
 
-            #region Табличка фильтров
+            #region РўР°Р±Р»РёС‡РєР° С„РёР»СЊС‚СЂРѕРІ
 
             List<EFPReportFilterItem> filtItems = new List<EFPReportFilterItem>();
 
-            EFPReportFilterItem fi1 = new EFPReportFilterItem("Здание");
+            EFPReportFilterItem fi1 = new EFPReportFilterItem("Р—РґР°РЅРёРµ");
             FiasAddress a1 = new FiasAddress();
             a1.AOGuid = ParentGuid;
             Owner._Handler.FillAddress(a1);
@@ -1497,7 +1497,7 @@ namespace FreeLibSet.Forms.FIAS
                 row = efpGrid.CurrentDataRow;
 
                 if (row == null)
-                  EFPApp.ErrorMessageBox("Строка не выбрана");
+                  EFPApp.ErrorMessageBox("РЎС‚СЂРѕРєР° РЅРµ РІС‹Р±СЂР°РЅР°");
                 else
                 {
                   Guid recId = DataTools.GetGuid(row, "ROOMID");
@@ -1517,7 +1517,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Обработчики поля "Наименование"
+      #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РїРѕР»СЏ "РќР°РёРјРµРЅРѕРІР°РЅРёРµ"
 
       //protected override void OnLeave(FiasLevel level)
       //{
@@ -1535,10 +1535,10 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Текущий адрес
+    #region РўРµРєСѓС‰РёР№ Р°РґСЂРµСЃ
 
     /// <summary>
-    /// Редактируемый адрес. Основное свойство
+    /// Р РµРґР°РєС‚РёСЂСѓРµРјС‹Р№ Р°РґСЂРµСЃ. РћСЃРЅРѕРІРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ
     /// </summary>
     public FiasAddress Address
     {
@@ -1569,7 +1569,7 @@ namespace FreeLibSet.Forms.FIAS
       try
       {
         if (!ReadOnly) // 03.03.2021
-          Address.ClearGuids(); // все
+          Address.ClearGuids(); // РІСЃРµ
         if (level != FiasLevel.Unknown)
         {
 #if DEBUG
@@ -1583,7 +1583,7 @@ namespace FreeLibSet.Forms.FIAS
         {
           if (level == FiasLevel.Unknown)
           {
-            // Обрезаем нижние уровни адреса
+            // РћР±СЂРµР·Р°РµРј РЅРёР¶РЅРёРµ СѓСЂРѕРІРЅРё Р°РґСЂРµСЃР°
             switch (EditorLevel)
             {
               case FiasEditorLevel.Village: Address.ClearBelow(FiasLevel.Village); break;
@@ -1591,7 +1591,7 @@ namespace FreeLibSet.Forms.FIAS
               //case FiasEditorLevel.House: Address.ClearBelow(FiasLevel.House); break;
               case FiasEditorLevel.House: Address.ClearBelow(FiasLevel.Structure); break; // 25.10.2020
               case FiasEditorLevel.Room:
-                // убрано 18.08.2020 Address.ClearBelow(FiasLevel.Flat); 
+                // СѓР±СЂР°РЅРѕ 18.08.2020 Address.ClearBelow(FiasLevel.Flat); 
                 break;
               default:
                 throw new BugException("EditorLevel=" + EditorLevel.ToString());
@@ -1602,7 +1602,7 @@ namespace FreeLibSet.Forms.FIAS
         }
 
 
-        // Обновляем элементы
+        // РћР±РЅРѕРІР»СЏРµРј СЌР»РµРјРµРЅС‚С‹
         Guid LastG = Guid.Empty;
         FiasLevel LastLevel = FiasLevel.Unknown;
         for (int i = 0; i < _AddrObParts.Count; i++)
@@ -1643,7 +1643,7 @@ namespace FreeLibSet.Forms.FIAS
           _RoomPart.SetParentGuid(LastG, LastLevel);
           _RoomPart.AddressUpdated();
 
-          // Бесполезное действие
+          // Р‘РµСЃРїРѕР»РµР·РЅРѕРµ РґРµР№СЃС‚РІРёРµ
           if (_Address.GetGuid(FiasLevel.Flat) != Guid.Empty)
           {
             LastG = _Address.GetGuid(FiasLevel.Flat);
@@ -1663,7 +1663,7 @@ namespace FreeLibSet.Forms.FIAS
 
         string sText;
         if (Address.IsEmpty)
-          sText = "Адрес не задан";
+          sText = "РђРґСЂРµСЃ РЅРµ Р·Р°РґР°РЅ";
         else
         {
           if (PostalCodeEditable)
@@ -1671,9 +1671,9 @@ namespace FreeLibSet.Forms.FIAS
           else
             sText = _Handler.GetTextWithoutPostalCode(_Address); // 23.10.2020
           if (_Address.Actuality == FiasActuality.Historical)
-            sText = "[Исторический] " + sText;
+            sText = "[РСЃС‚РѕСЂРёС‡РµСЃРєРёР№] " + sText;
           else if (!(_Address.Live ?? true))
-            sText = "[Недействующий] " + sText;
+            sText = "[РќРµРґРµР№СЃС‚РІСѓСЋС‰РёР№] " + sText;
         }
 
         _TextView.Text = sText;
@@ -1701,13 +1701,13 @@ namespace FreeLibSet.Forms.FIAS
     internal static void AddEditorMessages(FiasAddress address, FiasEditorLevel editorLevel, ErrorMessageList errors,
       UIValidateState canBeEmptyMode, UIValidateState canBePartialMode, FiasLevel minRefBookLevel)
     {
-      // Используется также к EFPAddressComboBox
+      // РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚Р°РєР¶Рµ Рє EFPAddressComboBox
 
       if (address.IsEmpty)
       {
         ErrorMessageKind kind = GetErrorOrWarningKind(canBeEmptyMode);
         if (kind != ErrorMessageKind.Info)
-          errors.Add(new ErrorMessageItem(kind, "Адрес должен быть заполнен"));
+          errors.Add(new ErrorMessageItem(kind, "РђРґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ"));
       }
       else
       {
@@ -1716,17 +1716,17 @@ namespace FreeLibSet.Forms.FIAS
         switch (cmp)
         {
           case FiasLevelCompareResult.Greater:
-            errors.AddError("Заполнены лишние компоненты адреса. " + errorText);
+            errors.AddError("Р—Р°РїРѕР»РЅРµРЅС‹ Р»РёС€РЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚С‹ Р°РґСЂРµСЃР°. " + errorText);
             break;
 
           case FiasLevelCompareResult.Less:
             ErrorMessageKind kind = GetErrorOrWarningKind(canBePartialMode);
             if (kind != ErrorMessageKind.Info)
-              errors.Add(new ErrorMessageItem(kind, "Адрес должен быть заполнен полностью. " + errorText));
+              errors.Add(new ErrorMessageItem(kind, "РђРґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РїРѕР»РЅРѕСЃС‚СЊСЋ. " + errorText));
             break;
         }
 
-        // Проверка минимального уровня, заполненного из классификатора
+        // РџСЂРѕРІРµСЂРєР° РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ, Р·Р°РїРѕР»РЅРµРЅРЅРѕРіРѕ РёР· РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
         if (!address.IsMinRefBookLevel(minRefBookLevel, out errorText))
           errors.AddError(errorText);
       }
@@ -1743,8 +1743,8 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Событие вызывается при изменении объекта Address - при установке
-    /// снаружи или в процессе редактирования.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РёР·РјРµРЅРµРЅРёРё РѕР±СЉРµРєС‚Р° Address - РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ
+    /// СЃРЅР°СЂСѓР¶Рё РёР»Рё РІ РїСЂРѕС†РµСЃСЃРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ.
     /// </summary>
     public event EventHandler AddressChanged;
 
@@ -1777,11 +1777,11 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Свойства CanBeEmpty и CanBePartial
+    #region РЎРІРѕР№СЃС‚РІР° CanBeEmpty Рё CanBePartial
 
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// По умолчанию - Error - адрес должен быть заполнен.
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error - Р°РґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -1797,8 +1797,8 @@ namespace FreeLibSet.Forms.FIAS
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// Дублирует CanBeEmptyMode
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј?
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
@@ -1807,9 +1807,9 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Может ли адрес быть заполненным частично (например, введен только регион)?
-    /// По умолчанию - Error - адрес должен быть заполнен согласно свойству EditorLevel.
-    /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРЅС‹Рј С‡Р°СЃС‚РёС‡РЅРѕ (РЅР°РїСЂРёРјРµСЂ, РІРІРµРґРµРЅ С‚РѕР»СЊРєРѕ СЂРµРіРёРѕРЅ)?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error - Р°РґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ СЃРѕРіР»Р°СЃРЅРѕ СЃРІРѕР№СЃС‚РІСѓ EditorLevel.
+    /// РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё EditorLevel=Room, С‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ, РєР°Рє РјРёРЅРёРјСѓРј, РґРѕРј.
     /// </summary>
     public UIValidateState CanBePartialMode
     {
@@ -1825,10 +1825,10 @@ namespace FreeLibSet.Forms.FIAS
     private UIValidateState _CanBePartialMode;
 
     /// <summary>
-    /// Может ли адрес быть заполненным частично (например, введен только регион)?
-    /// По умолчанию - false - адрес должен быть заполнен согласно свойству EditorLevel.
-    /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
-    /// Дублирует свойство CanBePartialMode
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРЅС‹Рј С‡Р°СЃС‚РёС‡РЅРѕ (РЅР°РїСЂРёРјРµСЂ, РІРІРµРґРµРЅ С‚РѕР»СЊРєРѕ СЂРµРіРёРѕРЅ)?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - Р°РґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ СЃРѕРіР»Р°СЃРЅРѕ СЃРІРѕР№СЃС‚РІСѓ EditorLevel.
+    /// РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё EditorLevel=Room, С‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ, РєР°Рє РјРёРЅРёРјСѓРј, РґРѕРј.
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ CanBePartialMode
     /// </summary>
     public bool CanBePartial
     {
@@ -1838,17 +1838,17 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Текстовое представление адреса
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ Р°РґСЂРµСЃР°
 
     //public EFPTextBox TextView { get { return _TextView; } }
     private EFPTextBox _TextView;
 
     #endregion
 
-    #region Свойство ReadOnly
+    #region РЎРІРѕР№СЃС‚РІРѕ ReadOnly
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Visible и Enabled равны true, а ReadOnly=false
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ СЃРІРѕР№СЃС‚РІР° Visible Рё Enabled СЂР°РІРЅС‹ true, Р° ReadOnly=false
     /// </summary>
     public override bool EnabledState
     {
@@ -1856,7 +1856,7 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Режим "только чтение"
+    /// Р РµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ"
     /// </summary>
     public bool ReadOnly
     {
@@ -1878,7 +1878,7 @@ namespace FreeLibSet.Forms.FIAS
 
         efpManualPostalCode.Enabled = !value;
 
-        Address = Address; // повторная инициализация
+        Address = Address; // РїРѕРІС‚РѕСЂРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 
 
         foreach (AddrObItem item in _AddrObParts)
@@ -1892,7 +1892,7 @@ namespace FreeLibSet.Forms.FIAS
     private bool _ReadOnly;
 
     /// <summary>
-    /// Управляемое свойство для ReadOnly.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ ReadOnly.
     /// </summary>
     public DepValue<Boolean> ReadOnlyEx
     {
@@ -1917,7 +1917,7 @@ namespace FreeLibSet.Forms.FIAS
       }
     }
     /// <summary>
-    /// Выходная часть свойства ReadOnly
+    /// Р’С‹С…РѕРґРЅР°СЏ С‡Р°СЃС‚СЊ СЃРІРѕР№СЃС‚РІР° ReadOnly
     /// </summary>
     private DepInput<Boolean> _ReadOnlyEx;
 
@@ -1928,7 +1928,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Кнопки и команды меню "Еще"
+    #region РљРЅРѕРїРєРё Рё РєРѕРјР°РЅРґС‹ РјРµРЅСЋ "Р•С‰Рµ"
 
     EFPErrorMessageListButton _ErrorButton;
 
@@ -1988,24 +1988,24 @@ namespace FreeLibSet.Forms.FIAS
       if (convert.TryParse(s, out newAddress))
         Address = newAddress;
       else
-        EFPApp.ShowTempMessage("В буфере обмена нет правильного адреса");
+        EFPApp.ShowTempMessage("Р’ Р±СѓС„РµСЂРµ РѕР±РјРµРЅР° РЅРµС‚ РїСЂР°РІРёР»СЊРЅРѕРіРѕ Р°РґСЂРµСЃР°");
     }
 
     #endregion
 
-    #region Статусная строка
+    #region РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°
 
     EFPCommandItem _sbPostalCode, _sbOKATO, _sbOKTMO, _sbIFNSFL, _sbIFNSUL;
 
     private void InitStatusBarItems()
     {
-      string sSuffix = Environment.NewLine + Environment.NewLine + "(Двойной щелчок левой кнопки мыши, чтобы скопировать код в буфер обмена)";
+      string sSuffix = Environment.NewLine + Environment.NewLine + "(Р”РІРѕР№РЅРѕР№ С‰РµР»С‡РѕРє Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё, С‡С‚РѕР±С‹ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ РєРѕРґ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°)";
 
       _sbPostalCode = new EFPCommandItem("View", "PostalCode");
       _sbPostalCode.Usage = EFPCommandItemUsage.StatusBar;
       _sbPostalCode.StatusBarText = "_";
       _sbPostalCode.ImageKey = "FIAS.PostalCode";
-      _sbPostalCode.ToolTipText = "Почтовый индекс" + sSuffix;
+      _sbPostalCode.ToolTipText = "РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ" + sSuffix;
       _sbPostalCode.Click += SB_Click;
       this.CommandItems.Add(_sbPostalCode);
 
@@ -2013,8 +2013,8 @@ namespace FreeLibSet.Forms.FIAS
       {
         _sbOKATO = new EFPCommandItem("View", "OKATO");
         _sbOKATO.Usage = EFPCommandItemUsage.StatusBar;
-        _sbOKATO.StatusBarText = "ОКАТО";
-        _sbOKATO.ToolTipText = "Код ОКАТО" + sSuffix;
+        _sbOKATO.StatusBarText = "РћРљРђРўРћ";
+        _sbOKATO.ToolTipText = "РљРѕРґ РћРљРђРўРћ" + sSuffix;
         _sbOKATO.Click += SB_Click;
         this.CommandItems.Add(_sbOKATO);
       }
@@ -2023,8 +2023,8 @@ namespace FreeLibSet.Forms.FIAS
       {
         _sbOKTMO = new EFPCommandItem("View", "OKTMO");
         _sbOKTMO.Usage = EFPCommandItemUsage.StatusBar;
-        _sbOKTMO.StatusBarText = "ОКАТО";
-        _sbOKTMO.ToolTipText = "Код ОКАТО" + sSuffix;
+        _sbOKTMO.StatusBarText = "РћРљРђРўРћ";
+        _sbOKTMO.ToolTipText = "РљРѕРґ РћРљРђРўРћ" + sSuffix;
         _sbOKTMO.Click += SB_Click;
         this.CommandItems.Add(_sbOKTMO);
       }
@@ -2033,15 +2033,15 @@ namespace FreeLibSet.Forms.FIAS
       {
         _sbIFNSFL = new EFPCommandItem("View", "IFNSFL");
         _sbIFNSFL.Usage = EFPCommandItemUsage.StatusBar;
-        _sbIFNSFL.StatusBarText = "ФЛ";
-        _sbIFNSFL.ToolTipText = "Код ИФНС физического лица" + sSuffix;
+        _sbIFNSFL.StatusBarText = "Р¤Р›";
+        _sbIFNSFL.ToolTipText = "РљРѕРґ РР¤РќРЎ С„РёР·РёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°" + sSuffix;
         _sbIFNSFL.Click += SB_Click;
         this.CommandItems.Add(_sbIFNSFL);
 
         _sbIFNSUL = new EFPCommandItem("View", "IFNSUL");
         _sbIFNSUL.Usage = EFPCommandItemUsage.StatusBar;
-        _sbIFNSUL.StatusBarText = "ЮЛ";
-        _sbIFNSUL.ToolTipText = "Код ИФНС юридического лица" + sSuffix;
+        _sbIFNSUL.StatusBarText = "Р®Р›";
+        _sbIFNSUL.ToolTipText = "РљРѕРґ РР¤РќРЎ СЋСЂРёРґРёС‡РµСЃРєРѕРіРѕ Р»РёС†Р°" + sSuffix;
         _sbIFNSUL.Click += SB_Click;
         this.CommandItems.Add(_sbIFNSUL);
       }
@@ -2052,13 +2052,13 @@ namespace FreeLibSet.Forms.FIAS
       if (_sbPostalCode != null)
         InitSBValue(_sbPostalCode, String.Empty, Address.FiasPostalCode);
       if (_sbOKATO != null)
-        InitSBValue(_sbOKATO, "ОКАТО: ", Address.OKATO);
+        InitSBValue(_sbOKATO, "РћРљРђРўРћ: ", Address.OKATO);
       if (_sbOKTMO != null)
-        InitSBValue(_sbOKTMO, "ОКТМО: ", Address.OKTMO);
+        InitSBValue(_sbOKTMO, "РћРљРўРњРћ: ", Address.OKTMO);
       if (_sbIFNSFL != null)
-        InitSBValue(_sbIFNSFL, "ФЛ: ", Address.IFNSFL);
+        InitSBValue(_sbIFNSFL, "Р¤Р›: ", Address.IFNSFL);
       if (_sbIFNSUL != null)
-        InitSBValue(_sbIFNSUL, "ЮЛ: ", Address.IFNSUL);
+        InitSBValue(_sbIFNSUL, "Р®Р›: ", Address.IFNSUL);
     }
 
     private void InitSBValue(EFPCommandItem sb, string prefix, string value)
@@ -2076,7 +2076,7 @@ namespace FreeLibSet.Forms.FIAS
       EFPCommandItem ci = (EFPCommandItem)sender;
       string s = DataTools.GetString(ci.Tag);
       if (String.IsNullOrEmpty(s))
-        EFPApp.ShowTempMessage("Код не определен");
+        EFPApp.ShowTempMessage("РљРѕРґ РЅРµ РѕРїСЂРµРґРµР»РµРЅ");
       else
         Clipboard.SetText(s);
     }

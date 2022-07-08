@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -16,19 +16,19 @@ using FreeLibSet.Controls.FIAS;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Настройки пользовательского интерфейса для работы с ФИАС.
-  /// Объект создается в единственном экземпляре на стороне клиента.
-  /// Ссылка на объект передается всем элементам пользовательского интефрейса
-  /// Обращение к методам должно выполняться из основного потока приложения, в котором вызван EFApp.InitApp().
-  /// Для поддержки удаленного интерфейса добавьте ссылку на объект FiasUI в список EFPApp.RICreators,
+  /// РќР°СЃС‚СЂРѕР№РєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР° РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Р¤РРђРЎ.
+  /// РћР±СЉРµРєС‚ СЃРѕР·РґР°РµС‚СЃСЏ РІ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРј СЌРєР·РµРјРїР»СЏСЂРµ РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°.
+  /// РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚ РїРµСЂРµРґР°РµС‚СЃСЏ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµС„СЂРµР№СЃР°
+  /// РћР±СЂР°С‰РµРЅРёРµ Рє РјРµС‚РѕРґР°Рј РґРѕР»Р¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕС‚РѕРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ, РІ РєРѕС‚РѕСЂРѕРј РІС‹Р·РІР°РЅ EFApp.InitApp().
+  /// Р”Р»СЏ РїРѕРґРґРµСЂР¶РєРё СѓРґР°Р»РµРЅРЅРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР° РґРѕР±Р°РІСЊС‚Рµ СЃСЃС‹Р»РєСѓ РЅР° РѕР±СЉРµРєС‚ FiasUI РІ СЃРїРёСЃРѕРє EFPApp.RICreators,
   /// </summary>
   public sealed class FiasUI : FreeLibSet.Forms.RI.IEFPAppRICreator
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает экземпляр объекта.
-    /// На момент вызова должен быть вызван метод EFPApp.InitApp() (в том же потоке)
+    /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ РѕР±СЉРµРєС‚Р°.
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РІР°РЅ РјРµС‚РѕРґ EFPApp.InitApp() (РІ С‚РѕРј Р¶Рµ РїРѕС‚РѕРєРµ)
     /// </summary>
     /// <param name="source"></param>
     public FiasUI(IFiasSource source)
@@ -39,7 +39,7 @@ namespace FreeLibSet.Forms.FIAS
         throw new ArgumentNullException("source");
       _Source = source;
 
-      EFPApp.CheckMainThread(); // заодно проверяет, что был вызов EFPApp.WasInit()
+      EFPApp.CheckMainThread(); // Р·Р°РѕРґРЅРѕ РїСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ Р±С‹Р» РІС‹Р·РѕРІ EFPApp.WasInit()
 
       //_Level = FiasLevel.Flat;
 
@@ -50,42 +50,42 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Обработчик адресов и общие свойства
+    #region РћР±СЂР°Р±РѕС‚С‡РёРє Р°РґСЂРµСЃРѕРІ Рё РѕР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Источник данных для классификатора
+    /// РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… РґР»СЏ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     public IFiasSource Source { get { return _Source; } }
     private IFiasSource _Source;
 
     /// <summary>
-    /// Настройки базы данных классификатора ФИАС (нельзя изменять)
+    /// РќР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ (РЅРµР»СЊР·СЏ РёР·РјРµРЅСЏС‚СЊ)
     /// </summary>
     public FiasDBSettings DBSettings { get { return _Source.DBSettings; } }
 
     /// <summary>
-    /// Внутренние установки классификатора.
-    /// Не используется в прикладном коде
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёРµ СѓСЃС‚Р°РЅРѕРІРєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
     /// </summary>
     public FiasInternalSettings InternalSettings { get { return _Source.InternalSettings; } }
 
     #endregion
 
-    #region Статистика и дата актуальности
+    #region РЎС‚Р°С‚РёСЃС‚РёРєР° Рё РґР°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё
 
     /// <summary>
-    /// Дата актуальности классификатора
+    /// Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     public DateTime ActualDate { get { return _Source.ActualDate; } }
 
     /// <summary>
-    /// Возвращает статистику по базе данных классификатора.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ Р±Р°Р·Рµ РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
     /// </summary>
     public FiasDBStat DBStat { get { return _Source.DBStat; } }
 
     /// <summary>
-    /// Проверить изменение даты актуальности.
-    /// Этот метод может вызываться клиентом, если есть предположение, что дата актуальности могла измениться
+    /// РџСЂРѕРІРµСЂРёС‚СЊ РёР·РјРµРЅРµРЅРёРµ РґР°С‚С‹ Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РєР»РёРµРЅС‚РѕРј, РµСЃР»Рё РµСЃС‚СЊ РїСЂРµРґРїРѕР»РѕР¶РµРЅРёРµ, С‡С‚Рѕ РґР°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РјРѕРіР»Р° РёР·РјРµРЅРёС‚СЊСЃСЏ
     /// </summary>
     public void UpdateActualDate()
     {
@@ -94,12 +94,12 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Параметры для редактора адреса
+    #region РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ СЂРµРґР°РєС‚РѕСЂР° Р°РґСЂРµСЃР°
 
     /// <summary>
-    /// Нужно ли показывать колонки идентификаторов (AOGUID, HOUSEGUID, ROOMGUID) при выборе из справочника
-    /// в редакторе адреса.
-    /// По умолчанию - false - колонки не показываются
+    /// РќСѓР¶РЅРѕ Р»Рё РїРѕРєР°Р·С‹РІР°С‚СЊ РєРѕР»РѕРЅРєРё РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ (AOGUID, HOUSEGUID, ROOMGUID) РїСЂРё РІС‹Р±РѕСЂРµ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°
+    /// РІ СЂРµРґР°РєС‚РѕСЂРµ Р°РґСЂРµСЃР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - РєРѕР»РѕРЅРєРё РЅРµ РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ
     /// </summary>
     public bool ShowGuids { get { return _ShowGuids; } set { _ShowGuids = value; } }
     private bool _ShowGuids;
@@ -108,10 +108,10 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Инициализация изображений
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёР№
 
     /// <summary>
-    /// Добавление изображений библиотеки ExtDBDocForms
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ РёР·РѕР±СЂР°Р¶РµРЅРёР№ Р±РёР±Р»РёРѕС‚РµРєРё ExtDBDocForms
     /// </summary>
     private static void InitImages()
     {
@@ -126,19 +126,19 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Показ блоков диалога
+    #region РџРѕРєР°Р· Р±Р»РѕРєРѕРІ РґРёР°Р»РѕРіР°
 
     /// <summary>
-    /// Показывает диалог "Подробности" для указанного адреса
+    /// РџРѕРєР°Р·С‹РІР°РµС‚ РґРёР°Р»РѕРі "РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё" РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ Р°РґСЂРµСЃР°
     /// </summary>
-    /// <param name="address">Адрес для просмотра</param>
+    /// <param name="address">РђРґСЂРµСЃ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°</param>
     public void ShowDetails(FiasAddress address)
     {
       if (address == null)
         throw new ArgumentNullException("address");
 
       SimpleGridForm form = new SimpleGridForm();
-      form.Text = "Подробности";
+      form.Text = "РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё";
       FiasHandler handler = new FiasHandler(_Source);
       form.AddInfoLabel(DockStyle.Top).Text = handler.GetTextWithoutPostalCode(address);
       form.Icon = EFPApp.MainImageIcon("Fias.Details");
@@ -148,27 +148,27 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Показывает историю переименований и других изменений для заданного адресного объекта, дома или помещения
+    /// РџРѕРєР°Р·С‹РІР°РµС‚ РёСЃС‚РѕСЂРёСЋ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№ Рё РґСЂСѓРіРёС… РёР·РјРµРЅРµРЅРёР№ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР° РёР»Рё РїРѕРјРµС‰РµРЅРёСЏ
     /// </summary>
-    /// <param name="tableType">Тип объекта</param>
-    /// <param name="guid">"Устойчивый" идентификатор объекта</param>
+    /// <param name="tableType">РўРёРї РѕР±СЉРµРєС‚Р°</param>
+    /// <param name="guid">"РЈСЃС‚РѕР№С‡РёРІС‹Р№" РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°</param>
     public void ShowHistory(FiasTableType tableType, Guid guid)
     {
       if (guid == Guid.Empty)
       {
-        EFPApp.ErrorMessageBox("Объект для просмотра истории не выбран");
+        EFPApp.ErrorMessageBox("РћР±СЉРµРєС‚ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РёСЃС‚РѕСЂРёРё РЅРµ РІС‹Р±СЂР°РЅ");
         return;
       }
 
       if (!DBSettings.UseHistory)
       {
         // 25.01.2022
-        EFPApp.ErrorMessageBox("Используемый классификатор ФИАС не содержит исторических сведений");
+        EFPApp.ErrorMessageBox("РСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ Р¤РРђРЎ РЅРµ СЃРѕРґРµСЂР¶РёС‚ РёСЃС‚РѕСЂРёС‡РµСЃРєРёС… СЃРІРµРґРµРЅРёР№");
         return;
       }
 
       DataTable table;
-      EFPApp.BeginWait("Получение таблицы истории", "FiasAddress", true);
+      EFPApp.BeginWait("РџРѕР»СѓС‡РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РёСЃС‚РѕСЂРёРё", "FiasAddress", true);
       try
       {
         table = Source.GetTableForGuid(guid, tableType).Tables[0];
@@ -179,7 +179,7 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       SimpleGridForm form = new SimpleGridForm();
-      form.Text = "История изменений: " + FiasEnumNames.ToString(tableType, false) + " GUID=" + guid.ToString();
+      form.Text = "РСЃС‚РѕСЂРёСЏ РёР·РјРµРЅРµРЅРёР№: " + FiasEnumNames.ToString(tableType, false) + " GUID=" + guid.ToString();
       form.Icon = EFPApp.MainImageIcon("View");
 
       EFPFiasListDataGridView ghHist = new EFPFiasListDataGridView(form.ControlWithToolBar, this, tableType, true);
@@ -189,15 +189,15 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Поиск адреса.
-    /// Выводит диалог параметров поиска.
-    /// Затем выполняется поиск и выводится форма со списком найденных адресов, из которых можно выбрать один.
+    /// РџРѕРёСЃРє Р°РґСЂРµСЃР°.
+    /// Р’С‹РІРѕРґРёС‚ РґРёР°Р»РѕРі РїР°СЂР°РјРµС‚СЂРѕРІ РїРѕРёСЃРєР°.
+    /// Р—Р°С‚РµРј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє Рё РІС‹РІРѕРґРёС‚СЃСЏ С„РѕСЂРјР° СЃРѕ СЃРїРёСЃРєРѕРј РЅР°Р№РґРµРЅРЅС‹С… Р°РґСЂРµСЃРѕРІ, РёР· РєРѕС‚РѕСЂС‹С… РјРѕР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ РѕРґРёРЅ.
     /// </summary>
-    /// <param name="address">На входе - базовый адрес для поиска. На выходе - найденный адрес</param>
-    /// <returns>True, если пользователь выполнил поиск и выбрал адрес</returns>
+    /// <param name="address">РќР° РІС…РѕРґРµ - Р±Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ РґР»СЏ РїРѕРёСЃРєР°. РќР° РІС‹С…РѕРґРµ - РЅР°Р№РґРµРЅРЅС‹Р№ Р°РґСЂРµСЃ</param>
+    /// <returns>True, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹РїРѕР»РЅРёР» РїРѕРёСЃРє Рё РІС‹Р±СЂР°Р» Р°РґСЂРµСЃ</returns>
     public bool SearchAddress(ref FiasAddress address)
     {
-      #region Запрос параметров
+      #region Р—Р°РїСЂРѕСЃ РїР°СЂР°РјРµС‚СЂРѕРІ
 
 
       FiasSearchForm frm1 = new FiasSearchForm();
@@ -208,7 +208,7 @@ namespace FreeLibSet.Forms.FIAS
       handler.FillAddress(startAddress);
       startAddress.ClearAuxInfo();
       if (startAddress.IsEmpty)
-        frm1.efpStartAddress.Text = "Весь классификатор";
+        frm1.efpStartAddress.Text = "Р’РµСЃСЊ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ";
       else
       {
         string s = startAddress.ToString();
@@ -279,7 +279,7 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Поиск адресов
+      #region РџРѕРёСЃРє Р°РґСЂРµСЃРѕРІ
 
       FiasAddressSearchParams searchParams = new FiasAddressSearchParams();
       searchParams.Text = frm1.efpText.Text;
@@ -300,7 +300,7 @@ namespace FreeLibSet.Forms.FIAS
 
       FiasAddress[] a;
 
-      EFPApp.BeginWait("Поиск адресных объектов", "Find", true);
+      EFPApp.BeginWait("РџРѕРёСЃРє Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ", "Find", true);
       try
       {
         a = handler.FindAddresses(searchParams);
@@ -312,12 +312,12 @@ namespace FreeLibSet.Forms.FIAS
 
       #endregion
 
-      #region Вывод результатов
+      #region Р’С‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 
       if (a.Length == 0)
       {
-        EFPApp.MessageBox("Не найдено ни одного адреса." + Environment.NewLine + Environment.NewLine +
-          searchParams.ToString(), "Результаты поиска");
+        EFPApp.MessageBox("РќРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕРіРѕ Р°РґСЂРµСЃР°." + Environment.NewLine + Environment.NewLine +
+          searchParams.ToString(), "Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР°");
         return false;
       }
 
@@ -329,9 +329,9 @@ namespace FreeLibSet.Forms.FIAS
         if (EFPApp.ShowDialog(frm2, false) == DialogResult.OK)
         {
           FiasAddress addr2 = a[frm2.gh.CurrentRowIndex];
-          // Заменяем на актуальный адрес
+          // Р—Р°РјРµРЅСЏРµРј РЅР° Р°РєС‚СѓР°Р»СЊРЅС‹Р№ Р°РґСЂРµСЃ
           if (addr2.AOGuid == Guid.Empty)
-            throw new BugException("Выбранный адрес не содержит AOGUID");
+            throw new BugException("Р’С‹Р±СЂР°РЅРЅС‹Р№ Р°РґСЂРµСЃ РЅРµ СЃРѕРґРµСЂР¶РёС‚ AOGUID");
           address = new FiasAddress();
           address.AOGuid = addr2.AOGuid;
           handler.FillAddress(address);
@@ -346,7 +346,7 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Просмотр настроек базы данных без возможности редактирования
+    /// РџСЂРѕСЃРјРѕС‚СЂ РЅР°СЃС‚СЂРѕРµРє Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р±РµР· РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
     /// </summary>
     public void ShowDBSettings()
     {
@@ -354,36 +354,36 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Выводит диалог с историей обновлений
+    /// Р’С‹РІРѕРґРёС‚ РґРёР°Р»РѕРі СЃ РёСЃС‚РѕСЂРёРµР№ РѕР±РЅРѕРІР»РµРЅРёР№
     /// </summary>
     public void ShowClassifUpdateTable()
     {
       DataTable table = _Source.GetClassifUpdateTable();
 
       SimpleGridForm frm = new SimpleGridForm();
-      frm.Text = "Обновления классификатора";
+      frm.Text = "РћР±РЅРѕРІР»РµРЅРёСЏ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°";
       frm.Icon = EFPApp.MainImageIcon("Information");
 
       EFPDataGridView gh = new EFPDataGridView(frm.ControlWithToolBar);
       gh.Control.AutoGenerateColumns = false;
       gh.Columns.AddImage("Image");
-      gh.Columns.AddDate("ActualDate", true, "Дата актуальности");
-      gh.Columns.AddDateTime("StartTime", true, "Обновление запущено");
-      gh.Columns.AddDateTime("FinishTime", true, "Обновление закончено");
-      gh.Columns.AddText("TimeSpan", false, "Время", 8, 8);
+      gh.Columns.AddDate("ActualDate", true, "Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё");
+      gh.Columns.AddDateTime("StartTime", true, "РћР±РЅРѕРІР»РµРЅРёРµ Р·Р°РїСѓС‰РµРЅРѕ");
+      gh.Columns.AddDateTime("FinishTime", true, "РћР±РЅРѕРІР»РµРЅРёРµ Р·Р°РєРѕРЅС‡РµРЅРѕ");
+      gh.Columns.AddText("TimeSpan", false, "Р’СЂРµРјСЏ", 8, 8);
       gh.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
-      gh.Columns.AddInt("AddrObCount", true, "Кол-во адресных объектов", 12);
+      gh.Columns.AddInt("AddrObCount", true, "РљРѕР»-РІРѕ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ", 12);
       gh.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = "#,##0";
       gh.Columns.LastAdded.SizeGroup = "ObjCount";
       if (_Source.DBSettings.UseHouse)
       {
-        gh.Columns.AddInt("HouseCount", true, "Кол-во зданий", 12);
+        gh.Columns.AddInt("HouseCount", true, "РљРѕР»-РІРѕ Р·РґР°РЅРёР№", 12);
         gh.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = "#,##0";
         gh.Columns.LastAdded.SizeGroup = "ObjCount";
       }
       if (_Source.DBSettings.UseRoom)
       {
-        gh.Columns.AddInt("RoomCount", true, "Кол-во помещений", 12);
+        gh.Columns.AddInt("RoomCount", true, "РљРѕР»-РІРѕ РїРѕРјРµС‰РµРЅРёР№", 12);
         gh.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = "#,##0";
         gh.Columns.LastAdded.SizeGroup = "ObjCount";
       }
@@ -414,7 +414,7 @@ namespace FreeLibSet.Forms.FIAS
             args.Value = EFPApp.MainImages.Images["Time"];
           else
             args.Value = EFPApp.MainImages.Images["New"];
-          args.ToolTipText = "Ошибок при загрузке: " + errorCount.ToString();
+          args.ToolTipText = "РћС€РёР±РѕРє РїСЂРё Р·Р°РіСЂСѓР·РєРµ: " + errorCount.ToString();
           break;
 
         case "ActualDate": // 24.02.2021
@@ -426,7 +426,7 @@ namespace FreeLibSet.Forms.FIAS
             if (ad1 == ad2 && (!PrevRow.IsNull("FinishTime")))
             {
               args.ColorType = EFPDataGridViewColorType.Warning;
-              args.ToolTipText = "Повторная загрузка обновления от " + ad2.ToString("d");
+              args.ToolTipText = "РџРѕРІС‚РѕСЂРЅР°СЏ Р·Р°РіСЂСѓР·РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РѕС‚ " + ad2.ToString("d");
             }
           }
           break;
@@ -438,7 +438,7 @@ namespace FreeLibSet.Forms.FIAS
           { 
             TimeSpan ts=dt2.Value-dt1.Value;
             string s = ts.ToString();
-            // убираем дробную часть
+            // СѓР±РёСЂР°РµРј РґСЂРѕР±РЅСѓСЋ С‡Р°СЃС‚СЊ
             int p = s.LastIndexOf('.');
             if (p >= 0)
               s = s.Substring(0, p);
@@ -466,7 +466,7 @@ namespace FreeLibSet.Forms.FIAS
 
     private class FiasAddressPanelItem : EFPFiasAddressPanel, FreeLibSet.Forms.RI.IEFPAppRIControlItem
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public FiasAddressPanelItem(FiasUI ui, FreeLibSet.FIAS.RI.FiasAddressPanel riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new FiasAddressPanel(), ui, riItem.EditorLevel)
@@ -502,7 +502,7 @@ namespace FreeLibSet.Forms.FIAS
 
     private class FiasAddressComboBoxItem : EFPFiasAddressComboBox, FreeLibSet.Forms.RI.IEFPAppRIControlItem
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public FiasAddressComboBoxItem(FiasUI ui, FreeLibSet.FIAS.RI.FiasAddressComboBox riItem, EFPBaseProvider baseProvider)
         : base(baseProvider, new UserSelComboBox(), ui)
@@ -542,7 +542,7 @@ namespace FreeLibSet.Forms.FIAS
 
     private class FiasAddressDialogItem: FreeLibSet.Forms.RI.IEFPAppRIStandardDialogItem
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public FiasAddressDialogItem(FiasUI ui, FreeLibSet.FIAS.RI.FiasAddressDialog riDialog)
       {

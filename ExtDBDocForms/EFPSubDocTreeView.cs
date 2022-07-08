@@ -13,6 +13,7 @@ using FreeLibSet.Models.Tree;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Remoting;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -755,7 +756,7 @@ namespace FreeLibSet.Forms.Docs
         return;
 
       DataSet ds = new DataSet();
-      ds.RemotingFormat = SerializationFormat.Binary;
+      //ds.RemotingFormat = SerializationFormat.Binary;
       //ds.ExtendedProperties["WorkAreaIdentity"] = DocProvider.DBIdentity;
       ds.ExtendedProperties["DBIdentity"] = DocProvider.DBIdentity; // 15.05.2020
       DataTable table = this.SourceAsDataTable.Clone();
@@ -764,6 +765,7 @@ namespace FreeLibSet.Forms.Docs
       for (int i = 0; i < rows.Length; i++)
         table.Rows.Add(rows[i].ItemArray);
 
+      SerializationTools.PrepareDataSet(ds); // 07.07.2022
       args.DataObject.SetData(ds);
     }
 

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +17,7 @@ namespace TestCache
 {
   public partial class TestForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public TestForm()
     {
@@ -26,9 +26,9 @@ namespace TestCache
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
       efpThreads = new EFPDataGridView(efpForm, grThreads);
-      efpThreads.Columns.AddInt("Id", false, "№ потока", 3);
-      efpThreads.Columns.AddInt("AccessCount", false, "Число обращений", 8);
-      efpThreads.Columns.AddInt("DelCount", false, "Число удалений", 8);
+      efpThreads.Columns.AddInt("Id", false, "в„– РїРѕС‚РѕРєР°", 3);
+      efpThreads.Columns.AddInt("AccessCount", false, "Р§РёСЃР»Рѕ РѕР±СЂР°С‰РµРЅРёР№", 8);
+      efpThreads.Columns.AddInt("DelCount", false, "Р§РёСЃР»Рѕ СѓРґР°Р»РµРЅРёР№", 8);
       efpThreads.Columns.AddText("ThreadState", false, "Thread.State", 20, 5);
       efpThreads.ReadOnly = false;
       efpThreads.CanView = false;
@@ -37,9 +37,9 @@ namespace TestCache
 
       efpStat = new EFPDataGridView(efpForm, grStat);
       efpStat.Columns.AddText("ObjType", false, "Object type", 15, 10);
-      efpStat.Columns.AddFixedPoint("PrcMem", false, "% из памяти", 5, 1, "Percent");
-      efpStat.Columns.AddFixedPoint("PrcFile", false, "% из файла", 5, 1, "Percent");
-      efpStat.Columns.AddFixedPoint("PrcCreate", false, "% создание", 5, 1, "Percent");
+      efpStat.Columns.AddFixedPoint("PrcMem", false, "% РёР· РїР°РјСЏС‚Рё", 5, 1, "Percent");
+      efpStat.Columns.AddFixedPoint("PrcFile", false, "% РёР· С„Р°Р№Р»Р°", 5, 1, "Percent");
+      efpStat.Columns.AddFixedPoint("PrcCreate", false, "% СЃРѕР·РґР°РЅРёРµ", 5, 1, "Percent");
       MinMaxInt mmi = DataTools.GetEnumRange(typeof(CacheStatParam));
       for (int i = 0; i <= mmi.MaxValue; i++)
       {
@@ -50,7 +50,7 @@ namespace TestCache
       }
       efpStat.Columns.AddText("Persistance", false, "Persistance", 15, 5);
       efpStat.Columns.AddBool("AllowDelete", false, "AllowDelete");
-      efpStat.Columns.AddInt("MaxCount", false, "Вариантов значений", 7);
+      efpStat.Columns.AddInt("MaxCount", false, "Р’Р°СЂРёР°РЅС‚РѕРІ Р·РЅР°С‡РµРЅРёР№", 7);
 
       efpStat.ReadOnly = false;
       efpStat.CanView = false;
@@ -114,7 +114,7 @@ namespace TestCache
 
     void efpInfo_Click(object sender, EventArgs args)
     {
-      DebugTools.ShowDebugInfo("Отладочная информация");
+      DebugTools.ShowDebugInfo("РћС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ");
     }
 
     void efpClear_Click(object sender, EventArgs args)
@@ -124,18 +124,18 @@ namespace TestCache
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     private EFPDataGridView efpThreads, efpStat;
 
     /// <summary>
-    /// Количество потоков тестирования
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕС‚РѕРєРѕРІ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ
     /// </summary>
     public int ThreadCount;
 
     #endregion
 
-    #region Запуск теста
+    #region Р—Р°РїСѓСЃРє С‚РµСЃС‚Р°
 
     protected override void OnLoad(EventArgs e)
     {
@@ -177,7 +177,7 @@ namespace TestCache
 
     #endregion
 
-    #region Вывод статистики
+    #region Р’С‹РІРѕРґ СЃС‚Р°С‚РёСЃС‚РёРєРё
 
     bool InsideTimerTick;
 
@@ -241,7 +241,7 @@ namespace TestCache
         }
       }
 
-      grStat[0, Stats.Length].Value = "Все объекты";
+      grStat[0, Stats.Length].Value = "Р’СЃРµ РѕР±СЉРµРєС‚С‹";
       FillStatRow(Stats.Length, TotalStat, mmi);
 
       string[] a = new string[GC.MaxGeneration + 1];
@@ -256,7 +256,7 @@ namespace TestCache
       TimeSpan ts = DateTime.Now - EFPApp.AppStartTime;
       string s2 = String.Empty;
       if (ts.TotalSeconds > 1.0)
-        s2 = " (" + ((double)MaxCC / ts.TotalSeconds).ToString("0.0") + " раз в секунду)";
+        s2 = " (" + ((double)MaxCC / ts.TotalSeconds).ToString("0.0") + " СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ)";
 
       lblCollectInfo.Text = String.Join(", ", a) + s2;
 
@@ -273,7 +273,7 @@ namespace TestCache
 
       int ml = MemoryTools.MemoryLoad;
       if (ml == MemoryTools.UnknownMemoryLoad)
-        lblMemoryLoad.Text = "Неизвестно";
+        lblMemoryLoad.Text = "РќРµРёР·РІРµСЃС‚РЅРѕ";
       else
         lblMemoryLoad.Text = ml.ToString() + "%";
     }

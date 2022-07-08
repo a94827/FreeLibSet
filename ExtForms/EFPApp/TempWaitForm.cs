@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,11 +13,11 @@ using FreeLibSet.Logging;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Форма для вывода заставок EFPApp.BeginWait()/EndWait
+  /// Р¤РѕСЂРјР° РґР»СЏ РІС‹РІРѕРґР° Р·Р°СЃС‚Р°РІРѕРє EFPApp.BeginWait()/EndWait
   /// </summary>
   internal partial class TempWaitForm : TempBaseForm
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public TempWaitForm()
     {
@@ -26,20 +26,20 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Статический метод запуска
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°
 
     /// <summary>
-    /// Статический экземпляр формы
+    /// РЎС‚Р°С‚РёС‡РµСЃРєРёР№ СЌРєР·РµРјРїР»СЏСЂ С„РѕСЂРјС‹
     /// </summary>
     private static TempWaitForm _TheForm = null;
 
     public static void BeginWait(string message, int imageIndex, bool updateImmediately)
     {
-      #region Значения по умолчанию
+      #region Р—РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 
       if (_WaitInfoStack.Count > 0)
       {
-        // Если какой-либо параметр не указан - берем данные от предыдущего уровня
+        // Р•СЃР»Рё РєР°РєРѕР№-Р»РёР±Рѕ РїР°СЂР°РјРµС‚СЂ РЅРµ СѓРєР°Р·Р°РЅ - Р±РµСЂРµРј РґР°РЅРЅС‹Рµ РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ СѓСЂРѕРІРЅСЏ
 
         WaitInfo prevObj = _WaitInfoStack.Peek();
         if (String.IsNullOrEmpty(message))
@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms
       else
       {
         if (String.IsNullOrEmpty(message))
-          message = "Ждите";
+          message = "Р–РґРёС‚Рµ";
         if (imageIndex < 0)
           imageIndex = EFPApp.MainImages.Images.IndexOfKey("HourGlass");
       }
@@ -88,7 +88,7 @@ namespace FreeLibSet.Forms
       //      CheckTread();
       //#endif
 
-      // Убираем себя из стека
+      // РЈР±РёСЂР°РµРј СЃРµР±СЏ РёР· СЃС‚РµРєР°
       _WaitInfoStack.Pop();
 
       try
@@ -110,10 +110,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработка ошибок
+    #region РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
 
     /// <summary>
-    /// Признак однократного логгирования ошибки в BeginWait() / EndWait()
+    /// РџСЂРёР·РЅР°Рє РѕРґРЅРѕРєСЂР°С‚РЅРѕРіРѕ Р»РѕРіРіРёСЂРѕРІР°РЅРёСЏ РѕС€РёР±РєРё РІ BeginWait() / EndWait()
     /// </summary>
     private static bool _BeginEndWaitErrorLogged = false;
 
@@ -122,20 +122,20 @@ namespace FreeLibSet.Forms
       if (_BeginEndWaitErrorLogged)
         return;
       _BeginEndWaitErrorLogged = true;
-      LogoutTools.LogoutException(e, "Перехват ошибки EFPApp.BeginWait()/EndWait(). Повторные сообщения не выводятся");
+      LogoutTools.LogoutException(e, "РџРµСЂРµС…РІР°С‚ РѕС€РёР±РєРё EFPApp.BeginWait()/EndWait(). РџРѕРІС‚РѕСЂРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РЅРµ РІС‹РІРѕРґСЏС‚СЃСЏ");
     }
 
     #endregion
 
-    #region Стек сообщений
+    #region РЎС‚РµРє СЃРѕРѕР±С‰РµРЅРёР№
 
     /// <summary>
-    /// Объект для стека сообщений. Для вызовов WaitCursor без аргументов
-    /// в стеке хранятся значения null
+    /// РћР±СЉРµРєС‚ РґР»СЏ СЃС‚РµРєР° СЃРѕРѕР±С‰РµРЅРёР№. Р”Р»СЏ РІС‹Р·РѕРІРѕРІ WaitCursor Р±РµР· Р°СЂРіСѓРјРµРЅС‚РѕРІ
+    /// РІ СЃС‚РµРєРµ С…СЂР°РЅСЏС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ null
     /// </summary>
     private class WaitInfo
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public string Message;
       public int ImageIndex;
@@ -144,7 +144,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>                
-    /// Стек вызовов
+    /// РЎС‚РµРє РІС‹Р·РѕРІРѕРІ
     /// </summary>
     private static Stack<WaitInfo> _WaitInfoStack = new Stack<WaitInfo>();
 

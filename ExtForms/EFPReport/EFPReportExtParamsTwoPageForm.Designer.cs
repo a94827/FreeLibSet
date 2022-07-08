@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+п»їnamespace FreeLibSet.Forms
 {
   partial class EFPReportExtParamsTwoPageForm
   {
@@ -58,7 +58,7 @@ namespace FreeLibSet.Forms
       this.MainTabPage.Padding = new System.Windows.Forms.Padding(3);
       this.MainTabPage.Size = new System.Drawing.Size(624, 378);
       this.MainTabPage.TabIndex = 0;
-      this.MainTabPage.Text = "Общие";
+      this.MainTabPage.Text = "РћР±С‰РёРµ";
       this.MainTabPage.UseVisualStyleBackColor = true;
       // 
       // FiltersTabPage
@@ -68,7 +68,7 @@ namespace FreeLibSet.Forms
       this.FiltersTabPage.Padding = new System.Windows.Forms.Padding(3);
       this.FiltersTabPage.Size = new System.Drawing.Size(624, 378);
       this.FiltersTabPage.TabIndex = 1;
-      this.FiltersTabPage.Text = "Фильтры";
+      this.FiltersTabPage.Text = "Р¤РёР»СЊС‚СЂС‹";
       this.FiltersTabPage.UseVisualStyleBackColor = true;
       // 
       // EFPReportExtParamsTwoPageForm
@@ -88,8 +88,8 @@ namespace FreeLibSet.Forms
     private System.Windows.Forms.TabControl TheTabControl;
 
     /// <summary>
-    /// Вкладка "Общие".
-    /// Сюда должны быть добавлены пользовательские управляющие элементы, задающие основные параметры отчета
+    /// Р’РєР»Р°РґРєР° "РћР±С‰РёРµ".
+    /// РЎСЋРґР° РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹, Р·Р°РґР°СЋС‰РёРµ РѕСЃРЅРѕРІРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РѕС‚С‡РµС‚Р°
     /// </summary>
     public System.Windows.Forms.TabPage MainTabPage;
     private System.Windows.Forms.TabPage FiltersTabPage;

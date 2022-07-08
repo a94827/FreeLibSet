@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System.IO;
@@ -14,17 +14,17 @@ using FreeLibSet.Core;
 namespace FreeLibSet.IO
 {
   /// <summary>
-  /// Пара "Ключ-Значение" для извлечения из Ini-файла
+  /// РџР°СЂР° "РљР»СЋС‡-Р—РЅР°С‡РµРЅРёРµ" РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёР· Ini-С„Р°Р№Р»Р°
   /// </summary>
   public class IniKeyValue : IObjectWithCode
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пару "Ключ-Значение"
+    /// РЎРѕР·РґР°РµС‚ РїР°СЂСѓ "РљР»СЋС‡-Р—РЅР°С‡РµРЅРёРµ"
     /// </summary>
-    /// <param name="key">Имя параметра</param>
-    /// <param name="value">Значение</param>
+    /// <param name="key">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
     public IniKeyValue(string key, string value)
     {
       _Key = key;
@@ -33,22 +33,22 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Ключ
+    /// РљР»СЋС‡
     /// </summary>
     public string Key { get { return _Key; } }
     private string _Key;
 
     /// <summary>
-    /// Значение
+    /// Р—РЅР°С‡РµРЅРёРµ
     /// </summary>
     public string Value { get { return _Value; } }
     private string _Value;
 
     /// <summary>
-    /// Возвращает пару "Ключ=Значение"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїР°СЂСѓ "РљР»СЋС‡=Р—РЅР°С‡РµРЅРёРµ"
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -69,70 +69,70 @@ namespace FreeLibSet.IO
   }
 
   /// <summary>
-  /// Интефрейс доступа к INI-файлам.
-  /// Доступ может быть реализован путем обычного чтения-записи файла (класс IniFile)
-  /// или вызовами Windows API (класс IniFileWindows)
+  /// РРЅС‚РµС„СЂРµР№СЃ РґРѕСЃС‚СѓРїР° Рє INI-С„Р°Р№Р»Р°Рј.
+  /// Р”РѕСЃС‚СѓРї РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂРµР°Р»РёР·РѕРІР°РЅ РїСѓС‚РµРј РѕР±С‹С‡РЅРѕРіРѕ С‡С‚РµРЅРёСЏ-Р·Р°РїРёСЃРё С„Р°Р№Р»Р° (РєР»Р°СЃСЃ IniFile)
+  /// РёР»Рё РІС‹Р·РѕРІР°РјРё Windows API (РєР»Р°СЃСЃ IniFileWindows)
   /// </summary>
   public interface IIniFile : IReadOnlyObject
   {
-    #region Секции
+    #region РЎРµРєС†РёРё
 
     /// <summary>
-    /// Возвращает массив имен всех секций
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёРјРµРЅ РІСЃРµС… СЃРµРєС†РёР№
     /// </summary>
-    /// <returns>Массив имен</returns>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     string[] GetSectionNames();
 
     /// <summary>
-    /// Удаление секции и всех значений в ней.
-    /// Если секция не существует, никаких действий не выполняется.
+    /// РЈРґР°Р»РµРЅРёРµ СЃРµРєС†РёРё Рё РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РІ РЅРµР№.
+    /// Р•СЃР»Рё СЃРµРєС†РёСЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="section">Имя секции</param>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
     void DeleteSection(string section);
 
     #endregion
 
-    #region Значения
+    #region Р—РЅР°С‡РµРЅРёСЏ
 
     /// <summary>
-    /// Чтение и запись строкового значения.
-    /// Если при чтении нет такой секции или ключа, возвращается пустое значение.
-    /// При записи несуществующего значения выполняется создание секции или ключа
+    /// Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ СЃС‚СЂРѕРєРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё РїСЂРё С‡С‚РµРЅРёРё РЅРµС‚ С‚Р°РєРѕР№ СЃРµРєС†РёРё РёР»Рё РєР»СЋС‡Р°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РџСЂРё Р·Р°РїРёСЃРё РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃРѕР·РґР°РЅРёРµ СЃРµРєС†РёРё РёР»Рё РєР»СЋС‡Р°
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
-    /// <returns>Строковое значение</returns>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <param name="key">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     string this[string section, string key] { get; set; }
 
     /// <summary>
-    /// Получение строкого значения с указанием значения по умолчанию
+    /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚СЂРѕРєРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ СЃ СѓРєР°Р·Р°РЅРёРµРј Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
-    /// <param name="defaultValue">Значение по умолчанию</param>
-    /// <returns>Строковое значение</returns>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <param name="key">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="defaultValue">Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     string GetString(string section, string key, string defaultValue);
 
     /// <summary>
-    /// Возвращает массив имен всех параметров для заданной секции
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёРјРµРЅ РІСЃРµС… РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ СЃРµРєС†РёРё
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <returns>Массив имен</returns>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     string[] GetKeyNames(string section);
 
     /// <summary>
-    /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ РІС‹Р·РІР°С‚СЊ foreach РїРѕ РїР°СЂР°Рј "РљР»СЋС‡-Р—РЅР°С‡РµРЅРёРµ"
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <returns>Объект, реализующий интерфейс IEnumerable</returns>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <returns>РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ IEnumerable</returns>
     IEnumerable<IniKeyValue> GetKeyValues(string section);
 
     /// <summary>
-    /// Удаление параметра из секции.
-    /// Если секция или значение не существуют, никаких действий не выполняется.
+    /// РЈРґР°Р»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° РёР· СЃРµРєС†РёРё.
+    /// Р•СЃР»Рё СЃРµРєС†РёСЏ РёР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‚, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <param name="key">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
     void DeleteKey(string section, string key);
 
     #endregion
@@ -141,21 +141,21 @@ namespace FreeLibSet.IO
 
 
   /// <summary>
-  /// Доступ к INI-файлу в режиме чтения и записи файла как целого.
-  /// Работает, в том числе и на платформах, отличных от Windows.
-  /// Для загрузки значений и сохранения изменений используйте методы Load() и Save().
-  /// Для работы с INI-файлами с помощью функций Windows, используйте класс IniFileWindows.
+  /// Р”РѕСЃС‚СѓРї Рє INI-С„Р°Р№Р»Сѓ РІ СЂРµР¶РёРјРµ С‡С‚РµРЅРёСЏ Рё Р·Р°РїРёСЃРё С„Р°Р№Р»Р° РєР°Рє С†РµР»РѕРіРѕ.
+  /// Р Р°Р±РѕС‚Р°РµС‚, РІ С‚РѕРј С‡РёСЃР»Рµ Рё РЅР° РїР»Р°С‚С„РѕСЂРјР°С…, РѕС‚Р»РёС‡РЅС‹С… РѕС‚ Windows.
+  /// Р”Р»СЏ Р·Р°РіСЂСѓР·РєРё Р·РЅР°С‡РµРЅРёР№ Рё СЃРѕС…СЂР°РЅРµРЅРёСЏ РёР·РјРµРЅРµРЅРёР№ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґС‹ Load() Рё Save().
+  /// Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃ INI-С„Р°Р№Р»Р°РјРё СЃ РїРѕРјРѕС‰СЊСЋ С„СѓРЅРєС†РёР№ Windows, РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РєР»Р°СЃСЃ IniFileWindows.
   /// </summary>
   public class IniFile : IIniFile
   {
-    #region Вложенные классы
+    #region Р’Р»РѕР¶РµРЅРЅС‹Рµ РєР»Р°СЃСЃС‹
 
     /// <summary>
-    /// Секция конфигурации
+    /// РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
     private class IniSection : NamedList<IniKeyValue>, IObjectWithCode
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public IniSection(string section)
         : base(true)
@@ -165,7 +165,7 @@ namespace FreeLibSet.IO
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public string Section { get { return _Section; } }
       private string _Section;
@@ -176,11 +176,11 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Список секций конфигурации
+    /// РЎРїРёСЃРѕРє СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
     private class IniSectionList : NamedList<IniSection>
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public IniSectionList()
         : base(true)
@@ -201,11 +201,11 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает пустой список секций.
-    /// Список доступен и для чтения и для записи.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє СЃРµРєС†РёР№.
+    /// РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРµРЅ Рё РґР»СЏ С‡С‚РµРЅРёСЏ Рё РґР»СЏ Р·Р°РїРёСЃРё.
     /// </summary>
     public IniFile()
       : this(false)
@@ -213,9 +213,9 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Создает пустой список секций
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє СЃРµРєС†РёР№
     /// </summary>
-    /// <param name="isReadOnly">Если true, то список будет доступен только для чтения</param>
+    /// <param name="isReadOnly">Р•СЃР»Рё true, С‚Рѕ СЃРїРёСЃРѕРє Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ</param>
     public IniFile(bool isReadOnly)
     {
       _Sections = new IniSectionList();
@@ -224,14 +224,14 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Методы загрузки и сохранения
+    #region РњРµС‚РѕРґС‹ Р·Р°РіСЂСѓР·РєРё Рё СЃРѕС…СЂР°РЅРµРЅРёСЏ
 
-    #region Чтение
+    #region Р§С‚РµРЅРёРµ
 
     /// <summary>
-    /// Загружает данные из заданного файла, используя кодировку, принятую по умолчанию
+    /// Р—Р°РіСЂСѓР¶Р°РµС‚ РґР°РЅРЅС‹Рµ РёР· Р·Р°РґР°РЅРЅРѕРіРѕ С„Р°Р№Р»Р°, РёСЃРїРѕР»СЊР·СѓСЏ РєРѕРґРёСЂРѕРІРєСѓ, РїСЂРёРЅСЏС‚СѓСЋ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
-    /// <param name="filePath">Путь к файлу. Файл должен существовать</param>
+    /// <param name="filePath">РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ. Р¤Р°Р№Р» РґРѕР»Р¶РµРЅ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ</param>
     public void Load(AbsPath filePath)
     {
       if (filePath.IsEmpty)
@@ -246,10 +246,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Загружает данные из заданного файла
+    /// Р—Р°РіСЂСѓР¶Р°РµС‚ РґР°РЅРЅС‹Рµ РёР· Р·Р°РґР°РЅРЅРѕРіРѕ С„Р°Р№Р»Р°
     /// </summary>
-    /// <param name="filePath">Путь к файлу. Файл должен существовать</param>
-    /// <param name="encoding">Кодировка</param>
+    /// <param name="filePath">РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ. Р¤Р°Р№Р» РґРѕР»Р¶РµРЅ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ</param>
+    /// <param name="encoding">РљРѕРґРёСЂРѕРІРєР°</param>
     public void Load(AbsPath filePath, Encoding encoding)
     {
       if (filePath.IsEmpty)
@@ -264,10 +264,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Загружает данные из потока
+    /// Р—Р°РіСЂСѓР¶Р°РµС‚ РґР°РЅРЅС‹Рµ РёР· РїРѕС‚РѕРєР°
     /// </summary>
-    /// <param name="stream">Поток для чтения</param>
-    /// <param name="encoding">Кодировка</param>
+    /// <param name="stream">РџРѕС‚РѕРє РґР»СЏ С‡С‚РµРЅРёСЏ</param>
+    /// <param name="encoding">РљРѕРґРёСЂРѕРІРєР°</param>
     public void Load(Stream stream, Encoding encoding)
     {
       if (stream == null)
@@ -296,7 +296,7 @@ namespace FreeLibSet.IO
 
         m = regexComment.Match(line);
         if (m.Success)
-          continue; // комментарии не сохраняем
+          continue; // РєРѕРјРјРµРЅС‚Р°СЂРёРё РЅРµ СЃРѕС…СЂР°РЅСЏРµРј
 
         m = regexSection.Match(line);
         if (m.Success)
@@ -315,7 +315,7 @@ namespace FreeLibSet.IO
         {
           IniSection sect = _Sections[_Sections.Count - 1];
           IniKeyValue v = new IniKeyValue(m.Groups[1].Value, m.Groups[2].Value);
-          sect.Remove(v.Key); // на случай ошибки
+          sect.Remove(v.Key); // РЅР° СЃР»СѓС‡Р°Р№ РѕС€РёР±РєРё
           sect.Add(v);
         }
       }
@@ -323,13 +323,13 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Запись
+    #region Р—Р°РїРёСЃСЊ
 
     /// <summary>
-    /// Записывает данные в файл, используя кодировку, принятую по умолчанию.
-    /// Этот метод нельзя вызывать при IsReadOnly=true.
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РІ С„Р°Р№Р», РёСЃРїРѕР»СЊР·СѓСЏ РєРѕРґРёСЂРѕРІРєСѓ, РїСЂРёРЅСЏС‚СѓСЋ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµР»СЊР·СЏ РІС‹Р·С‹РІР°С‚СЊ РїСЂРё IsReadOnly=true.
     /// </summary>
-    /// <param name="filePath">Имя файла</param>
+    /// <param name="filePath">РРјСЏ С„Р°Р№Р»Р°</param>
     public void Save(AbsPath filePath)
     {
       if (filePath.IsEmpty)
@@ -345,11 +345,11 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Записывает данные в файл в указанной кодировке.
-    /// Этот метод нельзя вызывать при IsReadOnly=true.
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РІ С„Р°Р№Р» РІ СѓРєР°Р·Р°РЅРЅРѕР№ РєРѕРґРёСЂРѕРІРєРµ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµР»СЊР·СЏ РІС‹Р·С‹РІР°С‚СЊ РїСЂРё IsReadOnly=true.
     /// </summary>
-    /// <param name="filePath">Имя файла</param>
-    /// <param name="encoding">Кодировка</param>
+    /// <param name="filePath">РРјСЏ С„Р°Р№Р»Р°</param>
+    /// <param name="encoding">РљРѕРґРёСЂРѕРІРєР°</param>
     public void Save(AbsPath filePath, Encoding encoding)
     {
       if (filePath.IsEmpty)
@@ -365,10 +365,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Записывает данные в поток
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РІ РїРѕС‚РѕРє
     /// </summary>
-    /// <param name="stream">Поток</param>
-    /// <param name="encoding">Кодировка</param>
+    /// <param name="stream">РџРѕС‚РѕРє</param>
+    /// <param name="encoding">РљРѕРґРёСЂРѕРІРєР°</param>
     public void Save(Stream stream, Encoding encoding)
     {
       if (stream == null)
@@ -397,9 +397,9 @@ namespace FreeLibSet.IO
     private AbsPath _FilePath;
 
     /// <summary>
-    /// Возвращает имя файла, для которого был вызван Load() или Save() или "no file"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С„Р°Р№Р»Р°, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ Р±С‹Р» РІС‹Р·РІР°РЅ Load() РёР»Рё Save() РёР»Рё "no file"
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (_FilePath.IsEmpty)
@@ -412,7 +412,7 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Список секций
+    #region РЎРїРёСЃРѕРє СЃРµРєС†РёР№
 
     private IniSectionList _Sections;
 
@@ -421,13 +421,13 @@ namespace FreeLibSet.IO
     #region IIniFile Members
 
     /// <summary>
-    /// Чтение и запись строкового значения.
-    /// Если при чтении нет такой секции или ключа, возвращается пустое значение.
-    /// При записи несуществующего значения выполняется создание секции или ключа
+    /// Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ СЃС‚СЂРѕРєРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё РїСЂРё С‡С‚РµРЅРёРё РЅРµС‚ С‚Р°РєРѕР№ СЃРµРєС†РёРё РёР»Рё РєР»СЋС‡Р°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РџСЂРё Р·Р°РїРёСЃРё РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃРѕР·РґР°РЅРёРµ СЃРµРєС†РёРё РёР»Рё РєР»СЋС‡Р°
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
-    /// <returns>Строковое значение</returns>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <param name="key">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     public string this[string section, string key]
     {
       get
@@ -457,12 +457,12 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Получение строкого значения с указанием значения по умолчанию
+    /// РџРѕР»СѓС‡РµРЅРёРµ СЃС‚СЂРѕРєРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ СЃ СѓРєР°Р·Р°РЅРёРµРј Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
-    /// <param name="defaultValue">Значение по умолчанию</param>
-    /// <returns>Строковое значение</returns>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <param name="key">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="defaultValue">Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <returns>РЎС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     public string GetString(string section, string key, string defaultValue)
     {
       if (String.IsNullOrEmpty(section))
@@ -475,26 +475,26 @@ namespace FreeLibSet.IO
         return defaultValue;
       IniKeyValue v = sect[key];
       //if (v.Key == null)
-      if (v == null) // исправлено 08.11.2019
+      if (v == null) // РёСЃРїСЂР°РІР»РµРЅРѕ 08.11.2019
         return defaultValue;
       else
         return v.Value;
     }
 
     /// <summary>
-    /// Возвращает массив имен всех секций
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёРјРµРЅ РІСЃРµС… СЃРµРєС†РёР№
     /// </summary>
-    /// <returns>Массив имен</returns>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     public string[] GetSectionNames()
     {
       return _Sections.GetCodes();
     }
 
     /// <summary>
-    /// Возвращает массив имен всех параметров для заданной секции
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёРјРµРЅ РІСЃРµС… РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ СЃРµРєС†РёРё
     /// </summary>
     /// <param name="section"></param>
-    /// <returns>Массив имен</returns>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     public string[] GetKeyNames(string section)
     {
       if (String.IsNullOrEmpty(section))
@@ -508,10 +508,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Удаление секции и всех значений в ней.
-    /// Если секция не существует, никаких действий не выполняется.
+    /// РЈРґР°Р»РµРЅРёРµ СЃРµРєС†РёРё Рё РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РІ РЅРµР№.
+    /// Р•СЃР»Рё СЃРµРєС†РёСЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="section">Имя секции</param>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
     public void DeleteSection(string section)
     {
       if (String.IsNullOrEmpty(section))
@@ -522,11 +522,11 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Удаление параметра из секции.
-    /// Если секция или значение не существуют, никаких действий не выполняется.
+    /// РЈРґР°Р»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР° РёР· СЃРµРєС†РёРё.
+    /// Р•СЃР»Рё СЃРµРєС†РёСЏ РёР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‚, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <param name="key">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
     public void DeleteKey(string section, string key)
     {
       if (String.IsNullOrEmpty(section))
@@ -542,10 +542,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ РІС‹Р·РІР°С‚СЊ foreach РїРѕ РїР°СЂР°Рј "РљР»СЋС‡-Р—РЅР°С‡РµРЅРёРµ"
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <returns>Объект, реализующий интерфейс IEnumerable</returns>
+    /// <param name="section">РРјСЏ СЃРµРєС†РёРё</param>
+    /// <returns>РћР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ IEnumerable</returns>
     public IEnumerable<IniKeyValue> GetKeyValues(string section)
     {
       if (String.IsNullOrEmpty(section))
@@ -562,14 +562,14 @@ namespace FreeLibSet.IO
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если разрешено только чтение, но не запись.
-    /// Задается в конструкторе
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЂР°Р·СЂРµС€РµРЅРѕ С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ, РЅРѕ РЅРµ Р·Р°РїРёСЃСЊ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
+    /// Р“РµРЅРµСЂРёСЂСѓРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё IsReadOnly=true.
     /// </summary>
     public void CheckNotReadOnly()
     {

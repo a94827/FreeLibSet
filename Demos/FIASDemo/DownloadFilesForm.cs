@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,11 +13,11 @@ using AgeyevAV;
 namespace FIASDemo
 {
   /// <summary>
-  /// Диалог параметров скачивания архивов обновлений
+  /// Р”РёР°Р»РѕРі РїР°СЂР°РјРµС‚СЂРѕРІ СЃРєР°С‡РёРІР°РЅРёСЏ Р°СЂС…РёРІРѕРІ РѕР±РЅРѕРІР»РµРЅРёР№
   /// </summary>
   public partial class DownloadFilesForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public DownloadFilesForm()
     {
@@ -38,7 +38,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     EFPTextBox efpDir;
 
@@ -48,7 +48,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Статический метод запуска
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°
 
     public static void PerformDownload()
     {
@@ -67,10 +67,10 @@ namespace FIASDemo
         case 0: loader.Format = FiasDBUpdateSource.Xml; break;
         case 1: loader.Format = FiasDBUpdateSource.Dbf; break;
         default:
-          throw new BugException("Неизвестный формат");
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С„РѕСЂРјР°С‚");
       }
 
-      using (Splash splash = new Splash("Загрузка обновлений"))
+      using (Splash splash = new Splash("Р—Р°РіСЂСѓР·РєР° РѕР±РЅРѕРІР»РµРЅРёР№"))
       {
         loader.Splash = splash;
         loader.DownloadFiles();

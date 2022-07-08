@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,29 +12,29 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.FIAS
 {
-  // Буферизуемые данные
+  // Р‘СѓС„РµСЂРёР·СѓРµРјС‹Рµ РґР°РЅРЅС‹Рµ
 
-  #region Перечисление FiasSearchRowCount
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ FiasSearchRowCount
 
   /// <summary>
-  /// Результаты поиска строк
+  /// Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР° СЃС‚СЂРѕРє
   /// </summary>
   [Serializable]
   public enum FiasSearchRowCount
   {
     /// <summary>
-    /// Не найдено ни одной строки
+    /// РќРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё
     /// </summary>
     NotFound,
 
     /// <summary>
-    /// Поиск завершен успешно.
-    /// Найдена одна строка.
+    /// РџРѕРёСЃРє Р·Р°РІРµСЂС€РµРЅ СѓСЃРїРµС€РЅРѕ.
+    /// РќР°Р№РґРµРЅР° РѕРґРЅР° СЃС‚СЂРѕРєР°.
     /// </summary>
     Ok,
 
     /// <summary>
-    /// Поиск завершен неудачно, так как найдено больше одной строки классификатора
+    /// РџРѕРёСЃРє Р·Р°РІРµСЂС€РµРЅ РЅРµСѓРґР°С‡РЅРѕ, С‚Р°Рє РєР°Рє РЅР°Р№РґРµРЅРѕ Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     Multi,
   }
@@ -42,16 +42,16 @@ namespace FreeLibSet.FIAS
   #endregion
 
   /// <summary>
-  /// Результаты поиска компонента адреса
-  /// Не используется в прикладном коде
+  /// Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР° РєРѕРјРїРѕРЅРµРЅС‚Р° Р°РґСЂРµСЃР°
+  /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
   /// </summary>
   [Serializable]
   public struct FiasSearchRowResult
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚
     /// </summary>
     /// <param name="count"></param>
     /// <param name="row"></param>
@@ -74,24 +74,24 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Количество найденных строк: Ничего, одна или несколько
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ РЅР°Р№РґРµРЅРЅС‹С… СЃС‚СЂРѕРє: РќРёС‡РµРіРѕ, РѕРґРЅР° РёР»Рё РЅРµСЃРєРѕР»СЊРєРѕ
     /// </summary>
     public FiasSearchRowCount Count { get { return _Count; } }
     private readonly FiasSearchRowCount _Count;
 
     /// <summary>
-    /// Строка таблицы кэша, если найдена ровно одна запись в классификаторе
+    /// РЎС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РєСЌС€Р°, РµСЃР»Рё РЅР°Р№РґРµРЅР° СЂРѕРІРЅРѕ РѕРґРЅР° Р·Р°РїРёСЃСЊ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂРµ
     /// </summary>
     public DataRow Row { get { return _Row; } }
     private readonly DataRow _Row;
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return Count.ToString();
@@ -99,15 +99,15 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Статические свойства
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Статический экземпляр "Не нашли"
+    /// РЎС‚Р°С‚РёС‡РµСЃРєРёР№ СЌРєР·РµРјРїР»СЏСЂ "РќРµ РЅР°С€Р»Рё"
     /// </summary>
     public static readonly FiasSearchRowResult NotFound = new FiasSearchRowResult(FiasSearchRowCount.NotFound, null);
 
     /// <summary>
-    /// Статический экземпляр "Нашли несколько строк"
+    /// РЎС‚Р°С‚РёС‡РµСЃРєРёР№ СЌРєР·РµРјРїР»СЏСЂ "РќР°С€Р»Рё РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚СЂРѕРє"
     /// </summary>
     public static readonly FiasSearchRowResult Multi = new FiasSearchRowResult(FiasSearchRowCount.Multi, null);
 
@@ -115,14 +115,14 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Страница классификатора для адресных объектов.
-  /// Этот класс не используется в пользовательском коде.
-  /// Класс является потокобезопасным.
+  /// РЎС‚СЂР°РЅРёС†Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґР»СЏ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ.
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ.
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   [Serializable]
   public class FiasCachedPageAddrOb
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasCachedPageAddrOb(Guid pageAOGuid, FiasLevel level, DataSet ds)
     {
@@ -136,48 +136,48 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     /// <summary>
-    /// GUID адресного объекта к которому относится страница
+    /// GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЃС‚СЂР°РЅРёС†Р°
     /// </summary>
     internal Guid PageAOGuid { get { return _PageAOGuid; } }
     private readonly Guid _PageAOGuid;
 
     /// <summary>
-    /// Уровень адресных объектов, которые загружены в таблице
+    /// РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р·Р°РіСЂСѓР¶РµРЅС‹ РІ С‚Р°Р±Р»РёС†Рµ
     /// </summary>
     internal FiasLevel Level { get { return _Level; } }
     private readonly FiasLevel _Level;
 
     /// <summary>
-    /// Внутренняя таблица данных "AddrOb"
-    /// Первичным ключом таблицы является идентификатор записи AOID.
-    /// DefaulView отсортирован по полю AOGUID
-    /// Есть дополнительный DataView
+    /// Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ С‚Р°Р±Р»РёС†Р° РґР°РЅРЅС‹С… "AddrOb"
+    /// РџРµСЂРІРёС‡РЅС‹Рј РєР»СЋС‡РѕРј С‚Р°Р±Р»РёС†С‹ СЏРІР»СЏРµС‚СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё AOID.
+    /// DefaulView РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ РїРѕ РїРѕР»СЋ AOGUID
+    /// Р•СЃС‚СЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ DataView
     /// </summary>
     private readonly DataSet _DS;
 
     /// <summary>
-    /// Объект для поиска строк по имени
+    /// РћР±СЉРµРєС‚ РґР»СЏ РїРѕРёСЃРєР° СЃС‚СЂРѕРє РїРѕ РёРјРµРЅРё
     /// </summary>
     [NonSerialized]
     private DataView _dvOffName;
 
 
     /// <summary>
-    /// Возвращает true, если на странице нет ни одной записи
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РЅР° СЃС‚СЂР°РЅРёС†Рµ РЅРµС‚ РЅРё РѕРґРЅРѕР№ Р·Р°РїРёСЃРё
     /// </summary>
     public bool IsEmpty { get { return _DS.Tables[0].Rows.Count == 0; } }
 
     /// <summary>
-    /// Количество строк в таблице на странице (для отладочных целей)
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ РЅР° СЃС‚СЂР°РЅРёС†Рµ (РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№)
     /// </summary>
     public int RowCount { get { return _DS.Tables[0].Rows.Count; } }
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [System.Runtime.Serialization.OnDeserialized]
     private void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
@@ -193,7 +193,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поиск
+    #region РџРѕРёСЃРє
 
     internal DataRow FindRowByGuid(Guid guid)
     {
@@ -211,7 +211,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Возвращает GUID родительского адресного объекта
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ GUID СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
     /// <param name="guid"></param>
     /// <returns></returns>
@@ -226,7 +226,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     internal void AddToGuidDict(DictionaryWithMRU<FiasGuidKey, FiasGuidInfo> dict)
     {
@@ -244,9 +244,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление объекта</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р°</returns>
     public override string ToString()
     {
       return Level.ToString() + " " + _PageAOGuid.ToString();
@@ -254,11 +254,11 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Методы и свойства для редактора
+    #region РњРµС‚РѕРґС‹ Рё СЃРІРѕР№СЃС‚РІР° РґР»СЏ СЂРµРґР°РєС‚РѕСЂР°
 
     /// <summary>
-    /// Имена без сокращений для инициализации списка AutoComplete в поле ввода.
-    /// В список входят только действующие элементы.
+    /// РРјРµРЅР° Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёР№ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃРїРёСЃРєР° AutoComplete РІ РїРѕР»Рµ РІРІРѕРґР°.
+    /// Р’ СЃРїРёСЃРѕРє РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ РґРµР№СЃС‚РІСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹.
     /// </summary>
     public string[] Names
     {
@@ -287,27 +287,27 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Создать объект DataView для просмотра.
-    /// Список отсортирован.
-    /// Созданный объект должен быть удален после того, как просмотр закрывается.
-    /// В просмотр входят только актуальные записи.
-    /// Для извлечения информации из строк DataRow просмотра используйте FiasAddrObExtractor.
+    /// РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ DataView РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ.
+    /// РЎРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРґР°Р»РµРЅ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє РїСЂРѕСЃРјРѕС‚СЂ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
+    /// Р’ РїСЂРѕСЃРјРѕС‚СЂ РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ Р·Р°РїРёСЃРё.
+    /// Р”Р»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃС‚СЂРѕРє DataRow РїСЂРѕСЃРјРѕС‚СЂР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ FiasAddrObExtractor.
     /// </summary>
-    /// <returns>Новый объект DataView</returns>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DataView</returns>
     public DataView CreateDataView()
     {
       return CreateDataView(true);
     }
 
     /// <summary>
-    /// Создать объект DataView для просмотра.
-    /// Список отсортирован.
-    /// Созданный объект должен быть удален после того, как просмотр закрывается.
-    /// Для извлечения информации из строк DataRow просмотра используйте FiasAddrObExtractor.
+    /// РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ DataView РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ.
+    /// РЎРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРґР°Р»РµРЅ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє РїСЂРѕСЃРјРѕС‚СЂ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
+    /// Р”Р»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃС‚СЂРѕРє DataRow РїСЂРѕСЃРјРѕС‚СЂР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ FiasAddrObExtractor.
     /// </summary>
-    /// <param name="actualOnly">Если true, то в просмотр входят только актуальные записи.
-    /// Если false, то фильтр не устанавливается. Однако наличие исторических записей зависит от FiasDBSettings.</param>
-    /// <returns>Новый объект DataView</returns>
+    /// <param name="actualOnly">Р•СЃР»Рё true, С‚Рѕ РІ РїСЂРѕСЃРјРѕС‚СЂ РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё false, С‚Рѕ С„РёР»СЊС‚СЂ РЅРµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ. РћРґРЅР°РєРѕ РЅР°Р»РёС‡РёРµ РёСЃС‚РѕСЂРёС‡РµСЃРєРёС… Р·Р°РїРёСЃРµР№ Р·Р°РІРёСЃРёС‚ РѕС‚ FiasDBSettings.</param>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DataView</returns>
     public DataView CreateDataView(bool actualOnly)
     {
       DataView dv = new DataView(_DS.Tables[0]);
@@ -318,43 +318,43 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Поиск строки.
-    /// Сначала выполняется поиск вместе с типом адресообразующего элемента, а затем - без него.
-    /// Если есть больше одной подходящей строки (неоднозначность), то возвращается null
+    /// РџРѕРёСЃРє СЃС‚СЂРѕРєРё.
+    /// РЎРЅР°С‡Р°Р»Р° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє РІРјРµСЃС‚Рµ СЃ С‚РёРїРѕРј Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°, Р° Р·Р°С‚РµРј - Р±РµР· РЅРµРіРѕ.
+    /// Р•СЃР»Рё РµСЃС‚СЊ Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ РїРѕРґС…РѕРґСЏС‰РµР№ СЃС‚СЂРѕРєРё (РЅРµРѕРґРЅРѕР·РЅР°С‡РЅРѕСЃС‚СЊ), С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="name">Наименование адресообразующего элемента без сокращения</param>
-    /// <param name="aoTypeId">Идентификатор типа адресообразующего элемента в таблице AOType</param>
-    /// <returns>Строка таблицы или null</returns>
+    /// <param name="name">РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёСЏ</param>
+    /// <param name="aoTypeId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РёРїР° Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РІ С‚Р°Р±Р»РёС†Рµ AOType</param>
+    /// <returns>РЎС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РёР»Рё null</returns>
     public FiasSearchRowResult FindRow(string name, Int32 aoTypeId)
     {
       return FindRow(name, aoTypeId, false);
     }
 
     /// <summary>
-    /// Поиск строки.
-    /// Сначала выполняется поиск вместе с типом адресообразующего элемента, а затем - без него.
-    /// Если есть больше одной подходящей строки (неоднозначность), то возвращается null
+    /// РџРѕРёСЃРє СЃС‚СЂРѕРєРё.
+    /// РЎРЅР°С‡Р°Р»Р° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє РІРјРµСЃС‚Рµ СЃ С‚РёРїРѕРј Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°, Р° Р·Р°С‚РµРј - Р±РµР· РЅРµРіРѕ.
+    /// Р•СЃР»Рё РµСЃС‚СЊ Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ РїРѕРґС…РѕРґСЏС‰РµР№ СЃС‚СЂРѕРєРё (РЅРµРѕРґРЅРѕР·РЅР°С‡РЅРѕСЃС‚СЊ), С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="name">Наименование адресообразующего элемента без сокращения</param>
-    /// <param name="aoTypeId">Идентификатор типа адресообразующего элемента в таблице AOType</param>
-    /// <param name="extSearch">True - выполнять расширенный поиск с подбором похожих наименований</param>
-    /// <returns>Строка таблицы или null</returns>
+    /// <param name="name">РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёСЏ</param>
+    /// <param name="aoTypeId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РёРїР° Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РІ С‚Р°Р±Р»РёС†Рµ AOType</param>
+    /// <param name="extSearch">True - РІС‹РїРѕР»РЅСЏС‚СЊ СЂР°СЃС€РёСЂРµРЅРЅС‹Р№ РїРѕРёСЃРє СЃ РїРѕРґР±РѕСЂРѕРј РїРѕС…РѕР¶РёС… РЅР°РёРјРµРЅРѕРІР°РЅРёР№</param>
+    /// <returns>РЎС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РёР»Рё null</returns>
     public FiasSearchRowResult FindRow(string name, Int32 aoTypeId, bool extSearch)
     {
       if (String.IsNullOrEmpty(name))
         return FiasSearchRowResult.NotFound;
 
-      // Обычный поиск
+      // РћР±С‹С‡РЅС‹Р№ РїРѕРёСЃРє
       FiasSearchRowResult res = DoFindRowNorm(name, aoTypeId);
       if (res.Count == FiasSearchRowCount.Ok)
         return res;
       if (extSearch)
-        res = DoFindRowExt(name, aoTypeId); // расширенный поиск
+        res = DoFindRowExt(name, aoTypeId); // СЂР°СЃС€РёСЂРµРЅРЅС‹Р№ РїРѕРёСЃРє
       return res;
     }
 
     /// <summary>
-    /// Обычный поиск с использованием DataView.FindRows()
+    /// РћР±С‹С‡РЅС‹Р№ РїРѕРёСЃРє СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј DataView.FindRows()
     /// </summary>
     private FiasSearchRowResult DoFindRowNorm(string name, Int32 aoTypeId)
     {
@@ -373,7 +373,7 @@ namespace FreeLibSet.FIAS
           if (row == null)
             row = drvs[i].Row;
           else
-            return FiasSearchRowResult.Multi; // больше одной строки
+            return FiasSearchRowResult.Multi; // Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё
         }
       }
 
@@ -384,27 +384,27 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Расширенный поиск с перебором строк
+    /// Р Р°СЃС€РёСЂРµРЅРЅС‹Р№ РїРѕРёСЃРє СЃ РїРµСЂРµР±РѕСЂРѕРј СЃС‚СЂРѕРє
     /// </summary>
     private FiasSearchRowResult DoFindRowExt(string name, Int32 aoTypeId)
     {
       FiasAddrObName xname = new FiasAddrObName(name);
-      DataRow row1 = null; // строка с совпадением сокращения
-      DataRow row2 = null; // строка с любым сокращением
-      int count2 = 0; // количество строк без совпадения сокращения
+      DataRow row1 = null; // СЃС‚СЂРѕРєР° СЃ СЃРѕРІРїР°РґРµРЅРёРµРј СЃРѕРєСЂР°С‰РµРЅРёСЏ
+      DataRow row2 = null; // СЃС‚СЂРѕРєР° СЃ Р»СЋР±С‹Рј СЃРѕРєСЂР°С‰РµРЅРёРµРј
+      int count2 = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє Р±РµР· СЃРѕРІРїР°РґРµРЅРёСЏ СЃРѕРєСЂР°С‰РµРЅРёСЏ
       foreach (DataRowView drv in _dvOffName)
       {
         FiasAddrObName xname2 = new FiasAddrObName(DataTools.GetString(drv.Row, "OFFNAME"));
         if (xname2 == xname)
         {
-          // Есть совпадение по лексемам
+          // Р•СЃС‚СЊ СЃРѕРІРїР°РґРµРЅРёРµ РїРѕ Р»РµРєСЃРµРјР°Рј
           if (aoTypeId != 0)
           {
             Int32 aoTypeId2 = DataTools.GetInt(drv.Row, "AOTypeId");
             if (aoTypeId2 == aoTypeId)
             {
               if (row1 != null)
-                return FiasSearchRowResult.Multi; // две строки с совпадающшим сокращением
+                return FiasSearchRowResult.Multi; // РґРІРµ СЃС‚СЂРѕРєРё СЃ СЃРѕРІРїР°РґР°СЋС‰С€РёРј СЃРѕРєСЂР°С‰РµРЅРёРµРј
               else
                 row1 = drv.Row;
             }
@@ -412,22 +412,22 @@ namespace FreeLibSet.FIAS
 
           count2++;
           row2 = drv.Row;
-          // Здесь не прерываем поиск, если нашли несколько строк
-          // Может быть, будет найдена ровно одна строка с совпадением сокращения.
+          // Р—РґРµСЃСЊ РЅРµ РїСЂРµСЂС‹РІР°РµРј РїРѕРёСЃРє, РµСЃР»Рё РЅР°С€Р»Рё РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚СЂРѕРє
+          // РњРѕР¶РµС‚ Р±С‹С‚СЊ, Р±СѓРґРµС‚ РЅР°Р№РґРµРЅР° СЂРѕРІРЅРѕ РѕРґРЅР° СЃС‚СЂРѕРєР° СЃ СЃРѕРІРїР°РґРµРЅРёРµРј СЃРѕРєСЂР°С‰РµРЅРёСЏ.
         }
       }
 
       if (row1 != null)
-        return new FiasSearchRowResult(FiasSearchRowCount.Ok, row1); // с совпадением сокращением
+        return new FiasSearchRowResult(FiasSearchRowCount.Ok, row1); // СЃ СЃРѕРІРїР°РґРµРЅРёРµРј СЃРѕРєСЂР°С‰РµРЅРёРµРј
       else if (count2 == 1)
-        return new FiasSearchRowResult(FiasSearchRowCount.Ok, row2); // без проверки сокращения
+        return new FiasSearchRowResult(FiasSearchRowCount.Ok, row2); // Р±РµР· РїСЂРѕРІРµСЂРєРё СЃРѕРєСЂР°С‰РµРЅРёСЏ
       else
         return FiasSearchRowResult.NotFound;
     }
 
     /// <summary>
-    /// Устойчивые идентификаторы адресных объектов.
-    /// В список входят только действующие элементы.
+    /// РЈСЃС‚РѕР№С‡РёРІС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ.
+    /// Р’ СЃРїРёСЃРѕРє РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ РґРµР№СЃС‚РІСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹.
     /// </summary>
     public Guid[] AOGuids
     {
@@ -459,14 +459,14 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Специальная страница классификатора адресных объектов
-  /// Отдельный класс нужен, чтобы специальные страницы не путались при извлечении из кэша обычных страниц.
-  /// Класс является потокобезопасным.
+  /// РЎРїРµС†РёР°Р»СЊРЅР°СЏ СЃС‚СЂР°РЅРёС†Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
+  /// РћС‚РґРµР»СЊРЅС‹Р№ РєР»Р°СЃСЃ РЅСѓР¶РµРЅ, С‡С‚РѕР±С‹ СЃРїРµС†РёР°Р»СЊРЅС‹Рµ СЃС‚СЂР°РЅРёС†С‹ РЅРµ РїСѓС‚Р°Р»РёСЃСЊ РїСЂРё РёР·РІР»РµС‡РµРЅРёРё РёР· РєСЌС€Р° РѕР±С‹С‡РЅС‹С… СЃС‚СЂР°РЅРёС†.
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   [Serializable]
   public sealed class FiasCachedPageSpecialAddrOb : FiasCachedPageAddrOb
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasCachedPageSpecialAddrOb(Guid pageAOGuid, FiasLevel level, FiasSpecialPageType specialPageType, DataSet ds)
       : base(pageAOGuid, level, ds)
@@ -476,16 +476,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Специальный тип страницы
+    /// РЎРїРµС†РёР°Р»СЊРЅС‹Р№ С‚РёРї СЃС‚СЂР°РЅРёС†С‹
     /// </summary>
     public FiasSpecialPageType SpecialPageType { get { return _SpecialPageType; } }
     private readonly FiasSpecialPageType _SpecialPageType;
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -497,14 +497,14 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Страница классификатора для домов.
-  /// Этот класс не используется в пользовательском коде.
-  /// Класс является потокобезопасным.
+  /// РЎС‚СЂР°РЅРёС†Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґР»СЏ РґРѕРјРѕРІ.
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ.
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   [Serializable]
   public sealed class FiasCachedPageHouse
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasCachedPageHouse(Guid pageAOGuid, DataSet ds)
     {
@@ -518,40 +518,40 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     /// <summary>
-    /// GUID адресного объекта к которому относится страница
+    /// GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЃС‚СЂР°РЅРёС†Р°
     /// </summary>
     internal Guid PageAOGuid { get { return _PageAOGuid; } }
     private readonly Guid _PageAOGuid;
 
     /// <summary>
-    /// Внутренняя таблица данных
+    /// Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ С‚Р°Р±Р»РёС†Р° РґР°РЅРЅС‹С…
     /// </summary>
     private readonly DataSet _DS;
 
     /// <summary>
-    /// Объект для поиска домов, корпусов, строений.
-    /// Имеет Sort="HOUSENUM". Поиск по корпусам и строениям выполняется перебором DataViewRow
-    /// При работе блокировка не нужна
+    /// РћР±СЉРµРєС‚ РґР»СЏ РїРѕРёСЃРєР° РґРѕРјРѕРІ, РєРѕСЂРїСѓСЃРѕРІ, СЃС‚СЂРѕРµРЅРёР№.
+    /// РРјРµРµС‚ Sort="HOUSENUM". РџРѕРёСЃРє РїРѕ РєРѕСЂРїСѓСЃР°Рј Рё СЃС‚СЂРѕРµРЅРёСЏРј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРµСЂРµР±РѕСЂРѕРј DataViewRow
+    /// РџСЂРё СЂР°Р±РѕС‚Рµ Р±Р»РѕРєРёСЂРѕРІРєР° РЅРµ РЅСѓР¶РЅР°
     /// </summary>
     [NonSerialized]
     private DataView _dvHouseNum;
 
     /// <summary>
-    /// Возвращает true, если на странице нет ни одной записи
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РЅР° СЃС‚СЂР°РЅРёС†Рµ РЅРµС‚ РЅРё РѕРґРЅРѕР№ Р·Р°РїРёСЃРё
     /// </summary>
     public bool IsEmpty { get { return _DS.Tables[0].Rows.Count == 0; } }
 
     /// <summary>
-    /// Количество строк в таблице на странице (для отладочных целей)
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ РЅР° СЃС‚СЂР°РЅРёС†Рµ (РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№)
     /// </summary>
     public int RowCount { get { return _DS.Tables[0].Rows.Count; } }
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [System.Runtime.Serialization.OnDeserialized]
     private void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
@@ -567,7 +567,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поиск
+    #region РџРѕРёСЃРє
 
     internal DataRow FindRowByGuid(Guid guid)
     {
@@ -585,7 +585,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     internal void AddToGuidDict(DictionaryWithMRU<FiasGuidKey, FiasGuidInfo> dict)
     {
@@ -603,9 +603,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление объекта</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р°</returns>
     public override string ToString()
     {
       return _PageAOGuid.ToString();
@@ -613,10 +613,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Методы и свойства для редактора
+    #region РњРµС‚РѕРґС‹ Рё СЃРІРѕР№СЃС‚РІР° РґР»СЏ СЂРµРґР°РєС‚РѕСЂР°
 
     /// <summary>
-    /// Номера домов без сокращений для инициализации списка AutoComplete в поле ввода
+    /// РќРѕРјРµСЂР° РґРѕРјРѕРІ Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёР№ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃРїРёСЃРєР° AutoComplete РІ РїРѕР»Рµ РІРІРѕРґР°
     /// </summary>
     public string[] GetHouseNums()
     {
@@ -642,13 +642,13 @@ namespace FreeLibSet.FIAS
     [NonSerialized]
     private volatile string[] _HouseNums;
 
-    // Для корпусов и строений данные не буферизуются
+    // Р”Р»СЏ РєРѕСЂРїСѓСЃРѕРІ Рё СЃС‚СЂРѕРµРЅРёР№ РґР°РЅРЅС‹Рµ РЅРµ Р±СѓС„РµСЂРёР·СѓСЋС‚СЃСЏ
 
     /// <summary>
-    /// Получить номера корпусов для заданного номера дома
+    /// РџРѕР»СѓС‡РёС‚СЊ РЅРѕРјРµСЂР° РєРѕСЂРїСѓСЃРѕРІ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ РЅРѕРјРµСЂР° РґРѕРјР°
     /// </summary>
-    /// <param name="houseNum">Номер дома</param>
-    /// <returns>Список корпусов</returns>
+    /// <param name="houseNum">РќРѕРјРµСЂ РґРѕРјР°</param>
+    /// <returns>РЎРїРёСЃРѕРє РєРѕСЂРїСѓСЃРѕРІ</returns>
     public string[] GetBuildingNums(string houseNum)
     {
       if (houseNum == null)
@@ -667,12 +667,12 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Получить номера строений для заданного номера дома и корпуса.
-    /// Может вызываться с пустыми аргументами, так как строения могут задаваться самостоятельно
+    /// РџРѕР»СѓС‡РёС‚СЊ РЅРѕРјРµСЂР° СЃС‚СЂРѕРµРЅРёР№ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ РЅРѕРјРµСЂР° РґРѕРјР° Рё РєРѕСЂРїСѓСЃР°.
+    /// РњРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ СЃ РїСѓСЃС‚С‹РјРё Р°СЂРіСѓРјРµРЅС‚Р°РјРё, С‚Р°Рє РєР°Рє СЃС‚СЂРѕРµРЅРёСЏ РјРѕРіСѓС‚ Р·Р°РґР°РІР°С‚СЊСЃСЏ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ
     /// </summary>
-    /// <param name="houseNum">Номер дома</param>
-    /// <param name="buildNum">Номер корпуса</param>
-    /// <returns>Список корпусов</returns>
+    /// <param name="houseNum">РќРѕРјРµСЂ РґРѕРјР°</param>
+    /// <param name="buildNum">РќРѕРјРµСЂ РєРѕСЂРїСѓСЃР°</param>
+    /// <returns>РЎРїРёСЃРѕРє РєРѕСЂРїСѓСЃРѕРІ</returns>
     public string[] GetStrNums(string houseNum, string buildNum)
     {
       if (houseNum == null)
@@ -696,27 +696,27 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Создать объект DataView для просмотра.
-    /// Список отсортирован.
-    /// Созданный список должен быть удален после того, как просмотр закрывается.
-    /// В просмотр входят только актуальные записи.
-    /// Для извлечения информации из строк DataRow просмотра используйте FiasHouseExtractor.
+    /// РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ DataView РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ.
+    /// РЎРѕР·РґР°РЅРЅС‹Р№ СЃРїРёСЃРѕРє РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРґР°Р»РµРЅ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє РїСЂРѕСЃРјРѕС‚СЂ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
+    /// Р’ РїСЂРѕСЃРјРѕС‚СЂ РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ Р·Р°РїРёСЃРё.
+    /// Р”Р»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃС‚СЂРѕРє DataRow РїСЂРѕСЃРјРѕС‚СЂР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ FiasHouseExtractor.
     /// </summary>
-    /// <returns>Новый объект DataView</returns>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DataView</returns>
     public DataView CreateDataView()
     {
       return CreateDataView(true);
     }
 
     /// <summary>
-    /// Создать объект DataView для просмотра.
-    /// Список отсортирован.
-    /// Созданный объект должен быть удален после того, как просмотр закрывается.
-    /// Для извлечения информации из строк DataRow просмотра используйте FiasHouseExtractor.
+    /// РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ DataView РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ.
+    /// РЎРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРґР°Р»РµРЅ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє РїСЂРѕСЃРјРѕС‚СЂ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
+    /// Р”Р»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃС‚СЂРѕРє DataRow РїСЂРѕСЃРјРѕС‚СЂР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ FiasHouseExtractor.
     /// </summary>
-    /// <param name="actualOnly">Если true, то в просмотр входят только актуальные записи.
-    /// Если false, то фильтр не устанавливается. Однако наличие исторических записей зависит от FiasDBSettings.</param>
-    /// <returns>Новый объект DataView</returns>
+    /// <param name="actualOnly">Р•СЃР»Рё true, С‚Рѕ РІ РїСЂРѕСЃРјРѕС‚СЂ РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё false, С‚Рѕ С„РёР»СЊС‚СЂ РЅРµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ. РћРґРЅР°РєРѕ РЅР°Р»РёС‡РёРµ РёСЃС‚РѕСЂРёС‡РµСЃРєРёС… Р·Р°РїРёСЃРµР№ Р·Р°РІРёСЃРёС‚ РѕС‚ FiasDBSettings.</param>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DataView</returns>
     public DataView CreateDataView(bool actualOnly)
     {
       DataView dv = new DataView(_DS.Tables[0]);
@@ -727,10 +727,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Поиск строки.
-    /// Если есть больше одной подходящей строки (неоднозначность), то возвращается null
+    /// РџРѕРёСЃРє СЃС‚СЂРѕРєРё.
+    /// Р•СЃР»Рё РµСЃС‚СЊ Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ РїРѕРґС…РѕРґСЏС‰РµР№ СЃС‚СЂРѕРєРё (РЅРµРѕРґРЅРѕР·РЅР°С‡РЅРѕСЃС‚СЊ), С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <returns>Строка таблицы или null</returns>
+    /// <returns>РЎС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РёР»Рё null</returns>
     public DataRow FindRow(string houseNum, FiasEstateStatus estStatus, string buildNum, string strNum, FiasStructureStatus strStatus)
     {
       if (houseNum == null)
@@ -792,10 +792,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Получить текстовое представление здания для строки кэша
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ Р·РґР°РЅРёСЏ РґР»СЏ СЃС‚СЂРѕРєРё РєСЌС€Р°
     /// </summary>
-    /// <param name="row">Строка таблицы кэша или null</param>
-    /// <returns>Текствое представление</returns>
+    /// <param name="row">РЎС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РєСЌС€Р° РёР»Рё null</param>
+    /// <returns>РўРµРєСЃС‚РІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string GetText(DataRow row)
     {
       if (row == null)
@@ -810,14 +810,14 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Получить текстовое представление для здания
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ Р·РґР°РЅРёСЏ
     /// </summary>
-    /// <param name="houseNum">Номер дома</param>
-    /// <param name="estStatus">Признак владения</param>
-    /// <param name="buildNum">Номер корпуса</param>
-    /// <param name="strNum">Номер строения</param>
-    /// <param name="strStatus">Признак строения</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="houseNum">РќРѕРјРµСЂ РґРѕРјР°</param>
+    /// <param name="estStatus">РџСЂРёР·РЅР°Рє РІР»Р°РґРµРЅРёСЏ</param>
+    /// <param name="buildNum">РќРѕРјРµСЂ РєРѕСЂРїСѓСЃР°</param>
+    /// <param name="strNum">РќРѕРјРµСЂ СЃС‚СЂРѕРµРЅРёСЏ</param>
+    /// <param name="strStatus">РџСЂРёР·РЅР°Рє СЃС‚СЂРѕРµРЅРёСЏ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string GetText(string houseNum, FiasEstateStatus estStatus, string buildNum, string strNum, FiasStructureStatus strStatus)
     {
       StringBuilder sb = new StringBuilder();
@@ -838,7 +838,7 @@ namespace FreeLibSet.FIAS
       {
         if (sb.Length > 0)
           sb.Append(", ");
-        sb.Append("корпус ");
+        sb.Append("РєРѕСЂРїСѓСЃ ");
         sb.Append(buildNum);
       }
       if (strNum.Length > 0)
@@ -860,8 +860,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Устойчивые идентификаторы зданий.
-    /// В список входят только действующие элементы.
+    /// РЈСЃС‚РѕР№С‡РёРІС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Р·РґР°РЅРёР№.
+    /// Р’ СЃРїРёСЃРѕРє РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ РґРµР№СЃС‚РІСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹.
     /// </summary>
     public Guid[] HouseGuids
     {
@@ -893,14 +893,14 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Страница классификатора для помещений.
-  /// Этот класс не используется в пользовательском коде.
-  /// Класс является потокобезопасным.
+  /// РЎС‚СЂР°РЅРёС†Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґР»СЏ РїРѕРјРµС‰РµРЅРёР№.
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ.
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   [Serializable]
   public sealed class FiasCachedPageRoom
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasCachedPageRoom(Guid pageHouseGuid, DataSet ds)
     {
@@ -913,40 +913,40 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     /// <summary>
-    /// GUID дома, к которому относится страница
+    /// GUID РґРѕРјР°, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЃС‚СЂР°РЅРёС†Р°
     /// </summary>
     internal Guid PageHouseGuid { get { return _PageHouseGuid; } }
     private readonly Guid _PageHouseGuid;
 
     /// <summary>
-    /// Внутренняя таблица данных
+    /// Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ С‚Р°Р±Р»РёС†Р° РґР°РЅРЅС‹С…
     /// </summary>
     private readonly DataSet _DS;
 
     /// <summary>
-    /// Объект для поиска домов, корпусов, строений.
-    /// Имеет Sort="HOUSENUM". Поиск по корпусам и строениям выполняется перебором DataViewRow
-    /// При работе блокировка не нужна
+    /// РћР±СЉРµРєС‚ РґР»СЏ РїРѕРёСЃРєР° РґРѕРјРѕРІ, РєРѕСЂРїСѓСЃРѕРІ, СЃС‚СЂРѕРµРЅРёР№.
+    /// РРјРµРµС‚ Sort="HOUSENUM". РџРѕРёСЃРє РїРѕ РєРѕСЂРїСѓСЃР°Рј Рё СЃС‚СЂРѕРµРЅРёСЏРј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРµСЂРµР±РѕСЂРѕРј DataViewRow
+    /// РџСЂРё СЂР°Р±РѕС‚Рµ Р±Р»РѕРєРёСЂРѕРІРєР° РЅРµ РЅСѓР¶РЅР°
     /// </summary>
     [NonSerialized]
     private DataView _dvFlatNumber;
 
     /// <summary>
-    /// Возвращает true, если на странице нет ни одной записи
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РЅР° СЃС‚СЂР°РЅРёС†Рµ РЅРµС‚ РЅРё РѕРґРЅРѕР№ Р·Р°РїРёСЃРё
     /// </summary>
     public bool IsEmpty { get { return _DS.Tables[0].Rows.Count == 0; } }
 
     /// <summary>
-    /// Количество строк в таблице на странице (для отладочных целей)
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ РЅР° СЃС‚СЂР°РЅРёС†Рµ (РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№)
     /// </summary>
     public int RowCount { get { return _DS.Tables[0].Rows.Count; } }
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [System.Runtime.Serialization.OnDeserialized]
     private void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
@@ -962,7 +962,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поиск
+    #region РџРѕРёСЃРє
 
     internal DataRow FindRowByGuid(Guid guid)
     {
@@ -980,7 +980,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     internal void AddToGuidDict(DictionaryWithMRU<FiasGuidKey, FiasGuidInfo> dict)
     {
@@ -998,9 +998,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление объекта</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р°</returns>
     public override string ToString()
     {
       return _PageHouseGuid.ToString();
@@ -1008,10 +1008,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Методы и свойства для редактора
+    #region РњРµС‚РѕРґС‹ Рё СЃРІРѕР№СЃС‚РІР° РґР»СЏ СЂРµРґР°РєС‚РѕСЂР°
 
     /// <summary>
-    /// Номера квартир (помещений) без сокращений для инициализации списка AutoComplete в поле ввода
+    /// РќРѕРјРµСЂР° РєРІР°СЂС‚РёСЂ (РїРѕРјРµС‰РµРЅРёР№) Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёР№ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃРїРёСЃРєР° AutoComplete РІ РїРѕР»Рµ РІРІРѕРґР°
     /// </summary>
     public string[] GetFlatNums()
     {
@@ -1037,13 +1037,13 @@ namespace FreeLibSet.FIAS
     [NonSerialized]
     private volatile string[] _FlatNums;
 
-    // Для комнат данные не буферизуются
+    // Р”Р»СЏ РєРѕРјРЅР°С‚ РґР°РЅРЅС‹Рµ РЅРµ Р±СѓС„РµСЂРёР·СѓСЋС‚СЃСЏ
 
     /// <summary>
-    /// Получить номера комнат для заданного номера квартиры (помещения)
+    /// РџРѕР»СѓС‡РёС‚СЊ РЅРѕРјРµСЂР° РєРѕРјРЅР°С‚ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ РЅРѕРјРµСЂР° РєРІР°СЂС‚РёСЂС‹ (РїРѕРјРµС‰РµРЅРёСЏ)
     /// </summary>
-    /// <param name="flatNum">Номер квартиры</param>
-    /// <returns>Список комнат</returns>
+    /// <param name="flatNum">РќРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹</param>
+    /// <returns>РЎРїРёСЃРѕРє РєРѕРјРЅР°С‚</returns>
     public string[] GetRoomNums(string flatNum)
     {
       if (flatNum == null)
@@ -1061,45 +1061,45 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Создать объект DataView для просмотра.
-    /// Список отсортирован.
-    /// Созданный объект должен быть удален после того, как просмотр закрывается.
-    /// В просмотр входят только актуальные записи.
-    /// Для извлечения информации из строк DataRow просмотра используйте FiasRoomExtractor.
+    /// РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ DataView РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ.
+    /// РЎРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРґР°Р»РµРЅ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє РїСЂРѕСЃРјРѕС‚СЂ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
+    /// Р’ РїСЂРѕСЃРјРѕС‚СЂ РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ Р·Р°РїРёСЃРё.
+    /// Р”Р»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃС‚СЂРѕРє DataRow РїСЂРѕСЃРјРѕС‚СЂР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ FiasRoomExtractor.
     /// </summary>
-    /// <returns>Новый объект DataView</returns>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DataView</returns>
     public DataView CreateDataView()
     {
       return CreateDataView(true);
     }
 
     /// <summary>
-    /// Создать объект DataView для просмотра.
-    /// Список отсортирован.
-    /// Созданный объект должен быть удален после того, как просмотр закрывается.
-    /// Для извлечения информации из строк DataRow просмотра используйте FiasRoomExtractor.
+    /// РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ DataView РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РЎРїРёСЃРѕРє РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅ.
+    /// РЎРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРґР°Р»РµРЅ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє РїСЂРѕСЃРјРѕС‚СЂ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
+    /// Р”Р»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃС‚СЂРѕРє DataRow РїСЂРѕСЃРјРѕС‚СЂР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ FiasRoomExtractor.
     /// </summary>
-    /// <param name="actualOnly">Если true, то в просмотр входят только актуальные записи.
-    /// Если false, то фильтр не устанавливается. Однако наличие исторических записей зависит от FiasDBSettings.</param>
-    /// <returns>Новый объект DataView</returns>
+    /// <param name="actualOnly">Р•СЃР»Рё true, С‚Рѕ РІ РїСЂРѕСЃРјРѕС‚СЂ РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё false, С‚Рѕ С„РёР»СЊС‚СЂ РЅРµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ. РћРґРЅР°РєРѕ РЅР°Р»РёС‡РёРµ РёСЃС‚РѕСЂРёС‡РµСЃРєРёС… Р·Р°РїРёСЃРµР№ Р·Р°РІРёСЃРёС‚ РѕС‚ FiasDBSettings.</param>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DataView</returns>
     public DataView CreateDataView(bool actualOnly)
     {
       DataView dv = new DataView(_DS.Tables[0]);
       if (actualOnly)
         FiasTools.InitTopFlagAndDatesRowFilter(dv);
-      dv.Sort = "FLATTYPE,nFlatNumber,FLATNUMBER,ROOMTYPE,nRoomNumber,ROOMNUMBER"; // квартиры до помещений, затем по номерам квартир
+      dv.Sort = "FLATTYPE,nFlatNumber,FLATNUMBER,ROOMTYPE,nRoomNumber,ROOMNUMBER"; // РєРІР°СЂС‚РёСЂС‹ РґРѕ РїРѕРјРµС‰РµРЅРёР№, Р·Р°С‚РµРј РїРѕ РЅРѕРјРµСЂР°Рј РєРІР°СЂС‚РёСЂ
       return dv;
     }
 
     /// <summary>
-    /// Поиск строки.
-    /// Если есть больше одной подходящей строки (неоднозначность), то возвращается null
+    /// РџРѕРёСЃРє СЃС‚СЂРѕРєРё.
+    /// Р•СЃР»Рё РµСЃС‚СЊ Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ РїРѕРґС…РѕРґСЏС‰РµР№ СЃС‚СЂРѕРєРё (РЅРµРѕРґРЅРѕР·РЅР°С‡РЅРѕСЃС‚СЊ), С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="flatNum">Номер квартиры (помещения)</param>
-    /// <param name="flatType">Тип квартиры</param>
-    /// <param name="roomNum">Номер комнаты</param>
-    /// <param name="roomType">Тип комнаты</param>
-    /// <returns>Строка таблицы или null</returns>
+    /// <param name="flatNum">РќРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹ (РїРѕРјРµС‰РµРЅРёСЏ)</param>
+    /// <param name="flatType">РўРёРї РєРІР°СЂС‚РёСЂС‹</param>
+    /// <param name="roomNum">РќРѕРјРµСЂ РєРѕРјРЅР°С‚С‹</param>
+    /// <param name="roomType">РўРёРї РєРѕРјРЅР°С‚С‹</param>
+    /// <returns>РЎС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РёР»Рё null</returns>
     public DataRow FindRow(string flatNum, FiasFlatType flatType, string roomNum, FiasRoomType roomType)
     {
       if (flatNum == null)
@@ -1121,7 +1121,7 @@ namespace FreeLibSet.FIAS
         drvs = _dvFlatNumber.FindRows(flatNum);
       DataRow row = DoFindRow(drvs, flatType, roomNum, roomType, true);
       if (row != null)
-        return row; // точное соответствие
+        return row; // С‚РѕС‡РЅРѕРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ
       else
         return DoFindRow(drvs, flatType, roomNum, roomType, false);
     }
@@ -1146,17 +1146,17 @@ namespace FreeLibSet.FIAS
         if (row == null)
           row = drvs[i].Row;
         else
-          return null; // больше одной строки
+          return null; // Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё
       }
 
       return row;
     }
 
     /// <summary>
-    /// Получить текстовое представление для квартиры/помещения/комнаты
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РєРІР°СЂС‚РёСЂС‹/РїРѕРјРµС‰РµРЅРёСЏ/РєРѕРјРЅР°С‚С‹
     /// </summary>
-    /// <param name="row">Строка таблицы кэша или null</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="row">РЎС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹ РєСЌС€Р° РёР»Рё null</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string GetText(DataRow row)
     {
       if (row == null)
@@ -1170,13 +1170,13 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Получить текстовое представление для квартиры/помещения/комнаты
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РєРІР°СЂС‚РёСЂС‹/РїРѕРјРµС‰РµРЅРёСЏ/РєРѕРјРЅР°С‚С‹
     /// </summary>
-    /// <param name="flatNum">Номер квартиры/помещения</param>
-    /// <param name="flatType">Тип помещения</param>
-    /// <param name="roomNum">Номер комнаты</param>
-    /// <param name="roomType">Тип комнаты</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="flatNum">РќРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹/РїРѕРјРµС‰РµРЅРёСЏ</param>
+    /// <param name="flatType">РўРёРї РїРѕРјРµС‰РµРЅРёСЏ</param>
+    /// <param name="roomNum">РќРѕРјРµСЂ РєРѕРјРЅР°С‚С‹</param>
+    /// <param name="roomType">РўРёРї РєРѕРјРЅР°С‚С‹</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string GetText(string flatNum, FiasFlatType flatType, string roomNum, FiasRoomType roomType)
     {
       StringBuilder sb = new StringBuilder();
@@ -1211,8 +1211,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Устойчивые идентификаторы помещений.
-    /// В список входят только действующие элементы.
+    /// РЈСЃС‚РѕР№С‡РёРІС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РїРѕРјРµС‰РµРЅРёР№.
+    /// Р’ СЃРїРёСЃРѕРє РІС…РѕРґСЏС‚ С‚РѕР»СЊРєРѕ РґРµР№СЃС‚РІСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹.
     /// </summary>
     public Guid[] RoomGuids
     {
@@ -1244,18 +1244,18 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Извлечение данных из строки классификатора для таблицы AddrOb.
-  /// Строки должны быть получены из просмотра, создаваемым FiasCachedPageAddrOb.CreateDataView()
-  /// После установки свойства Row становятся доступными свойства для извлечения информации.
+  /// РР·РІР»РµС‡РµРЅРёРµ РґР°РЅРЅС‹С… РёР· СЃС‚СЂРѕРєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґР»СЏ С‚Р°Р±Р»РёС†С‹ AddrOb.
+  /// РЎС‚СЂРѕРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РїРѕР»СѓС‡РµРЅС‹ РёР· РїСЂРѕСЃРјРѕС‚СЂР°, СЃРѕР·РґР°РІР°РµРјС‹Рј FiasCachedPageAddrOb.CreateDataView()
+  /// РџРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° Row СЃС‚Р°РЅРѕРІСЏС‚СЃСЏ РґРѕСЃС‚СѓРїРЅС‹РјРё СЃРІРѕР№СЃС‚РІР° РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё.
   /// </summary>
   public struct FiasAddrObExtractor
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализирует объект.
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РѕР±СЉРµРєС‚.
     /// </summary>
-    /// <param name="source">Источник данных. Не может быть null</param>
+    /// <param name="source">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public FiasAddrObExtractor(IFiasSource source)
     {
 #if DEBUG
@@ -1268,45 +1268,45 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства объекта
+    #region РЎРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°
 
     private readonly IFiasSource _Source;
 
     /// <summary>
-    /// Сюда должна быть помещена строка из просмотра страницы FiasCachedPageAddrOb.CreateDataView().
-    /// После этого можно обращаться к другим свойствам.
+    /// РЎСЋРґР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїРѕРјРµС‰РµРЅР° СЃС‚СЂРѕРєР° РёР· РїСЂРѕСЃРјРѕС‚СЂР° СЃС‚СЂР°РЅРёС†С‹ FiasCachedPageAddrOb.CreateDataView().
+    /// РџРѕСЃР»Рµ СЌС‚РѕРіРѕ РјРѕР¶РЅРѕ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ Рє РґСЂСѓРіРёРј СЃРІРѕР№СЃС‚РІР°Рј.
     /// </summary>
     public DataRow Row { get { return _Row; } set { _Row = value; } }
     private DataRow _Row;
 
     #endregion
 
-    #region Свойства адреса
+    #region РЎРІРѕР№СЃС‚РІР° Р°РґСЂРµСЃР°
 
     /// <summary>
-    /// Идентификатор адресного объекта
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
     public Guid AOGuid { get { return DataTools.GetGuid(_Row, "AOGUID"); } }
 
     /// <summary>
-    /// Текстовое наименование без сокращения
+    /// РўРµРєСЃС‚РѕРІРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёСЏ
     /// </summary>
     public string Name { get { return DataTools.GetString(_Row, "OFFNAME"); } }
 
     /// <summary>
-    /// Идентификатор типа адресообразующего элемента.
-    /// Для получения типа в читаемом виде используйте метод FiasCachedAOTypes.GetAOType()
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С‚РёРїР° Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°.
+    /// Р”Р»СЏ РїРѕР»СѓС‡РµРЅРёСЏ С‚РёРїР° РІ С‡РёС‚Р°РµРјРѕРј РІРёРґРµ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ FiasCachedAOTypes.GetAOType()
     /// </summary>
     public Int32 AOTypeId { get { return DataTools.GetInt(_Row, "AOTypeId"); } }
 
     /// <summary>
-    /// Уровень адресного объекта
+    /// РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
     public FiasLevel Level { get { return (FiasLevel)DataTools.GetInt(_Row, "AOLEVEL"); } }
 
     /// <summary>
-    /// Почтовый индекс.
-    /// Если не определен, возвращает пустую строку
+    /// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ.
+    /// Р•СЃР»Рё РЅРµ РѕРїСЂРµРґРµР»РµРЅ, РІРѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
     /// </summary>
     public string PostalCode
     {
@@ -1320,7 +1320,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код региона ("01"-"99")
+    /// РљРѕРґ СЂРµРіРёРѕРЅР° ("01"-"99")
     /// </summary>
     public string RegionCode
     {
@@ -1335,8 +1335,8 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Код ОКАТО.
-    /// Если FiasDBSettings.UseOKATO=false, то возвращается пустая строка.
+    /// РљРѕРґ РћРљРђРўРћ.
+    /// Р•СЃР»Рё FiasDBSettings.UseOKATO=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string OKATO
     {
@@ -1356,8 +1356,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ОКТМО (8 или 11 знаков).
-    /// Если FiasDBSettings.UseOKTMO=false, то возвращается пустая строка.
+    /// РљРѕРґ РћРљРўРњРћ (8 РёР»Рё 11 Р·РЅР°РєРѕРІ).
+    /// Р•СЃР»Рё FiasDBSettings.UseOKTMO=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string OKTMO
     {
@@ -1379,8 +1379,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р¤Р›.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string IFNSFL
     {
@@ -1399,8 +1399,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ территории.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р¤Р› С‚РµСЂСЂРёС‚РѕСЂРёРё.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     internal string IFNSFLTerr
     {
@@ -1419,8 +1419,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р®Р›.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string IFNSUL
     {
@@ -1439,8 +1439,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ территории.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р®Р› С‚РµСЂСЂРёС‚РѕСЂРёРё.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     internal string IFNSULTerr
     {
@@ -1459,8 +1459,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Признак актуальности записи.
-    /// Если FiasDBSettings.UseHistory=false, всегда возвращает true.
+    /// РџСЂРёР·РЅР°Рє Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSettings.UseHistory=false, РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ true.
     /// </summary>
     public bool Actual
     {
@@ -1475,8 +1475,8 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Признак действующей записи.
-    /// Если FiasDBSettings.UseHistory=false, всегда возвращает true.
+    /// РџСЂРёР·РЅР°Рє РґРµР№СЃС‚РІСѓСЋС‰РµР№ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSettings.UseHistory=false, РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ true.
     /// </summary>
     public bool Live
     {
@@ -1492,22 +1492,22 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства записи
+    #region РЎРІРѕР№СЃС‚РІР° Р·Р°РїРёСЃРё
 
     /// <summary>
-    /// Идентификатор записи
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё
     /// </summary>
     internal Guid RecId { get { return DataTools.GetGuid(_Row, "AOID"); } }
 
     /// <summary>
-    /// Начало действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null.
+    /// РќР°С‡Р°Р»Рѕ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSetting.UseDates=false, РІРѕР·РІСЂР°С‰Р°РµС‚ null.
     /// </summary>
     public DateTime? StartDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, true); } }
 
     /// <summary>
-    /// Окончание действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null.
+    /// РћРєРѕРЅС‡Р°РЅРёРµ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSetting.UseDates=false, РІРѕР·РІСЂР°С‰Р°РµС‚ null.
     /// </summary>
     public DateTime? EndDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, false); } }
 
@@ -1515,18 +1515,18 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Извлечение данных из строки классификатора для таблицы House.
-  /// Строки должны быть получены из просмотра, создаваемым FiasCachedPageHouse.CreateDataView()
-  /// После установки свойства Row становятся доступными свойства для извлечения информации.
+  /// РР·РІР»РµС‡РµРЅРёРµ РґР°РЅРЅС‹С… РёР· СЃС‚СЂРѕРєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґР»СЏ С‚Р°Р±Р»РёС†С‹ House.
+  /// РЎС‚СЂРѕРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РїРѕР»СѓС‡РµРЅС‹ РёР· РїСЂРѕСЃРјРѕС‚СЂР°, СЃРѕР·РґР°РІР°РµРјС‹Рј FiasCachedPageHouse.CreateDataView()
+  /// РџРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° Row СЃС‚Р°РЅРѕРІСЏС‚СЃСЏ РґРѕСЃС‚СѓРїРЅС‹РјРё СЃРІРѕР№СЃС‚РІР° РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё.
   /// </summary>
   public struct FiasHouseExtractor
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализирует объект.
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РѕР±СЉРµРєС‚.
     /// </summary>
-    /// <param name="source">Источник данных. Не может быть null</param>
+    /// <param name="source">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public FiasHouseExtractor(IFiasSource source)
     {
 #if DEBUG
@@ -1539,54 +1539,54 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства объекта
+    #region РЎРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°
 
     private readonly IFiasSource _Source;
 
     /// <summary>
-    /// Сюда должна быть помещена строка из просмотра страницы FiasCachedPageHouse.CreateDataView().
-    /// После этого можно обращаться к другим свойствам.
+    /// РЎСЋРґР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїРѕРјРµС‰РµРЅР° СЃС‚СЂРѕРєР° РёР· РїСЂРѕСЃРјРѕС‚СЂР° СЃС‚СЂР°РЅРёС†С‹ FiasCachedPageHouse.CreateDataView().
+    /// РџРѕСЃР»Рµ СЌС‚РѕРіРѕ РјРѕР¶РЅРѕ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ Рє РґСЂСѓРіРёРј СЃРІРѕР№СЃС‚РІР°Рј.
     /// </summary>
     public DataRow Row { get { return _Row; } set { _Row = value; } }
     private DataRow _Row;
 
     #endregion
 
-    #region Свойства адреса
+    #region РЎРІРѕР№СЃС‚РІР° Р°РґСЂРµСЃР°
 
     /// <summary>
-    /// Идентификатор здания
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·РґР°РЅРёСЏ
     /// </summary>
     public Guid HouseGuid { get { return DataTools.GetGuid(_Row, "HOUSEGUID"); } }
 
     /// <summary>
-    /// Номер дома
+    /// РќРѕРјРµСЂ РґРѕРјР°
     /// </summary>
     public string HouseNum { get { return DataTools.GetString(_Row, "HOUSENUM"); } }
 
     /// <summary>
-    /// Признак владения
+    /// РџСЂРёР·РЅР°Рє РІР»Р°РґРµРЅРёСЏ
     /// </summary>
     public FiasEstateStatus EstStatus { get { return (FiasEstateStatus)DataTools.GetInt(_Row, "ESTSTATUS"); } }
 
     /// <summary>
-    /// Номер корпуса
+    /// РќРѕРјРµСЂ РєРѕСЂРїСѓСЃР°
     /// </summary>
     public string BuildNum { get { return DataTools.GetString(_Row, "BUILDNUM"); } }
 
     /// <summary>
-    /// Номер строения
+    /// РќРѕРјРµСЂ СЃС‚СЂРѕРµРЅРёСЏ
     /// </summary>
     public string StrucNum { get { return DataTools.GetString(_Row, "STRUCNUM"); } }
 
     /// <summary>
-    /// Тип строения
+    /// РўРёРї СЃС‚СЂРѕРµРЅРёСЏ
     /// </summary>
     public FiasStructureStatus StrStatus { get { return (FiasStructureStatus)DataTools.GetInt(_Row, "STRSTATUS"); } }
 
     /// <summary>
-    /// Почтовый индекс.
-    /// Если не определен, возвращает пустую строку
+    /// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ.
+    /// Р•СЃР»Рё РЅРµ РѕРїСЂРµРґРµР»РµРЅ, РІРѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
     /// </summary>
     public string PostalCode
     {
@@ -1600,8 +1600,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ОКАТО.
-    /// Если FiasDBSettings.UseOKATO=false, то возвращается пустая строка.
+    /// РљРѕРґ РћРљРђРўРћ.
+    /// Р•СЃР»Рё FiasDBSettings.UseOKATO=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string OKATO
     {
@@ -1621,8 +1621,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ОКТМО (8 или 11 знаков).
-    /// Если FiasDBSettings.UseOKTMO=false, то возвращается пустая строка.
+    /// РљРѕРґ РћРљРўРњРћ (8 РёР»Рё 11 Р·РЅР°РєРѕРІ).
+    /// Р•СЃР»Рё FiasDBSettings.UseOKTMO=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string OKTMO
     {
@@ -1644,8 +1644,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р¤Р›.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string IFNSFL
     {
@@ -1664,8 +1664,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ФЛ территории.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р¤Р› С‚РµСЂСЂРёС‚РѕСЂРёРё.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     internal string IFNSFLTerr
     {
@@ -1684,8 +1684,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р®Р›.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string IFNSUL
     {
@@ -1704,8 +1704,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Код ИФНС ЮЛ территории.
-    /// Если FiasDBSettings.UseIFNS=false, то возвращается пустая строка.
+    /// РљРѕРґ РР¤РќРЎ Р®Р› С‚РµСЂСЂРёС‚РѕСЂРёРё.
+    /// Р•СЃР»Рё FiasDBSettings.UseIFNS=false, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     internal string IFNSULTerr
     {
@@ -1725,22 +1725,22 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства записи
+    #region РЎРІРѕР№СЃС‚РІР° Р·Р°РїРёСЃРё
 
     /// <summary>
-    /// Идентификатор записи
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё
     /// </summary>
     internal Guid RecId { get { return DataTools.GetGuid(_Row, "HOUSEID"); } }
 
     /// <summary>
-    /// Начало действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null
+    /// РќР°С‡Р°Р»Рѕ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSetting.UseDates=false, РІРѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
     public DateTime? StartDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, true); } }
 
     /// <summary>
-    /// Окончание действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null
+    /// РћРєРѕРЅС‡Р°РЅРёРµ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSetting.UseDates=false, РІРѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
     public DateTime? EndDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, false); } }
 
@@ -1748,18 +1748,18 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Извлечение данных из строки классификатора для таблицы Room.
-  /// Строки должны быть получены из просмотра, создаваемым FiasCachedPageRoom.CreateDataView()
-  /// После установки свойства Row становятся доступными свойства для извлечения информации.
+  /// РР·РІР»РµС‡РµРЅРёРµ РґР°РЅРЅС‹С… РёР· СЃС‚СЂРѕРєРё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РґР»СЏ С‚Р°Р±Р»РёС†С‹ Room.
+  /// РЎС‚СЂРѕРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РїРѕР»СѓС‡РµРЅС‹ РёР· РїСЂРѕСЃРјРѕС‚СЂР°, СЃРѕР·РґР°РІР°РµРјС‹Рј FiasCachedPageRoom.CreateDataView()
+  /// РџРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° Row СЃС‚Р°РЅРѕРІСЏС‚СЃСЏ РґРѕСЃС‚СѓРїРЅС‹РјРё СЃРІРѕР№СЃС‚РІР° РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРё.
   /// </summary>
   public struct FiasRoomExtractor
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализирует объект.
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РѕР±СЉРµРєС‚.
     /// </summary>
-    /// <param name="source">Источник данных. Не может быть null</param>
+    /// <param name="source">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public FiasRoomExtractor(IFiasSource source)
     {
 #if DEBUG
@@ -1772,49 +1772,49 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства объекта
+    #region РЎРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р°
 
     private readonly IFiasSource _Source;
 
     /// <summary>
-    /// Сюда должна быть помещена строка из просмотра страницы FiasCachedPageRoom.CreateDataView().
-    /// После этого можно обращаться к другим свойствам.
+    /// РЎСЋРґР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїРѕРјРµС‰РµРЅР° СЃС‚СЂРѕРєР° РёР· РїСЂРѕСЃРјРѕС‚СЂР° СЃС‚СЂР°РЅРёС†С‹ FiasCachedPageRoom.CreateDataView().
+    /// РџРѕСЃР»Рµ СЌС‚РѕРіРѕ РјРѕР¶РЅРѕ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ Рє РґСЂСѓРіРёРј СЃРІРѕР№СЃС‚РІР°Рј.
     /// </summary>
     public DataRow Row { get { return _Row; } set { _Row = value; } }
     private DataRow _Row;
 
     #endregion
 
-    #region Свойства адреса
+    #region РЎРІРѕР№СЃС‚РІР° Р°РґСЂРµСЃР°
 
     /// <summary>
-    /// Идентификатор помещения
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕРјРµС‰РµРЅРёСЏ
     /// </summary>
     public Guid RoomGuid { get { return DataTools.GetGuid(_Row, "ROOMGUID"); } }
 
     /// <summary>
-    /// Номер квартиры, офиса
+    /// РќРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹, РѕС„РёСЃР°
     /// </summary>
     public string FlatNumber { get { return DataTools.GetString(_Row, "FLATNUMBER"); } }
 
     /// <summary>
-    /// Тип помещения (квартира, офис, ...)
+    /// РўРёРї РїРѕРјРµС‰РµРЅРёСЏ (РєРІР°СЂС‚РёСЂР°, РѕС„РёСЃ, ...)
     /// </summary>
     public FiasFlatType FlatType { get { return (FiasFlatType)DataTools.GetInt(_Row, "FLATTYPE"); } }
 
     /// <summary>
-    /// Номер комнаты
+    /// РќРѕРјРµСЂ РєРѕРјРЅР°С‚С‹
     /// </summary>
     public string RoomNumber { get { return DataTools.GetString(_Row, "ROOMNUMBER"); } }
 
     /// <summary>
-    /// Тип комнаты
+    /// РўРёРї РєРѕРјРЅР°С‚С‹
     /// </summary>
     public FiasRoomType RoomType { get { return (FiasRoomType)DataTools.GetInt(_Row, "ROOMTYPE"); } }
 
     /// <summary>
-    /// Почтовый индекс.
-    /// Если не определен, возвращает пустую строку
+    /// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ.
+    /// Р•СЃР»Рё РЅРµ РѕРїСЂРµРґРµР»РµРЅ, РІРѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
     /// </summary>
     public string PostalCode
     {
@@ -1828,8 +1828,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Признак действующей записи.
-    /// Если FiasDBSettings.UseHistory=false, всегда возвращает true.
+    /// РџСЂРёР·РЅР°Рє РґРµР№СЃС‚РІСѓСЋС‰РµР№ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSettings.UseHistory=false, РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ true.
     /// </summary>
     public bool Live
     {
@@ -1844,22 +1844,22 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства записи
+    #region РЎРІРѕР№СЃС‚РІР° Р·Р°РїРёСЃРё
 
     /// <summary>
-    /// Идентификатор записи
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё
     /// </summary>
     internal Guid RecId { get { return DataTools.GetGuid(_Row, "ROOMID"); } }
 
     /// <summary>
-    /// Начало действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null
+    /// РќР°С‡Р°Р»Рѕ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSetting.UseDates=false, РІРѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
     public DateTime? StartDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, true); } }
 
     /// <summary>
-    /// Окончание действия записи.
-    /// Если FiasDBSetting.UseDates=false, возвращает null
+    /// РћРєРѕРЅС‡Р°РЅРёРµ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё FiasDBSetting.UseDates=false, РІРѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
     public DateTime? EndDate { get { return FiasTools.GetStartOrEndDate(_Source, _Row, false); } }
 

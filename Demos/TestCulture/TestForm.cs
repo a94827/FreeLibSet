@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +13,7 @@ namespace TestCulture
 {
   public partial class TestForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public TestForm()
     {
@@ -23,7 +23,7 @@ namespace TestCulture
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
-      #region Управляющие элементы
+      #region РЈРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹
 
       efpDTP = new EFPDateTimePicker(efpForm, edDTP);
 
@@ -47,7 +47,7 @@ namespace TestCulture
 
       #endregion
 
-      #region Табличный просмотр
+      #region РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ
 
       efpGr1 = new EFPDataGridView(efpForm, gr1);
       efpGr1.Control.AutoGenerateColumns = false;
@@ -66,7 +66,7 @@ namespace TestCulture
 
     #endregion
 
-    #region Управляющие элементы
+    #region РЈРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹
 
     EFPDateTimePicker efpDTP;
     EFPDateBox efpDB;
@@ -92,13 +92,13 @@ namespace TestCulture
 
     #endregion
 
-    #region Табличный просмотр
+    #region РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ
 
     EFPDataGridView efpGr1;
 
     #endregion
 
-    #region Статический метод запуска
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°
 
     internal static void PerformTest()
     {

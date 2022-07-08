@@ -1,4 +1,4 @@
-namespace TestCache
+п»їnamespace TestCache
 {
   partial class TestForm
   {
@@ -72,7 +72,7 @@ namespace TestCache
       this.groupBox2.Size = new System.Drawing.Size(731, 166);
       this.groupBox2.TabIndex = 0;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Потоки выполнения";
+      this.groupBox2.Text = "РџРѕС‚РѕРєРё РІС‹РїРѕР»РЅРµРЅРёСЏ";
       // 
       // grThreads
       // 
@@ -115,7 +115,7 @@ namespace TestCache
       this.groupBox3.Size = new System.Drawing.Size(731, 139);
       this.groupBox3.TabIndex = 0;
       this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Статистика объекта CacheStat";
+      this.groupBox3.Text = "РЎС‚Р°С‚РёСЃС‚РёРєР° РѕР±СЉРµРєС‚Р° CacheStat";
       // 
       // grStat
       // 
@@ -158,7 +158,7 @@ namespace TestCache
       this.btnClear.Name = "btnClear";
       this.btnClear.Size = new System.Drawing.Size(88, 24);
       this.btnClear.TabIndex = 6;
-      this.btnClear.Text = "Сброс";
+      this.btnClear.Text = "РЎР±СЂРѕСЃ";
       this.btnClear.UseVisualStyleBackColor = true;
       // 
       // btnInfo
@@ -168,7 +168,7 @@ namespace TestCache
       this.btnInfo.Name = "btnInfo";
       this.btnInfo.Size = new System.Drawing.Size(88, 24);
       this.btnInfo.TabIndex = 18;
-      this.btnInfo.Text = "Инфо";
+      this.btnInfo.Text = "РРЅС„Рѕ";
       this.btnInfo.UseVisualStyleBackColor = true;
       // 
       // lblMemoryLoad
@@ -296,7 +296,7 @@ namespace TestCache
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(117, 20);
       this.label2.TabIndex = 3;
-      this.label2.Text = "Постоянный каталог";
+      this.label2.Text = "РџРѕСЃС‚РѕСЏРЅРЅС‹Р№ РєР°С‚Р°Р»РѕРі";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edTempDir
@@ -315,7 +315,7 @@ namespace TestCache
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(117, 20);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Временный каталог";
+      this.label1.Text = "Р’СЂРµРјРµРЅРЅС‹Р№ РєР°С‚Р°Р»РѕРі";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // TestForm
@@ -325,7 +325,7 @@ namespace TestCache
       this.ClientSize = new System.Drawing.Size(731, 426);
       this.Controls.Add(this.splitContainer1);
       this.Name = "TestForm";
-      this.Text = "Тестирования кэша";
+      this.Text = "РўРµСЃС‚РёСЂРѕРІР°РЅРёСЏ РєСЌС€Р°";
       this.groupBox2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.grThreads)).EndInit();
       this.splitContainer1.Panel1.ResumeLayout(false);

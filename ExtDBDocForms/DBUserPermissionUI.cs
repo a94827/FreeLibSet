@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -8,25 +8,25 @@ using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Controls;
 
-// Пользовательский интерфейс для конкретных видов разрешений
-// Классы, производные от UserPermissionUI
+// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РєРѕРЅРєСЂРµС‚РЅС‹С… РІРёРґРѕРІ СЂР°Р·СЂРµС€РµРЅРёР№.
+// РљР»Р°СЃСЃС‹, РїСЂРѕРёР·РІРѕРґРЅС‹Рµ РѕС‚ UserPermissionUI
 
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Абстрактный класс интефрейса разрешения, задаваемого перечислимым значением.
-  /// Может также использоваться для разрешений, задаваемых логическим значением, типа "Разрешено-Запрещено"
+  /// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РєР»Р°СЃСЃ РёРЅС‚РµС„СЂРµР№СЃР° СЂР°Р·СЂРµС€РµРЅРёСЏ, Р·Р°РґР°РІР°РµРјРѕРіРѕ РїРµСЂРµС‡РёСЃР»РёРјС‹Рј Р·РЅР°С‡РµРЅРёРµРј.
+  /// РњРѕР¶РµС‚ С‚Р°РєР¶Рµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёР№, Р·Р°РґР°РІР°РµРјС‹С… Р»РѕРіРёС‡РµСЃРєРёРј Р·РЅР°С‡РµРЅРёРµРј, С‚РёРїР° "Р Р°Р·СЂРµС€РµРЅРѕ-Р—Р°РїСЂРµС‰РµРЅРѕ"
   /// </summary>
   public abstract class EnumUserPermissionUI : UserPermissionUI
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает интферейс для класса разрешений
+    /// РЎРѕР·РґР°РµС‚ РёРЅС‚С„РµСЂРµР№СЃ РґР»СЏ РєР»Р°СЃСЃР° СЂР°Р·СЂРµС€РµРЅРёР№
     /// </summary>
-    /// <param name="classCode">Код класса разрешений</param>
-    /// <param name="textValues">Текстовые значения элементво перечисления</param>
-    /// <param name="imageKeys">Значки для элементов перечисления</param>
+    /// <param name="classCode">РљРѕРґ РєР»Р°СЃСЃР° СЂР°Р·СЂРµС€РµРЅРёР№</param>
+    /// <param name="textValues">РўРµРєСЃС‚РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ СЌР»РµРјРµРЅС‚РІРѕ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</param>
+    /// <param name="imageKeys">Р—РЅР°С‡РєРё РґР»СЏ СЌР»РµРјРµРЅС‚РѕРІ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</param>
     protected EnumUserPermissionUI(string classCode, string[] textValues, string[] imageKeys)
       : base(classCode)
     {
@@ -38,47 +38,47 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Текстовые значения, соответствующие значениям перечисления
+    /// РўРµРєСЃС‚РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ Р·РЅР°С‡РµРЅРёСЏРј РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ
     /// </summary>
     public string[] TextValues { get { return _TextValues; } }
     private string[] _TextValues;
 
     /// <summary>
-    /// Значки, соответствующие значениям перечисления
+    /// Р—РЅР°С‡РєРё, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ Р·РЅР°С‡РµРЅРёСЏРј РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ
     /// </summary>
     public string[] ImageKeys { get { return _ImageKeys; } }
     private string[] _ImageKeys;
 
     #endregion
 
-    #region Абстрактные методы
+    #region РђР±СЃС‚СЂР°РєС‚РЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает перечислимое значение из разрешения, приведенное к целому числу
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· СЂР°Р·СЂРµС€РµРЅРёСЏ, РїСЂРёРІРµРґРµРЅРЅРѕРµ Рє С†РµР»РѕРјСѓ С‡РёСЃР»Сѓ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <returns>Перечислимое значение</returns>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected abstract int GetIndexValue(UserPermission permission);
 
     /// <summary>
-    /// Устанавливает перечислимое значение для разрешения
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <param name="value">Перечислимое значение как целое число</param>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РєР°Рє С†РµР»РѕРµ С‡РёСЃР»Рѕ</param>
     protected abstract void SetIndexValue(UserPermission permission, int value);
 
     #endregion
 
-    #region Получение информации
+    #region РџРѕР»СѓС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё
 
     /// <summary>
-    /// Заполнение информации о разрешении для пользовательского интерфейса
+    /// Р—Р°РїРѕР»РЅРµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё Рѕ СЂР°Р·СЂРµС€РµРЅРёРё РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
     /// </summary>
-    /// <param name="permission">Разрешение, откуда берется информация</param>
-    /// <param name="info">Заполняемый объект</param>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ, РѕС‚РєСѓРґР° Р±РµСЂРµС‚СЃСЏ РёРЅС„РѕСЂРјР°С†РёСЏ</param>
+    /// <param name="info">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
     public override void GetInfo(UserPermission permission, UserPermissionUIInfo info)
     {
       base.GetInfo(permission, info);
@@ -88,17 +88,17 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Редактирование
+    #region Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
 
     /// <summary>
-    /// Заголовок группы радиокнопок в редакторе
+    /// Р—Р°РіРѕР»РѕРІРѕРє РіСЂСѓРїРїС‹ СЂР°РґРёРѕРєРЅРѕРїРѕРє РІ СЂРµРґР°РєС‚РѕСЂРµ
     /// </summary>
-    protected virtual string GroupTitle { get { return "Режим доступа"; } }
+    protected virtual string GroupTitle { get { return "Р РµР¶РёРј РґРѕСЃС‚СѓРїР°"; } }
 
     /// <summary>
-    /// Создает панель для редактирования разрешения
+    /// РЎРѕР·РґР°РµС‚ РїР°РЅРµР»СЊ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
-    /// <param name="editor">Редактор разрешения, который требуется инициализировать</param>
+    /// <param name="editor">Р РµРґР°РєС‚РѕСЂ СЂР°Р·СЂРµС€РµРЅРёСЏ, РєРѕС‚РѕСЂС‹Р№ С‚СЂРµР±СѓРµС‚СЃСЏ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ</param>
     public override void CreateEditor(UserPermissionEditor editor)
     {
       RadioGroupBox control = new RadioGroupBox(TextValues);
@@ -132,41 +132,41 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Интерфейс разрешения на базу данных в целом
+  /// РРЅС‚РµСЂС„РµР№СЃ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° Р±Р°Р·Сѓ РґР°РЅРЅС‹С… РІ С†РµР»РѕРј
   /// </summary>
   public class WholeDBPermissionUI : EnumUserPermissionUI
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает экземпляр интерфейса разрешения
+    /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ РёРЅС‚РµСЂС„РµР№СЃР° СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
     public WholeDBPermissionUI()
       : base("DB", DBUserPermission.ValueNames, ValueImageKeys)
     {
-      base.DisplayName = "База данных";
+      base.DisplayName = "Р‘Р°Р·Р° РґР°РЅРЅС‹С…";
       base.ImageKey = "Database";
     }
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает перечислимое значение из разрешения, приведенное к целому числу
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· СЂР°Р·СЂРµС€РµРЅРёСЏ, РїСЂРёРІРµРґРµРЅРЅРѕРµ Рє С†РµР»РѕРјСѓ С‡РёСЃР»Сѓ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <returns>Перечислимое значение</returns>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected override int GetIndexValue(UserPermission permission)
     {
       return (int)(((WholeDBPermission)permission).Mode);
     }
 
     /// <summary>
-    /// Устанавливает перечислимое значение для разрешения
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <param name="value">Перечислимое значение как целое число</param>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РєР°Рє С†РµР»РѕРµ С‡РёСЃР»Рѕ</param>
     protected override void SetIndexValue(UserPermission permission, int value)
     {
       ((WholeDBPermission)permission).Mode = (DBxAccessMode)value;
@@ -174,18 +174,18 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Статические списки
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ СЃРїРёСЃРєРё
 
     /// <summary>
-    /// Имена изображений в EFPApp.MainImages, соответствующие перечислению DBxAccessMode
+    /// РРјРµРЅР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ РІ EFPApp.MainImages, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ DBxAccessMode
     /// </summary>
     public static readonly string[] ValueImageKeys = new string[] { "Edit", "View", "No" };
 
     /// <summary>
-    /// Возвращает имя изображения в EFPApp.MainImages, соответствующее перечислению DBxAccessMode
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ EFPApp.MainImages, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ DBxAccessMode
     /// </summary>
-    /// <param name="mode">Режим доступа</param>
-    /// <returns>Имя изображения</returns>
+    /// <param name="mode">Р РµР¶РёРј РґРѕСЃС‚СѓРїР°</param>
+    /// <returns>РРјСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</returns>
     public static string GetModeImageKey(DBxAccessMode mode)
     {
       if ((int)mode < 0 || (int)mode >= ValueImageKeys.Length)
@@ -198,15 +198,15 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Интерфейс разрешения на доступ к одной или нескольким таблицам базы данных.
-  /// Этот тип разрешения редко используется
+  /// РРЅС‚РµСЂС„РµР№СЃ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє РѕРґРЅРѕР№ РёР»Рё РЅРµСЃРєРѕР»СЊРєРёРј С‚Р°Р±Р»РёС†Р°Рј Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+  /// Р­С‚РѕС‚ С‚РёРї СЂР°Р·СЂРµС€РµРЅРёСЏ СЂРµРґРєРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
   /// </summary>
-  public class TableUserPermissionUI : EnumUserPermissionUI // TODO: Этот тип плохо подходит
+  public class TableUserPermissionUI : EnumUserPermissionUI // TODO: Р­С‚РѕС‚ С‚РёРї РїР»РѕС…Рѕ РїРѕРґС…РѕРґРёС‚
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает интерфейс разрешения
+    /// РЎРѕР·РґР°РµС‚ РёРЅС‚РµСЂС„РµР№СЃ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
     public TableUserPermissionUI()
       : base("Table", DBUserPermission.ValueNames, WholeDBPermissionUI.ValueImageKeys)
@@ -215,30 +215,30 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает перечислимое значение из разрешения, приведенное к целому числу
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· СЂР°Р·СЂРµС€РµРЅРёСЏ, РїСЂРёРІРµРґРµРЅРЅРѕРµ Рє С†РµР»РѕРјСѓ С‡РёСЃР»Сѓ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <returns>Перечислимое значение</returns>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected override int GetIndexValue(UserPermission permission)
     {
       return (int)(((TablePermission)permission).Mode);
     }
 
     /// <summary>
-    /// Устанавливает перечислимое значение для разрешения
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <param name="value">Перечислимое значение как целое число</param>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РєР°Рє С†РµР»РѕРµ С‡РёСЃР»Рѕ</param>
     protected override void SetIndexValue(UserPermission permission, int value)
     {
       ((TablePermission)permission).Mode = (DBxAccessMode)value;
     }
 
     /// <summary>
-    /// Не реализовано
+    /// РќРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ
     /// </summary>
     /// <param name="editor"></param>
     public override void CreateEditor(UserPermissionEditor editor)
@@ -249,43 +249,42 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
   /// <summary>
-  /// Интерфейс разрешения на пересчет вычисляемых полей
+  /// РРЅС‚РµСЂС„РµР№СЃ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РїРµСЂРµСЃС‡РµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹С… РїРѕР»РµР№
   /// </summary>
   public class RecalcColumnsPermissionUI : EnumUserPermissionUI
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает интерфейс разрешения
+    /// РЎРѕР·РґР°РµС‚ РёРЅС‚РµСЂС„РµР№СЃ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
     public RecalcColumnsPermissionUI()
       : base("RecalcColumns", RecalcColumnsPermission.ValueNames, ValueImageKeys)
     {
-      base.DisplayName = "Пересчет вычисляемых полей";
+      base.DisplayName = "РџРµСЂРµСЃС‡РµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹С… РїРѕР»РµР№";
       base.ImageKey = "RecalcColumns";
     }
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает перечислимое значение из разрешения, приведенное к целому числу
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· СЂР°Р·СЂРµС€РµРЅРёСЏ, РїСЂРёРІРµРґРµРЅРЅРѕРµ Рє С†РµР»РѕРјСѓ С‡РёСЃР»Сѓ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <returns>Перечислимое значение</returns>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected override int GetIndexValue(UserPermission permission)
     {
       return (int)(((RecalcColumnsPermission)permission).Mode);
     }
 
     /// <summary>
-    /// Устанавливает перечислимое значение для разрешения
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
-    /// <param name="permission">Разрешение</param>
-    /// <param name="value">Перечислимое значение как целое число</param>
+    /// <param name="permission">Р Р°Р·СЂРµС€РµРЅРёРµ</param>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РєР°Рє С†РµР»РѕРµ С‡РёСЃР»Рѕ</param>
     protected override void SetIndexValue(UserPermission permission, int value)
     {
       ((RecalcColumnsPermission)permission).Mode = (RecalcColumnsPermissionMode)value;
@@ -293,18 +292,18 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Статические списки
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ СЃРїРёСЃРєРё
 
     /// <summary>
-    /// Имена изображений в EFPApp.MainImages, соответствующие перечислению RecalcColumnsPermissionMode
+    /// РРјРµРЅР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ РІ EFPApp.MainImages, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ RecalcColumnsPermissionMode
     /// </summary>
     public static readonly string[] ValueImageKeys = new string[] { "No", "CircleYellow", "Ok" };
 
     /// <summary>
-    /// Возвращает имя изображения в EFPApp.MainImages, соответствующие перечислению RecalcColumnsPermissionMode
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ EFPApp.MainImages, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ RecalcColumnsPermissionMode
     /// </summary>
-    /// <param name="mode">Режим пересчета полей</param>
-    /// <returns>Имя изображения</returns>
+    /// <param name="mode">Р РµР¶РёРј РїРµСЂРµСЃС‡РµС‚Р° РїРѕР»РµР№</param>
+    /// <returns>РРјСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</returns>
     public static string GetModeImageKey(RecalcColumnsPermissionMode mode)
     {
       if ((int)mode < 0 || (int)mode >= ValueImageKeys.Length)

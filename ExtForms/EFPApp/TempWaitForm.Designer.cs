@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+﻿namespace FreeLibSet.Forms
 {
   partial class TempWaitForm
   {

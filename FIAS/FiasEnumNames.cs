@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,107 +12,107 @@ namespace FreeLibSet.FIAS
   #region FiasLevel
 
   /// <summary>
-  /// Значения поля AOLEVEL (Уровень адресного объекта)
+  /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ AOLEVEL (РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°)
   /// </summary>
   [Serializable]
   public enum FiasLevel
   {
-    #region Значения, определенные в ФИАС
+    #region Р—РЅР°С‡РµРЅРёСЏ, РѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РІ Р¤РРђРЎ
 
     /// <summary>
-    /// Уровень региона
+    /// РЈСЂРѕРІРµРЅСЊ СЂРµРіРёРѕРЅР°
     /// </summary>
     Region = 1,
 
     /// <summary>
-    /// уровень автономного округа (устаревшее)
+    /// СѓСЂРѕРІРµРЅСЊ Р°РІС‚РѕРЅРѕРјРЅРѕРіРѕ РѕРєСЂСѓРіР° (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     AutonomousArea = 2,
 
     /// <summary>
-    /// уровень района
+    /// СѓСЂРѕРІРµРЅСЊ СЂР°Р№РѕРЅР°
     /// </summary>
     District = 3,
 
     /// <summary>
-    /// уровень городских и сельских поселений
+    /// СѓСЂРѕРІРµРЅСЊ РіРѕСЂРѕРґСЃРєРёС… Рё СЃРµР»СЊСЃРєРёС… РїРѕСЃРµР»РµРЅРёР№
     /// </summary>
     Settlement = 35,
 
     /// <summary>
-    /// уровень города
+    /// СѓСЂРѕРІРµРЅСЊ РіРѕСЂРѕРґР°
     /// </summary>
     City = 4,
 
     /// <summary>
-    /// уровень внутригородской территории (устаревшее)
+    /// СѓСЂРѕРІРµРЅСЊ РІРЅСѓС‚СЂРёРіРѕСЂРѕРґСЃРєРѕР№ С‚РµСЂСЂРёС‚РѕСЂРёРё (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     InnerCityArea = 5,
 
     /// <summary>
-    /// уровень населенного пункта
+    /// СѓСЂРѕРІРµРЅСЊ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р°
     /// </summary>
     Village = 6,
 
     /// <summary>
-    /// планировочная структура
+    /// РїР»Р°РЅРёСЂРѕРІРѕС‡РЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°
     /// </summary>
     PlanningStructure = 65,
 
     /// <summary>
-    /// уровень улицы
+    /// СѓСЂРѕРІРµРЅСЊ СѓР»РёС†С‹
     /// </summary>
     Street = 7,
 
     /// <summary>
-    /// земельный участок
+    /// Р·РµРјРµР»СЊРЅС‹Р№ СѓС‡Р°СЃС‚РѕРє
     /// </summary>
     LandPlot = 75,
 
     /// <summary>
-    /// здания, сооружения, объекта незавершенного строительства
+    /// Р·РґР°РЅРёСЏ, СЃРѕРѕСЂСѓР¶РµРЅРёСЏ, РѕР±СЉРµРєС‚Р° РЅРµР·Р°РІРµСЂС€РµРЅРЅРѕРіРѕ СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІР°
     /// </summary>
     House = 8,
 
     /// <summary>
-    ///  уровень помещения в пределах здания, сооружения
+    ///  СѓСЂРѕРІРµРЅСЊ РїРѕРјРµС‰РµРЅРёСЏ РІ РїСЂРµРґРµР»Р°С… Р·РґР°РЅРёСЏ, СЃРѕРѕСЂСѓР¶РµРЅРёСЏ
     /// </summary>
     Flat = 9,
 
     /// <summary>
-    /// уровень дополнительных территорий (устаревшее)
+    /// СѓСЂРѕРІРµРЅСЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… С‚РµСЂСЂРёС‚РѕСЂРёР№ (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     AdditionalTerritory = 90,
 
     /// <summary>
-    /// уровень объектов на дополнительных территориях (устаревшее)
+    /// СѓСЂРѕРІРµРЅСЊ РѕР±СЉРµРєС‚РѕРІ РЅР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… С‚РµСЂСЂРёС‚РѕСЂРёСЏС… (СѓСЃС‚Р°СЂРµРІС€РµРµ)
     /// </summary>
     AdditionalTerritoryObject = 91,
 
     #endregion
 
-    #region Дополнительные значения
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 
     /// <summary>
-    /// Корпус.
-    /// Это значение не определено в ФИАС
+    /// РљРѕСЂРїСѓСЃ.
+    /// Р­С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ РІ Р¤РРђРЎ
     /// </summary>
     Building = 201,
 
     /// <summary>
-    /// Строение.
-    /// Это значение не определено в ФИАС
+    /// РЎС‚СЂРѕРµРЅРёРµ.
+    /// Р­С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ РІ Р¤РРђРЎ
     /// </summary>
     Structure = 202,
 
     /// <summary>
-    /// Комната
-    /// Это значение не определено в ФИАС
+    /// РљРѕРјРЅР°С‚Р°
+    /// Р­С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ РІ Р¤РРђРЎ
     /// </summary>
     Room = 203,
 
     /// <summary>
-    /// Уровень не задан
+    /// РЈСЂРѕРІРµРЅСЊ РЅРµ Р·Р°РґР°РЅ
     /// </summary>
     Unknown = 0,
 
@@ -124,29 +124,29 @@ namespace FreeLibSet.FIAS
   #region FiasCenterStatus
 
   /// <summary>
-  /// Является ли населенный пункт столицей района и/или региона?
-  /// Значение поля AddressObjects.CENTSTATUS
+  /// РЇРІР»СЏРµС‚СЃСЏ Р»Рё РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚ СЃС‚РѕР»РёС†РµР№ СЂР°Р№РѕРЅР° Рё/РёР»Рё СЂРµРіРёРѕРЅР°?
+  /// Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ AddressObjects.CENTSTATUS
   /// </summary>
   [Serializable]
   public enum FiasCenterStatus
   {
     /// <summary>
-    /// объект не является центром административно-территориального образования
+    /// РѕР±СЉРµРєС‚ РЅРµ СЏРІР»СЏРµС‚СЃСЏ С†РµРЅС‚СЂРѕРј Р°РґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅРѕ-С‚РµСЂСЂРёС‚РѕСЂРёР°Р»СЊРЅРѕРіРѕ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ
     /// </summary>
     None = 0,
 
     /// <summary>
-    /// объект является центром района
+    /// РѕР±СЉРµРєС‚ СЏРІР»СЏРµС‚СЃСЏ С†РµРЅС‚СЂРѕРј СЂР°Р№РѕРЅР°
     /// </summary>
     District = 1,
 
     /// <summary>
-    /// объект является центром (столицей) региона
+    /// РѕР±СЉРµРєС‚ СЏРІР»СЏРµС‚СЃСЏ С†РµРЅС‚СЂРѕРј (СЃС‚РѕР»РёС†РµР№) СЂРµРіРёРѕРЅР°
     /// </summary>
     Region = 2,
 
     /// <summary>
-    /// объект является одновременно и центром района и центром региона.
+    /// РѕР±СЉРµРєС‚ СЏРІР»СЏРµС‚СЃСЏ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ Рё С†РµРЅС‚СЂРѕРј СЂР°Р№РѕРЅР° Рё С†РµРЅС‚СЂРѕРј СЂРµРіРёРѕРЅР°.
     /// </summary>
     RegionAndDistrict = 3
   }
@@ -156,23 +156,23 @@ namespace FreeLibSet.FIAS
   #region FiasDivType
 
   /// <summary>
-  /// Признак адресации
+  /// РџСЂРёР·РЅР°Рє Р°РґСЂРµСЃР°С†РёРё
   /// </summary>
   [Serializable]
   public enum FiasDivType
   {
     /// <summary>
-    /// не определено
+    /// РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ
     /// </summary>
     Unknown = 0,
 
     /// <summary>
-    /// муниципальное деление
+    /// РјСѓРЅРёС†РёРїР°Р»СЊРЅРѕРµ РґРµР»РµРЅРёРµ
     /// </summary>
     MD = 1,
 
     /// <summary>
-    /// административно-территориальное деление
+    /// Р°РґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅРѕ-С‚РµСЂСЂРёС‚РѕСЂРёР°Р»СЊРЅРѕРµ РґРµР»РµРЅРёРµ
     /// </summary>
     ATD = 2,
   }
@@ -182,29 +182,29 @@ namespace FreeLibSet.FIAS
   #region FiasStructureStatus
 
   /// <summary>
-  /// Признак строения.
-  /// Значение поля "STRSTATUS"
+  /// РџСЂРёР·РЅР°Рє СЃС‚СЂРѕРµРЅРёСЏ.
+  /// Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ "STRSTATUS"
   /// </summary>
   [Serializable]
   public enum FiasStructureStatus
   {
     /// <summary>
-    /// Не определено
+    /// РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ
     /// </summary>
     Unknown = 0,
 
     /// <summary>
-    /// Строение
+    /// РЎС‚СЂРѕРµРЅРёРµ
     /// </summary>
     Structure = 1,
 
     /// <summary>
-    /// Сооружение
+    /// РЎРѕРѕСЂСѓР¶РµРЅРёРµ
     /// </summary>
     Construction = 2,
 
     /// <summary>
-    /// Литер
+    /// Р›РёС‚РµСЂ
     /// </summary>
     Character = 3,
   }
@@ -214,64 +214,64 @@ namespace FreeLibSet.FIAS
   #region FiasEstateStatus
 
   /// <summary>
-  /// Признак владения (строением).
-  /// Значение поля ESTSTATUS
+  /// РџСЂРёР·РЅР°Рє РІР»Р°РґРµРЅРёСЏ (СЃС‚СЂРѕРµРЅРёРµРј).
+  /// Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ ESTSTATUS
   /// </summary>
   [Serializable]
   public enum FiasEstateStatus
   {
     /// <summary>
-    /// Не определено
+    /// РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ
     /// </summary>
     Unknown = 0,
 
     /// <summary>
-    /// Владение
+    /// Р’Р»Р°РґРµРЅРёРµ
     /// </summary>
     Hold = 1,
 
     /// <summary>
-    /// Дом
+    /// Р”РѕРј
     /// </summary>
     House = 2,
 
     /// <summary>
-    /// Домовладение
+    /// Р”РѕРјРѕРІР»Р°РґРµРЅРёРµ
     /// </summary>
     Household = 3,
 
     /// <summary>
-    /// Гараж
+    /// Р“Р°СЂР°Р¶
     /// </summary>
     Garage = 4,
 
     /// <summary>
-    /// Здание
+    /// Р—РґР°РЅРёРµ
     /// </summary>
     Bulding = 5,
 
     /// <summary>
-    /// Шахта
+    /// РЁР°С…С‚Р°
     /// </summary>
     Mine = 6,
 
     /// <summary>
-    /// Подвал
+    /// РџРѕРґРІР°Р»
     /// </summary>
     Basement = 7,
 
     /// <summary>
-    /// Котельная
+    /// РљРѕС‚РµР»СЊРЅР°СЏ
     /// </summary>
     Steamshop = 8,
 
     /// <summary>
-    /// Погреб
+    /// РџРѕРіСЂРµР±
     /// </summary>
     Cellar = 9,
 
     /// <summary>
-    /// Объект незавершенного строительства
+    /// РћР±СЉРµРєС‚ РЅРµР·Р°РІРµСЂС€РµРЅРЅРѕРіРѕ СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІР°
     /// </summary>
     UnderConstruction = 10,
   }
@@ -281,79 +281,79 @@ namespace FreeLibSet.FIAS
   #region FiasFlatType
 
   /// <summary>
-  /// Тип помещения.
-  /// Значения поля FLATTYPE
+  /// РўРёРї РїРѕРјРµС‰РµРЅРёСЏ.
+  /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ FLATTYPE
   /// </summary>
   [Serializable]
   public enum FiasFlatType
   {
     /// <summary>
-    /// Не определено
+    /// РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ
     /// </summary>
     Unknown = 0,
 
     /// <summary>
-    /// Помещение
+    /// РџРѕРјРµС‰РµРЅРёРµ
     /// </summary>
     Space = 1,
 
     /// <summary>
-    /// Квартира
+    /// РљРІР°СЂС‚РёСЂР°
     /// </summary>
     Flat = 2,
 
     /// <summary>
-    /// Офис,
+    /// РћС„РёСЃ,
     /// </summary>
     Office = 3,
 
     /// <summary>
-    /// Комната
+    /// РљРѕРјРЅР°С‚Р°
     /// </summary>
     Room = 4,
 
     /// <summary>
-    /// Рабочий участок
+    /// Р Р°Р±РѕС‡РёР№ СѓС‡Р°СЃС‚РѕРє
     /// </summary>
     WorkingSection = 5,
 
     /// <summary>
-    /// Склад
+    /// РЎРєР»Р°Рґ
     /// </summary>
     Storage = 6,
 
     /// <summary>
-    /// Торговый зал
+    /// РўРѕСЂРіРѕРІС‹Р№ Р·Р°Р»
     /// </summary>
     SalesArea = 7,
 
     /// <summary>
-    /// Цех
+    /// Р¦РµС…
     /// </summary>
     Workshop = 8,
 
     /// <summary>
-    /// Павильон
+    /// РџР°РІРёР»СЊРѕРЅ
     /// </summary>
     Pavilion = 9,
 
     /// <summary>
-    /// Подвал
+    /// РџРѕРґРІР°Р»
     /// </summary>
     Basement = 10,
 
     /// <summary>
-    /// Котельная
+    /// РљРѕС‚РµР»СЊРЅР°СЏ
     /// </summary>
     Steamshop = 11,
 
     /// <summary>
-    /// Погреб
+    /// РџРѕРіСЂРµР±
     /// </summary>
     Cellar = 12,
 
     /// <summary>
-    /// Гараж
+    /// Р“Р°СЂР°Р¶
     /// </summary>
     Garage = 13,
   };
@@ -363,24 +363,24 @@ namespace FreeLibSet.FIAS
   #region FiasRoomType
 
   /// <summary>
-  /// Тип комнаты.
-  /// Значения поля ROOMTYPE
+  /// РўРёРї РєРѕРјРЅР°С‚С‹.
+  /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ ROOMTYPE
   /// </summary>
   [Serializable]
   public enum FiasRoomType
   {
     /// <summary>
-    /// Не определено
+    /// РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ
     /// </summary>
     Unknown = 0,
 
     /// <summary>
-    /// Комната
+    /// РљРѕРјРЅР°С‚Р°
     /// </summary>
     Room = 1,
 
     /// <summary>
-    /// Помещение
+    /// РџРѕРјРµС‰РµРЅРёРµ
     /// </summary>
     Space = 2
   }
@@ -390,23 +390,23 @@ namespace FreeLibSet.FIAS
   #region FiasActuality
 
   /// <summary>
-  /// Актульность адреса
+  /// РђРєС‚СѓР»СЊРЅРѕСЃС‚СЊ Р°РґСЂРµСЃР°
   /// </summary>
   [Serializable]
   public enum FiasActuality
   {
     /// <summary>
-    /// Не определена
+    /// РќРµ РѕРїСЂРµРґРµР»РµРЅР°
     /// </summary>
     Unknown,
 
     /// <summary>
-    /// Актуальный адрес
+    /// РђРєС‚СѓР°Р»СЊРЅС‹Р№ Р°РґСЂРµСЃ
     /// </summary>
     Actual,
 
     /// <summary>
-    /// Исторические сведения
+    /// РСЃС‚РѕСЂРёС‡РµСЃРєРёРµ СЃРІРµРґРµРЅРёСЏ
     /// </summary>
     Historical,
   }
@@ -416,28 +416,28 @@ namespace FreeLibSet.FIAS
   #region FiasTableType
 
   /// <summary>
-  /// Таблица в справочнике ФИАС
+  /// РўР°Р±Р»РёС†Р° РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ Р¤РРђРЎ
   /// </summary>
   [Serializable]
   public enum FiasTableType
   {
     /// <summary>
-    /// Не определена
+    /// РќРµ РѕРїСЂРµРґРµР»РµРЅР°
     /// </summary>
     Unknown,
 
     /// <summary>
-    /// Адресные объекты
+    /// РђРґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹
     /// </summary>
     AddrOb,
 
     /// <summary>
-    /// Здания и сооружения
+    /// Р—РґР°РЅРёСЏ Рё СЃРѕРѕСЂСѓР¶РµРЅРёСЏ
     /// </summary>
     House,
 
     /// <summary>
-    /// Помещения
+    /// РџРѕРјРµС‰РµРЅРёСЏ
     /// </summary>
     Room
   }
@@ -447,18 +447,18 @@ namespace FreeLibSet.FIAS
   #region FiasAOTypeMode
 
   /// <summary>
-  /// Вариант типа адресообразующего элемента
+  /// Р’Р°СЂРёР°РЅС‚ С‚РёРїР° Р°РґСЂРµСЃРѕРѕР±СЂР°Р·СѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
   /// </summary>
   [Serializable]
   public enum FiasAOTypeMode
   {
     /// <summary>
-    /// Полное наименование типа элемента ("улица"). Соответствует полю "SOCRNAME" в таблице "SOCRBASE"
+    /// РџРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР° СЌР»РµРјРµРЅС‚Р° ("СѓР»РёС†Р°"). РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЋ "SOCRNAME" РІ С‚Р°Р±Р»РёС†Рµ "SOCRBASE"
     /// </summary>
     Full,
 
     /// <summary>
-    /// Сокращенное наименование типа элемента ("ул."). Соответствует полю "SCNAME" в таблице "SOCRBASE"
+    /// РЎРѕРєСЂР°С‰РµРЅРЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР° СЌР»РµРјРµРЅС‚Р° ("СѓР»."). РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЋ "SCNAME" РІ С‚Р°Р±Р»РёС†Рµ "SOCRBASE"
     /// </summary>
     Abbreviation
   }
@@ -468,28 +468,28 @@ namespace FreeLibSet.FIAS
   #region FiasEditorLevel
 
   /// <summary>
-  /// Уровень, до которого можно редактировать адрес в редакторе
+  /// РЈСЂРѕРІРµРЅСЊ, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р°РґСЂРµСЃ РІ СЂРµРґР°РєС‚РѕСЂРµ
   /// </summary>
   [Serializable]
   public enum FiasEditorLevel
   {
     /// <summary>
-    /// До населенного пункта
+    /// Р”Рѕ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р°
     /// </summary>
     Village,
 
     /// <summary>
-    /// До улицы
+    /// Р”Рѕ СѓР»РёС†С‹
     /// </summary>
     Street,
 
     /// <summary>
-    /// До здания
+    /// Р”Рѕ Р·РґР°РЅРёСЏ
     /// </summary>
     House,
 
     /// <summary>
-    /// До помещения
+    /// Р”Рѕ РїРѕРјРµС‰РµРЅРёСЏ
     /// </summary>
     Room
   }
@@ -499,24 +499,24 @@ namespace FreeLibSet.FIAS
   #region FiasLevelCompareResult
 
   /// <summary>
-  /// Результаты сравнения уровней адреса.
-  /// Содержит значения 0, 1 и (-1), совместимые с возвращаемыми значениями стандартных методов Compare() в Net Framework
+  /// Р РµР·СѓР»СЊС‚Р°С‚С‹ СЃСЂР°РІРЅРµРЅРёСЏ СѓСЂРѕРІРЅРµР№ Р°РґСЂРµСЃР°.
+  /// РЎРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёСЏ 0, 1 Рё (-1), СЃРѕРІРјРµСЃС‚РёРјС‹Рµ СЃ РІРѕР·РІСЂР°С‰Р°РµРјС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РјРµС‚РѕРґРѕРІ Compare() РІ Net Framework
   /// </summary>
   [Serializable]
   public enum FiasLevelCompareResult
   {
     /// <summary>
-    /// Уровни совпадают
+    /// РЈСЂРѕРІРЅРё СЃРѕРІРїР°РґР°СЋС‚
     /// </summary>
     Equal = 0,
 
     /// <summary>
-    /// Первый сравниваемый уровень является более детальным, чем второй
+    /// РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ СЏРІР»СЏРµС‚СЃСЏ Р±РѕР»РµРµ РґРµС‚Р°Р»СЊРЅС‹Рј, С‡РµРј РІС‚РѕСЂРѕР№
     /// </summary>
     Greater = +1,
 
     /// <summary>
-    /// Первый сравниваемый уровень является менее детальным, чем второй
+    /// РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ СЏРІР»СЏРµС‚СЃСЏ РјРµРЅРµРµ РґРµС‚Р°Р»СЊРЅС‹Рј, С‡РµРј РІС‚РѕСЂРѕР№
     /// </summary>
     Less = -1,
   }
@@ -524,12 +524,12 @@ namespace FreeLibSet.FIAS
   #endregion
 
   /// <summary>
-  /// Наименования для перечислений, используемых ФИАС
+  /// РќР°РёРјРµРЅРѕРІР°РЅРёСЏ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёР№, РёСЃРїРѕР»СЊР·СѓРµРјС‹С… Р¤РРђРЎ
   /// </summary>
   public static class FiasEnumNames
   {
     /// <summary>
-    /// Символы, удаляемые из сокращений при дополнительном распознавании
+    /// РЎРёРјРІРѕР»С‹, СѓРґР°Р»СЏРµРјС‹Рµ РёР· СЃРѕРєСЂР°С‰РµРЅРёР№ РїСЂРё РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРј СЂР°СЃРїРѕР·РЅР°РІР°РЅРёРё
     /// </summary>
     private static readonly CharArrayIndexer _AbbrRemovedCharIndexer = new CharArrayIndexer(" .-/");
 
@@ -539,23 +539,23 @@ namespace FreeLibSet.FIAS
     private static Dictionary<FiasLevel, string> CreateLevelNames1()
     {
       Dictionary<FiasLevel, string> d = new Dictionary<FiasLevel, string>();
-      d.Add(FiasLevel.Region, "Регион");
-      d.Add(FiasLevel.AutonomousArea, "АО");
-      d.Add(FiasLevel.District, "Район");
-      d.Add(FiasLevel.Settlement, "Г/С пос.");
-      d.Add(FiasLevel.City, "Город");
-      d.Add(FiasLevel.InnerCityArea, "Внутригор.т.");
-      d.Add(FiasLevel.Village, "Нас. пункт");
-      d.Add(FiasLevel.PlanningStructure, "План.стр");
-      d.Add(FiasLevel.Street, "Улица");
-      d.Add(FiasLevel.LandPlot, "Участок");
-      d.Add(FiasLevel.AdditionalTerritory, "Доп.тер.");
-      d.Add(FiasLevel.AdditionalTerritoryObject, "Доп.тер.об.");
-      d.Add(FiasLevel.House, "Дом");
-      d.Add(FiasLevel.Building, "Корпус");
-      d.Add(FiasLevel.Structure, "Строение");
-      d.Add(FiasLevel.Flat, "Квартира");
-      d.Add(FiasLevel.Room, "Комната");
+      d.Add(FiasLevel.Region, "Р РµРіРёРѕРЅ");
+      d.Add(FiasLevel.AutonomousArea, "РђРћ");
+      d.Add(FiasLevel.District, "Р Р°Р№РѕРЅ");
+      d.Add(FiasLevel.Settlement, "Р“/РЎ РїРѕСЃ.");
+      d.Add(FiasLevel.City, "Р“РѕСЂРѕРґ");
+      d.Add(FiasLevel.InnerCityArea, "Р’РЅСѓС‚СЂРёРіРѕСЂ.С‚.");
+      d.Add(FiasLevel.Village, "РќР°СЃ. РїСѓРЅРєС‚");
+      d.Add(FiasLevel.PlanningStructure, "РџР»Р°РЅ.СЃС‚СЂ");
+      d.Add(FiasLevel.Street, "РЈР»РёС†Р°");
+      d.Add(FiasLevel.LandPlot, "РЈС‡Р°СЃС‚РѕРє");
+      d.Add(FiasLevel.AdditionalTerritory, "Р”РѕРї.С‚РµСЂ.");
+      d.Add(FiasLevel.AdditionalTerritoryObject, "Р”РѕРї.С‚РµСЂ.РѕР±.");
+      d.Add(FiasLevel.House, "Р”РѕРј");
+      d.Add(FiasLevel.Building, "РљРѕСЂРїСѓСЃ");
+      d.Add(FiasLevel.Structure, "РЎС‚СЂРѕРµРЅРёРµ");
+      d.Add(FiasLevel.Flat, "РљРІР°СЂС‚РёСЂР°");
+      d.Add(FiasLevel.Room, "РљРѕРјРЅР°С‚Р°");
       return d;
     }
 
@@ -563,37 +563,37 @@ namespace FreeLibSet.FIAS
     private static Dictionary<FiasLevel, string> CreateLevelNames2()
     {
       Dictionary<FiasLevel, string> d = new Dictionary<FiasLevel, string>();
-      d.Add(FiasLevel.Region, "Субъект Российской Федерации");
-      d.Add(FiasLevel.AutonomousArea, "Автономный округ (устаревшее)");
-      d.Add(FiasLevel.District, "Район");
-      d.Add(FiasLevel.Settlement, "Городское или сельское поселение");
-      d.Add(FiasLevel.City, "Город");
-      d.Add(FiasLevel.InnerCityArea, "Внутригородская территория (устаревшее)");
-      d.Add(FiasLevel.Village, "Населенный пункт");
-      d.Add(FiasLevel.PlanningStructure, "Планировочная структура");
-      d.Add(FiasLevel.Street, "Улица");
-      d.Add(FiasLevel.LandPlot, "Земельный участок");
-      d.Add(FiasLevel.AdditionalTerritory, "Дополнительная территория (устаревшее)");
-      d.Add(FiasLevel.AdditionalTerritoryObject, "Объект на дополнительной территории (устаревшее)");
-      d.Add(FiasLevel.House, "Здание, сооружение, объект незавершенного строительства");
-      d.Add(FiasLevel.Building, "Корпус");
-      d.Add(FiasLevel.Structure, "Строение");
-      d.Add(FiasLevel.Flat, "Помещение в пределах здания, сооружения");
-      d.Add(FiasLevel.Room, "Комната");
+      d.Add(FiasLevel.Region, "РЎСѓР±СЉРµРєС‚ Р РѕСЃСЃРёР№СЃРєРѕР№ Р¤РµРґРµСЂР°С†РёРё");
+      d.Add(FiasLevel.AutonomousArea, "РђРІС‚РѕРЅРѕРјРЅС‹Р№ РѕРєСЂСѓРі (СѓСЃС‚Р°СЂРµРІС€РµРµ)");
+      d.Add(FiasLevel.District, "Р Р°Р№РѕРЅ");
+      d.Add(FiasLevel.Settlement, "Р“РѕСЂРѕРґСЃРєРѕРµ РёР»Рё СЃРµР»СЊСЃРєРѕРµ РїРѕСЃРµР»РµРЅРёРµ");
+      d.Add(FiasLevel.City, "Р“РѕСЂРѕРґ");
+      d.Add(FiasLevel.InnerCityArea, "Р’РЅСѓС‚СЂРёРіРѕСЂРѕРґСЃРєР°СЏ С‚РµСЂСЂРёС‚РѕСЂРёСЏ (СѓСЃС‚Р°СЂРµРІС€РµРµ)");
+      d.Add(FiasLevel.Village, "РќР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚");
+      d.Add(FiasLevel.PlanningStructure, "РџР»Р°РЅРёСЂРѕРІРѕС‡РЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°");
+      d.Add(FiasLevel.Street, "РЈР»РёС†Р°");
+      d.Add(FiasLevel.LandPlot, "Р—РµРјРµР»СЊРЅС‹Р№ СѓС‡Р°СЃС‚РѕРє");
+      d.Add(FiasLevel.AdditionalTerritory, "Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ С‚РµСЂСЂРёС‚РѕСЂРёСЏ (СѓСЃС‚Р°СЂРµРІС€РµРµ)");
+      d.Add(FiasLevel.AdditionalTerritoryObject, "РћР±СЉРµРєС‚ РЅР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ С‚РµСЂСЂРёС‚РѕСЂРёРё (СѓСЃС‚Р°СЂРµРІС€РµРµ)");
+      d.Add(FiasLevel.House, "Р—РґР°РЅРёРµ, СЃРѕРѕСЂСѓР¶РµРЅРёРµ, РѕР±СЉРµРєС‚ РЅРµР·Р°РІРµСЂС€РµРЅРЅРѕРіРѕ СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІР°");
+      d.Add(FiasLevel.Building, "РљРѕСЂРїСѓСЃ");
+      d.Add(FiasLevel.Structure, "РЎС‚СЂРѕРµРЅРёРµ");
+      d.Add(FiasLevel.Flat, "РџРѕРјРµС‰РµРЅРёРµ РІ РїСЂРµРґРµР»Р°С… Р·РґР°РЅРёСЏ, СЃРѕРѕСЂСѓР¶РµРЅРёСЏ");
+      d.Add(FiasLevel.Room, "РљРѕРјРЅР°С‚Р°");
       return d;
     }
 
     /// <summary>
-    /// Получить текстовое представление для уровня адресного объекта
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ СѓСЂРѕРІРЅСЏ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="isLong">true - длинное представление ("Населенный пункт"),
-    /// false - краткое представление ("Нас. пункт")</param>
-    /// <returns>Текст</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="isLong">true - РґР»РёРЅРЅРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ ("РќР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚"),
+    /// false - РєСЂР°С‚РєРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ ("РќР°СЃ. РїСѓРЅРєС‚")</param>
+    /// <returns>РўРµРєСЃС‚</returns>
     public static string ToString(FiasLevel level, bool isLong)
     {
       if (level == FiasLevel.Unknown)
-        return "Не задан"; // 29.04.2020
+        return "РќРµ Р·Р°РґР°РЅ"; // 29.04.2020
       Dictionary<FiasLevel, string> d = isLong ? _LevelNames2 : _LevelNames1;
       string s;
       if (d.TryGetValue(level, out s))
@@ -607,22 +607,22 @@ namespace FreeLibSet.FIAS
     #region FiasCenterStatus
 
     /// <summary>
-    /// Является ли населенный пункт столицей района и/или региона?
-    /// Значения поля AddressObjects.CENTSTATUS
+    /// РЇРІР»СЏРµС‚СЃСЏ Р»Рё РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚ СЃС‚РѕР»РёС†РµР№ СЂР°Р№РѕРЅР° Рё/РёР»Рё СЂРµРіРёРѕРЅР°?
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ AddressObjects.CENTSTATUS
     /// </summary>
     public static readonly string[] CenterStatusNames = new string[] { 
-      "Нет",
-      "Районный центр",
-      "Центр (столица) региона",
-      "Центр региона и района"
+      "РќРµС‚",
+      "Р Р°Р№РѕРЅРЅС‹Р№ С†РµРЅС‚СЂ",
+      "Р¦РµРЅС‚СЂ (СЃС‚РѕР»РёС†Р°) СЂРµРіРёРѕРЅР°",
+      "Р¦РµРЅС‚СЂ СЂРµРіРёРѕРЅР° Рё СЂР°Р№РѕРЅР°"
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasCenterStatus.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasCenterStatus.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasCenterStatus value)
     {
       return GetName((int)value, CenterStatusNames);
@@ -641,20 +641,20 @@ namespace FreeLibSet.FIAS
     #region FiasDivType
 
     /// <summary>
-    /// Признаки адресации
+    /// РџСЂРёР·РЅР°РєРё Р°РґСЂРµСЃР°С†РёРё
     /// </summary>
     public static readonly string[] DivTypeNames = new string[] { 
-      "Не определено",
-      "Муниципальное деление",
-      "Административно-территориальное деление"
+      "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ",
+      "РњСѓРЅРёС†РёРїР°Р»СЊРЅРѕРµ РґРµР»РµРЅРёРµ",
+      "РђРґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅРѕ-С‚РµСЂСЂРёС‚РѕСЂРёР°Р»СЊРЅРѕРµ РґРµР»РµРЅРёРµ"
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasDivType.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasDivType.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasDivType value)
     {
       return GetName((int)value, DivTypeNames);
@@ -662,67 +662,67 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region FiasEstateStatus (тип строения)
+    #region FiasEstateStatus (С‚РёРї СЃС‚СЂРѕРµРЅРёСЏ)
 
     /// <summary>
-    /// Признак владения (строением).
-    /// Значения поля ESTSTATUS
+    /// РџСЂРёР·РЅР°Рє РІР»Р°РґРµРЅРёСЏ (СЃС‚СЂРѕРµРЅРёРµРј).
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ ESTSTATUS
     /// </summary>
     public static readonly string[] EstateStatusAOTypes = new string[] { 
-     "Не определено",
-     "Владение",
-     "Дом",
-     "Домовладение",
-     "Гараж",
-     "Здание",
-     "Шахта",
-     "Подвал", // ФИАС от 23.03.2020
-     "Котельная", // ФИАС от 23.03.2020
-     "Погреб", // ФИАС от 23.03.2020
-     "Объект нез-го стр-ва" // ФИАС от 23.03.2020
+     "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ",
+     "Р’Р»Р°РґРµРЅРёРµ",
+     "Р”РѕРј",
+     "Р”РѕРјРѕРІР»Р°РґРµРЅРёРµ",
+     "Р“Р°СЂР°Р¶",
+     "Р—РґР°РЅРёРµ",
+     "РЁР°С…С‚Р°",
+     "РџРѕРґРІР°Р»", // Р¤РРђРЎ РѕС‚ 23.03.2020
+     "РљРѕС‚РµР»СЊРЅР°СЏ", // Р¤РРђРЎ РѕС‚ 23.03.2020
+     "РџРѕРіСЂРµР±", // Р¤РРђРЎ РѕС‚ 23.03.2020
+     "РћР±СЉРµРєС‚ РЅРµР·-РіРѕ СЃС‚СЂ-РІР°" // Р¤РРђРЎ РѕС‚ 23.03.2020
     };
 
     private static readonly StringArrayIndexer _EstateStatusAOTypeIndexer = new StringArrayIndexer(EstateStatusAOTypes, true);
 
 
     /// <summary>
-    /// Признак владения (строением). Сокращения
-    /// Значения поля ESTSTATUS
+    /// РџСЂРёР·РЅР°Рє РІР»Р°РґРµРЅРёСЏ (СЃС‚СЂРѕРµРЅРёРµРј). РЎРѕРєСЂР°С‰РµРЅРёСЏ
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ ESTSTATUS
     /// </summary>
     public static readonly string[] EstateStatusAbbrs = new string[] { 
      String.Empty,
-     "влд.",
-     "д.",
-     "двлд.",
-     "г-ж",
-     "зд.",
-     "шахта",
-     "подв.", 
-     "кот.", 
-     "пб.", 
-     "онс"
+     "РІР»Рґ.",
+     "Рґ.",
+     "РґРІР»Рґ.",
+     "Рі-Р¶",
+     "Р·Рґ.",
+     "С€Р°С…С‚Р°",
+     "РїРѕРґРІ.", 
+     "РєРѕС‚.", 
+     "РїР±.", 
+     "РѕРЅСЃ"
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasEstateStatus.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasEstateStatus.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasEstateStatus value)
     {
       return GetName((int)value, EstateStatusAOTypes);
     }
 
     /// <summary>
-    /// Преобразует строку сокращения, например, "дом" в перечисление FiasEstateStatus.
-    /// Регистр не учитывается.
-    /// Дополнительно обрабатываются сокращения, например, "д".
-    /// Если задана пустая строка, возвращается значение Unknown.
-    /// Если задана неизвестная строка, возвращается значение Unknown. Исключение не выбрасывается.
+    /// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "РґРѕРј" РІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ FiasEstateStatus.
+    /// Р РµРіРёСЃС‚СЂ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РѕР±СЂР°Р±Р°С‚С‹РІР°СЋС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "Рґ".
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РЅРµРёР·РІРµСЃС‚РЅР°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown. РСЃРєР»СЋС‡РµРЅРёРµ РЅРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <returns>Значение перечисления</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</returns>
     public static FiasEstateStatus ParseEstateStatus(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -732,25 +732,25 @@ namespace FreeLibSet.FIAS
       if (p >= 0)
         return (FiasEstateStatus)p;
 
-      // При добавлении не забыть про метод FiasCachedAOTypes.CreateAOTypeLevelDict()
+      // РџСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРµ Р·Р°Р±С‹С‚СЊ РїСЂРѕ РјРµС‚РѕРґ FiasCachedAOTypes.CreateAOTypeLevelDict()
 
       s = DataTools.RemoveChars(s.ToLowerInvariant(), _AbbrRemovedCharIndexer);
       switch (s)
       {
-        case "д": return FiasEstateStatus.House;
-        case "влд": return FiasEstateStatus.Hold;
-        case "дв":
-        case "двл":
-        case "двлд":
-        case "двлад": return FiasEstateStatus.Hold;
-        case "гар":
-        case "г-ж":
-        case "гж": return FiasEstateStatus.Garage;
-        case "зд": return FiasEstateStatus.Bulding;
-        case "подв": return FiasEstateStatus.Basement;
-        case "кот": return FiasEstateStatus.Steamshop;
-        case "пб": return FiasEstateStatus.Cellar;
-        case "онс": return FiasEstateStatus.UnderConstruction;
+        case "Рґ": return FiasEstateStatus.House;
+        case "РІР»Рґ": return FiasEstateStatus.Hold;
+        case "РґРІ":
+        case "РґРІР»":
+        case "РґРІР»Рґ":
+        case "РґРІР»Р°Рґ": return FiasEstateStatus.Hold;
+        case "РіР°СЂ":
+        case "Рі-Р¶":
+        case "РіР¶": return FiasEstateStatus.Garage;
+        case "Р·Рґ": return FiasEstateStatus.Bulding;
+        case "РїРѕРґРІ": return FiasEstateStatus.Basement;
+        case "РєРѕС‚": return FiasEstateStatus.Steamshop;
+        case "РїР±": return FiasEstateStatus.Cellar;
+        case "РѕРЅСЃ": return FiasEstateStatus.UnderConstruction;
       }
 
       return FiasEstateStatus.Unknown;
@@ -758,51 +758,51 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region FiasStructureStatus (тип строения)
+    #region FiasStructureStatus (С‚РёРї СЃС‚СЂРѕРµРЅРёСЏ)
 
     /// <summary>
-    /// Признак строения.
-    /// Значения поля "STRSTATUS"
+    /// РџСЂРёР·РЅР°Рє СЃС‚СЂРѕРµРЅРёСЏ.
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ "STRSTATUS"
     /// </summary>
     public static readonly string[] StructureStatusAOTypes = new string[] { 
-      "Не определено",
-      "Строение",
-      "Сооружение",
-      "Литер"};
+      "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ",
+      "РЎС‚СЂРѕРµРЅРёРµ",
+      "РЎРѕРѕСЂСѓР¶РµРЅРёРµ",
+      "Р›РёС‚РµСЂ"};
 
     private static readonly StringArrayIndexer _StructureStatusAOTypeIndexer = new StringArrayIndexer(StructureStatusAOTypes, true);
 
     /// <summary>
-    /// Признак строения. Сокращение
-    /// Значения поля "STRSTATUS"
+    /// РџСЂРёР·РЅР°Рє СЃС‚СЂРѕРµРЅРёСЏ. РЎРѕРєСЂР°С‰РµРЅРёРµ
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ "STRSTATUS"
     /// </summary>
     public static readonly string[] StructureStatusAbbrs = new string[] { 
       String.Empty,
-      "стр.",
-      "cоор.",
-      "л."};
+      "СЃС‚СЂ.",
+      "cРѕРѕСЂ.",
+      "Р»."};
 
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasStructureStatus.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasStructureStatus.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasStructureStatus value)
     {
       return GetName((int)value, StructureStatusAOTypes);
     }
 
     /// <summary>
-    /// Преобразует строку сокращения, например, "строение" в перечисление FiasStructureStatus.
-    /// Регистр не учитывается.
-    /// Дополнительно обрабатываются сокращения, например, "стр".
-    /// Если задана пустая строка, возвращается значение Unknown.
-    /// Если задана неизвестная строка, возвращается значение Unknown. Исключение не выбрасывается.
+    /// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "СЃС‚СЂРѕРµРЅРёРµ" РІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ FiasStructureStatus.
+    /// Р РµРіРёСЃС‚СЂ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РѕР±СЂР°Р±Р°С‚С‹РІР°СЋС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "СЃС‚СЂ".
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РЅРµРёР·РІРµСЃС‚РЅР°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown. РСЃРєР»СЋС‡РµРЅРёРµ РЅРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <returns>Значение перечисления</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</returns>
     public static FiasStructureStatus ParseStructureStatus(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -812,17 +812,17 @@ namespace FreeLibSet.FIAS
       if (p >= 0)
         return (FiasStructureStatus)p;
 
-      // При добавлении не забыть про метод FiasCachedAOTypes.CreateAOTypeLevelDict()
+      // РџСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРµ Р·Р°Р±С‹С‚СЊ РїСЂРѕ РјРµС‚РѕРґ FiasCachedAOTypes.CreateAOTypeLevelDict()
 
       s = DataTools.RemoveChars(s.ToLowerInvariant(), _AbbrRemovedCharIndexer);
       switch (s)
       {
-        case "стр":
-        case "ст": return FiasStructureStatus.Structure;
-        case "сооруж":
-        case "соор": return FiasStructureStatus.Construction;
-        case "лит":
-        case "л": return FiasStructureStatus.Character;
+        case "СЃС‚СЂ":
+        case "СЃС‚": return FiasStructureStatus.Structure;
+        case "СЃРѕРѕСЂСѓР¶":
+        case "СЃРѕРѕСЂ": return FiasStructureStatus.Construction;
+        case "Р»РёС‚":
+        case "Р»": return FiasStructureStatus.Character;
       }
 
       return FiasStructureStatus.Unknown;
@@ -833,69 +833,69 @@ namespace FreeLibSet.FIAS
     #region FiasFlatType
 
     /// <summary>
-    /// Тип помещения.
-    /// Значения поля FLATTYPE
+    /// РўРёРї РїРѕРјРµС‰РµРЅРёСЏ.
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ FLATTYPE
     /// </summary>
     public static readonly string[] FlatTypeAOTypes = new string[] { 
-      "Не определено",
-      "Помещение",
-      "Квартира",
-      "Офис",
-      "Комната",
-      "Рабочий участок",
-      "Склад",
-      "Торговый зал",
-      "Цех",
-      "Павильон",
-      "Подвал", // ФИАС от 23.03.2020
-      "Котельная", // ФИАС от 23.03.2020
-      "Погреб", // ФИАС от 23.03.2020
-      "Гараж" // ФИАС от 23.03.2020
+      "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ",
+      "РџРѕРјРµС‰РµРЅРёРµ",
+      "РљРІР°СЂС‚РёСЂР°",
+      "РћС„РёСЃ",
+      "РљРѕРјРЅР°С‚Р°",
+      "Р Р°Р±РѕС‡РёР№ СѓС‡Р°СЃС‚РѕРє",
+      "РЎРєР»Р°Рґ",
+      "РўРѕСЂРіРѕРІС‹Р№ Р·Р°Р»",
+      "Р¦РµС…",
+      "РџР°РІРёР»СЊРѕРЅ",
+      "РџРѕРґРІР°Р»", // Р¤РРђРЎ РѕС‚ 23.03.2020
+      "РљРѕС‚РµР»СЊРЅР°СЏ", // Р¤РРђРЎ РѕС‚ 23.03.2020
+      "РџРѕРіСЂРµР±", // Р¤РРђРЎ РѕС‚ 23.03.2020
+      "Р“Р°СЂР°Р¶" // Р¤РРђРЎ РѕС‚ 23.03.2020
     };
 
     private static readonly StringArrayIndexer _FlatTypeAOTypeIndexer = new StringArrayIndexer(FlatTypeAOTypes, true);
 
     /// <summary>
-    /// Тип помещения. Сокращения
-    /// Значения поля FLATTYPE
+    /// РўРёРї РїРѕРјРµС‰РµРЅРёСЏ. РЎРѕРєСЂР°С‰РµРЅРёСЏ
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ FLATTYPE
     /// </summary>
     public static readonly string[] FlatTypeAbbrs = new string[] { 
       String.Empty,
-      "пом.",
-      "кв.",
-      "оф.",
-      "ком.",
-      "раб.уч.",
-      "скл.",
-      "торг.зал",
-      "цех",
-      "пав.",
-      "подв.", // ФИАС от 23.03.2020
-      "кот.", // ФИАС от 23.03.2020
-      "п-б", // ФИАС от 23.03.2020
-      "г-ж" // ФИАС от 23.03.2020
+      "РїРѕРј.",
+      "РєРІ.",
+      "РѕС„.",
+      "РєРѕРј.",
+      "СЂР°Р±.СѓС‡.",
+      "СЃРєР».",
+      "С‚РѕСЂРі.Р·Р°Р»",
+      "С†РµС…",
+      "РїР°РІ.",
+      "РїРѕРґРІ.", // Р¤РРђРЎ РѕС‚ 23.03.2020
+      "РєРѕС‚.", // Р¤РРђРЎ РѕС‚ 23.03.2020
+      "Рї-Р±", // Р¤РРђРЎ РѕС‚ 23.03.2020
+      "Рі-Р¶" // Р¤РРђРЎ РѕС‚ 23.03.2020
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasFlatType.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasFlatType.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasFlatType value)
     {
       return GetName((int)value, FlatTypeAOTypes);
     }
 
     /// <summary>
-    /// Преобразует строку сокращения, например, "квартира" в перечисление FiasFlatType.
-    /// Регистр не учитывается.
-    /// Дополнительно обрабатываются сокращения, например, "кв".
-    /// Если задана пустая строка, возвращается значение Unknown.
-    /// Если задана неизвестная строка, возвращается значение Unknown. Исключение не выбрасывается.
+    /// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "РєРІР°СЂС‚РёСЂР°" РІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ FiasFlatType.
+    /// Р РµРіРёСЃС‚СЂ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РѕР±СЂР°Р±Р°С‚С‹РІР°СЋС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "РєРІ".
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РЅРµРёР·РІРµСЃС‚РЅР°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown. РСЃРєР»СЋС‡РµРЅРёРµ РЅРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <returns>Значение перечисления</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</returns>
     public static FiasFlatType ParseFlatType(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -908,21 +908,21 @@ namespace FreeLibSet.FIAS
       s = DataTools.RemoveChars(s.ToLowerInvariant(), _AbbrRemovedCharIndexer);
       switch (s)
       {
-        case "пом": return FiasFlatType.Space;
-        case "кв": return FiasFlatType.Flat;
-        case "оф": return FiasFlatType.Office;
-        case "ком":
-        case "комн": return FiasFlatType.Room;
-        case "скл": return FiasFlatType.Storage;
-        case "тз":
-        case "тзал":
-        case "торгзал": return FiasFlatType.SalesArea;
-        case "пав": return FiasFlatType.Pavilion;
-        case "подв": return FiasFlatType.Basement;
-        case "кот": return FiasFlatType.Steamshop;
-        case "пб": return FiasFlatType.Cellar;
-        case "гар":
-        case "гж": return FiasFlatType.Garage;
+        case "РїРѕРј": return FiasFlatType.Space;
+        case "РєРІ": return FiasFlatType.Flat;
+        case "РѕС„": return FiasFlatType.Office;
+        case "РєРѕРј":
+        case "РєРѕРјРЅ": return FiasFlatType.Room;
+        case "СЃРєР»": return FiasFlatType.Storage;
+        case "С‚Р·":
+        case "С‚Р·Р°Р»":
+        case "С‚РѕСЂРіР·Р°Р»": return FiasFlatType.SalesArea;
+        case "РїР°РІ": return FiasFlatType.Pavilion;
+        case "РїРѕРґРІ": return FiasFlatType.Basement;
+        case "РєРѕС‚": return FiasFlatType.Steamshop;
+        case "РїР±": return FiasFlatType.Cellar;
+        case "РіР°СЂ":
+        case "РіР¶": return FiasFlatType.Garage;
       }
 
       return FiasFlatType.Unknown;
@@ -933,47 +933,47 @@ namespace FreeLibSet.FIAS
     #region FiasRoomType
 
     /// <summary>
-    /// Тип комнаты.
-    /// Значения поля ROOMTYPE
+    /// РўРёРї РєРѕРјРЅР°С‚С‹.
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ ROOMTYPE
     /// </summary>
     public static readonly string[] RoomTypeAOTypes = new string[] { 
-      "Не определено",
-      "Комната",
-      "Помещение"
+      "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ",
+      "РљРѕРјРЅР°С‚Р°",
+      "РџРѕРјРµС‰РµРЅРёРµ"
     };
 
     private static readonly StringArrayIndexer _RoomTypeAOTypeIndexer = new StringArrayIndexer(RoomTypeAOTypes, true);
 
     /// <summary>
-    /// Тип комнаты. Сокращение
-    /// Значения поля ROOMTYPE
+    /// РўРёРї РєРѕРјРЅР°С‚С‹. РЎРѕРєСЂР°С‰РµРЅРёРµ
+    /// Р—РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ ROOMTYPE
     /// </summary>
     public static readonly string[] RoomTypeAbbrs = new string[] { 
       String.Empty,
-      "ком.",
-      "пом."
+      "РєРѕРј.",
+      "РїРѕРј."
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasRoomType.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasRoomType.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasRoomType value)
     {
       return GetName((int)value, RoomTypeAOTypes);
     }
 
     /// <summary>
-    /// Преобразует строку сокращения, например, "комната" в перечисление FiasRoomType.
-    /// Регистр не учитывается.
-    /// Дополнительно обрабатываются сокращения, например, "ком".
-    /// Если задана пустая строка, возвращается значение Unknown.
-    /// Если задана неизвестная строка, возвращается значение Unknown. Исключение не выбрасывается.
+    /// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "РєРѕРјРЅР°С‚Р°" РІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ FiasRoomType.
+    /// Р РµРіРёСЃС‚СЂ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РѕР±СЂР°Р±Р°С‚С‹РІР°СЋС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "РєРѕРј".
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РЅРµРёР·РІРµСЃС‚РЅР°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ Unknown. РСЃРєР»СЋС‡РµРЅРёРµ РЅРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <returns>Значение перечисления</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</returns>
     public static FiasRoomType ParseRoomType(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -986,9 +986,9 @@ namespace FreeLibSet.FIAS
       s = DataTools.RemoveChars(s.ToLowerInvariant(), _AbbrRemovedCharIndexer);
       switch (s)
       {
-        case "ком":
-        case "комн": return FiasRoomType.Room;
-        case "пом": return FiasRoomType.Space;
+        case "РєРѕРј":
+        case "РєРѕРјРЅ": return FiasRoomType.Room;
+        case "РїРѕРј": return FiasRoomType.Space;
       }
 
       return FiasRoomType.Unknown;
@@ -999,20 +999,20 @@ namespace FreeLibSet.FIAS
     #region FiasActuality
 
     /// <summary>
-    /// Актульность адреса
+    /// РђРєС‚СѓР»СЊРЅРѕСЃС‚СЊ Р°РґСЂРµСЃР°
     /// </summary>
     public static readonly string[] ActualityNames = new string[] { 
-      "Не определено",
-      "Актуальный",
-      "Исторический"
+      "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ",
+      "РђРєС‚СѓР°Р»СЊРЅС‹Р№",
+      "РСЃС‚РѕСЂРёС‡РµСЃРєРёР№"
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasActuality.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasActuality.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasActuality value)
     {
       return GetName((int)value, ActualityNames);
@@ -1023,32 +1023,32 @@ namespace FreeLibSet.FIAS
     #region FiasTableType
 
     /// <summary>
-    /// Текстовые значения, соответствующие перечислению FiasTableType, во множественном числе
+    /// РўРµРєСЃС‚РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ FiasTableType, РІРѕ РјРЅРѕР¶РµСЃС‚РІРµРЅРЅРѕРј С‡РёСЃР»Рµ
     /// </summary>
     public static readonly string[] TableTypeNamesPlural = new string[] { 
-      "Неизвестно",
-      "Адресные объекты",
-      "Здания",
-      "Помещения"
+      "РќРµРёР·РІРµСЃС‚РЅРѕ",
+      "РђРґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹",
+      "Р—РґР°РЅРёСЏ",
+      "РџРѕРјРµС‰РµРЅРёСЏ"
     };
 
     /// <summary>
-    /// Текстовые значения, соответствующие перечислению FiasTableType, в единственном числе
+    /// РўРµРєСЃС‚РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ FiasTableType, РІ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРј С‡РёСЃР»Рµ
     /// </summary>
     public static readonly string[] TableTypeNamesSingular = new string[] { 
-      "Неизвестно",
-      "Адресный объект",
-      "Здание",
-      "Помещение"
+      "РќРµРёР·РІРµСЃС‚РЅРѕ",
+      "РђРґСЂРµСЃРЅС‹Р№ РѕР±СЉРµРєС‚",
+      "Р—РґР°РЅРёРµ",
+      "РџРѕРјРµС‰РµРЅРёРµ"
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasTableType.
-    /// Если передано недопустимое значение <paramref name="value"/>, возвращается числовое значение со знаками "??" 
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasTableType.
+    /// Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРѕ Р·РЅР°РєР°РјРё "??" 
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <param name="plural">true - во множественном числе, false - в единственном</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="plural">true - РІРѕ РјРЅРѕР¶РµСЃС‚РІРµРЅРЅРѕРј С‡РёСЃР»Рµ, false - РІ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРј</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasTableType value, bool plural)
     {
       return GetName((int)value, plural ? TableTypeNamesPlural : TableTypeNamesSingular);
@@ -1059,20 +1059,20 @@ namespace FreeLibSet.FIAS
     #region FiasTableType
 
     /// <summary>
-    /// Названия для перечисления FiasTableType
+    /// РќР°Р·РІР°РЅРёСЏ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasTableType
     /// </summary>
     public static readonly string[] FiasTableTypeNames = new string[] { 
-      "Не определено",
-      "Адресные объекты",
-      "Здания",
-      "Помещения"
+      "РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ",
+      "РђРґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹",
+      "Р—РґР°РЅРёСЏ",
+      "РџРѕРјРµС‰РµРЅРёСЏ"
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasTableType
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasTableType
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasTableType value)
     {
       return GetName((int)value, FiasTableTypeNames);
@@ -1083,20 +1083,20 @@ namespace FreeLibSet.FIAS
     #region FiasEditorLebel
 
     /// <summary>
-    /// Названия для перечисления FiasEditorLevel
+    /// РќР°Р·РІР°РЅРёСЏ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasEditorLevel
     /// </summary>
     public static readonly string[] FiasEditorLevelNames = new string[] { 
-      "Населенный пункт",
-      "Улица",
-      "Здание",
-      "Помещение"
+      "РќР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚",
+      "РЈР»РёС†Р°",
+      "Р—РґР°РЅРёРµ",
+      "РџРѕРјРµС‰РµРЅРёРµ"
     };
 
     /// <summary>
-    /// Получить текстовое представление для перечисления FiasEditorLevel
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ FiasEditorLevel
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(FiasEditorLevel value)
     {
       return GetName((int)value, FiasEditorLevelNames);

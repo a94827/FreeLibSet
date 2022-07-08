@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.Collections
   [TestFixture]
   public class SingleScopeSortedListTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_simple()
@@ -31,7 +31,7 @@ namespace ExtTools_tests.Collections
     }
 
     /// <summary>
-    /// Класс сравнения целых чисел по модулю
+    /// РљР»Р°СЃСЃ СЃСЂР°РІРЅРµРЅРёСЏ С†РµР»С‹С… С‡РёСЃРµР» РїРѕ РјРѕРґСѓР»СЋ
     /// </summary>
     private class IntAbsComparer : IComparer<int>
     {
@@ -227,7 +227,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     [Test]
     public void Clear()
@@ -256,7 +256,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Перечислитель
+    #region РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
 
     [Test]
     public void GetEnumerator()

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,11 +10,11 @@ using FreeLibSet.Config;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Параметры для вызова метода интерфейса IEFPCormCreator.CreateForm()
+  /// РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° РёРЅС‚РµСЂС„РµР№СЃР° IEFPCormCreator.CreateForm()
   /// </summary>
   public sealed class EFPFormCreatorParams
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPFormCreatorParams(CfgPart cfg)
     {
@@ -31,41 +31,41 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Значение тега Class
+    /// Р—РЅР°С‡РµРЅРёРµ С‚РµРіР° Class
     /// </summary>
     public string ClassName { get { return _ClassName; } }
     private string _ClassName;
 
     /// <summary>
-    /// Значение тега ConfigName
+    /// Р—РЅР°С‡РµРЅРёРµ С‚РµРіР° ConfigName
     /// </summary>
     public string ConfigSectionName { get { return _ConfigSectionName; } }
     private string _ConfigSectionName;
 
     /// <summary>
-    /// Все данные для создаваемой формы из секции конефигурации "Composition"-"UI"
+    /// Р’СЃРµ РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕР·РґР°РІР°РµРјРѕР№ С„РѕСЂРјС‹ РёР· СЃРµРєС†РёРё РєРѕРЅРµС„РёРіСѓСЂР°С†РёРё "Composition"-"UI"
     /// </summary>
     public CfgPart Config { get { return _Config; } }
     private CfgPart _Config;
 
     /// <summary>
-    /// Заголовок формы
+    /// Р—Р°РіРѕР»РѕРІРѕРє С„РѕСЂРјС‹
     /// </summary>
     public string Title { get { return _Title; } }
     private string _Title;
 
     /// <summary>
-    /// Текстовое представление возвращает заголовок окна
-    /// или "[ Без заголовка ]"
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·Р°РіРѕР»РѕРІРѕРє РѕРєРЅР°
+    /// РёР»Рё "[ Р‘РµР· Р·Р°РіРѕР»РѕРІРєР° ]"
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (String.IsNullOrEmpty(Title))
-        return "[ Без заголовка ]";
+        return "[ Р‘РµР· Р·Р°РіРѕР»РѕРІРєР° ]";
       else
         return Title;
     }
@@ -74,18 +74,18 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Объекты, реализующие интерфейс, должны быть добавлены в список EFPApp.FormCreators
+  /// РћР±СЉРµРєС‚С‹, СЂРµР°Р»РёР·СѓСЋС‰РёРµ РёРЅС‚РµСЂС„РµР№СЃ, РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅС‹ РІ СЃРїРёСЃРѕРє EFPApp.FormCreators
   /// </summary>
   public interface IEFPFormCreator
   {
     /// <summary>
-    /// Создать форму по заданным параметрам.
-    /// Метод возвращает созданную форму или null, если переданный ClassName не обрабатывается этим объектом.
-    /// Если форма не может быть создана по другим причинам, наприимер, из-за отсутствия у пользователя прав,
-    /// должно быть выброшено осмысленное исключение.
+    /// РЎРѕР·РґР°С‚СЊ С„РѕСЂРјСѓ РїРѕ Р·Р°РґР°РЅРЅС‹Рј РїР°СЂР°РјРµС‚СЂР°Рј.
+    /// РњРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРѕР·РґР°РЅРЅСѓСЋ С„РѕСЂРјСѓ РёР»Рё null, РµСЃР»Рё РїРµСЂРµРґР°РЅРЅС‹Р№ ClassName РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ СЌС‚РёРј РѕР±СЉРµРєС‚РѕРј.
+    /// Р•СЃР»Рё С„РѕСЂРјР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃРѕР·РґР°РЅР° РїРѕ РґСЂСѓРіРёРј РїСЂРёС‡РёРЅР°Рј, РЅР°РїСЂРёРёРјРµСЂ, РёР·-Р·Р° РѕС‚СЃСѓС‚СЃС‚РІРёСЏ Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїСЂР°РІ,
+    /// РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІС‹Р±СЂРѕС€РµРЅРѕ РѕСЃРјС‹СЃР»РµРЅРЅРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ.
     /// </summary>
-    /// <param name="creatorParams">Список параметров для создания формы</param>
-    /// <returns>Созданная форма или null</returns>
+    /// <param name="creatorParams">РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ С„РѕСЂРјС‹</param>
+    /// <returns>РЎРѕР·РґР°РЅРЅР°СЏ С„РѕСЂРјР° РёР»Рё null</returns>
     Form CreateForm(EFPFormCreatorParams creatorParams);
   }
 }

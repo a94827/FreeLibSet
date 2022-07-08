@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.Collections
   [TestFixture]
   public class HashtableTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_Simple()
@@ -55,7 +55,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Метод Item
+    #region РњРµС‚РѕРґ Item
 
     private static Hashtable<string, int> CreateTestObject(bool ignoreCase)
     {
@@ -171,7 +171,7 @@ namespace ExtTools_tests.Collections
       List<string> keys = new List<string>();
       List<int> values = new List<int>();
 
-      // Важно, что перечислители выполняются в одном и том же порядке
+      // Р’Р°Р¶РЅРѕ, С‡С‚Рѕ РїРµСЂРµС‡РёСЃР»РёС‚РµР»Рё РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ РІ РѕРґРЅРѕРј Рё С‚РѕРј Р¶Рµ РїРѕСЂСЏРґРєРµ
       foreach (string key in sut.Keys)
         keys.Add(key);
       foreach (int value in sut.Values)
@@ -191,7 +191,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     [Test]
     public void Clear()
@@ -220,7 +220,7 @@ namespace ExtTools_tests.Collections
       Assert.IsNull(a[0].Key, "[0].Key");
       Assert.AreEqual(0, a[0].Value, "a[0].Value");
 
-      // Порядок скопированных элементов не гарантирован
+      // РџРѕСЂСЏРґРѕРє СЃРєРѕРїРёСЂРѕРІР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ РЅРµ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅ
       for (int i = 1; i < a.Length; i++)
       {
         Assert.AreEqual(sut[a[i].Key], a[i].Value, "#" + i.ToString());
@@ -241,7 +241,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Перечислитель
+    #region РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
 
     [Test]
     public void GetEnumerator([Values(true, false)]bool useComparer)
@@ -290,7 +290,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [Test]
     public void Serialization( [Values(false, true)] bool useReadOnly)
@@ -304,7 +304,7 @@ namespace ExtTools_tests.Collections
       byte[] bytes = SerializationTools.SerializeBinary(sut1);
       Hashtable_RO<int, string> sut2 = (Hashtable_RO<int, string>)(SerializationTools.DeserializeBinary(bytes));
 
-      // Вообще говоря, порядок элементов при сериализации не обязан сохраняться
+      // Р’РѕРѕР±С‰Рµ РіРѕРІРѕСЂСЏ, РїРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ РїСЂРё СЃРµСЂРёР°Р»РёР·Р°С†РёРё РЅРµ РѕР±СЏР·Р°РЅ СЃРѕС…СЂР°РЅСЏС‚СЊСЃСЏ
       // Assert.AreEqual(DataTools.CreateArray<KeyValuePair<int, string>>(sut1), DataTools.CreateArray<KeyValuePair<int, string>>(sut2));
       Assert.AreEqual("AAA", sut2[1], "#1");
       Assert.AreEqual("BBB", sut2[2], "#2");

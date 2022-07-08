@@ -1,4 +1,4 @@
-namespace FreeLibSet.Controls.FIAS
+п»їnamespace FreeLibSet.Controls.FIAS
 {
 #pragma warning disable 1591
 
@@ -342,7 +342,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbRegionAOType.Name = "cbRegionAOType";
       this.cbRegionAOType.Size = new System.Drawing.Size(158, 21);
       this.cbRegionAOType.TabIndex = 2;
-      this.cbRegionAOType.Text = "? Регион";
+      this.cbRegionAOType.Text = "? Р РµРіРёРѕРЅ";
       // 
       // edRegionName
       // 
@@ -370,7 +370,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbDistrictAOType.Name = "cbDistrictAOType";
       this.cbDistrictAOType.Size = new System.Drawing.Size(158, 21);
       this.cbDistrictAOType.TabIndex = 7;
-      this.cbDistrictAOType.Text = "? Район";
+      this.cbDistrictAOType.Text = "? Р Р°Р№РѕРЅ";
       // 
       // cbCityAOType
       // 
@@ -380,7 +380,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbCityAOType.Name = "cbCityAOType";
       this.cbCityAOType.Size = new System.Drawing.Size(158, 21);
       this.cbCityAOType.TabIndex = 12;
-      this.cbCityAOType.Text = "? Город";
+      this.cbCityAOType.Text = "? Р“РѕСЂРѕРґ";
       // 
       // edCityName
       // 
@@ -399,7 +399,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbVillageAOType.Name = "cbVillageAOType";
       this.cbVillageAOType.Size = new System.Drawing.Size(158, 21);
       this.cbVillageAOType.TabIndex = 17;
-      this.cbVillageAOType.Text = "? Нас. пункт";
+      this.cbVillageAOType.Text = "? РќР°СЃ. РїСѓРЅРєС‚";
       // 
       // edVillageName
       // 
@@ -418,7 +418,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbPlanStrAOType.Name = "cbPlanStrAOType";
       this.cbPlanStrAOType.Size = new System.Drawing.Size(158, 21);
       this.cbPlanStrAOType.TabIndex = 22;
-      this.cbPlanStrAOType.Text = "? Эл-т ПС";
+      this.cbPlanStrAOType.Text = "? Р­Р»-С‚ РџРЎ";
       // 
       // edPlanStrName
       // 
@@ -446,7 +446,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbStreetAOType.Name = "cbStreetAOType";
       this.cbStreetAOType.Size = new System.Drawing.Size(158, 21);
       this.cbStreetAOType.TabIndex = 27;
-      this.cbStreetAOType.Text = "? Улица";
+      this.cbStreetAOType.Text = "? РЈР»РёС†Р°";
       // 
       // cbHouseAOType
       // 
@@ -456,7 +456,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbHouseAOType.Name = "cbHouseAOType";
       this.cbHouseAOType.Size = new System.Drawing.Size(158, 21);
       this.cbHouseAOType.TabIndex = 32;
-      this.cbHouseAOType.Text = "? Дом";
+      this.cbHouseAOType.Text = "? Р”РѕРј";
       // 
       // edHouseName
       // 
@@ -484,7 +484,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbBuildingAOType.Name = "cbBuildingAOType";
       this.cbBuildingAOType.Size = new System.Drawing.Size(158, 21);
       this.cbBuildingAOType.TabIndex = 36;
-      this.cbBuildingAOType.Text = "? Корпус";
+      this.cbBuildingAOType.Text = "? РљРѕСЂРїСѓСЃ";
       // 
       // cbStrAOType
       // 
@@ -494,7 +494,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbStrAOType.Name = "cbStrAOType";
       this.cbStrAOType.Size = new System.Drawing.Size(158, 21);
       this.cbStrAOType.TabIndex = 38;
-      this.cbStrAOType.Text = "? Строение";
+      this.cbStrAOType.Text = "? РЎС‚СЂРѕРµРЅРёРµ";
       // 
       // edStrName
       // 
@@ -513,7 +513,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbFlatAOType.Name = "cbFlatAOType";
       this.cbFlatAOType.Size = new System.Drawing.Size(158, 21);
       this.cbFlatAOType.TabIndex = 41;
-      this.cbFlatAOType.Text = "? Квартира";
+      this.cbFlatAOType.Text = "? РљРІР°СЂС‚РёСЂР°";
       // 
       // edFlatName
       // 
@@ -532,7 +532,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbRoomAOType.Name = "cbRoomAOType";
       this.cbRoomAOType.Size = new System.Drawing.Size(158, 21);
       this.cbRoomAOType.TabIndex = 45;
-      this.cbRoomAOType.Text = "? Комната";
+      this.cbRoomAOType.Text = "? РљРѕРјРЅР°С‚Р°";
       // 
       // edRoomName
       // 
@@ -645,7 +645,7 @@ namespace FreeLibSet.Controls.FIAS
       this.edTextView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.edTextView.Size = new System.Drawing.Size(404, 48);
       this.edTextView.TabIndex = 48;
-      this.edTextView.Text = "Строка 1\r\nСтрока 2";
+      this.edTextView.Text = "РЎС‚СЂРѕРєР° 1\r\nРЎС‚СЂРѕРєР° 2";
       // 
       // lblRegion
       // 
@@ -679,7 +679,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbManualPostalCode.Name = "cbManualPostalCode";
       this.cbManualPostalCode.Size = new System.Drawing.Size(115, 17);
       this.cbManualPostalCode.TabIndex = 46;
-      this.cbManualPostalCode.Text = "Почтовый индекс";
+      this.cbManualPostalCode.Text = "РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ";
       this.cbManualPostalCode.UseVisualStyleBackColor = true;
       // 
       // edPostalCode

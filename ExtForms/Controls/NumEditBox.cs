@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -21,7 +21,7 @@ namespace FreeLibSet.Controls
   public abstract class NumEditBoxBase<T> : UserControl, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public NumEditBoxBase()
     {
@@ -38,11 +38,11 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Основной управляющий элемент
+    #region РћСЃРЅРѕРІРЅРѕР№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚
 
     private class InternalUpDown : UpDownBase
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal InternalUpDown(NumEditBoxBase<T> owner)
       {
@@ -56,25 +56,25 @@ namespace FreeLibSet.Controls
           }
         }
         if (_MainPart == null)
-          throw new BugException("Не найден TextBox");
+          throw new BugException("РќРµ РЅР°Р№РґРµРЅ TextBox");
       }
 
       private NumEditBoxBase<T> _Owner;
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Основной элемент - TextBox.
-      /// См. исходный текст класса net framework UpDownBase.
+      /// РћСЃРЅРѕРІРЅРѕР№ СЌР»РµРјРµРЅС‚ - TextBox.
+      /// РЎРј. РёСЃС…РѕРґРЅС‹Р№ С‚РµРєСЃС‚ РєР»Р°СЃСЃР° net framework UpDownBase.
       /// </summary>
       public TextBox MainPart { get { return _MainPart; } }
       private TextBox _MainPart;
 
       #endregion
 
-      #region Переопределенные методы UpDownBase
+      #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹ UpDownBase
 
       public override void UpButton()
       {
@@ -88,16 +88,16 @@ namespace FreeLibSet.Controls
 
       protected override void UpdateEditText()
       {
-        // Этого не надо
+        // Р­С‚РѕРіРѕ РЅРµ РЅР°РґРѕ
         //_Owner.InitControlText();
       }
 
       #endregion
 
-      #region Исправление прокрутки колесиком мыши
+      #region РСЃРїСЂР°РІР»РµРЅРёРµ РїСЂРѕРєСЂСѓС‚РєРё РєРѕР»РµСЃРёРєРѕРј РјС‹С€Рё
 
       /// <summary>
-      /// Событие MouseWheel не вызывается
+      /// РЎРѕР±С‹С‚РёРµ MouseWheel РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ
       /// </summary>
       [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
       [Bindable(false)]
@@ -110,19 +110,19 @@ namespace FreeLibSet.Controls
       }
 
       /// <summary>
-      /// Упрощенная реализация прокрутки колесиком мыши.
-      /// В классе UpDownBase выполнется прокрутка, зависящая от системных настроек.
-      /// Обычно, за один щелчок колесика выполняется прокрутка на 3 единицы, а не 1, как при нажатии на стрелочки.
-      /// Реализуем прокрутку на 1 единицу.
+      /// РЈРїСЂРѕС‰РµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РїСЂРѕРєСЂСѓС‚РєРё РєРѕР»РµСЃРёРєРѕРј РјС‹С€Рё.
+      /// Р’ РєР»Р°СЃСЃРµ UpDownBase РІС‹РїРѕР»РЅРµС‚СЃСЏ РїСЂРѕРєСЂСѓС‚РєР°, Р·Р°РІРёСЃСЏС‰Р°СЏ РѕС‚ СЃРёСЃС‚РµРјРЅС‹С… РЅР°СЃС‚СЂРѕРµРє.
+      /// РћР±С‹С‡РЅРѕ, Р·Р° РѕРґРёРЅ С‰РµР»С‡РѕРє РєРѕР»РµСЃРёРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРѕРєСЂСѓС‚РєР° РЅР° 3 РµРґРёРЅРёС†С‹, Р° РЅРµ 1, РєР°Рє РїСЂРё РЅР°Р¶Р°С‚РёРё РЅР° СЃС‚СЂРµР»РѕС‡РєРё.
+      /// Р РµР°Р»РёР·СѓРµРј РїСЂРѕРєСЂСѓС‚РєСѓ РЅР° 1 РµРґРёРЅРёС†Сѓ.
       /// 
-      /// К сожалению, событие MouseWheel больше не удается вызвать
+      /// Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ, СЃРѕР±С‹С‚РёРµ MouseWheel Р±РѕР»СЊС€Рµ РЅРµ СѓРґР°РµС‚СЃСЏ РІС‹Р·РІР°С‚СЊ
       /// </summary>
-      /// <param name="args">Аргументы события</param>
+      /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
       protected override void OnMouseWheel(MouseEventArgs args)
       {
         // base.OnMouseWheel(args);
 
-        // Взято из UpDownBase.OnMouseWheel()
+        // Р’Р·СЏС‚Рѕ РёР· UpDownBase.OnMouseWheel()
         if ((ModifierKeys & (Keys.Shift | Keys.Alt)) != 0 || MouseButtons != MouseButtons.None)
           return; // Do not scroll when Shift or Alt key is down, or when a mouse button is down.
 
@@ -152,13 +152,13 @@ namespace FreeLibSet.Controls
       _InsideInitMainControl = true;
       try
       {
-        // Запоминаем свойства
+        // Р—Р°РїРѕРјРёРЅР°РµРј СЃРІРѕР№СЃС‚РІР°
         HorizontalAlignment oldTextAlign = this.TextAlign;
         string oldText = this.Text;
         bool oldReadOnly = this.ReadOnly;
 
         bool hasOldControl = false;
-        // Удаляем старый элемент
+        // РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№ СЌР»РµРјРµРЅС‚
         if (_MainControl != null)
         {
           hasOldControl = true;
@@ -166,19 +166,19 @@ namespace FreeLibSet.Controls
           _MainControl.Dispose();
         }
 
-        // Создаем новый элемент
+        // РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚
         if (upDown)
           _MainControl = new InternalUpDown(this);
         else
           _MainControl = new TextBox();
         _MainControl.Dock = DockStyle.Fill;
 
-        // Восстанавливаем свойства
+        // Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРІРѕР№СЃС‚РІР°
         this.TextAlign = oldTextAlign;
         this.Text = oldText;
         this.ReadOnly = oldReadOnly;
 
-        // Текущие значения свойств
+        // РўРµРєСѓС‰РёРµ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІ
         if (!this.ReadOnly)
         {
           _MainControl.BackColor = this.BackColor;
@@ -190,7 +190,7 @@ namespace FreeLibSet.Controls
 
         base.Controls.Add(_MainControl);
 
-        // После этого присоединяем обработчики
+        // РџРѕСЃР»Рµ СЌС‚РѕРіРѕ РїСЂРёСЃРѕРµРґРёРЅСЏРµРј РѕР±СЂР°Р±РѕС‚С‡РёРєРё
         _MainControl.TextChanged += MainControl_TextChanged;
 
         _MainControl.KeyDown += new System.Windows.Forms.KeyEventHandler(MainControl_KeyDown);
@@ -223,14 +223,14 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Свойства Value/NValue
+    #region РЎРІРѕР№СЃС‚РІР° Value/NValue
 
     private bool _InsideValueChanged;
 
     [Bindable(true)]
     [DefaultValue(null)]
     [RefreshProperties(RefreshProperties.All)]
-    [Description("Текущее значение с выделением пустого значения")]
+    [Description("РўРµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ СЃ РІС‹РґРµР»РµРЅРёРµРј РїСѓСЃС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ")]
     [Category("Appearance")]
     public T? NValue
     {
@@ -262,12 +262,12 @@ namespace FreeLibSet.Controls
         }
       }
     }
-    private T? _NValue; // текущее значение
+    private T? _NValue; // С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ
 
     [Bindable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [RefreshProperties(RefreshProperties.All)]
-    [Description("Текущее значение без поддержки null")]
+    [Description("РўРµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ Р±РµР· РїРѕРґРґРµСЂР¶РєРё null")]
     [Category("Appearance")]
     [Browsable(false)]
     public T Value
@@ -282,12 +282,12 @@ namespace FreeLibSet.Controls
         ValueChanged(this, args);
     }
 
-    [Description("Посылается после изменения свойств NValue/Value")]
+    [Description("РџРѕСЃС‹Р»Р°РµС‚СЃСЏ РїРѕСЃР»Рµ РёР·РјРµРЅРµРЅРёСЏ СЃРІРѕР№СЃС‚РІ NValue/Value")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
 
     /// <summary>
-    /// Переопределенный метод должен выполнить округление с учетом количества десятичных знаков в формате
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РІС‹РїРѕР»РЅРёС‚СЊ РѕРєСЂСѓРіР»РµРЅРёРµ СЃ СѓС‡РµС‚РѕРј РєРѕР»РёС‡РµСЃС‚РІР° РґРµСЃСЏС‚РёС‡РЅС‹С… Р·РЅР°РєРѕРІ РІ С„РѕСЂРјР°С‚Рµ
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
@@ -295,7 +295,7 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Свойство Increment
+    #region РЎРІРѕР№СЃС‚РІРѕ Increment
 
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -317,7 +317,7 @@ namespace FreeLibSet.Controls
 
     [Bindable(true)]
     //[RefreshProperties(RefreshProperties.All)]
-    [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
+    [Description("РРЅРєСЂРµРјРµРЅС‚. Р•СЃР»Рё СЂР°РІРЅРѕ 0, С‚Рѕ РµСЃС‚СЊ С‚РѕР»СЊРєРѕ РїРѕР»Рµ РІРІРѕРґР°. РџРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРёРІРѕРґРёС‚ Рє РїРѕСЏРІР»РµРЅРёСЋ СЃС‚СЂРµР»РѕС‡РµРє РґР»СЏ РїСЂРѕРєСЂСѓС‚РєРё Р·РЅР°С‡РµРЅРёСЏ")]
     [Category("Appearance")]
     [DefaultValue(0.0)]
     public T Increment
@@ -336,7 +336,7 @@ namespace FreeLibSet.Controls
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw new ArgumentOutOfRangeException("value", value, "Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РёР»Рё СЂР°РІРЅРѕ 0");
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -363,17 +363,17 @@ namespace FreeLibSet.Controls
         if (has)
           NValue = value;
       }
-      catch { } // Перехват OvertflowException
+      catch { } // РџРµСЂРµС…РІР°С‚ OvertflowException
 
     }
 
     #endregion
 
-    #region Свойства Minimum и Maximum
+    #region РЎРІРѕР№СЃС‚РІР° Minimum Рё Maximum
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     //[RefreshProperties(RefreshProperties.All)]
-    [Description("Минимальное значение, используемое для прокрутки")]
+    [Description("РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ, РёСЃРїРѕР»СЊР·СѓРµРјРѕРµ РґР»СЏ РїСЂРѕРєСЂСѓС‚РєРё")]
     [Category("Appearance")]
     [DefaultValue(null)]
     public T? Minimum
@@ -385,7 +385,7 @@ namespace FreeLibSet.Controls
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     //[RefreshProperties(RefreshProperties.All)]
-    [Description("Максимальное значение, используемое для прокрутки")]
+    [Description("РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ, РёСЃРїРѕР»СЊР·СѓРµРјРѕРµ РґР»СЏ РїСЂРѕРєСЂСѓС‚РєРё")]
     [Category("Appearance")]
     [DefaultValue(null)]
     public T? Maximum
@@ -397,11 +397,11 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Свойство Format
+    #region РЎРІРѕР№СЃС‚РІРѕ Format
 
     [Bindable(true)]
     [DefaultValue("")]
-    [Description("Форматирование текстового вывода")]
+    [Description("Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‚РµРєСЃС‚РѕРІРѕРіРѕ РІС‹РІРѕРґР°")]
     [RefreshProperties(RefreshProperties.All)]
     [Category("Appearance")]
     public string Format
@@ -414,9 +414,9 @@ namespace FreeLibSet.Controls
         if (String.Equals(value, _Format, StringComparison.Ordinal))
           return;
 
-        // Проверяем корректность формата
-        // Используем InvariantCulture во избежание неожиданностей от национальных настроек
-        default(T).ToString(value, CultureInfo.InvariantCulture); // может произойти FormatException
+        // РџСЂРѕРІРµСЂСЏРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ С„РѕСЂРјР°С‚Р°
+        // РСЃРїРѕР»СЊР·СѓРµРј InvariantCulture РІРѕ РёР·Р±РµР¶Р°РЅРёРµ РЅРµРѕР¶РёРґР°РЅРЅРѕСЃС‚РµР№ РѕС‚ РЅР°С†РёРѕРЅР°Р»СЊРЅС‹С… РЅР°СЃС‚СЂРѕРµРє
+        default(T).ToString(value, CultureInfo.InvariantCulture); // РјРѕР¶РµС‚ РїСЂРѕРёР·РѕР№С‚Рё FormatException
 
         _Format = value;
         OnFormatChanged();
@@ -430,7 +430,7 @@ namespace FreeLibSet.Controls
     }
 
     /// <summary>
-    /// Форматировщик для числового значения
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІС‰РёРє РґР»СЏ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -451,11 +451,11 @@ namespace FreeLibSet.Controls
     private IFormatProvider _FormatProvider;
 
     /// <summary>
-    /// Вспомогательное свойство.
-    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format
+    /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РґРµСЃСЏС‚РёС‡РЅС‹С… СЂР°Р·СЂСЏРґРѕРІ РґР»СЏ С‡РёСЃР»Р° СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№, РєРѕС‚РѕСЂРѕРµ РѕРїСЂРµРґРµР»РµРЅРѕ РІ СЃРІРѕР№СЃС‚РІРµ Format
     /// </summary>
     [DefaultValue("")]
-    [Description("Количество знаков после запятой. Альтернативная установка для свойства Format")]
+    [Description("РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№. РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР° РґР»СЏ СЃРІРѕР№СЃС‚РІР° Format")]
     [RefreshProperties(RefreshProperties.All)]
     [Category("Appearance")]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -467,9 +467,9 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Свойство ReadOnly
+    #region РЎРІРѕР№СЃС‚РІРѕ ReadOnly
 
-    [Description("Режим \"Только для просмотра\"")]
+    [Description("Р РµР¶РёРј \"РўРѕР»СЊРєРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°\"")]
     [Category("Appearance")]
     [DefaultValue(false)]
     public bool ReadOnly
@@ -500,7 +500,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    [Description("Изменилось свойство ReadOnly")]
+    [Description("РР·РјРµРЅРёР»РѕСЃСЊ СЃРІРѕР№СЃС‚РІРѕ ReadOnly")]
     [Category("PropertyChanged")]
     public event EventHandler ReadOnlyChanged;
 
@@ -512,7 +512,7 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Текстовое представление
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
     private void InitControlText()
     {
@@ -534,7 +534,7 @@ namespace FreeLibSet.Controls
     }
 
     /// <summary>
-    /// Свойство возвращает true, если текущий введенный текст может быть преобразован в число
+    /// РЎРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚РµРєСѓС‰РёР№ РІРІРµРґРµРЅРЅС‹Р№ С‚РµРєСЃС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅ РІ С‡РёСЃР»Рѕ
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Bindable(false)]
@@ -559,7 +559,7 @@ namespace FreeLibSet.Controls
           else
           {
             string s = _MainControl.Text;
-            UITools.CorrectNumberString(ref s, this.FormatProvider); // замена точки и запятой
+            UITools.CorrectNumberString(ref s, this.FormatProvider); // Р·Р°РјРµРЅР° С‚РѕС‡РєРё Рё Р·Р°РїСЏС‚РѕР№
 
             T value;
             _TextIsValid = TryParseText(s, out value);
@@ -594,7 +594,7 @@ namespace FreeLibSet.Controls
       set { _MainControl.Text = value; }
     }
 
-    [Description("Горизонтальное выравнивание (по умолчанию - по правому краю)")]
+    [Description("Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕРµ РІС‹СЂР°РІРЅРёРІР°РЅРёРµ (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РїРѕ РїСЂР°РІРѕРјСѓ РєСЂР°СЋ)")]
     [Localizable(true)]
     [DefaultValue(HorizontalAlignment.Right)]
     [Category("Appearance")]
@@ -620,7 +620,7 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Шрифт и цвет
+    #region РЁСЂРёС„С‚ Рё С†РІРµС‚
 
     protected override void OnFontChanged(EventArgs args)
     {
@@ -700,7 +700,7 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Свойства TextBox
+    #region РЎРІРѕР№СЃС‚РІР° TextBox
 
     [Browsable(false)]
     [DesignerSerializationVisibility(0)]
@@ -790,7 +790,7 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Передача других событий от основного элемента
+    #region РџРµСЂРµРґР°С‡Р° РґСЂСѓРіРёС… СЃРѕР±С‹С‚РёР№ РѕС‚ РѕСЃРЅРѕРІРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
 
     void MainControl_Click(object sender, EventArgs args)
     {
@@ -846,7 +846,7 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Другие переопределенные свойства и методы
+    #region Р”СЂСѓРіРёРµ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР° Рё РјРµС‚РѕРґС‹
 
     protected override Size DefaultSize
     {
@@ -860,7 +860,7 @@ namespace FreeLibSet.Controls
     }
 
     /// <summary>
-    /// При выходе из элемента выполняем форматирование текста
+    /// РџСЂРё РІС‹С…РѕРґРµ РёР· СЌР»РµРјРµРЅС‚Р° РІС‹РїРѕР»РЅСЏРµРј С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‚РµРєСЃС‚Р°
     /// </summary>
     /// <param name="args"></param>
     protected override void OnLeave(EventArgs args)
@@ -894,7 +894,7 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    #region Заглушки для свойств
+    #region Р—Р°РіР»СѓС€РєРё РґР»СЏ СЃРІРѕР№СЃС‚РІ
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Bindable(false)]
@@ -962,39 +962,39 @@ namespace FreeLibSet.Controls
 
 
   /// <summary>
-  /// Поле ввода числового значения типа Double
+  /// РџРѕР»Рµ РІРІРѕРґР° С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° Double
   /// </summary>
-  [Description("Поле ввода целого числа")]
+  [Description("РџРѕР»Рµ РІРІРѕРґР° С†РµР»РѕРіРѕ С‡РёСЃР»Р°")]
   [ToolboxBitmap(typeof(IntEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   [DesignerSerializer("System.Windows.Forms.Design.ControlCodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.ComponentModel.Design.Serialization.CodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
   public class IntEditBox : NumEditBoxBase<Int32>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вызывает метод Int32.TryParse() с соответствующими флагами
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ Int32.TryParse() СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРјРё С„Р»Р°РіР°РјРё
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="result">Числовое значение</param>
-    /// <returns>true, если преобразование выполнено</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="result">Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІС‹РїРѕР»РЅРµРЅРѕ</returns>
     protected override bool TryParseText(string s, out int result)
     {
       return Int32.TryParse(s, NumberStyles.Integer | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
 
     /// <summary>
-    /// Ничего не делает
+    /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
     /// </summary>
-    /// <param name="value">Значение до округления</param>
-    /// <returns>Округленное значение</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ РґРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ</param>
+    /// <returns>РћРєСЂСѓРіР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected override int GetRoundedValue(int value)
     {
       return value;
     }
 
     /// <summary>
-    /// Возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1005,36 +1005,36 @@ namespace FreeLibSet.Controls
   }
 
   /// <summary>
-  /// Поле ввода числового значения типа Double
+  /// РџРѕР»Рµ РІРІРѕРґР° С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° Double
   /// </summary>
-  [Description("Поле ввода числового значения типа Single")]
+  [Description("РџРѕР»Рµ РІРІРѕРґР° С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° Single")]
   [ToolboxBitmap(typeof(SingleEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   public class SingleEditBox : NumEditBoxBase<Single>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вызывает метод Single.TryParse() с соответствующими флагами
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ Single.TryParse() СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРјРё С„Р»Р°РіР°РјРё
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="result">Числовое значение</param>
-    /// <returns>true, если преобразование выполнено</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="result">Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІС‹РїРѕР»РЅРµРЅРѕ</returns>
     protected override bool TryParseText(string s, out float result)
     {
       return Single.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
 
     /// <summary>
-    /// Выполняет округление до числа разрядов, определяемых свойством DecimalPlaces
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РґРѕ С‡РёСЃР»Р° СЂР°Р·СЂСЏРґРѕРІ, РѕРїСЂРµРґРµР»СЏРµРјС‹С… СЃРІРѕР№СЃС‚РІРѕРј DecimalPlaces
     /// </summary>
-    /// <param name="value">Значение до округления</param>
-    /// <returns>Округленное значение</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ РґРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ</param>
+    /// <returns>РћРєСЂСѓРіР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected override float GetRoundedValue(float value)
     {
       int dp = this.DecimalPlaces;
       if (dp >= 0)
-        // Нет Math.Round() для float.
+        // РќРµС‚ Math.Round() РґР»СЏ float.
         return (float)Math.Round((double)value, dp, MidpointRounding.AwayFromZero);
       else
         return value;
@@ -1044,31 +1044,31 @@ namespace FreeLibSet.Controls
   }
 
   /// <summary>
-  /// Поле ввода числового значения типа Double
+  /// РџРѕР»Рµ РІРІРѕРґР° С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° Double
   /// </summary>
-  [Description("Поле ввода числового значения типа Double")]
+  [Description("РџРѕР»Рµ РІРІРѕРґР° С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° Double")]
   [ToolboxBitmap(typeof(DoubleEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   public class DoubleEditBox : NumEditBoxBase<Double>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вызывает метод Double.TryParse() с соответствующими флагами
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ Double.TryParse() СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРјРё С„Р»Р°РіР°РјРё
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="result">Числовое значение</param>
-    /// <returns>true, если преобразование выполнено</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="result">Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІС‹РїРѕР»РЅРµРЅРѕ</returns>
     protected override bool TryParseText(string s, out double result)
     {
       return Double.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
 
     /// <summary>
-    /// Выполняет округление до числа разрядов, определяемых свойством DecimalPlaces
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РґРѕ С‡РёСЃР»Р° СЂР°Р·СЂСЏРґРѕРІ, РѕРїСЂРµРґРµР»СЏРµРјС‹С… СЃРІРѕР№СЃС‚РІРѕРј DecimalPlaces
     /// </summary>
-    /// <param name="value">Значение до округления</param>
-    /// <returns>Округленное значение</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ РґРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ</param>
+    /// <returns>РћРєСЂСѓРіР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected override double GetRoundedValue(double value)
     {
       int dp = this.DecimalPlaces;
@@ -1082,31 +1082,31 @@ namespace FreeLibSet.Controls
   }
 
   /// <summary>
-  /// Поле ввода числового значения типа Double
+  /// РџРѕР»Рµ РІРІРѕРґР° С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° Double
   /// </summary>
-  [Description("Поле ввода числового значения типа Decimal")]
+  [Description("РџРѕР»Рµ РІРІРѕРґР° С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° Decimal")]
   [ToolboxBitmap(typeof(DecimalEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   public class DecimalEditBox : NumEditBoxBase<Decimal>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вызывает метод Decimal.TryParse() с соответствующими флагами
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ Decimal.TryParse() СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРјРё С„Р»Р°РіР°РјРё
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="result">Числовое значение</param>
-    /// <returns>true, если преобразование выполнено</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="result">Р§РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІС‹РїРѕР»РЅРµРЅРѕ</returns>
     protected override bool TryParseText(string s, out decimal result)
     {
       return Decimal.TryParse(s, NumberStyles.Float | NumberStyles.AllowParentheses | NumberStyles.AllowThousands, FormatProvider, out result);
     }
 
     /// <summary>
-    /// Выполняет округление до числа разрядов, определяемых свойством DecimalPlaces
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РґРѕ С‡РёСЃР»Р° СЂР°Р·СЂСЏРґРѕРІ, РѕРїСЂРµРґРµР»СЏРµРјС‹С… СЃРІРѕР№СЃС‚РІРѕРј DecimalPlaces
     /// </summary>
-    /// <param name="value">Значение до округления</param>
-    /// <returns>Округленное значение</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ РґРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ</param>
+    /// <returns>РћРєСЂСѓРіР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     protected override decimal GetRoundedValue(decimal value)
     {
       int dp = this.DecimalPlaces;

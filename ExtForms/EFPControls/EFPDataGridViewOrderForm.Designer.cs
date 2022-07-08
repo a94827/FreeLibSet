@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+п»їnamespace FreeLibSet.Forms
 {
   partial class EFPDataGridViewOrderForm
   {
@@ -88,7 +88,7 @@ namespace FreeLibSet.Forms
       this.tpFixed.Padding = new System.Windows.Forms.Padding(3);
       this.tpFixed.Size = new System.Drawing.Size(624, 386);
       this.tpFixed.TabIndex = 0;
-      this.tpFixed.Text = "Предопределенный";
+      this.tpFixed.Text = "РџСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№";
       this.tpFixed.UseVisualStyleBackColor = true;
       // 
       // tpCustom
@@ -99,7 +99,7 @@ namespace FreeLibSet.Forms
       this.tpCustom.Padding = new System.Windows.Forms.Padding(3);
       this.tpCustom.Size = new System.Drawing.Size(624, 386);
       this.tpCustom.TabIndex = 1;
-      this.tpCustom.Text = "Произвольный";
+      this.tpCustom.Text = "РџСЂРѕРёР·РІРѕР»СЊРЅС‹Р№";
       this.tpCustom.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms
       this.groupBox1.Size = new System.Drawing.Size(618, 380);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Порядок сортировки";
+      this.groupBox1.Text = "РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё";
       // 
       // grFixed
       // 
@@ -146,7 +146,7 @@ namespace FreeLibSet.Forms
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -156,7 +156,7 @@ namespace FreeLibSet.Forms
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // groupBox2
@@ -170,7 +170,7 @@ namespace FreeLibSet.Forms
       this.groupBox2.Size = new System.Drawing.Size(276, 374);
       this.groupBox2.TabIndex = 0;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Доступные столбцы";
+      this.groupBox2.Text = "Р”РѕСЃС‚СѓРїРЅС‹Рµ СЃС‚РѕР»Р±С†С‹";
       // 
       // groupBox3
       // 
@@ -184,7 +184,7 @@ namespace FreeLibSet.Forms
       this.groupBox3.Size = new System.Drawing.Size(276, 374);
       this.groupBox3.TabIndex = 2;
       this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Выбранные столбцы";
+      this.groupBox3.Text = "Р’С‹Р±СЂР°РЅРЅС‹Рµ СЃС‚РѕР»Р±С†С‹";
       // 
       // grAvailable
       // 
@@ -248,7 +248,7 @@ namespace FreeLibSet.Forms
       this.Controls.Add(this.ThetabControl);
       this.Controls.Add(this.panel1);
       this.Name = "EFPDataGridViewOrderForm";
-      this.Text = "Порядок строк";
+      this.Text = "РџРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє";
       this.AcceptButton = btnOk;
       this.CancelButton = btnCancel;
       this.panel1.ResumeLayout(false);

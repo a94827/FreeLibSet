@@ -1,8 +1,8 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
-// Убрать, когда точно ясно будет
-//#define OLD_TOTYPE // Если определено, то используется первоначальный вариант методов ToTypeEx()/ToNTypeEx()
+// РЈР±СЂР°С‚СЊ, РєРѕРіРґР° С‚РѕС‡РЅРѕ СЏСЃРЅРѕ Р±СѓРґРµС‚
+//#define OLD_TOTYPE // Р•СЃР»Рё РѕРїСЂРµРґРµР»РµРЅРѕ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅС‹Р№ РІР°СЂРёР°РЅС‚ РјРµС‚РѕРґРѕРІ ToTypeEx()/ToNTypeEx()
 
 using System;
 using System.Collections.Generic;
@@ -14,25 +14,25 @@ using System.Reflection;
 namespace FreeLibSet.DependedValues
 {
   /// <summary>
-  /// Функции, которые можно использовать с классами DepExprX для вычислений в удаленном пользовательском интерфейсе (RI).
-  /// В RI обычно нельзя использовать делегаты на собственные пользовательские методы, если загрузка сборки с этим методом запрещена.
-  /// В отличие от стандартных методов Net Framework, методы DepTools не выбрасываются исключения.
-  /// Функции с суффиксом Ex возвращают готовое выражение DepExprX на основании аргументов DepValue.
+  /// Р¤СѓРЅРєС†РёРё, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃ РєР»Р°СЃСЃР°РјРё DepExprX РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёР№ РІ СѓРґР°Р»РµРЅРЅРѕРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РёРЅС‚РµСЂС„РµР№СЃРµ (RI).
+  /// Р’ RI РѕР±С‹С‡РЅРѕ РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґРµР»РµРіР°С‚С‹ РЅР° СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РјРµС‚РѕРґС‹, РµСЃР»Рё Р·Р°РіСЂСѓР·РєР° СЃР±РѕСЂРєРё СЃ СЌС‚РёРј РјРµС‚РѕРґРѕРј Р·Р°РїСЂРµС‰РµРЅР°.
+  /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РјРµС‚РѕРґРѕРІ Net Framework, РјРµС‚РѕРґС‹ DepTools РЅРµ РІС‹Р±СЂР°СЃС‹РІР°СЋС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёСЏ.
+  /// Р¤СѓРЅРєС†РёРё СЃ СЃСѓС„С„РёРєСЃРѕРј Ex РІРѕР·РІСЂР°С‰Р°СЋС‚ РіРѕС‚РѕРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ DepExprX РЅР° РѕСЃРЅРѕРІР°РЅРёРё Р°СЂРіСѓРјРµРЅС‚РѕРІ DepValue.
   /// 
-  /// Функции CreateXXX() предназначены для создания типизированных классов на основании аргумента Type
+  /// Р¤СѓРЅРєС†РёРё CreateXXX() РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅС‹ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹С… РєР»Р°СЃСЃРѕРІ РЅР° РѕСЃРЅРѕРІР°РЅРёРё Р°СЂРіСѓРјРµРЅС‚Р° Type
   /// </summary>
   public static class DepTools
   {
-    #region Строковые функции
+    #region РЎС‚СЂРѕРєРѕРІС‹Рµ С„СѓРЅРєС†РёРё
 
     #region Length()
 
     /// <summary>
-    /// Возвращает длину строки String.Length.
-    /// Может использоваться в конструкторе класса DepExpr1.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ СЃС‚СЂРѕРєРё String.Length.
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr1.
     /// </summary>
-    /// <param name="s">Строка</param>
-    /// <returns>Длина строки</returns>
+    /// <param name="s">РЎС‚СЂРѕРєР°</param>
+    /// <returns>Р”Р»РёРЅР° СЃС‚СЂРѕРєРё</returns>
     private static int Length(string s)
     {
       if (Object.ReferenceEquals(s, null))
@@ -42,10 +42,10 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Вычисляет длину строки String.Length
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ РґР»РёРЅСѓ СЃС‚СЂРѕРєРё String.Length
     /// </summary>
-    /// <param name="s">Строка</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РЎС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> LengthEx(DepValue<string> s)
     {
       return new DepExpr1<int, string>(s, Length);
@@ -56,20 +56,20 @@ namespace FreeLibSet.DependedValues
     #region IsNotEmpty()
 
     /// <summary>
-    /// Возвращает true, если строка непустая (!String.IsNullOrEmpty())
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° РЅРµРїСѓСЃС‚Р°СЏ (!String.IsNullOrEmpty())
     /// </summary>
-    /// <param name="value">Проверяемая строка</param>
-    /// <returns>Признак непустой строки</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>РџСЂРёР·РЅР°Рє РЅРµРїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРё</returns>
     private static bool IsNotEmpty(string value)
     {
       return !String.IsNullOrEmpty(value);
     }
 
     /// <summary>
-    /// Возвращает true, если строка непустая (!String.IsNullOrEmpty())
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° РЅРµРїСѓСЃС‚Р°СЏ (!String.IsNullOrEmpty())
     /// </summary>
-    /// <param name="value">Проверяемая строка</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsNotEmptyEx(DepValue<string> value)
     {
       return new DepExpr1<bool, string>(value, IsNotEmpty);
@@ -80,14 +80,14 @@ namespace FreeLibSet.DependedValues
     #region Substring()
 
     /// <summary>
-    /// Получение подстроки (метод String.Substring()).
-    /// Если <paramref name="startIndex"/> и/или <paramref name="length"/> выходят за пределы строки, возвращается пустая строка.
-    /// Может использоваться в конструкторе класса DepExpr3.
+    /// РџРѕР»СѓС‡РµРЅРёРµ РїРѕРґСЃС‚СЂРѕРєРё (РјРµС‚РѕРґ String.Substring()).
+    /// Р•СЃР»Рё <paramref name="startIndex"/> Рё/РёР»Рё <paramref name="length"/> РІС‹С…РѕРґСЏС‚ Р·Р° РїСЂРµРґРµР»С‹ СЃС‚СЂРѕРєРё, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr3.
     /// </summary>
-    /// <param name="s">Строка</param>
-    /// <param name="startIndex">Начальный индекс</param>
-    /// <param name="length">Длина подстроки</param>
-    /// <returns>Подстрока</returns>
+    /// <param name="s">РЎС‚СЂРѕРєР°</param>
+    /// <param name="startIndex">РќР°С‡Р°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ</param>
+    /// <param name="length">Р”Р»РёРЅР° РїРѕРґСЃС‚СЂРѕРєРё</param>
+    /// <returns>РџРѕРґСЃС‚СЂРѕРєР°</returns>
     private static string Substring(string s, int startIndex, int length)
     {
       if (String.IsNullOrEmpty(s))
@@ -106,24 +106,24 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Вычисляет подстроку String.Substring().
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ РїРѕРґСЃС‚СЂРѕРєСѓ String.Substring().
     /// </summary>
-    /// <param name="s">Строка</param>
-    /// <param name="startIndex">Начальный индекс</param>
-    /// <param name="length">Длина подстроки</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РЎС‚СЂРѕРєР°</param>
+    /// <param name="startIndex">РќР°С‡Р°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ</param>
+    /// <param name="length">Р”Р»РёРЅР° РїРѕРґСЃС‚СЂРѕРєРё</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<string> SubstringEx(DepValue<string> s, DepValue<int> startIndex, DepValue<int> length)
     {
       return new DepExpr3<string, string, int, int>(s, startIndex, length, Substring);
     }
 
     /// <summary>
-    /// Вычисляет подстроку String.Substring().
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ РїРѕРґСЃС‚СЂРѕРєСѓ String.Substring().
     /// </summary>
-    /// <param name="s">Строка</param>
-    /// <param name="startIndex">Начальный индекс</param>
-    /// <param name="length">Длина подстроки</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РЎС‚СЂРѕРєР°</param>
+    /// <param name="startIndex">РќР°С‡Р°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ</param>
+    /// <param name="length">Р”Р»РёРЅР° РїРѕРґСЃС‚СЂРѕРєРё</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<string> SubstringEx(DepValue<string> s, int startIndex, int length)
     {
       return new DepExpr3<string, string, int, int>(s, startIndex, length, Substring);
@@ -134,16 +134,16 @@ namespace FreeLibSet.DependedValues
     #region StartsWith()
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> начинается с заданной подстроки.
-    /// Используется режим сравнения с учетом регистра StringComparison.Ordinal.
-    /// Если <paramref name="s"/> - пустая строка, возвращается false.
-    /// Если <paramref name="substring"/> - пустая строка, возвращается true.
-    /// Если обе строки пустые - возвращается false.
-    /// Может использоваться в конструкторе класса DepExpr2.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ СЃ СѓС‡РµС‚РѕРј СЂРµРіРёСЃС‚СЂР° StringComparison.Ordinal.
+    /// Р•СЃР»Рё <paramref name="s"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// Р•СЃР»Рё <paramref name="substring"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true.
+    /// Р•СЃР»Рё РѕР±Рµ СЃС‚СЂРѕРєРё РїСѓСЃС‚С‹Рµ - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr2.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Признак совпадения</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>РџСЂРёР·РЅР°Рє СЃРѕРІРїР°РґРµРЅРёСЏ</returns>
     private static bool StartsWithOrdinal(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
@@ -154,40 +154,40 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> начинается с заданной подстроки.
-    /// Используется режим сравнения с учетом регистра StringComparison.Ordinal.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ СЃ СѓС‡РµС‚РѕРј СЂРµРіРёСЃС‚СЂР° StringComparison.Ordinal.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> StartsWithOrdinalEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinal);
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> начинается с заданной подстроки.
-    /// Используется режим сравнения с учетом регистра StringComparison.Ordinal.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ СЃ СѓС‡РµС‚РѕРј СЂРµРіРёСЃС‚СЂР° StringComparison.Ordinal.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> StartsWithOrdinalEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinal);
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> начинается с заданной подстроки.
-    /// Используется режим сравнения без учета регистра StringComparison.OrdinalIgnoreCase.
-    /// Если <paramref name="s"/> - пустая строка, возвращается false.
-    /// Если <paramref name="substring"/> - пустая строка, возвращается true.
-    /// Если обе строки пустые - возвращается false.
-    /// Может использоваться в конструкторе класса DepExpr2.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР° StringComparison.OrdinalIgnoreCase.
+    /// Р•СЃР»Рё <paramref name="s"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// Р•СЃР»Рё <paramref name="substring"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true.
+    /// Р•СЃР»Рё РѕР±Рµ СЃС‚СЂРѕРєРё РїСѓСЃС‚С‹Рµ - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr2.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Признак совпадения</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>РџСЂРёР·РЅР°Рє СЃРѕРІРїР°РґРµРЅРёСЏ</returns>
     private static bool StartsWithOrdinalIgnoreCase(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
@@ -198,24 +198,24 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> начинается с заданной подстроки.
-    /// Используется режим сравнения без учета регистра StringComparison.OrdinalIgnoreCase.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР° StringComparison.OrdinalIgnoreCase.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> StartsWithOrdinalIgnoreCaseEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinalIgnoreCase);
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> начинается с заданной подстроки.
-    /// Используется режим сравнения без учета регистра StringComparison.OrdinalIgnoreCase.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР° StringComparison.OrdinalIgnoreCase.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> StartsWithOrdinalIgnoreCaseEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, StartsWithOrdinalIgnoreCase);
@@ -226,16 +226,16 @@ namespace FreeLibSet.DependedValues
     #region EndsWith()
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> заканчивается заданной подстрокой.
-    /// Используется режим сравнения с учетом регистра StringComparison.Ordinal.
-    /// Если <paramref name="s"/> - пустая строка, возвращается false.
-    /// Если <paramref name="substring"/> - пустая строка, возвращается true.
-    /// Если обе строки пустые - возвращается false.
-    /// Может использоваться в конструкторе класса DepExpr2.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРѕР№.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ СЃ СѓС‡РµС‚РѕРј СЂРµРіРёСЃС‚СЂР° StringComparison.Ordinal.
+    /// Р•СЃР»Рё <paramref name="s"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// Р•СЃР»Рё <paramref name="substring"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true.
+    /// Р•СЃР»Рё РѕР±Рµ СЃС‚СЂРѕРєРё РїСѓСЃС‚С‹Рµ - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr2.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Признак совпадения</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>РџСЂРёР·РЅР°Рє СЃРѕРІРїР°РґРµРЅРёСЏ</returns>
     private static bool EndsWithOrdinal(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
@@ -246,24 +246,24 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> заканчивается заданной подстрокой.
-    /// Используется режим сравнения с учетом регистра StringComparison.Ordinal.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРѕР№.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ СЃ СѓС‡РµС‚РѕРј СЂРµРіРёСЃС‚СЂР° StringComparison.Ordinal.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> EndsWithOrdinalEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinal);
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> заканчивается заданной подстрокой.
-    /// Используется режим сравнения с учетом регистра StringComparison.Ordinal.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРѕР№.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ СЃ СѓС‡РµС‚РѕРј СЂРµРіРёСЃС‚СЂР° StringComparison.Ordinal.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> EndsWithOrdinalEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinal);
@@ -272,16 +272,16 @@ namespace FreeLibSet.DependedValues
 
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> заканчивается заданной подстрокой.
-    /// Используется режим сравнения без учета регистра StringComparison.OrdinalIgnoreCase.
-    /// Если <paramref name="s"/> - пустая строка, возвращается false.
-    /// Если <paramref name="substring"/> - пустая строка, возвращается true.
-    /// Если обе строки пустые - возвращается false.
-    /// Может использоваться в конструкторе класса DepExpr2.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРѕР№.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР° StringComparison.OrdinalIgnoreCase.
+    /// Р•СЃР»Рё <paramref name="s"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// Р•СЃР»Рё <paramref name="substring"/> - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true.
+    /// Р•СЃР»Рё РѕР±Рµ СЃС‚СЂРѕРєРё РїСѓСЃС‚С‹Рµ - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr2.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Признак совпадения</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>РџСЂРёР·РЅР°Рє СЃРѕРІРїР°РґРµРЅРёСЏ</returns>
     private static bool EndsWithOrdinalIgnoreCase(string s, string substring)
     {
       if (String.IsNullOrEmpty(s))
@@ -292,24 +292,24 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> заканчивается заданной подстрокой.
-    /// Используется режим сравнения без учета регистра StringComparison.OrdinalIgnoreCase.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРѕР№.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР° StringComparison.OrdinalIgnoreCase.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> EndsWithOrdinalIgnoreCaseEx(DepValue<string> s, DepValue<string> substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinalIgnoreCase);
     }
 
     /// <summary>
-    /// Возвращает true, если строка <paramref name="s"/> заканчивается заданной подстрокой.
-    /// Используется режим сравнения без учета регистра StringComparison.OrdinalIgnoreCase.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚СЂРѕРєР° <paramref name="s"/> Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРѕР№.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР° StringComparison.OrdinalIgnoreCase.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="substring">Подстрока</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="substring">РџРѕРґСЃС‚СЂРѕРєР°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> EndsWithOrdinalIgnoreCaseEx(DepValue<string> s, string substring)
     {
       return new DepExpr2<bool, string, string>(s, substring, EndsWithOrdinalIgnoreCase);
@@ -320,13 +320,13 @@ namespace FreeLibSet.DependedValues
     #region ToString()
 
     /// <summary>
-    /// Преобразование в строку (метод Object.ToString()). Используется, в основном, для отладочных целей.
-    /// Если <paramref name="value"/>=null, то возвращается пустая строка
-    /// Может использоваться в конструкторе класса DepExpr1.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєСѓ (РјРµС‚РѕРґ Object.ToString()). РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РІ РѕСЃРЅРѕРІРЅРѕРј, РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№.
+    /// Р•СЃР»Рё <paramref name="value"/>=null, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr1.
     /// </summary>
-    /// <typeparam name="T">Тип данных</typeparam>
-    /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <typeparam name="T">РўРёРї РґР°РЅРЅС‹С…</typeparam>
+    /// <param name="value">РџСЂРµРѕР±СЂР°Р·СѓРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     private static string ToString<T>(T value)
     {
       if (value == null)
@@ -336,11 +336,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование в строку (метод Object.ToString()). Используется, в основном, для отладочных целей.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєСѓ (РјРµС‚РѕРґ Object.ToString()). РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РІ РѕСЃРЅРѕРІРЅРѕРј, РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№.
     /// </summary>
-    /// <typeparam name="T">Тип данных</typeparam>
-    /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РґР°РЅРЅС‹С…</typeparam>
+    /// <param name="value">РџСЂРµРѕР±СЂР°Р·СѓРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<string> ToStringEx<T>(DepValue<T> value)
     {
       return new DepExpr1<string, T>(value, ToString);
@@ -351,14 +351,14 @@ namespace FreeLibSet.DependedValues
     #region Regex.IsMatch()
 
     /// <summary>
-    /// Проверка соответствия строки регулярному выражению.
-    /// Этот метод вызывает статический метод Regex.IsMatch(). Если аргументы <paramref name="s"/>==null или <paramref name="pattern"/>==null, то 
-    /// они заменяются на пустую строку. Если вызов Regex.IsMatch() вызывает исключение (из-за неправильного <paramref name="pattern"/>), то оно перехватывается и возвращается false.
-    /// Может использоваться в конструкторе класса DepExpr2.
+    /// РџСЂРѕРІРµСЂРєР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЏ СЃС‚СЂРѕРєРё СЂРµРіСѓР»СЏСЂРЅРѕРјСѓ РІС‹СЂР°Р¶РµРЅРёСЋ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Regex.IsMatch(). Р•СЃР»Рё Р°СЂРіСѓРјРµРЅС‚С‹ <paramref name="s"/>==null РёР»Рё <paramref name="pattern"/>==null, С‚Рѕ 
+    /// РѕРЅРё Р·Р°РјРµРЅСЏСЋС‚СЃСЏ РЅР° РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ. Р•СЃР»Рё РІС‹Р·РѕРІ Regex.IsMatch() РІС‹Р·С‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ (РёР·-Р·Р° РЅРµРїСЂР°РІРёР»СЊРЅРѕРіРѕ <paramref name="pattern"/>), С‚Рѕ РѕРЅРѕ РїРµСЂРµС…РІР°С‚С‹РІР°РµС‚СЃСЏ Рё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР° DepExpr2.
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="pattern">Регулярное выражение</param>
-    /// <returns>Признак соответствия</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="pattern">Р РµРіСѓР»СЏСЂРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>РџСЂРёР·РЅР°Рє СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЏ</returns>
     private static bool RegexIsMatch(string s, string pattern)
     {
       if (s == null)
@@ -377,12 +377,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Проверка соответствия строки регулярному выражению.
-    /// Этот метод вызывает статический метод Regex.IsMatch(). 
+    /// РџСЂРѕРІРµСЂРєР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЏ СЃС‚СЂРѕРєРё СЂРµРіСѓР»СЏСЂРЅРѕРјСѓ РІС‹СЂР°Р¶РµРЅРёСЋ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Regex.IsMatch(). 
     /// </summary>
-    /// <param name="s">Проверяемая строка</param>
-    /// <param name="pattern">Регулярное выражение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="pattern">Р РµРіСѓР»СЏСЂРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> RegexIsMatchEx(DepValue<string> s, string pattern)
     {
       return new DepExpr2<bool, string, string>(s, pattern, RegexIsMatch);
@@ -394,15 +394,15 @@ namespace FreeLibSet.DependedValues
 
     #region DateTime
 
-    #region Компоненты
+    #region РљРѕРјРїРѕРЅРµРЅС‚С‹
 
     #region Year
 
     /// <summary>
-    /// Возвращает год. Если дата не задана, возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРѕРґ. Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static int Year(DateTime? dt)
     {
       if (dt.HasValue)
@@ -412,30 +412,30 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает год. Если дата не задана, возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРѕРґ. Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> YearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<int, DateTime?>(dt, Year);
     }
 
     /// <summary>
-    /// Возвращает год. Если дата не задана, возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРѕРґ. Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static int Year(DateTime dt)
     {
       return dt.Year;
     }
 
     /// <summary>
-    /// Возвращает год. 
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРѕРґ. 
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> YearEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<int, DateTime>(dt, Year);
@@ -446,10 +446,10 @@ namespace FreeLibSet.DependedValues
     #region Month
 
     /// <summary>
-    /// Возвращает месяц (1-12). Если дата не задана, возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРµСЃСЏС† (1-12). Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static int Month(DateTime? dt)
     {
       if (dt.HasValue)
@@ -459,30 +459,30 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает месяц (1-12). Если дата не задана, возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРµСЃСЏС† (1-12). Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> MonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<int, DateTime?>(dt, Month);
     }
 
     /// <summary>
-    /// Возвращает месяц (1-12)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРµСЃСЏС† (1-12)
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static int Month(DateTime dt)
     {
       return dt.Month;
     }
 
     /// <summary>
-    /// Возвращает месяц (1-12). 
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРµСЃСЏС† (1-12). 
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> MonthEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<int, DateTime>(dt, Month);
@@ -493,10 +493,10 @@ namespace FreeLibSet.DependedValues
     #region Day
 
     /// <summary>
-    /// Возвращает день месяца (1-31). Если дата не задана, возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РјРµСЃСЏС†Р° (1-31). Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static int Day(DateTime? dt)
     {
       if (dt.HasValue)
@@ -506,30 +506,30 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает день месяца (1-31). Если дата не задана, возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РјРµСЃСЏС†Р° (1-31). Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> DayEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<int, DateTime?>(dt, Day);
     }
 
     /// <summary>
-    /// Возвращает день месяца (1-31). 
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РјРµСЃСЏС†Р° (1-31). 
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static int Day(DateTime dt)
     {
       return dt.Day;
     }
 
     /// <summary>
-    /// Возвращает день месяца (1-31).
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РјРµСЃСЏС†Р° (1-31).
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> DayEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<int, DateTime>(dt, Day);
@@ -540,10 +540,10 @@ namespace FreeLibSet.DependedValues
     #region DayOfWeek
 
     /// <summary>
-    /// Возвращает день недели. Если дата не задана, возвращает воскресенье
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РЅРµРґРµР»Рё. Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ РІРѕСЃРєСЂРµСЃРµРЅСЊРµ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static DayOfWeek DayOfWeek(DateTime? dt)
     {
       if (dt.HasValue)
@@ -553,30 +553,30 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает день недели. Если дата не задана, возвращает воскресенье
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РЅРµРґРµР»Рё. Р•СЃР»Рё РґР°С‚Р° РЅРµ Р·Р°РґР°РЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ РІРѕСЃРєСЂРµСЃРµРЅСЊРµ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DayOfWeek> DayOfWeekEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DayOfWeek, DateTime?>(dt, DayOfWeek);
     }
 
     /// <summary>
-    /// Возвращает день недели. 
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РЅРµРґРµР»Рё. 
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Значение компонента</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚Р°</returns>
     private static DayOfWeek DayOfWeek(DateTime dt)
     {
       return dt.DayOfWeek;
     }
 
     /// <summary>
-    /// Возвращает день недели.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РЅРµРґРµР»Рё.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DayOfWeek> DayOfWeekEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<DayOfWeek, DateTime>(dt, DayOfWeek);
@@ -591,10 +591,10 @@ namespace FreeLibSet.DependedValues
     #region Year
 
     /// <summary>
-    /// Возвращает true, если дата приходится на 1 января
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° 1 СЏРЅРІР°СЂСЏ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static bool IsBottomOfYear(DateTime? dt)
     {
       if (dt.HasValue)
@@ -604,30 +604,30 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на 1 января
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° 1 СЏРЅРІР°СЂСЏ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsBottomOfYearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsBottomOfYear);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на 1 января
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° 1 СЏРЅРІР°СЂСЏ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsBottomOfYearEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfYear);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на 31 декабря
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° 31 РґРµРєР°Р±СЂСЏ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static bool IsEndOfYear(DateTime? dt)
     {
       if (dt.HasValue)
@@ -637,31 +637,31 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на 31 декабря
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° 31 РґРµРєР°Р±СЂСЏ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsEndOfYearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsEndOfYear);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на 31 декабря
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° 31 РґРµРєР°Р±СЂСЏ
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsEndOfYearEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfYear);
     }
 
     /// <summary>
-    /// Возвращает дату 01 января.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ 01 СЏРЅРІР°СЂСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static DateTime? BottomOfYear(DateTime? dt)
     {
       if (dt.HasValue)
@@ -671,32 +671,32 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату 01 января.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ 01 СЏРЅРІР°СЂСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> BottomOfYearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DateTime?, DateTime?>(dt, BottomOfYear);
     }
 
     /// <summary>
-    /// Возвращает дату 01 января.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ 01 СЏРЅРІР°СЂСЏ.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime> BottomOfYearEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfYear);
     }
 
     /// <summary>
-    /// Возвращает дату 31 декабря.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ 31 РґРµРєР°Р±СЂСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static DateTime? EndOfYear(DateTime? dt)
     {
       if (dt.HasValue)
@@ -706,11 +706,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату 31 декабря.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ 31 РґРµРєР°Р±СЂСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> EndOfYearEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DateTime?, DateTime?>(dt, EndOfYear);
@@ -718,10 +718,10 @@ namespace FreeLibSet.DependedValues
 
 
     /// <summary>
-    /// Возвращает дату 31 декабря.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ 31 РґРµРєР°Р±СЂСЏ.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime> EndOfYearEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfYear);
@@ -732,10 +732,10 @@ namespace FreeLibSet.DependedValues
     #region Quarter
 
     /// <summary>
-    /// Возвращает true, если дата приходится на первый день квартала
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРµСЂРІС‹Р№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static bool IsBottomOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
@@ -745,30 +745,30 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на первый день квартала
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРµСЂРІС‹Р№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsBottomOfQuarterEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsBottomOfQuarter);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на первый день квартала
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРµСЂРІС‹Р№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsBottomOfQuarterEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfQuarter);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день квартала
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static bool IsEndOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
@@ -778,31 +778,31 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день квартала
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsEndOfQuarterEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsEndOfQuarter);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день квартала
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsEndOfQuarterEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfQuarter);
     }
 
     /// <summary>
-    /// Возвращает дату начала квартала.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ РЅР°С‡Р°Р»Р° РєРІР°СЂС‚Р°Р»Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static DateTime? BottomOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
@@ -812,32 +812,32 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату начала квартала.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ РЅР°С‡Р°Р»Р° РєРІР°СЂС‚Р°Р»Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> BottomOfQuarterEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DateTime?, DateTime?>(dt, BottomOfQuarter);
     }
 
     /// <summary>
-    /// Возвращает дату начала квартала.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ РЅР°С‡Р°Р»Р° РєРІР°СЂС‚Р°Р»Р°.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepExpr1<DateTime, DateTime> BottomOfQuarterEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfQuarter);
     }
 
     /// <summary>
-    /// Возвращает дату конца квартала.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ РєРѕРЅС†Р° РєРІР°СЂС‚Р°Р»Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static DateTime? EndOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
@@ -847,21 +847,21 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату конца квартала.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ РєРѕРЅС†Р° РєРІР°СЂС‚Р°Р»Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> EndOfQuarterEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DateTime?, DateTime?>(dt, EndOfQuarter);
     }
 
     /// <summary>
-    /// Возвращает дату конца квартала.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ РєРѕРЅС†Р° РєРІР°СЂС‚Р°Р»Р°.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime> EndOfQuarterEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfQuarter);
@@ -872,10 +872,10 @@ namespace FreeLibSet.DependedValues
     #region Month
 
     /// <summary>
-    /// Возвращает true, если дата приходится на первый день месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static bool IsBottomOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
@@ -885,30 +885,30 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на первый день месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsBottomOfMonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsBottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на первый день месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsBottomOfMonthEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static bool IsEndOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
@@ -918,31 +918,31 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsEndOfMonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<bool, DateTime?>(dt, IsEndOfMonth);
     }
 
     /// <summary>
-    /// Возвращает true, если дата приходится на последний день месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° РїСЂРёС…РѕРґРёС‚СЃСЏ РЅР° РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsEndOfMonthEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfMonth);
     }
 
     /// <summary>
-    /// Возвращает первый день месяца.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static DateTime? BottomOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
@@ -952,32 +952,32 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает первый день месяца.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> BottomOfMonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DateTime?, DateTime?>(dt, BottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает первый день месяца.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime> BottomOfMonthEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает первый день месяца.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Результат проверки</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё</returns>
     private static DateTime? EndOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
@@ -987,21 +987,21 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает первый день месяца.
-    /// Возвращает null, если <paramref name="dt"/>=null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё <paramref name="dt"/>=null.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> EndOfMonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<DateTime?, DateTime?>(dt, EndOfMonth);
     }
 
     /// <summary>
-    /// Возвращает первый день месяца.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime> EndOfMonthEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfMonth);
@@ -1015,7 +1015,7 @@ namespace FreeLibSet.DependedValues
 
     #region YearMonth
 
-    #region Компоненты
+    #region РљРѕРјРїРѕРЅРµРЅС‚С‹
 
     private static int Year(YearMonth value)
     {
@@ -1026,11 +1026,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает год из структуры YearMonth.
-    /// Если YearMonth.IsEmpty=true, возвращает 0.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРѕРґ РёР· СЃС‚СЂСѓРєС‚СѓСЂС‹ YearMonth.
+    /// Р•СЃР»Рё YearMonth.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚ 0.
     /// </summary>
-    /// <param name="value">Управляемое исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РЈРїСЂР°РІР»СЏРµРјРѕРµ РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> YearEx(DepValue<YearMonth> value)
     {
       return new DepExpr1<int, YearMonth>(value, Year);
@@ -1046,11 +1046,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает месяц (1-12) из структуры YearMonth.
-    /// Если YearMonth.IsEmpty=true, возвращает 0.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРµСЃСЏС† (1-12) РёР· СЃС‚СЂСѓРєС‚СѓСЂС‹ YearMonth.
+    /// Р•СЃР»Рё YearMonth.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚ 0.
     /// </summary>
-    /// <param name="value">Управляемое исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РЈРїСЂР°РІР»СЏРµРјРѕРµ РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> MonthEx(DepValue<YearMonth> value)
     {
       return new DepExpr1<int, YearMonth>(value, Month);
@@ -1061,11 +1061,11 @@ namespace FreeLibSet.DependedValues
     #region NBottom/EndOfMonth()
 
     /// <summary>
-    /// Возвращает дату, соответствующую первому дню месяца.
-    /// Для YearMonth.Empty возвращается null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРµСЂРІРѕРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Дата</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р”Р°С‚Р°</returns>
     private static DateTime? NBottomOfMonth(YearMonth ym)
     {
       if (ym.IsEmpty)
@@ -1075,22 +1075,22 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату, соответствующую первому дню месяца.
-    /// Для YearMonth.Empty возвращается null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРµСЂРІРѕРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> NBottomOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime?, YearMonth>(ym, NBottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает дату, соответствующую последнему дню месяца.
-    /// Для YearMonth.Empty возвращается null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРѕСЃР»РµРґРЅРµРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Дата</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р”Р°С‚Р°</returns>
     private static DateTime? NEndOfMonth(YearMonth ym)
     {
       if (ym.IsEmpty)
@@ -1100,11 +1100,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату, соответствующую последнему дню месяца.
-    /// Для YearMonth.Empty возвращается null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРѕСЃР»РµРґРЅРµРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime?> NEndOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime?, YearMonth>(ym, NEndOfMonth);
@@ -1115,44 +1115,44 @@ namespace FreeLibSet.DependedValues
     #region Bottom/EndOfMonth()
 
     /// <summary>
-    /// Возвращает дату, соответствующую первому дню месяца.
-    /// Для YearMonth.Empty возвращается 01.01.0001.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРµСЂРІРѕРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 01.01.0001.
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Дата</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р”Р°С‚Р°</returns>
     private static DateTime BottomOfMonth(YearMonth ym)
     {
       return ym.BottomOfMonth;
     }
 
     /// <summary>
-    /// Возвращает дату, соответствующую первому дню месяца.
-    /// Для YearMonth.Empty возвращается 01.01.0001.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРµСЂРІРѕРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 01.01.0001.
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime> BottomOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime, YearMonth>(ym, BottomOfMonth);
     }
 
     /// <summary>
-    /// Возвращает дату, соответствующую последнему дню месяца.
-    /// Для YearMonth.Empty возвращается 31.12.9999.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРѕСЃР»РµРґРЅРµРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 31.12.9999.
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Дата</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р”Р°С‚Р°</returns>
     private static DateTime EndOfMonth(YearMonth ym)
     {
       return ym.EndOfMonth;
     }
 
     /// <summary>
-    /// Возвращает дату, соответствующую последнему дню месяца.
-    /// Для YearMonth.Empty возвращается 31.12.9999.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ РїРѕСЃР»РµРґРЅРµРјСѓ РґРЅСЋ РјРµСЃСЏС†Р°.
+    /// Р”Р»СЏ YearMonth.Empty РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 31.12.9999.
     /// </summary>
-    /// <param name="ym">Месяц и год</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="ym">РњРµСЃСЏС† Рё РіРѕРґ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<DateTime> EndOfMonthEx(DepValue<YearMonth> ym)
     {
       return new DepExpr1<DateTime, YearMonth>(ym, EndOfMonth);
@@ -1163,11 +1163,11 @@ namespace FreeLibSet.DependedValues
     #region YearMonth
 
     /// <summary>
-    /// Преобразование даты в структуру YearMonth.
-    /// Для значения null возвращает YearMonth.Empty
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ YearMonth.
+    /// Р”Р»СЏ Р·РЅР°С‡РµРЅРёСЏ null РІРѕР·РІСЂР°С‰Р°РµС‚ YearMonth.Empty
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Год и месяц</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р“РѕРґ Рё РјРµСЃСЏС†</returns>
     private static YearMonth YearMonth(DateTime? dt)
     {
       if (dt.HasValue)
@@ -1177,11 +1177,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование даты в структуру YearMonth.
-    /// Для значения null возвращает YearMonth.Empty
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ YearMonth.
+    /// Р”Р»СЏ Р·РЅР°С‡РµРЅРёСЏ null РІРѕР·РІСЂР°С‰Р°РµС‚ YearMonth.Empty
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<YearMonth> YearMonthEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<YearMonth, DateTime?>(dt, YearMonth);
@@ -1189,10 +1189,10 @@ namespace FreeLibSet.DependedValues
 
 
     /// <summary>
-    /// Преобразование даты в структуру YearMonth.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ YearMonth.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Год и месяц</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р“РѕРґ Рё РјРµСЃСЏС†</returns>
     private static YearMonth YearMonth(DateTime dt)
     {
       if (dt.Year >= FreeLibSet.Calendar.YearMonth.MinYear && dt.Year <= FreeLibSet.Calendar.YearMonth.MaxYear)
@@ -1202,10 +1202,10 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование даты в структуру YearMonth.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ YearMonth.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<YearMonth> YearMonthEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<YearMonth, DateTime>(dt, YearMonth);
@@ -1222,12 +1222,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Создание структуры YearMonth из года и месяца (1-12).
-    /// Если год или месяц имеют неправильные значения, возвращается YearMonth.Empty
+    /// РЎРѕР·РґР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ YearMonth РёР· РіРѕРґР° Рё РјРµСЃСЏС†Р° (1-12).
+    /// Р•СЃР»Рё РіРѕРґ РёР»Рё РјРµСЃСЏС† РёРјРµСЋС‚ РЅРµРїСЂР°РІРёР»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ YearMonth.Empty
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <param name="month">Месяц</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<YearMonth> YearMonthEx(DepValue<int> year, DepValue<int> month)
     {
       return new DepExpr2<YearMonth, int, int>(year, month, YearMonth);
@@ -1238,20 +1238,20 @@ namespace FreeLibSet.DependedValues
     #region IsNotEmpty()
 
     /// <summary>
-    /// Возвращает true, если значение непустое (YearMonth.IsEmpty=false)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµРїСѓСЃС‚РѕРµ (YearMonth.IsEmpty=false)
     /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Значение свойства</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР°</returns>
     private static bool IsNotEmpty(YearMonth value)
     {
       return !value.IsEmpty;
     }
 
     /// <summary>
-    /// Возвращает true, если значение непустое (YearMonth.IsEmpty=false)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµРїСѓСЃС‚РѕРµ (YearMonth.IsEmpty=false)
     /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsNotEmptyEx(DepValue<YearMonth> value)
     {
       return new DepExpr1<bool, YearMonth>(value, IsNotEmpty);
@@ -1263,7 +1263,7 @@ namespace FreeLibSet.DependedValues
 
     #region MonthDay
 
-    #region Компоненты
+    #region РљРѕРјРїРѕРЅРµРЅС‚С‹
 
     private static int Month(MonthDay value)
     {
@@ -1274,11 +1274,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает месяц (1-12) из структуры MonthDay.
-    /// Если MonthDay.IsEmpty=true, возвращает 0.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРµСЃСЏС† (1-12) РёР· СЃС‚СЂСѓРєС‚СѓСЂС‹ MonthDay.
+    /// Р•СЃР»Рё MonthDay.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚ 0.
     /// </summary>
-    /// <param name="value">Управляемое исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РЈРїСЂР°РІР»СЏРµРјРѕРµ РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> MonthEx(DepValue<MonthDay> value)
     {
       return new DepExpr1<int, MonthDay>(value, Month);
@@ -1294,11 +1294,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает день из структуры MonthDay.
-    /// Если MonthDay.IsEmpty=true, возвращает 0.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµРЅСЊ РёР· СЃС‚СЂСѓРєС‚СѓСЂС‹ MonthDay.
+    /// Р•СЃР»Рё MonthDay.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚ 0.
     /// </summary>
-    /// <param name="value">Управляемое исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РЈРїСЂР°РІР»СЏРµРјРѕРµ РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> DayEx(DepValue<MonthDay> value)
     {
       return new DepExpr1<int, MonthDay>(value, Day);
@@ -1309,11 +1309,11 @@ namespace FreeLibSet.DependedValues
     #region MonthDay
 
     /// <summary>
-    /// Преобразование даты в структуру MonthDay.
-    /// Для значения null возвращает MonthDay.Empty
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ MonthDay.
+    /// Р”Р»СЏ Р·РЅР°С‡РµРЅРёСЏ null РІРѕР·РІСЂР°С‰Р°РµС‚ MonthDay.Empty
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Структура</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>РЎС‚СЂСѓРєС‚СѓСЂР°</returns>
     private static MonthDay MonthDay(DateTime? dt)
     {
       if (dt.HasValue)
@@ -1323,11 +1323,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование даты в структуру MonthDay.
-    /// Для значения null возвращает MonthDay.Empty
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ MonthDay.
+    /// Р”Р»СЏ Р·РЅР°С‡РµРЅРёСЏ null РІРѕР·РІСЂР°С‰Р°РµС‚ MonthDay.Empty
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<MonthDay> MonthDayEx(DepValue<DateTime?> dt)
     {
       return new DepExpr1<MonthDay, DateTime?>(dt, MonthDay);
@@ -1335,20 +1335,20 @@ namespace FreeLibSet.DependedValues
 
 
     /// <summary>
-    /// Преобразование даты в структуру MonthDay.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ MonthDay.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Структура</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>РЎС‚СЂСѓРєС‚СѓСЂР°</returns>
     private static MonthDay MonthDay(DateTime dt)
     {
       return new MonthDay(dt);
     }
 
     /// <summary>
-    /// Преобразование даты в структуру MonthDay.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґР°С‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ MonthDay.
     /// </summary>
-    /// <param name="dt">Дата</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="dt">Р”Р°С‚Р°</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<MonthDay> MonthDayEx(DepValue<DateTime> dt)
     {
       return new DepExpr1<MonthDay, DateTime>(dt, MonthDay);
@@ -1360,19 +1360,19 @@ namespace FreeLibSet.DependedValues
       if (month < 1 || month > 12)
         return new MonthDay();
 
-      if (day < 1 || day > DateTime.DaysInMonth(2021, month)) // обязательно невисокосный год
+      if (day < 1 || day > DateTime.DaysInMonth(2021, month)) // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РЅРµРІРёСЃРѕРєРѕСЃРЅС‹Р№ РіРѕРґ
         return new MonthDay();
 
       return new MonthDay(month, day);
     }
 
     /// <summary>
-    /// Создание структуры MonthDay из месяца (1-12) и дня (1-28/30/31).
-    /// Если год или месяц имеют неправильные значения, возвращается MonthDay.Empty
+    /// РЎРѕР·РґР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ MonthDay РёР· РјРµСЃСЏС†Р° (1-12) Рё РґРЅСЏ (1-28/30/31).
+    /// Р•СЃР»Рё РіРѕРґ РёР»Рё РјРµСЃСЏС† РёРјРµСЋС‚ РЅРµРїСЂР°РІРёР»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ MonthDay.Empty
     /// </summary>
-    /// <param name="month">Месяц</param>
-    /// <param name="day">День</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <param name="day">Р”РµРЅСЊ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<MonthDay> MonthDayEx(DepValue<int> month, DepValue<int> day)
     {
       return new DepExpr2<MonthDay, int, int>(month, day, MonthDay);
@@ -1383,20 +1383,20 @@ namespace FreeLibSet.DependedValues
     #region IsNotEmpty()
 
     /// <summary>
-    /// Возвращает true, если значение непустое (MonthDay.IsEmpty=false)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµРїСѓСЃС‚РѕРµ (MonthDay.IsEmpty=false)
     /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Значение свойства</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР°</returns>
     private static bool IsNotEmpty(MonthDay value)
     {
       return !value.IsEmpty;
     }
 
     /// <summary>
-    /// Возвращает true, если значение непустое (MonthDay.IsEmpty=false)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµРїСѓСЃС‚РѕРµ (MonthDay.IsEmpty=false)
     /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsNotEmptyEx(DepValue<MonthDay> value)
     {
       return new DepExpr1<bool, MonthDay>(value, IsNotEmpty);
@@ -1407,13 +1407,13 @@ namespace FreeLibSet.DependedValues
     #region GetDate()
 
     /// <summary>
-    /// Возвращает дату, соответвующую заданному году.
-    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚РІСѓСЋС‰СѓСЋ Р·Р°РґР°РЅРЅРѕРјСѓ РіРѕРґСѓ.
+    /// Р•СЃР»Рё СЃС‚СЂСѓРєС‚СѓСЂР° <paramref name="md"/> РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РёР»Рё <paramref name="year"/> Р·Р°РґР°РµС‚ РЅРµРґРѕРїСѓСЃС‚РёС‹Р№ РіРѕРґ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="md">Месяц и день</param>
-    /// <param name="year">Год</param>
-    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
-    /// <returns>Дата или null</returns>
+    /// <param name="md">РњРµСЃСЏС† Рё РґРµРЅСЊ</param>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="february29">Р•СЃР»Рё true Рё РіРѕРґ РІРёСЃРѕРєРѕСЃРЅС‹Р№, С‚Рѕ 28 С„РµРІСЂР°Р»СЏ Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° 29</param>
+    /// <returns>Р”Р°С‚Р° РёР»Рё null</returns>
     private static DateTime? GetNDate(MonthDay md, int year, bool february29)
     {
       if (md.IsEmpty || year < DateRange.Whole.FirstDate.Year || year > DateRange.Whole.LastDate.Year)
@@ -1423,26 +1423,26 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату, соответвующую заданному году.
-    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚РІСѓСЋС‰СѓСЋ Р·Р°РґР°РЅРЅРѕРјСѓ РіРѕРґСѓ.
+    /// Р•СЃР»Рё СЃС‚СЂСѓРєС‚СѓСЂР° <paramref name="md"/> РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РёР»Рё <paramref name="year"/> Р·Р°РґР°РµС‚ РЅРµРґРѕРїСѓСЃС‚РёС‹Р№ РіРѕРґ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="md">Месяц и день</param>
-    /// <param name="year">Год</param>
-    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
-    /// <returns>Дата или null</returns>
+    /// <param name="md">РњРµСЃСЏС† Рё РґРµРЅСЊ</param>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="february29">Р•СЃР»Рё true Рё РіРѕРґ РІРёСЃРѕРєРѕСЃРЅС‹Р№, С‚Рѕ 28 С„РµРІСЂР°Р»СЏ Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° 29</param>
+    /// <returns>Р”Р°С‚Р° РёР»Рё null</returns>
     public static DepValue<DateTime?> GetNDateEx(DepValue<MonthDay> md, DepValue<int> year, bool february29)
     {
       return new DepExpr3<DateTime?, MonthDay, int, bool>(md, year, february29, GetNDate);
     }
 
     /// <summary>
-    /// Возвращает дату, соответвующую заданному году.
-    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается DataTime.MinValue.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚РІСѓСЋС‰СѓСЋ Р·Р°РґР°РЅРЅРѕРјСѓ РіРѕРґСѓ.
+    /// Р•СЃР»Рё СЃС‚СЂСѓРєС‚СѓСЂР° <paramref name="md"/> РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РёР»Рё <paramref name="year"/> Р·Р°РґР°РµС‚ РЅРµРґРѕРїСѓСЃС‚РёС‹Р№ РіРѕРґ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ DataTime.MinValue.
     /// </summary>
-    /// <param name="md">Месяц и день</param>
-    /// <param name="year">Год</param>
-    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
-    /// <returns>Дата или null</returns>
+    /// <param name="md">РњРµСЃСЏС† Рё РґРµРЅСЊ</param>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="february29">Р•СЃР»Рё true Рё РіРѕРґ РІРёСЃРѕРєРѕСЃРЅС‹Р№, С‚Рѕ 28 С„РµРІСЂР°Р»СЏ Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° 29</param>
+    /// <returns>Р”Р°С‚Р° РёР»Рё null</returns>
     private static DateTime GetDate(MonthDay md, int year, bool february29)
     {
       if (md.IsEmpty || year < DateRange.Whole.FirstDate.Year || year > DateRange.Whole.LastDate.Year)
@@ -1452,13 +1452,13 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает дату, соответвующую заданному году.
-    /// Если структура <paramref name="md"/> не инициализирована, или <paramref name="year"/> задает недопустиый год, возвращается DataTime.MinValue.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, СЃРѕРѕС‚РІРµС‚РІСѓСЋС‰СѓСЋ Р·Р°РґР°РЅРЅРѕРјСѓ РіРѕРґСѓ.
+    /// Р•СЃР»Рё СЃС‚СЂСѓРєС‚СѓСЂР° <paramref name="md"/> РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РёР»Рё <paramref name="year"/> Р·Р°РґР°РµС‚ РЅРµРґРѕРїСѓСЃС‚РёС‹Р№ РіРѕРґ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ DataTime.MinValue.
     /// </summary>
-    /// <param name="md">Месяц и день</param>
-    /// <param name="year">Год</param>
-    /// <param name="february29">Если true и год високосный, то 28 февраля заменяется на 29</param>
-    /// <returns>Дата или null</returns>
+    /// <param name="md">РњРµСЃСЏС† Рё РґРµРЅСЊ</param>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="february29">Р•СЃР»Рё true Рё РіРѕРґ РІРёСЃРѕРєРѕСЃРЅС‹Р№, С‚Рѕ 28 С„РµРІСЂР°Р»СЏ Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° 29</param>
+    /// <returns>Р”Р°С‚Р° РёР»Рё null</returns>
     public static DepValue<DateTime> GetDateEx(DepValue<MonthDay> md, DepValue<int> year, bool february29)
     {
       return new DepExpr3<DateTime, MonthDay, int, bool>(md, year, february29, GetDate);
@@ -1473,12 +1473,12 @@ namespace FreeLibSet.DependedValues
     #region ReplaceNull
 
     /// <summary>
-    /// Замена для Nullable-значения (оператор ?? в C#).
-    /// Не имеет смысла использовать в прикладном коде
+    /// Р—Р°РјРµРЅР° РґР»СЏ Nullable-Р·РЅР°С‡РµРЅРёСЏ (РѕРїРµСЂР°С‚РѕСЂ ?? РІ C#).
+    /// РќРµ РёРјРµРµС‚ СЃРјС‹СЃР»Р° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
     /// </summary>
-    /// <param name="value">Значение, которое может быть null</param>
-    /// <param name="nullValue">Замещающее значение для null</param>
-    /// <returns>Значение <paramref name="value"/>.Value или <paramref name="nullValue"/>.</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="nullValue">Р—Р°РјРµС‰Р°СЋС‰РµРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ null</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ <paramref name="value"/>.Value РёР»Рё <paramref name="nullValue"/>.</returns>
     private static T ReplaceNull<T>(T? value, T nullValue)
       where T : struct
     {
@@ -1486,11 +1486,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Замена для Nullable-значения (оператор ?? в C#).
+    /// Р—Р°РјРµРЅР° РґР»СЏ Nullable-Р·РЅР°С‡РµРЅРёСЏ (РѕРїРµСЂР°С‚РѕСЂ ?? РІ C#).
     /// </summary>
-    /// <param name="value">Значение, которое может быть null</param>
-    /// <param name="nullValue">Замещающее значение для null</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="nullValue">Р—Р°РјРµС‰Р°СЋС‰РµРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ null</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> ReplaceNullEx<T>(DepValue<T?> value, T nullValue)
       where T : struct
     {
@@ -1498,10 +1498,10 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Замена для Nullable-значения (оператор ?? в C#) на значение по умолчанию default(T).
+    /// Р—Р°РјРµРЅР° РґР»СЏ Nullable-Р·РЅР°С‡РµРЅРёСЏ (РѕРїРµСЂР°С‚РѕСЂ ?? РІ C#) РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ default(T).
     /// </summary>
-    /// <param name="value">Значение, которое может быть null</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> ReplaceNullEx<T>(DepValue<T?> value)
       where T : struct
     {
@@ -1513,10 +1513,10 @@ namespace FreeLibSet.DependedValues
     #region IsNotEmpty()
 
     /// <summary>
-    /// Возвращает true, если есть Nullable-значение (свойство HasValue)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РµСЃС‚СЊ Nullable-Р·РЅР°С‡РµРЅРёРµ (СЃРІРѕР№СЃС‚РІРѕ HasValue)
     /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Признак непустой строки</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РџСЂРёР·РЅР°Рє РЅРµРїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРё</returns>
     private static bool IsNotEmpty<T>(T? value)
       where T : struct
     {
@@ -1524,10 +1524,10 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если есть Nullable-значение (свойство HasValue)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РµСЃС‚СЊ Nullable-Р·РЅР°С‡РµРЅРёРµ (СЃРІРѕР№СЃС‚РІРѕ HasValue)
     /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> IsNotEmptyEx<T>(DepValue<T?> value)
       where T : struct
     {
@@ -1538,16 +1538,16 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
-    #region Перечисления
+    #region РџРµСЂРµС‡РёСЃР»РµРЅРёСЏ
 
     #region Enum <--> Int32
 
     /// <summary>
-    /// Преобразование перечисления в целочисленное значение
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Перечислимое значение</param>
-    /// <returns>Преобразованное значение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static int EnumToInt<T>(T value)
       where T : struct
     {
@@ -1555,11 +1555,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование перечисления в целочисленное значение
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Перечислимое значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> EnumToIntEx<T>(DepValue<T> value)
       where T : struct
     {
@@ -1567,11 +1567,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование целочисленного значения в перечислимое
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Целочисленное значение</param>
-    /// <returns>Преобразованное значение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">Р¦РµР»РѕС‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static T EnumFromInt<T>(int value)
       where T : struct
     {
@@ -1580,11 +1580,11 @@ namespace FreeLibSet.DependedValues
 
 
     /// <summary>
-    /// Преобразование целочисленного значения в перечислимое
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Целочисленное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">Р¦РµР»РѕС‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> EnumFromIntEx<T>(DepValue<int> value)
       where T : struct
     {
@@ -1596,12 +1596,12 @@ namespace FreeLibSet.DependedValues
     #region Enum <--> String
 
     /// <summary>
-    /// Преобразование перечисления в строковое значение.
-    /// Выполняет простой вызов <typeparamref name="T"/>.ToString().
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІ СЃС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїСЂРѕСЃС‚РѕР№ РІС‹Р·РѕРІ <typeparamref name="T"/>.ToString().
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Перечислимое значение</param>
-    /// <returns>Преобразованное значение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static string EnumToString<T>(T value)
       where T : struct
     {
@@ -1609,12 +1609,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование перечисления в строковое значение.
-    /// Выполняет простой вызов <typeparamref name="T"/>.ToString().
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІ СЃС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїСЂРѕСЃС‚РѕР№ РІС‹Р·РѕРІ <typeparamref name="T"/>.ToString().
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Перечислимое значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<string> EnumToStringEx<T>(DepValue<T> value)
       where T : struct
     {
@@ -1622,12 +1622,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование перечисления в строковое значение.
-    /// Вызывает StdConvert.TryParseEnum(). Для пустой строки или неправильной строки возвращает значение перечисления, соответствующее 0.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІ СЃС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р’С‹Р·С‹РІР°РµС‚ StdConvert.TryParseEnum(). Р”Р»СЏ РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРё РёР»Рё РЅРµРїСЂР°РІРёР»СЊРЅРѕР№ СЃС‚СЂРѕРєРё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ 0.
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Перечислимое значение</param>
-    /// <returns>Преобразованное значение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static T EnumFromString<T>(string value)
       where T : struct
     {
@@ -1639,12 +1639,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование перечисления в строковое значение.
-    /// Вызывает StdConvert.TryParseEnum(). Для пустой строки или неправильной строки возвращает значение перечисления, соответствующее 0.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІ СЃС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р’С‹Р·С‹РІР°РµС‚ StdConvert.TryParseEnum(). Р”Р»СЏ РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРё РёР»Рё РЅРµРїСЂР°РІРёР»СЊРЅРѕР№ СЃС‚СЂРѕРєРё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ 0.
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="value">Перечислимое значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="value">РџРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> EnumFromStringEx<T>(DepValue<string> value)
       where T : struct
     {
@@ -1655,16 +1655,16 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
-    #region Массивы
+    #region РњР°СЃСЃРёРІС‹
 
     #region Length()
 
     /// <summary>
-    /// Возвращает длину массива Array.Length.
-    /// Если ссылка на массив равна null, возвращает 0.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ РјР°СЃСЃРёРІР° Array.Length.
+    /// Р•СЃР»Рё СЃСЃС‹Р»РєР° РЅР° РјР°СЃСЃРёРІ СЂР°РІРЅР° null, РІРѕР·РІСЂР°С‰Р°РµС‚ 0.
     /// </summary>
-    /// <param name="array">Массив</param>
-    /// <returns>Длина массива</returns>
+    /// <param name="array">РњР°СЃСЃРёРІ</param>
+    /// <returns>Р”Р»РёРЅР° РјР°СЃСЃРёРІР°</returns>
     private static int Length<T>(T[] array)
     {
       if (Object.ReferenceEquals(array, null))
@@ -1674,11 +1674,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает длину массива Array.Length.
-    /// Если ссылка на массив равна null, возвращает 0.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ РјР°СЃСЃРёРІР° Array.Length.
+    /// Р•СЃР»Рё СЃСЃС‹Р»РєР° РЅР° РјР°СЃСЃРёРІ СЂР°РІРЅР° null, РІРѕР·РІСЂР°С‰Р°РµС‚ 0.
     /// </summary>
-    /// <param name="array">Массив</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="array">РњР°СЃСЃРёРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<int> LengthEx<T>(DepValue<T[]> array)
     {
       return new DepExpr1<int, T[]>(array, Length<T>);
@@ -1688,23 +1688,23 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
-    #region Математические функции
+    #region РњР°С‚РµРјР°С‚РёС‡РµСЃРєРёРµ С„СѓРЅРєС†РёРё
 
     #region Min()/Max()
 
     #region Min()
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static T Min<T>(params T[] values)
       where T : IComparable<T>
     {
       if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
+        throw new ArgumentException("РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РїСѓСЃС‚РѕР№");
 
       T res = values[0];
       for (int i = 1; i < values.Length; i++)
@@ -1716,11 +1716,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> MinEx<T>(params DepValue<T>[] values)
       where T : IComparable<T>
     {
@@ -1728,12 +1728,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р—РЅР°С‡РµРЅРёСЏ null РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р•СЃР»Рё СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РїСѓСЃС‚РѕР№ РёР»Рё РЅРµ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёР№, РѕС‚Р»РёС‡РЅС‹С… РѕС‚ null - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static T? Min<T>(params T?[] values)
       where T : struct, IComparable<T>
     {
@@ -1755,12 +1755,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает минимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р—РЅР°С‡РµРЅРёСЏ null РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р•СЃР»Рё СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РїСѓСЃС‚РѕР№ РёР»Рё РЅРµ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёР№, РѕС‚Р»РёС‡РЅС‹С… РѕС‚ null - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T?> MinEx<T>(params DepValue<T?>[] values)
       where T : struct, IComparable<T>
     {
@@ -1772,16 +1772,16 @@ namespace FreeLibSet.DependedValues
     #region Max()
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static T Max<T>(params T[] values)
       where T : IComparable<T>
     {
       if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
+        throw new ArgumentException("РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РїСѓСЃС‚РѕР№");
 
       T res = values[0];
       for (int i = 1; i < values.Length; i++)
@@ -1793,11 +1793,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Список аргументов не может быть пустым.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> MaxEx<T>(params DepValue<T>[] values)
       where T : IComparable<T>
     {
@@ -1805,12 +1805,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р—РЅР°С‡РµРЅРёСЏ null РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р•СЃР»Рё СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РїСѓСЃС‚РѕР№ РёР»Рё РЅРµ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёР№, РѕС‚Р»РёС‡РЅС‹С… РѕС‚ null - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисленное значение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     private static T? Max<T>(params T?[] values)
       where T : struct, IComparable<T>
     {
@@ -1832,12 +1832,12 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает максимальное значение.
-    /// Значения null пропускаются.
-    /// Если список аргументов пустой или не содержит значений, отличных от null - возвращается null.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р—РЅР°С‡РµРЅРёСЏ null РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р•СЃР»Рё СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РїСѓСЃС‚РѕР№ РёР»Рё РЅРµ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёР№, РѕС‚Р»РёС‡РЅС‹С… РѕС‚ null - РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="values">Список аргументов</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <param name="values">РЎРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T?> MaxEx<T>(params DepValue<T?>[] values)
       where T : struct, IComparable<T>
     {
@@ -1851,14 +1851,14 @@ namespace FreeLibSet.DependedValues
     #region InRange()
 
     /// <summary>
-    /// Возвращает true, если значение находится в указанном диапазоне.
-    /// Поддерживаются открытые и полуоткрытые интервалы.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅР°С…РѕРґРёС‚СЃСЏ РІ СѓРєР°Р·Р°РЅРЅРѕРј РґРёР°РїР°Р·РѕРЅРµ.
+    /// РџРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ РѕС‚РєСЂС‹С‚С‹Рµ Рё РїРѕР»СѓРѕС‚РєСЂС‹С‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹.
     /// </summary>
-    /// <typeparam name="T">Значимый тип (обычно, числовой) данных. Должен поддерживать интерфейс для сравнения значений</typeparam>
-    /// <param name="value">Проверяемое значение</param>
-    /// <param name="minimum">Минимальное значение или null, если ограничение не задано</param>
-    /// <param name="maximum">Максимальное значение или null, если ограничение не задано</param>
-    /// <returns>true, если значение находится внутри диапазона</returns>
+    /// <typeparam name="T">Р—РЅР°С‡РёРјС‹Р№ С‚РёРї (РѕР±С‹С‡РЅРѕ, С‡РёСЃР»РѕРІРѕР№) РґР°РЅРЅС‹С…. Р”РѕР»Р¶РµРЅ РїРѕРґРґРµСЂР¶РёРІР°С‚СЊ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№</typeparam>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="minimum">РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null, РµСЃР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ Р·Р°РґР°РЅРѕ</param>
+    /// <param name="maximum">РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null, РµСЃР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ Р·Р°РґР°РЅРѕ</param>
+    /// <returns>true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅР°С…РѕРґРёС‚СЃСЏ РІРЅСѓС‚СЂРё РґРёР°РїР°Р·РѕРЅР°</returns>
     private static bool InRange<T>(T value, T? minimum, T? maximum)
       where T : struct, IComparable<T>
     {
@@ -1876,14 +1876,14 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если значение находится в указанном диапазоне.
-    /// Поддерживаются открытые и полуоткрытые интервалы.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅР°С…РѕРґРёС‚СЃСЏ РІ СѓРєР°Р·Р°РЅРЅРѕРј РґРёР°РїР°Р·РѕРЅРµ.
+    /// РџРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ РѕС‚РєСЂС‹С‚С‹Рµ Рё РїРѕР»СѓРѕС‚РєСЂС‹С‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹.
     /// </summary>
-    /// <typeparam name="T">Значимый тип (обычно, числовой) данных. Должен поддерживать интерфейс для сравнения значений</typeparam>
-    /// <param name="value">Проверяемое значение</param>
-    /// <param name="minimum">Минимальное значение или null, если ограничение не задано</param>
-    /// <param name="maximum">Максимальное значение или null, если ограничение не задано</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">Р—РЅР°С‡РёРјС‹Р№ С‚РёРї (РѕР±С‹С‡РЅРѕ, С‡РёСЃР»РѕРІРѕР№) РґР°РЅРЅС‹С…. Р”РѕР»Р¶РµРЅ РїРѕРґРґРµСЂР¶РёРІР°С‚СЊ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№</typeparam>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="minimum">РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null, РµСЃР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ Р·Р°РґР°РЅРѕ</param>
+    /// <param name="maximum">РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null, РµСЃР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ Р·Р°РґР°РЅРѕ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> InRangeEx<T>(DepValue<T> value, T? minimum, T? maximum)
       where T : struct, IComparable<T>
     {
@@ -1891,14 +1891,14 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Возвращает true, если значение находится в указанном диапазоне.
-    /// Поддерживаются открытые и полуоткрытые интервалы.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅР°С…РѕРґРёС‚СЃСЏ РІ СѓРєР°Р·Р°РЅРЅРѕРј РґРёР°РїР°Р·РѕРЅРµ.
+    /// РџРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ РѕС‚РєСЂС‹С‚С‹Рµ Рё РїРѕР»СѓРѕС‚РєСЂС‹С‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹.
     /// </summary>
-    /// <typeparam name="T">Значимый тип (обычно, числовой) данных. Должен поддерживать интерфейс для сравнения значений</typeparam>
-    /// <param name="value">Проверяемое значение</param>
-    /// <param name="minimum">Минимальное значение или null, если ограничение не задано</param>
-    /// <param name="maximum">Максимальное значение или null, если ограничение не задано</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">Р—РЅР°С‡РёРјС‹Р№ С‚РёРї (РѕР±С‹С‡РЅРѕ, С‡РёСЃР»РѕРІРѕР№) РґР°РЅРЅС‹С…. Р”РѕР»Р¶РµРЅ РїРѕРґРґРµСЂР¶РёРІР°С‚СЊ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№</typeparam>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="minimum">РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null, РµСЃР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ Р·Р°РґР°РЅРѕ</param>
+    /// <param name="maximum">РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null, РµСЃР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ Р·Р°РґР°РЅРѕ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<bool> InRangeEx<T>(DepValue<T> value, DepValue<T?> minimum, DepValue<T?> maximum)
       where T : struct, IComparable<T>
     {
@@ -1909,7 +1909,7 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
-    #region Преобразование типов
+    #region РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ С‚РёРїРѕРІ
 
 #if OLD_TOTYPE
 
@@ -1922,13 +1922,13 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование Object к заданному типу.
-    /// Для преобразования используется метод Convert.ChangeType().
-    /// Если исходное значение равно null, то возвращается default(T).
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Object Рє Р·Р°РґР°РЅРЅРѕРјСѓ С‚РёРїСѓ.
+    /// Р”Р»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјРµС‚РѕРґ Convert.ChangeType().
+    /// Р•СЃР»Рё РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ null, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ default(T).
     /// </summary>
-    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
-    /// <param name="value">Исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РґР°РЅРЅС‹С…, Рє РєРѕС‚РѕСЂРѕРјСѓ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ</typeparam>
+    /// <param name="value">РСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> ToTypeEx<T>(IDepValue value)
     {
       return new DepExprOA<T>(new IDepValue[1] { value }, ToType<T>);
@@ -1947,13 +1947,13 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование Object к заданному Nullable-типу.
-    /// Если исходное значение равно null, то возвращается null.
-    /// Иначе для преобразования используется метод Convert.ChangeType().
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Object Рє Р·Р°РґР°РЅРЅРѕРјСѓ Nullable-С‚РёРїСѓ.
+    /// Р•СЃР»Рё РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ null, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
+    /// РРЅР°С‡Рµ РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјРµС‚РѕРґ Convert.ChangeType().
     /// </summary>
-    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
-    /// <param name="value">Исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РґР°РЅРЅС‹С…, Рє РєРѕС‚РѕСЂРѕРјСѓ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ</typeparam>
+    /// <param name="value">РСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T?> ToNTypeEx<T>(IDepValue value)
       where T : struct
     {
@@ -1963,11 +1963,11 @@ namespace FreeLibSet.DependedValues
 #else
 
     /// <summary>
-    /// Если тип T является Nullable-структурой, возвращает значимый тип, для которого объявлена структура.
-    /// Иначе возвращает null
+    /// Р•СЃР»Рё С‚РёРї T СЏРІР»СЏРµС‚СЃСЏ Nullable-СЃС‚СЂСѓРєС‚СѓСЂРѕР№, РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РёРјС‹Р№ С‚РёРї, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РѕР±СЉСЏРІР»РµРЅР° СЃС‚СЂСѓРєС‚СѓСЂР°.
+    /// РРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
-    /// <param name="t">Проверяемый тип данных</param>
-    /// <returns>Базовый значимый тип или null</returns>
+    /// <param name="t">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ С‚РёРї РґР°РЅРЅС‹С…</param>
+    /// <returns>Р‘Р°Р·РѕРІС‹Р№ Р·РЅР°С‡РёРјС‹Р№ С‚РёРї РёР»Рё null</returns>
     private static Type GetNullableBaseType(Type t)
     {
       if (!t.IsGenericType)
@@ -1979,36 +1979,36 @@ namespace FreeLibSet.DependedValues
       Type[] a = t.GetGenericArguments();
 #if DEBUG
       if (a.Length != 1)
-        throw new BugException("GetGenericArguments() для типа " + t.ToString());
+        throw new BugException("GetGenericArguments() РґР»СЏ С‚РёРїР° " + t.ToString());
 #endif
       return a[0];
     }
 
-    #region Перечисление FormatProviderKind
+    #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ FormatProviderKind
 
     /// <summary>
-    /// Используемый вариант форматировщика
+    /// РСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РІР°СЂРёР°РЅС‚ С„РѕСЂРјР°С‚РёСЂРѕРІС‰РёРєР°
     /// </summary>
     private enum FormatProviderKind
     {
       /// <summary>
-      /// Нет форматировщика.
-      /// Этот вариант используется, если не используется преобразование в/из строки.
-      /// Например, преобразование из Int32 в Double не треует форматировщика.
-      /// Также этот вариант используется для форматирования с использованием текущей культуры.
-      /// При передаче объектов DepToType по сети культура может не совпадать. 
-      /// Также она, в теории, может динамически меняться в результате работы панели управления.
+      /// РќРµС‚ С„РѕСЂРјР°С‚РёСЂРѕРІС‰РёРєР°.
+      /// Р­С‚РѕС‚ РІР°СЂРёР°РЅС‚ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РµСЃР»Рё РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ/РёР· СЃС‚СЂРѕРєРё.
+      /// РќР°РїСЂРёРјРµСЂ, РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РёР· Int32 РІ Double РЅРµ С‚СЂРµСѓРµС‚ С„РѕСЂРјР°С‚РёСЂРѕРІС‰РёРєР°.
+      /// РўР°РєР¶Рµ СЌС‚РѕС‚ РІР°СЂРёР°РЅС‚ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј С‚РµРєСѓС‰РµР№ РєСѓР»СЊС‚СѓСЂС‹.
+      /// РџСЂРё РїРµСЂРµРґР°С‡Рµ РѕР±СЉРµРєС‚РѕРІ DepToType РїРѕ СЃРµС‚Рё РєСѓР»СЊС‚СѓСЂР° РјРѕР¶РµС‚ РЅРµ СЃРѕРІРїР°РґР°С‚СЊ. 
+      /// РўР°РєР¶Рµ РѕРЅР°, РІ С‚РµРѕСЂРёРё, РјРѕР¶РµС‚ РґРёРЅР°РјРёС‡РµСЃРєРё РјРµРЅСЏС‚СЊСЃСЏ РІ СЂРµР·СѓР»СЊС‚Р°С‚Рµ СЂР°Р±РѕС‚С‹ РїР°РЅРµР»Рё СѓРїСЂР°РІР»РµРЅРёСЏ.
       /// </summary>
       Null,
 
       /// <summary>
-      /// Задана фиксированная культура (по имени). В частности, может быть задана инвариантная культура "".
+      /// Р—Р°РґР°РЅР° С„РёРєСЃРёСЂРѕРІР°РЅРЅР°СЏ РєСѓР»СЊС‚СѓСЂР° (РїРѕ РёРјРµРЅРё). Р’ С‡Р°СЃС‚РЅРѕСЃС‚Рё, РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РґР°РЅР° РёРЅРІР°СЂРёР°РЅС‚РЅР°СЏ РєСѓР»СЊС‚СѓСЂР° "".
       /// </summary>
       CultureInfo,
 
       /// <summary>
-      /// Задан пользовательский объект, реализующий IFormatProvider.
-      /// Если выполняется передача по сети, необходимо, чтобы этот объект был сериализуемым.
+      /// Р—Р°РґР°РЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ IFormatProvider.
+      /// Р•СЃР»Рё РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРµСЂРµРґР°С‡Р° РїРѕ СЃРµС‚Рё, РЅРµРѕР±С…РѕРґРёРјРѕ, С‡С‚РѕР±С‹ СЌС‚РѕС‚ РѕР±СЉРµРєС‚ Р±С‹Р» СЃРµСЂРёР°Р»РёР·СѓРµРјС‹Рј.
       /// </summary>
       UserDefined
     }
@@ -2018,7 +2018,7 @@ namespace FreeLibSet.DependedValues
     [Serializable]
     private class DepToType<T> : DepExprOA<T>
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public DepToType(IDepValue arg, string cultureName, IFormatProvider userFormatProvider)
         : base(new IDepValue[1] { arg }, null)
@@ -2037,7 +2037,7 @@ namespace FreeLibSet.DependedValues
       {
         get
         {
-          if (_CultureName != null) // пустая строка и null - не одно и то же
+          if (_CultureName != null) // РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР° Рё null - РЅРµ РѕРґРЅРѕ Рё С‚Рѕ Р¶Рµ
           {
             System.Globalization.CultureInfo ci = System.Globalization.CultureInfo.GetCultureInfo(_CultureName);
             return ci;
@@ -2047,7 +2047,7 @@ namespace FreeLibSet.DependedValues
       }
 
       /// <summary>
-      /// Какой тип IFormatProvider используется?
+      /// РљР°РєРѕР№ С‚РёРї IFormatProvider РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ?
       /// </summary>
       public FormatProviderKind FormatProviderKind
       {
@@ -2068,15 +2068,15 @@ namespace FreeLibSet.DependedValues
       }
 
       /// <summary>
-      /// Имя культуры для получения форматирования, например, "ru-RU".
-      /// Null - не задано. "" - инвариантная культура
+      /// РРјСЏ РєСѓР»СЊС‚СѓСЂС‹ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "ru-RU".
+      /// Null - РЅРµ Р·Р°РґР°РЅРѕ. "" - РёРЅРІР°СЂРёР°РЅС‚РЅР°СЏ РєСѓР»СЊС‚СѓСЂР°
       /// </summary>
       public string CultureName { get { return _CultureName; } }
       private string _CultureName;
 
       /// <summary>
-      /// Пользовательский объект.
-      /// Вряд ли будет часто использоваться
+      /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЉРµРєС‚.
+      /// Р’СЂСЏРґ Р»Рё Р±СѓРґРµС‚ С‡Р°СЃС‚Рѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ
       /// </summary>
       public IFormatProvider UserFormatProvider { get { return _UserFormatProvider; } }
       private IFormatProvider _UserFormatProvider;
@@ -2094,7 +2094,7 @@ namespace FreeLibSet.DependedValues
           case DepTools.FormatProviderKind.CultureInfo:
             return String.Equals(cultureName, this.CultureName, StringComparison.Ordinal);
           case DepTools.FormatProviderKind.UserDefined:
-            return userFormatProvider.Equals(this.UserFormatProvider); // там может быть пользовательская логика сравнения
+            return userFormatProvider.Equals(this.UserFormatProvider); // С‚Р°Рј РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєР°СЏ Р»РѕРіРёРєР° СЃСЂР°РІРЅРµРЅРёСЏ
           default:
             throw new BugException();
         }
@@ -2102,7 +2102,7 @@ namespace FreeLibSet.DependedValues
 
       #endregion
 
-      #region Расчет
+      #region Р Р°СЃС‡РµС‚
 
       protected override T Calculate()
       {
@@ -2127,61 +2127,61 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Преобразование Object к заданному типу.
-    /// Для преобразования используется метод Convert.ChangeType().
-    /// Если исходное значение равно null, то возвращается default(T).
-    /// Работает с любыми типами, включая nullable.
-    /// Если исходное вычисляемое значение уже имеет подходящий тип, оно возвращается без изменений.
-    /// Если для него уже был создан преобразователь, он возвращается существующий экземпляр.
-    /// В противном случае создается новый объект преобразователя.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Object Рє Р·Р°РґР°РЅРЅРѕРјСѓ С‚РёРїСѓ.
+    /// Р”Р»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјРµС‚РѕРґ Convert.ChangeType().
+    /// Р•СЃР»Рё РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ null, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ default(T).
+    /// Р Р°Р±РѕС‚Р°РµС‚ СЃ Р»СЋР±С‹РјРё С‚РёРїР°РјРё, РІРєР»СЋС‡Р°СЏ nullable.
+    /// Р•СЃР»Рё РёСЃС…РѕРґРЅРѕРµ РІС‹С‡РёСЃР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ СѓР¶Рµ РёРјРµРµС‚ РїРѕРґС…РѕРґСЏС‰РёР№ С‚РёРї, РѕРЅРѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р±РµР· РёР·РјРµРЅРµРЅРёР№.
+    /// Р•СЃР»Рё РґР»СЏ РЅРµРіРѕ СѓР¶Рµ Р±С‹Р» СЃРѕР·РґР°РЅ РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚РµР»СЊ, РѕРЅ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ СЌРєР·РµРјРїР»СЏСЂ.
+    /// Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚РµР»СЏ.
     /// 
-    /// Эта перегрузка не использует IFormatProvider при вызове метода ChangeType(). Ее следует использовать в двух
-    /// случаях:
-    /// 1. Преобразование не использует строки. Например, для преобразования Int32 в Double не требуется форматизатор.
-    /// 2. Преобразование должно выполняться с учетом текущей культуры. При передаче объектов по сети культуры могут отличаться.
-    /// Также возможно динамическоен изменение текущей культуры в процессе работы. 
-    /// Использование этой перегрузки не идентично вызову перегрузки с аргументом cultureInfo=CultureInfo.CurrentCulture,
-    /// так как не происходит фиксации действующего значения CultureInfo.CurrentCulture.
+    /// Р­С‚Р° РїРµСЂРµРіСЂСѓР·РєР° РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚ IFormatProvider РїСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° ChangeType(). Р•Рµ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РґРІСѓС…
+    /// СЃР»СѓС‡Р°СЏС…:
+    /// 1. РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚ СЃС‚СЂРѕРєРё. РќР°РїСЂРёРјРµСЂ, РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ Int32 РІ Double РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ.
+    /// 2. РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РґРѕР»Р¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ СЃ СѓС‡РµС‚РѕРј С‚РµРєСѓС‰РµР№ РєСѓР»СЊС‚СѓСЂС‹. РџСЂРё РїРµСЂРµРґР°С‡Рµ РѕР±СЉРµРєС‚РѕРІ РїРѕ СЃРµС‚Рё РєСѓР»СЊС‚СѓСЂС‹ РјРѕРіСѓС‚ РѕС‚Р»РёС‡Р°С‚СЊСЃСЏ.
+    /// РўР°РєР¶Рµ РІРѕР·РјРѕР¶РЅРѕ РґРёРЅР°РјРёС‡РµСЃРєРѕРµРЅ РёР·РјРµРЅРµРЅРёРµ С‚РµРєСѓС‰РµР№ РєСѓР»СЊС‚СѓСЂС‹ РІ РїСЂРѕС†РµСЃСЃРµ СЂР°Р±РѕС‚С‹. 
+    /// РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЌС‚РѕР№ РїРµСЂРµРіСЂСѓР·РєРё РЅРµ РёРґРµРЅС‚РёС‡РЅРѕ РІС‹Р·РѕРІСѓ РїРµСЂРµРіСЂСѓР·РєРё СЃ Р°СЂРіСѓРјРµРЅС‚РѕРј cultureInfo=CultureInfo.CurrentCulture,
+    /// С‚Р°Рє РєР°Рє РЅРµ РїСЂРѕРёСЃС…РѕРґРёС‚ С„РёРєСЃР°С†РёРё РґРµР№СЃС‚РІСѓСЋС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ CultureInfo.CurrentCulture.
     /// </summary>
-    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
-    /// <param name="value">Исходное значение</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РґР°РЅРЅС‹С…, Рє РєРѕС‚РѕСЂРѕРјСѓ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ</typeparam>
+    /// <param name="value">РСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> ToTypeEx<T>(IDepValue value)
     {
       return ToTypeEx<T>(value, null, null);
     }
 
     /// <summary>
-    /// Преобразование Object к заданному типу.
-    /// Для преобразования используется метод Convert.ChangeType().
-    /// Если исходное значение равно null, то возвращается default(T).
-    /// Работает с любыми типами, включая nullable.
-    /// Если исходное вычисляемое значение уже имеет подходящий тип, оно возвращается без изменений.
-    /// Если для него уже был создан преобразователь, он возвращается существующий экземпляр.
-    /// В противном случае создается новый объект преобразователя.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Object Рє Р·Р°РґР°РЅРЅРѕРјСѓ С‚РёРїСѓ.
+    /// Р”Р»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјРµС‚РѕРґ Convert.ChangeType().
+    /// Р•СЃР»Рё РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ null, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ default(T).
+    /// Р Р°Р±РѕС‚Р°РµС‚ СЃ Р»СЋР±С‹РјРё С‚РёРїР°РјРё, РІРєР»СЋС‡Р°СЏ nullable.
+    /// Р•СЃР»Рё РёСЃС…РѕРґРЅРѕРµ РІС‹С‡РёСЃР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ СѓР¶Рµ РёРјРµРµС‚ РїРѕРґС…РѕРґСЏС‰РёР№ С‚РёРї, РѕРЅРѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р±РµР· РёР·РјРµРЅРµРЅРёР№.
+    /// Р•СЃР»Рё РґР»СЏ РЅРµРіРѕ СѓР¶Рµ Р±С‹Р» СЃРѕР·РґР°РЅ РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚РµР»СЊ, РѕРЅ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ СЌРєР·РµРјРїР»СЏСЂ.
+    /// Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚РµР»СЏ.
     /// 
-    /// Эта перегрузка, использует IFormatProvider при вызове метода ChangeType(). 
-    /// Ее следует использовать для преобразования в/из строк. В частности, можно указывать инвариантную культуру.
-    /// Если задана текущая культура CultureInfo.CurrentCulture, то она фиксируется. При передаче объекта по сети
-    /// будет использоваться та культура, которая действовала на машине, где вызван метод ToTypeEx(), а культура
-    /// на машине, выполняющей преобразование. Это поведение отличается от поведения перегрузки без аргумента <paramref name="formatProvider"/>.
+    /// Р­С‚Р° РїРµСЂРµРіСЂСѓР·РєР°, РёСЃРїРѕР»СЊР·СѓРµС‚ IFormatProvider РїСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° ChangeType(). 
+    /// Р•Рµ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІ/РёР· СЃС‚СЂРѕРє. Р’ С‡Р°СЃС‚РЅРѕСЃС‚Рё, РјРѕР¶РЅРѕ СѓРєР°Р·С‹РІР°С‚СЊ РёРЅРІР°СЂРёР°РЅС‚РЅСѓСЋ РєСѓР»СЊС‚СѓСЂСѓ.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° С‚РµРєСѓС‰Р°СЏ РєСѓР»СЊС‚СѓСЂР° CultureInfo.CurrentCulture, С‚Рѕ РѕРЅР° С„РёРєСЃРёСЂСѓРµС‚СЃСЏ. РџСЂРё РїРµСЂРµРґР°С‡Рµ РѕР±СЉРµРєС‚Р° РїРѕ СЃРµС‚Рё
+    /// Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ С‚Р° РєСѓР»СЊС‚СѓСЂР°, РєРѕС‚РѕСЂР°СЏ РґРµР№СЃС‚РІРѕРІР°Р»Р° РЅР° РјР°С€РёРЅРµ, РіРґРµ РІС‹Р·РІР°РЅ РјРµС‚РѕРґ ToTypeEx(), Р° РєСѓР»СЊС‚СѓСЂР°
+    /// РЅР° РјР°С€РёРЅРµ, РІС‹РїРѕР»РЅСЏСЋС‰РµР№ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ. Р­С‚Рѕ РїРѕРІРµРґРµРЅРёРµ РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ РїРѕРІРµРґРµРЅРёСЏ РїРµСЂРµРіСЂСѓР·РєРё Р±РµР· Р°СЂРіСѓРјРµРЅС‚Р° <paramref name="formatProvider"/>.
     /// 
-    /// Также перегрузка позволяет передавать произвольный пользовательский объект, реализующий интерфейс IFormatProvider.
-    /// Если используется передача объекта, то объект должен быть сериализуемым.
+    /// РўР°РєР¶Рµ РїРµСЂРµРіСЂСѓР·РєР° РїРѕР·РІРѕР»СЏРµС‚ РїРµСЂРµРґР°РІР°С‚СЊ РїСЂРѕРёР·РІРѕР»СЊРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЉРµРєС‚, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ IFormatProvider.
+    /// Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїРµСЂРµРґР°С‡Р° РѕР±СЉРµРєС‚Р°, С‚Рѕ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃРµСЂРёР°Р»РёР·СѓРµРјС‹Рј.
     ///
-    /// При работе в сети не передавайте объекты NumberFormatInfo и DateTimeFormatInfo без крайней необходимости.
-    /// В отличие от CultureInfo, для них не предусмотрено оптимизированной сериализации.
+    /// РџСЂРё СЂР°Р±РѕС‚Рµ РІ СЃРµС‚Рё РЅРµ РїРµСЂРµРґР°РІР°Р№С‚Рµ РѕР±СЉРµРєС‚С‹ NumberFormatInfo Рё DateTimeFormatInfo Р±РµР· РєСЂР°Р№РЅРµР№ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ CultureInfo, РґР»СЏ РЅРёС… РЅРµ РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅРѕ РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅРѕР№ СЃРµСЂРёР°Р»РёР·Р°С†РёРё.
     /// </summary>
-    /// <typeparam name="T">Тип данных, к которому требуется преобразование</typeparam>
-    /// <param name="value">Исходное значение</param>
-    /// <param name="formatProvider">Используемая культура CultureInfo при преобразовании строк или пользовательский объект
-    /// Не может быть null.</param>
-    /// <returns>Вычисляемое выражение</returns>
+    /// <typeparam name="T">РўРёРї РґР°РЅРЅС‹С…, Рє РєРѕС‚РѕСЂРѕРјСѓ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ</typeparam>
+    /// <param name="value">РСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="formatProvider">РСЃРїРѕР»СЊР·СѓРµРјР°СЏ РєСѓР»СЊС‚СѓСЂР° CultureInfo РїСЂРё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРё СЃС‚СЂРѕРє РёР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЉРµРєС‚
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null.</param>
+    /// <returns>Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</returns>
     public static DepValue<T> ToTypeEx<T>(IDepValue value, IFormatProvider formatProvider)
     {
-      // Можно было бы разрешить использовать null, но тогда непонятно, что это точно означает:
-      // 1. Не передавать FormatProvider совсем (плавающая CurrentCulture)
-      // 2. Зафиксировать CurrentCulture и всегда использовать ее
+      // РњРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹ СЂР°Р·СЂРµС€РёС‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ null, РЅРѕ С‚РѕРіРґР° РЅРµРїРѕРЅСЏС‚РЅРѕ, С‡С‚Рѕ СЌС‚Рѕ С‚РѕС‡РЅРѕ РѕР·РЅР°С‡Р°РµС‚:
+      // 1. РќРµ РїРµСЂРµРґР°РІР°С‚СЊ FormatProvider СЃРѕРІСЃРµРј (РїР»Р°РІР°СЋС‰Р°СЏ CurrentCulture)
+      // 2. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ CurrentCulture Рё РІСЃРµРіРґР° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РµРµ
 
       if (formatProvider == null)
         throw new ArgumentNullException("formatProvider");
@@ -2207,7 +2207,7 @@ namespace FreeLibSet.DependedValues
       if (v2 != null)
         return v2;
 
-      if (!value.IsConst) // иначе будет исключение
+      if (!value.IsConst) // РёРЅР°С‡Рµ Р±СѓРґРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ
       {
         IDepExpr[] a = value.GetChildExpressions(false);
         for (int i = 0; i < a.Length; i++)
@@ -2221,7 +2221,7 @@ namespace FreeLibSet.DependedValues
         }
       }
 
-      // Создаем новый преобразователь
+      // РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚РµР»СЊ
       return new DepToType<T>(value, cultureName, userFormatProvider);
     }
 
@@ -2229,14 +2229,14 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
-    #region Методы Create()
+    #region РњРµС‚РѕРґС‹ Create()
 
     /// <summary>
-    /// Создает экземпляр шаблонного класса DepOutput, используя механизм рефлексии.
-    /// Начальным значением IDepOutput.Value будет значение по умолчанию для типа <paramref name="valueType"/>.
+    /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ С€Р°Р±Р»РѕРЅРЅРѕРіРѕ РєР»Р°СЃСЃР° DepOutput, РёСЃРїРѕР»СЊР·СѓСЏ РјРµС…Р°РЅРёР·Рј СЂРµС„Р»РµРєСЃРёРё.
+    /// РќР°С‡Р°Р»СЊРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј IDepOutput.Value Р±СѓРґРµС‚ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ С‚РёРїР° <paramref name="valueType"/>.
     /// </summary>
-    /// <param name="valueType">Тип данных, который будет храниться в новом объекте. Должен быть задан.</param>
-    /// <returns>Новый объект DepOutput</returns>
+    /// <param name="valueType">РўРёРї РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ С…СЂР°РЅРёС‚СЊСЃСЏ РІ РЅРѕРІРѕРј РѕР±СЉРµРєС‚Рµ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ.</param>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DepOutput</returns>
     public static IDepOutput CreateOutput(Type valueType)
     {
       if (valueType == null)
@@ -2248,11 +2248,11 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Создает экземпляр шаблонного класса DepInput, используя механизм рефлексии.
-    /// Начальным значением IDepInput.Value будет значение по умолчанию для типа <paramref name="valueType"/>.
+    /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ С€Р°Р±Р»РѕРЅРЅРѕРіРѕ РєР»Р°СЃСЃР° DepInput, РёСЃРїРѕР»СЊР·СѓСЏ РјРµС…Р°РЅРёР·Рј СЂРµС„Р»РµРєСЃРёРё.
+    /// РќР°С‡Р°Р»СЊРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј IDepInput.Value Р±СѓРґРµС‚ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ С‚РёРїР° <paramref name="valueType"/>.
     /// </summary>
-    /// <param name="valueType">Тип данных, который будет храниться в новом объекте. Должен быть задан.</param>
-    /// <returns>Новый объект DepInput</returns>
+    /// <param name="valueType">РўРёРї РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ С…СЂР°РЅРёС‚СЊСЃСЏ РІ РЅРѕРІРѕРј РѕР±СЉРµРєС‚Рµ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ.</param>
+    /// <returns>РќРѕРІС‹Р№ РѕР±СЉРµРєС‚ DepInput</returns>
     public static IDepInput CreateInput(Type valueType)
     {
       if (valueType == null)
@@ -2264,7 +2264,7 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Пустой массив объектов IDepInput.
+    /// РџСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ РѕР±СЉРµРєС‚РѕРІ IDepInput.
     /// </summary>
     internal static readonly IDepInput[] EmptyInputs = new IDepInput[0];
 

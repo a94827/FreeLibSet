@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,10 +10,10 @@ using System.Diagnostics;
 
 namespace FreeLibSet.Win32
 {
-  #region Перечисление WTSConnectState
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ WTSConnectState
 
   /// <summary>
-  /// Возможные значения свойства WTSSession.ConnectState
+  /// Р’РѕР·РјРѕР¶РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° WTSSession.ConnectState
   /// </summary>
   public enum WTSConnectState
   {
@@ -73,10 +73,10 @@ namespace FreeLibSet.Win32
 
   #endregion
 
-  #region Перечисление WTSColorDepth
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ WTSColorDepth
 
   /// <summary>
-  /// Значения свойства WTSSession.ClientDisplayColorDepth
+  /// Р—РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° WTSSession.ClientDisplayColorDepth
   /// </summary>
   public enum WTSColorDepth
   {
@@ -118,10 +118,10 @@ namespace FreeLibSet.Win32
 
   #endregion
 
-  #region Перечисление WTSClientProtocolType
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ WTSClientProtocolType
 
   /// <summary>
-  /// Значения свойства WTSSession.ClientProtocolType
+  /// Р—РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° WTSSession.ClientProtocolType
   /// </summary>
   public enum WTSClientProtocolType
   {
@@ -144,30 +144,30 @@ namespace FreeLibSet.Win32
   #endregion
 
   /// <summary>
-  /// Информация о сессии Remote Desktop Services.
-  /// Пока поддерживается только текущий сервер WTS_CURRENT_SERVER_HANDLE
+  /// РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРµСЃСЃРёРё Remote Desktop Services.
+  /// РџРѕРєР° РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ С‚РµРєСѓС‰РёР№ СЃРµСЂРІРµСЂ WTS_CURRENT_SERVER_HANDLE
   /// </summary>
   public sealed class WTSSession
   {
-    #region Поддержка ОС
+    #region РџРѕРґРґРµСЂР¶РєР° РћРЎ
 
     static WTSSession()
     {
       _IsSupported = false;
       if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         return;
-      if (Environment.OSVersion.Version.Major < 5) // до Windows 2000
+      if (Environment.OSVersion.Version.Major < 5) // РґРѕ Windows 2000
         return;
       if (Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor == 0) // Windows 2000
         return; // 26.10.2018
       if (Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor == 1) // Windows XP
-        return; // 28.05.2021 Не работает в XP тоже. Надоела выдавать исключения
+        return; // 28.05.2021 РќРµ СЂР°Р±РѕС‚Р°РµС‚ РІ XP С‚РѕР¶Рµ. РќР°РґРѕРµР»Р° РІС‹РґР°РІР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёСЏ
 
       _IsSupported = true;
     }
 
     /// <summary>
-    /// Возвращает true, если Remote Desktop Services поддерживаются операционной системой
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Remote Desktop Services РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјРѕР№
     /// </summary>
     public static bool IsSupported { get { return _IsSupported; } }
     private static bool _IsSupported;
@@ -180,10 +180,10 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает объект для WTS_CURRENT_SERVER_HANDLE и WTS_CURRENT_SESSION
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґР»СЏ WTS_CURRENT_SERVER_HANDLE Рё WTS_CURRENT_SESSION
     /// </summary>
     public WTSSession()
       : this(NativeMethods.WTS_CURRENT_SESSION)
@@ -191,9 +191,9 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Создает объект для WTS_CURRENT_SERVER_HANDLE и заданного идентификатора сессии
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґР»СЏ WTS_CURRENT_SERVER_HANDLE Рё Р·Р°РґР°РЅРЅРѕРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° СЃРµСЃСЃРёРё
     /// </summary>
-    /// <param name="sessionId">Идентификатор сессии</param>
+    /// <param name="sessionId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
     public WTSSession(int sessionId)
     {
       CheckIsSupported();
@@ -202,7 +202,7 @@ namespace FreeLibSet.Win32
       {
         _SessionId = NativeMethods.WTSGetActiveConsoleSessionId();
         if (_SessionId == (-1))
-          throw new InvalidOperationException("Нет текущей сессии");
+          throw new InvalidOperationException("РќРµС‚ С‚РµРєСѓС‰РµР№ СЃРµСЃСЃРёРё");
       }
       else
         _SessionId = sessionId;
@@ -212,29 +212,29 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
     /// A handle to an RD Session Host server. 
-    /// В текущей реализации всегда WTS_CURRENT_SERVER_HANDLE.
+    /// Р’ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё РІСЃРµРіРґР° WTS_CURRENT_SERVER_HANDLE.
     /// </summary>
     public IntPtr ServerHandle { get { return _ServerHandle; } }
     private IntPtr _ServerHandle;
 
     /// <summary>
-    /// Идентификатор сессии.
-    /// Если конструктору не был передан идентификатор сессии, возвращает идентификатор активной сессии
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё.
+    /// Р•СЃР»Рё РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂСѓ РЅРµ Р±С‹Р» РїРµСЂРµРґР°РЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё, РІРѕР·РІСЂР°С‰Р°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р°РєС‚РёРІРЅРѕР№ СЃРµСЃСЃРёРё
     /// </summary>
     public int SessionId { get { return _SessionId; } }
     private int _SessionId;
 
     #endregion
 
-    #region Свойства, получаемые из WTSQuerySessionInformation
+    #region РЎРІРѕР№СЃС‚РІР°, РїРѕР»СѓС‡Р°РµРјС‹Рµ РёР· WTSQuerySessionInformation
 
     /// <summary>
-    /// Используем буферизацию. Если одно и тоже свойство запрашивается несколько раз,
-    /// не вызывает функции ОС.
+    /// РСЃРїРѕР»СЊР·СѓРµРј Р±СѓС„РµСЂРёР·Р°С†РёСЋ. Р•СЃР»Рё РѕРґРЅРѕ Рё С‚РѕР¶Рµ СЃРІРѕР№СЃС‚РІРѕ Р·Р°РїСЂР°С€РёРІР°РµС‚СЃСЏ РЅРµСЃРєРѕР»СЊРєРѕ СЂР°Р·,
+    /// РЅРµ РІС‹Р·С‹РІР°РµС‚ С„СѓРЅРєС†РёРё РћРЎ.
     /// </summary>
     private object[] _InfoValues;
 
@@ -261,9 +261,9 @@ namespace FreeLibSet.Win32
     /// </summary>
     public string WorkingDirectory { get { return (string)GetInfoValue(NativeMethods.WtsInfoClass.WTSWorkingDirectory); } }
 
-    // WTSOEMId пропускаем
+    // WTSOEMId РїСЂРѕРїСѓСЃРєР°РµРј
 
-    // WTSSessionId пропускаем, т.к. инициализируется в конструкторе
+    // WTSSessionId РїСЂРѕРїСѓСЃРєР°РµРј, С‚.Рє. РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
 
     /// <summary>
     /// Name of the user associated with the session.
@@ -319,22 +319,22 @@ namespace FreeLibSet.Win32
     /// </summary>
     public int ClientHardwareId { get { return (int)GetInfoValue(NativeMethods.WtsInfoClass.WTSClientHardwareId); } }
 
-    // WTSClientAddress пропускаем. Х.З. как это возвращать
+    // WTSClientAddress РїСЂРѕРїСѓСЃРєР°РµРј. РҐ.Р—. РєР°Рє СЌС‚Рѕ РІРѕР·РІСЂР°С‰Р°С‚СЊ
 
     private NativeMethods.WTS_CLIENT_DISPLAY ClientDisplay { get { return (NativeMethods.WTS_CLIENT_DISPLAY)GetInfoValue(NativeMethods.WtsInfoClass.WTSClientDisplay); } }
 
     /// <summary>
-    /// Горизонтальное разрешение
+    /// Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕРµ СЂР°Р·СЂРµС€РµРЅРёРµ
     /// </summary>
     public int ClientDisplayHorizontalResolution { get { return ClientDisplay.iHorizontalResolution; } }
 
     /// <summary>
-    /// Вертикальное разрешение
+    /// Р’РµСЂС‚РёРєР°Р»СЊРЅРѕРµ СЂР°Р·СЂРµС€РµРЅРёРµ
     /// </summary>
     public int ClientDisplayVerticalResolution { get { return ClientDisplay.iVerticalResolution; } }
 
     /// <summary>
-    /// Количество цветов
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ С†РІРµС‚РѕРІ
     /// </summary>
     public WTSColorDepth ClientDisplayColorDepth { get { return (WTSColorDepth)(ClientDisplay.iColorDepth); } }
 
@@ -343,17 +343,17 @@ namespace FreeLibSet.Win32
     /// </summary>
     public WTSClientProtocolType ClientProtocolType { get { return (WTSClientProtocolType)GetInfoValue(NativeMethods.WtsInfoClass.WTSClientProtocolType); } }
 
-    // WTSIdleTime, WTSLogonTime,WTSIncomingBytes,WTSOutgoingBytes,WTSIncomingFrames,WTSOutgoingFrames пропускаем
+    // WTSIdleTime, WTSLogonTime,WTSIncomingBytes,WTSOutgoingBytes,WTSIncomingFrames,WTSOutgoingFrames РїСЂРѕРїСѓСЃРєР°РµРј
 
-    // WTSClientInfo пропускаем, т.к. повтор других данных
+    // WTSClientInfo РїСЂРѕРїСѓСЃРєР°РµРј, С‚.Рє. РїРѕРІС‚РѕСЂ РґСЂСѓРіРёС… РґР°РЅРЅС‹С…
 
-    // WTSSessionInfo и WTSSessionInfoEx пропускаем - неохота разбираться.
+    // WTSSessionInfo Рё WTSSessionInfoEx РїСЂРѕРїСѓСЃРєР°РµРј - РЅРµРѕС…РѕС‚Р° СЂР°Р·Р±РёСЂР°С‚СЊСЃСЏ.
 
-    // WTSConfigInfo пропускаем - неохота разбираться.
+    // WTSConfigInfo РїСЂРѕРїСѓСЃРєР°РµРј - РЅРµРѕС…РѕС‚Р° СЂР°Р·Р±РёСЂР°С‚СЊСЃСЏ.
 
-    // WTSValidationInfo не поддерживается
+    // WTSValidationInfo РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ
 
-    // WTSSessionAddressV4 пропускаем - неохота разбираться.
+    // WTSSessionAddressV4 РїСЂРѕРїСѓСЃРєР°РµРј - РЅРµРѕС…РѕС‚Р° СЂР°Р·Р±РёСЂР°С‚СЊСЃСЏ.
 
     /// <summary>
     /// Determines whether the current session is a remote session. 
@@ -372,7 +372,7 @@ namespace FreeLibSet.Win32
           NativeMethods.WtsInfoClass.WTSIsRemoteSession, out dummyBuffer, out dummyCount);
       }
     }
-    // не так работает public bool IsRemoteSession { get { return DataTools.GetBool(GetInfoValue(NativeMethods.WtsInfoClass.WTSIsRemoteSession)); } }
+    // РЅРµ С‚Р°Рє СЂР°Р±РѕС‚Р°РµС‚ public bool IsRemoteSession { get { return DataTools.GetBool(GetInfoValue(NativeMethods.WtsInfoClass.WTSIsRemoteSession)); } }
 
     private object GetInfoValue(NativeMethods.WtsInfoClass infoClass)
     {
@@ -415,7 +415,7 @@ namespace FreeLibSet.Win32
         case NativeMethods.WtsInfoClass.WTSDomainName:
         case NativeMethods.WtsInfoClass.WTSClientName:
         case NativeMethods.WtsInfoClass.WTSClientDirectory:
-          // строки
+          // СЃС‚СЂРѕРєРё
           return Marshal.PtrToStringAnsi(buffer);
 
         case NativeMethods.WtsInfoClass.WTSConnectState:
@@ -430,7 +430,7 @@ namespace FreeLibSet.Win32
         case NativeMethods.WtsInfoClass.WTSClientProductId:
         case NativeMethods.WtsInfoClass.WTSClientProtocolType:
           // USHORT
-          // Тут пакость. Метод PtrToStructure() не работает с двухбайтной структурой
+          // РўСѓС‚ РїР°РєРѕСЃС‚СЊ. РњРµС‚РѕРґ PtrToStructure() РЅРµ СЂР°Р±РѕС‚Р°РµС‚ СЃ РґРІСѓС…Р±Р°Р№С‚РЅРѕР№ СЃС‚СЂСѓРєС‚СѓСЂРѕР№
           //return (int)Marshal.PtrToStructure(Buffer, typeof(UInt16));
           short[] a16 = new short[1];
           Marshal.Copy(buffer, a16, 0, 1);
@@ -457,7 +457,7 @@ namespace FreeLibSet.Win32
 
     private static class NativeMethods
     {
-      #region Константы
+      #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
       public static IntPtr WTS_CURRENT_SERVER_HANDLE = IntPtr.Zero;
 
@@ -465,7 +465,7 @@ namespace FreeLibSet.Win32
 
       #endregion
 
-      #region Перечисление WTS_INFO_CLASS
+      #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ WTS_INFO_CLASS
 
       /// <summary>
       /// Contains values that indicate the type of session information to retrieve in a call to the <see cref="WTSQuerySessionInformation"/> function.
@@ -666,7 +666,7 @@ namespace FreeLibSet.Win32
 
       #endregion
 
-      #region Функции
+      #region Р¤СѓРЅРєС†РёРё
 
       /// <summary>
       /// The WTSGetActiveConsoleSessionId function retrieves the Remote Desktop Services session that

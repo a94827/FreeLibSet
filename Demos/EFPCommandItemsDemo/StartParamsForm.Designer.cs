@@ -1,4 +1,4 @@
-namespace EFPCommandItemsDemo
+п»їnamespace EFPCommandItemsDemo
 {
   partial class StartParamsForm
   {
@@ -68,7 +68,7 @@ namespace EFPCommandItemsDemo
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(80, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -78,7 +78,7 @@ namespace EFPCommandItemsDemo
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(80, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -90,7 +90,7 @@ namespace EFPCommandItemsDemo
       this.groupBox1.Size = new System.Drawing.Size(200, 81);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Интерфейс";
+      this.groupBox1.Text = "РРЅС‚РµСЂС„РµР№СЃ";
       // 
       // rbMDI
       // 
@@ -121,7 +121,7 @@ namespace EFPCommandItemsDemo
       this.cbDebugWindow.Name = "cbDebugWindow";
       this.cbDebugWindow.Size = new System.Drawing.Size(113, 17);
       this.cbDebugWindow.TabIndex = 1;
-      this.cbDebugWindow.Text = "Отладочное окно";
+      this.cbDebugWindow.Text = "РћС‚Р»Р°РґРѕС‡РЅРѕРµ РѕРєРЅРѕ";
       this.cbDebugWindow.UseVisualStyleBackColor = true;
       // 
       // StartParamsForm
@@ -138,7 +138,7 @@ namespace EFPCommandItemsDemo
       this.MinimizeBox = false;
       this.Name = "StartParamsForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Параметры запуска";
+      this.Text = "РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСѓСЃРєР°";
       this.panel1.ResumeLayout(false);
       this.panel2.ResumeLayout(false);
       this.panel2.PerformLayout();

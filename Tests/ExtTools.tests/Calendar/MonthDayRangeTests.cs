@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -104,7 +104,7 @@ namespace ExtTools_tests.Calendar
       Assert.IsFalse(sut3.Contains(dt), sut3.ToString());
     }
 
-#if XXX // Метод GetCross() является устаревшим
+#if XXX // РњРµС‚РѕРґ GetCross() СЏРІР»СЏРµС‚СЃСЏ СѓСЃС‚Р°СЂРµРІС€РёРј
     [TestCase("0201-0331", "0325-0408", "0325-0331")]
     [TestCase("0331-0201", "0325-0408", "0331-0408")]
     [TestCase("0201-0331", "0408-0325", "0201-0325")]
@@ -113,7 +113,7 @@ namespace ExtTools_tests.Calendar
       MonthDayRange r1 = Creators.CreateMonthDayRange(sR1);
       MonthDayRange r2 = Creators.CreateMonthDayRange(sR2);
 
-      // Метод GetCross() должен возвращать одинаковый результат при перестановке аргументов.
+      // РњРµС‚РѕРґ GetCross() РґРѕР»Р¶РµРЅ РІРѕР·РІСЂР°С‰Р°С‚СЊ РѕРґРёРЅР°РєРѕРІС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚ РїСЂРё РїРµСЂРµСЃС‚Р°РЅРѕРІРєРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 
       MonthDayRange res1 = MonthDayRange.GetCross(r1, r2);
       Assert.AreEqual(sWanted, Creators.ToString(res1), "GetCross() - Direct");
@@ -153,8 +153,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("1201-0731", "0501-0131", "0501-0731,1201-0131")]
     [TestCase("0201-0331", "", "")]
     [TestCase("", "0201-0331", "")]
-    [TestCase("0201-0131", "0601-0630", "0601-0630")] // полный год
-    [TestCase("0601-0630", "0101-1231", "0601-0630")] // полный год
+    [TestCase("0201-0131", "0601-0630", "0601-0630")] // РїРѕР»РЅС‹Р№ РіРѕРґ
+    [TestCase("0601-0630", "0101-1231", "0601-0630")] // РїРѕР»РЅС‹Р№ РіРѕРґ
     public void GetCrosses(string sR1, string sR2, string sWanted)
     {
       MonthDayRange r1 = Creators.CreateMonthDayRange(sR1);

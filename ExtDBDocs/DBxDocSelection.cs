@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using FreeLibSet.Config;
 using FreeLibSet.Core;
+using FreeLibSet.Remoting;
 
 namespace FreeLibSet.Data.Docs
 {
@@ -32,7 +33,7 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("dbIdentity");
 
       _Data = new DataSet();
-      _Data.RemotingFormat = SerializationFormat.Binary;
+      //_Data.RemotingFormat = SerializationFormat.Binary;
       _DBIdentity = dbIdentity;
     }
 
@@ -798,7 +799,8 @@ namespace FreeLibSet.Data.Docs
     internal void OnSerializingMethod(StreamingContext context)
     {
       // Перед сериализацией сохраняем все изменения
-      _Data.AcceptChanges();
+      //_Data.AcceptChanges();
+      SerializationTools.PrepareDataSet(_Data); // 07.07.2022
     }
 
     #endregion

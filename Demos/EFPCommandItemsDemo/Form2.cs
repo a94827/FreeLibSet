@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,7 +18,7 @@ namespace EFPCommandItemsDemo
       Program.LastFormNumber++;
       _FormNumber = Program.LastFormNumber;
 
-      Text = "Ôîðìà ¹" + _FormNumber.ToString();
+      Text = "Ð¤Ð¾Ñ€Ð¼Ð° â„–" + _FormNumber.ToString();
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efp1 = new EFPTextBox(efpForm, ed1);

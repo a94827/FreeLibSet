@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -206,11 +206,11 @@ namespace ExtTools_tests.Calendar
       DateRangeList sut2 = sut1.Clone();
 
       sut1.Add(r);
-      sut1.Merge(); // иначе пересечения интервалов могут зависеть от реализации
+      sut1.Merge(); // РёРЅР°С‡Рµ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РёРЅС‚РµСЂРІР°Р»РѕРІ РјРѕРіСѓС‚ Р·Р°РІРёСЃРµС‚СЊ РѕС‚ СЂРµР°Р»РёР·Р°С†РёРё
       Assert.AreEqual(result, ToString(sut1));
 
       sut2.Add(list2);
-      sut2.Merge(); // иначе пересечения интервалов могут зависеть от реализации
+      sut2.Merge(); // РёРЅР°С‡Рµ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РёРЅС‚РµСЂРІР°Р»РѕРІ РјРѕРіСѓС‚ Р·Р°РІРёСЃРµС‚СЊ РѕС‚ СЂРµР°Р»РёР·Р°С†РёРё
       Assert.AreEqual(result, ToString(sut2));
     }
 
@@ -231,11 +231,11 @@ namespace ExtTools_tests.Calendar
       DateRangeList sut2 = sut1.Clone();
 
       sut1.Remove(r);
-      sut1.Merge(); // иначе пересечения интервалов могут зависеть от реализации
+      sut1.Merge(); // РёРЅР°С‡Рµ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РёРЅС‚РµСЂРІР°Р»РѕРІ РјРѕРіСѓС‚ Р·Р°РІРёСЃРµС‚СЊ РѕС‚ СЂРµР°Р»РёР·Р°С†РёРё
       Assert.AreEqual(result, ToString(sut1));
 
       sut2.Remove(list2);
-      sut2.Merge(); // иначе пересечения интервалов могут зависеть от реализации
+      sut2.Merge(); // РёРЅР°С‡Рµ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РёРЅС‚РµСЂРІР°Р»РѕРІ РјРѕРіСѓС‚ Р·Р°РІРёСЃРµС‚СЊ РѕС‚ СЂРµР°Р»РёР·Р°С†РёРё
       Assert.AreEqual(result, ToString(sut2));
     }
 
@@ -491,7 +491,7 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual("20190101-20191231,20210101-20211231", ToString(res), "List");
     }
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     public static string ToString(DateRangeList obj)
     {

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -9,7 +9,7 @@ namespace TestCache
 {
   internal class DeadLockTest_GetAndClear : ICacheFactory<DeadLockTest_GetAndClear.DummyData>
   {
-    #region Поля
+    #region РџРѕР»СЏ
 
     private string Key1;
 
@@ -24,18 +24,18 @@ namespace TestCache
     {
     }
 
-    #region Процедура, выполняемая в потоке
+    #region РџСЂРѕС†РµРґСѓСЂР°, РІС‹РїРѕР»РЅСЏРµРјР°СЏ РІ РїРѕС‚РѕРєРµ
 
     private void Proc(object dummy)
     {
       try
       {
         DummyData data = Cache.GetItem<DummyData>(new string[] { Key1 }, CachePersistance.MemoryOnly, this);
-        EFPApp.MessageBox("Данные для ключа " + Key1 + " успешно получены");
+        EFPApp.MessageBox("Р”Р°РЅРЅС‹Рµ РґР»СЏ РєР»СЋС‡Р° " + Key1 + " СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅС‹");
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при получении данных для ключа " + Key1);
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РїСЂРё РїРѕР»СѓС‡РµРЅРёРё РґР°РЅРЅС‹С… РґР»СЏ РєР»СЋС‡Р° " + Key1);
       }
       Completed = true;
     }
@@ -54,7 +54,7 @@ namespace TestCache
 
     #endregion
 
-    #region Статический метод запуска
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°
 
     internal static void PerformTest()
     {
@@ -72,7 +72,7 @@ namespace TestCache
       trd2.Name = "Test2 thread";
       trd2.Start();
 
-      using (Splash spl = new Splash("Выполняется тест"))
+      using (Splash spl = new Splash("Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ С‚РµСЃС‚"))
       {
         while (!(obj1.Completed && obj2.Completed))
         {
@@ -80,7 +80,7 @@ namespace TestCache
         }
       }
 
-      DebugTools.ShowDebugInfo("Тест успешно выполнен");
+      DebugTools.ShowDebugInfo("РўРµСЃС‚ СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅ");
     }
 
     #endregion

@@ -1,4 +1,4 @@
-namespace FileEnumeratorDemo
+п»їnamespace FileEnumeratorDemo
 {
   partial class ParamForm
   {
@@ -73,7 +73,7 @@ namespace FileEnumeratorDemo
       this.groupBox1.Size = new System.Drawing.Size(711, 155);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Параметры";
+      this.groupBox1.Text = "РџР°СЂР°РјРµС‚СЂС‹";
       // 
       // label1
       // 
@@ -81,7 +81,7 @@ namespace FileEnumeratorDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(134, 23);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Класс перечислителя";
+      this.label1.Text = "РљР»Р°СЃСЃ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЏ";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbClass
@@ -120,7 +120,7 @@ namespace FileEnumeratorDemo
       this.btnBrowse.Name = "btnBrowse";
       this.btnBrowse.Size = new System.Drawing.Size(88, 24);
       this.btnBrowse.TabIndex = 4;
-      this.btnBrowse.Text = "Обзор";
+      this.btnBrowse.Text = "РћР±Р·РѕСЂ";
       this.btnBrowse.UseVisualStyleBackColor = true;
       // 
       // cbEnumerateKind
@@ -176,7 +176,7 @@ namespace FileEnumeratorDemo
       this.grpFiles.Size = new System.Drawing.Size(711, 78);
       this.grpFiles.TabIndex = 1;
       this.grpFiles.TabStop = false;
-      this.grpFiles.Text = "Файлы";
+      this.grpFiles.Text = "Р¤Р°Р№Р»С‹";
       // 
       // edFileSearchPattern
       // 
@@ -235,7 +235,7 @@ namespace FileEnumeratorDemo
       this.groupBox2.Size = new System.Drawing.Size(711, 78);
       this.groupBox2.TabIndex = 2;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Каталоги";
+      this.groupBox2.Text = "РљР°С‚Р°Р»РѕРіРё";
       // 
       // cbReverseDirectories
       // 
@@ -287,7 +287,7 @@ namespace FileEnumeratorDemo
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 3;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // ParamForm
@@ -301,7 +301,7 @@ namespace FileEnumeratorDemo
       this.Controls.Add(this.grpFiles);
       this.Controls.Add(this.groupBox1);
       this.Name = "ParamForm";
-      this.Text = "Перебор каталогов и файлов";
+      this.Text = "РџРµСЂРµР±РѕСЂ РєР°С‚Р°Р»РѕРіРѕРІ Рё С„Р°Р№Р»РѕРІ";
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.grpFiles.ResumeLayout(false);

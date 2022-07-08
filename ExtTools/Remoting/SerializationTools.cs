@@ -108,14 +108,19 @@ namespace FreeLibSet.Remoting
     /// <returns>Предпочтительный формат</returns>
     public static SerializationFormat GetPreferredRemotingFormat(DataSet ds)
     {
-      int cntRows = 0;
-      for (int i = 0; i < ds.Tables.Count; i++)
-        cntRows += ds.Tables[i].Rows.Count;
+      // 07.07.2022
+      // Двоичный формат не является совместимым между Net Framework (сервер) и Mono (клиент).
+      // Возникает ошибка при десериализации
+      return SerializationFormat.Xml;
 
-      if (cntRows > 100)
-        return System.Data.SerializationFormat.Binary;
-      else
-        return System.Data.SerializationFormat.Xml;
+      //int cntRows = 0;
+      //for (int i = 0; i < ds.Tables.Count; i++)
+      //  cntRows += ds.Tables[i].Rows.Count;
+
+      //if (cntRows > 100)
+      //  return System.Data.SerializationFormat.Binary;
+      //else
+      //  return System.Data.SerializationFormat.Xml;
     }
 
     /// <summary>
@@ -126,10 +131,15 @@ namespace FreeLibSet.Remoting
     /// <returns>Предпочтительный формат</returns>
     public static SerializationFormat GetPreferredRemotingFormat(DataTable table)
     {
-      if (table.Rows.Count > 100)
-        return System.Data.SerializationFormat.Binary;
-      else
-        return System.Data.SerializationFormat.Xml;
+      // 07.07.2022
+      // Двоичный формат не является совместимым между Net Framework (сервер) и Mono (клиент).
+      // Возникает ошибка при десериализации
+      return SerializationFormat.Xml;
+
+      //if (table.Rows.Count > 100)
+      //  return System.Data.SerializationFormat.Binary;
+      //else
+      //  return System.Data.SerializationFormat.Xml;
     }
 
     #region Обработка DataTable.DateTimeMode

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -14,28 +14,28 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Базовый класс для EFPDocComboBoxBase и EFPMultiDocComboBoxBase.
-  /// Не содержит ссылок на идентификаторы Id или Ids
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ EFPDocComboBoxBase Рё EFPMultiDocComboBoxBase.
+  /// РќРµ СЃРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РѕРє РЅР° РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ Id РёР»Рё Ids
   /// </summary>
   public abstract class EFPAnyDocComboBoxBase : EFPUserSelComboBox
   {
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     /// <summary>
-    /// Текст комбоблока по умолчанию, когда не выбран документ
+    /// РўРµРєСЃС‚ РєРѕРјР±РѕР±Р»РѕРєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, РєРѕРіРґР° РЅРµ РІС‹Р±СЂР°РЅ РґРѕРєСѓРјРµРЅС‚
     /// </summary>
-    public const string DefaultEmptyText = "[ нет ]";
+    public const string DefaultEmptyText = "[ РЅРµС‚ ]";
 
     #endregion
 
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
-    /// <param name="ui">Доступ к интерфейсу пользователя</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
+    /// <param name="ui">Р”РѕСЃС‚СѓРї Рє РёРЅС‚РµСЂС„РµР№СЃСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</param>
     protected EFPAnyDocComboBoxBase(EFPBaseProvider baseProvider, UserSelComboBox control, DBUI ui)
       : base(baseProvider, control)
     {
@@ -59,10 +59,10 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство UI
+    #region РЎРІРѕР№СЃС‚РІРѕ UI
 
     /// <summary>
-    /// Доступ к интерфейсу пользователя
+    /// Р”РѕСЃС‚СѓРї Рє РёРЅС‚РµСЂС„РµР№СЃСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     /// </summary>
     public DBUI UI { get { return _UI; } }
     private DBUI _UI;
@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms.Docs
     #region InitTextAndImage
 
     /// <summary>
-    /// Вызывает InitTextAndImage()
+    /// Р’С‹Р·С‹РІР°РµС‚ InitTextAndImage()
     /// </summary>
     protected override void OnCreated()
     {
@@ -82,12 +82,12 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Инициализирует текстовое представление (свойство TextValue) и значок
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ (СЃРІРѕР№СЃС‚РІРѕ TextValue) Рё Р·РЅР°С‡РѕРє
     /// </summary>
     protected abstract void InitTextAndImage();
 
     /// <summary>
-    /// Принудительное обновление текста и изображения в выпадающем списке
+    /// РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ С‚РµРєСЃС‚Р° Рё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ РІС‹РїР°РґР°СЋС‰РµРј СЃРїРёСЃРєРµ
     /// </summary>
     public void UpdateText()
     {
@@ -96,7 +96,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Выбор значения Popup
+    #region Р’С‹Р±РѕСЂ Р·РЅР°С‡РµРЅРёСЏ Popup
 
     private void Control_PopupClick(object sender, EventArgs args)
     {
@@ -106,19 +106,19 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при выборе из комбоблока \"" + DisplayName + "\"");
-        //EFPApp.MessageBox(e.Message, "Ошибка при выборе из списка",
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РїСЂРё РІС‹Р±РѕСЂРµ РёР· РєРѕРјР±РѕР±Р»РѕРєР° \"" + DisplayName + "\"");
+        //EFPApp.MessageBox(e.Message, "РћС€РёР±РєР° РїСЂРё РІС‹Р±РѕСЂРµ РёР· СЃРїРёСЃРєР°",
         //  MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
     /// <summary>
-    /// Этот метод должен вызвать блок диалога и установить значение RefId.ValueEx
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РІС‹Р·РІР°С‚СЊ Р±Р»РѕРє РґРёР°Р»РѕРіР° Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ Р·РЅР°С‡РµРЅРёРµ RefId.ValueEx
     /// </summary>
     protected abstract void DoPopup();
 
     /// <summary>
-    /// Выполнить действия, аналогичные нажатию стрелочки выпадающего списка
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ РґРµР№СЃС‚РІРёСЏ, Р°РЅР°Р»РѕРіРёС‡РЅС‹Рµ РЅР°Р¶Р°С‚РёСЋ СЃС‚СЂРµР»РѕС‡РєРё РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР°
     /// </summary>
     public void PerformPopup()
     {
@@ -129,45 +129,45 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Если обработчик события установлен, то он вызывается вместо вывода
-    /// стандартного диалога. Обработчик должен вывести пользователю собственный
-    /// диалог выбора документа и установить требуемые свойства после выбора
+    /// Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РѕРЅ РІС‹Р·С‹РІР°РµС‚СЃСЏ РІРјРµСЃС‚Рѕ РІС‹РІРѕРґР°
+    /// СЃС‚Р°РЅРґР°СЂС‚РЅРѕРіРѕ РґРёР°Р»РѕРіР°. РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР»Р¶РµРЅ РІС‹РІРµСЃС‚Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№
+    /// РґРёР°Р»РѕРі РІС‹Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚Р° Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ С‚СЂРµР±СѓРµРјС‹Рµ СЃРІРѕР№СЃС‚РІР° РїРѕСЃР»Рµ РІС‹Р±РѕСЂР°
     /// </summary>
     public event EventHandler Popup;
 
     #endregion
 
-    #region Очистка значения Clear
+    #region РћС‡РёСЃС‚РєР° Р·РЅР°С‡РµРЅРёСЏ Clear
 
     private void Control_ClearClick(object sender, EventArgs args)
     {
       try
       {
-        Clear(); // здесь тоже может возникнуть иключение
+        Clear(); // Р·РґРµСЃСЊ С‚РѕР¶Рµ РјРѕР¶РµС‚ РІРѕР·РЅРёРєРЅСѓС‚СЊ РёРєР»СЋС‡РµРЅРёРµ
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка очистки значения");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РѕС‡РёСЃС‚РєРё Р·РЅР°С‡РµРЅРёСЏ");
       }
     }
 
     /// <summary>
-    /// Очищает выбранное значение.
+    /// РћС‡РёС‰Р°РµС‚ РІС‹Р±СЂР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ.
     /// </summary>
     public abstract void Clear();
 
     /// <summary>
-    /// Свойство возвращает true, если в комбоблоке выбрано значение
+    /// РЎРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ РєРѕРјР±РѕР±Р»РѕРєРµ РІС‹Р±СЂР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     public abstract bool IsNotEmpty { get;}
 
     #endregion
 
-    #region Свойство EmptyText
+    #region РЎРІРѕР№СЃС‚РІРѕ EmptyText
 
     /// <summary>
-    /// Текст, выводимый в комбоблоке, когда нет выбранного значения.
-    /// (по умолчанию "[ нет ]")
+    /// РўРµРєСЃС‚, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ "[ РЅРµС‚ ]")
     /// </summary>
     public string EmptyText
     {
@@ -175,7 +175,7 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         if (value == null)
-          value = String.Empty; // 13.06.2019. Нужно для правильной работы переходника DocValueAnyDocComboBoxBase
+          value = String.Empty; // 13.06.2019. РќСѓР¶РЅРѕ РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ СЂР°Р±РѕС‚С‹ РїРµСЂРµС…РѕРґРЅРёРєР° DocValueAnyDocComboBoxBase
 
         if (value == _EmptyText)
           return;
@@ -188,8 +188,8 @@ namespace FreeLibSet.Forms.Docs
     private string _EmptyText;
 
     /// <summary>
-    /// Текст, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Управляемое свойство для EmptyText.
+    /// РўРµРєСЃС‚, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ EmptyText.
     /// </summary>
     public DepValue<String> EmptyTextEx
     {
@@ -223,12 +223,12 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство EmptyImageKey
+    #region РЎРІРѕР№СЃС‚РІРѕ EmptyImageKey
 
     /// <summary>
-    /// Значок, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Изображение должно быть в коллекции EFPApp.MainImages.
-    /// По умолчанию "" - нет значка.
+    /// Р—РЅР°С‡РѕРє, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РР·РѕР±СЂР°Р¶РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ РєРѕР»Р»РµРєС†РёРё EFPApp.MainImages.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ "" - РЅРµС‚ Р·РЅР°С‡РєР°.
     /// </summary>
     public string EmptyImageKey
     {
@@ -246,8 +246,8 @@ namespace FreeLibSet.Forms.Docs
     private string _EmptyImageKey;
 
     /// <summary>
-    /// Значок, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Управляемое свойство для EmptyImageKey.
+    /// Р—РЅР°С‡РѕРє, РІС‹РІРѕРґРёРјС‹Р№ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, РєРѕРіРґР° РЅРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ EmptyImageKey.
     /// </summary>
     public DepValue<String> EmptyImageKeyEx
     {
@@ -281,13 +281,13 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство CanBeEmpty
+    #region РЎРІРѕР№СЃС‚РІРѕ CanBeEmpty
 
     /// <summary>
-    /// Режим проверки пустого значения.
-    /// По умолчанию - Error.
-    /// Это свойство переопределяется для нестандартных элементов, содержащих
-    /// кнопку очистки справа от элемента
+    /// Р РµР¶РёРј РїСЂРѕРІРµСЂРєРё РїСѓСЃС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error.
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РїРµСЂРµРѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РґР»СЏ РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС…
+    /// РєРЅРѕРїРєСѓ РѕС‡РёСЃС‚РєРё СЃРїСЂР°РІР° РѕС‚ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -304,8 +304,8 @@ namespace FreeLibSet.Forms.Docs
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// True, если ли элемент содержать пустое значение (нулевой идентификатор для элементов выбора единственного значения, или список нулевой длины для элементов выбора нескольких значений).
-    /// Дублирует CanBeEmptyMode
+    /// True, РµСЃР»Рё Р»Рё СЌР»РµРјРµРЅС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ (РЅСѓР»РµРІРѕР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґР»СЏ СЌР»РµРјРµРЅС‚РѕРІ РІС‹Р±РѕСЂР° РµРґРёРЅСЃС‚РІРµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, РёР»Рё СЃРїРёСЃРѕРє РЅСѓР»РµРІРѕР№ РґР»РёРЅС‹ РґР»СЏ СЌР»РµРјРµРЅС‚РѕРІ РІС‹Р±РѕСЂР° РЅРµСЃРєРѕР»СЊРєРёС… Р·РЅР°С‡РµРЅРёР№).
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
@@ -315,14 +315,14 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство CanBeDeleted
+    #region РЎРІРѕР№СЃС‚РІРѕ CanBeDeleted
 
     /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// Если установлено в Ok, то разрешается выбирать удаленные документы или
-    /// поддокументы. По умолчанию (Error), если выбранный документ/поддокумент
-    /// удален, то выдается ошибка.
-    /// Также может выдаваться предупреждение.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РїСЂРѕРІРµСЂРєРµ РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РІРІРµРґРµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ Ok, С‚Рѕ СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ РІС‹Р±РёСЂР°С‚СЊ СѓРґР°Р»РµРЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ РёР»Рё
+    /// РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (Error), РµСЃР»Рё РІС‹Р±СЂР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚/РїРѕРґРґРѕРєСѓРјРµРЅС‚
+    /// СѓРґР°Р»РµРЅ, С‚Рѕ РІС‹РґР°РµС‚СЃСЏ РѕС€РёР±РєР°.
+    /// РўР°РєР¶Рµ РјРѕР¶РµС‚ РІС‹РґР°РІР°С‚СЊСЃСЏ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ.
     /// </summary>
     public UIValidateState CanBeDeletedMode
     {
@@ -338,11 +338,11 @@ namespace FreeLibSet.Forms.Docs
     private UIValidateState _CanBeDeletedMode;
 
     /// <summary>
-    /// Используется при проверке корректности введенного значения.
-    /// Если установлено в true, то разрешается выбирать удаленные документы или
-    /// поддокументы. По умолчанию (false), если выбранный документ/поддокумент
-    /// удален, то выдается ошибка.
-    /// Дубирует свойство CanBeDeletedMode.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РїСЂРѕРІРµСЂРєРµ РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РІРІРµРґРµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ СЂР°Р·СЂРµС€Р°РµС‚СЃСЏ РІС‹Р±РёСЂР°С‚СЊ СѓРґР°Р»РµРЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ РёР»Рё
+    /// РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (false), РµСЃР»Рё РІС‹Р±СЂР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚/РїРѕРґРґРѕРєСѓРјРµРЅС‚
+    /// СѓРґР°Р»РµРЅ, С‚Рѕ РІС‹РґР°РµС‚СЃСЏ РѕС€РёР±РєР°.
+    /// Р”СѓР±РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ CanBeDeletedMode.
     /// </summary>
     public bool CanBeDeleted
     {
@@ -352,79 +352,79 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Выборка документов
+    #region Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ
 
     /// <summary>
-    /// Свойство возвращает true, если объект поддерживает получение выборки документов.
-    /// Это - константное свойство. Возвращаемое значение не зависит от текущего выбранного значения.
+    /// РЎРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЉРµРєС‚ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РїРѕР»СѓС‡РµРЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р­С‚Рѕ - РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ. Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ С‚РµРєСѓС‰РµРіРѕ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
     /// </summary>
     public virtual bool GetDocSelSupported { get { return false; } }
 
     /// <summary>
-    /// Свойство возвращает true, если объект поддерживает присвоение выборки документов
-    /// Это - константное свойство. Возвращаемое значение не зависит от текущего выбранного значения.
+    /// РЎРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЉРµРєС‚ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РїСЂРёСЃРІРѕРµРЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ
+    /// Р­С‚Рѕ - РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ. Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ С‚РµРєСѓС‰РµРіРѕ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
     /// </summary>
     public virtual bool SetDocSelSupported { get { return false; } }
 
     /// <summary>
-    /// Общедоступный метод для получения выборки документов.
-    /// Вызывает виртуальный метод OnGetDocSel().
-    /// Для комбоблоков выбора документов возвращает выборку, содержащую выбранный документ
-    /// (или документы) и, возможно, связанные документы.
-    /// Для комбоблоков выбора поддокументов возвращает документ-владелец и, возможно, связанные документы.
-    /// Если нет выбранных документов в комбоблоке, то возвращает null.
+    /// РћР±С‰РµРґРѕСЃС‚СѓРїРЅС‹Р№ РјРµС‚РѕРґ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р’С‹Р·С‹РІР°РµС‚ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ OnGetDocSel().
+    /// Р”Р»СЏ РєРѕРјР±РѕР±Р»РѕРєРѕРІ РІС‹Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚РѕРІ РІРѕР·РІСЂР°С‰Р°РµС‚ РІС‹Р±РѕСЂРєСѓ, СЃРѕРґРµСЂР¶Р°С‰СѓСЋ РІС‹Р±СЂР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚
+    /// (РёР»Рё РґРѕРєСѓРјРµРЅС‚С‹) Рё, РІРѕР·РјРѕР¶РЅРѕ, СЃРІСЏР·Р°РЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹.
+    /// Р”Р»СЏ РєРѕРјР±РѕР±Р»РѕРєРѕРІ РІС‹Р±РѕСЂР° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ РІРѕР·РІСЂР°С‰Р°РµС‚ РґРѕРєСѓРјРµРЅС‚-РІР»Р°РґРµР»РµС† Рё, РІРѕР·РјРѕР¶РЅРѕ, СЃРІСЏР·Р°РЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹.
+    /// Р•СЃР»Рё РЅРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ РІ РєРѕРјР±РѕР±Р»РѕРєРµ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ null.
     /// </summary>
-    /// <param name="reason">Причина получения выборки</param>
-    /// <returns>Выборка документов</returns>
+    /// <param name="reason">РџСЂРёС‡РёРЅР° РїРѕР»СѓС‡РµРЅРёСЏ РІС‹Р±РѕСЂРєРё</param>
+    /// <returns>Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
     public DBxDocSelection PerformGetDocSel(EFPDBxGridViewDocSelReason reason)
     {
       return OnGetDocSel(reason);
     }
 
     /// <summary>
-    /// Получение выборки документов.
-    /// Непереопределенный метод возвращает null.
+    /// РџРѕР»СѓС‡РµРЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ null.
     /// </summary>
-    /// <param name="reason">Причина получения выборки</param>
-    /// <returns>Выборка документов</returns>
+    /// <param name="reason">РџСЂРёС‡РёРЅР° РїРѕР»СѓС‡РµРЅРёСЏ РІС‹Р±РѕСЂРєРё</param>
+    /// <returns>Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
     protected virtual DBxDocSelection OnGetDocSel(EFPDBxGridViewDocSelReason reason)
     {
       return null;
     }
 
     /// <summary>
-    /// Общедоступный метод присвоения выборки документов.
-    /// Вызывает виртуальный метод OnSetDocSel().
+    /// РћР±С‰РµРґРѕСЃС‚СѓРїРЅС‹Р№ РјРµС‚РѕРґ РїСЂРёСЃРІРѕРµРЅРёСЏ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р’С‹Р·С‹РІР°РµС‚ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ OnSetDocSel().
     /// </summary>
-    /// <param name="docSel">Выборка документов</param>
+    /// <param name="docSel">Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     public void PerformSetDocSel(DBxDocSelection docSel)
     {
       OnSetDocSel(docSel);
     }
 
     /// <summary>
-    /// Присвоение выборки документов.
-    /// Непереопределенный метод вызывает исключение
+    /// РџСЂРёСЃРІРѕРµРЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="docSel">Выборка документов</param>
+    /// <param name="docSel">Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     protected virtual void OnSetDocSel(DBxDocSelection docSel)
     {
-      throw new NotSupportedException("Присвоение выборки документов не реализовано");
+      throw new NotSupportedException("РџСЂРёСЃРІРѕРµРЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ");
     }
 
     /// <summary>
-    /// Возвращает true, если получение информации о документе должно быть доступно.
-    /// Используется EFPDocComboBox.
-    /// Это - константное свойство. Возвращаемое значение не зависит от текущего выбранного значения.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїРѕР»СѓС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё Рѕ РґРѕРєСѓРјРµРЅС‚Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅРѕ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ EFPDocComboBox.
+    /// Р­С‚Рѕ - РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ. Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ С‚РµРєСѓС‰РµРіРѕ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
     /// </summary>
     public virtual bool DocInfoSupported { get { return false; } }
 
     #endregion
 
-    #region Локальное меню
+    #region Р›РѕРєР°Р»СЊРЅРѕРµ РјРµРЅСЋ
 
     /// <summary>
-    /// Возвращает набор команд EFPAnyDocComboBoxBaseControlItems.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°Р±РѕСЂ РєРѕРјР°РЅРґ EFPAnyDocComboBoxBaseControlItems.
     /// </summary>
     /// <returns></returns>
     protected override EFPControlCommandItems GetCommandItems()
@@ -440,7 +440,7 @@ namespace FreeLibSet.Forms.Docs
 
     void SelectableEx_ValueChanged(object sender, EventArgs args)
     {
-      InitTextAndImage(); // могла поменяться кнопка редактирования
+      InitTextAndImage(); // РјРѕРіР»Р° РїРѕРјРµРЅСЏС‚СЊСЃСЏ РєРЅРѕРїРєР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 
       if (CommandItemsAssigned)
       {
@@ -454,16 +454,16 @@ namespace FreeLibSet.Forms.Docs
 
 
   /// <summary>
-  /// Команды локального меню
+  /// РљРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
   /// </summary>
   public class EFPAnyDocComboBoxBaseCommandItems : EFPControlCommandItems
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает набор команд
+    /// РЎРѕР·РґР°РµС‚ РЅР°Р±РѕСЂ РєРѕРјР°РЅРґ
     /// </summary>
-    /// <param name="controlProvider">Провайдер комбоблока</param>
+    /// <param name="controlProvider">РџСЂРѕРІР°Р№РґРµСЂ РєРѕРјР±РѕР±Р»РѕРєР°</param>
     public EFPAnyDocComboBoxBaseCommandItems(EFPAnyDocComboBoxBase controlProvider)
       :base(controlProvider)
     {
@@ -490,7 +490,7 @@ namespace FreeLibSet.Forms.Docs
       if (controlProvider.DocInfoSupported)
       {
         ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
-        ciShowDocInfo.MenuText = "Информация о документе";
+        ciShowDocInfo.MenuText = "РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РґРѕРєСѓРјРµРЅС‚Рµ";
         ciShowDocInfo.ShortCut = Keys.F12;
         ciShowDocInfo.ImageKey = "Information";
         ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
@@ -502,19 +502,19 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер управляющего элемента
+    /// РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
     protected new EFPAnyDocComboBoxBase ControlProvider { get { return (EFPAnyDocComboBoxBase)(base.ControlProvider); } }
 
     #endregion
 
-    #region Инициализация доступности команд
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РєРѕРјР°РЅРґ
 
     /// <summary>
-    /// Управляет доступностью команд, в зависимости от наличия выбранной записи
+    /// РЈРїСЂР°РІР»СЏРµС‚ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊСЋ РєРѕРјР°РЅРґ, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РЅР°Р»РёС‡РёСЏ РІС‹Р±СЂР°РЅРЅРѕР№ Р·Р°РїРёСЃРё
     /// </summary>
     public void InitEnabled()
     {
@@ -550,7 +550,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Команды буфера обмена
+    #region РљРѕРјР°РЅРґС‹ Р±СѓС„РµСЂР° РѕР±РјРµРЅР°
 
     private EFPCommandItem ciCut, ciCopy, ciPaste;
 
@@ -564,7 +564,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (!ControlProvider.IsNotEmpty)
       {
-        EFPApp.ShowTempMessage("Значение не выбрано");
+        EFPApp.ShowTempMessage("Р—РЅР°С‡РµРЅРёРµ РЅРµ РІС‹Р±СЂР°РЅРѕ");
         return;
       }
       DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
@@ -580,17 +580,17 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = ControlProvider.UI.PasteDocSel();
       if (docSel == null)
       {
-        EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
+        EFPApp.ShowTempMessage("Р‘СѓС„РµСЂ РѕР±РјРµРЅР° РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РѕРє РЅР° РґРѕРєСѓРјРµРЅС‚С‹");
         return;
       }
-      // Сами не нормализуем
-      // Это может делать виртуальный метод SetDocSel()
+      // РЎР°РјРё РЅРµ РЅРѕСЂРјР°Р»РёР·СѓРµРј
+      // Р­С‚Рѕ РјРѕР¶РµС‚ РґРµР»Р°С‚СЊ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ SetDocSel()
       ControlProvider.PerformSetDocSel(docSel);
     }
 
     #endregion
 
-    #region Информация о документе
+    #region РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РґРѕРєСѓРјРµРЅС‚Рµ
 
     EFPCommandItem ciShowDocInfo;
 
@@ -598,17 +598,17 @@ namespace FreeLibSet.Forms.Docs
     {
       if (!ControlProvider.IsNotEmpty)
       {
-        EFPApp.ShowTempMessage("Значение не выбрано");
+        EFPApp.ShowTempMessage("Р—РЅР°С‡РµРЅРёРµ РЅРµ РІС‹Р±СЂР°РЅРѕ");
         return;
       }
       DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
       if (docSel.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Нет выбранного документа");
+        EFPApp.ShowTempMessage("РќРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°");
         return;
       }
 
-      // Наш тип документа - первый в списке
+      // РќР°С€ С‚РёРї РґРѕРєСѓРјРµРЅС‚Р° - РїРµСЂРІС‹Р№ РІ СЃРїРёСЃРєРµ
       string docTypeName = docSel.TableNames[0];
       Int32 docId = docSel[docTypeName][0];
 

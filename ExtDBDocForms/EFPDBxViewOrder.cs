@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,19 +13,19 @@ namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>
-  /// Расширенная сортировка табличного просмотра, основанного на наборе данных
-  /// Поддерживает задание полей с помощью выражений DBxOrder, в том числе, содержащих функции.
-  /// Для этого в набор данных добавляются виртуальные вычисляемые столбцы.
+  /// Р Р°СЃС€РёСЂРµРЅРЅР°СЏ СЃРѕСЂС‚РёСЂРѕРІРєР° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°, РѕСЃРЅРѕРІР°РЅРЅРѕРіРѕ РЅР° РЅР°Р±РѕСЂРµ РґР°РЅРЅС‹С…
+  /// РџРѕРґРґРµСЂР¶РёРІР°РµС‚ Р·Р°РґР°РЅРёРµ РїРѕР»РµР№ СЃ РїРѕРјРѕС‰СЊСЋ РІС‹СЂР°Р¶РµРЅРёР№ DBxOrder, РІ С‚РѕРј С‡РёСЃР»Рµ, СЃРѕРґРµСЂР¶Р°С‰РёС… С„СѓРЅРєС†РёРё.
+  /// Р”Р»СЏ СЌС‚РѕРіРѕ РІ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РІРёСЂС‚СѓР°Р»СЊРЅС‹Рµ РІС‹С‡РёСЃР»СЏРµРјС‹Рµ СЃС‚РѕР»Р±С†С‹.
   /// </summary>
   public class EFPDBxViewOrder : EFPDataViewOrder
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект сортировки
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃРѕСЂС‚РёСЂРѕРІРєРё
     /// </summary>
-    /// <param name="name">Условное имя для порядка сортировки</param>
-    /// <param name="order">Порядок сортировки для ORDER BY</param>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РґР»СЏ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё</param>
+    /// <param name="order">РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ ORDER BY</param>
     public EFPDBxViewOrder(string name, DBxOrder order)
       :base(name, String.Empty)
     {
@@ -41,18 +41,18 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Порядок сортировки для SQL-запроса SELECT .. ORDER BY
+    /// РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ SQL-Р·Р°РїСЂРѕСЃР° SELECT .. ORDER BY
     /// </summary>
     public DBxOrder Order { get { return _Order; } }
     private DBxOrder _Order;
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return DisplayName + " (" + Order.ToString() + ")";
@@ -60,15 +60,15 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Выполнение сортировки
+    #region Р’С‹РїРѕР»РЅРµРЅРёРµ СЃРѕСЂС‚РёСЂРѕРІРєРё
 
     /// <summary>
-    /// Реализация интерфейса INamedValuesAccess.
-    /// Возвращает значения по умолчанию для всех столбцов данных таблицы
+    /// Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° INamedValuesAccess.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ РІСЃРµС… СЃС‚РѕР»Р±С†РѕРІ РґР°РЅРЅС‹С… С‚Р°Р±Р»РёС†С‹
     /// </summary>
     private class DefValAccess : INamedValuesAccess
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public DefValAccess(DataTable table)
       {
@@ -85,7 +85,7 @@ namespace FreeLibSet.Forms.Docs
       {
         int p = _Table.Columns.IndexOf(name);
         if (p < 0)
-          throw new ArgumentException("Неизвестный столбец \"" + name + "\"");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ СЃС‚РѕР»Р±РµС† \"" + name + "\"");
 
         return DataTools.GetEmptyValue(_Table.Columns[p].DataType);
       }
@@ -107,31 +107,31 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполняет сортировку в табличного просмотре.
-    /// Провайдер должен иметь тип, производный от EFPDBxGridView.
-    /// Источником данных должен быть объект DataView (свойство EFPDataGridView.SourceAsDataView должно возвращать непустое значение).
-    /// Устанавливает свойство DataView.Sort.
-    /// Если среди компонентов сортировки есть объекты, отличные от DBxOrderColumn,
-    /// то в таблицу добавляются вычисляемые столбцы "$$Sort_XXX", для которых устанавливается свойство DataColumn.Expression.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ СЃРѕСЂС‚РёСЂРѕРІРєСѓ РІ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂРµ.
+    /// РџСЂРѕРІР°Р№РґРµСЂ РґРѕР»Р¶РµРЅ РёРјРµС‚СЊ С‚РёРї, РїСЂРѕРёР·РІРѕРґРЅС‹Р№ РѕС‚ EFPDBxGridView.
+    /// РСЃС‚РѕС‡РЅРёРєРѕРј РґР°РЅРЅС‹С… РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕР±СЉРµРєС‚ DataView (СЃРІРѕР№СЃС‚РІРѕ EFPDataGridView.SourceAsDataView РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊ РЅРµРїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ).
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ DataView.Sort.
+    /// Р•СЃР»Рё СЃСЂРµРґРё РєРѕРјРїРѕРЅРµРЅС‚РѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё РµСЃС‚СЊ РѕР±СЉРµРєС‚С‹, РѕС‚Р»РёС‡РЅС‹Рµ РѕС‚ DBxOrderColumn,
+    /// С‚Рѕ РІ С‚Р°Р±Р»РёС†Сѓ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рµ СЃС‚РѕР»Р±С†С‹ "$$Sort_XXX", РґР»СЏ РєРѕС‚РѕСЂС‹С… СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ DataColumn.Expression.
     /// </summary>     
-    /// <param name="controlProvider">Провайдер табличного просмотра, для которого нужно установить порядок сортировки.</param>
+    /// <param name="controlProvider">РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РЅСѓР¶РЅРѕ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё.</param>
     public override void PerformSort(IEFPDataView controlProvider)
     {
       //if (!(controlProvider is EFPDBxGridView))
-      //  throw new InvalidOperationException("Неправильный тип ControlProvider: " + controlProvider.GetType().ToString());
+      //  throw new InvalidOperationException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С‚РёРї ControlProvider: " + controlProvider.GetType().ToString());
 
       DataView dv = controlProvider.SourceAsDataView;
       if (dv == null)
-        throw new InvalidDataSourceException("Источником данных просмотра не является DataView");
+        throw new InvalidDataSourceException("РСЃС‚РѕС‡РЅРёРєРѕРј РґР°РЅРЅС‹С… РїСЂРѕСЃРјРѕС‚СЂР° РЅРµ СЏРІР»СЏРµС‚СЃСЏ DataView");
 
-      // Обычно, порядок сортировки задается нормальными полями и вычисляемые столбцы
-      // не нужны. При наличии выражения, например, DBxOrderColumnIfNull, его нельзя
-      // задавать в DataView.Sort. Вместо этого создается вычисляемый столбец,
-      // который содержит установленное свойство Expression. По нему выполняется
-      // сортировка.
-      // В одном DataOrder может быть несколько выражений, через запятую, а, также,
-      // обычные поля. Вычисляемые столбцы используются только для вычисляемых
-      // DataOrderItem, а для простых полей не используются
+      // РћР±С‹С‡РЅРѕ, РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё Р·Р°РґР°РµС‚СЃСЏ РЅРѕСЂРјР°Р»СЊРЅС‹РјРё РїРѕР»СЏРјРё Рё РІС‹С‡РёСЃР»СЏРµРјС‹Рµ СЃС‚РѕР»Р±С†С‹
+      // РЅРµ РЅСѓР¶РЅС‹. РџСЂРё РЅР°Р»РёС‡РёРё РІС‹СЂР°Р¶РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, DBxOrderColumnIfNull, РµРіРѕ РЅРµР»СЊР·СЏ
+      // Р·Р°РґР°РІР°С‚СЊ РІ DataView.Sort. Р’РјРµСЃС‚Рѕ СЌС‚РѕРіРѕ СЃРѕР·РґР°РµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС†,
+      // РєРѕС‚РѕСЂС‹Р№ СЃРѕРґРµСЂР¶РёС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ Expression. РџРѕ РЅРµРјСѓ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
+      // СЃРѕСЂС‚РёСЂРѕРІРєР°.
+      // Р’ РѕРґРЅРѕРј DataOrder РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ РІС‹СЂР°Р¶РµРЅРёР№, С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, Р°, С‚Р°РєР¶Рµ,
+      // РѕР±С‹С‡РЅС‹Рµ РїРѕР»СЏ. Р’С‹С‡РёСЃР»СЏРµРјС‹Рµ СЃС‚РѕР»Р±С†С‹ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ РІС‹С‡РёСЃР»СЏРµРјС‹С…
+      // DataOrderItem, Р° РґР»СЏ РїСЂРѕСЃС‚С‹С… РїРѕР»РµР№ РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ
 
       DBxSqlBuffer buf = new DBxSqlBuffer();
       buf.Clear();
@@ -140,40 +140,40 @@ namespace FreeLibSet.Forms.Docs
         if (i > 0)
           buf.SB.Append(',');
         if ((Order.Parts[i].Expression) is DBxColumn)
-          // Простое поле
+          // РџСЂРѕСЃС‚РѕРµ РїРѕР»Рµ
           buf.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
         else
         {
-          // Вычисляемое поле
+          // Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РїРѕР»Рµ
           DBxSqlBuffer buf2 = new DBxSqlBuffer();
           buf2.Clear();
           buf2.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
           string Expr = buf2.SB.ToString();
-          // Имя столбца
+          // РРјСЏ СЃС‚РѕР»Р±С†Р°
           string ExprColName = "$$Sort_" + DataTools.MD5SumFromString(Expr);
 
           // 16.10.2019
-          // Тип данных для столбца проверяем по другому
+          // РўРёРї РґР°РЅРЅС‹С… РґР»СЏ СЃС‚РѕР»Р±С†Р° РїСЂРѕРІРµСЂСЏРµРј РїРѕ РґСЂСѓРіРѕРјСѓ
           DefValAccess dva = new DefValAccess(dv.Table);
           object defVal = Order.Parts[i].Expression.GetValue(dva, false);
           if (defVal == null)
-            throw new NullReferenceException("Для выражения \"" + Expr + "\" порядка сортировки \"" + DisplayName + "\" не удалось вычислить значение по умолчанию, чтобы определить тип данных");
+            throw new NullReferenceException("Р”Р»СЏ РІС‹СЂР°Р¶РµРЅРёСЏ \"" + Expr + "\" РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё \"" + DisplayName + "\" РЅРµ СѓРґР°Р»РѕСЃСЊ РІС‹С‡РёСЃР»РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, С‡С‚РѕР±С‹ РѕРїСЂРµРґРµР»РёС‚СЊ С‚РёРї РґР°РЅРЅС‹С…");
           Type dataType = defVal.GetType();
 
 
-          // Столбец добавляется только при необходимости, чтобы исключить размножение
-          // столбцов при каждом переключении сортировки
+          // РЎС‚РѕР»Р±РµС† РґРѕР±Р°РІР»СЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё, С‡С‚РѕР±С‹ РёСЃРєР»СЋС‡РёС‚СЊ СЂР°Р·РјРЅРѕР¶РµРЅРёРµ
+          // СЃС‚РѕР»Р±С†РѕРІ РїСЂРё РєР°Р¶РґРѕРј РїРµСЂРµРєР»СЋС‡РµРЅРёРё СЃРѕСЂС‚РёСЂРѕРІРєРё
           if (!dv.Table.Columns.Contains(ExprColName))
           {
             DataColumn Col = new DataColumn(ExprColName, dataType, Expr);
             dv.Table.Columns.Add(Col);
           }
 
-          // В Sort добавляется имя вычисляемого столбца
+          // Р’ Sort РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°
           buf.SB.Append(ExprColName);
         }
 
-        // Признак обратной сортировки
+        // РџСЂРёР·РЅР°Рє РѕР±СЂР°С‚РЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРё
         if (Order.Parts[i].SortOrder == ListSortDirection.Descending)
           buf.SB.Append(" DESC");
       }
@@ -183,20 +183,20 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Реализация свойства EFPDBxGridView.Orders.
-  /// Также используется для EFPDBxGridProducer.Orders.
+  /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° EFPDBxGridView.Orders.
+  /// РўР°РєР¶Рµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ EFPDBxGridProducer.Orders.
   /// </summary>
   public class EFPDBxViewOrders : EFPDataViewOrders
   {
-    #region Методы добавления
+    #region РњРµС‚РѕРґС‹ РґРѕР±Р°РІР»РµРЅРёСЏ
 
     /// <summary>
-    /// Создает порядок сортировки EFPDBxGridViewOrder и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё EFPDBxGridViewOrder Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="order">Порядок сортировки для SELECT .. ORDER BY</param>
-    /// <param name="displayName">Отображаемое имя для меню</param>
-    /// <param name="sortInfo">Столбец табличного просмотра для нажатия мышью</param>
-    /// <returns>Созданный порядок сортировки</returns>
+    /// <param name="order">РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ SELECT .. ORDER BY</param>
+    /// <param name="displayName">РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ РґР»СЏ РјРµРЅСЋ</param>
+    /// <param name="sortInfo">РЎС‚РѕР»Р±РµС† С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РґР»СЏ РЅР°Р¶Р°С‚РёСЏ РјС‹С€СЊСЋ</param>
+    /// <returns>РЎРѕР·РґР°РЅРЅС‹Р№ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё</returns>
     public EFPDBxViewOrder Add(DBxOrder order, string displayName, EFPDataGridViewSortInfo sortInfo)
     {
 #if DEBUG
@@ -209,8 +209,8 @@ namespace FreeLibSet.Forms.Docs
       if (!sortInfo.IsEmpty)
         item.SortInfo = sortInfo;
       base.Add(item);
-      //// Если первое поле в порядке сортировки присутствует в просмотре, то столбец
-      //// можно щелкать по заголовку
+      //// Р•СЃР»Рё РїРµСЂРІРѕРµ РїРѕР»Рµ РІ РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РІ РїСЂРѕСЃРјРѕС‚СЂРµ, С‚Рѕ СЃС‚РѕР»Р±РµС†
+      //// РјРѕР¶РЅРѕ С‰РµР»РєР°С‚СЊ РїРѕ Р·Р°РіРѕР»РѕРІРєСѓ
       //EFPDataGridViewColumn Column = GetUsedColumn(Item); // 19.06.2019
       //if (Column != null)
       //  Column.GridColumn.SortMode = DataGridViewColumnSortMode.Programmatic;
@@ -218,12 +218,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает порядок сортировки EFPDBxGridViewOrder и добавляет его в список.
-    /// Столбец табличного просмотра для нажатия мышью определяется автоматически.
+    /// РЎРѕР·РґР°РµС‚ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё EFPDBxGridViewOrder Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє.
+    /// РЎС‚РѕР»Р±РµС† С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РґР»СЏ РЅР°Р¶Р°С‚РёСЏ РјС‹С€СЊСЋ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё.
     /// </summary>
-    /// <param name="order">Порядок сортировки для SELECT .. ORDER BY</param>
-    /// <param name="displayName">Отображаемое имя для меню</param>
-    /// <returns>Созданный порядок сортировки</returns>
+    /// <param name="order">РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ SELECT .. ORDER BY</param>
+    /// <param name="displayName">РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ РґР»СЏ РјРµРЅСЋ</param>
+    /// <returns>РЎРѕР·РґР°РЅРЅС‹Р№ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё</returns>
     public EFPDBxViewOrder Add(DBxOrder order, string displayName)
     {
       return Add(order, displayName, EFPDataGridViewSortInfo.Empty);
@@ -234,17 +234,17 @@ namespace FreeLibSet.Forms.Docs
 
 #if XXX
   /// <summary>
-  /// Описание одного порядка сортировки
+  /// РћРїРёСЃР°РЅРёРµ РѕРґРЅРѕРіРѕ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё
   /// </summary>
   public class EFPGridProducerOrder
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Основной конструктор из объекта DBxOrder. Поддерживаются как простые поля для сортировки, так и выражения
+    /// РћСЃРЅРѕРІРЅРѕР№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёР· РѕР±СЉРµРєС‚Р° DBxOrder. РџРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ РєР°Рє РїСЂРѕСЃС‚С‹Рµ РїРѕР»СЏ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё, С‚Р°Рє Рё РІС‹СЂР°Р¶РµРЅРёСЏ
     /// </summary>
-    /// <param name="dataOrder">Объект сортировки для SQL-запроса</param>
-    /// <param name="displayName">Название порядка сортировки для выбора из меню</param>
+    /// <param name="dataOrder">РћР±СЉРµРєС‚ СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="displayName">РќР°Р·РІР°РЅРёРµ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ РІС‹Р±РѕСЂР° РёР· РјРµРЅСЋ</param>
     public EFPGridProducerOrder(DBxOrder dataOrder, string displayName)
     {
 #if DEBUG
@@ -268,7 +268,7 @@ namespace FreeLibSet.Forms.Docs
         if (DataOrder.Infos[i].Item is DBxOrderColumn)
           sb.Append(((DBxOrderColumn)(DataOrder.Infos[i].Item)).ColumnName);
         else
-          throw new InvalidOperationException("Порядок сортировки " + DataOrder.ToString() + " в позиции " + i.ToString() + " содержит элемент, не являющийся простым полем. Преобразование в GridProducerOrder невозможно");
+          throw new InvalidOperationException("РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё " + DataOrder.ToString() + " РІ РїРѕР·РёС†РёРё " + i.ToString() + " СЃРѕРґРµСЂР¶РёС‚ СЌР»РµРјРµРЅС‚, РЅРµ СЏРІР»СЏСЋС‰РёР№СЃСЏ РїСЂРѕСЃС‚С‹Рј РїРѕР»РµРј. РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ GridProducerOrder РЅРµРІРѕР·РјРѕР¶РЅРѕ");
       }
 
       FColumnNames = sb.ToString();
@@ -282,23 +282,23 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Конструктор из списка полей с запятыми.
-    /// Можно задавать обратный порядок сортировки, но нельзя использовать выражения
+    /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёР· СЃРїРёСЃРєР° РїРѕР»РµР№ СЃ Р·Р°РїСЏС‚С‹РјРё.
+    /// РњРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ РѕР±СЂР°С‚РЅС‹Р№ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё, РЅРѕ РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІС‹СЂР°Р¶РµРЅРёСЏ
     /// </summary>
-    /// <param name="columnNames">Список имен столбцов для сортировки, разделенных запятыми. Поля не должны заключаться в скобки "[]". 
-    /// Для указания порядка сортировки по убыванию задается символ "!" перед именем поля</param>
-    /// <param name="displayName">Название порядка сортировки для выбора из меню</param>
+    /// <param name="columnNames">РЎРїРёСЃРѕРє РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё, СЂР°Р·РґРµР»РµРЅРЅС‹С… Р·Р°РїСЏС‚С‹РјРё. РџРѕР»СЏ РЅРµ РґРѕР»Р¶РЅС‹ Р·Р°РєР»СЋС‡Р°С‚СЊСЃСЏ РІ СЃРєРѕР±РєРё "[]". 
+    /// Р”Р»СЏ СѓРєР°Р·Р°РЅРёСЏ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ СѓР±С‹РІР°РЅРёСЋ Р·Р°РґР°РµС‚СЃСЏ СЃРёРјРІРѕР» "!" РїРµСЂРµРґ РёРјРµРЅРµРј РїРѕР»СЏ</param>
+    /// <param name="displayName">РќР°Р·РІР°РЅРёРµ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ РІС‹Р±РѕСЂР° РёР· РјРµРЅСЋ</param>
     public EFPGridProducerOrder(string columnNames, string displayName)
       : this(DBxOrder.FromColumnNames(columnNames), displayName)
     {
     }
 
     /// <summary>
-    /// Конструктор из объекта DBxColumns.
-    /// Нельзя задать обратный порядок сортировки
+    /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёР· РѕР±СЉРµРєС‚Р° DBxColumns.
+    /// РќРµР»СЊР·СЏ Р·Р°РґР°С‚СЊ РѕР±СЂР°С‚РЅС‹Р№ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё
     /// </summary>
-    /// <param name="columnNames">Список имен полей для сортировки</param>
-    /// <param name="displayName">Название порядка сортировки для выбора из меню</param>
+    /// <param name="columnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё</param>
+    /// <param name="displayName">РќР°Р·РІР°РЅРёРµ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ РІС‹Р±РѕСЂР° РёР· РјРµРЅСЋ</param>
     public EFPGridProducerOrder(DBxColumns columnNames, string displayName)
       : this(columnNames.AsString, displayName)
     {
@@ -306,34 +306,34 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает порядок сортировки как объект DBxOrder.
-    /// Свойство задается в конструкторе
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РєР°Рє РѕР±СЉРµРєС‚ DBxOrder.
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public DBxOrder DataOrder { get { return _DataOrder; } }
     private DBxOrder _DataOrder;
 
     /// <summary>
-    /// Отображаемое имя для выбора порядка сортировки через меню
+    /// РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ РґР»СЏ РІС‹Р±РѕСЂР° РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё С‡РµСЂРµР· РјРµРЅСЋ
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
     private string _DisplayName;
 
     /// <summary>
-    /// Столбец сортировки для табличного просмотра. 
-    /// Если SortInfo.IsEmpty=true (значение по умолчанию), то сортировка выподняется для первого столбца в
-    /// списке ColumnNames
+    /// РЎС‚РѕР»Р±РµС† СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°. 
+    /// Р•СЃР»Рё SortInfo.IsEmpty=true (Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ СЃРѕСЂС‚РёСЂРѕРІРєР° РІС‹РїРѕРґРЅСЏРµС‚СЃСЏ РґР»СЏ РїРµСЂРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ
+    /// СЃРїРёСЃРєРµ ColumnNames
     /// </summary>
     public EFPDataGridViewSortInfo SortInfo { get { return _SortInfo; } set { _SortInfo = value; } }
     private EFPDataGridViewSortInfo _SortInfo;
 
     /// <summary>
-    /// Список необходимых столбцов, которые все должны присутствовать в просмотре, чтобы данный порядок сортировки был разрешен
-    /// По умолчанию возвращается список полей, по которым выполняется сортировка (свойство Columns)
-    /// Установка специального списка столбцов может потребоваться, если в наборе данных присутствуют дублирующие поля, одно из
-    /// которых используется для отображения (используется в GridProducerColumn), а второе содержит значение для сортировки (и не отображается)
+    /// РЎРїРёСЃРѕРє РЅРµРѕР±С…РѕРґРёРјС‹С… СЃС‚РѕР»Р±С†РѕРІ, РєРѕС‚РѕСЂС‹Рµ РІСЃРµ РґРѕР»Р¶РЅС‹ РїСЂРёСЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ РІ РїСЂРѕСЃРјРѕС‚СЂРµ, С‡С‚РѕР±С‹ РґР°РЅРЅС‹Р№ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё Р±С‹Р» СЂР°Р·СЂРµС€РµРЅ
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃРїРёСЃРѕРє РїРѕР»РµР№, РїРѕ РєРѕС‚РѕСЂС‹Рј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃРѕСЂС‚РёСЂРѕРІРєР° (СЃРІРѕР№СЃС‚РІРѕ Columns)
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРїРµС†РёР°Р»СЊРЅРѕРіРѕ СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ РјРѕР¶РµС‚ РїРѕС‚СЂРµР±РѕРІР°С‚СЊСЃСЏ, РµСЃР»Рё РІ РЅР°Р±РѕСЂРµ РґР°РЅРЅС‹С… РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‚ РґСѓР±Р»РёСЂСѓСЋС‰РёРµ РїРѕР»СЏ, РѕРґРЅРѕ РёР·
+    /// РєРѕС‚РѕСЂС‹С… РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ GridProducerColumn), Р° РІС‚РѕСЂРѕРµ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё (Рё РЅРµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ)
     /// </summary>
     public DBxColumns RequiredColumns
     {
@@ -352,8 +352,8 @@ namespace FreeLibSet.Forms.Docs
     private DBxColumns _RequiredColumns;
 
     /// <summary>
-    /// Возвращает массив столбцов в виде объекта DBxColumns
-    /// Информация о порядке сортировки (по возрастанию или убыванию) теряется
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ СЃС‚РѕР»Р±С†РѕРІ РІ РІРёРґРµ РѕР±СЉРµРєС‚Р° DBxColumns
+    /// РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё (РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ РёР»Рё СѓР±С‹РІР°РЅРёСЋ) С‚РµСЂСЏРµС‚СЃСЏ
     /// </summary>
     public DBxColumns Columns
     {
@@ -371,8 +371,8 @@ namespace FreeLibSet.Forms.Docs
     private DBxColumns _Columns;
 
     /// <summary>
-    /// Столбец сортировки по умолчанию
-    /// Используется, когда столбец сортировки не задан в явном виде (SortInfo.IsEmpty=true)
+    /// РЎС‚РѕР»Р±РµС† СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РєРѕРіРґР° СЃС‚РѕР»Р±РµС† СЃРѕСЂС‚РёСЂРѕРІРєРё РЅРµ Р·Р°РґР°РЅ РІ СЏРІРЅРѕРј РІРёРґРµ (SortInfo.IsEmpty=true)
     /// </summary>
     public EFPDataGridViewSortInfo DefaultSortInfo
     {
@@ -381,41 +381,41 @@ namespace FreeLibSet.Forms.Docs
         DBxColumnList lst = new DBxColumnList();
         _DataOrder.Parts[0].Expression.GetColumnNames(lst);
         if (lst.Count == 0)
-          throw new InvalidOperationException("Элемент сортировки " + _DataOrder.Parts[0].Expression.ToString() + " не вернул ни одного имени поля");
+          throw new InvalidOperationException("Р­Р»РµРјРµРЅС‚ СЃРѕСЂС‚РёСЂРѕРІРєРё " + _DataOrder.Parts[0].Expression.ToString() + " РЅРµ РІРµСЂРЅСѓР» РЅРё РѕРґРЅРѕРіРѕ РёРјРµРЅРё РїРѕР»СЏ");
 
         return new EFPDataGridViewSortInfo(lst[0], _DataOrder.Parts[0].SortOrder==ListSortDirection.Desc);
       }
     }
 
     /// <summary>
-    /// Текст для сохранения выбранного порядка в настройках пользователя
+    /// РўРµРєСЃС‚ РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РїРѕСЂСЏРґРєР° РІ РЅР°СЃС‚СЂРѕР№РєР°С… РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     /// </summary>
     public string ConfigName { get { return _ConfigName; } }
     private string _ConfigName;
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return DisplayName + " (" + ConfigName + ")";
     }
 
     /// <summary>
-    /// Установить свойство SortInfo на столбец, заданный индексом ColumnIndex
-    /// (нумерация столбцов начинается с нуля)
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРІРѕР№СЃС‚РІРѕ SortInfo РЅР° СЃС‚РѕР»Р±РµС†, Р·Р°РґР°РЅРЅС‹Р№ РёРЅРґРµРєСЃРѕРј ColumnIndex
+    /// (РЅСѓРјРµСЂР°С†РёСЏ СЃС‚РѕР»Р±С†РѕРІ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ РЅСѓР»СЏ)
     /// </summary>
     /// <param name="columnIndex"></param>
     public void SetSortInfo(int columnIndex)
     {
 #if DEBUG
       if (columnIndex < 0 || columnIndex >= DataOrder.Parts.Length)
-        throw new ArgumentOutOfRangeException("columnIndex", columnIndex, "Индекс имени столбца вне диапазона");
+        throw new ArgumentOutOfRangeException("columnIndex", columnIndex, "РРЅРґРµРєСЃ РёРјРµРЅРё СЃС‚РѕР»Р±С†Р° РІРЅРµ РґРёР°РїР°Р·РѕРЅР°");
 #endif
       DBxOrderPart Item = DataOrder.Parts[columnIndex];
 
@@ -424,26 +424,26 @@ namespace FreeLibSet.Forms.Docs
       if (lst.Count > 0)
         SortInfo = new EFPDataGridViewSortInfo(lst[0], Item.SortOrder==ListSortDirection.Desc);
       else
-        throw new InvalidOperationException("Элемент сортировки " + Item.Expression.ToString() + " не вернул ни одного имени поля");
+        throw new InvalidOperationException("Р­Р»РµРјРµРЅС‚ СЃРѕСЂС‚РёСЂРѕРІРєРё " + Item.Expression.ToString() + " РЅРµ РІРµСЂРЅСѓР» РЅРё РѕРґРЅРѕРіРѕ РёРјРµРЅРё РїРѕР»СЏ");
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Коллекция порядков сортировки для свойства Gridproducer.Orders
+  /// РљРѕР»Р»РµРєС†РёСЏ РїРѕСЂСЏРґРєРѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ СЃРІРѕР№СЃС‚РІР° Gridproducer.Orders
   /// </summary>
   public class EFPGridProducerOrders : List<EFPGridProducerOrder>
   {
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Добавить порядок сортировки.
+    /// Р”РѕР±Р°РІРёС‚СЊ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё.
     /// </summary>
-    /// <param name="columnNames">Имена столбцов, разделенные запятыми. Для указания сортировки по убыванию, имени поля должен предшествать "!"</param>
-    /// <param name="displayName">Отображаемое имя. Используется при построении локального меню просмотра</param>
-    /// <param name="sortInfo">Указание способа выбора порядка сортировки в просмотре: по какому столбцу щелкать и вкакую сторону рисуется треугольник</param>
-    /// <returns>Объект GridProducerOrder</returns>
+    /// <param name="columnNames">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ, СЂР°Р·РґРµР»РµРЅРЅС‹Рµ Р·Р°РїСЏС‚С‹РјРё. Р”Р»СЏ СѓРєР°Р·Р°РЅРёСЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ СѓР±С‹РІР°РЅРёСЋ, РёРјРµРЅРё РїРѕР»СЏ РґРѕР»Р¶РµРЅ РїСЂРµРґС€РµСЃС‚РІР°С‚СЊ "!"</param>
+    /// <param name="displayName">РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="sortInfo">РЈРєР°Р·Р°РЅРёРµ СЃРїРѕСЃРѕР±Р° РІС‹Р±РѕСЂР° РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё РІ РїСЂРѕСЃРјРѕС‚СЂРµ: РїРѕ РєР°РєРѕРјСѓ СЃС‚РѕР»Р±С†Сѓ С‰РµР»РєР°С‚СЊ Рё РІРєР°РєСѓСЋ СЃС‚РѕСЂРѕРЅСѓ СЂРёСЃСѓРµС‚СЃСЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРє</param>
+    /// <returns>РћР±СЉРµРєС‚ GridProducerOrder</returns>
     public EFPGridProducerOrder Add(string columnNames, string displayName, EFPDataGridViewSortInfo sortInfo)
     {
       EFPGridProducerOrder Item = new EFPGridProducerOrder(columnNames, displayName);
@@ -453,14 +453,14 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавить порядок сортировки.
-    /// Эта версия автоматически определяет, по какому столбцу нужно тыкать мышью и куда рисуется треугольник,
-    /// исходя из первого столбца в списке<paramref name="columnNames"/>. Если в просмотре не отображается первый
-    /// столбец из списка сортировки, порядок сортировки можно будет выбирать только из локального меню
+    /// Р”РѕР±Р°РІРёС‚СЊ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕРїСЂРµРґРµР»СЏРµС‚, РїРѕ РєР°РєРѕРјСѓ СЃС‚РѕР»Р±С†Сѓ РЅСѓР¶РЅРѕ С‚С‹РєР°С‚СЊ РјС‹С€СЊСЋ Рё РєСѓРґР° СЂРёСЃСѓРµС‚СЃСЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРє,
+    /// РёСЃС…РѕРґСЏ РёР· РїРµСЂРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ СЃРїРёСЃРєРµ<paramref name="columnNames"/>. Р•СЃР»Рё РІ РїСЂРѕСЃРјРѕС‚СЂРµ РЅРµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РїРµСЂРІС‹Р№
+    /// СЃС‚РѕР»Р±РµС† РёР· СЃРїРёСЃРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё, РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РјРѕР¶РЅРѕ Р±СѓРґРµС‚ РІС‹Р±РёСЂР°С‚СЊ С‚РѕР»СЊРєРѕ РёР· Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
     /// </summary>
-    /// <param name="columnNames">Имена столбцов, разделенные запятыми. Для указания сортировки по убыванию, имени поля должен предшествать "!"</param>
-    /// <param name="displayName">Отображаемое имя. Используется при построении локального меню просмотра</param>
-    /// <returns>Объект GridProducerOrder</returns>
+    /// <param name="columnNames">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ, СЂР°Р·РґРµР»РµРЅРЅС‹Рµ Р·Р°РїСЏС‚С‹РјРё. Р”Р»СЏ СѓРєР°Р·Р°РЅРёСЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ СѓР±С‹РІР°РЅРёСЋ, РёРјРµРЅРё РїРѕР»СЏ РґРѕР»Р¶РµРЅ РїСЂРµРґС€РµСЃС‚РІР°С‚СЊ "!"</param>
+    /// <param name="displayName">РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <returns>РћР±СЉРµРєС‚ GridProducerOrder</returns>
     public EFPGridProducerOrder Add(string columnNames, string displayName)
     {
       EFPGridProducerOrder Item = new EFPGridProducerOrder(columnNames, displayName);
@@ -469,14 +469,14 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавить порядок сортировки.
-    /// Эта версия задает отображаемое имя, равное списку столбцов и применяется редко.
-    /// Эта версия автоматически определяет, по какому столбцу нужно тыкать мышью и куда рисуется треугольник,
-    /// исходя из первого столбца в списке<paramref name="columnNames"/>. Если в просмотре не отображается первый
-    /// столбец из списка сортировки, порядок сортировки можно будет выбирать только из локального меню
+    /// Р”РѕР±Р°РІРёС‚СЊ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ Р·Р°РґР°РµС‚ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ, СЂР°РІРЅРѕРµ СЃРїРёСЃРєСѓ СЃС‚РѕР»Р±С†РѕРІ Рё РїСЂРёРјРµРЅСЏРµС‚СЃСЏ СЂРµРґРєРѕ.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕРїСЂРµРґРµР»СЏРµС‚, РїРѕ РєР°РєРѕРјСѓ СЃС‚РѕР»Р±С†Сѓ РЅСѓР¶РЅРѕ С‚С‹РєР°С‚СЊ РјС‹С€СЊСЋ Рё РєСѓРґР° СЂРёСЃСѓРµС‚СЃСЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРє,
+    /// РёСЃС…РѕРґСЏ РёР· РїРµСЂРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ СЃРїРёСЃРєРµ<paramref name="columnNames"/>. Р•СЃР»Рё РІ РїСЂРѕСЃРјРѕС‚СЂРµ РЅРµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РїРµСЂРІС‹Р№
+    /// СЃС‚РѕР»Р±РµС† РёР· СЃРїРёСЃРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё, РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РјРѕР¶РЅРѕ Р±СѓРґРµС‚ РІС‹Р±РёСЂР°С‚СЊ С‚РѕР»СЊРєРѕ РёР· Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
     /// </summary>
-    /// <param name="columnNames">Имена столбцов, разделенные запятыми. Для указания сортировки по убыванию, имени поля должен предшествать "!"</param>
-    /// <returns>Объект GridProducerOrder</returns>
+    /// <param name="columnNames">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ, СЂР°Р·РґРµР»РµРЅРЅС‹Рµ Р·Р°РїСЏС‚С‹РјРё. Р”Р»СЏ СѓРєР°Р·Р°РЅРёСЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ СѓР±С‹РІР°РЅРёСЋ, РёРјРµРЅРё РїРѕР»СЏ РґРѕР»Р¶РµРЅ РїСЂРµРґС€РµСЃС‚РІР°С‚СЊ "!"</param>
+    /// <returns>РћР±СЉРµРєС‚ GridProducerOrder</returns>
     public EFPGridProducerOrder Add(string columnNames)
     {
       return Add(columnNames, columnNames);

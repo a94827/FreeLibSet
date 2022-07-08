@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -15,11 +15,11 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Выбор порядка сортировки строк табличного просмотра
+  /// Р’С‹Р±РѕСЂ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё СЃС‚СЂРѕРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
   /// </summary>
   internal partial class EFPDataGridViewOrderForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPDataGridViewOrderForm(EFPDataGridView controlProvider)
     {
@@ -27,12 +27,12 @@ namespace FreeLibSet.Forms
       InitializeComponent();
       Icon = EFPApp.MainImageIcon("OrderAZ");
       EFPFormProvider efpForm = new EFPFormProvider(this);
-      efpForm.ConfigSectionName = "EFPDataGridViewOrderForm"; // для сохранения размеров диалога
+      efpForm.ConfigSectionName = "EFPDataGridViewOrderForm"; // РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ РґРёР°Р»РѕРіР°
 
       ThetabControl.ImageList = EFPApp.MainImages;
       EFPTabControl efpTabControl = new EFPTabControl(efpForm, ThetabControl);
 
-      #region Предопределенные порядки
+      #region РџСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РїРѕСЂСЏРґРєРё
 
       if (controlProvider.Orders.Count > 0)
       {
@@ -58,7 +58,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Произвольная сортировка
+      #region РџСЂРѕРёР·РІРѕР»СЊРЅР°СЏ СЃРѕСЂС‚РёСЂРѕРІРєР°
 
       if (controlProvider.CustomOrderAllowed)
       {
@@ -69,14 +69,14 @@ namespace FreeLibSet.Forms
         btnAdd.Image = EFPApp.MainImages.Images["RightRight"];
         btnAdd.ImageAlign = ContentAlignment.MiddleCenter;
         EFPButton efpAdd = new EFPButton(efpForm, btnAdd);
-        efpAdd.DisplayName = "Добавить";
-        efpAdd.ToolTipText = "Добавляет столбец в список выбранных для сортировки";
+        efpAdd.DisplayName = "Р”РѕР±Р°РІРёС‚СЊ";
+        efpAdd.ToolTipText = "Р”РѕР±Р°РІР»СЏРµС‚ СЃС‚РѕР»Р±РµС† РІ СЃРїРёСЃРѕРє РІС‹Р±СЂР°РЅРЅС‹С… РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё";
 
         btnRemove.Image = EFPApp.MainImages.Images["LeftLeft"];
         btnRemove.ImageAlign = ContentAlignment.MiddleCenter;
         EFPButton efpRemove = new EFPButton(efpForm, btnRemove);
-        efpRemove.DisplayName = "Удалить";
-        efpRemove.ToolTipText = "Удаляет столбец из сортировки";
+        efpRemove.DisplayName = "РЈРґР°Р»РёС‚СЊ";
+        efpRemove.ToolTipText = "РЈРґР°Р»СЏРµС‚ СЃС‚РѕР»Р±РµС† РёР· СЃРѕСЂС‚РёСЂРѕРІРєРё";
 
         EFPDataGridView efpSelected = new EFPDataGridView(efpForm, grSelected);
         efpSelected.ToolBarPanel = panSpbSelected;
@@ -86,7 +86,7 @@ namespace FreeLibSet.Forms
         efpCustom.EditItem += new EFPTwoListSelectorEditItemEventHandler(efpCustom_EditItem);
 
         List<SortItem> lstAll = new List<SortItem>();
-        // Словарь соответствия имен полей для сортировки и EFPDataGridViewColumn
+        // РЎР»РѕРІР°СЂСЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЏ РёРјРµРЅ РїРѕР»РµР№ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё Рё EFPDataGridViewColumn
         Dictionary<string, EFPDataGridViewColumn> columnsForSort = new Dictionary<string, EFPDataGridViewColumn>();
 
         foreach (EFPDataGridViewColumn col in controlProvider.VisibleColumns)
@@ -117,7 +117,7 @@ namespace FreeLibSet.Forms
               EFPDataGridViewColumn col;
               if (!columnsForSort.TryGetValue(columnNames[i], out col))
               {
-                // В предопределенном порядке сортировки использован столбец, который нельзя использовать для произвольной сортировки
+                // Р’ РїСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅРѕРј РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё РёСЃРїРѕР»СЊР·РѕРІР°РЅ СЃС‚РѕР»Р±РµС†, РєРѕС‚РѕСЂС‹Р№ РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРё
                 a = null;
                 break;
               }
@@ -132,11 +132,11 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка получения элементов сортировки");
+          LogoutTools.LogoutException(e, "РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё");
         }
 
         efpCustom.Validators.AddError(efpCustom.IsNotEmptyEx,
-          "Должно быть выбрано хотя бы одно поле для сортировки",
+          "Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅРѕ С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕ РїРѕР»Рµ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё",
           efpTabControl.TabPages[tpCustom].SelectedEx);
       }
       else
@@ -149,7 +149,7 @@ namespace FreeLibSet.Forms
 
     private EFPDataGridView _ControlProvider;
 
-    #region Предопределенные порядки
+    #region РџСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РїРѕСЂСЏРґРєРё
 
     EFPDataGridView efpFixed;
 
@@ -172,17 +172,17 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Произвольная сортировка
+    #region РџСЂРѕРёР·РІРѕР»СЊРЅР°СЏ СЃРѕСЂС‚РёСЂРѕРІРєР°
 
     EFPTwoListSelector efpCustom;
 
     /// <summary>
-    /// Пара "ИмяПоля-Порядок сортировки".
-    /// Нельзя использовать стандартный класс ListSortDescription, так как там используется ссылка на PropertyDescriptor
+    /// РџР°СЂР° "РРјСЏРџРѕР»СЏ-РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё".
+    /// РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РєР»Р°СЃСЃ ListSortDescription, С‚Р°Рє РєР°Рє С‚Р°Рј РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃСЃС‹Р»РєР° РЅР° PropertyDescriptor
     /// </summary>
     private class SortItem
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public EFPDataGridViewColumn Column;
 
@@ -190,7 +190,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       public override string ToString()
       {
@@ -207,8 +207,8 @@ namespace FreeLibSet.Forms
       {
         //return Object.ReferenceEquals(a.Column, b.Column);
 
-        // В просмотре могут быть два столбца, сортировка которых выполняется одинаково
-        // (например, текстовое представление перечисление и значок)
+        // Р’ РїСЂРѕСЃРјРѕС‚СЂРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РґРІР° СЃС‚РѕР»Р±С†Р°, СЃРѕСЂС‚РёСЂРѕРІРєР° РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕРґРёРЅР°РєРѕРІРѕ
+        // (РЅР°РїСЂРёРјРµСЂ, С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ Рё Р·РЅР°С‡РѕРє)
         return String.Equals(a.Column.CustomOrderColumnName, b.Column.CustomOrderColumnName, StringComparison.Ordinal);
       }
 
@@ -230,7 +230,7 @@ namespace FreeLibSet.Forms
       SortItem item = (SortItem)(args.Item);
       if (args.IsSelected)
       {
-        args.TextValue = item.Column.DisplayName + (item.Direction == ListSortDirection.Ascending ? " (по возрастанию)" : " (по убыванию)");
+        args.TextValue = item.Column.DisplayName + (item.Direction == ListSortDirection.Ascending ? " (РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ)" : " (РїРѕ СѓР±С‹РІР°РЅРёСЋ)");
         args.ImageKey = (item.Direction == ListSortDirection.Ascending) ? "Up" : "Down";
       }
       else
@@ -253,7 +253,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Статический метод
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ
 
     internal static bool PerformSort(EFPDataGridView controlProvider)
     {
@@ -278,7 +278,7 @@ namespace FreeLibSet.Forms
           }
           else
           {
-            // Собираем сортировку
+            // РЎРѕР±РёСЂР°РµРј СЃРѕСЂС‚РёСЂРѕРІРєСѓ
             controlProvider.CustomOrderActive = true;
             string[] columnNames = new string[frm.efpCustom.SelectedItems.Length];
             ListSortDirection[] directions = new ListSortDirection[frm.efpCustom.SelectedItems.Length];

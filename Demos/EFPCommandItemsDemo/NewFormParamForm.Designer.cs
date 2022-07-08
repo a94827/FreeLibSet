@@ -1,4 +1,4 @@
-namespace EFPCommandItemsDemo
+п»їnamespace EFPCommandItemsDemo
 {
   partial class NewFormParamForm
   {
@@ -64,7 +64,7 @@ namespace EFPCommandItemsDemo
       this.groupBox2.Size = new System.Drawing.Size(200, 81);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Способ показа";
+      this.groupBox2.Text = "РЎРїРѕСЃРѕР± РїРѕРєР°Р·Р°";
       // 
       // rbDialog
       // 
@@ -98,7 +98,7 @@ namespace EFPCommandItemsDemo
       this.groupBox1.Size = new System.Drawing.Size(200, 108);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Форма";
+      this.groupBox1.Text = "Р¤РѕСЂРјР°";
       // 
       // rb2
       // 
@@ -108,7 +108,7 @@ namespace EFPCommandItemsDemo
       this.rb2.Size = new System.Drawing.Size(112, 17);
       this.rb2.TabIndex = 1;
       this.rb2.TabStop = true;
-      this.rb2.Text = "Форма с полями";
+      this.rb2.Text = "Р¤РѕСЂРјР° СЃ РїРѕР»СЏРјРё";
       this.rb2.UseVisualStyleBackColor = true;
       // 
       // rb1
@@ -119,7 +119,7 @@ namespace EFPCommandItemsDemo
       this.rb1.Size = new System.Drawing.Size(130, 17);
       this.rb1.TabIndex = 0;
       this.rb1.TabStop = true;
-      this.rb1.Text = "Форма с вкладками";
+      this.rb1.Text = "Р¤РѕСЂРјР° СЃ РІРєР»Р°РґРєР°РјРё";
       this.rb1.UseVisualStyleBackColor = true;
       // 
       // panel1
@@ -139,7 +139,7 @@ namespace EFPCommandItemsDemo
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(80, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -149,7 +149,7 @@ namespace EFPCommandItemsDemo
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(80, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // rb3
@@ -160,7 +160,7 @@ namespace EFPCommandItemsDemo
       this.rb3.Size = new System.Drawing.Size(141, 17);
       this.rb3.TabIndex = 2;
       this.rb3.TabStop = true;
-      this.rb3.Text = "Форма с одним полем";
+      this.rb3.Text = "Р¤РѕСЂРјР° СЃ РѕРґРЅРёРј РїРѕР»РµРј";
       this.rb3.UseVisualStyleBackColor = true;
       // 
       // NewFormParamForm
@@ -176,7 +176,7 @@ namespace EFPCommandItemsDemo
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "NewFormParamForm";
-      this.Text = "Показать форму";
+      this.Text = "РџРѕРєР°Р·Р°С‚СЊ С„РѕСЂРјСѓ";
       this.panel2.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();

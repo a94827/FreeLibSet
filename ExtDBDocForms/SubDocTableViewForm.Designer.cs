@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms.Docs
+Ôªønamespace FreeLibSet.Forms.Docs
 {
   partial class SubDocTableViewForm
   {
@@ -59,7 +59,7 @@ namespace FreeLibSet.Forms.Docs
       this.TheNoButton.Name = "TheNoButton";
       this.TheNoButton.Size = new System.Drawing.Size(88, 24);
       this.TheNoButton.TabIndex = 2;
-      this.TheNoButton.Text = "&ÕÂÚ";
+      this.TheNoButton.Text = "&–ù–µ—Ç";
       this.TheNoButton.UseVisualStyleBackColor = true;
       // 
       // TheCancelButton
@@ -70,7 +70,7 @@ namespace FreeLibSet.Forms.Docs
       this.TheCancelButton.Name = "TheCancelButton";
       this.TheCancelButton.Size = new System.Drawing.Size(88, 24);
       this.TheCancelButton.TabIndex = 1;
-      this.TheCancelButton.Text = "ŒÚÏÂÌ‡";
+      this.TheCancelButton.Text = "–û—Ç–º–µ–Ω–∞";
       // 
       // TheOKButton
       // 
@@ -80,7 +80,7 @@ namespace FreeLibSet.Forms.Docs
       this.TheOKButton.Name = "TheOKButton";
       this.TheOKButton.Size = new System.Drawing.Size(88, 24);
       this.TheOKButton.TabIndex = 0;
-      this.TheOKButton.Text = "Œ& ";
+      this.TheOKButton.Text = "–û&–ö";
       // 
       // ControlPanel
       // 

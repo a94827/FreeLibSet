@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -16,14 +16,14 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.FIAS
 {
-  #region Делегаты
+  #region Р”РµР»РµРіР°С‚С‹
 
   /// <summary>
-  /// Аргументы событий FiasDB.ExecProcXxx
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёР№ FiasDB.ExecProcXxx
   /// </summary>
   public sealed class FiasExecProcEventArgs : EventArgs
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasExecProcEventArgs(ExecProc execProc, object userData)
     {
@@ -33,16 +33,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Объект процедуры (закрытого класса)
+    /// РћР±СЉРµРєС‚ РїСЂРѕС†РµРґСѓСЂС‹ (Р·Р°РєСЂС‹С‚РѕРіРѕ РєР»Р°СЃСЃР°)
     /// </summary>
     public ExecProc ExecProc { get { return _ExecProc; } }
     private ExecProc _ExecProc;
 
     /// <summary>
-    /// Произвольные пользовательские данные, задаваемые свойством FiasDistributedSource.UserData
+    /// РџСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ, Р·Р°РґР°РІР°РµРјС‹Рµ СЃРІРѕР№СЃС‚РІРѕРј FiasDistributedSource.UserData
     /// </summary>
     public object UserData { get { return _UserData; } }
     private object _UserData;
@@ -51,66 +51,66 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Делегат событий FiasDB.ExecProcXxx
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёР№ FiasDB.ExecProcXxx
   /// </summary>
-  /// <param name="sender">Объект FiasDB</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РћР±СЉРµРєС‚ FiasDB</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void FiasExecProcEventHandler(object sender, FiasExecProcEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Реализует работу с базой данных классификатора. 
-  /// Этот класс создается пользовательским кодом на стороне сервера в единственном экземпляре.
-  /// Пользовательский код отвечает за удаление объекта
-  /// Отвечает за инициализацию структуры базы данных.
-  /// Содержит буферизованный источник данных для работы с классификатором на стороне сервера (свойство Source).
+  /// Р РµР°Р»РёР·СѓРµС‚ СЂР°Р±РѕС‚Сѓ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°. 
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ СЃРѕР·РґР°РµС‚СЃСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРј РєРѕРґРѕРј РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР° РІ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРј СЌРєР·РµРјРїР»СЏСЂРµ.
+  /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РєРѕРґ РѕС‚РІРµС‡Р°РµС‚ Р·Р° СѓРґР°Р»РµРЅРёРµ РѕР±СЉРµРєС‚Р°
+  /// РћС‚РІРµС‡Р°РµС‚ Р·Р° РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+  /// РЎРѕРґРµСЂР¶РёС‚ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂРѕРј РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР° (СЃРІРѕР№СЃС‚РІРѕ Source).
   /// </summary>
   public sealed class FiasDB : SimpleDisposableObject
   {
     // 03.01.2021
-    // Можно использовать базовый класс без деструктора
+    // РњРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ Р±РµР· РґРµСЃС‚СЂСѓРєС‚РѕСЂР°
 
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     /// <summary>
-    /// Создает объект сервера или объект для доступа к классификатору в монолитном приложении.
-    /// Эта версия конструктора используется, если приложение использует готовую базу данных и не может ее обновлять.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃРµСЂРІРµСЂР° РёР»Рё РѕР±СЉРµРєС‚ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ РІ РјРѕРЅРѕР»РёС‚РЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РµСЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РёСЃРїРѕР»СЊР·СѓРµС‚ РіРѕС‚РѕРІСѓСЋ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… Рё РЅРµ РјРѕР¶РµС‚ РµРµ РѕР±РЅРѕРІР»СЏС‚СЊ.
     /// </summary>
-    /// <param name="db">Созданное описание базы данных fias</param>
+    /// <param name="db">РЎРѕР·РґР°РЅРЅРѕРµ РѕРїРёСЃР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… fias</param>
     public FiasDB(DBx db)
       : this(db, null, false)
     {
     }
 
     /// <summary>
-    /// Создает объект сервера или объект для доступа к классификатору в монолитном приложении.
-    /// Задавайте аргумент <paramref name="dbSettings"/>, если приложение отвечает за обновление базы данных классификатора.
-    /// Если приложение обращается к базе данных только на просмотр, а за обновление классификатора отвечает другое
-    /// приложение, задавайте null.
-    /// Задание <paramref name="dbSettings"/> только создает при необходимости пустую базу данных и добавляет недостающие пустые таблицы.
-    /// Если таблицы уже существуют, проверяется совместимость переданных настроек и сохраненных в базе данных
-    /// Импорт классификатора ФИАС выполняется отдельно с помощью FiasDBUpdater.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃРµСЂРІРµСЂР° РёР»Рё РѕР±СЉРµРєС‚ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ РІ РјРѕРЅРѕР»РёС‚РЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё.
+    /// Р—Р°РґР°РІР°Р№С‚Рµ Р°СЂРіСѓРјРµРЅС‚ <paramref name="dbSettings"/>, РµСЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РѕС‚РІРµС‡Р°РµС‚ Р·Р° РѕР±РЅРѕРІР»РµРЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+    /// Р•СЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РѕР±СЂР°С‰Р°РµС‚СЃСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… С‚РѕР»СЊРєРѕ РЅР° РїСЂРѕСЃРјРѕС‚СЂ, Р° Р·Р° РѕР±РЅРѕРІР»РµРЅРёРµ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РѕС‚РІРµС‡Р°РµС‚ РґСЂСѓРіРѕРµ
+    /// РїСЂРёР»РѕР¶РµРЅРёРµ, Р·Р°РґР°РІР°Р№С‚Рµ null.
+    /// Р—Р°РґР°РЅРёРµ <paramref name="dbSettings"/> С‚РѕР»СЊРєРѕ СЃРѕР·РґР°РµС‚ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РїСѓСЃС‚СѓСЋ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… Рё РґРѕР±Р°РІР»СЏРµС‚ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ РїСѓСЃС‚С‹Рµ С‚Р°Р±Р»РёС†С‹.
+    /// Р•СЃР»Рё С‚Р°Р±Р»РёС†С‹ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓСЋС‚, РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚СЊ РїРµСЂРµРґР°РЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє Рё СЃРѕС…СЂР°РЅРµРЅРЅС‹С… РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
+    /// РРјРїРѕСЂС‚ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅРѕ СЃ РїРѕРјРѕС‰СЊСЋ FiasDBUpdater.
     /// </summary>
-    /// <param name="db">Созданное описание базы данных fias</param>
-    /// <param name="dbSettings">Настройки базы данных. Вызывается FiasDBSettings.SetReadOnly()</param>
+    /// <param name="db">РЎРѕР·РґР°РЅРЅРѕРµ РѕРїРёСЃР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… fias</param>
+    /// <param name="dbSettings">РќР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С…. Р’С‹Р·С‹РІР°РµС‚СЃСЏ FiasDBSettings.SetReadOnly()</param>
     public FiasDB(DBx db, FiasDBSettings dbSettings)
       : this(db, dbSettings, dbSettings != null)
     {
     }
 
     /// <summary>
-    /// Создает объект сервера или объект для доступа к классификатору в монолитном приложении.
-    /// Задавайте аргумент <paramref name="dbSettings"/>, если приложение отвечает за обновление базы данных классификатора.
-    /// Если приложение обращается к базе данных только на просмотр, а за обновление классификатора отвечает другое
-    /// приложение, задавайте null.
-    /// Задание <paramref name="updateStruct"/> только создает при необходимости пустую базу данных и добавляет недостающие пустые таблицы.
-    /// Если таблицы уже существуют, проверяется совместимость переданных настроек и сохраненных в базе данных.
-    /// Импорт классификатора ФИАС выполняется отдельно с помощью FiasDBUpdater.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃРµСЂРІРµСЂР° РёР»Рё РѕР±СЉРµРєС‚ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂСѓ РІ РјРѕРЅРѕР»РёС‚РЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё.
+    /// Р—Р°РґР°РІР°Р№С‚Рµ Р°СЂРіСѓРјРµРЅС‚ <paramref name="dbSettings"/>, РµСЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РѕС‚РІРµС‡Р°РµС‚ Р·Р° РѕР±РЅРѕРІР»РµРЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+    /// Р•СЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РѕР±СЂР°С‰Р°РµС‚СЃСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… С‚РѕР»СЊРєРѕ РЅР° РїСЂРѕСЃРјРѕС‚СЂ, Р° Р·Р° РѕР±РЅРѕРІР»РµРЅРёРµ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РѕС‚РІРµС‡Р°РµС‚ РґСЂСѓРіРѕРµ
+    /// РїСЂРёР»РѕР¶РµРЅРёРµ, Р·Р°РґР°РІР°Р№С‚Рµ null.
+    /// Р—Р°РґР°РЅРёРµ <paramref name="updateStruct"/> С‚РѕР»СЊРєРѕ СЃРѕР·РґР°РµС‚ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РїСѓСЃС‚СѓСЋ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… Рё РґРѕР±Р°РІР»СЏРµС‚ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ РїСѓСЃС‚С‹Рµ С‚Р°Р±Р»РёС†С‹.
+    /// Р•СЃР»Рё С‚Р°Р±Р»РёС†С‹ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓСЋС‚, РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚СЊ РїРµСЂРµРґР°РЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє Рё СЃРѕС…СЂР°РЅРµРЅРЅС‹С… РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// РРјРїРѕСЂС‚ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅРѕ СЃ РїРѕРјРѕС‰СЊСЋ FiasDBUpdater.
     /// </summary>
-    /// <param name="db">Созданное описание базы данных fias</param>
-    /// <param name="dbSettings">Настройки базы данных. Вызывается FiasDBSettings.SetReadOnly()</param>
-    /// <param name="updateStruct">Будет ли приложение обновлять структуру базы данных</param>
+    /// <param name="db">РЎРѕР·РґР°РЅРЅРѕРµ РѕРїРёСЃР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… fias</param>
+    /// <param name="dbSettings">РќР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С…. Р’С‹Р·С‹РІР°РµС‚СЃСЏ FiasDBSettings.SetReadOnly()</param>
+    /// <param name="updateStruct">Р‘СѓРґРµС‚ Р»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РѕР±РЅРѕРІР»СЏС‚СЊ СЃС‚СЂСѓРєС‚СѓСЂСѓ Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
     public FiasDB(DBx db, FiasDBSettings dbSettings, bool updateStruct)
     {
       if (db == null)
@@ -138,17 +138,17 @@ namespace FreeLibSet.FIAS
       else
       {
         if (!db.DatabaseExists)
-          throw new ArgumentException("База данных не существует: " + db.DatabaseName);
+          throw new ArgumentException("Р‘Р°Р·Р° РґР°РЅРЅС‹С… РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚: " + db.DatabaseName);
       }
 
-      InitIsEmpty(false); // этот метод работает до установки свойства DBx.Struct.
+      InitIsEmpty(false); // СЌС‚РѕС‚ РјРµС‚РѕРґ СЂР°Р±РѕС‚Р°РµС‚ РґРѕ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° DBx.Struct.
 
       if (dbSettings != null)
       {
 
         if (_InternalSettings.FTSMode == FiasFTSMode.FTS3)
         {
-          // Таблица для поиска создается до создания таблицы AddrOb, чтобы в AddrOb можно было создать ссылочное поле
+          // РўР°Р±Р»РёС†Р° РґР»СЏ РїРѕРёСЃРєР° СЃРѕР·РґР°РµС‚СЃСЏ РґРѕ СЃРѕР·РґР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ AddrOb, С‡С‚РѕР±С‹ РІ AddrOb РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СЃРѕР·РґР°С‚СЊ СЃСЃС‹Р»РѕС‡РЅРѕРµ РїРѕР»Рµ
           using (DBxConBase con = db.MainEntry.CreateCon())
           {
             DBxSqlBuffer buffer = new DBxSqlBuffer(db.Formatter);
@@ -156,9 +156,9 @@ namespace FreeLibSet.FIAS
             buffer.FormatTableName("AddrObFTS");
             buffer.SB.Append(" USING fts3(");
             buffer.FormatColumnName("OFFNAME");
-            // Не будем ориентироваться на наличие токенайзера icu и то, правильно ли он
-            // обрабатывает регистр русских букв.
-            // Вместо этого будем руками приводить символы к верхнему регистру и убирать букву "Ё"
+            // РќРµ Р±СѓРґРµРј РѕСЂРёРµРЅС‚РёСЂРѕРІР°С‚СЊСЃСЏ РЅР° РЅР°Р»РёС‡РёРµ С‚РѕРєРµРЅР°Р№Р·РµСЂР° icu Рё С‚Рѕ, РїСЂР°РІРёР»СЊРЅРѕ Р»Рё РѕРЅ
+            // РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚ СЂРµРіРёСЃС‚СЂ СЂСѓСЃСЃРєРёС… Р±СѓРєРІ.
+            // Р’РјРµСЃС‚Рѕ СЌС‚РѕРіРѕ Р±СѓРґРµРј СЂСѓРєР°РјРё РїСЂРёРІРѕРґРёС‚СЊ СЃРёРјРІРѕР»С‹ Рє РІРµСЂС…РЅРµРјСѓ СЂРµРіРёСЃС‚СЂСѓ Рё СѓР±РёСЂР°С‚СЊ Р±СѓРєРІСѓ "РЃ"
             //buffer.SB.Append(" tokenize=icu ru_RU");
             buffer.SB.Append(")");
             con.SQLExecuteScalar(buffer.SB.ToString());
@@ -173,22 +173,22 @@ namespace FreeLibSet.FIAS
           object oXML;
           if (con.GetValue("ClassifInfo", 1, "DBSettings", out oXML))
           {
-            // Сравнение конфигураций
+            // РЎСЂР°РІРЅРµРЅРёРµ РєРѕРЅС„РёРіСѓСЂР°С†РёР№
             TempCfg cfg = new TempCfg();
             cfg.AsXmlText = DataTools.GetString(oXML);
             FiasDBSettings dbSettinngs2 = new FiasDBSettings();
             dbSettinngs2.ReadConfig(cfg);
             cfg.Clear();
-            dbSettinngs2.WriteConfig(cfg); // еще раз перезаписываем, т.к. формат хранения мог немного поменяться в связи с обновлением FIAS.dll
+            dbSettinngs2.WriteConfig(cfg); // РµС‰Рµ СЂР°Р· РїРµСЂРµР·Р°РїРёСЃС‹РІР°РµРј, С‚.Рє. С„РѕСЂРјР°С‚ С…СЂР°РЅРµРЅРёСЏ РјРѕРі РЅРµРјРЅРѕРіРѕ РїРѕРјРµРЅСЏС‚СЊСЃСЏ РІ СЃРІСЏР·Рё СЃ РѕР±РЅРѕРІР»РµРЅРёРµРј FIAS.dll
 
             TempCfg cfg1 = new TempCfg();
             DBSettings.WriteConfig(cfg1);
             if (cfg1.AsXmlText != cfg.AsXmlText)
-              throw new FiasDBSettingsDifferentException("Настройки ФИАС, хранящиеся в базе данных не совпадают с переданными");
+              throw new FiasDBSettingsDifferentException("РќР°СЃС‚СЂРѕР№РєРё Р¤РРђРЎ, С…СЂР°РЅСЏС‰РёРµСЃСЏ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С… РЅРµ СЃРѕРІРїР°РґР°СЋС‚ СЃ РїРµСЂРµРґР°РЅРЅС‹РјРё");
           }
           else
           {
-            // Первый вызов
+            // РџРµСЂРІС‹Р№ РІС‹Р·РѕРІ
             TempCfg cfg = new TempCfg();
             DBSettings.WriteConfig(cfg);
 
@@ -200,8 +200,8 @@ namespace FreeLibSet.FIAS
       }
       else // dbSettings=null
       {
-        db.Struct = CreateDBStruct(true); // только таблица ClassifInfo
-        // не обновляем структуру! db.UpdateStruct();
+        db.Struct = CreateDBStruct(true); // С‚РѕР»СЊРєРѕ С‚Р°Р±Р»РёС†Р° ClassifInfo
+        // РЅРµ РѕР±РЅРѕРІР»СЏРµРј СЃС‚СЂСѓРєС‚СѓСЂСѓ! db.UpdateStruct();
 
         using (DBxCon con = new DBxCon(db.MainEntry))
         {
@@ -214,10 +214,10 @@ namespace FreeLibSet.FIAS
             _DBSettings.ReadConfig(cfg);
           }
           else
-            throw new DBxConsistencyException("В таблице \"ClassifInfo\" нет строки с идентификатом 1");
+            throw new DBxConsistencyException("Р’ С‚Р°Р±Р»РёС†Рµ \"ClassifInfo\" РЅРµС‚ СЃС‚СЂРѕРєРё СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕРј 1");
         }
 
-        db.Struct = CreateDBStruct(false); // все таблицы
+        db.Struct = CreateDBStruct(false); // РІСЃРµ С‚Р°Р±Р»РёС†С‹
         if (_UpdateStruct)
           db.UpdateStruct();
       }
@@ -230,19 +230,19 @@ namespace FreeLibSet.FIAS
           csb.ConnectionString = db.MainEntry.UnpasswordedConnectionString;
           if (MemoryTools.TotalPhysicalMemory >= 2 * FileTools.GByte)
           {
-            //csb["cache size"] = 20000; // 1.3 ГБ при максимальном размере страницы 64кБ
+            //csb["cache size"] = 20000; // 1.3 Р“Р‘ РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј СЂР°Р·РјРµСЂРµ СЃС‚СЂР°РЅРёС†С‹ 64РєР‘
             // 09.09.2020. 
-            // Если забрать 1.3ГБ, то после этого свойство MemoryTools.AvailableMemoryState будет всегда возвращать Low,
-            // т.к. MemoryFailPoint не сможет выделять блок памяти.
-            // Х.З. почему, после обновления соединение закрывается и не должно возвращаться в пул, т.к. есть вызов ClearPool().
-            // Это - затычка!
-            csb["cache size"] = 10000; // 0.66 ГБ при максимальном размере страницы 64кБ
+            // Р•СЃР»Рё Р·Р°Р±СЂР°С‚СЊ 1.3Р“Р‘, С‚Рѕ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ СЃРІРѕР№СЃС‚РІРѕ MemoryTools.AvailableMemoryState Р±СѓРґРµС‚ РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°С‚СЊ Low,
+            // С‚.Рє. MemoryFailPoint РЅРµ СЃРјРѕР¶РµС‚ РІС‹РґРµР»СЏС‚СЊ Р±Р»РѕРє РїР°РјСЏС‚Рё.
+            // РҐ.Р—. РїРѕС‡РµРјСѓ, РїРѕСЃР»Рµ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРѕРµРґРёРЅРµРЅРёРµ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ Рё РЅРµ РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ РІ РїСѓР», С‚.Рє. РµСЃС‚СЊ РІС‹Р·РѕРІ ClearPool().
+            // Р­С‚Рѕ - Р·Р°С‚С‹С‡РєР°!
+            csb["cache size"] = 10000; // 0.66 Р“Р‘ РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј СЂР°Р·РјРµСЂРµ СЃС‚СЂР°РЅРёС†С‹ 64РєР‘
           }
 
           if (_IsEmpty)
           {
             csb["journal mode"] = "Off";
-            csb["synchronous"] = "Off"; // испортится и не жалко.
+            csb["synchronous"] = "Off"; // РёСЃРїРѕСЂС‚РёС‚СЃСЏ Рё РЅРµ Р¶Р°Р»РєРѕ.
           }
           //else
           //  csb["journal mode"] = "Default";
@@ -256,12 +256,12 @@ namespace FreeLibSet.FIAS
           _UpdateEntry = db.MainEntry;
       }
 
-      InitIsEmpty(true); // еще раз, чтобы обновить дату актуальности
+      InitIsEmpty(true); // РµС‰Рµ СЂР°Р·, С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёС‚СЊ РґР°С‚Сѓ Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё
 
       _UnbufferedSource = new FiasDBUnbufferedSource(this);
-      _Source = new FiasDBCachedSource(_UnbufferedSource.CreateProxy(), this); // обязательно после инициализации InitIsEmpty()
+      _Source = new FiasDBCachedSource(_UnbufferedSource.CreateProxy(), this); // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РїРѕСЃР»Рµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё InitIsEmpty()
 
-      //// Открываем соединение и выполняем фиктивную команду, чтобы выполнить текхническое обслуживание БД, если необходимо
+      //// РћС‚РєСЂС‹РІР°РµРј СЃРѕРµРґРёРЅРµРЅРёРµ Рё РІС‹РїРѕР»РЅСЏРµРј С„РёРєС‚РёРІРЅСѓСЋ РєРѕРјР°РЅРґСѓ, С‡С‚РѕР±С‹ РІС‹РїРѕР»РЅРёС‚СЊ С‚РµРєС…РЅРёС‡РµСЃРєРѕРµ РѕР±СЃР»СѓР¶РёРІР°РЅРёРµ Р‘Р”, РµСЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ
       //using (DBxConBase con = DB.MainEntry.CreateCon())
       //{
       //  con.GetRecordCount("AOType");
@@ -273,7 +273,7 @@ namespace FreeLibSet.FIAS
 
     /*
     /// <summary>
-    /// Версия классификатора, использующая стандартную базу данных SQLite "fias.db"
+    /// Р’РµСЂСЃРёСЏ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°, РёСЃРїРѕР»СЊР·СѓСЋС‰Р°СЏ СЃС‚Р°РЅРґР°СЂС‚РЅСѓСЋ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… SQLite "fias.db"
     /// </summary>
     /// <param name="Settings"></param>
     public ClassifDB(ClassifSettings Settings)
@@ -287,9 +287,9 @@ namespace FreeLibSet.FIAS
     } */
 
     /// <summary>
-    /// Удаляет буферизованный источник данных Source.
+    /// РЈРґР°Р»СЏРµС‚ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… Source.
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose()</param>
+    /// <param name="disposing">true, РµСЃР»Рё РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose()</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -314,10 +314,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Структура базы данных
+    #region РЎС‚СЂСѓРєС‚СѓСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Содержит true, если создание индексов было отложено, так база данных пустая
+    /// РЎРѕРґРµСЂР¶РёС‚ true, РµСЃР»Рё СЃРѕР·РґР°РЅРёРµ РёРЅРґРµРєСЃРѕРІ Р±С‹Р»Рѕ РѕС‚Р»РѕР¶РµРЅРѕ, С‚Р°Рє Р±Р°Р·Р° РґР°РЅРЅС‹С… РїСѓСЃС‚Р°СЏ
     /// </summary>
     private bool _IndexDelayed;
 
@@ -329,10 +329,10 @@ namespace FreeLibSet.FIAS
       #region "ClassifInfo"
 
       ts = dbx.Tables.Add("ClassifInfo");
-      ts.Columns.AddId(); // Фиктивный идентификатор, всегда равен 1
-      ts.Columns.AddXmlConfig("DBSettings"); // Данные FiasDBSettings
-      ts.Columns.AddDate("ActualDate", false); // Дата актуальности классификатора
-      ts.Columns.AddDateTime("UpdateTime", false); // Время загрузки или последнего обновления классификатора
+      ts.Columns.AddId(); // Р¤РёРєС‚РёРІРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ, РІСЃРµРіРґР° СЂР°РІРµРЅ 1
+      ts.Columns.AddXmlConfig("DBSettings"); // Р”Р°РЅРЅС‹Рµ FiasDBSettings
+      ts.Columns.AddDate("ActualDate", false); // Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+      ts.Columns.AddDateTime("UpdateTime", false); // Р’СЂРµРјСЏ Р·Р°РіСЂСѓР·РєРё РёР»Рё РїРѕСЃР»РµРґРЅРµРіРѕ РѕР±РЅРѕРІР»РµРЅРёСЏ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
       // 10.09.2020
       if (!classifInfoOnly)
       {
@@ -349,8 +349,8 @@ namespace FreeLibSet.FIAS
       {
         _IndexDelayed = _IsEmpty;
 
-        //bool NoPK = true; // Не использовать первичный ключ типа GUID в таблицах. Будет неявный первичный ключ по rowid.
-        // А для полей AOID и прочих, используем индекс.
+        //bool NoPK = true; // РќРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡ С‚РёРїР° GUID РІ С‚Р°Р±Р»РёС†Р°С…. Р‘СѓРґРµС‚ РЅРµСЏРІРЅС‹Р№ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡ РїРѕ rowid.
+        // Рђ РґР»СЏ РїРѕР»РµР№ AOID Рё РїСЂРѕС‡РёС…, РёСЃРїРѕР»СЊР·СѓРµРј РёРЅРґРµРєСЃ.
         bool noPK = (_DB is FreeLibSet.Data.SQLite.SQLiteDBx); // 30.07.2020
 
 
@@ -358,12 +358,12 @@ namespace FreeLibSet.FIAS
 
         ts = dbx.Tables.Add("ClassifUpdate");
         ts.Columns.AddId();
-        ts.Columns.AddDate("ActualDate", false); // Дата актуальности классификатора
-        ts.Columns.AddInt("Source", DataTools.GetEnumRange(typeof(FiasDBUpdateSource)), false); // Источник данных
-        ts.Columns.AddBoolean("Cumulative", false); // false - первоначальная загрузка, true - накопительное обновление
-        ts.Columns.AddDateTime("StartTime", false); // Время начала обновления
-        ts.Columns.AddDateTime("FinishTime", true); // Время окончания обновления. Если null, то обновление не закончено
-        ts.Columns.AddInt("ErrorCount", true); // Количество ошибок при установке обновления
+        ts.Columns.AddDate("ActualDate", false); // Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+        ts.Columns.AddInt("Source", DataTools.GetEnumRange(typeof(FiasDBUpdateSource)), false); // РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С…
+        ts.Columns.AddBoolean("Cumulative", false); // false - РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ Р·Р°РіСЂСѓР·РєР°, true - РЅР°РєРѕРїРёС‚РµР»СЊРЅРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ
+        ts.Columns.AddDateTime("StartTime", false); // Р’СЂРµРјСЏ РЅР°С‡Р°Р»Р° РѕР±РЅРѕРІР»РµРЅРёСЏ
+        ts.Columns.AddDateTime("FinishTime", true); // Р’СЂРµРјСЏ РѕРєРѕРЅС‡Р°РЅРёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ. Р•СЃР»Рё null, С‚Рѕ РѕР±РЅРѕРІР»РµРЅРёРµ РЅРµ Р·Р°РєРѕРЅС‡РµРЅРѕ
+        ts.Columns.AddInt("ErrorCount", true); // РљРѕР»РёС‡РµСЃС‚РІРѕ РѕС€РёР±РѕРє РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ РѕР±РЅРѕРІР»РµРЅРёСЏ
         // 10.09.2020
         ts.Columns.AddInt64("AddrObCount");
         if (_DBSettings.UseHouse)
@@ -381,7 +381,7 @@ namespace FreeLibSet.FIAS
         ts.Columns.AddString("SCNAME", 30, false);
         ts.Columns.AddString("SOCRNAME", 50, false);
 
-        // Не нужен. ts.Indices.Add("LEVEL,SCNAME");
+        // РќРµ РЅСѓР¶РµРЅ. ts.Indices.Add("LEVEL,SCNAME");
 
         #endregion
 
@@ -409,7 +409,7 @@ namespace FreeLibSet.FIAS
         if (_InternalSettings.FTSMode == FiasFTSMode.FTS3)
         {
           ts = dbx.Tables.Add("AddrObFTS");
-          ts.AutoCreate = false; // Создается отдельным SQL-запросом
+          ts.AutoCreate = false; // РЎРѕР·РґР°РµС‚СЃСЏ РѕС‚РґРµР»СЊРЅС‹Рј SQL-Р·Р°РїСЂРѕСЃРѕРј
           ts.Columns.AddId("rowid");
           ts.Columns.AddString("OFFNAME", 120, false);
         }
@@ -417,51 +417,51 @@ namespace FreeLibSet.FIAS
         #region "AddrOb"
 
         ts = dbx.Tables.Add("AddrOb");
-        // Поля для организации дерева объектов
+        // РџРѕР»СЏ РґР»СЏ РѕСЂРіР°РЅРёР·Р°С†РёРё РґРµСЂРµРІР° РѕР±СЉРµРєС‚РѕРІ
         if (_InternalSettings.UseIdTables)
         {
-          ts.Columns.AddReference("Id", "AddrObRec", false); // Идентификатор записи и первичный ключ. Задается как ссылка на таблицу, а не генерируется автоматически
+          ts.Columns.AddReference("Id", "AddrObRec", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. Р—Р°РґР°РµС‚СЃСЏ РєР°Рє СЃСЃС‹Р»РєР° РЅР° С‚Р°Р±Р»РёС†Сѓ, Р° РЅРµ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
           if (_DBSettings.UseHistory)
           {
-            ts.Columns.AddReference("PrevId", "AddrObRec", true);  // Ссылки для отслеживания переименований
-            ts.Columns.AddReference("NextId", "AddrObRec", true);  // Ссылки для отслеживания переименований
+            ts.Columns.AddReference("PrevId", "AddrObRec", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+            ts.Columns.AddReference("NextId", "AddrObRec", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
           }
-          ts.Columns.AddReference("AOGuidRef", "AddrObGuid", false); // Идентификатор объекта классификатора
-          ts.Columns.AddReference("ParentAOGuidRef", "AddrObGuid", true); // Родительский элемент
+          ts.Columns.AddReference("AOGuidRef", "AddrObGuid", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+          ts.Columns.AddReference("ParentAOGuidRef", "AddrObGuid", true); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
         }
         else
         {
-          ts.Columns.AddGuid("AOID", false); // Идентификатор записи и первичный ключ. 
+          ts.Columns.AddGuid("AOID", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. 
           if (DBSettings.UseHistory)
           {
-            ts.Columns.AddGuid("PREVID", true);  // Ссылки для отслеживания переименований
-            ts.Columns.AddGuid("NEXTID", true);  // Ссылки для отслеживания переименований
+            ts.Columns.AddGuid("PREVID", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+            ts.Columns.AddGuid("NEXTID", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
           }
-          ts.Columns.AddGuid("AOGUID", false); // Идентификатор объекта классификатора
-          ts.Columns.AddGuid("PARENTGUID", true); // Родительский элемент
+          ts.Columns.AddGuid("AOGUID", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+          ts.Columns.AddGuid("PARENTGUID", true); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
 
           // 28.02.2020
-          // Это - неверно! Поле PARENTGUID указывает на AOGUID родительского объекта, а не на AOID, которое является первичным ключом таблицы
+          // Р­С‚Рѕ - РЅРµРІРµСЂРЅРѕ! РџРѕР»Рµ PARENTGUID СѓРєР°Р·С‹РІР°РµС‚ РЅР° AOGUID СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РѕР±СЉРµРєС‚Р°, Р° РЅРµ РЅР° AOID, РєРѕС‚РѕСЂРѕРµ СЏРІР»СЏРµС‚СЃСЏ РїРµСЂРІРёС‡РЅС‹Рј РєР»СЋС‡РѕРј С‚Р°Р±Р»РёС†С‹
           //ts.Columns.LastAdded.MasterTableName = "AddrOb";
           //ts.Columns.LastAdded.RefType = DBxRefType.Emulation;
         }
-        // Поля для адресного объекта
+        // РџРѕР»СЏ РґР»СЏ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
         if (_DBSettings.UseHistory)
         {
-          ts.Columns.AddBoolean("Actual", false); // Соответствует полю ACTUALSTATUS в ФИАС. Равен true, если ACTUALSTATUS=1.
-          // Если исторические записи не нужны, то у всех записей Actual=true и Live=true и поля не нужны
-          ts.Columns.AddBoolean("Live", false); // Соответствует полю LIVESTATUS в ФИАС
+          ts.Columns.AddBoolean("Actual", false); // РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЋ ACTUALSTATUS РІ Р¤РРђРЎ. Р Р°РІРµРЅ true, РµСЃР»Рё ACTUALSTATUS=1.
+          // Р•СЃР»Рё РёСЃС‚РѕСЂРёС‡РµСЃРєРёРµ Р·Р°РїРёСЃРё РЅРµ РЅСѓР¶РЅС‹, С‚Рѕ Сѓ РІСЃРµС… Р·Р°РїРёСЃРµР№ Actual=true Рё Live=true Рё РїРѕР»СЏ РЅРµ РЅСѓР¶РЅС‹
+          ts.Columns.AddBoolean("Live", false); // РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЋ LIVESTATUS РІ Р¤РРђРЎ
         }
-        ts.Columns.AddInt("AOLEVEL", /*DataTools.GetEnumRange(typeof(FiasLevel))*/ 1, 99, false); // Уровень адресного объекта
-        ts.Columns.AddString("OFFNAME", 120, false); // Наименование объекта. Нельзя делать короче, так как есть такие ужасные названия
+        ts.Columns.AddInt("AOLEVEL", /*DataTools.GetEnumRange(typeof(FiasLevel))*/ 1, 99, false); // РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
+        ts.Columns.AddString("OFFNAME", 120, false); // РќР°РёРјРµРЅРѕРІР°РЅРёРµ РѕР±СЉРµРєС‚Р°. РќРµР»СЊР·СЏ РґРµР»Р°С‚СЊ РєРѕСЂРѕС‡Рµ, С‚Р°Рє РєР°Рє РµСЃС‚СЊ С‚Р°РєРёРµ СѓР¶Р°СЃРЅС‹Рµ РЅР°Р·РІР°РЅРёСЏ
         if (_InternalSettings.FTSMode == FiasFTSMode.FTS3)
           ts.Columns.AddReference("NameId", "AddrObFTS", false);
-        ts.Columns.AddReference("AOTypeId", "AOType", false, DBxRefType.Emulation); // Псевдо-ссылка на таблицу "AOType". 
-        //В ФИАС используется текстовое поле SHORTNAME. Заменено на ссылку для экономии места.
-        ts.Columns.AddInt("CENTSTATUS", DataTools.GetEnumRange(typeof(FiasCenterStatus)), false); // Статус центра
-        ts.Columns.AddInt("DIVTYPE", DataTools.GetEnumRange(typeof(FiasDivType)), false); // Признак адресации:
-        ts.Columns.AddInt("REGIONCODE", 0, 99, false);	// Код региона. Для экономии места храним как число. Поле не может иметь значения NULL
-        ts.Columns.AddInt("POSTALCODE", 0, 999999, false);	// Почтовый индекс
+        ts.Columns.AddReference("AOTypeId", "AOType", false, DBxRefType.Emulation); // РџСЃРµРІРґРѕ-СЃСЃС‹Р»РєР° РЅР° С‚Р°Р±Р»РёС†Сѓ "AOType". 
+        //Р’ Р¤РРђРЎ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РµРєСЃС‚РѕРІРѕРµ РїРѕР»Рµ SHORTNAME. Р—Р°РјРµРЅРµРЅРѕ РЅР° СЃСЃС‹Р»РєСѓ РґР»СЏ СЌРєРѕРЅРѕРјРёРё РјРµСЃС‚Р°.
+        ts.Columns.AddInt("CENTSTATUS", DataTools.GetEnumRange(typeof(FiasCenterStatus)), false); // РЎС‚Р°С‚СѓСЃ С†РµРЅС‚СЂР°
+        ts.Columns.AddInt("DIVTYPE", DataTools.GetEnumRange(typeof(FiasDivType)), false); // РџСЂРёР·РЅР°Рє Р°РґСЂРµСЃР°С†РёРё:
+        ts.Columns.AddInt("REGIONCODE", 0, 99, false);	// РљРѕРґ СЂРµРіРёРѕРЅР°. Р”Р»СЏ СЌРєРѕРЅРѕРјРёРё РјРµСЃС‚Р° С…СЂР°РЅРёРј РєР°Рє С‡РёСЃР»Рѕ. РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ РёРјРµС‚СЊ Р·РЅР°С‡РµРЅРёСЏ NULL
+        ts.Columns.AddInt("POSTALCODE", 0, 999999, false);	// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ
         if (_DBSettings.UseIFNS)
         {
           ts.Columns.AddInt("IFNSFL", 0, 9999, false);
@@ -496,12 +496,12 @@ namespace FreeLibSet.FIAS
           if (!_InternalSettings.UseIdTables)
           {
             if (noPK)
-              ts.Indexes.Add("AOID"); // псевдо-первичный ключ
-            ts.Indexes.Add("AOGUID"); // используется, когда в адресе задан GUID адресного объекта, то есть в большинстве случаев
-            ts.Indexes.Add("PARENTGUID"); // используетсч при загрузке буферизованной страницы.
+              ts.Indexes.Add("AOID"); // РїСЃРµРІРґРѕ-РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
+            ts.Indexes.Add("AOGUID"); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РєРѕРіРґР° РІ Р°РґСЂРµСЃРµ Р·Р°РґР°РЅ GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, С‚Рѕ РµСЃС‚СЊ РІ Р±РѕР»СЊС€РёРЅСЃС‚РІРµ СЃР»СѓС‡Р°РµРІ
+            ts.Indexes.Add("PARENTGUID"); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃС‡ РїСЂРё Р·Р°РіСЂСѓР·РєРµ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹.
           }
           if (_InternalSettings.FTSMode == FiasFTSMode.FTS3)
-            ts.Indexes.Add("NameID"); // используется при полнотекстном поиске, чтобы получить найденные адресные объекты
+            ts.Indexes.Add("NameID"); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РїРѕР»РЅРѕС‚РµРєСЃС‚РЅРѕРј РїРѕРёСЃРєРµ, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ РЅР°Р№РґРµРЅРЅС‹Рµ Р°РґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹
         }
 
         #endregion
@@ -529,33 +529,33 @@ namespace FreeLibSet.FIAS
           #region "House"
 
           ts = dbx.Tables.Add("House");
-          // Поля для организации дерева объектов
+          // РџРѕР»СЏ РґР»СЏ РѕСЂРіР°РЅРёР·Р°С†РёРё РґРµСЂРµРІР° РѕР±СЉРµРєС‚РѕРІ
           /*
-          ts.Columns.AddReference("Id", "HouseRec", false); // Идентификатор записи и первичный ключ. Задается как ссылка на таблицу, а не генерируется автоматически
-          //ts.Columns.AddReference("PrevId", "HouseRec", true);  // Ссылки для отслеживания переименований
-          //ts.Columns.AddReference("NextId", "HouseRec", true);  // Ссылки для отслеживания переименований
-          ts.Columns.AddReference("HouseGuidRef", "HouseGuid", false); // Идентификатор объекта классификатора
-          ts.Columns.AddReference("ParentAOGuidRef", "AddrObGuid", true); // Родительский элемент
+          ts.Columns.AddReference("Id", "HouseRec", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. Р—Р°РґР°РµС‚СЃСЏ РєР°Рє СЃСЃС‹Р»РєР° РЅР° С‚Р°Р±Р»РёС†Сѓ, Р° РЅРµ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
+          //ts.Columns.AddReference("PrevId", "HouseRec", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+          //ts.Columns.AddReference("NextId", "HouseRec", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+          ts.Columns.AddReference("HouseGuidRef", "HouseGuid", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+          ts.Columns.AddReference("ParentAOGuidRef", "AddrObGuid", true); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
            * */
-          ts.Columns.AddGuid("HOUSEID", false); // Идентификатор записи и первичный ключ. 
-          ts.Columns.AddGuid("HOUSEGUID", false); // Идентификатор объекта классификатора
-          ts.Columns.AddGuid("AOGUID", true); // Родительский элемент
+          ts.Columns.AddGuid("HOUSEID", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. 
+          ts.Columns.AddGuid("HOUSEGUID", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+          ts.Columns.AddGuid("AOGUID", true); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
 
 
-          // Поля для дома
-          ts.Columns.AddInt("nHouseNum", 0, 255, false); // Функция FiasTools.GetNumInt(HOUSENUM)
-          ts.Columns.AddString("HOUSENUM", 20, true); // Номер дома. Нельзя делать короче, так как есть такие ужасные дома
-          ts.Columns.AddInt("nBuildNum", 0, 255, false); // Функция FiasTools.GetNumInt(BUILDNUM)
-          ts.Columns.AddString("BUILDNUM", 10, true); // Номер корпуса.
-          ts.Columns.AddInt("nStrucNum", 0, 255, false); // Функция FiasTools.GetNumInt(STRUCNUM)
-          ts.Columns.AddString("STRUCNUM", 10, true); // Номер строения
-          ts.Columns.AddInt("STRSTATUS", DataTools.GetEnumRange(typeof(FiasStructureStatus)), false); // Статус строения
-          ts.Columns.AddInt("ESTSTATUS", DataTools.GetEnumRange(typeof(FiasEstateStatus)), false); // Признак владения
-          //ts.Columns.AddInt("STARSTATUS", 0, 99, false); // размерность под вопросом
+          // РџРѕР»СЏ РґР»СЏ РґРѕРјР°
+          ts.Columns.AddInt("nHouseNum", 0, 255, false); // Р¤СѓРЅРєС†РёСЏ FiasTools.GetNumInt(HOUSENUM)
+          ts.Columns.AddString("HOUSENUM", 20, true); // РќРѕРјРµСЂ РґРѕРјР°. РќРµР»СЊР·СЏ РґРµР»Р°С‚СЊ РєРѕСЂРѕС‡Рµ, С‚Р°Рє РєР°Рє РµСЃС‚СЊ С‚Р°РєРёРµ СѓР¶Р°СЃРЅС‹Рµ РґРѕРјР°
+          ts.Columns.AddInt("nBuildNum", 0, 255, false); // Р¤СѓРЅРєС†РёСЏ FiasTools.GetNumInt(BUILDNUM)
+          ts.Columns.AddString("BUILDNUM", 10, true); // РќРѕРјРµСЂ РєРѕСЂРїСѓСЃР°.
+          ts.Columns.AddInt("nStrucNum", 0, 255, false); // Р¤СѓРЅРєС†РёСЏ FiasTools.GetNumInt(STRUCNUM)
+          ts.Columns.AddString("STRUCNUM", 10, true); // РќРѕРјРµСЂ СЃС‚СЂРѕРµРЅРёСЏ
+          ts.Columns.AddInt("STRSTATUS", DataTools.GetEnumRange(typeof(FiasStructureStatus)), false); // РЎС‚Р°С‚СѓСЃ СЃС‚СЂРѕРµРЅРёСЏ
+          ts.Columns.AddInt("ESTSTATUS", DataTools.GetEnumRange(typeof(FiasEstateStatus)), false); // РџСЂРёР·РЅР°Рє РІР»Р°РґРµРЅРёСЏ
+          //ts.Columns.AddInt("STARSTATUS", 0, 99, false); // СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ РїРѕРґ РІРѕРїСЂРѕСЃРѕРј
 
-          ts.Columns.AddInt("DIVTYPE", DataTools.GetEnumRange(typeof(FiasDivType)), false); // Признак адресации:
-          // Не нужен ts.Columns.AddInt("REGIONCODE", 0, 99, _UseNullableCodes);	// Код региона.
-          ts.Columns.AddInt("POSTALCODE", 0, 999999, false);	// Почтовый индекс
+          ts.Columns.AddInt("DIVTYPE", DataTools.GetEnumRange(typeof(FiasDivType)), false); // РџСЂРёР·РЅР°Рє Р°РґСЂРµСЃР°С†РёРё:
+          // РќРµ РЅСѓР¶РµРЅ ts.Columns.AddInt("REGIONCODE", 0, 99, _UseNullableCodes);	// РљРѕРґ СЂРµРіРёРѕРЅР°.
+          ts.Columns.AddInt("POSTALCODE", 0, 999999, false);	// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ
           if (_DBSettings.UseIFNS)
           {
             ts.Columns.AddInt("IFNSFL", 0, 9999, false);
@@ -589,10 +589,10 @@ namespace FreeLibSet.FIAS
             if (!_InternalSettings.UseIdTables)
             {
               if (noPK)
-                ts.Indexes.Add("HOUSEID"); // псевдо-первичный ключ
+                ts.Indexes.Add("HOUSEID"); // РїСЃРµРІРґРѕ-РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
 
-              ts.Indexes.Add("HOUSEGUID"); // используется, если в адресе задан GUID здания
-              ts.Indexes.Add("AOGUID"); // используется при загрузке буферизованной страницы
+              ts.Indexes.Add("HOUSEGUID"); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РµСЃР»Рё РІ Р°РґСЂРµСЃРµ Р·Р°РґР°РЅ GUID Р·РґР°РЅРёСЏ
+              ts.Indexes.Add("AOGUID"); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё Р·Р°РіСЂСѓР·РєРµ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
             }
           }
 
@@ -623,33 +623,33 @@ namespace FreeLibSet.FIAS
           #region "Room"
 
           ts = dbx.Tables.Add("Room");
-          // Поля для организации дерева объектов
+          // РџРѕР»СЏ РґР»СЏ РѕСЂРіР°РЅРёР·Р°С†РёРё РґРµСЂРµРІР° РѕР±СЉРµРєС‚РѕРІ
           /*
-          ts.Columns.AddReference("Id", "RoomRec", false); // Идентификатор записи и первичный ключ. Задается как ссылка на таблицу, а не генерируется автоматически
-          ts.Columns.AddReference("PrevId", "RoomRec", true);  // Ссылки для отслеживания переименований
-          ts.Columns.AddReference("NextId", "RoomRec", true);  // Ссылки для отслеживания переименований
-          ts.Columns.AddReference("RoomGuidRef", "RoomGuid", false); // Идентификатор объекта классификатора
-          ts.Columns.AddReference("ParentHouseGuidRef", "HouseGuid", true); // Родительский элемент
+          ts.Columns.AddReference("Id", "RoomRec", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. Р—Р°РґР°РµС‚СЃСЏ РєР°Рє СЃСЃС‹Р»РєР° РЅР° С‚Р°Р±Р»РёС†Сѓ, Р° РЅРµ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
+          ts.Columns.AddReference("PrevId", "RoomRec", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+          ts.Columns.AddReference("NextId", "RoomRec", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+          ts.Columns.AddReference("RoomGuidRef", "RoomGuid", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+          ts.Columns.AddReference("ParentHouseGuidRef", "HouseGuid", true); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
            * */
-          ts.Columns.AddGuid("ROOMID", false); // Идентификатор записи и первичный ключ. 
+          ts.Columns.AddGuid("ROOMID", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. 
           if (DBSettings.UseHistory)
           {
-            ts.Columns.AddGuid("PREVID", true);  // Ссылки для отслеживания переименований
-            ts.Columns.AddGuid("NEXTID", true);  // Ссылки для отслеживания переименований
+            ts.Columns.AddGuid("PREVID", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+            ts.Columns.AddGuid("NEXTID", true);  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
           }
-          ts.Columns.AddGuid("ROOMGUID", false); // Идентификатор объекта классификатора
-          ts.Columns.AddGuid("HOUSEGUID", true); // Родительский элемент
+          ts.Columns.AddGuid("ROOMGUID", false); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+          ts.Columns.AddGuid("HOUSEGUID", true); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
 
-          // Поля для объекта
+          // РџРѕР»СЏ РґР»СЏ РѕР±СЉРµРєС‚Р°
           if (DBSettings.UseHistory)
-            ts.Columns.AddBoolean("Live", false); // Соответствует полю LIVESTATUS в ФИАС
-          ts.Columns.AddInt("nFlatNumber", 0, 255, false); // Функция FiasTools.GetNumInt(FLATNUMBER)
-          ts.Columns.AddString("FLATNUMBER", 50, true); // Номер квартиры, офиса или прочего
-          ts.Columns.AddInt("FLATTYPE", DataTools.GetEnumRange(typeof(FiasFlatType)), false); // Тип помещения
-          ts.Columns.AddInt("nRoomNumber", 0, 255, false); // Функция FiasTools.GetNumInt(ROOMNUMBER)
-          ts.Columns.AddString("ROOMNUMBER", 50, true); // Номер комнаты
-          ts.Columns.AddInt("ROOMTYPE", DataTools.GetEnumRange(typeof(FiasRoomType)), false); // Тип комнаты
-          ts.Columns.AddInt("POSTALCODE", 0, 999999, false);	// Почтовый индекс
+            ts.Columns.AddBoolean("Live", false); // РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЋ LIVESTATUS РІ Р¤РРђРЎ
+          ts.Columns.AddInt("nFlatNumber", 0, 255, false); // Р¤СѓРЅРєС†РёСЏ FiasTools.GetNumInt(FLATNUMBER)
+          ts.Columns.AddString("FLATNUMBER", 50, true); // РќРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹, РѕС„РёСЃР° РёР»Рё РїСЂРѕС‡РµРіРѕ
+          ts.Columns.AddInt("FLATTYPE", DataTools.GetEnumRange(typeof(FiasFlatType)), false); // РўРёРї РїРѕРјРµС‰РµРЅРёСЏ
+          ts.Columns.AddInt("nRoomNumber", 0, 255, false); // Р¤СѓРЅРєС†РёСЏ FiasTools.GetNumInt(ROOMNUMBER)
+          ts.Columns.AddString("ROOMNUMBER", 50, true); // РќРѕРјРµСЂ РєРѕРјРЅР°С‚С‹
+          ts.Columns.AddInt("ROOMTYPE", DataTools.GetEnumRange(typeof(FiasRoomType)), false); // РўРёРї РєРѕРјРЅР°С‚С‹
+          ts.Columns.AddInt("POSTALCODE", 0, 999999, false);	// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ
           if (_DBSettings.UseDates)
           {
             if (_InternalSettings.UseOADates)
@@ -672,10 +672,10 @@ namespace FreeLibSet.FIAS
             if (!_InternalSettings.UseIdTables)
             {
               if (noPK)
-                ts.Indexes.Add("ROOMID"); // псевдопервичный ключ
+                ts.Indexes.Add("ROOMID"); // РїСЃРµРІРґРѕРїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
 
-              ts.Indexes.Add("ROOMGUID"); // используется, если в адресе задан GUID помещения
-              ts.Indexes.Add("HOUSEGUID"); // используется при загрузке буферизованной страницы
+              ts.Indexes.Add("ROOMGUID"); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РµСЃР»Рё РІ Р°РґСЂРµСЃРµ Р·Р°РґР°РЅ GUID РїРѕРјРµС‰РµРЅРёСЏ
+              ts.Indexes.Add("HOUSEGUID"); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё Р·Р°РіСЂСѓР·РєРµ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
             }
           }
 
@@ -689,33 +689,33 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// База данных
+    /// Р‘Р°Р·Р° РґР°РЅРЅС‹С…
     /// </summary>
     public DBx DB { get { return _DB; } }
     private readonly DBx _DB;
 
     /// <summary>
-    /// Альтернативный доступ к базе данных для обновления
+    /// РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹Р№ РґРѕСЃС‚СѓРї Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
     /// </summary>
     private DBx _UpdateDB;
 
     /// <summary>
-    /// Точка подключения к базе данных для выполнения обновления (с кэшем большего размера)
+    /// РўРѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ (СЃ РєСЌС€РµРј Р±РѕР»СЊС€РµРіРѕ СЂР°Р·РјРµСЂР°)
     /// </summary>
     internal DBxEntry UpdateEntry { get { return _UpdateEntry; } }
     private readonly DBxEntry _UpdateEntry;
 
     /// <summary>
-    /// Настройки базы данных
+    /// РќР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     public FiasDBSettings DBSettings { get { return _DBSettings; } }
     private readonly FiasDBSettings _DBSettings;
 
     /// <summary>
-    /// Внутренние параметры классификатора, которые пользователь настраивать не может
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёРµ РїР°СЂР°РјРµС‚СЂС‹ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°, РєРѕС‚РѕСЂС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР°СЃС‚СЂР°РёРІР°С‚СЊ РЅРµ РјРѕР¶РµС‚
     /// </summary>
     internal FiasInternalSettings InternalSettings { get { return _InternalSettings; } }
     private FiasInternalSettings _InternalSettings;
@@ -726,17 +726,17 @@ namespace FreeLibSet.FIAS
     private FiasDBUnbufferedSource _UnbufferedSource;
 
     /// <summary>
-    /// Буферизованный источник данных.
-    /// Существует до вызова метода Dispose().
-    /// Используется для инициализации объекта FiasHandler на стороне сервера.
-    /// Передается клиенту через net remoting для создания собственного объекта FiasCachedSource.
+    /// Р‘СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С….
+    /// РЎСѓС‰РµСЃС‚РІСѓРµС‚ РґРѕ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° Dispose().
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РѕР±СЉРµРєС‚Р° FiasHandler РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР°.
+    /// РџРµСЂРµРґР°РµС‚СЃСЏ РєР»РёРµРЅС‚Сѓ С‡РµСЂРµР· net remoting РґР»СЏ СЃРѕР·РґР°РЅРёСЏ СЃРѕР±СЃС‚РІРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° FiasCachedSource.
     /// </summary>
     public FiasCachedSource Source { get { return _Source; } }
     private FiasDBCachedSource _Source;
 
 
     /// <summary>
-    /// Возвращает true, если в данный момент классфикатор не загружен
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РєР»Р°СЃСЃС„РёРєР°С‚РѕСЂ РЅРµ Р·Р°РіСЂСѓР¶РµРЅ
     /// </summary>
     public bool IsEmpty { get { return _IsEmpty; } }
     private bool _IsEmpty;
@@ -745,10 +745,10 @@ namespace FreeLibSet.FIAS
     {
       using (DBxConBase con = _DB.MainEntry.CreateCon())
       {
-        // Т.к. метод может вызываться до инициализации структуры базы данных, таблицы может не существовать
+        // Рў.Рє. РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РґРѕ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃС‚СЂСѓРєС‚СѓСЂС‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, С‚Р°Р±Р»РёС†С‹ РјРѕР¶РµС‚ РЅРµ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ
         con.Validator.NameCheckingEnabled = false;
 
-        // Для SQLite можно было бы вызвать  SELECT COUNT(*) FROM sqlite_master WHERE type=="table" AND name=="AddrOb"
+        // Р”Р»СЏ SQLite РјРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹ РІС‹Р·РІР°С‚СЊ  SELECT COUNT(*) FROM sqlite_master WHERE type=="table" AND name=="AddrOb"
 
         DoInitIsEmpty(con, updateStat);
 
@@ -797,13 +797,13 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Статистика по базе данных
+    /// РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     /// </summary>
     public FiasDBStat DBStat { get { return _DBStat; } }
     private volatile FiasDBStat _DBStat;
 
     /// <summary>
-    /// Дата актуальности классификатора
+    /// Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     public DateTime ActualDate { get { return _DBStat.ActualDate; } }
 
@@ -811,11 +811,11 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Статистика по базе данных
+    #region РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Получает статистику по базе данных.
-    /// Этот метод выполняется медленно, т.к. требует выполнения запросов SELECT COUNT(*), которые не оптимизированы в SQLite
+    /// РџРѕР»СѓС‡Р°РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєСѓ РїРѕ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РјРµРґР»РµРЅРЅРѕ, С‚.Рє. С‚СЂРµР±СѓРµС‚ РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃРѕРІ SELECT COUNT(*), РєРѕС‚РѕСЂС‹Рµ РЅРµ РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅС‹ РІ SQLite
     /// </summary>
     /// <returns></returns>
     public FiasDBStat GetRealDBStat()
@@ -846,10 +846,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Процесс обновления
+    #region РџСЂРѕС†РµСЃСЃ РѕР±РЅРѕРІР»РµРЅРёСЏ
 
     /// <summary>
-    /// Ссылка содержит значение, отличное от null, когда выполняется обновление классификатора
+    /// РЎСЃС‹Р»РєР° СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёРµ, РѕС‚Р»РёС‡РЅРѕРµ РѕС‚ null, РєРѕРіРґР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕР±РЅРѕРІР»РµРЅРёРµ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     public FiasDBUpdater CurrentUpdater
     {
@@ -863,8 +863,8 @@ namespace FreeLibSet.FIAS
       InitIsEmpty(true);
       if (_IndexDelayed && (!_IsEmpty))
       {
-        // Требуется создать недостающие индексы
-        _DB.Struct = CreateDBStruct(false); // теперь с индексами
+        // РўСЂРµР±СѓРµС‚СЃСЏ СЃРѕР·РґР°С‚СЊ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ РёРЅРґРµРєСЃС‹
+        _DB.Struct = CreateDBStruct(false); // С‚РµРїРµСЂСЊ СЃ РёРЅРґРµРєСЃР°РјРё
         _DB.UpdateStruct();
       }
 
@@ -872,7 +872,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Вызывается в UnbufferedSource
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РІ UnbufferedSource
     /// </summary>
     internal void CheckIsReady()
     {
@@ -881,17 +881,17 @@ namespace FreeLibSet.FIAS
       if (u != null)
       {
         if (u.PrimaryLoad)
-          throw new InvalidOperationException("В данный момент выполняется первичная загрузка классификатора. Выполнять другие обращения в данный момент нельзя");
+          throw new InvalidOperationException("Р’ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРµСЂРІРёС‡РЅР°СЏ Р·Р°РіСЂСѓР·РєР° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°. Р’С‹РїРѕР»РЅСЏС‚СЊ РґСЂСѓРіРёРµ РѕР±СЂР°С‰РµРЅРёСЏ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РЅРµР»СЊР·СЏ");
       }
     }
 
     #endregion
 
-    #region События асинхонного выполнения процедур
+    #region РЎРѕР±С‹С‚РёСЏ Р°СЃРёРЅС…РѕРЅРЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂ
 
     /// <summary>
-    /// Вызывается при создании процедуры ExecProc для асинхронного выполнения запроса.
-    /// Обработчик события может вызываться асинхронно.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё СЃРѕР·РґР°РЅРёРё РїСЂРѕС†РµРґСѓСЂС‹ ExecProc РґР»СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃР°.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
     /// </summary>
     public event FiasExecProcEventHandler ExecProcCreated;
 
@@ -911,8 +911,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Вызывается перед началом выполнения процедуры ExecProc для асинхронного выполнения запроса.
-    /// Обработчик события может вызываться асинхронно.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹ ExecProc РґР»СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃР°.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
     /// </summary>
     public event FiasExecProcEventHandler ExecProcBeforeExecute;
 
@@ -932,9 +932,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Вызывается при окончании процедуры ExecProc для асинхронного выполнения запроса.
-    /// Вызывается, в том числе, и при возникновении исключения
-    /// Обработчик события может вызываться асинхронно.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕРєРѕРЅС‡Р°РЅРёРё РїСЂРѕС†РµРґСѓСЂС‹ ExecProc РґР»СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃР°.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ, РІ С‚РѕРј С‡РёСЃР»Рµ, Рё РїСЂРё РІРѕР·РЅРёРєРЅРѕРІРµРЅРёРё РёСЃРєР»СЋС‡РµРЅРёСЏ
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
     /// </summary>
     public event FiasExecProcEventHandler ExecProcAfterExecute;
 
@@ -954,8 +954,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Вызывается при удалении процедуры ExecProc для асинхронного выполнения запроса.
-    /// Обработчик события может вызываться асинхронно.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё СѓРґР°Р»РµРЅРёРё РїСЂРѕС†РµРґСѓСЂС‹ ExecProc РґР»СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃР°.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
     /// </summary>
     public event FiasExecProcEventHandler ExecProcDisposed;
 
@@ -978,13 +978,13 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Статистика по базе данных классификатора ФИАС.
-  /// Возвращается методом FiasDB/FiasSource.GetDBStat()
+  /// РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕ Р±Р°Р·Рµ РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ.
+  /// Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјРµС‚РѕРґРѕРј FiasDB/FiasSource.GetDBStat()
   /// </summary>
   [Serializable]
   public sealed class FiasDBStat
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasDBStat()
     {
@@ -993,10 +993,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Дата актуальности классификатора
+    /// Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     public DateTime ActualDate
     {
@@ -1006,38 +1006,38 @@ namespace FreeLibSet.FIAS
     private DateTime _ActualDate;
 
     /// <summary>
-    /// Количество записей в таблице адресных объектов
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ РІ С‚Р°Р±Р»РёС†Рµ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
     /// </summary>
     public long AddrObCount { get { return _AddrObCount; } internal set { _AddrObCount = value; } }
     private long _AddrObCount;
 
     /// <summary>
-    /// Количество записей в таблице домов
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ РІ С‚Р°Р±Р»РёС†Рµ РґРѕРјРѕРІ
     /// </summary>
     public long HouseCount { get { return _HouseCount; } internal set { _HouseCount = value; } }
     private long _HouseCount;
 
     /// <summary>
-    /// Количество записей в таблице помещений
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ РІ С‚Р°Р±Р»РёС†Рµ РїРѕРјРµС‰РµРЅРёР№
     /// </summary>
     public long RoomCount { get { return _RoomCount; } internal set { _RoomCount = value; } }
     private long _RoomCount;
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       StringBuilder sb = new StringBuilder();
 
-      sb.Append("Дата актуальности: ");
+      sb.Append("Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё: ");
       sb.Append(ActualDate);
-      sb.Append(", адресных объектов: ");
+      sb.Append(", Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ: ");
       sb.Append(AddrObCount);
-      sb.Append(", зданий: ");
+      sb.Append(", Р·РґР°РЅРёР№: ");
       sb.Append(HouseCount);
-      sb.Append(", помещений: ");
+      sb.Append(", РїРѕРјРµС‰РµРЅРёР№: ");
       sb.Append(RoomCount);
 
       return sb.ToString();

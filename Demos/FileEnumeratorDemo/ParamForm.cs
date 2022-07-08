@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +12,7 @@ namespace FileEnumeratorDemo
 {
   public partial class ParamForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public ParamForm()
     {
@@ -28,7 +28,7 @@ namespace FileEnumeratorDemo
       efpRootDirectory = new EFPTextBox(efpForm, edRootDirectory);
       efpRootDirectory.CanBeEmpty = false;
       EFPFolderBrowserButton efpBrowse = new EFPFolderBrowserButton(efpRootDirectory, btnBrowse);
-      efpBrowse.Description = "Корневой каталог, с которого начинается перебор";
+      efpBrowse.Description = "РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі, СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚СЃСЏ РїРµСЂРµР±РѕСЂ";
       efpBrowse.ShowNewFolderButton = false;
 
       efpEnumerateKind = new EFPListComboBox(efpForm, cbEnumerateKind);
@@ -70,7 +70,7 @@ namespace FileEnumeratorDemo
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     EFPFormProvider efpForm;
     EFPListComboBox efpClass;
@@ -82,13 +82,13 @@ namespace FileEnumeratorDemo
 
     #endregion
 
-    #region Построение списка
+    #region РџРѕСЃС‚СЂРѕРµРЅРёРµ СЃРїРёСЃРєР°
 
     List<string> TextList;
     int IndentLevel;
 
     /// <summary>
-    /// Строка для форматирования отступа
+    /// РЎС‚СЂРѕРєР° РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РѕС‚СЃС‚СѓРїР°
     /// </summary>
     string Indent { get { return new string(' ', IndentLevel * 2); } }
 
@@ -99,7 +99,7 @@ namespace FileEnumeratorDemo
 
       TextList = new List<string>();
 
-      using (Splash spl = new Splash("Идет перебор"))
+      using (Splash spl = new Splash("РРґРµС‚ РїРµСЂРµР±РѕСЂ"))
       {
         spl.AllowCancel = true;
 
@@ -130,11 +130,11 @@ namespace FileEnumeratorDemo
         }
 
       }
-      EFPApp.ShowTextView(String.Join(Environment.NewLine, TextList.ToArray()), "Результат перебора");
+      EFPApp.ShowTextView(String.Join(Environment.NewLine, TextList.ToArray()), "Р РµР·СѓР»СЊС‚Р°С‚ РїРµСЂРµР±РѕСЂР°");
     }
 
     /// <summary>
-    /// Инициализация свойств перечислителя
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЏ
     /// </summary>
     /// <param name="en"></param>
     private void InitProps(PathEnumerableBase en)
@@ -163,7 +163,7 @@ namespace FileEnumeratorDemo
     {
       IndentLevel = args.Level;
       TextList.Add(Indent + "BeforeDirectory: " + args.ToString());
-      IndentLevel = args.Level+1; // для файлов
+      IndentLevel = args.Level+1; // РґР»СЏ С„Р°Р№Р»РѕРІ
     }
 
     void en_AfterDirectory(object sender, EnumDirectoryEventArgs args)

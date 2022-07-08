@@ -1,4 +1,4 @@
-namespace FIASDemo
+п»їnamespace FIASDemo
 {
   partial class MainForm
   {
@@ -118,7 +118,7 @@ namespace FIASDemo
       this.btnLoadFiles.Name = "btnLoadFiles";
       this.btnLoadFiles.Size = new System.Drawing.Size(176, 24);
       this.btnLoadFiles.TabIndex = 1;
-      this.btnLoadFiles.Text = "Загрузить с диска";
+      this.btnLoadFiles.Text = "Р—Р°РіСЂСѓР·РёС‚СЊ СЃ РґРёСЃРєР°";
       this.btnLoadFiles.UseVisualStyleBackColor = true;
       // 
       // btnStat
@@ -129,7 +129,7 @@ namespace FIASDemo
       this.btnStat.Name = "btnStat";
       this.btnStat.Size = new System.Drawing.Size(156, 37);
       this.btnStat.TabIndex = 4;
-      this.btnStat.Text = "Статистика";
+      this.btnStat.Text = "РЎС‚Р°С‚РёСЃС‚РёРєР°";
       this.btnStat.UseVisualStyleBackColor = true;
       this.btnStat.Click += new System.EventHandler(this.btnStat_Click);
       // 
@@ -140,7 +140,7 @@ namespace FIASDemo
       this.btnClearCache.Name = "btnClearCache";
       this.btnClearCache.Size = new System.Drawing.Size(176, 24);
       this.btnClearCache.TabIndex = 0;
-      this.btnClearCache.Text = "Очистить кэш";
+      this.btnClearCache.Text = "РћС‡РёСЃС‚РёС‚СЊ РєСЌС€";
       this.btnClearCache.UseVisualStyleBackColor = true;
       // 
       // btnGetAllDownloadFileInfo
@@ -151,7 +151,7 @@ namespace FIASDemo
       this.btnGetAllDownloadFileInfo.Name = "btnGetAllDownloadFileInfo";
       this.btnGetAllDownloadFileInfo.Size = new System.Drawing.Size(132, 36);
       this.btnGetAllDownloadFileInfo.TabIndex = 5;
-      this.btnGetAllDownloadFileInfo.Text = "Список обновлений";
+      this.btnGetAllDownloadFileInfo.Text = "РЎРїРёСЃРѕРє РѕР±РЅРѕРІР»РµРЅРёР№";
       this.btnGetAllDownloadFileInfo.UseVisualStyleBackColor = true;
       this.btnGetAllDownloadFileInfo.Click += new System.EventHandler(this.btnGetAllDownloadFileInfo_Click);
       // 
@@ -181,7 +181,7 @@ namespace FIASDemo
       this.tpAddress.Padding = new System.Windows.Forms.Padding(2);
       this.tpAddress.Size = new System.Drawing.Size(624, 426);
       this.tpAddress.TabIndex = 0;
-      this.tpAddress.Text = "Адрес";
+      this.tpAddress.Text = "РђРґСЂРµСЃ";
       this.tpAddress.UseVisualStyleBackColor = true;
       // 
       // groupBox2
@@ -196,7 +196,7 @@ namespace FIASDemo
       this.groupBox2.Size = new System.Drawing.Size(620, 143);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Текущий адрес";
+      this.groupBox2.Text = "РўРµРєСѓС‰РёР№ Р°РґСЂРµСЃ";
       // 
       // grMessages
       // 
@@ -259,7 +259,7 @@ namespace FIASDemo
       this.groupBox5.Size = new System.Drawing.Size(620, 81);
       this.groupBox5.TabIndex = 2;
       this.groupBox5.TabStop = false;
-      this.groupBox5.Text = "Сохранение адреса как строки";
+      this.groupBox5.Text = "РЎРѕС…СЂР°РЅРµРЅРёРµ Р°РґСЂРµСЃР° РєР°Рє СЃС‚СЂРѕРєРё";
       // 
       // cbVFormat
       // 
@@ -277,7 +277,7 @@ namespace FIASDemo
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(93, 21);
       this.label3.TabIndex = 0;
-      this.label3.Text = "Формат";
+      this.label3.Text = "Р¤РѕСЂРјР°С‚";
       // 
       // cbVText
       // 
@@ -312,7 +312,7 @@ namespace FIASDemo
       this.groupBox1.Size = new System.Drawing.Size(620, 67);
       this.groupBox1.TabIndex = 3;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Поиск по GUIDу";
+      this.groupBox1.Text = "РџРѕРёСЃРє РїРѕ GUIDСѓ";
       // 
       // cbGuid
       // 
@@ -332,7 +332,7 @@ namespace FIASDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(232, 13);
       this.label1.TabIndex = 0;
-      this.label1.Text = "GUID адресного объекта, дома, помещения";
+      this.label1.Text = "GUID Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, РґРѕРјР°, РїРѕРјРµС‰РµРЅРёСЏ";
       // 
       // btnFromGuid
       // 
@@ -360,7 +360,7 @@ namespace FIASDemo
       this.btnAbout.Name = "btnAbout";
       this.btnAbout.Size = new System.Drawing.Size(132, 24);
       this.btnAbout.TabIndex = 4;
-      this.btnAbout.Text = "О программе";
+      this.btnAbout.Text = "Рћ РїСЂРѕРіСЂР°РјРјРµ";
       this.btnAbout.UseVisualStyleBackColor = true;
       // 
       // groupBox3
@@ -382,16 +382,16 @@ namespace FIASDemo
       this.groupBox3.Size = new System.Drawing.Size(620, 91);
       this.groupBox3.TabIndex = 0;
       this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Редактор адреса";
+      this.groupBox3.Text = "Р РµРґР°РєС‚РѕСЂ Р°РґСЂРµСЃР°";
       // 
       // cbPartialMode
       // 
       this.cbPartialMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cbPartialMode.FormattingEnabled = true;
       this.cbPartialMode.Items.AddRange(new object[] {
-            "Разрешен",
-            "Ошибка",
-            "Предупреждение"});
+            "Р Р°Р·СЂРµС€РµРЅ",
+            "РћС€РёР±РєР°",
+            "РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ"});
       this.cbPartialMode.Location = new System.Drawing.Point(322, 67);
       this.cbPartialMode.Name = "cbPartialMode";
       this.cbPartialMode.Size = new System.Drawing.Size(148, 21);
@@ -403,7 +403,7 @@ namespace FIASDemo
       this.label9.Name = "label9";
       this.label9.Size = new System.Drawing.Size(100, 17);
       this.label9.TabIndex = 6;
-      this.label9.Text = "Неполный адрес";
+      this.label9.Text = "РќРµРїРѕР»РЅС‹Р№ Р°РґСЂРµСЃ";
       this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbEmpyMode
@@ -411,9 +411,9 @@ namespace FIASDemo
       this.cbEmpyMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cbEmpyMode.FormattingEnabled = true;
       this.cbEmpyMode.Items.AddRange(new object[] {
-            "Разрешен",
-            "Ошибка",
-            "Предупреждение"});
+            "Р Р°Р·СЂРµС€РµРЅ",
+            "РћС€РёР±РєР°",
+            "РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ"});
       this.cbEmpyMode.Location = new System.Drawing.Point(322, 42);
       this.cbEmpyMode.Name = "cbEmpyMode";
       this.cbEmpyMode.Size = new System.Drawing.Size(148, 21);
@@ -425,7 +425,7 @@ namespace FIASDemo
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(100, 19);
       this.label7.TabIndex = 4;
-      this.label7.Text = "Пустой адрес";
+      this.label7.Text = "РџСѓСЃС‚РѕР№ Р°РґСЂРµСЃ";
       this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbManualPostalCode
@@ -435,7 +435,7 @@ namespace FIASDemo
       this.cbManualPostalCode.Name = "cbManualPostalCode";
       this.cbManualPostalCode.Size = new System.Drawing.Size(115, 17);
       this.cbManualPostalCode.TabIndex = 2;
-      this.cbManualPostalCode.Text = "Почтовый индекс";
+      this.cbManualPostalCode.Text = "РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ";
       this.cbManualPostalCode.UseVisualStyleBackColor = true;
       // 
       // cbReadOnly
@@ -445,7 +445,7 @@ namespace FIASDemo
       this.cbReadOnly.Name = "cbReadOnly";
       this.cbReadOnly.Size = new System.Drawing.Size(119, 17);
       this.cbReadOnly.TabIndex = 3;
-      this.cbReadOnly.Text = "Режим просмотра";
+      this.cbReadOnly.Text = "Р РµР¶РёРј РїСЂРѕСЃРјРѕС‚СЂР°";
       this.cbReadOnly.UseVisualStyleBackColor = true;
       // 
       // label2
@@ -455,7 +455,7 @@ namespace FIASDemo
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(51, 13);
       this.label2.TabIndex = 0;
-      this.label2.Text = "Уровень";
+      this.label2.Text = "РЈСЂРѕРІРµРЅСЊ";
       // 
       // cbLevel
       // 
@@ -476,7 +476,7 @@ namespace FIASDemo
       this.btnEdit.Name = "btnEdit";
       this.btnEdit.Size = new System.Drawing.Size(132, 24);
       this.btnEdit.TabIndex = 8;
-      this.btnEdit.Text = "Редактор";
+      this.btnEdit.Text = "Р РµРґР°РєС‚РѕСЂ";
       this.btnEdit.UseVisualStyleBackColor = true;
       // 
       // tpClassif
@@ -493,7 +493,7 @@ namespace FIASDemo
       this.tpClassif.Padding = new System.Windows.Forms.Padding(2);
       this.tpClassif.Size = new System.Drawing.Size(624, 426);
       this.tpClassif.TabIndex = 1;
-      this.tpClassif.Text = "БД ФИАС";
+      this.tpClassif.Text = "Р‘Р” Р¤РРђРЎ";
       this.tpClassif.UseVisualStyleBackColor = true;
       // 
       // groupBox9
@@ -506,7 +506,7 @@ namespace FIASDemo
       this.groupBox9.Size = new System.Drawing.Size(620, 52);
       this.groupBox9.TabIndex = 2;
       this.groupBox9.TabStop = false;
-      this.groupBox9.Text = "Дополнительно";
+      this.groupBox9.Text = "Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ";
       // 
       // btnConvertGuid
       // 
@@ -515,7 +515,7 @@ namespace FIASDemo
       this.btnConvertGuid.Name = "btnConvertGuid";
       this.btnConvertGuid.Size = new System.Drawing.Size(176, 24);
       this.btnConvertGuid.TabIndex = 3;
-      this.btnConvertGuid.Text = "Преобразование GUID";
+      this.btnConvertGuid.Text = "РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ GUID";
       this.btnConvertGuid.UseVisualStyleBackColor = true;
       // 
       // groupBox8
@@ -530,7 +530,7 @@ namespace FIASDemo
       this.groupBox8.Size = new System.Drawing.Size(620, 76);
       this.groupBox8.TabIndex = 0;
       this.groupBox8.TabStop = false;
-      this.groupBox8.Text = "Обновление";
+      this.groupBox8.Text = "РћР±РЅРѕРІР»РµРЅРёРµ";
       // 
       // btnToDisk
       // 
@@ -539,7 +539,7 @@ namespace FIASDemo
       this.btnToDisk.Name = "btnToDisk";
       this.btnToDisk.Size = new System.Drawing.Size(176, 24);
       this.btnToDisk.TabIndex = 3;
-      this.btnToDisk.Text = "Скачать с сайта на диск";
+      this.btnToDisk.Text = "РЎРєР°С‡Р°С‚СЊ СЃ СЃР°Р№С‚Р° РЅР° РґРёСЃРє";
       this.btnToDisk.UseVisualStyleBackColor = true;
       // 
       // btnLoadWeb
@@ -549,7 +549,7 @@ namespace FIASDemo
       this.btnLoadWeb.Name = "btnLoadWeb";
       this.btnLoadWeb.Size = new System.Drawing.Size(176, 24);
       this.btnLoadWeb.TabIndex = 0;
-      this.btnLoadWeb.Text = "Загрузить с сайта";
+      this.btnLoadWeb.Text = "Р—Р°РіСЂСѓР·РёС‚СЊ СЃ СЃР°Р№С‚Р°";
       this.btnLoadWeb.UseVisualStyleBackColor = true;
       // 
       // btnUpdateHistory
@@ -559,7 +559,7 @@ namespace FIASDemo
       this.btnUpdateHistory.Name = "btnUpdateHistory";
       this.btnUpdateHistory.Size = new System.Drawing.Size(176, 24);
       this.btnUpdateHistory.TabIndex = 2;
-      this.btnUpdateHistory.Text = "История обновлений";
+      this.btnUpdateHistory.Text = "РСЃС‚РѕСЂРёСЏ РѕР±РЅРѕРІР»РµРЅРёР№";
       this.btnUpdateHistory.UseVisualStyleBackColor = true;
       // 
       // groupBox7
@@ -578,7 +578,7 @@ namespace FIASDemo
       this.groupBox7.Size = new System.Drawing.Size(620, 85);
       this.groupBox7.TabIndex = 0;
       this.groupBox7.TabStop = false;
-      this.groupBox7.Text = "Текущая база данных";
+      this.groupBox7.Text = "РўРµРєСѓС‰Р°СЏ Р±Р°Р·Р° РґР°РЅРЅС‹С…";
       // 
       // lblRoomCount
       // 
@@ -596,7 +596,7 @@ namespace FIASDemo
       this.lblRoomCount2.Name = "lblRoomCount2";
       this.lblRoomCount2.Size = new System.Drawing.Size(100, 34);
       this.lblRoomCount2.TabIndex = 6;
-      this.lblRoomCount2.Text = "Помещения";
+      this.lblRoomCount2.Text = "РџРѕРјРµС‰РµРЅРёСЏ";
       this.lblRoomCount2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       // 
       // lblHouseCount
@@ -615,7 +615,7 @@ namespace FIASDemo
       this.lblHouseCount2.Name = "lblHouseCount2";
       this.lblHouseCount2.Size = new System.Drawing.Size(100, 34);
       this.lblHouseCount2.TabIndex = 4;
-      this.lblHouseCount2.Text = "Здания";
+      this.lblHouseCount2.Text = "Р—РґР°РЅРёСЏ";
       this.lblHouseCount2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       // 
       // lblAddrObCount
@@ -634,7 +634,7 @@ namespace FIASDemo
       this.lblAddrObjCount2.Name = "lblAddrObjCount2";
       this.lblAddrObjCount2.Size = new System.Drawing.Size(100, 34);
       this.lblAddrObjCount2.TabIndex = 2;
-      this.lblAddrObjCount2.Text = "Адресные объекты";
+      this.lblAddrObjCount2.Text = "РђРґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹";
       this.lblAddrObjCount2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       // 
       // label5
@@ -643,7 +643,7 @@ namespace FIASDemo
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(125, 24);
       this.label5.TabIndex = 0;
-      this.label5.Text = "Дата актуальности";
+      this.label5.Text = "Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё";
       this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edActualDate
@@ -661,7 +661,7 @@ namespace FIASDemo
       this.btnTest.Name = "btnTest";
       this.btnTest.Size = new System.Drawing.Size(156, 32);
       this.btnTest.TabIndex = 3;
-      this.btnTest.Text = "Тест";
+      this.btnTest.Text = "РўРµСЃС‚";
       this.btnTest.UseVisualStyleBackColor = true;
       this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
       // 
@@ -675,7 +675,7 @@ namespace FIASDemo
       this.tpSearch.Padding = new System.Windows.Forms.Padding(3);
       this.tpSearch.Size = new System.Drawing.Size(624, 426);
       this.tpSearch.TabIndex = 2;
-      this.tpSearch.Text = "Поиск";
+      this.tpSearch.Text = "РџРѕРёСЃРє";
       this.tpSearch.UseVisualStyleBackColor = true;
       // 
       // groupBox6
@@ -687,7 +687,7 @@ namespace FIASDemo
       this.groupBox6.Size = new System.Drawing.Size(618, 294);
       this.groupBox6.TabIndex = 3;
       this.groupBox6.TabStop = false;
-      this.groupBox6.Text = "Адреса для поиска";
+      this.groupBox6.Text = "РђРґСЂРµСЃР° РґР»СЏ РїРѕРёСЃРєР°";
       // 
       // edSearchText
       // 
@@ -712,7 +712,7 @@ namespace FIASDemo
       this.groupBox4.Size = new System.Drawing.Size(618, 86);
       this.groupBox4.TabIndex = 0;
       this.groupBox4.TabStop = false;
-      this.groupBox4.Text = "Параметры поиска";
+      this.groupBox4.Text = "РџР°СЂР°РјРµС‚СЂС‹ РїРѕРёСЃРєР°";
       // 
       // cbSearchLevel
       // 
@@ -731,7 +731,7 @@ namespace FIASDemo
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(133, 21);
       this.label4.TabIndex = 2;
-      this.label4.Text = "Нижний уровень";
+      this.label4.Text = "РќРёР¶РЅРёР№ СѓСЂРѕРІРµРЅСЊ";
       // 
       // btnBaseAddress
       // 
@@ -739,7 +739,7 @@ namespace FIASDemo
       this.btnBaseAddress.Name = "btnBaseAddress";
       this.btnBaseAddress.Size = new System.Drawing.Size(132, 24);
       this.btnBaseAddress.TabIndex = 0;
-      this.btnBaseAddress.Text = "Базовый адрес";
+      this.btnBaseAddress.Text = "Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ";
       this.btnBaseAddress.UseVisualStyleBackColor = true;
       // 
       // edParseSettingsText
@@ -768,8 +768,8 @@ namespace FIASDemo
       this.infoLabel1.Name = "infoLabel1";
       this.infoLabel1.Size = new System.Drawing.Size(514, 40);
       this.infoLabel1.TabIndex = 1;
-      this.infoLabel1.Text = "Вставьте в текстовое поле один или несколько адресов, которые нужно найти. Раздел" +
-          "ители компонентов - запятые или табуляция. Одна строка - один адрес";
+      this.infoLabel1.Text = "Р’СЃС‚Р°РІСЊС‚Рµ РІ С‚РµРєСЃС‚РѕРІРѕРµ РїРѕР»Рµ РѕРґРёРЅ РёР»Рё РЅРµСЃРєРѕР»СЊРєРѕ Р°РґСЂРµСЃРѕРІ, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ РЅР°Р№С‚Рё. Р Р°Р·РґРµР»" +
+          "РёС‚РµР»Рё РєРѕРјРїРѕРЅРµРЅС‚РѕРІ - Р·Р°РїСЏС‚С‹Рµ РёР»Рё С‚Р°Р±СѓР»СЏС†РёСЏ. РћРґРЅР° СЃС‚СЂРѕРєР° - РѕРґРёРЅ Р°РґСЂРµСЃ";
       // 
       // panel4
       // 
@@ -786,7 +786,7 @@ namespace FIASDemo
       this.btnSearch.Name = "btnSearch";
       this.btnSearch.Size = new System.Drawing.Size(88, 24);
       this.btnSearch.TabIndex = 0;
-      this.btnSearch.Text = "Найти";
+      this.btnSearch.Text = "РќР°Р№С‚Рё";
       this.btnSearch.UseVisualStyleBackColor = true;
       // 
       // MainForm
@@ -797,7 +797,7 @@ namespace FIASDemo
       this.Controls.Add(this.TheTabControl);
       this.Margin = new System.Windows.Forms.Padding(2);
       this.Name = "MainForm";
-      this.Text = "Тестирование справочника ФИАС";
+      this.Text = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р¤РРђРЎ";
       this.TheTabControl.ResumeLayout(false);
       this.tpAddress.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);

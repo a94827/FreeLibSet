@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+п»їnamespace FreeLibSet.Forms
 {
   partial class SelectCompositionForm
   {
@@ -66,7 +66,7 @@ namespace FreeLibSet.Forms
       this.groupBox2.Size = new System.Drawing.Size(424, 45);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Сохраненные композиции";
+      this.groupBox2.Text = "РЎРѕС…СЂР°РЅРµРЅРЅС‹Рµ РєРѕРјРїРѕР·РёС†РёРё";
       // 
       // cbParamSet
       // 
@@ -96,7 +96,7 @@ namespace FreeLibSet.Forms
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -106,7 +106,7 @@ namespace FreeLibSet.Forms
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -120,7 +120,7 @@ namespace FreeLibSet.Forms
       this.groupBox1.Size = new System.Drawing.Size(624, 397);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Выбранная композиция";
+      this.groupBox1.Text = "Р’С‹Р±СЂР°РЅРЅР°СЏ РєРѕРјРїРѕР·РёС†РёСЏ";
       // 
       // lblInfo
       // 
@@ -169,7 +169,7 @@ namespace FreeLibSet.Forms
       this.Controls.Add(this.panel1);
       this.Name = "SelectCompositionForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Композиции рабочего стола";
+      this.Text = "РљРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°";
       this.panel1.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);
       this.panel2.ResumeLayout(false);

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -8,86 +8,86 @@ using System.Globalization;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
 
-// Класс RusDateRangeFormatter не может быть размещен в библиотеке ExtRussian.dll, т.к. она 
-// не ссылается на ExtTools.dll
-// Сама библиотека ExtRussian.dll не нужна для использования этого модуля
+// РљР»Р°СЃСЃ RusDateRangeFormatter РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°Р·РјРµС‰РµРЅ РІ Р±РёР±Р»РёРѕС‚РµРєРµ ExtRussian.dll, С‚.Рє. РѕРЅР° 
+// РЅРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ РЅР° ExtTools.dll
+// РЎР°РјР° Р±РёР±Р»РёРѕС‚РµРєР° ExtRussian.dll РЅРµ РЅСѓР¶РЅР° РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СЌС‚РѕРіРѕ РјРѕРґСѓР»СЏ
 
 namespace FreeLibSet.Russian
 {
   /// <summary>
-  /// Форматировщик диапазонов дат по правилам русского языка.
-  /// В частности, реализует объединение диапазонов дат, например, "01-30 июня 2017 г.".
-  /// Для ициализации обработчика, выполните в начале работы приложения вызов:
+  /// Р¤РѕСЂРјР°С‚РёСЂРѕРІС‰РёРє РґРёР°РїР°Р·РѕРЅРѕРІ РґР°С‚ РїРѕ РїСЂР°РІРёР»Р°Рј СЂСѓСЃСЃРєРѕРіРѕ СЏР·С‹РєР°.
+  /// Р’ С‡Р°СЃС‚РЅРѕСЃС‚Рё, СЂРµР°Р»РёР·СѓРµС‚ РѕР±СЉРµРґРёРЅРµРЅРёРµ РґРёР°РїР°Р·РѕРЅРѕРІ РґР°С‚, РЅР°РїСЂРёРјРµСЂ, "01-30 РёСЋРЅСЏ 2017 Рі.".
+  /// Р”Р»СЏ РёС†РёР°Р»РёР·Р°С†РёРё РѕР±СЂР°Р±РѕС‚С‡РёРєР°, РІС‹РїРѕР»РЅРёС‚Рµ РІ РЅР°С‡Р°Р»Рµ СЂР°Р±РѕС‚С‹ РїСЂРёР»РѕР¶РµРЅРёСЏ РІС‹Р·РѕРІ:
   /// DateRangeFormatter.Default=new RusDateRangeFormatter()
   /// </summary>
   public class RusDateRangeFormatter : DateRangeFormatter
   {
     /// <summary>
-    /// Форматировщик для дат
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІС‰РёРє РґР»СЏ РґР°С‚
     /// </summary>
     public static readonly IFormatProvider FormatProvider = CultureInfo.GetCultureInfo("ru-RU");
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     public override string ToString(DateTime date, bool isLong)
     {
       if (isLong)
-        return date.ToString(@"dd MMMM yyyy г.", FormatProvider);
+        return date.ToString(@"dd MMMM yyyy Рі.", FormatProvider);
       else
         return date.ToString(@"dd\.MM\.yyyy", FormatProvider);
     }
 
     public override string ToString(DateTime? firstDate, DateTime? lastDate, bool isLong)
     {
-      #region (Полу)открытые интервалы
+      #region (РџРѕР»Сѓ)РѕС‚РєСЂС‹С‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹
 
       if (!(firstDate.HasValue || lastDate.HasValue))
-        return "все даты";
+        return "РІСЃРµ РґР°С‚С‹";
       if (!firstDate.HasValue)
-        return "по " + ToString(lastDate.Value, isLong);
+        return "РїРѕ " + ToString(lastDate.Value, isLong);
       if (!lastDate.HasValue)
-        return "с " + ToString(firstDate.Value, isLong);
+        return "СЃ " + ToString(firstDate.Value, isLong);
 
       #endregion
 
-      #region Закрытые интервалы
+      #region Р—Р°РєСЂС‹С‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹
 
       if (firstDate.Value.Year != lastDate.Value.Year)
-        // Нет объединения
+        // РќРµС‚ РѕР±СЉРµРґРёРЅРµРЅРёСЏ
         return ToString(firstDate.Value, isLong) + " - " + ToString(lastDate.Value, isLong);
 
       if (DataTools.IsBottomOfYear(firstDate.Value) && DataTools.IsEndOfYear(lastDate.Value))
       { 
-        // 31.08.2018 - целый год
+        // 31.08.2018 - С†РµР»С‹Р№ РіРѕРґ
         if (isLong)
-          return lastDate.Value.ToString(@"yyyy г.", FormatProvider);
+          return lastDate.Value.ToString(@"yyyy Рі.", FormatProvider);
         else
           return lastDate.Value.ToString(@"yyyy", FormatProvider);
       }
 
       if (firstDate.Value.Month != lastDate.Value.Month)
       {
-        // Объединяется только год
+        // РћР±СЉРµРґРёРЅСЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РіРѕРґ
         if (isLong)
-          return firstDate.Value.ToString(@"dd MMMM", FormatProvider) + " - " + lastDate.Value.ToString(@"dd MMMM yyyy г.", FormatProvider);
+          return firstDate.Value.ToString(@"dd MMMM", FormatProvider) + " - " + lastDate.Value.ToString(@"dd MMMM yyyy Рі.", FormatProvider);
         else
           return firstDate.Value.ToString(@"dd\.MM", FormatProvider) + "-" + lastDate.Value.ToString(@"dd\.MM\.yyyy", FormatProvider);
       }
 
       if (DataTools.IsBottomOfMonth(firstDate.Value) && DataTools.IsEndOfMonth(lastDate.Value))
       { 
-        // 31.08.2018 - целый месяц
+        // 31.08.2018 - С†РµР»С‹Р№ РјРµСЃСЏС†
         if (isLong)
-          return lastDate.Value.ToString(@"MMMM yyyy г.", FormatProvider);
+          return lastDate.Value.ToString(@"MMMM yyyy Рі.", FormatProvider);
         else
           return lastDate.Value.ToString(@"MM\.yyyy", FormatProvider);
       }
 
       if (firstDate.Value.Day != lastDate.Value.Day)
       { 
-        // Объединяется год и месяц
+        // РћР±СЉРµРґРёРЅСЏРµС‚СЃСЏ РіРѕРґ Рё РјРµСЃСЏС†
         if (isLong)
-          return firstDate.Value.ToString(@"dd", FormatProvider) + " - " + lastDate.Value.ToString(@"dd MMMM yyyy г.", FormatProvider);
+          return firstDate.Value.ToString(@"dd", FormatProvider) + " - " + lastDate.Value.ToString(@"dd MMMM yyyy Рі.", FormatProvider);
         else
         {
           //return FirstDate.Value.ToString(@"dd\.MM", FormatProvider) + "-" + LastDate.Value.ToString(@"dd\.MM\.yyyy", FormatProvider);
@@ -96,7 +96,7 @@ namespace FreeLibSet.Russian
         }
       }
 
-      // Полное совпадение
+      // РџРѕР»РЅРѕРµ СЃРѕРІРїР°РґРµРЅРёРµ
       return ToString(firstDate.Value, isLong);
 
       #endregion
@@ -109,21 +109,21 @@ namespace FreeLibSet.Russian
         if (!lastYM.IsEmpty)
         {
           if (firstYM == lastYM)
-            return firstYM.BottomOfMonth.ToString("MMMM yyyy г.");
+            return firstYM.BottomOfMonth.ToString("MMMM yyyy Рі.");
           else if (firstYM.Month==1 && lastYM.Month==12)
-            return lastYM.EndOfMonth.ToString("yyyy г."); // 31.08.2018
+            return lastYM.EndOfMonth.ToString("yyyy Рі."); // 31.08.2018
           else
-            return firstYM.BottomOfMonth.ToString("MMMM") + "-" + lastYM.EndOfMonth.ToString("MMMM yyyy г.");
+            return firstYM.BottomOfMonth.ToString("MMMM") + "-" + lastYM.EndOfMonth.ToString("MMMM yyyy Рі.");
         }
         else
-          return "с " + firstYM.BottomOfMonth.ToString("MMMM yyyy г.");
+          return "СЃ " + firstYM.BottomOfMonth.ToString("MMMM yyyy Рі.");
       }
       else
       {
         if (!lastYM.IsEmpty)
-          return "по " + lastYM.EndOfMonth.ToString("MMM yyyy г.");
+          return "РїРѕ " + lastYM.EndOfMonth.ToString("MMM yyyy Рі.");
         else
-          return "все даты";
+          return "РІСЃРµ РґР°С‚С‹";
       }
     }
 

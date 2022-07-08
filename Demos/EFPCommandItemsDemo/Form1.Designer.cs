@@ -1,4 +1,4 @@
-namespace EFPCommandItemsDemo
+﻿namespace EFPCommandItemsDemo
 {
   partial class Form1
   {

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -15,7 +15,7 @@ namespace FreeLibSet.Forms.Diagnostics
 {
   internal partial class ShowExceptionMsgBoxForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public ShowExceptionMsgBoxForm()
     {
@@ -31,14 +31,14 @@ namespace FreeLibSet.Forms.Diagnostics
     void efpMore_Click(object sender, EventArgs args)
     {
       if (LogFilePath.IsEmpty)
-        LogFilePath = LogoutTools.LogoutExceptionToFile(Exception, this.Text); // 02.09.2020. Запись в файл выполняется только при открытии детальной формы.
+        LogFilePath = LogoutTools.LogoutExceptionToFile(Exception, this.Text); // 02.09.2020. Р—Р°РїРёСЃСЊ РІ С„Р°Р№Р» РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїСЂРё РѕС‚РєСЂС‹С‚РёРё РґРµС‚Р°Р»СЊРЅРѕР№ С„РѕСЂРјС‹.
 
       ShowExceptionForm.ShowException(Exception, this.Text, null, LogFilePath);
     }
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public Exception Exception;
 

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,34 +12,34 @@ using System.Diagnostics;
 using FreeLibSet.Logging;
 using FreeLibSet.Core;
 
-// Провайдер для доступа к базе данных SQLite
+// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… SQLite
 
 namespace FreeLibSet.Data.SQLite
 {
   /// <summary>
-  /// База данных PostGreSQL через провайдер Npgsql.
-  /// Для использования должны быть подключены сборки Npgsql.dll и Mono.Security из подкаталога FreeLibSet/Others
+  /// Р‘Р°Р·Р° РґР°РЅРЅС‹С… PostGreSQL С‡РµСЂРµР· РїСЂРѕРІР°Р№РґРµСЂ Npgsql.
+  /// Р”Р»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РїРѕРґРєР»СЋС‡РµРЅС‹ СЃР±РѕСЂРєРё Npgsql.dll Рё Mono.Security РёР· РїРѕРґРєР°С‚Р°Р»РѕРіР° FreeLibSet/Others
   /// </summary>
   public class SQLiteDBx : DBx
   {
-    #region Конструкторы и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё Dispose
 
     internal const string MemoryFileName = ":memory:";
 
     /// <summary>
-    /// Устанавливается в 1 при первом вызове конструктора
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ 1 РїСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°
     /// </summary>
     private static int _FirstFlagValue = 0;
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// РЎРѕР·РґР°РЅРёРµ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РµС‚СЃСЏ РѕСЃРЅРѕРІРЅР°СЏ С‚РѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ
     /// </summary>
-    /// <param name="connectionStringBuilder">Собранная строка подключения</param>
+    /// <param name="connectionStringBuilder">РЎРѕР±СЂР°РЅРЅР°СЏ СЃС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
     public SQLiteDBx(SQLiteConnectionStringBuilder connectionStringBuilder)
     {
       bool firstCall = false;
-      if (System.Threading.Interlocked.Exchange(ref _FirstFlagValue, 1) == 0) // могут быть асинхронные вызовы конструктора
+      if (System.Threading.Interlocked.Exchange(ref _FirstFlagValue, 1) == 0) // РјРѕРіСѓС‚ Р±С‹С‚СЊ Р°СЃРёРЅС…СЂРѕРЅРЅС‹Рµ РІС‹Р·РѕРІС‹ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°
       {
         LoadDLLs();
         LogoutTools.LogoutInfoNeeded += new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded);
@@ -53,7 +53,7 @@ namespace FreeLibSet.Data.SQLite
       {
         _FileName = new AbsPath(connectionStringBuilder.DataSource);
         if (_FileName.IsEmpty)
-          throw new ArgumentException("В строке подключения не задан параметр DataSource", "connectionStringBuilder");
+          throw new ArgumentException("Р’ СЃС‚СЂРѕРєРµ РїРѕРґРєР»СЋС‡РµРЅРёСЏ РЅРµ Р·Р°РґР°РЅ РїР°СЂР°РјРµС‚СЂ DataSource", "connectionStringBuilder");
       }
 
       _DateFormat = @"yyyy\-MM\-dd";
@@ -61,7 +61,7 @@ namespace FreeLibSet.Data.SQLite
       SetFormatter(new
         SQLiteDBxSqlFormatter(this));
 
-      connectionStringBuilder.FailIfMissing = false; // всегда автоматически создаем базу данных
+      connectionStringBuilder.FailIfMissing = false; // РІСЃРµРіРґР° Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РµРј Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
 
       if (InMemory)
       {
@@ -76,21 +76,21 @@ namespace FreeLibSet.Data.SQLite
     }                                                                                   
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// РЎРѕР·РґР°РЅРёРµ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РµС‚СЃСЏ РѕСЃРЅРѕРІРЅР°СЏ С‚РѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ
     /// </summary>
-    /// <param name="connectionString">Строка подключения</param>
+    /// <param name="connectionString">РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
     public SQLiteDBx(string connectionString)
       : this(new SQLiteConnectionStringBuilder(connectionString))
     {
     }
 
     /// <summary>
-    /// Открывает базу данных по указанному пути.
-    /// Устанавливает в строке подключения атрибут "foreign keys=true".
+    /// РћС‚РєСЂС‹РІР°РµС‚ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РїСѓС‚Рё.
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РІ СЃС‚СЂРѕРєРµ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Р°С‚СЂРёР±СѓС‚ "foreign keys=true".
     /// </summary>
-    /// <param name="path">Путь к базе данных. Должен быть задан</param>
-    /// <param name="readOnly">True - открыть базу только для просмотра, false - для записи</param>
+    /// <param name="path">РџСѓС‚СЊ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
+    /// <param name="readOnly">True - РѕС‚РєСЂС‹С‚СЊ Р±Р°Р·Сѓ С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°, false - РґР»СЏ Р·Р°РїРёСЃРё</param>
     public SQLiteDBx(AbsPath path, bool readOnly)
       : this(GetConnectionStringBuilder(path, readOnly))
     {
@@ -108,7 +108,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Эта версия конструктора предназначена для создания базы данных в памяти
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РІ РїР°РјСЏС‚Рё
     /// </summary>
     public SQLiteDBx()
       : this("Data Source=" + MemoryFileName +
@@ -117,9 +117,9 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Если InMemory=true, то закрывает соединение с базой данных, что приводит к ее удалению.
+    /// Р•СЃР»Рё InMemory=true, С‚Рѕ Р·Р°РєСЂС‹РІР°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…, С‡С‚Рѕ РїСЂРёРІРѕРґРёС‚ Рє РµРµ СѓРґР°Р»РµРЅРёСЋ.
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose()</param>
+    /// <param name="disposing">true, РµСЃР»Рё РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose()</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -136,30 +136,30 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает полный путь к файлу базы данных
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     public override string DatabaseName { get { return FileName.Path; } }
 
     /// <summary>
-    /// Имя файла
+    /// РРјСЏ С„Р°Р№Р»Р°
     /// </summary>
     public AbsPath FileName { get { return _FileName; } }
     private AbsPath _FileName;
 
     /// <summary>
-    /// Главная точка входа в базу данных.
-    /// Не содержит явно назначенных прав пользователя
+    /// Р“Р»Р°РІРЅР°СЏ С‚РѕС‡РєР° РІС…РѕРґР° РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С….
+    /// РќРµ СЃРѕРґРµСЂР¶РёС‚ СЏРІРЅРѕ РЅР°Р·РЅР°С‡РµРЅРЅС‹С… РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     /// </summary>
     public new SQLiteDBxEntry MainEntry { get { return (SQLiteDBxEntry)(base.MainEntry); } }
 
     /// <summary>
-    /// Создает SQLiteDBxEntry
+    /// РЎРѕР·РґР°РµС‚ SQLiteDBxEntry
     /// </summary>
-    /// <param name="permissions">Разрешения на доступ к базе данных</param>
-    /// <returns>Точка входа</returns>
+    /// <param name="permissions">Р Р°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
+    /// <returns>РўРѕС‡РєР° РІС…РѕРґР°</returns>
     public override DBxEntry CreateEntry(DBxPermissions permissions)
     {
       return new SQLiteDBxEntry(this, MainEntry.ConnectionStringBuilder, permissions);
@@ -168,7 +168,7 @@ namespace FreeLibSet.Data.SQLite
     private object _SyncRoot;
 
     /// <summary>
-    /// Текстовое представление версии сервера
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІРµСЂСЃРёРё СЃРµСЂРІРµСЂР°
     /// </summary>
     public override string ServerVersionText
     {
@@ -190,9 +190,9 @@ namespace FreeLibSet.Data.SQLite
     private string _ServerVersionText;
 
     /// <summary>
-    /// Вызывает встроенную функцию pg_database_size()
+    /// Р’С‹Р·С‹РІР°РµС‚ РІСЃС‚СЂРѕРµРЅРЅСѓСЋ С„СѓРЅРєС†РёСЋ pg_database_size()
     /// </summary>
-    /// <returns>Размер базы данных в байтах</returns>
+    /// <returns>Р Р°Р·РјРµСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С… РІ Р±Р°Р№С‚Р°С…</returns>
     public override long GetDBSize()
     {
       throw new NotImplementedException();
@@ -203,28 +203,28 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Возвращает статический экзеипляр менеджера баз данных PostgreSQL
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ СЌРєР·РµРёРїР»СЏСЂ РјРµРЅРµРґР¶РµСЂР° Р±Р°Р· РґР°РЅРЅС‹С… PostgreSQL
     /// </summary>
     public override DBxManager Manager { get { return SQLiteDBxManager.TheManager; } }
 
     /// <summary>
-    /// Возвращает true, если база данных располагается в памяти
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р±Р°Р·Р° РґР°РЅРЅС‹С… СЂР°СЃРїРѕР»Р°РіР°РµС‚СЃСЏ РІ РїР°РјСЏС‚Рё
     /// </summary>
     public bool InMemory { get { return _InMemory; } }
     private bool _InMemory;
 
     /// <summary>
-    /// Если база данных располагается в памяти, требуется постоянно открытое соединение для нее.
-    /// Когда это соединение закрывается, база данных уничтожается.
+    /// Р•СЃР»Рё Р±Р°Р·Р° РґР°РЅРЅС‹С… СЂР°СЃРїРѕР»Р°РіР°РµС‚СЃСЏ РІ РїР°РјСЏС‚Рё, С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕСЃС‚РѕСЏРЅРЅРѕ РѕС‚РєСЂС‹С‚РѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ РґР»СЏ РЅРµРµ.
+    /// РљРѕРіРґР° СЌС‚Рѕ СЃРѕРµРґРёРЅРµРЅРёРµ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ, Р±Р°Р·Р° РґР°РЅРЅС‹С… СѓРЅРёС‡С‚РѕР¶Р°РµС‚СЃСЏ.
     /// </summary>
     internal SQLiteConnection MainConnection;
 
     #endregion
 
-    #region Форматирование значений
+    #region Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ Р·РЅР°С‡РµРЅРёР№
 
     /// <summary>
-    /// Формат даты
+    /// Р¤РѕСЂРјР°С‚ РґР°С‚С‹
     /// </summary>
     public string DateFormat
     {
@@ -238,7 +238,7 @@ namespace FreeLibSet.Data.SQLite
     private string _DateFormat;
 
     /// <summary>
-    /// Формат времени
+    /// Р¤РѕСЂРјР°С‚ РІСЂРµРјРµРЅРё
     /// </summary>
     public string TimeFormat
     {
@@ -253,10 +253,10 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Обновление структуры
+    #region РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹
 
     /// <summary>
-    /// Возвращает признак существования файла FileName
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРёР·РЅР°Рє СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ С„Р°Р№Р»Р° FileName
     /// </summary>
     public override bool DatabaseExists
     {
@@ -270,7 +270,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Создает файл базы данных, если он не существует
+    /// РЎРѕР·РґР°РµС‚ С„Р°Р№Р» Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РµСЃР»Рё РѕРЅ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
     public override void CreateIfRequired()
     {
@@ -278,40 +278,40 @@ namespace FreeLibSet.Data.SQLite
         return;
       using (SQLiteDBxCon con = new SQLiteDBxCon(MainEntry))
       {
-        // Ничего не делаем. Само создается
-        // 21.07.2021. Неверно. Надо обязательно обратиться к свойству Connection
+        // РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј. РЎР°РјРѕ СЃРѕР·РґР°РµС‚СЃСЏ
+        // 21.07.2021. РќРµРІРµСЂРЅРѕ. РќР°РґРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РѕР±СЂР°С‚РёС‚СЊСЃСЏ Рє СЃРІРѕР№СЃС‚РІСѓ Connection
 
         con.Connection.GetSchema();
       }
     }
 
     /// <summary>                               
-    /// Обновляет структуру существующей базы
-    /// данных на основании созданного описание в свойстве DBx.Struct.
-    /// На момент вызова база данных (возможно, пустая) должна существовать.
+    /// РћР±РЅРѕРІР»СЏРµС‚ СЃС‚СЂСѓРєС‚СѓСЂСѓ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р±Р°Р·С‹
+    /// РґР°РЅРЅС‹С… РЅР° РѕСЃРЅРѕРІР°РЅРёРё СЃРѕР·РґР°РЅРЅРѕРіРѕ РѕРїРёСЃР°РЅРёРµ РІ СЃРІРѕР№СЃС‚РІРµ DBx.Struct.
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° Р±Р°Р·Р° РґР°РЅРЅС‹С… (РІРѕР·РјРѕР¶РЅРѕ, РїСѓСЃС‚Р°СЏ) РґРѕР»Р¶РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
-    /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
-    /// не вносится не вносится, сообщения не добавляются</param>
-    /// <param name="options">Опции обновления</param>
-    /// <returns>true, если в базу данных были внесены изменения</returns>
+    /// <param name="splash">Р—РґРµСЃСЊ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ PhaseText РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІС‹РїРѕР»РЅРµРЅСЏРјС‹С… РґРµР№СЃС‚РІРёР№</param>
+    /// <param name="errors">РЎСЋРґР° РїРѕРјРµС‰Р°СЋС‚СЃСЏ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЏ Рё РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ. Р•СЃР»Рё РЅРёРєР°РєРёС… РёР·РјРµРЅРµРЅРёР№
+    /// РЅРµ РІРЅРѕСЃРёС‚СЃСЏ РЅРµ РІРЅРѕСЃРёС‚СЃСЏ, СЃРѕРѕР±С‰РµРЅРёСЏ РЅРµ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ</param>
+    /// <param name="options">РћРїС†РёРё РѕР±РЅРѕРІР»РµРЅРёСЏ</param>
+    /// <returns>true, РµСЃР»Рё РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… Р±С‹Р»Рё РІРЅРµСЃРµРЅС‹ РёР·РјРµРЅРµРЅРёСЏ</returns>
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
-      // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
+      // Р”РµР»РµРіРёСЂСѓРµРј РІСЃРµ РґРµР№СЃС‚РІРёСЏ СЃРѕРµРґРёРЅРµРЅРёСЋ, С‚.Рє. РЅСѓР¶РµРЅ РґРѕСЃС‚СѓРї Рє Р·Р°С‰РёС‰РµРЅРЅС‹Рј РјРµС‚РѕРґР°Рј
       using (SQLiteDBxCon con = new SQLiteDBxCon(MainEntry))
       {
-        con.CommandTimeout = 0; // Бесконечное время выполнения
+        con.CommandTimeout = 0; // Р‘РµСЃРєРѕРЅРµС‡РЅРѕРµ РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ
         return con.UpdateDBStruct(splash, errors, options);
       }
     }
 
     /// <summary>
-    /// Удаляет таблицу данных, если она существует.
-    /// Этот метод должен вызываться до установки свойства DBx.Struct и вызова UpdateStruct().
-    /// Если обновление структуры не предполагается, после последовательности вызовов этого метода,
-    /// должна быть выполнена установка DB.Struct=null, чтобы обновить список таблиц
+    /// РЈРґР°Р»СЏРµС‚ С‚Р°Р±Р»РёС†Сѓ РґР°РЅРЅС‹С…, РµСЃР»Рё РѕРЅР° СЃСѓС‰РµСЃС‚РІСѓРµС‚.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РґРѕ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° DBx.Struct Рё РІС‹Р·РѕРІР° UpdateStruct().
+    /// Р•СЃР»Рё РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ РЅРµ РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, РїРѕСЃР»Рµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РІС‹Р·РѕРІРѕРІ СЌС‚РѕРіРѕ РјРµС‚РѕРґР°,
+    /// РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅР° СѓСЃС‚Р°РЅРѕРІРєР° DB.Struct=null, С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёС‚СЊ СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС†
     /// </summary>
-    /// <param name="tableName">Имя удаляемой таблицы</param>
+    /// <param name="tableName">РРјСЏ СѓРґР°Р»СЏРµРјРѕР№ С‚Р°Р±Р»РёС†С‹</param>
     public override void DropTableIfExists(string tableName)
     {
       using (DBxConBase con = MainEntry.CreateCon())
@@ -327,13 +327,13 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Прочее
+    #region РџСЂРѕС‡РµРµ
 
     /// <summary>
-    /// Удаление базы данных, если она существует
+    /// РЈРґР°Р»РµРЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РµСЃР»Рё РѕРЅР° СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
-    /// <returns>True, если существующая база данных была удалена.
-    /// False, если база данных не зарегистрирована</returns>
+    /// <returns>True, РµСЃР»Рё СЃСѓС‰РµСЃС‚РІСѓСЋС‰Р°СЏ Р±Р°Р·Р° РґР°РЅРЅС‹С… Р±С‹Р»Р° СѓРґР°Р»РµРЅР°.
+    /// False, РµСЃР»Рё Р±Р°Р·Р° РґР°РЅРЅС‹С… РЅРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅР°</returns>
     public override bool DropDatabaseIfExists()
     {
       if (!DatabaseExists)
@@ -347,7 +347,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Возвращает ссылку на SQLiteFactory
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃСЃС‹Р»РєСѓ РЅР° SQLiteFactory
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {
@@ -356,11 +356,11 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Загрузка библиотек доступа к SQLite
+    #region Р—Р°РіСЂСѓР·РєР° Р±РёР±Р»РёРѕС‚РµРє РґРѕСЃС‚СѓРїР° Рє SQLite
 
     /// <summary>
-    /// Загружает библиотеки, необходимые для работы с SQLite.
-    /// Повторные вызовы игнорируются
+    /// Р—Р°РіСЂСѓР¶Р°РµС‚ Р±РёР±Р»РёРѕС‚РµРєРё, РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ SQLite.
+    /// РџРѕРІС‚РѕСЂРЅС‹Рµ РІС‹Р·РѕРІС‹ РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ
     /// </summary>
     public static void LoadDLLs()
     {
@@ -369,17 +369,17 @@ namespace FreeLibSet.Data.SQLite
       //else
       //  System.Reflection.Assembly.Load("SQLite.Interop.x86");
 
-      System.Reflection.Assembly.Load("System.Data.SQLite"); // обязательно после SQLite.Interop.dll
+      System.Reflection.Assembly.Load("System.Data.SQLite"); // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РїРѕСЃР»Рµ SQLite.Interop.dll
     }
 
     #endregion
 
-    #region Инициализация функций          
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С„СѓРЅРєС†РёР№          
 
     /// <summary>
-    /// Если true (по умолчанию), то будут заменены функции UPPER(s) и LOWER().
-    /// Они будут вызывать методы String.ToUpperInvariant() и ToLowerInvariant() соответственно.
-    /// Свойство можно устанавливать только до первого вызова конструктора SQLiteDBx.
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ Р±СѓРґСѓС‚ Р·Р°РјРµРЅРµРЅС‹ С„СѓРЅРєС†РёРё UPPER(s) Рё LOWER().
+    /// РћРЅРё Р±СѓРґСѓС‚ РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґС‹ String.ToUpperInvariant() Рё ToLowerInvariant() СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ С‚РѕР»СЊРєРѕ РґРѕ РїРµСЂРІРѕРіРѕ РІС‹Р·РѕРІР° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° SQLiteDBx.
     /// </summary>
     public static bool UseInvariantStringFunctions
     {
@@ -387,28 +387,28 @@ namespace FreeLibSet.Data.SQLite
       set
       {                                                         
         if (_FirstFlagValue != 0)
-          throw new InvalidOperationException("Уже был вызов конструктора");
+          throw new InvalidOperationException("РЈР¶Рµ Р±С‹Р» РІС‹Р·РѕРІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°");
         _UseInvariantStringFunctions = value;
       }
     }                                                       
     private static bool _UseInvariantStringFunctions = true;
                                                                                                      
     /// <summary>
-    /// Инициализация функций UPPER() и LOWER().
-    /// Вызывается в конце работы конструктора при создании первой базы данных
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С„СѓРЅРєС†РёР№ UPPER() Рё LOWER().
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РІ РєРѕРЅС†Рµ СЂР°Р±РѕС‚С‹ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РїСЂРё СЃРѕР·РґР°РЅРёРё РїРµСЂРІРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     private void InitInvariantStringFunctions()
     {
-      // До инициализации функций меняем установку для LIKE, делая его регистрочувствительным
-      /* Как-то не так работает, как ожидается
+      // Р”Рѕ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё С„СѓРЅРєС†РёР№ РјРµРЅСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ РґР»СЏ LIKE, РґРµР»Р°СЏ РµРіРѕ СЂРµРіРёСЃС‚СЂРѕС‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј
+      /* РљР°Рє-С‚Рѕ РЅРµ С‚Р°Рє СЂР°Р±РѕС‚Р°РµС‚, РєР°Рє РѕР¶РёРґР°РµС‚СЃСЏ
       using (DBxConBase con = MainEntry.CreateCon())
       {
         con.SQLExecuteNonQuery("PRAGMA case_sensitive_like=1");
       }
        * */
 
-      // См. https://stackoverflow.com/questions/10349839/turkish-character-in-sqlite-while-using-like-expression/10361892#10361892
-      // Только там определены функция TOUPPER() а не UPPER
+      // РЎРј. https://stackoverflow.com/questions/10349839/turkish-character-in-sqlite-while-using-like-expression/10361892#10361892
+      // РўРѕР»СЊРєРѕ С‚Р°Рј РѕРїСЂРµРґРµР»РµРЅС‹ С„СѓРЅРєС†РёСЏ TOUPPER() Р° РЅРµ UPPER
 
       SQLiteFunction.RegisterFunction(typeof(UPPERFunction));
       SQLiteFunction.RegisterFunction(typeof(LOWERFunction));
@@ -444,7 +444,7 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Отладка использования памяти
+    #region РћС‚Р»Р°РґРєР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїР°РјСЏС‚Рё
 
     private static void LogoutTools_LogoutInfoNeeded(object sender, LogoutInfoNeededEventArgs args)
     {
@@ -461,7 +461,7 @@ namespace FreeLibSet.Data.SQLite
         args.WritePair("InteropCompileOptions", SQLiteConnection.InteropCompileOptions);
         args.WritePair("DefineConstants", SQLiteConnection.DefineConstants);
       }
-      catch (Exception e) { args.WriteLine("*** Ошибка ***. " + e.Message); }
+      catch (Exception e) { args.WriteLine("*** РћС€РёР±РєР° ***. " + e.Message); }
 
       args.WriteLine("SQLiteConnection.GetMemoryStatistics()");
       args.IndentLevel++;
@@ -471,7 +471,7 @@ namespace FreeLibSet.Data.SQLite
         SQLiteConnection.GetMemoryStatistics(ref dict);
         LogoutTools.LogoutObject(args, dict);
       }
-      catch (Exception e) { args.WriteLine("*** Ошибка ***. " + e.Message); }
+      catch (Exception e) { args.WriteLine("*** РћС€РёР±РєР° ***. " + e.Message); }
       args.IndentLevel--;
     }
 
@@ -479,14 +479,14 @@ namespace FreeLibSet.Data.SQLite
   }
 
   /// <summary>
-  /// Точка входа для базы данных SQLite
+  /// РўРѕС‡РєР° РІС…РѕРґР° РґР»СЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… SQLite
   /// </summary>
   public class SQLiteDBxEntry : DBxEntry
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Защищенный конструктор для основной точки входа
+    /// Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ РѕСЃРЅРѕРІРЅРѕР№ С‚РѕС‡РєРё РІС…РѕРґР°
     /// </summary>
     /// <param name="db"></param>
     /// <param name="connectionStringBuilder"></param>
@@ -498,22 +498,22 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Версия для подключения к существующей базе данных (повторный вход с другой строкой подключения)
+    /// Р’РµСЂСЃРёСЏ РґР»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р±Р°Р·Рµ РґР°РЅРЅС‹С… (РїРѕРІС‚РѕСЂРЅС‹Р№ РІС…РѕРґ СЃ РґСЂСѓРіРѕР№ СЃС‚СЂРѕРєРѕР№ РїРѕРґРєР»СЋС‡РµРЅРёСЏ)
     /// </summary>
-    /// <param name="db">База данных</param>
-    /// <param name="connectionString">Строка подключения</param>
-    /// <param name="permissions">Разрешения</param>
+    /// <param name="db">Р‘Р°Р·Р° РґР°РЅРЅС‹С…</param>
+    /// <param name="connectionString">РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
+    /// <param name="permissions">Р Р°Р·СЂРµС€РµРЅРёСЏ</param>
     public SQLiteDBxEntry(SQLiteDBx db, string connectionString, DBxPermissions permissions)
       : this(db, new SQLiteConnectionStringBuilder(connectionString), permissions)
     {
     }
 
     /// <summary>
-    /// Версия для подключения к существующей базе данных (повторный вход с другой строкой подключения)
+    /// Р’РµСЂСЃРёСЏ РґР»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р±Р°Р·Рµ РґР°РЅРЅС‹С… (РїРѕРІС‚РѕСЂРЅС‹Р№ РІС…РѕРґ СЃ РґСЂСѓРіРѕР№ СЃС‚СЂРѕРєРѕР№ РїРѕРґРєР»СЋС‡РµРЅРёСЏ)
     /// </summary>
-    /// <param name="db">База данных</param>
-    /// <param name="connectionStringBuilder">Строка подключения</param>
-    /// <param name="permissions">Разрешения</param>
+    /// <param name="db">Р‘Р°Р·Р° РґР°РЅРЅС‹С…</param>
+    /// <param name="connectionStringBuilder">РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ</param>
+    /// <param name="permissions">Р Р°Р·СЂРµС€РµРЅРёСЏ</param>
     public SQLiteDBxEntry(SQLiteDBx db, SQLiteConnectionStringBuilder connectionStringBuilder, DBxPermissions permissions)
       : base(db, permissions, false)
     {
@@ -523,14 +523,14 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// База данных, к которой относится точка входа
+    /// Р‘Р°Р·Р° РґР°РЅРЅС‹С…, Рє РєРѕС‚РѕСЂРѕР№ РѕС‚РЅРѕСЃРёС‚СЃСЏ С‚РѕС‡РєР° РІС…РѕРґР°
     /// </summary>
     public new SQLiteDBx DB { get { return (SQLiteDBx)(base.DB); } }
 
-    // Свойство ConnectionString не стоит делать public. Там может быть пароль
+    // РЎРІРѕР№СЃС‚РІРѕ ConnectionString РЅРµ СЃС‚РѕРёС‚ РґРµР»Р°С‚СЊ public. РўР°Рј РјРѕР¶РµС‚ Р±С‹С‚СЊ РїР°СЂРѕР»СЊ
 
     internal SQLiteConnectionStringBuilder ConnectionStringBuilder { get { return _ConnectionStringBuilder; } }
     private SQLiteConnectionStringBuilder _ConnectionStringBuilder;
@@ -540,22 +540,22 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает объект SQLiteDBxCon
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ SQLiteDBxCon
     /// </summary>
-    /// <returns>Соединение</returns>
+    /// <returns>РЎРѕРµРґРёРЅРµРЅРёРµ</returns>
     public override DBxConBase CreateCon()
     {
       return new SQLiteDBxCon(this);
     }
 
     /// <summary>
-    /// Создает копию точки входа с другим набором прав
+    /// РЎРѕР·РґР°РµС‚ РєРѕРїРёСЋ С‚РѕС‡РєРё РІС…РѕРґР° СЃ РґСЂСѓРіРёРј РЅР°Р±РѕСЂРѕРј РїСЂР°РІ
     /// </summary>
-    /// <param name="newPermissions">Требуемые разрешения на доступ к объектам базы данных</param>
-    /// <returns>Новая точка входа</returns>
+    /// <param name="newPermissions">РўСЂРµР±СѓРµРјС‹Рµ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє РѕР±СЉРµРєС‚Р°Рј Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
+    /// <returns>РќРѕРІР°СЏ С‚РѕС‡РєР° РІС…РѕРґР°</returns>
     public override DBxEntry Clone(DBxPermissions newPermissions)
     {
       return new SQLiteDBxEntry(DB, ConnectionString, newPermissions);
@@ -563,10 +563,10 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Строка подключения без пароля
+    #region РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Р±РµР· РїР°СЂРѕР»СЏ
 
     /// <summary>
-    /// Возвращает строку подключения, не содержащую пароль.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ РїРѕРґРєР»СЋС‡РµРЅРёСЏ, РЅРµ СЃРѕРґРµСЂР¶Р°С‰СѓСЋ РїР°СЂРѕР»СЊ.
     /// </summary>
     public override string UnpasswordedConnectionString
     {
@@ -577,7 +577,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Удаление пароля из строки соединения, если он есть
+    /// РЈРґР°Р»РµРЅРёРµ РїР°СЂРѕР»СЏ РёР· СЃС‚СЂРѕРєРё СЃРѕРµРґРёРЅРµРЅРёСЏ, РµСЃР»Рё РѕРЅ РµСЃС‚СЊ
     /// </summary>
     /// <param name="cs"></param>
     /// <returns></returns>
@@ -595,7 +595,7 @@ namespace FreeLibSet.Data.SQLite
       }
       catch (Exception e)
       {
-        return "Ошибка получения строки подключения. " + e.Message;
+        return "РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚СЂРѕРєРё РїРѕРґРєР»СЋС‡РµРЅРёСЏ. " + e.Message;
       }
     }
 
@@ -603,12 +603,12 @@ namespace FreeLibSet.Data.SQLite
   }
 
   /// <summary>
-  /// Соедиенение с базой данных SQLite.
-  /// Для создания объекта используйте SQLiteDBxEntry
+  /// РЎРѕРµРґРёРµРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С… SQLite.
+  /// Р”Р»СЏ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ SQLiteDBxEntry
   /// </summary>
   public class SQLiteDBxCon : DBxConBase
   {
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     internal SQLiteDBxCon(SQLiteDBxEntry entry)
       : base(entry)
@@ -616,11 +616,11 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Закрывает соедиенение ADO.NET, если оно было открыто, и возвращает его в пул.
-    /// Удаляет соединение из точки входа.
+    /// Р—Р°РєСЂС‹РІР°РµС‚ СЃРѕРµРґРёРµРЅРµРЅРёРµ ADO.NET, РµСЃР»Рё РѕРЅРѕ Р±С‹Р»Рѕ РѕС‚РєСЂС‹С‚Рѕ, Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РµРіРѕ РІ РїСѓР».
+    /// РЈРґР°Р»СЏРµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ РёР· С‚РѕС‡РєРё РІС…РѕРґР°.
     /// </summary>
-    /// <param name="disposing">True, если был вызван метод Dispose().
-    /// False, если вызван деструктор</param>
+    /// <param name="disposing">True, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose().
+    /// False, РµСЃР»Рё РІС‹Р·РІР°РЅ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -632,7 +632,7 @@ namespace FreeLibSet.Data.SQLite
           _Connection = null;
         }
 
-        // Это вообще завершает приложение сервера
+        // Р­С‚Рѕ РІРѕРѕР±С‰Рµ Р·Р°РІРµСЂС€Р°РµС‚ РїСЂРёР»РѕР¶РµРЅРёРµ СЃРµСЂРІРµСЂР°
         //if (ClearPoolCalled)
         //  SQLiteConnection.Shutdown(false, true);
       }
@@ -641,25 +641,25 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает точку доступа, к которой относится соединение
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РѕС‡РєСѓ РґРѕСЃС‚СѓРїР°, Рє РєРѕС‚РѕСЂРѕР№ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЃРѕРµРґРёРЅРµРЅРёРµ
     /// </summary>
     public new SQLiteDBxEntry Entry { get { return (SQLiteDBxEntry)(base.Entry); } }
 
     /// <summary>
-    /// Возвращает базу данных, к которой относится соединение
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…, Рє РєРѕС‚РѕСЂРѕР№ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЃРѕРµРґРёРЅРµРЅРёРµ
     /// </summary>
     public new SQLiteDBx DB { get { return (SQLiteDBx)(base.DB); } }
 
     #endregion
 
-    #region Соединение
+    #region РЎРѕРµРґРёРЅРµРЅРёРµ
 
     /// <summary>
-    /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ ADO.NET.
+    /// РћР±СЉРµРєС‚ СЃРѕР·РґР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РѕР±СЂР°С‰РµРЅРёРё Рє СЃРІРѕР№СЃС‚РІСѓ
     /// </summary>
     public SQLiteConnection Connection
     {
@@ -679,12 +679,12 @@ namespace FreeLibSet.Data.SQLite
             }
             else
             {
-              // Это эквивалентно вызову new SQLiteConnection(Entry.DB.MainConnection)
-              // Создает соединение для новой временной базы данных
-              // Х.з., как подключиться к существующей
+              // Р­С‚Рѕ СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕ РІС‹Р·РѕРІСѓ new SQLiteConnection(Entry.DB.MainConnection)
+              // РЎРѕР·РґР°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ РґР»СЏ РЅРѕРІРѕР№ РІСЂРµРјРµРЅРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
+              // РҐ.Р·., РєР°Рє РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№
               //_Connection = (SQLiteConnection)(Entry.DB.MainConnection.Clone());
 
-              // TODO: Плохо. Если используется DBDataReader, то соединение будет занято
+              // TODO: РџР»РѕС…Рѕ. Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ DBDataReader, С‚Рѕ СЃРѕРµРґРёРЅРµРЅРёРµ Р±СѓРґРµС‚ Р·Р°РЅСЏС‚Рѕ
               _Connection = Entry.DB.MainConnection;
             }
 
@@ -702,8 +702,8 @@ namespace FreeLibSet.Data.SQLite
     private SQLiteConnection _Connection;
 
     /// <summary>
-    /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ ADO.NET.
+    /// РћР±СЉРµРєС‚ СЃРѕР·РґР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РѕР±СЂР°С‰РµРЅРёРё Рє СЃРІРѕР№СЃС‚РІСѓ
     /// </summary>
     protected override DbConnection DbConnection { get { return Connection; } }
 
@@ -722,7 +722,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Вызывает SQLiteConnection.ClearPool()
+    /// Р’С‹Р·С‹РІР°РµС‚ SQLiteConnection.ClearPool()
     /// </summary>
     public override void ClearPool()
     {
@@ -732,14 +732,14 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Выполнение SQL-запросов
+    #region Р’С‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃРѕРІ
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего единственное значение
+    /// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РјРµС‚РѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ SLQ-Р·Р°РїСЂРѕСЃР°, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
-    /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="paramValues">Параметры запроса</param>
-    /// <returns>Значение, возвращаемое запросом</returns>
+    /// <param name="cmdText">РўРµРєСЃС‚ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="paramValues">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ, РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·Р°РїСЂРѕСЃРѕРј</returns>
     protected override object DoSQLExecuteScalar(string cmdText, object[] paramValues)
     {
       SQLiteCommand cmd = new SQLiteCommand(cmdText, Connection);
@@ -751,10 +751,10 @@ namespace FreeLibSet.Data.SQLite
 
 
     /// <summary>
-    /// Выполнение SQL-запроса, не возвращающего значения
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃР°, РЅРµ РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ
     /// </summary>
-    /// <param name="cmdText">SQL-оператор</param>
-    /// <param name="paramValues">Значения параметров запроса</param>
+    /// <param name="cmdText">SQL-РѕРїРµСЂР°С‚РѕСЂ</param>
+    /// <param name="paramValues">Р—РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ Р·Р°РїСЂРѕСЃР°</param>
     [DebuggerStepThrough]
     protected override void DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
@@ -766,12 +766,12 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
+    /// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РјРµС‚РѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ SLQ-Р·Р°РїСЂРѕСЃР°, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ С‚Р°Р±Р»РёС†Сѓ РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="tableName">Имя таблицы для возвращаемого DataTable</param>
-    /// <param name="paramValues">Параметры запроса</param>
-    /// <returns>Заполненная таблица</returns>
+    /// <param name="cmdText">РўРµРєСЃС‚ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґР»СЏ РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ DataTable</param>
+    /// <param name="paramValues">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>Р—Р°РїРѕР»РЅРµРЅРЅР°СЏ С‚Р°Р±Р»РёС†Р°</returns>
     protected override DataTable DoSQLExecuteDataTable(string cmdText, string tableName, object[] paramValues)
     {
       SQLiteCommand cmd = new SQLiteCommand(cmdText, Connection);
@@ -788,11 +788,11 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего DbDataReader
+    /// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РјРµС‚РѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ SLQ-Р·Р°РїСЂРѕСЃР°, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ DbDataReader
     /// </summary>
-    /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="paramValues">Параметры запроса</param>
-    /// <returns>Объект для чтения данных</returns>
+    /// <param name="cmdText">РўРµРєСЃС‚ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="paramValues">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>РћР±СЉРµРєС‚ РґР»СЏ С‡С‚РµРЅРёСЏ РґР°РЅРЅС‹С…</returns>
     protected override DbDataReader DoSQLExecuteReader(string cmdText, object[] paramValues)
     {
       SQLiteCommand cmd = new SQLiteCommand(cmdText, Connection);
@@ -810,7 +810,7 @@ namespace FreeLibSet.Data.SQLite
         {
           SQLiteParameter sqlParam = new SQLiteParameter();
           //Param.ParameterName = "@P" + (i + 1).ToString();
-          sqlParam.ParameterName = ":P" + (i + 1).ToString(); // исправлено 29.05.2020
+          sqlParam.ParameterName = ":P" + (i + 1).ToString(); // РёСЃРїСЂР°РІР»РµРЅРѕ 29.05.2020
           sqlParam.Value = paramValues[i];
 
           if (paramValues[i] != null)
@@ -828,10 +828,10 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Переопределенные реализации выполнения запросов
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ СЂРµР°Р»РёР·Р°С†РёРё РІС‹РїРѕР»РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃРѕРІ
 
     /// <summary>
-    /// Возвращает оптимизированную реализацию писателя
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅСѓСЋ СЂРµР°Р»РёР·Р°С†РёСЋ РїРёСЃР°С‚РµР»СЏ
     /// </summary>
     /// <param name="writerInfo"></param>
     /// <returns></returns>
@@ -840,10 +840,10 @@ namespace FreeLibSet.Data.SQLite
       return new SQLiteDBxDataWriter(this, writerInfo);
     }
 
-    #region Подсчет строк
+    #region РџРѕРґСЃС‡РµС‚ СЃС‚СЂРѕРє
 
 #if XXX
-    // Не нравится предлжение "AS"
+    // РќРµ РЅСЂР°РІРёС‚СЃСЏ РїСЂРµРґР»Р¶РµРЅРёРµ "AS"
 
     public override int RecordCount(string TableName)
     {
@@ -876,8 +876,8 @@ namespace FreeLibSet.Data.SQLite
 #endif
 
     /// <summary>
-    /// Оптимизированная версия запроса проверки, что таблица пуста.
-    /// Обычный запрос SELECT COUNT(*) медленно выполняется в SQLite
+    /// РћРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅР°СЏ РІРµСЂСЃРёСЏ Р·Р°РїСЂРѕСЃР° РїСЂРѕРІРµСЂРєРё, С‡С‚Рѕ С‚Р°Р±Р»РёС†Р° РїСѓСЃС‚Р°.
+    /// РћР±С‹С‡РЅС‹Р№ Р·Р°РїСЂРѕСЃ SELECT COUNT(*) РјРµРґР»РµРЅРЅРѕ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІ SQLite
     /// </summary>
     /// <param name="tableName"></param>
     /// <returns></returns>
@@ -896,16 +896,16 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Добавление записей
+    #region Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРµР№
 
     /// <summary>
-    /// Добавить строку с автоматическим присвоением идентификатора.
-    /// Полученный идентификатор возвращается и может быть использован для ссылок на строку
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚СЂРѕРєСѓ СЃ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёРј РїСЂРёСЃРІРѕРµРЅРёРµРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°.
+    /// РџРѕР»СѓС‡РµРЅРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Рё РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅ РґР»СЏ СЃСЃС‹Р»РѕРє РЅР° СЃС‚СЂРѕРєСѓ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
-    /// <param name="values">Значения. Порядок значений должен соответствовать списку столбцов</param>
-    /// <returns>Идентификатор добавленной записи</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ. Р’ СЃРїРёСЃРєРµ РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР»СЏ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°</param>
+    /// <param name="values">Р—РЅР°С‡РµРЅРёСЏ. РџРѕСЂСЏРґРѕРє Р·РЅР°С‡РµРЅРёР№ РґРѕР»Р¶РµРЅ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ СЃРїРёСЃРєСѓ СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕР±Р°РІР»РµРЅРЅРѕР№ Р·Р°РїРёСЃРё</returns>
     public override Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       Buffer.Clear();
@@ -915,7 +915,7 @@ namespace FreeLibSet.Data.SQLite
       Validator.CheckTablePrimaryKeyInt32(tableName);
 
       if (columnNames.Count != values.Length)
-        throw new ArgumentException("Число полей не совпадает с числом значений");
+        throw new ArgumentException("Р§РёСЃР»Рѕ РїРѕР»РµР№ РЅРµ СЃРѕРІРїР°РґР°РµС‚ СЃ С‡РёСЃР»РѕРј Р·РЅР°С‡РµРЅРёР№");
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
@@ -935,7 +935,7 @@ namespace FreeLibSet.Data.SQLite
       id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
 
       if (id <= 0)
-        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + id.ToString());
+        throw new BugException("РџРѕР»СѓС‡РµРЅ РЅРµРїСЂР°РІРёР»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґР»СЏ РґРѕР±Р°РІР»РµРЅРЅРѕР№ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ \"" + tableName + "\" Id=" + id.ToString());
 
       return id;
     }
@@ -944,10 +944,10 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Транзакция
+    #region РўСЂР°РЅР·Р°РєС†РёСЏ
 
     /// <summary>
-    /// Текущая транзакция, если был вызов метода TransactionBegin(), или null, если нет активной транзакции
+    /// РўРµРєСѓС‰Р°СЏ С‚СЂР°РЅР·Р°РєС†РёСЏ, РµСЃР»Рё Р±С‹Р» РІС‹Р·РѕРІ РјРµС‚РѕРґР° TransactionBegin(), РёР»Рё null, РµСЃР»Рё РЅРµС‚ Р°РєС‚РёРІРЅРѕР№ С‚СЂР°РЅР·Р°РєС†РёРё
     /// </summary>
     public new SQLiteTransaction CurrentTransaction
     {
@@ -956,15 +956,15 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Извлечение схемы данных
+    #region РР·РІР»РµС‡РµРЅРёРµ СЃС…РµРјС‹ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Получить полный список таблиц
+    /// РџРѕР»СѓС‡РёС‚СЊ РїРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС†
     /// </summary>
     /// <returns></returns>
     internal protected override string[] GetAllTableNamesFromSchema()
     {
-      DataTable table = Connection.GetSchema("Tables"); // исправлено 28.08.2020
+      DataTable table = Connection.GetSchema("Tables"); // РёСЃРїСЂР°РІР»РµРЅРѕ 28.08.2020
       string[] a = new string[table.Rows.Count];
       for (int i = 0; i < table.Rows.Count; i++)
         a[i] = DataTools.GetString(table.Rows[i], "table_name");
@@ -973,18 +973,18 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Получить реальное описание структуры таблицы
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂРµР°Р»СЊРЅРѕРµ РѕРїРёСЃР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Структура</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РЎС‚СЂСѓРєС‚СѓСЂР°</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
       DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
-      #region Список столбцов, тип, MaxLen, Nullable
+      #region РЎРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ, С‚РёРї, MaxLen, Nullable
 
-      DataTable table = Connection.GetSchema("Columns", new string[] { null, null, tableName }); // исправлено 28.08.2020
-      table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
+      DataTable table = Connection.GetSchema("Columns", new string[] { null, null, tableName }); // РёСЃРїСЂР°РІР»РµРЅРѕ 28.08.2020
+      table.DefaultView.Sort = "ordinal_position"; // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РїРѕ РїРѕСЂСЏРґРєСѓ, РёРЅР°С‡Рµ РєР»СЋС‡РµРІРѕРµ РїРѕР»Рµ Р±СѓРґРµС‚ РЅРµ РїРµСЂРІС‹Рј
 
       foreach (DataRowView drv in table.DefaultView)
       {
@@ -993,8 +993,8 @@ namespace FreeLibSet.Data.SQLite
 
         string colTypeString = DataTools.GetString(drv.Row, "data_type");
         // 28.08.2020
-        // Таблица типов взята из файла System.Data.SQLite\Resources\DataTypes.xml
-        // исходных текстов System.Data.SQLite
+        // РўР°Р±Р»РёС†Р° С‚РёРїРѕРІ РІР·СЏС‚Р° РёР· С„Р°Р№Р»Р° System.Data.SQLite\Resources\DataTypes.xml
+        // РёСЃС…РѕРґРЅС‹С… С‚РµРєСЃС‚РѕРІ System.Data.SQLite
         switch (colTypeString)
         {
           case "tinyint":
@@ -1010,15 +1010,15 @@ namespace FreeLibSet.Data.SQLite
             break;
 
           case "int":
-          case "integer": // По идее, это Int64, но этот тип используется для идентификаторов
+          case "integer": // РџРѕ РёРґРµРµ, СЌС‚Рѕ Int64, РЅРѕ СЌС‚РѕС‚ С‚РёРї РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ
             colDef.ColumnType = DBxColumnType.Int;
             colDef.MinValue = Int32.MinValue;
             colDef.MaxValue = Int32.MaxValue;
             break;
 
-          case "counter": // ?? Надо?
-          case "autoincrement": // ?? Надо?
-          case "identity": // ?? Надо?
+          case "counter": // ?? РќР°РґРѕ?
+          case "autoincrement": // ?? РќР°РґРѕ?
+          case "identity": // ?? РќР°РґРѕ?
           case "long":
           case "bigint":
             colDef.ColumnType = DBxColumnType.Int;
@@ -1057,7 +1057,7 @@ namespace FreeLibSet.Data.SQLite
 
           case "char":
           case "nchar":
-          case "string": // это - под вопросом
+          case "string": // СЌС‚Рѕ - РїРѕРґ РІРѕРїСЂРѕСЃРѕРј
             colDef.ColumnType = DBxColumnType.String;
             break;
           case "smallmoney":
@@ -1073,7 +1073,7 @@ namespace FreeLibSet.Data.SQLite
             break;
 
           case "date":
-          case "smalldate": // под вопросом
+          case "smalldate": // РїРѕРґ РІРѕРїСЂРѕСЃРѕРј
             colDef.ColumnType = DBxColumnType.Date;
             break;
 
@@ -1082,7 +1082,7 @@ namespace FreeLibSet.Data.SQLite
             break;
 
           case "datetime":
-          case "timestamp": // ?? под вопросом
+          case "timestamp": // ?? РїРѕРґ РІРѕРїСЂРѕСЃРѕРј
             colDef.ColumnType = DBxColumnType.DateTime;
             break;
 
@@ -1091,7 +1091,7 @@ namespace FreeLibSet.Data.SQLite
           case "blob":
           case "image":
           case "general":
-          case "oleobject": // ?? надо?
+          case "oleobject": // ?? РЅР°РґРѕ?
             colDef.ColumnType = DBxColumnType.Binary;
             break;
 
@@ -1100,12 +1100,12 @@ namespace FreeLibSet.Data.SQLite
             colDef.ColumnType = DBxColumnType.Guid;
             break;
 
-          case "xml": // Этого типа нет, я его сам придумал
+          case "xml": // Р­С‚РѕРіРѕ С‚РёРїР° РЅРµС‚, СЏ РµРіРѕ СЃР°Рј РїСЂРёРґСѓРјР°Р»
             colDef.ColumnType = DBxColumnType.Xml;
             break;
 
           default:
-            throw new BugException("Неизвестный тип поля: \"" + colTypeString + "\"");
+            throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї РїРѕР»СЏ: \"" + colTypeString + "\"");
         }
 
         colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
@@ -1113,7 +1113,7 @@ namespace FreeLibSet.Data.SQLite
         string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
         switch (nullableStr)
         {
-          case "TRUE": colDef.Nullable = true; break;  // исправлено 28.08.2020
+          case "TRUE": colDef.Nullable = true; break;  // РёСЃРїСЂР°РІР»РµРЅРѕ 28.08.2020
           case "FALSE": colDef.Nullable = false; break;
         }
 
@@ -1122,7 +1122,7 @@ namespace FreeLibSet.Data.SQLite
 
       #endregion
 
-      #region Определение ссылочных полей
+      #region РћРїСЂРµРґРµР»РµРЅРёРµ СЃСЃС‹Р»РѕС‡РЅС‹С… РїРѕР»РµР№
 
       DataTable schema = Connection.GetSchema("FOREIGNKEYS", new string[] { null, null, tableName, null });
       foreach (DataRow row in schema.Rows)
@@ -1130,14 +1130,14 @@ namespace FreeLibSet.Data.SQLite
         string refColName = DataTools.GetString(row, "FKEY_FROM_COLUMN");
         DBxColumnStruct colStr = tableStr.Columns[refColName];
         if (colStr == null)
-          continue; // по идее, это ошибка
+          continue; // РїРѕ РёРґРµРµ, СЌС‚Рѕ РѕС€РёР±РєР°
 
         colStr.MasterTableName = DataTools.GetString(row, "FKEY_TO_TABLE");
 
         string mode = DataTools.GetString(row, "FKEY_ON_DELETE");
 
-        // См.режимы: https://www.sqlite.org/foreignkeys.html
-        // раздел 4.3
+        // РЎРј.СЂРµР¶РёРјС‹: https://www.sqlite.org/foreignkeys.html
+        // СЂР°Р·РґРµР» 4.3
 
         switch (mode)
         {
@@ -1163,10 +1163,10 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Получение информации
+    #region РџРѕР»СѓС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё
 
     /// <summary>
-    /// Версия SQLite в виде объекта, чтобы его можно было сравнивать
+    /// Р’РµСЂСЃРёСЏ SQLite РІ РІРёРґРµ РѕР±СЉРµРєС‚Р°, С‡С‚РѕР±С‹ РµРіРѕ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СЃСЂР°РІРЅРёРІР°С‚СЊ
     /// </summary>
     internal Version ServerVersion
     {
@@ -1194,9 +1194,9 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Обновление структуры
+    #region РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹
 
-    #region Основной метод UpdateDBStruct
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ UpdateDBStruct
 
     internal bool UpdateDBStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
@@ -1212,43 +1212,43 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Добавление таблиц, столбцов и первичных ключей
+    #region Р”РѕР±Р°РІР»РµРЅРёРµ С‚Р°Р±Р»РёС†, СЃС‚РѕР»Р±С†РѕРІ Рё РїРµСЂРІРёС‡РЅС‹С… РєР»СЋС‡РµР№
 
     /// <summary>
-    /// Имя временной промежуточной таблицы, используемой при обновлении типов полей
+    /// РРјСЏ РІСЂРµРјРµРЅРЅРѕР№ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕР№ С‚Р°Р±Р»РёС†С‹, РёСЃРїРѕР»СЊР·СѓРµРјРѕР№ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё С‚РёРїРѕРІ РїРѕР»РµР№
     /// </summary>
     private const string AlterTableName = "_TempAlterTable";
 
     private bool UpdateDBStructTables(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       /*
-       * SQLite не поддерживает инструкцию ALTER TABLE ALTER COLUMN.
-       * Если требуется изменить тип столбца или ограничение NULL/NOT NULL, то требуется создать
-       * копию таблицы
+       * SQLite РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РёРЅСЃС‚СЂСѓРєС†РёСЋ ALTER TABLE ALTER COLUMN.
+       * Р•СЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РёР·РјРµРЅРёС‚СЊ С‚РёРї СЃС‚РѕР»Р±С†Р° РёР»Рё РѕРіСЂР°РЅРёС‡РµРЅРёРµ NULL/NOT NULL, С‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРѕР·РґР°С‚СЊ
+       * РєРѕРїРёСЋ С‚Р°Р±Р»РёС†С‹
        */
 
       bool modified = false;
 
-      #region Извлечение информации из существующей схемы данных
+      #region РР·РІР»РµС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё РёР· СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ СЃС…РµРјС‹ РґР°РЅРЅС‹С…
 
       /*
-       * Реализация извлечения схемы данных сразу для всех таблиц неоптимально в System.Data.SQLite.
-       * Выгоднее извлекать информацию по каждой таблице отдельно.
-       * Также лучше делать вызовы самостоятельно, так как схема содержит много дополнительной информации,
-       * которая не нужна для обновления структуры, но для которой делаются дополнительные вызовы.
+       * Р РµР°Р»РёР·Р°С†РёСЏ РёР·РІР»РµС‡РµРЅРёСЏ СЃС…РµРјС‹ РґР°РЅРЅС‹С… СЃСЂР°Р·Сѓ РґР»СЏ РІСЃРµС… С‚Р°Р±Р»РёС† РЅРµРѕРїС‚РёРјР°Р»СЊРЅРѕ РІ System.Data.SQLite.
+       * Р’С‹РіРѕРґРЅРµРµ РёР·РІР»РµРєР°С‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ РїРѕ РєР°Р¶РґРѕР№ С‚Р°Р±Р»РёС†Рµ РѕС‚РґРµР»СЊРЅРѕ.
+       * РўР°РєР¶Рµ Р»СѓС‡С€Рµ РґРµР»Р°С‚СЊ РІС‹Р·РѕРІС‹ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ, С‚Р°Рє РєР°Рє СЃС…РµРјР° СЃРѕРґРµСЂР¶РёС‚ РјРЅРѕРіРѕ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё,
+       * РєРѕС‚РѕСЂР°СЏ РЅРµ РЅСѓР¶РЅР° РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃС‚СЂСѓРєС‚СѓСЂС‹, РЅРѕ РґР»СЏ РєРѕС‚РѕСЂРѕР№ РґРµР»Р°СЋС‚СЃСЏ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РІС‹Р·РѕРІС‹.
        */
 
       DataTable tableTables = Connection.GetSchema("Tables");
       DataView dvTables = new DataView(tableTables);
       dvTables.Sort = "TABLE_NAME";
 
-      //// Столбцы
+      //// РЎС‚РѕР»Р±С†С‹
       //DataTable TableColumns = Connection.GetSchema("Columns", new string[] { String.Empty });
       //DataView dvColumns = new DataView(TableColumns);
-      //dvColumns.Sort = "TABLE_NAME,COLUMN_NAME"; // нужен такой порядок
+      //dvColumns.Sort = "TABLE_NAME,COLUMN_NAME"; // РЅСѓР¶РµРЅ С‚Р°РєРѕР№ РїРѕСЂСЏРґРѕРє
 
-      //// Данные по индексам 
-      //DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { String.Empty }); // каталог "main"
+      //// Р”Р°РЅРЅС‹Рµ РїРѕ РёРЅРґРµРєСЃР°Рј 
+      //DataTable TableIndexes = Connection.GetSchema("Indexes", new string[] { String.Empty }); // РєР°С‚Р°Р»РѕРі "main"
       //DataView dvIndexes = new DataView(TableIndices);
 
       //DataTable TableIndexColumns = Connection.GetSchema("IndexColumns");
@@ -1259,44 +1259,44 @@ namespace FreeLibSet.Data.SQLite
 
       splash.PercentMax = DB.Struct.Tables.Count;
 
-      // Цикл по таблицам
+      // Р¦РёРєР» РїРѕ С‚Р°Р±Р»РёС†Р°Рј
       foreach (DBxTableStruct table in DB.Struct.Tables)
       {
         if (!table.AutoCreate)
           continue;
 
         if (table.Columns.Count == 0)
-          throw new DBxStructException(table, "Не задано ни одного столбца");
+          throw new DBxStructException(table, "РќРµ Р·Р°РґР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°");
 
         //CheckPrimaryKeyColumn(Table, Table.PrimaryKeyColumns[0]);
         //bool IndicesDropped = false;
 
         List<DBxColumnStruct> columnsToAdd;
         DBxColumns existedColumns;
-        List<DBxColumnStruct> columnsToReplaceNullToDef; // Столбцы для замены NULL на DEFAULT
+        List<DBxColumnStruct> columnsToReplaceNullToDef; // РЎС‚РѕР»Р±С†С‹ РґР»СЏ Р·Р°РјРµРЅС‹ NULL РЅР° DEFAULT
 
         if (dvTables.Find(table.TableName) < 0)
         {
-          #region Требуется полное создание таблицы
+          #region РўСЂРµР±СѓРµС‚СЃСЏ РїРѕР»РЅРѕРµ СЃРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
 
-          splash.PhaseText = "Создается таблица \"" + table.TableName + "\"";
+          splash.PhaseText = "РЎРѕР·РґР°РµС‚СЃСЏ С‚Р°Р±Р»РёС†Р° \"" + table.TableName + "\"";
           CreateTable(table, table.TableName, options);
-          errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
+          errors.AddInfo("РЎРѕР·РґР°РЅР° С‚Р°Р±Р»РёС†Р° \"" + table.TableName + "\"");
           modified = true;
 
           #endregion
         }
         else if (NeedsRecreateTable(table, /*dvColumns,*/ errors, out columnsToAdd, out existedColumns, out columnsToReplaceNullToDef))
         {
-          #region Требуется пересоздание с использованием промежуточной таблицы
+          #region РўСЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµСЃРѕР·РґР°РЅРёРµ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕР№ С‚Р°Р±Р»РёС†С‹
 
-          // См. порядок действий в справочном файле SQLite
+          // РЎРј. РїРѕСЂСЏРґРѕРє РґРµР№СЃС‚РІРёР№ РІ СЃРїСЂР°РІРѕС‡РЅРѕРј С„Р°Р№Р»Рµ SQLite
           // lang_altertable.html
 
           DropAllIndices(splash, table.TableName);
           //IndicesDropped = true;
 
-          splash.PhaseText = "Изменение структуры таблицы \"" + table.TableName + "\"";
+          splash.PhaseText = "РР·РјРµРЅРµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ С‚Р°Р±Р»РёС†С‹ \"" + table.TableName + "\"";
 
           DropTable(AlterTableName, true);
           PragmaForeighKeys(false);
@@ -1310,7 +1310,7 @@ namespace FreeLibSet.Data.SQLite
                 {
                   foreach (DBxColumnStruct colDef in columnsToReplaceNullToDef)
                   {
-                    // Заменяем значения NULL на значение по умолчанию
+                    // Р—Р°РјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёСЏ NULL РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
                     Buffer.Clear();
                     Buffer.SB.Append("UPDATE ");
                     Buffer.FormatTableName(table.TableName);
@@ -1322,21 +1322,21 @@ namespace FreeLibSet.Data.SQLite
                     Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append(" IS NULL");
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" значения NULL заменены на значение по умолчанию");
+                    errors.AddInfo("Р”Р»СЏ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+                      "\" Р·РЅР°С‡РµРЅРёСЏ NULL Р·Р°РјРµРЅРµРЅС‹ РЅР° Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ");
                   }
                 }
 
-                // Создаем промежуточную таблицу
+                // РЎРѕР·РґР°РµРј РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ
                 CreateTable(table, AlterTableName, options);
 
-                // Переносим данные. Здесь может возникнуть исключение, если типы данных несовместимы
+                // РџРµСЂРµРЅРѕСЃРёРј РґР°РЅРЅС‹Рµ. Р—РґРµСЃСЊ РјРѕР¶РµС‚ РІРѕР·РЅРёРєРЅСѓС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё С‚РёРїС‹ РґР°РЅРЅС‹С… РЅРµСЃРѕРІРјРµСЃС‚РёРјС‹
                 InsertIntoFrom(AlterTableName, table.TableName, existedColumns);
 
-                // Удаляем исходную таблицу
+                // РЈРґР°Р»СЏРµРј РёСЃС…РѕРґРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ
                 DropTable(table.TableName, false);
 
-                // Переименовываем таблицу
+                // РџРµСЂРµРёРјРµРЅРѕРІС‹РІР°РµРј С‚Р°Р±Р»РёС†Сѓ
                 RenameTable(AlterTableName, table.TableName);
 
                 tran.Commit();
@@ -1352,34 +1352,34 @@ namespace FreeLibSet.Data.SQLite
           {
             PragmaForeighKeys(true);
           }
-          errors.AddInfo("Таблица \"" + table.TableName + "\" пересоздана из-за изменения формата столбцов");
+          errors.AddInfo("РўР°Р±Р»РёС†Р° \"" + table.TableName + "\" РїРµСЂРµСЃРѕР·РґР°РЅР° РёР·-Р·Р° РёР·РјРµРЅРµРЅРёСЏ С„РѕСЂРјР°С‚Р° СЃС‚РѕР»Р±С†РѕРІ");
           modified = true;
 
           #endregion
         }
         else if (columnsToAdd != null)
         {
-          #region Требуется добавление недостающих столбцлв
+          #region РўСЂРµР±СѓРµС‚СЃСЏ РґРѕР±Р°РІР»РµРЅРёРµ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚РѕР»Р±С†Р»РІ
 
           foreach (DBxColumnStruct colDef in columnsToAdd)
           {
-            splash.PhaseText = "Добавление поля \"" + colDef.ColumnName + "\"в таблицу \"" + table.TableName + "\"";
+            splash.PhaseText = "Р”РѕР±Р°РІР»РµРЅРёРµ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Сѓ \"" + table.TableName + "\"";
             Buffer.Clear();
             Buffer.SB.Append("ALTER TABLE ");
             Buffer.FormatTableName(table.TableName);
-            Buffer.SB.Append(" ADD "); // а не ADD COLUMN
+            Buffer.SB.Append(" ADD "); // Р° РЅРµ ADD COLUMN
             AppendColumnDef(/*Table, */colDef, false, options, true);
             SQLExecuteNonQuery(Buffer.SB.ToString());
-            errors.AddInfo("Создано поле \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName + "\"");
+            errors.AddInfo("РЎРѕР·РґР°РЅРѕ РїРѕР»Рµ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\"");
             modified = true;
           }
 
           #endregion
         }
 
-        // Таблица существует
+        // РўР°Р±Р»РёС†Р° СЃСѓС‰РµСЃС‚РІСѓРµС‚
 
-        #region Комментарии
+        #region РљРѕРјРјРµРЅС‚Р°СЂРёРё
 
         SetTableComment(table.TableName, table.Comment);
         for (int i = 0; i < table.Columns.Count; i++)
@@ -1391,16 +1391,16 @@ namespace FreeLibSet.Data.SQLite
 
         splash.PhaseText = String.Empty;
         splash.IncPercent();
-      } // Цикл по таблицам
+      } // Р¦РёРєР» РїРѕ С‚Р°Р±Р»РёС†Р°Рј
 
       return modified;
     }
 
     /// <summary>
-    /// Переименование таблицы
+    /// РџРµСЂРµРёРјРµРЅРѕРІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <param name="oldName">Имя существующей таблицы</param>
-    /// <param name="newName">Новое имя</param>
+    /// <param name="oldName">РРјСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="newName">РќРѕРІРѕРµ РёРјСЏ</param>
     private void RenameTable(string oldName, string newName)
     {
       Buffer.Clear();
@@ -1422,15 +1422,15 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Выполнение запроса INSERT INTO xxx SELECT yyy
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РїСЂРѕСЃР° INSERT INTO xxx SELECT yyy
     /// </summary>
-    /// <param name="resTableName">Заполняемая таблица</param>
-    /// <param name="srcTableName">Исходная таблица</param>
-    /// <param name="columns">Список столбцов для копирования</param>
+    /// <param name="resTableName">Р—Р°РїРѕР»РЅСЏРµРјР°СЏ С‚Р°Р±Р»РёС†Р°</param>
+    /// <param name="srcTableName">РСЃС…РѕРґРЅР°СЏ С‚Р°Р±Р»РёС†Р°</param>
+    /// <param name="columns">РЎРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ РґР»СЏ РєРѕРїРёСЂРѕРІР°РЅРёСЏ</param>
     private void InsertIntoFrom(string resTableName, string srcTableName, DBxColumns columns)
     {
       if (columns.IsEmpty)
-        throw new ArgumentException("Не задан список столбцов для копирования", "columns");
+        throw new ArgumentException("РќРµ Р·Р°РґР°РЅ СЃРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ РґР»СЏ РєРѕРїРёСЂРѕРІР°РЅРёСЏ", "columns");
 
       Buffer.Clear();
       Buffer.SB.Append("INSERT INTO ");
@@ -1446,7 +1446,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Выполнение запроса PRAGMA foreign keys ON/OFF
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РїСЂРѕСЃР° PRAGMA foreign keys ON/OFF
     /// </summary>
     /// <param name="isOn"></param>
     private void PragmaForeighKeys(bool isOn)
@@ -1458,17 +1458,17 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Проверяет необходимость пересоздания таблицы
+    /// РџСЂРѕРІРµСЂСЏРµС‚ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РїРµСЂРµСЃРѕР·РґР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <param name="table">Требуемое описание структуры таблицы</param>
-    /// <param name="columnsToAdd">Сюда помещаются столбцы из Table.Columns, которые нужно
-    /// добавить. Список не определен, если требуется пересохдание таблицы</param>
-    /// <param name="errors">Список для добавления информационных сообщений</param>
-    /// <param name="existedColumns">Список существующих столбцов таблицы.
-    /// Этот список заполняется независимо от того, будет ли пересоздаваться таблица</param>
-    /// <param name="columnsToReplaceNullToDef">Список полей, для которых требуется замена NULL на DEFAULT.
-    /// Если возвращает null, замены не нужны</param>
-    /// <returns>true, если требуется пересоздание таблицы</returns>
+    /// <param name="table">РўСЂРµР±СѓРµРјРѕРµ РѕРїРёСЃР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnsToAdd">РЎСЋРґР° РїРѕРјРµС‰Р°СЋС‚СЃСЏ СЃС‚РѕР»Р±С†С‹ РёР· Table.Columns, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ
+    /// РґРѕР±Р°РІРёС‚СЊ. РЎРїРёСЃРѕРє РЅРµ РѕРїСЂРµРґРµР»РµРЅ, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµСЃРѕС…РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="errors">РЎРїРёСЃРѕРє РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№</param>
+    /// <param name="existedColumns">РЎРїРёСЃРѕРє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС†С‹.
+    /// Р­С‚РѕС‚ СЃРїРёСЃРѕРє Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ С‚РѕРіРѕ, Р±СѓРґРµС‚ Р»Рё РїРµСЂРµСЃРѕР·РґР°РІР°С‚СЊСЃСЏ С‚Р°Р±Р»РёС†Р°</param>
+    /// <param name="columnsToReplaceNullToDef">РЎРїРёСЃРѕРє РїРѕР»РµР№, РґР»СЏ РєРѕС‚РѕСЂС‹С… С‚СЂРµР±СѓРµС‚СЃСЏ Р·Р°РјРµРЅР° NULL РЅР° DEFAULT.
+    /// Р•СЃР»Рё РІРѕР·РІСЂР°С‰Р°РµС‚ null, Р·Р°РјРµРЅС‹ РЅРµ РЅСѓР¶РЅС‹</param>
+    /// <returns>true, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµСЃРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹</returns>
     private bool NeedsRecreateTable(DBxTableStruct table, /* DataView dvColumns, */
       ErrorMessageList errors,
       out List<DBxColumnStruct> columnsToAdd,
@@ -1478,7 +1478,7 @@ namespace FreeLibSet.Data.SQLite
       bool needsRecreate = false;
       DBxColumnList lstExistedColumns = new DBxColumnList(table.Columns.Count);
       columnsToAdd = null;
-      // не нужен отдельный форматизатор DBxSqlBuffer Buffer2 = new DBxSqlBuffer(Buffer.Formatter);
+      // РЅРµ РЅСѓР¶РµРЅ РѕС‚РґРµР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ DBxSqlBuffer Buffer2 = new DBxSqlBuffer(Buffer.Formatter);
       columnsToReplaceNullToDef = null;
 
       Buffer.Clear();
@@ -1493,7 +1493,7 @@ namespace FreeLibSet.Data.SQLite
         int columnRowIndex = tblColumns.DefaultView.Find(colDef.ColumnName);
         if (columnRowIndex < 0)
         {
-          // Поля не существует
+          // РџРѕР»СЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
           if (columnsToAdd == null)
             columnsToAdd = new List<DBxColumnStruct>();
           columnsToAdd.Add(colDef);
@@ -1501,9 +1501,9 @@ namespace FreeLibSet.Data.SQLite
         else
         {
           lstExistedColumns.Add(colDef.ColumnName);
-          // Проверяем соответствие поля
+          // РџСЂРѕРІРµСЂСЏРµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РїРѕР»СЏ
           DataRow columnRow = tblColumns.DefaultView[columnRowIndex].Row;
-          // Проверяем соответствие типа столбца объявлению
+          // РџСЂРѕРІРµСЂСЏРµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїР° СЃС‚РѕР»Р±С†Р° РѕР±СЉСЏРІР»РµРЅРёСЋ
 
           string realType = DataTools.GetString(columnRow, "type").ToUpperInvariant();
           int realLength;
@@ -1518,43 +1518,43 @@ namespace FreeLibSet.Data.SQLite
           Buffer.Clear();
           FormatValueType(Buffer, colDef, false);
           string wantedType = Buffer.SB.ToString();
-          int wantedLength; // равно Column.MaxLength
+          int wantedLength; // СЂР°РІРЅРѕ Column.MaxLength
           SplitValueType(ref wantedType, out wantedLength);
 
           if (realType != wantedType)
           {
-            errors.AddInfo("Несоответствие типа поля \"" + colDef.ColumnName + "\" таблицы \"" +
-              table.TableName + "\". Объявление поля типа " + colDef.ColumnType.ToString() +
-              " предполагает тип " + wantedType +
-              " в то время как реальный тип поля " + realType + ". Требуется пересоздать таблицу");
+            errors.AddInfo("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїР° РїРѕР»СЏ \"" + colDef.ColumnName + "\" С‚Р°Р±Р»РёС†С‹ \"" +
+              table.TableName + "\". РћР±СЉСЏРІР»РµРЅРёРµ РїРѕР»СЏ С‚РёРїР° " + colDef.ColumnType.ToString() +
+              " РїСЂРµРґРїРѕР»Р°РіР°РµС‚ С‚РёРї " + wantedType +
+              " РІ С‚Рѕ РІСЂРµРјСЏ РєР°Рє СЂРµР°Р»СЊРЅС‹Р№ С‚РёРї РїРѕР»СЏ " + realType + ". РўСЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµСЃРѕР·РґР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ");
             needsRecreate = true;
           }
           else
           {
-            #region Проверка длины строкового поля
+            #region РџСЂРѕРІРµСЂРєР° РґР»РёРЅС‹ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ
 
             if (colDef.ColumnType == DBxColumnType.String)
             {
-              // Укорачивать строковые поля никакого смысла не имеет, так как в файле лишние символы
-              // не хранятся, как в Access или MS SQL Server.
-              // Удлинять надо, так как из-за неправильного описания в программе может срабатывать
-              // ограничение, если будет прочитана реальная структура таблицы
+              // РЈРєРѕСЂР°С‡РёРІР°С‚СЊ СЃС‚СЂРѕРєРѕРІС‹Рµ РїРѕР»СЏ РЅРёРєР°РєРѕРіРѕ СЃРјС‹СЃР»Р° РЅРµ РёРјРµРµС‚, С‚Р°Рє РєР°Рє РІ С„Р°Р№Р»Рµ Р»РёС€РЅРёРµ СЃРёРјРІРѕР»С‹
+              // РЅРµ С…СЂР°РЅСЏС‚СЃСЏ, РєР°Рє РІ Access РёР»Рё MS SQL Server.
+              // РЈРґР»РёРЅСЏС‚СЊ РЅР°РґРѕ, С‚Р°Рє РєР°Рє РёР·-Р·Р° РЅРµРїСЂР°РІРёР»СЊРЅРѕРіРѕ РѕРїРёСЃР°РЅРёСЏ РІ РїСЂРѕРіСЂР°РјРјРµ РјРѕР¶РµС‚ СЃСЂР°Р±Р°С‚С‹РІР°С‚СЊ
+              // РѕРіСЂР°РЅРёС‡РµРЅРёРµ, РµСЃР»Рё Р±СѓРґРµС‚ РїСЂРѕС‡РёС‚Р°РЅР° СЂРµР°Р»СЊРЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР° С‚Р°Р±Р»РёС†С‹
 
               if (realLength < wantedLength)
               {
-                errors.AddInfo("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
-                      table.TableName + "\" должно иметь длину " + wantedLength.ToString() +
-                      " символов, в то время, как реальное поле длиннее:  " + realLength.ToString() + " символов. Для удлинения поля требуется пересоздать таблицу");
+                errors.AddInfo("РџРѕР»Рµ \"" + colDef.ColumnName + "\" С‚Р°Р±Р»РёС†С‹ \"" +
+                      table.TableName + "\" РґРѕР»Р¶РЅРѕ РёРјРµС‚СЊ РґР»РёРЅСѓ " + wantedLength.ToString() +
+                      " СЃРёРјРІРѕР»РѕРІ, РІ С‚Рѕ РІСЂРµРјСЏ, РєР°Рє СЂРµР°Р»СЊРЅРѕРµ РїРѕР»Рµ РґР»РёРЅРЅРµРµ:  " + realLength.ToString() + " СЃРёРјРІРѕР»РѕРІ. Р”Р»СЏ СѓРґР»РёРЅРµРЅРёСЏ РїРѕР»СЏ С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµСЃРѕР·РґР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ");
                 needsRecreate = true;
               }
-            } // Строковое поле
+            } // РЎС‚СЂРѕРєРѕРІРѕРµ РїРѕР»Рµ
 
             #endregion
           } // RealType==WantedType
 
-          #region Проверка Default
+          #region РџСЂРѕРІРµСЂРєР° Default
 
-          // Установка свойства DEFAULT должна выполняться до установки NOT NULL, иначе возникнет ошибка
+          // РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° DEFAULT РґРѕР»Р¶РЅР° РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РґРѕ СѓСЃС‚Р°РЅРѕРІРєРё NOT NULL, РёРЅР°С‡Рµ РІРѕР·РЅРёРєРЅРµС‚ РѕС€РёР±РєР°
 
           string wantedDefExpr = String.Empty;
           if (colDef.DefaultExpression != null)
@@ -1566,22 +1566,22 @@ namespace FreeLibSet.Data.SQLite
           string RealDefExpr = DataTools.GetString(columnRow, "dflt_value");
           if (RealDefExpr != wantedDefExpr)
           {
-            errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-              "\" должен быть " + (RealDefExpr.Length > 0 ? "установлен" : "сброшен") + " признак DEFAULT. Для изменения признака DEFAULT требуется пересоздать таблицу");
+            errors.AddInfo("Р”Р»СЏ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+              "\" РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ " + (RealDefExpr.Length > 0 ? "СѓСЃС‚Р°РЅРѕРІР»РµРЅ" : "СЃР±СЂРѕС€РµРЅ") + " РїСЂРёР·РЅР°Рє DEFAULT. Р”Р»СЏ РёР·РјРµРЅРµРЅРёСЏ РїСЂРёР·РЅР°РєР° DEFAULT С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµСЃРѕР·РґР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ");
             needsRecreate = true;
           }
 
           #endregion
 
-          #region Проверка признака Nullable
+          #region РџСЂРѕРІРµСЂРєР° РїСЂРёР·РЅР°РєР° Nullable
 
-          // Проверяем Nullable
+          // РџСЂРѕРІРµСЂСЏРµРј Nullable
           bool realNullable = !DataTools.GetBool(columnRow, "notnull");
 
           if (colDef.Nullable != realNullable)
           {
-            errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-              "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\"") + ". Для изменения ограничения NULLABLE требуется пересоздать таблицу");
+            errors.AddInfo("Р”Р»СЏ РїРѕР»СЏ \"" + colDef.ColumnName + "\"РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName +
+              "\" СѓСЃС‚Р°РЅРѕРІР»РµРЅ РїСЂРёР·РЅР°Рє " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\"") + ". Р”Р»СЏ РёР·РјРµРЅРµРЅРёСЏ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ NULLABLE С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµСЃРѕР·РґР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ");
             needsRecreate = true;
 
             if ((!colDef.Nullable) && colDef.DefaultExpression != null)
@@ -1593,22 +1593,22 @@ namespace FreeLibSet.Data.SQLite
           }
 
           #endregion
-        } // поле существует
-      } // Цикл по столбцам
+        } // РїРѕР»Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+      } // Р¦РёРєР» РїРѕ СЃС‚РѕР»Р±С†Р°Рј
 
-      #region Проверяем правильность первичного ключа
+      #region РџСЂРѕРІРµСЂСЏРµРј РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°
 
       //if (CorrectPrimaryKey(Table, dvIndexColumns, Errors))
       //  Modified = true;
 
       #endregion
 
-      existedColumns = new DBxColumns(lstExistedColumns); // нет смысла оптимизировать
+      existedColumns = new DBxColumns(lstExistedColumns); // РЅРµС‚ СЃРјС‹СЃР»Р° РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ
       return needsRecreate;
     }
 
     /// <summary>
-    /// Находим в типе поля "CHAR(x)" скобку и извлекаем длину
+    /// РќР°С…РѕРґРёРј РІ С‚РёРїРµ РїРѕР»СЏ "CHAR(x)" СЃРєРѕР±РєСѓ Рё РёР·РІР»РµРєР°РµРј РґР»РёРЅСѓ
     /// </summary>
     /// <param name="typeStr"></param>
     /// <param name="length"></param>
@@ -1620,7 +1620,7 @@ namespace FreeLibSet.Data.SQLite
       }
       catch (Exception e)
       {
-        throw new ParsingException("Ошибка разбора описания типа \"" + typeStr + "\". " + e.Message, e);
+        throw new ParsingException("РћС€РёР±РєР° СЂР°Р·Р±РѕСЂР° РѕРїРёСЃР°РЅРёСЏ С‚РёРїР° \"" + typeStr + "\". " + e.Message, e);
       }
     }
 
@@ -1645,12 +1645,12 @@ namespace FreeLibSet.Data.SQLite
     private void CreateTable(DBxTableStruct table, string tableName, DBxUpdateStructOptions options)
     {
       // 19.01.2020
-      // Поддержка первичных ключей, отличных от Integer
+      // РџРѕРґРґРµСЂР¶РєР° РїРµСЂРІРёС‡РЅС‹С… РєР»СЋС‡РµР№, РѕС‚Р»РёС‡РЅС‹С… РѕС‚ Integer
       //
       // 09.03.2020
-      // Выражение WITHOUT ROWID не применяется, если есть BLOB-поля
-      // TODO: Надо бы еще проверять, что средний размер записи не превышает 5% от размера страницы, но это сложно сделать
-      // Когда на одной странице помещается мало строк, выгоднее использовать таблицу с rowid.
+      // Р’С‹СЂР°Р¶РµРЅРёРµ WITHOUT ROWID РЅРµ РїСЂРёРјРµРЅСЏРµС‚СЃСЏ, РµСЃР»Рё РµСЃС‚СЊ BLOB-РїРѕР»СЏ
+      // TODO: РќР°РґРѕ Р±С‹ РµС‰Рµ РїСЂРѕРІРµСЂСЏС‚СЊ, С‡С‚Рѕ СЃСЂРµРґРЅРёР№ СЂР°Р·РјРµСЂ Р·Р°РїРёСЃРё РЅРµ РїСЂРµРІС‹С€Р°РµС‚ 5% РѕС‚ СЂР°Р·РјРµСЂР° СЃС‚СЂР°РЅРёС†С‹, РЅРѕ СЌС‚Рѕ СЃР»РѕР¶РЅРѕ СЃРґРµР»Р°С‚СЊ
+      // РљРѕРіРґР° РЅР° РѕРґРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РјР°Р»Рѕ СЃС‚СЂРѕРє, РІС‹РіРѕРґРЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ СЃ rowid.
 
       int pPrimaryKey;
       bool withoutRowId;
@@ -1687,7 +1687,7 @@ namespace FreeLibSet.Data.SQLite
       if (pPrimaryKey < 0 && table.PrimaryKey.Count > 0)
       {
         Buffer.SB.Append(", PRIMARY KEY (");
-        for (int i = 0; i < table.PrimaryKey.Count; i++) // Исправлено 28.12.2020
+        for (int i = 0; i < table.PrimaryKey.Count; i++) // РСЃРїСЂР°РІР»РµРЅРѕ 28.12.2020
         {
           if (i > 0)
             Buffer.SB.Append(",");
@@ -1737,7 +1737,7 @@ namespace FreeLibSet.Data.SQLite
       {
         if (column.ColumnType == DBxColumnType.Int)
         {
-          buffer.SB.Append("INTEGER"); // всегда используем основной тип данных для первичного ключа
+          buffer.SB.Append("INTEGER"); // РІСЃРµРіРґР° РёСЃРїРѕР»СЊР·СѓРµРј РѕСЃРЅРѕРІРЅРѕР№ С‚РёРї РґР°РЅРЅС‹С… РґР»СЏ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°
           return;
         }
       }
@@ -1746,7 +1746,7 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Комментарии
+    #region РљРѕРјРјРµРЅС‚Р°СЂРёРё
 
     private void SetTableComment(string tableName, string comment)
     {
@@ -1767,7 +1767,7 @@ namespace FreeLibSet.Data.SQLite
       if (!String.IsNullOrEmpty(comment))
       {
         Buffer.Clear();
-        Buffer.SB.Append("COMMENT ON COLUMN "); // а не ADD COLUMN
+        Buffer.SB.Append("COMMENT ON COLUMN "); // Р° РЅРµ ADD COLUMN
         Buffer.FormatTableName(tableName);
         Buffer.SB.Append(".");
         Buffer.FormatColumnName(columnName);
@@ -1779,16 +1779,16 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Индексы
+    #region РРЅРґРµРєСЃС‹
 
     /*
-     * Используем имена индексов вида "ИмяТаблицы_1", "ИмяТаблицы_2", ... чтобы обеспечить уникальность
-     * в пределах базы данных
+     * РСЃРїРѕР»СЊР·СѓРµРј РёРјРµРЅР° РёРЅРґРµРєСЃРѕРІ РІРёРґР° "РРјСЏРўР°Р±Р»РёС†С‹_1", "РРјСЏРўР°Р±Р»РёС†С‹_2", ... С‡С‚РѕР±С‹ РѕР±РµСЃРїРµС‡РёС‚СЊ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ
+     * РІ РїСЂРµРґРµР»Р°С… Р±Р°Р·С‹ РґР°РЅРЅС‹С…
      */
 
     private void DropAllIndices(ISplash splash, string tableName)
     {
-      splash.PhaseText = "Удаление индексов таблицы \"" + tableName + "\"";
+      splash.PhaseText = "РЈРґР°Р»РµРЅРёРµ РёРЅРґРµРєСЃРѕРІ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"";
 
       Buffer.Clear();
       Buffer.SB.Append("PRAGMA index_list(");
@@ -1816,29 +1816,29 @@ namespace FreeLibSet.Data.SQLite
     {
       bool modified = false;
 
-      // Таблица существующих индексов
+      // РўР°Р±Р»РёС†Р° СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РёРЅРґРµРєСЃРѕРІ
       DataTable tblIndices = CreateIndicesTable(table.TableName);
       tblIndices.DefaultView.Sort = "IndexName";
       DataView dvIdxCols = new DataView(tblIndices);
       dvIdxCols.Sort = "Columns";
 
 
-      #region Добавляем недостающие индексы
+      #region Р”РѕР±Р°РІР»СЏРµРј РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ РёРЅРґРµРєСЃС‹
 
       for (int i = 0; i < table.Indexes.Count; i++)
       {
         string wantedCols = table.Indexes[i].Columns.AsString;
         int pIndex = dvIdxCols.Find(wantedCols);
         if (pIndex >= 0)
-          // Индекс найден
+          // РРЅРґРµРєСЃ РЅР°Р№РґРµРЅ
           dvIdxCols[pIndex].Row["Flag"] = true;
         else
         {
-          // Требуется создать индекс
-          // Имя нового индекса
+          // РўСЂРµР±СѓРµС‚СЃСЏ СЃРѕР·РґР°С‚СЊ РёРЅРґРµРєСЃ
+          // РРјСЏ РЅРѕРІРѕРіРѕ РёРЅРґРµРєСЃР°
           string indexName = GetNewIndexName(table.TableName, tblIndices);
 
-          splash.PhaseText = "Создание индекса \"" + indexName + "\" для таблицы \"" + table.TableName + "\", столбцы: " + wantedCols;
+          splash.PhaseText = "РЎРѕР·РґР°РЅРёРµ РёРЅРґРµРєСЃР° \"" + indexName + "\" РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + table.TableName + "\", СЃС‚РѕР»Р±С†С‹: " + wantedCols;
 
           Buffer.Clear();
           Buffer.SB.Append("CREATE INDEX \"");
@@ -1851,15 +1851,15 @@ namespace FreeLibSet.Data.SQLite
           SQLExecuteNonQuery(Buffer.SB.ToString());
 
           modified = true;
-          errors.AddInfo("Создан индекс \"" + indexName + "\" для таблицы \"" + table.TableName + "\", столбцы: " + wantedCols);
+          errors.AddInfo("РЎРѕР·РґР°РЅ РёРЅРґРµРєСЃ \"" + indexName + "\" РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + table.TableName + "\", СЃС‚РѕР»Р±С†С‹: " + wantedCols);
 
-          tblIndices.Rows.Add(indexName, wantedCols, true); // обязательно добавляем, иначе следующее имя индекса будет неправильным
+          tblIndices.Rows.Add(indexName, wantedCols, true); // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР±Р°РІР»СЏРµРј, РёРЅР°С‡Рµ СЃР»РµРґСѓСЋС‰РµРµ РёРјСЏ РёРЅРґРµРєСЃР° Р±СѓРґРµС‚ РЅРµРїСЂР°РІРёР»СЊРЅС‹Рј
         }
-      } // цикл по объявленным индексам
+      } // С†РёРєР» РїРѕ РѕР±СЉСЏРІР»РµРЅРЅС‹Рј РёРЅРґРµРєСЃР°Рј
 
       #endregion
 
-      #region Удаляем лишние индексы
+      #region РЈРґР°Р»СЏРµРј Р»РёС€РЅРёРµ РёРЅРґРµРєСЃС‹
 
       if (options.DropUnusedIndices)
       {
@@ -1868,9 +1868,9 @@ namespace FreeLibSet.Data.SQLite
           if (!DataTools.GetBool(idxRow, "Flag"))
           {
             string indexName = DataTools.GetString(idxRow, "IndexName");
-            splash.PhaseText = "Удаление лишнего индекса для таблицы \"" + table.TableName + "\"";
+            splash.PhaseText = "РЈРґР°Р»РµРЅРёРµ Р»РёС€РЅРµРіРѕ РёРЅРґРµРєСЃР° РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + table.TableName + "\"";
             DropIndex(/*table.TableName, */indexName);
-            errors.AddInfo("Удален лишний индекс \"" + indexName + "\" в таблице \"" + table.TableName + "\"");
+            errors.AddInfo("РЈРґР°Р»РµРЅ Р»РёС€РЅРёР№ РёРЅРґРµРєСЃ \"" + indexName + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + table.TableName + "\"");
             modified = true;
           }
         }
@@ -1882,7 +1882,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Создает таблицу, содержащую поля "IndexName", "Columns" и "Flag".
+    /// РЎРѕР·РґР°РµС‚ С‚Р°Р±Р»РёС†Сѓ, СЃРѕРґРµСЂР¶Р°С‰СѓСЋ РїРѕР»СЏ "IndexName", "Columns" Рё "Flag".
     /// </summary>
     /// <param name="tableName"></param>
     /// <returns></returns>
@@ -1893,7 +1893,7 @@ namespace FreeLibSet.Data.SQLite
       tblIndices.Columns.Add("Columns", typeof(string));
       tblIndices.Columns.Add("Flag", typeof(bool));
 
-#if XXX // Так почему-то не работает для составных индексов. Часть столбцов может не иметь имени
+#if XXX // РўР°Рє РїРѕС‡РµРјСѓ-С‚Рѕ РЅРµ СЂР°Р±РѕС‚Р°РµС‚ РґР»СЏ СЃРѕСЃС‚Р°РІРЅС‹С… РёРЅРґРµРєСЃРѕРІ. Р§Р°СЃС‚СЊ СЃС‚РѕР»Р±С†РѕРІ РјРѕР¶РµС‚ РЅРµ РёРјРµС‚СЊ РёРјРµРЅРё
       
           Buffer.Clear();
       Buffer.SB.Append("PRAGMA index_list(");
@@ -1915,7 +1915,7 @@ namespace FreeLibSet.Data.SQLite
           string ColName = DataTools.GetString(tblCols.Rows[j], "name");
           if (String.IsNullOrEmpty(ColName))
           {
-            // Вычисляемый индекс. Не поддерживается
+            // Р’С‹С‡РёСЃР»СЏРµРјС‹Р№ РёРЅРґРµРєСЃ. РќРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ
           Buffer.Clear();
             Buffer.SB.Append("[Formula]");
             break;
@@ -1939,17 +1939,17 @@ namespace FreeLibSet.Data.SQLite
         string expr = DataTools.GetString(listRow, "sql");
 
         if (expr.Length == 0)
-          continue; // 18.01.2020. Автоиндексы не имеют выражения
+          continue; // 18.01.2020. РђРІС‚РѕРёРЅРґРµРєСЃС‹ РЅРµ РёРјРµСЋС‚ РІС‹СЂР°Р¶РµРЅРёСЏ
 
-        // выражение - это то, что в круглых скобках
+        // РІС‹СЂР°Р¶РµРЅРёРµ - СЌС‚Рѕ С‚Рѕ, С‡С‚Рѕ РІ РєСЂСѓРіР»С‹С… СЃРєРѕР±РєР°С…
         int p1 = expr.IndexOf('(');
         if (p1 < 0)
-          throw new BugException("Не найдена \"(\"");
+          throw new BugException("РќРµ РЅР°Р№РґРµРЅР° \"(\"");
         int p2 = expr.LastIndexOf(')');
         if (p2 < p1)
-          throw new BugException("Не найдена \")\"");
+          throw new BugException("РќРµ РЅР°Р№РґРµРЅР° \")\"");
         expr = expr.Substring(p1 + 1, p2 - p1 - 1);
-        // внутри могут оставаться пробелы, поля - в кавычках
+        // РІРЅСѓС‚СЂРё РјРѕРіСѓС‚ РѕСЃС‚Р°РІР°С‚СЊСЃСЏ РїСЂРѕР±РµР»С‹, РїРѕР»СЏ - РІ РєР°РІС‹С‡РєР°С…
         string[] a = expr.Split(',');
         for (int i = 0; i < a.Length; i++)
           a[i] = GetIndexColumnName(a[i]);
@@ -1962,7 +1962,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Извлекаем имя поля, убирая пробелы и кавычки
+    /// РР·РІР»РµРєР°РµРј РёРјСЏ РїРѕР»СЏ, СѓР±РёСЂР°СЏ РїСЂРѕР±РµР»С‹ Рё РєР°РІС‹С‡РєРё
     /// </summary>
     /// <param name="s"></param>
     /// <returns></returns>
@@ -1983,7 +1983,7 @@ namespace FreeLibSet.Data.SQLite
 
 
     /// <summary>
-    /// Придумываем имя для нового индекса
+    /// РџСЂРёРґСѓРјС‹РІР°РµРј РёРјСЏ РґР»СЏ РЅРѕРІРѕРіРѕ РёРЅРґРµРєСЃР°
     /// </summary>
     /// <param name="tableName"></param>
     /// <param name="tblIndices"></param>
@@ -1996,7 +1996,7 @@ namespace FreeLibSet.Data.SQLite
         if (tblIndices.DefaultView.Find(indexName) < 0)
           return indexName;
       }
-      throw new BugException("Не смогли придумать имя для нового индекса таблицы \"" + tableName + "\". Слишком много существующих индексов");
+      throw new BugException("РќРµ СЃРјРѕРіР»Рё РїСЂРёРґСѓРјР°С‚СЊ РёРјСЏ РґР»СЏ РЅРѕРІРѕРіРѕ РёРЅРґРµРєСЃР° С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\". РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РёРЅРґРµРєСЃРѕРІ");
     }
     #endregion
 
@@ -2005,7 +2005,7 @@ namespace FreeLibSet.Data.SQLite
 
   internal class SQLiteDBxManager : DBxManager
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     private SQLiteDBxManager()
       : base(DBxProviderNames.SQLite)
@@ -2016,7 +2016,7 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     public override DBx CreateDBObject(string connectionString)
     {
@@ -2028,10 +2028,10 @@ namespace FreeLibSet.Data.SQLite
       SQLiteConnectionStringBuilder csb = new SQLiteConnectionStringBuilder(connectionString);
 
       if (csb.DataSource.EndsWith(SQLiteDBx.MemoryFileName))
-        return csb.ConnectionString; // 21.07.2021 У баз данных в памяти одно и тоже имя
+        return csb.ConnectionString; // 21.07.2021 РЈ Р±Р°Р· РґР°РЅРЅС‹С… РІ РїР°РјСЏС‚Рё РѕРґРЅРѕ Рё С‚РѕР¶Рµ РёРјСЏ
 
       //csb.DataSource = ReplaceDBItem(csb.DataSource, OldDBName, NewDBName);
-      // 31.07.2018. Вместо простой замены текста, заменяем имя файла
+      // 31.07.2018. Р’РјРµСЃС‚Рѕ РїСЂРѕСЃС‚РѕР№ Р·Р°РјРµРЅС‹ С‚РµРєСЃС‚Р°, Р·Р°РјРµРЅСЏРµРј РёРјСЏ С„Р°Р№Р»Р°
       AbsPath path = new AbsPath(csb.DataSource);
       if (String.Equals(path.FileNameWithoutExtension, oldDBName, StringComparison.OrdinalIgnoreCase))
       {
@@ -2044,7 +2044,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Возвращает ссылку на SQLiteFactory
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃСЃС‹Р»РєСѓ РЅР° SQLiteFactory
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {
@@ -2060,13 +2060,13 @@ namespace FreeLibSet.Data.SQLite
   }
 
   /// <summary>
-  /// Объект для записи в базу данных SQLite.
-  /// Для SQLite нет обходных путей для группового добавления записей, но есть оператор "INSERT OR UPDATE".
-  /// Также создаем однократно команду SQLiteCommand
+  /// РћР±СЉРµРєС‚ РґР»СЏ Р·Р°РїРёСЃРё РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С… SQLite.
+  /// Р”Р»СЏ SQLite РЅРµС‚ РѕР±С…РѕРґРЅС‹С… РїСѓС‚РµР№ РґР»СЏ РіСЂСѓРїРїРѕРІРѕРіРѕ РґРѕР±Р°РІР»РµРЅРёСЏ Р·Р°РїРёСЃРµР№, РЅРѕ РµСЃС‚СЊ РѕРїРµСЂР°С‚РѕСЂ "INSERT OR UPDATE".
+  /// РўР°РєР¶Рµ СЃРѕР·РґР°РµРј РѕРґРЅРѕРєСЂР°С‚РЅРѕ РєРѕРјР°РЅРґСѓ SQLiteCommand
   /// </summary>
   internal class SQLiteDBxDataWriter : DBxDataWriter
   {
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     public SQLiteDBxDataWriter(SQLiteDBxCon con, DBxDataWriterInfo writerInfo)
       : base(con, writerInfo)
@@ -2089,7 +2089,7 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Подготовленная команда
+    #region РџРѕРґРіРѕС‚РѕРІР»РµРЅРЅР°СЏ РєРѕРјР°РЅРґР°
 
     private SQLiteCommand _Command;
 
@@ -2107,16 +2107,16 @@ namespace FreeLibSet.Data.SQLite
           break;
 
         case DBxDataWriterMode.InsertOrUpdate:
-          // TODO: Можно-таки использовать "UPSERT", но только если нет внешних ключей на эту таблицу
+          // TODO: РњРѕР¶РЅРѕ-С‚Р°РєРё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ "UPSERT", РЅРѕ С‚РѕР»СЊРєРѕ РµСЃР»Рё РЅРµС‚ РІРЅРµС€РЅРёС… РєР»СЋС‡РµР№ РЅР° СЌС‚Сѓ С‚Р°Р±Р»РёС†Сѓ
 
           //if (((SQLiteDBxCon)Con).ServerVersion>=new Version(3, 24))
           //{ 
           //}
           //else
           //{
-          // Используем "двойную" команду, сначала INSERT, потом UPDATE
+          // РСЃРїРѕР»СЊР·СѓРµРј "РґРІРѕР№РЅСѓСЋ" РєРѕРјР°РЅРґСѓ, СЃРЅР°С‡Р°Р»Р° INSERT, РїРѕС‚РѕРј UPDATE
           // https://stackoverflow.com/questions/15277373/sqlite-upsert-update-or-insert/38463024#38463024
-          // см. ответ №69
+          // СЃРј. РѕС‚РІРµС‚ в„–69
 
           FormatUpdateSql(buffer);
           buffer.SB.Append(";");
@@ -2141,7 +2141,7 @@ namespace FreeLibSet.Data.SQLite
           break;
 
         default:
-          throw new BugException("Неизвестный Mode=" + WriterInfo.Mode.ToString());
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Mode=" + WriterInfo.Mode.ToString());
       }
 
       _Command = new SQLiteCommand(buffer.SB.ToString());
@@ -2150,7 +2150,7 @@ namespace FreeLibSet.Data.SQLite
       _Command.Connection = ((SQLiteDBxCon)Con).Connection;
       _Command.Transaction = ((SQLiteDBxCon)Con).CurrentTransaction;
       _Command.CommandTimeout = Con.CommandTimeout;
-      _Command.Prepare(); // для порядка.
+      _Command.Prepare(); // РґР»СЏ РїРѕСЂСЏРґРєР°.
     }
 
     private void FormatInsertSQL(DBxSqlBuffer buffer)
@@ -2212,7 +2212,7 @@ namespace FreeLibSet.Data.SQLite
       }
 
 
-      // TODO: Требуется отладка SQL-запроса
+      // TODO: РўСЂРµР±СѓРµС‚СЃСЏ РѕС‚Р»Р°РґРєР° SQL-Р·Р°РїСЂРѕСЃР°
 
       _Command.ExecuteNonQuery();
     }

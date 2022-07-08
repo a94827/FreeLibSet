@@ -1,4 +1,4 @@
-namespace TestCulture
+п»їnamespace TestCulture
 {
   partial class TestForm
   {
@@ -83,7 +83,7 @@ namespace TestCulture
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -94,7 +94,7 @@ namespace TestCulture
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // TheTabControl
@@ -137,7 +137,7 @@ namespace TestCulture
       this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.tabPage1.Size = new System.Drawing.Size(523, 317);
       this.tabPage1.TabIndex = 0;
-      this.tabPage1.Text = "Управляющие элементы";
+      this.tabPage1.Text = "РЈРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹";
       this.tabPage1.UseVisualStyleBackColor = true;
       // 
       // cbDoRB
@@ -348,7 +348,7 @@ namespace TestCulture
       this.tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.tabPage2.Size = new System.Drawing.Size(523, 317);
       this.tabPage2.TabIndex = 1;
-      this.tabPage2.Text = "Табличный просмотр";
+      this.tabPage2.Text = "РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ";
       this.tabPage2.UseVisualStyleBackColor = true;
       // 
       // gr1

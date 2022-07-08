@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+Ôªønamespace FreeLibSet.Forms
 {
   partial class NumRangeForm
   {
@@ -48,7 +48,7 @@ namespace FreeLibSet.Forms
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(117, 30);
       this.btnCancel.TabIndex = 2;
-      this.btnCancel.Text = "ŒÚÏÂÌ‡";
+      this.btnCancel.Text = "–û—Ç–º–µ–Ω–∞";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(117, 30);
       this.btnOk.TabIndex = 1;
-      this.btnOk.Text = "Œ& ";
+      this.btnOk.Text = "–û&–ö";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // TheGroup
@@ -108,7 +108,7 @@ namespace FreeLibSet.Forms
       this.lblMaximum.Name = "lblMaximum";
       this.lblMaximum.Size = new System.Drawing.Size(168, 22);
       this.lblMaximum.TabIndex = 2;
-      this.lblMaximum.Text = "Ã&‡ÍÒËÏÛÏ";
+      this.lblMaximum.Text = "–ú&–∞–∫—Å–∏–º—É–º";
       this.lblMaximum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // lblMinimum
@@ -118,7 +118,7 @@ namespace FreeLibSet.Forms
       this.lblMinimum.Name = "lblMinimum";
       this.lblMinimum.Size = new System.Drawing.Size(168, 22);
       this.lblMinimum.TabIndex = 0;
-      this.lblMinimum.Text = "Ã&ËÌËÏÛÏ";
+      this.lblMinimum.Text = "–ú&–∏–Ω–∏–º—É–º";
       this.lblMinimum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // btnNo
@@ -129,7 +129,7 @@ namespace FreeLibSet.Forms
       this.btnNo.Name = "btnNo";
       this.btnNo.Size = new System.Drawing.Size(117, 30);
       this.btnNo.TabIndex = 3;
-      this.btnNo.Text = "&ÕÂÚ";
+      this.btnNo.Text = "&–ù–µ—Ç";
       this.btnNo.UseVisualStyleBackColor = true;
       // 
       // NumRangeForm

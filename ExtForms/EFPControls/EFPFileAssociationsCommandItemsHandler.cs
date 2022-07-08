@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,24 +13,24 @@ using FreeLibSet.Logging;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация команд "Открыть" и "Открыть с помощью" для локального меню управляющего элемента,
-  /// который может сохранять файлы определенного вида.
-  /// На момент создания управляющего элемента файл не обязан (но может) существовать.
-  /// Вместо этого, файл может создаваться по требованию, если пользователь выбирает одну из команд.
-  /// В общем случае, файл на диске может иметь другое расширение, чем переданное в конструкторе
-  /// расширение. Например, можно в конструкторе задать расширение ".txt", а затем передать файл "myfile.log"
+  /// Р РµР°Р»РёР·Р°С†РёСЏ РєРѕРјР°РЅРґ "РћС‚РєСЂС‹С‚СЊ" Рё "РћС‚РєСЂС‹С‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ" РґР»СЏ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°,
+  /// РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ СЃРѕС…СЂР°РЅСЏС‚СЊ С„Р°Р№Р»С‹ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ РІРёРґР°.
+  /// РќР° РјРѕРјРµРЅС‚ СЃРѕР·РґР°РЅРёСЏ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° С„Р°Р№Р» РЅРµ РѕР±СЏР·Р°РЅ (РЅРѕ РјРѕР¶РµС‚) СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ.
+  /// Р’РјРµСЃС‚Рѕ СЌС‚РѕРіРѕ, С„Р°Р№Р» РјРѕР¶РµС‚ СЃРѕР·РґР°РІР°С‚СЊСЃСЏ РїРѕ С‚СЂРµР±РѕРІР°РЅРёСЋ, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹Р±РёСЂР°РµС‚ РѕРґРЅСѓ РёР· РєРѕРјР°РЅРґ.
+  /// Р’ РѕР±С‰РµРј СЃР»СѓС‡Р°Рµ, С„Р°Р№Р» РЅР° РґРёСЃРєРµ РјРѕР¶РµС‚ РёРјРµС‚СЊ РґСЂСѓРіРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ, С‡РµРј РїРµСЂРµРґР°РЅРЅРѕРµ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
+  /// СЂР°СЃС€РёСЂРµРЅРёРµ. РќР°РїСЂРёРјРµСЂ, РјРѕР¶РЅРѕ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ Р·Р°РґР°С‚СЊ СЂР°СЃС€РёСЂРµРЅРёРµ ".txt", Р° Р·Р°С‚РµРј РїРµСЂРµРґР°С‚СЊ С„Р°Р№Р» "myfile.log"
   /// </summary>
   public sealed class EFPFileAssociationsCommandItemsHandler
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает команды, относящиеся к файлу с заданным расширением.
-    /// Если для операционной системы не реализованы файловые ассоциации, команды не добавляются
+    /// РЎРѕР·РґР°РµС‚ РєРѕРјР°РЅРґС‹, РѕС‚РЅРѕСЃСЏС‰РёРµСЃСЏ Рє С„Р°Р№Р»Сѓ СЃ Р·Р°РґР°РЅРЅС‹Рј СЂР°СЃС€РёСЂРµРЅРёРµРј.
+    /// Р•СЃР»Рё РґР»СЏ РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹ РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅС‹ С„Р°Р№Р»РѕРІС‹Рµ Р°СЃСЃРѕС†РёР°С†РёРё, РєРѕРјР°РЅРґС‹ РЅРµ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ
     /// </summary>
-    /// <param name="commandItems">Список для добавления команд</param>
-    /// <param name="fileExt">Расширение файла, включая точку.
-    /// Например, ".txt", ".xml". Должно быть задано обязательно.</param>
+    /// <param name="commandItems">РЎРїРёСЃРѕРє РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РєРѕРјР°РЅРґ</param>
+    /// <param name="fileExt">Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°, РІРєР»СЋС‡Р°СЏ С‚РѕС‡РєСѓ.
+    /// РќР°РїСЂРёРјРµСЂ, ".txt", ".xml". Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ.</param>
     public EFPFileAssociationsCommandItemsHandler(EFPCommandItems commandItems, string fileExt)
     {
       if (commandItems == null)
@@ -39,10 +39,10 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(fileExt))
         throw new ArgumentNullException("fileExt");
       if (fileExt[0] != '.')
-        throw new ArgumentException("Расширение должно начинаться с точки", "fileExt");
+        throw new ArgumentException("Р Р°СЃС€РёСЂРµРЅРёРµ РґРѕР»Р¶РЅРѕ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ С‚РѕС‡РєРё", "fileExt");
       _FileExt = fileExt;
 
-      #region Добавление команд
+      #region Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРјР°РЅРґ
 
       _AllCommands = new List<EFPCommandItem>();
 
@@ -57,7 +57,7 @@ namespace FreeLibSet.Forms
         if (faItems.OpenItem != null)
         {
           EFPCommandItem ci = CreateCommandItem(faItems.OpenItem);
-          ci.MenuText = "Открыть";
+          ci.MenuText = "РћС‚РєСЂС‹С‚СЊ";
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;
           if (ci.HasImage)
             ci.ImageKey = "UnknownState";
@@ -68,15 +68,15 @@ namespace FreeLibSet.Forms
         else
         {
           EFPCommandItem ci = new EFPCommandItem("File", "OpenNowhere");
-          ci.MenuText = "Открыть";
+          ci.MenuText = "РћС‚РєСЂС‹С‚СЊ";
           if (faItems.Exception == null)
           {
-            ci.ToolTipText = "Нет приложения, которое может открывать файлы с расширением \"" + fileExt + "\"";
+            ci.ToolTipText = "РќРµС‚ РїСЂРёР»РѕР¶РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РјРѕР¶РµС‚ РѕС‚РєСЂС‹РІР°С‚СЊ С„Р°Р№Р»С‹ СЃ СЂР°СЃС€РёСЂРµРЅРёРµРј \"" + fileExt + "\"";
             ci.ImageKey = "UnknownState";
           }
           else
           {
-            ci.ToolTipText = "Возикла ошибка при получении файловых ассоциаций. " + faItems.Exception.Message;
+            ci.ToolTipText = "Р’РѕР·РёРєР»Р° РѕС€РёР±РєР° РїСЂРё РїРѕР»СѓС‡РµРЅРёРё С„Р°Р№Р»РѕРІС‹С… Р°СЃСЃРѕС†РёР°С†РёР№. " + faItems.Exception.Message;
             ci.ImageKey = "Error";
           }
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;
@@ -86,7 +86,7 @@ namespace FreeLibSet.Forms
         }
 
         EFPCommandItem smOpenWith = new EFPCommandItem("File", "OpenWith");
-        smOpenWith.MenuText = "Открыть с помощью";
+        smOpenWith.MenuText = "РћС‚РєСЂС‹С‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ";
         smOpenWith.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarDropDown;
         commandItems.Add(smOpenWith);
         _AllCommands.Add(smOpenWith);
@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms
           {
             EFPCommandItem ci = CreateCommandItem(faItems.OpenWithItems[i]);
             ci.Parent = smOpenWith;
-            ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
+            ci.Usage = EFPCommandItemUsage.Menu; // РІ РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РЅРµ РЅР°РґРѕ
             commandItems.Add(ci);
             _AllCommands.Add(ci);
           }
@@ -106,9 +106,9 @@ namespace FreeLibSet.Forms
         {
           EFPCommandItem ci = new EFPCommandItem("File", "OpenWithNone");
           ci.Parent = smOpenWith;
-          ci.MenuText = "[ Нет приложения ]";
+          ci.MenuText = "[ РќРµС‚ РїСЂРёР»РѕР¶РµРЅРёСЏ ]";
           ci.ImageKey = "UnknownState";
-          ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
+          ci.Usage = EFPCommandItemUsage.Menu; // РІ РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РЅРµ РЅР°РґРѕ
           ci.Enabled = false;
           commandItems.Add(ci);
           _AllCommands.Add(ci);
@@ -117,9 +117,9 @@ namespace FreeLibSet.Forms
         {
           EFPCommandItem ci = new EFPCommandItem("File", "OpenWithError");
           ci.Parent = smOpenWith;
-          ci.MenuText = "[ Ошибка ]";
+          ci.MenuText = "[ РћС€РёР±РєР° ]";
           ci.ImageKey = "Error";
-          ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
+          ci.Usage = EFPCommandItemUsage.Menu; // РІ РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РЅРµ РЅР°РґРѕ
           ci.Enabled = true;
           ci.Tag = faItems.Exception;
           ci.Click += new EventHandler(ciOpenWithError_Click);
@@ -132,9 +132,9 @@ namespace FreeLibSet.Forms
         e.Data["FileExt"] = fileExt;
         e.Data["CommandItems"] = commandItems.ToString();
 
-        // Исключение показываем один раз, дальше только выводим в log-файл
+        // РСЃРєР»СЋС‡РµРЅРёРµ РїРѕРєР°Р·С‹РІР°РµРј РѕРґРёРЅ СЂР°Р·, РґР°Р»СЊС€Рµ С‚РѕР»СЊРєРѕ РІС‹РІРѕРґРёРј РІ log-С„Р°Р№Р»
 
-        string title = "Ошибка инициализации EFPFileAssociationsCommandItemsHandler";
+        string title = "РћС€РёР±РєР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё EFPFileAssociationsCommandItemsHandler";
         if (_ExceptionShown)
           LogoutTools.LogoutException(e, title);
         else
@@ -151,19 +151,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Имя файла и расширение
+    #region РРјСЏ С„Р°Р№Р»Р° Рё СЂР°СЃС€РёСЂРµРЅРёРµ
 
     /// <summary>
-    /// Расширение файла, включая точку.
-    /// Задается в конструкторе
+    /// Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°, РІРєР»СЋС‡Р°СЏ С‚РѕС‡РєСѓ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string FileExt { get { return _FileExt; } }
     private string _FileExt;
 
     /// <summary>
-    /// Путь к существующему файлу на диске.
-    /// Свойство может быть установлено либо до вывода элемента на экрав, если файл существует заранее,
-    /// либо в обработчике события FileNeeded
+    /// РџСѓС‚СЊ Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРјСѓ С„Р°Р№Р»Сѓ РЅР° РґРёСЃРєРµ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ Р»РёР±Рѕ РґРѕ РІС‹РІРѕРґР° СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РІ, РµСЃР»Рё С„Р°Р№Р» СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р·Р°СЂР°РЅРµРµ,
+    /// Р»РёР±Рѕ РІ РѕР±СЂР°Р±РѕС‚С‡РёРєРµ СЃРѕР±С‹С‚РёСЏ FileNeeded
     /// </summary>
     public AbsPath FilePath
     {
@@ -173,25 +173,25 @@ namespace FreeLibSet.Forms
     private AbsPath _FilePath;
 
     /// <summary>
-    /// Событие вызывается перед выполнением любой из команд.
-    /// Если свойство FilePath устанавливается до вывода управляющего элемента на экран, то обработчик не нужен.
-    /// Обычно обработчик должен проверить FilePath.IsEmpty. Если свойство не было установлено, обработчик
-    /// записывает (во временный каталог) файл и устанавливает свойство FilePath.
-    /// Если после вызова обработчика свойство FilePath не установлено или файла нет на диске, выбрасывается
-    /// исключение при выполнении команды.
-    /// Обработчик может установить свойство Cancel=true, чтобы предотвратить выполнение команды без выдачи исключения.
-    /// В этом случае обязанность выдачи сообщения об ошибке лежит на обработчике события.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј Р»СЋР±РѕР№ РёР· РєРѕРјР°РЅРґ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ FilePath СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РґРѕ РІС‹РІРѕРґР° СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РЅ, С‚Рѕ РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРµ РЅСѓР¶РµРЅ.
+    /// РћР±С‹С‡РЅРѕ РѕР±СЂР°Р±РѕС‚С‡РёРє РґРѕР»Р¶РµРЅ РїСЂРѕРІРµСЂРёС‚СЊ FilePath.IsEmpty. Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ Р±С‹Р»Рѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РѕР±СЂР°Р±РѕС‚С‡РёРє
+    /// Р·Р°РїРёСЃС‹РІР°РµС‚ (РІРѕ РІСЂРµРјРµРЅРЅС‹Р№ РєР°С‚Р°Р»РѕРі) С„Р°Р№Р» Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ FilePath.
+    /// Р•СЃР»Рё РїРѕСЃР»Рµ РІС‹Р·РѕРІР° РѕР±СЂР°Р±РѕС‚С‡РёРєР° СЃРІРѕР№СЃС‚РІРѕ FilePath РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РёР»Рё С„Р°Р№Р»Р° РЅРµС‚ РЅР° РґРёСЃРєРµ, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ
+    /// РёСЃРєР»СЋС‡РµРЅРёРµ РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РєРѕРјР°РЅРґС‹.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РјРѕР¶РµС‚ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРІРѕР№СЃС‚РІРѕ Cancel=true, С‡С‚РѕР±С‹ РїСЂРµРґРѕС‚РІСЂР°С‚РёС‚СЊ РІС‹РїРѕР»РЅРµРЅРёРµ РєРѕРјР°РЅРґС‹ Р±РµР· РІС‹РґР°С‡Рё РёСЃРєР»СЋС‡РµРЅРёСЏ.
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РѕР±СЏР·Р°РЅРЅРѕСЃС‚СЊ РІС‹РґР°С‡Рё СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ Р»РµР¶РёС‚ РЅР° РѕР±СЂР°Р±РѕС‚С‡РёРєРµ СЃРѕР±С‹С‚РёСЏ.
     /// </summary>
     public event CancelEventHandler FileNeeded;
 
     /// <summary>
-    /// Подготовка файла.
-    /// Вызывается перед выполнением любой команды.
-    /// 1. Вызывает событие FileNeeded, если есть обработчик.
-    /// 2. Проверяет, что свойство FilePath установлено.
-    /// 3. Проверяет наличие файла на диске
+    /// РџРѕРґРіРѕС‚РѕРІРєР° С„Р°Р№Р»Р°.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј Р»СЋР±РѕР№ РєРѕРјР°РЅРґС‹.
+    /// 1. Р’С‹Р·С‹РІР°РµС‚ СЃРѕР±С‹С‚РёРµ FileNeeded, РµСЃР»Рё РµСЃС‚СЊ РѕР±СЂР°Р±РѕС‚С‡РёРє.
+    /// 2. РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ FilePath СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
+    /// 3. РџСЂРѕРІРµСЂСЏРµС‚ РЅР°Р»РёС‡РёРµ С„Р°Р№Р»Р° РЅР° РґРёСЃРєРµ
     /// </summary>
-    /// <returns>Возвращает false, если обработчик FileNeeded установил свойство Cancel</returns>
+    /// <returns>Р’РѕР·РІСЂР°С‰Р°РµС‚ false, РµСЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє FileNeeded СѓСЃС‚Р°РЅРѕРІРёР» СЃРІРѕР№СЃС‚РІРѕ Cancel</returns>
     public bool PrepareFile()
     {
       if (FileNeeded != null)
@@ -202,19 +202,19 @@ namespace FreeLibSet.Forms
           return false;
       }
       if (FilePath.IsEmpty)
-        throw new NullReferenceException("Свойство FilePath не установлено");
+        throw new NullReferenceException("РЎРІРѕР№СЃС‚РІРѕ FilePath РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ");
       if (!System.IO.File.Exists(FilePath.Path))
-        throw new System.IO.FileNotFoundException("Файл не существует", FilePath.Path);
+        throw new System.IO.FileNotFoundException("Р¤Р°Р№Р» РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚", FilePath.Path);
 
       return true;
     }
 
     #endregion
 
-    #region Команды меню
+    #region РљРѕРјР°РЅРґС‹ РјРµРЅСЋ
 
     /// <summary>
-    /// Все созданные команды меню
+    /// Р’СЃРµ СЃРѕР·РґР°РЅРЅС‹Рµ РєРѕРјР°РЅРґС‹ РјРµРЅСЋ
     /// </summary>
     private List<EFPCommandItem> _AllCommands;
 
@@ -227,9 +227,9 @@ namespace FreeLibSet.Forms
 
       ci.Image = EFPApp.FileExtAssociations.GetIconImage(fa.IconPath, fa.IconIndex, true);
       if (ci.Image == null)
-        ci.ImageKey = "EmptyImage"; // иначе не будет кнопки на панели инструментов
+        ci.ImageKey = "EmptyImage"; // РёРЅР°С‡Рµ РЅРµ Р±СѓРґРµС‚ РєРЅРѕРїРєРё РЅР° РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
 
-      ci.ToolTipText = "Открыть файл с помощью приложения " + fa.DisplayName + " (" + fa.ProgramPath.FileName + ")";
+      ci.ToolTipText = "РћС‚РєСЂС‹С‚СЊ С„Р°Р№Р» СЃ РїРѕРјРѕС‰СЊСЋ РїСЂРёР»РѕР¶РµРЅРёСЏ " + fa.DisplayName + " (" + fa.ProgramPath.FileName + ")";
 
       return ci;
     }
@@ -256,17 +256,17 @@ namespace FreeLibSet.Forms
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
       Exception ex = (Exception)(ci.Tag);
-      EFPApp.ExceptionMessageBox("Не удалось получить файловые ассоциации для расширения \"" + this.FileExt + "\"", ex,
-        "Открыть с помощью");
+      EFPApp.ExceptionMessageBox("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ С„Р°Р№Р»РѕРІС‹Рµ Р°СЃСЃРѕС†РёР°С†РёРё РґР»СЏ СЂР°СЃС€РёСЂРµРЅРёСЏ \"" + this.FileExt + "\"", ex,
+        "РћС‚РєСЂС‹С‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ");
     }
 
     #endregion
 
-    #region Свойство Visible
+    #region РЎРІРѕР№СЃС‚РІРѕ Visible
 
     /// <summary>
-    /// Видимость команд отправки.
-    /// По умолчанию равно true.
+    /// Р’РёРґРёРјРѕСЃС‚СЊ РєРѕРјР°РЅРґ РѕС‚РїСЂР°РІРєРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ true.
     /// </summary>
     public bool Visible
     {
@@ -286,10 +286,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство Tag
+    #region РЎРІРѕР№СЃС‚РІРѕ Tag
 
     /// <summary>
-    /// Произвольные пользовательские данные
+    /// РџСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ
     /// </summary>
     public object Tag { get { return _Tag; } set { _Tag = value; } }
     private object _Tag;

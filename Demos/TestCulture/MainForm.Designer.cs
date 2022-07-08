@@ -1,4 +1,4 @@
-namespace TestCulture
+п»їnamespace TestCulture
 {
   partial class MainForm
   {
@@ -63,7 +63,7 @@ namespace TestCulture
       this.groupBox1.Size = new System.Drawing.Size(526, 45);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Выбрать настройки";
+      this.groupBox1.Text = "Р’С‹Р±СЂР°С‚СЊ РЅР°СЃС‚СЂРѕР№РєРё";
       // 
       // cbCulture
       // 
@@ -93,7 +93,7 @@ namespace TestCulture
       this.btnTest.Name = "btnTest";
       this.btnTest.Size = new System.Drawing.Size(88, 24);
       this.btnTest.TabIndex = 0;
-      this.btnTest.Text = "Тест";
+      this.btnTest.Text = "РўРµСЃС‚";
       this.btnTest.UseVisualStyleBackColor = true;
       // 
       // groupBox2
@@ -107,7 +107,7 @@ namespace TestCulture
       this.groupBox2.Size = new System.Drawing.Size(526, 266);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Региональные стандарты";
+      this.groupBox2.Text = "Р РµРіРёРѕРЅР°Р»СЊРЅС‹Рµ СЃС‚Р°РЅРґР°СЂС‚С‹";
       // 
       // TheTabControl
       // 
@@ -131,7 +131,7 @@ namespace TestCulture
       this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
       this.tabPage1.Size = new System.Drawing.Size(514, 188);
       this.tabPage1.TabIndex = 0;
-      this.tabPage1.Text = "Параметры";
+      this.tabPage1.Text = "РџР°СЂР°РјРµС‚СЂС‹";
       this.tabPage1.UseVisualStyleBackColor = true;
       // 
       // grInfo
@@ -154,7 +154,7 @@ namespace TestCulture
       this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
       this.tabPage2.Size = new System.Drawing.Size(514, 188);
       this.tabPage2.TabIndex = 1;
-      this.tabPage2.Text = "Стандартные форматы";
+      this.tabPage2.Text = "РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ С„РѕСЂРјР°С‚С‹";
       this.tabPage2.UseVisualStyleBackColor = true;
       // 
       // grFormats
@@ -201,7 +201,7 @@ namespace TestCulture
       this.Controls.Add(this.groupBox1);
       this.Margin = new System.Windows.Forms.Padding(2);
       this.Name = "MainForm";
-      this.Text = "Тестирование настроек языка";
+      this.Text = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РЅР°СЃС‚СЂРѕРµРє СЏР·С‹РєР°";
       this.groupBox1.ResumeLayout(false);
       this.panel1.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);

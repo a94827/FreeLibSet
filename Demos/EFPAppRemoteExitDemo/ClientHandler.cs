@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using AgeyevAV.ExtForms;
@@ -6,23 +6,23 @@ using AgeyevAV.ExtForms;
 namespace EFPAppRemoteExitDemo
 {
   /// <summary>
-  /// Эмуляция работы клиента.
-  /// Один раз в секунду опрашивается "сервер".
-  /// Если на нем инициализировано завершение работы, запускаем процедуру удаленного завершения
+  /// Р­РјСѓР»СЏС†РёСЏ СЂР°Р±РѕС‚С‹ РєР»РёРµРЅС‚Р°.
+  /// РћРґРёРЅ СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ РѕРїСЂР°С€РёРІР°РµС‚СЃСЏ "СЃРµСЂРІРµСЂ".
+  /// Р•СЃР»Рё РЅР° РЅРµРј РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРѕ Р·Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹, Р·Р°РїСѓСЃРєР°РµРј РїСЂРѕС†РµРґСѓСЂСѓ СѓРґР°Р»РµРЅРЅРѕРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ
   /// </summary>
   public class ClientHandler:IEFPAppTimeHandler
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public ClientHandler(ServerForm ServerForm)
     {
       this.ServerForm = ServerForm;
-      EFPApp.Timers.Add(this); // на все время работы приложения
+      EFPApp.Timers.Add(this); // РЅР° РІСЃРµ РІСЂРµРјСЏ СЂР°Р±РѕС‚С‹ РїСЂРёР»РѕР¶РµРЅРёСЏ
     }
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     ServerForm ServerForm;
 
@@ -32,8 +32,8 @@ namespace EFPAppRemoteExitDemo
 
     public void TimerTick()
     {
-      // В настоящем приложении выполняется удаленный вызов сервера.
-      // И, наверное, не один раз в секунду, а реже
+      // Р’ РЅР°СЃС‚РѕСЏС‰РµРј РїСЂРёР»РѕР¶РµРЅРёРё РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СѓРґР°Р»РµРЅРЅС‹Р№ РІС‹Р·РѕРІ СЃРµСЂРІРµСЂР°.
+      // Р, РЅР°РІРµСЂРЅРѕРµ, РЅРµ РѕРґРёРЅ СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ, Р° СЂРµР¶Рµ
 
       bool Exit;
       string Message;
@@ -45,7 +45,7 @@ namespace EFPAppRemoteExitDemo
 
       string txt = EFPApp.RemoteExitHandler.State.ToString();
       if (EFPApp.RemoteExitHandler.State == EFPAppRemoteExitState.Started)
-        txt += " Ожидание " + (EFPApp.RemoteExitHandler.RemainderTime/1000).ToString() + " с.";
+        txt += " РћР¶РёРґР°РЅРёРµ " + (EFPApp.RemoteExitHandler.RemainderTime/1000).ToString() + " СЃ.";
       ServerForm.SetClientStatus(txt);
     }
 

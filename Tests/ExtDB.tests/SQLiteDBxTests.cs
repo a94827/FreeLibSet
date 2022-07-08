@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtDB_tests.Data_SQLite
   [TestFixture]
   public class SQLiteDBxTests
   {
-    #region Рабочая конфигурация
+    #region Р Р°Р±РѕС‡Р°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
 
     private TempDirectory _TempDir;
 
@@ -47,7 +47,7 @@ namespace ExtDB_tests.Data_SQLite
       AbsPath path = new AbsPath(_TempDir.Dir, "test.db");
       _DB = new SQLiteDBx(path, false);
       Assert.IsFalse(_DB.InMemory, "InMemory");
-      //может вернуть пустую структуру Assert.IsNull(_DB.Struct, "Struct"); 
+      //РјРѕР¶РµС‚ РІРµСЂРЅСѓС‚СЊ РїСѓСЃС‚СѓСЋ СЃС‚СЂСѓРєС‚СѓСЂСѓ Assert.IsNull(_DB.Struct, "Struct"); 
       Assert.IsFalse(_DB.StructHasBeenSet, "StructHasBeenSet");
       Assert.IsFalse(_DB.StructHasBeenUpdated, "StructHasBeenUpdated");
       Assert.IsNotNull(_DB.MainEntry, "MainEntry");
@@ -96,7 +96,7 @@ namespace ExtDB_tests.Data_SQLite
       ts.Columns.AddId();
       ts.Columns.AddString("F1", 20, false);
       ts.Columns.AddInt("F2");
-      ts.Columns.AddReference("F3", "Table1", true); // для проверки дерева
+      ts.Columns.AddReference("F3", "Table1", true); // РґР»СЏ РїСЂРѕРІРµСЂРєРё РґРµСЂРµРІР°
       return dbs;
     }
 

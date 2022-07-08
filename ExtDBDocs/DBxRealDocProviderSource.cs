@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,19 +9,19 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.Data.Docs
 {
-  #region Делегаты
+  #region Р”РµР»РµРіР°С‚С‹
 
   /// <summary>
-  /// Аргументы события DBxRealDocProviderSource.BeforeApplyChanges
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ DBxRealDocProviderSource.BeforeApplyChanges
   /// </summary>
   public class DBxBeforeApplyChangesEventArgs : EventArgs
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Аргументы события не создаются в пользовательском коде
+    /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ РЅРµ СЃРѕР·РґР°СЋС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
     /// </summary>
-    /// <param name="docSet">Набор данных</param>
+    /// <param name="docSet">РќР°Р±РѕСЂ РґР°РЅРЅС‹С…</param>
     public DBxBeforeApplyChangesEventArgs(DBxDocSet docSet)
     {
 #if DEBUG
@@ -34,10 +34,10 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Набор данных, обновления из которого применяются
+    /// РќР°Р±РѕСЂ РґР°РЅРЅС‹С…, РѕР±РЅРѕРІР»РµРЅРёСЏ РёР· РєРѕС‚РѕСЂРѕРіРѕ РїСЂРёРјРµРЅСЏСЋС‚СЃСЏ
     /// </summary>
     public DBxDocSet DocSet { get { return _DocSet; } }
     private DBxDocSet _DocSet;
@@ -46,30 +46,30 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Делегат события DBxRealDocProviderSource.BeforeApplyChanges
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ DBxRealDocProviderSource.BeforeApplyChanges
   /// </summary>
-  /// <param name="sender">Ссылка на DBxRealDocProviderSource</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РЎСЃС‹Р»РєР° РЅР° DBxRealDocProviderSource</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void DBxBeforeApplyChangesEventHandler(object sender,
     DBxBeforeApplyChangesEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Потокобезопасный (в режиме ReadOnly) класс, хранящий общие данные для одного или нескольких DBxRealDocProvider 
-  /// Объект хранит настройки разрешений для пользователя
-  /// Этот класс не сериализуется и существует только на стороне сервера, 
-  /// т.к. через свойство GlobalData содержит точки подключения к базе данных без ограничения доступа
+  /// РџРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Р№ (РІ СЂРµР¶РёРјРµ ReadOnly) РєР»Р°СЃСЃ, С…СЂР°РЅСЏС‰РёР№ РѕР±С‰РёРµ РґР°РЅРЅС‹Рµ РґР»СЏ РѕРґРЅРѕРіРѕ РёР»Рё РЅРµСЃРєРѕР»СЊРєРёС… DBxRealDocProvider 
+  /// РћР±СЉРµРєС‚ С…СЂР°РЅРёС‚ РЅР°СЃС‚СЂРѕР№РєРё СЂР°Р·СЂРµС€РµРЅРёР№ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ СЃРµСЂРёР°Р»РёР·СѓРµС‚СЃСЏ Рё СЃСѓС‰РµСЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР°, 
+  /// С‚.Рє. С‡РµСЂРµР· СЃРІРѕР№СЃС‚РІРѕ GlobalData СЃРѕРґРµСЂР¶РёС‚ С‚РѕС‡РєРё РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… Р±РµР· РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РґРѕСЃС‚СѓРїР°
   /// </summary>
   public class DBxRealDocProviderSource : IReadOnlyObject, IDBxCacheSource
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект DBxRealDocProviderSource.
-    /// Для переданного <paramref name="globalData"/> будет вызван SetReadOnly().
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ DBxRealDocProviderSource.
+    /// Р”Р»СЏ РїРµСЂРµРґР°РЅРЅРѕРіРѕ <paramref name="globalData"/> Р±СѓРґРµС‚ РІС‹Р·РІР°РЅ SetReadOnly().
     /// </summary>
-    /// <param name="globalData">Общие данные по системе документов без выделения прав отдельных пользователей</param>
+    /// <param name="globalData">РћР±С‰РёРµ РґР°РЅРЅС‹Рµ РїРѕ СЃРёСЃС‚РµРјРµ РґРѕРєСѓРјРµРЅС‚РѕРІ Р±РµР· РІС‹РґРµР»РµРЅРёСЏ РїСЂР°РІ РѕС‚РґРµР»СЊРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</param>
     public DBxRealDocProviderSource(DBxRealDocProviderGlobal globalData)
     {
 #if DEBUG
@@ -83,7 +83,7 @@ namespace FreeLibSet.Data.Docs
 
       _UserPermissions = UserPermissions.Empty;
 
-      _DisplayName = "[ Без имени ]";
+      _DisplayName = "[ Р‘РµР· РёРјРµРЅРё ]";
 
       _SyncRoot = new object();
 
@@ -92,20 +92,20 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Общие данные для всех пользователей
+    /// РћР±С‰РёРµ РґР°РЅРЅС‹Рµ РґР»СЏ РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
     /// </summary>
     public DBxRealDocProviderGlobal GlobalData { get { return _GlobalData; } }
     private DBxRealDocProviderGlobal _GlobalData;
 
     /// <summary>
-    /// Настраиваемые разрешения, назначенные пользователю
-    /// Если свойство не установлено в явном виде, возвращается пустой список UserPermissions.Empty.
-    /// Для установки разрешений требуется создать новый объект UserPermissions, заполнить его, 
-    /// а затем - установить это свойство. При этом объект UserPermissions переводится в состояние ReadOnly.
-    /// Модифицирует значение, возвращаемое MainDBEntry. 
+    /// РќР°СЃС‚СЂР°РёРІР°РµРјС‹Рµ СЂР°Р·СЂРµС€РµРЅРёСЏ, РЅР°Р·РЅР°С‡РµРЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє UserPermissions.Empty.
+    /// Р”Р»СЏ СѓСЃС‚Р°РЅРѕРІРєРё СЂР°Р·СЂРµС€РµРЅРёР№ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ UserPermissions, Р·Р°РїРѕР»РЅРёС‚СЊ РµРіРѕ, 
+    /// Р° Р·Р°С‚РµРј - СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЌС‚Рѕ СЃРІРѕР№СЃС‚РІРѕ. РџСЂРё СЌС‚РѕРј РѕР±СЉРµРєС‚ UserPermissions РїРµСЂРµРІРѕРґРёС‚СЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРµ ReadOnly.
+    /// РњРѕРґРёС„РёС†РёСЂСѓРµС‚ Р·РЅР°С‡РµРЅРёРµ, РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ MainDBEntry. 
     /// </summary>
     public UserPermissions UserPermissions
     {
@@ -122,9 +122,9 @@ namespace FreeLibSet.Data.Docs
     private UserPermissions _UserPermissions;
 
     /// <summary>
-    /// Подключение к основной базе данных.
-    /// Из нее извлекаются права пользователя на объекты базы данных.
-    /// Свойство не обязательно устанавливать в явном виде. Обычно оно инициализируется при установке свойства UserPermissions.
+    /// РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// РР· РЅРµРµ РёР·РІР»РµРєР°СЋС‚СЃСЏ РїСЂР°РІР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РѕР±СЉРµРєС‚С‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С….
+    /// РЎРІРѕР№СЃС‚РІРѕ РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ РІ СЏРІРЅРѕРј РІРёРґРµ. РћР±С‹С‡РЅРѕ РѕРЅРѕ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° UserPermissions.
     /// </summary>
     public DBxEntry MainDBEntry
     {
@@ -157,8 +157,8 @@ namespace FreeLibSet.Data.Docs
     private DBxEntry _MainDBEntry;
 
     /// <summary>
-    /// Было ли установлено свойство MainDBEntry в явном виде?
-    /// Используется при установке свойства UserPermissions
+    /// Р‘С‹Р»Рѕ Р»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ MainDBEntry РІ СЏРІРЅРѕРј РІРёРґРµ?
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° UserPermissions
     /// </summary>
     private bool _MainDBEntryHasBeenSet;
 
@@ -175,12 +175,12 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Идентификатор базы данных. Используется для работы буфера обмена.
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С…. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЂР°Р±РѕС‚С‹ Р±СѓС„РµСЂР° РѕР±РјРµРЅР°.
     /// </summary>
     public string DBIdentity { get { return GlobalData.MainDBEntry.DB.DBIdentity; } }
 
     /// <summary>
-    /// Отображаемое имя
+    /// РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ
     /// </summary>
     public string DisplayName
     {
@@ -196,9 +196,9 @@ namespace FreeLibSet.Data.Docs
     private string _DisplayName;
 
     /// <summary>
-    /// Возвращает DisplayName
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ DisplayName
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return DisplayName;
@@ -206,17 +206,17 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Кэширование
+    #region РљСЌС€РёСЂРѕРІР°РЅРёРµ
 
     /// <summary>
-    /// Использовать в качестве блокируемого объекта GlobalData или typeof() не стоит
+    /// РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РєР°С‡РµСЃС‚РІРµ Р±Р»РѕРєРёСЂСѓРµРјРѕРіРѕ РѕР±СЉРµРєС‚Р° GlobalData РёР»Рё typeof() РЅРµ СЃС‚РѕРёС‚
     /// </summary>
     private object _SyncRoot;
 
     /// <summary>
-    /// Потокобезопасный кэш данных на стороне сервера
-    /// Объекты DBxRealDocProvider, связанные с текущим источником, возвращают этот объект
-    /// Пока IsReadOnly=false, свойство возвращает null
+    /// РџРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Р№ РєСЌС€ РґР°РЅРЅС‹С… РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР°
+    /// РћР±СЉРµРєС‚С‹ DBxRealDocProvider, СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ С‚РµРєСѓС‰РёРј РёСЃС‚РѕС‡РЅРёРєРѕРј, РІРѕР·РІСЂР°С‰Р°СЋС‚ СЌС‚РѕС‚ РѕР±СЉРµРєС‚
+    /// РџРѕРєР° IsReadOnly=false, СЃРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ null
     /// </summary>
     public DBxCache DBCache
     {
@@ -228,7 +228,7 @@ namespace FreeLibSet.Data.Docs
           {
             if (IsReadOnly)
             {
-              // сделано при переходе в режим ReadOnly
+              // СЃРґРµР»Р°РЅРѕ РїСЂРё РїРµСЂРµС…РѕРґРµ РІ СЂРµР¶РёРј ReadOnly
               //_StructSource = new InternalStructSource(this);
               _DBCache = new DBxCache(this, false);
             }
@@ -243,7 +243,7 @@ namespace FreeLibSet.Data.Docs
     private DBxCache _DBCache;
 
     /// <summary>
-    /// Вызывает DBxCache.ClearCache()
+    /// Р’С‹Р·С‹РІР°РµС‚ DBxCache.ClearCache()
     /// </summary>
     public void ClearCache()
     {
@@ -255,9 +255,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Вызывает статический метод DBxDocProvider.ClearCache()
+    /// Р’С‹Р·С‹РІР°РµС‚ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ DBxDocProvider.ClearCache()
     /// </summary>
-    /// <param name="ds">Набор таблиц и DBxDocSet</param>
+    /// <param name="ds">РќР°Р±РѕСЂ С‚Р°Р±Р»РёС† Рё DBxDocSet</param>
     public void ClearCache(DataSet ds)
     {
       lock (_SyncRoot)
@@ -283,9 +283,9 @@ namespace FreeLibSet.Data.Docs
 
 #if XXX
     /// <summary>
-    /// Коллекция описаний полей таблиц для буферизации.
-    /// Ключ - имя таблицы.
-    /// На момент обращения коллекция блокируется для обеспечения потокобезопасности
+    /// РљРѕР»Р»РµРєС†РёСЏ РѕРїРёСЃР°РЅРёР№ РїРѕР»РµР№ С‚Р°Р±Р»РёС† РґР»СЏ Р±СѓС„РµСЂРёР·Р°С†РёРё.
+    /// РљР»СЋС‡ - РёРјСЏ С‚Р°Р±Р»РёС†С‹.
+    /// РќР° РјРѕРјРµРЅС‚ РѕР±СЂР°С‰РµРЅРёСЏ РєРѕР»Р»РµРєС†РёСЏ Р±Р»РѕРєРёСЂСѓРµС‚СЃСЏ РґР»СЏ РѕР±РµСЃРїРµС‡РµРЅРёСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
     /// </summary>
     private Dictionary<string, DBxTableCacheInfo> _TableCacheInfos;
 
@@ -310,7 +310,7 @@ namespace FreeLibSet.Data.Docs
           {
             DBxDocTypeBase DocTypeBase;
             if (!GlobalData.DocTypes.FindByTableName(tableName, out DocTypeBase))
-              throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "TableName");
+              throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅРѕРµ РёРјСЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"", "TableName");
 
             if (DocTypeBase.IndividualCacheColumns.AreAllDefaults)
               Info = null;
@@ -324,7 +324,7 @@ namespace FreeLibSet.Data.Docs
                 string ColumnName = Info.TableStruct.Columns[i].ColumnName;
                 if (DocTypeBase.Struct.Columns.Contains(ColumnName))
                   Info.IndividualColumnFlags[i] = DocTypeBase.IndividualCacheColumns[ColumnName];
-                // Для полей типа "Id" нет соответствующего описания в структуре полей DBxDocTypeBase.Struct
+                // Р”Р»СЏ РїРѕР»РµР№ С‚РёРїР° "Id" РЅРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ РѕРїРёСЃР°РЅРёСЏ РІ СЃС‚СЂСѓРєС‚СѓСЂРµ РїРѕР»РµР№ DBxDocTypeBase.Struct
               }
               Info.SetReadOnly();
             }
@@ -338,12 +338,12 @@ namespace FreeLibSet.Data.Docs
 
     DBxCacheLoadResponse IDBxCacheSource.LoadCachePages(DBxCacheLoadRequest request)
     {
-      // В одном запросе могут быть обращения к таблицам основной базы данных и к таблице двоичных данных
+      // Р’ РѕРґРЅРѕРј Р·Р°РїСЂРѕСЃРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РѕР±СЂР°С‰РµРЅРёСЏ Рє С‚Р°Р±Р»РёС†Р°Рј РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С… Рё Рє С‚Р°Р±Р»РёС†Рµ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…
 
-      // Разбиваем по таблицам
+      // Р Р°Р·Р±РёРІР°РµРј РїРѕ С‚Р°Р±Р»РёС†Р°Рј
       Dictionary<string, DBxCacheLoadRequest> dict1 = request.SplitByTables();
 
-      // Разбиваем по базам данных
+      // Р Р°Р·Р±РёРІР°РµРј РїРѕ Р±Р°Р·Р°Рј РґР°РЅРЅС‹С…
       Dictionary<DBxEntry, List<DBxCacheLoadRequest>> dict2 = new Dictionary<DBxEntry, List<DBxCacheLoadRequest>>();
       foreach (KeyValuePair<string, DBxCacheLoadRequest> pair1 in dict1)
       {
@@ -375,7 +375,7 @@ namespace FreeLibSet.Data.Docs
 
     void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstId)
     {
-      // Ничего не делаем
+      // РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
     }
 
     private DBxEntry GetEntry(string tableName)
@@ -389,13 +389,13 @@ namespace FreeLibSet.Data.Docs
     #endregion
 
     /// <summary>
-    /// Получение текстового представления для документа.
-    /// Если у пользователя нет прав на чтение документов, возвращает только идентификатор.
-    /// Наличие прав на отдельные поля не проверяется
+    /// РџРѕР»СѓС‡РµРЅРёРµ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р°.
+    /// Р•СЃР»Рё Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµС‚ РїСЂР°РІ РЅР° С‡С‚РµРЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ, РІРѕР·РІСЂР°С‰Р°РµС‚ С‚РѕР»СЊРєРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ.
+    /// РќР°Р»РёС‡РёРµ РїСЂР°РІ РЅР° РѕС‚РґРµР»СЊРЅС‹Рµ РїРѕР»СЏ РЅРµ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="id">Идентификатор документа или поддокумента</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public string GetTextValue(string tableName, Int32 id)
     {
       if (MainDBEntry.Permissions.TableModes[tableName] == DBxAccessMode.None)
@@ -416,7 +416,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          return "Id=" + id.ToString() + ". Ошибка. " + e.Message;
+          return "Id=" + id.ToString() + ". РћС€РёР±РєР°. " + e.Message;
         }
       }
     }
@@ -426,15 +426,15 @@ namespace FreeLibSet.Data.Docs
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если объект DBxRealDocProviderSource был переведен в режим "только чтение".
-    /// При этом нельзя устанавливать управляющие свойства.
-    /// Не имеет отношение к правам на изменение документов.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЉРµРєС‚ DBxRealDocProviderSource Р±С‹Р» РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// РџСЂРё СЌС‚РѕРј РЅРµР»СЊР·СЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЃРІРѕР№СЃС‚РІР°.
+    /// РќРµ РёРјРµРµС‚ РѕС‚РЅРѕС€РµРЅРёРµ Рє РїСЂР°РІР°Рј РЅР° РёР·РјРµРЅРµРЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ.
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Р“РµРЅРµСЂРёСЂСѓРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё IsReadOnly=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -443,9 +443,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Переводит объект в режим "только чтение".
-    /// Нет необходимости вызывать метод из пользовательского кода, так как он вызывается при 
-    /// создании DBxRealDocProvider.
+    /// РџРµСЂРµРІРѕРґРёС‚ РѕР±СЉРµРєС‚ РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// РќРµС‚ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґ РёР· РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РєРѕРґР°, С‚Р°Рє РєР°Рє РѕРЅ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё 
+    /// СЃРѕР·РґР°РЅРёРё DBxRealDocProvider.
     /// </summary>
     public void SetReadOnly()
     {
@@ -462,19 +462,19 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Обработчики
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё
 
     /// <summary>
-    /// Это событие вызывается до применения изменений к документам.
-    /// Обработчик события может, например, отслеживать отключение пользователя.
-    /// Обработчик должен быть потокобезопасным
+    /// Р­С‚Рѕ СЃРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ РїСЂРёРјРµРЅРµРЅРёСЏ РёР·РјРµРЅРµРЅРёР№ Рє РґРѕРєСѓРјРµРЅС‚Р°Рј.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РјРѕР¶РµС‚, РЅР°РїСЂРёРјРµСЂ, РѕС‚СЃР»РµР¶РёРІР°С‚СЊ РѕС‚РєР»СЋС‡РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј
     /// </summary>
     public event DBxBeforeApplyChangesEventHandler BeforeApplyChanges;
 
     /// <summary>
-    /// Вызывает событие BeforeApplyChanges, если обработчик установлен
+    /// Р’С‹Р·С‹РІР°РµС‚ СЃРѕР±С‹С‚РёРµ BeforeApplyChanges, РµСЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє СѓСЃС‚Р°РЅРѕРІР»РµРЅ
     /// </summary>
-    /// <param name="docSet">Набор данных, для которого применяются изменения</param>
+    /// <param name="docSet">РќР°Р±РѕСЂ РґР°РЅРЅС‹С…, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РїСЂРёРјРµРЅСЏСЋС‚СЃСЏ РёР·РјРµРЅРµРЅРёСЏ</param>
     public void PerformBeforeApplyChanges(DBxDocSet docSet)
     {
       if (BeforeApplyChanges != null)
@@ -488,18 +488,18 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Сериализуемая информация о DBxBinDataHandler, передаваемая в DBxDocProvider
+  /// РЎРµСЂРёР°Р»РёР·СѓРµРјР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ DBxBinDataHandler, РїРµСЂРµРґР°РІР°РµРјР°СЏ РІ DBxDocProvider
   /// </summary>
   [Serializable]
   internal class DBxBinDataHandlerInfo
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация объекта.
-    /// Аргумент может быть null
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р°.
+    /// РђСЂРіСѓРјРµРЅС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
     /// </summary>
-    /// <param name="handler">Обработчик двоичных данных на стороне сервера или null</param>
+    /// <param name="handler">РћР±СЂР°Р±РѕС‚С‡РёРє РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С… РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР° РёР»Рё null</param>
     public DBxBinDataHandlerInfo(DBxBinDataHandler handler)
     {
       if (handler != null)
@@ -507,8 +507,8 @@ namespace FreeLibSet.Data.Docs
         _UseBinData = handler.UseBinData;
         _UseFiles = handler.UseFiles;
 
-        // Объект DBxStruct, в отличие от DBxTableStruct, не является сериализуемым.
-        // Нужно хранить в полях DBxTableStruct
+        // РћР±СЉРµРєС‚ DBxStruct, РІ РѕС‚Р»РёС‡РёРµ РѕС‚ DBxTableStruct, РЅРµ СЏРІР»СЏРµС‚СЃСЏ СЃРµСЂРёР°Р»РёР·СѓРµРјС‹Рј.
+        // РќСѓР¶РЅРѕ С…СЂР°РЅРёС‚СЊ РІ РїРѕР»СЏС… DBxTableStruct
         DBxStruct dbs = new DBxStruct();
         handler.AddMainTableStructs(dbs);
         _BinDataTableStruct = dbs.Tables["BinData"];
@@ -518,7 +518,7 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     public bool UseBinData { get { return _UseBinData; } }
     private bool _UseBinData;
@@ -534,7 +534,7 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     public DBxTableStruct GetTableStruct(string tableName)
     {
@@ -556,13 +556,13 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Реализация свойств DBxDocProvider и DBxRealDocProviderSource.StructSource
-  /// Получение "урезанных" структур, в соответствии с правами пользователя.
-  /// Класс является потокобезопасным
+  /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІ DBxDocProvider Рё DBxRealDocProviderSource.StructSource
+  /// РџРѕР»СѓС‡РµРЅРёРµ "СѓСЂРµР·Р°РЅРЅС‹С…" СЃС‚СЂСѓРєС‚СѓСЂ, РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РїСЂР°РІР°РјРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј
   /// </summary>
   internal class DBxDocStructSource : IDBxStructSource
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal DBxDocStructSource(DBxDocTypes docTypes, DBxPermissions dbPermissions, DBxBinDataHandlerInfo binDataInfo)
     {
@@ -570,31 +570,31 @@ namespace FreeLibSet.Data.Docs
       _DBPermissions = dbPermissions;
       _BinDataInfo = binDataInfo;
 
-      _StructDict = new Dictionary<string, DBxTableStruct>(); // используем в качестве блокируемого объекта
+      _StructDict = new Dictionary<string, DBxTableStruct>(); // РёСЃРїРѕР»СЊР·СѓРµРј РІ РєР°С‡РµСЃС‚РІРµ Р±Р»РѕРєРёСЂСѓРµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°
     }
 
     #endregion
 
-    #region Исходные данные
+    #region РСЃС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ
 
     DBxDocTypes _DocTypes;
     DBxPermissions _DBPermissions;
     DBxBinDataHandlerInfo _BinDataInfo;
 
     /// <summary>
-    /// Объект для синхронизации во всех операциях.
-    /// Также стараемся обходиться без блокировки
+    /// РћР±СЉРµРєС‚ РґР»СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РІРѕ РІСЃРµС… РѕРїРµСЂР°С†РёСЏС….
+    /// РўР°РєР¶Рµ СЃС‚Р°СЂР°РµРјСЃСЏ РѕР±С…РѕРґРёС‚СЊСЃСЏ Р±РµР· Р±Р»РѕРєРёСЂРѕРІРєРё
     /// </summary>
     private object SyncRoot { get { return _StructDict; } }
 
     #endregion
 
-    #region Полная структура
+    #region РџРѕР»РЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°
 
     /// <summary>
-    /// Структура основной базы данных, созданная DBxDocTypes.GetMainDBStruct().
-    /// Содержит все поля документов и поддокументов, включая те, к которым нет доступа.
-    /// Инициализируется при первом обращении
+    /// РЎС‚СЂСѓРєС‚СѓСЂР° РѕСЃРЅРѕРІРЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, СЃРѕР·РґР°РЅРЅР°СЏ DBxDocTypes.GetMainDBStruct().
+    /// РЎРѕРґРµСЂР¶РёС‚ РІСЃРµ РїРѕР»СЏ РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ, РІРєР»СЋС‡Р°СЏ С‚Рµ, Рє РєРѕС‚РѕСЂС‹Рј РЅРµС‚ РґРѕСЃС‚СѓРїР°.
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РѕР±СЂР°С‰РµРЅРёРё
     /// </summary>
     /// <returns></returns>
     private DBxStruct MainDBstruct
@@ -610,11 +610,11 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Список таблиц, к которым есть доступ
+    #region РЎРїРёСЃРѕРє С‚Р°Р±Р»РёС†, Рє РєРѕС‚РѕСЂС‹Рј РµСЃС‚СЊ РґРѕСЃС‚СѓРї
 
     /// <summary>
-    /// Возвращает полный список таблиц, к которым у пользователя есть доступ
-    /// Включает таблицы "BinData" и "FileNames"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС†, Рє РєРѕС‚РѕСЂС‹Рј Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РµСЃС‚СЊ РґРѕСЃС‚СѓРї
+    /// Р’РєР»СЋС‡Р°РµС‚ С‚Р°Р±Р»РёС†С‹ "BinData" Рё "FileNames"
     /// </summary>
     /// <returns></returns>
     public string[] GetAllTableNames()
@@ -655,25 +655,25 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Урезанные структуры
+    #region РЈСЂРµР·Р°РЅРЅС‹Рµ СЃС‚СЂСѓРєС‚СѓСЂС‹
 
     /// <summary>
-    /// Урезанные структуры.
-    /// Ключ - имя таблицы, значение - структура
+    /// РЈСЂРµР·Р°РЅРЅС‹Рµ СЃС‚СЂСѓРєС‚СѓСЂС‹.
+    /// РљР»СЋС‡ - РёРјСЏ С‚Р°Р±Р»РёС†С‹, Р·РЅР°С‡РµРЅРёРµ - СЃС‚СЂСѓРєС‚СѓСЂР°
     /// </summary>
     private Dictionary<string, DBxTableStruct> _StructDict;
 
     /// <summary>
-    /// Возвращает структуру таблицы документа или поддокумента, а также таблиц
-    /// "BinData" и "FileNames".
-    /// В структуру таблицы входят все служебные поля (при соответствующих
-    /// установленных флажках в DBxDocTypes): Id, Deleted, CreateUserId и т.п.
-    /// В структуру не входят поля, к которым у пользователя нет разрешения на доступ.
-    /// Если запрошено несуществующее имя таблицы, генерируется исключение.
-    /// Если у пользователя нет разрешения на просмотр таблицы, генерируется исключение.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂСѓРєС‚СѓСЂСѓ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°, Р° С‚Р°РєР¶Рµ С‚Р°Р±Р»РёС†
+    /// "BinData" Рё "FileNames".
+    /// Р’ СЃС‚СЂСѓРєС‚СѓСЂСѓ С‚Р°Р±Р»РёС†С‹ РІС…РѕРґСЏС‚ РІСЃРµ СЃР»СѓР¶РµР±РЅС‹Рµ РїРѕР»СЏ (РїСЂРё СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС…
+    /// СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… С„Р»Р°Р¶РєР°С… РІ DBxDocTypes): Id, Deleted, CreateUserId Рё С‚.Рї.
+    /// Р’ СЃС‚СЂСѓРєС‚СѓСЂСѓ РЅРµ РІС…РѕРґСЏС‚ РїРѕР»СЏ, Рє РєРѕС‚РѕСЂС‹Рј Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµС‚ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї.
+    /// Р•СЃР»Рё Р·Р°РїСЂРѕС€РµРЅРѕ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРµ РёРјСЏ С‚Р°Р±Р»РёС†С‹, РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ.
+    /// Р•СЃР»Рё Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµС‚ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РїСЂРѕСЃРјРѕС‚СЂ С‚Р°Р±Р»РёС†С‹, РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <returns>Пустая таблица, содержащая структуру. В ней присутствует поле Id </returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>РџСѓСЃС‚Р°СЏ С‚Р°Р±Р»РёС†Р°, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ СЃС‚СЂСѓРєС‚СѓСЂСѓ. Р’ РЅРµР№ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РїРѕР»Рµ Id </returns>
     public DBxTableStruct GetTableStruct(string tableName)
     {
       //try
@@ -707,12 +707,12 @@ namespace FreeLibSet.Data.Docs
 
       DBxTableStruct ts1 = MainDBstruct.Tables[tableName];
       if (ts1 == null)
-        throw new ArgumentException("Неизвестная таблица \"" + tableName + "\"", "tableName");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅР°СЏ С‚Р°Р±Р»РёС†Р° \"" + tableName + "\"", "tableName");
 
       if (_DBPermissions.TableModes[tableName] == DBxAccessMode.None)
-        throw new DBxAccessException("Доступ к таблице \"" + tableName + "\" запрещен");
+        throw new DBxAccessException("Р”РѕСЃС‚СѓРї Рє С‚Р°Р±Р»РёС†Рµ \"" + tableName + "\" Р·Р°РїСЂРµС‰РµРЅ");
 
-      // Создаем "урезанную" копию, проверяя права пользователя.
+      // РЎРѕР·РґР°РµРј "СѓСЂРµР·Р°РЅРЅСѓСЋ" РєРѕРїРёСЋ, РїСЂРѕРІРµСЂСЏСЏ РїСЂР°РІР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
       DBxTableStruct ts2 = new DBxTableStruct(tableName);
       for (int i = 0; i < ts1.Columns.Count; i++)
       {
@@ -727,9 +727,9 @@ namespace FreeLibSet.Data.Docs
     #endregion
 
     /// <summary>
-    /// Коллекция описаний полей таблиц для буферизации.
-    /// Ключ - имя таблицы.
-    /// На момент обращения коллекция блокируется для обеспечения потокобезопасности
+    /// РљРѕР»Р»РµРєС†РёСЏ РѕРїРёСЃР°РЅРёР№ РїРѕР»РµР№ С‚Р°Р±Р»РёС† РґР»СЏ Р±СѓС„РµСЂРёР·Р°С†РёРё.
+    /// РљР»СЋС‡ - РёРјСЏ С‚Р°Р±Р»РёС†С‹.
+    /// РќР° РјРѕРјРµРЅС‚ РѕР±СЂР°С‰РµРЅРёСЏ РєРѕР»Р»РµРєС†РёСЏ Р±Р»РѕРєРёСЂСѓРµС‚СЃСЏ РґР»СЏ РѕР±РµСЃРїРµС‡РµРЅРёСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
     /// </summary>
     private Dictionary<string, DBxTableCacheInfo> _TableCacheInfos;
 
@@ -745,7 +745,7 @@ namespace FreeLibSet.Data.Docs
         {
           DBxTableStruct ts = GetTableStruct(tableName);
           if (ts == null)
-            throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
+            throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅРѕРµ РёРјСЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"", "tableName");
           info = new DBxTableCacheInfo(ts);
 
           DBxDocTypeBase docTypeBase;
@@ -758,7 +758,7 @@ namespace FreeLibSet.Data.Docs
                 string ColumnName = info.TableStruct.Columns[i].ColumnName;
                 if (docTypeBase.Struct.Columns.Contains(ColumnName))
                   info.IndividualColumnFlags[i] = docTypeBase.IndividualCacheColumns[ColumnName];
-                // Для полей типа "Id" нет соответствующего описания в структуре полей DBxDocTypeBase.Struct
+                // Р”Р»СЏ РїРѕР»РµР№ С‚РёРїР° "Id" РЅРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ РѕРїРёСЃР°РЅРёСЏ РІ СЃС‚СЂСѓРєС‚СѓСЂРµ РїРѕР»РµР№ DBxDocTypeBase.Struct
               }
             }
           }

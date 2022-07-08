@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,17 +11,17 @@ namespace FreeLibSet.Models.Tree
 {
 
   /// <summary>
-  /// Простейшая модель "дерева", содержащая узлы только одного уровня.
-  /// Узлы задаются списком IList.
-  /// Содержит методы для добавления, удаления и изменения узлов.
-  /// Если список предназначен только для просмотра, используйте класс SimpleListTreeModel
+  /// РџСЂРѕСЃС‚РµР№С€Р°СЏ РјРѕРґРµР»СЊ "РґРµСЂРµРІР°", СЃРѕРґРµСЂР¶Р°С‰Р°СЏ СѓР·Р»С‹ С‚РѕР»СЊРєРѕ РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ.
+  /// РЈР·Р»С‹ Р·Р°РґР°СЋС‚СЃСЏ СЃРїРёСЃРєРѕРј IList.
+  /// РЎРѕРґРµСЂР¶РёС‚ РјРµС‚РѕРґС‹ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ, СѓРґР°Р»РµРЅРёСЏ Рё РёР·РјРµРЅРµРЅРёСЏ СѓР·Р»РѕРІ.
+  /// Р•СЃР»Рё СЃРїРёСЃРѕРє РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°, РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РєР»Р°СЃСЃ SimpleListTreeModel
   /// </summary>
   public class ListTreeModel : TreeModelBase
   {
-    #region Конструторы
+    #region РљРѕРЅСЃС‚СЂСѓС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает модель, первоначально не содержащую ни одного узла
+    /// РЎРѕР·РґР°РµС‚ РјРѕРґРµР»СЊ, РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕ РЅРµ СЃРѕРґРµСЂР¶Р°С‰СѓСЋ РЅРё РѕРґРЅРѕРіРѕ СѓР·Р»Р°
     /// </summary>
     public ListTreeModel()
     {
@@ -29,11 +29,11 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Создает модель с заданным списком узлов.
-    /// Передаваемый список <paramref name="list"/> является "рабочим".
-    /// Методы изменения узлов в ListModel будут вносить изменения в этот список.
+    /// РЎРѕР·РґР°РµС‚ РјРѕРґРµР»СЊ СЃ Р·Р°РґР°РЅРЅС‹Рј СЃРїРёСЃРєРѕРј СѓР·Р»РѕРІ.
+    /// РџРµСЂРµРґР°РІР°РµРјС‹Р№ СЃРїРёСЃРѕРє <paramref name="list"/> СЏРІР»СЏРµС‚СЃСЏ "СЂР°Р±РѕС‡РёРј".
+    /// РњРµС‚РѕРґС‹ РёР·РјРµРЅРµРЅРёСЏ СѓР·Р»РѕРІ РІ ListModel Р±СѓРґСѓС‚ РІРЅРѕСЃРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ РІ СЌС‚РѕС‚ СЃРїРёСЃРѕРє.
     /// </summary>
-    /// <param name="list">Список</param>
+    /// <param name="list">РЎРїРёСЃРѕРє</param>
     public ListTreeModel(IList list)
     {
       _list = list;
@@ -42,22 +42,22 @@ namespace FreeLibSet.Models.Tree
 
     #endregion
 
-    #region Методы ITreeModel
+    #region РњРµС‚РѕРґС‹ ITreeModel
 
     /// <summary>
-    /// Возвращает рабочий список в качестве перечислителя
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р±РѕС‡РёР№ СЃРїРёСЃРѕРє РІ РєР°С‡РµСЃС‚РІРµ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЏ
     /// </summary>
-    /// <param name="treePath">Игнорируется</param>
-    /// <returns>Список</returns>
+    /// <param name="treePath">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <returns>РЎРїРёСЃРѕРє</returns>
     public override IEnumerable GetChildren(TreePath treePath)
     {
       return _list;
     }
 
     /// <summary>
-    /// Возвращает true, так как "дерево" не содержит узлов, кроме верхнего уровня.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, С‚Р°Рє РєР°Рє "РґРµСЂРµРІРѕ" РЅРµ СЃРѕРґРµСЂР¶РёС‚ СѓР·Р»РѕРІ, РєСЂРѕРјРµ РІРµСЂС…РЅРµРіРѕ СѓСЂРѕРІРЅСЏ.
     /// </summary>
-    /// <param name="treePath">Игнорируется</param>
+    /// <param name="treePath">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     /// <returns>true</returns>
     public override bool IsLeaf(TreePath treePath)
     {
@@ -66,10 +66,10 @@ namespace FreeLibSet.Models.Tree
 
     #endregion
 
-    #region Методы ICollection
+    #region РњРµС‚РѕРґС‹ ICollection
 
     /// <summary>
-    /// Возвращает число узлов в списке
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‡РёСЃР»Рѕ СѓР·Р»РѕРІ РІ СЃРїРёСЃРєРµ
     /// </summary>
     public int Count
     {
@@ -77,9 +77,9 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Добавляет несколько узлов в конец списка
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РЅРµСЃРєРѕР»СЊРєРѕ СѓР·Р»РѕРІ РІ РєРѕРЅРµС† СЃРїРёСЃРєР°
     /// </summary>
-    /// <param name="items">Добавляемые узлы</param>
+    /// <param name="items">Р”РѕР±Р°РІР»СЏРµРјС‹Рµ СѓР·Р»С‹</param>
     public void AddRange(IEnumerable items)
     {
       foreach (object obj in items)
@@ -88,9 +88,9 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Возвращает один узел в конец списка
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕРґРёРЅ СѓР·РµР» РІ РєРѕРЅРµС† СЃРїРёСЃРєР°
     /// </summary>
-    /// <param name="item">Добавляемый узел</param>
+    /// <param name="item">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ СѓР·РµР»</param>
     public void Add(object item)
     {
       _list.Add(item);
@@ -98,7 +98,7 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Очищает список
+    /// РћС‡РёС‰Р°РµС‚ СЃРїРёСЃРѕРє
     /// </summary>
     public void Clear()
     {
@@ -110,9 +110,9 @@ namespace FreeLibSet.Models.Tree
   }
 
   /// <summary>
-  /// Простейший переходник для списка, чтобы отображать его в дереве.
-  /// Принимает интерфейс IEnumerable.
-  /// Список предназначен только для просмотра, изменение списка не предусмотрено.
+  /// РџСЂРѕСЃС‚РµР№С€РёР№ РїРµСЂРµС…РѕРґРЅРёРє РґР»СЏ СЃРїРёСЃРєР°, С‡С‚РѕР±С‹ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ РµРіРѕ РІ РґРµСЂРµРІРµ.
+  /// РџСЂРёРЅРёРјР°РµС‚ РёРЅС‚РµСЂС„РµР№СЃ IEnumerable.
+  /// РЎРїРёСЃРѕРє РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°, РёР·РјРµРЅРµРЅРёРµ СЃРїРёСЃРєР° РЅРµ РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅРѕ.
   /// </summary>
   public sealed class SimpleListTreeModel : TreeModelBase
   {
@@ -121,14 +121,14 @@ namespace FreeLibSet.Models.Tree
     // http://www.codeproject.com/Articles/14741/Advanced-TreeView-for-NET
     // http://sourceforge.net/projects/treeviewadv/
     //
-    // В оригинале - класс TreeListAdapter
+    // Р’ РѕСЂРёРіРёРЅР°Р»Рµ - РєР»Р°СЃСЃ TreeListAdapter
 
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает "модель" - переходник
+    /// РЎРѕР·РґР°РµС‚ "РјРѕРґРµР»СЊ" - РїРµСЂРµС…РѕРґРЅРёРє
     /// </summary>
-    /// <param name="list">Исходный список</param>
+    /// <param name="list">РСЃС…РѕРґРЅС‹Р№ СЃРїРёСЃРѕРє</param>
     public SimpleListTreeModel(System.Collections.IEnumerable list)
     {
       if (list == null)
@@ -143,10 +143,10 @@ namespace FreeLibSet.Models.Tree
     #region ITreeModel Members
 
     /// <summary>
-    /// Возращает список для TreePath.Empty и фиктивный перечислитель для непустого пути
+    /// Р’РѕР·СЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РґР»СЏ TreePath.Empty Рё С„РёРєС‚РёРІРЅС‹Р№ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РґР»СЏ РЅРµРїСѓСЃС‚РѕРіРѕ РїСѓС‚Рё
     /// </summary>
-    /// <param name="treePath">Путь к корневому узлу</param>
-    /// <returns>Перечислитель</returns>
+    /// <param name="treePath">РџСѓС‚СЊ Рє РєРѕСЂРЅРµРІРѕРјСѓ СѓР·Р»Сѓ</param>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ</returns>
     public override System.Collections.IEnumerable GetChildren(TreePath treePath)
     {
       if (treePath.IsEmpty)
@@ -156,9 +156,9 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Всегда возвращает true
+    /// Р’СЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ true
     /// </summary>
-    /// <param name="treePath">Игнорируется</param>
+    /// <param name="treePath">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     /// <returns>true</returns>
     public override bool IsLeaf(TreePath treePath)
     {

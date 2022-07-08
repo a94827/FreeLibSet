@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,20 +11,20 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Иерархическое перечисление адресов ФИАС
-  /// Прикладной код может создать объект FiasEnumerable, установить управляющие свойства и выполнить цикл foreach.
-  /// В процессе перебора, прикладному коду может передаваться один и тот же экземпляр класса FiasAddress.
-  /// Прикладной код не должен запоминать ссылку на этот объект, так как адрес будет перезатерт на следующем цикле.
-  /// Для сохранения копии адреса используйте метод FiasAddress.Clone().
+  /// РРµСЂР°СЂС…РёС‡РµСЃРєРѕРµ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ Р°РґСЂРµСЃРѕРІ Р¤РРђРЎ
+  /// РџСЂРёРєР»Р°РґРЅРѕР№ РєРѕРґ РјРѕР¶РµС‚ СЃРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ FiasEnumerable, СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЃРІРѕР№СЃС‚РІР° Рё РІС‹РїРѕР»РЅРёС‚СЊ С†РёРєР» foreach.
+  /// Р’ РїСЂРѕС†РµСЃСЃРµ РїРµСЂРµР±РѕСЂР°, РїСЂРёРєР»Р°РґРЅРѕРјСѓ РєРѕРґСѓ РјРѕР¶РµС‚ РїРµСЂРµРґР°РІР°С‚СЊСЃСЏ РѕРґРёРЅ Рё С‚РѕС‚ Р¶Рµ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР° FiasAddress.
+  /// РџСЂРёРєР»Р°РґРЅРѕР№ РєРѕРґ РЅРµ РґРѕР»Р¶РµРЅ Р·Р°РїРѕРјРёРЅР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° СЌС‚РѕС‚ РѕР±СЉРµРєС‚, С‚Р°Рє РєР°Рє Р°РґСЂРµСЃ Р±СѓРґРµС‚ РїРµСЂРµР·Р°С‚РµСЂС‚ РЅР° СЃР»РµРґСѓСЋС‰РµРј С†РёРєР»Рµ.
+  /// Р”Р»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РєРѕРїРёРё Р°РґСЂРµСЃР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ FiasAddress.Clone().
   /// </summary>
   public sealed class FiasEnumerable : IEnumerable<FiasAddress>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект с параметрами по умолчанию
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃ РїР°СЂР°РјРµС‚СЂР°РјРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
-    /// <param name="source">Источник данных ФИАС. Не может быть null</param>
+    /// <param name="source">РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… Р¤РРђРЎ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public FiasEnumerable(IFiasSource source)
     {
       if (source == null)
@@ -36,16 +36,16 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Источник данных ФИАС. Задается в конструкторе
+    /// РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… Р¤РРђРЎ. Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public IFiasSource Source { get { return _Source; } }
     private IFiasSource _Source;
 
     /// <summary>
-    /// Базовый адрес, от которого должно выполняться перечисление
+    /// Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ, РѕС‚ РєРѕС‚РѕСЂРѕРіРѕ РґРѕР»Р¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ
     /// </summary>
     public FiasAddress BaseAddress
     {
@@ -60,7 +60,7 @@ namespace FreeLibSet.FIAS
     private FiasAddress _BaseAddress;
 
     /// <summary>
-    /// Самый нижний уровень, до которого нужно доходить при перечислении адресов.
+    /// РЎР°РјС‹Р№ РЅРёР¶РЅРёР№ СѓСЂРѕРІРµРЅСЊ, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ РЅСѓР¶РЅРѕ РґРѕС…РѕРґРёС‚СЊ РїСЂРё РїРµСЂРµС‡РёСЃР»РµРЅРёРё Р°РґСЂРµСЃРѕРІ.
     /// </summary>
     public FiasLevel BottomLevel
     {
@@ -96,9 +96,9 @@ namespace FreeLibSet.FIAS
     #region IEnumerable<FiasAddress> Members
 
     /// <summary>
-    /// Создает перечислитель
+    /// РЎРѕР·РґР°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
     /// </summary>
-    /// <returns>Перечислитель</returns>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ</returns>
     public IEnumerator<FiasAddress> GetEnumerator()
     {
       return new FiasEnumerator(this);
@@ -113,7 +113,7 @@ namespace FreeLibSet.FIAS
 
     private class LevelInfo
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public LevelInfo(FiasLevel level, FiasAddress[] addresses)
       {
@@ -125,34 +125,34 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Свойства и поля
+      #region РЎРІРѕР№СЃС‚РІР° Рё РїРѕР»СЏ
 
       public FiasLevel Level { get { return _Level; } }
       private FiasLevel _Level;
 
       /// <summary>
-      /// Список адресов.
-      /// Он заполняется при открытии страницы, чтобы сразу заполнить адреса за один прохол
+      /// РЎРїРёСЃРѕРє Р°РґСЂРµСЃРѕРІ.
+      /// РћРЅ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРё РѕС‚РєСЂС‹С‚РёРё СЃС‚СЂР°РЅРёС†С‹, С‡С‚РѕР±С‹ СЃСЂР°Р·Сѓ Р·Р°РїРѕР»РЅРёС‚СЊ Р°РґСЂРµСЃР° Р·Р° РѕРґРёРЅ РїСЂРѕС…РѕР»
       /// </summary>
       public FiasAddress[] Addresses { get { return _Addresses; } }
       private FiasAddress[] _Addresses;
 
       /// <summary>
-      /// Текущая строка в списке DataView.
-      /// Исходно имеет значение (-1). Инкремент выполняется перед получением очередного адреса
+      /// РўРµРєСѓС‰Р°СЏ СЃС‚СЂРѕРєР° РІ СЃРїРёСЃРєРµ DataView.
+      /// РСЃС…РѕРґРЅРѕ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ (-1). РРЅРєСЂРµРјРµРЅС‚ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРµСЂРµРґ РїРѕР»СѓС‡РµРЅРёРµРј РѕС‡РµСЂРµРґРЅРѕРіРѕ Р°РґСЂРµСЃР°
       /// </summary>
       public int Index;
 
       /// <summary>
-      /// Используется для перебора дочерних узлов
-      /// Например, для региона (Level=Region) сначала надо перебрать районы (ChildLevel=District), а потом - города (ChildLevel=City).
-      /// Исходно и при переходе к очередной строке получает значение Unknown, чтобы вернуть текущую строку
+      /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РїРµСЂРµР±РѕСЂР° РґРѕС‡РµСЂРЅРёС… СѓР·Р»РѕРІ
+      /// РќР°РїСЂРёРјРµСЂ, РґР»СЏ СЂРµРіРёРѕРЅР° (Level=Region) СЃРЅР°С‡Р°Р»Р° РЅР°РґРѕ РїРµСЂРµР±СЂР°С‚СЊ СЂР°Р№РѕРЅС‹ (ChildLevel=District), Р° РїРѕС‚РѕРј - РіРѕСЂРѕРґР° (ChildLevel=City).
+      /// РСЃС…РѕРґРЅРѕ Рё РїСЂРё РїРµСЂРµС…РѕРґРµ Рє РѕС‡РµСЂРµРґРЅРѕР№ СЃС‚СЂРѕРєРµ РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ Unknown, С‡С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊ С‚РµРєСѓС‰СѓСЋ СЃС‚СЂРѕРєСѓ
       /// </summary>
       public FiasLevel ChildLevel;
 
       #endregion
 
-      #region Для отладки
+      #region Р”Р»СЏ РѕС‚Р»Р°РґРєРё
 
       public override string ToString()
       {
@@ -165,9 +165,9 @@ namespace FreeLibSet.FIAS
     private class FiasEnumerator : SimpleDisposableObject, IEnumerator<FiasAddress>
     {
       // 03.01.2021
-      // Можно использовать базовый класс без деструктора
+      // РњРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ Р±РµР· РґРµСЃС‚СЂСѓРєС‚РѕСЂР°
 
-      #region Конструктор и Dispose
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
       public FiasEnumerator(FiasEnumerable owner)
       {
@@ -175,19 +175,19 @@ namespace FreeLibSet.FIAS
         _Handler = new FiasHandler(owner._Source);
         _Handler.FillAddress(owner.BaseAddress);
         if (owner.BaseAddress.Messages.Severity == ErrorMessageKind.Error)
-          throw new InvalidOperationException("Базовый адрес содержит ошибки");
+          throw new InvalidOperationException("Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ СЃРѕРґРµСЂР¶РёС‚ РѕС€РёР±РєРё");
         _Stack = new Stack<LevelInfo>();
-        _Current = new FiasAddress(); // используем единственный объект
+        _Current = new FiasAddress(); // РёСЃРїРѕР»СЊР·СѓРµРј РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РѕР±СЉРµРєС‚
 
         FiasLevel firstLevel = FiasLevel.Region;
         if (!owner._BaseAddress.IsEmpty)
           firstLevel = owner._BaseAddress.GuidBottomLevel;
         int p1 = FiasTools.AllLevelIndexer.IndexOf(firstLevel);
         if (p1 < 0)
-          throw new BugException("Неизвестный первый уровень: " + firstLevel.ToString());
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ РїРµСЂРІС‹Р№ СѓСЂРѕРІРµРЅСЊ: " + firstLevel.ToString());
         int p2 = FiasTools.AllLevelIndexer.IndexOf(owner.BottomLevel);
         if (p2 < 0)
-          throw new BugException("Неизвестный нижний уровень: BottomLevel=" + owner.BottomLevel.ToString());
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ РЅРёР¶РЅРёР№ СѓСЂРѕРІРµРЅСЊ: BottomLevel=" + owner.BottomLevel.ToString());
         List<FiasLevel> lst = new List<FiasLevel>();
         for (int p = p1; p <= p2; p++)
         {
@@ -196,14 +196,14 @@ namespace FreeLibSet.FIAS
           {
             case FiasLevel.Building:
             case FiasLevel.Structure:
-              // Эти равны дому
+              // Р­С‚Рё СЂР°РІРЅС‹ РґРѕРјСѓ
               break;
             case FiasLevel.AutonomousArea:
             case FiasLevel.InnerCityArea:
             case FiasLevel.PlanningStructure:
             case FiasLevel.Settlement:
             case FiasLevel.LandPlot:
-              // Эти уровни не нужны пока
+              // Р­С‚Рё СѓСЂРѕРІРЅРё РЅРµ РЅСѓР¶РЅС‹ РїРѕРєР°
               break;
             default:
               lst.Add(lvl);
@@ -211,7 +211,7 @@ namespace FreeLibSet.FIAS
           }
         }
         if (lst.Count == 0)
-          throw new InvalidOperationException("Базовый адрес \"" + owner.BaseAddress.ToString() + "\" не совместим с заданным нижним уровнем перечисления BottomLevel=" + owner.BottomLevel.ToString());
+          throw new InvalidOperationException("Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ \"" + owner.BaseAddress.ToString() + "\" РЅРµ СЃРѕРІРјРµСЃС‚РёРј СЃ Р·Р°РґР°РЅРЅС‹Рј РЅРёР¶РЅРёРј СѓСЂРѕРІРЅРµРј РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ BottomLevel=" + owner.BottomLevel.ToString());
         _EnumLevels = lst.ToArray();
         _EnumLevelIndexer = new ArrayIndexer<FiasLevel>(_EnumLevels);
         _TopChildLevel = FiasLevel.Unknown;
@@ -226,21 +226,21 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Списки уровней
+      #region РЎРїРёСЃРєРё СѓСЂРѕРІРЅРµР№
 
       /// <summary>
-      /// Уровни, которые будут перечисляться адреса, начиная с BaseAddress.GuidBottomLevel и заканчивая BottomLevel
+      /// РЈСЂРѕРІРЅРё, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РїРµСЂРµС‡РёСЃР»СЏС‚СЊСЃСЏ Р°РґСЂРµСЃР°, РЅР°С‡РёРЅР°СЏ СЃ BaseAddress.GuidBottomLevel Рё Р·Р°РєР°РЅС‡РёРІР°СЏ BottomLevel
       /// </summary>
       private FiasLevel[] _EnumLevels;
 
       /// <summary>
-      /// Индексатор для массива _EnumLevels
+      /// РРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РјР°СЃСЃРёРІР° _EnumLevels
       /// </summary>
       private ArrayIndexer<FiasLevel> _EnumLevelIndexer;
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       private FiasEnumerable _Owner;
 
@@ -249,7 +249,7 @@ namespace FreeLibSet.FIAS
       private Stack<LevelInfo> _Stack;
 
       /// <summary>
-      /// Значение, аналогичное LevelInfo.ChildLevel, но используемое для переключения адреса верхнего уровня
+      /// Р—РЅР°С‡РµРЅРёРµ, Р°РЅР°Р»РѕРіРёС‡РЅРѕРµ LevelInfo.ChildLevel, РЅРѕ РёСЃРїРѕР»СЊР·СѓРµРјРѕРµ РґР»СЏ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ Р°РґСЂРµСЃР° РІРµСЂС…РЅРµРіРѕ СѓСЂРѕРІРЅСЏ
       /// </summary>
       private FiasLevel _TopChildLevel;
 
@@ -275,14 +275,14 @@ namespace FreeLibSet.FIAS
       }
 
       /// <summary>
-      /// Основной метод
+      /// РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ
       /// </summary>
       /// <returns></returns>
       public bool MoveNext()
       {
         if (_Stack.Count == 0)
         {
-          // Первый шаг
+          // РџРµСЂРІС‹Р№ С€Р°Рі
           _TopChildLevel = GetNextLevel(_Owner.BaseAddress.GuidBottomLevel, _Owner.BaseAddress.GuidBottomLevel);
           AddNextLevel(_Owner.BaseAddress, _TopChildLevel);
           if (_TopChildLevel == FiasLevel.Unknown)
@@ -304,7 +304,7 @@ namespace FreeLibSet.FIAS
             int pCol = li.DV.Table.Columns.IndexOf(colName);
 #if DEBUG
             if (pCol < 0)
-              throw new BugException("Не найден столбец " + colName);
+              throw new BugException("РќРµ РЅР°Р№РґРµРЅ СЃС‚РѕР»Р±РµС† " + colName);
 #endif
 
             li.Index = -2;
@@ -318,7 +318,7 @@ namespace FreeLibSet.FIAS
               }
             }
             if (li.Index == -2)
-              throw new InvalidOperationException("Не найден " + colName + "=" + g.ToString());
+              throw new InvalidOperationException("РќРµ РЅР°Р№РґРµРЅ " + colName + "=" + g.ToString());
 #endif
         }
 
@@ -336,14 +336,14 @@ namespace FreeLibSet.FIAS
           currLI.Index++;
           if (currLI.Index < currLI.Addresses.Length)
           {
-            // Возвращаем текущий адрес
+            // Р’РѕР·РІСЂР°С‰Р°РµРј С‚РµРєСѓС‰РёР№ Р°РґСЂРµСЃ
             _Current = currLI.Addresses[currLI.Index];
 
-            // В следующий раз требуется дочерний уровень
+            // Р’ СЃР»РµРґСѓСЋС‰РёР№ СЂР°Р· С‚СЂРµР±СѓРµС‚СЃСЏ РґРѕС‡РµСЂРЅРёР№ СѓСЂРѕРІРµРЅСЊ
             currLI.ChildLevel = GetNextLevel(currLI.Level, currLI.Level);
             if (currLI.ChildLevel == FiasLevel.Unknown)
             {
-              // Нет ни одного дочернего уровня
+              // РќРµС‚ РЅРё РѕРґРЅРѕРіРѕ РґРѕС‡РµСЂРЅРµРіРѕ СѓСЂРѕРІРЅСЏ
             }
             else
             {
@@ -354,7 +354,7 @@ namespace FreeLibSet.FIAS
           }
           else
           {
-            // Только что обошли дочерние адреса одного уровня и надо посмотреть другие уровни
+            // РўРѕР»СЊРєРѕ С‡С‚Рѕ РѕР±РѕС€Р»Рё РґРѕС‡РµСЂРЅРёРµ Р°РґСЂРµСЃР° РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ Рё РЅР°РґРѕ РїРѕСЃРјРѕС‚СЂРµС‚СЊ РґСЂСѓРіРёРµ СѓСЂРѕРІРЅРё
             // 
             _Stack.Pop();
             if (_Stack.Count == 0)
@@ -371,7 +371,7 @@ namespace FreeLibSet.FIAS
                 if (_TopChildLevel == FiasLevel.Unknown)
                   return false;
                 if (FiasTools.IsInheritableLevel(_Owner._BaseAddress.GuidBottomLevel, _TopChildLevel, false))
-                  break; // ненаследуемые уровни точно не нужны
+                  break; // РЅРµРЅР°СЃР»РµРґСѓРµРјС‹Рµ СѓСЂРѕРІРЅРё С‚РѕС‡РЅРѕ РЅРµ РЅСѓР¶РЅС‹
               }
               AddNextLevel(_Owner._BaseAddress, _TopChildLevel);
               continue;
@@ -394,23 +394,23 @@ namespace FreeLibSet.FIAS
             }
           }
 
-          //// На текущем уровне кончились адреса.
-          //// Переходим к верхнему уровню
+          //// РќР° С‚РµРєСѓС‰РµРј СѓСЂРѕРІРЅРµ РєРѕРЅС‡РёР»РёСЃСЊ Р°РґСЂРµСЃР°.
+          //// РџРµСЂРµС…РѕРґРёРј Рє РІРµСЂС…РЅРµРјСѓ СѓСЂРѕРІРЅСЋ
           //_Stack.Pop();
           //if (_Stack.Count == 0)
-          //  return false; // перечисление закончено
+          //  return false; // РїРµСЂРµС‡РёСЃР»РµРЅРёРµ Р·Р°РєРѕРЅС‡РµРЅРѕ
           //}
           //else
           //{ 
-          //  // Надо
+          //  // РќР°РґРѕ
           //}
         } // while true
       }
 
       /// <summary>
-      /// Возвращает уровень, который является дочерним по отношению к заданному.
-      /// Проверяется, что наследование допускается.
-      /// Если полученный уровень выходит за BottomLevel, возвращается Guid.Unknown
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СѓСЂРѕРІРµРЅСЊ, РєРѕС‚РѕСЂС‹Р№ СЏРІР»СЏРµС‚СЃСЏ РґРѕС‡РµСЂРЅРёРј РїРѕ РѕС‚РЅРѕС€РµРЅРёСЋ Рє Р·Р°РґР°РЅРЅРѕРјСѓ.
+      /// РџСЂРѕРІРµСЂСЏРµС‚СЃСЏ, С‡С‚Рѕ РЅР°СЃР»РµРґРѕРІР°РЅРёРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ.
+      /// Р•СЃР»Рё РїРѕР»СѓС‡РµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ РІС‹С…РѕРґРёС‚ Р·Р° BottomLevel, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Guid.Unknown
       /// </summary>
       /// <param name="baseLevel"></param>
       /// <param name="prevLevel"></param>
@@ -422,7 +422,7 @@ namespace FreeLibSet.FIAS
 
         int p = _EnumLevelIndexer.IndexOf(prevLevel);
         if (p < 0)
-          throw new ArgumentException("Уровня " + prevLevel.ToString() + " нет в списке", "prevLevel");
+          throw new ArgumentException("РЈСЂРѕРІРЅСЏ " + prevLevel.ToString() + " РЅРµС‚ РІ СЃРїРёСЃРєРµ", "prevLevel");
 
         for (int i = p + 1; i < _EnumLevels.Length; i++)
         {
@@ -463,7 +463,7 @@ namespace FreeLibSet.FIAS
           int pRecIdCol = dv.Table.Columns.IndexOf(recIdColName);
 #if DEBUG
           if (pRecIdCol < 0)
-            throw new BugException("Не найдено поле \"" + recIdColName + "\"");
+            throw new BugException("РќРµ РЅР°Р№РґРµРЅРѕ РїРѕР»Рµ \"" + recIdColName + "\"");
 #endif
 
           FiasAddress[] a = new FiasAddress[dv.Count];

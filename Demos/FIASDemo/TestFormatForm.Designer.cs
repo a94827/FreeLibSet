@@ -1,4 +1,4 @@
-namespace FIASDemo
+п»їnamespace FIASDemo
 {
   partial class TestFormatForm
   {
@@ -43,7 +43,7 @@ namespace FIASDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(389, 13);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Введите строку форматирования или выберите простой формат из списка";
+      this.label1.Text = "Р’РІРµРґРёС‚Рµ СЃС‚СЂРѕРєСѓ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РёР»Рё РІС‹Р±РµСЂРёС‚Рµ РїСЂРѕСЃС‚РѕР№ С„РѕСЂРјР°С‚ РёР· СЃРїРёСЃРєР°";
       // 
       // label2
       // 
@@ -52,7 +52,7 @@ namespace FIASDemo
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(200, 13);
       this.label2.TabIndex = 2;
-      this.label2.Text = "Результат вызова FiasHandler.Format()";
+      this.label2.Text = "Р РµР·СѓР»СЊС‚Р°С‚ РІС‹Р·РѕРІР° FiasHandler.Format()";
       // 
       // cbFormat
       // 
@@ -83,7 +83,7 @@ namespace FIASDemo
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(88, 24);
       this.btnClose.TabIndex = 4;
-      this.btnClose.Text = "Закрыть";
+      this.btnClose.Text = "Р—Р°РєСЂС‹С‚СЊ";
       this.btnClose.UseVisualStyleBackColor = true;
       // 
       // btnDebugParsing
@@ -109,7 +109,7 @@ namespace FIASDemo
       this.Controls.Add(this.cbFormat);
       this.Name = "TestFormatForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Тестирование метода FiasHandler.Format()";
+      this.Text = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РјРµС‚РѕРґР° FiasHandler.Format()";
       this.ResumeLayout(false);
       this.PerformLayout();
 

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +15,7 @@ namespace TestMemoryTools
 {
   public partial class MainForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public MainForm()
     {
@@ -43,7 +43,7 @@ namespace TestMemoryTools
       efpInfo.Click += new EventHandler(efpInfo_Click);
 
       if (MemoryTools.TotalPhysicalMemory == MemoryTools.UnknownMemorySize)
-        lblTotalPhysicalMemory.Text = "Неизвестно";
+        lblTotalPhysicalMemory.Text = "РќРµРёР·РІРµСЃС‚РЅРѕ";
       else
         lblTotalPhysicalMemory.Text = (MemoryTools.TotalPhysicalMemory / FileTools.MByte).ToString() + " MB";
 
@@ -54,7 +54,7 @@ namespace TestMemoryTools
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     EFPFormProvider efpForm;
     EFPExtNumericUpDown efpCount;
@@ -62,20 +62,20 @@ namespace TestMemoryTools
 
     #endregion
 
-    #region Обработчики кнопок
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РєРЅРѕРїРѕРє
 
     /// <summary>
-    /// Список хранит object, для которых вызывается ToString()
+    /// РЎРїРёСЃРѕРє С…СЂР°РЅРёС‚ object, РґР»СЏ РєРѕС‚РѕСЂС‹С… РІС‹Р·С‹РІР°РµС‚СЃСЏ ToString()
     /// </summary>
     private class MemListItem
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public MemListItem(int SizeMB)
       {
         this.SizeMB = SizeMB;
         Buffer = new byte[SizeMB * FileTools.MByte];
-        // Важно заполнить буфер значениями, иначе swapping может не выполняться
+        // Р’Р°Р¶РЅРѕ Р·Р°РїРѕР»РЅРёС‚СЊ Р±СѓС„РµСЂ Р·РЅР°С‡РµРЅРёСЏРјРё, РёРЅР°С‡Рµ swapping РјРѕР¶РµС‚ РЅРµ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ
         rnd.NextBytes(Buffer);
       }
 
@@ -83,7 +83,7 @@ namespace TestMemoryTools
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public int SizeMB;
 
@@ -91,7 +91,7 @@ namespace TestMemoryTools
 
       public override string ToString()
       {
-        return SizeMB.ToString() + " МБ";
+        return SizeMB.ToString() + " РњР‘";
       }
 
       #endregion
@@ -104,7 +104,7 @@ namespace TestMemoryTools
 
       try
       {
-        using (Splash spl = new Splash("Выделяется память"))
+        using (Splash spl = new Splash("Р’С‹РґРµР»СЏРµС‚СЃСЏ РїР°РјСЏС‚СЊ"))
         {
           spl.PercentMax = efpCount.IntValue;
           for (int i = 0; i < efpCount.IntValue; i++)
@@ -127,7 +127,7 @@ namespace TestMemoryTools
     {
       if (lb1.SelectedItems.Count==0)
       {
-        EFPApp.ShowTempMessage("Блоки не выбраны");
+        EFPApp.ShowTempMessage("Р‘Р»РѕРєРё РЅРµ РІС‹Р±СЂР°РЅС‹");
         return;
       }
       object[]a=new object[lb1.SelectedItems.Count];
@@ -154,12 +154,12 @@ namespace TestMemoryTools
 
     void efpInfo_Click(object Sender, EventArgs Args)
     {
-      EFPApp.ShowTextView(LogoutTools.GetDebugInfo(), "Информация о программе");
+      EFPApp.ShowTextView(LogoutTools.GetDebugInfo(), "РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїСЂРѕРіСЂР°РјРјРµ");
     }
 
     #endregion
 
-    #region Обновление информации по таймеру
+    #region РћР±РЅРѕРІР»РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё РїРѕ С‚Р°Р№РјРµСЂСѓ
 
     void efpForm_UpdateByTime(object Sender, EventArgs Args)
     {
@@ -176,7 +176,7 @@ namespace TestMemoryTools
 
       int ml=MemoryTools.MemoryLoad;
       if (ml == MemoryTools.UnknownMemoryLoad)
-        lblMemoryLoad.Text = "Неизвестно";
+        lblMemoryLoad.Text = "РќРµРёР·РІРµСЃС‚РЅРѕ";
       else
         lblMemoryLoad.Text = ml.ToString() + "%";
     }

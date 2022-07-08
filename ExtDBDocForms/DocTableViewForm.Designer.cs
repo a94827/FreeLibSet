@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+Ôªøusing System.Windows.Forms;
 namespace FreeLibSet.Forms.Docs
 {
   partial class DocTableViewForm
@@ -73,7 +73,7 @@ namespace FreeLibSet.Forms.Docs
       this.TheNoButton.Name = "TheNoButton";
       this.TheNoButton.Size = new System.Drawing.Size(88, 24);
       this.TheNoButton.TabIndex = 2;
-      this.TheNoButton.Text = "&ÕÂÚ";
+      this.TheNoButton.Text = "&–ù–µ—Ç";
       this.TheNoButton.UseVisualStyleBackColor = true;
       this.TheNoButton.Click += new System.EventHandler(this.FormNoButton_Click);
       // 
@@ -85,7 +85,7 @@ namespace FreeLibSet.Forms.Docs
       this.TheCancelButton.Name = "TheCancelButton";
       this.TheCancelButton.Size = new System.Drawing.Size(88, 24);
       this.TheCancelButton.TabIndex = 1;
-      this.TheCancelButton.Text = "ŒÚÏÂÌ‡";
+      this.TheCancelButton.Text = "–û—Ç–º–µ–Ω–∞";
       this.TheCancelButton.Click += new System.EventHandler(this.FormCancelButton_Click);
       // 
       // TheOKButton
@@ -96,7 +96,7 @@ namespace FreeLibSet.Forms.Docs
       this.TheOKButton.Name = "TheOKButton";
       this.TheOKButton.Size = new System.Drawing.Size(88, 24);
       this.TheOKButton.TabIndex = 0;
-      this.TheOKButton.Text = "Œ& ";
+      this.TheOKButton.Text = "–û&–ö";
       this.TheOKButton.Click += new System.EventHandler(this.FormOKButton_Click);
       // 
       // ControlPanel
@@ -181,7 +181,7 @@ namespace FreeLibSet.Forms.Docs
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(63, 21);
       this.label1.TabIndex = 0;
-      this.label1.Text = "&√ÛÔÔ‡";
+      this.label1.Text = "&–ì—Ä—É–ø–ø–∞";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // GroupCB

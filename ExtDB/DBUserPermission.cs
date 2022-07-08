@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,27 +10,27 @@ namespace FreeLibSet.Data
 {
 
   /// <summary>
-  /// Базовый класс для WholeDBPermission и TablePermission 
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ WholeDBPermission Рё TablePermission 
   /// </summary>
   public abstract class DBUserPermission : UserPermission
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает разрешение с заданным кодом.
-    /// Свойство Mode получает значение Full (полный доступ)
+    /// РЎРѕР·РґР°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ СЃ Р·Р°РґР°РЅРЅС‹Рј РєРѕРґРѕРј.
+    /// РЎРІРѕР№СЃС‚РІРѕ Mode РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ Full (РїРѕР»РЅС‹Р№ РґРѕСЃС‚СѓРї)
     /// </summary>
-    /// <param name="classCode">Класс разрешения</param>
+    /// <param name="classCode">РљР»Р°СЃСЃ СЂР°Р·СЂРµС€РµРЅРёСЏ</param>
     protected DBUserPermission(string classCode)
       : base(classCode)
     {
     }
 
     /// <summary>
-    /// Создает разрешение с заданным кодом
+    /// РЎРѕР·РґР°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ СЃ Р·Р°РґР°РЅРЅС‹Рј РєРѕРґРѕРј
     /// </summary>
-    /// <param name="classCode">Класс разрешения</param>
-    /// <param name="mode">Режим доступа</param>
+    /// <param name="classCode">РљР»Р°СЃСЃ СЂР°Р·СЂРµС€РµРЅРёСЏ</param>
+    /// <param name="mode">Р РµР¶РёРј РґРѕСЃС‚СѓРїР°</param>
     protected DBUserPermission(string classCode, DBxAccessMode mode)
       : base(classCode)
     {
@@ -39,10 +39,10 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Режим доступа к объекту базы данных
+    /// Р РµР¶РёРј РґРѕСЃС‚СѓРїР° Рє РѕР±СЉРµРєС‚Сѓ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
     public DBxAccessMode Mode
     {
@@ -57,7 +57,7 @@ namespace FreeLibSet.Data
     private DBxAccessMode _Mode;
 
     /// <summary>
-    /// Текстовое представление для разрешения
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ
     /// </summary>
     public override string ValueText
     {
@@ -69,18 +69,18 @@ namespace FreeLibSet.Data
     #region XML
 
     /// <summary>
-    /// Записывает в секцию конфигурации параметр "Mode"
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РїР°СЂР°РјРµС‚СЂ "Mode"
     /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     public override void Write(CfgPart cfg)
     {
       cfg.SetString("Mode", Mode.ToString());
     }
 
     /// <summary>
-    /// Читает из секции конфигурации параметр "Mode"
+    /// Р§РёС‚Р°РµС‚ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РїР°СЂР°РјРµС‚СЂ "Mode"
     /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     public override void Read(CfgPart cfg)
     {
       string s = cfg.GetString("Mode");
@@ -91,7 +91,7 @@ namespace FreeLibSet.Data
         case "ReadOnly": Mode = DBxAccessMode.ReadOnly; break;
         case "None": Mode = DBxAccessMode.None; break;
         default:
-          throw new InvalidOperationException("Неизвестное значение Mode=\"" + s + "\"");
+          throw new InvalidOperationException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Mode=\"" + s + "\"");
       }
     }
 
@@ -106,31 +106,31 @@ namespace FreeLibSet.Data
         case "ReadOnly": return DBxAccessMode.ReadOnly;
         case "None": return DBxAccessMode.None;
         default:
-          throw new InvalidOperationException("Неизвестное значение Mode=\"" + s + "\"");
+          throw new InvalidOperationException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Mode=\"" + s + "\"");
       }
     }
 #endif
 
     #endregion
 
-    #region Статические методы для DBxAccessMode
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ РјРµС‚РѕРґС‹ РґР»СЏ DBxAccessMode
 
     /// <summary>
-    /// Коды, соответствующие перечислению DBxAccessMode
+    /// РљРѕРґС‹, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ DBxAccessMode
     /// </summary>
     public static readonly string[] ValueCodes = new string[] { "FULL", "READONLY", "NONE" };
 
     /// <summary>
-    /// Отображаемые значения, соответствующие перечислению DBxAccessMode
+    /// РћС‚РѕР±СЂР°Р¶Р°РµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ DBxAccessMode
     /// </summary>
-    public static readonly string[] ValueNames = new string[] { "Полный", "Чтение", "Запрет" };
+    public static readonly string[] ValueNames = new string[] { "РџРѕР»РЅС‹Р№", "Р§С‚РµРЅРёРµ", "Р—Р°РїСЂРµС‚" };
 
 
     /// <summary>
-    /// Получить текстовое представление, соответствующее коду
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРµ РєРѕРґСѓ
     /// </summary>
-    /// <param name="code">Код из списка ValueCodes</param>
-    /// <returns>текстовое представление</returns>
+    /// <param name="code">РљРѕРґ РёР· СЃРїРёСЃРєР° ValueCodes</param>
+    /// <returns>С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string GetValueName(string code)
     {
       int p = Array.IndexOf<string>(ValueCodes, code);
@@ -141,10 +141,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить текстовое представление для перечисления DBxAccessMode.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ DBxAccessMode.
     /// </summary>
-    /// <param name="mode">Режим DBxAccessMode</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="mode">Р РµР¶РёРј DBxAccessMode</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string GetValueName(DBxAccessMode mode)
     {
       if ((int)mode >= 0 && (int)mode <= ValueNames.Length)
@@ -154,38 +154,38 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить код из списка ValueCodes для перечисления DBxAccessMode.
+    /// РџРѕР»СѓС‡РёС‚СЊ РєРѕРґ РёР· СЃРїРёСЃРєР° ValueCodes РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ DBxAccessMode.
     /// </summary>
-    /// <param name="mode">Режим DBxAccessMode</param>
-    /// <returns>"Код</returns>
+    /// <param name="mode">Р РµР¶РёРј DBxAccessMode</param>
+    /// <returns>"РљРѕРґ</returns>
     public static string GetValueCode(DBxAccessMode mode)
     {
       if ((int)mode >= 0 && (int)mode <= ValueCodes.Length)
         return ValueCodes[(int)mode];
       else
-        throw new ArgumentException("Неизвестный режим доступа " + mode.ToString());
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ СЂРµР¶РёРј РґРѕСЃС‚СѓРїР° " + mode.ToString());
     }
 
     /// <summary>
-    /// Получить элемент перечисления DBxAccessMode, соответствующий коду из списка ValueCodes.
-    /// Если задан недопустимый код, выбрасывается исключение
+    /// РџРѕР»СѓС‡РёС‚СЊ СЌР»РµРјРµРЅС‚ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ DBxAccessMode, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ РєРѕРґСѓ РёР· СЃРїРёСЃРєР° ValueCodes.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Р№ РєРѕРґ, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="code">Код</param>
-    /// <returns>Перечисление DBxAccessMode</returns>
+    /// <param name="code">РљРѕРґ</param>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РµРЅРёРµ DBxAccessMode</returns>
     public static DBxAccessMode GetAccessMode(string code)
     {
       int p = Array.IndexOf<string>(ValueCodes, code);
       if (p >= 0)
         return (DBxAccessMode)p;
       else
-        throw new ArgumentException("Неизвестный код режима доступа: \"" + code + "\"", "code");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ РєРѕРґ СЂРµР¶РёРјР° РґРѕСЃС‚СѓРїР°: \"" + code + "\"", "code");
     }
 
     /// <summary>
-    /// Возвращает true, если указанный код есть в списке ValueCodes
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СѓРєР°Р·Р°РЅРЅС‹Р№ РєРѕРґ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ ValueCodes
     /// </summary>
-    /// <param name="code">Код</param>
-    /// <returns>Наличие в списке</returns>
+    /// <param name="code">РљРѕРґ</param>
+    /// <returns>РќР°Р»РёС‡РёРµ РІ СЃРїРёСЃРєРµ</returns>
     public static bool IsValidAccessMode(string code)
     {
       int p = Array.IndexOf<string>(ValueCodes, code);
@@ -196,27 +196,27 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Разрешение на доступ к базе данных в-целом.
-  /// Код класса "DB"
+  /// Р Р°Р·СЂРµС€РµРЅРёРµ РЅР° РґРѕСЃС‚СѓРї Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… РІ-С†РµР»РѕРј.
+  /// РљРѕРґ РєР»Р°СЃСЃР° "DB"
   /// </summary>
   public class WholeDBPermission : DBUserPermission
   {
     #region Creator
 
     /// <summary>
-    /// Реализация интерфейса IUserPermissionCreator
+    /// Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° IUserPermissionCreator
     /// </summary>
     public sealed class Creator : IUserPermissionCreator
     {
       #region IUserPermissionCreator Members
 
       /// <summary>
-      /// Возвращает "DB"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "DB"
       /// </summary>
       public string Code { get { return "DB"; } }
 
       /// <summary>
-      /// Создает WholeDBPermission
+      /// РЎРѕР·РґР°РµС‚ WholeDBPermission
       /// </summary>
       /// <returns></returns>
       public UserPermission CreateUserPermission()
@@ -229,10 +229,10 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает разрешение в режиме "Full".
+    /// РЎРѕР·РґР°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ РІ СЂРµР¶РёРјРµ "Full".
     /// </summary>
     public WholeDBPermission()
       : base("DB")
@@ -240,9 +240,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает разрешение
+    /// РЎРѕР·РґР°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ
     /// </summary>
-    /// <param name="mode">Режим</param>
+    /// <param name="mode">Р РµР¶РёРј</param>
     public WholeDBPermission(DBxAccessMode mode)
       : this()
     {
@@ -251,47 +251,47 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Устанавливает свойство DBxPermissions.DBMode.
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ DBxPermissions.DBMode.
     /// </summary>
-    /// <param name="dbPermissions">Заполняемый объект разрешений базы данных</param>
+    /// <param name="dbPermissions">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РѕР±СЉРµРєС‚ СЂР°Р·СЂРµС€РµРЅРёР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
     public override void ApplyDbPermissions(DBxPermissions dbPermissions)
     {
       dbPermissions.DBMode = Mode;
     }
 
     /// <summary>
-    /// Возвращает "Доступ к базе данных"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "Р”РѕСЃС‚СѓРї Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…"
     /// </summary>
-    public override string ObjectText { get { return "Доступ к базе данных"; } }
+    public override string ObjectText { get { return "Р”РѕСЃС‚СѓРї Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…"; } }
 
     #endregion
   }
 
   /// <summary>
-  /// Разрешение на доступ к одной или нескольким таблицам
-  /// Код класса "Table"
+  /// Р Р°Р·СЂРµС€РµРЅРёРµ РЅР° РґРѕСЃС‚СѓРї Рє РѕРґРЅРѕР№ РёР»Рё РЅРµСЃРєРѕР»СЊРєРёРј С‚Р°Р±Р»РёС†Р°Рј
+  /// РљРѕРґ РєР»Р°СЃСЃР° "Table"
   /// </summary>
   public class TablePermission : DBUserPermission
   {
     #region Creator
 
     /// <summary>
-    /// Реализация интерфейса IUserPermissionCreator
+    /// Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° IUserPermissionCreator
     /// </summary>
     public sealed class Creator : IUserPermissionCreator
     {
       #region IUserPermissionCreator Members
 
       /// <summary>
-      /// Возвращает "Table"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "Table"
       /// </summary>
       public string Code { get { return "Table"; } }
 
       /// <summary>
-      /// Создает TablePermission
+      /// РЎРѕР·РґР°РµС‚ TablePermission
       /// </summary>
       /// <returns></returns>
       public UserPermission CreateUserPermission()
@@ -304,12 +304,12 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает разрешение.
-    /// Свойства TableNames и Mode должны быть установлены явно.
-    /// Свойство Mode получает значение Full.
+    /// РЎРѕР·РґР°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ.
+    /// РЎРІРѕР№СЃС‚РІР° TableNames Рё Mode РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ СЏРІРЅРѕ.
+    /// РЎРІРѕР№СЃС‚РІРѕ Mode РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ Full.
     /// </summary>
     public TablePermission()
       :base("Table")
@@ -317,10 +317,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает разрешение для заданных таблиц
+    /// РЎРѕР·РґР°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ РґР»СЏ Р·Р°РґР°РЅРЅС‹С… С‚Р°Р±Р»РёС†
     /// </summary>
-    /// <param name="tableNames">Имена таблиц в базе данных</param>
-    /// <param name="mode">Режим доступа</param>
+    /// <param name="tableNames">РРјРµРЅР° С‚Р°Р±Р»РёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
+    /// <param name="mode">Р РµР¶РёРј РґРѕСЃС‚СѓРїР°</param>
     public TablePermission(string[] tableNames, DBxAccessMode mode)
       :this()
     {
@@ -329,10 +329,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает разрешение для одной таблицы
+    /// РЎРѕР·РґР°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ РґР»СЏ РѕРґРЅРѕР№ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <param name="tableName">Имя таблицы в базе данных</param>
-    /// <param name="mode">Режим доступа</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
+    /// <param name="mode">Р РµР¶РёРј РґРѕСЃС‚СѓРїР°</param>
     public TablePermission(string tableName, DBxAccessMode mode)
       : this()
     {
@@ -342,10 +342,10 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Имена таблиц в базе данных.
+    /// РРјРµРЅР° С‚Р°Р±Р»РёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
     /// </summary>
     public string[] TableNames
     {
@@ -360,12 +360,12 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Записать разрешения в объект DBxPermissions 
+    /// Р—Р°РїРёСЃР°С‚СЊ СЂР°Р·СЂРµС€РµРЅРёСЏ РІ РѕР±СЉРµРєС‚ DBxPermissions 
     /// </summary>
-    /// <param name="dbPermissions">Разрешения на доступ к объектам базы данных</param>
+    /// <param name="dbPermissions">Р Р°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє РѕР±СЉРµРєС‚Р°Рј Р±Р°Р·С‹ РґР°РЅРЅС‹С…</param>
     public override void ApplyDbPermissions(DBxPermissions dbPermissions)
     {
       for (int i = 0; i < TableNames.Length; i++)
@@ -373,26 +373,26 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// текстовое представление для списка таблиц
+    /// С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ СЃРїРёСЃРєР° С‚Р°Р±Р»РёС†
     /// </summary>
     public override string ObjectText
     {
       get
       {
         if (TableNames == null)
-          return "Таблицы не заданы";
+          return "РўР°Р±Р»РёС†С‹ РЅРµ Р·Р°РґР°РЅС‹";
 
         if (TableNames.Length == 1)
-          return "Таблица \"" + TableNames[0] + "\"";
+          return "РўР°Р±Р»РёС†Р° \"" + TableNames[0] + "\"";
         else
-          return "Таблицы " + String.Join(", ", TableNames);
+          return "РўР°Р±Р»РёС†С‹ " + String.Join(", ", TableNames);
       }
     }
 
     /// <summary>
-    /// Запись разрешения в секцию конфигурации
+    /// Р—Р°РїРёСЃСЊ СЂР°Р·СЂРµС€РµРЅРёСЏ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Секция конфигурации для разрешения</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ</param>
     public override void Write(CfgPart cfg)
     {
       base.Write(cfg);
@@ -401,9 +401,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Чтение разрешения из секции конфигурации
+    /// Р§С‚РµРЅРёРµ СЂР°Р·СЂРµС€РµРЅРёСЏ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Секция конфигурации для разрешения</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ</param>
     public override void Read(CfgPart cfg)
     {
       base.Read(cfg);
@@ -414,17 +414,17 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Поиск разрешения
+    #region РџРѕРёСЃРє СЂР°Р·СЂРµС€РµРЅРёСЏ
 
     /// <summary>
-    /// Возвращает разрешение на таблицу документов.
-    /// В списке пользовательских разрешений <paramref name="permissions"/> выполняется поиск подходящего разрешения TablePermission или WholeDBPermission.
-    /// Поиск выполняется от конца к началу списка.
-    /// Если разрешение не найдено, возвращается DBxAccessMode.Full
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р·СЂРµС€РµРЅРёРµ РЅР° С‚Р°Р±Р»РёС†Сѓ РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р’ СЃРїРёСЃРєРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… СЂР°Р·СЂРµС€РµРЅРёР№ <paramref name="permissions"/> РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє РїРѕРґС…РѕРґСЏС‰РµРіРѕ СЂР°Р·СЂРµС€РµРЅРёСЏ TablePermission РёР»Рё WholeDBPermission.
+    /// РџРѕРёСЃРє РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕС‚ РєРѕРЅС†Р° Рє РЅР°С‡Р°Р»Сѓ СЃРїРёСЃРєР°.
+    /// Р•СЃР»Рё СЂР°Р·СЂРµС€РµРЅРёРµ РЅРµ РЅР°Р№РґРµРЅРѕ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ DBxAccessMode.Full
     /// </summary>
-    /// <param name="permissions">Пользовательские разрешения</param>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Разрешение</returns>
+    /// <param name="permissions">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ СЂР°Р·СЂРµС€РµРЅРёСЏ</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>Р Р°Р·СЂРµС€РµРЅРёРµ</returns>
     public static DBxAccessMode GetAccessMode(UserPermissions permissions, string tableName)
     {
       if (permissions == null)

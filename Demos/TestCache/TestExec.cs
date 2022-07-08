@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -9,12 +9,12 @@ using AgeyevAV.ExtForms;
 namespace TestCache
 {
   /// <summary>
-  /// Объект тестирования
-  /// Создается по одному экземпляру для каждого потока
+  /// РћР±СЉРµРєС‚ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ
+  /// РЎРѕР·РґР°РµС‚СЃСЏ РїРѕ РѕРґРЅРѕРјСѓ СЌРєР·РµРјРїР»СЏСЂСѓ РґР»СЏ РєР°Р¶РґРѕРіРѕ РїРѕС‚РѕРєР°
   /// </summary>
   public class TestExec : ICacheFactory<TestBuf1>, ICacheFactory<TestBuf2>, ICacheFactory<TestBuf3>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public TestExec(int threadNo)
     {
@@ -25,10 +25,10 @@ namespace TestCache
 
     #endregion
 
-    #region Управление
+    #region РЈРїСЂР°РІР»РµРЅРёРµ
 
     /// <summary>
-    /// Поток выполнения теста
+    /// РџРѕС‚РѕРє РІС‹РїРѕР»РЅРµРЅРёСЏ С‚РµСЃС‚Р°
     /// </summary>
     public Thread Thread { get { return _Thread; } }
     private Thread _Thread;
@@ -40,11 +40,11 @@ namespace TestCache
     }
     private bool _StopSignal;
 
-    public static ObjTypeSettings Settings1, Settings2, Settings3; // если null, то объект не используется
+    public static ObjTypeSettings Settings1, Settings2, Settings3; // РµСЃР»Рё null, С‚Рѕ РѕР±СЉРµРєС‚ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
 
     #endregion
 
-    #region Выводимая информация
+    #region Р’С‹РІРѕРґРёРјР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ
 
     public int AccessCount
     {
@@ -71,7 +71,7 @@ namespace TestCache
     private int _DelCount;
 
     /// <summary>
-    /// Номер потока 1-число потоков
+    /// РќРѕРјРµСЂ РїРѕС‚РѕРєР° 1-С‡РёСЃР»Рѕ РїРѕС‚РѕРєРѕРІ
     /// </summary>
     private int _ThreadNo;
 
@@ -83,7 +83,7 @@ namespace TestCache
 
     #endregion
 
-    #region Для проверки
+    #region Р”Р»СЏ РїСЂРѕРІРµСЂРєРё
 
     private static Dictionary<string, Guid> ObjGuids1 = new Dictionary<string, Guid>();
     private static Dictionary<string, Guid> ObjGuids2 = new Dictionary<string, Guid>();
@@ -91,15 +91,15 @@ namespace TestCache
 
     #endregion
 
-    #region Выполняемый метод
+    #region Р’С‹РїРѕР»РЅСЏРµРјС‹Р№ РјРµС‚РѕРґ
 
 
     public void ThreadExec()
     {
       try
       {
-        // В каждом потоке должен быть свой Random, чтобы обойтись без блокировки
-        // Если в каждом потоке одновременно создать объекты Random без параметров, они будут все одинаковые
+        // Р’ РєР°Р¶РґРѕРј РїРѕС‚РѕРєРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃРІРѕР№ Random, С‡С‚РѕР±С‹ РѕР±РѕР№С‚РёСЃСЊ Р±РµР· Р±Р»РѕРєРёСЂРѕРІРєРё
+        // Р•СЃР»Рё РІ РєР°Р¶РґРѕРј РїРѕС‚РѕРєРµ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ СЃРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚С‹ Random Р±РµР· РїР°СЂР°РјРµС‚СЂРѕРІ, РѕРЅРё Р±СѓРґСѓС‚ РІСЃРµ РѕРґРёРЅР°РєРѕРІС‹Рµ
         Random rnd = new Random(((int)(DateTime.Now.Ticks & 0xFFFFL)) | Thread.ManagedThreadId);
 
         int cnt = 0;
@@ -136,15 +136,15 @@ namespace TestCache
 
           if (cnt > 1000)
           {
-            // Делаем случайную паузу, чтобы рассинхронизировать потоки
+            // Р”РµР»Р°РµРј СЃР»СѓС‡Р°Р№РЅСѓСЋ РїР°СѓР·Сѓ, С‡С‚РѕР±С‹ СЂР°СЃСЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ РїРѕС‚РѕРєРё
             Thread.Sleep(rnd.Next(20));
             cnt = 0;
           }
-        } // конец цикла
+        } // РєРѕРЅРµС† С†РёРєР»Р°
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка выполнения в потоке " + this.ToString());
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РІС‹РїРѕР»РЅРµРЅРёСЏ РІ РїРѕС‚РѕРєРµ " + this.ToString());
       }
     }
 
@@ -156,7 +156,7 @@ namespace TestCache
 
       TestBufBase obj = Cache.GetItem<T>(GetKeys(settings, rnd), settings.Persistance, factory);
       if ((settings.Persistance & CachePersistance.PersistOnly) != 0)
-        objGuids = null; // Если используется каталог, то нельзя проверять совпадение GUID'в
+        objGuids = null; // Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР°С‚Р°Р»РѕРі, С‚Рѕ РЅРµР»СЊР·СЏ РїСЂРѕРІРµСЂСЏС‚СЊ СЃРѕРІРїР°РґРµРЅРёРµ GUID'РІ
 
       obj.TestValid(objGuids);
       lock (this) { _AccessCount++; }
@@ -220,11 +220,11 @@ namespace TestCache
 
   [Serializable]
   /// <summary>
-  /// Базовый класс для тестирования буфера.
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ Р±СѓС„РµСЂР°.
   /// </summary>
   public class TestBufBase
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public TestBufBase(int size)
     {
@@ -238,7 +238,7 @@ namespace TestCache
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private byte[] _Data;
 
@@ -248,7 +248,7 @@ namespace TestCache
     {
       string NewMD5 = DataTools.MD5Sum(_Data);
       if (NewMD5 != _MD5)
-        throw new Exception("Объект поврежден. Неправильная контрольная сумма");
+        throw new Exception("РћР±СЉРµРєС‚ РїРѕРІСЂРµР¶РґРµРЅ. РќРµРїСЂР°РІРёР»СЊРЅР°СЏ РєРѕРЅС‚СЂРѕР»СЊРЅР°СЏ СЃСѓРјРјР°");
 
       if (objGuids != null)
       {
@@ -256,16 +256,16 @@ namespace TestCache
         {
           Guid SavedGuid;
           if (!objGuids.TryGetValue(TheKey, out SavedGuid))
-            throw new BugException("Не было элемента с ключом " + TheKey);
+            throw new BugException("РќРµ Р±С‹Р»Рѕ СЌР»РµРјРµРЅС‚Р° СЃ РєР»СЋС‡РѕРј " + TheKey);
           if (SavedGuid != this.Guid)
-            throw new BugException("Неправильный Guid");
+            throw new BugException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ Guid");
         }
       }
     }
 
     #endregion
 
-    #region Проверка Guid
+    #region РџСЂРѕРІРµСЂРєР° Guid
 
     public Guid Guid;
 
@@ -284,10 +284,10 @@ namespace TestCache
     #endregion
   }
 
-  // Несколько различных классов
+  // РќРµСЃРєРѕР»СЊРєРѕ СЂР°Р·Р»РёС‡РЅС‹С… РєР»Р°СЃСЃРѕРІ
 
   /// <summary>
-  /// Маленький элемент (10кБ)
+  /// РњР°Р»РµРЅСЊРєРёР№ СЌР»РµРјРµРЅС‚ (10РєР‘)
   /// </summary>
   [Serializable]
   public class TestBuf1 : TestBufBase
@@ -299,7 +299,7 @@ namespace TestCache
   }
 
   /// <summary>
-  /// Средний элемент (100кБ)
+  /// РЎСЂРµРґРЅРёР№ СЌР»РµРјРµРЅС‚ (100РєР‘)
   /// </summary>
   [Serializable]
   public class TestBuf2 : TestBufBase
@@ -311,7 +311,7 @@ namespace TestCache
   }
 
   /// <summary>
-  /// Большой элемент (1МБ)
+  /// Р‘РѕР»СЊС€РѕР№ СЌР»РµРјРµРЅС‚ (1РњР‘)
   /// </summary>
   [Serializable]
   public class TestBuf3 : TestBufBase

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.Collections
   [TestFixture]
   public class DictionaryWithReadOnlyTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_NoReadOnly()
@@ -50,11 +50,11 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Создание коллекции
+    #region РЎРѕР·РґР°РЅРёРµ РєРѕР»Р»РµРєС†РёРё
 
     private class DictionaryWithReadOnly_RO : DictionaryWithReadOnly<string, int>
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public DictionaryWithReadOnly_RO()
         : base(CreateDictionary(), false)
@@ -72,7 +72,7 @@ namespace ExtTools_tests.Collections
 
       #endregion
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       public new void SetReadOnly()
       {
@@ -84,7 +84,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Методы, не меняющие коллекцию
+    #region РњРµС‚РѕРґС‹, РЅРµ РјРµРЅСЏСЋС‰РёРµ РєРѕР»Р»РµРєС†РёСЋ
 
     [Test]
     public void Item_get()
@@ -124,7 +124,7 @@ namespace ExtTools_tests.Collections
       KeyValuePair<string, int>[] a = new KeyValuePair<string, int>[4];
       sut.CopyTo(a, 1);
 
-      // Порядок элементов в массиве не определен
+      // РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ РІ РјР°СЃСЃРёРІРµ РЅРµ РѕРїСЂРµРґРµР»РµРЅ
       Assert.IsNull(a[0].Key, "[0].Key");
       Assert.AreEqual(0, a[0].Value, "[0].Value");
 
@@ -166,7 +166,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Перечислитель
+    #region РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
 
     [Test]
     public void GetEnumerator()
@@ -192,7 +192,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Методы, изменяющие коллекцию
+    #region РњРµС‚РѕРґС‹, РёР·РјРµРЅСЏСЋС‰РёРµ РєРѕР»Р»РµРєС†РёСЋ
 
     [Test]
     public void Add()
@@ -236,7 +236,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [Test]
     public void Serialization([Values(true, false)] bool ignoreCase)

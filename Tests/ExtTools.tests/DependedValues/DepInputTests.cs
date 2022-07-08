@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -9,7 +9,7 @@ namespace ExtTools_tests.DependedValues
   [TestFixture]
   class DepInputTests
   {
-    #region Основные тесты
+    #region РћСЃРЅРѕРІРЅС‹Рµ С‚РµСЃС‚С‹
 
     [Test]
     public void Constructor()
@@ -36,7 +36,7 @@ namespace ExtTools_tests.DependedValues
       DepInput<int> dummy = new DepInput<int>(0, null);
       dummy.Source = sut;
 
-      Assert.AreEqual(1, sut.Value, "Value"); // не должна испортиться
+      Assert.AreEqual(1, sut.Value, "Value"); // РЅРµ РґРѕР»Р¶РЅР° РёСЃРїРѕСЂС‚РёС‚СЊСЃСЏ
       Assert.IsFalse(sut.InsideSetValue, "InsideSetValue");
       Assert.IsFalse(sut.HasValueChanged, "HasValueChanged");
       Assert.IsFalse(sut.HasSource, "HasSource");
@@ -65,10 +65,10 @@ namespace ExtTools_tests.DependedValues
       DepInput<int> sut = new DepInput<int>(1, null);
       DepInput<int> src = new DepInput<int>(2, null);
       sut.Source = src;
-      // теперь отключаем
+      // С‚РµРїРµСЂСЊ РѕС‚РєР»СЋС‡Р°РµРј
       sut.Source = null;
 
-      Assert.AreEqual(2, sut.Value, "Value"); // не должна вернуться в 1
+      Assert.AreEqual(2, sut.Value, "Value"); // РЅРµ РґРѕР»Р¶РЅР° РІРµСЂРЅСѓС‚СЊСЃСЏ РІ 1
       Assert.IsFalse(sut.HasSource, "HasSource");
       Assert.IsFalse(sut.IsConnected, "IsConnected");
     }
@@ -88,7 +88,7 @@ namespace ExtTools_tests.DependedValues
       Assert.AreEqual("1|2|3", resprod.ToString(), "Source value changed");
     }
 
-    #region Событие ValueChanged
+    #region РЎРѕР±С‹С‚РёРµ ValueChanged
 
     [Test]
     public void ValueChanged()
@@ -107,7 +107,7 @@ namespace ExtTools_tests.DependedValues
 
     #endregion
 
-    #region Событие CheckValue
+    #region РЎРѕР±С‹С‚РёРµ CheckValue
 
     [Test]
     public void CheckValue_nothing()
@@ -167,7 +167,7 @@ namespace ExtTools_tests.DependedValues
       DepResultProducer<int> resprod = new DepResultProducer<int>(sut);
       Assert.AreEqual("1", resprod.ToString(), "Original");
 
-      sut.Value = 1; // не меняем
+      sut.Value = 1; // РЅРµ РјРµРЅСЏРµРј
       Assert.AreEqual("1|1", resprod.ToString(), "Second call");
     }
 
@@ -180,19 +180,19 @@ namespace ExtTools_tests.DependedValues
 
     #endregion
 
-    #region Тестирование комбинации "Обычное свойство - управляемое свойство"
+    #region РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РєРѕРјР±РёРЅР°С†РёРё "РћР±С‹С‡РЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ - СѓРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ"
 
-    #region Тестовый объект
+    #region РўРµСЃС‚РѕРІС‹Р№ РѕР±СЉРµРєС‚
 
     private class PropertyPair
     {
       /// <summary>
-      /// Тестирование изменения устанавливаемого значения, как в EFPInsideSubDoc.SubDocId
+      /// РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РёР·РјРµРЅРµРЅРёСЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, РєР°Рє РІ EFPInsideSubDoc.SubDocId
       /// </summary>
       public bool TestModifySetValue;
 
       /// <summary>
-      /// Основное свойство
+      /// РћСЃРЅРѕРІРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ
       /// </summary>
       public int Value
       {
@@ -212,7 +212,7 @@ namespace ExtTools_tests.DependedValues
       private int _Value;
 
       /// <summary>
-      /// Управляемое свойство
+      /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ
       /// </summary>
       public DepValue<int> ValueEx
       {
@@ -301,7 +301,7 @@ namespace ExtTools_tests.DependedValues
 
     #endregion
 
-    #region "Короткое замыкание" входа на самого себя
+    #region "РљРѕСЂРѕС‚РєРѕРµ Р·Р°РјС‹РєР°РЅРёРµ" РІС…РѕРґР° РЅР° СЃР°РјРѕРіРѕ СЃРµР±СЏ
 
     [Test]
     public void ShortCircuit_1()
@@ -338,7 +338,7 @@ namespace ExtTools_tests.DependedValues
     [Test]
     public void ShortCircuit_InputNotInputNot()
     { 
-      // Такая схема используется в ExtDBDocForms, метод DocValueControlBase.CreateGrayedCheckBox
+      // РўР°РєР°СЏ СЃС…РµРјР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ ExtDBDocForms, РјРµС‚РѕРґ DocValueControlBase.CreateGrayedCheckBox
       DepInput<bool> sut1 = new DepInput<bool>(false, null);
       DepNot not1 = new DepNot(sut1);
       DepInput<bool> sut2 = new DepInput<bool>(false, null);

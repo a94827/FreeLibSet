@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +14,7 @@ namespace ExtTools_tests.UICore
   [TestFixture]
   public class UISelRCColumnTests
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     [Test]
     public void Constructor_1()
@@ -42,7 +42,7 @@ namespace ExtTools_tests.UICore
 
     #endregion
 
-    #region Тестовые данные
+    #region РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ
 
     public static UISelRCGridData CreateTestData(string textValue, UISelRCColumn sut)
     {
@@ -50,7 +50,7 @@ namespace ExtTools_tests.UICore
       UISelRCColumn[] availableColumns = new UISelRCColumn[1] { sut };
 
       UISelRCGridData data = new UISelRCGridData(sourceData, availableColumns);
-      // помечаем строку и столбец как выбранные
+      // РїРѕРјРµС‡Р°РµРј СЃС‚СЂРѕРєСѓ Рё СЃС‚РѕР»Р±РµС† РєР°Рє РІС‹Р±СЂР°РЅРЅС‹Рµ
       data.SelRows[0] = true;
       data.SelColumns[0] = sut;
       return data;
@@ -132,13 +132,13 @@ namespace ExtTools_tests.UICore
       tester.ErrorText = errorText;
       tester.ResultValue = resultValue;
 
-      // присоединение обработчика после конструктора
+      // РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ РѕР±СЂР°Р±РѕС‚С‡РёРєР° РїРѕСЃР»Рµ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°
       UISelRCColumn sut1 = new UISelRCColumn("Col1");
       sut1.Validating += tester.Validating;
       UISelRCGridData data1 = CreateTestData("Dummy", sut1);
       tester.DoTest(data1, "#1");
 
-      // задание обработчика в конструкторе
+      // Р·Р°РґР°РЅРёРµ РѕР±СЂР°Р±РѕС‚С‡РёРєР° РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
       UISelRCColumn sut2 = new UISelRCColumn("Col2", "Col2", tester.Validating);
       UISelRCGridData data2 = CreateTestData("Dummy", sut2);
       tester.DoTest(data2, "#2");
@@ -162,7 +162,7 @@ namespace ExtTools_tests.UICore
 
       UISelRCColumn sut = new UISelRCColumn("Col1", "Col1", counter.Validating);
       sut.CanBeEmpty = canBeEmpty;
-      UISelRCGridData data = CreateTestData("", sut); // пустые данные
+      UISelRCGridData data = CreateTestData("", sut); // РїСѓСЃС‚С‹Рµ РґР°РЅРЅС‹Рµ
       object value1 = data[0, 0];
       Assert.AreEqual(wantedCount, counter.Count);
     }
@@ -172,7 +172,7 @@ namespace ExtTools_tests.UICore
 
   public class UISelRCColumn_InheritorTests
   {
-    #region Столбцы ввода простых значений
+    #region РЎС‚РѕР»Р±С†С‹ РІРІРѕРґР° РїСЂРѕСЃС‚С‹С… Р·РЅР°С‡РµРЅРёР№
 
     [Test]
     public void UISelRCIntColumn_main()
@@ -212,7 +212,7 @@ namespace ExtTools_tests.UICore
       Assert.AreEqual(UIValidateState.Ok, data1.Validate(0, 0, out errorText), "Validate() #1");
 
       UISelRCGridData data2 = UISelRCColumnTests.CreateTestData(badText, col);
-      // Ошибочное значение не определено
+      // РћС€РёР±РѕС‡РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ
       //Assert.AreEqual(defValue, data2[0, 0], "Default value #2");
       Assert.AreEqual(UIValidateState.Error, data2.Validate(0, 0, out errorText), "Validate() #2");
 
@@ -229,7 +229,7 @@ namespace ExtTools_tests.UICore
 
     #endregion
 
-    #region Столбцы перечислений
+    #region РЎС‚РѕР»Р±С†С‹ РїРµСЂРµС‡РёСЃР»РµРЅРёР№
 
     private enum SimpleEnum
     { 
@@ -271,7 +271,7 @@ namespace ExtTools_tests.UICore
       TypedStringDictionary<SimpleEnum> dict = new TypedStringDictionary<SimpleEnum>(true);
       dict.Add("Value 1", SimpleEnum.One);
       dict.Add("Value 3", SimpleEnum.Three);
-      dict.Add("XXX 3", SimpleEnum.Three); // повтор
+      dict.Add("XXX 3", SimpleEnum.Three); // РїРѕРІС‚РѕСЂ
 
       UISelRCEnumColumnWithDict<SimpleEnum> col = new UISelRCEnumColumnWithDict<SimpleEnum>("Col1", "Test", dict);
 

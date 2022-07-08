@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +15,7 @@ namespace TestCache
 {
   public partial class ParamForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public ParamForm()
     {
@@ -41,7 +41,7 @@ namespace TestCache
       ghObjs.ReadOnly = true;
       ghObjs.Control.ReadOnly = false;
       ghObjs.Control.Columns[0].ReadOnly = true;
-      colPersistance.Items.Add("[ Нет ]");
+      colPersistance.Items.Add("[ РќРµС‚ ]");
       CachePersistance[] a = (CachePersistance[])(Enum.GetValues(typeof(CachePersistance)));
       for (int i = 0; i < a.Length; i++)
         colPersistance.Items.Add(GetPersistanceText(a[i]));
@@ -56,7 +56,7 @@ namespace TestCache
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public EFPNumEditBox efpCapacity;
 
@@ -72,7 +72,7 @@ namespace TestCache
 
     #endregion
 
-    #region Статический метод
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ
 
     public static bool PerformSetup(out int ThreadCount)
     {
@@ -152,34 +152,34 @@ namespace TestCache
   }
 
   /// <summary>
-  /// Настройки для одного типа объектов
+  /// РќР°СЃС‚СЂРѕР№РєРё РґР»СЏ РѕРґРЅРѕРіРѕ С‚РёРїР° РѕР±СЉРµРєС‚РѕРІ
   /// </summary>
   public class ObjTypeSettings
   {
-    #region Поля
+    #region РџРѕР»СЏ
 
     /// <summary>
-    /// Размер блоков в байтах
+    /// Р Р°Р·РјРµСЂ Р±Р»РѕРєРѕРІ РІ Р±Р°Р№С‚Р°С…
     /// </summary>
     public int Size;
 
     /// <summary>
-    /// Длина массива ключей
+    /// Р”Р»РёРЅР° РјР°СЃСЃРёРІР° РєР»СЋС‡РµР№
     /// </summary>
     public int KeyCount;
 
     /// <summary>
-    /// Количество значений (для каждой размерности ключа)
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°С‡РµРЅРёР№ (РґР»СЏ РєР°Р¶РґРѕР№ СЂР°Р·РјРµСЂРЅРѕСЃС‚Рё РєР»СЋС‡Р°)
     /// </summary>
     public int ValueCount;
 
     /// <summary>
-    /// Режим сохранения
+    /// Р РµР¶РёРј СЃРѕС…СЂР°РЅРµРЅРёСЏ
     /// </summary>
     public CachePersistance Persistance;
 
     /// <summary>
-    /// Тестировать удаление объектов из кэша
+    /// РўРµСЃС‚РёСЂРѕРІР°С‚СЊ СѓРґР°Р»РµРЅРёРµ РѕР±СЉРµРєС‚РѕРІ РёР· РєСЌС€Р°
     /// </summary>
     public bool AllowDelete;
 

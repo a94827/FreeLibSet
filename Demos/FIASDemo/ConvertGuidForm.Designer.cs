@@ -1,4 +1,4 @@
-namespace FIASDemo
+п»їnamespace FIASDemo
 {
   partial class ConvertGuidForm
   {
@@ -49,7 +49,7 @@ namespace FIASDemo
       this.groupBox1.Size = new System.Drawing.Size(130, 82);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Направление";
+      this.groupBox1.Text = "РќР°РїСЂР°РІР»РµРЅРёРµ";
       // 
       // rbGuid2Bin
       // 
@@ -129,7 +129,7 @@ namespace FIASDemo
       this.Controls.Add(this.label1);
       this.Controls.Add(this.groupBox1);
       this.Name = "ConvertGuidForm";
-      this.Text = "Преобразование GUID";
+      this.Text = "РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ GUID";
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.ResumeLayout(false);

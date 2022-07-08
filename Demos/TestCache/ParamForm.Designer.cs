@@ -1,4 +1,4 @@
-namespace TestCache
+п»їnamespace TestCache
 {
   partial class ParamForm
   {
@@ -96,7 +96,7 @@ namespace TestCache
       this.groupBox1.Size = new System.Drawing.Size(634, 159);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Параметры Cache";
+      this.groupBox1.Text = "РџР°СЂР°РјРµС‚СЂС‹ Cache";
       // 
       // label7
       // 
@@ -104,7 +104,7 @@ namespace TestCache
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(38, 20);
       this.label7.TabIndex = 12;
-      this.label7.Text = "с";
+      this.label7.Text = "СЃ";
       this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // eCheckMemoryInterval
@@ -156,7 +156,7 @@ namespace TestCache
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(38, 20);
       this.label4.TabIndex = 6;
-      this.label4.Text = "МБ";
+      this.label4.Text = "РњР‘";
       this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edLowMemorySize
@@ -190,7 +190,7 @@ namespace TestCache
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(221, 20);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Макс. число элементов кэша";
+      this.label1.Text = "РњР°РєСЃ. С‡РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ РєСЌС€Р°";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // panel3
@@ -220,7 +220,7 @@ namespace TestCache
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -230,7 +230,7 @@ namespace TestCache
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // groupBox2
@@ -244,7 +244,7 @@ namespace TestCache
       this.groupBox2.Size = new System.Drawing.Size(634, 209);
       this.groupBox2.TabIndex = 3;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Параметры тестирования";
+      this.groupBox2.Text = "РџР°СЂР°РјРµС‚СЂС‹ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ";
       // 
       // grObjs
       // 
@@ -299,7 +299,7 @@ namespace TestCache
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(221, 20);
       this.label2.TabIndex = 0;
-      this.label2.Text = "Число потоков";
+      this.label2.Text = "Р§РёСЃР»Рѕ РїРѕС‚РѕРєРѕРІ";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // colType
@@ -308,13 +308,13 @@ namespace TestCache
       this.colType.DataPropertyName = "ObjType";
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       this.colType.DefaultCellStyle = dataGridViewCellStyle1;
-      this.colType.HeaderText = "Тип объекта";
+      this.colType.HeaderText = "РўРёРї РѕР±СЉРµРєС‚Р°";
       this.colType.Name = "colType";
       // 
       // colPersistance
       // 
       this.colPersistance.DataPropertyName = "Persistance";
-      this.colPersistance.HeaderText = "Хранение";
+      this.colPersistance.HeaderText = "РҐСЂР°РЅРµРЅРёРµ";
       this.colPersistance.Name = "colPersistance";
       this.colPersistance.Resizable = System.Windows.Forms.DataGridViewTriState.True;
       this.colPersistance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
@@ -323,7 +323,7 @@ namespace TestCache
       // colDel
       // 
       this.colDel.DataPropertyName = "AllowDelete";
-      this.colDel.HeaderText = "Удалять";
+      this.colDel.HeaderText = "РЈРґР°Р»СЏС‚СЊ";
       this.colDel.Name = "colDel";
       this.colDel.Width = 24;
       // 
@@ -332,7 +332,7 @@ namespace TestCache
       this.colSize.DataPropertyName = "Size";
       dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
       this.colSize.DefaultCellStyle = dataGridViewCellStyle2;
-      this.colSize.HeaderText = "Размер";
+      this.colSize.HeaderText = "Р Р°Р·РјРµСЂ";
       this.colSize.Name = "colSize";
       // 
       // colKeys
@@ -340,7 +340,7 @@ namespace TestCache
       this.colKeys.DataPropertyName = "KeyCount";
       dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
       this.colKeys.DefaultCellStyle = dataGridViewCellStyle3;
-      this.colKeys.HeaderText = "Кол-во ключей";
+      this.colKeys.HeaderText = "РљРѕР»-РІРѕ РєР»СЋС‡РµР№";
       this.colKeys.Name = "colKeys";
       this.colKeys.Width = 30;
       // 
@@ -349,7 +349,7 @@ namespace TestCache
       this.colValues.DataPropertyName = "ValueCount";
       dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
       this.colValues.DefaultCellStyle = dataGridViewCellStyle4;
-      this.colValues.HeaderText = "Число значений ключа";
+      this.colValues.HeaderText = "Р§РёСЃР»Рѕ Р·РЅР°С‡РµРЅРёР№ РєР»СЋС‡Р°";
       this.colValues.Name = "colValues";
       // 
       // ParamForm
@@ -365,7 +365,7 @@ namespace TestCache
       this.MinimizeBox = false;
       this.Name = "ParamForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Тестирование кэша";
+      this.Text = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РєСЌС€Р°";
       this.panel2.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();

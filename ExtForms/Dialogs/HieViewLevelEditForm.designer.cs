@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+п»їnamespace FreeLibSet.Forms
 {
   partial class HieViewLevelEditForm
   {
@@ -62,7 +62,7 @@ namespace FreeLibSet.Forms
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // MainPanel
@@ -110,7 +110,7 @@ namespace FreeLibSet.Forms
       this.grpMain.Size = new System.Drawing.Size(354, 222);
       this.grpMain.TabIndex = 0;
       this.grpMain.TabStop = false;
-      this.grpMain.Text = "Настройка наличия и порядка уровней";
+      this.grpMain.Text = "РќР°СЃС‚СЂРѕР№РєР° РЅР°Р»РёС‡РёСЏ Рё РїРѕСЂСЏРґРєР° СѓСЂРѕРІРЅРµР№";
       // 
       // grpSample
       // 
@@ -120,7 +120,7 @@ namespace FreeLibSet.Forms
       this.grpSample.Size = new System.Drawing.Size(159, 222);
       this.grpSample.TabIndex = 0;
       this.grpSample.TabStop = false;
-      this.grpSample.Text = "Образец";
+      this.grpSample.Text = "РћР±СЂР°Р·РµС†";
       // 
       // panel3
       // 
@@ -139,7 +139,7 @@ namespace FreeLibSet.Forms
       this.cbHideExtraSumRows.Name = "cbHideExtraSumRows";
       this.cbHideExtraSumRows.Size = new System.Drawing.Size(316, 17);
       this.cbHideExtraSumRows.TabIndex = 0;
-      this.cbHideExtraSumRows.Text = "Скрывать итоговые строки для уровней с одной строкой";
+      this.cbHideExtraSumRows.Text = "РЎРєСЂС‹РІР°С‚СЊ РёС‚РѕРіРѕРІС‹Рµ СЃС‚СЂРѕРєРё РґР»СЏ СѓСЂРѕРІРЅРµР№ СЃ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРѕР№";
       this.cbHideExtraSumRows.UseVisualStyleBackColor = true;
       // 
       // HieViewLevelEditForm
@@ -154,7 +154,7 @@ namespace FreeLibSet.Forms
       this.MinimizeBox = false;
       this.Name = "HieViewLevelEditForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Уровни иерархии";
+      this.Text = "РЈСЂРѕРІРЅРё РёРµСЂР°СЂС…РёРё";
       this.panel2.ResumeLayout(false);
       this.MainPanel.ResumeLayout(false);
       this.splitContainer1.Panel1.ResumeLayout(false);

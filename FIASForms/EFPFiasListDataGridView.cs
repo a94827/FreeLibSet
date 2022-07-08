@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,11 +13,11 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Табличный просмотр справочника адресных объектов, домов или помещений
+  /// РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, РґРѕРјРѕРІ РёР»Рё РїРѕРјРµС‰РµРЅРёР№
   /// </summary>
   internal class EFPFiasListDataGridView : EFPDataGridView
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     public EFPFiasListDataGridView(EFPBaseProvider baseProvider, DataGridView control, FiasUI ui, FiasTableType tableType, bool isHistView)
       : base(baseProvider, control)
@@ -50,11 +50,11 @@ namespace FreeLibSet.Forms.FIAS
       switch (tableType)
       {
         case FiasTableType.AddrOb:
-          Columns.AddTextFill("OFFNAME", true, "Наименование", 50, 25);
+          Columns.AddTextFill("OFFNAME", true, "РќР°РёРјРµРЅРѕРІР°РЅРёРµ", 50, 25);
           Columns.LastAdded.CanIncSearch = true;
-          Columns.AddText("SOCRNAME", false, "Сокращение", 10);
+          Columns.AddText("SOCRNAME", false, "РЎРѕРєСЂР°С‰РµРЅРёРµ", 10);
 
-          Columns.AddTextFill("PARENTNAME", false, "Родительский объект", 50, 40);
+          Columns.AddTextFill("PARENTNAME", false, "Р РѕРґРёС‚РµР»СЊСЃРєРёР№ РѕР±СЉРµРєС‚", 50, 40);
           Columns.LastAdded.Grayed = true;
 
           if (ui.ShowGuids)
@@ -62,7 +62,7 @@ namespace FreeLibSet.Forms.FIAS
             Columns.AddText("AOGUID", true, "AOGUID", 36);
             Columns.LastAdded.CanIncSearch = true;
 
-            Columns.AddText("AOID", true, "AOID (неустойчивый идентификатор записи)", 36);
+            Columns.AddText("AOID", true, "AOID (РЅРµСѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё)", 36);
             Columns.LastAdded.CanIncSearch = true;
             Columns.LastAdded.Grayed = true;
           }
@@ -71,68 +71,68 @@ namespace FreeLibSet.Forms.FIAS
             Columns.AddBool("Actual", true, "Actual");
             Columns.AddBool("Live", true, "Live");
           }
-          Columns.AddText("POSTALCODE", true, "Почтовый индекс", 6, 6); 
+          Columns.AddText("POSTALCODE", true, "РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ", 6, 6); 
           Columns.LastAdded.TextAlign = HorizontalAlignment.Center;
 
           if (_Handler.Source.DBSettings.UseOKATO)
-            Columns.AddText("OKATO", true, "ОКАТО", 11, 11);
+            Columns.AddText("OKATO", true, "РћРљРђРўРћ", 11, 11);
           if (_Handler.Source.DBSettings.UseOKTMO)
-            Columns.AddText("OKTMO", true, "ОКТМО", 11, 11);
+            Columns.AddText("OKTMO", true, "РћРљРўРњРћ", 11, 11);
           if (_Handler.Source.DBSettings.UseIFNS)
           {
-            Columns.AddText("IFNSFL", true, "ИФНС ФЛ", 4, 4);
-            Columns.AddText("IFNSUL", true, "ИФНС ЮЛ", 4, 4);
+            Columns.AddText("IFNSFL", true, "РР¤РќРЎ Р¤Р›", 4, 4);
+            Columns.AddText("IFNSUL", true, "РР¤РќРЎ Р®Р›", 4, 4);
           }
 
           FrozenColumns = 3;
           break;
 
         case FiasTableType.House:
-          Columns.AddTextFill("HOUSETEXT", false, "Текстовое представление", 100, 20);
+          Columns.AddTextFill("HOUSETEXT", false, "РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ", 100, 20);
 
-          Columns.AddText("HOUSENUM", true, "Дом", 15, 10);
+          Columns.AddText("HOUSENUM", true, "Р”РѕРј", 15, 10);
           Columns.LastAdded.CanIncSearch = true;
-          Columns.AddText("BUILDNUM", true, "Корпус", 15, 10);
+          Columns.AddText("BUILDNUM", true, "РљРѕСЂРїСѓСЃ", 15, 10);
           Columns.LastAdded.CanIncSearch = true;
-          Columns.AddText("STRUCNUM", true, "Строение", 15, 10);
+          Columns.AddText("STRUCNUM", true, "РЎС‚СЂРѕРµРЅРёРµ", 15, 10);
           Columns.LastAdded.CanIncSearch = true;
           if (ui.ShowGuids)
           {
             Columns.AddText("HOUSEGUID", true, "HOUSEGUID", 36);
             Columns.LastAdded.CanIncSearch = true;
 
-            Columns.AddText("HOUSEID", true, "HOUSEID (неустойчивый идентификатор записи)", 36);
+            Columns.AddText("HOUSEID", true, "HOUSEID (РЅРµСѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё)", 36);
             Columns.LastAdded.CanIncSearch = true;
             Columns.LastAdded.Grayed = true;
           }
-          Columns.AddText("POSTALCODE", true, "Почтовый индекс", 6, 6);
+          Columns.AddText("POSTALCODE", true, "РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ", 6, 6);
           Columns.LastAdded.TextAlign = HorizontalAlignment.Center;
 
           if (_Handler.Source.DBSettings.UseOKATO)
-            Columns.AddText("OKATO", true, "ОКАТО", 11, 11);
+            Columns.AddText("OKATO", true, "РћРљРђРўРћ", 11, 11);
           if (_Handler.Source.DBSettings.UseOKTMO)
-            Columns.AddText("OKTMO", true, "ОКТМО", 11, 11);
+            Columns.AddText("OKTMO", true, "РћРљРўРњРћ", 11, 11);
           if (_Handler.Source.DBSettings.UseIFNS)
           {
-            Columns.AddText("IFNSFL", true, "ИФНС ФЛ", 4, 4);
-            Columns.AddText("IFNSUL", true, "ИФНС ЮЛ", 4, 4);
+            Columns.AddText("IFNSFL", true, "РР¤РќРЎ Р¤Р›", 4, 4);
+            Columns.AddText("IFNSUL", true, "РР¤РќРЎ Р®Р›", 4, 4);
           }
 
           FrozenColumns = 2;
           break;
 
         case FiasTableType.Room:
-          Columns.AddTextFill("ROOMTEXT", false, "Текстовое представление", 100, 20);
-          Columns.AddText("FLATNUMBER", true, "Квартира", 15, 10);
+          Columns.AddTextFill("ROOMTEXT", false, "РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ", 100, 20);
+          Columns.AddText("FLATNUMBER", true, "РљРІР°СЂС‚РёСЂР°", 15, 10);
           Columns.LastAdded.CanIncSearch = true;
-          Columns.AddText("ROOMNUMBER", true, "Комната", 15, 10);
+          Columns.AddText("ROOMNUMBER", true, "РљРѕРјРЅР°С‚Р°", 15, 10);
           Columns.LastAdded.CanIncSearch = true;
           if (ui.ShowGuids)
           {
             Columns.AddText("ROOMGUID", true, "ROOMGUID", 36);
             Columns.LastAdded.CanIncSearch = true;
 
-            Columns.AddText("ROOMID", true, "ROOMID (неустойчивый идентификатор записи)", 36);
+            Columns.AddText("ROOMID", true, "ROOMID (РЅРµСѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё)", 36);
             Columns.LastAdded.CanIncSearch = true;
             Columns.LastAdded.Grayed = true;
           }
@@ -145,22 +145,22 @@ namespace FreeLibSet.Forms.FIAS
           break;
 
         default:
-          throw new ArgumentException("Неизвестная таблица " + tableType.ToString(), "tableType");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅР°СЏ С‚Р°Р±Р»РёС†Р° " + tableType.ToString(), "tableType");
       }
 
       if (ui.ShowDates)
       {
         if (ui.InternalSettings.UseOADates)
         {
-          Columns.AddDate("STARTDATE", false, "Начало действия");
-          Columns.AddDate("ENDDATE", false, "Окончание действия");
+          Columns.AddDate("STARTDATE", false, "РќР°С‡Р°Р»Рѕ РґРµР№СЃС‚РІРёСЏ");
+          Columns.AddDate("ENDDATE", false, "РћРєРѕРЅС‡Р°РЅРёРµ РґРµР№СЃС‚РІРёСЏ");
         }
         else
         {
-          // Обычные столбцы
+          // РћР±С‹С‡РЅС‹Рµ СЃС‚РѕР»Р±С†С‹
 
-          Columns.AddDate("STARTDATE", true, "Начало действия");
-          Columns.AddDate("ENDDATE", true, "Окончание действия");
+          Columns.AddDate("STARTDATE", true, "РќР°С‡Р°Р»Рѕ РґРµР№СЃС‚РІРёСЏ");
+          Columns.AddDate("ENDDATE", true, "РћРєРѕРЅС‡Р°РЅРёРµ РґРµР№СЃС‚РІРёСЏ");
           return;
         }
       }
@@ -180,7 +180,7 @@ namespace FreeLibSet.Forms.FIAS
 
       if (UseNextPrev)
       {
-        // 26.02.2021 - Просмотр идентификаторов NEXTID и PREVID
+        // 26.02.2021 - РџСЂРѕСЃРјРѕС‚СЂ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ NEXTID Рё PREVID
         Columns.AddText("PREVID", true, "PREVID", 36);
         Columns.LastAdded.CanIncSearch = true;
         Columns.LastAdded.Grayed = true;
@@ -207,14 +207,14 @@ namespace FreeLibSet.Forms.FIAS
       if (UseNextPrev)
       {
         ciGotoPrev = new EFPCommandItem("View", "GoToPrev");
-        ciGotoPrev.MenuText = "Предыдущая историческая запись";
+        ciGotoPrev.MenuText = "РџСЂРµРґС‹РґСѓС‰Р°СЏ РёСЃС‚РѕСЂРёС‡РµСЃРєР°СЏ Р·Р°РїРёСЃСЊ";
         ciGotoPrev.ImageKey = "ArrowLeft";
         ciGotoPrev.Click += new EventHandler(ciGotoPrev_Click);
         ciGotoPrev.GroupBegin = true;
         CommandItems.Add(ciGotoPrev);
 
         ciGotoNext = new EFPCommandItem("View", "GoToNext");
-        ciGotoNext.MenuText = "Следующая историческая запись";
+        ciGotoNext.MenuText = "РЎР»РµРґСѓСЋС‰Р°СЏ РёСЃС‚РѕСЂРёС‡РµСЃРєР°СЏ Р·Р°РїРёСЃСЊ";
         ciGotoNext.ImageKey = "ArrowRight";
         ciGotoNext.Click += new EventHandler(ciGotoNext_Click);
         ciGotoNext.GroupEnd = true;
@@ -244,7 +244,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     public FiasUI UI { get { return _UI; } }
     private FiasUI _UI;
@@ -258,20 +258,20 @@ namespace FreeLibSet.Forms.FIAS
     {
       get
       {
-        return "Таблица \"" + FiasEnumNames.ToString(_TableType) + "\"";
+        return "РўР°Р±Р»РёС†Р° \"" + FiasEnumNames.ToString(_TableType) + "\"";
       }
     }
 
     #endregion
 
-    #region Оформление просмотра
+    #region РћС„РѕСЂРјР»РµРЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР°
 
     private Dictionary<Guid, string> _ParentNames;
 
     private int posStartDate, posEndDate;
 
     /// <summary>
-    /// Возвращает период действия строки данных STARTDATE-ENDDATE
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРёРѕРґ РґРµР№СЃС‚РІРёСЏ СЃС‚СЂРѕРєРё РґР°РЅРЅС‹С… STARTDATE-ENDDATE
     /// </summary>
     /// <param name="row"></param>
     /// <returns></returns>
@@ -353,10 +353,10 @@ namespace FreeLibSet.Forms.FIAS
             args.Value = EFPApp.MainImages.Images[GetImageKey(Actual ? FiasActuality.Actual : FiasActuality.Historical)];
             break;
 
-          #region Вызовы IsValidName()
+          #region Р’С‹Р·РѕРІС‹ IsValidName()
 
           // 03.03.2021
-          // Вызываем IsValidName() в основном, чтобы протестировать эту функцию
+          // Р’С‹Р·С‹РІР°РµРј IsValidName() РІ РѕСЃРЅРѕРІРЅРѕРј, С‡С‚РѕР±С‹ РїСЂРѕС‚РµСЃС‚РёСЂРѕРІР°С‚СЊ СЌС‚Сѓ С„СѓРЅРєС†РёСЋ
 
           case "OFFNAME":
             FiasLevel level = (FiasLevel)(DataTools.GetInt(args.DataRow, "AOLEVEL"));
@@ -465,7 +465,7 @@ namespace FreeLibSet.Forms.FIAS
                 if (!_RecIdRows.ContainsKey(RefGuid))
                 {
                   args.ColorType = EFPDataGridViewColorType.Error;
-                  args.ToolTipText = "Ссылка на историческую запись не найдена";
+                  args.ToolTipText = "РЎСЃС‹Р»РєР° РЅР° РёСЃС‚РѕСЂРёС‡РµСЃРєСѓСЋ Р·Р°РїРёСЃСЊ РЅРµ РЅР°Р№РґРµРЅР°";
                 }
               }
             }
@@ -474,12 +474,12 @@ namespace FreeLibSet.Forms.FIAS
           case "IFNSFL":
           case "IFNSUL":
             if (DataTools.GetInt(args.DataRow, args.ColumnName) == 0)
-              args.Value = null; // поле является числовым
+              args.Value = null; // РїРѕР»Рµ СЏРІР»СЏРµС‚СЃСЏ С‡РёСЃР»РѕРІС‹Рј
             break;
           case "OKATO":
           case "OKTMO":
             if (DataTools.GetInt64(args.DataRow, args.ColumnName) == 0L)
-              args.Value = null; // поле является числовым
+              args.Value = null; // РїРѕР»Рµ СЏРІР»СЏРµС‚СЃСЏ С‡РёСЃР»РѕРІС‹Рј
             break;
         }
       }
@@ -508,7 +508,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Просмотр истории изменения адресного объекта
+    #region РџСЂРѕСЃРјРѕС‚СЂ РёСЃС‚РѕСЂРёРё РёР·РјРµРЅРµРЅРёСЏ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
 
     void EFPFiasListDataGridView_EditData(object sender, EventArgs args)
     {
@@ -531,18 +531,18 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Переход к следующей/предыдущей исторической записи
+    #region РџРµСЂРµС…РѕРґ Рє СЃР»РµРґСѓСЋС‰РµР№/РїСЂРµРґС‹РґСѓС‰РµР№ РёСЃС‚РѕСЂРёС‡РµСЃРєРѕР№ Р·Р°РїРёСЃРё
 
     /// <summary>
-    /// true, если есть команды перехода между историческими записями
+    /// true, РµСЃР»Рё РµСЃС‚СЊ РєРѕРјР°РЅРґС‹ РїРµСЂРµС…РѕРґР° РјРµР¶РґСѓ РёСЃС‚РѕСЂРёС‡РµСЃРєРёРјРё Р·Р°РїРёСЃСЏРјРё
     /// </summary>
     internal bool UseNextPrev { get { return _UseNextPrev; } }
     private bool _UseNextPrev;
 
     /// <summary>
-    /// Используется для раскраски полей NEXTID и PREVID и для перехода между историческими записям.
-    /// Ключ - неустойчивый идентификатор записи.
-    /// Значение - строка таблицы
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЂР°СЃРєСЂР°СЃРєРё РїРѕР»РµР№ NEXTID Рё PREVID Рё РґР»СЏ РїРµСЂРµС…РѕРґР° РјРµР¶РґСѓ РёСЃС‚РѕСЂРёС‡РµСЃРєРёРјРё Р·Р°РїРёСЃСЏРј.
+    /// РљР»СЋС‡ - РЅРµСѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё.
+    /// Р—РЅР°С‡РµРЅРёРµ - СЃС‚СЂРѕРєР° С‚Р°Р±Р»РёС†С‹
     /// </summary>
     private Dictionary<Guid, DataRow> _RecIdRows;
 
@@ -611,7 +611,7 @@ namespace FreeLibSet.Forms.FIAS
         return;
       if (CurrentDataRow.IsNull(columnName))
       {
-        EFPApp.ShowTempMessage("Цепочка перехода закончена");
+        EFPApp.ShowTempMessage("Р¦РµРїРѕС‡РєР° РїРµСЂРµС…РѕРґР° Р·Р°РєРѕРЅС‡РµРЅР°");
         return;
       }
       Guid g = DataTools.GetGuid(CurrentDataRow, columnName);
@@ -619,7 +619,7 @@ namespace FreeLibSet.Forms.FIAS
       if (_RecIdRows.TryGetValue(g, out row))
         CurrentDataRow = row;
       else
-        EFPApp.ShowTempMessage("Не найдена историческая запись для перехода");
+        EFPApp.ShowTempMessage("РќРµ РЅР°Р№РґРµРЅР° РёСЃС‚РѕСЂРёС‡РµСЃРєР°СЏ Р·Р°РїРёСЃСЊ РґР»СЏ РїРµСЂРµС…РѕРґР°");
     }
 
     #endregion

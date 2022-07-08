@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,17 +10,17 @@ using System.Drawing;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Интерфейс пользователя, в котором все окна располагаются непосредственно на рабочем столе
-  /// Windows и имеют собственное главное меню, панели инструментов и статусную строку.
-  /// Обычно используется для программ, в которых есть только одно окно для документа.
-  /// Свойство Name возвращает значение "SDI".
+  /// РРЅС‚РµСЂС„РµР№СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РІ РєРѕС‚РѕСЂРѕРј РІСЃРµ РѕРєРЅР° СЂР°СЃРїРѕР»Р°РіР°СЋС‚СЃСЏ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РЅР° СЂР°Р±РѕС‡РµРј СЃС‚РѕР»Рµ
+  /// Windows Рё РёРјРµСЋС‚ СЃРѕР±СЃС‚РІРµРЅРЅРѕРµ РіР»Р°РІРЅРѕРµ РјРµРЅСЋ, РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ Рё СЃС‚Р°С‚СѓСЃРЅСѓСЋ СЃС‚СЂРѕРєСѓ.
+  /// РћР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РїСЂРѕРіСЂР°РјРј, РІ РєРѕС‚РѕСЂС‹С… РµСЃС‚СЊ С‚РѕР»СЊРєРѕ РѕРґРЅРѕ РѕРєРЅРѕ РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р°.
+  /// РЎРІРѕР№СЃС‚РІРѕ Name РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ "SDI".
   /// </summary>
   public class EFPAppInterfaceSDI : EFPAppInterface
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает интерфейс
+    /// РЎРѕР·РґР°РµС‚ РёРЅС‚РµСЂС„РµР№СЃ
     /// </summary>
     public EFPAppInterfaceSDI()
     {
@@ -29,37 +29,37 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Характеристики интерфейса
+    #region РҐР°СЂР°РєС‚РµСЂРёСЃС‚РёРєРё РёРЅС‚РµСЂС„РµР№СЃР°
 
     /// <summary>
-    /// Возвращает "SDI"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "SDI"
     /// </summary>
     public override string Name { get { return "SDI"; } }
 
     /// <summary>
-    /// Возвращает true.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true.
     /// </summary>
     public override bool IsSDI { get { return true; } }
 
     /// <summary>
-    /// Возвращает false
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ false
     /// </summary>
     public override bool MainWindowNumberUsed { get { return false; } }
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Ничего не делает
+    /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
     /// </summary>
     internal protected override void InitMainWindowTitles()
     {
-      // Ничего не делаем. Заголовок определен в момент присоединения формы и больше не меняется
+      // РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј. Р—Р°РіРѕР»РѕРІРѕРє РѕРїСЂРµРґРµР»РµРЅ РІ РјРѕРјРµРЅС‚ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЏ С„РѕСЂРјС‹ Рё Р±РѕР»СЊС€Рµ РЅРµ РјРµРЅСЏРµС‚СЃСЏ
     }
 
     /// <summary>
-    /// Создает окно - "пустышку"
+    /// РЎРѕР·РґР°РµС‚ РѕРєРЅРѕ - "РїСѓСЃС‚С‹С€РєСѓ"
     /// </summary>
     /// <returns></returns>
     public override EFPAppMainWindowLayout ShowMainWindow()
@@ -73,14 +73,14 @@ namespace FreeLibSet.Forms
       StatusStrip TheStatusBar = new System.Windows.Forms.StatusStrip();
       stripContainer.BottomToolStripPanel.Controls.Add(TheStatusBar);
 
-      _CascadeHelper.SetStartPosition(dummyForm, EFPApp.DefaultScreen.WorkingArea);  // обязательно до AddMainWindow()
+      _CascadeHelper.SetStartPosition(dummyForm, EFPApp.DefaultScreen.WorkingArea);  // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕ AddMainWindow()
 
       EFPAppMainWindowLayoutSDI layout = new EFPAppMainWindowLayoutSDI(dummyForm, false);
       base.AddMainWindow(layout);
 
       layout.MainWindow.Show();
 
-      // Пустышка не попадает в список дочерних окон
+      // РџСѓСЃС‚С‹С€РєР° РЅРµ РїРѕРїР°РґР°РµС‚ РІ СЃРїРёСЃРѕРє РґРѕС‡РµСЂРЅРёС… РѕРєРѕРЅ
 
       return layout;
     }
@@ -90,7 +90,7 @@ namespace FreeLibSet.Forms
 
     private class PreparationData
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       internal EFPAppMainWindowLayoutSDI Layout;
 
@@ -104,7 +104,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Подготовка к просмотру
+    /// РџРѕРґРіРѕС‚РѕРІРєР° Рє РїСЂРѕСЃРјРѕС‚СЂСѓ
     /// </summary>
     /// <param name="form"></param>
     /// <returns></returns>
@@ -130,10 +130,10 @@ namespace FreeLibSet.Forms
       pd.StripContainer.BottomToolStripPanel.Controls.Add(TheStatusBar);
       form.Controls.Add(TheStatusBar);
 
-      //TheStatusBar.Items.Add("Статусная строка SDI");
+      //TheStatusBar.Items.Add("РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР° SDI");
 
-      // Умещаем на экран
-      _CascadeHelper.SetStartPosition(form, EFPApp.DefaultScreen.WorkingArea); // обязательно до AddMainWindow()
+      // РЈРјРµС‰Р°РµРј РЅР° СЌРєСЂР°РЅ
+      _CascadeHelper.SetStartPosition(form, EFPApp.DefaultScreen.WorkingArea); // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕ AddMainWindow()
 
       pd.Layout = new EFPAppMainWindowLayoutSDI(form, true);
       base.AddMainWindow(pd.Layout);
@@ -142,23 +142,23 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Показ дочернего окна.
-    /// Создает ToolStripContainer, в центральную панель которого переносит все существующие
-    /// дочерние элементы формы
+    /// РџРѕРєР°Р· РґРѕС‡РµСЂРЅРµРіРѕ РѕРєРЅР°.
+    /// РЎРѕР·РґР°РµС‚ ToolStripContainer, РІ С†РµРЅС‚СЂР°Р»СЊРЅСѓСЋ РїР°РЅРµР»СЊ РєРѕС‚РѕСЂРѕРіРѕ РїРµСЂРµРЅРѕСЃРёС‚ РІСЃРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ
+    /// РґРѕС‡РµСЂРЅРёРµ СЌР»РµРјРµРЅС‚С‹ С„РѕСЂРјС‹
     /// </summary>
-    /// <param name="form">Созданная в пользовательском коде форма</param>
-    /// <param name="preparationData">Внутренние данные</param>
+    /// <param name="form">РЎРѕР·РґР°РЅРЅР°СЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ С„РѕСЂРјР°</param>
+    /// <param name="preparationData">Р’РЅСѓС‚СЂРµРЅРЅРёРµ РґР°РЅРЅС‹Рµ</param>
     protected override void OnShowChildForm(Form form, object preparationData)
     {
       PreparationData pd = (PreparationData)preparationData;
 
       pd.Layout.MainWindow.Show();
 
-      // Делаем, чтобы размеры сохранились
+      // Р”РµР»Р°РµРј, С‡С‚РѕР±С‹ СЂР°Р·РјРµСЂС‹ СЃРѕС…СЂР°РЅРёР»РёСЃСЊ
       EFPFormProvider formProvider = EFPFormProvider.FindFormProviderRequired(form);
       if ((!pd.SrcSize.IsEmpty) && (formProvider.ReadConfigFormBoundsParts & EFPFormBoundsPart.Size) == 0)
       {
-        // Должно быть после вызова AddMainWindow(), т.к. там добавляется статусная строка и панели
+        // Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕСЃР»Рµ РІС‹Р·РѕРІР° AddMainWindow(), С‚.Рє. С‚Р°Рј РґРѕР±Р°РІР»СЏРµС‚СЃСЏ СЃС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР° Рё РїР°РЅРµР»Рё
         Size NewSize = pd.StripContainer.ContentPanel.ClientSize;
         int dx = pd.SrcSize.Width - NewSize.Width;
         int dy = pd.SrcSize.Height - NewSize.Height;
@@ -166,29 +166,29 @@ namespace FreeLibSet.Forms
           form.Size.Height + dy);
       }
 
-      WinFormsTools.PlaceFormInRectangle(form, EFPApp.DefaultScreen.WorkingArea); // еще раз, с учетом добавленных панелей
+      WinFormsTools.PlaceFormInRectangle(form, EFPApp.DefaultScreen.WorkingArea); // РµС‰Рµ СЂР°Р·, СЃ СѓС‡РµС‚РѕРј РґРѕР±Р°РІР»РµРЅРЅС‹С… РїР°РЅРµР»РµР№
 
       form.WindowState = pd.SrcState;
     }
 
     /// <summary>
-    /// Выбрасывает исключение
+    /// Р’С‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
     /// <param name="mdiLayout"></param>
     public override void LayoutChildForms(MdiLayout mdiLayout)
     {
-      throw new NotImplementedException("Размещение окон интерфейса SDI не реализовано");
+      throw new NotImplementedException("Р Р°Р·РјРµС‰РµРЅРёРµ РѕРєРѕРЅ РёРЅС‚РµСЂС„РµР№СЃР° SDI РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ");
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Расширение EFPAppMainWindowLayout для интерфейса SDI.
+  /// Р Р°СЃС€РёСЂРµРЅРёРµ EFPAppMainWindowLayout РґР»СЏ РёРЅС‚РµСЂС„РµР№СЃР° SDI.
   /// </summary>
   public sealed class EFPAppMainWindowLayoutSDI : EFPAppMainWindowLayout
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPAppMainWindowLayoutSDI(Form form, bool isRealForm)
     {

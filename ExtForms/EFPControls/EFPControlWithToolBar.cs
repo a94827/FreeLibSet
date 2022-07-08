@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,12 +9,12 @@ using System.Drawing;
 
 namespace FreeLibSet.Forms
 {
-  #region Интерфейс IEFPControlWithToolBar<T>
+  #region РРЅС‚РµСЂС„РµР№СЃ IEFPControlWithToolBar<T>
 
   /// <summary>
-  /// Интерфейс управляющего элемента с панелью инструментов.
-  /// Обычно используется шаблонный класс EFPControlWithToolBar.
-  /// Нетипизированная версия интерфейса
+  /// РРЅС‚РµСЂС„РµР№СЃ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° СЃ РїР°РЅРµР»СЊСЋ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ.
+  /// РћР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С€Р°Р±Р»РѕРЅРЅС‹Р№ РєР»Р°СЃСЃ EFPControlWithToolBar.
+  /// РќРµС‚РёРїРёР·РёСЂРѕРІР°РЅРЅР°СЏ РІРµСЂСЃРёСЏ РёРЅС‚РµСЂС„РµР№СЃР°
   /// </summary>
   public interface IEFPControlWithToolBar
   {
@@ -24,27 +24,27 @@ namespace FreeLibSet.Forms
     EFPBaseProvider BaseProvider { get;}
 
     /// <summary>
-    /// Основной управляющий элемент
+    /// РћСЃРЅРѕРІРЅРѕР№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚
     /// </summary>
     Control Control { get;}
 
     /// <summary>
-    /// Панель для размещения инструментов.
-    /// Может быть null, если EFPApp.ShowControlToolBars=false
+    /// РџР°РЅРµР»СЊ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ.
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё EFPApp.ShowControlToolBars=false
     /// </summary>
     Panel ToolBarPanel { get;}
   }
 
   /// <summary>
-  /// Интерфейс управляющего элемента с панелью инструментов.
-  /// Обычно используется шаблонный класс EFPControlWithToolBar
+  /// РРЅС‚РµСЂС„РµР№СЃ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° СЃ РїР°РЅРµР»СЊСЋ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ.
+  /// РћР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С€Р°Р±Р»РѕРЅРЅС‹Р№ РєР»Р°СЃСЃ EFPControlWithToolBar
   /// </summary>
-  /// <typeparam name="T">Тип управляющего элемента</typeparam>
+  /// <typeparam name="T">РўРёРї СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</typeparam>
   public interface IEFPControlWithToolBar<T> : IEFPControlWithToolBar
     where T : Control
   {
     /// <summary>
-    /// Основной управляющий элемент
+    /// РћСЃРЅРѕРІРЅРѕР№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚
     /// </summary>
     new T Control { get;}
   }
@@ -52,17 +52,17 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Управляющий элемент с панелью инструментов
+  /// РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ СЃ РїР°РЅРµР»СЊСЋ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
   /// </summary>
-  /// <typeparam name="T">Тип управляющего элемента</typeparam>
+  /// <typeparam name="T">РўРёРї СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</typeparam>
   public class EFPControlWithToolBar<T> : IEFPControlWithToolBar<T>
     where T : Control, new()
   {
-    #region Вложенный класс провайдера
+    #region Р’Р»РѕР¶РµРЅРЅС‹Р№ РєР»Р°СЃСЃ РїСЂРѕРІР°Р№РґРµСЂР°
 
     private class ExProvider : EFPBaseProvider
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public ExProvider(Panel toolBarPanel)
       {
@@ -71,7 +71,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       private Panel _ToolBarPanel;
 
@@ -79,11 +79,11 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Переопределенные методы
+      #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
       // 19.06.2019
-      // Присоединение панели инструментов выполняется не в методе InitCommandItemList(), а в Add() (с учетом возможного удаления и замены элементов)
-      // В старом варианте панель инструментов не рисовалась, если форма выводилась на экран при запуске программы из EFPApp.LoadComposition()
+      // РџСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РЅРµ РІ РјРµС‚РѕРґРµ InitCommandItemList(), Р° РІ Add() (СЃ СѓС‡РµС‚РѕРј РІРѕР·РјРѕР¶РЅРѕРіРѕ СѓРґР°Р»РµРЅРёСЏ Рё Р·Р°РјРµРЅС‹ СЌР»РµРјРµРЅС‚РѕРІ)
+      // Р’ СЃС‚Р°СЂРѕРј РІР°СЂРёР°РЅС‚Рµ РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РЅРµ СЂРёСЃРѕРІР°Р»Р°СЃСЊ, РµСЃР»Рё С„РѕСЂРјР° РІС‹РІРѕРґРёР»Р°СЃСЊ РЅР° СЌРєСЂР°РЅ РїСЂРё Р·Р°РїСѓСЃРєРµ РїСЂРѕРіСЂР°РјРјС‹ РёР· EFPApp.LoadComposition()
 
       protected override void OnControlProviderAdded(EFPControlBase controlProvider)
       {
@@ -104,40 +104,40 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает новый управляющий элемент типа <typeparamref name="T"/> и панель инструментов. 
-    /// Элементы размещаются в <paramref name="parent"/>.Control.
-    /// В качестве <paramref name="parent"/> обычно используется EFPTabPage
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ С‚РёРїР° <typeparamref name="T"/> Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ. 
+    /// Р­Р»РµРјРµРЅС‚С‹ СЂР°Р·РјРµС‰Р°СЋС‚СЃСЏ РІ <paramref name="parent"/>.Control.
+    /// Р’ РєР°С‡РµСЃС‚РІРµ <paramref name="parent"/> РѕР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ EFPTabPage
     /// </summary>
-    /// <param name="parent">Провайдер родительского элемента</param>
+    /// <param name="parent">РџСЂРѕРІР°Р№РґРµСЂ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
     public EFPControlWithToolBar(EFPControlBase parent)
       : this(parent.BaseProvider, parent.Control, new T())
     {
     }
 
     /// <summary>
-    /// Создает новый управляющий элемент типа <typeparamref name="T"/> и панель инструментов. 
-    /// Элементы размещаются в родительском элементе <paramref name="parent"/>.
-    /// Обычно это Panel или другая панель.
-    /// Основная версия конструктора.
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ С‚РёРїР° <typeparamref name="T"/> Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ. 
+    /// Р­Р»РµРјРµРЅС‚С‹ СЂР°Р·РјРµС‰Р°СЋС‚СЃСЏ РІ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРј СЌР»РµРјРµРЅС‚Рµ <paramref name="parent"/>.
+    /// РћР±С‹С‡РЅРѕ СЌС‚Рѕ Panel РёР»Рё РґСЂСѓРіР°СЏ РїР°РЅРµР»СЊ.
+    /// РћСЃРЅРѕРІРЅР°СЏ РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°.
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="parent">Родительский управляюший элемент</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="parent">Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СѓРїСЂР°РІР»СЏСЋС€РёР№ СЌР»РµРјРµРЅС‚</param>
     public EFPControlWithToolBar(EFPBaseProvider baseProvider, Control parent)
       : this(baseProvider, parent, new T())
     {
     }
 
     /// <summary>
-    /// Использует готовый управляюший элемент <paramref name="control"/> и создает новую панель инструментов. 
-    /// Элементы размещаются в родительском элементе <paramref name="parent"/>.
-    /// Обычно это Panel или другая панель.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚ РіРѕС‚РѕРІС‹Р№ СѓРїСЂР°РІР»СЏСЋС€РёР№ СЌР»РµРјРµРЅС‚ <paramref name="control"/> Рё СЃРѕР·РґР°РµС‚ РЅРѕРІСѓСЋ РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ. 
+    /// Р­Р»РµРјРµРЅС‚С‹ СЂР°Р·РјРµС‰Р°СЋС‚СЃСЏ РІ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРј СЌР»РµРјРµРЅС‚Рµ <paramref name="parent"/>.
+    /// РћР±С‹С‡РЅРѕ СЌС‚Рѕ Panel РёР»Рё РґСЂСѓРіР°СЏ РїР°РЅРµР»СЊ.
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="parent">Родительский управляюший элемент</param>
-    /// <param name="control">Основной управляющий элемент</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="parent">Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СѓРїСЂР°РІР»СЏСЋС€РёР№ СЌР»РµРјРµРЅС‚</param>
+    /// <param name="control">РћСЃРЅРѕРІРЅРѕР№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
     public EFPControlWithToolBar(EFPBaseProvider baseProvider, Control parent, T control)
     {
 #if DEBUG
@@ -146,11 +146,11 @@ namespace FreeLibSet.Forms
       if (parent == null)
         throw new ArgumentNullException("parent");
       if (parent.Controls.Count > 0)
-        throw new InvalidOperationException("Родительский управляющий элемент " + parent.ToString() + " уже содержит элементы");
+        throw new InvalidOperationException("Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ " + parent.ToString() + " СѓР¶Рµ СЃРѕРґРµСЂР¶РёС‚ СЌР»РµРјРµРЅС‚С‹");
       if (control == null)
         throw new ArgumentNullException("control");
       if (control.Parent != null)
-        throw new ArgumentException("Основной управлящий элемент не должен иметь родителя", "control");
+        throw new ArgumentException("РћСЃРЅРѕРІРЅРѕР№ СѓРїСЂР°РІР»СЏС‰РёР№ СЌР»РµРјРµРЅС‚ РЅРµ РґРѕР»Р¶РµРЅ РёРјРµС‚СЊ СЂРѕРґРёС‚РµР»СЏ", "control");
 #endif
 
 
@@ -173,16 +173,16 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Задается в конструкторе
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
     private ExProvider _BaseProvider;
 
     /// <summary>
-    /// Основной управляющий элемент. Задается в конструкторе
+    /// РћСЃРЅРѕРІРЅРѕР№ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚. Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public T Control { get { return _Control; } }
     private T _Control;
@@ -190,8 +190,8 @@ namespace FreeLibSet.Forms
     Control IEFPControlWithToolBar.Control { get { return _Control; } }
 
     /// <summary>
-    /// Панель для размещения инструментов. Создается в конструкторе. Может быть
-    /// null, если EFPApp.ShowControlToolBars=false
+    /// РџР°РЅРµР»СЊ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ. РЎРѕР·РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ. РњРѕР¶РµС‚ Р±С‹С‚СЊ
+    /// null, РµСЃР»Рё EFPApp.ShowControlToolBars=false
     /// </summary>
     public Panel ToolBarPanel { get { return _ToolBarPanel; } }
     private Panel _ToolBarPanel;

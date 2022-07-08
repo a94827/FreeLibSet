@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,12 +11,12 @@ using FreeLibSet.Logging;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Базовый класс для TempMessageForm и TempWaitForm.
-  /// Обеспечивает размещение формы поверх статусной строки активного окна
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ TempMessageForm Рё TempWaitForm.
+  /// РћР±РµСЃРїРµС‡РёРІР°РµС‚ СЂР°Р·РјРµС‰РµРЅРёРµ С„РѕСЂРјС‹ РїРѕРІРµСЂС… СЃС‚Р°С‚СѓСЃРЅРѕР№ СЃС‚СЂРѕРєРё Р°РєС‚РёРІРЅРѕРіРѕ РѕРєРЅР°
   /// </summary>
   internal class TempBaseForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public TempBaseForm()
     {
@@ -41,7 +41,7 @@ namespace FreeLibSet.Forms
 
       if (Visible)
       {
-        #region Определение TheForm.Owner
+        #region РћРїСЂРµРґРµР»РµРЅРёРµ TheForm.Owner
 
         try
         {
@@ -78,15 +78,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Определить, какая существующая форма
+    /// РћРїСЂРµРґРµР»РёС‚СЊ, РєР°РєР°СЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰Р°СЏ С„РѕСЂРјР°
     /// </summary>
     /// <returns></returns>
     private Form GetWantedOwner()
     {
       if (EFPApp.ActiveDialog != null)
-        return EFPApp.ActiveDialog; // дополнительные проверки видимости формы не нужны.
+        return EFPApp.ActiveDialog; // РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РїСЂРѕРІРµСЂРєРё РІРёРґРёРјРѕСЃС‚Рё С„РѕСЂРјС‹ РЅРµ РЅСѓР¶РЅС‹.
 
-      Form af = Form.ActiveForm; // 21.12.2018. См. исправление в EFPApp.DialogOwnerWindow
+      Form af = Form.ActiveForm; // 21.12.2018. РЎРј. РёСЃРїСЂР°РІР»РµРЅРёРµ РІ EFPApp.DialogOwnerWindow
       Form wantedOwner;
       if (EFPApp.MainWindow != null)
         wantedOwner = EFPApp.MainWindow; // 21.09.2018
@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms
 
       if (wantedOwner != null)
       {
-        // 17.06.2018 - проверяем, что активная форма нормальная
+        // 17.06.2018 - РїСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ Р°РєС‚РёРІРЅР°СЏ С„РѕСЂРјР° РЅРѕСЂРјР°Р»СЊРЅР°СЏ
 
         if (wantedOwner.IsDisposed)
           wantedOwner = null;
@@ -130,7 +130,7 @@ namespace FreeLibSet.Forms
       this.Bounds = new Rectangle(rect.Left, rect.Bottom - 22, rect.Width, 22);
     }
 
-    #region Обработчики для формы-владельца
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РґР»СЏ С„РѕСЂРјС‹-РІР»Р°РґРµР»СЊС†Р°
 
     private void AttachOwnerHandlers()
     {
@@ -141,7 +141,7 @@ namespace FreeLibSet.Forms
 
     private void DetachOwnerHandlers()
     {
-      #region Отключение старого обработчика BoundsChanged
+      #region РћС‚РєР»СЋС‡РµРЅРёРµ СЃС‚Р°СЂРѕРіРѕ РѕР±СЂР°Р±РѕС‚С‡РёРєР° BoundsChanged
 
       try
       {
@@ -153,7 +153,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка отключения обработчика SizeChanged");
+        LogoutTools.LogoutException(e, "РћС€РёР±РєР° РѕС‚РєР»СЋС‡РµРЅРёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєР° SizeChanged");
       }
 
       #endregion

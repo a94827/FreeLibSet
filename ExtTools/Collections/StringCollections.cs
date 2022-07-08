@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -8,28 +8,28 @@ using System.Collections;
 using System.Runtime.Serialization;
 using FreeLibSet.Core;
 
-// Коллекции, использующие строки (в качестве ключа).
-// Поддерживают режим IgnoreCase
+// РљРѕР»Р»РµРєС†РёРё, РёСЃРїРѕР»СЊР·СѓСЋС‰РёРµ СЃС‚СЂРѕРєРё (РІ РєР°С‡РµСЃС‚РІРµ РєР»СЋС‡Р°).
+// РџРѕРґРґРµСЂР¶РёРІР°СЋС‚ СЂРµР¶РёРј IgnoreCase
 
 namespace FreeLibSet.Collections
 {
   /// <summary>
-  /// Список строк с однократным вхождением.
-  /// Поддерживаются варианты с учетом и без учета регистра.
-  /// В варианте без учета регистра, исходный вариант регистра сохраняется.
-  /// Значения null не допускаются.
-  /// После установки свойства ReadOnly=true, список становится потокобезопасным.
-  /// Строки хранятся в списке в порядке добавления. Используйте метод Sort() для сортировки списка
+  /// РЎРїРёСЃРѕРє СЃС‚СЂРѕРє СЃ РѕРґРЅРѕРєСЂР°С‚РЅС‹Рј РІС…РѕР¶РґРµРЅРёРµРј.
+  /// РџРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ РІР°СЂРёР°РЅС‚С‹ СЃ СѓС‡РµС‚РѕРј Рё Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР°.
+  /// Р’ РІР°СЂРёР°РЅС‚Рµ Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР°, РёСЃС…РѕРґРЅС‹Р№ РІР°СЂРёР°РЅС‚ СЂРµРіРёСЃС‚СЂР° СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ.
+  /// Р—РЅР°С‡РµРЅРёСЏ null РЅРµ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+  /// РџРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° ReadOnly=true, СЃРїРёСЃРѕРє СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
+  /// РЎС‚СЂРѕРєРё С…СЂР°РЅСЏС‚СЃСЏ РІ СЃРїРёСЃРєРµ РІ РїРѕСЂСЏРґРєРµ РґРѕР±Р°РІР»РµРЅРёСЏ. РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ Sort() РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё СЃРїРёСЃРєР°
   /// </summary>
   [Serializable]
   public class SingleScopeStringList : SingleScopeList<string>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает пустой список
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(bool ignoreCase)
       : base(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -37,9 +37,9 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустой список
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(StringComparer comparer)
       : base(comparer)
     {
@@ -47,11 +47,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустой список заданной емкости.
-    /// Используйте этот конструктор, если конечное число элементов в коллекции известно с большой долей вероятности.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє Р·Р°РґР°РЅРЅРѕР№ РµРјРєРѕСЃС‚Рё.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЌС‚РѕС‚ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ, РµСЃР»Рё РєРѕРЅРµС‡РЅРѕРµ С‡РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё РёР·РІРµСЃС‚РЅРѕ СЃ Р±РѕР»СЊС€РѕР№ РґРѕР»РµР№ РІРµСЂРѕСЏС‚РЅРѕСЃС‚Рё.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -59,11 +59,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустой список заданной емкости.
-    /// Используйте этот конструктор, если конечное число элементов в коллекции известно с большой долей вероятности.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє Р·Р°РґР°РЅРЅРѕР№ РµРјРєРѕСЃС‚Рё.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЌС‚РѕС‚ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ, РµСЃР»Рё РєРѕРЅРµС‡РЅРѕРµ С‡РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё РёР·РІРµСЃС‚РЅРѕ СЃ Р±РѕР»СЊС€РѕР№ РґРѕР»РµР№ РІРµСЂРѕСЏС‚РЅРѕСЃС‚Рё.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(int capacity, StringComparer comparer)
       : base(capacity, comparer)
     {
@@ -71,10 +71,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает список и заполняет его заданными значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·Р°РґР°РЅРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="src">Коллекция, откуда следует взять строки</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="src">РљРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° СЃР»РµРґСѓРµС‚ РІР·СЏС‚СЊ СЃС‚СЂРѕРєРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(ICollection<string> src, bool ignoreCase)
       : base(src, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -82,10 +82,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает список и заполняет его заданными значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·Р°РґР°РЅРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="src">Коллекция, откуда следует взять строки</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="src">РљРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° СЃР»РµРґСѓРµС‚ РІР·СЏС‚СЊ СЃС‚СЂРѕРєРё</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(ICollection<string> src, StringComparer comparer)
       : base(src, comparer)
     {
@@ -93,10 +93,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает список и заполняет его заданными значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·Р°РґР°РЅРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="src">Коллекция, откуда следует взять строки</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="src">РљРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° СЃР»РµРґСѓРµС‚ РІР·СЏС‚СЊ СЃС‚СЂРѕРєРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(IEnumerable<string> src, bool ignoreCase)
       : base(src, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -104,10 +104,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает список и заполняет его заданными значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·Р°РґР°РЅРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="src">Коллекция, откуда следует взять строки</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="src">РљРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° СЃР»РµРґСѓРµС‚ РІР·СЏС‚СЊ СЃС‚СЂРѕРєРё</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public SingleScopeStringList(IEnumerable<string> src, StringComparer comparer)
       : base(src, comparer)
     {
@@ -116,10 +116,10 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает true, если список не является чувствительным к регистру
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃРїРёСЃРѕРє РЅРµ СЏРІР»СЏРµС‚СЃСЏ С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
@@ -128,19 +128,19 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Реализация типизированной коллекции, в которой ключом являются строки, а значения имеют заданный тип.
-  /// В отличие от обычной коллекции Dictionary, может быть не чувствительна к регистру ключа
+  /// Р РµР°Р»РёР·Р°С†РёСЏ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕР№ РєРѕР»Р»РµРєС†РёРё, РІ РєРѕС‚РѕСЂРѕР№ РєР»СЋС‡РѕРј СЏРІР»СЏСЋС‚СЃСЏ СЃС‚СЂРѕРєРё, Р° Р·РЅР°С‡РµРЅРёСЏ РёРјРµСЋС‚ Р·Р°РґР°РЅРЅС‹Р№ С‚РёРї.
+  /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РѕР±С‹С‡РЅРѕР№ РєРѕР»Р»РµРєС†РёРё Dictionary, РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅР° Рє СЂРµРіРёСЃС‚СЂСѓ РєР»СЋС‡Р°
   /// </summary>
-  /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
+  /// <typeparam name="TValue">РўРёРї С…СЂР°РЅСЏС‰РёС…СЃСЏ Р·РЅР°С‡РµРЅРёР№</typeparam>
   [Serializable]
   public class TypedStringDictionary<TValue> : DictionaryWithReadOnly<string, TValue>, INamedValuesAccess
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает пустую коллекцию.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public TypedStringDictionary(bool ignoreCase)
       : base(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -148,9 +148,9 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустую коллекцию.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
     /// </summary>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public TypedStringDictionary(StringComparer comparer)
       : base(comparer)
     {
@@ -158,10 +158,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустую коллекцию заданной емкости
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ Р·Р°РґР°РЅРЅРѕР№ РµРјРєРѕСЃС‚Рё
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public TypedStringDictionary(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -169,10 +169,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустую коллекцию заданной емкости
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ Р·Р°РґР°РЅРЅРѕР№ РµРјРєРѕСЃС‚Рё
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public TypedStringDictionary(int capacity, StringComparer comparer)
       : base(capacity, comparer)
     {
@@ -180,10 +180,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает коллецию и заполняет ее значениями
+    /// РЎРѕР·РґР°РµС‚ РєРѕР»Р»РµС†РёСЋ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРµ Р·РЅР°С‡РµРЅРёСЏРјРё
     /// </summary>
-    /// <param name="dictionary">Исходная коллекция, откуда берутся значения для заполнения</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="dictionary">РСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public TypedStringDictionary(IDictionary<string, TValue> dictionary, bool ignoreCase)
       : this(dictionary.Count, ignoreCase)
     {
@@ -192,10 +192,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает коллецию и заполняет ее значениями
+    /// РЎРѕР·РґР°РµС‚ РєРѕР»Р»РµС†РёСЋ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРµ Р·РЅР°С‡РµРЅРёСЏРјРё
     /// </summary>
-    /// <param name="dictionary">Исходная коллекция, откуда берутся значения для заполнения</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="dictionary">РСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public TypedStringDictionary(IDictionary<string, TValue> dictionary, StringComparer comparer)
       : this(dictionary.Count, comparer)
     {
@@ -207,10 +207,10 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает true, если коллекция не является чувствительной к регистру
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕР»Р»РµРєС†РёСЏ РЅРµ СЏРІР»СЏРµС‚СЃСЏ С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕР№ Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
@@ -240,21 +240,21 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Реализация типизированной коллекции, в которой ключом являются строки, а значения имеют заданный тип.
-  /// Двусторонняя коллекция, в которой можно получить не только значение для ключа, но и ключ для значения.
-  /// В отличие от обычной коллекции Dictionary, ключ может быть не чувствителен к регистру ключа.
-  /// Если значением <typeparamref name="TValue"/> является строка, то она всегда является чувствительной к регистру
+  /// Р РµР°Р»РёР·Р°С†РёСЏ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕР№ РєРѕР»Р»РµРєС†РёРё, РІ РєРѕС‚РѕСЂРѕР№ РєР»СЋС‡РѕРј СЏРІР»СЏСЋС‚СЃСЏ СЃС‚СЂРѕРєРё, Р° Р·РЅР°С‡РµРЅРёСЏ РёРјРµСЋС‚ Р·Р°РґР°РЅРЅС‹Р№ С‚РёРї.
+  /// Р”РІСѓСЃС‚РѕСЂРѕРЅРЅСЏСЏ РєРѕР»Р»РµРєС†РёСЏ, РІ РєРѕС‚РѕСЂРѕР№ РјРѕР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ РЅРµ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РєР»СЋС‡Р°, РЅРѕ Рё РєР»СЋС‡ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ.
+  /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РѕР±С‹С‡РЅРѕР№ РєРѕР»Р»РµРєС†РёРё Dictionary, РєР»СЋС‡ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ С‡СѓРІСЃС‚РІРёС‚РµР»РµРЅ Рє СЂРµРіРёСЃС‚СЂСѓ РєР»СЋС‡Р°.
+  /// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµРј <typeparamref name="TValue"/> СЏРІР»СЏРµС‚СЃСЏ СЃС‚СЂРѕРєР°, С‚Рѕ РѕРЅР° РІСЃРµРіРґР° СЏРІР»СЏРµС‚СЃСЏ С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕР№ Рє СЂРµРіРёСЃС‚СЂСѓ
   /// </summary>
-  /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
+  /// <typeparam name="TValue">РўРёРї С…СЂР°РЅСЏС‰РёС…СЃСЏ Р·РЅР°С‡РµРЅРёР№</typeparam>
   [Serializable]
   public class BidirectionalTypedStringDictionary<TValue> : BidirectionalDictionary<string, TValue>, INamedValuesAccess
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает пустую коллекцию.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public BidirectionalTypedStringDictionary(bool ignoreCase)
       :base(ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal, null)
     {
@@ -262,9 +262,9 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустую коллекцию.
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
     /// </summary>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public BidirectionalTypedStringDictionary(StringComparer comparer)
       : base(comparer, null)
     {
@@ -272,10 +272,10 @@ namespace FreeLibSet.Collections
     }
         
     /// <summary>
-    /// Создает пустую коллекцию заданной емкости
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ Р·Р°РґР°РЅРЅРѕР№ РµРјРєРѕСЃС‚Рё
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public BidirectionalTypedStringDictionary(int capacity, bool ignoreCase)
       :base(capacity, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal, null)
     {
@@ -283,10 +283,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустую коллекцию заданной емкости
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ РєРѕР»Р»РµРєС†РёСЋ Р·Р°РґР°РЅРЅРѕР№ РµРјРєРѕСЃС‚Рё
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public BidirectionalTypedStringDictionary(int capacity, StringComparer comparer)
       : base(capacity, comparer, null)
     {
@@ -294,10 +294,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает коллецию и заполняет ее значениями
+    /// РЎРѕР·РґР°РµС‚ РєРѕР»Р»РµС†РёСЋ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРµ Р·РЅР°С‡РµРЅРёСЏРјРё
     /// </summary>
-    /// <param name="dictionary">Исходная коллекция, откуда берутся значения для заполнения</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="dictionary">РСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public BidirectionalTypedStringDictionary(IDictionary<string, TValue> dictionary, bool ignoreCase)
       : this(dictionary.Count, ignoreCase)
     {
@@ -306,10 +306,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает коллецию и заполняет ее значениями
+    /// РЎРѕР·РґР°РµС‚ РєРѕР»Р»РµС†РёСЋ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРµ Р·РЅР°С‡РµРЅРёСЏРјРё
     /// </summary>
-    /// <param name="dictionary">Исходная коллекция, откуда берутся значения для заполнения</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="dictionary">РСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public BidirectionalTypedStringDictionary(IDictionary<string, TValue> dictionary, StringComparer comparer)
       : this(dictionary.Count, comparer)
     {
@@ -322,8 +322,8 @@ namespace FreeLibSet.Collections
     #region IgnoreCase
 
     /// <summary>
-    /// Если true, то регистр строк не учитывается.
-    /// Свойство задается в конструкторе
+    /// Р•СЃР»Рё true, С‚Рѕ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
@@ -354,35 +354,35 @@ namespace FreeLibSet.Collections
 
 
   /// <summary>
-  /// Простой класс, реализующий быстрый поиск элементов в массиве строк.
-  /// Содержит методы Contains и IndexOf.
-  /// Поддерживает игнорирование регистра
-  /// Исходный массив должен подходить в качестве ключа коллекции: элементы должны быть уникальными,
-  /// значения null недопустимы.
-  /// Не содержит исходного массива.
-  /// Этот класс не является сериализуемым, т.к. легко может быть воссоздан.
-  /// Интерфейс реализует интерфейс IComparer для сортировки других массивов и списков (метод Compare()).
-  /// Класс является потокобезопасным.
+  /// РџСЂРѕСЃС‚РѕР№ РєР»Р°СЃСЃ, СЂРµР°Р»РёР·СѓСЋС‰РёР№ Р±С‹СЃС‚СЂС‹Р№ РїРѕРёСЃРє СЌР»РµРјРµРЅС‚РѕРІ РІ РјР°СЃСЃРёРІРµ СЃС‚СЂРѕРє.
+  /// РЎРѕРґРµСЂР¶РёС‚ РјРµС‚РѕРґС‹ Contains Рё IndexOf.
+  /// РџРѕРґРґРµСЂР¶РёРІР°РµС‚ РёРіРЅРѕСЂРёСЂРѕРІР°РЅРёРµ СЂРµРіРёСЃС‚СЂР°
+  /// РСЃС…РѕРґРЅС‹Р№ РјР°СЃСЃРёРІ РґРѕР»Р¶РµРЅ РїРѕРґС…РѕРґРёС‚СЊ РІ РєР°С‡РµСЃС‚РІРµ РєР»СЋС‡Р° РєРѕР»Р»РµРєС†РёРё: СЌР»РµРјРµРЅС‚С‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓРЅРёРєР°Р»СЊРЅС‹РјРё,
+  /// Р·РЅР°С‡РµРЅРёСЏ null РЅРµРґРѕРїСѓСЃС‚РёРјС‹.
+  /// РќРµ СЃРѕРґРµСЂР¶РёС‚ РёСЃС…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР°.
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ СЏРІР»СЏРµС‚СЃСЏ СЃРµСЂРёР°Р»РёР·СѓРµРјС‹Рј, С‚.Рє. Р»РµРіРєРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІРѕСЃСЃРѕР·РґР°РЅ.
+  /// РРЅС‚РµСЂС„РµР№СЃ СЂРµР°Р»РёР·СѓРµС‚ РёРЅС‚РµСЂС„РµР№СЃ IComparer РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РґСЂСѓРіРёС… РјР°СЃСЃРёРІРѕРІ Рё СЃРїРёСЃРєРѕРІ (РјРµС‚РѕРґ Compare()).
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   public sealed class StringArrayIndexer : ArrayIndexer<string>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает индексатор для массива.
-    /// Эта версия конструкторов учитывает регистр символов.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РјР°СЃСЃРёРІР°.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРІ СѓС‡РёС‚С‹РІР°РµС‚ СЂРµРіРёСЃС‚СЂ СЃРёРјРІРѕР»РѕРІ.
     /// </summary>
-    /// <param name="source">Индексируемый массив</param>
+    /// <param name="source">РРЅРґРµРєСЃРёСЂСѓРµРјС‹Р№ РјР°СЃСЃРёРІ</param>
     public StringArrayIndexer(string[] source)
       : this(source, false)
     {
     }
 
     /// <summary>
-    /// Создает индексатор для массива.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РјР°СЃСЃРёРІР°.
     /// </summary>
-    /// <param name="source">Индексируемый массив</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="source">РРЅРґРµРєСЃРёСЂСѓРµРјС‹Р№ РјР°СЃСЃРёРІ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public StringArrayIndexer(string[] source, bool ignoreCase)
       :base(source, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -390,10 +390,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает индексатор для массива.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РјР°СЃСЃРёРІР°.
     /// </summary>
-    /// <param name="source">Индексируемый массив</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="source">РРЅРґРµРєСЃРёСЂСѓРµРјС‹Р№ РјР°СЃСЃРёРІ</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public StringArrayIndexer(string[] source, StringComparer comparer)
       : base(source, comparer)
     {
@@ -401,20 +401,20 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает индексатор для коллекции строк.
-    /// Эта версия конструкторов учитывает регистр символов.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РєРѕР»Р»РµРєС†РёРё СЃС‚СЂРѕРє.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРІ СѓС‡РёС‚С‹РІР°РµС‚ СЂРµРіРёСЃС‚СЂ СЃРёРјРІРѕР»РѕРІ.
     /// </summary>
-    /// <param name="source">Индексируемая коллекция</param>
+    /// <param name="source">РРЅРґРµРєСЃРёСЂСѓРµРјР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
     public StringArrayIndexer(ICollection<string> source)
       : this(source, false)
     {
     }
 
     /// <summary>
-    /// Создает индексатор для коллекции строк.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РєРѕР»Р»РµРєС†РёРё СЃС‚СЂРѕРє.
     /// </summary>
-    /// <param name="source">Индексируемая коллекция</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр строк</param>
+    /// <param name="source">РРЅРґРµРєСЃРёСЂСѓРµРјР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє</param>
     public StringArrayIndexer(ICollection<string> source, bool ignoreCase)
       :base(source, ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal)
     {
@@ -422,10 +422,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает индексатор для коллекции строк.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РєРѕР»Р»РµРєС†РёРё СЃС‚СЂРѕРє.
     /// </summary>
-    /// <param name="source">Индексируемая коллекция</param>
-    /// <param name="comparer">Объект для сравнения строк</param>
+    /// <param name="source">РРЅРґРµРєСЃРёСЂСѓРµРјР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="comparer">РћР±СЉРµРєС‚ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє</param>
     public StringArrayIndexer(ICollection<string> source, StringComparer comparer)
       : base(source, comparer)
     {
@@ -434,21 +434,21 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Если true, то регистр строк не учитывается.
-    /// Свойство задается в конструкторе
+    /// Р•СЃР»Рё true, С‚Рѕ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
 
     #endregion
 
-    #region Статический список
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ СЃРїРёСЃРѕРє
 
     /// <summary>
-    /// Пустой список - индексатор
+    /// РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє - РёРЅРґРµРєСЃР°С‚РѕСЂ
     /// </summary>
     public static readonly StringArrayIndexer Empty = new StringArrayIndexer(DataTools.EmptyStrings, false);
 
@@ -456,40 +456,40 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Простой класс, реализующий быстрый поиск символов.
-  /// Содержит методы Contains() и IndexOf().
-  /// Исходный массив должен подходить в качестве ключа коллекции: элементы должны быть уникальными,
-  /// значения null недопустимы.
-  /// Не содержит исходного массива.
-  /// Этот класс не является сериализуемым, т.к. легко может быть воссоздан.
-  /// Идентичен ArrayIndexer of Char за исключением конструкторов из строки.
-  /// Также поддерживает поиск с игнорированием регистра
-  /// Интерфейс реализует интерфейс IComparer для сортировки других массивов и списков (метод Compare()).
-  /// Класс является потокобезопасным.
+  /// РџСЂРѕСЃС‚РѕР№ РєР»Р°СЃСЃ, СЂРµР°Р»РёР·СѓСЋС‰РёР№ Р±С‹СЃС‚СЂС‹Р№ РїРѕРёСЃРє СЃРёРјРІРѕР»РѕРІ.
+  /// РЎРѕРґРµСЂР¶РёС‚ РјРµС‚РѕРґС‹ Contains() Рё IndexOf().
+  /// РСЃС…РѕРґРЅС‹Р№ РјР°СЃСЃРёРІ РґРѕР»Р¶РµРЅ РїРѕРґС…РѕРґРёС‚СЊ РІ РєР°С‡РµСЃС‚РІРµ РєР»СЋС‡Р° РєРѕР»Р»РµРєС†РёРё: СЌР»РµРјРµРЅС‚С‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓРЅРёРєР°Р»СЊРЅС‹РјРё,
+  /// Р·РЅР°С‡РµРЅРёСЏ null РЅРµРґРѕРїСѓСЃС‚РёРјС‹.
+  /// РќРµ СЃРѕРґРµСЂР¶РёС‚ РёСЃС…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР°.
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ СЏРІР»СЏРµС‚СЃСЏ СЃРµСЂРёР°Р»РёР·СѓРµРјС‹Рј, С‚.Рє. Р»РµРіРєРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІРѕСЃСЃРѕР·РґР°РЅ.
+  /// РРґРµРЅС‚РёС‡РµРЅ ArrayIndexer of Char Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРІ РёР· СЃС‚СЂРѕРєРё.
+  /// РўР°РєР¶Рµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РїРѕРёСЃРє СЃ РёРіРЅРѕСЂРёСЂРѕРІР°РЅРёРµРј СЂРµРіРёСЃС‚СЂР°
+  /// РРЅС‚РµСЂС„РµР№СЃ СЂРµР°Р»РёР·СѓРµС‚ РёРЅС‚РµСЂС„РµР№СЃ IComparer РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РґСЂСѓРіРёС… РјР°СЃСЃРёРІРѕРІ Рё СЃРїРёСЃРєРѕРІ (РјРµС‚РѕРґ Compare()).
+  /// РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   public sealed class CharArrayIndexer : IComparer<char>
   {
-    // Требуется собственная реализация, а не через ArrayIndexer, т.к. StringComparer не реализует IEqualityComparer для Char
+    // РўСЂРµР±СѓРµС‚СЃСЏ СЃРѕР±СЃС‚РІРµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ, Р° РЅРµ С‡РµСЂРµР· ArrayIndexer, С‚.Рє. StringComparer РЅРµ СЂРµР°Р»РёР·СѓРµС‚ IEqualityComparer РґР»СЏ Char
 
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает индексатор для массива.
-    /// В отличие от ArrayIndexer of Char, допускается наличие в <paramref name="source"/> повторяющихся символов, которые отбрасываются.
-    /// Сравнение будет чувствительным к регистру символов.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РјР°СЃСЃРёРІР°.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ ArrayIndexer of Char, РґРѕРїСѓСЃРєР°РµС‚СЃСЏ РЅР°Р»РёС‡РёРµ РІ <paramref name="source"/> РїРѕРІС‚РѕСЂСЏСЋС‰РёС…СЃСЏ СЃРёРјРІРѕР»РѕРІ, РєРѕС‚РѕСЂС‹Рµ РѕС‚Р±СЂР°СЃС‹РІР°СЋС‚СЃСЏ.
+    /// РЎСЂР°РІРЅРµРЅРёРµ Р±СѓРґРµС‚ С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ СЃРёРјРІРѕР»РѕРІ.
     /// </summary>
-    /// <param name="source">Массив символов</param>
+    /// <param name="source">РњР°СЃСЃРёРІ СЃРёРјРІРѕР»РѕРІ</param>
     public CharArrayIndexer(char[] source)
       : this(source, false)
     {
     }
 
     /// <summary>
-    /// Создает индексатор для массива.
-    /// В отличие от ArrayIndexer of Char, допускается наличие в <paramref name="source"/> повторяющихся символов, которые отбрасываются
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ РјР°СЃСЃРёРІР°.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ ArrayIndexer of Char, РґРѕРїСѓСЃРєР°РµС‚СЃСЏ РЅР°Р»РёС‡РёРµ РІ <paramref name="source"/> РїРѕРІС‚РѕСЂСЏСЋС‰РёС…СЃСЏ СЃРёРјРІРѕР»РѕРІ, РєРѕС‚РѕСЂС‹Рµ РѕС‚Р±СЂР°СЃС‹РІР°СЋС‚СЃСЏ
     /// </summary>
-    /// <param name="source">Массив символов</param>
-    /// <param name="ignoreCase">Если true, то будет игнорироваться регистр символов</param>
+    /// <param name="source">РњР°СЃСЃРёРІ СЃРёРјРІРѕР»РѕРІ</param>
+    /// <param name="ignoreCase">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊСЃСЏ СЂРµРіРёСЃС‚СЂ СЃРёРјРІРѕР»РѕРІ</param>
     public CharArrayIndexer(char[] source, bool ignoreCase)
     {
       if (source == null)
@@ -509,22 +509,22 @@ namespace FreeLibSet.Collections
 
 
     /// <summary>
-    /// Создает индексатор для строки символов
-    /// Допускается наличие в <paramref name="source"/> повторяющихся символов, которые отбрасываются
-    /// Сравнение будет чувствительным к регистру символов.
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ СЃС‚СЂРѕРєРё СЃРёРјРІРѕР»РѕРІ
+    /// Р”РѕРїСѓСЃРєР°РµС‚СЃСЏ РЅР°Р»РёС‡РёРµ РІ <paramref name="source"/> РїРѕРІС‚РѕСЂСЏСЋС‰РёС…СЃСЏ СЃРёРјРІРѕР»РѕРІ, РєРѕС‚РѕСЂС‹Рµ РѕС‚Р±СЂР°СЃС‹РІР°СЋС‚СЃСЏ
+    /// РЎСЂР°РІРЅРµРЅРёРµ Р±СѓРґРµС‚ С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ СЃРёРјРІРѕР»РѕРІ.
     /// </summary>
-    /// <param name="source">Строка символов</param>
+    /// <param name="source">РЎС‚СЂРѕРєР° СЃРёРјРІРѕР»РѕРІ</param>
     public CharArrayIndexer(string source)
       : this(source, false)
     {
     }
 
     /// <summary>
-    /// Создает индексатор для строки символов
-    /// Допускается наличие в <paramref name="source"/> повторяющихся символов, которые отбрасываются
+    /// РЎРѕР·РґР°РµС‚ РёРЅРґРµРєСЃР°С‚РѕСЂ РґР»СЏ СЃС‚СЂРѕРєРё СЃРёРјРІРѕР»РѕРІ
+    /// Р”РѕРїСѓСЃРєР°РµС‚СЃСЏ РЅР°Р»РёС‡РёРµ РІ <paramref name="source"/> РїРѕРІС‚РѕСЂСЏСЋС‰РёС…СЃСЏ СЃРёРјРІРѕР»РѕРІ, РєРѕС‚РѕСЂС‹Рµ РѕС‚Р±СЂР°СЃС‹РІР°СЋС‚СЃСЏ
     /// </summary>
-    /// <param name="source">Строка символов</param>
-    /// <param name="ignoreCase">Если true, то будет игнорироваться регистр символов</param>
+    /// <param name="source">РЎС‚СЂРѕРєР° СЃРёРјРІРѕР»РѕРІ</param>
+    /// <param name="ignoreCase">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊСЃСЏ СЂРµРіРёСЃС‚СЂ СЃРёРјРІРѕР»РѕРІ</param>
     public CharArrayIndexer(string source, bool ignoreCase)
     {
       if (source == null)
@@ -548,41 +548,41 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private Dictionary<char, int> _Dict;
 
     /// <summary>
-    /// Количество элементов в массиве
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РјР°СЃСЃРёРІРµ
     /// </summary>
     public int Count { get { return _Dict.Count; } }
 
     /// <summary>
-    /// Если true, то регистр строк не учитывается.
-    /// Свойство задается в конструкторе
+    /// Р•СЃР»Рё true, С‚Рѕ СЂРµРіРёСЃС‚СЂ СЃС‚СЂРѕРє РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ Р·Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private bool _IgnoreCase;
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Текстовое представление для отладки
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Строка вида "Count=XXX"</returns>
+    /// <returns>РЎС‚СЂРѕРєР° РІРёРґР° "Count=XXX"</returns>
     public override string ToString()
     {
       return "Count=" + _Dict.Count.ToString();
     }
 
     /// <summary>
-    /// Возвращает индекс элемента в массиве.
-    /// В отличие от Array.IndexOf(), выполняется быстро
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ СЌР»РµРјРµРЅС‚Р° РІ РјР°СЃСЃРёРІРµ.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ Array.IndexOf(), РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р±С‹СЃС‚СЂРѕ
     /// </summary>
-    /// <param name="item">Символ для поиска</param>
-    /// <returns>Индекс элемента</returns>
+    /// <param name="item">РЎРёРјРІРѕР» РґР»СЏ РїРѕРёСЃРєР°</param>
+    /// <returns>РРЅРґРµРєСЃ СЌР»РµРјРµРЅС‚Р°</returns>
     public int IndexOf(char item)
     {
       if (_IgnoreCase)
@@ -596,11 +596,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает индекс любого символа из строки <paramref name="s"/>, если он есть в текущем массиве.
-    /// Если в текущем массиве нет ни одного символа из строки <paramref name="s"/>, возвращается (-1)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ Р»СЋР±РѕРіРѕ СЃРёРјРІРѕР»Р° РёР· СЃС‚СЂРѕРєРё <paramref name="s"/>, РµСЃР»Рё РѕРЅ РµСЃС‚СЊ РІ С‚РµРєСѓС‰РµРј РјР°СЃСЃРёРІРµ.
+    /// Р•СЃР»Рё РІ С‚РµРєСѓС‰РµРј РјР°СЃСЃРёРІРµ РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ СЃРёРјРІРѕР»Р° РёР· СЃС‚СЂРѕРєРё <paramref name="s"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ (-1)
     /// </summary>
-    /// <param name="s">Символы для поиска</param>
-    /// <returns>Индекс первого найденного символа</returns>
+    /// <param name="s">РЎРёРјРІРѕР»С‹ РґР»СЏ РїРѕРёСЃРєР°</param>
+    /// <returns>РРЅРґРµРєСЃ РїРµСЂРІРѕРіРѕ РЅР°Р№РґРµРЅРЅРѕРіРѕ СЃРёРјРІРѕР»Р°</returns>
     public int IndexOfAny(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -619,10 +619,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает true, если элемент есть в исходном массиве
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЌР»РµРјРµРЅС‚ РµСЃС‚СЊ РІ РёСЃС…РѕРґРЅРѕРј РјР°СЃСЃРёРІРµ
     /// </summary>
-    /// <param name="item">Символ для поиска</param>
-    /// <returns>true, если символ есть в списке</returns>
+    /// <param name="item">РЎРёРјРІРѕР» РґР»СЏ РїРѕРёСЃРєР°</param>
+    /// <returns>true, РµСЃР»Рё СЃРёРјРІРѕР» РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ</returns>
     public bool Contains(char item)
     {
       if (_IgnoreCase)
@@ -632,10 +632,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает true, если в текущем индексаторе есть хотя бы один символ из строки <paramref name="s"/>
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ С‚РµРєСѓС‰РµРј РёРЅРґРµРєСЃР°С‚РѕСЂРµ РµСЃС‚СЊ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СЃРёРјРІРѕР» РёР· СЃС‚СЂРѕРєРё <paramref name="s"/>
     /// </summary>
-    /// <param name="s">Проверяемая строка символов</param>
-    /// <returns>результат поиска</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР° СЃРёРјРІРѕР»РѕРІ</param>
+    /// <returns>СЂРµР·СѓР»СЊС‚Р°С‚ РїРѕРёСЃРєР°</returns>
     public bool ContainsAny(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -653,10 +653,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает true, если в текущем индексаторе есть все символы из строки <paramref name="s"/>
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ С‚РµРєСѓС‰РµРј РёРЅРґРµРєСЃР°С‚РѕСЂРµ РµСЃС‚СЊ РІСЃРµ СЃРёРјРІРѕР»С‹ РёР· СЃС‚СЂРѕРєРё <paramref name="s"/>
     /// </summary>
-    /// <param name="s">Проверяемая строка символов</param>
-    /// <returns>результат поиска</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР° СЃРёРјРІРѕР»РѕРІ</param>
+    /// <returns>СЂРµР·СѓР»СЊС‚Р°С‚ РїРѕРёСЃРєР°</returns>
     public bool ContainsAll(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -674,11 +674,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает true, если в списке содержатся все элементы, то есть если Contains() возвращает true для каждого элемента.
-    /// Если проверяемый список пустой, возвращает true.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ СЃРїРёСЃРєРµ СЃРѕРґРµСЂР¶Р°С‚СЃСЏ РІСЃРµ СЌР»РµРјРµРЅС‚С‹, С‚Рѕ РµСЃС‚СЊ РµСЃР»Рё Contains() РІРѕР·РІСЂР°С‰Р°РµС‚ true РґР»СЏ РєР°Р¶РґРѕРіРѕ СЌР»РµРјРµРЅС‚Р°.
+    /// Р•СЃР»Рё РїСЂРѕРІРµСЂСЏРµРјС‹Р№ СЃРїРёСЃРѕРє РїСѓСЃС‚РѕР№, РІРѕР·РІСЂР°С‰Р°РµС‚ true.
     /// </summary>
-    /// <param name="items">Проверяемый список элементов</param>
-    /// <returns>Наличие элементов</returns>
+    /// <param name="items">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ СЃРїРёСЃРѕРє СЌР»РµРјРµРЅС‚РѕРІ</param>
+    /// <returns>РќР°Р»РёС‡РёРµ СЌР»РµРјРµРЅС‚РѕРІ</returns>
     public bool ContainsAll(IEnumerable<char> items)
     {
       foreach (char item in items)
@@ -690,11 +690,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает true, если в списке есть хотя бы один элемент, то есть если Contains() возвращает true для какого-либо элемента
-    /// Если проверяемый список пустой, возвращает false.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ СЃРїРёСЃРєРµ РµСЃС‚СЊ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СЌР»РµРјРµРЅС‚, С‚Рѕ РµСЃС‚СЊ РµСЃР»Рё Contains() РІРѕР·РІСЂР°С‰Р°РµС‚ true РґР»СЏ РєР°РєРѕРіРѕ-Р»РёР±Рѕ СЌР»РµРјРµРЅС‚Р°
+    /// Р•СЃР»Рё РїСЂРѕРІРµСЂСЏРµРјС‹Р№ СЃРїРёСЃРѕРє РїСѓСЃС‚РѕР№, РІРѕР·РІСЂР°С‰Р°РµС‚ false.
     /// </summary>
-    /// <param name="items">Проверяемый список элементов</param>
-    /// <returns>Наличие элементов</returns>
+    /// <param name="items">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ СЃРїРёСЃРѕРє СЌР»РµРјРµРЅС‚РѕРІ</param>
+    /// <returns>РќР°Р»РёС‡РёРµ СЌР»РµРјРµРЅС‚РѕРІ</returns>
     public bool ContainsAny(IEnumerable<char> items)
     {
       foreach (char item in items)
@@ -710,13 +710,13 @@ namespace FreeLibSet.Collections
     #region IComparer<T> members
 
     /// <summary>
-    /// Устанавливается для списка Empty
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РґР»СЏ СЃРїРёСЃРєР° Empty
     /// </summary>
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Положение ненайденных элементов при сортировке с помощью метода Compare().
-    /// По умолчанию - First - ненайденные элементы располагаются в начале списка.
+    /// РџРѕР»РѕР¶РµРЅРёРµ РЅРµРЅР°Р№РґРµРЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ РїСЂРё СЃРѕСЂС‚РёСЂРѕРІРєРµ СЃ РїРѕРјРѕС‰СЊСЋ РјРµС‚РѕРґР° Compare().
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - First - РЅРµРЅР°Р№РґРµРЅРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ СЂР°СЃРїРѕР»Р°РіР°СЋС‚СЃСЏ РІ РЅР°С‡Р°Р»Рµ СЃРїРёСЃРєР°.
     /// </summary>
     public UnknownItemPosition UnknownItemPosition
     {
@@ -740,21 +740,21 @@ namespace FreeLibSet.Collections
     private UnknownItemPosition _UnknownItemPosition;
 
     /// <summary>
-    /// Сравнение положения двух символов.
-    /// Метод может быть использован для сортировки произвольных списков и массивов, чтобы
-    /// отсортировать их в соответствии с порядком элементов в текущем объекте CharArrayIndexer.
-    /// Сравнивается положение элементов в текущем объекте, а не коды символов.
-    /// Если какое-либо значение отсутствует в текущем объекте, то оно будет расположено в
-    /// начале или в конце списка, в зависимости от свойства UnknownItemPosition.
-    /// Если обоих значений нет в текущем списке, то возвращается результат сравнения значений.
+    /// РЎСЂР°РІРЅРµРЅРёРµ РїРѕР»РѕР¶РµРЅРёСЏ РґРІСѓС… СЃРёРјРІРѕР»РѕРІ.
+    /// РњРµС‚РѕРґ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РїСЂРѕРёР·РІРѕР»СЊРЅС‹С… СЃРїРёСЃРєРѕРІ Рё РјР°СЃСЃРёРІРѕРІ, С‡С‚РѕР±С‹
+    /// РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РёС… РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РїРѕСЂСЏРґРєРѕРј СЌР»РµРјРµРЅС‚РѕРІ РІ С‚РµРєСѓС‰РµРј РѕР±СЉРµРєС‚Рµ CharArrayIndexer.
+    /// РЎСЂР°РІРЅРёРІР°РµС‚СЃСЏ РїРѕР»РѕР¶РµРЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ РІ С‚РµРєСѓС‰РµРј РѕР±СЉРµРєС‚Рµ, Р° РЅРµ РєРѕРґС‹ СЃРёРјРІРѕР»РѕРІ.
+    /// Р•СЃР»Рё РєР°РєРѕРµ-Р»РёР±Рѕ Р·РЅР°С‡РµРЅРёРµ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РІ С‚РµРєСѓС‰РµРј РѕР±СЉРµРєС‚Рµ, С‚Рѕ РѕРЅРѕ Р±СѓРґРµС‚ СЂР°СЃРїРѕР»РѕР¶РµРЅРѕ РІ
+    /// РЅР°С‡Р°Р»Рµ РёР»Рё РІ РєРѕРЅС†Рµ СЃРїРёСЃРєР°, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРІРѕР№СЃС‚РІР° UnknownItemPosition.
+    /// Р•СЃР»Рё РѕР±РѕРёС… Р·РЅР°С‡РµРЅРёР№ РЅРµС‚ РІ С‚РµРєСѓС‰РµРј СЃРїРёСЃРєРµ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№.
     /// 
-    /// Метод возвращает отрицательное значение, если <paramref name="x"/> располагается ближе
-    /// к началу списка, чем <paramref name="y"/>. Положительное значение возвращается, если
-    /// <paramref name="x"/> располагается ближе к концу списка, чем <paramref name="y"/>. 
+    /// РњРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ, РµСЃР»Рё <paramref name="x"/> СЂР°СЃРїРѕР»Р°РіР°РµС‚СЃСЏ Р±Р»РёР¶Рµ
+    /// Рє РЅР°С‡Р°Р»Сѓ СЃРїРёСЃРєР°, С‡РµРј <paramref name="y"/>. РџРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ, РµСЃР»Рё
+    /// <paramref name="x"/> СЂР°СЃРїРѕР»Р°РіР°РµС‚СЃСЏ Р±Р»РёР¶Рµ Рє РєРѕРЅС†Сѓ СЃРїРёСЃРєР°, С‡РµРј <paramref name="y"/>. 
     /// </summary>
-    /// <param name="x">Первое сравниваемое значение</param>
-    /// <param name="y">Второе сравниваемое значение</param>
-    /// <returns>Результат сравнение позиций</returns>
+    /// <param name="x">РџРµСЂРІРѕРµ СЃСЂР°РІРЅРёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="y">Р’С‚РѕСЂРѕРµ СЃСЂР°РІРЅРёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёРµ РїРѕР·РёС†РёР№</returns>
     public int Compare(char x, char y)
     {
       int px = IndexOf(x);
@@ -762,7 +762,7 @@ namespace FreeLibSet.Collections
 
       if (px < 0 && py < 0)
       {
-        // Если обоих элементов нет в списке, сравниваем элементы
+        // Р•СЃР»Рё РѕР±РѕРёС… СЌР»РµРјРµРЅС‚РѕРІ РЅРµС‚ РІ СЃРїРёСЃРєРµ, СЃСЂР°РІРЅРёРІР°РµРј СЌР»РµРјРµРЅС‚С‹
         return x.CompareTo(y);
       }
 
@@ -779,30 +779,30 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Статический список
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ СЃРїРёСЃРѕРє
 
     /// <summary>
-    /// Пустой список - индексатор
+    /// РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє - РёРЅРґРµРєСЃР°С‚РѕСЂ
     /// </summary>
     public static readonly CharArrayIndexer Empty = new CharArrayIndexer();
 
     #endregion
   }
 
-  #region Числовые коллекции со строковым ключом
+  #region Р§РёСЃР»РѕРІС‹Рµ РєРѕР»Р»РµРєС†РёРё СЃРѕ СЃС‚СЂРѕРєРѕРІС‹Рј РєР»СЋС‡РѕРј
 
   /// <summary>
-  /// Словарь числовых значений со строковым ключом.
-  /// Словарь может быть не чувствителен к регистру ключа (определяется в конструкторе).
+  /// РЎР»РѕРІР°СЂСЊ С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ СЃРѕ СЃС‚СЂРѕРєРѕРІС‹Рј РєР»СЋС‡РѕРј.
+  /// РЎР»РѕРІР°СЂСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ С‡СѓРІСЃС‚РІРёС‚РµР»РµРЅ Рє СЂРµРіРёСЃС‚СЂСѓ РєР»СЋС‡Р° (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ).
   /// </summary>
   [Serializable]
   public class IntNamedDictionary : TypedStringDictionary<int>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Основная версия конструктора.
-    /// Создает словарь с ключом, чувствительным к регистру
+    /// РћСЃРЅРѕРІРЅР°СЏ РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
     public IntNamedDictionary()
       : this(false)
@@ -810,49 +810,49 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public IntNamedDictionary(bool ignoreCase)
       : base(ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
     public IntNamedDictionary(int capacity)
       : this(capacity, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру.
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ.
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public IntNamedDictionary(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
     public IntNamedDictionary(IDictionary<string, int> dictionary)
       : this(dictionary, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру, и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ, Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public IntNamedDictionary(IDictionary<string, int> dictionary, bool ignoreCase)
       : base(dictionary, ignoreCase)
     {
@@ -860,15 +860,15 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Доступ к значениям
+    #region Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј
 
     /// <summary>
-    /// Получение или установка значения.
-    /// Если в словаре нет значения с указанным ключом, возвращается 0
-    /// (без выброса исключения, как это принято в стандартных коллекциях)
+    /// РџРѕР»СѓС‡РµРЅРёРµ РёР»Рё СѓСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё РІ СЃР»РѕРІР°СЂРµ РЅРµС‚ Р·РЅР°С‡РµРЅРёСЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєР»СЋС‡РѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0
+    /// (Р±РµР· РІС‹Р±СЂРѕСЃР° РёСЃРєР»СЋС‡РµРЅРёСЏ, РєР°Рє СЌС‚Рѕ РїСЂРёРЅСЏС‚Рѕ РІ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РєРѕР»Р»РµРєС†РёСЏС…)
     /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>Значение</returns>
+    /// <param name="key">РљР»СЋС‡</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public new int this[string key]
     {
       get
@@ -887,14 +887,14 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Сложение и вычитание
+    #region РЎР»РѕР¶РµРЅРёРµ Рё РІС‹С‡РёС‚Р°РЅРёРµ
 
     /// <summary>
-    /// Добавить к текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РѕР±Р°РІРёС‚СЊ Рє С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся добавляемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РґРѕР±Р°РІР»СЏРµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Add(IDictionary<string, int> source)
     {
       if (source == null)
@@ -905,11 +905,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычесть из текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р’С‹С‡РµСЃС‚СЊ РёР· С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся вычитаемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РІС‹С‡РёС‚Р°РµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Substract(IDictionary<string, int> source)
     {
       if (source == null)
@@ -920,14 +920,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Сложение двух коллекций.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Add(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// РЎР»РѕР¶РµРЅРёРµ РґРІСѓС… РєРѕР»Р»РµРєС†РёР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Add(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static IntNamedDictionary operator +(IntNamedDictionary a, IDictionary<string, int> b)
     {
       IntNamedDictionary res = new IntNamedDictionary(a, a.IgnoreCase);
@@ -936,14 +936,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычитание одной коллекции из другой.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Substract(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// Р’С‹С‡РёС‚Р°РЅРёРµ РѕРґРЅРѕР№ РєРѕР»Р»РµРєС†РёРё РёР· РґСЂСѓРіРѕР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Substract(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static IntNamedDictionary operator -(IntNamedDictionary a, IDictionary<string, int> b)
     {
       IntNamedDictionary res = new IntNamedDictionary(a, a.IgnoreCase);
@@ -953,13 +953,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Умножение и деление
+    #region РЈРјРЅРѕР¶РµРЅРёРµ Рё РґРµР»РµРЅРёРµ
 
     /// <summary>
-    /// Умножение всех значений коллекции на заданное число.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// РЈРјРЅРѕР¶РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="m">Множитель</param>
+    /// <param name="m">РњРЅРѕР¶РёС‚РµР»СЊ</param>
     public void Multiply(int m)
     {
       string[] codes = new string[base.Count];
@@ -969,11 +969,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Деление всех значений коллекции на заданное число.
-    /// Деление выполняется с выполнением округления по правилам для целых чисел.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РµР»РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// Р”РµР»РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃ РІС‹РїРѕР»РЅРµРЅРёРµРј РѕРєСЂСѓРіР»РµРЅРёСЏ РїРѕ РїСЂР°РІРёР»Р°Рј РґР»СЏ С†РµР»С‹С… С‡РёСЃРµР».
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="d">Делитель. Не может быть равен 0</param>
+    /// <param name="d">Р”РµР»РёС‚РµР»СЊ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РІРµРЅ 0</param>
     public void Divide(int d)
     {
       string[] codes = new string[base.Count];
@@ -986,17 +986,17 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Словарь числовых значений со строковым ключом.
-  /// Словарь может быть не чувствителен к регистру ключа (определяется в конструкторе).
+  /// РЎР»РѕРІР°СЂСЊ С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ СЃРѕ СЃС‚СЂРѕРєРѕРІС‹Рј РєР»СЋС‡РѕРј.
+  /// РЎР»РѕРІР°СЂСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ С‡СѓРІСЃС‚РІРёС‚РµР»РµРЅ Рє СЂРµРіРёСЃС‚СЂСѓ РєР»СЋС‡Р° (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ).
   /// </summary>
   [Serializable]
   public class Int64NamedDictionary : TypedStringDictionary<long>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Основная версия конструктора.
-    /// Создает словарь с ключом, чувствительным к регистру
+    /// РћСЃРЅРѕРІРЅР°СЏ РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
     public Int64NamedDictionary()
       : this(false)
@@ -1004,49 +1004,49 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public Int64NamedDictionary(bool ignoreCase)
       : base(ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
     public Int64NamedDictionary(int capacity)
       : this(capacity, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру.
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ.
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public Int64NamedDictionary(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
     public Int64NamedDictionary(IDictionary<string, long> dictionary)
       : this(dictionary, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру, и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ, Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public Int64NamedDictionary(IDictionary<string, long> dictionary, bool ignoreCase)
       : base(dictionary, ignoreCase)
     {
@@ -1054,15 +1054,15 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Доступ к значениям
+    #region Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј
 
     /// <summary>
-    /// Получение или установка значения.
-    /// Если в словаре нет значения с указанным ключом, возвращается 0
-    /// (без выброса исключения, как это принято в стандартных коллекциях)
+    /// РџРѕР»СѓС‡РµРЅРёРµ РёР»Рё СѓСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё РІ СЃР»РѕРІР°СЂРµ РЅРµС‚ Р·РЅР°С‡РµРЅРёСЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєР»СЋС‡РѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0
+    /// (Р±РµР· РІС‹Р±СЂРѕСЃР° РёСЃРєР»СЋС‡РµРЅРёСЏ, РєР°Рє СЌС‚Рѕ РїСЂРёРЅСЏС‚Рѕ РІ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РєРѕР»Р»РµРєС†РёСЏС…)
     /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>Значение</returns>
+    /// <param name="key">РљР»СЋС‡</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public new long this[string key]
     {
       get
@@ -1081,14 +1081,14 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Сложение и вычитание
+    #region РЎР»РѕР¶РµРЅРёРµ Рё РІС‹С‡РёС‚Р°РЅРёРµ
 
     /// <summary>
-    /// Добавить к текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РѕР±Р°РІРёС‚СЊ Рє С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся добавляемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РґРѕР±Р°РІР»СЏРµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Add(IDictionary<string, long> source)
     {
       if (source == null)
@@ -1099,11 +1099,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычесть из текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р’С‹С‡РµСЃС‚СЊ РёР· С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся вычитаемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РІС‹С‡РёС‚Р°РµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Substract(IDictionary<string, long> source)
     {
       if (source == null)
@@ -1114,14 +1114,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Сложение двух коллекций.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Add(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// РЎР»РѕР¶РµРЅРёРµ РґРІСѓС… РєРѕР»Р»РµРєС†РёР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Add(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static Int64NamedDictionary operator +(Int64NamedDictionary a, IDictionary<string, long> b)
     {
       Int64NamedDictionary res = new Int64NamedDictionary(a, a.IgnoreCase);
@@ -1130,14 +1130,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычитание одной коллекции из другой.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Substract(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// Р’С‹С‡РёС‚Р°РЅРёРµ РѕРґРЅРѕР№ РєРѕР»Р»РµРєС†РёРё РёР· РґСЂСѓРіРѕР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Substract(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static Int64NamedDictionary operator -(Int64NamedDictionary a, IDictionary<string, long> b)
     {
       Int64NamedDictionary res = new Int64NamedDictionary(a, a.IgnoreCase);
@@ -1147,13 +1147,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Умножение и деление
+    #region РЈРјРЅРѕР¶РµРЅРёРµ Рё РґРµР»РµРЅРёРµ
 
     /// <summary>
-    /// Умножение всех значений коллекции на заданное число.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// РЈРјРЅРѕР¶РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="m">Множитель</param>
+    /// <param name="m">РњРЅРѕР¶РёС‚РµР»СЊ</param>
     public void Multiply(long m)
     {
       string[] codes = new string[base.Count];
@@ -1163,11 +1163,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Деление всех значений коллекции на заданное число.
-    /// Деление выполняется с выполнением округления по правилам для целых чисел.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РµР»РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// Р”РµР»РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃ РІС‹РїРѕР»РЅРµРЅРёРµРј РѕРєСЂСѓРіР»РµРЅРёСЏ РїРѕ РїСЂР°РІРёР»Р°Рј РґР»СЏ С†РµР»С‹С… С‡РёСЃРµР».
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="d">Делитель. Не может быть равен 0</param>
+    /// <param name="d">Р”РµР»РёС‚РµР»СЊ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РІРµРЅ 0</param>
     public void Divide(long d)
     {
       string[] codes = new string[base.Count];
@@ -1180,17 +1180,17 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Словарь числовых значений со строковым ключом.
-  /// Словарь может быть не чувствителен к регистру ключа (определяется в конструкторе).
+  /// РЎР»РѕРІР°СЂСЊ С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ СЃРѕ СЃС‚СЂРѕРєРѕРІС‹Рј РєР»СЋС‡РѕРј.
+  /// РЎР»РѕРІР°СЂСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ С‡СѓРІСЃС‚РІРёС‚РµР»РµРЅ Рє СЂРµРіРёСЃС‚СЂСѓ РєР»СЋС‡Р° (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ).
   /// </summary>
   [Serializable]
   public class SingleNamedDictionary : TypedStringDictionary<float>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Основная версия конструктора.
-    /// Создает словарь с ключом, чувствительным к регистру
+    /// РћСЃРЅРѕРІРЅР°СЏ РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
     public SingleNamedDictionary()
       : this(false)
@@ -1198,49 +1198,49 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public SingleNamedDictionary(bool ignoreCase)
       : base(ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
     public SingleNamedDictionary(int capacity)
       : this(capacity, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру.
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ.
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public SingleNamedDictionary(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
     public SingleNamedDictionary(IDictionary<string, float> dictionary)
       : this(dictionary, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру, и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ, Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public SingleNamedDictionary(IDictionary<string, float> dictionary, bool ignoreCase)
       : base(dictionary, ignoreCase)
     {
@@ -1248,15 +1248,15 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Доступ к значениям
+    #region Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј
 
     /// <summary>
-    /// Получение или установка значения.
-    /// Если в словаре нет значения с указанным ключом, возвращается 0
-    /// (без выброса исключения, как это принято в стандартных коллекциях)
+    /// РџРѕР»СѓС‡РµРЅРёРµ РёР»Рё СѓСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё РІ СЃР»РѕРІР°СЂРµ РЅРµС‚ Р·РЅР°С‡РµРЅРёСЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєР»СЋС‡РѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0
+    /// (Р±РµР· РІС‹Р±СЂРѕСЃР° РёСЃРєР»СЋС‡РµРЅРёСЏ, РєР°Рє СЌС‚Рѕ РїСЂРёРЅСЏС‚Рѕ РІ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РєРѕР»Р»РµРєС†РёСЏС…)
     /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>Значение</returns>
+    /// <param name="key">РљР»СЋС‡</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public new float this[string key]
     {
       get
@@ -1275,14 +1275,14 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Сложение и вычитание
+    #region РЎР»РѕР¶РµРЅРёРµ Рё РІС‹С‡РёС‚Р°РЅРёРµ
 
     /// <summary>
-    /// Добавить к текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РѕР±Р°РІРёС‚СЊ Рє С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся добавляемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РґРѕР±Р°РІР»СЏРµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Add(IDictionary<string, float> source)
     {
       if (source == null)
@@ -1293,11 +1293,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычесть из текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р’С‹С‡РµСЃС‚СЊ РёР· С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся вычитаемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РІС‹С‡РёС‚Р°РµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Substract(IDictionary<string, float> source)
     {
       if (source == null)
@@ -1308,14 +1308,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Сложение двух коллекций.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Add(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// РЎР»РѕР¶РµРЅРёРµ РґРІСѓС… РєРѕР»Р»РµРєС†РёР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Add(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static SingleNamedDictionary operator +(SingleNamedDictionary a, IDictionary<string, float> b)
     {
       SingleNamedDictionary res = new SingleNamedDictionary(a, a.IgnoreCase);
@@ -1324,14 +1324,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычитание одной коллекции из другой.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Substract(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// Р’С‹С‡РёС‚Р°РЅРёРµ РѕРґРЅРѕР№ РєРѕР»Р»РµРєС†РёРё РёР· РґСЂСѓРіРѕР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Substract(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static SingleNamedDictionary operator -(SingleNamedDictionary a, IDictionary<string, float> b)
     {
       SingleNamedDictionary res = new SingleNamedDictionary(a, a.IgnoreCase);
@@ -1341,13 +1341,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Умножение и деление
+    #region РЈРјРЅРѕР¶РµРЅРёРµ Рё РґРµР»РµРЅРёРµ
 
     /// <summary>
-    /// Умножение всех значений коллекции на заданное число.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// РЈРјРЅРѕР¶РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="m">Множитель</param>
+    /// <param name="m">РњРЅРѕР¶РёС‚РµР»СЊ</param>
     public void Multiply(float m)
     {
       string[] codes = new string[base.Count];
@@ -1357,12 +1357,12 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Деление всех значений коллекции на заданное число.
-    /// Деление выполняется без округления.
-    /// Используйте метод Round() после выполнения деления
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РµР»РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// Р”РµР»РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р±РµР· РѕРєСЂСѓРіР»РµРЅРёСЏ.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ Round() РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР»РµРЅРёСЏ
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="d">Делитель. Не может быть равен 0</param>
+    /// <param name="d">Р”РµР»РёС‚РµР»СЊ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РІРµРЅ 0</param>
     public void Divide(float d)
     {
       string[] codes = new string[base.Count];
@@ -1373,13 +1373,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Округление
+    #region РћРєСЂСѓРіР»РµРЅРёРµ
 
     /// <summary>
-    /// Выполняет округление всех элементов коллекции до заданного числа знаков после запятой.
-    /// Используются правила математического округления.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё РґРѕ Р·Р°РґР°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№.
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїСЂР°РІРёР»Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ.
     /// </summary>
-    /// <param name="decimals">Число знаков после запятой</param>
+    /// <param name="decimals">Р§РёСЃР»Рѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№</param>
     public void Round(int decimals)
     {
       string[] codes = new string[base.Count];
@@ -1389,8 +1389,8 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Выполняет округление всех элементов коллекции до целых значений.
-    /// Используются правила математического округления.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё РґРѕ С†РµР»С‹С… Р·РЅР°С‡РµРЅРёР№.
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїСЂР°РІРёР»Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ.
     /// </summary>
     public void Round()
     {
@@ -1401,17 +1401,17 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Словарь числовых значений со строковым ключом.
-  /// Словарь может быть не чувствителен к регистру ключа (определяется в конструкторе).
+  /// РЎР»РѕРІР°СЂСЊ С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ СЃРѕ СЃС‚СЂРѕРєРѕРІС‹Рј РєР»СЋС‡РѕРј.
+  /// РЎР»РѕРІР°СЂСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ С‡СѓРІСЃС‚РІРёС‚РµР»РµРЅ Рє СЂРµРіРёСЃС‚СЂСѓ РєР»СЋС‡Р° (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ).
   /// </summary>
   [Serializable]
   public class DoubleNamedDictionary : TypedStringDictionary<double>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Основная версия конструктора.
-    /// Создает словарь с ключом, чувствительным к регистру
+    /// РћСЃРЅРѕРІРЅР°СЏ РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
     public DoubleNamedDictionary()
       : this(false)
@@ -1419,49 +1419,49 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public DoubleNamedDictionary(bool ignoreCase)
       : base(ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
     public DoubleNamedDictionary(int capacity)
       : this(capacity, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру.
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ.
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public DoubleNamedDictionary(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
     public DoubleNamedDictionary(IDictionary<string, double> dictionary)
       : this(dictionary, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру, и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ, Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public DoubleNamedDictionary(IDictionary<string, double> dictionary, bool ignoreCase)
       : base(dictionary, ignoreCase)
     {
@@ -1469,15 +1469,15 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Доступ к значениям
+    #region Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј
 
     /// <summary>
-    /// Получение или установка значения.
-    /// Если в словаре нет значения с указанным ключом, возвращается 0
-    /// (без выброса исключения, как это принято в стандартных коллекциях)
+    /// РџРѕР»СѓС‡РµРЅРёРµ РёР»Рё СѓСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё РІ СЃР»РѕРІР°СЂРµ РЅРµС‚ Р·РЅР°С‡РµРЅРёСЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєР»СЋС‡РѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0
+    /// (Р±РµР· РІС‹Р±СЂРѕСЃР° РёСЃРєР»СЋС‡РµРЅРёСЏ, РєР°Рє СЌС‚Рѕ РїСЂРёРЅСЏС‚Рѕ РІ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РєРѕР»Р»РµРєС†РёСЏС…)
     /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>Значение</returns>
+    /// <param name="key">РљР»СЋС‡</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public new double this[string key]
     {
       get
@@ -1496,14 +1496,14 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Сложение и вычитание
+    #region РЎР»РѕР¶РµРЅРёРµ Рё РІС‹С‡РёС‚Р°РЅРёРµ
 
     /// <summary>
-    /// Добавить к текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РѕР±Р°РІРёС‚СЊ Рє С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся добавляемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РґРѕР±Р°РІР»СЏРµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Add(IDictionary<string, double> source)
     {
       if (source == null)
@@ -1514,11 +1514,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычесть из текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р’С‹С‡РµСЃС‚СЊ РёР· С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся вычитаемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РІС‹С‡РёС‚Р°РµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Substract(IDictionary<string, double> source)
     {
       if (source == null)
@@ -1529,14 +1529,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Сложение двух коллекций.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Add(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// РЎР»РѕР¶РµРЅРёРµ РґРІСѓС… РєРѕР»Р»РµРєС†РёР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Add(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static DoubleNamedDictionary operator +(DoubleNamedDictionary a, IDictionary<string, double> b)
     {
       DoubleNamedDictionary res = new DoubleNamedDictionary(a, a.IgnoreCase);
@@ -1545,14 +1545,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычитание одной коллекции из другой.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Substract(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// Р’С‹С‡РёС‚Р°РЅРёРµ РѕРґРЅРѕР№ РєРѕР»Р»РµРєС†РёРё РёР· РґСЂСѓРіРѕР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Substract(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static DoubleNamedDictionary operator -(DoubleNamedDictionary a, IDictionary<string, double> b)
     {
       DoubleNamedDictionary res = new DoubleNamedDictionary(a, a.IgnoreCase);
@@ -1562,13 +1562,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Умножение и деление
+    #region РЈРјРЅРѕР¶РµРЅРёРµ Рё РґРµР»РµРЅРёРµ
 
     /// <summary>
-    /// Умножение всех значений коллекции на заданное число.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// РЈРјРЅРѕР¶РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="m">Множитель</param>
+    /// <param name="m">РњРЅРѕР¶РёС‚РµР»СЊ</param>
     public void Multiply(double m)
     {
       string[] codes = new string[base.Count];
@@ -1578,12 +1578,12 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Деление всех значений коллекции на заданное число.
-    /// Деление выполняется без округления.
-    /// Используйте метод Round() после выполнения деления
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РµР»РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// Р”РµР»РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р±РµР· РѕРєСЂСѓРіР»РµРЅРёСЏ.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ Round() РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР»РµРЅРёСЏ
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="d">Делитель. Не может быть равен 0</param>
+    /// <param name="d">Р”РµР»РёС‚РµР»СЊ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РІРµРЅ 0</param>
     public void Divide(double d)
     {
       string[] codes = new string[base.Count];
@@ -1594,13 +1594,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Округление
+    #region РћРєСЂСѓРіР»РµРЅРёРµ
 
     /// <summary>
-    /// Выполняет округление всех элементов коллекции до заданного числа знаков после запятой.
-    /// Используются правила математического округления.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё РґРѕ Р·Р°РґР°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№.
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїСЂР°РІРёР»Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ.
     /// </summary>
-    /// <param name="decimals">Число знаков после запятой</param>
+    /// <param name="decimals">Р§РёСЃР»Рѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№</param>
     public void Round(int decimals)
     {
       string[] codes = new string[base.Count];
@@ -1610,8 +1610,8 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Выполняет округление всех элементов коллекции до целых значений.
-    /// Используются правила математического округления.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё РґРѕ С†РµР»С‹С… Р·РЅР°С‡РµРЅРёР№.
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїСЂР°РІРёР»Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ.
     /// </summary>
     public void Round()
     {
@@ -1622,17 +1622,17 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Словарь числовых значений со строковым ключом.
-  /// Словарь может быть не чувствителен к регистру ключа (определяется в конструкторе).
+  /// РЎР»РѕРІР°СЂСЊ С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ СЃРѕ СЃС‚СЂРѕРєРѕРІС‹Рј РєР»СЋС‡РѕРј.
+  /// РЎР»РѕРІР°СЂСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ С‡СѓРІСЃС‚РІРёС‚РµР»РµРЅ Рє СЂРµРіРёСЃС‚СЂСѓ РєР»СЋС‡Р° (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ).
   /// </summary>
   [Serializable]
   public class DecimalNamedDictionary : TypedStringDictionary<decimal>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Основная версия конструктора.
-    /// Создает словарь с ключом, чувствительным к регистру
+    /// РћСЃРЅРѕРІРЅР°СЏ РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
     public DecimalNamedDictionary()
       : this(false)
@@ -1640,49 +1640,49 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ
     /// </summary>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public DecimalNamedDictionary(bool ignoreCase)
       : base(ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
     public DecimalNamedDictionary(int capacity)
       : this(capacity, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру.
-    /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ.
+    /// Р­С‚Сѓ РІРµСЂСЃРёСЋ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, РµСЃР»Рё Р·Р°СЂР°РЅРµРµ РёР·РІРµСЃС‚РЅРѕ, СЃРєРѕР»СЊРєРѕ Р±СѓРґРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃР»РѕРІР°СЂРµ.
     /// </summary>
-    /// <param name="capacity">Начальная емкость коллекции</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="capacity">РќР°С‡Р°Р»СЊРЅР°СЏ РµРјРєРѕСЃС‚СЊ РєРѕР»Р»РµРєС†РёРё</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public DecimalNamedDictionary(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase)
     {
     }
 
     /// <summary>
-    /// Создает словарь с ключом, чувствительным к регистру и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ РєР»СЋС‡РѕРј, С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹Рј Рє СЂРµРіРёСЃС‚СЂСѓ Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
     public DecimalNamedDictionary(IDictionary<string, decimal> dictionary)
       : this(dictionary, false)
     {
     }
 
     /// <summary>
-    /// Создает словарь с указанием чувствительности к регистру, и заполняет его значениями.
+    /// РЎРѕР·РґР°РµС‚ СЃР»РѕРІР°СЂСЊ СЃ СѓРєР°Р·Р°РЅРёРµРј С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚Рё Рє СЂРµРіРёСЃС‚СЂСѓ, Рё Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё.
     /// </summary>
-    /// <param name="dictionary">Источник, откуда берутся значения</param>
-    /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
+    /// <param name="dictionary">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ</param>
+    /// <param name="ignoreCase">РќСѓР¶РЅРѕ Р»Рё РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ СЂРµРіРёСЃС‚СЂ РєР»СЋС‡Р°</param>
     public DecimalNamedDictionary(IDictionary<string, decimal> dictionary, bool ignoreCase)
       : base(dictionary, ignoreCase)
     {
@@ -1690,15 +1690,15 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Доступ к значениям
+    #region Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј
 
     /// <summary>
-    /// Получение или установка значения.
-    /// Если в словаре нет значения с указанным ключом, возвращается 0
-    /// (без выброса исключения, как это принято в стандартных коллекциях)
+    /// РџРѕР»СѓС‡РµРЅРёРµ РёР»Рё СѓСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё РІ СЃР»РѕРІР°СЂРµ РЅРµС‚ Р·РЅР°С‡РµРЅРёСЏ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєР»СЋС‡РѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0
+    /// (Р±РµР· РІС‹Р±СЂРѕСЃР° РёСЃРєР»СЋС‡РµРЅРёСЏ, РєР°Рє СЌС‚Рѕ РїСЂРёРЅСЏС‚Рѕ РІ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… РєРѕР»Р»РµРєС†РёСЏС…)
     /// </summary>
-    /// <param name="key">Ключ</param>
-    /// <returns>Значение</returns>
+    /// <param name="key">РљР»СЋС‡</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public new decimal this[string key]
     {
       get
@@ -1717,14 +1717,14 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Сложение и вычитание
+    #region РЎР»РѕР¶РµРЅРёРµ Рё РІС‹С‡РёС‚Р°РЅРёРµ
 
     /// <summary>
-    /// Добавить к текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РѕР±Р°РІРёС‚СЊ Рє С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся добавляемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РґРѕР±Р°РІР»СЏРµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Add(IDictionary<string, decimal> source)
     {
       if (source == null)
@@ -1735,11 +1735,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычесть из текущей коллекции значения из другой коллекции.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р’С‹С‡РµСЃС‚СЊ РёР· С‚РµРєСѓС‰РµР№ РєРѕР»Р»РµРєС†РёРё Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ РєРѕР»Р»РµРєС†РёРё.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="source">Словарь "Код-Значения", откуда берутся вычитаемые значения.
-    /// Если null, то никаких действий не выполняется</param>
+    /// <param name="source">РЎР»РѕРІР°СЂСЊ "РљРѕРґ-Р—РЅР°С‡РµРЅРёСЏ", РѕС‚РєСѓРґР° Р±РµСЂСѓС‚СЃСЏ РІС‹С‡РёС‚Р°РµРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ</param>
     public void Substract(IDictionary<string, decimal> source)
     {
       if (source == null)
@@ -1750,14 +1750,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Сложение двух коллекций.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Add(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// РЎР»РѕР¶РµРЅРёРµ РґРІСѓС… РєРѕР»Р»РµРєС†РёР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Add(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static DecimalNamedDictionary operator +(DecimalNamedDictionary a, IDictionary<string, decimal> b)
     {
       DecimalNamedDictionary Res = new DecimalNamedDictionary(a, a.IgnoreCase);
@@ -1766,14 +1766,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вычитание одной коллекции из другой.
-    /// При выполнении оператора всегда создается новая коллекция, поэтому обычно экономичнее использовать
-    /// нестатический метод Substract(), который мофицирует существующую коллекцию.
-    /// Свойство IgnoreCase новой коллекции устанавливается в соответствии со значением свойства первой коллекции.
+    /// Р’С‹С‡РёС‚Р°РЅРёРµ РѕРґРЅРѕР№ РєРѕР»Р»РµРєС†РёРё РёР· РґСЂСѓРіРѕР№.
+    /// РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РѕРїРµСЂР°С‚РѕСЂР° РІСЃРµРіРґР° СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ СЌРєРѕРЅРѕРјРёС‡РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+    /// РЅРµСЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Substract(), РєРѕС‚РѕСЂС‹Р№ РјРѕС„РёС†РёСЂСѓРµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰СѓСЋ РєРѕР»Р»РµРєС†РёСЋ.
+    /// РЎРІРѕР№СЃС‚РІРѕ IgnoreCase РЅРѕРІРѕР№ РєРѕР»Р»РµРєС†РёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј СЃРІРѕР№СЃС‚РІР° РїРµСЂРІРѕР№ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="a">Первая исходная коллекция</param>
-    /// <param name="b">Вторая исходная коллекция</param>
-    /// <returns>Новая коллекция</returns>
+    /// <param name="a">РџРµСЂРІР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <param name="b">Р’С‚РѕСЂР°СЏ РёСЃС…РѕРґРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ</param>
+    /// <returns>РќРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ</returns>
     public static DecimalNamedDictionary operator -(DecimalNamedDictionary a, IDictionary<string, decimal> b)
     {
       DecimalNamedDictionary Res = new DecimalNamedDictionary(a, a.IgnoreCase);
@@ -1783,13 +1783,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Умножение и деление
+    #region РЈРјРЅРѕР¶РµРЅРёРµ Рё РґРµР»РµРЅРёРµ
 
     /// <summary>
-    /// Умножение всех значений коллекции на заданное число.
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// РЈРјРЅРѕР¶РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="m">Множитель</param>
+    /// <param name="m">РњРЅРѕР¶РёС‚РµР»СЊ</param>
     public void Multiply(decimal m)
     {
       string[] codes = new string[base.Count];
@@ -1799,12 +1799,12 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Деление всех значений коллекции на заданное число.
-    /// Деление выполняется без округления.
-    /// Используйте метод Round() после выполнения деления
-    /// Текущая коллекция должна быть доступна для записи (IsReadOnly=false).
+    /// Р”РµР»РµРЅРёРµ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№ РєРѕР»Р»РµРєС†РёРё РЅР° Р·Р°РґР°РЅРЅРѕРµ С‡РёСЃР»Рѕ.
+    /// Р”РµР»РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р±РµР· РѕРєСЂСѓРіР»РµРЅРёСЏ.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ Round() РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР»РµРЅРёСЏ
+    /// РўРµРєСѓС‰Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ Р·Р°РїРёСЃРё (IsReadOnly=false).
     /// </summary>
-    /// <param name="d">Делитель. Не может быть равен 0</param>
+    /// <param name="d">Р”РµР»РёС‚РµР»СЊ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РІРµРЅ 0</param>
     public void Divide(decimal d)
     {
       string[] codes = new string[base.Count];
@@ -1815,13 +1815,13 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Округление
+    #region РћРєСЂСѓРіР»РµРЅРёРµ
 
     /// <summary>
-    /// Выполняет округление всех элементов коллекции до заданного числа знаков после запятой.
-    /// Используются правила математического округления.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё РґРѕ Р·Р°РґР°РЅРЅРѕРіРѕ С‡РёСЃР»Р° Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№.
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїСЂР°РІРёР»Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ.
     /// </summary>
-    /// <param name="decimals">Число знаков после запятой</param>
+    /// <param name="decimals">Р§РёСЃР»Рѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№</param>
     public void Round(int decimals)
     {
       string[] codes = new string[base.Count];
@@ -1831,8 +1831,8 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Выполняет округление всех элементов коллекции до целых значений.
-    /// Используются правила математического округления.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕРєСЂСѓРіР»РµРЅРёРµ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё РґРѕ С†РµР»С‹С… Р·РЅР°С‡РµРЅРёР№.
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїСЂР°РІРёР»Р° РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕРіРѕ РѕРєСЂСѓРіР»РµРЅРёСЏ.
     /// </summary>
     public void Round()
     {

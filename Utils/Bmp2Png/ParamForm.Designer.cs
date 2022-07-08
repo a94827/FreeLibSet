@@ -1,4 +1,4 @@
-namespace Bmp2Png
+п»їnamespace Bmp2Png
 {
   partial class ParamForm
   {
@@ -51,8 +51,8 @@ namespace Bmp2Png
       this.infoLabel1.Name = "infoLabel1";
       this.infoLabel1.Size = new System.Drawing.Size(624, 48);
       this.infoLabel1.TabIndex = 2;
-      this.infoLabel1.Text = "Преобразует 16-цыетные значки bmp, используемые ExtForms.dll в изображеения png д" +
-          "ля справочной системы";
+      this.infoLabel1.Text = "РџСЂРµРѕР±СЂР°Р·СѓРµС‚ 16-С†С‹РµС‚РЅС‹Рµ Р·РЅР°С‡РєРё bmp, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ ExtForms.dll РІ РёР·РѕР±СЂР°Р¶РµРµРЅРёСЏ png Рґ" +
+          "Р»СЏ СЃРїСЂР°РІРѕС‡РЅРѕР№ СЃРёСЃС‚РµРјС‹";
       // 
       // panel1
       // 
@@ -87,7 +87,7 @@ namespace Bmp2Png
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -97,7 +97,7 @@ namespace Bmp2Png
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // label1
@@ -107,7 +107,7 @@ namespace Bmp2Png
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(232, 13);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Каталог с исходными изображениями *.bmp";
+      this.label1.Text = "РљР°С‚Р°Р»РѕРі СЃ РёСЃС…РѕРґРЅС‹РјРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏРјРё *.bmp";
       // 
       // edSrcDir
       // 
@@ -125,7 +125,7 @@ namespace Bmp2Png
       this.btnBrowseSrcDir.Name = "btnBrowseSrcDir";
       this.btnBrowseSrcDir.Size = new System.Drawing.Size(88, 24);
       this.btnBrowseSrcDir.TabIndex = 2;
-      this.btnBrowseSrcDir.Text = "Обзор";
+      this.btnBrowseSrcDir.Text = "РћР±Р·РѕСЂ";
       this.btnBrowseSrcDir.UseVisualStyleBackColor = true;
       // 
       // btnBrowseResDir
@@ -135,7 +135,7 @@ namespace Bmp2Png
       this.btnBrowseResDir.Name = "btnBrowseResDir";
       this.btnBrowseResDir.Size = new System.Drawing.Size(88, 24);
       this.btnBrowseResDir.TabIndex = 5;
-      this.btnBrowseResDir.Text = "Обзор";
+      this.btnBrowseResDir.Text = "РћР±Р·РѕСЂ";
       this.btnBrowseResDir.UseVisualStyleBackColor = true;
       // 
       // edResDir
@@ -154,7 +154,7 @@ namespace Bmp2Png
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(139, 13);
       this.label2.TabIndex = 3;
-      this.label2.Text = "Каталог для записи *..png";
+      this.label2.Text = "РљР°С‚Р°Р»РѕРі РґР»СЏ Р·Р°РїРёСЃРё *..png";
       // 
       // cbSubDirs
       // 
@@ -163,7 +163,7 @@ namespace Bmp2Png
       this.cbSubDirs.Name = "cbSubDirs";
       this.cbSubDirs.Size = new System.Drawing.Size(154, 17);
       this.cbSubDirs.TabIndex = 6;
-      this.cbSubDirs.Text = "Обработка подкаталогов";
+      this.cbSubDirs.Text = "РћР±СЂР°Р±РѕС‚РєР° РїРѕРґРєР°С‚Р°Р»РѕРіРѕРІ";
       this.cbSubDirs.UseVisualStyleBackColor = true;
       // 
       // ParamForm
@@ -181,7 +181,7 @@ namespace Bmp2Png
       this.MinimizeBox = false;
       this.Name = "ParamForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Преобразование значков bmp в png";
+      this.Text = "РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Р·РЅР°С‡РєРѕРІ bmp РІ png";
       this.panel1.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();

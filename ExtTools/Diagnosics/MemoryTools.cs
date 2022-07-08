@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,31 +12,31 @@ using FreeLibSet.Logging;
 namespace FreeLibSet.Diagnostics
 {
   /// <summary>
-  /// Наличие свободной оперативной памяти
+  /// РќР°Р»РёС‡РёРµ СЃРІРѕР±РѕРґРЅРѕР№ РѕРїРµСЂР°С‚РёРІРЅРѕР№ РїР°РјСЏС‚Рё
   /// </summary>
   [Serializable]
   public enum AvailableMemoryState
   {
     /// <summary>
-    /// Имеется достаточное количество свободной памяти. Файл подкачки не задействован
+    /// РРјРµРµС‚СЃСЏ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРІРѕР±РѕРґРЅРѕР№ РїР°РјСЏС‚Рё. Р¤Р°Р№Р» РїРѕРґРєР°С‡РєРё РЅРµ Р·Р°РґРµР№СЃС‚РІРѕРІР°РЅ
     /// </summary>
     Normal,
 
     /// <summary>
-    /// Свободная физическая память закончилась. Используется файл подкачки.
-    /// Желательно освободить память
+    /// РЎРІРѕР±РѕРґРЅР°СЏ С„РёР·РёС‡РµСЃРєР°СЏ РїР°РјСЏС‚СЊ Р·Р°РєРѕРЅС‡РёР»Р°СЃСЊ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С„Р°Р№Р» РїРѕРґРєР°С‡РєРё.
+    /// Р–РµР»Р°С‚РµР»СЊРЅРѕ РѕСЃРІРѕР±РѕРґРёС‚СЊ РїР°РјСЏС‚СЊ
     /// </summary>
     Swapping,
 
     /// <summary>
-    /// Виртуальная память заканчивается.
-    /// Велика вероятность получения OutOfMemoryException
+    /// Р’РёСЂС‚СѓР°Р»СЊРЅР°СЏ РїР°РјСЏС‚СЊ Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ.
+    /// Р’РµР»РёРєР° РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РїРѕР»СѓС‡РµРЅРёСЏ OutOfMemoryException
     /// </summary>
     Low
   }
 
   /// <summary>
-  /// Методы определения наличия свободной оперативной памяти
+  /// РњРµС‚РѕРґС‹ РѕРїСЂРµРґРµР»РµРЅРёСЏ РЅР°Р»РёС‡РёСЏ СЃРІРѕР±РѕРґРЅРѕР№ РѕРїРµСЂР°С‚РёРІРЅРѕР№ РїР°РјСЏС‚Рё
   /// </summary>
   public static class MemoryTools
   {
@@ -45,10 +45,10 @@ namespace FreeLibSet.Diagnostics
     private static bool _CheckSufficientMemoryExceptionLogged = false;
 
     /// <summary>
-    /// Проверить возможность выделения блока памяти с помощью MemoryFailPoint
+    /// РџСЂРѕРІРµСЂРёС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РІС‹РґРµР»РµРЅРёСЏ Р±Р»РѕРєР° РїР°РјСЏС‚Рё СЃ РїРѕРјРѕС‰СЊСЋ MemoryFailPoint
     /// </summary>
-    /// <param name="sizeMB">Размер блока в мегабайтах</param>
-    /// <returns>true - выделение блок возможно</returns>
+    /// <param name="sizeMB">Р Р°Р·РјРµСЂ Р±Р»РѕРєР° РІ РјРµРіР°Р±Р°Р№С‚Р°С…</param>
+    /// <returns>true - РІС‹РґРµР»РµРЅРёРµ Р±Р»РѕРє РІРѕР·РјРѕР¶РЅРѕ</returns>
     [DebuggerStepThrough]
     public static bool CheckSufficientMemory(int sizeMB)
     {
@@ -66,8 +66,8 @@ namespace FreeLibSet.Diagnostics
       catch (Exception e)
       {
         // 20.06.2017
-        // В mono MemoryFailPoint не работает и выбрасывает NotImplementedException
-        // TODO: Надо проверять свободную память как-то по-другому
+        // Р’ mono MemoryFailPoint РЅРµ СЂР°Р±РѕС‚Р°РµС‚ Рё РІС‹Р±СЂР°СЃС‹РІР°РµС‚ NotImplementedException
+        // TODO: РќР°РґРѕ РїСЂРѕРІРµСЂСЏС‚СЊ СЃРІРѕР±РѕРґРЅСѓСЋ РїР°РјСЏС‚СЊ РєР°Рє-С‚Рѕ РїРѕ-РґСЂСѓРіРѕРјСѓ
         if (!_CheckSufficientMemoryExceptionLogged)
         {
           _CheckSufficientMemoryExceptionLogged = true;
@@ -82,7 +82,7 @@ namespace FreeLibSet.Diagnostics
 
     #region P/Invoke
 
-#pragma warning disable 649 // Предупреждение "Значение не присваивается полю"
+#pragma warning disable 649 // РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ "Р—РЅР°С‡РµРЅРёРµ РЅРµ РїСЂРёСЃРІР°РёРІР°РµС‚СЃСЏ РїРѕР»СЋ"
 
     /// <summary>
     /// contains information about the current state of both physical and virtual memory, including extended memory
@@ -90,7 +90,7 @@ namespace FreeLibSet.Diagnostics
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     private class MEMORYSTATUSEX
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       /// <summary>
       /// Size of the structure, in bytes. You must set this member before calling GlobalMemoryStatusEx. 
@@ -141,7 +141,7 @@ namespace FreeLibSet.Diagnostics
 
       #endregion
 
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
       /// Initializes a new instance of the <see cref="T:MEMORYSTATUSEX"/> class.
@@ -164,7 +164,7 @@ namespace FreeLibSet.Diagnostics
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     private class MEMORYSTATUS
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       /// <summary>
       /// Size of the MEMORYSTATUS data structure, in bytes. You do not need to set this member before calling the GlobalMemoryStatus function; the function sets it. 
@@ -209,7 +209,7 @@ namespace FreeLibSet.Diagnostics
 
       #endregion
 
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public MEMORYSTATUS()
       {
@@ -230,8 +230,8 @@ namespace FreeLibSet.Diagnostics
     #region MemoryLoad
 
     /// <summary>
-    /// Процент использования оперативной памяти (0-100).
-    /// Возвращает константу UnknownMemoryLoad, если для ОС нельзя получить это значение
+    /// РџСЂРѕС†РµРЅС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РѕРїРµСЂР°С‚РёРІРЅРѕР№ РїР°РјСЏС‚Рё (0-100).
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕРЅСЃС‚Р°РЅС‚Сѓ UnknownMemoryLoad, РµСЃР»Рё РґР»СЏ РћРЎ РЅРµР»СЊР·СЏ РїРѕР»СѓС‡РёС‚СЊ СЌС‚Рѕ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     public static int MemoryLoad
     {
@@ -268,7 +268,7 @@ namespace FreeLibSet.Diagnostics
     }
 
     /// <summary>
-    /// Это значение возвращается свойством MemoryLoad, когда нельзя получить процент использования памяти
+    /// Р­С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕРј MemoryLoad, РєРѕРіРґР° РЅРµР»СЊР·СЏ РїРѕР»СѓС‡РёС‚СЊ РїСЂРѕС†РµРЅС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїР°РјСЏС‚Рё
     /// </summary>
     public const int UnknownMemoryLoad = -1;
 
@@ -277,8 +277,8 @@ namespace FreeLibSet.Diagnostics
     #region TotalPhysicalMemory
 
     /// <summary>
-    /// Общий объем установленной физической памяти.
-    /// Возвращает UnknownMemorySize, если определить объем невозможно
+    /// РћР±С‰РёР№ РѕР±СЉРµРј СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ С„РёР·РёС‡РµСЃРєРѕР№ РїР°РјСЏС‚Рё.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ UnknownMemorySize, РµСЃР»Рё РѕРїСЂРµРґРµР»РёС‚СЊ РѕР±СЉРµРј РЅРµРІРѕР·РјРѕР¶РЅРѕ
     /// </summary>
     public static long TotalPhysicalMemory
     {
@@ -315,7 +315,7 @@ namespace FreeLibSet.Diagnostics
     }
 
     /// <summary>
-    /// Значение, возвращаемое свойством TotalPhysicalMemory, если объем памяти неизвестен
+    /// Р—РЅР°С‡РµРЅРёРµ, РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕРј TotalPhysicalMemory, РµСЃР»Рё РѕР±СЉРµРј РїР°РјСЏС‚Рё РЅРµРёР·РІРµСЃС‚РµРЅ
     /// </summary>
     public const long UnknownMemorySize = -1L;
 
@@ -324,7 +324,7 @@ namespace FreeLibSet.Diagnostics
     #region AvailableMemoryState
 
     /// <summary>
-    /// Возвращает текущее состояние оперативной памяти
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РѕРїРµСЂР°С‚РёРІРЅРѕР№ РїР°РјСЏС‚Рё
     /// </summary>
     public static AvailableMemoryState AvailableMemoryState
     {
@@ -340,9 +340,9 @@ namespace FreeLibSet.Diagnostics
     }
 
     /// <summary>
-    /// Объем свободной виртуальной памяти в МБ, который считается критическим.
-    /// Если не удается выделить блок памяти такого размера, считается, что памяти мало.
-    /// По умолчанию - 100МБ
+    /// РћР±СЉРµРј СЃРІРѕР±РѕРґРЅРѕР№ РІРёСЂС‚СѓР°Р»СЊРЅРѕР№ РїР°РјСЏС‚Рё РІ РњР‘, РєРѕС‚РѕСЂС‹Р№ СЃС‡РёС‚Р°РµС‚СЃСЏ РєСЂРёС‚РёС‡РµСЃРєРёРј.
+    /// Р•СЃР»Рё РЅРµ СѓРґР°РµС‚СЃСЏ РІС‹РґРµР»РёС‚СЊ Р±Р»РѕРє РїР°РјСЏС‚Рё С‚Р°РєРѕРіРѕ СЂР°Р·РјРµСЂР°, СЃС‡РёС‚Р°РµС‚СЃСЏ, С‡С‚Рѕ РїР°РјСЏС‚Рё РјР°Р»Рѕ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - 100РњР‘
     /// </summary>
     public static int LowMemorySizeMB
     {

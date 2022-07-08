@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.Collections
   [TestFixture]
   public class BidirectionalDictionaryTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_empty()
@@ -63,7 +63,7 @@ namespace ExtTools_tests.Collections
     }
 
     /// <summary>
-    /// Тестовый компатор, который считает одинаковыми положительные и отрицательные числа
+    /// РўРµСЃС‚РѕРІС‹Р№ РєРѕРјРїР°С‚РѕСЂ, РєРѕС‚РѕСЂС‹Р№ СЃС‡РёС‚Р°РµС‚ РѕРґРёРЅР°РєРѕРІС‹РјРё РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рµ Рё РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рµ С‡РёСЃР»Р°
     /// </summary>
     private class IntUnsignedComparer : IEqualityComparer<int>
     {
@@ -95,7 +95,7 @@ namespace ExtTools_tests.Collections
       sut.Add(2, "BBB");
       Assert.Catch(delegate() { sut.Add(-1, "CCC"); }, "Same key");
 
-      // Это не вызывает исключения в текущей реализации
+      // Р­С‚Рѕ РЅРµ РІС‹Р·С‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ РІ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё
       //Assert.Catch(delegate() { sut.Add(3, "bbb"); }, "Same value");
     }
 
@@ -122,7 +122,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Прямые методы доступа
+    #region РџСЂСЏРјС‹Рµ РјРµС‚РѕРґС‹ РґРѕСЃС‚СѓРїР°
 
     [TestCase(1, true, "AAA")]
     [TestCase(4, false, null)]
@@ -170,7 +170,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Обратные методы доступа
+    #region РћР±СЂР°С‚РЅС‹Рµ РјРµС‚РѕРґС‹ РґРѕСЃС‚СѓРїР°
 
     [TestCase("AAA", true)]
     [TestCase("DDD", false)]
@@ -202,7 +202,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     [Test]
     public void Clear()
@@ -214,7 +214,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Перечислитель
+    #region РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
 
     [Test]
     public void GetEnumerator()
@@ -262,7 +262,7 @@ namespace ExtTools_tests.Collections
     #endregion
 
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [Test]
     public void Serialization()

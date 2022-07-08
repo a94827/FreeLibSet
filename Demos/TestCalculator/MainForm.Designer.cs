@@ -1,4 +1,4 @@
-namespace TestCalculator
+п»їnamespace TestCalculator
 {
   partial class MainForm
   {
@@ -51,7 +51,7 @@ namespace TestCalculator
       this.groupBox1.Size = new System.Drawing.Size(502, 55);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Выражение для вычисления";
+      this.groupBox1.Text = "Р’С‹СЂР°Р¶РµРЅРёРµ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ";
       // 
       // edExpr
       // 
@@ -74,7 +74,7 @@ namespace TestCalculator
       this.groupBox2.Size = new System.Drawing.Size(502, 69);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Результат";
+      this.groupBox2.Text = "Р РµР·СѓР»СЊС‚Р°С‚";
       // 
       // edRes
       // 
@@ -91,7 +91,7 @@ namespace TestCalculator
       this.btnDebug.Name = "btnDebug";
       this.btnDebug.Size = new System.Drawing.Size(132, 24);
       this.btnDebug.TabIndex = 2;
-      this.btnDebug.Text = "Отладка";
+      this.btnDebug.Text = "РћС‚Р»Р°РґРєР°";
       this.btnDebug.UseVisualStyleBackColor = true;
       // 
       // panel1
@@ -111,7 +111,7 @@ namespace TestCalculator
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(66, 13);
       this.label1.TabIndex = 1;
-      this.label1.Text = "Тип данных";
+      this.label1.Text = "РўРёРї РґР°РЅРЅС‹С…";
       // 
       // edResType
       // 
@@ -145,7 +145,7 @@ namespace TestCalculator
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
       this.Name = "MainForm";
-      this.Text = "Тест калькулятора";
+      this.Text = "РўРµСЃС‚ РєР°Р»СЊРєСѓР»СЏС‚РѕСЂР°";
       this.groupBox1.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();

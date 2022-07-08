@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Forms;
@@ -18,16 +18,16 @@ namespace EFPCommandItemsDemo
       step1.GetNext += new WizardGetNextEventHandler(step1_GetNext);
       _Wizard = new Wizard(step1);
       _Wizard.ShowImage = false;
-      _Wizard.Title = "Тест выполнения Мастера";
+      _Wizard.Title = "РўРµСЃС‚ РІС‹РїРѕР»РЅРµРЅРёСЏ РњР°СЃС‚РµСЂР°";
       _Wizard.Execute();
     }
 
     void step1_GetNext(object sender, WizardGetNextEventArgs args)
     {
       WizardStepWithGroupBox step2 = new WizardStepWithGroupBox();
-      step2.TopLabel.Text = "Текст сверху";
+      step2.TopLabel.Text = "РўРµРєСЃС‚ СЃРІРµСЂС…Сѓ";
       step2.TheGroupBox.Text = "WizardStepWithGroupBox";
-      step2.BottomLabel.Text = "Текст снизу";
+      step2.BottomLabel.Text = "РўРµРєСЃС‚ СЃРЅРёР·Сѓ";
       step2.GetNext += new WizardGetNextEventHandler(step2_GetNext);
       args.NextStep = step2;
     }

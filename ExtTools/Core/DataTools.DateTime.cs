@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,43 +12,43 @@ namespace FreeLibSet.Core
 {
 	partial class DataTools
 	{
-    #region Функции работы с датой
+    #region Р¤СѓРЅРєС†РёРё СЂР°Р±РѕС‚С‹ СЃ РґР°С‚РѕР№
 
 #if DEBUG
 
     private static void CheckYear(int year)
     {
       if (year < DateTime.MinValue.Year || year > DateTime.MaxValue.Year)
-        throw new ArgumentOutOfRangeException("year", year, "Год должен быть в диапазоне от " +
-          DateTime.MinValue.Year.ToString() + " до " + DateTime.MaxValue.Year.ToString());
+        throw new ArgumentOutOfRangeException("year", year, "Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ " +
+          DateTime.MinValue.Year.ToString() + " РґРѕ " + DateTime.MaxValue.Year.ToString());
     }
 
     private static void CheckMonth(int month)
     {
       if (month < 1 || month > 12)
-        throw new ArgumentOutOfRangeException("month", month, "Месяц должен быть в диапазоне от 1 до 12");
+        throw new ArgumentOutOfRangeException("month", month, "РњРµСЃСЏС† РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 12");
     }
 
 #endif
 
     /// <summary>
-    /// Возвращает последний день месяца, определяемого датой <paramref name="date"/>.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РјРµСЃСЏС†Р°, РѕРїСЂРµРґРµР»СЏРµРјРѕРіРѕ РґР°С‚РѕР№ <paramref name="date"/>.
     /// </summary>
-    /// <param name="date">Дата, определяющая месяц</param>
-    /// <returns>Конец месяца</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕРїСЂРµРґРµР»СЏСЋС‰Р°СЏ РјРµСЃСЏС†</param>
+    /// <returns>РљРѕРЅРµС† РјРµСЃСЏС†Р°</returns>
     public static DateTime EndOfMonth(DateTime date)
     {
       return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
     }
 
     /// <summary>
-    /// Возвращает последний день месяца заданного года.
-    /// Год должен быть в диапазоне, который поддерживается DateTime.
-    /// Месяц должен быть в диапазоне от 1 до 12.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РјРµСЃСЏС†Р° Р·Р°РґР°РЅРЅРѕРіРѕ РіРѕРґР°.
+    /// Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ, РєРѕС‚РѕСЂС‹Р№ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ DateTime.
+    /// РњРµСЃСЏС† РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 12.
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <param name="month">Месяц</param>
-    /// <returns>Конец месяца</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <returns>РљРѕРЅРµС† РјРµСЃСЏС†Р°</returns>
     public static DateTime EndOfMonth(int year, int month)
     {
 #if DEBUG
@@ -59,23 +59,23 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает первый день месяца, определяемого датой <paramref name="date"/>.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р°, РѕРїСЂРµРґРµР»СЏРµРјРѕРіРѕ РґР°С‚РѕР№ <paramref name="date"/>.
     /// </summary>
-    /// <param name="date">Дата, определяющая месяц</param>
-    /// <returns>Начало месяца</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕРїСЂРµРґРµР»СЏСЋС‰Р°СЏ РјРµСЃСЏС†</param>
+    /// <returns>РќР°С‡Р°Р»Рѕ РјРµСЃСЏС†Р°</returns>
     public static DateTime BottomOfMonth(DateTime date)
     {
       return new DateTime(date.Year, date.Month, 1);
     }
 
     /// <summary>
-    /// Возвращает первый день месяца заданного года.
-    /// Год должен быть в диапазоне, который поддерживается DateTime.
-    /// Месяц должен быть в диапазоне от 1 до 12.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РјРµСЃСЏС†Р° Р·Р°РґР°РЅРЅРѕРіРѕ РіРѕРґР°.
+    /// Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ, РєРѕС‚РѕСЂС‹Р№ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ DateTime.
+    /// РњРµСЃСЏС† РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 12.
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <param name="month">Месяц</param>
-    /// <returns>Начало месяца</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <returns>РќР°С‡Р°Р»Рѕ РјРµСЃСЏС†Р°</returns>
     public static DateTime BottomOfMonth(int year, int month)
     {
 #if DEBUG
@@ -86,21 +86,21 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает 31 декабря года, к которому относится заданная дата.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ 31 РґРµРєР°Р±СЂСЏ РіРѕРґР°, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ Р·Р°РґР°РЅРЅР°СЏ РґР°С‚Р°.
     /// </summary>
-    /// <param name="date">Дата, определяющая год</param>
-    /// <returns>Конец года</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕРїСЂРµРґРµР»СЏСЋС‰Р°СЏ РіРѕРґ</param>
+    /// <returns>РљРѕРЅРµС† РіРѕРґР°</returns>
     public static DateTime EndOfYear(DateTime date)
     {
       return new DateTime(date.Year, 12, 31);
     }
 
     /// <summary>
-    /// Возвращает 31 декабря заданного года.
-    /// Год должен быть в диапазоне, который поддерживается DateTime
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ 31 РґРµРєР°Р±СЂСЏ Р·Р°РґР°РЅРЅРѕРіРѕ РіРѕРґР°.
+    /// Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ, РєРѕС‚РѕСЂС‹Р№ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ DateTime
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <returns>Конец года</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <returns>РљРѕРЅРµС† РіРѕРґР°</returns>
     public static DateTime EndOfYear(int year)
     {
 #if DEBUG
@@ -110,21 +110,21 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает первое января года, к которому относится заданная дата.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІРѕРµ СЏРЅРІР°СЂСЏ РіРѕРґР°, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ Р·Р°РґР°РЅРЅР°СЏ РґР°С‚Р°.
     /// </summary>
-    /// <param name="date">Дата, определяющая год</param>
-    /// <returns>Начало года</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕРїСЂРµРґРµР»СЏСЋС‰Р°СЏ РіРѕРґ</param>
+    /// <returns>РќР°С‡Р°Р»Рѕ РіРѕРґР°</returns>
     public static DateTime BottomOfYear(DateTime date)
     {
       return new DateTime(date.Year, 1, 1);
     }
 
     /// <summary>
-    /// Возвращает первое января заданного года.
-    /// Год должен быть в диапазоне, который поддерживается DateTime
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІРѕРµ СЏРЅРІР°СЂСЏ Р·Р°РґР°РЅРЅРѕРіРѕ РіРѕРґР°.
+    /// Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ, РєРѕС‚РѕСЂС‹Р№ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ DateTime
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <returns>Начало года</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <returns>РќР°С‡Р°Р»Рѕ РіРѕРґР°</returns>
     public static DateTime BottomOfYear(int year)
     {
 #if DEBUG
@@ -134,10 +134,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает последний день квартала, к которому относится заданная дата.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ Р·Р°РґР°РЅРЅР°СЏ РґР°С‚Р°.
     /// </summary>
-    /// <param name="date">Дата, определяющая квартал</param>
-    /// <returns>Конец квартала</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕРїСЂРµРґРµР»СЏСЋС‰Р°СЏ РєРІР°СЂС‚Р°Р»</param>
+    /// <returns>РљРѕРЅРµС† РєРІР°СЂС‚Р°Р»Р°</returns>
     public static DateTime EndOfQuarter(DateTime date)
     {
       int q = (date.Month + 2) / 3; // 1-4
@@ -145,10 +145,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает первый день квартала, к которому относится заданная дата.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РєРІР°СЂС‚Р°Р»Р°, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ Р·Р°РґР°РЅРЅР°СЏ РґР°С‚Р°.
     /// </summary>
-    /// <param name="date">Дата, определяющая квартал</param>
-    /// <returns>Начало квартала</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕРїСЂРµРґРµР»СЏСЋС‰Р°СЏ РєРІР°СЂС‚Р°Р»</param>
+    /// <returns>РќР°С‡Р°Р»Рѕ РєРІР°СЂС‚Р°Р»Р°</returns>
     public static DateTime BottomOfQuarter(DateTime date)
     {
       int q = (date.Month + 2) / 3; // 1-4
@@ -156,14 +156,14 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает последний день недели - воскресенье
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РЅРµРґРµР»Рё - РІРѕСЃРєСЂРµСЃРµРЅСЊРµ
     /// </summary>
-    /// <param name="date">Дата, относящая к неделе, для которой нужно определить окончание</param>
-    /// <returns>Дата, большая или равная заданной</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕС‚РЅРѕСЃСЏС‰Р°СЏ Рє РЅРµРґРµР»Рµ, РґР»СЏ РєРѕС‚РѕСЂРѕР№ РЅСѓР¶РЅРѕ РѕРїСЂРµРґРµР»РёС‚СЊ РѕРєРѕРЅС‡Р°РЅРёРµ</param>
+    /// <returns>Р”Р°С‚Р°, Р±РѕР»СЊС€Р°СЏ РёР»Рё СЂР°РІРЅР°СЏ Р·Р°РґР°РЅРЅРѕР№</returns>
     public static DateTime EndOfWeekSunday(DateTime date)
     {
       /*
-       * День недели DayOfWeek кодируется как 0-ВС, 1-ПН, ... 6-СБ
+       * Р”РµРЅСЊ РЅРµРґРµР»Рё DayOfWeek РєРѕРґРёСЂСѓРµС‚СЃСЏ РєР°Рє 0-Р’РЎ, 1-РџРќ, ... 6-РЎР‘
        */
 
       DayOfWeek dow = date.DayOfWeek;
@@ -174,10 +174,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает первый день недели - понедельник
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ РЅРµРґРµР»Рё - РїРѕРЅРµРґРµР»СЊРЅРёРє
     /// </summary>
-    /// <param name="date">Дата, относящая к неделе, для которой нужно определить начало</param>
-    /// <returns>Дата, меньшая или равная заданной</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕС‚РЅРѕСЃСЏС‰Р°СЏ Рє РЅРµРґРµР»Рµ, РґР»СЏ РєРѕС‚РѕСЂРѕР№ РЅСѓР¶РЅРѕ РѕРїСЂРµРґРµР»РёС‚СЊ РЅР°С‡Р°Р»Рѕ</param>
+    /// <returns>Р”Р°С‚Р°, РјРµРЅСЊС€Р°СЏ РёР»Рё СЂР°РІРЅР°СЏ Р·Р°РґР°РЅРЅРѕР№</returns>
     public static DateTime BottomOfWeekMonday(DateTime date)
     {
       DayOfWeek dow = date.DayOfWeek;
@@ -188,12 +188,12 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает последний день "плавающей" недели.
-    /// Если <paramref name="lastDayOfWeek"/> задает воскресенье, функция совпадает с EndOfWeekSunday().
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ "РїР»Р°РІР°СЋС‰РµР№" РЅРµРґРµР»Рё.
+    /// Р•СЃР»Рё <paramref name="lastDayOfWeek"/> Р·Р°РґР°РµС‚ РІРѕСЃРєСЂРµСЃРµРЅСЊРµ, С„СѓРЅРєС†РёСЏ СЃРѕРІРїР°РґР°РµС‚ СЃ EndOfWeekSunday().
     /// </summary>
-    /// <param name="date">Дата, относящая к неделе, для которой нужно определить окончание</param>
-    /// <param name="lastDayOfWeek">Последний день недели</param>
-    /// <returns>Дата, большая или равная заданной</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕС‚РЅРѕСЃСЏС‰Р°СЏ Рє РЅРµРґРµР»Рµ, РґР»СЏ РєРѕС‚РѕСЂРѕР№ РЅСѓР¶РЅРѕ РѕРїСЂРµРґРµР»РёС‚СЊ РѕРєРѕРЅС‡Р°РЅРёРµ</param>
+    /// <param name="lastDayOfWeek">РџРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РЅРµРґРµР»Рё</param>
+    /// <returns>Р”Р°С‚Р°, Р±РѕР»СЊС€Р°СЏ РёР»Рё СЂР°РІРЅР°СЏ Р·Р°РґР°РЅРЅРѕР№</returns>
     public static DateTime EndOfWeek(DateTime date, DayOfWeek lastDayOfWeek)
     {
       int delta = (int)lastDayOfWeek - (int)(date.DayOfWeek);
@@ -203,11 +203,11 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает первый день "плавающей" недели
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Р№ РґРµРЅСЊ "РїР»Р°РІР°СЋС‰РµР№" РЅРµРґРµР»Рё
     /// </summary>
-    /// <param name="date">Дата, относящая к неделе, для которой нужно определить начало</param>
-    /// <param name="firstDayOfWeek">Последний день недели</param>
-    /// <returns>Дата, меньшая или равная заданной</returns>
+    /// <param name="date">Р”Р°С‚Р°, РѕС‚РЅРѕСЃСЏС‰Р°СЏ Рє РЅРµРґРµР»Рµ, РґР»СЏ РєРѕС‚РѕСЂРѕР№ РЅСѓР¶РЅРѕ РѕРїСЂРµРґРµР»РёС‚СЊ РЅР°С‡Р°Р»Рѕ</param>
+    /// <param name="firstDayOfWeek">РџРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РЅРµРґРµР»Рё</param>
+    /// <returns>Р”Р°С‚Р°, РјРµРЅСЊС€Р°СЏ РёР»Рё СЂР°РІРЅР°СЏ Р·Р°РґР°РЅРЅРѕР№</returns>
     public static DateTime BottomOfWeek(DateTime date, DayOfWeek firstDayOfWeek)
     {
       int delta = (int)(date.DayOfWeek) - (int)firstDayOfWeek;
@@ -217,83 +217,83 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает true, если день в дате является первым днем месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґРµРЅСЊ РІ РґР°С‚Рµ СЏРІР»СЏРµС‚СЃСЏ РїРµСЂРІС‹Рј РґРЅРµРј РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true для первого дня месяца</returns>
+    /// <param name="date">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>true РґР»СЏ РїРµСЂРІРѕРіРѕ РґРЅСЏ РјРµСЃСЏС†Р°</returns>
     public static bool IsBottomOfMonth(DateTime date)
     {
       return date.Day == 1;
     }
 
     /// <summary>
-    /// Возвращает true, если день в дате является последним днем месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґРµРЅСЊ РІ РґР°С‚Рµ СЏРІР»СЏРµС‚СЃСЏ РїРѕСЃР»РµРґРЅРёРј РґРЅРµРј РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true для последнего дня месяца</returns>
+    /// <param name="date">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>true РґР»СЏ РїРѕСЃР»РµРґРЅРµРіРѕ РґРЅСЏ РјРµСЃСЏС†Р°</returns>
     public static bool IsEndOfMonth(DateTime date)
     {
       return date.Day == DateTime.DaysInMonth(date.Year, date.Month);
     }
 
     /// <summary>
-    /// Возвращает true, если дата - 1 января
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° - 1 СЏРЅРІР°СЂСЏ
     /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true для первого дня года</returns>
+    /// <param name="date">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>true РґР»СЏ РїРµСЂРІРѕРіРѕ РґРЅСЏ РіРѕРґР°</returns>
     public static bool IsBottomOfYear(DateTime date)
     {
       return date.Day == 1 && date.Month == 1;
     }
 
     /// <summary>
-    /// Возвращает true, если дата - 31 декабря
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° - 31 РґРµРєР°Р±СЂСЏ
     /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true для последнего дня года</returns>
+    /// <param name="date">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>true РґР»СЏ РїРѕСЃР»РµРґРЅРµРіРѕ РґРЅСЏ РіРѕРґР°</returns>
     public static bool IsEndOfYear(DateTime date)
     {
       return date.Month == 12 && date.Day == 31;
     }
 
     /// <summary>
-    /// Возвращает true, если дата - 1 января, 1 апреля, 1 июля или 1 октября
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° - 1 СЏРЅРІР°СЂСЏ, 1 Р°РїСЂРµР»СЏ, 1 РёСЋР»СЏ РёР»Рё 1 РѕРєС‚СЏР±СЂСЏ
     /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true для первого дня квартала</returns>
+    /// <param name="date">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>true РґР»СЏ РїРµСЂРІРѕРіРѕ РґРЅСЏ РєРІР°СЂС‚Р°Р»Р°</returns>
     public static bool IsBottomOfQuarter(DateTime date)
     {
       return ((date.Month - 1) % 3) == 0 && date.Day == 1;
     }
 
     /// <summary>
-    /// Возвращает true, если дата - 31 марта, 30 июня, 30 сентября или 31 декабря
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°С‚Р° - 31 РјР°СЂС‚Р°, 30 РёСЋРЅСЏ, 30 СЃРµРЅС‚СЏР±СЂСЏ РёР»Рё 31 РґРµРєР°Р±СЂСЏ
     /// </summary>
-    /// <param name="date">Проверяемая дата</param>
-    /// <returns>true для последнего дня квартала</returns>
+    /// <param name="date">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>true РґР»СЏ РїРѕСЃР»РµРґРЅРµРіРѕ РґРЅСЏ РєРІР°СЂС‚Р°Р»Р°</returns>
     public static bool IsEndOfQuarter(DateTime date)
     {
       return (date.Month % 3) == 0 && date.Day == DateTime.DaysInMonth(date.Year, date.Month);
     }
 
     /// <summary>
-    /// Возвращает максимальную из двух дат
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РёР· РґРІСѓС… РґР°С‚
     /// </summary>
-    /// <param name="dt1">Первая сравниваемая дата</param>
-    /// <param name="dt2">Вторая сравниваемая дата</param>
-    /// <returns>dt1 или dt2</returns>
+    /// <param name="dt1">РџРµСЂРІР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="dt2">Р’С‚РѕСЂР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>dt1 РёР»Рё dt2</returns>
     public static DateTime Max(DateTime dt1, DateTime dt2)
     {
       return (dt1 > dt2) ? dt1 : dt2;
     }
 
     /// <summary>
-    /// Максимальное значение из двух дат. Если одна из дат не задана, то возвращается
-    /// другая дата
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· РґРІСѓС… РґР°С‚. Р•СЃР»Рё РѕРґРЅР° РёР· РґР°С‚ РЅРµ Р·Р°РґР°РЅР°, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ
+    /// РґСЂСѓРіР°СЏ РґР°С‚Р°
     /// </summary>
-    /// <param name="dt1">Первая сравниваемая дата</param>
-    /// <param name="dt2">Вторая сравниваемая дата</param>
-    /// <returns>dt1 или dt2</returns>
+    /// <param name="dt1">РџРµСЂРІР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="dt2">Р’С‚РѕСЂР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>dt1 РёР»Рё dt2</returns>
     public static Nullable<DateTime> Max(Nullable<DateTime> dt1, Nullable<DateTime> dt2)
     {
       if (dt1.HasValue)
@@ -308,23 +308,23 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает минимальную из двух дат
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅСѓСЋ РёР· РґРІСѓС… РґР°С‚
     /// </summary>
-    /// <param name="dt1">Первая сравниваемая дата</param>
-    /// <param name="dt2">Вторая сравниваемая дата</param>
-    /// <returns>dt1 или dt2</returns>
+    /// <param name="dt1">РџРµСЂРІР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="dt2">Р’С‚РѕСЂР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>dt1 РёР»Рё dt2</returns>
     public static DateTime Min(DateTime dt1, DateTime dt2)
     {
       return (dt1 < dt2) ? dt1 : dt2;
     }
 
     /// <summary>
-    /// Минимальное значение из двух дат. Если одна из дат не задана, то возвращается
-    /// другая дата
+    /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· РґРІСѓС… РґР°С‚. Р•СЃР»Рё РѕРґРЅР° РёР· РґР°С‚ РЅРµ Р·Р°РґР°РЅР°, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ
+    /// РґСЂСѓРіР°СЏ РґР°С‚Р°
     /// </summary>
-    /// <param name="dt1">Первая сравниваемая дата</param>
-    /// <param name="dt2">Вторая сравниваемая дата</param>
-    /// <returns>dt1 или dt2</returns>
+    /// <param name="dt1">РџРµСЂРІР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="dt2">Р’С‚РѕСЂР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>dt1 РёР»Рё dt2</returns>
     public static Nullable<DateTime> Min(Nullable<DateTime> dt1, Nullable<DateTime> dt2)
     {
       if (dt1.HasValue)
@@ -339,24 +339,24 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает true, если у двух дат одинаковые месяц и год.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Сѓ РґРІСѓС… РґР°С‚ РѕРґРёРЅР°РєРѕРІС‹Рµ РјРµСЃСЏС† Рё РіРѕРґ.
     /// </summary>
-    /// <param name="dt1">Первая сравниваемая дата</param>
-    /// <param name="dt2">Вторая сравниваемая дата</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="dt1">РџРµСЂРІР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="dt2">Р’С‚РѕСЂР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public static bool IsEqualYearAndMonth(DateTime dt1, DateTime dt2)
     {
       return dt1.Year == dt2.Year && dt1.Month == dt2.Month;
     }
 
     /// <summary>
-    /// Возвращает true, если у двух дат одинаковые месяц и год.
-    /// Если обе даты пустые, возвращается true.
-    /// Если только одна дата пустая, возвращается false.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Сѓ РґРІСѓС… РґР°С‚ РѕРґРёРЅР°РєРѕРІС‹Рµ РјРµСЃСЏС† Рё РіРѕРґ.
+    /// Р•СЃР»Рё РѕР±Рµ РґР°С‚С‹ РїСѓСЃС‚С‹Рµ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true.
+    /// Р•СЃР»Рё С‚РѕР»СЊРєРѕ РѕРґРЅР° РґР°С‚Р° РїСѓСЃС‚Р°СЏ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ false.
     /// </summary>
-    /// <param name="dt1">Первая сравниваемая дата</param>
-    /// <param name="dt2">Вторая сравниваемая дата</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="dt1">РџРµСЂРІР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="dt2">Р’С‚РѕСЂР°СЏ СЃСЂР°РІРЅРёРІР°РµРјР°СЏ РґР°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public static bool IsEqualYearAndMonth(Nullable<DateTime> dt1, Nullable<DateTime> dt2)
     {
       //if (dt2.HasValue != dt2.HasValue) 
@@ -365,17 +365,17 @@ namespace FreeLibSet.Core
       if (dt1.HasValue)
         return IsEqualYearAndMonth(dt1.Value, dt2.Value);
       else
-        return true; // обе даты пустые
+        return true; // РѕР±Рµ РґР°С‚С‹ РїСѓСЃС‚С‹Рµ
     }
 
     /// <summary>
-    /// Возвращает дату, у которой год и месяц берутся из указанной даты <paramref name="dt"/>,
-    /// а день задается отдельно.
-    /// Если в месяце нет столько дней, то возвращается последний день месяца
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ, Сѓ РєРѕС‚РѕСЂРѕР№ РіРѕРґ Рё РјРµСЃСЏС† Р±РµСЂСѓС‚СЃСЏ РёР· СѓРєР°Р·Р°РЅРЅРѕР№ РґР°С‚С‹ <paramref name="dt"/>,
+    /// Р° РґРµРЅСЊ Р·Р°РґР°РµС‚СЃСЏ РѕС‚РґРµР»СЊРЅРѕ.
+    /// Р•СЃР»Рё РІ РјРµСЃСЏС†Рµ РЅРµС‚ СЃС‚РѕР»СЊРєРѕ РґРЅРµР№, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РјРµСЃСЏС†Р°
     /// </summary>
-    /// <param name="dt">Дата, из которой берутся год и месяц</param>
-    /// <param name="day">День</param>
-    /// <returns>Созданная дата</returns>
+    /// <param name="dt">Р”Р°С‚Р°, РёР· РєРѕС‚РѕСЂРѕР№ Р±РµСЂСѓС‚СЃСЏ РіРѕРґ Рё РјРµСЃСЏС†</param>
+    /// <param name="day">Р”РµРЅСЊ</param>
+    /// <returns>РЎРѕР·РґР°РЅРЅР°СЏ РґР°С‚Р°</returns>
     public static DateTime CreateDateTime(DateTime dt, int day)
     {
       //return CreateDateTime(dt.Year, dt.Month, dt.Day);
@@ -383,14 +383,14 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает дату из компонентов.
-    /// Если в месяце нет столько дней, то возвращается последний день месяца.
-    /// Если год вне диапазона, разрешенного для DateTime, выбрасывается ArgumentOutOfRangeException
+    /// РЎРѕР·РґР°РµС‚ РґР°С‚Сѓ РёР· РєРѕРјРїРѕРЅРµРЅС‚РѕРІ.
+    /// Р•СЃР»Рё РІ РјРµСЃСЏС†Рµ РЅРµС‚ СЃС‚РѕР»СЊРєРѕ РґРЅРµР№, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РјРµСЃСЏС†Р°.
+    /// Р•СЃР»Рё РіРѕРґ РІРЅРµ РґРёР°РїР°Р·РѕРЅР°, СЂР°Р·СЂРµС€РµРЅРЅРѕРіРѕ РґР»СЏ DateTime, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ ArgumentOutOfRangeException
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <param name="month">Месяц</param>
-    /// <param name="day">День</param>
-    /// <returns>Объект даты</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <param name="day">Р”РµРЅСЊ</param>
+    /// <returns>РћР±СЉРµРєС‚ РґР°С‚С‹</returns>
     [DebuggerStepThrough]
     public static DateTime CreateDateTime(int year, int month, int day)
     {
@@ -414,13 +414,13 @@ namespace FreeLibSet.Core
     #region GetNullableDateTime()
 
     /// <summary>
-    /// Создает новый объект DateTime, если день, месяц и год содержат допустимое значение.
-    /// Иначе возвращается null
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ DateTime, РµСЃР»Рё РґРµРЅСЊ, РјРµСЃСЏС† Рё РіРѕРґ СЃРѕРґРµСЂР¶Р°С‚ РґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <param name="month">Месяц</param>
-    /// <param name="day">День</param>
-    /// <returns>Объект DateTime или null</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <param name="day">Р”РµРЅСЊ</param>
+    /// <returns>РћР±СЉРµРєС‚ DateTime РёР»Рё null</returns>
     public static DateTime? CreateDateTimeIfValid(int year, int month, int day)
     {
       if (IsValidYMD(year, month, day))
@@ -430,16 +430,16 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает новый объект DateTime, если компоненты даты и времени содержат допустимые значение.
-    /// Иначе возвращается null
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ DateTime, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚С‹ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё СЃРѕРґРµСЂР¶Р°С‚ РґРѕРїСѓСЃС‚РёРјС‹Рµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <param name="month">Месяц</param>
-    /// <param name="day">День</param>
-    /// <param name="hour">Часы</param>
-    /// <param name="minute">Минуты</param>
-    /// <param name="second">Секунды</param>
-    /// <returns>Объект DateTime или null</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <param name="day">Р”РµРЅСЊ</param>
+    /// <param name="hour">Р§Р°СЃС‹</param>
+    /// <param name="minute">РњРёРЅСѓС‚С‹</param>
+    /// <param name="second">РЎРµРєСѓРЅРґС‹</param>
+    /// <returns>РћР±СЉРµРєС‚ DateTime РёР»Рё null</returns>
     public static DateTime? CreateDateTimeIfValid(int year, int month, int day, int hour, int minute, int second)
     {
       if (IsValidYMD(year, month, day) && IsValidHMS(hour, minute, second))
@@ -449,17 +449,17 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает новый объект DateTime, если компоненты даты и времени содержат допустимые значение.
-    /// Иначе возвращается null
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ DateTime, РµСЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚С‹ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё СЃРѕРґРµСЂР¶Р°С‚ РґРѕРїСѓСЃС‚РёРјС‹Рµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РРЅР°С‡Рµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="year">Год</param>
-    /// <param name="month">Месяц</param>
-    /// <param name="day">День</param>
-    /// <param name="hour">Часы</param>
-    /// <param name="minute">Минуты</param>
-    /// <param name="second">Секунды</param>
-    /// <param name="millisecond">Миллисекунды</param>
-    /// <returns>Объект DateTime или null</returns>
+    /// <param name="year">Р“РѕРґ</param>
+    /// <param name="month">РњРµСЃСЏС†</param>
+    /// <param name="day">Р”РµРЅСЊ</param>
+    /// <param name="hour">Р§Р°СЃС‹</param>
+    /// <param name="minute">РњРёРЅСѓС‚С‹</param>
+    /// <param name="second">РЎРµРєСѓРЅРґС‹</param>
+    /// <param name="millisecond">РњРёР»Р»РёСЃРµРєСѓРЅРґС‹</param>
+    /// <returns>РћР±СЉРµРєС‚ DateTime РёР»Рё null</returns>
     public static DateTime? CreateDateTimeIfValid(int year, int month, int day, int hour, int minute, int second, int millisecond)
     {
       if (IsValidYMD(year, month, day) && IsValidHMS(hour, minute, second) && IsValidMS(millisecond))
@@ -494,18 +494,18 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region Интервалы дат
+    #region РРЅС‚РµСЂРІР°Р»С‹ РґР°С‚
 
     /// <summary>
-    /// Проверка попадания даты в интервал.
-    /// Берутся только даты, время отбрасывается.
+    /// РџСЂРѕРІРµСЂРєР° РїРѕРїР°РґР°РЅРёСЏ РґР°С‚С‹ РІ РёРЅС‚РµСЂРІР°Р».
+    /// Р‘РµСЂСѓС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР°С‚С‹, РІСЂРµРјСЏ РѕС‚Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="testDate">Проверяемая дата</param>
-    /// <param name="hasFirstDate">Есть начальная дата диапазона</param>
-    /// <param name="firstDate">Начальная дата диапазона при HasFirstDate=True</param>
-    /// <param name="hasLastDate">Есть конечная дата диапазона</param>
-    /// <param name="lastDate">Конечная дата диапазона при HasLastDate=True</param>
-    /// <returns>True, если дата лежит внутри диапазона, false, если она не входит в интервал</returns>
+    /// <param name="testDate">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="hasFirstDate">Р•СЃС‚СЊ РЅР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="firstDate">РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР° РїСЂРё HasFirstDate=True</param>
+    /// <param name="hasLastDate">Р•СЃС‚СЊ РєРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastDate">РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР° РїСЂРё HasLastDate=True</param>
+    /// <returns>True, РµСЃР»Рё РґР°С‚Р° Р»РµР¶РёС‚ РІРЅСѓС‚СЂРё РґРёР°РїР°Р·РѕРЅР°, false, РµСЃР»Рё РѕРЅР° РЅРµ РІС…РѕРґРёС‚ РІ РёРЅС‚РµСЂРІР°Р»</returns>
     public static bool DateInRange(DateTime testDate, bool hasFirstDate, DateTime firstDate, bool hasLastDate, DateTime lastDate)
     {
       Nullable<DateTime> dt1 = null;
@@ -518,13 +518,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Проверка попадания даты в интервал
-    /// Берутся только даты, время отбрасывается
+    /// РџСЂРѕРІРµСЂРєР° РїРѕРїР°РґР°РЅРёСЏ РґР°С‚С‹ РІ РёРЅС‚РµСЂРІР°Р»
+    /// Р‘РµСЂСѓС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР°С‚С‹, РІСЂРµРјСЏ РѕС‚Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ
     /// </summary>
-    /// <param name="testDate">Проверяемая дата</param>
-    /// <param name="firstDate">Начальная дата диапазона</param>
-    /// <param name="lastDate">Конечная дата диапазона</param>
-    /// <returns>True, если дата лежит внутри диапазона, false, если она не входит в интервал</returns>
+    /// <param name="testDate">РџСЂРѕРІРµСЂСЏРµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="firstDate">РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastDate">РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <returns>True, РµСЃР»Рё РґР°С‚Р° Р»РµР¶РёС‚ РІРЅСѓС‚СЂРё РґРёР°РїР°Р·РѕРЅР°, false, РµСЃР»Рё РѕРЅР° РЅРµ РІС…РѕРґРёС‚ РІ РёРЅС‚РµСЂРІР°Р»</returns>
     public static bool DateInRange(DateTime testDate, DateTime? firstDate, DateTime? lastDate)
     {
       testDate = testDate.Date;
@@ -542,13 +542,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращет true, если указанный год попадает в интервал дат.
-    /// Год считается попавшим в диапазон, если попал хотz бы один день из года.
+    /// Р’РѕР·РІСЂР°С‰РµС‚ true, РµСЃР»Рё СѓРєР°Р·Р°РЅРЅС‹Р№ РіРѕРґ РїРѕРїР°РґР°РµС‚ РІ РёРЅС‚РµСЂРІР°Р» РґР°С‚.
+    /// Р“РѕРґ СЃС‡РёС‚Р°РµС‚СЃСЏ РїРѕРїР°РІС€РёРј РІ РґРёР°РїР°Р·РѕРЅ, РµСЃР»Рё РїРѕРїР°Р» С…РѕС‚z Р±С‹ РѕРґРёРЅ РґРµРЅСЊ РёР· РіРѕРґР°.
     /// </summary>
-    /// <param name="testYear">Проверяемый год</param>
-    /// <param name="firstDate">Начальная дата диапазона</param>
-    /// <param name="lastDate">Конечная дата диапазона</param>
-    /// <returns>true, если год попадает в диазон</returns>
+    /// <param name="testYear">РџСЂРѕРІРµСЂСЏРµРјС‹Р№ РіРѕРґ</param>
+    /// <param name="firstDate">РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastDate">РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <returns>true, РµСЃР»Рё РіРѕРґ РїРѕРїР°РґР°РµС‚ РІ РґРёР°Р·РѕРЅ</returns>
     public static bool YearInRange(int testYear, DateTime? firstDate, DateTime? lastDate)
     {
       if (firstDate.HasValue)
@@ -565,17 +565,17 @@ namespace FreeLibSet.Core
     }
 
     /*
-     * Метода MonthInRange нет, т.к. это должно быть реализовано в YearMonth
+     * РњРµС‚РѕРґР° MonthInRange РЅРµС‚, С‚.Рє. СЌС‚Рѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РІ YearMonth
      */
 
     /// <summary>
-    /// Помещает дату в диапазон.
-    /// Если задана начальная дата диапазона <paramref name="firstDate"/> и заданная дата <paramref name="dt"/> меньшее ее, дата <paramref name="dt"/>
-    /// делается равной начальной дате. Аналогично учитывается конечная дата диапазона <paramref name="lastDate"/>
+    /// РџРѕРјРµС‰Р°РµС‚ РґР°С‚Сѓ РІ РґРёР°РїР°Р·РѕРЅ.
+    /// Р•СЃР»Рё Р·Р°РґР°РЅР° РЅР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР° <paramref name="firstDate"/> Рё Р·Р°РґР°РЅРЅР°СЏ РґР°С‚Р° <paramref name="dt"/> РјРµРЅСЊС€РµРµ РµРµ, РґР°С‚Р° <paramref name="dt"/>
+    /// РґРµР»Р°РµС‚СЃСЏ СЂР°РІРЅРѕР№ РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚Рµ. РђРЅР°Р»РѕРіРёС‡РЅРѕ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ РєРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР° <paramref name="lastDate"/>
     /// </summary>
-    /// <param name="dt">Проверяемая и корректируемая дата</param>
-    /// <param name="firstDate">Начальная дата диапазона</param>
-    /// <param name="lastDate">Конечная дата диапазона</param>
+    /// <param name="dt">РџСЂРѕРІРµСЂСЏРµРјР°СЏ Рё РєРѕСЂСЂРµРєС‚РёСЂСѓРµРјР°СЏ РґР°С‚Р°</param>
+    /// <param name="firstDate">РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastDate">РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°</param>
     public static void DateToRange(ref DateTime dt, DateTime? firstDate, DateTime? lastDate)
     {
       dt = dt.Date;
@@ -594,16 +594,16 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Пересекаются ли два интервала дат
-    /// Возвращается true, если есть хотя бы один общий день
-    /// Оба интервала равноправны
-    /// Время не учитывается
+    /// РџРµСЂРµСЃРµРєР°СЋС‚СЃСЏ Р»Рё РґРІР° РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true, РµСЃР»Рё РµСЃС‚СЊ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ РѕР±С‰РёР№ РґРµРЅСЊ
+    /// РћР±Р° РёРЅС‚РµСЂРІР°Р»Р° СЂР°РІРЅРѕРїСЂР°РІРЅС‹
+    /// Р’СЂРµРјСЏ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ
     /// </summary>
-    /// <param name="firstDate1">Начало первого интервала</param>
-    /// <param name="lastDate1">Окончание первого интервала</param>
-    /// <param name="firstDate2">Начало второго интервала</param>
-    /// <param name="lastDate2">Окончание второго интервала</param>
-    /// <returns>true, если интервалы пересекаются</returns>
+    /// <param name="firstDate1">РќР°С‡Р°Р»Рѕ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate1">РћРєРѕРЅС‡Р°РЅРёРµ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="firstDate2">РќР°С‡Р°Р»Рѕ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate2">РћРєРѕРЅС‡Р°РЅРёРµ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <returns>true, РµСЃР»Рё РёРЅС‚РµСЂРІР°Р»С‹ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ</returns>
     public static bool DateRangeCrossed(Nullable<DateTime> firstDate1, Nullable<DateTime> lastDate1,
       Nullable<DateTime> firstDate2, Nullable<DateTime> lastDate2)
     {
@@ -627,7 +627,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Удаление времени из поля типа дата/время
+    /// РЈРґР°Р»РµРЅРёРµ РІСЂРµРјРµРЅРё РёР· РїРѕР»СЏ С‚РёРїР° РґР°С‚Р°/РІСЂРµРјСЏ
     /// </summary>
     /// <param name="dt"></param>
     private static void MakeDateOnly(ref Nullable<DateTime> dt)
@@ -638,16 +638,16 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Возвращает true, если интервал дат {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} целиком
-    /// помещается в интервале дат {<paramref name="firstDate2"/>, <paramref name="lastDate2"/>}
-    /// Интервалы не являются равноправными
-    /// Время не учитывается.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РёРЅС‚РµСЂРІР°Р» РґР°С‚ {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} С†РµР»РёРєРѕРј
+    /// РїРѕРјРµС‰Р°РµС‚СЃСЏ РІ РёРЅС‚РµСЂРІР°Р»Рµ РґР°С‚ {<paramref name="firstDate2"/>, <paramref name="lastDate2"/>}
+    /// РРЅС‚РµСЂРІР°Р»С‹ РЅРµ СЏРІР»СЏСЋС‚СЃСЏ СЂР°РІРЅРѕРїСЂР°РІРЅС‹РјРё
+    /// Р’СЂРµРјСЏ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="firstDate1">Начало первого интервала</param>
-    /// <param name="lastDate1">Окончание первого интервала</param>
-    /// <param name="firstDate2">Начало второго интервала</param>
-    /// <param name="lastDate2">Окончание второго интервала</param>
-    /// <returns>true, если первый интервал входит во второй</returns>
+    /// <param name="firstDate1">РќР°С‡Р°Р»Рѕ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate1">РћРєРѕРЅС‡Р°РЅРёРµ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="firstDate2">РќР°С‡Р°Р»Рѕ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate2">РћРєРѕРЅС‡Р°РЅРёРµ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <returns>true, РµСЃР»Рё РїРµСЂРІС‹Р№ РёРЅС‚РµСЂРІР°Р» РІС…РѕРґРёС‚ РІРѕ РІС‚РѕСЂРѕР№</returns>
     public static bool DateRangeInRange(Nullable<DateTime> firstDate1, Nullable<DateTime> lastDate1,
       Nullable<DateTime> firstDate2, Nullable<DateTime> lastDate2)
     {
@@ -682,13 +682,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Расширение интервала дат {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} так, чтобы в него целиком
-    /// помещался интервал {<paramref name="firstDate2"/>, <paramref name="lastDate2"/>}.
+    /// Р Р°СЃС€РёСЂРµРЅРёРµ РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚ {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} С‚Р°Рє, С‡С‚РѕР±С‹ РІ РЅРµРіРѕ С†РµР»РёРєРѕРј
+    /// РїРѕРјРµС‰Р°Р»СЃСЏ РёРЅС‚РµСЂРІР°Р» {<paramref name="firstDate2"/>, <paramref name="lastDate2"/>}.
     /// </summary>
-    /// <param name="firstDate1">Начало первого интервала</param>
-    /// <param name="lastDate1">Окончание первого интервала</param>
-    /// <param name="firstDate2">Начало второго интервала</param>
-    /// <param name="lastDate2">Окончание второго интервала</param>
+    /// <param name="firstDate1">РќР°С‡Р°Р»Рѕ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate1">РћРєРѕРЅС‡Р°РЅРёРµ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="firstDate2">РќР°С‡Р°Р»Рѕ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate2">РћРєРѕРЅС‡Р°РЅРёРµ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
     public static void GetDateRangeUnion(ref Nullable<DateTime> firstDate1, ref Nullable<DateTime> lastDate1,
       Nullable<DateTime> firstDate2, Nullable<DateTime> lastDate2)
     {
@@ -716,18 +716,18 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Сужение интервала дат {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} так, чтобы он не выходил
-    /// за пределы интервала {<paramref name="firstDate2"/>, <paramref name="lastDate2"/>}
-    /// Если интервалы дат не
-    /// пересекаются (DateRangeCrossed(<paramref name="firstDate1"/>, <paramref name="lastDate1"/>, <paramref name="firstDate2"/>, <paramref name="lastDate2"/>)=0),
-    /// то возвращается значение false, а <paramref name="firstDate1"/> и <paramref name="lastDate1"/> приобретают значение null.
+    /// РЎСѓР¶РµРЅРёРµ РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚ {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} С‚Р°Рє, С‡С‚РѕР±С‹ РѕРЅ РЅРµ РІС‹С…РѕРґРёР»
+    /// Р·Р° РїСЂРµРґРµР»С‹ РёРЅС‚РµСЂРІР°Р»Р° {<paramref name="firstDate2"/>, <paramref name="lastDate2"/>}
+    /// Р•СЃР»Рё РёРЅС‚РµСЂРІР°Р»С‹ РґР°С‚ РЅРµ
+    /// РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ (DateRangeCrossed(<paramref name="firstDate1"/>, <paramref name="lastDate1"/>, <paramref name="firstDate2"/>, <paramref name="lastDate2"/>)=0),
+    /// С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ false, Р° <paramref name="firstDate1"/> Рё <paramref name="lastDate1"/> РїСЂРёРѕР±СЂРµС‚Р°СЋС‚ Р·РЅР°С‡РµРЅРёРµ null.
     /// </summary>
-    /// <param name="firstDate1">Начало первого интервала</param>
-    /// <param name="lastDate1">Окончание первого интервала</param>
-    /// <param name="firstDate2">Начало второго интервала</param>
-    /// <param name="lastDate2">Окончание второго интервала</param>
-    /// <returns>true, если пересечение интервалов выполнено и false, если интервалы
-    /// не пересекаются</returns>
+    /// <param name="firstDate1">РќР°С‡Р°Р»Рѕ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate1">РћРєРѕРЅС‡Р°РЅРёРµ РїРµСЂРІРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="firstDate2">РќР°С‡Р°Р»Рѕ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <param name="lastDate2">РћРєРѕРЅС‡Р°РЅРёРµ РІС‚РѕСЂРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°</param>
+    /// <returns>true, РµСЃР»Рё РїРµСЂРµСЃРµС‡РµРЅРёРµ РёРЅС‚РµСЂРІР°Р»РѕРІ РІС‹РїРѕР»РЅРµРЅРѕ Рё false, РµСЃР»Рё РёРЅС‚РµСЂРІР°Р»С‹
+    /// РЅРµ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ</returns>
     public static bool GetDateRangeCross(ref Nullable<DateTime> firstDate1, ref Nullable<DateTime> lastDate1,
       Nullable<DateTime> firstDate2, Nullable<DateTime> lastDate2)
     {
@@ -767,27 +767,27 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region Сравнение TimeSpan
+    #region РЎСЂР°РІРЅРµРЅРёРµ TimeSpan
 
     /// <summary>
-    /// Возвращает максимальное значение из двух интервалов времени.
-    /// Отрицательные значения допускаются.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· РґРІСѓС… РёРЅС‚РµСЂРІР°Р»РѕРІ РІСЂРµРјРµРЅРё.
+    /// РћС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
     /// </summary>
-    /// <param name="ts1">Первый интервал</param>
-    /// <param name="ts2">Второй интервал</param>
-    /// <returns>Максимальное значение</returns>
+    /// <param name="ts1">РџРµСЂРІС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <param name="ts2">Р’С‚РѕСЂРѕР№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <returns>РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     public static TimeSpan Max(TimeSpan ts1, TimeSpan ts2)
     {
       return (ts1 > ts2) ? ts1 : ts2;
     }
 
     /// <summary>
-    /// Максимальное значение из двух интервалов времени. Если один из интервалов не задан, то возвращается
-    /// другой интервал
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· РґРІСѓС… РёРЅС‚РµСЂРІР°Р»РѕРІ РІСЂРµРјРµРЅРё. Р•СЃР»Рё РѕРґРёРЅ РёР· РёРЅС‚РµСЂРІР°Р»РѕРІ РЅРµ Р·Р°РґР°РЅ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ
+    /// РґСЂСѓРіРѕР№ РёРЅС‚РµСЂРІР°Р»
     /// </summary>
-    /// <param name="ts1">Первый сравниваемый интервал</param>
-    /// <param name="ts2">Второй сравниваемый интервал</param>
-    /// <returns>ts1 или ts2</returns>
+    /// <param name="ts1">РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <param name="ts2">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <returns>ts1 РёР»Рё ts2</returns>
     public static Nullable<TimeSpan> Max(Nullable<TimeSpan> ts1, Nullable<TimeSpan> ts2)
     {
       if (ts1.HasValue)
@@ -802,24 +802,24 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает минимальное значение из двух интервалов времени.
-    /// Отрицательные значения допускаются.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· РґРІСѓС… РёРЅС‚РµСЂРІР°Р»РѕРІ РІСЂРµРјРµРЅРё.
+    /// РћС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
     /// </summary>
-    /// <param name="ts1">Первый интервал</param>
-    /// <param name="ts2">Второй интервал</param>
-    /// <returns>Минимальное значение</returns>
+    /// <param name="ts1">РџРµСЂРІС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <param name="ts2">Р’С‚РѕСЂРѕР№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <returns>РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     public static TimeSpan Min(TimeSpan ts1, TimeSpan ts2)
     {
       return (ts1 < ts2) ? ts1 : ts2;
     }
 
     /// <summary>
-    /// Минимальное значение из двух интервалов времени. Если один из интервалов не задан, то возвращается
-    /// другой интервал
+    /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· РґРІСѓС… РёРЅС‚РµСЂРІР°Р»РѕРІ РІСЂРµРјРµРЅРё. Р•СЃР»Рё РѕРґРёРЅ РёР· РёРЅС‚РµСЂРІР°Р»РѕРІ РЅРµ Р·Р°РґР°РЅ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ
+    /// РґСЂСѓРіРѕР№ РёРЅС‚РµСЂРІР°Р»
     /// </summary>
-    /// <param name="ts1">Первый сравниваемый интервал</param>
-    /// <param name="ts2">Второй сравниваемый интервал</param>
-    /// <returns>ts1 или ts22</returns>
+    /// <param name="ts1">РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <param name="ts2">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РёРЅС‚РµСЂРІР°Р»</param>
+    /// <returns>ts1 РёР»Рё ts22</returns>
     public static Nullable<TimeSpan> Min(Nullable<TimeSpan> ts1, Nullable<TimeSpan> ts2)
     {
       if (ts1.HasValue)

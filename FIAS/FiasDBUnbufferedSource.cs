@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -15,13 +15,13 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Небуферизованный источник данных для загрузки страниц классификатора.
-  /// Отвечает за выполнение SQL-запросов SELECT.
-  /// Создается в конструкторе FiasDB.
+  /// РќРµР±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… РґР»СЏ Р·Р°РіСЂСѓР·РєРё СЃС‚СЂР°РЅРёС† РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+  /// РћС‚РІРµС‡Р°РµС‚ Р·Р° РІС‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃРѕРІ SELECT.
+  /// РЎРѕР·РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ FiasDB.
   /// </summary>
   internal class FiasDBUnbufferedSource : IFiasSource
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public FiasDBUnbufferedSource(FiasDB fiasDB)
     {
@@ -31,13 +31,13 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private FiasDB _FiasDB;
 
     #endregion
 
-    #region Простые cвойства IFiasSource
+    #region РџСЂРѕСЃС‚С‹Рµ cРІРѕР№СЃС‚РІР° IFiasSource
 
     public string DBIdentity { get { return _FiasDB.DB.DBIdentity; } }
 
@@ -56,12 +56,12 @@ namespace FreeLibSet.FIAS
 
     FreeLibSet.Remoting.DistributedCallData IFiasSource.StartDistributedCall(FreeLibSet.Remoting.NamedValues args, object userData)
     {
-      throw new InvalidOperationException("Этот метод должен вызываться для FiasDB.Source");
+      throw new InvalidOperationException("Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РґР»СЏ FiasDB.Source");
     }
 
     #endregion
 
-    #region Получение словарей идентификаторов
+    #region РџРѕР»СѓС‡РµРЅРёРµ СЃР»РѕРІР°СЂРµР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ
 
     public IDictionary<Guid, FiasGuidInfo> GetGuidInfo(Guid[] guids, FiasTableType tableType)
     {
@@ -83,7 +83,7 @@ namespace FreeLibSet.FIAS
 
         if (tableType == FiasTableType.AddrOb || tableType == FiasTableType.Unknown)
         {
-          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("Поиск родительских адресных объектов для идентификаторов (" + guids.Length.ToString() + ")");
+          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("РџРѕРёСЃРє СЂРѕРґРёС‚РµР»СЊСЃРєРёС… Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ (" + guids.Length.ToString() + ")");
           try
           {
             spl.PercentMax = guids.Length;
@@ -121,8 +121,8 @@ namespace FreeLibSet.FIAS
 
         if (_FiasDB.DBSettings.UseHouse && (tableType == FiasTableType.House || tableType == FiasTableType.Unknown))
         {
-          guids = RemoveFoundGuids(guids, dict); // убрали найденные адресные объекты
-          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("Поиск адресных объектов для идентификаторов зданий (" + guids.Length.ToString() + ")");
+          guids = RemoveFoundGuids(guids, dict); // СѓР±СЂР°Р»Рё РЅР°Р№РґРµРЅРЅС‹Рµ Р°РґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹
+          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("РџРѕРёСЃРє Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ Р·РґР°РЅРёР№ (" + guids.Length.ToString() + ")");
           try
           {
             spl.PercentMax = guids.Length;
@@ -157,8 +157,8 @@ namespace FreeLibSet.FIAS
 
         if (_FiasDB.DBSettings.UseRoom && (tableType == FiasTableType.Room || tableType == FiasTableType.Unknown))
         {
-          guids = RemoveFoundGuids(guids, dict); // убрали найденные дома
-          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("Поиск домов для идентификаторов помещений (" + guids.Length.ToString() + ")");
+          guids = RemoveFoundGuids(guids, dict); // СѓР±СЂР°Р»Рё РЅР°Р№РґРµРЅРЅС‹Рµ РґРѕРјР°
+          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("РџРѕРёСЃРє РґРѕРјРѕРІ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РїРѕРјРµС‰РµРЅРёР№ (" + guids.Length.ToString() + ")");
           try
           {
             spl.PercentMax = guids.Length;
@@ -190,7 +190,7 @@ namespace FreeLibSet.FIAS
         #endregion
       }
 
-      #region Остальные - не найдены
+      #region РћСЃС‚Р°Р»СЊРЅС‹Рµ - РЅРµ РЅР°Р№РґРµРЅС‹
 
       if (guids.Length > 0)
       {
@@ -232,7 +232,7 @@ namespace FreeLibSet.FIAS
 
         if (tableType == FiasTableType.AddrOb || tableType == FiasTableType.Unknown)
         {
-          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("Поиск родительских адресных объектов для идентификаторов (" + recIds.Length.ToString() + ")");
+          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("РџРѕРёСЃРє СЂРѕРґРёС‚РµР»СЊСЃРєРёС… Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ (" + recIds.Length.ToString() + ")");
           try
           {
             spl.PercentMax = recIds.Length;
@@ -268,8 +268,8 @@ namespace FreeLibSet.FIAS
 
         if (_FiasDB.DBSettings.UseHouse && (tableType == FiasTableType.House || tableType == FiasTableType.Unknown))
         {
-          recIds = RemoveFoundGuids(recIds, dict); // убрали найденные адресные объекты
-          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("Поиск адресных объектов для идентификаторов зданий (" + recIds.Length.ToString() + ")");
+          recIds = RemoveFoundGuids(recIds, dict); // СѓР±СЂР°Р»Рё РЅР°Р№РґРµРЅРЅС‹Рµ Р°РґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹
+          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("РџРѕРёСЃРє Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ Р·РґР°РЅРёР№ (" + recIds.Length.ToString() + ")");
           try
           {
             spl.PercentMax = recIds.Length;
@@ -304,8 +304,8 @@ namespace FreeLibSet.FIAS
 
         if (_FiasDB.DBSettings.UseRoom && (tableType == FiasTableType.Room || tableType == FiasTableType.Unknown))
         {
-          recIds = RemoveFoundGuids(recIds, dict); // убрали найденные дома
-          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("Поиск домов для идентификаторов помещений (" + recIds.Length.ToString() + ")");
+          recIds = RemoveFoundGuids(recIds, dict); // СѓР±СЂР°Р»Рё РЅР°Р№РґРµРЅРЅС‹Рµ РґРѕРјР°
+          ISplash spl = SplashTools.ThreadSplashStack.BeginSplash("РџРѕРёСЃРє РґРѕРјРѕРІ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РїРѕРјРµС‰РµРЅРёР№ (" + recIds.Length.ToString() + ")");
           try
           {
             spl.PercentMax = recIds.Length;
@@ -337,7 +337,7 @@ namespace FreeLibSet.FIAS
         #endregion
       }
 
-      #region Остальные - не найдены
+      #region РћСЃС‚Р°Р»СЊРЅС‹Рµ - РЅРµ РЅР°Р№РґРµРЅС‹
 
       if (recIds.Length > 0)
       {
@@ -376,20 +376,20 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Шаблоны таблиц классификатора
+    #region РЁР°Р±Р»РѕРЅС‹ С‚Р°Р±Р»РёС† РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
 
     /// <summary>
-    /// Шаблон таблицы для страницы FiasCachedPageAddrOb
+    /// РЁР°Р±Р»РѕРЅ С‚Р°Р±Р»РёС†С‹ РґР»СЏ СЃС‚СЂР°РЅРёС†С‹ FiasCachedPageAddrOb
     /// </summary>
     private DataTable _AddrObTemplate;
 
     /// <summary>
-    /// Шаблон таблицы для страницы FiasCachedPageHouse
+    /// РЁР°Р±Р»РѕРЅ С‚Р°Р±Р»РёС†С‹ РґР»СЏ СЃС‚СЂР°РЅРёС†С‹ FiasCachedPageHouse
     /// </summary>
     private DataTable _HouseTemplate;
 
     /// <summary>
-    /// Шаблон таблицы для страницы FiasCachedPageRoom
+    /// РЁР°Р±Р»РѕРЅ С‚Р°Р±Р»РёС†С‹ РґР»СЏ СЃС‚СЂР°РЅРёС†С‹ FiasCachedPageRoom
     /// </summary>
     private DataTable _RoomTemplate;
 
@@ -400,26 +400,26 @@ namespace FreeLibSet.FIAS
       _AddrObTemplate = new DataTable("AddrOb");
       //_AddrObTemplate.RemotingFormat = SerializationFormat.Binary;
 
-      _AddrObTemplate.Columns.Add("AOID", typeof(Guid)); // Идентификатор записи и первичный ключ. 
+      _AddrObTemplate.Columns.Add("AOID", typeof(Guid)); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. 
       if (_FiasDB.DBSettings.UseHistory)
       {
-        _AddrObTemplate.Columns.Add("PREVID", typeof(Guid));  // Ссылки для отслеживания переименований
-        _AddrObTemplate.Columns.Add("NEXTID", typeof(Guid));  // Ссылки для отслеживания переименований
+        _AddrObTemplate.Columns.Add("PREVID", typeof(Guid));  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+        _AddrObTemplate.Columns.Add("NEXTID", typeof(Guid));  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
       }
-      _AddrObTemplate.Columns.Add("AOGUID", typeof(Guid)); // Идентификатор объекта классификатора
-      _AddrObTemplate.Columns.Add("PARENTGUID", typeof(Guid)); // Родительский элемент
+      _AddrObTemplate.Columns.Add("AOGUID", typeof(Guid)); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+      _AddrObTemplate.Columns.Add("PARENTGUID", typeof(Guid)); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
       if (_FiasDB.DBSettings.UseHistory)
       {
-        _AddrObTemplate.Columns.Add("Actual", typeof(bool)); // загадочный признак актуальности
-        _AddrObTemplate.Columns.Add("Live", typeof(bool)); // Соответствует полю LIVESTATUS в ФИАС
+        _AddrObTemplate.Columns.Add("Actual", typeof(bool)); // Р·Р°РіР°РґРѕС‡РЅС‹Р№ РїСЂРёР·РЅР°Рє Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё
+        _AddrObTemplate.Columns.Add("Live", typeof(bool)); // РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЋ LIVESTATUS РІ Р¤РРђРЎ
       }
-      _AddrObTemplate.Columns.Add("AOLEVEL", typeof(int)); // Уровень адресного объекта строки, а не страницы
-      _AddrObTemplate.Columns.Add("OFFNAME", typeof(string)); // Наименование объекта. 
-      _AddrObTemplate.Columns.Add("AOTypeId", typeof(Int32)); // Ссылка на таблицу "AOTypes". 
-      _AddrObTemplate.Columns.Add("CENTSTATUS", typeof(int)); // Статус центра
-      _AddrObTemplate.Columns.Add("DIVTYPE", typeof(int)); // Признак адресации:
-      _AddrObTemplate.Columns.Add("REGIONCODE", typeof(int));	// Код региона. Для экономии места храним как число. Поле не может иметь значения NULL
-      _AddrObTemplate.Columns.Add("POSTALCODE", typeof(int));	// Почтовый индекс
+      _AddrObTemplate.Columns.Add("AOLEVEL", typeof(int)); // РЈСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° СЃС‚СЂРѕРєРё, Р° РЅРµ СЃС‚СЂР°РЅРёС†С‹
+      _AddrObTemplate.Columns.Add("OFFNAME", typeof(string)); // РќР°РёРјРµРЅРѕРІР°РЅРёРµ РѕР±СЉРµРєС‚Р°. 
+      _AddrObTemplate.Columns.Add("AOTypeId", typeof(Int32)); // РЎСЃС‹Р»РєР° РЅР° С‚Р°Р±Р»РёС†Сѓ "AOTypes". 
+      _AddrObTemplate.Columns.Add("CENTSTATUS", typeof(int)); // РЎС‚Р°С‚СѓСЃ С†РµРЅС‚СЂР°
+      _AddrObTemplate.Columns.Add("DIVTYPE", typeof(int)); // РџСЂРёР·РЅР°Рє Р°РґСЂРµСЃР°С†РёРё:
+      _AddrObTemplate.Columns.Add("REGIONCODE", typeof(int));	// РљРѕРґ СЂРµРіРёРѕРЅР°. Р”Р»СЏ СЌРєРѕРЅРѕРјРёРё РјРµСЃС‚Р° С…СЂР°РЅРёРј РєР°Рє С‡РёСЃР»Рѕ. РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ РёРјРµС‚СЊ Р·РЅР°С‡РµРЅРёСЏ NULL
+      _AddrObTemplate.Columns.Add("POSTALCODE", typeof(int));	// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ
       if (_FiasDB.DBSettings.UseIFNS)
       {
         _AddrObTemplate.Columns.Add("IFNSFL", typeof(int));
@@ -444,7 +444,7 @@ namespace FreeLibSet.FIAS
           _AddrObTemplate.Columns.Add("ENDDATE", typeof(DateTime));
         }
       }
-      _AddrObTemplate.Columns.Add("TopFlag", typeof(bool)); // поля нет в базе данных. Отмечает актуальную строку для заданного AOGUID.
+      _AddrObTemplate.Columns.Add("TopFlag", typeof(bool)); // РїРѕР»СЏ РЅРµС‚ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…. РћС‚РјРµС‡Р°РµС‚ Р°РєС‚СѓР°Р»СЊРЅСѓСЋ СЃС‚СЂРѕРєСѓ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ AOGUID.
 
       #endregion
 
@@ -455,25 +455,25 @@ namespace FreeLibSet.FIAS
         _HouseTemplate = new DataTable("AddrOb");
         //_HouseTemplate.RemotingFormat = SerializationFormat.Binary;
 
-        _HouseTemplate.Columns.Add("HOUSEID", typeof(Guid)); // Идентификатор записи и первичный ключ. 
-        _HouseTemplate.Columns.Add("HOUSEGUID", typeof(Guid)); // Идентификатор объекта классификатора
-        // Это не нужно. Страница всегда относится к одному адресному объекту (улице или населенному пункту)
-        //_HouseTemplate.Columns.Add("AOGUID", typeof(Guid)); // Родительский элемент
+        _HouseTemplate.Columns.Add("HOUSEID", typeof(Guid)); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. 
+        _HouseTemplate.Columns.Add("HOUSEGUID", typeof(Guid)); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+        // Р­С‚Рѕ РЅРµ РЅСѓР¶РЅРѕ. РЎС‚СЂР°РЅРёС†Р° РІСЃРµРіРґР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РѕРґРЅРѕРјСѓ Р°РґСЂРµСЃРЅРѕРјСѓ РѕР±СЉРµРєС‚Сѓ (СѓР»РёС†Рµ РёР»Рё РЅР°СЃРµР»РµРЅРЅРѕРјСѓ РїСѓРЅРєС‚Сѓ)
+        //_HouseTemplate.Columns.Add("AOGUID", typeof(Guid)); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
 
-        // Поля для дома
-        _HouseTemplate.Columns.Add("nHouseNum", typeof(int)); // Числовой номер дома для сортировки. 
-        _HouseTemplate.Columns.Add("HOUSENUM", typeof(string)); // Номер дома. 
-        _HouseTemplate.Columns.Add("nBuildNum", typeof(int)); // Числовой номер корпуса для сортировки. 
-        _HouseTemplate.Columns.Add("BUILDNUM", typeof(string)); // Номер корпуса.
-        _HouseTemplate.Columns.Add("nStrucNum", typeof(int)); // Числовой номер строения для сортировки. 
-        _HouseTemplate.Columns.Add("STRUCNUM", typeof(string)); // Номер строения
-        _HouseTemplate.Columns.Add("STRSTATUS", typeof(int)); // Статус строения
-        _HouseTemplate.Columns.Add("ESTSTATUS", typeof(string)); // Признак владения
-        //ts.Columns.AddInt("STARSTATUS", 0, 99, false); // размерность под вопросом
+        // РџРѕР»СЏ РґР»СЏ РґРѕРјР°
+        _HouseTemplate.Columns.Add("nHouseNum", typeof(int)); // Р§РёСЃР»РѕРІРѕР№ РЅРѕРјРµСЂ РґРѕРјР° РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё. 
+        _HouseTemplate.Columns.Add("HOUSENUM", typeof(string)); // РќРѕРјРµСЂ РґРѕРјР°. 
+        _HouseTemplate.Columns.Add("nBuildNum", typeof(int)); // Р§РёСЃР»РѕРІРѕР№ РЅРѕРјРµСЂ РєРѕСЂРїСѓСЃР° РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё. 
+        _HouseTemplate.Columns.Add("BUILDNUM", typeof(string)); // РќРѕРјРµСЂ РєРѕСЂРїСѓСЃР°.
+        _HouseTemplate.Columns.Add("nStrucNum", typeof(int)); // Р§РёСЃР»РѕРІРѕР№ РЅРѕРјРµСЂ СЃС‚СЂРѕРµРЅРёСЏ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё. 
+        _HouseTemplate.Columns.Add("STRUCNUM", typeof(string)); // РќРѕРјРµСЂ СЃС‚СЂРѕРµРЅРёСЏ
+        _HouseTemplate.Columns.Add("STRSTATUS", typeof(int)); // РЎС‚Р°С‚СѓСЃ СЃС‚СЂРѕРµРЅРёСЏ
+        _HouseTemplate.Columns.Add("ESTSTATUS", typeof(string)); // РџСЂРёР·РЅР°Рє РІР»Р°РґРµРЅРёСЏ
+        //ts.Columns.AddInt("STARSTATUS", 0, 99, false); // СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ РїРѕРґ РІРѕРїСЂРѕСЃРѕРј
 
-        _HouseTemplate.Columns.Add("DIVTYPE", typeof(string)); // Признак адресации:
-        // Не нуженts.Columns.AddInt("REGIONCODE", 0, 99, _UseNullableCodes);	// Код региона.
-        _HouseTemplate.Columns.Add("POSTALCODE", typeof(int));	// Почтовый индекс
+        _HouseTemplate.Columns.Add("DIVTYPE", typeof(string)); // РџСЂРёР·РЅР°Рє Р°РґСЂРµСЃР°С†РёРё:
+        // РќРµ РЅСѓР¶РµРЅts.Columns.AddInt("REGIONCODE", 0, 99, _UseNullableCodes);	// РљРѕРґ СЂРµРіРёРѕРЅР°.
+        _HouseTemplate.Columns.Add("POSTALCODE", typeof(int));	// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ
         if (_FiasDB.DBSettings.UseIFNS)
         {
           _HouseTemplate.Columns.Add("IFNSFL", typeof(int));
@@ -498,7 +498,7 @@ namespace FreeLibSet.FIAS
             _HouseTemplate.Columns.Add("ENDDATE", typeof(DateTime));
           }
         }
-        _HouseTemplate.Columns.Add("TopFlag", typeof(bool)); // поля нет в базе данных. Отмечает актуальную строку для заданного HOUSEGUID.
+        _HouseTemplate.Columns.Add("TopFlag", typeof(bool)); // РїРѕР»СЏ РЅРµС‚ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…. РћС‚РјРµС‡Р°РµС‚ Р°РєС‚СѓР°Р»СЊРЅСѓСЋ СЃС‚СЂРѕРєСѓ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ HOUSEGUID.
       }
 
       #endregion
@@ -510,26 +510,26 @@ namespace FreeLibSet.FIAS
         _RoomTemplate = new DataTable("Room");
         //_RoomTemplate.RemotingFormat = SerializationFormat.Binary;
 
-        _RoomTemplate.Columns.Add("ROOMID", typeof(Guid)); // Идентификатор записи и первичный ключ. 
+        _RoomTemplate.Columns.Add("ROOMID", typeof(Guid)); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡. 
         if (DBSettings.UseHistory)
         {
-          _RoomTemplate.Columns.Add("PREVID", typeof(Guid));  // Ссылки для отслеживания переименований
-          _RoomTemplate.Columns.Add("NEXTID", typeof(Guid));  // Ссылки для отслеживания переименований
+          _RoomTemplate.Columns.Add("PREVID", typeof(Guid));  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
+          _RoomTemplate.Columns.Add("NEXTID", typeof(Guid));  // РЎСЃС‹Р»РєРё РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёР№
         }
-        _RoomTemplate.Columns.Add("ROOMGUID", typeof(Guid)); // Идентификатор объекта классификатора
-        // Это не нужно. Таблица всегда относится к одному дому
-        //_RoomTemplate.Columns.Add("HOUSEGUID", typeof(Guid)); // Родительский элемент
+        _RoomTemplate.Columns.Add("ROOMGUID", typeof(Guid)); // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
+        // Р­С‚Рѕ РЅРµ РЅСѓР¶РЅРѕ. РўР°Р±Р»РёС†Р° РІСЃРµРіРґР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РѕРґРЅРѕРјСѓ РґРѕРјСѓ
+        //_RoomTemplate.Columns.Add("HOUSEGUID", typeof(Guid)); // Р РѕРґРёС‚РµР»СЊСЃРєРёР№ СЌР»РµРјРµРЅС‚
 
-        // Поля для объекта
+        // РџРѕР»СЏ РґР»СЏ РѕР±СЉРµРєС‚Р°
         if (DBSettings.UseHistory)
-          _RoomTemplate.Columns.Add("Live", typeof(bool)); // Соответствует полю LIVESTATUS в ФИАС
-        _RoomTemplate.Columns.Add("nFlatNumber", typeof(int)); // Числовой номер квартиры для сортировки
-        _RoomTemplate.Columns.Add("FLATNUMBER", typeof(string)); // Номер квартиры, офиса или прочего
-        _RoomTemplate.Columns.Add("FLATTYPE", typeof(int)); // Тип помещения
-        _RoomTemplate.Columns.Add("nRoomNumber", typeof(int)); // Числовой номер помещения для сортировки
-        _RoomTemplate.Columns.Add("ROOMNUMBER", typeof(String)); // Номер комнаты
-        _RoomTemplate.Columns.Add("ROOMTYPE", typeof(int)); // Тип комнаты
-        _RoomTemplate.Columns.Add("POSTALCODE", typeof(int));	// Почтовый индекс
+          _RoomTemplate.Columns.Add("Live", typeof(bool)); // РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЋ LIVESTATUS РІ Р¤РРђРЎ
+        _RoomTemplate.Columns.Add("nFlatNumber", typeof(int)); // Р§РёСЃР»РѕРІРѕР№ РЅРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё
+        _RoomTemplate.Columns.Add("FLATNUMBER", typeof(string)); // РќРѕРјРµСЂ РєРІР°СЂС‚РёСЂС‹, РѕС„РёСЃР° РёР»Рё РїСЂРѕС‡РµРіРѕ
+        _RoomTemplate.Columns.Add("FLATTYPE", typeof(int)); // РўРёРї РїРѕРјРµС‰РµРЅРёСЏ
+        _RoomTemplate.Columns.Add("nRoomNumber", typeof(int)); // Р§РёСЃР»РѕРІРѕР№ РЅРѕРјРµСЂ РїРѕРјРµС‰РµРЅРёСЏ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё
+        _RoomTemplate.Columns.Add("ROOMNUMBER", typeof(String)); // РќРѕРјРµСЂ РєРѕРјРЅР°С‚С‹
+        _RoomTemplate.Columns.Add("ROOMTYPE", typeof(int)); // РўРёРї РєРѕРјРЅР°С‚С‹
+        _RoomTemplate.Columns.Add("POSTALCODE", typeof(int));	// РџРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ
         if (_FiasDB.DBSettings.UseDates)
         {
           if (_FiasDB.InternalSettings.UseOADates)
@@ -543,7 +543,7 @@ namespace FreeLibSet.FIAS
             _RoomTemplate.Columns.Add("ENDDATE", typeof(DateTime));
           }
         }
-        _RoomTemplate.Columns.Add("TopFlag", typeof(bool)); // поля нет в базе данных. Отмечает актуальную строку для заданного ROOMGUID.
+        _RoomTemplate.Columns.Add("TopFlag", typeof(bool)); // РїРѕР»СЏ РЅРµС‚ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…. РћС‚РјРµС‡Р°РµС‚ Р°РєС‚СѓР°Р»СЊРЅСѓСЋ СЃС‚СЂРѕРєСѓ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ ROOMGUID.
       }
 
       #endregion
@@ -551,14 +551,14 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Загрузка страниц классификатора
+    #region Р—Р°РіСЂСѓР·РєР° СЃС‚СЂР°РЅРёС† РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
 
     /// <summary>
-    /// Кандидат на перенос в ExtDB
+    /// РљР°РЅРґРёРґР°С‚ РЅР° РїРµСЂРµРЅРѕСЃ РІ ExtDB
     /// </summary>
     private class ColMapper
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public ColMapper(DBxColumns columns1, DataTable table2)
       {
@@ -573,13 +573,13 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       private Dictionary<int, int> _Map;
 
       #endregion
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       public void Fill(DbDataReader rdr1, DataRow row2)
       {
@@ -604,19 +604,19 @@ namespace FreeLibSet.FIAS
       Dictionary<Guid, FiasCachedPageAddrOb> dict;
 
       ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(new string[]{
-        "Загрузка страниц адресных объектов \"" + FiasEnumNames.ToString(level, false) + "\" (" + pageAOGuids.Length.ToString() + ")",
-        "Подготовка таблиц"});
+        "Р—Р°РіСЂСѓР·РєР° СЃС‚СЂР°РЅРёС† Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ \"" + FiasEnumNames.ToString(level, false) + "\" (" + pageAOGuids.Length.ToString() + ")",
+        "РџРѕРґРіРѕС‚РѕРІРєР° С‚Р°Р±Р»РёС†"});
       try
       {
-        #region Создаем таблицы
+        #region РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†С‹
 
         Dictionary<Guid, DataTable> tables = new Dictionary<Guid, DataTable>(pageAOGuids.Length);
-        int pEmptyGuid = -1; // для справочника регионов
+        int pEmptyGuid = -1; // РґР»СЏ СЃРїСЂР°РІРѕС‡РЅРёРєР° СЂРµРіРёРѕРЅРѕРІ
         for (int i = 0; i < pageAOGuids.Length; i++)
         {
           Guid g = pageAOGuids[i];
           if (g == FiasTools.GuidNotFound)
-            throw new ArgumentException("Обнаружен guid, задающий ненайденный уровень", "pageAOGuids");
+            throw new ArgumentException("РћР±РЅР°СЂСѓР¶РµРЅ guid, Р·Р°РґР°СЋС‰РёР№ РЅРµРЅР°Р№РґРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ", "pageAOGuids");
 
           DataSet ds = new DataSet();
           //ds.RemotingFormat = SerializationFormat.Binary;
@@ -639,19 +639,19 @@ namespace FreeLibSet.FIAS
           spl.PercentMax = pageAOGuids.Length;
           spl.AllowCancel = true;
 
-          #region Справочник регионов
+          #region РЎРїСЂР°РІРѕС‡РЅРёРє СЂРµРіРёРѕРЅРѕРІ
 
-          // Для справочника регионов PARENTGUID=GuidEmpty.
-          // В базе данных он хранится как NULL. В результате запрос будет неоптимальным. 
-          // Из-за наличия COALESCE() не будет использован индекс по полю PARENTGUID.
-          // Обрабатываем в отдельном запросе
+          // Р”Р»СЏ СЃРїСЂР°РІРѕС‡РЅРёРєР° СЂРµРіРёРѕРЅРѕРІ PARENTGUID=GuidEmpty.
+          // Р’ Р±Р°Р·Рµ РґР°РЅРЅС‹С… РѕРЅ С…СЂР°РЅРёС‚СЃСЏ РєР°Рє NULL. Р’ СЂРµР·СѓР»СЊС‚Р°С‚Рµ Р·Р°РїСЂРѕСЃ Р±СѓРґРµС‚ РЅРµРѕРїС‚РёРјР°Р»СЊРЅС‹Рј. 
+          // РР·-Р·Р° РЅР°Р»РёС‡РёСЏ COALESCE() РЅРµ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅ РёРЅРґРµРєСЃ РїРѕ РїРѕР»СЋ PARENTGUID.
+          // РћР±СЂР°Р±Р°С‚С‹РІР°РµРј РІ РѕС‚РґРµР»СЊРЅРѕРј Р·Р°РїСЂРѕСЃРµ
 
           if (pEmptyGuid >= 0)
           {
-            // Убираем Guid.Empty из списка pageAOGuids
+            // РЈР±РёСЂР°РµРј Guid.Empty РёР· СЃРїРёСЃРєР° pageAOGuids
             DataTools.DeleteFromArray(ref pageAOGuids, pEmptyGuid, 1);
 
-            // Отдельный запрос
+            // РћС‚РґРµР»СЊРЅС‹Р№ Р·Р°РїСЂРѕСЃ
             List<DBxFilter> filters = new List<DBxFilter>();
             filters.Add(new ValueFilter("PARENTGUID", null, DBxColumnType.Guid));
             filters.Add(new ValueFilter("AOLEVEL", (int)level));
@@ -675,7 +675,7 @@ namespace FreeLibSet.FIAS
 
           #endregion
 
-          #region Заполняем таблицы
+          #region Р—Р°РїРѕР»РЅСЏРµРј С‚Р°Р±Р»РёС†С‹
 
           foreach (Guid[] guids2 in new ArrayBlockEnumerable<Guid>(pageAOGuids, 100))
           {
@@ -707,7 +707,7 @@ namespace FreeLibSet.FIAS
           spl.Complete();
         } // using con
 
-        #region Создание коллекции страниц
+        #region РЎРѕР·РґР°РЅРёРµ РєРѕР»Р»РµРєС†РёРё СЃС‚СЂР°РЅРёС†
 
         dict = new Dictionary<Guid, FiasCachedPageAddrOb>(tables.Count);
         foreach (KeyValuePair<Guid, DataTable> pair in tables)
@@ -745,19 +745,19 @@ namespace FreeLibSet.FIAS
       Dictionary<Guid, FiasCachedPageHouse> dict;
 
       ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(new string[]{
-        "Загрузка страниц зданий (" + pageAOGuids.Length.ToString() + ")",
-        "Подготовка таблиц"});
+        "Р—Р°РіСЂСѓР·РєР° СЃС‚СЂР°РЅРёС† Р·РґР°РЅРёР№ (" + pageAOGuids.Length.ToString() + ")",
+        "РџРѕРґРіРѕС‚РѕРІРєР° С‚Р°Р±Р»РёС†"});
       try
       {
-        #region Создаем таблицы
+        #region РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†С‹
 
         Dictionary<Guid, DataTable> tables = new Dictionary<Guid, DataTable>(pageAOGuids.Length);
         foreach (Guid g in pageAOGuids)
         {
           if (g == FiasTools.GuidNotFound)
-            throw new ArgumentException("Обнаружен guid, задающий ненайденный уровень", "pageAOGuids");
+            throw new ArgumentException("РћР±РЅР°СЂСѓР¶РµРЅ guid, Р·Р°РґР°СЋС‰РёР№ РЅРµРЅР°Р№РґРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ", "pageAOGuids");
           if (g == Guid.Empty)
-            throw new ArgumentException("Обнаружен Guid.Empty", "pageAOGuids");
+            throw new ArgumentException("РћР±РЅР°СЂСѓР¶РµРЅ Guid.Empty", "pageAOGuids");
 
           DataSet ds = new DataSet();
           //ds.RemotingFormat = SerializationFormat.Binary;
@@ -770,7 +770,7 @@ namespace FreeLibSet.FIAS
 
         using (DBxConBase con = _FiasDB.DB.MainEntry.CreateCon())
         {
-          #region Заполняем таблицы
+          #region Р—Р°РїРѕР»РЅСЏРµРј С‚Р°Р±Р»РёС†С‹
 
           DBxColumns columns = (DBxColumns.FromColumns(_HouseTemplate.Columns) + "AOGUID") - "TopFlag";
           int pParentGuid = columns.IndexOf("AOGUID");
@@ -779,11 +779,11 @@ namespace FreeLibSet.FIAS
           int pNStrucNum = columns.IndexOf("nStrucNum");
 #if DEBUG
           if (pNHouseNum < 0)
-            throw new BugException("Нет поля nHouseNum");
+            throw new BugException("РќРµС‚ РїРѕР»СЏ nHouseNum");
           if (pNBuildNum < 0)
-            throw new BugException("Нет поля nBuildNum");
+            throw new BugException("РќРµС‚ РїРѕР»СЏ nBuildNum");
           if (pNStrucNum < 0)
-            throw new BugException("Нет поля nStrucNum");
+            throw new BugException("РќРµС‚ РїРѕР»СЏ nStrucNum");
 #endif
           ColMapper map = new ColMapper(columns, _HouseTemplate);
 
@@ -818,7 +818,7 @@ namespace FreeLibSet.FIAS
           #endregion
         } // using con
 
-        #region Создание коллекции страниц
+        #region РЎРѕР·РґР°РЅРёРµ РєРѕР»Р»РµРєС†РёРё СЃС‚СЂР°РЅРёС†
 
         dict = new Dictionary<Guid, FiasCachedPageHouse>(tables.Count);
         foreach (KeyValuePair<Guid, DataTable> pair in tables)
@@ -855,19 +855,19 @@ namespace FreeLibSet.FIAS
       Dictionary<Guid, FiasCachedPageRoom> dict;
 
       ISplash spl = SplashTools.ThreadSplashStack.BeginSplash(new string[]{
-        "Загрузка страниц зданий (" + pageHouseGuids.Length.ToString() + ")",
-        "Подготовка таблиц"});
+        "Р—Р°РіСЂСѓР·РєР° СЃС‚СЂР°РЅРёС† Р·РґР°РЅРёР№ (" + pageHouseGuids.Length.ToString() + ")",
+        "РџРѕРґРіРѕС‚РѕРІРєР° С‚Р°Р±Р»РёС†"});
       try
       {
-        #region Создаем таблицы
+        #region РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†С‹
 
         Dictionary<Guid, DataTable> tables = new Dictionary<Guid, DataTable>(pageHouseGuids.Length);
         foreach (Guid g in pageHouseGuids)
         {
           if (g == FiasTools.GuidNotFound)
-            throw new ArgumentException("Обнаружен guid, задающий ненайденный уровень", "pageHouseGuids");
+            throw new ArgumentException("РћР±РЅР°СЂСѓР¶РµРЅ guid, Р·Р°РґР°СЋС‰РёР№ РЅРµРЅР°Р№РґРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ", "pageHouseGuids");
           if (g == Guid.Empty)
-            throw new ArgumentException("Обнаружен Guid.Empty", "pageHouseGuids");
+            throw new ArgumentException("РћР±РЅР°СЂСѓР¶РµРЅ Guid.Empty", "pageHouseGuids");
 
           DataSet ds = new DataSet();
           //ds.RemotingFormat = SerializationFormat.Binary;
@@ -880,7 +880,7 @@ namespace FreeLibSet.FIAS
 
         using (DBxConBase con = _FiasDB.DB.MainEntry.CreateCon())
         {
-          #region Заполняем таблицы
+          #region Р—Р°РїРѕР»РЅСЏРµРј С‚Р°Р±Р»РёС†С‹
 
           DBxColumns columns = (DBxColumns.FromColumns(_RoomTemplate.Columns) + "HOUSEGUID") - "TopFlag";
           int pParentGuid = columns.IndexOf("HOUSEGUID");
@@ -888,9 +888,9 @@ namespace FreeLibSet.FIAS
           int pNRoomNumber = columns.IndexOf("nRoomNumber");
 #if DEBUG
           if (pNFlatNumber < 0)
-            throw new BugException("Нет поля nFlatNumber");
+            throw new BugException("РќРµС‚ РїРѕР»СЏ nFlatNumber");
           if (pNRoomNumber < 0)
-            throw new BugException("Нет поля nRoomNumber");
+            throw new BugException("РќРµС‚ РїРѕР»СЏ nRoomNumber");
 #endif
           ColMapper map = new ColMapper(columns, _RoomTemplate);
 
@@ -925,7 +925,7 @@ namespace FreeLibSet.FIAS
           #endregion
         } // using con
 
-        #region Создание коллекции страниц
+        #region РЎРѕР·РґР°РЅРёРµ РєРѕР»Р»РµРєС†РёРё СЃС‚СЂР°РЅРёС†
 
         dict = new Dictionary<Guid, FiasCachedPageRoom>(tables.Count);
         foreach (KeyValuePair<Guid, DataTable> pair in tables)
@@ -950,7 +950,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Специальные страницы для редактора адреса
+    #region РЎРїРµС†РёР°Р»СЊРЅС‹Рµ СЃС‚СЂР°РЅРёС†С‹ РґР»СЏ СЂРµРґР°РєС‚РѕСЂР° Р°РґСЂРµСЃР°
 
     public FiasCachedPageSpecialAddrOb GetSpecialAddrObPage(FiasSpecialPageType pageType, Guid pageAOGuid)
     {
@@ -963,7 +963,7 @@ namespace FreeLibSet.FIAS
 
       using (DBxConBase con = _FiasDB.DB.MainEntry.CreateCon())
       {
-        #region Заполняем таблицы
+        #region Р—Р°РїРѕР»РЅСЏРµРј С‚Р°Р±Р»РёС†С‹
 
         DBxColumns columns = DBxColumns.FromColumns(_AddrObTemplate.Columns) /*+ "PARENTGUID"*/ - "TopFlag";
         //int pParentGuid = columns.IndexOf("PARENTGUID");
@@ -974,22 +974,22 @@ namespace FreeLibSet.FIAS
         {
           case FiasSpecialPageType.AllCities:
             if (pageAOGuid != Guid.Empty)
-              throw new ArgumentException("pageAOGuid непустой");
+              throw new ArgumentException("pageAOGuid РЅРµРїСѓСЃС‚РѕР№");
 
             //filters.Add(new ValuesFilter("CENTSTATUS", new int[] { (int)FiasCenterStatus.Region, (int)FiasCenterStatus.RegionAndDistrict }));
 
-            // Нужны только города, а не сельсоветы и прочее, что может быть на уровне "Город"
+            // РќСѓР¶РЅС‹ С‚РѕР»СЊРєРѕ РіРѕСЂРѕРґР°, Р° РЅРµ СЃРµР»СЊСЃРѕРІРµС‚С‹ Рё РїСЂРѕС‡РµРµ, С‡С‚Рѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅР° СѓСЂРѕРІРЅРµ "Р“РѕСЂРѕРґ"
             IdList CityAOTypeIds = con.GetIds("AOType", new AndFilter(new ValueFilter("LEVEL", (int)FiasLevel.City),
-              new ValueFilter("SOCRNAME", "Город"))); // может быть несколько сокращений: "г." и "г".
+              new ValueFilter("SOCRNAME", "Р“РѕСЂРѕРґ"))); // РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ СЃРѕРєСЂР°С‰РµРЅРёР№: "Рі." Рё "Рі".
             if (CityAOTypeIds.Count > 0)
               filters.Add(new IdsFilter("AOTypeId", CityAOTypeIds));
 
             break;
           case FiasSpecialPageType.AllDistricts:
             if (pageAOGuid != Guid.Empty)
-              throw new ArgumentException("pageAOGuid непустой");
+              throw new ArgumentException("pageAOGuid РЅРµРїСѓСЃС‚РѕР№");
 
-            // В Москве есть поселения, находящиеся в справочнике районов
+            // Р’ РњРѕСЃРєРІРµ РµСЃС‚СЊ РїРѕСЃРµР»РµРЅРёСЏ, РЅР°С…РѕРґСЏС‰РёРµСЃСЏ РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ СЂР°Р№РѕРЅРѕРІ
             filters.Add(new NotFilter(new ValuesFilter("REGIONCODE", FiasTools.FederalCityRegionCodesInt)));
 
             break;
@@ -1017,7 +1017,7 @@ namespace FreeLibSet.FIAS
       } // using con
 
 
-      #region Создание страницы
+      #region РЎРѕР·РґР°РЅРёРµ СЃС‚СЂР°РЅРёС†С‹
 
       SetTopFlag(table, "AOGUID");
 
@@ -1038,12 +1038,12 @@ namespace FreeLibSet.FIAS
     #endregion
 
     /// <summary>
-    /// Обратная замена значений для полей номеров домов и квартир.
-    /// Например, если поле "nHouseNum" имеет значение 25 (от 1 до 255), а поле "HOUSENUM" имеет значение NULL,
-    /// то поле "HOUSENUM" заменяется на "25"
+    /// РћР±СЂР°С‚РЅР°СЏ Р·Р°РјРµРЅР° Р·РЅР°С‡РµРЅРёР№ РґР»СЏ РїРѕР»РµР№ РЅРѕРјРµСЂРѕРІ РґРѕРјРѕРІ Рё РєРІР°СЂС‚РёСЂ.
+    /// РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё РїРѕР»Рµ "nHouseNum" РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ 25 (РѕС‚ 1 РґРѕ 255), Р° РїРѕР»Рµ "HOUSENUM" РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ NULL,
+    /// С‚Рѕ РїРѕР»Рµ "HOUSENUM" Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° "25"
     /// </summary>
-    /// <param name="row">Строка буферизуемой таблицы</param>
-    /// <param name="pNColumn">Позиция числового столбца, который идет до основного поля</param>
+    /// <param name="row">РЎС‚СЂРѕРєР° Р±СѓС„РµСЂРёР·СѓРµРјРѕР№ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="pNColumn">РџРѕР·РёС†РёСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р°, РєРѕС‚РѕСЂС‹Р№ РёРґРµС‚ РґРѕ РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕР»СЏ</param>
     private static void ExpandNumInt(DataRow row, int pNColumn)
     {
       if (row.IsNull(pNColumn + 1))
@@ -1059,7 +1059,7 @@ namespace FreeLibSet.FIAS
       int pNColumn = table.Columns.IndexOf(nameNColumn);
 #if DEBUG
       if (pNColumn < 0)
-        throw new ArgumentException("Таблица " + table.TableName + " не содержит поля \"" + nameNColumn + "\"", "nameNColumn");
+        throw new ArgumentException("РўР°Р±Р»РёС†Р° " + table.TableName + " РЅРµ СЃРѕРґРµСЂР¶РёС‚ РїРѕР»СЏ \"" + nameNColumn + "\"", "nameNColumn");
 #endif
 
       foreach (DataRow row in table.Rows)
@@ -1068,10 +1068,10 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Установка поля "TopFlag" в загруженной таблице страницы
+    /// РЈСЃС‚Р°РЅРѕРІРєР° РїРѕР»СЏ "TopFlag" РІ Р·Р°РіСЂСѓР¶РµРЅРЅРѕР№ С‚Р°Р±Р»РёС†Рµ СЃС‚СЂР°РЅРёС†С‹
     /// </summary>
-    /// <param name="table">Заполненная таблица</param>
-    /// <param name="guidColName">Поле "устойчивого" идентификатора адресного объекта</param>
+    /// <param name="table">Р—Р°РїРѕР»РЅРµРЅРЅР°СЏ С‚Р°Р±Р»РёС†Р°</param>
+    /// <param name="guidColName">РџРѕР»Рµ "СѓСЃС‚РѕР№С‡РёРІРѕРіРѕ" РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°</param>
     private void SetTopFlag(DataTable table, string guidColName)
     {
       if (table.Rows.Count == 0)
@@ -1104,7 +1104,7 @@ namespace FreeLibSet.FIAS
       }
     }
 
-    #region Корректировка дат
+    #region РљРѕСЂСЂРµРєС‚РёСЂРѕРІРєР° РґР°С‚
 
     private static readonly DateTime _DT19991231 = new DateTime(1999, 12, 31);
     private static readonly int _NDT19991231 = (int)(new DateTime(1999, 12, 31).ToOADate());
@@ -1112,9 +1112,9 @@ namespace FreeLibSet.FIAS
 
     private void CorrectRowDates(DataRow row, FiasTableType tableType)
     {
-      // В ФИАСе от 02.03.2020 для всех действующих адресных объектов конечная дата задана как 31.12.1999
-      // Для квартир - тоже
-      // Для домов - правильная конечная дата 31.12.9999
+      // Р’ Р¤РРђРЎРµ РѕС‚ 02.03.2020 РґР»СЏ РІСЃРµС… РґРµР№СЃС‚РІСѓСЋС‰РёС… Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ РєРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° Р·Р°РґР°РЅР° РєР°Рє 31.12.1999
+      // Р”Р»СЏ РєРІР°СЂС‚РёСЂ - С‚РѕР¶Рµ
+      // Р”Р»СЏ РґРѕРјРѕРІ - РїСЂР°РІРёР»СЊРЅР°СЏ РєРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° 31.12.9999
 
       if (!_FiasDB.DBSettings.UseDates)
         return;
@@ -1143,7 +1143,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Таблица сокращений
+    #region РўР°Р±Р»РёС†Р° СЃРѕРєСЂР°С‰РµРЅРёР№
 
     public FiasCachedAOTypes GetAOTypes()
     {
@@ -1158,11 +1158,11 @@ namespace FreeLibSet.FIAS
       {
         DataTable table = con.FillSelect("AOType");
 
-        // В версии ФИАСа от 02.03.2020 зачем-то заменены некоторые уровни:
-        // 18 - здания (должно быть 8)
-        // 19 - помещения (должно быть 9)
-        // 20 - земельный участок (должно быть 75, не нужный уровень)
-        // 21 - х.з., похоже на 35, но 35 тоже есть
+        // Р’ РІРµСЂСЃРёРё Р¤РРђРЎР° РѕС‚ 02.03.2020 Р·Р°С‡РµРј-С‚Рѕ Р·Р°РјРµРЅРµРЅС‹ РЅРµРєРѕС‚РѕСЂС‹Рµ СѓСЂРѕРІРЅРё:
+        // 18 - Р·РґР°РЅРёСЏ (РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 8)
+        // 19 - РїРѕРјРµС‰РµРЅРёСЏ (РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 9)
+        // 20 - Р·РµРјРµР»СЊРЅС‹Р№ СѓС‡Р°СЃС‚РѕРє (РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 75, РЅРµ РЅСѓР¶РЅС‹Р№ СѓСЂРѕРІРµРЅСЊ)
+        // 21 - С….Р·., РїРѕС…РѕР¶Рµ РЅР° 35, РЅРѕ 35 С‚РѕР¶Рµ РµСЃС‚СЊ
         foreach (DataRow row in table.Rows)
         {
           switch (DataTools.GetInt(row, "LEVEL"))
@@ -1191,7 +1191,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Поиск адресов
+    #region РџРѕРёСЃРє Р°РґСЂРµСЃРѕРІ
 
     public DataSet FindAddresses(FiasAddressSearchParams searchParams)
     {
@@ -1209,7 +1209,7 @@ namespace FreeLibSet.FIAS
             table = FindAddressesFTS3(searchParams, con);
             break;
           default:
-            throw new InvalidOperationException("Полнотекстный поиск не поддерживается");
+            throw new InvalidOperationException("РџРѕР»РЅРѕС‚РµРєСЃС‚РЅС‹Р№ РїРѕРёСЃРє РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ");
         }
       }
       DataSet ds = new DataSet();
@@ -1225,11 +1225,11 @@ namespace FreeLibSet.FIAS
 
 #if XXX
     /// <summary>
-    /// Форматирование фильтра MATCH вместо LIKE
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР° MATCH РІРјРµСЃС‚Рѕ LIKE
     /// </summary>
     private class MyFormatter : DBxSqlChainFormatter
     {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public MyFormatter(DBxSqlFormatter source)
         :base(source)
@@ -1238,13 +1238,13 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Форматирование фильтра
+    #region Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°
 
       protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
       {
         buffer.FormatExpression(filter.Expression, new DBxFormatExpressionInfo());
         buffer.SB.Append(" MATCH ");
-        buffer.FormatValue(filter.Value, DBxColumnType.String); // звездочка была добавлена заранее
+        buffer.FormatValue(filter.Value, DBxColumnType.String); // Р·РІРµР·РґРѕС‡РєР° Р±С‹Р»Р° РґРѕР±Р°РІР»РµРЅР° Р·Р°СЂР°РЅРµРµ
       }
 
     #endregion
@@ -1261,7 +1261,7 @@ namespace FreeLibSet.FIAS
 
       List<DBxFilter> filters = new List<DBxFilter>();
 
-      // Этот фильтр будет заменен на "MATCH" при форматировании в классе MyFormatter
+      // Р­С‚РѕС‚ С„РёР»СЊС‚СЂ Р±СѓРґРµС‚ Р·Р°РјРµРЅРµРЅ РЅР° "MATCH" РїСЂРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРё РІ РєР»Р°СЃСЃРµ MyFormatter
       filters.Add(new StartsWithFilter("NameId.OFFNAME", FiasTools.PrepareForFTS(searchParams.Text) + "*"));
 
       if (searchParams.ActualOnly && _FiasDB.DBSettings.UseHistory)
@@ -1276,20 +1276,20 @@ namespace FreeLibSet.FIAS
         levels = searchParams.Levels;
       }
       else
-        levels = FiasTools.AOLevels; // все возможные уровни для поиска
+        levels = FiasTools.AOLevels; // РІСЃРµ РІРѕР·РјРѕР¶РЅС‹Рµ СѓСЂРѕРІРЅРё РґР»СЏ РїРѕРёСЃРєР°
       if (searchParams.StartAddress != null)
       { 
         FiasLevel parentLevel=searchParams.StartAddress.Guids.BottomLevel;
         if (parentLevel != FiasLevel.Unknown)
         { 
-          // Список дистанций
+          // РЎРїРёСЃРѕРє РґРёСЃС‚Р°РЅС†РёР№
           SingleScopeList<int> distList = new SingleScopeList<int>();
           for (int i = 0; i < levels.Length; i++)
             FiasTools.GetPossibleInheritanceDistance(parentLevel, levels[i], distList);
 
           distList.Sort();
           if (distList.Count == 0)
-            throw new ArgumentException("Для базового адреса " + searchParams.StartAddress.ToString() + " не удалось определить уровень наследования искомых уровней адроесных объектов", "searchParams.StartAddress");
+            throw new ArgumentException("Р”Р»СЏ Р±Р°Р·РѕРІРѕРіРѕ Р°РґСЂРµСЃР° " + searchParams.StartAddress.ToString() + " РЅРµ СѓРґР°Р»РѕСЃСЊ РѕРїСЂРµРґРµР»РёС‚СЊ СѓСЂРѕРІРµРЅСЊ РЅР°СЃР»РµРґРѕРІР°РЅРёСЏ РёСЃРєРѕРјС‹С… СѓСЂРѕРІРЅРµР№ Р°РґСЂРѕРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ", "searchParams.StartAddress");
           DBxFilter[] treeFilters = new DBxFilter[distList.Count];
           for (int i = 0; i < distList.Count; i++)
           { 
@@ -1314,10 +1314,10 @@ namespace FreeLibSet.FIAS
       buffer.FormatSelect(info, con.Validator);
 
       string cmdText = buffer.SB.ToString();
-      // Нужно заменить связь между таблицами AddrOb и AddrObFTS с "LEFT JOIN" на "JOIN".
-      // А остальные связи между AddrOb и AddrOb оставить "LEFT JOIN".
+      // РќСѓР¶РЅРѕ Р·Р°РјРµРЅРёС‚СЊ СЃРІСЏР·СЊ РјРµР¶РґСѓ С‚Р°Р±Р»РёС†Р°РјРё AddrOb Рё AddrObFTS СЃ "LEFT JOIN" РЅР° "JOIN".
+      // Рђ РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЃРІСЏР·Рё РјРµР¶РґСѓ AddrOb Рё AddrOb РѕСЃС‚Р°РІРёС‚СЊ "LEFT JOIN".
       int p = cmdText.IndexOf("LEFT JOIN");
-      cmdText = cmdText.Substring(0, p) + cmdText.Substring(p + 5); // убрали LEFT
+      cmdText = cmdText.Substring(0, p) + cmdText.Substring(p + 5); // СѓР±СЂР°Р»Рё LEFT
 
       return con.SQLExecuteDataTable(cmdText);
     }
@@ -1329,12 +1329,12 @@ namespace FreeLibSet.FIAS
       if (searchParams.Levels != null)
         levels = searchParams.Levels;
       else
-        levels = FiasTools.AOLevels; // все возможные уровни для поиска
+        levels = FiasTools.AOLevels; // РІСЃРµ РІРѕР·РјРѕР¶РЅС‹Рµ СѓСЂРѕРІРЅРё РґР»СЏ РїРѕРёСЃРєР°
 
-      // Максимальная дистанция для сравнения с PARENTAOGUID.
-      // Если 0, то базовый адрес не задан.
-      // Если 1, то сравнение только с текущим PARENTGUID (например, поиск улицы в населенном пункте или нас. пункта в районе)
-      // Если 2, то на один уровень больше (например, улицы в городе)
+      // РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґРёСЃС‚Р°РЅС†РёСЏ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃ PARENTAOGUID.
+      // Р•СЃР»Рё 0, С‚Рѕ Р±Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ РЅРµ Р·Р°РґР°РЅ.
+      // Р•СЃР»Рё 1, С‚Рѕ СЃСЂР°РІРЅРµРЅРёРµ С‚РѕР»СЊРєРѕ СЃ С‚РµРєСѓС‰РёРј PARENTGUID (РЅР°РїСЂРёРјРµСЂ, РїРѕРёСЃРє СѓР»РёС†С‹ РІ РЅР°СЃРµР»РµРЅРЅРѕРј РїСѓРЅРєС‚Рµ РёР»Рё РЅР°СЃ. РїСѓРЅРєС‚Р° РІ СЂР°Р№РѕРЅРµ)
+      // Р•СЃР»Рё 2, С‚Рѕ РЅР° РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ Р±РѕР»СЊС€Рµ (РЅР°РїСЂРёРјРµСЂ, СѓР»РёС†С‹ РІ РіРѕСЂРѕРґРµ)
       int maxDist = 0;
       Guid parentGuid = Guid.Empty;
       if (searchParams.StartAddress != null)
@@ -1343,14 +1343,14 @@ namespace FreeLibSet.FIAS
         if (parentLevel != FiasLevel.Unknown)
         {
           parentGuid = searchParams.StartAddress.GetGuid(parentLevel);
-          // Список дистанций
+          // РЎРїРёСЃРѕРє РґРёСЃС‚Р°РЅС†РёР№
           SingleScopeList<int> distList = new SingleScopeList<int>();
           for (int i = 0; i < levels.Length; i++)
             FiasTools.GetPossibleInheritanceDistance(parentLevel, levels[i], distList);
 
           distList.Sort();
           if (distList.Count == 0)
-            throw new ArgumentException("Для базового адреса " + searchParams.StartAddress.ToString() + " (уровень " + FiasEnumNames.ToString(parentLevel, true) + ") не удалось определить уровень наследования искомых уровней адресных объектов", "searchParams");
+            throw new ArgumentException("Р”Р»СЏ Р±Р°Р·РѕРІРѕРіРѕ Р°РґСЂРµСЃР° " + searchParams.StartAddress.ToString() + " (СѓСЂРѕРІРµРЅСЊ " + FiasEnumNames.ToString(parentLevel, true) + ") РЅРµ СѓРґР°Р»РѕСЃСЊ РѕРїСЂРµРґРµР»РёС‚СЊ СѓСЂРѕРІРµРЅСЊ РЅР°СЃР»РµРґРѕРІР°РЅРёСЏ РёСЃРєРѕРјС‹С… СѓСЂРѕРІРЅРµР№ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ", "searchParams");
           maxDist = distList[distList.Count - 1];
         }
       }
@@ -1358,7 +1358,7 @@ namespace FreeLibSet.FIAS
 
       DBxSqlBuffer buffer = new DBxSqlBuffer(_FiasDB.DB.Formatter);
 
-      // Создаем SQL-запрос вручную
+      // РЎРѕР·РґР°РµРј SQL-Р·Р°РїСЂРѕСЃ РІСЂСѓС‡РЅСѓСЋ
       buffer.SB.Append("SELECT DISTINCT ");
 
       buffer.FormatColumnName("AddrOb_1", "AOGUID");
@@ -1410,7 +1410,7 @@ namespace FreeLibSet.FIAS
       }
 
       buffer.SB.Append(" FROM ");
-      // Открывающие скобки
+      // РћС‚РєСЂС‹РІР°СЋС‰РёРµ СЃРєРѕР±РєРё
       if (maxDist > 1)
         buffer.SB.Append(new string('(', maxDist - 1));
       buffer.SB.Append("(");
@@ -1495,7 +1495,7 @@ namespace FreeLibSet.FIAS
 #endif
     #endregion
 
-    #region Доступ к истории
+    #region Р”РѕСЃС‚СѓРї Рє РёСЃС‚РѕСЂРёРё
 
     public DataSet GetTableForGuid(Guid guid, FiasTableType tableType)
     {
@@ -1505,7 +1505,7 @@ namespace FreeLibSet.FIAS
       _FiasDB.CheckIsReady();
 
       if (guid == Guid.Empty || guid == FiasTools.GuidNotFound)
-        throw new ArgumentException("Недопустимый GUID=" + guid.ToString(), "guid");
+        throw new ArgumentException("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ GUID=" + guid.ToString(), "guid");
 
       string tableName, colName;
       switch (tableType)
@@ -1517,7 +1517,7 @@ namespace FreeLibSet.FIAS
         case FiasTableType.Room:
           tableName = "Room"; colName = "ROOMGUID"; break;
         default:
-          throw new ArgumentException("Неизвестная таблица " + tableType.ToString(), "tableType");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅР°СЏ С‚Р°Р±Р»РёС†Р° " + tableType.ToString(), "tableType");
       }
 
       string order = String.Empty;
@@ -1530,8 +1530,8 @@ namespace FreeLibSet.FIAS
       }
 
       // 26.02.2021
-      // Пока не знаю, как сделать
-      // Для AddrOb и Room порядок сортировки должен быть:
+      // РџРѕРєР° РЅРµ Р·РЅР°СЋ, РєР°Рє СЃРґРµР»Р°С‚СЊ
+      // Р”Р»СЏ AddrOb Рё Room РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ:
       // ORDER BY STARTDATE,ISNULL(PREVID)?0:1,ISNULL(NEXTID)?1:0,ENDDATE
 
       //List<DBxOrderPart> orderParts=new List<DBxOrderPart>();
@@ -1562,7 +1562,7 @@ namespace FreeLibSet.FIAS
           new ValueFilter(colName, guid, CompareKind.Equal, DBxColumnType.Guid),
           DBxOrder.FromDataViewSort(order));
 
-        // Такие же действия, как при загрузке буферизованных страниц
+        // РўР°РєРёРµ Р¶Рµ РґРµР№СЃС‚РІРёСЏ, РєР°Рє РїСЂРё Р·Р°РіСЂСѓР·РєРµ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹С… СЃС‚СЂР°РЅРёС†
         switch (tableType)
         {
           case FiasTableType.House:
@@ -1592,10 +1592,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Таблица обновлений
+    #region РўР°Р±Р»РёС†Р° РѕР±РЅРѕРІР»РµРЅРёР№
 
     /// <summary>
-    /// Загружает таблицу истории обновлений классификатора
+    /// Р—Р°РіСЂСѓР¶Р°РµС‚ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РѕР±РЅРѕРІР»РµРЅРёР№ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     /// <returns></returns>
     public DataTable GetClassifUpdateTable()
@@ -1616,7 +1616,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Ничего не делает
+    /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
     /// </summary>
     void IFiasSource.UpdateActualDate()
     {

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using AgeyevAV.Remoting;
@@ -8,17 +8,17 @@ using System.Diagnostics;
 namespace TestExecProc
 {
   /// <summary>
-  /// Выделенный класс исключения для удобства отладки
+  /// Р’С‹РґРµР»РµРЅРЅС‹Р№ РєР»Р°СЃСЃ РёСЃРєР»СЋС‡РµРЅРёСЏ РґР»СЏ СѓРґРѕР±СЃС‚РІР° РѕС‚Р»Р°РґРєРё
   /// </summary>
   [Serializable]
   public class ProcTestException : ApplicationException
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает новый объект исключения
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ
     /// </summary>
-    /// <param name="message">Сообщение</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public ProcTestException(string message)
       : base(message)
     {
@@ -26,7 +26,7 @@ namespace TestExecProc
 
 
     /// <summary>
-    /// Эта версия конструктора нужна для правильной десериализации
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РЅСѓР¶РЅР° РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ РґРµСЃРµСЂРёР°Р»РёР·Р°С†РёРё
     /// </summary>
     protected ProcTestException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
       : base(info, context)
@@ -38,31 +38,31 @@ namespace TestExecProc
 
 
   /// <summary>
-  /// Объект для создания процедур ExecProc.
-  /// Можно использовать из основного домена приложения или из отдельного домена
+  /// РћР±СЉРµРєС‚ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїСЂРѕС†РµРґСѓСЂ ExecProc.
+  /// РњРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ РґРѕРјРµРЅР° РїСЂРёР»РѕР¶РµРЅРёСЏ РёР»Рё РёР· РѕС‚РґРµР»СЊРЅРѕРіРѕ РґРѕРјРµРЅР°
   /// </summary>
   public class ProcCreator : MarshalByRefSponsoredObject
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public ProcCreator()
     {
-      // Добавляем трассировку
+      // Р”РѕР±Р°РІР»СЏРµРј С‚СЂР°СЃСЃРёСЂРѕРІРєСѓ
       Trace.Listeners.Add(new ConsoleTraceListener());
 
-      Trace.WriteLine("Включена трассировка для домена " + AppDomain.CurrentDomain.FriendlyName);
+      Trace.WriteLine("Р’РєР»СЋС‡РµРЅР° С‚СЂР°СЃСЃРёСЂРѕРІРєР° РґР»СЏ РґРѕРјРµРЅР° " + AppDomain.CurrentDomain.FriendlyName);
 
-      base.EternalLife = true; // существует вечно
+      base.EternalLife = true; // СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІРµС‡РЅРѕ
 
       DebugRefs = new WeakReferenceCollection<object>();
     }
 
     #endregion
 
-    #region Создание процедур
+    #region РЎРѕР·РґР°РЅРёРµ РїСЂРѕС†РµРґСѓСЂ
 
     /// <summary>
-    /// Этот метод используется для основного домена приложения, когда запускается непосредственно ExecProc
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РѕСЃРЅРѕРІРЅРѕРіРѕ РґРѕРјРµРЅР° РїСЂРёР»РѕР¶РµРЅРёСЏ, РєРѕРіРґР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ ExecProc
     /// </summary>
     /// <param name="ProcType"></param>
     /// <returns></returns>
@@ -97,8 +97,8 @@ namespace TestExecProc
     }
 
     /// <summary>
-    /// Этот метод используется для отдельного домена, когда используется RemoteExecProc.
-    /// Возвращает прокси, который реализует marshal-by-reference
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РѕС‚РґРµР»СЊРЅРѕРіРѕ РґРѕРјРµРЅР°, РєРѕРіРґР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ RemoteExecProc.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРѕРєСЃРё, РєРѕС‚РѕСЂС‹Р№ СЂРµР°Р»РёР·СѓРµС‚ marshal-by-reference
     /// </summary>
     /// <param name="procType"></param>
     /// <returns></returns>
@@ -116,7 +116,7 @@ namespace TestExecProc
 
     #endregion
 
-    #region Объекты ExecProc
+    #region РћР±СЉРµРєС‚С‹ ExecProc
 
     private abstract class ExecProcExt : ExecProc
     {
@@ -147,30 +147,30 @@ namespace TestExecProc
 
     private class SimpleWaitProc : ExecProcExt
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public SimpleWaitProc(int Time)
       {
         this.Time = Time;
-        this.DisplayName = "Тест выполнения в течение " + Time.ToString() + " секунд";
+        this.DisplayName = "РўРµСЃС‚ РІС‹РїРѕР»РЅРµРЅРёСЏ РІ С‚РµС‡РµРЅРёРµ " + Time.ToString() + " СЃРµРєСѓРЅРґ";
       }
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       /// <summary>
-      /// Время выполнения в секундах
+      /// Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РІ СЃРµРєСѓРЅРґР°С…
       /// </summary>
       public int Time;
 
       #endregion
 
-      #region Выполнение
+      #region Р’С‹РїРѕР»РЅРµРЅРёРµ
 
       protected override NamedValues OnExecute(NamedValues Args)
       {
-        ISplash spl = BeginSplash("Тест времени");
+        ISplash spl = BeginSplash("РўРµСЃС‚ РІСЂРµРјРµРЅРё");
         spl.PercentMax = Time;
         spl.AllowCancel = true;
         for (int i = 0; i < Time; i++)
@@ -189,20 +189,20 @@ namespace TestExecProc
 
     private class FastProc : ExecProcExt
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public FastProc()
       {
-        this.DisplayName = "Быстрое выполнение 0.1 секунды";
+        this.DisplayName = "Р‘С‹СЃС‚СЂРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ 0.1 СЃРµРєСѓРЅРґС‹";
       }
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       #endregion
 
-      #region Выполнение
+      #region Р’С‹РїРѕР»РЅРµРЅРёРµ
 
       protected override NamedValues OnExecute(NamedValues Args)
       {
@@ -216,20 +216,20 @@ namespace TestExecProc
 
     private class WaitAndCrashProc : ExecProcExt
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public WaitAndCrashProc()
       {
-        this.DisplayName = "Пять секунд и ошибка";
+        this.DisplayName = "РџСЏС‚СЊ СЃРµРєСѓРЅРґ Рё РѕС€РёР±РєР°";
       }
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       #endregion
 
-      #region Выполнение
+      #region Р’С‹РїРѕР»РЅРµРЅРёРµ
 
       [DebuggerStepThrough]
       protected override NamedValues OnExecute(NamedValues Args)
@@ -239,7 +239,7 @@ namespace TestExecProc
           System.Threading.Thread.Sleep(1000);
           Trace.Write(" .. " + (i + 1).ToString());
         }
-        throw new ProcTestException("Тестовое исключение из процедуры " + Guid.ToString());
+        throw new ProcTestException("РўРµСЃС‚РѕРІРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ РёР· РїСЂРѕС†РµРґСѓСЂС‹ " + Guid.ToString());
       }
 
       #endregion
@@ -247,25 +247,25 @@ namespace TestExecProc
 
     private class FastCrashProc : ExecProcExt
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public FastCrashProc()
       {
-        this.DisplayName = "Ошибка сразу";
+        this.DisplayName = "РћС€РёР±РєР° СЃСЂР°Р·Сѓ";
       }
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       #endregion
 
-      #region Выполнение
+      #region Р’С‹РїРѕР»РЅРµРЅРёРµ
 
       [DebuggerStepThrough]
       protected override NamedValues OnExecute(NamedValues Args)
       {
-        throw new ProcTestException("Тестовое исключение из процедуры " + Guid.ToString());
+        throw new ProcTestException("РўРµСЃС‚РѕРІРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ РёР· РїСЂРѕС†РµРґСѓСЂС‹ " + Guid.ToString());
       }
 
       #endregion
@@ -273,16 +273,16 @@ namespace TestExecProc
 
     #endregion
 
-    #region Отладочная информация
+    #region РћС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ
 
     /// <summary>
-    /// Отлаживаем реальное удаление объектов
+    /// РћС‚Р»Р°Р¶РёРІР°РµРј СЂРµР°Р»СЊРЅРѕРµ СѓРґР°Р»РµРЅРёРµ РѕР±СЉРµРєС‚РѕРІ
     /// </summary>
     public WeakReferenceCollection<object> DebugRefs;
 
     public void TraceInfo()
     {
-      Trace.WriteLine("=== Домен " + AppDomain.CurrentDomain.FriendlyName + " ===");
+      Trace.WriteLine("=== Р”РѕРјРµРЅ " + AppDomain.CurrentDomain.FriendlyName + " ===");
       // Trace.WriteLine("ExecProc      .AllProcCount      =" + ExecProc.AllProcCount.ToString());
       // Trace.WriteLine("ExecProc      .ExecutingProcCount=" + ExecProc.ExecutingProcCount.ToString());
       // Trace.WriteLine("RemoteExecProc.AllProcCount      =" + RemoteExecProc.AllProcCount.ToString());
@@ -296,7 +296,7 @@ namespace TestExecProc
         string s2 = a[i].ToString();
         string s;
         if (s2 == s1)
-          // ToString() ничего полезного не вернул
+          // ToString() РЅРёС‡РµРіРѕ РїРѕР»РµР·РЅРѕРіРѕ РЅРµ РІРµСЂРЅСѓР»
           s = s1;
         else
           s = "[" + s1 + "] " + s2;

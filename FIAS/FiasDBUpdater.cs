@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -17,60 +17,60 @@ using FreeLibSet.Core;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Источник обновления классификатора ФИАС
+  /// РСЃС‚РѕС‡РЅРёРє РѕР±РЅРѕРІР»РµРЅРёСЏ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ
   /// </summary>
   public enum FiasDBUpdateSource
   {
     /// <summary>
-    /// Загрузка ФИАС в формате XML
+    /// Р—Р°РіСЂСѓР·РєР° Р¤РРђРЎ РІ С„РѕСЂРјР°С‚Рµ XML
     /// </summary>
     Xml = 1,
 
     /// <summary>
-    /// Загрузка ФИАС в формате DBF
+    /// Р—Р°РіСЂСѓР·РєР° Р¤РРђРЎ РІ С„РѕСЂРјР°С‚Рµ DBF
     /// </summary>
     Dbf = 2
   }
 
   /// <summary>
-  /// Содержит методы для выполнения обновления базы данных, используя локальные файлы.
-  /// Одновременно может существовать не более одного экземпляра класса.
+  /// РЎРѕРґРµСЂР¶РёС‚ РјРµС‚РѕРґС‹ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РёСЃРїРѕР»СЊР·СѓСЏ Р»РѕРєР°Р»СЊРЅС‹Рµ С„Р°Р№Р»С‹.
+  /// РћРґРЅРѕРІСЂРµРјРµРЅРЅРѕ РјРѕР¶РµС‚ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ РЅРµ Р±РѕР»РµРµ РѕРґРЅРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° РєР»Р°СЃСЃР°.
   /// </summary>
   public sealed class FiasDBUpdater : SimpleDisposableObject
   {
     // 03.01.2021
-    // Можно использовать базовый класс без деструктора
+    // РњРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ Р±РµР· РґРµСЃС‚СЂСѓРєС‚РѕСЂР°
 
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     /// <summary>
-    /// Создает объект для обновления базы.
-    /// Автоматически определяется вариант первичной загрузки/обновления
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ Р±Р°Р·С‹.
+    /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІР°СЂРёР°РЅС‚ РїРµСЂРІРёС‡РЅРѕР№ Р·Р°РіСЂСѓР·РєРё/РѕР±РЅРѕРІР»РµРЅРёСЏ
     /// </summary>
-    /// <param name="fiasDB">База данных</param>
+    /// <param name="fiasDB">Р‘Р°Р·Р° РґР°РЅРЅС‹С…</param>
     public FiasDBUpdater(FiasDB fiasDB)
       : this(fiasDB, fiasDB.IsEmpty)
     {
     }
 
     /// <summary>
-    /// Создает объект для обновления базы.
-    /// Автоматически определяется вариант первичной загрузки/обновления
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ Р±Р°Р·С‹.
+    /// РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РІР°СЂРёР°РЅС‚ РїРµСЂРІРёС‡РЅРѕР№ Р·Р°РіСЂСѓР·РєРё/РѕР±РЅРѕРІР»РµРЅРёСЏ
     /// </summary>
-    /// <param name="fiasDB">База данных</param>
-    /// <param name="primaryLoad">true - первичное наполнение базы, false - обновление</param>
+    /// <param name="fiasDB">Р‘Р°Р·Р° РґР°РЅРЅС‹С…</param>
+    /// <param name="primaryLoad">true - РїРµСЂРІРёС‡РЅРѕРµ РЅР°РїРѕР»РЅРµРЅРёРµ Р±Р°Р·С‹, false - РѕР±РЅРѕРІР»РµРЅРёРµ</param>
     public FiasDBUpdater(FiasDB fiasDB, bool primaryLoad)
     {
       if (fiasDB == null)
         throw new ArgumentNullException("fiasDB");
 
       if (!fiasDB.UpdateStruct)
-        throw new InvalidOperationException("База данных ФИАС не предназначена для обновления");
+        throw new InvalidOperationException("Р‘Р°Р·Р° РґР°РЅРЅС‹С… Р¤РРђРЎ РЅРµ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ");
 
       lock (fiasDB)
       {
         if (fiasDB.CurrentUpdater != null)
-          throw new InvalidOperationException("Предыдущее обновление еще не завершено");
+          throw new InvalidOperationException("РџСЂРµРґС‹РґСѓС‰РµРµ РѕР±РЅРѕРІР»РµРЅРёРµ РµС‰Рµ РЅРµ Р·Р°РІРµСЂС€РµРЅРѕ");
         fiasDB.CurrentUpdater = this;
       }
       _FiasDB = fiasDB;
@@ -80,10 +80,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Вызывается из Dispose().
-    /// Отсоединяет этот объект от FiasDB
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· Dispose().
+    /// РћС‚СЃРѕРµРґРёРЅСЏРµС‚ СЌС‚РѕС‚ РѕР±СЉРµРєС‚ РѕС‚ FiasDB
     /// </summary>
-    /// <param name="Disposing">true, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="Disposing">true, РµСЃР»Рё РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose(), Р° РЅРµ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool Disposing)
     {
       if (_FiasDB != null && Disposing)
@@ -98,19 +98,19 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// База данных для которой выполняется обновление
+    /// Р‘Р°Р·Р° РґР°РЅРЅС‹С… РґР»СЏ РєРѕС‚РѕСЂРѕР№ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕР±РЅРѕРІР»РµРЅРёРµ
     /// </summary>
     public FiasDB FiasDB { get { return _FiasDB; } }
     private FiasDB _FiasDB;
 
     /// <summary>
-    /// Заставка.
-    /// Если свойство установлено, то используется во время загрузки файлов.
-    /// Может не задаваться.
-    /// Если значение не установлено, возвращается фиктивная заставка, а не null.
+    /// Р—Р°СЃС‚Р°РІРєР°.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІРѕ РІСЂРµРјСЏ Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІ.
+    /// РњРѕР¶РµС‚ РЅРµ Р·Р°РґР°РІР°С‚СЊСЃСЏ.
+    /// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С„РёРєС‚РёРІРЅР°СЏ Р·Р°СЃС‚Р°РІРєР°, Р° РЅРµ null.
     /// </summary>
     public ISplash Splash
     {
@@ -126,29 +126,29 @@ namespace FreeLibSet.FIAS
     private ISplash _Splash;
 
     /// <summary>
-    /// Устанавливается в конструкторе в true, если выполняется первичная загрузка классификатора, а не обновление.
-    /// При этом запись в таблицы может выполняться в режиме INSERT, а не INSERT_OR_UPDATE
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РІ true, РµСЃР»Рё РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРµСЂРІРёС‡РЅР°СЏ Р·Р°РіСЂСѓР·РєР° РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°, Р° РЅРµ РѕР±РЅРѕРІР»РµРЅРёРµ.
+    /// РџСЂРё СЌС‚РѕРј Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†С‹ РјРѕР¶РµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РІ СЂРµР¶РёРјРµ INSERT, Р° РЅРµ INSERT_OR_UPDATE
     /// </summary>
     public bool PrimaryLoad { get { return _PrimaryLoad; } }
     private bool _PrimaryLoad;
 
     #endregion
 
-    #region Загрузка DBF-файлов
+    #region Р—Р°РіСЂСѓР·РєР° DBF-С„Р°Р№Р»РѕРІ
 
-    #region Основной метод
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ
 
     /// <summary>
-    /// Загрузка каталога с DBF-файлами
+    /// Р—Р°РіСЂСѓР·РєР° РєР°С‚Р°Р»РѕРіР° СЃ DBF-С„Р°Р№Р»Р°РјРё
     /// </summary>
-    /// <param name="dir">Каталог</param>
-    /// <param name="actualDate">Дата актуальности обновления</param>
-    /// <returns>Количество DBF-файлов, которые были обработаны.
-    /// Ненужные для загрузки файлы не учитываются</returns>
+    /// <param name="dir">РљР°С‚Р°Р»РѕРі</param>
+    /// <param name="actualDate">Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РѕР±РЅРѕРІР»РµРЅРёСЏ</param>
+    /// <returns>РљРѕР»РёС‡РµСЃС‚РІРѕ DBF-С„Р°Р№Р»РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р±С‹Р»Рё РѕР±СЂР°Р±РѕС‚Р°РЅС‹.
+    /// РќРµРЅСѓР¶РЅС‹Рµ РґР»СЏ Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»С‹ РЅРµ СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ</returns>
     public int LoadDbfDir(AbsPath dir, DateTime actualDate)
     {
       if (!Directory.Exists(dir.Path))
-        throw new FileNotFoundException("Не найден каталог \"" + dir.Path + "\"");
+        throw new FileNotFoundException("РќРµ РЅР°Р№РґРµРЅ РєР°С‚Р°Р»РѕРі \"" + dir.Path + "\"");
 
       int cnt = 0;
       string oldPT = Splash.PhaseText;
@@ -185,9 +185,9 @@ namespace FreeLibSet.FIAS
           Splash.IncPercent();
         }
 
-        // TODO: таблицы удаления DADDROBJ, ...
+        // TODO: С‚Р°Р±Р»РёС†С‹ СѓРґР°Р»РµРЅРёСЏ DADDROBJ, ...
 
-        Splash.PhaseText = "Запись в таблицу истории обновлений";
+        Splash.PhaseText = "Р—Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РѕР±РЅРѕРІР»РµРЅРёР№";
         EndUpdate(con);
         Splash.PhaseText = oldPT;
         Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBUpdate finished. DBF files proceed: " + cnt.ToString());
@@ -224,7 +224,7 @@ namespace FreeLibSet.FIAS
       // 25.02.2021
       if (name.StartsWith("DAD") || name.StartsWith("DHOUSE") || name.StartsWith("DROOM"))
       {
-        throw new NotImplementedException("Не реализована обработка удаления записей ФИАС. Файл " + filePath.Path);
+        throw new NotImplementedException("РќРµ СЂРµР°Р»РёР·РѕРІР°РЅР° РѕР±СЂР°Р±РѕС‚РєР° СѓРґР°Р»РµРЅРёСЏ Р·Р°РїРёСЃРµР№ Р¤РРђРЎ. Р¤Р°Р№Р» " + filePath.Path);
       }
 
       return false;
@@ -232,7 +232,7 @@ namespace FreeLibSet.FIAS
 
     private bool CheckDbfFileNameRegion(string nameSuffix)
     {
-      // Проверяем, что все символы - цифры и их не меньше двух
+      // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РІСЃРµ СЃРёРјРІРѕР»С‹ - С†РёС„СЂС‹ Рё РёС… РЅРµ РјРµРЅСЊС€Рµ РґРІСѓС…
       if (nameSuffix.Length < 2)
         return false;
       for (int i = 0; i < nameSuffix.Length; i++)
@@ -244,7 +244,7 @@ namespace FreeLibSet.FIAS
       if (FiasDB.DBSettings.RegionCodes.Count == 0)
         return true;
 
-      string regCode = nameSuffix.Substring(0, 2); // есть дополнительные DBF-файлы, например, "ROOM7701.DBF", когда основной файл слишком большой для DBF
+      string regCode = nameSuffix.Substring(0, 2); // РµСЃС‚СЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ DBF-С„Р°Р№Р»С‹, РЅР°РїСЂРёРјРµСЂ, "ROOM7701.DBF", РєРѕРіРґР° РѕСЃРЅРѕРІРЅРѕР№ С„Р°Р№Р» СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕР№ РґР»СЏ DBF
       return FiasDB.DBSettings.RegionCodes.Contains(regCode);
     }
 
@@ -301,7 +301,7 @@ namespace FreeLibSet.FIAS
               if ((dbf.RecNo % 1000) == 0)
               {
                 Splash.Percent = dbf.RecNo - 1;
-                Splash.PhaseText = filePath.FileName + " (" + dbf.RecNo.ToString() + " из " + dbf.RecordCount.ToString() + ")";
+                Splash.PhaseText = filePath.FileName + " (" + dbf.RecNo.ToString() + " РёР· " + dbf.RecordCount.ToString() + ")";
               }
 
               if (!_FiasDB.DBSettings.UseHistory)
@@ -314,7 +314,7 @@ namespace FreeLibSet.FIAS
                   continue;
               }
 
-              #region Внутренний идентификатор в AddressObjects
+              #region Р’РЅСѓС‚СЂРµРЅРЅРёР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ AddressObjects
 
               wrt.SetGuid("AOID", DataTools.GetGuid(dbf.GetString("AOID")));
               if (_FiasDB.DBSettings.UseHistory)
@@ -327,7 +327,7 @@ namespace FreeLibSet.FIAS
 
               #endregion
 
-              #region Наименование адресного объекта
+              #region РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
 
               string offName = dbf.GetString("OFFNAME");
               wrt["OFFNAME"] = offName;
@@ -341,7 +341,7 @@ namespace FreeLibSet.FIAS
 
               #endregion
 
-              #region Краткое наименование
+              #region РљСЂР°С‚РєРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ
 
               int level = dbf.GetInt("AOLEVEL");
               string scName = dbf.GetString("SHORTNAME");
@@ -349,7 +349,7 @@ namespace FreeLibSet.FIAS
 
               #endregion
 
-              #region Поля, записываемые по-другому
+              #region РџРѕР»СЏ, Р·Р°РїРёСЃС‹РІР°РµРјС‹Рµ РїРѕ-РґСЂСѓРіРѕРјСѓ
 
               if (_FiasDB.DBSettings.UseHistory)
               {
@@ -358,7 +358,7 @@ namespace FreeLibSet.FIAS
                   case 1: wrt["Actual"] = true; break;
                   case 0: wrt["Actual"] = false; break;
                   default:
-                    throw new BugException("Неизвестное значение ACTSTATUS=" + dbf.GetInt("ACTSTATUS"));
+                    throw new BugException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ ACTSTATUS=" + dbf.GetInt("ACTSTATUS"));
                 }
 
                 switch (dbf.GetInt("LIVESTATUS"))
@@ -366,13 +366,13 @@ namespace FreeLibSet.FIAS
                   case 1: wrt["Live"] = true; break;
                   case 0: wrt["Live"] = false; break;
                   default:
-                    throw new BugException("Неизвестное значение LIVESTATUS=" + dbf.GetInt("LIVESTATUS"));
+                    throw new BugException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ LIVESTATUS=" + dbf.GetInt("LIVESTATUS"));
                 }
               }
 
               #endregion
 
-              #region Остальные поля
+              #region РћСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕР»СЏ
 
               wrt["AOLEVEL"] = dbf.GetInt("AOLEVEL");
               wrt["CENTSTATUS"] = dbf.GetInt("CENTSTATUS");
@@ -410,7 +410,7 @@ namespace FreeLibSet.FIAS
 
               wrt.Write();
               cnt++;
-            } // перебор строк в DBF-файле
+            } // РїРµСЂРµР±РѕСЂ СЃС‚СЂРѕРє РІ DBF-С„Р°Р№Р»Рµ
 
             wrt.Finish();
           }
@@ -474,7 +474,7 @@ namespace FreeLibSet.FIAS
             if ((dbf.RecNo % 1000) == 0)
             {
               Splash.Percent = dbf.RecNo - 1;
-              Splash.PhaseText = filePath.FileName + " (" + dbf.RecNo.ToString() + " из " + dbf.RecordCount.ToString() + ")";
+              Splash.PhaseText = filePath.FileName + " (" + dbf.RecNo.ToString() + " РёР· " + dbf.RecordCount.ToString() + ")";
             }
             if (!_FiasDB.DBSettings.UseHistory)
             {
@@ -482,7 +482,7 @@ namespace FreeLibSet.FIAS
                 continue;
             }
 
-            #region Внутренний идентификатор в House
+            #region Р’РЅСѓС‚СЂРµРЅРЅРёР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ House
 
             wrt.SetGuid("HOUSEID", DataTools.GetGuid(dbf.GetString("HOUSEID")));
             wrt.SetGuid("HOUSEGUID", DataTools.GetGuid(dbf.GetString("HOUSEGUID")));
@@ -490,21 +490,21 @@ namespace FreeLibSet.FIAS
 
             #endregion
 
-            #region Остальные поля
+            #region РћСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕР»СЏ
 
             string sHouseNum = dbf.GetString("HOUSENUM");
             int nHouseNum = FiasTools.GetNumInt(ref sHouseNum);
-            wrt["nHouseNum"] = nHouseNum; // 0 записывается
+            wrt["nHouseNum"] = nHouseNum; // 0 Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ
             wrt.SetString("HOUSENUM", sHouseNum);
 
             string sBuildNum = dbf.GetString("BUILDNUM");
             int nBuildNum = FiasTools.GetNumInt(ref sBuildNum);
-            wrt["nBuildNum"] = nBuildNum; // 0 записывается
+            wrt["nBuildNum"] = nBuildNum; // 0 Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ
             wrt.SetString("BUILDNUM", sBuildNum);
 
             string sStrucNum = dbf.GetString("STRUCNUM");
             int nStrucNum = FiasTools.GetNumInt(ref sStrucNum);
-            wrt["nStrucNum"] = nStrucNum; // 0 записывается
+            wrt["nStrucNum"] = nStrucNum; // 0 Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ
             wrt.SetString("STRUCNUM", sStrucNum);
 
             wrt["STRSTATUS"] = dbf.GetInt("STRSTATUS");
@@ -543,7 +543,7 @@ namespace FreeLibSet.FIAS
 
             wrt.Write();
             cnt++;
-          } // цикл по dbf.Read()
+          } // С†РёРєР» РїРѕ dbf.Read()
 
           wrt.Finish();
         }
@@ -574,7 +574,7 @@ namespace FreeLibSet.FIAS
             if ((dbf.RecNo % 1000) == 0)
             {
               Splash.Percent = dbf.RecNo - 1;
-              Splash.PhaseText = filePath.FileName + " (" + dbf.RecNo.ToString() + " из " + dbf.RecordCount.ToString() + ")";
+              Splash.PhaseText = filePath.FileName + " (" + dbf.RecNo.ToString() + " РёР· " + dbf.RecordCount.ToString() + ")";
             }
 
             if (!_FiasDB.DBSettings.UseHistory)
@@ -585,7 +585,7 @@ namespace FreeLibSet.FIAS
                 continue;
             }
 
-            #region Внутренний идентификатор в Room
+            #region Р’РЅСѓС‚СЂРµРЅРЅРёР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ Room
 
             wrt.SetGuid("ROOMID", DataTools.GetGuid(dbf.GetString("ROOMID")));
             if (_FiasDB.DBSettings.UseHistory)
@@ -598,7 +598,7 @@ namespace FreeLibSet.FIAS
 
             #endregion
 
-            #region Поля, записываемые по-другому
+            #region РџРѕР»СЏ, Р·Р°РїРёСЃС‹РІР°РµРјС‹Рµ РїРѕ-РґСЂСѓРіРѕРјСѓ
 
             if (_FiasDB.DBSettings.UseHistory)
             {
@@ -607,13 +607,13 @@ namespace FreeLibSet.FIAS
                 case 1: wrt["Live"] = true; break;
                 case 0: wrt["Live"] = false; break;
                 default:
-                  throw new BugException("Неизвестное значение LIVESTATUS=" + dbf.GetInt("LIVESTATUS"));
+                  throw new BugException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ LIVESTATUS=" + dbf.GetInt("LIVESTATUS"));
               }
             }
 
             #endregion
 
-            #region Остальные поля
+            #region РћСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕР»СЏ
 
             string sFlatNumber = dbf.GetString("FLATNUMBER");
             int nFlatNumber = FiasTools.GetNumInt(ref sFlatNumber);
@@ -648,7 +648,7 @@ namespace FreeLibSet.FIAS
 
             wrt.Write();
             cnt++;
-          } // цикл по строкам DBF-файла 
+          } // С†РёРєР» РїРѕ СЃС‚СЂРѕРєР°Рј DBF-С„Р°Р№Р»Р° 
 
           wrt.Finish();
         }
@@ -658,10 +658,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Получение числового значения с перехватом ошибки.
-    /// Исключение выводится в Trace.
-    /// Возвращается 0.
-    /// В таблице room19.dbf классификатора от 02.03.2019 есть нечисловой почтовый индекс в строке 81502
+    /// РџРѕР»СѓС‡РµРЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ СЃ РїРµСЂРµС…РІР°С‚РѕРј РѕС€РёР±РєРё.
+    /// РСЃРєР»СЋС‡РµРЅРёРµ РІС‹РІРѕРґРёС‚СЃСЏ РІ Trace.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0.
+    /// Р’ С‚Р°Р±Р»РёС†Рµ room19.dbf РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РѕС‚ 02.03.2019 РµСЃС‚СЊ РЅРµС‡РёСЃР»РѕРІРѕР№ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ РІ СЃС‚СЂРѕРєРµ 81502
     /// </summary>
     /// <param name="filePath"></param>
     /// <param name="dbf"></param>
@@ -684,21 +684,21 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Загрузка XML-файлов
+    #region Р—Р°РіСЂСѓР·РєР° XML-С„Р°Р№Р»РѕРІ
 
-    #region Основной метод
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ
 
     /// <summary>
-    /// Загрузка каталога с DBF-файлами
+    /// Р—Р°РіСЂСѓР·РєР° РєР°С‚Р°Р»РѕРіР° СЃ DBF-С„Р°Р№Р»Р°РјРё
     /// </summary>
-    /// <param name="dir">Каталог</param>
-    /// <param name="actualDate">Дата актуальности обновления</param>
-    /// <returns>Количество DBF-файлов, которые были обработаны.
-    /// Ненужные для загрузки файлы не учитываются</returns>
+    /// <param name="dir">РљР°С‚Р°Р»РѕРі</param>
+    /// <param name="actualDate">Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РѕР±РЅРѕРІР»РµРЅРёСЏ</param>
+    /// <returns>РљРѕР»РёС‡РµСЃС‚РІРѕ DBF-С„Р°Р№Р»РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р±С‹Р»Рё РѕР±СЂР°Р±РѕС‚Р°РЅС‹.
+    /// РќРµРЅСѓР¶РЅС‹Рµ РґР»СЏ Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»С‹ РЅРµ СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ</returns>
     public int LoadXmlDir(AbsPath dir, DateTime actualDate)
     {
       if (!Directory.Exists(dir.Path))
-        throw new FileNotFoundException("Не найден каталог \"" + dir.Path + "\"");
+        throw new FileNotFoundException("РќРµ РЅР°Р№РґРµРЅ РєР°С‚Р°Р»РѕРі \"" + dir.Path + "\"");
 
       int cnt = 0;
 
@@ -713,7 +713,7 @@ namespace FreeLibSet.FIAS
 
         BeginUpdate(con, actualDate, FiasDBUpdateSource.Xml);
 
-        #region Добавление данных
+        #region Р”РѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
 
         filePath = GetXmlFilePath(dir, "AS_SOCRBASE");
         if (!filePath.IsEmpty)
@@ -724,10 +724,10 @@ namespace FreeLibSet.FIAS
           cnt++;
         }
 
-        // В версии ФИАС от 26.12.2019 есть файл AS_ADDROBJ_20191226_9985b7cf-05ef-4113-8b40-1dcf76ce6363.XML
-        // В версии ФИАС от 16.03.2020 есть файл AS_ADDRESS_OBJECTS_20200316_7d7eb721-53c7-4f43-9886-c02db9f3a18f.XML
-        // Как хочешь, так и понимай.
-        // Так как в ФИАС от 16.03.2020 нет файлов AS_DEL*, неизвестно, как называется файл удаленных адресов
+        // Р’ РІРµСЂСЃРёРё Р¤РРђРЎ РѕС‚ 26.12.2019 РµСЃС‚СЊ С„Р°Р№Р» AS_ADDROBJ_20191226_9985b7cf-05ef-4113-8b40-1dcf76ce6363.XML
+        // Р’ РІРµСЂСЃРёРё Р¤РРђРЎ РѕС‚ 16.03.2020 РµСЃС‚СЊ С„Р°Р№Р» AS_ADDRESS_OBJECTS_20200316_7d7eb721-53c7-4f43-9886-c02db9f3a18f.XML
+        // РљР°Рє С…РѕС‡РµС€СЊ, С‚Р°Рє Рё РїРѕРЅРёРјР°Р№.
+        // РўР°Рє РєР°Рє РІ Р¤РРђРЎ РѕС‚ 16.03.2020 РЅРµС‚ С„Р°Р№Р»РѕРІ AS_DEL*, РЅРµРёР·РІРµСЃС‚РЅРѕ, РєР°Рє РЅР°Р·С‹РІР°РµС‚СЃСЏ С„Р°Р№Р» СѓРґР°Р»РµРЅРЅС‹С… Р°РґСЂРµСЃРѕРІ
 
         filePath = GetXmlFilePath(dir, "AS_ADDROBJ");
         if (!filePath.IsEmpty)
@@ -775,9 +775,9 @@ namespace FreeLibSet.FIAS
 
         #endregion
 
-        #region Удаление данных
+        #region РЈРґР°Р»РµРЅРёРµ РґР°РЅРЅС‹С…
 
-        filePath = GetXmlFilePath(dir, "AS_DEL_ADDRESS_OBJECTS"); // на всякий случай
+        filePath = GetXmlFilePath(dir, "AS_DEL_ADDRESS_OBJECTS"); // РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№
         if (!filePath.IsEmpty)
         {
           Splash.PhaseText = filePath.FileName;
@@ -823,7 +823,7 @@ namespace FreeLibSet.FIAS
 
         #endregion
 
-        Splash.PhaseText = "Запись в таблицу истории обновлений";
+        Splash.PhaseText = "Р—Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РѕР±РЅРѕРІР»РµРЅРёР№";
         EndUpdate(con);
         Splash.PhaseText = oldPT;
 
@@ -844,7 +844,7 @@ namespace FreeLibSet.FIAS
         case 0: return AbsPath.Empty;
         case 1: return new AbsPath(aFiles[0]);
         default:
-          throw new InvalidOperationException("В каталоге \"" + dir.Path + "\" имеется больше одного файла, соответствующего шаблону \"" + template + "\"");
+          throw new InvalidOperationException("Р’ РєР°С‚Р°Р»РѕРіРµ \"" + dir.Path + "\" РёРјРµРµС‚СЃСЏ Р±РѕР»СЊС€Рµ РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ С€Р°Р±Р»РѕРЅСѓ \"" + template + "\"");
       }
     }
 
@@ -924,7 +924,7 @@ namespace FreeLibSet.FIAS
                   }
 
 
-                  #region Внутренний идентификатор в AddressObjects
+                  #region Р’РЅСѓС‚СЂРµРЅРЅРёР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ AddressObjects
 
                   //if (_FiasDB.InternalSettings.UseIdTables)
                   //{
@@ -951,7 +951,7 @@ namespace FreeLibSet.FIAS
 
                   #endregion
 
-                  #region Наименование адресного объекта
+                  #region РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
 
                   string offName = DataTools.GetString(rdr.GetAttribute("OFFNAME"));
                   wrt["OFFNAME"] = offName;
@@ -965,7 +965,7 @@ namespace FreeLibSet.FIAS
 
                   #endregion
 
-                  #region Краткое наименование
+                  #region РљСЂР°С‚РєРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ
 
                   int level = DataTools.GetInt(rdr.GetAttribute("AOLEVEL"));
                   string scName = DataTools.GetString(rdr.GetAttribute("SHORTNAME"));
@@ -973,7 +973,7 @@ namespace FreeLibSet.FIAS
 
                   #endregion
 
-                  #region Поля, записываемые по-другому
+                  #region РџРѕР»СЏ, Р·Р°РїРёСЃС‹РІР°РµРјС‹Рµ РїРѕ-РґСЂСѓРіРѕРјСѓ
 
                   if (_FiasDB.DBSettings.UseHistory)
                   {
@@ -982,7 +982,7 @@ namespace FreeLibSet.FIAS
                       case 1: wrt["Actual"] = true; break;
                       case 0: wrt["Actual"] = false; break;
                       default:
-                        throw new BugException("Неизвестное значение ACTSTATUS=" + rdr.GetAttribute("ACTSTATUS"));
+                        throw new BugException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ ACTSTATUS=" + rdr.GetAttribute("ACTSTATUS"));
                     }
 
                     switch (DataTools.GetInt(rdr.GetAttribute("LIVESTATUS")))
@@ -990,13 +990,13 @@ namespace FreeLibSet.FIAS
                       case 1: wrt["Live"] = true; break;
                       case 0: wrt["Live"] = false; break;
                       default:
-                        throw new BugException("Неизвестное значение LIVESTATUS=" + rdr.GetAttribute("LIVESTATUS"));
+                        throw new BugException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ LIVESTATUS=" + rdr.GetAttribute("LIVESTATUS"));
                     }
                   }
 
                   #endregion
 
-                  #region Остальные поля
+                  #region РћСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕР»СЏ
 
                   wrt["AOLEVEL"] = DataTools.GetInt(rdr.GetAttribute("AOLEVEL"));
                   wrt["CENTSTATUS"] = DataTools.GetInt(rdr.GetAttribute("CENTSTATUS"));
@@ -1088,7 +1088,7 @@ namespace FreeLibSet.FIAS
                     continue;
                 }
 
-                #region Внутренний идентификатор в House
+                #region Р’РЅСѓС‚СЂРµРЅРЅРёР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ House
 
                 wrt.SetGuid("HOUSEID", DataTools.GetGuid(rdr.GetAttribute("HOUSEID")));
                 wrt.SetGuid("HOUSEGUID", DataTools.GetGuid(rdr.GetAttribute("HOUSEGUID")));
@@ -1096,21 +1096,21 @@ namespace FreeLibSet.FIAS
 
                 #endregion
 
-                #region Остальные поля
+                #region РћСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕР»СЏ
 
                 string sHouseNum = rdr.GetAttribute("HOUSENUM");
                 int nHouseNum = FiasTools.GetNumInt(ref sHouseNum);
-                wrt["nHouseNum"] = nHouseNum; // 0 записывается
+                wrt["nHouseNum"] = nHouseNum; // 0 Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ
                 wrt.SetString("HOUSENUM", sHouseNum);
 
                 string sBuildNum = rdr.GetAttribute("BUILDNUM");
                 int nBuildNum = FiasTools.GetNumInt(ref sBuildNum);
-                wrt["nBuildNum"] = nBuildNum; // 0 записывается
+                wrt["nBuildNum"] = nBuildNum; // 0 Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ
                 wrt.SetString("BUILDNUM", sBuildNum);
 
                 string sStrucNum = rdr.GetAttribute("STRUCNUM");
                 int nStrucNum = FiasTools.GetNumInt(ref sStrucNum);
-                wrt["nStrucNum"] = nStrucNum; // 0 записывается
+                wrt["nStrucNum"] = nStrucNum; // 0 Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ
                 wrt.SetString("STRUCNUM", sStrucNum);
 
                 wrt["STRSTATUS"] = DataTools.GetInt(rdr.GetAttribute("STRSTATUS"));
@@ -1198,7 +1198,7 @@ namespace FreeLibSet.FIAS
                 }
 
 
-                #region Внутренний идентификатор в Room
+                #region Р’РЅСѓС‚СЂРµРЅРЅРёР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ Room
 
                 wrt.SetGuid("ROOMID", DataTools.GetGuid(rdr.GetAttribute("ROOMID")));
                 if (_FiasDB.DBSettings.UseHistory)
@@ -1211,7 +1211,7 @@ namespace FreeLibSet.FIAS
 
                 #endregion
 
-                #region Поля, записываемые по-другому
+                #region РџРѕР»СЏ, Р·Р°РїРёСЃС‹РІР°РµРјС‹Рµ РїРѕ-РґСЂСѓРіРѕРјСѓ
 
                 if (_FiasDB.DBSettings.UseHistory)
                 {
@@ -1220,13 +1220,13 @@ namespace FreeLibSet.FIAS
                     case 1: wrt["Live"] = true; break;
                     case 0: wrt["Live"] = false; break;
                     default:
-                      throw new BugException("Неизвестное значение LIVESTATUS=" + rdr.GetAttribute("LIVESTATUS"));
+                      throw new BugException("РќРµРёР·РІРµСЃС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ LIVESTATUS=" + rdr.GetAttribute("LIVESTATUS"));
                   }
                 }
 
                 #endregion
 
-                #region Остальные поля
+                #region РћСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕР»СЏ
 
                 string sFlatNumber = rdr.GetAttribute("FLATNUMBER");
                 int nFlatNumber = FiasTools.GetNumInt(ref sFlatNumber);
@@ -1276,12 +1276,12 @@ namespace FreeLibSet.FIAS
     #region AS_DEL_*.XML
 
     /// <summary>
-    /// Удаление записей из таблиц адресных объектов, домов, помещений
+    /// РЈРґР°Р»РµРЅРёРµ Р·Р°РїРёСЃРµР№ РёР· С‚Р°Р±Р»РёС† Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ, РґРѕРјРѕРІ, РїРѕРјРµС‰РµРЅРёР№
     /// </summary>
     /// <param name="con"></param>
-    /// <param name="filePath">Путь к XML-файлу</param>
-    /// <param name="elName">Имена тегов объектов</param>
-    /// <param name="resTableName">Имя таблицы в базе данных</param>
+    /// <param name="filePath">РџСѓС‚СЊ Рє XML-С„Р°Р№Р»Сѓ</param>
+    /// <param name="elName">РРјРµРЅР° С‚РµРіРѕРІ РѕР±СЉРµРєС‚РѕРІ</param>
+    /// <param name="resTableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
     private void DoDelXml(DBxConBase con, AbsPath filePath, string elName, string resTableName)
     {
       BeginLoadFile(filePath);
@@ -1291,7 +1291,7 @@ namespace FreeLibSet.FIAS
       {
         XmlReader rdr = rdr0.Reader;
 
-        // Имя ключевого GUID-поля ("AOID")
+        // РРјСЏ РєР»СЋС‡РµРІРѕРіРѕ GUID-РїРѕР»СЏ ("AOID")
         string pkName = FiasDB.DB.Struct.Tables[resTableName].PrimaryKey[0];
         List<Guid> delIds = new List<Guid>();
         Splash.AllowCancel = true;
@@ -1326,22 +1326,22 @@ namespace FreeLibSet.FIAS
     #endregion
 
     /// <summary>
-    /// Читатель для XML-файла с поддержкой процентного индикатора
+    /// Р§РёС‚Р°С‚РµР»СЊ РґР»СЏ XML-С„Р°Р№Р»Р° СЃ РїРѕРґРґРµСЂР¶РєРѕР№ РїСЂРѕС†РµРЅС‚РЅРѕРіРѕ РёРЅРґРёРєР°С‚РѕСЂР°
     /// </summary>
     private class ExtXmlReader : SimpleDisposableObject
     {
       // 03.01.2021
-      // Можно использовать базовый класс без деструктора
+      // РњРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ Р±РµР· РґРµСЃС‚СЂСѓРєС‚РѕСЂР°
 
-      #region Конструктор и Dispose
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
       public ExtXmlReader(AbsPath path, ISplash splash)
       {
         _FileStream = new FileStream(path.Path, FileMode.Open);
 
         _Splash = splash;
-        // XML-файл может быть несколько ГБ длиной.
-        // Во избежание переполнения Int32, считаем в блоках по 64КБ.
+        // XML-С„Р°Р№Р» РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ Р“Р‘ РґР»РёРЅРѕР№.
+        // Р’Рѕ РёР·Р±РµР¶Р°РЅРёРµ РїРµСЂРµРїРѕР»РЅРµРЅРёСЏ Int32, СЃС‡РёС‚Р°РµРј РІ Р±Р»РѕРєР°С… РїРѕ 64РљР‘.
         _Splash.PercentMax = (int)(_FileStream.Length >> 16);
         _Splash.AllowCancel = true;
 
@@ -1362,15 +1362,15 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Поток для извлечения текущей позиции
+      /// РџРѕС‚РѕРє РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРё
       /// </summary>
       private Stream _FileStream;
 
       /// <summary>
-      /// Основной объект
+      /// РћСЃРЅРѕРІРЅРѕР№ РѕР±СЉРµРєС‚
       /// </summary>
       public XmlReader Reader { get { return _Reader; } }
       private XmlReader _Reader;
@@ -1381,7 +1381,7 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Обновление заставки
+      #region РћР±РЅРѕРІР»РµРЅРёРµ Р·Р°СЃС‚Р°РІРєРё
 
       public void UpdateSplash()
       {
@@ -1407,10 +1407,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Получение числового значения с перехватом ошибки.
-    /// Исключение выводится в Trace.
-    /// Возвращается 0.
-    /// В таблице as_room*.xml классификатора от 16.03.2019 тожн есть нечисловой почтовый индекс.
+    /// РџРѕР»СѓС‡РµРЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ СЃ РїРµСЂРµС…РІР°С‚РѕРј РѕС€РёР±РєРё.
+    /// РСЃРєР»СЋС‡РµРЅРёРµ РІС‹РІРѕРґРёС‚СЃСЏ РІ Trace.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0.
+    /// Р’ С‚Р°Р±Р»РёС†Рµ as_room*.xml РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РѕС‚ 16.03.2019 С‚РѕР¶РЅ РµСЃС‚СЊ РЅРµС‡РёСЃР»РѕРІРѕР№ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ.
     /// </summary>
     /// <param name="filePath"></param>
     /// <param name="rdr"></param>
@@ -1432,23 +1432,23 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Загрузка каталога с XML или DBF
+    #region Р—Р°РіСЂСѓР·РєР° РєР°С‚Р°Р»РѕРіР° СЃ XML РёР»Рё DBF
 
     /// <summary>
-    /// Основной метод - загрузка данных
+    /// РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ - Р·Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="dir">Каталог с файлами DBF или XML. Вложенные каталоги не просматриваются</param>
-    /// <param name="actualDate">Дата актуальности обновления</param>
-    /// <returns>Количество загруженных файлов</returns>
+    /// <param name="dir">РљР°С‚Р°Р»РѕРі СЃ С„Р°Р№Р»Р°РјРё DBF РёР»Рё XML. Р’Р»РѕР¶РµРЅРЅС‹Рµ РєР°С‚Р°Р»РѕРіРё РЅРµ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ</param>
+    /// <param name="actualDate">Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РѕР±РЅРѕРІР»РµРЅРёСЏ</param>
+    /// <returns>РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ</returns>
     public int LoadDir(AbsPath dir, DateTime actualDate)
     {
       if (dir.IsEmpty)
-        throw new ArgumentException("Каталог не задан", "dir");
+        throw new ArgumentException("РљР°С‚Р°Р»РѕРі РЅРµ Р·Р°РґР°РЅ", "dir");
 
-      Splash.PhaseText = "Определение наличия данных";
+      Splash.PhaseText = "РћРїСЂРµРґРµР»РµРЅРёРµ РЅР°Р»РёС‡РёСЏ РґР°РЅРЅС‹С…";
 
       if (!Directory.Exists(dir.Path))
-        throw new FileNotFoundException("Не найден каталог \"" + dir.Path + "\"");
+        throw new FileNotFoundException("РќРµ РЅР°Р№РґРµРЅ РєР°С‚Р°Р»РѕРі \"" + dir.Path + "\"");
 
       string[] aXmlFiles = Directory.GetFiles(dir.Path, "*.xml", SearchOption.TopDirectoryOnly);
       string[] aDbfFiles = Directory.GetFiles(dir.Path, "*.dbf", SearchOption.TopDirectoryOnly);
@@ -1459,34 +1459,34 @@ namespace FreeLibSet.FIAS
       if (aXmlFiles.Length == 0 && aDbfFiles.Length == 0)
         return 0;
 
-      throw new InvalidOperationException("В каталоге \"" + dir.Path + "\" присутствуют и XML и DBF-файлы");
+      throw new InvalidOperationException("Р’ РєР°С‚Р°Р»РѕРіРµ \"" + dir.Path + "\" РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‚ Рё XML Рё DBF-С„Р°Р№Р»С‹");
     }
 
     #endregion
 
-    #region Загрузка из архива
+    #region Р—Р°РіСЂСѓР·РєР° РёР· Р°СЂС…РёРІР°
 
     /// <summary>
-    /// Загрузка обновления из архива.
-    /// Выполняет распаковку во временный каталог и вызывает LoadDir().
-    /// Поддерживаемые форматы файлов архивов определяются классом FileCompressor
+    /// Р—Р°РіСЂСѓР·РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РёР· Р°СЂС…РёРІР°.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ СЂР°СЃРїР°РєРѕРІРєСѓ РІРѕ РІСЂРµРјРµРЅРЅС‹Р№ РєР°С‚Р°Р»РѕРі Рё РІС‹Р·С‹РІР°РµС‚ LoadDir().
+    /// РџРѕРґРґРµСЂР¶РёРІР°РµРјС‹Рµ С„РѕСЂРјР°С‚С‹ С„Р°Р№Р»РѕРІ Р°СЂС…РёРІРѕРІ РѕРїСЂРµРґРµР»СЏСЋС‚СЃСЏ РєР»Р°СЃСЃРѕРј FileCompressor
     /// </summary>
-    /// <param name="path">Путь к файлу архива</param>
-    /// <param name="actualDate">Дата актуальности обновления</param>
-    /// <returns>Количество загруженных файлов из архива</returns>
+    /// <param name="path">РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ Р°СЂС…РёРІР°</param>
+    /// <param name="actualDate">Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РѕР±РЅРѕРІР»РµРЅРёСЏ</param>
+    /// <returns>РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ РёР· Р°СЂС…РёРІР°</returns>
     public int LoadArchiveFile(AbsPath path, DateTime actualDate)
     {
       if (path.IsEmpty)
-        throw new ArgumentException("Файл не задан", "path");
+        throw new ArgumentException("Р¤Р°Р№Р» РЅРµ Р·Р°РґР°РЅ", "path");
 
       if (FileCompressor.GetArchiveTypeFromFileName(path) == FileComressorArchiveType.Unknown)
-        throw new ArgumentException("Неправильное имя файла: " + path.FileName + ". Неподдерживаемый формат архива");
+        throw new ArgumentException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РёРјСЏ С„Р°Р№Р»Р°: " + path.FileName + ". РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјС‹Р№ С„РѕСЂРјР°С‚ Р°СЂС…РёРІР°");
 
-      Splash.PhaseText = "Распаковка архива " + path.FileName;
+      Splash.PhaseText = "Р Р°СЃРїР°РєРѕРІРєР° Р°СЂС…РёРІР° " + path.FileName;
       Trace.WriteLine(_FileStartTime.ToString("G") + " Unpacking " + path.Path + " to the temp directory");
 
       if (!File.Exists(path.Path))
-        throw new FileNotFoundException("Не найден файл \"" + path.Path + "\"");
+        throw new FileNotFoundException("РќРµ РЅР°Р№РґРµРЅ С„Р°Р№Р» \"" + path.Path + "\"");
 
       int nFiles;
 
@@ -1505,7 +1505,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Диапазон STARTDATE - ENDDATE
+    #region Р”РёР°РїР°Р·РѕРЅ STARTDATE - ENDDATE
 
     private DateTime _Today;
 
@@ -1517,20 +1517,20 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Таблицы идентификаторов
+    #region РўР°Р±Р»РёС†С‹ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ
 
 #if XXX
     /// <summary>
-    /// Упреждающее заполнение таблиц "xxRecIds" и "xxGuids"
+    /// РЈРїСЂРµР¶РґР°СЋС‰РµРµ Р·Р°РїРѕР»РЅРµРЅРёРµ С‚Р°Р±Р»РёС† "xxRecIds" Рё "xxGuids"
     /// </summary>
-    /// <param name="srcTable">Таблица для извлечения идентификаторов</param>
+    /// <param name="srcTable">РўР°Р±Р»РёС†Р° РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ</param>
     /// <param name="srcColNames"></param>
-    /// <param name="con">Соединение с БД "fias"</param>
+    /// <param name="con">РЎРѕРµРґРёРЅРµРЅРёРµ СЃ Р‘Р” "fias"</param>
     /// <param name="resTableName"></param>
-    /// <returns>Словарь идентификаторов</returns>
+    /// <returns>РЎР»РѕРІР°СЂСЊ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ</returns>
     private Dictionary<string, Int32> CreateForwardGuidRows(DataTable srcTable, string[] srcColNames, DBxCon con, string resTableName)
     {
-    #region Находим все GUID'ы, используемые в таблице
+    #region РќР°С…РѕРґРёРј РІСЃРµ GUID'С‹, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РІ С‚Р°Р±Р»РёС†Рµ
 
       DataTable GuidTable = new DataTable(resTableName);
       GuidTable.Columns.Add("Guid", typeof(string));
@@ -1545,22 +1545,22 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      // Ключ - идентификатор AOID в ФИАСе
-      // Значение - внутренний идентификатор записи в таблице "AddrOb"
+      // РљР»СЋС‡ - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ AOID РІ Р¤РРђРЎРµ
+      // Р—РЅР°С‡РµРЅРёРµ - РІРЅСѓС‚СЂРµРЅРЅРёР№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ "AddrOb"
       Dictionary<string, Int32> IdDict = new Dictionary<string, Int32>(GuidTable.Rows.Count);
 
       if (GuidTable.Rows.Count == 0)
-        return IdDict; // никогда не будет
+        return IdDict; // РЅРёРєРѕРіРґР° РЅРµ Р±СѓРґРµС‚
 
     #endregion
 
-    #region Поиск/добавление записей в базу данных
+    #region РџРѕРёСЃРє/РґРѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРµР№ РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
 
       Int32[] Ids = con.FindOrAddRecords(GuidTable);
 
     #endregion
 
-    #region Создаем словарь
+    #region РЎРѕР·РґР°РµРј СЃР»РѕРІР°СЂСЊ
 
       for (int i = 0; i < GuidTable.Rows.Count; i++)
         IdDict.Add(GuidTable.Rows[i][0].ToString(), Ids[i]);
@@ -1577,21 +1577,21 @@ namespace FreeLibSet.FIAS
         return DBNull.Value;
       Int32 Id;
       if (!guidDict.TryGetValue(Guid, out Id))
-        throw new BugException("В коллекции не найден GUID=\"" + Guid + "\" из поля \"" + columnName + "\"");
+        throw new BugException("Р’ РєРѕР»Р»РµРєС†РёРё РЅРµ РЅР°Р№РґРµРЅ GUID=\"" + Guid + "\" РёР· РїРѕР»СЏ \"" + columnName + "\"");
       return Id;
     }
 #endif
 
     #endregion
 
-    #region Буферизация таблицы AOType
+    #region Р‘СѓС„РµСЂРёР·Р°С†РёСЏ С‚Р°Р±Р»РёС†С‹ AOType
 
     /// <summary>
-    /// Буферизованная таблица типов адресных объектов.
-    /// Сюда загружается полная таблицы "AOType" из классификатора методом LoadAOTypesTable().
-    /// В процессе обработки внешних файлов сюда могут добавляться строки.
-    /// Перед записью основных таблиц классификатора вызывается FlushAOTypesTable().
-    /// Если в таблицу были добавлены строким
+    /// Р‘СѓС„РµСЂРёР·РѕРІР°РЅРЅР°СЏ С‚Р°Р±Р»РёС†Р° С‚РёРїРѕРІ Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ.
+    /// РЎСЋРґР° Р·Р°РіСЂСѓР¶Р°РµС‚СЃСЏ РїРѕР»РЅР°СЏ С‚Р°Р±Р»РёС†С‹ "AOType" РёР· РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РјРµС‚РѕРґРѕРј LoadAOTypesTable().
+    /// Р’ РїСЂРѕС†РµСЃСЃРµ РѕР±СЂР°Р±РѕС‚РєРё РІРЅРµС€РЅРёС… С„Р°Р№Р»РѕРІ СЃСЋРґР° РјРѕРіСѓС‚ РґРѕР±Р°РІР»СЏС‚СЊСЃСЏ СЃС‚СЂРѕРєРё.
+    /// РџРµСЂРµРґ Р·Р°РїРёСЃСЊСЋ РѕСЃРЅРѕРІРЅС‹С… С‚Р°Р±Р»РёС† РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° РІС‹Р·С‹РІР°РµС‚СЃСЏ FlushAOTypesTable().
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Сѓ Р±С‹Р»Рё РґРѕР±Р°РІР»РµРЅС‹ СЃС‚СЂРѕРєРёРј
     /// </summary>
     private DataTable _AOTypesTable;
     private int _AOTypesTableRowCount;
@@ -1599,8 +1599,8 @@ namespace FreeLibSet.FIAS
     private Int32 _AOTypesTableLastId2;
 
     ///// <summary>
-    ///// Идентификатор фиктивной записи в таблице AOType.
-    ///// Используется для forward-строк в AddressObjects
+    ///// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С„РёРєС‚РёРІРЅРѕР№ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ AOType.
+    ///// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ forward-СЃС‚СЂРѕРє РІ AddressObjects
     ///// </summary>
     //private Int32 DummyAOTypeId;
 
@@ -1623,7 +1623,7 @@ namespace FreeLibSet.FIAS
     private void FlushAOTypesTable(DBxConBase con)
     {
       if (_AOTypesTableRowCount == _AOTypesTable.Rows.Count)
-        return; // Нечего сбрасывать
+        return; // РќРµС‡РµРіРѕ СЃР±СЂР°СЃС‹РІР°С‚СЊ
 
       DataTable tempTable;
       using (DataView dv2 = new DataView(_AOTypesTable))
@@ -1633,8 +1633,8 @@ namespace FreeLibSet.FIAS
 #if DEBUG
         int wantedRowCount = _AOTypesTable.Rows.Count - _AOTypesTableRowCount;
         if (wantedRowCount != tempTable.Rows.Count)
-          throw new BugException("Неправильное число добавляемых записей в таблицу AOTypes: " +
-            tempTable.Rows.Count.ToString() + ". Ожидалось: " + wantedRowCount.ToString());
+          throw new BugException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ С‡РёСЃР»Рѕ РґРѕР±Р°РІР»СЏРµРјС‹С… Р·Р°РїРёСЃРµР№ РІ С‚Р°Р±Р»РёС†Сѓ AOTypes: " +
+            tempTable.Rows.Count.ToString() + ". РћР¶РёРґР°Р»РѕСЃСЊ: " + wantedRowCount.ToString());
 #endif
       }
 
@@ -1644,12 +1644,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Поиск или добавление записи в таблице AOType
+    /// РџРѕРёСЃРє РёР»Рё РґРѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ AOType
     /// </summary>
-    /// <param name="level">Уровень</param>
-    /// <param name="scName">Сокращение</param>
-    /// <param name="socrName">Полное наименование</param>
-    /// <returns>Идентификатор найденной или созданной записи</returns>
+    /// <param name="level">РЈСЂРѕРІРµРЅСЊ</param>
+    /// <param name="scName">РЎРѕРєСЂР°С‰РµРЅРёРµ</param>
+    /// <param name="socrName">РџРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР°Р№РґРµРЅРЅРѕР№ РёР»Рё СЃРѕР·РґР°РЅРЅРѕР№ Р·Р°РїРёСЃРё</returns>
     private Int32 FindOrAddAOType(int level, string scName, string socrName)
     {
       if (String.IsNullOrEmpty(scName))
@@ -1661,7 +1661,7 @@ namespace FreeLibSet.FIAS
       DataRow row;
       if (p >= 0)
       {
-        // Существующее сокращение
+        // РЎСѓС‰РµСЃС‚РІСѓСЋС‰РµРµ СЃРѕРєСЂР°С‰РµРЅРёРµ
         row = _AOTypesTable.DefaultView[p].Row;
         Int32 id = DataTools.GetInt(row, "Id");
 
@@ -1685,7 +1685,7 @@ namespace FreeLibSet.FIAS
         row["Id"] = _AOTypesTableLastId2;
         row["LEVEL"] = level;
         row["SCNAME"] = scName;
-        if (String.IsNullOrEmpty(socrName)) // неизвестное сокращение из основной таблицы объектов
+        if (String.IsNullOrEmpty(socrName)) // РЅРµРёР·РІРµСЃС‚РЅРѕРµ СЃРѕРєСЂР°С‰РµРЅРёРµ РёР· РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹ РѕР±СЉРµРєС‚РѕРІ
           row["SOCRNAME"] = scName;
         else
           row["SOCRNAME"] = socrName;
@@ -1696,15 +1696,15 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Начало и окончание обновления
+    #region РќР°С‡Р°Р»Рѕ Рё РѕРєРѕРЅС‡Р°РЅРёРµ РѕР±РЅРѕРІР»РµРЅРёСЏ
 
     private DateTime _ActualDate;
 
     private Int32 _UpdateId;
 
     /// <summary>
-    /// Вызывается в начале обновления.
-    /// Добавляет запись в таблицу "ClassifUpdate"
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РІ РЅР°С‡Р°Р»Рµ РѕР±РЅРѕРІР»РµРЅРёСЏ.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Сѓ "ClassifUpdate"
     /// </summary>
     /// <param name="con"></param>
     /// <param name="actualDate"></param>
@@ -1717,9 +1717,9 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Вызывается после успешного обновления.
-    /// Изменяет запись в таблице "ClassifUpdate". Изменяет поля "ActualDate" и "UpdateTime" в таблице "ClassifInfo".
-    /// 10.09.2020. Также обновляется статистика
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ РѕР±РЅРѕРІР»РµРЅРёСЏ.
+    /// РР·РјРµРЅСЏРµС‚ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Рµ "ClassifUpdate". РР·РјРµРЅСЏРµС‚ РїРѕР»СЏ "ActualDate" Рё "UpdateTime" РІ С‚Р°Р±Р»РёС†Рµ "ClassifInfo".
+    /// 10.09.2020. РўР°РєР¶Рµ РѕР±РЅРѕРІР»СЏРµС‚СЃСЏ СЃС‚Р°С‚РёСЃС‚РёРєР°
     /// </summary>
     /// <param name="con"></param>
     private void EndUpdate(DBxConBase con)
@@ -1749,7 +1749,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Трассировка
+    #region РўСЂР°СЃСЃРёСЂРѕРІРєР°
 
     DateTime _FileStartTime;
 
@@ -1775,10 +1775,10 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Прочее
+    #region РџСЂРѕС‡РµРµ
 
     /// <summary>
-    /// Открывает соединение для обновления
+    /// РћС‚РєСЂС‹РІР°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
     /// </summary>
     /// <returns></returns>
     private DBxConBase CreateCon()
@@ -1786,7 +1786,7 @@ namespace FreeLibSet.FIAS
       DBxConBase con = _FiasDB.UpdateEntry.CreateCon();
       if (con.TraceEnabled)
       {
-        con.TraceEnabled = false; // иначе будет очень много записей, если логгирование включено
+        con.TraceEnabled = false; // РёРЅР°С‡Рµ Р±СѓРґРµС‚ РѕС‡РµРЅСЊ РјРЅРѕРіРѕ Р·Р°РїРёСЃРµР№, РµСЃР»Рё Р»РѕРіРіРёСЂРѕРІР°РЅРёРµ РІРєР»СЋС‡РµРЅРѕ
         Trace.WriteLine("  DBxConBase.TraceEnabled was set to false for updating connection");
         if (con is FreeLibSet.Data.SQLite.SQLiteDBxCon)
         {
@@ -1806,7 +1806,7 @@ namespace FreeLibSet.FIAS
       writerInfo.TableName = ts.TableName;
       writerInfo.Columns = ts.Columns.Columns;
       writerInfo.SearchColumns = new DBxColumns(ts.Columns[0].ColumnName); // 02.08.2020
-      writerInfo.TransactionPulseRowCount = 100000; // SQLite может переполниться
+      writerInfo.TransactionPulseRowCount = 100000; // SQLite РјРѕР¶РµС‚ РїРµСЂРµРїРѕР»РЅРёС‚СЊСЃСЏ
       return writerInfo;
     }
 

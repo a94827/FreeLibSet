@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -19,7 +19,7 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Controls
 {
   /// <summary>
-  /// Компонент для выбора элементов из списка доступных с возможностью сортировки
+  /// РљРѕРјРїРѕРЅРµРЅС‚ РґР»СЏ РІС‹Р±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РёР· СЃРїРёСЃРєР° РґРѕСЃС‚СѓРїРЅС‹С… СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ СЃРѕСЂС‚РёСЂРѕРІРєРё
   /// </summary>
   public partial class TwoListSelector : UserControl, ISupportInitialize
   {
@@ -45,11 +45,11 @@ namespace FreeLibSet.Controls
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Аргументы события EFPTwoListSelector.ItemInfoNeeded
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ EFPTwoListSelector.ItemInfoNeeded
   /// </summary>
   public sealed class EFPTwoListSelectorItemInfoNeededEventArgs : EventArgs
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPTwoListSelectorItemInfoNeededEventArgs()
     {
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     public object Item { get { return _Item; } }
     private object _Item;
@@ -77,29 +77,29 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Возвращает true, если всплывающая подсказка используется
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІСЃРїР»С‹РІР°СЋС‰Р°СЏ РїРѕРґСЃРєР°Р·РєР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
     /// </summary>
     public bool ToolTipTextNeeded { get { return EFPApp.ShowToolTips; } }
 
     /// <summary>
-    /// Возвращает true, если изображение используется
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
     /// </summary>
     public bool ImageNeeded { get { return EFPApp.ShowListImages; } }
 
     /// <summary>
-    /// Сюда может быть помещен текст для вывода в комбоблоке
+    /// РЎСЋРґР° РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕРјРµС‰РµРЅ С‚РµРєСЃС‚ РґР»СЏ РІС‹РІРѕРґР° РІ РєРѕРјР±РѕР±Р»РѕРєРµ
     /// </summary>
     public string TextValue { get { return _TextValue; } set { _TextValue = value; } }
     private string _TextValue;
 
     /// <summary>
-    /// Сюда может быть помещен текст всплывающей подсказки
+    /// РЎСЋРґР° РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕРјРµС‰РµРЅ С‚РµРєСЃС‚ РІСЃРїР»С‹РІР°СЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё
     /// </summary>
     public string ToolTipText { get { return _ToolTipText; } set { _ToolTipText = value; } }
     private string _ToolTipText;
 
     /// <summary>
-    /// Сюда может быть помещено изображение
+    /// РЎСЋРґР° РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕРјРµС‰РµРЅРѕ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
     /// </summary>
     public string ImageKey { get { return _ImageKey; } set { _ImageKey = value; } }
     private string _ImageKey;
@@ -108,17 +108,17 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события EFPTwoListSelector.ItemInfoNeeded
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ EFPTwoListSelector.ItemInfoNeeded
   /// </summary>
   public delegate void EFPTwoListSelectorItemInfoNeededEventHandler(object sender,
     EFPTwoListSelectorItemInfoNeededEventArgs args);
 
   /// <summary>
-  /// Аргументы события EFPTwoListSelector.EditItem
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ EFPTwoListSelector.EditItem
   /// </summary>
   public sealed class EFPTwoListSelectorEditItemEventArgs : EventArgs
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPTwoListSelectorEditItemEventArgs()
     {
@@ -126,7 +126,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     public object Item
     {
@@ -144,14 +144,14 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события EFPTwoListSelector.EditItem
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ EFPTwoListSelector.EditItem
   /// </summary>
   public delegate void EFPTwoListSelectorEditItemEventHandler(object sender,
      EFPTwoListSelectorEditItemEventArgs args);
 
   public class EFPTwoListSelector : EFPControlBase
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     public EFPTwoListSelector(EFPBaseProvider baseProvider, TwoListSelector control)
       : base(baseProvider, control, false)
@@ -161,12 +161,12 @@ namespace FreeLibSet.Forms
       control.AddButton.Image = EFPApp.MainImages.Images["RightRight"];
       control.AddButton.ImageAlign = ContentAlignment.MiddleCenter;
       _AddButtonProvider = new EFPButton(baseProvider, control.AddButton);
-      _AddButtonProvider.DisplayName = "Добавить";
+      _AddButtonProvider.DisplayName = "Р”РѕР±Р°РІРёС‚СЊ";
 
       control.RemoveButton.Image = EFPApp.MainImages.Images["LeftLeft"];
       control.RemoveButton.ImageAlign = ContentAlignment.MiddleCenter;
       _RemoveButtonProvider = new EFPButton(baseProvider, control.RemoveButton);
-      _RemoveButtonProvider.DisplayName = "Удалить";
+      _RemoveButtonProvider.DisplayName = "РЈРґР°Р»РёС‚СЊ";
 
       _SelectedGridViewProvider = new EFPDataGridView(baseProvider, control.SelectedGrid);
       _SelectedGridViewProvider.ToolBarPanel = control.SelectedToolBarPanel;
@@ -228,7 +228,7 @@ namespace FreeLibSet.Forms
       _SelectedGridViewProvider.ManualOrderRows = true;
       _SelectedGridViewProvider.ManualOrderChanged += new EventHandler(SelectedGridViewProvider_ManualOrderChanged);
 
-      // Убираем все лишние кнопки из панели инструментов
+      // РЈР±РёСЂР°РµРј РІСЃРµ Р»РёС€РЅРёРµ РєРЅРѕРїРєРё РёР· РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
       foreach (EFPCommandItem ci in _SelectedGridViewProvider.CommandItems)
       {
         bool inTooBar = false;
@@ -259,7 +259,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Провайдеры дочерних элементов
+    #region РџСЂРѕРІР°Р№РґРµСЂС‹ РґРѕС‡РµСЂРЅРёС… СЌР»РµРјРµРЅС‚РѕРІ
 
     private EFPDataGridView _AvailableGridViewProvider;
     private EFPButton _AddButtonProvider;
@@ -268,7 +268,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     protected override bool ControlEnabled
     {
@@ -297,14 +297,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Режим сортировки
+    #region Р РµР¶РёРј СЃРѕСЂС‚РёСЂРѕРІРєРё
 
     /// <summary>
-    /// Можно ли переставлять местами элементы (true) или списки являются отсортированными (false).
-    /// По умолчанию - true.
-    /// Если списки являются отсортированными, то требуется, чтобы элементы должны реализовывать интерфейс IComparable,
-    /// или должно быть установлено свойство Comparer.
-    /// Свойство можно устанавливать только до вызова события Created.
+    /// РњРѕР¶РЅРѕ Р»Рё РїРµСЂРµСЃС‚Р°РІР»СЏС‚СЊ РјРµСЃС‚Р°РјРё СЌР»РµРјРµРЅС‚С‹ (true) РёР»Рё СЃРїРёСЃРєРё СЏРІР»СЏСЋС‚СЃСЏ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹РјРё (false).
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true.
+    /// Р•СЃР»Рё СЃРїРёСЃРєРё СЏРІР»СЏСЋС‚СЃСЏ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹РјРё, С‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ, С‡С‚РѕР±С‹ СЌР»РµРјРµРЅС‚С‹ РґРѕР»Р¶РЅС‹ СЂРµР°Р»РёР·РѕРІС‹РІР°С‚СЊ РёРЅС‚РµСЂС„РµР№СЃ IComparable,
+    /// РёР»Рё РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ Comparer.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ С‚РѕР»СЊРєРѕ РґРѕ РІС‹Р·РѕРІР° СЃРѕР±С‹С‚РёСЏ Created.
     /// </summary>
     public bool AllowOrder
     {
@@ -317,10 +317,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Внешний интерфейс для сравнения элементов.
-    /// Используется при AllowOrder=false для сортировки элементов в просмотре.
-    /// По умолчанию - null.
-    /// Свойство можно устанавливать только до вызова события Created.
+    /// Р’РЅРµС€РЅРёР№ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё AllowOrder=false РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё СЌР»РµРјРµРЅС‚РѕРІ РІ РїСЂРѕСЃРјРѕС‚СЂРµ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - null.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ С‚РѕР»СЊРєРѕ РґРѕ РІС‹Р·РѕРІР° СЃРѕР±С‹С‚РёСЏ Created.
     /// </summary>
     public System.Collections.IComparer Comparer
     {
@@ -335,10 +335,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Список доступных элементов
+    #region РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
 
     /// <summary>
-    /// Полный список доступных элементов, включая выбранные
+    /// РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ, РІРєР»СЋС‡Р°СЏ РІС‹Р±СЂР°РЅРЅС‹Рµ
     /// </summary>
     public object[] AllItems
     {
@@ -369,7 +369,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Список выбранных элементов
+    #region РЎРїРёСЃРѕРє РІС‹Р±СЂР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
 
     public object[] SelectedItems
     {
@@ -412,7 +412,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Список доступных элементов
+    #region РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
 
     private void InitAvailableItemsInternal()
     {
@@ -422,7 +422,7 @@ namespace FreeLibSet.Forms
       else
       {
         ArrayIndexer<object> selIndexer = new ArrayIndexer<object>(SelectedItems);
-        // Нельзя использовать сразу массив, т.к. в массиве выбранных элементов могут быть посторонние элементы, которых нет в AllItems.
+        // РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃСЂР°Р·Сѓ РјР°СЃСЃРёРІ, С‚.Рє. РІ РјР°СЃСЃРёРІРµ РІС‹Р±СЂР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ РјРѕРіСѓС‚ Р±С‹С‚СЊ РїРѕСЃС‚РѕСЂРѕРЅРЅРёРµ СЌР»РµРјРµРЅС‚С‹, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РІ AllItems.
         System.Collections.ArrayList lst = new System.Collections.ArrayList(Math.Max(1, _AllItems.Length - SelectedItems.Length));
         for (int i = 0; i < _AllItems.Length; i++)
         {
@@ -442,7 +442,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Получение текста и значка для элемента
+    #region РџРѕР»СѓС‡РµРЅРёРµ С‚РµРєСЃС‚Р° Рё Р·РЅР°С‡РєР° РґР»СЏ СЌР»РµРјРµРЅС‚Р°
 
     public event EFPTwoListSelectorItemInfoNeededEventHandler ItemInfoNeeded;
 
@@ -465,26 +465,26 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Редактирование элемента
+    #region Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЌР»РµРјРµРЅС‚Р°
 
     /// <summary>
-    /// Событие обработчика редактирования элемента из списка выбранных.
-    /// Вызывается, когда пользователь выполняет команду "Редактировать" для строки таблицы.
-    /// Групповое редактирование нескольких строк не поддерживается.
-    /// Обработчик получает ссылку на редактируемый элемент.
-    /// Обработчик события не должен устанавливаться, если "редактирование" не имеет смысла. При этом
-    /// команда редактирования не будет доступна.
+    /// РЎРѕР±С‹С‚РёРµ РѕР±СЂР°Р±РѕС‚С‡РёРєР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЌР»РµРјРµРЅС‚Р° РёР· СЃРїРёСЃРєР° РІС‹Р±СЂР°РЅРЅС‹С….
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹РїРѕР»РЅСЏРµС‚ РєРѕРјР°РЅРґСѓ "Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ" РґР»СЏ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹.
+    /// Р“СЂСѓРїРїРѕРІРѕРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚СЂРѕРє РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РїРѕР»СѓС‡Р°РµС‚ СЃСЃС‹Р»РєСѓ РЅР° СЂРµРґР°РєС‚РёСЂСѓРµРјС‹Р№ СЌР»РµРјРµРЅС‚.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РЅРµ РґРѕР»Р¶РµРЅ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ, РµСЃР»Рё "СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ" РЅРµ РёРјРµРµС‚ СЃРјС‹СЃР»Р°. РџСЂРё СЌС‚РѕРј
+    /// РєРѕРјР°РЅРґР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РЅРµ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРЅР°.
     /// </summary>
     public event EFPTwoListSelectorEditItemEventHandler EditItem;
 
     /// <summary>
-    /// Возвращает true, если установлен обработчик события EditItem
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ EditItem
     /// </summary>
     public bool HasEditItemHandler { get { return EditItem != null; } }
 
     #endregion
 
-    #region Обработчики элементов
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё СЌР»РµРјРµРЅС‚РѕРІ
 
     void AvailableGridViewProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
@@ -508,7 +508,7 @@ namespace FreeLibSet.Forms
       DataGridViewRow[] rows1 = _AvailableGridViewProvider.SelectedGridRows;
       if (rows1.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет элементов в списке доступных");
+        EFPApp.ShowTempMessage("РќРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃРїРёСЃРєРµ РґРѕСЃС‚СѓРїРЅС‹С…");
         return;
       }
 
@@ -530,7 +530,7 @@ namespace FreeLibSet.Forms
       DataGridViewRow[] rows1 = _SelectedGridViewProvider.SelectedGridRows;
       if (rows1.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет элементов в списке выбранных");
+        EFPApp.ShowTempMessage("РќРµС‚ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃРїРёСЃРєРµ РІС‹Р±СЂР°РЅРЅС‹С…");
         return;
       }
 
@@ -570,9 +570,9 @@ namespace FreeLibSet.Forms
       EFPTwoListSelectorEditItemEventArgs args2 = new EFPTwoListSelectorEditItemEventArgs();
       args2.Item = _SelectedGridViewProvider.CurrentGridRow.Tag;
       EditItem(this, args2);
-      _SelectedGridViewProvider.CurrentGridRow.Tag = args2.Item; // На случай, если Item является структурой, а не классом
+      _SelectedGridViewProvider.CurrentGridRow.Tag = args2.Item; // РќР° СЃР»СѓС‡Р°Р№, РµСЃР»Рё Item СЏРІР»СЏРµС‚СЃСЏ СЃС‚СЂСѓРєС‚СѓСЂРѕР№, Р° РЅРµ РєР»Р°СЃСЃРѕРј
       _SelectedItemsInternal = null;
-      SelectedItems = SelectedItems; // список может быть переупорядочен
+      SelectedItems = SelectedItems; // СЃРїРёСЃРѕРє РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРµСЂРµСѓРїРѕСЂСЏРґРѕС‡РµРЅ
     }
 
     void SelectedGridViewProvider_Validating(object sender, UIValidatingEventArgs args)
@@ -588,10 +588,10 @@ namespace FreeLibSet.Forms
         switch (CanBeEmptyMode)
         {
           case UIValidateState.Error:
-            args.SetError("Список не может быть пустым");
+            args.SetError("РЎРїРёСЃРѕРє РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј");
             break;
           case UIValidateState.Warning:
-            args.SetWarning("Список не должен быть пустым");
+            args.SetWarning("РЎРїРёСЃРѕРє РЅРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј");
             break;
         }
       }
@@ -599,11 +599,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство CanBeEmpty
+    #region РЎРІРѕР№СЃС‚РІРѕ CanBeEmpty
 
     /// <summary>
-    /// Режим проверки пустого списка выбранных значений.
-    /// По умолчанию - Error.
+    /// Р РµР¶РёРј РїСЂРѕРІРµСЂРєРё РїСѓСЃС‚РѕРіРѕ СЃРїРёСЃРєР° РІС‹Р±СЂР°РЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -619,8 +619,8 @@ namespace FreeLibSet.Forms
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// True, если ли список выбранных элементов может быть пустым
-    /// Дублирует CanBeEmptyMode
+    /// True, РµСЃР»Рё Р»Рё СЃРїРёСЃРѕРє РІС‹Р±СЂР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
@@ -630,10 +630,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство IsNotEmptyEx
+    #region РЎРІРѕР№СЃС‚РІРѕ IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, возвращающее true, если есть выбранные элементы в списке
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРµ true, РµСЃР»Рё РµСЃС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ РІ СЃРїРёСЃРєРµ
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {

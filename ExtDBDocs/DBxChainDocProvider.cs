@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -14,17 +14,17 @@ using System.Diagnostics;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Аргументы события для восстановления подключения к серверу
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє СЃРµСЂРІРµСЂСѓ
   /// </summary>
   public class DBxRetriableExceptionEventArgs : EventArgs
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Объекты не создаются пользовательским кодом
+    /// РћР±СЉРµРєС‚С‹ РЅРµ СЃРѕР·РґР°СЋС‚СЃСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРј РєРѕРґРѕРј
     /// </summary>
-    /// <param name="exception">Объект исключения</param>
-    /// <param name="repeatCount">Количество повторов</param>
+    /// <param name="exception">РћР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ</param>
+    /// <param name="repeatCount">РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРІС‚РѕСЂРѕРІ</param>
     public DBxRetriableExceptionEventArgs(Exception exception, int repeatCount)
     {
       if (exception == null)
@@ -36,29 +36,29 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возникшее исключение.
-    /// Пользовательский обработчик обязательно должен проверить, что исключение связано с подключением к серверу
+    /// Р’РѕР·РЅРёРєС€РµРµ РёСЃРєР»СЋС‡РµРЅРёРµ.
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РµРЅ РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ СЃРІСЏР·Р°РЅРѕ СЃ РїРѕРґРєР»СЋС‡РµРЅРёРµРј Рє СЃРµСЂРІРµСЂСѓ
     /// </summary>
     public Exception Exception { get { return _Exception; } }
     private Exception _Exception;
 
     /// <summary>
-    /// Счетчик повторных вызовов.
-    /// При возникновении исключения свойство имеет значение 0. Если в том же методе возникает повторное
-    /// исключение, свойство возвразает 1, и т.д.
-    /// Пользовательский обработчик может, например, выполнять восстановление соединение только при первом
-    /// вызове.
-    /// Счетчик относится к конкретному вызову метода, а не к соединению вообще.
+    /// РЎС‡РµС‚С‡РёРє РїРѕРІС‚РѕСЂРЅС‹С… РІС‹Р·РѕРІРѕРІ.
+    /// РџСЂРё РІРѕР·РЅРёРєРЅРѕРІРµРЅРёРё РёСЃРєР»СЋС‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІРѕ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ 0. Р•СЃР»Рё РІ С‚РѕРј Р¶Рµ РјРµС‚РѕРґРµ РІРѕР·РЅРёРєР°РµС‚ РїРѕРІС‚РѕСЂРЅРѕРµ
+    /// РёСЃРєР»СЋС‡РµРЅРёРµ, СЃРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°Р·Р°РµС‚ 1, Рё С‚.Рґ.
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє РјРѕР¶РµС‚, РЅР°РїСЂРёРјРµСЂ, РІС‹РїРѕР»РЅСЏС‚СЊ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ СЃРѕРµРґРёРЅРµРЅРёРµ С‚РѕР»СЊРєРѕ РїСЂРё РїРµСЂРІРѕРј
+    /// РІС‹Р·РѕРІРµ.
+    /// РЎС‡РµС‚С‡РёРє РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РєРѕРЅРєСЂРµС‚РЅРѕРјСѓ РІС‹Р·РѕРІСѓ РјРµС‚РѕРґР°, Р° РЅРµ Рє СЃРѕРµРґРёРЅРµРЅРёСЋ РІРѕРѕР±С‰Рµ.
     /// </summary>
     public int RepeatCount { get { return _RepeatCount; } }
     private int _RepeatCount;
 
     /// <summary>
-    /// Это свойство должно быть установлено в true, если соединение с сервером восстановлено и следует
-    /// повторить попытку вызвать метод сервера
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, РµСЃР»Рё СЃРѕРµРґРёРЅРµРЅРёРµ СЃ СЃРµСЂРІРµСЂРѕРј РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРѕ Рё СЃР»РµРґСѓРµС‚
+    /// РїРѕРІС‚РѕСЂРёС‚СЊ РїРѕРїС‹С‚РєСѓ РІС‹Р·РІР°С‚СЊ РјРµС‚РѕРґ СЃРµСЂРІРµСЂР°
     /// </summary>
     public bool Retry { get { return _Retry; } set { _Retry = value; } }
     private bool _Retry;
@@ -67,23 +67,23 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Тип события DBxDocProvider.ExceptionCaught
+  /// РўРёРї СЃРѕР±С‹С‚РёСЏ DBxDocProvider.ExceptionCaught
   /// </summary>
-  /// <param name="sender">Ссылка на DBxChainDocProvider.</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РЎСЃС‹Р»РєР° РЅР° DBxChainDocProvider.</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void DBxRetriableExceptionEventHandler(object sender, DBxRetriableExceptionEventArgs args);
 
   /// <summary>
-  /// Данные, необходимые для организации цепочки провайдеров.
-  /// Требуется конструктору DBxChainDocProvider. Для получения прокси требуется вызов DBxDocProvider.CreateProxy().
-  /// Передается по сети как сериализуемый объект.
-  /// Содержит ссылку родительский провайдер (производный от MasterByRefObject) и фиксированные данные.
-  /// Не содержит общедоступных свойств и методов
+  /// Р”Р°РЅРЅС‹Рµ, РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РѕСЂРіР°РЅРёР·Р°С†РёРё С†РµРїРѕС‡РєРё РїСЂРѕРІР°Р№РґРµСЂРѕРІ.
+  /// РўСЂРµР±СѓРµС‚СЃСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂСѓ DBxChainDocProvider. Р”Р»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРѕРєСЃРё С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹Р·РѕРІ DBxDocProvider.CreateProxy().
+  /// РџРµСЂРµРґР°РµС‚СЃСЏ РїРѕ СЃРµС‚Рё РєР°Рє СЃРµСЂРёР°Р»РёР·СѓРµРјС‹Р№ РѕР±СЉРµРєС‚.
+  /// РЎРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РєСѓ СЂРѕРґРёС‚РµР»СЊСЃРєРёР№ РїСЂРѕРІР°Р№РґРµСЂ (РїСЂРѕРёР·РІРѕРґРЅС‹Р№ РѕС‚ MasterByRefObject) Рё С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ.
+  /// РќРµ СЃРѕРґРµСЂР¶РёС‚ РѕР±С‰РµРґРѕСЃС‚СѓРїРЅС‹С… СЃРІРѕР№СЃС‚РІ Рё РјРµС‚РѕРґРѕРІ
   /// </summary>
   [Serializable]
   public sealed class DBxDocProviderProxy
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal DBxDocProviderProxy(DBxDocProvider source, NamedValues fixedInfo)
     {
@@ -93,10 +93,10 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер-источник, для которого был вызван метод CreateProxy()
+    /// РџСЂРѕРІР°Р№РґРµСЂ-РёСЃС‚РѕС‡РЅРёРє, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ CreateProxy()
     /// </summary>
     public DBxDocProvider Source { get { return _Source; } }
     private DBxDocProvider _Source;
@@ -108,21 +108,21 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Базовый класс для реализации цепочек провайдеров.
-  /// Присоединяется к провайдеру-источнику. Источник может быть в текущем AppDomain или доступным через Remoting.
-  /// Реализует хранение кэша DBxCache и кэша двоичных данных, если источник данных является удаленным.
-  /// Класс DBxChainDocProvider сам по себе является потокобезопасным, но использование объекта может быть искусственно
-  /// огранчиено одним потоком, если задан флаг в конструкторе.
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ СЂРµР°Р»РёР·Р°С†РёРё С†РµРїРѕС‡РµРє РїСЂРѕРІР°Р№РґРµСЂРѕРІ.
+  /// РџСЂРёСЃРѕРµРґРёРЅСЏРµС‚СЃСЏ Рє РїСЂРѕРІР°Р№РґРµСЂСѓ-РёСЃС‚РѕС‡РЅРёРєСѓ. РСЃС‚РѕС‡РЅРёРє РјРѕР¶РµС‚ Р±С‹С‚СЊ РІ С‚РµРєСѓС‰РµРј AppDomain РёР»Рё РґРѕСЃС‚СѓРїРЅС‹Рј С‡РµСЂРµР· Remoting.
+  /// Р РµР°Р»РёР·СѓРµС‚ С…СЂР°РЅРµРЅРёРµ РєСЌС€Р° DBxCache Рё РєСЌС€Р° РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…, РµСЃР»Рё РёСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… СЏРІР»СЏРµС‚СЃСЏ СѓРґР°Р»РµРЅРЅС‹Рј.
+  /// РљР»Р°СЃСЃ DBxChainDocProvider СЃР°Рј РїРѕ СЃРµР±Рµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј, РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РѕР±СЉРµРєС‚Р° РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРєСѓСЃСЃС‚РІРµРЅРЅРѕ
+  /// РѕРіСЂР°РЅС‡РёРµРЅРѕ РѕРґРЅРёРј РїРѕС‚РѕРєРѕРј, РµСЃР»Рё Р·Р°РґР°РЅ С„Р»Р°Рі РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
   /// </summary>
   public class DBxChainDocProvider : DBxDocProvider
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает цепочечный провайдер
+    /// РЎРѕР·РґР°РµС‚ С†РµРїРѕС‡РµС‡РЅС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="sourceProxy">Результат вызова DBxDocProvider.CreateProxy() для предыдущего провайдера в цепочке</param>
-    /// <param name="currentThreadOnly">Если true, то вызовы нового провайдера будут разрешены только из текущего потока</param>
+    /// <param name="sourceProxy">Р РµР·СѓР»СЊС‚Р°С‚ РІС‹Р·РѕРІР° DBxDocProvider.CreateProxy() РґР»СЏ РїСЂРµРґС‹РґСѓС‰РµРіРѕ РїСЂРѕРІР°Р№РґРµСЂР° РІ С†РµРїРѕС‡РєРµ</param>
+    /// <param name="currentThreadOnly">Р•СЃР»Рё true, С‚Рѕ РІС‹Р·РѕРІС‹ РЅРѕРІРѕРіРѕ РїСЂРѕРІР°Р№РґРµСЂР° Р±СѓРґСѓС‚ СЂР°Р·СЂРµС€РµРЅС‹ С‚РѕР»СЊРєРѕ РёР· С‚РµРєСѓС‰РµРіРѕ РїРѕС‚РѕРєР°</param>
     public DBxChainDocProvider(DBxDocProviderProxy sourceProxy, bool currentThreadOnly)
       : base(sourceProxy.FixedInfo, currentThreadOnly)
     {
@@ -134,32 +134,32 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Основные свойства
+    #region РћСЃРЅРѕРІРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Исходный провайдер, выполняющий основной объем действий
+    /// РСЃС…РѕРґРЅС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РѕСЃРЅРѕРІРЅРѕР№ РѕР±СЉРµРј РґРµР№СЃС‚РІРёР№
     /// </summary>
     protected DBxDocProvider Source { get { return _Source; } }
     private DBxDocProvider _Source;
 
     /// <summary>
-    /// Возвращает true, если провайдер-источник является удаленным объектом (TransparentProxy).
-    /// В этом случае DBxChainDocProvider использует собственную копию DBxCache
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїСЂРѕРІР°Р№РґРµСЂ-РёСЃС‚РѕС‡РЅРёРє СЏРІР»СЏРµС‚СЃСЏ СѓРґР°Р»РµРЅРЅС‹Рј РѕР±СЉРµРєС‚РѕРј (TransparentProxy).
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ DBxChainDocProvider РёСЃРїРѕР»СЊР·СѓРµС‚ СЃРѕР±СЃС‚РІРµРЅРЅСѓСЋ РєРѕРїРёСЋ DBxCache
     /// </summary>
     public bool SourceIsRemote { get { return _SourceIsRemote; } }
     private bool _SourceIsRemote;
 
     #endregion
 
-    #region Методы и свойства, реализуемые головным DocProvider
+    #region РњРµС‚РѕРґС‹ Рё СЃРІРѕР№СЃС‚РІР°, СЂРµР°Р»РёР·СѓРµРјС‹Рµ РіРѕР»РѕРІРЅС‹Рј DocProvider
 
     /// <summary>
-    /// Загрузить документы (без поддокументов)
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ РґРѕРєСѓРјРµРЅС‚С‹ (Р±РµР· РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ)
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документов</param>
-    /// <param name="docIds">Массив идентификаторов</param>
-    /// <returns>Таблица документов</returns>
-    public override DataTable LoadDocData(string docTypeName, Int32[] docIds)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="docIds">РњР°СЃСЃРёРІ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoLoadDocData(string docTypeName, Int32[] docIds)
     {
       CheckThread();
 
@@ -178,12 +178,12 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Загрузить документы (без поддокументов)
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ РґРѕРєСѓРјРµРЅС‚С‹ (Р±РµР· РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ)
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документов</param>
-    /// <param name="filter">Условия для отбора документов</param>
-    /// <returns>Таблица документов</returns>
-    public override DataTable LoadDocData(string docTypeName, DBxFilter filter)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="filter">РЈСЃР»РѕРІРёСЏ РґР»СЏ РѕС‚Р±РѕСЂР° РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoLoadDocData(string docTypeName, DBxFilter filter)
     {
       CheckThread();
 
@@ -202,14 +202,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Загрузить поддокументы.
-    /// Предполагается, что таблица документов уже загружена
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹.
+    /// РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ С‚Р°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ СѓР¶Рµ Р·Р°РіСЂСѓР¶РµРЅР°
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документов</param>
-    /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
-    /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
-    /// <returns>Таблица поддокументов</returns>
-    public override DataTable LoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="subDocTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="docIds">РњР°СЃСЃРёРІ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґРѕРєСѓРјРµРЅС‚РѕРІ, РґР»СЏ РєРѕС‚РѕСЂС‹С… Р·Р°РіСЂСѓР¶Р°СЋС‚СЃСЏ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
     {
       CheckThread();
 
@@ -228,17 +228,17 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Применение изменений.
-    /// Выполняется создание, изменение и удаление документов и поддокументов
+    /// РџСЂРёРјРµРЅРµРЅРёРµ РёР·РјРµРЅРµРЅРёР№.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃРѕР·РґР°РЅРёРµ, РёР·РјРµРЅРµРЅРёРµ Рё СѓРґР°Р»РµРЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
-    /// <param name="dataSet">Набор данных</param>
-    /// <param name="reloadData">Если true, то будет возвращен тот же набор данных.
-    /// В нем фиктивные идентификаторы новых документов и поддокументов будут заменены на реальные,
-    /// а перекрестные ссылки на них исправлены. Это требуется в интерфейсе пользователя, когда
-    /// пользователь нажимает кнопку "Применить", чтобы можно было продолжить сеанс редактирования.
-    /// Если false, то исправленный набор данных не возвращается</param>
-    /// <returns>Набор с исправленными ссылками или null</returns>
-    protected override DataSet OnApplyChanges(DataSet dataSet, bool reloadData)
+    /// <param name="dataSet">РќР°Р±РѕСЂ РґР°РЅРЅС‹С…</param>
+    /// <param name="reloadData">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰РµРЅ С‚РѕС‚ Р¶Рµ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С….
+    /// Р’ РЅРµРј С„РёРєС‚РёРІРЅС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РЅРѕРІС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Р±СѓРґСѓС‚ Р·Р°РјРµРЅРµРЅС‹ РЅР° СЂРµР°Р»СЊРЅС‹Рµ,
+    /// Р° РїРµСЂРµРєСЂРµСЃС‚РЅС‹Рµ СЃСЃС‹Р»РєРё РЅР° РЅРёС… РёСЃРїСЂР°РІР»РµРЅС‹. Р­С‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ РІ РёРЅС‚РµСЂС„РµР№СЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РєРѕРіРґР°
+    /// РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР°Р¶РёРјР°РµС‚ РєРЅРѕРїРєСѓ "РџСЂРёРјРµРЅРёС‚СЊ", С‡С‚РѕР±С‹ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ СЃРµР°РЅСЃ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ.
+    /// Р•СЃР»Рё false, С‚Рѕ РёСЃРїСЂР°РІР»РµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ</param>
+    /// <returns>РќР°Р±РѕСЂ СЃ РёСЃРїСЂР°РІР»РµРЅРЅС‹РјРё СЃСЃС‹Р»РєР°РјРё РёР»Рё null</returns>
+    protected override DataSet DoApplyChanges(DataSet dataSet, bool reloadData)
     {
       CheckThread();
 
@@ -246,14 +246,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить таблицу версий строк документа.
-    /// Возвращает таблицу с одной строкой
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РІРµСЂСЃРёР№ СЃС‚СЂРѕРє РґРѕРєСѓРјРµРЅС‚Р°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚Р°Р±Р»РёС†Сѓ СЃ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРѕР№
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документа</param>
-    /// <param name="docId">Идентификатор документа</param>
-    /// <param name="docVersion">Версия документа</param>
-    /// <returns>Таблица</returns>
-    public override DataTable LoadDocDataVersion(string docTypeName, Int32 docId, int docVersion)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="docVersion">Р’РµСЂСЃРёСЏ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>РўР°Р±Р»РёС†Р°</returns>
+    protected override DataTable DoLoadDocDataVersion(string docTypeName, Int32 docId, int docVersion)
     {
       CheckThread();
 
@@ -272,14 +272,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить таблицу версий строк поддокументов.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РІРµСЂСЃРёР№ СЃС‚СЂРѕРє РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ.
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документа</param>
-    /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
-    /// <param name="docId">Идентификатор документа</param>
-    /// <param name="docVersion">Версия документа</param>
-    /// <returns>Таблица</returns>
-    public override DataTable LoadSubDocDataVersion(string docTypeName, string subDocTypeName, Int32 docId, int docVersion)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="subDocTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="docVersion">Р’РµСЂСЃРёСЏ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>РўР°Р±Р»РёС†Р°</returns>
+    protected override DataTable DoLoadSubDocDataVersion(string docTypeName, string subDocTypeName, Int32 docId, int docVersion)
     {
       CheckThread();
 
@@ -298,16 +298,16 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает все таблицы данных по документу. Возвращает таблицы документов (с одной строкой) и поддокументов,
-    /// включая удаленные записи. В набор добавляются строки из таблиц UserActions и DocActions.
-    /// В набор добавляются таблицы документов из базы данных истории. Чтобы отличить их от основных
-    /// документов, перед именами таблиц добавляется префикс "Undo_".
-    /// Метод предназначен для отладочных целей
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІСЃРµ С‚Р°Р±Р»РёС†С‹ РґР°РЅРЅС‹С… РїРѕ РґРѕРєСѓРјРµРЅС‚Сѓ. Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ (СЃ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРѕР№) Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ,
+    /// РІРєР»СЋС‡Р°СЏ СѓРґР°Р»РµРЅРЅС‹Рµ Р·Р°РїРёСЃРё. Р’ РЅР°Р±РѕСЂ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ СЃС‚СЂРѕРєРё РёР· С‚Р°Р±Р»РёС† UserActions Рё DocActions.
+    /// Р’ РЅР°Р±РѕСЂ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚РѕРІ РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С… РёСЃС‚РѕСЂРёРё. Р§С‚РѕР±С‹ РѕС‚Р»РёС‡РёС‚СЊ РёС… РѕС‚ РѕСЃРЅРѕРІРЅС‹С…
+    /// РґРѕРєСѓРјРµРЅС‚РѕРІ, РїРµСЂРµРґ РёРјРµРЅР°РјРё С‚Р°Р±Р»РёС† РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РїСЂРµС„РёРєСЃ "Undo_".
+    /// РњРµС‚РѕРґ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документа</param>
-    /// <param name="docId">Идентификатор документа</param>
-    /// <returns>Набор таблиц</returns>
-    public override DataSet LoadUnformattedDocData(string docTypeName, Int32 docId)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>РќР°Р±РѕСЂ С‚Р°Р±Р»РёС†</returns>
+    protected override DataSet DoLoadUnformattedDocData(string docTypeName, Int32 docId)
     {
       CheckThread();
 
@@ -327,11 +327,11 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Выполнение SQL-запроса SELECT с заданием всех возможных параметров
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃР° SELECT СЃ Р·Р°РґР°РЅРёРµРј РІСЃРµС… РІРѕР·РјРѕР¶РЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <param name="info">Параметры для запроса</param>
-    /// <returns>Таблица данных</returns>
-    public override DataTable FillSelect(DBxSelectInfo info)
+    /// <param name="info">РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С…</returns>
+    protected override DataTable DoFillSelect(DBxSelectInfo info)
     {
       CheckThread();
 
@@ -350,16 +350,16 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Найти запись
+    /// РќР°Р№С‚Рё Р·Р°РїРёСЃСЊ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="where">Условие отбора</param>
-    /// <param name="orderBy">Порядок сортировки. Имеет значение, только если найдено
-    /// больше одной записи, удовлетворяющей условию <paramref name="where"/>.
-    /// Будет возвращена первая из записей, в соответствии с порядком.
-    /// Если порядок не задан, какая запись будет возвращена, не определено</param>
-    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    public override Int32 FindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="where">РЈСЃР»РѕРІРёРµ РѕС‚Р±РѕСЂР°</param>
+    /// <param name="orderBy">РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё. РРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ, С‚РѕР»СЊРєРѕ РµСЃР»Рё РЅР°Р№РґРµРЅРѕ
+    /// Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ Р·Р°РїРёСЃРё, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РµР№ СѓСЃР»РѕРІРёСЋ <paramref name="where"/>.
+    /// Р‘СѓРґРµС‚ РІРѕР·РІСЂР°С‰РµРЅР° РїРµСЂРІР°СЏ РёР· Р·Р°РїРёСЃРµР№, РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РїРѕСЂСЏРґРєРѕРј.
+    /// Р•СЃР»Рё РїРѕСЂСЏРґРѕРє РЅРµ Р·Р°РґР°РЅ, РєР°РєР°СЏ Р·Р°РїРёСЃСЊ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰РµРЅР°, РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР°Р№РґРµРЅРЅРѕР№ Р·Р°РїРёСЃРё РёР»Рё 0, РµСЃР»Рё Р·Р°РїРёСЃСЊ РЅРµ РЅР°Р№РґРµРЅР°</returns>
+    protected override Int32 DoFindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
     {
       CheckThread();
 
@@ -378,14 +378,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Найти запись
+    /// РќР°Р№С‚Рё Р·Р°РїРёСЃСЊ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="where">Условие отбора</param>
-    /// <param name="singleOnly">Если true и найдено больше одной записи, удовлетворяющей условию
-    /// <paramref name="where"/>, то возвращается 0</param>
-    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    public override Int32 FindRecord(string tableName, DBxFilter where, bool singleOnly)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="where">РЈСЃР»РѕРІРёРµ РѕС‚Р±РѕСЂР°</param>
+    /// <param name="singleOnly">Р•СЃР»Рё true Рё РЅР°Р№РґРµРЅРѕ Р±РѕР»СЊС€Рµ РѕРґРЅРѕР№ Р·Р°РїРёСЃРё, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РµР№ СѓСЃР»РѕРІРёСЋ
+    /// <paramref name="where"/>, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР°Р№РґРµРЅРЅРѕР№ Р·Р°РїРёСЃРё РёР»Рё 0, РµСЃР»Рё Р·Р°РїРёСЃСЊ РЅРµ РЅР°Р№РґРµРЅР°</returns>
+    protected override Int32 DoFindRecord(string tableName, DBxFilter where, bool singleOnly)
     {
       CheckThread();
 
@@ -404,17 +404,17 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получение значения для одного поля. Имя поля может содержать точки для
-    /// извлечения значения из зависимой таблицы. Расширенная версия возвращает
-    /// значение поля по ссылке, а как результат возвращается признак того, что
-    /// строка найдена
+    /// РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РѕРґРЅРѕРіРѕ РїРѕР»СЏ. РРјСЏ РїРѕР»СЏ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё РґР»СЏ
+    /// РёР·РІР»РµС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РёР· Р·Р°РІРёСЃРёРјРѕР№ С‚Р°Р±Р»РёС†С‹. Р Р°СЃС€РёСЂРµРЅРЅР°СЏ РІРµСЂСЃРёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚
+    /// Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РїРѕ СЃСЃС‹Р»РєРµ, Р° РєР°Рє СЂРµР·СѓР»СЊС‚Р°С‚ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ
+    /// СЃС‚СЂРѕРєР° РЅР°Р№РґРµРЅР°
     /// </summary>
-    /// <param name="tableName">Имя таблицы, в которой выполняется поиск</param>
-    /// <param name="id">Идентификатор строки. Может быть 0, тогда возвращается Value=null</param>
-    /// <param name="columnName">Имя поля (может быть с точками)</param>
-    /// <param name="value">Сюда по ссылке записывается значение</param>
-    /// <returns>true, если поле было найдено</returns>
-    public override bool GetValue(string tableName, Int32 id, string columnName, out object value)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹, РІ РєРѕС‚РѕСЂРѕР№ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє</param>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃС‚СЂРѕРєРё. РњРѕР¶РµС‚ Р±С‹С‚СЊ 0, С‚РѕРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Value=null</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ (РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃ С‚РѕС‡РєР°РјРё)</param>
+    /// <param name="value">РЎСЋРґР° РїРѕ СЃСЃС‹Р»РєРµ Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>true, РµСЃР»Рё РїРѕР»Рµ Р±С‹Р»Рѕ РЅР°Р№РґРµРЅРѕ</returns>
+    protected override bool DoGetValue(string tableName, Int32 id, string columnName, out object value)
     {
       CheckThread();
 
@@ -433,15 +433,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить значения для заданного списка полей для одной записи.
-    /// Если не найдена строка с заданным идентификатором <paramref name="id"/>, 
-    /// то возвращается массив, содержазий одни значения null.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СЃРїРёСЃРєР° РїРѕР»РµР№ РґР»СЏ РѕРґРЅРѕР№ Р·Р°РїРёСЃРё.
+    /// Р•СЃР»Рё РЅРµ РЅР°Р№РґРµРЅР° СЃС‚СЂРѕРєР° СЃ Р·Р°РґР°РЅРЅС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј <paramref name="id"/>, 
+    /// С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјР°СЃСЃРёРІ, СЃРѕРґРµСЂР¶Р°Р·РёР№ РѕРґРЅРё Р·РЅР°С‡РµРЅРёСЏ null.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="id">Идентификатор строки</param>
-    /// <param name="columnNames">Имена столбцов, значения которых нужно получить</param>
-    /// <returns>Массив значений</returns>
-    public override object[] GetValues(string tableName, Int32 id, DBxColumns columnNames)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃС‚СЂРѕРєРё</param>
+    /// <param name="columnNames">РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ, Р·РЅР°С‡РµРЅРёСЏ РєРѕС‚РѕСЂС‹С… РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override object[] DoGetValues(string tableName, Int32 id, DBxColumns columnNames)
     {
       CheckThread();
 
@@ -460,13 +460,13 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить список идентификаторов в таблице для строк, соответствующих заданному фильтру.
-    /// Фильтры по полю Deleted должны быть заданы в явном виде
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РІ С‚Р°Р±Р»РёС†Рµ РґР»СЏ СЃС‚СЂРѕРє, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… Р·Р°РґР°РЅРЅРѕРјСѓ С„РёР»СЊС‚СЂСѓ.
+    /// Р¤РёР»СЊС‚СЂС‹ РїРѕ РїРѕР»СЋ Deleted РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ Р·Р°РґР°РЅС‹ РІ СЏРІРЅРѕРј РІРёРґРµ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="where">Фильтры</param>
-    /// <returns>Список идентификаторов</returns>
-    public override IdList GetIds(string tableName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂС‹</param>
+    /// <returns>РЎРїРёСЃРѕРє РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ</returns>
+    protected override IdList DoGetIds(string tableName, DBxFilter where)
     {
       CheckThread();
 
@@ -485,15 +485,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить минимальное значение числового поля.
-    /// Строки таблицы, содержащие значения NULL, игнорируются.
-    /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
+    /// РџРѕР»СѓС‡РёС‚СЊ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ.
+    /// РЎС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹, СЃРѕРґРµСЂР¶Р°С‰РёРµ Р·РЅР°С‡РµРЅРёСЏ NULL, РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ.
+    /// Р•СЃР»Рё РЅРµС‚ РЅРё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РµР№ СѓСЃР»РѕРІРёСЋ <paramref name="where"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя числового поля</param>
-    /// <param name="where">Фильтр (null для поиска среди всех строк таблицы)</param>
-    /// <returns>Минимальное значение</returns>
-    public override object GetMinValue(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ (null РґР»СЏ РїРѕРёСЃРєР° СЃСЂРµРґРё РІСЃРµС… СЃС‚СЂРѕРє С‚Р°Р±Р»РёС†С‹)</param>
+    /// <returns>РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
+    protected override object DoGetMinValue(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -512,15 +512,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить максимальное значение числового поля
-    /// Строки таблицы, содержащие значения NULL, игнорируются.
-    /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
+    /// РџРѕР»СѓС‡РёС‚СЊ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ
+    /// РЎС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹, СЃРѕРґРµСЂР¶Р°С‰РёРµ Р·РЅР°С‡РµРЅРёСЏ NULL, РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ.
+    /// Р•СЃР»Рё РЅРµС‚ РЅРё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РµР№ СѓСЃР»РѕРІРёСЋ <paramref name="where"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя числового поля</param>
-    /// <param name="where">Фильтр (null для поиска среди всех строк таблицы)</param>
-    /// <returns>Максимальное значение</returns>
-    public override object GetMaxValue(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ (null РґР»СЏ РїРѕРёСЃРєР° СЃСЂРµРґРё РІСЃРµС… СЃС‚СЂРѕРє С‚Р°Р±Р»РёС†С‹)</param>
+    /// <returns>РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
+    protected override object DoGetMaxValue(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -539,20 +539,20 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить значения полей для строки, содержащей минимальное значение заданного
-    /// поля.
-    /// Строки таблицы, содержащие значения NULL, игнорируются.
-    /// Если не найдено ни одной строки, удовлетворяющей условию <paramref name="where"/>,
-    /// возвращается массив, содержащий одни значения null.
-    /// Имена полей в <paramref name="columnNames"/>, <paramref name="minColumnName"/> и <paramref name="where"/>
-    /// могут содержать точки. В этом случае используются значения из связанных таблиц.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№ РґР»СЏ СЃС‚СЂРѕРєРё, СЃРѕРґРµСЂР¶Р°С‰РµР№ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Р·Р°РґР°РЅРЅРѕРіРѕ
+    /// РїРѕР»СЏ.
+    /// РЎС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹, СЃРѕРґРµСЂР¶Р°С‰РёРµ Р·РЅР°С‡РµРЅРёСЏ NULL, РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ.
+    /// Р•СЃР»Рё РЅРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РµР№ СѓСЃР»РѕРІРёСЋ <paramref name="where"/>,
+    /// РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјР°СЃСЃРёРІ, СЃРѕРґРµСЂР¶Р°С‰РёР№ РѕРґРЅРё Р·РЅР°С‡РµРЅРёСЏ null.
+    /// РРјРµРЅР° РїРѕР»РµР№ РІ <paramref name="columnNames"/>, <paramref name="minColumnName"/> Рё <paramref name="where"/>
+    /// РјРѕРіСѓС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РёР· СЃРІСЏР·Р°РЅРЅС‹С… С‚Р°Р±Р»РёС†.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Имена полей, значения которых нужно получить</param>
-    /// <param name="minColumnName">Имя поля, минимальное значение которого является условием выбора строки</param>
-    /// <param name="where">Фильтр строк, участвующих в отборе</param>
-    /// <returns>Массив значений для полей, заданных в <paramref name="columnNames"/></returns>
-    public override object[] GetValuesForMin(string tableName, DBxColumns columnNames, string minColumnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РРјРµРЅР° РїРѕР»РµР№, Р·РЅР°С‡РµРЅРёСЏ РєРѕС‚РѕСЂС‹С… РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+    /// <param name="minColumnName">РРјСЏ РїРѕР»СЏ, РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏРµС‚СЃСЏ СѓСЃР»РѕРІРёРµРј РІС‹Р±РѕСЂР° СЃС‚СЂРѕРєРё</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ СЃС‚СЂРѕРє, СѓС‡Р°СЃС‚РІСѓСЋС‰РёС… РІ РѕС‚Р±РѕСЂРµ</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№ РґР»СЏ РїРѕР»РµР№, Р·Р°РґР°РЅРЅС‹С… РІ <paramref name="columnNames"/></returns>
+    protected override object[] DoGetValuesForMin(string tableName, DBxColumns columnNames, string minColumnName, DBxFilter where)
     {
       CheckThread();
 
@@ -571,20 +571,20 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить значения полей для строки, содержащей максимальное значение заданного
-    /// поля.
-    /// Строки таблицы, содержащие значения NULL, игнорируются.
-    /// Если не найдено ни одной строки, удовлетворяющей условию <paramref name="where"/>,
-    /// возвращается массив, содержащий одни значения null.
-    /// Имена полей в <paramref name="columnNames"/>, <paramref name="maxColumnName"/> и <paramref name="where"/>
-    /// могут содержать точки. В этом случае используются значения из связанных таблиц.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№ РґР»СЏ СЃС‚СЂРѕРєРё, СЃРѕРґРµСЂР¶Р°С‰РµР№ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Р·Р°РґР°РЅРЅРѕРіРѕ
+    /// РїРѕР»СЏ.
+    /// РЎС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹, СЃРѕРґРµСЂР¶Р°С‰РёРµ Р·РЅР°С‡РµРЅРёСЏ NULL, РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ.
+    /// Р•СЃР»Рё РЅРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РµР№ СѓСЃР»РѕРІРёСЋ <paramref name="where"/>,
+    /// РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјР°СЃСЃРёРІ, СЃРѕРґРµСЂР¶Р°С‰РёР№ РѕРґРЅРё Р·РЅР°С‡РµРЅРёСЏ null.
+    /// РРјРµРЅР° РїРѕР»РµР№ РІ <paramref name="columnNames"/>, <paramref name="maxColumnName"/> Рё <paramref name="where"/>
+    /// РјРѕРіСѓС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РёР· СЃРІСЏР·Р°РЅРЅС‹С… С‚Р°Р±Р»РёС†.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Имена полей, значения которых нужно получить</param>
-    /// <param name="maxColumnName">Имя поля, максимальное значение которого является условием выбора строки</param>
-    /// <param name="where">Фильтр строк, участвующих в отборе</param>
-    /// <returns>Массив значений для полей, заданных в <paramref name="columnNames"/></returns>
-    public override object[] GetValuesForMax(string tableName, DBxColumns columnNames, string maxColumnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РРјРµРЅР° РїРѕР»РµР№, Р·РЅР°С‡РµРЅРёСЏ РєРѕС‚РѕСЂС‹С… РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+    /// <param name="maxColumnName">РРјСЏ РїРѕР»СЏ, РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏРµС‚СЃСЏ СѓСЃР»РѕРІРёРµРј РІС‹Р±РѕСЂР° СЃС‚СЂРѕРєРё</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ СЃС‚СЂРѕРє, СѓС‡Р°СЃС‚РІСѓСЋС‰РёС… РІ РѕС‚Р±РѕСЂРµ</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№ РґР»СЏ РїРѕР»РµР№, Р·Р°РґР°РЅРЅС‹С… РІ <paramref name="columnNames"/></returns>
+    protected override object[] DoGetValuesForMax(string tableName, DBxColumns columnNames, string maxColumnName, DBxFilter where)
     {
       CheckThread();
 
@@ -603,15 +603,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить суммарное значение числового поля для выбранных записей
-    /// Строки таблицы, содержащие значения NULL, игнорируются
-    /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃСѓРјРјР°СЂРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ РґР»СЏ РІС‹Р±СЂР°РЅРЅС‹С… Р·Р°РїРёСЃРµР№
+    /// РЎС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹, СЃРѕРґРµСЂР¶Р°С‰РёРµ Р·РЅР°С‡РµРЅРёСЏ NULL, РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ
+    /// Р•СЃР»Рё РЅРµС‚ РЅРё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РµР№ СѓСЃР»РѕРІРёСЋ <paramref name="where"/>, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя числового поля</param>
-    /// <param name="where">Фильтр (null для суммирования всех строк таблицы)</param>
-    /// <returns>Суммарное значение или null</returns>
-    public override object GetSumValue(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ (null РґР»СЏ СЃСѓРјРјРёСЂРѕРІР°РЅРёСЏ РІСЃРµС… СЃС‚СЂРѕРє С‚Р°Р±Р»РёС†С‹)</param>
+    /// <returns>РЎСѓРјРјР°СЂРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null</returns>
+    protected override object DoGetSumValue(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -630,14 +630,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получение списка уникальных значений поля SELECT DISTINCT
-    /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю
+    /// РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° СѓРЅРёРєР°Р»СЊРЅС‹С… Р·РЅР°С‡РµРЅРёР№ РїРѕР»СЏ SELECT DISTINCT
+    /// Р’ РїРѕР»СѓС‡РµРЅРЅРѕР№ С‚Р°Р±Р»РёС†Рµ Р±СѓРґРµС‚ РѕРґРЅРѕ РїРѕР»Рµ. РўР°Р±Р»РёС†Р° Р±СѓРґРµС‚ СѓРїРѕСЂСЏРґРѕС‡РµРЅР° РїРѕ СЌС‚РѕРјСѓ РїРѕР»СЋ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="where">Необязательный фильтр записей</param>
-    /// <returns>Таблица с единственной колонкой</returns>
-    public override DataTable FillUniqueColumnValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <param name="where">РќРµРѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ С„РёР»СЊС‚СЂ Р·Р°РїРёСЃРµР№</param>
+    /// <returns>РўР°Р±Р»РёС†Р° СЃ РµРґРёРЅСЃС‚РІРµРЅРЅРѕР№ РєРѕР»РѕРЅРєРѕР№</returns>
+    protected override DataTable DoFillUniqueColumnValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -656,15 +656,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить строковые значения поля без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚СЂРѕРєРѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override string[] GetUniqueStringValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override string[] DoGetUniqueStringValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -683,15 +683,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить числовые значения поля без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override int[] GetUniqueIntValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override int[] DoGetUniqueIntValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -711,15 +711,15 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Получить числовые значения поля без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override long[] GetUniqueInt64Values(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override long[] DoGetUniqueInt64Values(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -738,15 +738,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить числовые значения поля без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override float[] GetUniqueSingleValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override float[] DoGetUniqueSingleValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -765,15 +765,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить числовые значения поля без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override double[] GetUniqueDoubleValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override double[] DoGetUniqueDoubleValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -792,15 +792,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить числовые значения поля без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override decimal[] GetUniqueDecimalValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override decimal[] DoGetUniqueDecimalValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -819,15 +819,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить значения поля даты и/или времени без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ РґР°С‚С‹ Рё/РёР»Рё РІСЂРµРјРµРЅРё Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override DateTime[] GetUniqueDateTimeValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override DateTime[] DoGetUniqueDateTimeValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -846,15 +846,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить значения поля GUID без повторов.
-    /// Если в таблице встречаются значения NULL, то они пропускаются.
-    /// Возвращаемый массив сортируется.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ GUID Р±РµР· РїРѕРІС‚РѕСЂРѕРІ.
+    /// Р•СЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ NULL, С‚Рѕ РѕРЅРё РїСЂРѕРїСѓСЃРєР°СЋС‚СЃСЏ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјР°СЃСЃРёРІ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
-    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
-    /// <returns>Массив значений</returns>
-    public override Guid[] GetUniqueGuidValues(string tableName, string columnName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚СЂРѕРєРѕРІРѕРіРѕ РїРѕР»СЏ. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="where">Р¤РёР»СЊС‚СЂ. Р•СЃР»Рё null, С‚Рѕ РїСЂРѕСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РњР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№</returns>
+    protected override Guid[] DoGetUniqueGuidValues(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -874,11 +874,11 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Загрузить страницу таблицы кэша
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ С‚Р°Р±Р»РёС†С‹ РєСЌС€Р°
     /// </summary>
-    /// <param name="request">Параметры запроса</param>
-    /// <returns>Кэш страницы</returns>
-    public override DBxCacheLoadResponse LoadCachePages(DBxCacheLoadRequest request)
+    /// <param name="request">РџР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСЂРѕСЃР°</param>
+    /// <returns>РљСЌС€ СЃС‚СЂР°РЅРёС†С‹</returns>
+    protected override DBxCacheLoadResponse DoLoadCachePages(DBxCacheLoadRequest request)
     {
       CheckThread();
 
@@ -896,36 +896,36 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-    #region GetRecordCount() и IsTableEmpty()
+    #region GetRecordCount() Рё IsTableEmpty()
 
     /// <summary>
-    /// Получить общее число записей в таблице
+    /// РџРѕР»СѓС‡РёС‚СЊ РѕР±С‰РµРµ С‡РёСЃР»Рѕ Р·Р°РїРёСЃРµР№ РІ С‚Р°Р±Р»РёС†Рµ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Число записей</returns>
-    public override int GetRecordCount(string tableName)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>Р§РёСЃР»Рѕ Р·Р°РїРёСЃРµР№</returns>
+    protected override int DoGetRecordCount(string tableName)
     {
       return _Source.GetRecordCount(tableName);
     }
 
     /// <summary>
-    /// Получить число записей в таблице, удовлетворяющих условию
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»Рѕ Р·Р°РїРёСЃРµР№ РІ С‚Р°Р±Р»РёС†Рµ, СѓРґРѕРІР»РµС‚РІРѕСЂСЏСЋС‰РёС… СѓСЃР»РѕРІРёСЋ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="where">Условие</param>
-    /// <returns>Число записей</returns>
-    public override int GetRecordCount(string tableName, DBxFilter where)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="where">РЈСЃР»РѕРІРёРµ</param>
+    /// <returns>Р§РёСЃР»Рѕ Р·Р°РїРёСЃРµР№</returns>
+    protected override int DoGetRecordCount(string tableName, DBxFilter where)
     {
       return _Source.GetRecordCount(tableName, where);
     }
 
     /// <summary>
-    /// Возвращает true, если в таблице нет ни одной строки.
-    /// Тоже самое, что GetRecordCount()==0, но может быть оптимизировано.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ С‚Р°Р±Р»РёС†Рµ РЅРµС‚ РЅРё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё.
+    /// РўРѕР¶Рµ СЃР°РјРѕРµ, С‡С‚Рѕ GetRecordCount()==0, РЅРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅРѕ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Отсутствие записей</returns>
-    public override bool IsTableEmpty(string tableName)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РћС‚СЃСѓС‚СЃС‚РІРёРµ Р·Р°РїРёСЃРµР№</returns>
+    protected override bool DoIsTableEmpty(string tableName)
     {
       return _Source.IsTableEmpty(tableName);
     }
@@ -933,24 +933,23 @@ namespace FreeLibSet.Data.Docs
     #endregion
 
     /// <summary>
-    /// Очистить страницу таблицы кэша
+    /// РћС‡РёСЃС‚РёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ С‚Р°Р±Р»РёС†С‹ РєСЌС€Р°
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Список столбцов</param>
-    /// <param name="firstIds">Начальные идентификаторы страниц</param>
-    public override void ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РЎРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <param name="firstIds">РќР°С‡Р°Р»СЊРЅС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЃС‚СЂР°РЅРёС†</param>
+    protected override void DoClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
     {
       _Source.ClearCachePages(tableName, columnNames, firstIds);
     }
 
-
     /// <summary>
-    /// Получить таблицу истории для документа
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документа</param>
-    /// <param name="docId">Идентификатор документа</param>
-    /// <returns>Таблица истории</returns>
-    public override DataTable GetDocHistTable(string docTypeName, Int32 docId)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РёСЃС‚РѕСЂРёРё</returns>
+    protected override DataTable DoGetDocHistTable(string docTypeName, Int32 docId)
     {
       CheckThread();
 
@@ -969,14 +968,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить таблицу действий пользователя или всех пользователей за определенный период
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РґРµР№СЃС‚РІРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Р·Р° РѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РїРµСЂРёРѕРґ
     /// </summary>
-    /// <param name="firstDate">Начальная дата</param>
-    /// <param name="lastDate">Конечная дата</param>
-    /// <param name="userId">Идентификатор пользователя. 0-все пользователи</param>
-    /// <param name="singleDocTypeName">Имя таблицы документа. Пустая строка - документы всех видов</param>
-    /// <returns>Таблица действий</returns>
-    public override DataTable GetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName)
+    /// <param name="firstDate">РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°</param>
+    /// <param name="lastDate">РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р°</param>
+    /// <param name="userId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ. 0-РІСЃРµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</param>
+    /// <param name="singleDocTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°. РџСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР° - РґРѕРєСѓРјРµРЅС‚С‹ РІСЃРµС… РІРёРґРѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРµР№СЃС‚РІРёР№</returns>
+    protected override DataTable DoGetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName)
     {
       CheckThread();
 
@@ -995,11 +994,11 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить таблицу документов для одного действия пользователя
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ РґРѕРєСѓРјРµРЅС‚РѕРІ РґР»СЏ РѕРґРЅРѕРіРѕ РґРµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     /// </summary>
-    /// <param name="actionId">Идентификатор действия в таблице UserActions</param>
-    /// <returns>Таблица документов</returns>
-    public override DataTable GetUserActionDocTable(Int32 actionId)
+    /// <param name="actionId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРµР№СЃС‚РІРёСЏ РІ С‚Р°Р±Р»РёС†Рµ UserActions</param>
+    /// <returns>РўР°Р±Р»РёС†Р° РґРѕРєСѓРјРµРЅС‚РѕРІ</returns>
+    protected override DataTable DoGetUserActionDocTable(Int32 actionId)
     {
       CheckThread();
 
@@ -1018,13 +1017,13 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает время последнего действия пользователя (включая компонент времени).
-    /// Время возвращается в формате DataSetDateTime.Unspecified.
-    /// Если для пользователя нет ни одной записи в таблице UserActions, возвращается null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІСЂРµРјСЏ РїРѕСЃР»РµРґРЅРµРіРѕ РґРµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (РІРєР»СЋС‡Р°СЏ РєРѕРјРїРѕРЅРµРЅС‚ РІСЂРµРјРµРЅРё).
+    /// Р’СЂРµРјСЏ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ DataSetDateTime.Unspecified.
+    /// Р•СЃР»Рё РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµС‚ РЅРё РѕРґРЅРѕР№ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ UserActions, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="userId">Идентификатор пользователя, для которого надо получить данные</param>
-    /// <returns>Время или null</returns>
-    public override DateTime? GetUserActionsLastTime(Int32 userId)
+    /// <param name="userId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РЅР°РґРѕ РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ</param>
+    /// <returns>Р’СЂРµРјСЏ РёР»Рё null</returns>
+    protected override DateTime? DoGetUserActionsLastTime(Int32 userId)
     {
       CheckThread();
 
@@ -1043,12 +1042,12 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Установить длительную блокировку
-    /// Если какой-либо из документов уже заблокирован, выбрасывается исключение DBxLockDocsException
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РґР»РёС‚РµР»СЊРЅСѓСЋ Р±Р»РѕРєРёСЂРѕРІРєСѓ
+    /// Р•СЃР»Рё РєР°РєРѕР№-Р»РёР±Рѕ РёР· РґРѕРєСѓРјРµРЅС‚РѕРІ СѓР¶Рµ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ DBxLockDocsException
     /// </summary>
-    /// <param name="docSel">Выборка документов, которую требуется заблокировать</param>
-    /// <returns>Идентификатор установленной блокировки</returns>
-    public override Guid AddLongLock(DBxDocSelection docSel)
+    /// <param name="docSel">Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ, РєРѕС‚РѕСЂСѓСЋ С‚СЂРµР±СѓРµС‚СЃСЏ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ Р±Р»РѕРєРёСЂРѕРІРєРё</returns>
+    protected override Guid DoAddLongLock(DBxDocSelection docSel)
     {
       CheckThread();
 
@@ -1056,11 +1055,11 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Удалить длительную блокировку
+    /// РЈРґР°Р»РёС‚СЊ РґР»РёС‚РµР»СЊРЅСѓСЋ Р±Р»РѕРєРёСЂРѕРІРєСѓ
     /// </summary>
-    /// <param name="lockGuid">Идентификатор установленной блокировки</param>
-    /// <returns>true, если блокировка была удалена. false, если блокировка не найдена (была удалена ранее)</returns>
-    public override bool RemoveLongLock(Guid lockGuid)
+    /// <param name="lockGuid">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ Р±Р»РѕРєРёСЂРѕРІРєРё</param>
+    /// <returns>true, РµСЃР»Рё Р±Р»РѕРєРёСЂРѕРІРєР° Р±С‹Р»Р° СѓРґР°Р»РµРЅР°. false, РµСЃР»Рё Р±Р»РѕРєРёСЂРѕРІРєР° РЅРµ РЅР°Р№РґРµРЅР° (Р±С‹Р»Р° СѓРґР°Р»РµРЅР° СЂР°РЅРµРµ)</returns>
+    protected override bool DoRemoveLongLock(Guid lockGuid)
     {
       CheckThread();
 
@@ -1068,12 +1067,12 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получение текстового представления для документа / поддокумента
+    /// РџРѕР»СѓС‡РµРЅРёРµ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р° / РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="id">Идентификатор</param>
-    /// <returns>Текстовое представление</returns>
-    public override string GetTextValue(string tableName, Int32 id)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
+    protected override string DoGetTextValue(string tableName, Int32 id)
     {
       CheckThread();
 
@@ -1092,13 +1091,13 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Внутренний метод получения текста.
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёР№ РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ С‚РµРєСЃС‚Р°.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="id">Идентификатор документа или поддокумента</param>
-    /// <param name="primaryDS">Первичный набор данных</param>
-    /// <returns>Текст для документа или поддокумента</returns>
-    public override string InternalGetTextValue(string tableName, Int32 id, DataSet primaryDS)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="primaryDS">РџРµСЂРІРёС‡РЅС‹Р№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С…</param>
+    /// <returns>РўРµРєСЃС‚ РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</returns>
+    protected override string DoInternalGetTextValue(string tableName, Int32 id, DataSet primaryDS)
     {
       CheckThread();
 
@@ -1117,11 +1116,11 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Внутренний метод получения идентификатора двоичных данных
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёР№ РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="md5">Контрольная сумма</param>
-    /// <returns>Идентификатор записи или 0, если таких данных нет</returns>
-    public override int InternalFindBinData(string md5)
+    /// <param name="md5">РљРѕРЅС‚СЂРѕР»СЊРЅР°СЏ СЃСѓРјРјР°</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё РёР»Рё 0, РµСЃР»Рё С‚Р°РєРёС… РґР°РЅРЅС‹С… РЅРµС‚</returns>
+    protected override int DoInternalFindBinData(string md5)
     {
       CheckThread();
 
@@ -1140,14 +1139,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Внутренний метод получения идентификатора хранимого файла
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёР№ РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° С…СЂР°РЅРёРјРѕРіРѕ С„Р°Р№Р»Р°
     /// </summary>
-    /// <param name="fileInfo">Информация о файле</param>
-    /// <param name="md5">Контрольная сумма содержимого файла</param>
-    /// <param name="binDataId">Сюда помещается идентификатор двоичных данных,
-    /// возвращаемый методом InternalFindBinData()</param>
-    /// <returns>Идентификатор записи файла в базе данных</returns>
-    public override Int32 InternalFindDBFile(StoredFileInfo fileInfo, string md5, out Int32 binDataId)
+    /// <param name="fileInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С„Р°Р№Р»Рµ</param>
+    /// <param name="md5">РљРѕРЅС‚СЂРѕР»СЊРЅР°СЏ СЃСѓРјРјР° СЃРѕРґРµСЂР¶РёРјРѕРіРѕ С„Р°Р№Р»Р°</param>
+    /// <param name="binDataId">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…,
+    /// РІРѕР·РІСЂР°С‰Р°РµРјС‹Р№ РјРµС‚РѕРґРѕРј InternalFindBinData()</param>
+    /// <returns>РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё С„Р°Р№Р»Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…</returns>
+    protected override Int32 DoInternalFindDBFile(StoredFileInfo fileInfo, string md5, out Int32 binDataId)
     {
       CheckThread();
 
@@ -1166,31 +1165,31 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Пересчитать вычисляемые поля в документах.
+    /// РџРµСЂРµСЃС‡РёС‚Р°С‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Рµ РїРѕР»СЏ РІ РґРѕРєСѓРјРµРЅС‚Р°С….
     /// </summary>
-    /// <param name="docTypeName">Имя вида документв</param>
-    /// <param name="docIds">Массив идентификаторов.
-    /// null означает пересчет всех документов. Пересчету подлежат в том числе и удаленные документы</param>
-    public override void RecalcColumns(string docTypeName, Int32[] docIds)
+    /// <param name="docTypeName">РРјСЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РІ</param>
+    /// <param name="docIds">РњР°СЃСЃРёРІ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ.
+    /// null РѕР·РЅР°С‡Р°РµС‚ РїРµСЂРµСЃС‡РµС‚ РІСЃРµС… РґРѕРєСѓРјРµРЅС‚РѕРІ. РџРµСЂРµСЃС‡РµС‚Сѓ РїРѕРґР»РµР¶Р°С‚ РІ С‚РѕРј С‡РёСЃР»Рµ Рё СѓРґР°Р»РµРЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹</param>
+    protected override void DoRecalcColumns(string docTypeName, Int32[] docIds)
     {
       CheckThread();
       _Source.RecalcColumns(docTypeName, docIds);
     }
 
     /// <summary>
-    /// Получить набор таблиц для просмотра ссылок на один документ.
+    /// РџРѕР»СѓС‡РёС‚СЊ РЅР°Р±РѕСЂ С‚Р°Р±Р»РёС† РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° СЃСЃС‹Р»РѕРє РЅР° РѕРґРёРЅ РґРѕРєСѓРјРµРЅС‚.
     /// </summary>
-    /// <param name="docTypeName">Имя таблицы документа, на который ищутся ссылки</param>
-    /// <param name="docId">Идентификатор документа, на который ищутся ссылки</param>
-    /// <param name="showDeleted">Надо ли включать в таблицу ссылки из удаленных документов и поддокументов,
-    /// а также ссылки на удаленные поддокументы выбранного документа.
-    /// Не имеет значение, помечен ли сам документ <paramref name="docId"/> на удаление (за исключением ссылок документа на самого себя</param>
-    /// <param name="unique">Если true, то будет возвращено только по одной ссылке из каждого документа.
-    /// Это рекомендуемый вариант для показа таблицы ссылок. Если false, то в таблице может быть несколько ссылок из одного исходного документа</param>
-    /// <param name="fromSingleDocTypeName">Единственный вид документа, из которого берутся ссылки. Если не задано, то берутся ссылки из всех документов</param>
-    /// <param name="fromSingleDocId">Идентификатор единственного документа, из которого берутся ссылки. Если 0, то берутся ссылки из всех документов</param>
-    /// <returns>Таблица ссылок</returns>
-    public override DataTable GetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId)
+    /// <param name="docTypeName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р°, РЅР° РєРѕС‚РѕСЂС‹Р№ РёС‰СѓС‚СЃСЏ СЃСЃС‹Р»РєРё</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°, РЅР° РєРѕС‚РѕСЂС‹Р№ РёС‰СѓС‚СЃСЏ СЃСЃС‹Р»РєРё</param>
+    /// <param name="showDeleted">РќР°РґРѕ Р»Рё РІРєР»СЋС‡Р°С‚СЊ РІ С‚Р°Р±Р»РёС†Сѓ СЃСЃС‹Р»РєРё РёР· СѓРґР°Р»РµРЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ,
+    /// Р° С‚Р°РєР¶Рµ СЃСЃС‹Р»РєРё РЅР° СѓРґР°Р»РµРЅРЅС‹Рµ РїРѕРґРґРѕРєСѓРјРµРЅС‚С‹ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°.
+    /// РќРµ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ, РїРѕРјРµС‡РµРЅ Р»Рё СЃР°Рј РґРѕРєСѓРјРµРЅС‚ <paramref name="docId"/> РЅР° СѓРґР°Р»РµРЅРёРµ (Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј СЃСЃС‹Р»РѕРє РґРѕРєСѓРјРµРЅС‚Р° РЅР° СЃР°РјРѕРіРѕ СЃРµР±СЏ</param>
+    /// <param name="unique">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰РµРЅРѕ С‚РѕР»СЊРєРѕ РїРѕ РѕРґРЅРѕР№ СЃСЃС‹Р»РєРµ РёР· РєР°Р¶РґРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°.
+    /// Р­С‚Рѕ СЂРµРєРѕРјРµРЅРґСѓРµРјС‹Р№ РІР°СЂРёР°РЅС‚ РґР»СЏ РїРѕРєР°Р·Р° С‚Р°Р±Р»РёС†С‹ СЃСЃС‹Р»РѕРє. Р•СЃР»Рё false, С‚Рѕ РІ С‚Р°Р±Р»РёС†Рµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ СЃСЃС‹Р»РѕРє РёР· РѕРґРЅРѕРіРѕ РёСЃС…РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="fromSingleDocTypeName">Р•РґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РІРёРґ РґРѕРєСѓРјРµРЅС‚Р°, РёР· РєРѕС‚РѕСЂРѕРіРѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё. Р•СЃР»Рё РЅРµ Р·Р°РґР°РЅРѕ, С‚Рѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё РёР· РІСЃРµС… РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="fromSingleDocId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°, РёР· РєРѕС‚РѕСЂРѕРіРѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё. Р•СЃР»Рё 0, С‚Рѕ Р±РµСЂСѓС‚СЃСЏ СЃСЃС‹Р»РєРё РёР· РІСЃРµС… РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>РўР°Р±Р»РёС†Р° СЃСЃС‹Р»РѕРє</returns>
+    protected override DataTable DoGetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId)
     {
       CheckThread();
 
@@ -1209,22 +1208,22 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает список идентификаторов дочерних строк для таблиц, в которых реализована
-    /// иерахическая структура с помощью поля, ссылающегося на эту же таблицу, которое задает родительский
-    /// элемент. Родительская строка <paramref name="parentId"/> не входит в список
-    /// Метод не зацикливается, если структура дерева нарушена (зациклено).
-    /// Эта перегрузка возвращает идентификатор "зацикленного" узла. Возвращается только один узел, 
-    /// а не вся цепочка зацикливания. Также таблица может содержать несколько цепочек зацикливания.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґРѕС‡РµСЂРЅРёС… СЃС‚СЂРѕРє РґР»СЏ С‚Р°Р±Р»РёС†, РІ РєРѕС‚РѕСЂС‹С… СЂРµР°Р»РёР·РѕРІР°РЅР°
+    /// РёРµСЂР°С…РёС‡РµСЃРєР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР° СЃ РїРѕРјРѕС‰СЊСЋ РїРѕР»СЏ, СЃСЃС‹Р»Р°СЋС‰РµРіРѕСЃСЏ РЅР° СЌС‚Сѓ Р¶Рµ С‚Р°Р±Р»РёС†Сѓ, РєРѕС‚РѕСЂРѕРµ Р·Р°РґР°РµС‚ СЂРѕРґРёС‚РµР»СЊСЃРєРёР№
+    /// СЌР»РµРјРµРЅС‚. Р РѕРґРёС‚РµР»СЊСЃРєР°СЏ СЃС‚СЂРѕРєР° <paramref name="parentId"/> РЅРµ РІС…РѕРґРёС‚ РІ СЃРїРёСЃРѕРє
+    /// РњРµС‚РѕРґ РЅРµ Р·Р°С†РёРєР»РёРІР°РµС‚СЃСЏ, РµСЃР»Рё СЃС‚СЂСѓРєС‚СѓСЂР° РґРµСЂРµРІР° РЅР°СЂСѓС€РµРЅР° (Р·Р°С†РёРєР»РµРЅРѕ).
+    /// Р­С‚Р° РїРµСЂРµРіСЂСѓР·РєР° РІРѕР·РІСЂР°С‰Р°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ "Р·Р°С†РёРєР»РµРЅРЅРѕРіРѕ" СѓР·Р»Р°. Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СѓР·РµР», 
+    /// Р° РЅРµ РІСЃСЏ С†РµРїРѕС‡РєР° Р·Р°С†РёРєР»РёРІР°РЅРёСЏ. РўР°РєР¶Рµ С‚Р°Р±Р»РёС†Р° РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ С†РµРїРѕС‡РµРє Р·Р°С†РёРєР»РёРІР°РЅРёСЏ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="parentIdColumnName">Имя ссылочного столбца, например "ParentId"</param>
-    /// <param name="parentId">Идентификатор родительской строки. Если 0, то будут возвращены 
-    /// идентификаторы строк узлов верхнего уровня или всех строк (при <paramref name="nested"/>=true)</param>
-    /// <param name="nested">true, если требуется рекурсивный поиск. false, если требуется вернуть только непосредственные дочерние элементы</param>
-    /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
-    /// <param name="loopedId">Сюда записывается идентификатор "зацикленного" узла</param>
-    /// <returns>Список идентификаторов дочерних элементов</returns>
-    public override IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="parentIdColumnName">РРјСЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°, РЅР°РїСЂРёРјРµСЂ "ParentId"</param>
+    /// <param name="parentId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЂРѕРґРёС‚РµР»СЊСЃРєРѕР№ СЃС‚СЂРѕРєРё. Р•СЃР»Рё 0, С‚Рѕ Р±СѓРґСѓС‚ РІРѕР·РІСЂР°С‰РµРЅС‹ 
+    /// РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ СЃС‚СЂРѕРє СѓР·Р»РѕРІ РІРµСЂС…РЅРµРіРѕ СѓСЂРѕРІРЅСЏ РёР»Рё РІСЃРµС… СЃС‚СЂРѕРє (РїСЂРё <paramref name="nested"/>=true)</param>
+    /// <param name="nested">true, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РїРѕРёСЃРє. false, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РІРµСЂРЅСѓС‚СЊ С‚РѕР»СЊРєРѕ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅС‹Рµ РґРѕС‡РµСЂРЅРёРµ СЌР»РµРјРµРЅС‚С‹</param>
+    /// <param name="where">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ С„РёР»СЊС‚СЂ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё С„РёР»СЊС‚СЂР° РЅРµС‚</param>
+    /// <param name="loopedId">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ "Р·Р°С†РёРєР»РµРЅРЅРѕРіРѕ" СѓР·Р»Р°</param>
+    /// <returns>РЎРїРёСЃРѕРє РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґРѕС‡РµСЂРЅРёС… СЌР»РµРјРµРЅС‚РѕРІ</returns>
+    protected override IdList DoGetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
     {
       CheckThread();
 
@@ -1247,112 +1246,109 @@ namespace FreeLibSet.Data.Docs
     #region DBCache
 
     /// <summary>
-    /// Система кэширования данных.
-    /// Если данный экземпляр объекта DBxDocProvider является прокси для серверного объекта, то
-    /// он содержит собственную копию DBxCache.
-    /// Если же текущий DBxDocProvider ссылается на другой провайдер в цепочке без использования
-    /// Remoting, то используется Source.DBCache.
+    /// РЎРёСЃС‚РµРјР° РєСЌС€РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С….
+    /// Р•СЃР»Рё РґР°РЅРЅС‹Р№ СЌРєР·РµРјРїР»СЏСЂ РѕР±СЉРµРєС‚Р° DBxDocProvider СЏРІР»СЏРµС‚СЃСЏ РїСЂРѕРєСЃРё РґР»СЏ СЃРµСЂРІРµСЂРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, С‚Рѕ
+    /// РѕРЅ СЃРѕРґРµСЂР¶РёС‚ СЃРѕР±СЃС‚РІРµРЅРЅСѓСЋ РєРѕРїРёСЋ DBxCache.
+    /// Р•СЃР»Рё Р¶Рµ С‚РµРєСѓС‰РёР№ DBxDocProvider СЃСЃС‹Р»Р°РµС‚СЃСЏ РЅР° РґСЂСѓРіРѕР№ РїСЂРѕРІР°Р№РґРµСЂ РІ С†РµРїРѕС‡РєРµ Р±РµР· РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ
+    /// Remoting, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Source.DBCache.
     /// </summary>
-    public override DBxCache DBCache
+    protected override DBxCache DoGetDBCache()
     {
-      get
-      {
-        CheckThread();
+      CheckThread();
 
-        if (_SourceIsRemote)
-        {
-          if (_DBCache == null)
-            _DBCache = new DBxCache(this, CurrentThreadOnly);
-          return _DBCache;
-        }
-        else
-          return Source.DBCache;
+      if (_SourceIsRemote)
+      {
+        if (_DBCache == null)
+          _DBCache = new DBxCache(this, CurrentThreadOnly);
+        return _DBCache;
       }
+      else
+        return Source.DBCache;
     }
     private DBxCache _DBCache;
 
 
     /// <summary>
-    /// Очистка кэша
+    /// РћС‡РёСЃС‚РєР° РєСЌС€Р°
     /// </summary>
-    public override void ClearCache()
+    protected override void DoClearCache()
     {
       CheckThread();
 
       base.ClearCache();
       _Source.ClearCache();
       if (_DBCache != null)
-        _DBCache.Clear(); // очистка кэша клиента
+        _DBCache.Clear(); // РѕС‡РёСЃС‚РєР° РєСЌС€Р° РєР»РёРµРЅС‚Р°
     }
 
     #endregion
 
-    #region Доступ к двоичным данным и файлам
+    #region Р”РѕСЃС‚СѓРї Рє РґРІРѕРёС‡РЅС‹Рј РґР°РЅРЅС‹Рј Рё С„Р°Р№Р»Р°Рј
 
     /// <summary>
-    /// Метод получения двоичных данных, реализуемый в DBxRealDocProvider.
-    /// Этот метод не должен использоваться в прикладном коде.
+    /// РњРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…, СЂРµР°Р»РёР·СѓРµРјС‹Р№ РІ DBxRealDocProvider.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="columnName">Имя числового столбца, содержащего идентификатор двоичных данных</param>
-    /// <param name="wantedId">Идентификатор документа, поддокумента и двочных данных, которые нужно получить</param>
-    /// <param name="docVersion">Версия документа. 0 - текущая версия</param>
-    /// <param name="preloadIds">Идентификаторы документов, поддокументов и двочных данных,
-    /// которые желательно загрузить</param>
-    /// <returns>Словарь загруженных данных. Ключ - идентификатор двоичных данных. Значение - загруженные данные</returns>
-    public override Dictionary<Int32, byte[]> InternalGetBinData2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="columnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…</param>
+    /// <param name="wantedId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°, РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° Рё РґРІРѕС‡РЅС‹С… РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+    /// <param name="docVersion">Р’РµСЂСЃРёСЏ РґРѕРєСѓРјРµРЅС‚Р°. 0 - С‚РµРєСѓС‰Р°СЏ РІРµСЂСЃРёСЏ</param>
+    /// <param name="preloadIds">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Рё РґРІРѕС‡РЅС‹С… РґР°РЅРЅС‹С…,
+    /// РєРѕС‚РѕСЂС‹Рµ Р¶РµР»Р°С‚РµР»СЊРЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ</param>
+    /// <returns>РЎР»РѕРІР°СЂСЊ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… РґР°РЅРЅС‹С…. РљР»СЋС‡ - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С…. Р—РЅР°С‡РµРЅРёРµ - Р·Р°РіСЂСѓР¶РµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ</returns>
+    protected override Dictionary<Int32, byte[]> DoInternalGetBinData2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
     {
       return _Source.InternalGetBinData2(tableName, columnName, wantedId, docVersion, preloadIds);
     }
 
     /// <summary>
-    /// Внутренний метод получения хранимого файла
-    /// Этот метод не должен использоваться в прикладном коде.
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёР№ РјРµС‚РѕРґ РїРѕР»СѓС‡РµРЅРёСЏ С…СЂР°РЅРёРјРѕРіРѕ С„Р°Р№Р»Р°
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="columnName">Имя числового столбца, содержащего идентификатор файла</param>
-    /// <param name="wantedId">Идентификатор документа, поддокумента и файла, который нужно получить</param>
-    /// <param name="docVersion">Версия документа. 0 - текущая версия</param>
-    /// <param name="preloadIds">Идентификаторы документов, поддокументов и файлов,
-    /// которые желательно загрузить</param>
-    /// <returns>Словарь загруженных данных. Ключ - идентификатор файла. Значение - контейнер с файлом</returns>
-    public override Dictionary<Int32, FileContainer> InternalGetDBFile2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РґРѕРєСѓРјРµРЅС‚Р° РёР»Рё РїРѕРґРґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="columnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С„Р°Р№Р»Р°</param>
+    /// <param name="wantedId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°, РїРѕРґРґРѕРєСѓРјРµРЅС‚Р° Рё С„Р°Р№Р»Р°, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ</param>
+    /// <param name="docVersion">Р’РµСЂСЃРёСЏ РґРѕРєСѓРјРµРЅС‚Р°. 0 - С‚РµРєСѓС‰Р°СЏ РІРµСЂСЃРёСЏ</param>
+    /// <param name="preloadIds">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, РїРѕРґРґРѕРєСѓРјРµРЅС‚РѕРІ Рё С„Р°Р№Р»РѕРІ,
+    /// РєРѕС‚РѕСЂС‹Рµ Р¶РµР»Р°С‚РµР»СЊРЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ</param>
+    /// <returns>РЎР»РѕРІР°СЂСЊ Р·Р°РіСЂСѓР¶РµРЅРЅС‹С… РґР°РЅРЅС‹С…. РљР»СЋС‡ - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С„Р°Р№Р»Р°. Р—РЅР°С‡РµРЅРёРµ - РєРѕРЅС‚РµР№РЅРµСЂ СЃ С„Р°Р№Р»РѕРј</returns>
+    protected override Dictionary<Int32, FileContainer> DoInternalGetDBFile2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
     {
       return _Source.InternalGetDBFile2(tableName, columnName, wantedId, docVersion, preloadIds);
     }
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает копию провайдера-источника, а затем - копию DBxChainDocProvider
-    /// Этот метод является потокобезопасным
+    /// РЎРѕР·РґР°РµС‚ РєРѕРїРёСЋ РїСЂРѕРІР°Р№РґРµСЂР°-РёСЃС‚РѕС‡РЅРёРєР°, Р° Р·Р°С‚РµРј - РєРѕРїРёСЋ DBxChainDocProvider
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј
     /// </summary>
     /// <returns></returns>
-    public override DBxDocProvider Clone()
+    protected override DBxDocProvider DoClone()
     {
       DBxDocProvider source2 = Source.Clone();
       return new DBxChainDocProvider(source2.CreateProxy(), CurrentThreadOnly);
     }
 
     /// <summary>
-    /// Не используется в пользовательском коде
+    /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
     /// </summary>
     /// <returns></returns>
-    public override DistributedCallData StartServerExecProc(NamedValues args)
+    protected override DistributedCallData DoStartServerExecProc(NamedValues args)
     {
       return Source.StartServerExecProc(args);
     }
 
     #endregion
 
-    #region Права пользователя
+    #region РџСЂР°РІР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 
     /// <summary>
-    /// Коллекция объектов, предназначенная для создания объектов UserPermission
-    /// Если свойство установлено, то свойства UserPermissions и DocPermissions возвращают
-    /// локальные копии воссозданных разрешений.
+    /// РљРѕР»Р»РµРєС†РёСЏ РѕР±СЉРµРєС‚РѕРІ, РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРЅР°СЏ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ UserPermission
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ СЃРІРѕР№СЃС‚РІР° UserPermissions Рё DocPermissions РІРѕР·РІСЂР°С‰Р°СЋС‚
+    /// Р»РѕРєР°Р»СЊРЅС‹Рµ РєРѕРїРёРё РІРѕСЃСЃРѕР·РґР°РЅРЅС‹С… СЂР°Р·СЂРµС€РµРЅРёР№.
     /// </summary>
     public UserPermissionCreators UserPermissionCreators
     {
@@ -1367,7 +1363,7 @@ namespace FreeLibSet.Data.Docs
         CheckThread();
 
         if (_UserPermissionCreators != null)
-          throw new InvalidOperationException("Повторная установка свойства не допускается");
+          throw new InvalidOperationException("РџРѕРІС‚РѕСЂРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ");
         if (value == null)
           throw new ArgumentNullException();
         _UserPermissionCreators = value;
@@ -1386,9 +1382,9 @@ namespace FreeLibSet.Data.Docs
     private UserPermissionCreators _UserPermissionCreators;
 
     /// <summary>
-    /// Сброс прав пользователя
+    /// РЎР±СЂРѕСЃ РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     /// </summary>
-    public override void ResetPermissions()
+    protected override void DoResetPermissions()
     {
       CheckThread();
 
@@ -1410,78 +1406,75 @@ namespace FreeLibSet.Data.Docs
           }
         }
       }
-      base.ResetPermissions();
+      base.DoResetPermissions();
     }
 
     /// <summary>
-    /// Права, назначенные пользователю (включая классы, определенные в программе).
-    /// Объект DBxChainDocProvider содержит собственную копию разрешений
+    /// РџСЂР°РІР°, РЅР°Р·РЅР°С‡РµРЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ (РІРєР»СЋС‡Р°СЏ РєР»Р°СЃСЃС‹, РѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РІ РїСЂРѕРіСЂР°РјРјРµ).
+    /// РћР±СЉРµРєС‚ DBxChainDocProvider СЃРѕРґРµСЂР¶РёС‚ СЃРѕР±СЃС‚РІРµРЅРЅСѓСЋ РєРѕРїРёСЋ СЂР°Р·СЂРµС€РµРЅРёР№
     /// </summary>
-    public override UserPermissions UserPermissions
+    protected override UserPermissions DoGetUserPermissions()
     {
-      get
-      {
-        CheckThread();
+      CheckThread();
 
-        if (_UserPermissions == null)
+      if (_UserPermissions == null)
+      {
+        if (_UserPermissionCreators == null)
         {
-          if (_UserPermissionCreators == null)
-          {
-            if (SourceIsRemote)
-              return null;
-            _UserPermissions = _Source.UserPermissions;
-          }
-          else
-          {
-            TempCfg cfg = new TempCfg();
-            int repeatCount = 0;
-            while (true)
-            {
-              try
-              {
-                cfg.AsXmlText = UserPermissionsAsXmlString;
-                break;
-              }
-              catch (Exception e)
-              {
-                CatchException(e, ref repeatCount);  // 04.09.2017
-              }
-            }
-            _UserPermissions = new UserPermissions(_UserPermissionCreators);
-            _UserPermissions.Read(cfg);
-          }
+          if (SourceIsRemote)
+            return null;
+          _UserPermissions = _Source.UserPermissions;
         }
-        return _UserPermissions;
+        else
+        {
+          TempCfg cfg = new TempCfg();
+          int repeatCount = 0;
+          while (true)
+          {
+            try
+            {
+              cfg.AsXmlText = UserPermissionsAsXmlString;
+              break;
+            }
+            catch (Exception e)
+            {
+              CatchException(e, ref repeatCount);  // 04.09.2017
+            }
+          }
+          _UserPermissions = new UserPermissions(_UserPermissionCreators);
+          _UserPermissions.Read(cfg);
+        }
       }
+      return _UserPermissions;
     }
     private UserPermissions _UserPermissions;
 
     #endregion
 
-    #region Обработка ошибок
+    #region РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
 
     /// <summary>
-    /// Добавляет отладочную информацию в объект исключения.
-    /// Используется в блоках catch.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РѕС‚Р»Р°РґРѕС‡РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ РІ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ Р±Р»РѕРєР°С… catch.
     /// </summary>
-    /// <param name="e">Исключение</param>
-    public override void AddExceptionInfo(Exception e)
+    /// <param name="e">РСЃРєР»СЋС‡РµРЅРёРµ</param>
+    protected override void DoAddExceptionInfo(Exception e)
     {
       base.AddExceptionInfo(e);
       e.Data["DBxChainDocProvider.SourceIsRemote"] = SourceIsRemote;
     }
 
     /// <summary>
-    /// Событие вызывается при возникновении исключения при вызове метода в базовом провайдере (Source).
-    /// Пользовательский обработчик может проверить исключение и, если оно связано с сетью, попробовать
-    /// восстановить соединение с сервером. После этого следует установить свойство Retry в аргументе события.
-    /// При использовании ExtDBDocForms.dll следует добавлять обработчик события к DBUI, а не здесь.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РІРѕР·РЅРёРєРЅРѕРІРµРЅРёРё РёСЃРєР»СЋС‡РµРЅРёСЏ РїСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° РІ Р±Р°Р·РѕРІРѕРј РїСЂРѕРІР°Р№РґРµСЂРµ (Source).
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє РјРѕР¶РµС‚ РїСЂРѕРІРµСЂРёС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ Рё, РµСЃР»Рё РѕРЅРѕ СЃРІСЏР·Р°РЅРѕ СЃ СЃРµС‚СЊСЋ, РїРѕРїСЂРѕР±РѕРІР°С‚СЊ
+    /// РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ СЃ СЃРµСЂРІРµСЂРѕРј. РџРѕСЃР»Рµ СЌС‚РѕРіРѕ СЃР»РµРґСѓРµС‚ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРІРѕР№СЃС‚РІРѕ Retry РІ Р°СЂРіСѓРјРµРЅС‚Рµ СЃРѕР±С‹С‚РёСЏ.
+    /// РџСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё ExtDBDocForms.dll СЃР»РµРґСѓРµС‚ РґРѕР±Р°РІР»СЏС‚СЊ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Рє DBUI, Р° РЅРµ Р·РґРµСЃСЊ.
     /// </summary>
     /// <remarks>
-    /// Предупреждение.
-    /// Если есть цепочка DBxChainDocProvider и устанавливается обработчик события на стороне клиента,
-    /// то этот обработчик на самом деле присоединяется к последнему провайдеру в цепочке, после которого
-    /// используется Net Remoting для соединения со следующим провайдером.
+    /// РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ.
+    /// Р•СЃР»Рё РµСЃС‚СЊ С†РµРїРѕС‡РєР° DBxChainDocProvider Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°,
+    /// С‚Рѕ СЌС‚РѕС‚ РѕР±СЂР°Р±РѕС‚С‡РёРє РЅР° СЃР°РјРѕРј РґРµР»Рµ РїСЂРёСЃРѕРµРґРёРЅСЏРµС‚СЃСЏ Рє РїРѕСЃР»РµРґРЅРµРјСѓ РїСЂРѕРІР°Р№РґРµСЂСѓ РІ С†РµРїРѕС‡РєРµ, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ
+    /// РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Net Remoting РґР»СЏ СЃРѕРµРґРёРЅРµРЅРёСЏ СЃРѕ СЃР»РµРґСѓСЋС‰РёРј РїСЂРѕРІР°Р№РґРµСЂРѕРј.
     /// </remarks>
     public event DBxRetriableExceptionEventHandler ExceptionCaught
     {
@@ -1508,17 +1501,17 @@ namespace FreeLibSet.Data.Docs
     private event DBxRetriableExceptionEventHandler _ExceptionCaught;
 
     /// <summary>
-    /// Метод вызывается, если при вызове метода в Source возникло исключение.
-    /// Если исключения связано с сетью, метод должен попытаться восстановить подключение к серверу
-    /// и вернуть true, чтобы выполнить полытку запроса еще раз.
-    /// Тип исключения должен быть проверен, т.к. метод вызывается при любом исключении, не обязательно
-    /// связанным с потерей соединения
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ, РµСЃР»Рё РїСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° РІ Source РІРѕР·РЅРёРєР»Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ.
+    /// Р•СЃР»Рё РёСЃРєР»СЋС‡РµРЅРёСЏ СЃРІСЏР·Р°РЅРѕ СЃ СЃРµС‚СЊСЋ, РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РїРѕРїС‹С‚Р°С‚СЊСЃСЏ РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ
+    /// Рё РІРµСЂРЅСѓС‚СЊ true, С‡С‚РѕР±С‹ РІС‹РїРѕР»РЅРёС‚СЊ РїРѕР»С‹С‚РєСѓ Р·Р°РїСЂРѕСЃР° РµС‰Рµ СЂР°Р·.
+    /// РўРёРї РёСЃРєР»СЋС‡РµРЅРёСЏ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСЂРѕРІРµСЂРµРЅ, С‚.Рє. РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё Р»СЋР±РѕРј РёСЃРєР»СЋС‡РµРЅРёРё, РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
+    /// СЃРІСЏР·Р°РЅРЅС‹Рј СЃ РїРѕС‚РµСЂРµР№ СЃРѕРµРґРёРЅРµРЅРёСЏ
     /// </summary>
-    /// <param name="exception">Возникшее исключение</param>
-    /// <param name="repeatCount">Счетчик повторов. При первом вызове равно 0, затем 1 и т.д.
-    /// Учитываются только вызовы в пределах одного данного действия.
-    /// Переопределенный метод может, например, выполнять только ограниченное количество попыток восстановления</param>
-    /// <returns>true, если следует повторить операцию</returns>
+    /// <param name="exception">Р’РѕР·РЅРёРєС€РµРµ РёСЃРєР»СЋС‡РµРЅРёРµ</param>
+    /// <param name="repeatCount">РЎС‡РµС‚С‡РёРє РїРѕРІС‚РѕСЂРѕРІ. РџСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ СЂР°РІРЅРѕ 0, Р·Р°С‚РµРј 1 Рё С‚.Рґ.
+    /// РЈС‡РёС‚С‹РІР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РІС‹Р·РѕРІС‹ РІ РїСЂРµРґРµР»Р°С… РѕРґРЅРѕРіРѕ РґР°РЅРЅРѕРіРѕ РґРµР№СЃС‚РІРёСЏ.
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РјРѕР¶РµС‚, РЅР°РїСЂРёРјРµСЂ, РІС‹РїРѕР»РЅСЏС‚СЊ С‚РѕР»СЊРєРѕ РѕРіСЂР°РЅРёС‡РµРЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїС‹С‚РѕРє РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ</param>
+    /// <returns>true, РµСЃР»Рё СЃР»РµРґСѓРµС‚ РїРѕРІС‚РѕСЂРёС‚СЊ РѕРїРµСЂР°С†РёСЋ</returns>
     protected bool OnExceptionCaught(Exception exception, int repeatCount)
     {
       if (!SourceIsRemote)
@@ -1568,7 +1561,7 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Текущее время сервера
+    #region РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ СЃРµСЂРІРµСЂР°
 #if XXX
     public override DateTime ServerTime
     {
@@ -1576,7 +1569,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает интервал между временем сервера и текущим временем
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅС‚РµСЂРІР°Р» РјРµР¶РґСѓ РІСЂРµРјРµРЅРµРј СЃРµСЂРІРµСЂР° Рё С‚РµРєСѓС‰РёРј РІСЂРµРјРµРЅРµРј
     /// </summary>
     private TimeSpan ServerTimeDiff;
 #endif

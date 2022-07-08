@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -14,69 +14,69 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Интерфейс, реализующий чтение и запись значений полей формы в данные конфигурации.
-  /// Используется провайдером EFPConfigParamSetComboBox.
-  /// Интерфейс, как правило, реализуется непосредственно формой, в которой расположен ParamSetComboBox.
+  /// РРЅС‚РµСЂС„РµР№СЃ, СЂРµР°Р»РёР·СѓСЋС‰РёР№ С‡С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёР№ РїРѕР»РµР№ С„РѕСЂРјС‹ РІ РґР°РЅРЅС‹Рµ РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРѕРІР°Р№РґРµСЂРѕРј EFPConfigParamSetComboBox.
+  /// РРЅС‚РµСЂС„РµР№СЃ, РєР°Рє РїСЂР°РІРёР»Рѕ, СЂРµР°Р»РёР·СѓРµС‚СЃСЏ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ С„РѕСЂРјРѕР№, РІ РєРѕС‚РѕСЂРѕР№ СЂР°СЃРїРѕР»РѕР¶РµРЅ ParamSetComboBox.
   /// </summary>
   public interface IEFPConfigParamSetHandler
   {
     /// <summary>
-    /// Этот метод должен установить состояние управляющих элементов формы в соответствии со значениями в секции конфигурации
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ С„РѕСЂРјС‹ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ Р·РЅР°С‡РµРЅРёСЏРјРё РІ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     void ConfigToControls(CfgPart cfg);
 
     /// <summary>
-    /// Этот метод должен записать состояние управляющих элементов формы в секцию конфигурации
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ Р·Р°РїРёСЃР°С‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ С„РѕСЂРјС‹ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     void ConfigFromControls(CfgPart cfg);
   }
 
   /// <summary>
-  /// Интерфейс, реализующий получение поясняющего текста AuxText для выпадающего списка "Готовые наборы".
-  /// Используется провайдером EFPConfigParamSetComboBox.
-  /// Интерфейс, как правило, реализуется непосредственно формой, в которой расположен ParamSetComboBox.
+  /// РРЅС‚РµСЂС„РµР№СЃ, СЂРµР°Р»РёР·СѓСЋС‰РёР№ РїРѕР»СѓС‡РµРЅРёРµ РїРѕСЏСЃРЅСЏСЋС‰РµРіРѕ С‚РµРєСЃС‚Р° AuxText РґР»СЏ РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР° "Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹".
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРѕРІР°Р№РґРµСЂРѕРј EFPConfigParamSetComboBox.
+  /// РРЅС‚РµСЂС„РµР№СЃ, РєР°Рє РїСЂР°РІРёР»Рѕ, СЂРµР°Р»РёР·СѓРµС‚СЃСЏ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ С„РѕСЂРјРѕР№, РІ РєРѕС‚РѕСЂРѕР№ СЂР°СЃРїРѕР»РѕР¶РµРЅ ParamSetComboBox.
   /// </summary>
   public interface IEFPConfigParamSetAuxTextHandler
   {
     /// <summary>
-    /// Этот метод вызывается однократно перед последовательностью вызовов GetAuxText()
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РѕРґРЅРѕРєСЂР°С‚РЅРѕ РїРµСЂРµРґ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊСЋ РІС‹Р·РѕРІРѕРІ GetAuxText()
     /// </summary>
     void BeginGetAuxText();
 
     /// <summary>
-    /// Этот метод должен вернуть строку AuxText для секции конфигурации с набором параметров
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РІРµСЂРЅСѓС‚СЊ СЃС‚СЂРѕРєСѓ AuxText РґР»СЏ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё СЃ РЅР°Р±РѕСЂРѕРј РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <param name="cfg">Секция конфигурации, доступная для чтения, содержащая значения для одного набора</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё, РґРѕСЃС‚СѓРїРЅР°СЏ РґР»СЏ С‡С‚РµРЅРёСЏ, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РѕРґРЅРѕРіРѕ РЅР°Р±РѕСЂР°</param>
     string GetAuxText(CfgPart cfg);
 
     /// <summary>
-    /// Этот метод вызывается однократно после последовательности вызовов GetAuxText()
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РѕРґРЅРѕРєСЂР°С‚РЅРѕ РїРѕСЃР»Рµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РІС‹Р·РѕРІРѕРІ GetAuxText()
     /// </summary>
     void EndGetAuxText();
   }
 
   /// <summary>
-  /// Провайдер управляющего элемента "Набор параметров", состоящего из
-  /// комбоблока, кнопок "+" и "-".
-  /// Предназначен для хранения "истории" введенных значений в форме, а
-  /// также пользовательских "именных" наборов.
-  /// Для хранения используется система, реализующая IEFPConfigManager.
-  /// Вызывающий код должен предоставить интерфейс, выполняющий чтение и запись значений в поля формы.
-  /// Должно быть обязательно установлено свойство ConfigSectionName (и, при необходимости, ParamsCategory и HistoryCategory). 
-  /// Используйте список DefaultSets для задания набора(ов) по умолчанию.
+  /// РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° "РќР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ", СЃРѕСЃС‚РѕСЏС‰РµРіРѕ РёР·
+  /// РєРѕРјР±РѕР±Р»РѕРєР°, РєРЅРѕРїРѕРє "+" Рё "-".
+  /// РџСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ "РёСЃС‚РѕСЂРёРё" РІРІРµРґРµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№ РІ С„РѕСЂРјРµ, Р°
+  /// С‚Р°РєР¶Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… "РёРјРµРЅРЅС‹С…" РЅР°Р±РѕСЂРѕРІ.
+  /// Р”Р»СЏ С…СЂР°РЅРµРЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРёСЃС‚РµРјР°, СЂРµР°Р»РёР·СѓСЋС‰Р°СЏ IEFPConfigManager.
+  /// Р’С‹Р·С‹РІР°СЋС‰РёР№ РєРѕРґ РґРѕР»Р¶РµРЅ РїСЂРµРґРѕСЃС‚Р°РІРёС‚СЊ РёРЅС‚РµСЂС„РµР№СЃ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ С‡С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёР№ РІ РїРѕР»СЏ С„РѕСЂРјС‹.
+  /// Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ ConfigSectionName (Рё, РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё, ParamsCategory Рё HistoryCategory). 
+  /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃРїРёСЃРѕРє DefaultSets РґР»СЏ Р·Р°РґР°РЅРёСЏ РЅР°Р±РѕСЂР°(РѕРІ) РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
   /// </summary>
   public class EFPConfigParamSetComboBox : EFPControl<ParamSetComboBox>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
-    /// <param name="formHandler">Интерфейс для чтения и записи значений. Ссылка должна быть задана</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
+    /// <param name="formHandler">РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ С‡С‚РµРЅРёСЏ Рё Р·Р°РїРёСЃРё Р·РЅР°С‡РµРЅРёР№. РЎСЃС‹Р»РєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р·Р°РґР°РЅР°</param>
     public EFPConfigParamSetComboBox(EFPBaseProvider baseProvider, ParamSetComboBox control, IEFPConfigParamSetHandler formHandler)
       : base(baseProvider, control, true)
     {
@@ -85,17 +85,17 @@ namespace FreeLibSet.Forms
       _FormHandler = formHandler;
 
       efpSelCB = new EFPTextComboBox(baseProvider, control.TheCB);
-      efpSelCB.DisplayName = "Готовые наборы";
+      efpSelCB.DisplayName = "Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹";
       efpSelCB.CanBeEmpty = true;
 
       efpSaveButton = new EFPButton(baseProvider, control.SaveButton);
-      efpSaveButton.DisplayName = "Сохранить набор";
-      efpSaveButton.ToolTipText = "Сохранить установленные значения как новый пользовательский набор" + Environment.NewLine +
-        "Перед нажатием кнопки в поле слева должно быть введено имя набора";
+      efpSaveButton.DisplayName = "РЎРѕС…СЂР°РЅРёС‚СЊ РЅР°Р±РѕСЂ";
+      efpSaveButton.ToolTipText = "РЎРѕС…СЂР°РЅРёС‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РєР°Рє РЅРѕРІС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РЅР°Р±РѕСЂ" + Environment.NewLine +
+        "РџРµСЂРµРґ РЅР°Р¶Р°С‚РёРµРј РєРЅРѕРїРєРё РІ РїРѕР»Рµ СЃР»РµРІР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІРІРµРґРµРЅРѕ РёРјСЏ РЅР°Р±РѕСЂР°";
 
       efpDelButton = new EFPButton(baseProvider, control.DeleteButton);
-      efpDelButton.DisplayName = "Удалить набор";
-      efpDelButton.ToolTipText = "Удалить пользовательский набор значений, имя которого задано в списке слева";
+      efpDelButton.DisplayName = "РЈРґР°Р»РёС‚СЊ РЅР°Р±РѕСЂ";
+      efpDelButton.ToolTipText = "РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РЅР°Р±РѕСЂ Р·РЅР°С‡РµРЅРёР№, РёРјСЏ РєРѕС‚РѕСЂРѕРіРѕ Р·Р°РґР°РЅРѕ РІ СЃРїРёСЃРєРµ СЃР»РµРІР°";
 
       _ParamsCategory = EFPConfigCategories.UserParams;
       _HistoryCategory = EFPConfigCategories.UserHistory;
@@ -104,12 +104,12 @@ namespace FreeLibSet.Forms
 
       control.ShowImages = EFPApp.ShowListImages;
 
-      InitConfigHandler(); // иначе потеряется свойство ConfigSectionName
+      InitConfigHandler(); // РёРЅР°С‡Рµ РїРѕС‚РµСЂСЏРµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ ConfigSectionName
     }
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     private EFPTextComboBox efpSelCB;
 
@@ -119,12 +119,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Используемые секции конфигурации
+    #region РСЃРїРѕР»СЊР·СѓРµРјС‹Рµ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 
     /// <summary>
-    /// Имя категории секций конфигурации, используемых для хранения текущих значений.
-    /// По умолчанию равно EFPConfigCategories.UserParams
-    /// Свойство должно быть установлено до вывода формы на экран.
+    /// РРјСЏ РєР°С‚РµРіРѕСЂРёРё СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё, РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РґР»СЏ С…СЂР°РЅРµРЅРёСЏ С‚РµРєСѓС‰РёС… Р·РЅР°С‡РµРЅРёР№.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ EFPConfigCategories.UserParams
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РґРѕ РІС‹РІРѕРґР° С„РѕСЂРјС‹ РЅР° СЌРєСЂР°РЅ.
     /// </summary>
     public string ParamsCategory
     {
@@ -141,9 +141,9 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Имя категории секций конфигурации, используемых для хранения истории.
-    /// По умолчанию равно EFPConfigCategories.UserHistory
-    /// Свойство должно быть установлено до вывода формы на экран.
+    /// РРјСЏ РєР°С‚РµРіРѕСЂРёРё СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё, РёСЃРїРѕР»СЊР·СѓРµРјС‹С… РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РёСЃС‚РѕСЂРёРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ EFPConfigCategories.UserHistory
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РґРѕ РІС‹РІРѕРґР° С„РѕСЂРјС‹ РЅР° СЌРєСЂР°РЅ.
     /// </summary>
     public string HistoryCategory
     {
@@ -160,21 +160,21 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Стандартные наборы
+    #region РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ РЅР°Р±РѕСЂС‹
 
     /// <summary>
-    /// Описание одной строчки в списке для значения "По умолчанию"
+    /// РћРїРёСЃР°РЅРёРµ РѕРґРЅРѕР№ СЃС‚СЂРѕС‡РєРё РІ СЃРїРёСЃРєРµ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ "РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ"
     /// </summary>
     public sealed class DefaultSet
     {
-      #region Конструкторы
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
       /// <summary>
-      /// Создает объект
+      /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚
       /// </summary>
-      /// <param name="config">Набор параметров для значения "по умолчанию"</param>
-      /// <param name="displayName">Отображаемое имя (без скобок)</param>
-      /// <param name="imageKey">Значок в списке EFPApp.MainImages</param>
+      /// <param name="config">РќР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ "РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ"</param>
+      /// <param name="displayName">РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ (Р±РµР· СЃРєРѕР±РѕРє)</param>
+      /// <param name="imageKey">Р—РЅР°С‡РѕРє РІ СЃРїРёСЃРєРµ EFPApp.MainImages</param>
       public DefaultSet(TempCfg config, string displayName, string imageKey)
       {
         if (config == null)
@@ -192,56 +192,56 @@ namespace FreeLibSet.Forms
       }
 
       /// <summary>
-      /// Создает объект со значком по умолчанию "No"
+      /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃРѕ Р·РЅР°С‡РєРѕРј РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ "No"
       /// </summary>
-      /// <param name="config">Набор параметров для значения "по умолчанию"</param>
-      /// <param name="displayName">Отображаемое имя (без скобок)</param>
+      /// <param name="config">РќР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ "РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ"</param>
+      /// <param name="displayName">РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ (Р±РµР· СЃРєРѕР±РѕРє)</param>
       public DefaultSet(TempCfg config, string displayName)
         : this(config, displayName, "No")
       {
       }
 
       /// <summary>
-      /// Создает объект с текстом "По умолчанию" со значком по умолчанию "No"
+      /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃ С‚РµРєСЃС‚РѕРј "РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ" СЃРѕ Р·РЅР°С‡РєРѕРј РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ "No"
       /// </summary>
-      /// <param name="config">Набор параметров для значения "по умолчанию"</param>
+      /// <param name="config">РќР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ "РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ"</param>
       public DefaultSet(TempCfg config)
-        : this(config, "По умолчанию", "No")
+        : this(config, "РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ", "No")
       {
       }
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Набор параметров для значения "по умолчанию"
+      /// РќР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ "РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ"
       /// </summary>
       public TempCfg Config { get { return _Config; } }
       private TempCfg _Config;
 
       /// <summary>
-      /// Отображаемое имя (без скобок)
+      /// РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ (Р±РµР· СЃРєРѕР±РѕРє)
       /// </summary>
       public string DisplayName { get { return _DisplayName; } }
       private string _DisplayName;
 
       /// <summary>
-      /// Значок в списке EFPApp.MainImages
+      /// Р—РЅР°С‡РѕРє РІ СЃРїРёСЃРєРµ EFPApp.MainImages
       /// </summary>
       public string ImageKey { get { return _ImageKey; } }
       private string _ImageKey;
 
       /// <summary>
-      /// Контрольная сумма для секции конфигурации
+      /// РљРѕРЅС‚СЂРѕР»СЊРЅР°СЏ СЃСѓРјРјР° РґР»СЏ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
       /// </summary>
       public string MD5Sum { get { return _MD5Sum; } }
       private string _MD5Sum;
 
       /// <summary>
-      /// Возвращает свойство DisplayName
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ DisplayName
       /// </summary>
-      /// <returns>Текстовое представление</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
       public override string ToString()
       {
         return DisplayName;
@@ -251,11 +251,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Реализация свойства DefaultSets
+    /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° DefaultSets
     /// </summary>
     public sealed class DefaultSetList : ListWithReadOnly<DefaultSet>
     {
-      #region Защищенный конструктор
+      #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal DefaultSetList(EFPConfigParamSetComboBox owner)
       {
@@ -266,10 +266,10 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Методы добавления
+      #region РњРµС‚РѕРґС‹ РґРѕР±Р°РІР»РµРЅРёСЏ
 
       /// <summary>
-      /// Добавить установки, заданные в форме в настоящий момент, в качестве набора по умолчанию
+      /// Р”РѕР±Р°РІРёС‚СЊ СѓСЃС‚Р°РЅРѕРІРєРё, Р·Р°РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјРµ РІ РЅР°СЃС‚РѕСЏС‰РёР№ РјРѕРјРµРЅС‚, РІ РєР°С‡РµСЃС‚РІРµ РЅР°Р±РѕСЂР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
       /// </summary>
       /// <param name="displayName"></param>
       /// <param name="imageKey"></param>
@@ -279,7 +279,7 @@ namespace FreeLibSet.Forms
       }
 
       /// <summary>
-      /// Добавить установки, заданные в форме в настоящий момент, в качестве набора по умолчанию
+      /// Р”РѕР±Р°РІРёС‚СЊ СѓСЃС‚Р°РЅРѕРІРєРё, Р·Р°РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјРµ РІ РЅР°СЃС‚РѕСЏС‰РёР№ РјРѕРјРµРЅС‚, РІ РєР°С‡РµСЃС‚РІРµ РЅР°Р±РѕСЂР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
       /// </summary>
       /// <param name="displayName"></param>
       public void Add(string displayName)
@@ -288,7 +288,7 @@ namespace FreeLibSet.Forms
       }
 
       /// <summary>
-      /// Добавить установки, заданные в форме в настоящий момент, в качестве набора по умолчанию
+      /// Р”РѕР±Р°РІРёС‚СЊ СѓСЃС‚Р°РЅРѕРІРєРё, Р·Р°РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјРµ РІ РЅР°СЃС‚РѕСЏС‰РёР№ РјРѕРјРµРЅС‚, РІ РєР°С‡РµСЃС‚РІРµ РЅР°Р±РѕСЂР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
       /// </summary>
       public void Add()
       {
@@ -315,8 +315,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список наборов "по умолчанию".
-    /// Список может заполняться только до вывода формы на экран
+    /// РЎРїРёСЃРѕРє РЅР°Р±РѕСЂРѕРІ "РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ".
+    /// РЎРїРёСЃРѕРє РјРѕР¶РµС‚ Р·Р°РїРѕР»РЅСЏС‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РґРѕ РІС‹РІРѕРґР° С„РѕСЂРјС‹ РЅР° СЌРєСЂР°РЅ
     /// </summary>
     public DefaultSetList DefaultSets { get { return _DefaultSets; } }
     private DefaultSetList _DefaultSets;
@@ -326,8 +326,8 @@ namespace FreeLibSet.Forms
     #region FormHandler
 
     /// <summary>
-    /// Интерфейс, реализуемый в пользовательском коде, для чтения и записей полей формы.
-    /// Задается в конструкторе. Не может быть null
+    /// РРЅС‚РµСЂС„РµР№СЃ, СЂРµР°Р»РёР·СѓРµРјС‹Р№ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ, РґР»СЏ С‡С‚РµРЅРёСЏ Рё Р·Р°РїРёСЃРµР№ РїРѕР»РµР№ С„РѕСЂРјС‹.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
     /// </summary>
     public IEFPConfigParamSetHandler FormHandler { get { return _FormHandler; } }
     private IEFPConfigParamSetHandler _FormHandler;
@@ -340,7 +340,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка записи значений в управляющие элементы");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїРёСЃРё Р·РЅР°С‡РµРЅРёР№ РІ СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹");
       }
     }
 
@@ -352,14 +352,14 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка получения значений из управляющих элементов");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РёР· СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ");
       }
     }
 
     /// <summary>
-    /// Обработчик для получения дополнительного текста для выпадающего списка "Готовые наборы".
-    /// Если обработчик не установлен, дополнительный текст не выводится.
-    /// Свойство может устанавливаться до вывода формы на экран
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРіРѕ С‚РµРєСЃС‚Р° РґР»СЏ РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР° "Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹".
+    /// Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ С‚РµРєСЃС‚ РЅРµ РІС‹РІРѕРґРёС‚СЃСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ РґРѕ РІС‹РІРѕРґР° С„РѕСЂРјС‹ РЅР° СЌРєСЂР°РЅ
     /// </summary>
     public IEFPConfigParamSetAuxTextHandler AuxTextHandler
     {
@@ -372,18 +372,18 @@ namespace FreeLibSet.Forms
     }
     private IEFPConfigParamSetAuxTextHandler _AuxTextHandler;
 
-    private bool _UseAuxText; // определяем в OnShown()
+    private bool _UseAuxText; // РѕРїСЂРµРґРµР»СЏРµРј РІ OnShown()
 
     #endregion
 
-    #region Прочие свойства
+    #region РџСЂРѕС‡РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Нужно ли при открытии формы загрузить последний сохраненный набор настроек.
-    /// По умолчанию - false - управляющие элементы сохраняют значения, установленные в пользовательском коде
-    /// (или пустые значения).
-    /// Установите свойство в true, если для управляющих элементов не создан собственный режим сохранения значений
-    /// между сеансами работы.
+    /// РќСѓР¶РЅРѕ Р»Рё РїСЂРё РѕС‚РєСЂС‹С‚РёРё С„РѕСЂРјС‹ Р·Р°РіСЂСѓР·РёС‚СЊ РїРѕСЃР»РµРґРЅРёР№ СЃРѕС…СЂР°РЅРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РЅР°СЃС‚СЂРѕРµРє.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹ СЃРѕС…СЂР°РЅСЏСЋС‚ Р·РЅР°С‡РµРЅРёСЏ, СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
+    /// (РёР»Рё РїСѓСЃС‚С‹Рµ Р·РЅР°С‡РµРЅРёСЏ).
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚Рµ СЃРІРѕР№СЃС‚РІРѕ РІ true, РµСЃР»Рё РґР»СЏ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ РЅРµ СЃРѕР·РґР°РЅ СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№ СЂРµР¶РёРј СЃРѕС…СЂР°РЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№
+    /// РјРµР¶РґСѓ СЃРµР°РЅСЃР°РјРё СЂР°Р±РѕС‚С‹.
     /// </summary>
     public bool AutoLoadLastConfig
     {
@@ -398,15 +398,15 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики элемента в-целом
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё СЌР»РµРјРµРЅС‚Р° РІ-С†РµР»РѕРј
 
     /// <summary>
-    /// Метод вызывается при первом появлении элемента на экране
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РїРѕСЏРІР»РµРЅРёРё СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РЅРµ
     /// </summary>
     protected override void OnCreated()
     {
       if (String.IsNullOrEmpty(ConfigSectionName))
-        throw new NullReferenceException("Свойство \"ConfigSectionName\" должно быть установлено");
+        throw new NullReferenceException("РЎРІРѕР№СЃС‚РІРѕ \"ConfigSectionName\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ");
 
       base.OnCreated();
 
@@ -431,12 +431,12 @@ namespace FreeLibSet.Forms
         }
       }
 
-      // Выделяем в списке позицию, соответствующую текущему выбору
+      // Р’С‹РґРµР»СЏРµРј РІ СЃРїРёСЃРєРµ РїРѕР·РёС†РёСЋ, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ С‚РµРєСѓС‰РµРјСѓ РІС‹Р±РѕСЂСѓ
       TempCfg cfg2 = new TempCfg();
       ConfigFromControls(cfg2);
-      Control.SelectedMD5Sum = cfg2.MD5Sum(); // выбираем подходящий набор, если есть
+      Control.SelectedMD5Sum = cfg2.MD5Sum(); // РІС‹Р±РёСЂР°РµРј РїРѕРґС…РѕРґСЏС‰РёР№ РЅР°Р±РѕСЂ, РµСЃР»Рё РµСЃС‚СЊ
 
-      // Присоединяем обработчики после выбора текущей позиции
+      // РџСЂРёСЃРѕРµРґРёРЅСЏРµРј РѕР±СЂР°Р±РѕС‚С‡РёРєРё РїРѕСЃР»Рµ РІС‹Р±РѕСЂР° С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРё
       Control.ItemSelected += new ParamSetComboBoxItemEventHandler(SetComboBox_ItemSelected);
       Control.SaveClick += new ParamSetComboBoxSaveEventHandler(SetComboBox_SaveClick);
       Control.DeleteClick += new ParamSetComboBoxItemEventHandler(SetComboBox_DeleteClick);
@@ -446,30 +446,30 @@ namespace FreeLibSet.Forms
     private void InitSubToolTips()
     {
       StringBuilder sb = new StringBuilder();
-      sb.Append("Выбор готового набора фильтров из выпадающего списка.");
+      sb.Append("Р’С‹Р±РѕСЂ РіРѕС‚РѕРІРѕРіРѕ РЅР°Р±РѕСЂР° С„РёР»СЊС‚СЂРѕРІ РёР· РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР°.");
       sb.Append(Environment.NewLine);
-      sb.Append("В список входят:");
+      sb.Append("Р’ СЃРїРёСЃРѕРє РІС…РѕРґСЏС‚:");
       sb.Append(Environment.NewLine);
-      sb.Append("- пользовательские наборы, которые Вы сохранили;");
+      sb.Append("- РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РЅР°Р±РѕСЂС‹, РєРѕС‚РѕСЂС‹Рµ Р’С‹ СЃРѕС…СЂР°РЅРёР»Рё;");
       sb.Append(Environment.NewLine);
       if (DefaultSets.Count > 0)
       {
-        sb.Append("- настройки по умолчанию;");
+        sb.Append("- РЅР°СЃС‚СЂРѕР№РєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ;");
         sb.Append(Environment.NewLine);
       }
-      sb.Append("- а также до 9 последних наборов значений (история)");
+      sb.Append("- Р° С‚Р°РєР¶Рµ РґРѕ 9 РїРѕСЃР»РµРґРЅРёС… РЅР°Р±РѕСЂРѕРІ Р·РЅР°С‡РµРЅРёР№ (РёСЃС‚РѕСЂРёСЏ)");
       sb.Append(Environment.NewLine);
       sb.Append(Environment.NewLine);
-      sb.Append("Поле для ввода названия для нового набора");
+      sb.Append("РџРѕР»Рµ РґР»СЏ РІРІРѕРґР° РЅР°Р·РІР°РЅРёСЏ РґР»СЏ РЅРѕРІРѕРіРѕ РЅР°Р±РѕСЂР°");
 
       efpSelCB.ToolTipText = sb.ToString();
     }
 
     #endregion
 
-    #region Чтение и запись информации о готовых наборах
+    #region Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ РёРЅС„РѕСЂРјР°С†РёРё Рѕ РіРѕС‚РѕРІС‹С… РЅР°Р±РѕСЂР°С…
 
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     private const int GroupUser = 1;
     private const int GroupDefault = 2;
@@ -478,17 +478,17 @@ namespace FreeLibSet.Forms
     #endregion
 
     /// <summary>
-    /// Данные из секции SectHist, относящиеся к автоматически создаваемым записям, в виде таблицы
+    /// Р”Р°РЅРЅС‹Рµ РёР· СЃРµРєС†РёРё SectHist, РѕС‚РЅРѕСЃСЏС‰РёРµСЃСЏ Рє Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРѕР·РґР°РІР°РµРјС‹Рј Р·Р°РїРёСЃСЏРј, РІ РІРёРґРµ С‚Р°Р±Р»РёС†С‹
     /// </summary>
     private DataTable _TableHist;
 
     /// <summary>
-    /// Данные из секции SectHist, относящиеся к пользовательским записям, в виде таблицы
+    /// Р”Р°РЅРЅС‹Рµ РёР· СЃРµРєС†РёРё SectHist, РѕС‚РЅРѕСЃСЏС‰РёРµСЃСЏ Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРј Р·Р°РїРёСЃСЏРј, РІ РІРёРґРµ С‚Р°Р±Р»РёС†С‹
     /// </summary>
     private DataTable _TableUser;
 
     /// <summary>
-    /// Создание и заполнение таблиц TableHist и TableUser
+    /// РЎРѕР·РґР°РЅРёРµ Рё Р·Р°РїРѕР»РЅРµРЅРёРµ С‚Р°Р±Р»РёС† TableHist Рё TableUser
     /// </summary>
     private void CreateSetsTables()
     {
@@ -531,20 +531,20 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка чтения списка истории");
+          EFPApp.ShowException(e, "РћС€РёР±РєР° С‡С‚РµРЅРёСЏ СЃРїРёСЃРєР° РёСЃС‚РѕСЂРёРё");
         }
       }
     }
 
     /// <summary>
-    /// Заполнение комбоблока "Наборы"
-    /// (вызывается в методе OnShown())
+    /// Р—Р°РїРѕР»РЅРµРЅРёРµ РєРѕРјР±РѕР±Р»РѕРєР° "РќР°Р±РѕСЂС‹"
+    /// (РІС‹Р·С‹РІР°РµС‚СЃСЏ РІ РјРµС‚РѕРґРµ OnShown())
     /// </summary>
     private void FillSetItems()
     {
       if (_UseAuxText)
       {
-        #region Выполняем упреждающее чтение секций конфигурации
+        #region Р’С‹РїРѕР»РЅСЏРµРј СѓРїСЂРµР¶РґР°СЋС‰РµРµ С‡С‚РµРЅРёРµ СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 
         List<EFPConfigSectionInfo> preloadInfos = new List<EFPConfigSectionInfo>();
         foreach (DataRow row in _TableUser.Rows)
@@ -565,7 +565,7 @@ namespace FreeLibSet.Forms
       {
         string auxText = null;
 
-        #region Сначала - именные данные пользователя
+        #region РЎРЅР°С‡Р°Р»Р° - РёРјРµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 
         _TableUser.DefaultView.Sort = "Name";
         foreach (DataRowView drv in _TableUser.DefaultView)
@@ -593,7 +593,7 @@ namespace FreeLibSet.Forms
 
         #endregion
 
-        #region Затем - по умолчанию
+        #region Р—Р°С‚РµРј - РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 
         for (int i = 0; i < DefaultSets.Count; i++)
         {
@@ -605,7 +605,7 @@ namespace FreeLibSet.Forms
 
         #endregion
 
-        #region Последние - данные истории
+        #region РџРѕСЃР»РµРґРЅРёРµ - РґР°РЅРЅС‹Рµ РёСЃС‚РѕСЂРёРё
 
         _TableHist.DefaultView.Sort = "Order";
         int cnt = 0;
@@ -619,13 +619,13 @@ namespace FreeLibSet.Forms
           switch (cnt)
           {
             case 1:
-              Name = "(Последний)";
+              Name = "(РџРѕСЃР»РµРґРЅРёР№)";
               break;
             case 2:
-              Name = "(Предпоследний)";
+              Name = "(РџСЂРµРґРїРѕСЃР»РµРґРЅРёР№)";
               break;
             default:
-              Name = "(Предыдущий №" + cnt.ToString() + ")";
+              Name = "(РџСЂРµРґС‹РґСѓС‰РёР№ в„–" + cnt.ToString() + ")";
               break;
           }
 
@@ -680,14 +680,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики для списка работы с готовыми наборами
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РґР»СЏ СЃРїРёСЃРєР° СЂР°Р±РѕС‚С‹ СЃ РіРѕС‚РѕРІС‹РјРё РЅР°Р±РѕСЂР°РјРё
 
     void SetComboBox_ItemSelected(object sender, ParamSetComboBoxItemEventArgs args)
     {
       if (args.Item.Group == GroupDefault)
       {
         int defIndex = int.Parse(args.Item.Code);
-        // Выбран набор по умолчанию
+        // Р’С‹Р±СЂР°РЅ РЅР°Р±РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
         ConfigToControls(DefaultSets[defIndex].Config);
       }
       else
@@ -707,13 +707,13 @@ namespace FreeLibSet.Forms
     {
       if (String.IsNullOrEmpty(ConfigSectionName))
       {
-        EFPApp.ErrorMessageBox("Не предусмотрено сохранение значений между сеансами работы");
+        EFPApp.ErrorMessageBox("РќРµ РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅРѕ СЃРѕС…СЂР°РЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёР№ РјРµР¶РґСѓ СЃРµР°РЅСЃР°РјРё СЂР°Р±РѕС‚С‹");
         return;
       }
 
       if (!EFPConfigTools.IsPersist(this.ConfigManager.Persistence))
       {
-        EFPApp.ErrorMessageBox("Cохранение значений между сеансами работы не предусмотрено в программе");
+        EFPApp.ErrorMessageBox("CРѕС…СЂР°РЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёР№ РјРµР¶РґСѓ СЃРµР°РЅСЃР°РјРё СЂР°Р±РѕС‚С‹ РЅРµ РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅРѕ РІ РїСЂРѕРіСЂР°РјРјРµ");
         return;
       }
 
@@ -725,18 +725,18 @@ namespace FreeLibSet.Forms
       {
         if (!oldItem.Code.StartsWith("User"))
         {
-          EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы");
+          EFPApp.ShowTempMessage("РџРµСЂРµР·Р°РїРёСЃС‹РІР°С‚СЊ РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РЅР°Р±РѕСЂС‹");
           return;
         }
-        if (EFPApp.MessageBox("Набор \"" + args.DisplayName + "\" уже существует. Вы хотите перезаписать его?",
-          "Подтверждение перезаписи набора",
+        if (EFPApp.MessageBox("РќР°Р±РѕСЂ \"" + args.DisplayName + "\" СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚. Р’С‹ С…РѕС‚РёС‚Рµ РїРµСЂРµР·Р°РїРёСЃР°С‚СЊ РµРіРѕ?",
+          "РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РїРµСЂРµР·Р°РїРёСЃРё РЅР°Р±РѕСЂР°",
           MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
           return;
       }
 
       if (args.DisplayName.StartsWith("("))
       {
-        EFPApp.ShowTempMessage("Имя набора не может начинаться со скобки");
+        EFPApp.ShowTempMessage("РРјСЏ РЅР°Р±РѕСЂР° РЅРµ РјРѕР¶РµС‚ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃРѕ СЃРєРѕР±РєРё");
         return;
       }
 
@@ -800,20 +800,20 @@ namespace FreeLibSet.Forms
         table = _TableHist;
       else
       {
-        EFPApp.ErrorMessageBox("Этот набор нельзя удалить", "Удаление готового набора");
+        EFPApp.ErrorMessageBox("Р­С‚РѕС‚ РЅР°Р±РѕСЂ РЅРµР»СЊР·СЏ СѓРґР°Р»РёС‚СЊ", "РЈРґР°Р»РµРЅРёРµ РіРѕС‚РѕРІРѕРіРѕ РЅР°Р±РѕСЂР°");
         return;
       }
 
       DataRow row = table.Rows.Find(args.Item.Code);
       if (row == null)
       {
-        BugException ex = new BugException("Набор с кодом \"" + args.Item.Code + "\" не найден");
+        BugException ex = new BugException("РќР°Р±РѕСЂ СЃ РєРѕРґРѕРј \"" + args.Item.Code + "\" РЅРµ РЅР°Р№РґРµРЅ");
         ex.Data["Item"] = args.Item;
         throw ex;
       }
 
-      if (EFPApp.MessageBox("Удалить набор \"" + args.Item.DisplayName + "\"?",
-        "Подтверждение удаления набора", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+      if (EFPApp.MessageBox("РЈРґР°Р»РёС‚СЊ РЅР°Р±РѕСЂ \"" + args.Item.DisplayName + "\"?",
+        "РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ СѓРґР°Р»РµРЅРёСЏ РЅР°Р±РѕСЂР°", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         return;
 
       table.Rows.Remove(row);
@@ -832,11 +832,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Вызывается после закрытия диалога
+    #region Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ Р·Р°РєСЂС‹С‚РёСЏ РґРёР°Р»РѕРіР°
 
     /// <summary>
-    /// При закрытии формы нажатием "ОК" извлекает текущие значения из формы и помещает их в секцию конфигурации
-    /// в качестве истории.
+    /// РџСЂРё Р·Р°РєСЂС‹С‚РёРё С„РѕСЂРјС‹ РЅР°Р¶Р°С‚РёРµРј "РћРљ" РёР·РІР»РµРєР°РµС‚ С‚РµРєСѓС‰РёРµ Р·РЅР°С‡РµРЅРёСЏ РёР· С„РѕСЂРјС‹ Рё РїРѕРјРµС‰Р°РµС‚ РёС… РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+    /// РІ РєР°С‡РµСЃС‚РІРµ РёСЃС‚РѕСЂРёРё.
     /// </summary>
     protected override void OnValidate()
     {
@@ -874,9 +874,9 @@ namespace FreeLibSet.Forms
 
       if (!found)
       {
-        // Новые данные записываем в другую секцию
+        // РќРѕРІС‹Рµ РґР°РЅРЅС‹Рµ Р·Р°РїРёСЃС‹РІР°РµРј РІ РґСЂСѓРіСѓСЋ СЃРµРєС†РёСЋ
         DataRow resRow = null;
-        if (_TableHist.DefaultView.Count >= 9) // все позиции заняты
+        if (_TableHist.DefaultView.Count >= 9) // РІСЃРµ РїРѕР·РёС†РёРё Р·Р°РЅСЏС‚С‹
           resRow = _TableHist.DefaultView[0].Row;
         else
         {

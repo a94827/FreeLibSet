@@ -1,4 +1,4 @@
-namespace ManualOrderColumnDemo
+п»їnamespace ManualOrderColumnDemo
 {
   partial class ParamForm
   {
@@ -58,8 +58,8 @@ namespace ManualOrderColumnDemo
       this.infoLabel1.Name = "infoLabel1";
       this.infoLabel1.Size = new System.Drawing.Size(513, 58);
       this.infoLabel1.TabIndex = 2;
-      this.infoLabel1.Text = "Демонстрирует использование свойства EFPDataGridViewCommandItems, EFPDataTreeView" +
-          "CommandItems.ManualOrderColumn и связанных с ним действий";
+      this.infoLabel1.Text = "Р”РµРјРѕРЅСЃС‚СЂРёСЂСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЃРІРѕР№СЃС‚РІР° EFPDataGridViewCommandItems, EFPDataTreeView" +
+          "CommandItems.ManualOrderColumn Рё СЃРІСЏР·Р°РЅРЅС‹С… СЃ РЅРёРј РґРµР№СЃС‚РІРёР№";
       // 
       // panel1
       // 
@@ -88,7 +88,7 @@ namespace ManualOrderColumnDemo
       this.groupBox1.Size = new System.Drawing.Size(513, 243);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Параметры";
+      this.groupBox1.Text = "РџР°СЂР°РјРµС‚СЂС‹";
       // 
       // btnOk
       // 
@@ -97,7 +97,7 @@ namespace ManualOrderColumnDemo
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(75, 23);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -107,7 +107,7 @@ namespace ManualOrderColumnDemo
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // groupBox2
@@ -121,7 +121,7 @@ namespace ManualOrderColumnDemo
       this.groupBox2.Size = new System.Drawing.Size(308, 115);
       this.groupBox2.TabIndex = 0;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Просмотры";
+      this.groupBox2.Text = "РџСЂРѕСЃРјРѕС‚СЂС‹";
       // 
       // rbEFPInputDataGridView
       // 
@@ -214,7 +214,7 @@ namespace ManualOrderColumnDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(170, 13);
       this.label1.TabIndex = 7;
-      this.label1.Text = "Начальные значения поля Order";
+      this.label1.Text = "РќР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ Order";
       // 
       // cbOrderStartMode
       // 
@@ -222,8 +222,8 @@ namespace ManualOrderColumnDemo
       this.cbOrderStartMode.FormattingEnabled = true;
       this.cbOrderStartMode.Items.AddRange(new object[] {
             "1,2,3",
-            "Нулевые",
-            "Случайные"});
+            "РќСѓР»РµРІС‹Рµ",
+            "РЎР»СѓС‡Р°Р№РЅС‹Рµ"});
       this.cbOrderStartMode.Location = new System.Drawing.Point(208, 209);
       this.cbOrderStartMode.Name = "cbOrderStartMode";
       this.cbOrderStartMode.Size = new System.Drawing.Size(293, 21);
@@ -236,7 +236,7 @@ namespace ManualOrderColumnDemo
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(82, 13);
       this.label2.TabIndex = 5;
-      this.label2.Text = "Тип поля Order";
+      this.label2.Text = "РўРёРї РїРѕР»СЏ Order";
       // 
       // cbOrderDataType
       // 

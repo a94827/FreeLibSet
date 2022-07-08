@@ -1,4 +1,4 @@
-namespace FreeLibSet.Controls.FIAS
+п»їnamespace FreeLibSet.Controls.FIAS
 {
   partial class FiasDBSettingsPanel
   {
@@ -51,7 +51,7 @@ namespace FreeLibSet.Controls.FIAS
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(100, 20);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Регионы";
+      this.label1.Text = "Р РµРіРёРѕРЅС‹";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbRegionCodes
@@ -73,7 +73,7 @@ namespace FreeLibSet.Controls.FIAS
       this.groupBox1.Size = new System.Drawing.Size(520, 65);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Наличие таблиц";
+      this.groupBox1.Text = "РќР°Р»РёС‡РёРµ С‚Р°Р±Р»РёС†";
       // 
       // cbUseRoom
       // 
@@ -82,7 +82,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbUseRoom.Name = "cbUseRoom";
       this.cbUseRoom.Size = new System.Drawing.Size(147, 17);
       this.cbUseRoom.TabIndex = 1;
-      this.cbUseRoom.Text = "Квартиры и помещения";
+      this.cbUseRoom.Text = "РљРІР°СЂС‚РёСЂС‹ Рё РїРѕРјРµС‰РµРЅРёСЏ";
       this.cbUseRoom.UseVisualStyleBackColor = true;
       // 
       // cbUseHouse
@@ -92,7 +92,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbUseHouse.Name = "cbUseHouse";
       this.cbUseHouse.Size = new System.Drawing.Size(128, 17);
       this.cbUseHouse.TabIndex = 0;
-      this.cbUseHouse.Text = "Дома и сооружения";
+      this.cbUseHouse.Text = "Р”РѕРјР° Рё СЃРѕРѕСЂСѓР¶РµРЅРёСЏ";
       this.cbUseHouse.UseVisualStyleBackColor = true;
       // 
       // groupBox2
@@ -106,7 +106,7 @@ namespace FreeLibSet.Controls.FIAS
       this.groupBox2.Size = new System.Drawing.Size(520, 68);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Фильтрация";
+      this.groupBox2.Text = "Р¤РёР»СЊС‚СЂР°С†РёСЏ";
       // 
       // cbUseHistory
       // 
@@ -115,7 +115,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbUseHistory.Name = "cbUseHistory";
       this.cbUseHistory.Size = new System.Drawing.Size(149, 17);
       this.cbUseHistory.TabIndex = 2;
-      this.cbUseHistory.Text = "Исторические сведения";
+      this.cbUseHistory.Text = "РСЃС‚РѕСЂРёС‡РµСЃРєРёРµ СЃРІРµРґРµРЅРёСЏ";
       this.cbUseHistory.UseVisualStyleBackColor = true;
       // 
       // groupBox3
@@ -130,7 +130,7 @@ namespace FreeLibSet.Controls.FIAS
       this.groupBox3.Size = new System.Drawing.Size(520, 114);
       this.groupBox3.TabIndex = 2;
       this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Колонки в таблицах";
+      this.groupBox3.Text = "РљРѕР»РѕРЅРєРё РІ С‚Р°Р±Р»РёС†Р°С…";
       // 
       // cbUseDates
       // 
@@ -139,7 +139,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbUseDates.Name = "cbUseDates";
       this.cbUseDates.Size = new System.Drawing.Size(149, 17);
       this.cbUseDates.TabIndex = 3;
-      this.cbUseDates.Text = "Даты действия записей";
+      this.cbUseDates.Text = "Р”Р°С‚С‹ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРµР№";
       this.cbUseDates.UseVisualStyleBackColor = true;
       // 
       // cbUseIFNS
@@ -149,7 +149,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbUseIFNS.Name = "cbUseIFNS";
       this.cbUseIFNS.Size = new System.Drawing.Size(90, 17);
       this.cbUseIFNS.TabIndex = 2;
-      this.cbUseIFNS.Text = "Коды ИФНС";
+      this.cbUseIFNS.Text = "РљРѕРґС‹ РР¤РќРЎ";
       this.cbUseIFNS.UseVisualStyleBackColor = true;
       // 
       // cbUseOKTMO
@@ -159,7 +159,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbUseOKTMO.Name = "cbUseOKTMO";
       this.cbUseOKTMO.Size = new System.Drawing.Size(65, 17);
       this.cbUseOKTMO.TabIndex = 1;
-      this.cbUseOKTMO.Text = "ОКТМО";
+      this.cbUseOKTMO.Text = "РћРљРўРњРћ";
       this.cbUseOKTMO.UseVisualStyleBackColor = true;
       // 
       // cbUseOKATO
@@ -169,7 +169,7 @@ namespace FreeLibSet.Controls.FIAS
       this.cbUseOKATO.Name = "cbUseOKATO";
       this.cbUseOKATO.Size = new System.Drawing.Size(63, 17);
       this.cbUseOKATO.TabIndex = 0;
-      this.cbUseOKATO.Text = "ОКАТО";
+      this.cbUseOKATO.Text = "РћРљРђРўРћ";
       this.cbUseOKATO.UseVisualStyleBackColor = true;
       // 
       // FiasDBSettingsPanel

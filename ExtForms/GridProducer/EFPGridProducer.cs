@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -16,39 +16,39 @@ namespace FreeLibSet.Forms
   #region IEFPGridProducer
 
   /// <summary>
-  /// Обобщенный интерфейс генератора табличного просмотра
-  /// Не уточняет способа, каким инициализируются столбцы табличного просмотра
+  /// РћР±РѕР±С‰РµРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ РіРµРЅРµСЂР°С‚РѕСЂР° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
+  /// РќРµ СѓС‚РѕС‡РЅСЏРµС‚ СЃРїРѕСЃРѕР±Р°, РєР°РєРёРј РёРЅРёС†РёР°Р»РёР·РёСЂСѓСЋС‚СЃСЏ СЃС‚РѕР»Р±С†С‹ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
   /// </summary>
   public interface IEFPGridProducer : IReadOnlyObject
   {
     /// <summary>
-    /// Возвращает количество возможных вариантов сортировки для определения видимости команд меню.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РІРѕР·РјРѕР¶РЅС‹С… РІР°СЂРёР°РЅС‚РѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РІРёРґРёРјРѕСЃС‚Рё РєРѕРјР°РЅРґ РјРµРЅСЋ.
     /// </summary>
     int OrderCount { get; }
 
     /// <summary>
-    /// Метод должен создать столбцы в табличном просмотре в соответствии с установленной конфигурацией
-    /// (установки свойства EFPDataGridView.CurrentConfig)
-    /// На момент вызова табличный просмотр не содержит столбцов
-    /// После вызова этого метода следует вызвать EFPDataGridView.PerformGridProducerPostInit()
+    /// РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ СЃРѕР·РґР°С‚СЊ СЃС‚РѕР»Р±С†С‹ РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРµР№
+    /// (СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° EFPDataGridView.CurrentConfig)
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±С†РѕРІ
+    /// РџРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР° СЃР»РµРґСѓРµС‚ РІС‹Р·РІР°С‚СЊ EFPDataGridView.PerformGridProducerPostInit()
     /// </summary>
-    /// <param name="controlProvider">Заполняемый просмотр</param>
-    /// <param name="reInit">true, если инициализация выполняется повторно</param>
+    /// <param name="controlProvider">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ</param>
+    /// <param name="reInit">true, РµСЃР»Рё РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРІС‚РѕСЂРЅРѕ</param>
     void InitGridView(EFPDataGridView controlProvider, bool reInit);
 
     /// <summary>
-    /// Метод должен создать столбцы в иерархическом просмотре в соответствии с установленной конфигурацией
-    /// (установки свойства EFPDataTreeView.CurrentConfig)
-    /// На момент вызова табличный просмотр не содержит столбцов
-    /// После вызова этого метода следует вызвать EFPDataTreeView.PerformGridProducerPostInit()
+    /// РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ СЃРѕР·РґР°С‚СЊ СЃС‚РѕР»Р±С†С‹ РІ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРµР№
+    /// (СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° EFPDataTreeView.CurrentConfig)
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±С†РѕРІ
+    /// РџРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР° СЃР»РµРґСѓРµС‚ РІС‹Р·РІР°С‚СЊ EFPDataTreeView.PerformGridProducerPostInit()
     /// </summary>
-    /// <param name="controlProvider">Заполняемый просмотр</param>
-    /// <param name="reInit">true, если инициализация выполняется повторно</param>
+    /// <param name="controlProvider">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ</param>
+    /// <param name="reInit">true, РµСЃР»Рё РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРІС‚РѕСЂРЅРѕ</param>
     void InitTreeView(EFPDataTreeView controlProvider, bool reInit);
 
     /// <summary>
-    /// Дополнение к интерфейсу IReadOnlyObject.
-    /// Вызывается при присоединении к табличному просмотру
+    /// Р”РѕРїРѕР»РЅРµРЅРёРµ Рє РёРЅС‚РµСЂС„РµР№СЃСѓ IReadOnlyObject.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРё Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ
     /// </summary>
     void SetReadOnly();
   }
@@ -58,29 +58,29 @@ namespace FreeLibSet.Forms
   #region IEFPGridProducerColumn
 
   /// <summary>
-  /// Интерейс объекта, управляющего поведением столбца, созданного генератором табличного просмотра
-  /// Реализация IEFPGridProducer может не использовать этот интерфейс, или использовать его не для всех
-  /// столбцов, или использовать один объект для нескольких столбцов
+  /// РРЅС‚РµСЂРµР№СЃ РѕР±СЉРµРєС‚Р°, СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ РїРѕРІРµРґРµРЅРёРµРј СЃС‚РѕР»Р±С†Р°, СЃРѕР·РґР°РЅРЅРѕРіРѕ РіРµРЅРµСЂР°С‚РѕСЂРѕРј С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
+  /// Р РµР°Р»РёР·Р°С†РёСЏ IEFPGridProducer РјРѕР¶РµС‚ РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЌС‚РѕС‚ РёРЅС‚РµСЂС„РµР№СЃ, РёР»Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РµРіРѕ РЅРµ РґР»СЏ РІСЃРµС…
+  /// СЃС‚РѕР»Р±С†РѕРІ, РёР»Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РѕРґРёРЅ РѕР±СЉРµРєС‚ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚РѕР»Р±С†РѕРІ
   /// </summary>
   public interface IEFPGridProducerColumn
   {
     /// <summary>
-    /// Выполнить редактирование для ячейки.
-    /// Вызывается из EFPDataGridView.PerformEditData()
-    /// Если метод выполнил действия, связанные с редактированием, следует вернуть true. В этом случае дальнейшая обработрка не выполняется
-    /// Если следует выполнить обычные действия по редактированию, в частности, вызвать событие EFPDataGridView.EditData,
-    /// следует вернуть false
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РґР»СЏ СЏС‡РµР№РєРё.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· EFPDataGridView.PerformEditData()
+    /// Р•СЃР»Рё РјРµС‚РѕРґ РІС‹РїРѕР»РЅРёР» РґРµР№СЃС‚РІРёСЏ, СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµРј, СЃР»РµРґСѓРµС‚ РІРµСЂРЅСѓС‚СЊ true. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РґР°Р»СЊРЅРµР№С€Р°СЏ РѕР±СЂР°Р±РѕС‚СЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
+    /// Р•СЃР»Рё СЃР»РµРґСѓРµС‚ РІС‹РїРѕР»РЅРёС‚СЊ РѕР±С‹С‡РЅС‹Рµ РґРµР№СЃС‚РІРёСЏ РїРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЋ, РІ С‡Р°СЃС‚РЅРѕСЃС‚Рё, РІС‹Р·РІР°С‚СЊ СЃРѕР±С‹С‚РёРµ EFPDataGridView.EditData,
+    /// СЃР»РµРґСѓРµС‚ РІРµСЂРЅСѓС‚СЊ false
     /// </summary>
-    /// <param name="rowInfo">Информация о текущей строки в табличном просмотре</param>
-    /// <param name="columnName">Имя столбца</param>
-    /// <returns>true, если обработка выполнена</returns>
+    /// <param name="rowInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕРєРё РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>true, РµСЃР»Рё РѕР±СЂР°Р±РѕС‚РєР° РІС‹РїРѕР»РЅРµРЅР°</returns>
     bool PerformCellEdit(EFPDataViewRowInfo rowInfo, string columnName);
 
     /// <summary>
-    /// Методы вызывается при щелчке мыши на ячейке
+    /// РњРµС‚РѕРґС‹ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё С‰РµР»С‡РєРµ РјС‹С€Рё РЅР° СЏС‡РµР№РєРµ
     /// </summary>
-    /// <param name="rowInfo">Информация о текущей строки в табличном просмотре</param>
-    /// <param name="columnName">Имя столбца</param>
+    /// <param name="rowInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕРєРё РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
     void PerformCellClick(EFPDataViewRowInfo rowInfo, string columnName);
   }
 
@@ -89,47 +89,47 @@ namespace FreeLibSet.Forms
   #region IEFPConfigurableGridProducer
 
   /// <summary>
-  /// Интерфейс настраиваемого генератора табличного просмотра.
-  /// В отличие от IEFPGridProducer, предполагает возможность пользователя настраивать индивидуальные столбцы
-  /// на уровне EFPDataGrifViewConfig
-  /// Интерфейс используется на уровне EFPDataGridViewWithFilters, а не EFPDataGridView.
+  /// РРЅС‚РµСЂС„РµР№СЃ РЅР°СЃС‚СЂР°РёРІР°РµРјРѕРіРѕ РіРµРЅРµСЂР°С‚РѕСЂР° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+  /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ IEFPGridProducer, РїСЂРµРґРїРѕР»Р°РіР°РµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР°СЃС‚СЂР°РёРІР°С‚СЊ РёРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рµ СЃС‚РѕР»Р±С†С‹
+  /// РЅР° СѓСЂРѕРІРЅРµ EFPDataGrifViewConfig
+  /// РРЅС‚РµСЂС„РµР№СЃ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РЅР° СѓСЂРѕРІРЅРµ EFPDataGridViewWithFilters, Р° РЅРµ EFPDataGridView.
   /// </summary>
   public interface IEFPConfigurableGridProducer : IEFPGridProducer
   {
     /// <summary>
-    /// Инициализация редактора настройки столбцов табличного просмотра.
-    /// Метод должен добавить управляющие элементы в форму редактора и вернуть интерфейс управления.
-    /// Загружать начальные значения в редактор не следует
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЂРµРґР°РєС‚РѕСЂР° РЅР°СЃС‚СЂРѕР№РєРё СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ РґРѕР±Р°РІРёС‚СЊ СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹ РІ С„РѕСЂРјСѓ СЂРµРґР°РєС‚РѕСЂР° Рё РІРµСЂРЅСѓС‚СЊ РёРЅС‚РµСЂС„РµР№СЃ СѓРїСЂР°РІР»РµРЅРёСЏ.
+    /// Р—Р°РіСЂСѓР¶Р°С‚СЊ РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РІ СЂРµРґР°РєС‚РѕСЂ РЅРµ СЃР»РµРґСѓРµС‚
     /// </summary>
-    /// <param name="parentControl">Панель в окне настройки формы для размещения элементов редактора</param>
-    /// <param name="baseProvider">Базовый провайдер редактора настроек</param>
-    /// <param name="callerControlProvider">Провайдер настраиваемого табличного просмотра</param>
-    /// <returns>Интерфейс объекта редактора</returns>
+    /// <param name="parentControl">РџР°РЅРµР»СЊ РІ РѕРєРЅРµ РЅР°СЃС‚СЂРѕР№РєРё С„РѕСЂРјС‹ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ СЂРµРґР°РєС‚РѕСЂР°</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ СЂРµРґР°РєС‚РѕСЂР° РЅР°СЃС‚СЂРѕРµРє</param>
+    /// <param name="callerControlProvider">РџСЂРѕРІР°Р№РґРµСЂ РЅР°СЃС‚СЂР°РёРІР°РµРјРѕРіРѕ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <returns>РРЅС‚РµСЂС„РµР№СЃ РѕР±СЉРµРєС‚Р° СЂРµРґР°РєС‚РѕСЂР°</returns>
     IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPGridControl callerControlProvider);
   }
 
   #endregion
 
   /// <summary>
-  /// Описание всех возможных полей и настроек по умолчанию для
-  /// табличного просмотра EFPDataGridView или иерархического просмотра EFPDataTreeView. 
-  /// Класс не является потокобезопасным. Он должен вызываться только из основного потока приложения EFPApp.MainThread
+  /// РћРїРёСЃР°РЅРёРµ РІСЃРµС… РІРѕР·РјРѕР¶РЅС‹С… РїРѕР»РµР№ Рё РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ
+  /// С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° EFPDataGridView РёР»Рё РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° EFPDataTreeView. 
+  /// РљР»Р°СЃСЃ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј. РћРЅ РґРѕР»Р¶РµРЅ РІС‹Р·С‹РІР°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕС‚РѕРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ EFPApp.MainThread
   /// </summary>
   public partial class EFPGridProducer : IEFPConfigurableGridProducer
   {
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     /// <summary>
-    /// Имя конфигурации по умолчанию для отображения в списках
+    /// РРјСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІ СЃРїРёСЃРєР°С…
     /// </summary>
-    public const string DefaultConfigDisplayName = "< По умолчанию >";
+    public const string DefaultConfigDisplayName = "< РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ >";
 
     #endregion
 
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой объект
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ РѕР±СЉРµРєС‚
     /// </summary>
     public EFPGridProducer()
     {
@@ -138,10 +138,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Основные коллекции
+    #region РћСЃРЅРѕРІРЅС‹Рµ РєРѕР»Р»РµРєС†РёРё
 
     /// <summary>
-    /// Полный список столбцов, которые могут быть отображены в табличном просмотре
+    /// РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅС‹ РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ
     /// </summary>
     public EFPGridProducerColumns Columns
     {
@@ -155,13 +155,13 @@ namespace FreeLibSet.Forms
     private EFPGridProducerColumns _Columns;
 
     /// <summary>
-    /// Производный класс может создать объект производного класса для списка столбцов
+    /// РџСЂРѕРёР·РІРѕРґРЅС‹Р№ РєР»Р°СЃСЃ РјРѕР¶РµС‚ СЃРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ РїСЂРѕРёР·РІРѕРґРЅРѕРіРѕ РєР»Р°СЃСЃР° РґР»СЏ СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ
     /// </summary>
-    /// <returns>Коллекция</returns>
+    /// <returns>РљРѕР»Р»РµРєС†РёСЏ</returns>
     protected virtual EFPGridProducerColumns CreateColumns() { return new EFPGridProducerColumns(); }
 
     /// <summary>
-    /// Возвращает количество столбцов, которые добавлены в коллекцию Columns
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚РѕР»Р±С†РѕРІ, РєРѕС‚РѕСЂС‹Рµ РґРѕР±Р°РІР»РµРЅС‹ РІ РєРѕР»Р»РµРєС†РёСЋ Columns
     /// </summary>
     public int ColumnCount
     {
@@ -175,7 +175,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список строк всплывающих подсказок, которые могут быть отображены для строки табличного просмотра
+    /// РЎРїРёСЃРѕРє СЃС‚СЂРѕРє РІСЃРїР»С‹РІР°СЋС‰РёС… РїРѕРґСЃРєР°Р·РѕРє, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅС‹ РґР»СЏ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public EFPGridProducerToolTips ToolTips
     {
@@ -189,13 +189,13 @@ namespace FreeLibSet.Forms
     private EFPGridProducerToolTips _ToolTips;
 
     /// <summary>
-    /// Производный класс может создать объект производного класса для списка подсказок
+    /// РџСЂРѕРёР·РІРѕРґРЅС‹Р№ РєР»Р°СЃСЃ РјРѕР¶РµС‚ СЃРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ РїСЂРѕРёР·РІРѕРґРЅРѕРіРѕ РєР»Р°СЃСЃР° РґР»СЏ СЃРїРёСЃРєР° РїРѕРґСЃРєР°Р·РѕРє
     /// </summary>
-    /// <returns>Коллекция</returns>
+    /// <returns>РљРѕР»Р»РµРєС†РёСЏ</returns>
     protected virtual EFPGridProducerToolTips CreateToolTips() { return new EFPGridProducerToolTips(); }
 
     /// <summary>
-    /// Возвращает количество всплывающих подсказок, добавленных в коллекцию ToolTips
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РІСЃРїР»С‹РІР°СЋС‰РёС… РїРѕРґСЃРєР°Р·РѕРє, РґРѕР±Р°РІР»РµРЅРЅС‹С… РІ РєРѕР»Р»РµРєС†РёСЋ ToolTips
     /// </summary>
     public int ToolTipCount
     {
@@ -209,7 +209,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список возможных порядков сортировки табличного просмотра
+    /// РЎРїРёСЃРѕРє РІРѕР·РјРѕР¶РЅС‹С… РїРѕСЂСЏРґРєРѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public EFPDataViewOrders Orders
     {
@@ -223,13 +223,13 @@ namespace FreeLibSet.Forms
     private EFPDataViewOrders _Orders;
 
     /// <summary>
-    /// Производный класс может создать объект производного класса для списка порядков сортировки
+    /// РџСЂРѕРёР·РІРѕРґРЅС‹Р№ РєР»Р°СЃСЃ РјРѕР¶РµС‚ СЃРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ РїСЂРѕРёР·РІРѕРґРЅРѕРіРѕ РєР»Р°СЃСЃР° РґР»СЏ СЃРїРёСЃРєР° РїРѕСЂСЏРґРєРѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё
     /// </summary>
-    /// <returns>Коллекция</returns>
+    /// <returns>РљРѕР»Р»РµРєС†РёСЏ</returns>
     protected virtual EFPDataViewOrders CreateOrders() { return new EFPDataViewOrders(); }
 
     /// <summary>
-    /// Количество записей в списке Orders
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ РІ СЃРїРёСЃРєРµ Orders
     /// </summary>
     public int OrderCount
     {
@@ -243,17 +243,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список имен "обязательных" полей, которые всегда добавляются в список
-    /// Columns при вызове InitGrid() (например, "RefId")
-    /// По умолчанию - список пуст
+    /// РЎРїРёСЃРѕРє РёРјРµРЅ "РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С…" РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РІСЃРµРіРґР° РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РІ СЃРїРёСЃРѕРє
+    /// Columns РїСЂРё РІС‹Р·РѕРІРµ InitGrid() (РЅР°РїСЂРёРјРµСЂ, "RefId")
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - СЃРїРёСЃРѕРє РїСѓСЃС‚
     /// </summary>
     public IList<string> FixedColumns { get { return _FixedColumns; } }
     private SingleScopeList<string> _FixedColumns;
 
     /// <summary>
-    /// Вовзаращает список имен "обязательных" полей, которые всегда добавляются в список, в виде массива
+    /// Р’РѕРІР·Р°СЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РёРјРµРЅ "РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С…" РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РІСЃРµРіРґР° РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РІ СЃРїРёСЃРѕРє, РІ РІРёРґРµ РјР°СЃСЃРёРІР°
     /// </summary>
-    /// <returns>Массив имен</returns>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     public string[] GetFixedColumnArray()
     {
       return _FixedColumns.ToArray();
@@ -262,12 +262,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Конфигурации
+    #region РљРѕРЅС„РёРіСѓСЂР°С†РёРё
 
     /// <summary>
-    /// Кофнигурация табличного просмотра по умолчанию.
-    /// Если конфигурация не была задана в явном виде, она создается автоматически при
-    /// каждом обращении к свойству
+    /// РљРѕС„РЅРёРіСѓСЂР°С†РёСЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// Р•СЃР»Рё РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ РЅРµ Р±С‹Р»Р° Р·Р°РґР°РЅР° РІ СЏРІРЅРѕРј РІРёРґРµ, РѕРЅР° СЃРѕР·РґР°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСЂРё
+    /// РєР°Р¶РґРѕРј РѕР±СЂР°С‰РµРЅРёРё Рє СЃРІРѕР№СЃС‚РІСѓ
     /// </summary>
     public EFPDataGridViewConfig DefaultConfig
     {
@@ -287,35 +287,35 @@ namespace FreeLibSet.Forms
     private EFPDataGridViewConfig _DefaultConfig;
 
     /// <summary>
-    /// Именованные секции конфигурации
+    /// РРјРµРЅРѕРІР°РЅРЅС‹Рµ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
     private Dictionary<string, EFPDataGridViewConfig> _NamedConfigs;
 
     #endregion
 
-    #region Инициализация табличного просмотра
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
 
     /// <summary>
-    /// Инициализация табличного просмотра
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
-    /// <param name="controlProvider">Обработчик табличного просмотра</param>
-    /// <param name="reInit">При первом показе табличного просмотра получает значение False.
-    /// При повторных вызовах, когда табличный просмотр уже был инициализирован, получает значение true</param>
+    /// <param name="controlProvider">РћР±СЂР°Р±РѕС‚С‡РёРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="reInit">РџСЂРё РїРµСЂРІРѕРј РїРѕРєР°Р·Рµ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ False.
+    /// РџСЂРё РїРѕРІС‚РѕСЂРЅС‹С… РІС‹Р·РѕРІР°С…, РєРѕРіРґР° С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ СѓР¶Рµ Р±С‹Р» РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ, РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ true</param>
     public void InitGridView(EFPDataGridView controlProvider, bool reInit)
     {
       if (!(controlProvider is EFPConfigurableDataGridView))
-        throw new ArgumentException("Ожидался EFPConfigurableDataGridView", "controlProvider");
+        throw new ArgumentException("РћР¶РёРґР°Р»СЃСЏ EFPConfigurableDataGridView", "controlProvider");
       List<string> dummyColumns = new List<string>();
       InitGridView((EFPConfigurableDataGridView)controlProvider, reInit, controlProvider.CurrentConfig, dummyColumns);
     }
 
     /// <summary>
-    /// Инициализация табличного просмотра
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
-    /// <param name="controlProvider">Обработчик табличного просмотра</param>
+    /// <param name="controlProvider">РћР±СЂР°Р±РѕС‚С‡РёРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
     /// <param name="reInit"></param>
-    /// <param name="config">Конфигурация или null для использования конфигурации по умолчанию</param>
-    /// <param name="usedColumns">Сюда добавляются имена полей, которые должны быть в наборе данных</param>
+    /// <param name="config">РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ РёР»Рё null РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <param name="usedColumns">РЎСЋРґР° РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РёРјРµРЅР° РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ РЅР°Р±РѕСЂРµ РґР°РЅРЅС‹С…</param>
     public void InitGridView(EFPConfigurableDataGridView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
     {
       if (controlProvider == null)
@@ -323,7 +323,7 @@ namespace FreeLibSet.Forms
       if (reInit)
       {
         if (controlProvider.GridProducer != this)
-          throw new InvalidOperationException("Запрошена повторная инициализация, но свойство EFPDataGridView.GridProducer не установлено или установлено неверно");
+          throw new InvalidOperationException("Р—Р°РїСЂРѕС€РµРЅР° РїРѕРІС‚РѕСЂРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ, РЅРѕ СЃРІРѕР№СЃС‚РІРѕ EFPDataGridView.GridProducer РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РёР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РЅРµРІРµСЂРЅРѕ");
       }
       if (usedColumns == null)
         throw new ArgumentNullException("usedColumns");
@@ -337,12 +337,12 @@ namespace FreeLibSet.Forms
           Config = ControlProvider.ReadGridConfig(ControlProvider.CurrentConfigName);
 
           if (Config == null)
-            EFPApp.MessageBox("Настройка просмотра \"" + ControlProvider.CurrentConfigName + "\" была удалена. Загружается настройка по умолчанию");
+            EFPApp.MessageBox("РќР°СЃС‚СЂРѕР№РєР° РїСЂРѕСЃРјРѕС‚СЂР° \"" + ControlProvider.CurrentConfigName + "\" Р±С‹Р»Р° СѓРґР°Р»РµРЅР°. Р—Р°РіСЂСѓР¶Р°РµС‚СЃСЏ РЅР°СЃС‚СЂРѕР№РєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ");
         }
         catch (Exception e)
         {
-          EFPApp.MessageBox("Ошибка при загрузке настройки \"" + ControlProvider.CurrentConfigName + "\": " +
-            e.Message + ". Будет использована настройка по умолчанию");
+          EFPApp.MessageBox("РћС€РёР±РєР° РїСЂРё Р·Р°РіСЂСѓР·РєРµ РЅР°СЃС‚СЂРѕР№РєРё \"" + ControlProvider.CurrentConfigName + "\": " +
+            e.Message + ". Р‘СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅР° РЅР°СЃС‚СЂРѕР№РєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ");
           Config = null;
         }
       }
@@ -356,28 +356,28 @@ namespace FreeLibSet.Forms
         {
           config = GetNamedConfig(controlProvider.DefaultConfigName);
           if (config == null)
-            throw new BugException("Не найдена именная конфигурация \"" + controlProvider.DefaultConfigName +
-              "\". Неправильное значение свойства EFPAccDepGrid.DefaultConfigName");
+            throw new BugException("РќРµ РЅР°Р№РґРµРЅР° РёРјРµРЅРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ \"" + controlProvider.DefaultConfigName +
+              "\". РќРµРїСЂР°РІРёР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° EFPAccDepGrid.DefaultConfigName");
         }
         // TODO: ????? ControlProvider.CurrentConfigName = String.Empty;
       }
 
 
-      // предотвращаем Stack overflow
+      // РїСЂРµРґРѕС‚РІСЂР°С‰Р°РµРј Stack overflow
       if (config != controlProvider.CurrentConfig)
       {
         controlProvider.CurrentConfig = config;
         //ControlProvider.GridProducer = this;
       }
 
-      #region Фиксированные поля
+      #region Р¤РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рµ РїРѕР»СЏ
 
       foreach (string fixedName in FixedColumns)
         usedColumns.Add(fixedName);
 
       #endregion
 
-      #region Добавление столбцов в просмотр
+      #region Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚РѕР»Р±С†РѕРІ РІ РїСЂРѕСЃРјРѕС‚СЂ
 
       int maxTextRowHeight = 1;
       for (int i = 0; i < config.Columns.Count; i++)
@@ -385,12 +385,12 @@ namespace FreeLibSet.Forms
         string columnName = config.Columns[i].ColumnName;
         EFPGridProducerColumn colDef = Columns[columnName];
         if (colDef == null)
-          // Нет в с списке доступных столбцов
+          // РќРµС‚ РІ СЃ СЃРїРёСЃРєРµ РґРѕСЃС‚СѓРїРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ
           continue;
         DataGridViewColumn gridCol = colDef.CreateColumn();
         colDef.ApplyConfig(gridCol, config.Columns[i], controlProvider);
         controlProvider.Control.Columns.Add(gridCol);
-        // Запоминаем поля, которые нужны
+        // Р—Р°РїРѕРјРёРЅР°РµРј РїРѕР»СЏ, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅС‹
         colDef.GetColumnNames(usedColumns);
 
         EFPDataGridViewColumn col2 = controlProvider.Columns[gridCol];
@@ -416,24 +416,24 @@ namespace FreeLibSet.Forms
       {
         int startColumnIndex = controlProvider.Columns.IndexOf(config.StartColumnName);
         //else
-        //  // Активируем первый столбец с автоинкрементом
+        //  // РђРєС‚РёРІРёСЂСѓРµРј РїРµСЂРІС‹Р№ СЃС‚РѕР»Р±РµС† СЃ Р°РІС‚РѕРёРЅРєСЂРµРјРµРЅС‚РѕРј
         //  16.05.2018
-        //  Не надо. Активация нужного столбца перенесена в EFPDataGridView
+        //  РќРµ РЅР°РґРѕ. РђРєС‚РёРІР°С†РёСЏ РЅСѓР¶РЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РїРµСЂРµРЅРµСЃРµРЅР° РІ EFPDataGridView
         //  StartColumnIndex = ControlProvider.FirstIncSearchColumnIndex;
 
         controlProvider.CurrentColumnIndex = startColumnIndex;
-        controlProvider.SaveCurrentColumnAllowed = false; // чтобы не восстанавливался столбец из сохраненной секции конфигурации
+        controlProvider.SaveCurrentColumnAllowed = false; // С‡С‚РѕР±С‹ РЅРµ РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°Р»СЃСЏ СЃС‚РѕР»Р±РµС† РёР· СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
       }
       else
         controlProvider.SaveCurrentColumnAllowed = true;
 
       // 16.07.2021
-      // При добавлении порядков сортировки больше не будем использовать поля, которые нужны только для всплывающих подсказок
+      // РџСЂРё РґРѕР±Р°РІР»РµРЅРёРё РїРѕСЂСЏРґРєРѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё Р±РѕР»СЊС€Рµ РЅРµ Р±СѓРґРµРј РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїРѕР»СЏ, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅС‹ С‚РѕР»СЊРєРѕ РґР»СЏ РІСЃРїР»С‹РІР°СЋС‰РёС… РїРѕРґСЃРєР°Р·РѕРє
       SingleScopeList<string> usedColumnsForOrders = new SingleScopeList<string>(usedColumns);
 
       #endregion
 
-      #region Всплывающие подсказки
+      #region Р’СЃРїР»С‹РІР°СЋС‰РёРµ РїРѕРґСЃРєР°Р·РєРё
 
       for (int i = 0; i < config.ToolTips.Count; i++)
       {
@@ -448,7 +448,7 @@ namespace FreeLibSet.Forms
       if (!reInit)
         controlProvider.GetCellAttributes += EFPDataGridView_GetCellAttributes;
 
-      #region Доступные порядки сортировки
+      #region Р”РѕСЃС‚СѓРїРЅС‹Рµ РїРѕСЂСЏРґРєРё СЃРѕСЂС‚РёСЂРѕРІРєРё
 
       if (controlProvider.UseGridProducerOrders)
       {
@@ -457,8 +457,8 @@ namespace FreeLibSet.Forms
         {
           for (int i = 0; i < Orders.Count; i++)
           {
-            // Добавляем только объекты сортировки, для которых существуют столбцы просмотра или которые объявлены фиксированными
-            if (Orders[i].AreAllColumnsPresented(usedColumnsForOrders)) // есть все необходимые поля ?
+            // Р”РѕР±Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РѕР±СЉРµРєС‚С‹ СЃРѕСЂС‚РёСЂРѕРІРєРё, РґР»СЏ РєРѕС‚РѕСЂС‹С… СЃСѓС‰РµСЃС‚РІСѓСЋС‚ СЃС‚РѕР»Р±С†С‹ РїСЂРѕСЃРјРѕС‚СЂР° РёР»Рё РєРѕС‚РѕСЂС‹Рµ РѕР±СЉСЏРІР»РµРЅС‹ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹РјРё
+            if (Orders[i].AreAllColumnsPresented(usedColumnsForOrders)) // РµСЃС‚СЊ РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РїРѕР»СЏ ?
               controlProvider.Orders.Add(Orders[i]);
           }
         }
@@ -490,7 +490,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e) // 21.05.2021
           {
-            args.ToolTipText = "Ошибка при получении подсказки: " + e.Message;
+            args.ToolTipText = "РћС€РёР±РєР° РїСЂРё РїРѕР»СѓС‡РµРЅРёРё РїРѕРґСЃРєР°Р·РєРё: " + e.Message;
           }
           break;
       }
@@ -499,7 +499,7 @@ namespace FreeLibSet.Forms
     private void DoGetValue(EFPDataGridView controlProvider, EFPDataGridViewCellAttributesEventArgs args, EFPGridProducerColumn colDef)
     {
       if (args.Value != null)
-        return; // уже определено
+        return; // СѓР¶Рµ РѕРїСЂРµРґРµР»РµРЅРѕ
 
       DataRow sourceRow = controlProvider.GetDataRow(args.RowIndex);
 
@@ -519,7 +519,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (controlProvider.CurrentConfig == null)
-        throw new NullReferenceException("Не задано свойство EFPDataGridView.CurrentConfig");
+        throw new NullReferenceException("РќРµ Р·Р°РґР°РЅРѕ СЃРІРѕР№СЃС‚РІРѕ EFPDataGridView.CurrentConfig");
 #endif
 
       if (!controlProvider.CurrentConfig.CurrentCellToolTip)
@@ -541,9 +541,9 @@ namespace FreeLibSet.Forms
       {
         EFPGridProducerToolTip toolTip = this.ToolTips[controlProvider.CurrentConfig.ToolTips[i].ToolTipName];
         if (toolTip == null)
-          continue; // ерунда какая-то
+          continue; // РµСЂСѓРЅРґР° РєР°РєР°СЏ-С‚Рѕ
 
-        // Если в подсказки входит столбец, на который наведена мышь, то пропускаем подсказку
+        // Р•СЃР»Рё РІ РїРѕРґСЃРєР°Р·РєРё РІС…РѕРґРёС‚ СЃС‚РѕР»Р±РµС†, РЅР° РєРѕС‚РѕСЂС‹Р№ РЅР°РІРµРґРµРЅР° РјС‹С€СЊ, С‚Рѕ РїСЂРѕРїСѓСЃРєР°РµРј РїРѕРґСЃРєР°Р·РєСѓ
         List<string> lst1 = new List<string>();
         toolTip.GetColumnNames(lst1);
         if (lst1.Contains(args.ColumnName))
@@ -558,7 +558,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          s = toolTip.DisplayName + ": Ошибка! " + e.Message;
+          s = toolTip.DisplayName + ": РћС€РёР±РєР°! " + e.Message;
         }
         if (!String.IsNullOrEmpty(s))
           lst2.Add(s);
@@ -575,29 +575,29 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Инициализация древовидного просмотра
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґСЂРµРІРѕРІРёРґРЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
 
     /// <summary>
-    /// Инициализация иерархического просмотра
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
-    /// <param name="controlProvider">Обработчик табличного просмотра</param>
-    /// <param name="reInit">При первом показе табличного просмотра получает значение False.
-    /// При повторных вызовах, когда табличный просмотр уже был инициализирован, получает значение true</param>
+    /// <param name="controlProvider">РћР±СЂР°Р±РѕС‚С‡РёРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="reInit">РџСЂРё РїРµСЂРІРѕРј РїРѕРєР°Р·Рµ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ False.
+    /// РџСЂРё РїРѕРІС‚РѕСЂРЅС‹С… РІС‹Р·РѕРІР°С…, РєРѕРіРґР° С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ СѓР¶Рµ Р±С‹Р» РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ, РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ true</param>
     public void InitTreeView(EFPDataTreeView controlProvider, bool reInit)
     {
       if (!(controlProvider is EFPConfigurableDataTreeView))
-        throw new ArgumentException("Ожидался EFPConfigurableDataTreeView", "controlProvider");
+        throw new ArgumentException("РћР¶РёРґР°Р»СЃСЏ EFPConfigurableDataTreeView", "controlProvider");
       List<string> dummyColumns = new List<string>();
       InitTreeView((EFPConfigurableDataTreeView)controlProvider, reInit, controlProvider.CurrentConfig, dummyColumns);
     }
 
     /// <summary>
-    /// Инициализация иерархического просмотра
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
-    /// <param name="controlProvider">Обработчик просмотра</param>
+    /// <param name="controlProvider">РћР±СЂР°Р±РѕС‚С‡РёРє РїСЂРѕСЃРјРѕС‚СЂР°</param>
     /// <param name="reInit"></param>
-    /// <param name="config">Конфигурация или null для использования конфигурации по умолчанию</param>
-    /// <param name="usedColumns">Сюда добавляются имена полей, которые должны быть в наборе данных</param>
+    /// <param name="config">РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ РёР»Рё null РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <param name="usedColumns">РЎСЋРґР° РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РёРјРµРЅР° РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ РЅР°Р±РѕСЂРµ РґР°РЅРЅС‹С…</param>
     public void InitTreeView(EFPConfigurableDataTreeView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
     {
       if (controlProvider == null)
@@ -605,7 +605,7 @@ namespace FreeLibSet.Forms
       if (reInit)
       {
         if (controlProvider.GridProducer != this)
-          throw new InvalidOperationException("Запрошена повторная инициализация, но свойство EFPDataGridView.GridProducer не установлено или установлено неверно");
+          throw new InvalidOperationException("Р—Р°РїСЂРѕС€РµРЅР° РїРѕРІС‚РѕСЂРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ, РЅРѕ СЃРІРѕР№СЃС‚РІРѕ EFPDataGridView.GridProducer РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РёР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РЅРµРІРµСЂРЅРѕ");
       }
       if (usedColumns == null)
         throw new ArgumentNullException("usedColumns");
@@ -619,12 +619,12 @@ namespace FreeLibSet.Forms
           config = controlProvider.ReadGridConfig(controlProvider.CurrentConfigName);
 
           if (config == null)
-            EFPApp.MessageBox("Настройка просмотра \"" + controlProvider.CurrentConfigName + "\" была удалена. Загружается настройка по умолчанию");
+            EFPApp.MessageBox("РќР°СЃС‚СЂРѕР№РєР° РїСЂРѕСЃРјРѕС‚СЂР° \"" + controlProvider.CurrentConfigName + "\" Р±С‹Р»Р° СѓРґР°Р»РµРЅР°. Р—Р°РіСЂСѓР¶Р°РµС‚СЃСЏ РЅР°СЃС‚СЂРѕР№РєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ");
         }
         catch (Exception e)
         {
-          EFPApp.MessageBox("Ошибка при загрузке настройки \"" + controlProvider.CurrentConfigName + "\": " +
-            e.Message + ". Будет использована настройка по умолчанию");
+          EFPApp.MessageBox("РћС€РёР±РєР° РїСЂРё Р·Р°РіСЂСѓР·РєРµ РЅР°СЃС‚СЂРѕР№РєРё \"" + controlProvider.CurrentConfigName + "\": " +
+            e.Message + ". Р‘СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅР° РЅР°СЃС‚СЂРѕР№РєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ");
           config = null;
         }
       }
@@ -638,14 +638,14 @@ namespace FreeLibSet.Forms
         {
           config = this.GetNamedConfig(controlProvider.DefaultConfigName);
           if (config == null)
-            throw new BugException("Не найдена именная конфигурация \"" + controlProvider.DefaultConfigName +
-              "\". Неправильное значение свойства EFPAccDepGrid.DefaultConfigName");
+            throw new BugException("РќРµ РЅР°Р№РґРµРЅР° РёРјРµРЅРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ \"" + controlProvider.DefaultConfigName +
+              "\". РќРµРїСЂР°РІРёР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° EFPAccDepGrid.DefaultConfigName");
         }
         // TODO: ????? controlProvider.CurrentConfigName = String.Empty;
       }
 
 
-      // предотвращаем Stack overflow
+      // РїСЂРµРґРѕС‚РІСЂР°С‰Р°РµРј Stack overflow
       if (config != controlProvider.CurrentConfig)
       {
         controlProvider.CurrentConfig = config;
@@ -663,13 +663,13 @@ namespace FreeLibSet.Forms
         string columnName = config.Columns[i].ColumnName;
         EFPGridProducerColumn colDef = this.Columns[columnName];
         if (colDef == null)
-          // Нет в с списке доступных столбцов
+          // РќРµС‚ РІ СЃ СЃРїРёСЃРєРµ РґРѕСЃС‚СѓРїРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ
           continue;
-        // Создаем объект TreeColumn
+        // РЎРѕР·РґР°РµРј РѕР±СЉРµРєС‚ TreeColumn
         TreeColumn tc = colDef.CreateTreeColumn(config.Columns[i]);
         controlProvider.Control.Columns.Add(tc);
 
-        // Создаем объект NodeControl
+        // РЎРѕР·РґР°РµРј РѕР±СЉРµРєС‚ NodeControl
         BindableControl bc = colDef.CreateNodeControl();
         colDef.ApplyConfig(bc, config.Columns[i], controlProvider);
         bc.VirtualMode = true;
@@ -679,7 +679,7 @@ namespace FreeLibSet.Forms
 
 
 
-        // Запоминаем поля, которые нужны
+        // Р—Р°РїРѕРјРёРЅР°РµРј РїРѕР»СЏ, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅС‹
         colDef.GetColumnNames(usedColumns);
         /*
         EFPDataGridViewColumn Col2 = ControlProvider.Columns[Col];
@@ -700,7 +700,7 @@ namespace FreeLibSet.Forms
       /*
       int StartColumnIndex;
       if (String.IsNullOrEmpty(Config.StartColumnName))
-        // Активируем первый столбец с автоинкрементом
+        // РђРєС‚РёРІРёСЂСѓРµРј РїРµСЂРІС‹Р№ СЃС‚РѕР»Р±РµС† СЃ Р°РІС‚РѕРёРЅРєСЂРµРјРµРЅС‚РѕРј
         StartColumnIndex = ControlProvider.FirstIncSearchColumnIndex;
       else
         StartColumnIndex = ControlProvider.Columns.IndexOf(Config.StartColumnName);
@@ -719,9 +719,9 @@ namespace FreeLibSet.Forms
       }
        */
 
-      // Для отображения всплывающих подсказок и получения значений нужен отдельный 
-      // объект, который будет хранить только выбранные части
-      // подсказки и содержать обработчик
+      // Р”Р»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЃРїР»С‹РІР°СЋС‰РёС… РїРѕРґСЃРєР°Р·РѕРє Рё РїРѕР»СѓС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РЅСѓР¶РµРЅ РѕС‚РґРµР»СЊРЅС‹Р№ 
+      // РѕР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ С…СЂР°РЅРёС‚СЊ С‚РѕР»СЊРєРѕ РІС‹Р±СЂР°РЅРЅС‹Рµ С‡Р°СЃС‚Рё
+      // РїРѕРґСЃРєР°Р·РєРё Рё СЃРѕРґРµСЂР¶Р°С‚СЊ РѕР±СЂР°Р±РѕС‚С‡РёРє
       if (!reInit)
       {              /*
         GridProducerHandler tth = new GridProducerHandler(this, ControlProvider);
@@ -730,7 +730,7 @@ namespace FreeLibSet.Forms
         ControlProvider.Control.VirtualMode = true;*/
       }
 
-      // Попытаемся сохранить старый порядок сортировки
+      // РџРѕРїС‹С‚Р°РµРјСЃСЏ СЃРѕС…СЂР°РЅРёС‚СЊ СЃС‚Р°СЂС‹Р№ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё
       string orgOrderDisplayName = String.Empty;
       if (reInit && controlProvider.CurrentOrder != null)
         orgOrderDisplayName = controlProvider.CurrentOrder.DisplayName;
@@ -738,16 +738,16 @@ namespace FreeLibSet.Forms
       if (controlProvider.OrderCount > 0)
         controlProvider.Orders.Clear();
       else
-        controlProvider.DisableOrdering(); // запрет щелкать по заголовкам
+        controlProvider.DisableOrdering(); // Р·Р°РїСЂРµС‚ С‰РµР»РєР°С‚СЊ РїРѕ Р·Р°РіРѕР»РѕРІРєР°Рј
 #if XXX
       int NewOrderIndex = -1;
       if (Orders.Count > 0)
       {
         for (int i = 0; i < Orders.Count; i++)
         {
-          // Добавляем только объекты сортировки, для которых существуют поля
-          // в массиве Fields
-          if (UsedColumns.Contains(Orders[i].RequiredColumns)) // есть все необходимые поля ?
+          // Р”РѕР±Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РѕР±СЉРµРєС‚С‹ СЃРѕСЂС‚РёСЂРѕРІРєРё, РґР»СЏ РєРѕС‚РѕСЂС‹С… СЃСѓС‰РµСЃС‚РІСѓСЋС‚ РїРѕР»СЏ
+          // РІ РјР°СЃСЃРёРІРµ Fields
+          if (UsedColumns.Contains(Orders[i].RequiredColumns)) // РµСЃС‚СЊ РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РїРѕР»СЏ ?
           {
             ControlProvider.Orders.Add(Orders[i].ColumnNames, Orders[i].DisplayName, Orders[i].SortInfo);
             if (Orders[i].DisplayName == OrgOrderDisplayName)
@@ -773,14 +773,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Работа с настройками просмотра
+    #region Р Р°Р±РѕС‚Р° СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё РїСЂРѕСЃРјРѕС‚СЂР°
 
     /// <summary>
-    /// Создает новый объект для DefaultConfig и опционально заполняет его всеми
-    /// имеющимися столбцами и ToolTip'ами
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ РґР»СЏ DefaultConfig Рё РѕРїС†РёРѕРЅР°Р»СЊРЅРѕ Р·Р°РїРѕР»РЅСЏРµС‚ РµРіРѕ РІСЃРµРјРё
+    /// РёРјРµСЋС‰РёРјРёСЃСЏ СЃС‚РѕР»Р±С†Р°РјРё Рё ToolTip'Р°РјРё
     /// </summary>
-    /// <param name="addAll">Если true, то будут вызваны методы GridConfig.Columns.Add() и
-    /// ToolTips.Add() для имеющихся на текущий момент значениями</param>
+    /// <param name="addAll">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґСѓС‚ РІС‹Р·РІР°РЅС‹ РјРµС‚РѕРґС‹ GridConfig.Columns.Add() Рё
+    /// ToolTips.Add() РґР»СЏ РёРјРµСЋС‰РёС…СЃСЏ РЅР° С‚РµРєСѓС‰РёР№ РјРѕРјРµРЅС‚ Р·РЅР°С‡РµРЅРёСЏРјРё</param>
     public void NewDefaultConfig(bool addAll)
     {
       DefaultConfig = new EFPDataGridViewConfig();
@@ -792,10 +792,10 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Создает объект конфигурации и устанавливает в ней отметки для всех столбцов и
-    /// всплывающих подсказок.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РєРѕРЅС„РёРіСѓСЂР°С†РёРё Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РІ РЅРµР№ РѕС‚РјРµС‚РєРё РґР»СЏ РІСЃРµС… СЃС‚РѕР»Р±С†РѕРІ Рё
+    /// РІСЃРїР»С‹РІР°СЋС‰РёС… РїРѕРґСЃРєР°Р·РѕРє.
     /// </summary>
-    /// <returns>Новая конфигурация</returns>
+    /// <returns>РќРѕРІР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ</returns>
     public EFPDataGridViewConfig CreateDefaultConfig()
     {
       EFPDataGridViewConfig config = new EFPDataGridViewConfig();
@@ -807,10 +807,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создать настройку с фиксированным именем
+    /// РЎРѕР·РґР°С‚СЊ РЅР°СЃС‚СЂРѕР№РєСѓ СЃ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рј РёРјРµРЅРµРј
     /// </summary>
-    /// <param name="fixedName">Имя настройки</param>
-    /// <returns>Пустая конфигурация, которую нужно заполнить</returns>
+    /// <param name="fixedName">РРјСЏ РЅР°СЃС‚СЂРѕР№РєРё</param>
+    /// <returns>РџСѓСЃС‚Р°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ, РєРѕС‚РѕСЂСѓСЋ РЅСѓР¶РЅРѕ Р·Р°РїРѕР»РЅРёС‚СЊ</returns>
     public EFPDataGridViewConfig NewNamedConfig(string fixedName)
     {
 #if DEBUG
@@ -826,10 +826,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить настройку с фиксированным именем.
-    /// Если настройка не была создана, генерируется исключение
+    /// РџРѕР»СѓС‡РёС‚СЊ РЅР°СЃС‚СЂРѕР№РєСѓ СЃ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рј РёРјРµРЅРµРј.
+    /// Р•СЃР»Рё РЅР°СЃС‚СЂРѕР№РєР° РЅРµ Р±С‹Р»Р° СЃРѕР·РґР°РЅР°, РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="fixedName">Имя настройки</param>
+    /// <param name="fixedName">РРјСЏ РЅР°СЃС‚СЂРѕР№РєРё</param>
     /// <returns></returns>
     public EFPDataGridViewConfig GetNamedConfig(string fixedName)
     {
@@ -844,12 +844,12 @@ namespace FreeLibSet.Forms
       if (_NamedConfigs.TryGetValue(fixedName, out config))
         return config;
       else
-        throw new ArgumentException("Фиксированная настройка табличного просмотра с именем \"" + fixedName +
-          "\" не была объявлена в генераторе табличного просмотра", "fixedName");
+        throw new ArgumentException("Р¤РёРєСЃРёСЂРѕРІР°РЅРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° СЃ РёРјРµРЅРµРј \"" + fixedName +
+          "\" РЅРµ Р±С‹Р»Р° РѕР±СЉСЏРІР»РµРЅР° РІ РіРµРЅРµСЂР°С‚РѕСЂРµ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°", "fixedName");
     }
 
     /// <summary>
-    /// Возвращает имена настроек, добавленных с помощью NewNamedConfig()
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјРµРЅР° РЅР°СЃС‚СЂРѕРµРє, РґРѕР±Р°РІР»РµРЅРЅС‹С… СЃ РїРѕРјРѕС‰СЊСЋ NewNamedConfig()
     /// </summary>
     /// <returns></returns>
     public string[] GetNamedConfigNames()
@@ -865,13 +865,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Загрузить сохраненную ранее конфигурацию с заданным именем. Если имя не задано,
-    /// то возвращается DefaultConfig. Если имя неправильное, или настройка была удалена,
-    /// то возвращается null
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ СЃРѕС…СЂР°РЅРµРЅРЅСѓСЋ СЂР°РЅРµРµ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј. Р•СЃР»Рё РёРјСЏ РЅРµ Р·Р°РґР°РЅРѕ,
+    /// С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ DefaultConfig. Р•СЃР»Рё РёРјСЏ РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ, РёР»Рё РЅР°СЃС‚СЂРѕР№РєР° Р±С‹Р»Р° СѓРґР°Р»РµРЅР°,
+    /// С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="configSectionName">Имя секции конфигурации, используемое табличным просмотром</param>
-    /// <param name="defaulConfigName">Имя фиксированной настройки или пустая строка, если используется настройка по умолчанию</param>
-    /// <param name="cfgName">Имя сохраненной секции</param>
+    /// <param name="configSectionName">РРјСЏ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё, РёСЃРїРѕР»СЊР·СѓРµРјРѕРµ С‚Р°Р±Р»РёС‡РЅС‹Рј РїСЂРѕСЃРјРѕС‚СЂРѕРј</param>
+    /// <param name="defaulConfigName">РРјСЏ С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё РёР»Рё РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РµСЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РЅР°СЃС‚СЂРѕР№РєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <param name="cfgName">РРјСЏ СЃРѕС…СЂР°РЅРµРЅРЅРѕР№ СЃРµРєС†РёРё</param>
     /// <returns></returns>
     public EFPDataGridViewConfig LoadConfig(string configSectionName, string defaulConfigName, string cfgName)
     {
@@ -890,13 +890,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Загрузить сохраненную ранее конфигурацию, определив имя текущей конфигурации. 
-    /// Если имя не было сохранено или неправильное, или настройка была удалена,
-    /// то возвращается DefaultConfig
+    /// Р—Р°РіСЂСѓР·РёС‚СЊ СЃРѕС…СЂР°РЅРµРЅРЅСѓСЋ СЂР°РЅРµРµ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ, РѕРїСЂРµРґРµР»РёРІ РёРјСЏ С‚РµРєСѓС‰РµР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё. 
+    /// Р•СЃР»Рё РёРјСЏ РЅРµ Р±С‹Р»Рѕ СЃРѕС…СЂР°РЅРµРЅРѕ РёР»Рё РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ, РёР»Рё РЅР°СЃС‚СЂРѕР№РєР° Р±С‹Р»Р° СѓРґР°Р»РµРЅР°,
+    /// С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ DefaultConfig
     /// </summary>
-    /// <param name="configSectionName">Имя секции конфигурации, используемое табличным просмотром</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки или пустая строка, если используется настройка по умолчанию</param>
-    /// <returns>Загруженная секция или DefaultConfig</returns>
+    /// <param name="configSectionName">РРјСЏ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё, РёСЃРїРѕР»СЊР·СѓРµРјРѕРµ С‚Р°Р±Р»РёС‡РЅС‹Рј РїСЂРѕСЃРјРѕС‚СЂРѕРј</param>
+    /// <param name="defaultConfigName">РРјСЏ С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё РёР»Рё РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РµСЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РЅР°СЃС‚СЂРѕР№РєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <returns>Р—Р°РіСЂСѓР¶РµРЅРЅР°СЏ СЃРµРєС†РёСЏ РёР»Рё DefaultConfig</returns>
     public EFPDataGridViewConfig LoadConfig(string configSectionName, string defaultConfigName)
     {
       string cfgName = GetCurrentConfigName(configSectionName);
@@ -907,7 +907,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Определить имя текущей конфигурации, которая должна использоваться просмотром
+    /// РћРїСЂРµРґРµР»РёС‚СЊ РёРјСЏ С‚РµРєСѓС‰РµР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё, РєРѕС‚РѕСЂР°СЏ РґРѕР»Р¶РЅР° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РїСЂРѕСЃРјРѕС‚СЂРѕРј
     /// </summary>
     /// <param name="configSectionName"></param>
     /// <returns></returns>
@@ -918,16 +918,16 @@ namespace FreeLibSet.Forms
       /*
       if (String.IsNullOrEmpty(ConfigSectionName))
         throw new ArgumentNullException("ConfigSectionName");
-      ConfigSection Sect = AccDepClientExec.ConfigSections[ConfigSectionName, "Просмотр"];
-      return Sect.GetString("Настройка");
+      ConfigSection Sect = AccDepClientExec.ConfigSections[ConfigSectionName, "РџСЂРѕСЃРјРѕС‚СЂ"];
+      return Sect.GetString("РќР°СЃС‚СЂРѕР№РєР°");
        * */
     }
 
     /// <summary>
-    /// Получить список полей, необходимых для заданной конфигурации
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РїРѕР»РµР№, РЅРµРѕР±С…РѕРґРёРјС‹С… РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="config">Конфигурация. Если null, то возвращается FixedColumns</param>
-    /// <param name="usedColumns">Сюда добавляются имена полей</param>
+    /// <param name="config">РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ. Р•СЃР»Рё null, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ FixedColumns</param>
+    /// <param name="usedColumns">РЎСЋРґР° РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РёРјРµРЅР° РїРѕР»РµР№</param>
     public void GetColumnNames(EFPDataGridViewConfig config, IList<string> usedColumns)
     {
       if (usedColumns == null)
@@ -938,19 +938,19 @@ namespace FreeLibSet.Forms
         usedColumns.Add(fixedName);
       if (config != null)
       {
-        // Столбцы
+        // РЎС‚РѕР»Р±С†С‹
         for (int i = 0; i < config.Columns.Count; i++)
         {
           string columnName = config.Columns[i].ColumnName;
           EFPGridProducerColumn colDef = Columns[columnName];
           if (colDef == null)
-            // Нет в с списке доступных столбцов
+            // РќРµС‚ РІ СЃ СЃРїРёСЃРєРµ РґРѕСЃС‚СѓРїРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ
             continue;
-          // Запоминаем поля, которые нужны
+          // Р—Р°РїРѕРјРёРЅР°РµРј РїРѕР»СЏ, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅС‹
           colDef.GetColumnNames(usedColumns);
         }
 
-        // Всплывающие подсказки
+        // Р’СЃРїР»С‹РІР°СЋС‰РёРµ РїРѕРґСЃРєР°Р·РєРё
         for (int i = 0; i < config.ToolTips.Count; i++)
         {
           EFPGridProducerToolTip item = ToolTips[config.ToolTips[i].ToolTipName];
@@ -962,12 +962,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить список полей, необходимых для табличного просмотра, при использовании
-    /// конфигурации, запомненной пользователем
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РїРѕР»РµР№, РЅРµРѕР±С…РѕРґРёРјС‹С… РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°, РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё
+    /// РєРѕРЅС„РёРіСѓСЂР°С†РёРё, Р·Р°РїРѕРјРЅРµРЅРЅРѕР№ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј
     /// </summary>
-    /// <param name="configSectioName">Имя секции конфигурации для табличного просмотра</param>
-    /// <param name="defaultConfigName">Имя фиксированной настройки или пустая строка, если используется настройка по умолчанию</param>
-    /// <param name="usedColumns">Сюда добавляются имена полей</param>
+    /// <param name="configSectioName">РРјСЏ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="defaultConfigName">РРјСЏ С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё РёР»Рё РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РµСЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РЅР°СЃС‚СЂРѕР№РєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</param>
+    /// <param name="usedColumns">РЎСЋРґР° РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РёРјРµРЅР° РїРѕР»РµР№</param>
     public void GetColumnNames(string configSectioName, string defaultConfigName, IList<string> usedColumns)
     {
       GetColumnNames(LoadConfig(configSectioName, defaultConfigName), usedColumns);
@@ -979,7 +979,7 @@ namespace FreeLibSet.Forms
       for (int i = 0; i < Columns.Count; i++)
       {
         res.Columns.Add(new EFPDataGridViewConfigColumn(Columns[i].Name));
-        // Если определен только один столбец - делаем его с заполнением
+        // Р•СЃР»Рё РѕРїСЂРµРґРµР»РµРЅ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЃС‚РѕР»Р±РµС† - РґРµР»Р°РµРј РµРіРѕ СЃ Р·Р°РїРѕР»РЅРµРЅРёРµРј
         if (Columns.Count == 1)
           res.Columns[0].FillMode = true;
       }
@@ -993,17 +993,17 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Редактор
+    #region Р РµРґР°РєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация редактора настройки столбцов табличного просмотра.
-    /// Метод должен добавить управляющие элементы в форму редактора и вернуть интерфейс управления.
-    /// Загружать начальные значения в редактор не следует
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЂРµРґР°РєС‚РѕСЂР° РЅР°СЃС‚СЂРѕР№РєРё СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ РґРѕР±Р°РІРёС‚СЊ СѓРїСЂР°РІР»СЏСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹ РІ С„РѕСЂРјСѓ СЂРµРґР°РєС‚РѕСЂР° Рё РІРµСЂРЅСѓС‚СЊ РёРЅС‚РµСЂС„РµР№СЃ СѓРїСЂР°РІР»РµРЅРёСЏ.
+    /// Р—Р°РіСЂСѓР¶Р°С‚СЊ РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РІ СЂРµРґР°РєС‚РѕСЂ РЅРµ СЃР»РµРґСѓРµС‚
     /// </summary>
-    /// <param name="parentControl">Панель в окне настройки формы для размещения элементов редактора</param>
-    /// <param name="baseProvider">Базовый провайдер редактора настроек</param>
-    /// <param name="callerControlProvider">Провайдер настраиваемого табличного просмотра</param>
-    /// <returns>Интерфейс объекта редактора</returns>
+    /// <param name="parentControl">РџР°РЅРµР»СЊ РІ РѕРєРЅРµ РЅР°СЃС‚СЂРѕР№РєРё С„РѕСЂРјС‹ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ СЂРµРґР°РєС‚РѕСЂР°</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ СЂРµРґР°РєС‚РѕСЂР° РЅР°СЃС‚СЂРѕРµРє</param>
+    /// <param name="callerControlProvider">РџСЂРѕРІР°Р№РґРµСЂ РЅР°СЃС‚СЂР°РёРІР°РµРјРѕРіРѕ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <returns>РРЅС‚РµСЂС„РµР№СЃ РѕР±СЉРµРєС‚Р° СЂРµРґР°РєС‚РѕСЂР°</returns>
     public IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPGridControl callerControlProvider)
     {
       EFPGridProducerEditor form = new EFPGridProducerEditor(this, callerControlProvider, baseProvider);
@@ -1016,8 +1016,8 @@ namespace FreeLibSet.Forms
     #region IReadOnlyObject
 
     /// <summary>
-    /// Возвращает true, если GridProducer был переведен в режим "Только чтение".
-    /// Переводится при первом присоединении к табличному просмотру или по окончании инициализации объекта DBUI в ExtDBDocForms.dll
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё GridProducer Р±С‹Р» РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// РџРµСЂРµРІРѕРґРёС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРё Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ РёР»Рё РїРѕ РѕРєРѕРЅС‡Р°РЅРёРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РѕР±СЉРµРєС‚Р° DBUI РІ ExtDBDocForms.dll
     /// </summary>
     public bool IsReadOnly
     {
@@ -1031,7 +1031,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Генерирует исключение, если GridProducer был переведен в режим "Только чтение".
+    /// Р“РµРЅРµСЂРёСЂСѓРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё GridProducer Р±С‹Р» РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1040,9 +1040,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Перевод GridProducer в режим "только чтение".
-    /// При первом вызове выполняется проверка корректности данных.
-    /// Повторные вызовы игнорируются
+    /// РџРµСЂРµРІРѕРґ GridProducer РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// РџСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРѕРІРµСЂРєР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РґР°РЅРЅС‹С….
+    /// РџРѕРІС‚РѕСЂРЅС‹Рµ РІС‹Р·РѕРІС‹ РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ
     /// </summary>
     public void SetReadOnly()
     {
@@ -1053,23 +1053,23 @@ namespace FreeLibSet.Forms
       ToolTips.SetReadOnly();
       Orders.SetReadOnly();
 
-      // Остальное переводить неохота
+      // РћСЃС‚Р°Р»СЊРЅРѕРµ РїРµСЂРµРІРѕРґРёС‚СЊ РЅРµРѕС…РѕС‚Р°
 
       Validate();
     }
 
     #endregion
 
-    #region Проверка корректности данных
+    #region РџСЂРѕРІРµСЂРєР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Проверка корректности данных.
-    /// Вызывается однократно при первом вызове SetReadOnly()
+    /// РџСЂРѕРІРµСЂРєР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РґР°РЅРЅС‹С….
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РѕРґРЅРѕРєСЂР°С‚РЅРѕ РїСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ SetReadOnly()
     /// </summary>
     protected virtual void Validate()
     {
-      // Полный список имен полей, которые должны быть в базе данных
-      SingleScopeStringList srcColumnNames = new SingleScopeStringList(true); // без учета регистра
+      // РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
+      SingleScopeStringList srcColumnNames = new SingleScopeStringList(true); // Р±РµР· СѓС‡РµС‚Р° СЂРµРіРёСЃС‚СЂР°
       foreach (EFPGridProducerColumn col in Columns)
       {
         ValidateItemBase(col);
@@ -1081,15 +1081,15 @@ namespace FreeLibSet.Forms
         tt.GetColumnNames(srcColumnNames);
       }
 
-      SingleScopeStringList calcColumnNames = new SingleScopeStringList(true); // для проверки порядков сортировки
+      SingleScopeStringList calcColumnNames = new SingleScopeStringList(true); // РґР»СЏ РїСЂРѕРІРµСЂРєРё РїРѕСЂСЏРґРєРѕРІ СЃРѕСЂС‚РёСЂРѕРІРєРё
 
-      // проверяем, что они не совпадают с именами вычисляемых полей
+      // РїСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РѕРЅРё РЅРµ СЃРѕРІРїР°РґР°СЋС‚ СЃ РёРјРµРЅР°РјРё РІС‹С‡РёСЃР»СЏРµРјС‹С… РїРѕР»РµР№
       foreach (EFPGridProducerColumn col in Columns)
       {
         if (col.SourceColumnNames != null)
         {
           if (srcColumnNames.Contains(col.Name))
-            throw new EFPGridProducerValidationException("Неправильное имя вычисляемого столбца \"" + col.Name + "\", так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer");
+            throw new EFPGridProducerValidationException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° \"" + col.Name + "\", С‚Р°Рє РєР°Рє СЌС‚Рѕ РёРјСЏ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ РІ РґСЂСѓРіРёС… РѕР±СЉРµРєС‚Р°С… EFPGridProducer");
           calcColumnNames.Add(col.Name);
         }
       }
@@ -1098,9 +1098,9 @@ namespace FreeLibSet.Forms
         if (tt.SourceColumnNames != null)
         {
           if (srcColumnNames.Contains(tt.Name))
-            throw new EFPGridProducerValidationException("Неправильное имя вычисляемой всплывающей подсказки \"" + tt.Name + "\", так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer");
+            throw new EFPGridProducerValidationException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕР№ РІСЃРїР»С‹РІР°СЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё \"" + tt.Name + "\", С‚Р°Рє РєР°Рє СЌС‚Рѕ РёРјСЏ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ РІ РґСЂСѓРіРёС… РѕР±СЉРµРєС‚Р°С… EFPGridProducer");
 
-          // имена вычисляемых подсказок не интересны для порядка сортировки
+          // РёРјРµРЅР° РІС‹С‡РёСЃР»СЏРµРјС‹С… РїРѕРґСЃРєР°Р·РѕРє РЅРµ РёРЅС‚РµСЂРµСЃРЅС‹ РґР»СЏ РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё
         }
       }
 
@@ -1111,13 +1111,13 @@ namespace FreeLibSet.Forms
         order.GetColumnNames(orderColumnNames);
         for (int i = 0; i < orderColumnNames.Count; i++)
         {
-          if (!calcColumnNames.Contains(orderColumnNames[i])) // сортировка по вычисляемому столбцу
+          if (!calcColumnNames.Contains(orderColumnNames[i])) // СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РІС‹С‡РёСЃР»СЏРµРјРѕРјСѓ СЃС‚РѕР»Р±С†Сѓ
           {
-            // сортировка по реальному столбцу из базы данных
+            // СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ СЂРµР°Р»СЊРЅРѕРјСѓ СЃС‚РѕР»Р±С†Сѓ РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 
             string errorText;
             if (!IsValidSourceColumnName(orderColumnNames[i], out errorText))
-              throw new EFPGridProducerValidationException("Неправильное имя исходного столбца \"" + calcColumnNames + "\", используемого в порядке сортировки \"" + order.Name + "\". " + errorText);
+              throw new EFPGridProducerValidationException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РёРјСЏ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° \"" + calcColumnNames + "\", РёСЃРїРѕР»СЊР·СѓРµРјРѕРіРѕ РІ РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё \"" + order.Name + "\". " + errorText);
           }
         }
       }
@@ -1129,53 +1129,53 @@ namespace FreeLibSet.Forms
       if (item.SourceColumnNames == null)
       {
         if (!IsValidSourceColumnName(item.Name, out errorText))
-          throw new EFPGridProducerValidationException("Неправильное имя столбца \"" + item.Name + "\". " + errorText);
+          throw new EFPGridProducerValidationException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РёРјСЏ СЃС‚РѕР»Р±С†Р° \"" + item.Name + "\". " + errorText);
       }
       else
       {
         for (int i = 0; i < item.SourceColumnNames.Length; i++)
         {
           if (!IsValidSourceColumnName(item.SourceColumnNames[i], out errorText))
-            throw new EFPGridProducerValidationException("Неправильное имя исходного столбца \"" + item.SourceColumnNames[i] + "\" в вычисляемом столбце/подсказке \"" + item.Name + "\". " + errorText);
+            throw new EFPGridProducerValidationException("РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РёРјСЏ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° \"" + item.SourceColumnNames[i] + "\" РІ РІС‹С‡РёСЃР»СЏРµРјРѕРј СЃС‚РѕР»Р±С†Рµ/РїРѕРґСЃРєР°Р·РєРµ \"" + item.Name + "\". " + errorText);
         }
       }
     }
 
     /// <summary>
-    /// Проверка корректности имени исходного столбца.
+    /// РџСЂРѕРІРµСЂРєР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РёРјРµРЅРё РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="errorText">Сюда должно быть помещено сообщение об ошибке</param>
-    /// <returns>true, если имя является допустимым</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="errorText">РЎСЋРґР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕРјРµС‰РµРЅРѕ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ</param>
+    /// <returns>true, РµСЃР»Рё РёРјСЏ СЏРІР»СЏРµС‚СЃСЏ РґРѕРїСѓСЃС‚РёРјС‹Рј</returns>
     public virtual bool IsValidSourceColumnName(string columnName, out string errorText)
     {
       if (String.IsNullOrEmpty(columnName))
       {
-        errorText = "Имя не задано";
+        errorText = "РРјСЏ РЅРµ Р·Р°РґР°РЅРѕ";
         return false;
       }
 
       if (columnName.IndexOf(',') >= 0)
       {
-        errorText = "Имя не может содержать запятые";
+        errorText = "РРјСЏ РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ Р·Р°РїСЏС‚С‹Рµ";
         return false;
       }
 
       if (columnName.IndexOf(' ') >= 0)
       {
-        errorText = "Имя не может содержать пробелы";
+        errorText = "РРјСЏ РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РїСЂРѕР±РµР»С‹";
         return false;
       }
 
       if (columnName[0] == '.' || columnName[columnName.Length - 1] == '.')
       {
-        errorText = "Имя не может начинаться или заканичиваться точкой";
+        errorText = "РРјСЏ РЅРµ РјРѕР¶РµС‚ РЅР°С‡РёРЅР°С‚СЊСЃСЏ РёР»Рё Р·Р°РєР°РЅРёС‡РёРІР°С‚СЊСЃСЏ С‚РѕС‡РєРѕР№";
         return false;
       }
 
       if (columnName.IndexOf("..") >= 0)
       {
-        errorText = "Имя не может содержать 2 точки подряд";
+        errorText = "РРјСЏ РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ 2 С‚РѕС‡РєРё РїРѕРґСЂСЏРґ";
         return false;
       }
 
@@ -1188,17 +1188,17 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Исключение, возникающее при переводе объекта EFPGridProducer в режим "только чтение", в процессе проверки корректности данных
+  /// РСЃРєР»СЋС‡РµРЅРёРµ, РІРѕР·РЅРёРєР°СЋС‰РµРµ РїСЂРё РїРµСЂРµРІРѕРґРµ РѕР±СЉРµРєС‚Р° EFPGridProducer РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ", РІ РїСЂРѕС†РµСЃСЃРµ РїСЂРѕРІРµСЂРєРё РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РґР°РЅРЅС‹С…
   /// </summary>
   [Serializable]
   public class EFPGridProducerValidationException : ApplicationException
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект исключения с заданным сообщением
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ СЃ Р·Р°РґР°РЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public EFPGridProducerValidationException(string message)
       : this(message, null)
     {
@@ -1206,17 +1206,17 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Создает объект исключения с заданным сообщением и вложенным исключением
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ СЃ Р·Р°РґР°РЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј Рё РІР»РѕР¶РµРЅРЅС‹Рј РёСЃРєР»СЋС‡РµРЅРёРµРј
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
-    /// <param name="innerException">Вложенное исключение</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+    /// <param name="innerException">Р’Р»РѕР¶РµРЅРЅРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ</param>
     public EFPGridProducerValidationException(string message, Exception innerException)
       : base(message, innerException)
     {
     }
 
     /// <summary>
-    /// Эта версия конструктора нужна для правильной десериализации
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РЅСѓР¶РЅР° РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ РґРµСЃРµСЂРёР°Р»РёР·Р°С†РёРё
     /// </summary>
     protected EFPGridProducerValidationException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
       : base(info, context)

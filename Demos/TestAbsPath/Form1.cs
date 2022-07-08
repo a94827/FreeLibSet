@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,7 +23,7 @@ namespace TestAbsPath
         string s = edSrc.Text;
         AbsPath p = new AbsPath(s);
         StringBuilder sb = new StringBuilder();
-        AddInfo(sb,"Исходная строка", s);
+        AddInfo(sb,"РСЃС…РѕРґРЅР°СЏ СЃС‚СЂРѕРєР°", s);
         AddInfo(sb, "Path", p.Path);
         AddInfo(sb, "SlashedPath", p.SlashedPath);
         AddInfo(sb, "QuotedPath", p.QuotedPath);

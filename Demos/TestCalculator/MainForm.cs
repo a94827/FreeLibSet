@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,7 +14,7 @@ namespace TestCalculator
 {
   public partial class MainForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public MainForm()
     {
@@ -35,7 +35,7 @@ namespace TestCalculator
 
     #endregion
 
-    #region Объект для вычисления
+    #region РћР±СЉРµРєС‚ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ
 
     ParserList TheParser;
 
@@ -64,7 +64,7 @@ namespace TestCalculator
 
     #endregion
 
-    #region Вычисление
+    #region Р’С‹С‡РёСЃР»РµРЅРёРµ
 
     void edExpr_TextChanged(object Sender, EventArgs Args)
     {
@@ -75,7 +75,7 @@ namespace TestCalculator
         edResType.Text = String.Empty;
         lblCheckRes.Text = String.Empty;
 
-        TheExpression = null; // очищаем
+        TheExpression = null; // РѕС‡РёС‰Р°РµРј
         TheParsingData = new ParsingData(Expr);
         TheParser.Parse(TheParsingData);
         if (TheParsingData.FirstErrorToken != null)
@@ -90,7 +90,7 @@ namespace TestCalculator
         }
         catch (Exception e2)
         {
-          edRes.Text = "Ошибка парсинга. " + e2.Message;
+          edRes.Text = "РћС€РёР±РєР° РїР°СЂСЃРёРЅРіР°. " + e2.Message;
           return;
         }
 
@@ -102,7 +102,7 @@ namespace TestCalculator
 
         if (TheExpression == null)
         {
-          edRes.Text = "Нельзя вычислить";
+          edRes.Text = "РќРµР»СЊР·СЏ РІС‹С‡РёСЃР»РёС‚СЊ";
           return;
         }
 
@@ -113,7 +113,7 @@ namespace TestCalculator
         }
         catch (Exception e2)
         {
-          edRes.Text = "Ошибка вычисления. "+e2.Message;
+          edRes.Text = "РћС€РёР±РєР° РІС‹С‡РёСЃР»РµРЅРёСЏ. "+e2.Message;
           return;
         }
 
@@ -131,7 +131,7 @@ namespace TestCalculator
           edResType.Text = res.GetType().ToString();
         }
 
-        #region Проверка
+        #region РџСЂРѕРІРµСЂРєР°
 
         CheckResult(Expr, res);
 
@@ -139,18 +139,18 @@ namespace TestCalculator
       }
       catch (Exception e)
       {
-        DebugTools.ShowException(e, "Ошибка вычисления");
+        DebugTools.ShowException(e, "РћС€РёР±РєР° РІС‹С‡РёСЃР»РµРЅРёСЏ");
       }
     }
 
     void efpDebug_Click(object Sender, EventArgs Args)
     {
-      DebugTools.DebugParsingData(TheParsingData, "Парсинг", TheExpression);
+      DebugTools.DebugParsingData(TheParsingData, "РџР°СЂСЃРёРЅРі", TheExpression);
     }
 
     #endregion
 
-    #region Для проверки
+    #region Р”Р»СЏ РїСЂРѕРІРµСЂРєРё
 
     Microsoft.JScript.Vsa.VsaEngine TestEng;
 
@@ -163,12 +163,12 @@ namespace TestCalculator
       {
         if (res is Int32 || DataTools.IsFloatType(res.GetType()))
         {
-          string Expr2 = Expr.Replace(',', '.').Replace(" ", "."); // вычислитель использует точку, а не запятую
-          Expr2 = Expr2.Replace(';', ','); // разделитель аргументов
+          string Expr2 = Expr.Replace(',', '.').Replace(" ", "."); // РІС‹С‡РёСЃР»РёС‚РµР»СЊ РёСЃРїРѕР»СЊР·СѓРµС‚ С‚РѕС‡РєСѓ, Р° РЅРµ Р·Р°РїСЏС‚СѓСЋ
+          Expr2 = Expr2.Replace(';', ','); // СЂР°Р·РґРµР»РёС‚РµР»СЊ Р°СЂРіСѓРјРµРЅС‚РѕРІ
           object res2 = Microsoft.JScript.Eval.JScriptEvaluate(Expr2, TestEng);
-          if (DataTools.GetDouble(res2) != DataTools.GetDouble(res)) // double более "широкий" тип, чем decimal
+          if (DataTools.GetDouble(res2) != DataTools.GetDouble(res)) // double Р±РѕР»РµРµ "С€РёСЂРѕРєРёР№" С‚РёРї, С‡РµРј decimal
           {
-            lblCheckRes.Text = "Должно быть " + DataTools.GetString(res2);
+            lblCheckRes.Text = "Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ " + DataTools.GetString(res2);
             lblCheckRes.ForeColor = Color.Red;
           }
           else
@@ -180,7 +180,7 @@ namespace TestCalculator
       }
       catch (Exception e)
       {
-        lblCheckRes.Text = "Нельзя проверить в JScript.Eval: " + e.Message;
+        lblCheckRes.Text = "РќРµР»СЊР·СЏ РїСЂРѕРІРµСЂРёС‚СЊ РІ JScript.Eval: " + e.Message;
         lblCheckRes.ForeColor = Color.Magenta;
       }
     }

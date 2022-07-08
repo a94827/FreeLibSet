@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using AgeyevAV.Remoting;
@@ -42,11 +42,11 @@ namespace TestExecProc
   }
 
   /// <summary>
-  /// Тестирование 
+  /// РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ 
   /// </summary>
   public class Test
   {
-    #region Параметры
+    #region РџР°СЂР°РјРµС‚СЂС‹
 
     public TestProcType ProcType;
 
@@ -62,21 +62,21 @@ namespace TestExecProc
 
     #endregion
 
-    #region Генераторы процедур
+    #region Р“РµРЅРµСЂР°С‚РѕСЂС‹ РїСЂРѕС†РµРґСѓСЂ
 
     /// <summary>
-    /// Создатель процедур в основном домене приложения
+    /// РЎРѕР·РґР°С‚РµР»СЊ РїСЂРѕС†РµРґСѓСЂ РІ РѕСЃРЅРѕРІРЅРѕРј РґРѕРјРµРЅРµ РїСЂРёР»РѕР¶РµРЅРёСЏ
     /// </summary>
     public ProcCreator LocalProcCreator;
 
     /// <summary>
-    /// Создатель удаленных процедур в отдельном домене
+    /// РЎРѕР·РґР°С‚РµР»СЊ СѓРґР°Р»РµРЅРЅС‹С… РїСЂРѕС†РµРґСѓСЂ РІ РѕС‚РґРµР»СЊРЅРѕРј РґРѕРјРµРЅРµ
     /// </summary>
     public ProcCreator RemoteProcCreator;
 
     #endregion
 
-    #region Выполнение теста
+    #region Р’С‹РїРѕР»РЅРµРЅРёРµ С‚РµСЃС‚Р°
 
     #region Run
 
@@ -118,7 +118,7 @@ namespace TestExecProc
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска теста");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° С‚РµСЃС‚Р°");
       }
     }
 
@@ -217,19 +217,19 @@ namespace TestExecProc
 
     #endregion
 
-    #region Обработка завершения
+    #region РћР±СЂР°Р±РѕС‚РєР° Р·Р°РІРµСЂС€РµРЅРёСЏ
 
     public static void ProcFinished(object sender, ExecProcCallEventArgs args)
     {
       string prefix = GetPrefix(args.Item.ExecProc);
-      Console.WriteLine(prefix + "Успешное завершение (ProcFinished)");
+      Console.WriteLine(prefix + "РЈСЃРїРµС€РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ (ProcFinished)");
     }
 
 
     public static void ProcFinished(object sender, DistributedProcCallEventArgs args)
     {
       string prefix= GetPrefix(args.Item.DistributedProc);
-      Console.WriteLine(prefix + "Успешное завершение (ProcFinished)");
+      Console.WriteLine(prefix + "РЈСЃРїРµС€РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ (ProcFinished)");
     }
 
     private static string GetPrefix(IExecProc Proc)
@@ -244,24 +244,24 @@ namespace TestExecProc
 
     #endregion
 
-    #region Запуск с WaitHandler
+    #region Р—Р°РїСѓСЃРє СЃ WaitHandler
 
     private void StartWithWaitHandler(IExecProc Proc)
     {
       IAsyncResult ar = Proc.BeginExecute(NamedValues.Empty, null, null);
       LocalProcCreator.DebugRefs.Add(ar.AsyncWaitHandle);
-      using (Splash spl = new Splash("Ожидание срабатывания WaitHandle"))
+      using (Splash spl = new Splash("РћР¶РёРґР°РЅРёРµ СЃСЂР°Р±Р°С‚С‹РІР°РЅРёСЏ WaitHandle"))
       {
         ar.AsyncWaitHandle.WaitOne();
       }
       try
       {
         Proc.EndExecute(ar);
-        Console.WriteLine(GetPrefix(Proc) + "Сигнал от WaitHandle получен");
+        Console.WriteLine(GetPrefix(Proc) + "РЎРёРіРЅР°Р» РѕС‚ WaitHandle РїРѕР»СѓС‡РµРЅ");
       }
       catch (Exception e)
       {
-        Console.WriteLine(GetPrefix(Proc) + "Ошибка EndExecute(). " + e.Message);
+        Console.WriteLine(GetPrefix(Proc) + "РћС€РёР±РєР° EndExecute(). " + e.Message);
       }
     }
 
@@ -269,33 +269,33 @@ namespace TestExecProc
     {
       IAsyncResult ar = Proc.BeginExecute(null, null);
       LocalProcCreator.DebugRefs.Add(ar.AsyncWaitHandle);
-      using (Splash spl = new Splash("Ожидание срабатывания WaitHandle"))
+      using (Splash spl = new Splash("РћР¶РёРґР°РЅРёРµ СЃСЂР°Р±Р°С‚С‹РІР°РЅРёСЏ WaitHandle"))
       {
         ar.AsyncWaitHandle.WaitOne();
       }
       try
       {
         Proc.EndExecute(ar);
-        Console.WriteLine(GetPrefix(Proc) + "Сигнал от WaitHandle получен");
+        Console.WriteLine(GetPrefix(Proc) + "РЎРёРіРЅР°Р» РѕС‚ WaitHandle РїРѕР»СѓС‡РµРЅ");
       }
       catch (Exception e)
       {
-        Console.WriteLine(GetPrefix(Proc) + "Ошибка EndExecute(). " + e.Message);
+        Console.WriteLine(GetPrefix(Proc) + "РћС€РёР±РєР° EndExecute(). " + e.Message);
       }
     }
 
     #endregion
 
-    #region Запуск с AsyncCallback
+    #region Р—Р°РїСѓСЃРє СЃ AsyncCallback
 
     private void StartWithAsyncCallback(IExecProc Proc)
     {
       IAsyncResult ar = Proc.BeginExecute(NamedValues.Empty, new AsyncCallback(AsyncCallbackFinished), Proc);
-      Console.WriteLine(GetPrefix(Proc) + "Процедура запущена, ждем уведомление");
+      Console.WriteLine(GetPrefix(Proc) + "РџСЂРѕС†РµРґСѓСЂР° Р·Р°РїСѓС‰РµРЅР°, Р¶РґРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ");
     }
 
     /// <summary>
-    /// Этот метод вызывается асинхронно
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ
     /// </summary>
     /// <param name="ar"></param>
     private static void AsyncCallbackFinished(IAsyncResult ar)
@@ -305,23 +305,23 @@ namespace TestExecProc
       try
       {
         Proc.EndExecute(ar);
-        Console.WriteLine(GetPrefix(Proc) + "Сигнал от AsyncCallback получен");
+        Console.WriteLine(GetPrefix(Proc) + "РЎРёРіРЅР°Р» РѕС‚ AsyncCallback РїРѕР»СѓС‡РµРЅ");
       }
       catch (Exception e)
       {
-        // Нельзя использовать EFPApp.ShowException
-        Console.WriteLine(GetPrefix(Proc) + "Ошибка EndExecute() в AsyncCallback. " + e.Message);
+        // РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ EFPApp.ShowException
+        Console.WriteLine(GetPrefix(Proc) + "РћС€РёР±РєР° EndExecute() РІ AsyncCallback. " + e.Message);
       }
     }
 
     #endregion
 
-    #region Немедленный вызов EndExecute
+    #region РќРµРјРµРґР»РµРЅРЅС‹Р№ РІС‹Р·РѕРІ EndExecute
 
     private static void StartWithEndExecute(IExecProc Proc)
     {
       IAsyncResult ar = Proc.BeginExecute(NamedValues.Empty, null, null);
-      Console.WriteLine(GetPrefix(Proc) + "Процедура запущена, сразу вызываем EndExecute()");
+      Console.WriteLine(GetPrefix(Proc) + "РџСЂРѕС†РµРґСѓСЂР° Р·Р°РїСѓС‰РµРЅР°, СЃСЂР°Р·Сѓ РІС‹Р·С‹РІР°РµРј EndExecute()");
       try
       {
         try
@@ -330,13 +330,13 @@ namespace TestExecProc
         }
         finally
         {
-          Console.WriteLine(GetPrefix(Proc) + "EndExecute() выполнен");
+          Console.WriteLine(GetPrefix(Proc) + "EndExecute() РІС‹РїРѕР»РЅРµРЅ");
         }
       }
       catch (Exception e)
       {
-        // Нельзя использовать EFPApp.ShowException
-        Console.WriteLine(GetPrefix(Proc) + "Ошибка EndExecute(). " + e.Message);
+        // РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ EFPApp.ShowException
+        Console.WriteLine(GetPrefix(Proc) + "РћС€РёР±РєР° EndExecute(). " + e.Message);
       }
     }
 

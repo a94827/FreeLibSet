@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,32 +9,32 @@ using System.Globalization;
 
 namespace FreeLibSet.Formatting
 {
-  #region Перечисление DateFormatYMDOrder
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ DateFormatYMDOrder
 
   /// <summary>
-  /// Возможный относительный порядок расположения компонентов дня, месяца и года в формате дате
+  /// Р’РѕР·РјРѕР¶РЅС‹Р№ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Р№ РїРѕСЂСЏРґРѕРє СЂР°СЃРїРѕР»РѕР¶РµРЅРёСЏ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ РґРЅСЏ, РјРµСЃСЏС†Р° Рё РіРѕРґР° РІ С„РѕСЂРјР°С‚Рµ РґР°С‚Рµ
   /// </summary>
   public enum DateFormatYMDOrder
   {
-    // Порядок элементов важен!
+    // РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ РІР°Р¶РµРЅ!
 
     /// <summary>
-    /// Год, месяц день ("японский")
+    /// Р“РѕРґ, РјРµСЃСЏС† РґРµРЅСЊ ("СЏРїРѕРЅСЃРєРёР№")
     /// </summary>
     YMD = 0,
 
     /// <summary>
-    /// Год, день, месяц (не знаю, где такой есть)
+    /// Р“РѕРґ, РґРµРЅСЊ, РјРµСЃСЏС† (РЅРµ Р·РЅР°СЋ, РіРґРµ С‚Р°РєРѕР№ РµСЃС‚СЊ)
     /// </summary>
     YDM = 1,
 
     /// <summary>
-    /// Месяц, день, год (США)
+    /// РњРµСЃСЏС†, РґРµРЅСЊ, РіРѕРґ (РЎРЁРђ)
     /// </summary>
     MDY = 2,
 
     /// <summary>
-    /// День, месяц, год (Россия)
+    /// Р”РµРЅСЊ, РјРµСЃСЏС†, РіРѕРґ (Р РѕСЃСЃРёСЏ)
     /// </summary>
     DMY = 3,
   }
@@ -42,19 +42,19 @@ namespace FreeLibSet.Formatting
   #endregion
 
   /// <summary>
-  /// Статические функции для работы со строками форматирования
+  /// РЎС‚Р°С‚РёС‡РµСЃРєРёРµ С„СѓРЅРєС†РёРё РґР»СЏ СЂР°Р±РѕС‚С‹ СЃРѕ СЃС‚СЂРѕРєР°РјРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ
   /// </summary>
   public sealed class FormatStringTools
   {
-    #region Числовые форматы
+    #region Р§РёСЃР»РѕРІС‹Рµ С„РѕСЂРјР°С‚С‹
 
     /// <summary>
-    /// Получить числовой формат для заданного числа десятичных разрядов.
-    /// При отрицательном значении <paramref name="decimalPlaces"/> возвращается пустой формат.
-    /// При нулевом - целочисленный формат "0", при положительном - строка "0.0000" с соответствующим числом нулей
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕР№ С„РѕСЂРјР°С‚ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ С‡РёСЃР»Р° РґРµСЃСЏС‚РёС‡РЅС‹С… СЂР°Р·СЂСЏРґРѕРІ.
+    /// РџСЂРё РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРј Р·РЅР°С‡РµРЅРёРё <paramref name="decimalPlaces"/> РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚РѕР№ С„РѕСЂРјР°С‚.
+    /// РџСЂРё РЅСѓР»РµРІРѕРј - С†РµР»РѕС‡РёСЃР»РµРЅРЅС‹Р№ С„РѕСЂРјР°С‚ "0", РїСЂРё РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРј - СЃС‚СЂРѕРєР° "0.0000" СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРј С‡РёСЃР»РѕРј РЅСѓР»РµР№
     /// </summary>
-    /// <param name="decimalPlaces">Количество разрядов после десятичной точки</param>
-    /// <returns>Числовой формат</returns>
+    /// <param name="decimalPlaces">РљРѕР»РёС‡РµСЃС‚РІРѕ СЂР°Р·СЂСЏРґРѕРІ РїРѕСЃР»Рµ РґРµСЃСЏС‚РёС‡РЅРѕР№ С‚РѕС‡РєРё</param>
+    /// <returns>Р§РёСЃР»РѕРІРѕР№ С„РѕСЂРјР°С‚</returns>
     public static string DecimalPlacesToNumberFormat(int decimalPlaces)
     {
       if (decimalPlaces < 0)
@@ -66,17 +66,17 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Получить количество десятичных разрядов из числового формата.
-    /// Если значение <paramref name="format"/> не задано или формат не удается распознать как числовой, возвращается (-1).
-    /// Текущая реализация является очень простой и распознает только форматы с нулями и "#": "0", "0.0", "0.0#", и т.п.
+    /// РџРѕР»СѓС‡РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РґРµСЃСЏС‚РёС‡РЅС‹С… СЂР°Р·СЂСЏРґРѕРІ РёР· С‡РёСЃР»РѕРІРѕРіРѕ С„РѕСЂРјР°С‚Р°.
+    /// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ <paramref name="format"/> РЅРµ Р·Р°РґР°РЅРѕ РёР»Рё С„РѕСЂРјР°С‚ РЅРµ СѓРґР°РµС‚СЃСЏ СЂР°СЃРїРѕР·РЅР°С‚СЊ РєР°Рє С‡РёСЃР»РѕРІРѕР№, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ (-1).
+    /// РўРµРєСѓС‰Р°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ СЏРІР»СЏРµС‚СЃСЏ РѕС‡РµРЅСЊ РїСЂРѕСЃС‚РѕР№ Рё СЂР°СЃРїРѕР·РЅР°РµС‚ С‚РѕР»СЊРєРѕ С„РѕСЂРјР°С‚С‹ СЃ РЅСѓР»СЏРјРё Рё "#": "0", "0.0", "0.0#", Рё С‚.Рї.
     /// </summary>
-    /// <param name="format">Числовой формат</param>
-    /// <returns>Количество десятичных разрядов</returns>
+    /// <param name="format">Р§РёСЃР»РѕРІРѕР№ С„РѕСЂРјР°С‚</param>
+    /// <returns>РљРѕР»РёС‡РµСЃС‚РІРѕ РґРµСЃСЏС‚РёС‡РЅС‹С… СЂР°Р·СЂСЏРґРѕРІ</returns>
     public static int DecimalPlacesFromNumberFormat(string format)
     {
       if (String.IsNullOrEmpty(format))
         return -1;
-      if (format.Length == 1) // один из стандартных форматов, например, "G"
+      if (format.Length == 1) // РѕРґРёРЅ РёР· СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… С„РѕСЂРјР°С‚РѕРІ, РЅР°РїСЂРёРјРµСЂ, "G"
         return -1;
 
       int p = format.IndexOf('.');
@@ -99,13 +99,13 @@ namespace FreeLibSet.Formatting
     #region DateTime
 
     /// <summary>
-    /// Определяет, содержит ли строка форматирования символы для даты и/или времени.
-    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу DateTime.ToString().
-    /// Если <paramref name="formatString"/>-пустая строка, то <paramref name="containsDate"/>=true и <paramref name="containsTime"/>=true.
+    /// РћРїСЂРµРґРµР»СЏРµС‚, СЃРѕРґРµСЂР¶РёС‚ Р»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРёРјРІРѕР»С‹ РґР»СЏ РґР°С‚С‹ Рё/РёР»Рё РІСЂРµРјРµРЅРё.
+    /// Р Р°СЃРїРѕР·РЅР°СЋС‚СЃСЏ РѕРґРЅРѕСЃРёРјРІРѕР»СЊРЅС‹Рµ Рё РјРЅРѕРіРѕСЃРёРјРІРѕР»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РјРµС‚РѕРґСѓ DateTime.ToString().
+    /// Р•СЃР»Рё <paramref name="formatString"/>-РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, С‚Рѕ <paramref name="containsDate"/>=true Рё <paramref name="containsTime"/>=true.
     /// </summary>
-    /// <param name="formatString">Строка форматирования для DateTime</param>
-    /// <param name="containsDate">Сюда записывается true, если строка форматирования содержит дату</param>
-    /// <param name="containsTime">Сюда записывается true, если строка форматирования содержит время</param>
+    /// <param name="formatString">РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РґР»СЏ DateTime</param>
+    /// <param name="containsDate">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ true, РµСЃР»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРґРµСЂР¶РёС‚ РґР°С‚Сѓ</param>
+    /// <param name="containsTime">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ true, РµСЃР»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРґРµСЂР¶РёС‚ РІСЂРµРјСЏ</param>
     public static void ContainsDateTime(string formatString, out bool containsDate, out bool containsTime)
     {
       if (String.IsNullOrEmpty(formatString))
@@ -115,7 +115,7 @@ namespace FreeLibSet.Formatting
         return;
       }
 
-      #region Стандартная строка форматирования
+      #region РЎС‚Р°РЅРґР°СЂС‚РЅР°СЏ СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ
 
       if (formatString.Length == 1)
       {
@@ -157,7 +157,7 @@ namespace FreeLibSet.Formatting
 
       #endregion
 
-      #region Разбираемые строки форматирования
+      #region Р Р°Р·Р±РёСЂР°РµРјС‹Рµ СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ
 
       containsDate = false;
       containsTime = false;
@@ -187,14 +187,14 @@ namespace FreeLibSet.Formatting
             containsTime = true;
             break;
 
-          case '%': // получение шаблона
-          case '\\': // escape-символ
+          case '%': // РїРѕР»СѓС‡РµРЅРёРµ С€Р°Р±Р»РѕРЅР°
+          case '\\': // escape-СЃРёРјРІРѕР»
             p++;
             break;
 
           case '\"':
           case '\'':
-            // строки в кавычках
+            // СЃС‚СЂРѕРєРё РІ РєР°РІС‹С‡РєР°С…
             char ch = formatString[p];
             p++;
             while (p < formatString.Length)
@@ -213,12 +213,12 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Определяет, содержит ли строка форматирования символы для даты.
-    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу DateTime.ToString().
-    /// Если <paramref name="formatString"/>-пустая строка, то возвращается true.
+    /// РћРїСЂРµРґРµР»СЏРµС‚, СЃРѕРґРµСЂР¶РёС‚ Р»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРёРјРІРѕР»С‹ РґР»СЏ РґР°С‚С‹.
+    /// Р Р°СЃРїРѕР·РЅР°СЋС‚СЃСЏ РѕРґРЅРѕСЃРёРјРІРѕР»СЊРЅС‹Рµ Рё РјРЅРѕРіРѕСЃРёРјРІРѕР»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РјРµС‚РѕРґСѓ DateTime.ToString().
+    /// Р•СЃР»Рё <paramref name="formatString"/>-РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true.
     /// </summary>
-    /// <param name="formatString">Строка форматирования для DateTime</param>
-    /// <returns>true, если строка форматирования содержит дату</returns>
+    /// <param name="formatString">РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РґР»СЏ DateTime</param>
+    /// <returns>true, РµСЃР»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРґРµСЂР¶РёС‚ РґР°С‚Сѓ</returns>
     public static bool ContainsDate(string formatString)
     {
       bool containsDate;
@@ -228,12 +228,12 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Определяет, содержит ли строка форматирования символы для времени.
-    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу DateTime.ToString().
-    /// Если <paramref name="formatString"/>-пустая строка, то возвращается true.
+    /// РћРїСЂРµРґРµР»СЏРµС‚, СЃРѕРґРµСЂР¶РёС‚ Р»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРёРјРІРѕР»С‹ РґР»СЏ РІСЂРµРјРµРЅРё.
+    /// Р Р°СЃРїРѕР·РЅР°СЋС‚СЃСЏ РѕРґРЅРѕСЃРёРјРІРѕР»СЊРЅС‹Рµ Рё РјРЅРѕРіРѕСЃРёРјРІРѕР»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РјРµС‚РѕРґСѓ DateTime.ToString().
+    /// Р•СЃР»Рё <paramref name="formatString"/>-РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true.
     /// </summary>
-    /// <param name="formatString">Строка форматирования для DateTime</param>
-    /// <returns>true, если строка форматирования содержит времени</returns>
+    /// <param name="formatString">РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РґР»СЏ DateTime</param>
+    /// <returns>true, РµСЃР»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРґРµСЂР¶РёС‚ РІСЂРµРјРµРЅРё</returns>
     public static bool ContainsTime(string formatString)
     {
       bool containsDate;
@@ -243,20 +243,20 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает порядок следования дня, месяца и года в формате даты.
-    /// Если строка не задана или имеет длину в один символ (например, "d"), используется
-    /// ShortDatePattern из текущей культуры.
-    /// Анализируется наличие символов "d", "M" и "y" для определения порядка.
-    /// Если каких-то элементов нет, подбирается наиболее подходящий вариант.
-    /// Если формат не содержит ни одного из символов, возвращается DateFormatYMDOrder.YMD
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРѕРє СЃР»РµРґРѕРІР°РЅРёСЏ РґРЅСЏ, РјРµСЃСЏС†Р° Рё РіРѕРґР° РІ С„РѕСЂРјР°С‚Рµ РґР°С‚С‹.
+    /// Р•СЃР»Рё СЃС‚СЂРѕРєР° РЅРµ Р·Р°РґР°РЅР° РёР»Рё РёРјРµРµС‚ РґР»РёРЅСѓ РІ РѕРґРёРЅ СЃРёРјРІРѕР» (РЅР°РїСЂРёРјРµСЂ, "d"), РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
+    /// ShortDatePattern РёР· С‚РµРєСѓС‰РµР№ РєСѓР»СЊС‚СѓСЂС‹.
+    /// РђРЅР°Р»РёР·РёСЂСѓРµС‚СЃСЏ РЅР°Р»РёС‡РёРµ СЃРёРјРІРѕР»РѕРІ "d", "M" Рё "y" РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РїРѕСЂСЏРґРєР°.
+    /// Р•СЃР»Рё РєР°РєРёС…-С‚Рѕ СЌР»РµРјРµРЅС‚РѕРІ РЅРµС‚, РїРѕРґР±РёСЂР°РµС‚СЃСЏ РЅР°РёР±РѕР»РµРµ РїРѕРґС…РѕРґСЏС‰РёР№ РІР°СЂРёР°РЅС‚.
+    /// Р•СЃР»Рё С„РѕСЂРјР°С‚ РЅРµ СЃРѕРґРµСЂР¶РёС‚ РЅРё РѕРґРЅРѕРіРѕ РёР· СЃРёРјРІРѕР»РѕРІ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ DateFormatYMDOrder.YMD
     /// </summary>
-    /// <param name="formatString">Короткий формат даты</param>
-    /// <returns>Порядок следования компонентов</returns>
+    /// <param name="formatString">РљРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚ РґР°С‚С‹</param>
+    /// <returns>РџРѕСЂСЏРґРѕРє СЃР»РµРґРѕРІР°РЅРёСЏ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ</returns>
     public static DateFormatYMDOrder GetDateFormatOrder(string formatString)
     {
       if (String.IsNullOrEmpty(formatString))
         formatString = Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern;
-      else if (formatString.Length == 1) // стандартный формат, например, "d"
+      else if (formatString.Length == 1) // СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ С„РѕСЂРјР°С‚, РЅР°РїСЂРёРјРµСЂ, "d"
         formatString = Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern;
 
       int pD = formatString.IndexOf("d");
@@ -276,7 +276,7 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает порядок следования дня, месяца и года, используемый текущей культурой
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРѕРє СЃР»РµРґРѕРІР°РЅРёСЏ РґРЅСЏ, РјРµСЃСЏС†Р° Рё РіРѕРґР°, РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ С‚РµРєСѓС‰РµР№ РєСѓР»СЊС‚СѓСЂРѕР№
     /// </summary>
     public static DateFormatYMDOrder DateFormatOrder
     {
@@ -287,19 +287,19 @@ namespace FreeLibSet.Formatting
     private static readonly string[] _Date10Formats = new string[] { "yyyy/MM/dd", "yyyy/dd/MM", "MM/dd/yyyy", "dd/MM/yyyy" };
 
     /// <summary>
-    /// Возвращает "стандартизированный" формат даты из 10 символов, когда год отображается 4 цифрами,
-    /// месяц и день - двумя. Между частями задается символ-разделитель.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "СЃС‚Р°РЅРґР°СЂС‚РёР·РёСЂРѕРІР°РЅРЅС‹Р№" С„РѕСЂРјР°С‚ РґР°С‚С‹ РёР· 10 СЃРёРјРІРѕР»РѕРІ, РєРѕРіРґР° РіРѕРґ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ 4 С†РёС„СЂР°РјРё,
+    /// РјРµСЃСЏС† Рё РґРµРЅСЊ - РґРІСѓРјСЏ. РњРµР¶РґСѓ С‡Р°СЃС‚СЏРјРё Р·Р°РґР°РµС‚СЃСЏ СЃРёРјРІРѕР»-СЂР°Р·РґРµР»РёС‚РµР»СЊ.
     /// </summary>
-    /// <param name="formatString">Короткий формат даты</param>
-    /// <returns>"Стандартизированный" 10-символьный формат</returns>
+    /// <param name="formatString">РљРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚ РґР°С‚С‹</param>
+    /// <returns>"РЎС‚Р°РЅРґР°СЂС‚РёР·РёСЂРѕРІР°РЅРЅС‹Р№" 10-СЃРёРјРІРѕР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚</returns>
     public static string GetDate10Format(string formatString)
     {
       return _Date10Formats[(int)GetDateFormatOrder(formatString)];
     }
 
     /// <summary>
-    /// Возвращает "стандартизированный" формат даты из 10 символов, используемый текущей культурой.
-    /// Год отображается 4 цифрами, месяц и день - двумя. Между частями задается символ-разделитель.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "СЃС‚Р°РЅРґР°СЂС‚РёР·РёСЂРѕРІР°РЅРЅС‹Р№" С„РѕСЂРјР°С‚ РґР°С‚С‹ РёР· 10 СЃРёРјРІРѕР»РѕРІ, РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ С‚РµРєСѓС‰РµР№ РєСѓР»СЊС‚СѓСЂРѕР№.
+    /// Р“РѕРґ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ 4 С†РёС„СЂР°РјРё, РјРµСЃСЏС† Рё РґРµРЅСЊ - РґРІСѓРјСЏ. РњРµР¶РґСѓ С‡Р°СЃС‚СЏРјРё Р·Р°РґР°РµС‚СЃСЏ СЃРёРјРІРѕР»-СЂР°Р·РґРµР»РёС‚РµР»СЊ.
     /// </summary>
     public static string Date10Format
     {
@@ -307,7 +307,7 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Маска для редактирования даты: "00/00/0000" или "0000/00/00"
+    /// РњР°СЃРєР° РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°С‚С‹: "00/00/0000" РёР»Рё "0000/00/00"
     /// </summary>
     public static string Date10EditMask
     {
@@ -327,38 +327,38 @@ namespace FreeLibSet.Formatting
     #endregion
   }
 
-  #region Перечисление EditableDateTimeFormatterKind
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ EditableDateTimeFormatterKind
 
   /// <summary>
-  /// Тип форматизатора даты и времени
+  /// РўРёРї С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂР° РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё
   /// </summary>
   public enum EditableDateTimeFormatterKind
   {
     /// <summary>
-    /// Короткий формат даты ("ДД.ММ.ГГГГ")
-    /// При вызове методов Parse()/TryParse() компонент времени имеет значение 00:00:00.
+    /// РљРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚ РґР°С‚С‹ ("Р”Р”.РњРњ.Р“Р“Р“Р“")
+    /// РџСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґРѕРІ Parse()/TryParse() РєРѕРјРїРѕРЅРµРЅС‚ РІСЂРµРјРµРЅРё РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ 00:00:00.
     /// </summary>
     Date,
 
     /// <summary>
-    /// Короткий формат времени без секунд ("ЧЧ:ММ").
-    /// При вызове методов Parse()/TryParse() компонент даты имеет значение текущей даты DateTime.Today.
+    /// РљРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚ РІСЂРµРјРµРЅРё Р±РµР· СЃРµРєСѓРЅРґ ("Р§Р§:РњРњ").
+    /// РџСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґРѕРІ Parse()/TryParse() РєРѕРјРїРѕРЅРµРЅС‚ РґР°С‚С‹ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РµРєСѓС‰РµР№ РґР°С‚С‹ DateTime.Today.
     /// </summary>
     ShortTime,
 
     /// <summary>
-    /// Формат времени с секундами ("ЧЧ:ММ:СС")
-    /// При вызове методов Parse()/TryParse() компонент даты имеет значение текущей даты DateTime.Today.
+    /// Р¤РѕСЂРјР°С‚ РІСЂРµРјРµРЅРё СЃ СЃРµРєСѓРЅРґР°РјРё ("Р§Р§:РњРњ:РЎРЎ")
+    /// РџСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґРѕРІ Parse()/TryParse() РєРѕРјРїРѕРЅРµРЅС‚ РґР°С‚С‹ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РµРєСѓС‰РµР№ РґР°С‚С‹ DateTime.Today.
     /// </summary>
     Time,
 
     /// <summary>
-    /// Формат даты и времени без секунд "ДД.ММ.ГГГГ ЧЧ:ММ"
+    /// Р¤РѕСЂРјР°С‚ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё Р±РµР· СЃРµРєСѓРЅРґ "Р”Р”.РњРњ.Р“Р“Р“Р“ Р§Р§:РњРњ"
     /// </summary>
     ShortDateTime,
 
     /// <summary>
-    /// Формат даты и времени с секундами "ДД.ММ.ГГГГ ЧЧ:ММ:СС"
+    /// Р¤РѕСЂРјР°С‚ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё СЃ СЃРµРєСѓРЅРґР°РјРё "Р”Р”.РњРњ.Р“Р“Р“Р“ Р§Р§:РњРњ:РЎРЎ"
     /// </summary>
     DateTime
   }
@@ -366,17 +366,17 @@ namespace FreeLibSet.Formatting
   #endregion
 
   /// <summary>
-  /// Форматизатор даты/времени, который удобно использовать в полях ввода, т.к.
-  /// обеспечивается одинаковое количество символов для всех значений
+  /// Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ РґР°С‚С‹/РІСЂРµРјРµРЅРё, РєРѕС‚РѕСЂС‹Р№ СѓРґРѕР±РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РїРѕР»СЏС… РІРІРѕРґР°, С‚.Рє.
+  /// РѕР±РµСЃРїРµС‡РёРІР°РµС‚СЃСЏ РѕРґРёРЅР°РєРѕРІРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РґР»СЏ РІСЃРµС… Р·РЅР°С‡РµРЅРёР№
   /// </summary>
   public sealed class EditableDateTimeFormatter
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     private static readonly string[] _Date10Formats = new string[] { "yyyy/MM/dd", "yyyy/dd/MM", "MM/dd/yyyy", "dd/MM/yyyy" };
 
     /// <summary>
-    /// Используйте статические свойства класса EditableDateTimeFormatters для доступа к форматизаторам
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃС‚Р°С‚РёС‡РµСЃРєРёРµ СЃРІРѕР№СЃС‚РІР° РєР»Р°СЃСЃР° EditableDateTimeFormatters РґР»СЏ РґРѕСЃС‚СѓРїР° Рє С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂР°Рј
     /// </summary>
     /// <param name="cultureInfo"></param>
     /// <param name="kind"></param>
@@ -385,7 +385,7 @@ namespace FreeLibSet.Formatting
       _FormatInfo = cultureInfo.DateTimeFormat;
       _kind = kind;
 
-      #region Дата
+      #region Р”Р°С‚Р°
 
       string dateFormat;
       string dateMask;
@@ -409,7 +409,7 @@ namespace FreeLibSet.Formatting
 
       #endregion
 
-      #region Время
+      #region Р’СЂРµРјСЏ
 
       string timeFormat;
       string timeMask;
@@ -442,7 +442,7 @@ namespace FreeLibSet.Formatting
 
       #endregion
 
-      #region Инициализация свойств
+      #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІ
 
       _Format = dateFormat;
       _EditMask = dateMask;
@@ -452,7 +452,7 @@ namespace FreeLibSet.Formatting
       { 
         case EditableDateTimeFormatterKind.ShortDateTime:
         case EditableDateTimeFormatterKind.DateTime:
-          // Добавляем разделитель между датой и временем
+          // Р”РѕР±Р°РІР»СЏРµРј СЂР°Р·РґРµР»РёС‚РµР»СЊ РјРµР¶РґСѓ РґР°С‚РѕР№ Рё РІСЂРµРјРµРЅРµРј
           _Format += " ";
           _EditMask += " ";
           _TextWidth += 1;
@@ -472,14 +472,14 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает часть маски для редактирования AM/PM
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‡Р°СЃС‚СЊ РјР°СЃРєРё РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ AM/PM
     /// </summary>
     private string GetAMPMMask(DateTimeFormatInfo formatInfo, out int ampmTextWidth)
     {
       string s1 = formatInfo.AMDesignator;
       string s2 = formatInfo.PMDesignator;
       int nChars = Math.Max(s1.Length, s2.Length);
-      // Вряд ли десигнаторы могут быть разной длины, но на всякий случай проверим
+      // Р’СЂСЏРґ Р»Рё РґРµСЃРёРіРЅР°С‚РѕСЂС‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ СЂР°Р·РЅРѕР№ РґР»РёРЅС‹, РЅРѕ РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ РїСЂРѕРІРµСЂРёРј
       s1 = s1.PadRight(nChars);
       s2 = s2.PadRight(nChars);
 
@@ -488,14 +488,14 @@ namespace FreeLibSet.Formatting
       {
         if (s1[i] == s2[i])
         {
-          // Два одинаковых символа
+          // Р”РІР° РѕРґРёРЅР°РєРѕРІС‹С… СЃРёРјРІРѕР»Р°
           sb.Append('\\');
           sb.Append(s1[i]);
         }
         else
         {
-          // TODO: уточнить форматы
-          sb.Append("C"); // любой символ
+          // TODO: СѓС‚РѕС‡РЅРёС‚СЊ С„РѕСЂРјР°С‚С‹
+          sb.Append("C"); // Р»СЋР±РѕР№ СЃРёРјРІРѕР»
         }
       }
 
@@ -505,60 +505,60 @@ namespace FreeLibSet.Formatting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Тип форматизатора.
+    /// РўРёРї С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂР°.
     /// </summary>
     public EditableDateTimeFormatterKind Kind { get { return _kind; } }
     private EditableDateTimeFormatterKind _kind;
 
     /// <summary>
-    /// Формат
+    /// Р¤РѕСЂРјР°С‚
     /// </summary>
     public string Format { get { return _Format; } }
     private string _Format;
 
     /// <summary>
-    /// Провайдер для форматирования
+    /// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ
     /// </summary>
     public IFormatProvider FormatProvider { get { return _FormatInfo; } }
     private DateTimeFormatInfo _FormatInfo;
 
     /// <summary>
-    /// Маска, которую нужно использовать в поле ввода, например, MaskedTextBox
+    /// РњР°СЃРєР°, РєРѕС‚РѕСЂСѓСЋ РЅСѓР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РїРѕР»Рµ РІРІРѕРґР°, РЅР°РїСЂРёРјРµСЂ, MaskedTextBox
     /// </summary>
     public string EditMask { get { return _EditMask; } }
     private string _EditMask;
 
     /// <summary>
-    /// Ширина текстового поля (количество знаков в поле ввода)
+    /// РЁРёСЂРёРЅР° С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ (РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РІ РїРѕР»Рµ РІРІРѕРґР°)
     /// </summary>
     public int TextWidth { get { return _TextWidth; } }
     private int _TextWidth;
 
     /// <summary>
-    /// Провайдер для обслуживания маски ввода
+    /// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ РјР°СЃРєРё РІРІРѕРґР°
     /// </summary>
     public IMaskProvider MaskProvider { get { return _MaskProvider; } }
     private StdMaskProvider _MaskProvider;
 
     /// <summary>
-    /// Возвращает true, если методы Parse() и TryParse() могут обрабатывать аргумент defaultYear, когда
-    /// год не задан в преобразуемой строке. Если false, то этот аргумент игнорируется
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РјРµС‚РѕРґС‹ Parse() Рё TryParse() РјРѕРіСѓС‚ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ Р°СЂРіСѓРјРµРЅС‚ defaultYear, РєРѕРіРґР°
+    /// РіРѕРґ РЅРµ Р·Р°РґР°РЅ РІ РїСЂРµРѕР±СЂР°Р·СѓРµРјРѕР№ СЃС‚СЂРѕРєРµ. Р•СЃР»Рё false, С‚Рѕ СЌС‚РѕС‚ Р°СЂРіСѓРјРµРЅС‚ РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ
     /// </summary>
     public bool DefaultYearSupported
     {
       get
       {
         return Kind == EditableDateTimeFormatterKind.Date &&
-          Format[Format.Length - 1] == 'y'; // Заканчивается на год
+          Format[Format.Length - 1] == 'y'; // Р—Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ РЅР° РіРѕРґ
       }
     }
 
     /// <summary>
-    /// Возвращает true, если в формате присутствует компонент даты.
-    /// Как минимум, одно из свойств ContainsDate и ContainsTime должно возвращать true.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ С„РѕСЂРјР°С‚Рµ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РєРѕРјРїРѕРЅРµРЅС‚ РґР°С‚С‹.
+    /// РљР°Рє РјРёРЅРёРјСѓРј, РѕРґРЅРѕ РёР· СЃРІРѕР№СЃС‚РІ ContainsDate Рё ContainsTime РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊ true.
     /// </summary>
     public bool ContainsDate 
     {
@@ -577,8 +577,8 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает true, если в формате присутствует компонент времени.
-    /// Как минимум, одно из свойств ContainsDate и ContainsTime должно возвращать true.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ С„РѕСЂРјР°С‚Рµ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РєРѕРјРїРѕРЅРµРЅС‚ РІСЂРµРјРµРЅРё.
+    /// РљР°Рє РјРёРЅРёРјСѓРј, РѕРґРЅРѕ РёР· СЃРІРѕР№СЃС‚РІ ContainsDate Рё ContainsTime РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊ true.
     /// </summary>
     public bool ContainsTime
     {
@@ -599,26 +599,26 @@ namespace FreeLibSet.Formatting
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает дату/время, отформатированную в соответствии с полем Format
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР°С‚Сѓ/РІСЂРµРјСЏ, РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅСѓСЋ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РїРѕР»РµРј Format
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public string ToString(DateTime value)
     {
       return value.ToString(Format, FormatProvider);
     }
 
     /// <summary>
-    /// Выполняет попытку преобразования строки в значение даты/времени
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїРѕРїС‹С‚РєСѓ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ СЃС‚СЂРѕРєРё РІ Р·РЅР°С‡РµРЅРёРµ РґР°С‚С‹/РІСЂРµРјРµРЅРё
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="value">Сюда записывается значение</param>
-    /// <param name="defaultYear">Если передано ненулевое значение, свойство DefaultYearSupported=true,
-    /// а в строке нет года, то используется этот год</param>
-    /// <returns>true, если преобразование успешно выполнено</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="value">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="defaultYear">Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРЅСѓР»РµРІРѕРµ Р·РЅР°С‡РµРЅРёРµ, СЃРІРѕР№СЃС‚РІРѕ DefaultYearSupported=true,
+    /// Р° РІ СЃС‚СЂРѕРєРµ РЅРµС‚ РіРѕРґР°, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЌС‚РѕС‚ РіРѕРґ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅРѕ</returns>
     public bool TryParse(string s, out DateTime value, int defaultYear)
     {
       if (defaultYear != 0 && DefaultYearSupported)
@@ -632,24 +632,24 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Выполняет попытку преобразования строки в значение даты/времени
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїРѕРїС‹С‚РєСѓ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ СЃС‚СЂРѕРєРё РІ Р·РЅР°С‡РµРЅРёРµ РґР°С‚С‹/РІСЂРµРјРµРЅРё
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="value">Сюда записывается значение</param>
-    /// <returns>true, если преобразование успешно выполнено</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="value">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>true, РµСЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅРѕ</returns>
     public bool TryParse(string s, out DateTime value)
     {
       return TryParse(s, out value, 0);
     }
 
     /// <summary>
-    /// Выполняет преобразование строки в значение даты/времени.
-    /// В случае ошибки генерируется FormatException
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РІ Р·РЅР°С‡РµРЅРёРµ РґР°С‚С‹/РІСЂРµРјРµРЅРё.
+    /// Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ FormatException
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="defaultYear">Если передано ненулевое значение, свойство DefaultYearSupported=true,
-    /// а в строке нет года, то используется этот год</param>
-    /// <returns>Преобразованное значение</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="defaultYear">Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРЅСѓР»РµРІРѕРµ Р·РЅР°С‡РµРЅРёРµ, СЃРІРѕР№СЃС‚РІРѕ DefaultYearSupported=true,
+    /// Р° РІ СЃС‚СЂРѕРєРµ РЅРµС‚ РіРѕРґР°, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЌС‚РѕС‚ РіРѕРґ</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     public DateTime Parse(string s, int defaultYear)
     {
       DateTime value;
@@ -660,24 +660,24 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Выполняет преобразование строки в значение даты/времени.
-    /// В случае ошибки генерируется FormatException
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РІ Р·РЅР°С‡РµРЅРёРµ РґР°С‚С‹/РІСЂРµРјРµРЅРё.
+    /// Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ FormatException
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <returns>Преобразованное значение</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     public DateTime Parse(string s)
     {
       return Parse(s, 0);
     }
 
     /// <summary>
-    /// Преобразование строки в Nullable-значение.
-    /// В случае ошибки возвращается null, как для пустой строки.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РІ Nullable-Р·РЅР°С‡РµРЅРёРµ.
+    /// Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null, РєР°Рє РґР»СЏ РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="defaultYear">Если передано ненулевое значение, свойство DefaultYearSupported=true,
-    /// а в строке нет года, то используется этот год</param>
-    /// <returns>Преобразованное значение или null</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="defaultYear">Р•СЃР»Рё РїРµСЂРµРґР°РЅРѕ РЅРµРЅСѓР»РµРІРѕРµ Р·РЅР°С‡РµРЅРёРµ, СЃРІРѕР№СЃС‚РІРѕ DefaultYearSupported=true,
+    /// Р° РІ СЃС‚СЂРѕРєРµ РЅРµС‚ РіРѕРґР°, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЌС‚РѕС‚ РіРѕРґ</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null</returns>
     public DateTime? ToNValue(string s, int defaultYear)
     {
       DateTime value;
@@ -687,11 +687,11 @@ namespace FreeLibSet.Formatting
         return null;
     }
     /// <summary>
-    /// Преобразование строки в Nullable-значение.
-    /// В случае ошибки возвращается null, как для пустой строки.
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РІ Nullable-Р·РЅР°С‡РµРЅРёРµ.
+    /// Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null, РєР°Рє РґР»СЏ РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <returns>Преобразованное значение или null</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <returns>РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null</returns>
     public DateTime? ToNValue(string s)
     {
       return ToNValue(s, 0);
@@ -701,11 +701,11 @@ namespace FreeLibSet.Formatting
   }
 
   /// <summary>
-  /// Коллекция форматизаторов даты/времени, относящихся к текущему потоку
+  /// РљРѕР»Р»РµРєС†РёСЏ С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂРѕРІ РґР°С‚С‹/РІСЂРµРјРµРЅРё, РѕС‚РЅРѕСЃСЏС‰РёС…СЃСЏ Рє С‚РµРєСѓС‰РµРјСѓ РїРѕС‚РѕРєСѓ
   /// </summary>
   public static class EditableDateTimeFormatters
   {
-    #region Отслеживание изменений в потоке
+    #region РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РёР·РјРµРЅРµРЅРёР№ РІ РїРѕС‚РѕРєРµ
 
     [ThreadStatic]
     private static DateTimeFormatInfo _CurrentInfo;
@@ -724,30 +724,30 @@ namespace FreeLibSet.Formatting
 
     #endregion
 
-    #region Объекты EditableDateTimeFormatter
+    #region РћР±СЉРµРєС‚С‹ EditableDateTimeFormatter
 
     /// <summary>
-    /// Форматизатор для даты 
+    /// Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ РґР»СЏ РґР°С‚С‹ 
     /// </summary>
     public static EditableDateTimeFormatter Date { get { return Get(EditableDateTimeFormatterKind.Date); } }
 
     /// <summary>
-    /// Форматизатор для времени без секунд
+    /// Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ РґР»СЏ РІСЂРµРјРµРЅРё Р±РµР· СЃРµРєСѓРЅРґ
     /// </summary>
     public static EditableDateTimeFormatter ShortTime { get { return Get(EditableDateTimeFormatterKind.ShortTime); } }
 
     /// <summary>
-    /// Форматизатор для времени с секундами
+    /// Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ РґР»СЏ РІСЂРµРјРµРЅРё СЃ СЃРµРєСѓРЅРґР°РјРё
     /// </summary>
     public static EditableDateTimeFormatter Time { get { return Get(EditableDateTimeFormatterKind.Time); } }
 
     /// <summary>
-    /// Форматизатор для даты и времени без секунд
+    /// Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ РґР»СЏ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё Р±РµР· СЃРµРєСѓРЅРґ
     /// </summary>
     public static EditableDateTimeFormatter ShortDateTime { get { return Get(EditableDateTimeFormatterKind.ShortDateTime); } }
 
     /// <summary>
-    /// Форматизатор для даты и времени с секундами
+    /// Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ РґР»СЏ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё СЃ СЃРµРєСѓРЅРґР°РјРё
     /// </summary>
     public static EditableDateTimeFormatter DateTime { get { return Get(EditableDateTimeFormatterKind.DateTime); } }
 
@@ -755,10 +755,10 @@ namespace FreeLibSet.Formatting
     private static EditableDateTimeFormatter[] _Items;
 
     /// <summary>
-    /// Доступ к форматизатору по его виду
+    /// Р”РѕСЃС‚СѓРї Рє С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂСѓ РїРѕ РµРіРѕ РІРёРґСѓ
     /// </summary>
-    /// <param name="kind">Вид форматизатора</param>
-    /// <returns>Форматизатор</returns>
+    /// <param name="kind">Р’РёРґ С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂР°</param>
+    /// <returns>Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ</returns>
     public static EditableDateTimeFormatter Get(EditableDateTimeFormatterKind kind)
     {
       CheckCurrentInfo();
@@ -772,10 +772,10 @@ namespace FreeLibSet.Formatting
 
     #endregion
 
-    #region Статические списки
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ СЃРїРёСЃРєРё
 
     /// <summary>
-    /// Возвращает DateTimeFormatInfo.MonthNames без пустого 13-го месяца ("Январь", "Февраль", ..., "Декабрь")
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ DateTimeFormatInfo.MonthNames Р±РµР· РїСѓСЃС‚РѕРіРѕ 13-РіРѕ РјРµСЃСЏС†Р° ("РЇРЅРІР°СЂСЊ", "Р¤РµРІСЂР°Р»СЊ", ..., "Р”РµРєР°Р±СЂСЊ")
     /// </summary>
     public static string[] MonthNames12
     {
@@ -798,7 +798,7 @@ namespace FreeLibSet.Formatting
 
 
     /// <summary>
-    /// Возвращает DateTimeFormatInfo.MonthGenitiveNames без пустого 13-го месяца ("января", "февраля", ..., "декабря")
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ DateTimeFormatInfo.MonthGenitiveNames Р±РµР· РїСѓСЃС‚РѕРіРѕ 13-РіРѕ РјРµСЃСЏС†Р° ("СЏРЅРІР°СЂСЏ", "С„РµРІСЂР°Р»СЏ", ..., "РґРµРєР°Р±СЂСЏ")
     /// </summary>
     public static string[] MonthGenitiveNames12
     {

@@ -1,7 +1,7 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
-//#define USE_TRACE // трассировка в пределах этого файла
+//#define USE_TRACE // С‚СЂР°СЃСЃРёСЂРѕРІРєР° РІ РїСЂРµРґРµР»Р°С… СЌС‚РѕРіРѕ С„Р°Р№Р»Р°
 
 using System;
 using System.Collections.Generic;
@@ -17,12 +17,12 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Shell
 {
   /// <summary>
-  /// Описание команды "Открыть" или "Открыть с помощью"
+  /// РћРїРёСЃР°РЅРёРµ РєРѕРјР°РЅРґС‹ "РћС‚РєСЂС‹С‚СЊ" РёР»Рё "РћС‚РєСЂС‹С‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ"
   /// </summary>
   [Serializable]
   public class FileAssociationItem
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FileAssociationItem(string progId, AbsPath programPath, string arguments, string displayName, AbsPath iconPath, int iconIndex, bool useURL, string infoSourceString)
     {
@@ -66,11 +66,11 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Возвращает отображаемое имя программы для заданного пути.
-    /// Если выполняемый файл не содержит свойств, возвращается имя файла без расширения
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ РїСЂРѕРіСЂР°РјРјС‹ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ РїСѓС‚Рё.
+    /// Р•СЃР»Рё РІС‹РїРѕР»РЅСЏРµРјС‹Р№ С„Р°Р№Р» РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃРІРѕР№СЃС‚РІ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РёРјСЏ С„Р°Р№Р»Р° Р±РµР· СЂР°СЃС€РёСЂРµРЅРёСЏ
     /// </summary>
-    /// <param name="programPath">Путь к выполняемому файлу</param>
-    /// <returns>Отображаемое имя</returns>
+    /// <param name="programPath">РџСѓС‚СЊ Рє РІС‹РїРѕР»РЅСЏРµРјРѕРјСѓ С„Р°Р№Р»Сѓ</param>
+    /// <returns>РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ</returns>
     internal static string GetDisplayName(AbsPath programPath)
     {
       if (programPath.IsEmpty)
@@ -90,23 +90,23 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Идентификатор ProgId
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ ProgId
     /// </summary>
     public string ProgId { get { return _ProgId; } }
     private string _ProgId;
 
     /// <summary>
-    /// Путь к выполняемому файлу приложения
+    /// РџСѓС‚СЊ Рє РІС‹РїРѕР»РЅСЏРµРјРѕРјСѓ С„Р°Р№Р»Сѓ РїСЂРёР»РѕР¶РµРЅРёСЏ
     /// </summary>
     public AbsPath ProgramPath { get { return _ProgramPath; } }
     private AbsPath _ProgramPath;
 
     /// <summary>
-    /// Аргументы командной строки для запуска приложения.
-    /// Аргумент "%1" заменяется на путь к файлу
+    /// РђСЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё РґР»СЏ Р·Р°РїСѓСЃРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ.
+    /// РђСЂРіСѓРјРµРЅС‚ "%1" Р·Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ
     /// </summary>
     public string Arguments { get { return _Arguments; } }
     private string _Arguments;
@@ -114,43 +114,43 @@ namespace FreeLibSet.Shell
     //public string CommandLine { get { return FCommandLine; } set { FCommandLine = value; } }
 
     /// <summary>
-    /// Отображаемое имя программы для команд "Открыть с помощью"
+    /// РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ РїСЂРѕРіСЂР°РјРјС‹ РґР»СЏ РєРѕРјР°РЅРґ "РћС‚РєСЂС‹С‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ"
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
     private string _DisplayName;
 
     /// <summary>
-    /// Путь к файлу в котором содержится значок.
-    /// Может быть не задан
+    /// РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РІ РєРѕС‚РѕСЂРѕРј СЃРѕРґРµСЂР¶РёС‚СЃСЏ Р·РЅР°С‡РѕРє.
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ Р·Р°РґР°РЅ
     /// </summary>
     public AbsPath IconPath { get { return _IconPath; } }
     private AbsPath _IconPath;
 
     /// <summary>
-    /// Индекс значка в файле.
-    /// См. описание функции Windows ExtractIcon()
+    /// РРЅРґРµРєСЃ Р·РЅР°С‡РєР° РІ С„Р°Р№Р»Рµ.
+    /// РЎРј. РѕРїРёСЃР°РЅРёРµ С„СѓРЅРєС†РёРё Windows ExtractIcon()
     /// </summary>
     public int IconIndex { get { return _IconIndex; } }
     private int _IconIndex;
     /// <summary>
-    /// Если true, то при подстановке имени файла в командную строку будет использоваться форма "file:///"
+    /// Р•СЃР»Рё true, С‚Рѕ РїСЂРё РїРѕРґСЃС‚Р°РЅРѕРІРєРµ РёРјРµРЅРё С„Р°Р№Р»Р° РІ РєРѕРјР°РЅРґРЅСѓСЋ СЃС‚СЂРѕРєСѓ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ С„РѕСЂРјР° "file:///"
     /// </summary>
     public bool UserURL { get { return true; } }
     private bool _UseURL;
 
 #if DEBUG
     /// <summary>
-    /// Дополнительная информация, как была найдена эта копия (ключ реестра или имя переменной окружения).
-    /// Это свойство существует только в отладочном режиме
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ, РєР°Рє Р±С‹Р»Р° РЅР°Р№РґРµРЅР° СЌС‚Р° РєРѕРїРёСЏ (РєР»СЋС‡ СЂРµРµСЃС‚СЂР° РёР»Рё РёРјСЏ РїРµСЂРµРјРµРЅРЅРѕР№ РѕРєСЂСѓР¶РµРЅРёСЏ).
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СЃСѓС‰РµСЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ РІ РѕС‚Р»Р°РґРѕС‡РЅРѕРј СЂРµР¶РёРјРµ
     /// </summary>
     public string InfoSourceString { get { return _InfoSourceString; } }
     private string _InfoSourceString;
 #endif
 
     /// <summary>
-    /// Возвращает DisplayName
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ DisplayName
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return DisplayName;
@@ -158,7 +158,7 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Выполнение команды
+    #region Р’С‹РїРѕР»РЅРµРЅРёРµ РєРѕРјР°РЅРґС‹
 
     private ProcessStartInfo CreateProcessStartInfo(AbsPath filePath)
     {
@@ -178,11 +178,11 @@ namespace FreeLibSet.Shell
           psi.Arguments = psi.Arguments.Replace("%1", filePath.Path);
           break;
         case PlatformID.Unix:
-          psi.Arguments = psi.Arguments.Replace("%U", filePath.QuotedPath); // у LibreOffice с большой буквы
-          psi.Arguments = psi.Arguments.Replace("%u", filePath.QuotedPath); // у FireFox - с маленькой. В чем разница?
+          psi.Arguments = psi.Arguments.Replace("%U", filePath.QuotedPath); // Сѓ LibreOffice СЃ Р±РѕР»СЊС€РѕР№ Р±СѓРєРІС‹
+          psi.Arguments = psi.Arguments.Replace("%u", filePath.QuotedPath); // Сѓ FireFox - СЃ РјР°Р»РµРЅСЊРєРѕР№. Р’ С‡РµРј СЂР°Р·РЅРёС†Р°?
 
-          psi.Arguments = psi.Arguments.Replace("%F", filePath.QuotedPath); // у программы просмотра каталога Thunar
-          psi.Arguments = psi.Arguments.Replace("%f", filePath.QuotedPath); // для комплекта
+          psi.Arguments = psi.Arguments.Replace("%F", filePath.QuotedPath); // Сѓ РїСЂРѕРіСЂР°РјРјС‹ РїСЂРѕСЃРјРѕС‚СЂР° РєР°С‚Р°Р»РѕРіР° Thunar
+          psi.Arguments = psi.Arguments.Replace("%f", filePath.QuotedPath); // РґР»СЏ РєРѕРјРїР»РµРєС‚Р°
           break;
         default:
           throw new PlatformNotSupportedException();
@@ -192,9 +192,9 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Открывает приложение и указанный документ в нем.
+    /// РћС‚РєСЂС‹РІР°РµС‚ РїСЂРёР»РѕР¶РµРЅРёРµ Рё СѓРєР°Р·Р°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚ РІ РЅРµРј.
     /// </summary>
-    /// <param name="filePath">Путь к документу</param>
+    /// <param name="filePath">РџСѓС‚СЊ Рє РґРѕРєСѓРјРµРЅС‚Сѓ</param>
     public void Execute(AbsPath filePath)
     {
       ProcessStartInfo psi = CreateProcessStartInfo(filePath);
@@ -243,13 +243,13 @@ namespace FreeLibSet.Shell
   }
 
   /// <summary>
-  /// Ассоциации для заданного типа файлов.
-  /// Для получения ассоциаций используйте статический метод FromFileExtension()
+  /// РђСЃСЃРѕС†РёР°С†РёРё РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР° С„Р°Р№Р»РѕРІ.
+  /// Р”Р»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Р°СЃСЃРѕС†РёР°С†РёР№ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ FromFileExtension()
   /// </summary>
   [Serializable]
   public class FileAssociations : IReadOnlyObject
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     private FileAssociations(bool isReadOnly)
     {
@@ -260,10 +260,10 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Команда "Открыть"
+    /// РљРѕРјР°РЅРґР° "РћС‚РєСЂС‹С‚СЊ"
     /// </summary>
     public FileAssociationItem OpenItem
     {
@@ -279,10 +279,10 @@ namespace FreeLibSet.Shell
     [Serializable]
     private class OpenWithItemList : ListWithReadOnly<FileAssociationItem>
     {
-      // Первоначально использовался базовый класс NamedList.
-      // Но не имеет смысла использовать, т.к. поиск существующего элемента ведется и по ProgId и по ProgramPath
+      // РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°Р»СЃСЏ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ NamedList.
+      // РќРѕ РЅРµ РёРјРµРµС‚ СЃРјС‹СЃР»Р° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ, С‚.Рє. РїРѕРёСЃРє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° РІРµРґРµС‚СЃСЏ Рё РїРѕ ProgId Рё РїРѕ ProgramPath
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       public new void SetReadOnly()
       {
@@ -293,7 +293,7 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Команды "Открыть с помощью"
+    /// РљРѕРјР°РЅРґС‹ "РћС‚РєСЂС‹С‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ"
     /// </summary>
     public IList<FileAssociationItem> OpenWithItems { get { return _OpenWithItems; } }
     private OpenWithItemList _OpenWithItems;
@@ -316,12 +316,12 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Пустой список, доступный только для чтения
+    /// РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє, РґРѕСЃС‚СѓРїРЅС‹Р№ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ
     /// </summary>
     public static readonly FileAssociations Empty = new FileAssociations(true);
 
     /// <summary>
-    /// Возвращает true, если извлечение ассоциаций реализовано для операционной системы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РёР·РІР»РµС‡РµРЅРёРµ Р°СЃСЃРѕС†РёР°С†РёР№ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РґР»СЏ РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹
     /// </summary>
     public static bool IsSupported
     {
@@ -342,9 +342,9 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Если во время получения списка ассоциаций возникло исключение, оно сохраняется
-    /// в этом поле.
-    /// Если получение прошло успешно, то свойство содержит null.
+    /// Р•СЃР»Рё РІРѕ РІСЂРµРјСЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРёСЃРєР° Р°СЃСЃРѕС†РёР°С†РёР№ РІРѕР·РЅРёРєР»Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ, РѕРЅРѕ СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ
+    /// РІ СЌС‚РѕРј РїРѕР»Рµ.
+    /// Р•СЃР»Рё РїРѕР»СѓС‡РµРЅРёРµ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ, С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СЃРѕРґРµСЂР¶РёС‚ null.
     /// </summary>
     public Exception Exception
     {
@@ -360,19 +360,19 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Получение для расширения файла
+    #region РџРѕР»СѓС‡РµРЅРёРµ РґР»СЏ СЂР°СЃС€РёСЂРµРЅРёСЏ С„Р°Р№Р»Р°
 
     /// <summary>
-    /// Создает список ассоциаций для заданного расширения файла.
-    /// Реализовано для Windows и Linux. 
-    /// Для других операционных систем возвращает пустой список.
-    /// Возвращаемый список ассоциаций переведен в режим "Только чтение".
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє Р°СЃСЃРѕС†РёР°С†РёР№ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СЂР°СЃС€РёСЂРµРЅРёСЏ С„Р°Р№Р»Р°.
+    /// Р РµР°Р»РёР·РѕРІР°РЅРѕ РґР»СЏ Windows Рё Linux. 
+    /// Р”Р»СЏ РґСЂСѓРіРёС… РѕРїРµСЂР°С†РёРѕРЅРЅС‹С… СЃРёСЃС‚РµРј РІРѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ СЃРїРёСЃРѕРє Р°СЃСЃРѕС†РёР°С†РёР№ РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
     /// 
-    /// Этот метод выполняет опрос системы при каждом вызове.
-    /// Используйте свойство EFPApp.FileExtAssociations, которое поддерживает буферизацию
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹РїРѕР»РЅСЏРµС‚ РѕРїСЂРѕСЃ СЃРёСЃС‚РµРјС‹ РїСЂРё РєР°Р¶РґРѕРј РІС‹Р·РѕРІРµ.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃРІРѕР№СЃС‚РІРѕ EFPApp.FileExtAssociations, РєРѕС‚РѕСЂРѕРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ Р±СѓС„РµСЂРёР·Р°С†РёСЋ
     /// </summary>
-    /// <param name="fileExt">Расширение файла, включая точку</param>
-    /// <returns>Список ассоциаций</returns>
+    /// <param name="fileExt">Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°, РІРєР»СЋС‡Р°СЏ С‚РѕС‡РєСѓ</param>
+    /// <returns>РЎРїРёСЃРѕРє Р°СЃСЃРѕС†РёР°С†РёР№</returns>
     public static FileAssociations FromFileExtension(string fileExt)
     {
       try
@@ -384,16 +384,16 @@ namespace FreeLibSet.Shell
       catch (Exception e)
       {
         e.Data["FileExt"] = fileExt;
-        LogoutTools.LogoutException(e, "Ошибка загрузки файловых ассоциаций");
+        LogoutTools.LogoutException(e, "РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІС‹С… Р°СЃСЃРѕС†РёР°С†РёР№");
         return FromError(e);
       }
     }
 
     /// <summary>
-    /// Возвращает пустой список ассоциаций с заданным объктом исключения.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє Р°СЃСЃРѕС†РёР°С†РёР№ СЃ Р·Р°РґР°РЅРЅС‹Рј РѕР±СЉРєС‚РѕРј РёСЃРєР»СЋС‡РµРЅРёСЏ.
     /// </summary>
-    /// <param name="e">Перехваченное исключение</param>
-    /// <returns>Пустой список</returns>
+    /// <param name="e">РџРµСЂРµС…РІР°С‡РµРЅРЅРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ</param>
+    /// <returns>РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє</returns>
     private static FileAssociations FromError(Exception e)
     {
       FileAssociations faItems = new FileAssociations(false);
@@ -404,12 +404,12 @@ namespace FreeLibSet.Shell
 
     private static FileAssociations DoFromFileExtension(string fileExt)
     {
-      // В случае изменений не забыть про свойство IsSupported
+      // Р’ СЃР»СѓС‡Р°Рµ РёР·РјРµРЅРµРЅРёР№ РЅРµ Р·Р°Р±С‹С‚СЊ РїСЂРѕ СЃРІРѕР№СЃС‚РІРѕ IsSupported
 
       if (String.IsNullOrEmpty(fileExt))
         throw new ArgumentNullException("fileExt");
       if (fileExt[0] != '.')
-        throw new ArgumentException("Расширение должно начинаться с точки", "fileExt");
+        throw new ArgumentException("Р Р°СЃС€РёСЂРµРЅРёРµ РґРѕР»Р¶РЅРѕ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ С‚РѕС‡РєРё", "fileExt");
 
       switch (Environment.OSVersion.Platform)
       {
@@ -429,18 +429,18 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Получение для MIME-типа
+    #region РџРѕР»СѓС‡РµРЅРёРµ РґР»СЏ MIME-С‚РёРїР°
 
     /// <summary>
-    /// Создает список ассоциаций для заданного типа MIME.
-    /// Реализовано для Windows и Linux. 
-    /// Для других операционных систем возвращает пустой список.
-    /// Возвращаемый список ассоциаций переведен в режим "Только чтение".
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє Р°СЃСЃРѕС†РёР°С†РёР№ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР° MIME.
+    /// Р РµР°Р»РёР·РѕРІР°РЅРѕ РґР»СЏ Windows Рё Linux. 
+    /// Р”Р»СЏ РґСЂСѓРіРёС… РѕРїРµСЂР°С†РёРѕРЅРЅС‹С… СЃРёСЃС‚РµРј РІРѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє.
+    /// Р’РѕР·РІСЂР°С‰Р°РµРјС‹Р№ СЃРїРёСЃРѕРє Р°СЃСЃРѕС†РёР°С†РёР№ РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
     /// 
-    /// Для Windows этот метод практически бесполезен.
+    /// Р”Р»СЏ Windows СЌС‚РѕС‚ РјРµС‚РѕРґ РїСЂР°РєС‚РёС‡РµСЃРєРё Р±РµСЃРїРѕР»РµР·РµРЅ.
     /// </summary>
-    /// <param name="mimeType">MIME-тип, например, "text/plain"</param>
-    /// <returns>Список ассоциаций</returns>
+    /// <param name="mimeType">MIME-С‚РёРї, РЅР°РїСЂРёРјРµСЂ, "text/plain"</param>
+    /// <returns>РЎРїРёСЃРѕРє Р°СЃСЃРѕС†РёР°С†РёР№</returns>
     public static FileAssociations FromMimeType(string mimeType)
     {
       try
@@ -452,14 +452,14 @@ namespace FreeLibSet.Shell
       catch (Exception e)
       {
         e.Data["MimeType"] = mimeType;
-        LogoutTools.LogoutException(e, "Ошибка загрузки файловых ассоциаций для MIME-типа");
+        LogoutTools.LogoutException(e, "РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІС‹С… Р°СЃСЃРѕС†РёР°С†РёР№ РґР»СЏ MIME-С‚РёРїР°");
         return FromError(e);
       }
     }
 
     private static FileAssociations DoFromMimeType(string mimeType)
     {
-      // В случае изменений не забыть про свойство IsSupported
+      // Р’ СЃР»СѓС‡Р°Рµ РёР·РјРµРЅРµРЅРёР№ РЅРµ Р·Р°Р±С‹С‚СЊ РїСЂРѕ СЃРІРѕР№СЃС‚РІРѕ IsSupported
 
 
       if (String.IsNullOrEmpty(mimeType))
@@ -479,13 +479,13 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Для каталога
+    #region Р”Р»СЏ РєР°С‚Р°Р»РѕРіР°
 
     /// <summary>
-    /// Создает список файловых ассоциаций для просмотра каталогов.
-    /// Для Windows обычно возвращает единственный вариант - explorer.exe.
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІС‹С… Р°СЃСЃРѕС†РёР°С†РёР№ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РєР°С‚Р°Р»РѕРіРѕРІ.
+    /// Р”Р»СЏ Windows РѕР±С‹С‡РЅРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РІР°СЂРёР°РЅС‚ - explorer.exe.
     /// 
-    /// Используйте свойство EFPApp.FileAssociations.ShowDirectory
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃРІРѕР№СЃС‚РІРѕ EFPApp.FileAssociations.ShowDirectory
     /// </summary>
     /// <returns></returns>
     public static FileAssociations FromDirectory()
@@ -498,7 +498,7 @@ namespace FreeLibSet.Shell
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка загрузки файловых ассоциаций для каталогов");
+        LogoutTools.LogoutException(e, "РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё С„Р°Р№Р»РѕРІС‹С… Р°СЃСЃРѕС†РёР°С†РёР№ РґР»СЏ РєР°С‚Р°Р»РѕРіРѕРІ");
         return FromError(e);
       }
     }
@@ -519,7 +519,7 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Из реестра Windows
+    #region РР· СЂРµРµСЃС‚СЂР° Windows
 
     private static class Windows
     {
@@ -561,14 +561,14 @@ namespace FreeLibSet.Shell
           }
         }
 
-        // Теперь - OpenWithList
+        // РўРµРїРµСЂСЊ - OpenWithList
         RegistryKey2 key3 = tree[@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + fileExt + @"\OpenWithList"];
         if (key3 != null)
         {
-          string mruList = DataTools.GetString(key3.GetValue("MRUList")); // кодируется отдельными буквами
+          string mruList = DataTools.GetString(key3.GetValue("MRUList")); // РєРѕРґРёСЂСѓРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅС‹РјРё Р±СѓРєРІР°РјРё
           for (int i = 0; i < mruList.Length; i++)
           {
-            string valName = new string(mruList[i], 1); // строка из одной буквы
+            string valName = new string(mruList[i], 1); // СЃС‚СЂРѕРєР° РёР· РѕРґРЅРѕР№ Р±СѓРєРІС‹
             string progId3 = DataTools.GetString(key3.GetValue(valName));
             FileAssociationItem item = GetProgIdItem(tree, progId3, key3.Name);
             if (item != null && (!faItems.OpenWithContains(item)))
@@ -596,7 +596,7 @@ namespace FreeLibSet.Shell
           RegistryKey2 keyOWL = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithList"];
           if (keyOWL != null)
           {
-            string[] aProgIds = keyOWL.GetSubKeyNames(); // а не value names
+            string[] aProgIds = keyOWL.GetSubKeyNames(); // Р° РЅРµ value names
             for (int i = 0; i < aProgIds.Length; i++)
             {
               FileAssociationItem item = GetProgIdItem(tree, aProgIds[i], keyOWL.Name);
@@ -614,7 +614,7 @@ namespace FreeLibSet.Shell
               faItems.OpenWithItems.Insert(0, item0);
               p = 0;
             }
-            faItems.OpenItem = faItems.OpenWithItems[p]; // а не Item0
+            faItems.OpenItem = faItems.OpenWithItems[p]; // Р° РЅРµ Item0
           }
         }
       }
@@ -638,7 +638,7 @@ namespace FreeLibSet.Shell
           return null;
 
         if (cmd.IndexOf(@"%1", StringComparison.Ordinal) < 0)
-          // Обмен с помощью DDE не реализован
+          // РћР±РјРµРЅ СЃ РїРѕРјРѕС‰СЊСЋ DDE РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅ
           return null;
 
         string fileName, arguments;
@@ -657,7 +657,7 @@ namespace FreeLibSet.Shell
         if (path.FileName.ToLowerInvariant() == "rundll32.exe")
         {
           // 22.09.2019
-          // Извлекаем данные из аргументов 
+          // РР·РІР»РµРєР°РµРј РґР°РЅРЅС‹Рµ РёР· Р°СЂРіСѓРјРµРЅС‚РѕРІ 
 
           string fileName2 = GetFileNameFromArgs(arguments);
           if (!String.IsNullOrEmpty(fileName2))
@@ -691,8 +691,8 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Получаем имя файла из строки аргументов.
-      /// Имя файла может быть в кавычках
+      /// РџРѕР»СѓС‡Р°РµРј РёРјСЏ С„Р°Р№Р»Р° РёР· СЃС‚СЂРѕРєРё Р°СЂРіСѓРјРµРЅС‚РѕРІ.
+      /// РРјСЏ С„Р°Р№Р»Р° РјРѕР¶РµС‚ Р±С‹С‚СЊ РІ РєР°РІС‹С‡РєР°С…
       /// </summary>
       /// <param name="arguments"></param>
       /// <returns></returns>
@@ -702,19 +702,19 @@ namespace FreeLibSet.Shell
           return String.Empty;
         if (arguments[0] == '\"')
         {
-          // Ищем закрывающую кавычку
-          // TODO: Кавычка в имени файла
+          // РС‰РµРј Р·Р°РєСЂС‹РІР°СЋС‰СѓСЋ РєР°РІС‹С‡РєСѓ
+          // TODO: РљР°РІС‹С‡РєР° РІ РёРјРµРЅРё С„Р°Р№Р»Р°
           string s = arguments.Substring(1);
           int p = s.IndexOf('\"');
           if (p < 0)
-            return string.Empty; // ошибка
+            return string.Empty; // РѕС€РёР±РєР°
           else
             return s.Substring(0, p);
         }
         else
         {
-          // Имя файла без кавычек.
-          // Возвращаем все до первого пробела
+          // РРјСЏ С„Р°Р№Р»Р° Р±РµР· РєР°РІС‹С‡РµРє.
+          // Р’РѕР·РІСЂР°С‰Р°РµРј РІСЃРµ РґРѕ РїРµСЂРІРѕРіРѕ РїСЂРѕР±РµР»Р°
           int p = arguments.IndexOf(' ');
           if (p >= 0)
             return arguments.Substring(0, p);
@@ -740,9 +740,9 @@ namespace FreeLibSet.Shell
         RegistryKey2 keyProgId = tree[@"HKEY_CLASSES_ROOT\Applications\" + progId];
         if (keyProgId == null && progId.IndexOf('\\') < 0)
         {
-          // Может быть задано просто имя EXE-файла, например, "notepad.exe", тогда его надо искать
-          // в подразделе "Applications"
-          // Идентификатор приложения тоже надо изменить, иначе в списке будет два блокнота
+          // РњРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ РїСЂРѕСЃС‚Рѕ РёРјСЏ EXE-С„Р°Р№Р»Р°, РЅР°РїСЂРёРјРµСЂ, "notepad.exe", С‚РѕРіРґР° РµРіРѕ РЅР°РґРѕ РёСЃРєР°С‚СЊ
+          // РІ РїРѕРґСЂР°Р·РґРµР»Рµ "Applications"
+          // РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРёР»РѕР¶РµРЅРёСЏ С‚РѕР¶Рµ РЅР°РґРѕ РёР·РјРµРЅРёС‚СЊ, РёРЅР°С‡Рµ РІ СЃРїРёСЃРєРµ Р±СѓРґРµС‚ РґРІР° Р±Р»РѕРєРЅРѕС‚Р°
           progId = @"Applications\" + progId;
           keyProgId = tree[@"HKEY_CLASSES_ROOT\Applications\" + progId];
         }
@@ -756,7 +756,7 @@ namespace FreeLibSet.Shell
       {
         try
         {
-          // Последняя попытка - найти путь к приложению
+          // РџРѕСЃР»РµРґРЅСЏСЏ РїРѕРїС‹С‚РєР° - РЅР°Р№С‚Рё РїСѓС‚СЊ Рє РїСЂРёР»РѕР¶РµРЅРёСЋ
           string keyName = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + progId;
           string filePath = tree.GetString(keyName, String.Empty);
           AbsPath path = AbsPath.Create(filePath); // 25.01.2019
@@ -797,9 +797,9 @@ namespace FreeLibSet.Shell
           iconIndex = 0;
         }
         fileName = Environment.ExpandEnvironmentVariables(fileName);
-        if (fileName.IndexOf(System.IO.Path.DirectorySeparatorChar) < 0) // имя файла без пути
+        if (fileName.IndexOf(System.IO.Path.DirectorySeparatorChar) < 0) // РёРјСЏ С„Р°Р№Р»Р° Р±РµР· РїСѓС‚Рё
         {
-          // 13.12.2018 Пытаемся найти в системном каталоге
+          // 13.12.2018 РџС‹С‚Р°РµРјСЃСЏ РЅР°Р№С‚Рё РІ СЃРёСЃС‚РµРјРЅРѕРј РєР°С‚Р°Р»РѕРіРµ
           iconPath = AbsPath.Create(AbsPath.Create(Environment.SystemDirectory), fileName);
           //if (!System.IO.File.Exists(IconPath.Path))
           //  IconPath = FileTools.FindExecutableFilePath(FileName); 
@@ -855,11 +855,11 @@ namespace FreeLibSet.Shell
 
       #endregion
 
-      #region Ассоциации для каталога
+      #region РђСЃСЃРѕС†РёР°С†РёРё РґР»СЏ РєР°С‚Р°Р»РѕРіР°
 
       internal static FileAssociations FromDirectory()
       {
-        // TODO: поиск замены explorer.exe
+        // TODO: РїРѕРёСЃРє Р·Р°РјРµРЅС‹ explorer.exe
 
         FileAssociations faItems = new FileAssociations(false);
         AbsPath path = FileTools.FindExecutableFilePath("explorer.exe");
@@ -887,21 +887,21 @@ namespace FreeLibSet.Shell
 
     private static class Linux
     {
-      #region Расширение файла -> MIME
+      #region Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р° -> MIME
 
       /// <summary>
-      /// Словарь соответствий расширений MIME-типам.
-      /// Заполняется при первом обращении
-      /// Ключ - расширение файла (с точкой) в верхнем регистре
-      /// Значение - тип MIME.
+      /// РЎР»РѕРІР°СЂСЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёР№ СЂР°СЃС€РёСЂРµРЅРёР№ MIME-С‚РёРїР°Рј.
+      /// Р—Р°РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РѕР±СЂР°С‰РµРЅРёРё
+      /// РљР»СЋС‡ - СЂР°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р° (СЃ С‚РѕС‡РєРѕР№) РІ РІРµСЂС…РЅРµРј СЂРµРіРёСЃС‚СЂРµ
+      /// Р—РЅР°С‡РµРЅРёРµ - С‚РёРї MIME.
       /// </summary>
       private static Dictionary<string, string> _FileExtMimeDict = new Dictionary<string, string>();
 
       /// <summary>
-      /// Возвращает mime-тип для расширения файла.
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ mime-С‚РёРї РґР»СЏ СЂР°СЃС€РёСЂРµРЅРёСЏ С„Р°Р№Р»Р°.
       /// </summary>
-      /// <param name="fileExt">Расширение файла</param>
-      /// <returns>MIME-тип</returns>
+      /// <param name="fileExt">Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°</param>
+      /// <returns>MIME-С‚РёРї</returns>
       internal static string GetMimeTypeFromFileExtension(string fileExt)
       {
         string mime;
@@ -917,7 +917,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Инициализация словаря FileExtMimeDict
+      /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»РѕРІР°СЂСЏ FileExtMimeDict
       /// </summary>
       private static void InitFileExtMimeDict()
       {
@@ -925,7 +925,7 @@ namespace FreeLibSet.Shell
         Trace.WriteLine("Loading file mime types ...");
 #endif
 
-        #region Несколько стандартных
+        #region РќРµСЃРєРѕР»СЊРєРѕ СЃС‚Р°РЅРґР°СЂС‚РЅС‹С…
 
         _FileExtMimeDict[".TXT"] = "text/plain";
         _FileExtMimeDict[".HTM"] = "text/html";
@@ -934,9 +934,9 @@ namespace FreeLibSet.Shell
 
         #endregion
 
-        #region Загружаем из файлов XML
+        #region Р—Р°РіСЂСѓР¶Р°РµРј РёР· С„Р°Р№Р»РѕРІ XML
 
-        // По идее, нужно анализировать файлы "/usr/share/mime/packages/*.xml", в особенности freedesktop.org.xml.
+        // РџРѕ РёРґРµРµ, РЅСѓР¶РЅРѕ Р°РЅР°Р»РёР·РёСЂРѕРІР°С‚СЊ С„Р°Р№Р»С‹ "/usr/share/mime/packages/*.xml", РІ РѕСЃРѕР±РµРЅРЅРѕСЃС‚Рё freedesktop.org.xml.
 
         try
         {
@@ -974,13 +974,13 @@ namespace FreeLibSet.Shell
             }
             catch (Exception e)
             {
-              LogoutTools.LogoutException(e, "Ошибка загрузки " + aFiles[i].Length);
+              LogoutTools.LogoutException(e, "РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё " + aFiles[i].Length);
             }
           }
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка заполнения словаря mime-типов");
+          LogoutTools.LogoutException(e, "РћС€РёР±РєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ СЃР»РѕРІР°СЂСЏ mime-С‚РёРїРѕРІ");
         }
 
         #endregion
@@ -1001,11 +1001,11 @@ namespace FreeLibSet.Shell
 
       #endregion
 
-      #region Ассоциации для mime-типов
+      #region РђСЃСЃРѕС†РёР°С†РёРё РґР»СЏ mime-С‚РёРїРѕРІ
 
       /// <summary>
-      /// Так как класс FileAssociations предполагается потокобезопасным,
-      /// иногда необходимо выполнять блокировку
+      /// РўР°Рє РєР°Рє РєР»Р°СЃСЃ FileAssociations РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј,
+      /// РёРЅРѕРіРґР° РЅРµРѕР±С…РѕРґРёРјРѕ РІС‹РїРѕР»РЅСЏС‚СЊ Р±Р»РѕРєРёСЂРѕРІРєСѓ
       /// </summary>
       private static object _SyncRoot = new object();
 
@@ -1014,18 +1014,18 @@ namespace FreeLibSet.Shell
       private static string _MimeinfoCacheFilePath = "/usr/share/applications/mimeinfo.cache";
 
       /// <summary>
-      /// Время модификации файла "~/.local/share/applications/defaults.list"
+      /// Р’СЂРµРјСЏ РјРѕРґРёС„РёРєР°С†РёРё С„Р°Р№Р»Р° "~/.local/share/applications/defaults.list"
       /// </summary>
       private static DateTime _DefaultsListFileTime;
 
       /// <summary>
-      /// Время модификации файла "/usr/share/applications/mimeinfo.cache"
+      /// Р’СЂРµРјСЏ РјРѕРґРёС„РёРєР°С†РёРё С„Р°Р№Р»Р° "/usr/share/applications/mimeinfo.cache"
       /// </summary>
       private static DateTime _MimeinfoCacheFileTime;
 
       /// <summary>
-      /// Таблица соответствий mime-типов и desktop-файлов.
-      /// Ключ - MIME-тип, значение - список ярылков .desktop (через точку с запятой)
+      /// РўР°Р±Р»РёС†Р° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёР№ mime-С‚РёРїРѕРІ Рё desktop-С„Р°Р№Р»РѕРІ.
+      /// РљР»СЋС‡ - MIME-С‚РёРї, Р·РЅР°С‡РµРЅРёРµ - СЃРїРёСЃРѕРє СЏСЂС‹Р»РєРѕРІ .desktop (С‡РµСЂРµР· С‚РѕС‡РєСѓ СЃ Р·Р°РїСЏС‚РѕР№)
       /// </summary>
       private static Dictionary<string, string> _MimeDesktopFiles;
 
@@ -1046,9 +1046,9 @@ namespace FreeLibSet.Shell
       {
         string sDesktopFiles;
         if (!_MimeDesktopFiles.TryGetValue(mimeType, out sDesktopFiles))
-          return FileAssociations.Empty; // неизвестный mime-тип
+          return FileAssociations.Empty; // РЅРµРёР·РІРµСЃС‚РЅС‹Р№ mime-С‚РёРї
         if (String.IsNullOrEmpty(sDesktopFiles))
-          return FileAssociations.Empty; // нет ассоциации
+          return FileAssociations.Empty; // РЅРµС‚ Р°СЃСЃРѕС†РёР°С†РёРё
 
 #if USE_TRACE
         System.Diagnostics.Trace.WriteLine("Desktop files for MIMETYPE=\"" + MimeType + "\": \"" + sDesktopFiles + "\"");
@@ -1151,7 +1151,7 @@ namespace FreeLibSet.Shell
              * 
              * */
 
-            // Х.З., как правильно выбрать тему
+            // РҐ.Р—., РєР°Рє РїСЂР°РІРёР»СЊРЅРѕ РІС‹Р±СЂР°С‚СЊ С‚РµРјСѓ
             string[] a = System.IO.Directory.GetFiles("/usr/share/icons", sIcon + ".png", System.IO.SearchOption.AllDirectories);
             if (a.Length > 0)
               iconPath = new AbsPath(a[0]);
@@ -1163,7 +1163,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Возвращает идентификатор языка системы, например, "ru"
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЏР·С‹РєР° СЃРёСЃС‚РµРјС‹, РЅР°РїСЂРёРјРµСЂ, "ru"
       /// </summary>
       private static string LanguageStr
       {
@@ -1178,7 +1178,7 @@ namespace FreeLibSet.Shell
       }
 
       /// <summary>
-      /// Надо ли обновить словарь ассоциаций MimeDesktopFiles.
+      /// РќР°РґРѕ Р»Рё РѕР±РЅРѕРІРёС‚СЊ СЃР»РѕРІР°СЂСЊ Р°СЃСЃРѕС†РёР°С†РёР№ MimeDesktopFiles.
       /// </summary>
       /// <returns></returns>
       private static bool NeedsRecreateMimeDesktopFiles()
@@ -1206,7 +1206,7 @@ namespace FreeLibSet.Shell
 #endif
         _MimeDesktopFiles = new Dictionary<string, string>();
 
-        #region Общий список
+        #region РћР±С‰РёР№ СЃРїРёСЃРѕРє
 
         if (System.IO.File.Exists(_MimeinfoCacheFilePath))
         {
@@ -1222,7 +1222,7 @@ namespace FreeLibSet.Shell
 
         #endregion
 
-        #region Пользовательские настройки
+        #region РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РЅР°СЃС‚СЂРѕР№РєРё
 
         if (System.IO.File.Exists(_DefaultsListFilePath))
         {
@@ -1245,7 +1245,7 @@ namespace FreeLibSet.Shell
 
       #endregion
 
-      #region Ассоциации для каталогов
+      #region РђСЃСЃРѕС†РёР°С†РёРё РґР»СЏ РєР°С‚Р°Р»РѕРіРѕРІ
 
       internal static FileAssociations FromDirectory()
       {
@@ -1257,7 +1257,7 @@ namespace FreeLibSet.Shell
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     private static bool SplitFileNameAndArgs(string commandLine, out string fileName, out string arguments)
     {
@@ -1268,7 +1268,7 @@ namespace FreeLibSet.Shell
 
       if (commandLine[0] == '\"')
       {
-        // Имя программы в кавычках
+        // РРјСЏ РїСЂРѕРіСЂР°РјРјС‹ РІ РєР°РІС‹С‡РєР°С…
         StringBuilder sb = new StringBuilder();
         int pEndQuota = -1;
         for (int i = 1; i < commandLine.Length; i++)
@@ -1278,10 +1278,10 @@ namespace FreeLibSet.Shell
             if (i < (commandLine.Length - 1))
             {
               char nextChar = commandLine[i + 1];
-              if (nextChar == '\"') // удвоенная кавычка
+              if (nextChar == '\"') // СѓРґРІРѕРµРЅРЅР°СЏ РєР°РІС‹С‡РєР°
               {
                 sb.Append('\"');
-                i++; // пропускаем один символ
+                i++; // РїСЂРѕРїСѓСЃРєР°РµРј РѕРґРёРЅ СЃРёРјРІРѕР»
                 continue;
               }
             }
@@ -1301,7 +1301,7 @@ namespace FreeLibSet.Shell
       }
       else
       {
-        // Имя программы от аргументов отделяется пробелом
+        // РРјСЏ РїСЂРѕРіСЂР°РјРјС‹ РѕС‚ Р°СЂРіСѓРјРµРЅС‚РѕРІ РѕС‚РґРµР»СЏРµС‚СЃСЏ РїСЂРѕР±РµР»РѕРј
         int p = commandLine.IndexOf(' ');
         if (p >= 0)
         {

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -16,20 +16,20 @@ namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>
-  /// Иерархический просмотр дерева групп.
-  /// Расширяет обычный просмотр документов узлом "Все документы"
+  /// РРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РїСЂРѕСЃРјРѕС‚СЂ РґРµСЂРµРІР° РіСЂСѓРїРї.
+  /// Р Р°СЃС€РёСЂСЏРµС‚ РѕР±С‹С‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РґРѕРєСѓРјРµРЅС‚РѕРІ СѓР·Р»РѕРј "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹"
   /// </summary>
   public class EFPGroupDocTreeView : EFPDocTreeView, IEFPDBxView
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - дерево</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду документов группы</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ - РґРµСЂРµРІРѕ</param>
+    /// <param name="docTypeUI">РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РІРёРґСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ РіСЂСѓРїРїС‹</param>
     public EFPGroupDocTreeView(EFPBaseProvider baseProvider, TreeViewAdv control, GroupDocTypeUI docTypeUI)
       : base(baseProvider, control, docTypeUI)
     {
@@ -37,10 +37,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="docTypeUI">Интерфейс доступа к виду документов группы</param>
+    /// <param name="controlWithToolBar">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="docTypeUI">РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РІРёРґСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ РіСЂСѓРїРїС‹</param>
     public EFPGroupDocTreeView(IEFPControlWithToolBar<TreeViewAdv> controlWithToolBar, GroupDocTypeUI docTypeUI)
       : base(controlWithToolBar, docTypeUI)
     {
@@ -55,19 +55,19 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс доступа к документам группы
+    /// РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј РіСЂСѓРїРїС‹
     /// </summary>
     public new GroupDocTypeUI DocTypeUI { get { return (GroupDocTypeUI)(base.DocTypeUI); } }
 
     /// <summary>
-    /// Идентификатор выбранной группы.
-    /// Для узла "Все документы" возвращается 0.
-    /// Дерево групп не поддерживает множественный выбор документов, поэтому свойство возвращает
-    /// массив, состояший из одного идентификатора или пустой массив.
-    /// Попытка установки свойства как массива с несколькими элементами, приводит к выбросу исключения.
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІС‹Р±СЂР°РЅРЅРѕР№ РіСЂСѓРїРїС‹.
+    /// Р”Р»СЏ СѓР·Р»Р° "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹" РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0.
+    /// Р”РµСЂРµРІРѕ РіСЂСѓРїРї РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РјРЅРѕР¶РµСЃС‚РІРµРЅРЅС‹Р№ РІС‹Р±РѕСЂ РґРѕРєСѓРјРµРЅС‚РѕРІ, РїРѕСЌС‚РѕРјСѓ СЃРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚
+    /// РјР°СЃСЃРёРІ, СЃРѕСЃС‚РѕСЏС€РёР№ РёР· РѕРґРЅРѕРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РёР»Рё РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ.
+    /// РџРѕРїС‹С‚РєР° СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° РєР°Рє РјР°СЃСЃРёРІР° СЃ РЅРµСЃРєРѕР»СЊРєРёРјРё СЌР»РµРјРµРЅС‚Р°РјРё, РїСЂРёРІРѕРґРёС‚ Рє РІС‹Р±СЂРѕСЃСѓ РёСЃРєР»СЋС‡РµРЅРёСЏ.
     /// </summary>
     public override Int32[] SelectedIds
     {
@@ -85,15 +85,15 @@ namespace FreeLibSet.Forms.Docs
         if (value.Length == 0)
           CurrentId = 0;
         else if (value.Length > 1)
-          throw new ArgumentException("Множественный выбор узлов в дереве групп документов не допускается");
+          throw new ArgumentException("РњРЅРѕР¶РµСЃС‚РІРµРЅРЅС‹Р№ РІС‹Р±РѕСЂ СѓР·Р»РѕРІ РІ РґРµСЂРµРІРµ РіСЂСѓРїРї РґРѕРєСѓРјРµРЅС‚РѕРІ РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ");
         else
           CurrentId = value[0];
       }
     }
 
     /// <summary>
-    /// Идентификатор выбранной группы.
-    /// Для узла "Все документы" возвращается 0.
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІС‹Р±СЂР°РЅРЅРѕР№ РіСЂСѓРїРїС‹.
+    /// Р”Р»СЏ СѓР·Р»Р° "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹" РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ 0.
     /// </summary>
     public override Int32 CurrentId
     {
@@ -116,18 +116,18 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Обновление данных или первоначальная загрузка
+    /// РћР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РёР»Рё РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ Р·Р°РіСЂСѓР·РєР°
     /// </summary>
-    /// <param name="args">Не используется</param>
+    /// <param name="args">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
     protected override void OnRefreshData(EventArgs args)
     {
       if (args == null)
-        EFPApp.BeginWait("Загрузка данных", DocTypeUI.TableImageKey);
+        EFPApp.BeginWait("Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…", DocTypeUI.TableImageKey);
       else
-        EFPApp.BeginWait("Обновление данных", "Refresh");
+        EFPApp.BeginWait("РћР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С…", "Refresh");
       try
       {
         DBxDocTreeModel model = new DBxDocTreeModel(DocTypeUI.UI.DocProvider, DocTypeUI.DocType, UsedColumnNames);
@@ -143,11 +143,11 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает имя изображения для документа, к которому относится узел.
-    /// Изображение находится в списке EFPApp.MainImages
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р°, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ СѓР·РµР».
+    /// РР·РѕР±СЂР°Р¶РµРЅРёРµ РЅР°С…РѕРґРёС‚СЃСЏ РІ СЃРїРёСЃРєРµ EFPApp.MainImages
     /// </summary>
-    /// <param name="node">Узел</param>
-    /// <returns>Имя изображения</returns>
+    /// <param name="node">РЈР·РµР»</param>
+    /// <returns>РРјСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</returns>
     public override string GetNodeImageKey(TreeNodeAdv node)
     {
       DataRow row = node.Tag as DataRow;
@@ -161,19 +161,19 @@ namespace FreeLibSet.Forms.Docs
         return node.IsSelected ? "TreeViewOpenFolder" : "TreeViewClosedFolder";
       else
         //return base.GetNodeImageKey(Node);
-        return String.Empty; // раскрывающийся конвертик
+        return String.Empty; // СЂР°СЃРєСЂС‹РІР°СЋС‰РёР№СЃСЏ РєРѕРЅРІРµСЂС‚РёРє
     }
 
     /// <summary>
-    /// Повторная инициализация текста корневого узла
+    /// РџРѕРІС‚РѕСЂРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С‚РµРєСЃС‚Р° РєРѕСЂРЅРµРІРѕРіРѕ СѓР·Р»Р°
     /// </summary>
     protected override void OnAttached()
     {
       base.OnAttached();
 
       // 04.02.2022
-      // Модель может быть инициализирована до показа дерева на экране, когда столбцы просмотра еще созданы.
-      // Обновляем текст корневого узла
+      // РњРѕРґРµР»СЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР° РґРѕ РїРѕРєР°Р·Р° РґРµСЂРµРІР° РЅР° СЌРєСЂР°РЅРµ, РєРѕРіРґР° СЃС‚РѕР»Р±С†С‹ РїСЂРѕСЃРјРѕС‚СЂР° РµС‰Рµ СЃРѕР·РґР°РЅС‹.
+      // РћР±РЅРѕРІР»СЏРµРј С‚РµРєСЃС‚ РєРѕСЂРЅРµРІРѕРіРѕ СѓР·Р»Р°
 
       if (_RootNodeDataRow != null)
       {
@@ -185,15 +185,15 @@ namespace FreeLibSet.Forms.Docs
         model.RefreshNode(model.TreePathFromDataRow(_RootNodeDataRow));
 
         base.CurrentId = oldId; // 20.06.2022
-        // Хорошо бы, конечно, иметь возможность избежать отправки события StructureChanged для всего дерева.
+        // РҐРѕСЂРѕС€Рѕ Р±С‹, РєРѕРЅРµС‡РЅРѕ, РёРјРµС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РёР·Р±РµР¶Р°С‚СЊ РѕС‚РїСЂР°РІРєРё СЃРѕР±С‹С‚РёСЏ StructureChanged РґР»СЏ РІСЃРµРіРѕ РґРµСЂРµРІР°.
       }
     }
 
     /// <summary>
-    /// Вызывает DocTypeUI.PerformEditing() для выбранных узлов
+    /// Р’С‹Р·С‹РІР°РµС‚ DocTypeUI.PerformEditing() РґР»СЏ РІС‹Р±СЂР°РЅРЅС‹С… СѓР·Р»РѕРІ
     /// </summary>
-    /// <param name="args">Не используется</param>
-    /// <returns>Игнорируется</returns>
+    /// <param name="args">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
+    /// <returns>РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</returns>
     protected override bool OnEditData(EventArgs args)
     {
       return DocTypeUI.PerformEditing(this.SelectedIds, State, Control.FindForm().Modal, ViewHandler);
@@ -201,15 +201,15 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство IncludeNested
+    #region РЎРІРѕР№СЃС‚РІРѕ IncludeNested
 
     /// <summary>
-    /// Признак "Включая вложенные папки".
-    /// Это свойство влияет на отображение корневого узла,
-    /// если свойства RootNodeTextValue и RootNodeImageKey не установлены в явном виде.
-    /// Если true (по умолчанию), то отображается строка "Все документы",
-    /// иначе отображается "Документы без иерархии".
-    /// Также свойство влияет на значение, возвращаемое AuxFilterGroupIds.
+    /// РџСЂРёР·РЅР°Рє "Р’РєР»СЋС‡Р°СЏ РІР»РѕР¶РµРЅРЅС‹Рµ РїР°РїРєРё".
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РІР»РёСЏРµС‚ РЅР° РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РєРѕСЂРЅРµРІРѕРіРѕ СѓР·Р»Р°,
+    /// РµСЃР»Рё СЃРІРѕР№СЃС‚РІР° RootNodeTextValue Рё RootNodeImageKey РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ РІ СЏРІРЅРѕРј РІРёРґРµ.
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ СЃС‚СЂРѕРєР° "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹",
+    /// РёРЅР°С‡Рµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ "Р”РѕРєСѓРјРµРЅС‚С‹ Р±РµР· РёРµСЂР°СЂС…РёРё".
+    /// РўР°РєР¶Рµ СЃРІРѕР№СЃС‚РІРѕ РІР»РёСЏРµС‚ РЅР° Р·РЅР°С‡РµРЅРёРµ, РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ AuxFilterGroupIds.
     /// </summary>
     public bool IncludeNested
     {
@@ -236,8 +236,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _IncludeNested;
 
     /// <summary>
-    /// Управляемое свойство IncludeNested.
-    /// Обычно его делают равным свойству EFPCheckBox.CheckedEx для флажка "Включая вложенные группы"
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ IncludeNested.
+    /// РћР±С‹С‡РЅРѕ РµРіРѕ РґРµР»Р°СЋС‚ СЂР°РІРЅС‹Рј СЃРІРѕР№СЃС‚РІСѓ EFPCheckBox.CheckedEx РґР»СЏ С„Р»Р°Р¶РєР° "Р’РєР»СЋС‡Р°СЏ РІР»РѕР¶РµРЅРЅС‹Рµ РіСЂСѓРїРїС‹"
     /// </summary>
     public DepValue<bool> IncludeNestedEx
     {
@@ -270,15 +270,15 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Корневой узел
+    #region РљРѕСЂРЅРµРІРѕР№ СѓР·РµР»
 
     /// <summary>
-    /// Фиктивный идентификатор документа для корневого узла в деревьях
+    /// Р¤РёРєС‚РёРІРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° РґР»СЏ РєРѕСЂРЅРµРІРѕРіРѕ СѓР·Р»Р° РІ РґРµСЂРµРІСЊСЏС…
     /// </summary>
     private const Int32 RootNodeDocId = unchecked((int)0x80000000);
 
     /// <summary>
-    /// Возвращает строку "данных", соответствуюзую корневому узлу
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ "РґР°РЅРЅС‹С…", СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋР·СѓСЋ РєРѕСЂРЅРµРІРѕРјСѓ СѓР·Р»Сѓ
     /// </summary>
     //public DataRow RootNodeDataRow { get { return FRootNodeDataRow; } }
     private DataRow _RootNodeDataRow;
@@ -289,7 +289,7 @@ namespace FreeLibSet.Forms.Docs
       try
       {
         // 22.02.2022
-        // Сначала нужно добавить корневой узел, а потом уже делать ссылки на него
+        // РЎРЅР°С‡Р°Р»Р° РЅСѓР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РєРѕСЂРЅРµРІРѕР№ СѓР·РµР», Р° РїРѕС‚РѕРј СѓР¶Рµ РґРµР»Р°С‚СЊ СЃСЃС‹Р»РєРё РЅР° РЅРµРіРѕ
         _RootNodeDataRow = model.Table.NewRow();
         _RootNodeDataRow["Id"] = RootNodeDocId;
         BaseTextControl tc = base.FirstTextControl;
@@ -314,8 +314,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Текст для узла с нулевым идентификатором.
-    /// По умолчанию возвращает "Все документы"
+    /// РўРµРєСЃС‚ РґР»СЏ СѓР·Р»Р° СЃ РЅСѓР»РµРІС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІРѕР·РІСЂР°С‰Р°РµС‚ "Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹"
     /// </summary>
     public string RootNodeTextValue
     {
@@ -336,7 +336,7 @@ namespace FreeLibSet.Forms.Docs
     private string _RootNodeTextValue;
 
     /// <summary>
-    /// Значок для корневого узла
+    /// Р—РЅР°С‡РѕРє РґР»СЏ РєРѕСЂРЅРµРІРѕРіРѕ СѓР·Р»Р°
     /// </summary>
     public string RootNodeImageKey
     {
@@ -361,19 +361,19 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Реализация DocumentViewHandler
+    #region Р РµР°Р»РёР·Р°С†РёСЏ DocumentViewHandler
 
     /// <summary>
-    /// Требуется учесть наличие корневого узла с фиктивным идентификатором
+    /// РўСЂРµР±СѓРµС‚СЃСЏ СѓС‡РµСЃС‚СЊ РЅР°Р»РёС‡РёРµ РєРѕСЂРЅРµРІРѕРіРѕ СѓР·Р»Р° СЃ С„РёРєС‚РёРІРЅС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј
     /// </summary>
     protected new class IntDocumentViewHandler : EFPDocTreeView.IntDocumentViewHandler
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       /// <summary>
-      /// Конструктор объекта
+      /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РѕР±СЉРµРєС‚Р°
       /// </summary>
-      /// <param name="owner">Провайдер иерархического просмотра - владелец</param>
+      /// <param name="owner">РџСЂРѕРІР°Р№РґРµСЂ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° - РІР»Р°РґРµР»РµС†</param>
       public IntDocumentViewHandler(EFPGroupDocTreeView owner)
         : base(owner)
       {
@@ -382,11 +382,11 @@ namespace FreeLibSet.Forms.Docs
       #endregion
 
       /// <summary>
-      /// Заполнение строки DataRow <paramref name="resRow"/>, используемой моделью иерархического просмотра.
-      /// Для групп верхнего уровня заменяет значение поля "ParentId" фиктивным значением.
+      /// Р—Р°РїРѕР»РЅРµРЅРёРµ СЃС‚СЂРѕРєРё DataRow <paramref name="resRow"/>, РёСЃРїРѕР»СЊР·СѓРµРјРѕР№ РјРѕРґРµР»СЊСЋ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+      /// Р”Р»СЏ РіСЂСѓРїРї РІРµСЂС…РЅРµРіРѕ СѓСЂРѕРІРЅСЏ Р·Р°РјРµРЅСЏРµС‚ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ "ParentId" С„РёРєС‚РёРІРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј.
       /// </summary>
-      /// <param name="srcRow">Строка в обновленном наборе данных</param>
-      /// <param name="resRow">Заполняемая строка в модели иерархического просмотра</param>
+      /// <param name="srcRow">РЎС‚СЂРѕРєР° РІ РѕР±РЅРѕРІР»РµРЅРЅРѕРј РЅР°Р±РѕСЂРµ РґР°РЅРЅС‹С…</param>
+      /// <param name="resRow">Р—Р°РїРѕР»РЅСЏРµРјР°СЏ СЃС‚СЂРѕРєР° РІ РјРѕРґРµР»Рё РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
       protected override void CopyRowValues(DataRow srcRow, DataRow resRow)
       {
         base.CopyRowValues(srcRow, resRow);
@@ -396,7 +396,7 @@ namespace FreeLibSet.Forms.Docs
 #if DEBUG
           try
           {
-            throw new BugException("Попытка обновления для фиктивной строки");
+            throw new BugException("РџРѕРїС‹С‚РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РґР»СЏ С„РёРєС‚РёРІРЅРѕР№ СЃС‚СЂРѕРєРё");
           }
           catch (Exception e)
           {
@@ -412,19 +412,19 @@ namespace FreeLibSet.Forms.Docs
 
         if (resRow.IsNull(p))
         {
-          // Заменяем на фиктивный идентификатор
+          // Р—Р°РјРµРЅСЏРµРј РЅР° С„РёРєС‚РёРІРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
           resRow[p] = RootNodeDocId;
         }
       }
     }
 
     /// <summary>
-    /// Создает объект DocumentViewHandler для просмотра.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ DocumentViewHandler РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°.
     /// </summary>
-    /// <returns>Объект класса, производного от DocumentViewHandler</returns>
+    /// <returns>РћР±СЉРµРєС‚ РєР»Р°СЃСЃР°, РїСЂРѕРёР·РІРѕРґРЅРѕРіРѕ РѕС‚ DocumentViewHandler</returns>
     protected override EFPDocTreeView.IntDocumentViewHandler CreateDocumentViewHandler()
     {
-      return new IntDocumentViewHandler(this); // // 10.06.2019 Переопределенный класс
+      return new IntDocumentViewHandler(this); // // 10.06.2019 РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РєР»Р°СЃСЃ
     }
 
     #endregion

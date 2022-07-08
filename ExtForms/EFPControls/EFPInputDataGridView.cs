@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,22 +13,22 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Провайдер табличного просмотра, предназначенного для редактирования данных DataTable "по месту".
-  /// Расширяет EFPDataGridView, в основном, для поддержки операций вставки из буфера обмена с автоматическим
-  /// добавлением строк.
-  /// Инициализация столбцов выполняется при инициализации свойства Data.
-  /// Свойство FixedRows позволяет работать с таблицами произвольного размера или с фиксированным числом строк.
-  /// В режиме 
+  /// РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°, РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРЅРѕРіРѕ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С… DataTable "РїРѕ РјРµСЃС‚Сѓ".
+  /// Р Р°СЃС€РёСЂСЏРµС‚ EFPDataGridView, РІ РѕСЃРЅРѕРІРЅРѕРј, РґР»СЏ РїРѕРґРґРµСЂР¶РєРё РѕРїРµСЂР°С†РёР№ РІСЃС‚Р°РІРєРё РёР· Р±СѓС„РµСЂР° РѕР±РјРµРЅР° СЃ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёРј
+  /// РґРѕР±Р°РІР»РµРЅРёРµРј СЃС‚СЂРѕРє.
+  /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃС‚РѕР»Р±С†РѕРІ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃРІРѕР№СЃС‚РІР° Data.
+  /// РЎРІРѕР№СЃС‚РІРѕ FixedRows РїРѕР·РІРѕР»СЏРµС‚ СЂР°Р±РѕС‚Р°С‚СЊ СЃ С‚Р°Р±Р»РёС†Р°РјРё РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ СЂР°Р·РјРµСЂР° РёР»Рё СЃ С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рј С‡РёСЃР»РѕРј СЃС‚СЂРѕРє.
+  /// Р’ СЂРµР¶РёРјРµ 
   /// </summary>
   public class EFPInputDataGridView : EFPDataGridView
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает объект, привязанный к DataGridView
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёРІСЏР·Р°РЅРЅС‹Р№ Рє DataGridView
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент Windows Forms</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Windows Forms</param>
     public EFPInputDataGridView(EFPBaseProvider baseProvider, DataGridView control)
       : base(baseProvider, control)
     {
@@ -36,9 +36,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает объект, привязанный к ControlWithToolBar
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёРІСЏР·Р°РЅРЅС‹Р№ Рє ControlWithToolBar
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элмент и панель инструментов</param>
+    /// <param name="controlWithToolBar">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РјРµРЅС‚ Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
     public EFPInputDataGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar)
       : base(controlWithToolBar)
     {
@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms
 
     private void Init()
     {
-      Control.AutoGenerateColumns = false; // Сами добавляем
+      Control.AutoGenerateColumns = false; // РЎР°РјРё РґРѕР±Р°РІР»СЏРµРј
       Control.ReadOnly = false;
       Control.MultiSelect = true;
       Control.AllowUserToOrderColumns = false;
@@ -63,11 +63,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство FixedRows
+    #region РЎРІРѕР№СЃС‚РІРѕ FixedRows
 
     /// <summary>
-    /// Если свойство установлено в true, то пользователь не может добавлять или удалять строки.
-    /// Если false (по умолчанию), то можно добавлять строки
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РјРѕР¶РµС‚ РґРѕР±Р°РІР»СЏС‚СЊ РёР»Рё СѓРґР°Р»СЏС‚СЊ СЃС‚СЂРѕРєРё.
+    /// Р•СЃР»Рё false (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РјРѕР¶РЅРѕ РґРѕР±Р°РІР»СЏС‚СЊ СЃС‚СЂРѕРєРё
     /// </summary>
     public bool FixedRows
     {
@@ -82,11 +82,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство Data
+    #region РЎРІРѕР№СЃС‚РІРѕ Data
 
     /// <summary>
-    /// Просматриваемые данные и настройки столбцов.
-    /// Установка свойства приводит к инициализации просмотра
+    /// РџСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹Рµ РґР°РЅРЅС‹Рµ Рё РЅР°СЃС‚СЂРѕР№РєРё СЃС‚РѕР»Р±С†РѕРІ.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РїСЂРёРІРѕРґРёС‚ Рє РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public UIInputGridData Data
     {
@@ -113,7 +113,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Инициализация столбцов
+    #region РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃС‚РѕР»Р±С†РѕРІ
 
     private void InitColumns()
     {
@@ -166,10 +166,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Редактирование
+    #region Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
 
     /// <summary>
-    /// Реализует добавление и удаление строк
+    /// Р РµР°Р»РёР·СѓРµС‚ РґРѕР±Р°РІР»РµРЅРёРµ Рё СѓРґР°Р»РµРЅРёРµ СЃС‚СЂРѕРє
     /// </summary>
     /// <param name="args"></param>
     /// <returns></returns>
@@ -183,7 +183,7 @@ namespace FreeLibSet.Forms
         case EFPDataGridViewState.Insert:
           if (ReadOnly || FixedRows)
             return true;
-          // Добавляем перед текущей строкой столько строк, сколько выбрано
+          // Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРґ С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕРєРѕР№ СЃС‚РѕР»СЊРєРѕ СЃС‚СЂРѕРє, СЃРєРѕР»СЊРєРѕ РІС‹Р±СЂР°РЅРѕ
           int nAdded = SelectedRowCount;
           if (nAdded == 0)
             nAdded = 1;
@@ -206,7 +206,7 @@ namespace FreeLibSet.Forms
           Array.Sort<int>(rowIndices);
           for (int i = rowIndices.Length - 1; i >= 0; i--)
           {
-            if (rowIndices[i] < tbl.Rows.Count) // последняя строка может быть виртуальной
+            if (rowIndices[i] < tbl.Rows.Count) // РїРѕСЃР»РµРґРЅСЏСЏ СЃС‚СЂРѕРєР° РјРѕР¶РµС‚ Р±С‹С‚СЊ РІРёСЂС‚СѓР°Р»СЊРЅРѕР№
               tbl.Rows.RemoveAt(rowIndices[i]);
           }
           return true;
@@ -216,10 +216,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Сжатие и проверка таблицы при закрытии формы
+    #region РЎР¶Р°С‚РёРµ Рё РїСЂРѕРІРµСЂРєР° С‚Р°Р±Р»РёС†С‹ РїСЂРё Р·Р°РєСЂС‹С‚РёРё С„РѕСЂРјС‹
 
     /// <summary>
-    /// При закрытии формы выполняет сжатие таблицы данных
+    /// РџСЂРё Р·Р°РєСЂС‹С‚РёРё С„РѕСЂРјС‹ РІС‹РїРѕР»РЅСЏРµС‚ СЃР¶Р°С‚РёРµ С‚Р°Р±Р»РёС†С‹ РґР°РЅРЅС‹С…
     /// </summary>
     protected override void OnValidate()
     {
@@ -233,7 +233,7 @@ namespace FreeLibSet.Forms
         if (!Control.ReadOnly)
         {
           SourceAsDataTable.AcceptChanges();
-          _ValidatingResults.Clear(); // строки могли сдвинуться
+          _ValidatingResults.Clear(); // СЃС‚СЂРѕРєРё РјРѕРіР»Рё СЃРґРІРёРЅСѓС‚СЊСЃСЏ
 
           for (int i = 0; i < Data.Table.DefaultView.Count;i++ )
           {
@@ -295,28 +295,28 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработка изменений
+    #region РћР±СЂР°Р±РѕС‚РєР° РёР·РјРµРЅРµРЅРёР№
 
     /// <summary>
-    /// Результаты проверки для одной строки
+    /// Р РµР·СѓР»СЊС‚Р°С‚С‹ РїСЂРѕРІРµСЂРєРё РґР»СЏ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё
     /// </summary>
     private struct RowValidatingResults
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       /// <summary>
-      /// Ячейки с ошибками.
-      /// Ключ - индекс столбца таблицы.
-      /// Значение - текст сообщения.
-      /// Если поле содержит null, то в строке нет сообщений об ошибке
+      /// РЇС‡РµР№РєРё СЃ РѕС€РёР±РєР°РјРё.
+      /// РљР»СЋС‡ - РёРЅРґРµРєСЃ СЃС‚РѕР»Р±С†Р° С‚Р°Р±Р»РёС†С‹.
+      /// Р—РЅР°С‡РµРЅРёРµ - С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ.
+      /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ null, С‚Рѕ РІ СЃС‚СЂРѕРєРµ РЅРµС‚ СЃРѕРѕР±С‰РµРЅРёР№ РѕР± РѕС€РёР±РєРµ
       /// </summary>
       public Dictionary<int, string> CellErrors;
 
       /// <summary>
-      /// Ячейки с предупреждениями.
-      /// Ключ - индекс столбца таблицы.
-      /// Значение - текст сообщения.
-      /// Если поле содержит null, то в строке нет предупреждений
+      /// РЇС‡РµР№РєРё СЃ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЏРјРё.
+      /// РљР»СЋС‡ - РёРЅРґРµРєСЃ СЃС‚РѕР»Р±С†Р° С‚Р°Р±Р»РёС†С‹.
+      /// Р—РЅР°С‡РµРЅРёРµ - С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ.
+      /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ null, С‚Рѕ РІ СЃС‚СЂРѕРєРµ РЅРµС‚ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёР№
       /// </summary>
       public Dictionary<int, string> CellWarnings;
 
@@ -324,9 +324,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Буферизация проверки строк.
-    /// Ключ - индекс строки в просмотре
-    /// Значение - Результат проверки по строке
+    /// Р‘СѓС„РµСЂРёР·Р°С†РёСЏ РїСЂРѕРІРµСЂРєРё СЃС‚СЂРѕРє.
+    /// РљР»СЋС‡ - РёРЅРґРµРєСЃ СЃС‚СЂРѕРєРё РІ РїСЂРѕСЃРјРѕС‚СЂРµ
+    /// Р—РЅР°С‡РµРЅРёРµ - Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё РїРѕ СЃС‚СЂРѕРєРµ
     /// </summary>
     private Dictionary<int, RowValidatingResults> _ValidatingResults;
 
@@ -338,19 +338,19 @@ namespace FreeLibSet.Forms
           _ValidatingResults.Remove(args.NewIndex);
           break;
         case System.ComponentModel.ListChangedType.ItemAdded:
-          // можно не очищать ValidatingResults.
+          // РјРѕР¶РЅРѕ РЅРµ РѕС‡РёС‰Р°С‚СЊ ValidatingResults.
           DataRow row = ((DataView)sender)[args.NewIndex].Row;
           bool otherRowsChanged;
           InitManualOrderColumnValue(new DataRow[1] { row }, out otherRowsChanged);
           break;
-        default:// неохота проверять остальные режимы
+        default:// РЅРµРѕС…РѕС‚Р° РїСЂРѕРІРµСЂСЏС‚СЊ РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЂРµР¶РёРјС‹
           _ValidatingResults.Clear();
           break;
       }
     }
 
     /// <summary>
-    /// Присоединение обработчика ListChanged
+    /// РџСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ РѕР±СЂР°Р±РѕС‚С‡РёРєР° ListChanged
     /// </summary>
     protected override void OnAttached()
     {
@@ -360,7 +360,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Отключение обработчика ListChanged
+    /// РћС‚РєР»СЋС‡РµРЅРёРµ РѕР±СЂР°Р±РѕС‚С‡РёРєР° ListChanged
     /// </summary>
     protected override void OnDetached()
     {
@@ -372,10 +372,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Раскраска ячеек с ошибками
+    #region Р Р°СЃРєСЂР°СЃРєР° СЏС‡РµРµРє СЃ РѕС€РёР±РєР°РјРё
 
     /// <summary>
-    /// Получение списка сообщений для строки
+    /// РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° СЃРѕРѕР±С‰РµРЅРёР№ РґР»СЏ СЃС‚СЂРѕРєРё
     /// </summary>
     /// <param name="args"></param>
     protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
@@ -384,7 +384,7 @@ namespace FreeLibSet.Forms
       if (Data == null)
         return;
       if (args.RowIndex < 0 || args.RowIndex >= Data.Table.DefaultView.Count)
-        return; // заготовка новой строки
+        return; // Р·Р°РіРѕС‚РѕРІРєР° РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё
 
       RowValidatingResults rvr = GetRowValidatingResults(args.RowIndex);
 
@@ -413,7 +413,7 @@ namespace FreeLibSet.Forms
 
       if (!_ValidatingResults.TryGetValue(rowIndex, out rvr))
       {
-        // Требуется проверка
+        // РўСЂРµР±СѓРµС‚СЃСЏ РїСЂРѕРІРµСЂРєР°
         rvr = new RowValidatingResults();
 
         try
@@ -423,7 +423,7 @@ namespace FreeLibSet.Forms
         catch (Exception e)
         {
           rvr.CellErrors = new Dictionary<int, string>();
-          rvr.CellErrors.Add(0, "Ошибка при проверке строки. " + e.Message);
+          rvr.CellErrors.Add(0, "РћС€РёР±РєР° РїСЂРё РїСЂРѕРІРµСЂРєРµ СЃС‚СЂРѕРєРё. " + e.Message);
         }
 
         _ValidatingResults.Add(rowIndex, rvr);
@@ -432,12 +432,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Чтобы не создавать для каждой ячейки
+    /// Р§С‚РѕР±С‹ РЅРµ СЃРѕР·РґР°РІР°С‚СЊ РґР»СЏ РєР°Р¶РґРѕР№ СЏС‡РµР№РєРё
     /// </summary>
     UISimpleValidableObject _TempValidableObject;
 
     /// <summary>
-    /// Проверка одной строки
+    /// РџСЂРѕРІРµСЂРєР° РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё
     /// </summary>
     private void ValidateRow(int rowIndex, ref RowValidatingResults rvr)
     {
@@ -454,10 +454,10 @@ namespace FreeLibSet.Forms
           switch (Data.Columns[i].CanBeEmptyMode)
           {
             case UIValidateState.Error:
-              _TempValidableObject.SetError("Значение должно быть задано");
+              _TempValidableObject.SetError("Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ");
               break;
             case UIValidateState.Warning:
-              _TempValidableObject.SetWarning("Значение, веротяно, должно быть задано");
+              _TempValidableObject.SetWarning("Р—РЅР°С‡РµРЅРёРµ, РІРµСЂРѕС‚СЏРЅРѕ, РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РґР°РЅРѕ");
               break;
           }
         }
@@ -486,37 +486,37 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог для ввода табличных данных.
+  /// Р”РёР°Р»РѕРі РґР»СЏ РІРІРѕРґР° С‚Р°Р±Р»РёС‡РЅС‹С… РґР°РЅРЅС‹С….
   /// </summary>
   public class InputDataGridDialog : BaseInputDialog
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализирует объект значениями по умолчанию.
-    /// Перед выводом диалога должно быть установлено свойство DataSource
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РѕР±СЉРµРєС‚ Р·РЅР°С‡РµРЅРёСЏРјРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// РџРµСЂРµРґ РІС‹РІРѕРґРѕРј РґРёР°Р»РѕРіР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DataSource
     /// </summary>
     public InputDataGridDialog()
     {
-      Title = "Таблица";
+      Title = "РўР°Р±Р»РёС†Р°";
       ImageKey = "Table";
       _Data = new UIInputGridData();
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Основное свойство - редактируемая таблица данных.
-    /// В таблицу должны быть добавлены столбцы перед показом диалога.
-    /// Могут использоваться столбцы для просмотра, если установлено свойство DataColumn.Expression.
-    /// Дополнительные параметры для добавленных столбцов, например, формат, задавайте с помощью методов коллекции Columns.
+    /// РћСЃРЅРѕРІРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ - СЂРµРґР°РєС‚РёСЂСѓРµРјР°СЏ С‚Р°Р±Р»РёС†Р° РґР°РЅРЅС‹С….
+    /// Р’ С‚Р°Р±Р»РёС†Сѓ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅС‹ СЃС‚РѕР»Р±С†С‹ РїРµСЂРµРґ РїРѕРєР°Р·РѕРј РґРёР°Р»РѕРіР°.
+    /// РњРѕРіСѓС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ СЃС‚РѕР»Р±С†С‹ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°, РµСЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DataColumn.Expression.
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РґР»СЏ РґРѕР±Р°РІР»РµРЅРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ, РЅР°РїСЂРёРјРµСЂ, С„РѕСЂРјР°С‚, Р·Р°РґР°РІР°Р№С‚Рµ СЃ РїРѕРјРѕС‰СЊСЋ РјРµС‚РѕРґРѕРІ РєРѕР»Р»РµРєС†РёРё Columns.
     /// 
-    /// Если FixedRows=true, то в таблицу следует добавить строки, иначе пользователь не сможет ничего ввести.
+    /// Р•СЃР»Рё FixedRows=true, С‚Рѕ РІ С‚Р°Р±Р»РёС†Сѓ СЃР»РµРґСѓРµС‚ РґРѕР±Р°РІРёС‚СЊ СЃС‚СЂРѕРєРё, РёРЅР°С‡Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ СЃРјРѕР¶РµС‚ РЅРёС‡РµРіРѕ РІРІРµСЃС‚Рё.
     /// 
-    /// После закрытия блока диалога свойство Table должно быть прочитано заново, так как оно содержит ссылку на новую таблицу.
-    /// По умолчанию - пустая таблица.
+    /// РџРѕСЃР»Рµ Р·Р°РєСЂС‹С‚РёСЏ Р±Р»РѕРєР° РґРёР°Р»РѕРіР° СЃРІРѕР№СЃС‚РІРѕ Table РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСЂРѕС‡РёС‚Р°РЅРѕ Р·Р°РЅРѕРІРѕ, С‚Р°Рє РєР°Рє РѕРЅРѕ СЃРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РєСѓ РЅР° РЅРѕРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РїСѓСЃС‚Р°СЏ С‚Р°Р±Р»РёС†Р°.
     /// </summary>
     public UIInputGridData Data
     {
@@ -532,9 +532,9 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Фиксированные строки.
-    /// Если false (по умолчанию), то пользователь может добавлять и удалять строки в таблицу.
-    /// Если true, то пользователь может только редактировать существующие строки в таблице.
+    /// Р¤РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рµ СЃС‚СЂРѕРєРё.
+    /// Р•СЃР»Рё false (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РґРѕР±Р°РІР»СЏС‚СЊ Рё СѓРґР°Р»СЏС‚СЊ СЃС‚СЂРѕРєРё РІ С‚Р°Р±Р»РёС†Сѓ.
+    /// Р•СЃР»Рё true, С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ С‚РѕР»СЊРєРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ СЃС‚СЂРѕРєРё РІ С‚Р°Р±Р»РёС†Рµ.
     /// </summary>
     public bool FixedRows
     {
@@ -544,8 +544,8 @@ namespace FreeLibSet.Forms
     private bool _FixedRows;
 
     /// <summary>
-    /// Если true, то просмотр будет предназначен только для просмотра, но не для редактирования данных.
-    /// По умолчанию - false.
+    /// Р•СЃР»Рё true, С‚Рѕ РїСЂРѕСЃРјРѕС‚СЂ Р±СѓРґРµС‚ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°, РЅРѕ РЅРµ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С….
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false.
     /// </summary>
     public bool ReadOnly
     {
@@ -555,7 +555,7 @@ namespace FreeLibSet.Forms
     private bool _ReadOnly;
 
     /// <summary>
-    /// Информационный текст, выводимый в нижней части диалога
+    /// РРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹Р№ С‚РµРєСЃС‚, РІС‹РІРѕРґРёРјС‹Р№ РІ РЅРёР¶РЅРµР№ С‡Р°СЃС‚Рё РґРёР°Р»РѕРіР°
     /// </summary>
     public string InfoText
     {
@@ -566,7 +566,7 @@ namespace FreeLibSet.Forms
           if (ReadOnly || FixedRows)
             return String.Empty;
           else
-            return "При вставке из буфера обмена недостающие строки будут добавлены автоматически";
+            return "РџСЂРё РІСЃС‚Р°РІРєРµ РёР· Р±СѓС„РµСЂР° РѕР±РјРµРЅР° РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ СЃС‚СЂРѕРєРё Р±СѓРґСѓС‚ РґРѕР±Р°РІР»РµРЅС‹ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё";
         }
         else
           return _InfoText;
@@ -577,12 +577,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Показ диалога
+    #region РџРѕРєР°Р· РґРёР°Р»РѕРіР°
 
     /// <summary>
-    /// Показывает блок диалога с таблицей
+    /// РџРѕРєР°Р·С‹РІР°РµС‚ Р±Р»РѕРє РґРёР°Р»РѕРіР° СЃ С‚Р°Р±Р»РёС†РµР№
     /// </summary>
-    /// <returns>Результат выполнения диалога</returns>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРёР°Р»РѕРіР°</returns>
     public override DialogResult ShowDialog()
     {
       DialogResult res;

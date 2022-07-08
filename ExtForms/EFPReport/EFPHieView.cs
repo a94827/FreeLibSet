@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,7 +11,7 @@ using FreeLibSet.Remoting;
 
 
 /*
- * Иерархические отчеты на базе EFPDataGridView
+ * РРµСЂР°СЂС…РёС‡РµСЃРєРёРµ РѕС‚С‡РµС‚С‹ РЅР° Р±Р°Р·Рµ EFPDataGridView
  */
 
 #if XXX
@@ -19,17 +19,17 @@ namespace FreeLibSet.Forms
 {
 
   /// <summary>
-  /// Основной объект для построения иерархического отчета.
-  /// Должны быть установлены свойства - исходные данные для отчета, а затем вызван метод CreateDataView().
-  /// Объект является "одноразовым", то есть, повторный вызов CreateDataView() не допускается.
-  /// Для работы с табличным просмотром EFPDataGridView рекомендуется использовать EFPDataGridViewHieHandler
+  /// РћСЃРЅРѕРІРЅРѕР№ РѕР±СЉРµРєС‚ РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РѕС‚С‡РµС‚Р°.
+  /// Р”РѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ СЃРІРѕР№СЃС‚РІР° - РёСЃС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РѕС‚С‡РµС‚Р°, Р° Р·Р°С‚РµРј РІС‹Р·РІР°РЅ РјРµС‚РѕРґ CreateDataView().
+  /// РћР±СЉРµРєС‚ СЏРІР»СЏРµС‚СЃСЏ "РѕРґРЅРѕСЂР°Р·РѕРІС‹Рј", С‚Рѕ РµСЃС‚СЊ, РїРѕРІС‚РѕСЂРЅС‹Р№ РІС‹Р·РѕРІ CreateDataView() РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ.
+  /// Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃ С‚Р°Р±Р»РёС‡РЅС‹Рј РїСЂРѕСЃРјРѕС‚СЂРѕРј EFPDataGridView СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ EFPDataGridViewHieHandler
   /// </summary>
   public class EFPHieView : IReadOnlyObject
   {
-#region Конструктор
+#region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Конструктор построителя
+    /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕСЃС‚СЂРѕРёС‚РµР»СЏ
     /// </summary>
     public EFPHieView()
     {
@@ -40,10 +40,10 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Свойства - исходные данные для отчета
+#region РЎРІРѕР№СЃС‚РІР° - РёСЃС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РѕС‚С‡РµС‚Р°
 
     /// <summary>
-    /// Исходная таблица данных для отчета
+    /// РСЃС…РѕРґРЅР°СЏ С‚Р°Р±Р»РёС†Р° РґР°РЅРЅС‹С… РґР»СЏ РѕС‚С‡РµС‚Р°
     /// </summary>
     public DataTable SourceTable
     {
@@ -61,10 +61,10 @@ namespace FreeLibSet.Forms
     private DataTable FSourceTable;
 
     /// <summary>
-    /// Уровни иерархии. Нулевым элементом массива идет самый внутренний уровень,
-    /// то есть строки исходных данных, последним - самый внешний уровень.
-    /// Свойство должно быть установлено до иницализации просмотра.
-    /// Массив должен содержать, как минимум, один уровень иерархии.
+    /// РЈСЂРѕРІРЅРё РёРµСЂР°СЂС…РёРё. РќСѓР»РµРІС‹Рј СЌР»РµРјРµРЅС‚РѕРј РјР°СЃСЃРёРІР° РёРґРµС‚ СЃР°РјС‹Р№ РІРЅСѓС‚СЂРµРЅРЅРёР№ СѓСЂРѕРІРµРЅСЊ,
+    /// С‚Рѕ РµСЃС‚СЊ СЃС‚СЂРѕРєРё РёСЃС…РѕРґРЅС‹С… РґР°РЅРЅС‹С…, РїРѕСЃР»РµРґРЅРёРј - СЃР°РјС‹Р№ РІРЅРµС€РЅРёР№ СѓСЂРѕРІРµРЅСЊ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РґРѕ РёРЅРёС†Р°Р»РёР·Р°С†РёРё РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РњР°СЃСЃРёРІ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ, РєР°Рє РјРёРЅРёРјСѓРј, РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё.
     /// </summary>
     public EFPHieViewLevel[] Levels
     {
@@ -76,7 +76,7 @@ namespace FreeLibSet.Forms
         if (value == null)
           throw new ArgumentNullException();
         if (value.Length < 1)
-          throw new ArgumentException("Массив должен содержать не менее одного элемента");
+          throw new ArgumentException("РњР°СЃСЃРёРІ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РЅРµ РјРµРЅРµРµ РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°");
         for (int i = 0; i < value.Length; i++)
         {
           if (value[i] == null)
@@ -87,9 +87,9 @@ namespace FreeLibSet.Forms
             if (value[j].Name == value[i].Name)
             {
               if (object.ReferenceEquals(value[j], value[i]))
-                throw new InvalidOperationException("Повторное присоединение уровня " + value[i] + "не допускается");
+                throw new InvalidOperationException("РџРѕРІС‚РѕСЂРЅРѕРµ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ СѓСЂРѕРІРЅСЏ " + value[i] + "РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ");
               else
-                throw new ArgumentException("Элемент с именем " + value[i].Name + " входит в список дважды");
+                throw new ArgumentException("Р­Р»РµРјРµРЅС‚ СЃ РёРјРµРЅРµРј " + value[i].Name + " РІС…РѕРґРёС‚ РІ СЃРїРёСЃРѕРє РґРІР°Р¶РґС‹");
             }
           }
         }
@@ -99,7 +99,7 @@ namespace FreeLibSet.Forms
     private EFPHieViewLevel[] FLevels;
 
     /// <summary>
-    /// Имена столбцов, которые должны суммироваться
+    /// РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ СЃСѓРјРјРёСЂРѕРІР°С‚СЊСЃСЏ
     /// </summary>
     public string[] SumColumnNames
     {
@@ -116,9 +116,9 @@ namespace FreeLibSet.Forms
     private string[] FSumColumnNames;
 
     /// <summary>
-    /// Если True, то будут скрыты строки сумм, для которых есть
-    /// только одна строка суммируемых данных
-    /// По умолчанию (false) итоговые строки показываются всегда
+    /// Р•СЃР»Рё True, С‚Рѕ Р±СѓРґСѓС‚ СЃРєСЂС‹С‚С‹ СЃС‚СЂРѕРєРё СЃСѓРјРј, РґР»СЏ РєРѕС‚РѕСЂС‹С… РµСЃС‚СЊ
+    /// С‚РѕР»СЊРєРѕ РѕРґРЅР° СЃС‚СЂРѕРєР° СЃСѓРјРјРёСЂСѓРµРјС‹С… РґР°РЅРЅС‹С…
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (false) РёС‚РѕРіРѕРІС‹Рµ СЃС‚СЂРѕРєРё РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ РІСЃРµРіРґР°
     /// </summary>
     public bool HideExtraSumRows
     {
@@ -133,8 +133,8 @@ namespace FreeLibSet.Forms
     private bool FHideExtraSumRows;
 
     /// <summary>
-    /// Количество итоговых строк внизу просмотра. По умолчанию - одна строка.
-    /// Можно добавить дополнительные строки, например, для свернутого сальдо
+    /// РљРѕР»РёС‡РµСЃС‚РІРѕ РёС‚РѕРіРѕРІС‹С… СЃС‚СЂРѕРє РІРЅРёР·Сѓ РїСЂРѕСЃРјРѕС‚СЂР°. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РѕРґРЅР° СЃС‚СЂРѕРєР°.
+    /// РњРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё, РЅР°РїСЂРёРјРµСЂ, РґР»СЏ СЃРІРµСЂРЅСѓС‚РѕРіРѕ СЃР°Р»СЊРґРѕ
     /// </summary>
     public int TotalSumRowCount
     {
@@ -143,7 +143,7 @@ namespace FreeLibSet.Forms
       {
         CheckNotReadOnly();
         if (value < 1)
-          throw new ArgumentOutOfRangeException("TotalSumRowCount", value, "Число итоговых строк не может быть меньше 1");
+          throw new ArgumentOutOfRangeException("TotalSumRowCount", value, "Р§РёСЃР»Рѕ РёС‚РѕРіРѕРІС‹С… СЃС‚СЂРѕРє РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ 1");
         FTotalSumRowCount = value;
       }
     }
@@ -151,13 +151,13 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Создание иерархического просмотра
+#region РЎРѕР·РґР°РЅРёРµ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
 
-#region Внутренние поля и методы, используемые при построении отчета
+#region Р’РЅСѓС‚СЂРµРЅРЅРёРµ РїРѕР»СЏ Рё РјРµС‚РѕРґС‹, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РїСЂРё РїРѕСЃС‚СЂРѕРµРЅРёРё РѕС‚С‡РµС‚Р°
 
     private class KeyInfo
     {
-#region Поля
+#region РџРѕР»СЏ
 
       public string Key;
       public string Text;
@@ -172,11 +172,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Внутренние данные для одного уровня
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёРµ РґР°РЅРЅС‹Рµ РґР»СЏ РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
     /// </summary>
     private class InternalLevelData
     {
-#region Конструктор
+#region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public InternalLevelData(EFPHieViewLevel Level)
       {
@@ -187,7 +187,7 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Пары Ключ-Текст
+#region РџР°СЂС‹ РљР»СЋС‡-РўРµРєСЃС‚
 
       public SortedList<string, KeyInfo> KeyPairs;
 
@@ -215,7 +215,7 @@ namespace FreeLibSet.Forms
       }
 
       /// <summary>
-      /// Инициализация поля Order в массиве KeyPairs
+      /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРѕР»СЏ Order РІ РјР°СЃСЃРёРІРµ KeyPairs
       /// </summary>
       public void InitKeyPairsOrder()
       {
@@ -223,8 +223,8 @@ namespace FreeLibSet.Forms
         int cnt = 0;
         foreach (KeyInfo ki in KeyPairs.Values)
         {
-          // В массиве KeyPairs могут встречаться одинаковые названия
-          // Поэтому, добавляем к названию порядковый номер
+          // Р’ РјР°СЃСЃРёРІРµ KeyPairs РјРѕРіСѓС‚ РІСЃС‚СЂРµС‡Р°С‚СЊСЃСЏ РѕРґРёРЅР°РєРѕРІС‹Рµ РЅР°Р·РІР°РЅРёСЏ
+          // РџРѕСЌС‚РѕРјСѓ, РґРѕР±Р°РІР»СЏРµРј Рє РЅР°Р·РІР°РЅРёСЋ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ
           cnt++;
           TmpList.Add(ki.Key + "_" + cnt.ToString(), ki);
         }
@@ -233,7 +233,7 @@ namespace FreeLibSet.Forms
       }
 
       /// <summary>
-      /// Получить числовой код для сортировки для строки
+      /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕР№ РєРѕРґ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё РґР»СЏ СЃС‚СЂРѕРєРё
       /// </summary>
       /// <param name="Row"></param>
       /// <returns></returns>
@@ -255,23 +255,23 @@ namespace FreeLibSet.Forms
 #endregion
 
     /// <summary>
-    /// Создает иерархический просмотр.
-    /// После вызова, свойство DataView получает значение.
-    /// Объект переводится в режиме IsReadOnly=true.
-    /// Этот метод можно вызывать только один раз.
+    /// РЎРѕР·РґР°РµС‚ РёРµСЂР°СЂС…РёС‡РµСЃРєРёР№ РїСЂРѕСЃРјРѕС‚СЂ.
+    /// РџРѕСЃР»Рµ РІС‹Р·РѕРІР°, СЃРІРѕР№СЃС‚РІРѕ DataView РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ.
+    /// РћР±СЉРµРєС‚ РїРµСЂРµРІРѕРґРёС‚СЃСЏ РІ СЂРµР¶РёРјРµ IsReadOnly=true.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РЅРѕ РІС‹Р·С‹РІР°С‚СЊ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЂР°Р·.
     /// </summary>
     public void CreateDataView()
     {
       CheckNotReadOnly();
 
       if (SourceTable == null)
-        throw new NullReferenceException("Не задано свойство SourceTable");
+        throw new NullReferenceException("РќРµ Р·Р°РґР°РЅРѕ СЃРІРѕР№СЃС‚РІРѕ SourceTable");
       if (Levels == null)
-        throw new NullReferenceException("Не задано свойство Levels");
+        throw new NullReferenceException("РќРµ Р·Р°РґР°РЅРѕ СЃРІРѕР№СЃС‚РІРѕ Levels");
 
-      // Для каждого заданного уровня иерархии создаем словарь "значение поля"-"текст".
-      // Словарь сортируется по тексту (а не по коду) и элементы нумеруются по порядку
-      // Эти номера используются для сортировки уровней иерархии.
+      // Р”Р»СЏ РєР°Р¶РґРѕРіРѕ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё СЃРѕР·РґР°РµРј СЃР»РѕРІР°СЂСЊ "Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ"-"С‚РµРєСЃС‚".
+      // РЎР»РѕРІР°СЂСЊ СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ РїРѕ С‚РµРєСЃС‚Сѓ (Р° РЅРµ РїРѕ РєРѕРґСѓ) Рё СЌР»РµРјРµРЅС‚С‹ РЅСѓРјРµСЂСѓСЋС‚СЃСЏ РїРѕ РїРѕСЂСЏРґРєСѓ
+      // Р­С‚Рё РЅРѕРјРµСЂР° РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё.
       InternalLevelData[] LevelData = new InternalLevelData[Levels.Length];
       for (int i = 0; i < Levels.Length; i++)
       {
@@ -280,13 +280,13 @@ namespace FreeLibSet.Forms
         LevelData[i].InitKeyPairsOrder();
       }
 
-      // Создаем новую таблицу
+      // РЎРѕР·РґР°РµРј РЅРѕРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ
       DataTable ResTable = CreateResTable();
 
-      // Копируем строки нулевого уровня иерархии
+      // РљРѕРїРёСЂСѓРµРј СЃС‚СЂРѕРєРё РЅСѓР»РµРІРѕРіРѕ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё
       CopyLevel0(ResTable, LevelData);
 
-      // Создаем просмотр, отсортированный нужным образом
+      // РЎРѕР·РґР°РµРј РїСЂРѕСЃРјРѕС‚СЂ, РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Р№ РЅСѓР¶РЅС‹Рј РѕР±СЂР°Р·РѕРј
       FDataView = new DataView(ResTable);
       string s = "";
       for (int i = Levels.Length - 1; i >= 1; i--)
@@ -294,21 +294,21 @@ namespace FreeLibSet.Forms
       s += "Hie_Order0";
       FDataView.Sort = s;
 
-      // Добавляем для каждой исходной строки данных нужное число уровней иерархии
+      // Р”РѕР±Р°РІР»СЏРµРј РґР»СЏ РєР°Р¶РґРѕР№ РёСЃС…РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё РґР°РЅРЅС‹С… РЅСѓР¶РЅРѕРµ С‡РёСЃР»Рѕ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
       AddLevels(LevelData);
 
-      // Вычисление итоговых строк
+      // Р’С‹С‡РёСЃР»РµРЅРёРµ РёС‚РѕРіРѕРІС‹С… СЃС‚СЂРѕРє
       CalcSums();
 
       if (HideExtraSumRows)
         DoHideExtraSumRows();
 
-      // Перемещаем подытоговые строки для уровней с установленным признаком
+      // РџРµСЂРµРјРµС‰Р°РµРј РїРѕРґС‹С‚РѕРіРѕРІС‹Рµ СЃС‚СЂРѕРєРё РґР»СЏ СѓСЂРѕРІРЅРµР№ СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рј РїСЂРёР·РЅР°РєРѕРј
       MoveSumRowsFirst();
 
       OnAfterCreateView();
 
-      // Нумерация строк
+      // РќСѓРјРµСЂР°С†РёСЏ СЃС‚СЂРѕРє
       int cnt = 0;
       for (int j = 0; j < FDataView.Count; j++)
       {
@@ -323,12 +323,12 @@ namespace FreeLibSet.Forms
 
     private DataTable CreateResTable()
     {
-      // Нельзя сразу скопировать вместе с данными, т.к. надо добавить столбцы
+      // РќРµР»СЊР·СЏ СЃСЂР°Р·Сѓ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ РІРјРµСЃС‚Рµ СЃ РґР°РЅРЅС‹РјРё, С‚.Рє. РЅР°РґРѕ РґРѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±С†С‹
       DataTable ResTable = SourceTable.Clone();
       ResTable.TableName = "HieTable";
 
       // 31.01.2009
-      // Убираем ограничения для всех столбцов таблицы
+      // РЈР±РёСЂР°РµРј РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РґР»СЏ РІСЃРµС… СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС†С‹
       foreach (DataColumn Column in ResTable.Columns)
       {
         Column.AllowDBNull = true;
@@ -337,30 +337,30 @@ namespace FreeLibSet.Forms
       }
       ResTable.PrimaryKey = null;
 
-      // Добавляем столбцы
+      // Р”РѕР±Р°РІР»СЏРµРј СЃС‚РѕР»Р±С†С‹
 
-      // Здесь будет уровень иереархии (0-самый внутренний - исходные данные)
+      // Р—РґРµСЃСЊ Р±СѓРґРµС‚ СѓСЂРѕРІРµРЅСЊ РёРµСЂРµР°СЂС…РёРё (0-СЃР°РјС‹Р№ РІРЅСѓС‚СЂРµРЅРЅРёР№ - РёСЃС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ)
       ResTable.Columns.Add("Hie_Level", typeof(int));
 #if DEBUG
-      ResTable.Columns.Add("Hie_LevelName", typeof(string)); // отладка
+      ResTable.Columns.Add("Hie_LevelName", typeof(string)); // РѕС‚Р»Р°РґРєР°
 #endif
 
-      // True для строк итогов, false - для заголовков (при Hie_Level > 0)
+      // True РґР»СЏ СЃС‚СЂРѕРє РёС‚РѕРіРѕРІ, false - РґР»СЏ Р·Р°РіРѕР»РѕРІРєРѕРІ (РїСЂРё Hie_Level > 0)
       ResTable.Columns.Add("Hie_Sum", typeof(bool));
 
-      // Здесь будет текст с названиями уровней иерархии
+      // Р—РґРµСЃСЊ Р±СѓРґРµС‚ С‚РµРєСЃС‚ СЃ РЅР°Р·РІР°РЅРёСЏРјРё СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
       ResTable.Columns.Add("Hie_Text", typeof(string));
 
-      // Здесь будет номер строки (нумерация с единицы) для строк с Hie_Level=0
+      // Р—РґРµСЃСЊ Р±СѓРґРµС‚ РЅРѕРјРµСЂ СЃС‚СЂРѕРєРё (РЅСѓРјРµСЂР°С†РёСЏ СЃ РµРґРёРЅРёС†С‹) РґР»СЏ СЃС‚СЂРѕРє СЃ Hie_Level=0
       ResTable.Columns.Add("Hie_RowNumber", typeof(int));
 
-      // Для каждого уровня иерархии добавляем числовое поле для сортировки
+      // Р”Р»СЏ РєР°Р¶РґРѕРіРѕ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё РґРѕР±Р°РІР»СЏРµРј С‡РёСЃР»РѕРІРѕРµ РїРѕР»Рµ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё
       for (int i = 0; i < Levels.Length; i++)
       {
         ResTable.Columns.Add("Hie_Order" + i.ToString(), typeof(int));
       }
 
-      // Флажок для удаления лишних строк
+      // Р¤Р»Р°Р¶РѕРє РґР»СЏ СѓРґР°Р»РµРЅРёСЏ Р»РёС€РЅРёС… СЃС‚СЂРѕРє
       ResTable.Columns.Add("Hie_Hidden", typeof(bool));
 
       return ResTable;
@@ -388,11 +388,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создание строк уровней иерархии
+    /// РЎРѕР·РґР°РЅРёРµ СЃС‚СЂРѕРє СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
     /// </summary>
     private void AddLevels(InternalLevelData[] LevelData)
     {
-      int nLevels = Levels.Length; // число уровней иерархии
+      int nLevels = Levels.Length; // С‡РёСЃР»Рѕ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
       DataRowView drv;
       int i, j, k;
       for (i = 0; i < SourceTable.Rows.Count; i++)
@@ -411,7 +411,7 @@ namespace FreeLibSet.Forms
           StringBuilder sb = new StringBuilder();
           //string spc = new string(' ', (Levels.Length - j - 1) * 2);
 
-          // Добавляем заголовок строки
+          // Р”РѕР±Р°РІР»СЏРµРј Р·Р°РіРѕР»РѕРІРѕРє СЃС‚СЂРѕРєРё
           if (!Levels[j + 1].SubTotalRowFirst)
           {
             Orders[nLevels - j - 1] = -2;
@@ -425,8 +425,8 @@ namespace FreeLibSet.Forms
               drv.Row["Hie_LevelName"] = Levels[j + 1].Name;
 #endif
               drv.Row["Hie_Sum"] = false;
-              drv.Row["Hie_Text"] = /*spc + *//*"Начало: " + */Levels[j + 1].GetRowText(MainRow, false);
-              // Копирование "ключевых" полей уровней
+              drv.Row["Hie_Text"] = /*spc + *//*"РќР°С‡Р°Р»Рѕ: " + */Levels[j + 1].GetRowText(MainRow, false);
+              // РљРѕРїРёСЂРѕРІР°РЅРёРµ "РєР»СЋС‡РµРІС‹С…" РїРѕР»РµР№ СѓСЂРѕРІРЅРµР№
               for (k = j + 1; k < Levels.Length; k++)
               {
                 string[] FieldNames = Levels[k].ColumnNameArray;
@@ -437,8 +437,8 @@ namespace FreeLibSet.Forms
             }
           }
 
-          // Добавляем итоговую строку
-          Orders[nLevels - j - 1] = Int32.MaxValue; // порядок строк поменяем после расчета
+          // Р”РѕР±Р°РІР»СЏРµРј РёС‚РѕРіРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
+          Orders[nLevels - j - 1] = Int32.MaxValue; // РїРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РїРѕРјРµРЅСЏРµРј РїРѕСЃР»Рµ СЂР°СЃС‡РµС‚Р°
           if (FDataView.Find(Orders) < 0)
           {
             drv = FDataView.AddNew();
@@ -453,7 +453,7 @@ namespace FreeLibSet.Forms
               drv.Row["Hie_Text"] = Levels[j + 1].GetRowText(MainRow, false);
             else
               drv.Row["Hie_Text"] = Levels[j + 1].GetRowText(MainRow, true);
-            // Копирование "ключевых" полей уровней
+            // РљРѕРїРёСЂРѕРІР°РЅРёРµ "РєР»СЋС‡РµРІС‹С…" РїРѕР»РµР№ СѓСЂРѕРІРЅРµР№
             for (k = j + 1; k < Levels.Length; k++)
             {
               string[] FieldNames = Levels[k].ColumnNameArray;
@@ -465,7 +465,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      // Добавляем итоговую строку (или несколько строк)
+      // Р”РѕР±Р°РІР»СЏРµРј РёС‚РѕРіРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ (РёР»Рё РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚СЂРѕРє)
       FTotalSumRows = new DataRow[TotalSumRowCount];
       for (i = 0; i < TotalSumRowCount; i++)
       {
@@ -474,17 +474,17 @@ namespace FreeLibSet.Forms
           drv.Row["Hie_Order" + k.ToString()] = Int32.MaxValue;
         drv.Row["Hie_Level"] = nLevels;
 #if DEBUG
-        drv.Row["Hie_LevelName"] = "Итоговая строка";
+        drv.Row["Hie_LevelName"] = "РС‚РѕРіРѕРІР°СЏ СЃС‚СЂРѕРєР°";
 #endif
         drv.Row["Hie_Sum"] = true;
-        drv.Row["Hie_Text"] = "Итого";
+        drv.Row["Hie_Text"] = "РС‚РѕРіРѕ";
         FTotalSumRows[i] = drv.Row;
         drv.EndEdit();
       }
     }
 
     /// <summary>
-    /// Вычисление итоговых сумм
+    /// Р’С‹С‡РёСЃР»РµРЅРёРµ РёС‚РѕРіРѕРІС‹С… СЃСѓРјРј
     /// </summary>
     private void CalcSums()
     {
@@ -493,7 +493,7 @@ namespace FreeLibSet.Forms
       for (j = 0; j < SumColumnNames.Length; j++)
       {
         if (!FDataView.Table.Columns.Contains(SumColumnNames[j]))
-          throw new BugException("Суммируемого столбца \"" + SumColumnNames[j] + "\" нет в таблице иерархического отчета");
+          throw new BugException("РЎСѓРјРјРёСЂСѓРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° \"" + SumColumnNames[j] + "\" РЅРµС‚ РІ С‚Р°Р±Р»РёС†Рµ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РѕС‚С‡РµС‚Р°");
         Columns[j] = FDataView.Table.Columns[SumColumnNames[j]];
       }
 
@@ -507,7 +507,7 @@ namespace FreeLibSet.Forms
         int lvl = (int)Row["Hie_Level"];
         if (lvl == 0)
         {
-          // Для строки данных выполняем запоминание значения
+          // Р”Р»СЏ СЃС‚СЂРѕРєРё РґР°РЅРЅС‹С… РІС‹РїРѕР»РЅСЏРµРј Р·Р°РїРѕРјРёРЅР°РЅРёРµ Р·РЅР°С‡РµРЅРёСЏ
           for (k = 0; k <= Levels.Length; k++)
           {
             for (j = 0; j < Columns.Length; j++)
@@ -533,11 +533,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Удаление лишних строк сумм
+    /// РЈРґР°Р»РµРЅРёРµ Р»РёС€РЅРёС… СЃС‚СЂРѕРє СЃСѓРјРј
     /// </summary>
     private void DoHideExtraSumRows()
     {
-      // Число найденных строк для каждого уровня
+      // Р§РёСЃР»Рѕ РЅР°Р№РґРµРЅРЅС‹С… СЃС‚СЂРѕРє РґР»СЏ РєР°Р¶РґРѕРіРѕ СѓСЂРѕРІРЅСЏ
       int[] Counters = new int[Levels.Length + 1];
       Array.Clear(Counters, 0, Counters.Length);
 
@@ -569,14 +569,14 @@ namespace FreeLibSet.Forms
         }
       }
 
-      // Удаляем ненужные строки
+      // РЈРґР°Р»СЏРµРј РЅРµРЅСѓР¶РЅС‹Рµ СЃС‚СЂРѕРєРё
       DeleteHiddenRows(FDataView.Table);
     }
 
 
     /// <summary>
-    /// Перемещаем строки подытогов для уровней с установленным признаком
-    /// SubTotalRowFirst в начало группы строк
+    /// РџРµСЂРµРјРµС‰Р°РµРј СЃС‚СЂРѕРєРё РїРѕРґС‹С‚РѕРіРѕРІ РґР»СЏ СѓСЂРѕРІРЅРµР№ СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рј РїСЂРёР·РЅР°РєРѕРј
+    /// SubTotalRowFirst РІ РЅР°С‡Р°Р»Рѕ РіСЂСѓРїРїС‹ СЃС‚СЂРѕРє
     /// </summary>
     private void MoveSumRowsFirst()
     {
@@ -589,7 +589,7 @@ namespace FreeLibSet.Forms
       if (!HasMovement)
         return;
 
-      // Используем таблицу, а не DataView, т.к порядок строк меняемся
+      // РСЃРїРѕР»СЊР·СѓРµРј С‚Р°Р±Р»РёС†Сѓ, Р° РЅРµ DataView, С‚.Рє РїРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РјРµРЅСЏРµРјСЃСЏ
       foreach (DataRow Row in FDataView.Table.Rows)
       {
         //if (DataTools.GetInt(Row, "Hie_Level")==0)
@@ -621,9 +621,9 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Удаление строк, помеченных в поле "Hie_Hidden"
+    /// РЈРґР°Р»РµРЅРёРµ СЃС‚СЂРѕРє, РїРѕРјРµС‡РµРЅРЅС‹С… РІ РїРѕР»Рµ "Hie_Hidden"
     /// </summary>
-    /// <param name="Table">Таблица данных созданного просмотра</param>
+    /// <param name="Table">РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С… СЃРѕР·РґР°РЅРЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
     private void DeleteHiddenRows(DataTable Table)
     {
       for (int i = Table.Rows.Count - 1; i >= 0; i--)
@@ -636,31 +636,31 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Свойства и события, устанавливаемые методом CreateDataView()
+#region РЎРІРѕР№СЃС‚РІР° Рё СЃРѕР±С‹С‚РёСЏ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРјС‹Рµ РјРµС‚РѕРґРѕРј CreateDataView()
 
     /// <summary>
-    /// Созданный объект иерархического просмотра.
-    /// Свойство получает значение после вызова CreateDataView()
+    /// РЎРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РЎРІРѕР№СЃС‚РІРѕ РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРѕСЃР»Рµ РІС‹Р·РѕРІР° CreateDataView()
     /// </summary>
     public DataView DataView { get { return FDataView; } }
     private DataView FDataView;
 
     /// <summary>
-    /// Массив итоговых строк просмотра. (обычно одна строка). Свойство заполняется
-    /// после формирования просмотра и содержит количество строк, равное TotalSumsRowCount
+    /// РњР°СЃСЃРёРІ РёС‚РѕРіРѕРІС‹С… СЃС‚СЂРѕРє РїСЂРѕСЃРјРѕС‚СЂР°. (РѕР±С‹С‡РЅРѕ РѕРґРЅР° СЃС‚СЂРѕРєР°). РЎРІРѕР№СЃС‚РІРѕ Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ
+    /// РїРѕСЃР»Рµ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РїСЂРѕСЃРјРѕС‚СЂР° Рё СЃРѕРґРµСЂР¶РёС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє, СЂР°РІРЅРѕРµ TotalSumsRowCount
     /// </summary>
     public DataRow[] TotalSumRows { get { return FTotalSumRows; } }
     private DataRow[] FTotalSumRows;
 
     /// <summary>
-    /// Событие вызывается перед завершением метода CreateDataView, когда итог и подытоги
-    /// расчитаны, но нумерация строк еще не выполнена
-    /// Обработчик может инициализировать TotalSumRows, удалять ненужные строки
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ Р·Р°РІРµСЂС€РµРЅРёРµРј РјРµС‚РѕРґР° CreateDataView, РєРѕРіРґР° РёС‚РѕРі Рё РїРѕРґС‹С‚РѕРіРё
+    /// СЂР°СЃС‡РёС‚Р°РЅС‹, РЅРѕ РЅСѓРјРµСЂР°С†РёСЏ СЃС‚СЂРѕРє РµС‰Рµ РЅРµ РІС‹РїРѕР»РЅРµРЅР°
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РјРѕР¶РµС‚ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ TotalSumRows, СѓРґР°Р»СЏС‚СЊ РЅРµРЅСѓР¶РЅС‹Рµ СЃС‚СЂРѕРєРё
     /// </summary>
     public event EventHandler AfterCreateView;
 
     /// <summary>
-    /// Вызывает событие AfterCreateView
+    /// Р’С‹Р·С‹РІР°РµС‚ СЃРѕР±С‹С‚РёРµ AfterCreateView
     /// </summary>
     protected virtual void OnAfterCreateView()
     {
@@ -673,11 +673,11 @@ namespace FreeLibSet.Forms
     private void CheckIfCreated()
     {
       if (FDataView == null)
-        throw new InvalidOperationException("Просмотр не был создан. Не было вызова CreateDataView()");
+        throw new InvalidOperationException("РџСЂРѕСЃРјРѕС‚СЂ РЅРµ Р±С‹Р» СЃРѕР·РґР°РЅ. РќРµ Р±С‹Р»Рѕ РІС‹Р·РѕРІР° CreateDataView()");
     }
 
     /// <summary>
-    /// Проверка строки, что она относится к результирующей таблице
+    /// РџСЂРѕРІРµСЂРєР° СЃС‚СЂРѕРєРё, С‡С‚Рѕ РѕРЅР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє СЂРµР·СѓР»СЊС‚РёСЂСѓСЋС‰РµР№ С‚Р°Р±Р»РёС†Рµ
     /// </summary>
     /// <param name="Row"></param>
     private void CheckRow(DataRow Row)
@@ -686,21 +686,21 @@ namespace FreeLibSet.Forms
       if (Row == null)
         throw new ArgumentNullException("Row");
       if (Row.Table != FDataView.Table)
-        throw new ArgumentException("Строка относится к другой таблице", "Row");
+        throw new ArgumentException("РЎС‚СЂРѕРєР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РґСЂСѓРіРѕР№ С‚Р°Р±Р»РёС†Рµ", "Row");
     }
 
 #endif
 
 #endregion
 
-#region Методы, которые могут использоваться после создания просмотра
+#region РњРµС‚РѕРґС‹, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РїСЂРѕСЃРјРѕС‚СЂР°
 
     /// <summary>
-    /// Получить имя уровня для заданной строки (свойство HieViewLevel.NamePart)
-    /// Для итоговой строки возвращается ""
+    /// РџРѕР»СѓС‡РёС‚СЊ РёРјСЏ СѓСЂРѕРІРЅСЏ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ СЃС‚СЂРѕРєРё (СЃРІРѕР№СЃС‚РІРѕ HieViewLevel.NamePart)
+    /// Р”Р»СЏ РёС‚РѕРіРѕРІРѕР№ СЃС‚СЂРѕРєРё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ ""
     /// </summary>
-    /// <param name="Row">Строка из просмотра, созданного CreateView</param>
-    /// <returns>Имя уровня</returns>
+    /// <param name="Row">РЎС‚СЂРѕРєР° РёР· РїСЂРѕСЃРјРѕС‚СЂР°, СЃРѕР·РґР°РЅРЅРѕРіРѕ CreateView</param>
+    /// <returns>РРјСЏ СѓСЂРѕРІРЅСЏ</returns>
     public string GetLevelName(DataRow Row)
     {
       if (Row == null)
@@ -717,11 +717,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить индекс уровня для заданной строки (0 .. Levels.Length-1)
-    /// Для итоговой строки возвращается (-1)
+    /// РџРѕР»СѓС‡РёС‚СЊ РёРЅРґРµРєСЃ СѓСЂРѕРІРЅСЏ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ СЃС‚СЂРѕРєРё (0 .. Levels.Length-1)
+    /// Р”Р»СЏ РёС‚РѕРіРѕРІРѕР№ СЃС‚СЂРѕРєРё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ (-1)
     /// </summary>
-    /// <param name="Row">Строка из просмотра, созданного CreateView</param>
-    /// <returns>Имя уровня</returns>
+    /// <param name="Row">РЎС‚СЂРѕРєР° РёР· РїСЂРѕСЃРјРѕС‚СЂР°, СЃРѕР·РґР°РЅРЅРѕРіРѕ CreateView</param>
+    /// <returns>РРјСЏ СѓСЂРѕРІРЅСЏ</returns>
     public int GetLevelIndex(DataRow Row)
     {
       if (Row == null)
@@ -738,7 +738,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Является ли заданная строка итогом или подытогом ?
+    /// РЇРІР»СЏРµС‚СЃСЏ Р»Рё Р·Р°РґР°РЅРЅР°СЏ СЃС‚СЂРѕРєР° РёС‚РѕРіРѕРј РёР»Рё РїРѕРґС‹С‚РѕРіРѕРј ?
     /// </summary>
     /// <param name="Row"></param>
     /// <returns></returns>
@@ -760,7 +760,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Является ли заданная строка подзаголовком ?
+    /// РЇРІР»СЏРµС‚СЃСЏ Р»Рё Р·Р°РґР°РЅРЅР°СЏ СЃС‚СЂРѕРєР° РїРѕРґР·Р°РіРѕР»РѕРІРєРѕРј ?
     /// </summary>
     /// <param name="Row"></param>
     /// <returns></returns>
@@ -781,17 +781,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получение значения для поля <param name="ColumnName"></param>. Значение возвращается,
-    /// если для выбранной строки уровень детализации не превышает заданный.
-    /// Значение не возвращается, если ключевое поле не найдено
-    /// Если уровень иерархии содержит несколько полей, то FieldName должно задавать
-    /// все имена полей, разделенных запятыми, так, как они объявлены в уровне.
-    /// В этом случае возвращается массив значений
+    /// РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РїРѕР»СЏ <param name="ColumnName"></param>. Р—РЅР°С‡РµРЅРёРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ,
+    /// РµСЃР»Рё РґР»СЏ РІС‹Р±СЂР°РЅРЅРѕР№ СЃС‚СЂРѕРєРё СѓСЂРѕРІРµРЅСЊ РґРµС‚Р°Р»РёР·Р°С†РёРё РЅРµ РїСЂРµРІС‹С€Р°РµС‚ Р·Р°РґР°РЅРЅС‹Р№.
+    /// Р—РЅР°С‡РµРЅРёРµ РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ, РµСЃР»Рё РєР»СЋС‡РµРІРѕРµ РїРѕР»Рµ РЅРµ РЅР°Р№РґРµРЅРѕ
+    /// Р•СЃР»Рё СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё СЃРѕРґРµСЂР¶РёС‚ РЅРµСЃРєРѕР»СЊРєРѕ РїРѕР»РµР№, С‚Рѕ FieldName РґРѕР»Р¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ
+    /// РІСЃРµ РёРјРµРЅР° РїРѕР»РµР№, СЂР°Р·РґРµР»РµРЅРЅС‹С… Р·Р°РїСЏС‚С‹РјРё, С‚Р°Рє, РєР°Рє РѕРЅРё РѕР±СЉСЏРІР»РµРЅС‹ РІ СѓСЂРѕРІРЅРµ.
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№
     /// </summary>
-    /// <param name="Row">Строка в построенном иерархическом просмотре</param>
-    /// <param name="ColumnName">Имя ключевого поля</param>
-    /// <param name="Value">Сюда помещается возвращаемое значение или null, если значение не возвращается</param>
-    /// <returns>true, если значение возщвращается</returns>
+    /// <param name="Row">РЎС‚СЂРѕРєР° РІ РїРѕСЃС‚СЂРѕРµРЅРЅРѕРј РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ</param>
+    /// <param name="ColumnName">РРјСЏ РєР»СЋС‡РµРІРѕРіРѕ РїРѕР»СЏ</param>
+    /// <param name="Value">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ</param>
+    /// <returns>true, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РІРѕР·С‰РІСЂР°С‰Р°РµС‚СЃСЏ</returns>
     public bool GetLevelValue(DataRow Row, string ColumnName, out object Value)
     {
       Value = null;
@@ -813,7 +813,7 @@ namespace FreeLibSet.Forms
         }
       }
       if (Level < 0)
-        return false; // Уровень иерархии не найден
+        return false; // РЈСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё РЅРµ РЅР°Р№РґРµРЅ
       int ThisLevel = DataTools.GetInt(Row, "Hie_Level");
       if (ThisLevel > Level)
         return false;
@@ -830,7 +830,7 @@ namespace FreeLibSet.Forms
     }
 
 #if XXXXX
-#region Получение типизированных значений
+#region РџРѕР»СѓС‡РµРЅРёРµ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№
 
     public string GetLevelAsString(DataRow Row, string FieldName)
     { 
@@ -884,13 +884,13 @@ namespace FreeLibSet.Forms
 #endregion
 #endif
     /// <summary>
-    /// Получить заголовочную строку для данной строки Row заданного уровня Level
-    /// Если для строки Row уровень Level не определен (то есть строка Row относится
-    /// к более высокому уровню, чем Level), то возвращается null
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·Р°РіРѕР»РѕРІРѕС‡РЅСѓСЋ СЃС‚СЂРѕРєСѓ РґР»СЏ РґР°РЅРЅРѕР№ СЃС‚СЂРѕРєРё Row Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ Level
+    /// Р•СЃР»Рё РґР»СЏ СЃС‚СЂРѕРєРё Row СѓСЂРѕРІРµРЅСЊ Level РЅРµ РѕРїСЂРµРґРµР»РµРЅ (С‚Рѕ РµСЃС‚СЊ СЃС‚СЂРѕРєР° Row РѕС‚РЅРѕСЃРёС‚СЃСЏ
+    /// Рє Р±РѕР»РµРµ РІС‹СЃРѕРєРѕРјСѓ СѓСЂРѕРІРЅСЋ, С‡РµРј Level), С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null
     /// </summary>
-    /// <param name="Row">Строки из просмотра dv</param>
-    /// <param name="Level">Требуемый уровень</param>
-    /// <returns>Строка, являющаяся заголовком для уровня Level или null</returns>
+    /// <param name="Row">РЎС‚СЂРѕРєРё РёР· РїСЂРѕСЃРјРѕС‚СЂР° dv</param>
+    /// <param name="Level">РўСЂРµР±СѓРµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ</param>
+    /// <returns>РЎС‚СЂРѕРєР°, СЏРІР»СЏСЋС‰Р°СЏСЃСЏ Р·Р°РіРѕР»РѕРІРєРѕРј РґР»СЏ СѓСЂРѕРІРЅСЏ Level РёР»Рё null</returns>
     public DataRow GetHeaderRow(DataRow Row, int Level)
     {
 #if DEBUG
@@ -911,7 +911,7 @@ namespace FreeLibSet.Forms
         //  else
         //    k = Row["Hie_Order" + i.ToString()];
         //}
-        // Исправлено 06.01.2011
+        // РСЃРїСЂР°РІР»РµРЅРѕ 06.01.2011
         if (i >= Level)
           k = Row["Hie_Order" + i.ToString()];
         else if (i == (Level - 1))
@@ -928,14 +928,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить текстовое значения для заданного уровня Level для строки Row
-    /// Если для строки Row уровень Level не определен (то есть строка Row относится
-    /// к более высокому уровню, чем Level), то возвращается пустая строка
-    /// Выполняется вызов GetHeaderRow() и возвращается значение поля "Hie_Text"
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ Level РґР»СЏ СЃС‚СЂРѕРєРё Row
+    /// Р•СЃР»Рё РґР»СЏ СЃС‚СЂРѕРєРё Row СѓСЂРѕРІРµРЅСЊ Level РЅРµ РѕРїСЂРµРґРµР»РµРЅ (С‚Рѕ РµСЃС‚СЊ СЃС‚СЂРѕРєР° Row РѕС‚РЅРѕСЃРёС‚СЃСЏ
+    /// Рє Р±РѕР»РµРµ РІС‹СЃРѕРєРѕРјСѓ СѓСЂРѕРІРЅСЋ, С‡РµРј Level), С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°
+    /// Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ РІС‹Р·РѕРІ GetHeaderRow() Рё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ "Hie_Text"
     /// </summary>
-    /// <param name="Row">Строки из просмотра dv</param>
-    /// <param name="Level">Требуемый уровень</param>
-    /// <returns>Текстовое значение или null</returns>
+    /// <param name="Row">РЎС‚СЂРѕРєРё РёР· РїСЂРѕСЃРјРѕС‚СЂР° dv</param>
+    /// <param name="Level">РўСЂРµР±СѓРµРјС‹Р№ СѓСЂРѕРІРµРЅСЊ</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР»Рё null</returns>
     public string GetHeaderText(DataRow Row, int Level)
     {
       DataRow HeaderRow = GetHeaderRow(Row, Level);
@@ -967,22 +967,22 @@ namespace FreeLibSet.Forms
       if (p < 0)
       {
         // 01.02.2010
-        // В некоторых случаях первая строка в группе может иметь значение в поле
-        // Hie_OrderXXX не 1 а, например, 2. В этом случае точный поиск ключа 
-        // невозможен
+        // Р’ РЅРµРєРѕС‚РѕСЂС‹С… СЃР»СѓС‡Р°СЏС… РїРµСЂРІР°СЏ СЃС‚СЂРѕРєР° РІ РіСЂСѓРїРїРµ РјРѕР¶РµС‚ РёРјРµС‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ РїРѕР»Рµ
+        // Hie_OrderXXX РЅРµ 1 Р°, РЅР°РїСЂРёРјРµСЂ, 2. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ С‚РѕС‡РЅС‹Р№ РїРѕРёСЃРє РєР»СЋС‡Р° 
+        // РЅРµРІРѕР·РјРѕР¶РµРЅ
         if (Level > 0)
         {
-          // Создаем отдельный просмотр
+          // РЎРѕР·РґР°РµРј РѕС‚РґРµР»СЊРЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ
           DataView dv2 = new DataView(FDataView.Table, dv.RowFilter, dv.Sort, dv.RowStateFilter);
-          // и навешиваем на него доп. фильтры
+          // Рё РЅР°РІРµС€РёРІР°РµРј РЅР° РЅРµРіРѕ РґРѕРї. С„РёР»СЊС‚СЂС‹
           DataFilter[] Filters = new DataFilter[Levels.Length - Level];
           for (int i = 0; i < Filters.Length; i++)
             Filters[i] = new ValueFilter("Hie_Order" + (Levels.Length - i - 1).ToString(), Keys[i]);
           DataFilter Filter2 = AndFilter.FromArray(Filters);
           DataFilter.AddToDataViewAnd(dv2, Filter2);
 
-          // Теперь вручную перебираем строки, пропуская строки заголовков и итоги.
-          // Первая подходящая строка - то, что нам нужно
+          // РўРµРїРµСЂСЊ РІСЂСѓС‡РЅСѓСЋ РїРµСЂРµР±РёСЂР°РµРј СЃС‚СЂРѕРєРё, РїСЂРѕРїСѓСЃРєР°СЏ СЃС‚СЂРѕРєРё Р·Р°РіРѕР»РѕРІРєРѕРІ Рё РёС‚РѕРіРё.
+          // РџРµСЂРІР°СЏ РїРѕРґС…РѕРґСЏС‰Р°СЏ СЃС‚СЂРѕРєР° - С‚Рѕ, С‡С‚Рѕ РЅР°Рј РЅСѓР¶РЅРѕ
           for (int i = 0; i < dv2.Count; i++)
           {
             DataRow Row2 = dv2[i].Row;
@@ -1013,7 +1013,7 @@ namespace FreeLibSet.Forms
 #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true после вызова CreateDataView()
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true РїРѕСЃР»Рµ РІС‹Р·РѕРІР° CreateDataView()
     /// </summary>
     public bool IsReadOnly
     {
@@ -1030,16 +1030,16 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Редактор дополнительного параметра для уровня иерархии (абстрактный базовый класс)
-  /// Присоединяется к свойству HieViewLevel.ParamEditor.
-  /// Реализует редактирование, чтение и запись произвольного параметра (или параметров),
-  /// относящихся к данному уровню
-  /// Для хранение значения параметра используется HieViewLevel.ExtBalues, поэтому
-  /// один объект может использоваться для нескольких HieViewLevel
+  /// Р РµРґР°РєС‚РѕСЂ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРіРѕ РїР°СЂР°РјРµС‚СЂР° РґР»СЏ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё (Р°Р±СЃС‚СЂР°РєС‚РЅС‹Р№ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ)
+  /// РџСЂРёСЃРѕРµРґРёРЅСЏРµС‚СЃСЏ Рє СЃРІРѕР№СЃС‚РІСѓ HieViewLevel.ParamEditor.
+  /// Р РµР°Р»РёР·СѓРµС‚ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ, С‡С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ РїР°СЂР°РјРµС‚СЂР° (РёР»Рё РїР°СЂР°РјРµС‚СЂРѕРІ),
+  /// РѕС‚РЅРѕСЃСЏС‰РёС…СЃСЏ Рє РґР°РЅРЅРѕРјСѓ СѓСЂРѕРІРЅСЋ
+  /// Р”Р»СЏ С…СЂР°РЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ HieViewLevel.ExtBalues, РїРѕСЌС‚РѕРјСѓ
+  /// РѕРґРёРЅ РѕР±СЉРµРєС‚ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… HieViewLevel
   /// </summary>
   public abstract class EFPHieViewLevelParamEditor
   {
-#region Абстрактные методы
+#region РђР±СЃС‚СЂР°РєС‚РЅС‹Рµ РјРµС‚РѕРґС‹
 
     public abstract bool PerformEdit(EFPHieViewLevel Level);
 
@@ -1054,14 +1054,14 @@ namespace FreeLibSet.Forms
 
 #if XXX
   /// <summary>
-  /// Неабстрактная реализация редактора уровня иерархии, когда режим задается
-  /// перечислением возможных значений.
-  /// Для хранения значения используется код в HieViewLevel.ExtValues["Режим"]
-  /// Для записи в секции конфигурации используется строковый параметр "Режим"
+  /// РќРµР°Р±СЃС‚СЂР°РєС‚РЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ СЂРµРґР°РєС‚РѕСЂР° СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё, РєРѕРіРґР° СЂРµР¶РёРј Р·Р°РґР°РµС‚СЃСЏ
+  /// РїРµСЂРµС‡РёСЃР»РµРЅРёРµРј РІРѕР·РјРѕР¶РЅС‹С… Р·РЅР°С‡РµРЅРёР№.
+  /// Р”Р»СЏ С…СЂР°РЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєРѕРґ РІ HieViewLevel.ExtValues["Р РµР¶РёРј"]
+  /// Р”Р»СЏ Р·Р°РїРёСЃРё РІ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃС‚СЂРѕРєРѕРІС‹Р№ РїР°СЂР°РјРµС‚СЂ "Р РµР¶РёРј"
   /// </summary>
   public class EFPHieViewLevelEnumParamEditor : EFPHieViewLevelParamEditor
   {
-#region Конструкторы
+#region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     public EFPHieViewLevelEnumParamEditor(string[] Codes, string[] Names)
     {
@@ -1071,7 +1071,7 @@ namespace FreeLibSet.Forms
       if (Names == null)
         throw new ArgumentNullException("Names");
       if (Names.Length != Codes.Length)
-        throw new ArgumentException("Длина массива имен не совпадает с длиной массива кодов", "Names");
+        throw new ArgumentException("Р”Р»РёРЅР° РјР°СЃСЃРёРІР° РёРјРµРЅ РЅРµ СЃРѕРІРїР°РґР°РµС‚ СЃ РґР»РёРЅРѕР№ РјР°СЃСЃРёРІР° РєРѕРґРѕРІ", "Names");
 #endif
       FCodes = Codes;
       FNames = Names;
@@ -1092,29 +1092,29 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Свойства
+#region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Коды используются для хранения текущего значения параметра
-    /// Задается в конструкторе
+    /// РљРѕРґС‹ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР°
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string[] Codes { get { return FCodes; } }
     private string[] FCodes;
 
     /// <summary>
-    /// Имена используются для отображения на экране
-    /// Задается в конструкторе
+    /// РРјРµРЅР° РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° СЌРєСЂР°РЅРµ
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string[] Names { get { return FNames; } }
     private string[] FNames;
 
 #endregion
 
-#region Получение значения
+#region РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ
 
     public string GetSelectedCode(EFPHieViewLevel Level)
     {
-      string Code = Level.ExtValues.GetString("Режим");
+      string Code = Level.ExtValues.GetString("Р РµР¶РёРј");
       int p = Array.IndexOf<string>(FCodes, Code);
       if (p < 0)
         return FCodes[0];
@@ -1124,12 +1124,12 @@ namespace FreeLibSet.Forms
 
     public void SetSelectedCode(EFPHieViewLevel Level, string Code)
     {
-      Level.ExtValues["Режим"] = Code;
+      Level.ExtValues["Р РµР¶РёРј"] = Code;
     }
 
     public int GetSelectedIndex(EFPHieViewLevel Level)
     {
-      string Code = Level.ExtValues.GetString("Режим");
+      string Code = Level.ExtValues.GetString("Р РµР¶РёРј");
       int p = Array.IndexOf<string>(FCodes, Code);
       if (p < 0)
         return 0;
@@ -1139,19 +1139,19 @@ namespace FreeLibSet.Forms
 
     public void SetSelectedIndex(EFPHieViewLevel Level, int Index)
     {
-      Level.ExtValues["Режим"] = FCodes[Index];
+      Level.ExtValues["Р РµР¶РёРј"] = FCodes[Index];
     }
 
 #endregion
 
-#region Переопределенные методы
+#region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     public override bool PerformEdit(EFPHieViewLevel Level)
     {
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.ImageKey = Level.ImageKey;
       dlg.Title = Level.DisplayName;
-      dlg.GroupTitle = "Режим";
+      dlg.GroupTitle = "Р РµР¶РёРј";
       dlg.Items = Names;
       dlg.SelectedIndex = GetSelectedIndex(Level);
 
@@ -1164,12 +1164,12 @@ namespace FreeLibSet.Forms
 
     public override void WriteConfig(EFPHieViewLevel Level, CfgPart Part)
     {
-      Part.SetString("Режим", GetSelectedCode(Level));
+      Part.SetString("Р РµР¶РёРј", GetSelectedCode(Level));
     }
 
     public override void ReadConfig(EFPHieViewLevel Level, CfgPart Part)
     {
-      string Code = Part.GetString("Режим");
+      string Code = Part.GetString("Р РµР¶РёРј");
       int p = Array.IndexOf<string>(FCodes, Code);
       if (p < 0)
         SetSelectedIndex(Level, 0);
@@ -1189,14 +1189,14 @@ namespace FreeLibSet.Forms
 
 #if XXX
   /// <summary>
-  /// Реализация редактора уровня иерархии типа "Дата" с возможностью выбора
-  /// уровня обобщения Дата-Месяц-Квартал-Год
+  /// Р РµР°Р»РёР·Р°С†РёСЏ СЂРµРґР°РєС‚РѕСЂР° СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё С‚РёРїР° "Р”Р°С‚Р°" СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РІС‹Р±РѕСЂР°
+  /// СѓСЂРѕРІРЅСЏ РѕР±РѕР±С‰РµРЅРёСЏ Р”Р°С‚Р°-РњРµСЃСЏС†-РљРІР°СЂС‚Р°Р»-Р“РѕРґ
   /// </summary>
   public class EFPHieViewLevelDateGeneralizationParamEditor : EFPHieViewLevelEnumParamEditor
   {
-#region Конструктор
+#region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
-    private static readonly string[] DateTypeNames=new string[]{"Дата", "Месяц", "Квартал", "Год"};
+    private static readonly string[] DateTypeNames=new string[]{"Р”Р°С‚Р°", "РњРµСЃСЏС†", "РљРІР°СЂС‚Р°Р»", "Р“РѕРґ"};
 
     public EFPHieViewLevelDateGeneralizationParamEditor()
       : base(DateTypeNames, DateTypeNames)
@@ -1205,7 +1205,7 @@ namespace FreeLibSet.Forms
 
 #endregion
 
-#region Дополнительные методы
+#region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     public AccDepDateGeneralization GetSelectedMode(EFPHieViewLevel Level)
     {

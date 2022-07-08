@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,14 +12,14 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Значок в системном трее.
-  /// Реализует свойство EFPApp.TrayIcon      
+  /// Р—РЅР°С‡РѕРє РІ СЃРёСЃС‚РµРјРЅРѕРј С‚СЂРµРµ.
+  /// Р РµР°Р»РёР·СѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ EFPApp.TrayIcon      
   /// </summary>
   public sealed class EFPAppTrayIcon : DisposableObject, IReadOnlyObject/*, IEFPAppTimeHandler*/
   {
-    // Нельзя использовать SimpleDisposableObject в качестве базового класса
+    // РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ SimpleDisposableObject РІ РєР°С‡РµСЃС‚РІРµ Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°
 
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     internal EFPAppTrayIcon()
     {
@@ -32,9 +32,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Удаляет значок, если он выведен на экран.
+    /// РЈРґР°Р»СЏРµС‚ Р·РЅР°С‡РѕРє, РµСЃР»Рё РѕРЅ РІС‹РІРµРґРµРЅ РЅР° СЌРєСЂР°РЅ.
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">true, РµСЃР»Рё РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose(), Р° РЅРµ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool disposing)
     {
       Hide();
@@ -53,7 +53,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e)
           {
-            LogoutTools.LogoutException(e, "Ошибка удаления NotifyIcon");
+            LogoutTools.LogoutException(e, "РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ NotifyIcon");
           }
         }
         _NotifyIcons = null;
@@ -66,12 +66,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Значок
+    #region Р—РЅР°С‡РѕРє
 
     /// <summary>
-    /// Изображение для значка.
-    /// По умолчанию содержит значок приложения.
-    /// Свойство может устанавливаться динамически.
+    /// РР·РѕР±СЂР°Р¶РµРЅРёРµ РґР»СЏ Р·РЅР°С‡РєР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РѕРє РїСЂРёР»РѕР¶РµРЅРёСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ РґРёРЅР°РјРёС‡РµСЃРєРё.
     /// </summary>
     public Icon Icon
     {
@@ -89,12 +89,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Подсказка
+    #region РџРѕРґСЃРєР°Р·РєР°
 
     /// <summary>
-    /// Текст всплывающей подсказки для значка.
-    /// По умолчанию содержит имя приложения.
-    /// Свойство может устанавливаться динамически.
+    /// РўРµРєСЃС‚ РІСЃРїР»С‹РІР°СЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё РґР»СЏ Р·РЅР°С‡РєР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРѕРґРµСЂР¶РёС‚ РёРјСЏ РїСЂРёР»РѕР¶РµРЅРёСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ РґРёРЅР°РјРёС‡РµСЃРєРё.
     /// </summary>
     public string Text
     {
@@ -110,21 +110,21 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Меню
+    #region РњРµРЅСЋ
 
     /// <summary>
-    /// Команды меню, появляющегося при нажатии правой кнопки мыши на значке.
-    /// По умолчанию список команд пустой.
-    /// Список может заполняться только до показа значка.
+    /// РљРѕРјР°РЅРґС‹ РјРµРЅСЋ, РїРѕСЏРІР»СЏСЋС‰РµРіРѕСЃСЏ РїСЂРё РЅР°Р¶Р°С‚РёРё РїСЂР°РІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё РЅР° Р·РЅР°С‡РєРµ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРїРёСЃРѕРє РєРѕРјР°РЅРґ РїСѓСЃС‚РѕР№.
+    /// РЎРїРёСЃРѕРє РјРѕР¶РµС‚ Р·Р°РїРѕР»РЅСЏС‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РґРѕ РїРѕРєР°Р·Р° Р·РЅР°С‡РєР°.
     /// </summary>
     public EFPCommandItems CommandItems { get { return _CommandItems; } }
     private EFPCommandItems _CommandItems;
 
     /// <summary>
-    /// Команда, вызываемая при двойном щелчке мыши на значке.
-    /// Если свойство не установлено в явном виде, то оно возвращает первую команду в списке 
-    /// CommandItems или null, если список пустой.
-    /// Свойство должно устанавливаться до вывода значка на экран.
+    /// РљРѕРјР°РЅРґР°, РІС‹Р·С‹РІР°РµРјР°СЏ РїСЂРё РґРІРѕР№РЅРѕРј С‰РµР»С‡РєРµ РјС‹С€Рё РЅР° Р·РЅР°С‡РєРµ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, С‚Рѕ РѕРЅРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІСѓСЋ РєРѕРјР°РЅРґСѓ РІ СЃРїРёСЃРєРµ 
+    /// CommandItems РёР»Рё null, РµСЃР»Рё СЃРїРёСЃРѕРє РїСѓСЃС‚РѕР№.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ РґРѕ РІС‹РІРѕРґР° Р·РЅР°С‡РєР° РЅР° СЌРєСЂР°РЅ.
     /// </summary>
     public EFPCommandItem DefaultCommandItem
     {
@@ -156,12 +156,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Доступ из других рабочих столов
+    #region Р”РѕСЃС‚СѓРї РёР· РґСЂСѓРіРёС… СЂР°Р±РѕС‡РёС… СЃС‚РѕР»РѕРІ
 
     ///// <summary>
-    ///// Если true (по умолчанию), то значок будет показываться на рабочих столах других пользователей,
-    ///// если они войдут в систему.
-    ///// Если false, то у других пользователей не будет значка.
+    ///// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ Р·РЅР°С‡РѕРє Р±СѓРґРµС‚ РїРѕРєР°Р·С‹РІР°С‚СЊСЃСЏ РЅР° СЂР°Р±РѕС‡РёС… СЃС‚РѕР»Р°С… РґСЂСѓРіРёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№,
+    ///// РµСЃР»Рё РѕРЅРё РІРѕР№РґСѓС‚ РІ СЃРёСЃС‚РµРјСѓ.
+    ///// Р•СЃР»Рё false, С‚Рѕ Сѓ РґСЂСѓРіРёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РЅРµ Р±СѓРґРµС‚ Р·РЅР°С‡РєР°.
     ///// </summary>
     //public bool ForAllUsers
     //{
@@ -183,7 +183,7 @@ namespace FreeLibSet.Forms
     //    case Microsoft.Win32.SessionSwitchReason.RemoteConnect:
     //    case Microsoft.Win32.SessionSwitchReason.ConsoleConnect:
     //      int Key = GetKey();
-    //      EFPApp.MessageBox("Получен сигнал Args.Reason="+Args.Reason.ToString()+" для SessionId=" + Key.ToString());
+    //      EFPApp.MessageBox("РџРѕР»СѓС‡РµРЅ СЃРёРіРЅР°Р» Args.Reason="+Args.Reason.ToString()+" РґР»СЏ SessionId=" + Key.ToString());
     //      if (!NotifyIcons.ContainsKey(Key))
     //        NotifyIcons.Add(Key, CreateNotifyIcon());
     //      break;
@@ -197,11 +197,11 @@ namespace FreeLibSet.Forms
     //  int SessionId = EnvironmentTools.ActiveConsoleSessionId;
     //  if (SessionId != PrevSessionId)
     //  {
-    //    Console.WriteLine(DateTime.Now.ToString("G")+". Обнаружено переключение SessionId с " + PrevSessionId.ToString() + " на " + SessionId.ToString()+
+    //    Console.WriteLine(DateTime.Now.ToString("G")+". РћР±РЅР°СЂСѓР¶РµРЅРѕ РїРµСЂРµРєР»СЋС‡РµРЅРёРµ SessionId СЃ " + PrevSessionId.ToString() + " РЅР° " + SessionId.ToString()+
     //      ", UserInteractive="+Environment.UserInteractive.ToString());
     //    if (!NotifyIcons.ContainsKey(SessionId))
     //    {
-    //      Console.WriteLine("Добавляем значок для SessionId=" + SessionId.ToString());
+    //      Console.WriteLine("Р”РѕР±Р°РІР»СЏРµРј Р·РЅР°С‡РѕРє РґР»СЏ SessionId=" + SessionId.ToString());
     //      NotifyIcons.Add(SessionId, CreateNotifyIcon());
     //    }
     //    PrevSessionId = SessionId;
@@ -211,12 +211,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Скрытая форма для получения сообщений
+    #region РЎРєСЂС‹С‚Р°СЏ С„РѕСЂРјР° РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃРѕРѕР±С‰РµРЅРёР№
 
     /// <summary>
-    /// Нужно ли создавать скрытую форму (true) или у приложения есть «нормальная» форма (false). 
-    /// Если у приложения не будет формы, то Application.Run() сразу завершится.
-    /// По умолчанию – true – класс поддерживает скрытую форму.
+    /// РќСѓР¶РЅРѕ Р»Рё СЃРѕР·РґР°РІР°С‚СЊ СЃРєСЂС‹С‚СѓСЋ С„РѕСЂРјСѓ (true) РёР»Рё Сѓ РїСЂРёР»РѕР¶РµРЅРёСЏ РµСЃС‚СЊ В«РЅРѕСЂРјР°Р»СЊРЅР°СЏВ» С„РѕСЂРјР° (false). 
+    /// Р•СЃР»Рё Сѓ РїСЂРёР»РѕР¶РµРЅРёСЏ РЅРµ Р±СѓРґРµС‚ С„РѕСЂРјС‹, С‚Рѕ Application.Run() СЃСЂР°Р·Сѓ Р·Р°РІРµСЂС€РёС‚СЃСЏ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ вЂ“ true вЂ“ РєР»Р°СЃСЃ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ СЃРєСЂС‹С‚СѓСЋ С„РѕСЂРјСѓ.
     /// </summary>
     public bool UseHiddenForm
     {
@@ -231,11 +231,11 @@ namespace FreeLibSet.Forms
 
     private class HiddenForm : Form
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public HiddenForm()
       {
-        // Чтобы меньше мигало, делаем форму в углу
+        // Р§С‚РѕР±С‹ РјРµРЅСЊС€Рµ РјРёРіР°Р»Рѕ, РґРµР»Р°РµРј С„РѕСЂРјСѓ РІ СѓРіР»Сѓ
         ShowInTaskbar = false;
         FormBorderStyle = FormBorderStyle.None;
         base.Text = EnvironmentTools.ApplicationName + " - Hidden window for messages";
@@ -246,7 +246,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Обработчики формы
+      #region РћР±СЂР°Р±РѕС‚С‡РёРєРё С„РѕСЂРјС‹
 
       protected override void WndProc(ref Message m)
       {
@@ -267,8 +267,8 @@ namespace FreeLibSet.Forms
 
 #if XXXXX
         case WM_POWERBROADCAST:
-          // Это событие посылается только в Windows-2000 и Windows XP
-          // В Windows Vista и более новых должна использоваться функция
+          // Р­С‚Рѕ СЃРѕР±С‹С‚РёРµ РїРѕСЃС‹Р»Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ Windows-2000 Рё Windows XP
+          // Р’ Windows Vista Рё Р±РѕР»РµРµ РЅРѕРІС‹С… РґРѕР»Р¶РЅР° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ С„СѓРЅРєС†РёСЏ
           // SetThreadExecutionState()
           if (m.WParam == PBT_APMQUERYSUSPEND)
           { 
@@ -287,19 +287,19 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Скрытая форма
+    /// РЎРєСЂС‹С‚Р°СЏ С„РѕСЂРјР°
     /// </summary>
     private HiddenForm _TheHiddenForm;
 
     #endregion
 
-    #region Видимость значка
+    #region Р’РёРґРёРјРѕСЃС‚СЊ Р·РЅР°С‡РєР°
 
     /// <summary>
-    /// Если true, то значок выведен на экран, если false, то скрыт. 
-    /// Изначально равно false.
-    /// Видимость значка можно менять динамически
-    /// Можно использовать методы Show() и Hide().
+    /// Р•СЃР»Рё true, С‚Рѕ Р·РЅР°С‡РѕРє РІС‹РІРµРґРµРЅ РЅР° СЌРєСЂР°РЅ, РµСЃР»Рё false, С‚Рѕ СЃРєСЂС‹С‚. 
+    /// РР·РЅР°С‡Р°Р»СЊРЅРѕ СЂР°РІРЅРѕ false.
+    /// Р’РёРґРёРјРѕСЃС‚СЊ Р·РЅР°С‡РєР° РјРѕР¶РЅРѕ РјРµРЅСЏС‚СЊ РґРёРЅР°РјРёС‡РµСЃРєРё
+    /// РњРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РјРµС‚РѕРґС‹ Show() Рё Hide().
     /// </summary>
     public bool Visible
     {
@@ -318,7 +318,7 @@ namespace FreeLibSet.Forms
     private bool _Visible;
 
     /// <summary>
-    /// Показывает значок. Устанавливает Visible=true
+    /// РџРѕРєР°Р·С‹РІР°РµС‚ Р·РЅР°С‡РѕРє. РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Visible=true
     /// </summary>
     public void Show()
     {
@@ -326,7 +326,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Прячет значок. Устанавливает Visible=false
+    /// РџСЂСЏС‡РµС‚ Р·РЅР°С‡РѕРє. РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Visible=false
     /// </summary>
     public void Hide()
     {
@@ -341,8 +341,8 @@ namespace FreeLibSet.Forms
       if (UseHiddenForm && _TheHiddenForm == null)
       {
         _TheHiddenForm = new HiddenForm();
-        // Если форму показать, а затем спрятать, то она будет получать сообщения.
-        // А если просто вызвать CreateHandle(), то не будет
+        // Р•СЃР»Рё С„РѕСЂРјСѓ РїРѕРєР°Р·Р°С‚СЊ, Р° Р·Р°С‚РµРј СЃРїСЂСЏС‚Р°С‚СЊ, С‚Рѕ РѕРЅР° Р±СѓРґРµС‚ РїРѕР»СѓС‡Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ.
+        // Рђ РµСЃР»Рё РїСЂРѕСЃС‚Рѕ РІС‹Р·РІР°С‚СЊ CreateHandle(), С‚Рѕ РЅРµ Р±СѓРґРµС‚
         _TheHiddenForm.Show();
         _TheHiddenForm.Hide();
       }
@@ -379,12 +379,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Объекты NotifyIcon
+    #region РћР±СЉРµРєС‚С‹ NotifyIcon
 
     /// <summary>
-    /// Ключ - идентификатор SessionId, значение - объект значка
-    /// Зарезервировано.
-    /// В текущей реализации всегда используется единственный значок, а ключ равен 0
+    /// РљР»СЋС‡ - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ SessionId, Р·РЅР°С‡РµРЅРёРµ - РѕР±СЉРµРєС‚ Р·РЅР°С‡РєР°
+    /// Р—Р°СЂРµР·РµСЂРІРёСЂРѕРІР°РЅРѕ.
+    /// Р’ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё РІСЃРµРіРґР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ Р·РЅР°С‡РѕРє, Р° РєР»СЋС‡ СЂР°РІРµРЅ 0
     /// </summary>
     private Dictionary<int, NotifyIcon> _NotifyIcons;
 
@@ -395,7 +395,7 @@ namespace FreeLibSet.Forms
       ni.Text = Text;
       if (DefaultCommandItem != null)
         //ni.DoubleClick += new EventHandler(DefaultCommandItem.PerformClick);
-        // Надо перехватывать повторный щелчок, если команда еще выполняется
+        // РќР°РґРѕ РїРµСЂРµС…РІР°С‚С‹РІР°С‚СЊ РїРѕРІС‚РѕСЂРЅС‹Р№ С‰РµР»С‡РѕРє, РµСЃР»Рё РєРѕРјР°РЅРґР° РµС‰Рµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
         ni.DoubleClick += new EventHandler(ni_DoubleClick);
 
       if (CommandItems.Count > 0)
@@ -411,7 +411,7 @@ namespace FreeLibSet.Forms
     void ni_DoubleClick(object sender, EventArgs args)
     {
       if (DefaultCommandItem == null)
-        return; // в принципе, необязательно
+        return; // РІ РїСЂРёРЅС†РёРїРµ, РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
 
       if (DefaultCommandItem.InsideClick)
         return;
@@ -424,12 +424,12 @@ namespace FreeLibSet.Forms
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если значок уже был выведен на экран, и добавление новых команд в меню не допускается
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р·РЅР°С‡РѕРє СѓР¶Рµ Р±С‹Р» РІС‹РІРµРґРµРЅ РЅР° СЌРєСЂР°РЅ, Рё РґРѕР±Р°РІР»РµРЅРёРµ РЅРѕРІС‹С… РєРѕРјР°РЅРґ РІ РјРµРЅСЋ РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ
     /// </summary>
     public bool IsReadOnly { get { return _CommandItems.IsReadOnly; } }
 
     /// <summary>
-    /// Выбрасывает исключение, если IsReadOnly=true
+    /// Р’С‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё IsReadOnly=true
     /// </summary>
     public void CheckNotReadOnly()
     {

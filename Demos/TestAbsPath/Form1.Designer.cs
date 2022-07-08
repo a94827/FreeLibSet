@@ -1,4 +1,4 @@
-namespace TestAbsPath
+п»їnamespace TestAbsPath
 {
   partial class Form1
   {
@@ -49,7 +49,7 @@ namespace TestAbsPath
       this.groupBox1.Size = new System.Drawing.Size(484, 58);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Исходная строка";
+      this.groupBox1.Text = "РСЃС…РѕРґРЅР°СЏ СЃС‚СЂРѕРєР°";
       // 
       // btnOk
       // 
@@ -58,7 +58,7 @@ namespace TestAbsPath
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 2;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
       // 
@@ -77,7 +77,7 @@ namespace TestAbsPath
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(100, 20);
       this.label1.TabIndex = 0;
-      this.label1.Text = "&Путь";
+      this.label1.Text = "&РџСѓС‚СЊ";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // groupBox2
@@ -114,7 +114,7 @@ namespace TestAbsPath
       this.Controls.Add(this.groupBox1);
       this.Name = "Form1";
       this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
-      this.Text = "Тестирование AbsPath";
+      this.Text = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ AbsPath";
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.groupBox2.ResumeLayout(false);

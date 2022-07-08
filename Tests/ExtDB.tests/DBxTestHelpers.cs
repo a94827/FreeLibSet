@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Data;
@@ -7,16 +7,16 @@ using NUnit.Framework;
 namespace ExtDB_tests
 {
   /// <summary>
-  /// Вспомогательные методы для тестирования баз данных
+  /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ Р±Р°Р· РґР°РЅРЅС‹С…
   /// </summary>
   public static class DBxTestHelpers
   {
     /// <summary>
-    /// Сравнение требуемой структуры с реальной
+    /// РЎСЂР°РІРЅРµРЅРёРµ С‚СЂРµР±СѓРµРјРѕР№ СЃС‚СЂСѓРєС‚СѓСЂС‹ СЃ СЂРµР°Р»СЊРЅРѕР№
     /// </summary>
-    /// <param name="wanted">Объявленная структура</param>
-    /// <param name="real">Реальная структура</param>
-    /// <param name="prefixText">Текст выводимый перед всеми сообщениями</param>
+    /// <param name="wanted">РћР±СЉСЏРІР»РµРЅРЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°</param>
+    /// <param name="real">Р РµР°Р»СЊРЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°</param>
+    /// <param name="prefixText">РўРµРєСЃС‚ РІС‹РІРѕРґРёРјС‹Р№ РїРµСЂРµРґ РІСЃРµРјРё СЃРѕРѕР±С‰РµРЅРёСЏРјРё</param>
     public static void ValidateStruct(DBxStruct wanted, DBxStruct real, string prefixText)
     {
       Assert.IsNotNull(wanted, prefixText + "Wanted DBxStruct");

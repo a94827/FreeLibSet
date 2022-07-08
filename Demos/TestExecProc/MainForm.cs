@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,7 +14,7 @@ namespace TestExecProc
 {
   public partial class MainForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public MainForm()
     {
@@ -80,7 +80,7 @@ namespace TestExecProc
           case TestStartMode.ExecProcCallListExecuteAsyncAndWait:
           case TestStartMode.DistributedProcCallItemAsync:
           case TestStartMode.DistributedProcCallItemAsyncAndWait:
-            args.SetError("Свойство EFPApp.ExecProcCallList доступно только из основного потока приложения");
+            args.SetError("РЎРІРѕР№СЃС‚РІРѕ EFPApp.ExecProcCallList РґРѕСЃС‚СѓРїРЅРѕ С‚РѕР»СЊРєРѕ РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕС‚РѕРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ");
             break;
         }
       }
@@ -89,15 +89,15 @@ namespace TestExecProc
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     /// <summary>
-    /// Создатель процедур в основном домене приложения
+    /// РЎРѕР·РґР°С‚РµР»СЊ РїСЂРѕС†РµРґСѓСЂ РІ РѕСЃРЅРѕРІРЅРѕРј РґРѕРјРµРЅРµ РїСЂРёР»РѕР¶РµРЅРёСЏ
     /// </summary>
     ProcCreator LocalProcCreator;
 
     /// <summary>
-    /// Создатель удаленных процедур в отдельном домене
+    /// РЎРѕР·РґР°С‚РµР»СЊ СѓРґР°Р»РµРЅРЅС‹С… РїСЂРѕС†РµРґСѓСЂ РІ РѕС‚РґРµР»СЊРЅРѕРј РґРѕРјРµРЅРµ
     /// </summary>
     ProcCreator RemoteProcCreator;
 
@@ -119,7 +119,7 @@ namespace TestExecProc
 
     #endregion
 
-    #region Запуск процедур
+    #region Р—Р°РїСѓСЃРє РїСЂРѕС†РµРґСѓСЂ
 
     void efpStart_Click(object Sender, EventArgs Args)
     {
@@ -143,7 +143,7 @@ namespace TestExecProc
 
     #endregion
 
-    #region Прочее
+    #region РџСЂРѕС‡РµРµ
 
     void efpInfo_Click(object Sender, EventArgs Args)
     {

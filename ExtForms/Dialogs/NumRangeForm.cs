@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -17,15 +17,15 @@ using FreeLibSet.DependedValues;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Форма для IntRangeDialog, SingleRangeDialog и др. диалогов.
-  /// В пользовательском коде следует использовать классы диалогов , а не NumRangeForm
+  /// Р¤РѕСЂРјР° РґР»СЏ IntRangeDialog, SingleRangeDialog Рё РґСЂ. РґРёР°Р»РѕРіРѕРІ.
+  /// Р’ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєР»Р°СЃСЃС‹ РґРёР°Р»РѕРіРѕРІ , Р° РЅРµ NumRangeForm
   /// </summary>
   internal partial class NumRangeForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Конструктор формы
+    /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
     /// </summary>
     public NumRangeForm()
     {
@@ -36,15 +36,15 @@ namespace FreeLibSet.Forms
       btn2eq1.Image = EFPApp.MainImages.Images["SignEqual"];
       btn2eq1.ImageAlign = ContentAlignment.MiddleCenter;
       efp2eq1 = new EFPButton(FormProvider, btn2eq1);
-      efp2eq1.DisplayName = "Максимальное значение равно минимальному";
-      efp2eq1.ToolTipText = "Присваивает полю \"Максимум\" значение из поля \"Минимум\"";
+      efp2eq1.DisplayName = "РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ РјРёРЅРёРјР°Р»СЊРЅРѕРјСѓ";
+      efp2eq1.ToolTipText = "РџСЂРёСЃРІР°РёРІР°РµС‚ РїРѕР»СЋ \"РњР°РєСЃРёРјСѓРј\" Р·РЅР°С‡РµРЅРёРµ РёР· РїРѕР»СЏ \"РњРёРЅРёРјСѓРј\"";
 
       btnNo.Visible = false;
     }
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public EFPFormProvider FormProvider;
 
@@ -60,30 +60,30 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог для ввода диапазона целых чисел.
-  /// Базовый класс для IntRangeDialog, SingleRangeDialog, DoubleRangeDialog и DecimalRangeDialog.
+  /// Р”РёР°Р»РѕРі РґР»СЏ РІРІРѕРґР° РґРёР°РїР°Р·РѕРЅР° С†РµР»С‹С… С‡РёСЃРµР».
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ IntRangeDialog, SingleRangeDialog, DoubleRangeDialog Рё DecimalRangeDialog.
   /// </summary>
   public abstract class BaseNumRangeDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal BaseNumRangeDialog()
     {
-      Title = "Ввод диапазона чисел";
-      Prompt = "Диапазон";
+      Title = "Р’РІРѕРґ РґРёР°РїР°Р·РѕРЅР° С‡РёСЃРµР»";
+      Prompt = "Р”РёР°РїР°Р·РѕРЅ";
       _Format = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     #region N/First/LastValue
 
     /// <summary>
-    /// Вход и выход: Первое значение диапазона с поддержкой полуоткрытых диапазонов
+    /// Р’С…РѕРґ Рё РІС‹С…РѕРґ: РџРµСЂРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РґРёР°РїР°Р·РѕРЅР° СЃ РїРѕРґРґРµСЂР¶РєРѕР№ РїРѕР»СѓРѕС‚РєСЂС‹С‚С‹С… РґРёР°РїР°Р·РѕРЅРѕРІ
     /// </summary>
     public T? NFirstValue
     {
@@ -100,8 +100,8 @@ namespace FreeLibSet.Forms
     private T? _NFirstValue;
 
     /// <summary>
-    /// Управляемое свойство для NFirstValue
-    /// Только для чтения. Может использоваться в валидаторах.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ NFirstValue
+    /// РўРѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ. РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РІР°Р»РёРґР°С‚РѕСЂР°С….
     /// </summary>
     public DepValue<T?> NFirstValueEx
     {
@@ -118,7 +118,7 @@ namespace FreeLibSet.Forms
     private DepOutput<T?> _NFirstValueEx;
 
     /// <summary>
-    /// Вход и выход: Первое значение диапазона для закрытого интервала
+    /// Р’С…РѕРґ Рё РІС‹С…РѕРґ: РџРµСЂРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РґРёР°РїР°Р·РѕРЅР° РґР»СЏ Р·Р°РєСЂС‹С‚РѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°
     /// </summary>
     public T FirstValue
     {
@@ -127,8 +127,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для FirstValue
-    /// Только для чтения. Может использоваться в валидаторах.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ FirstValue
+    /// РўРѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ. РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РІР°Р»РёРґР°С‚РѕСЂР°С….
     /// </summary>
     public DepValue<T> FirstValueEx
     {
@@ -146,7 +146,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вход и выход: Последнее значение диапазона с поддержкой полуоткрытых диапазонов
+    /// Р’С…РѕРґ Рё РІС‹С…РѕРґ: РџРѕСЃР»РµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ РґРёР°РїР°Р·РѕРЅР° СЃ РїРѕРґРґРµСЂР¶РєРѕР№ РїРѕР»СѓРѕС‚РєСЂС‹С‚С‹С… РґРёР°РїР°Р·РѕРЅРѕРІ
     /// </summary>
     public T? NLastValue
     {
@@ -163,8 +163,8 @@ namespace FreeLibSet.Forms
     private T? _NLastValue;
 
     /// <summary>
-    /// Управляемое свойство для NLastValue
-    /// Только для чтения. Может использоваться в валидаторах.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ NLastValue
+    /// РўРѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ. РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РІР°Р»РёРґР°С‚РѕСЂР°С….
     /// </summary>
     public DepValue<T?> NLastValueEx
     {
@@ -181,7 +181,7 @@ namespace FreeLibSet.Forms
     private DepOutput<T?> _NLastValueEx;
 
     /// <summary>
-    /// Вход и выход: Последнее значение диапазона для закрытого интервала
+    /// Р’С…РѕРґ Рё РІС‹С…РѕРґ: РџРѕСЃР»РµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ РґРёР°РїР°Р·РѕРЅР° РґР»СЏ Р·Р°РєСЂС‹С‚РѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°
     /// </summary>
     public T LastValue
     {
@@ -190,8 +190,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для NLastValue
-    /// Только для чтения. Может использоваться в валидаторах.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ NLastValue
+    /// РўРѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ. РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РІР°Р»РёРґР°С‚РѕСЂР°С….
     /// </summary>
     public DepValue<T> LastValueEx
     {
@@ -212,8 +212,8 @@ namespace FreeLibSet.Forms
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
-    /// Может использоваться в валидаторах.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±Рµ РґР°С‚С‹ РґРёР°РїР°Р·РѕРЅР° Р·Р°РїРѕР»РЅРµРЅС‹ (NFirstDate.HasValue=true Рё NLastDate.HasValue=true).
+    /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РІР°Р»РёРґР°С‚РѕСЂР°С….
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -239,15 +239,15 @@ namespace FreeLibSet.Forms
     #region CanBeEmpty
 
     /// <summary>
-    /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// Р РµР¶РёРј РїСЂРѕРІРµСЂРєРё РїСѓСЃС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// РњРѕР¶РЅРѕ Р»Рё РІРІРѕРґРёС‚СЊ РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ. Р”СѓР±Р»РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ CanBeEmptyMode.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false
     /// </summary>
     public bool CanBeEmpty
     {
@@ -260,7 +260,7 @@ namespace FreeLibSet.Forms
     #region Format
 
     /// <summary>
-    /// Строка формата для числа
+    /// РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚Р° РґР»СЏ С‡РёСЃР»Р°
     /// </summary>
     public string Format
     {
@@ -276,7 +276,7 @@ namespace FreeLibSet.Forms
     private string _Format;
 
     /// <summary>
-    /// Форматировщик для числового значения
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІС‰РёРє РґР»СЏ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
     /// </summary>
     [Browsable(false)]
     public IFormatProvider FormatProvider
@@ -296,8 +296,8 @@ namespace FreeLibSet.Forms
     private IFormatProvider _FormatProvider;
 
     /// <summary>
-    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
-    /// Установка значения свойства создает формат.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РґРµСЃСЏС‚РёС‡РЅС‹С… СЂР°Р·СЂСЏРґРѕРІ РґР»СЏ С‡РёСЃР»Р° СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№, РєРѕС‚РѕСЂРѕРµ РѕРїСЂРµРґРµР»РµРЅРѕ РІ СЃРІРѕР№СЃС‚РІРµ Format.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° СЃРѕР·РґР°РµС‚ С„РѕСЂРјР°С‚.
     /// </summary>
     public virtual int DecimalPlaces
     {
@@ -307,16 +307,16 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Диапазон допустимых значений
+    #region Р”РёР°РїР°Р·РѕРЅ РґРѕРїСѓСЃС‚РёРјС‹С… Р·РЅР°С‡РµРЅРёР№
 
     /// <summary>
-    /// Минимальное значение. 
+    /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ. 
     /// </summary>
     public T? Minimum { get { return _Minimum; } set { _Minimum = value; } }
     private T? _Minimum;
 
     /// <summary>
-    /// Максимальное значение. 
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ. 
     /// </summary>
     public T? Maximum { get { return _Maximum; } set { _Maximum = value; } }
     private T? _Maximum;
@@ -326,9 +326,9 @@ namespace FreeLibSet.Forms
     #region Increment
 
     /// <summary>
-    /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
-    /// Если null, то прокрутки нет.
-    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// РЎРїРµС†РёР°Р»СЊРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РїСЂРѕРєСЂСѓС‚РєРё Р·РЅР°С‡РµРЅРёСЏ СЃС‚СЂРµР»РѕС‡РєР°РјРё РІРІРµСЂС… Рё РІРЅРёР·.
+    /// Р•СЃР»Рё null, С‚Рѕ РїСЂРѕРєСЂСѓС‚РєРё РЅРµС‚.
+    /// РћР±С‹С‡РЅРѕ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРІРѕР№СЃС‚РІРѕ Increment, РµСЃР»Рё РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРїРµС†РёР°Р»СЊРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РїСЂРѕРєСЂСѓС‚РєРё
     /// </summary>
     public IUpDownHandler<T?> UpDownHandler
     {
@@ -338,10 +338,10 @@ namespace FreeLibSet.Forms
     private IUpDownHandler<T?> _UpDownHandler;
 
     /// <summary>
-    /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
-    /// стрелочек вверх/вниз или колесиком мыши.
-    /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
-    /// Это свойство дублирует UpDownHandler
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ (РѕР±С‹С‡РЅРѕ, 1), С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РІ РїРѕР»Рµ РјРѕР¶РЅРѕ РїСЂРѕРєСЂСѓС‡РёРІР°С‚СЊ СЃ РїРѕРјРѕС‰СЊСЋ
+    /// СЃС‚СЂРµР»РѕС‡РµРє РІРІРµСЂС…/РІРЅРёР· РёР»Рё РєРѕР»РµСЃРёРєРѕРј РјС‹С€Рё.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СЂР°РІРЅРѕ 0 (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ С‡РёСЃР»Рѕ РјРѕР¶РЅРѕ РІРІРѕРґРёС‚СЊ С‚РѕР»СЊРєРѕ РІСЂСѓС‡РЅСѓСЋ.
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РґСѓР±Р»РёСЂСѓРµС‚ UpDownHandler
     /// </summary>
     public T Increment
     {
@@ -359,7 +359,7 @@ namespace FreeLibSet.Forms
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw new ArgumentOutOfRangeException("value", value, "Р—РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РёР»Рё СЂР°РІРЅРѕ 0");
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -372,12 +372,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Вывод диалога
+    #region Р’С‹РІРѕРґ РґРёР°Р»РѕРіР°
 
     /// <summary>
-    /// Показ блока диалога.
+    /// РџРѕРєР°Р· Р±Р»РѕРєР° РґРёР°Р»РѕРіР°.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел корректные значения</returns>
+    /// <returns>Ok, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІРІРµР» РєРѕСЂСЂРµРєС‚РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ</returns>
     public override DialogResult ShowDialog()
     {
       NumRangeForm form = new NumRangeForm();
@@ -390,7 +390,7 @@ namespace FreeLibSet.Forms
       p.Owner = this;
       p.lblRange = form.lblRange;
 
-      #region Создание управляющих элементов
+      #region РЎРѕР·РґР°РЅРёРµ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ
 
       p.efpFirstValue = CreateControlProvider(form.FormProvider);
       p.efpFirstValue.Control.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
@@ -470,7 +470,7 @@ namespace FreeLibSet.Forms
     private class EFPPack/*<T>
         where T : struct, IFormattable, IComparable<T>*/
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public BaseNumRangeDialog<T> Owner;
 
@@ -482,7 +482,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Проверка
+      #region РџСЂРѕРІРµСЂРєР°
 
       public void efpAnyValue_Validating(object sender, UIValidatingEventArgs args)
       {
@@ -502,7 +502,7 @@ namespace FreeLibSet.Forms
         {
           if (efpFirstValue.Value.CompareTo(efpLastValue.Value) > 0)
           {
-            args.SetError("Минимальное значение больше максимального");
+            args.SetError("РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Р±РѕР»СЊС€Рµ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ");
             return;
           }
         }
@@ -514,7 +514,7 @@ namespace FreeLibSet.Forms
       private void InitLblRange(UIValidatingEventArgs args)
       {
         if (efpFirstValue.ValidateState == UIValidateState.Error || efpLastValue.ValidateState == UIValidateState.Error)
-          lblRange.Text = "Ошибка";
+          lblRange.Text = "РћС€РёР±РєР°";
         else
         {
           T? v1 = efpFirstValue.NValue;
@@ -527,17 +527,17 @@ namespace FreeLibSet.Forms
               lblRange.Text = v1.Value.ToString(efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider) + " - " + v2.Value.ToString(efpLastValue.Control.Format, efpLastValue.Control.FormatProvider);
           }
           else if (v1.HasValue)
-            lblRange.Text = "От " + v1.Value.ToString(efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider);
+            lblRange.Text = "РћС‚ " + v1.Value.ToString(efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider);
           else if (v2.HasValue)
-            lblRange.Text = "До " + v2.Value.ToString(efpLastValue.Control.Format, efpLastValue.Control.FormatProvider);
+            lblRange.Text = "Р”Рѕ " + v2.Value.ToString(efpLastValue.Control.Format, efpLastValue.Control.FormatProvider);
           else
-            lblRange.Text = "Диапазон не задан";
+            lblRange.Text = "Р”РёР°РїР°Р·РѕРЅ РЅРµ Р·Р°РґР°РЅ";
         }
       }
 
       #endregion
 
-      #region Обработчик для кнопки "="
+      #region РћР±СЂР°Р±РѕС‚С‡РёРє РґР»СЏ РєРЅРѕРїРєРё "="
 
       public void efp2eq1_Click(object sender, EventArgs args)
       {
@@ -549,71 +549,71 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Абстрактные методы
+    #region РђР±СЃС‚СЂР°РєС‚РЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает управляющий элемент и провайдер для него
+    /// РЎРѕР·РґР°РµС‚ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РЅРµРіРѕ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <returns>Провайдер управляющего элемента</returns>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <returns>РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</returns>
     protected abstract EFPNumEditBoxBase<T> CreateControlProvider(EFPBaseProvider baseProvider);
 
     /// <summary>
-    /// Записывает значение в секцию конфигурации
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="name">Имя для параметра</param>
-    /// <param name="value">Значение</param>
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
     protected abstract void WriteConfigValue(string name, T? value);
 
     /// <summary>
-    /// Читает значение из секции конфигурации
+    /// Р§РёС‚Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="name">Имя для параметра</param>
-    /// <returns>Значение</returns>
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     protected abstract T? ReadConfigValue(string name);
 
     #endregion
   }
 
   /// <summary>
-  /// Диалог для ввода диапазона целых чисел
+  /// Р”РёР°Р»РѕРі РґР»СЏ РІРІРѕРґР° РґРёР°РїР°Р·РѕРЅР° С†РµР»С‹С… С‡РёСЃРµР»
   /// </summary>
   public sealed class IntRangeDialog : BaseNumRangeDialog<Int32>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает управляющий элемент и провайдер для него
+    /// РЎРѕР·РґР°РµС‚ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РЅРµРіРѕ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <returns>Провайдер управляющего элемента</returns>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <returns>РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</returns>
     protected override EFPNumEditBoxBase<int> CreateControlProvider(EFPBaseProvider baseProvider)
     {
       return new EFPIntEditBox(baseProvider, new IntEditBox());
     }
 
     /// <summary>
-    /// Записывает значение в секцию конфигурации
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="name">Имя для параметра</param>
-    /// <param name="value">Значение</param>
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
     protected override void WriteConfigValue(string name, int? value)
     {
       ConfigPart.SetNullableInt(name, value);
     }
 
     /// <summary>
-    /// Читает значение из секции конфигурации
-    /// <param name="name">Имя для параметра</param>
+    /// Р§РёС‚Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
     /// </summary>
-    /// <returns>Значение</returns>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     protected override int? ReadConfigValue(string name)
     {
       return ConfigPart.GetNullableInt(name);
     }
 
     /// <summary>
-    /// Возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override int DecimalPlaces
@@ -626,37 +626,37 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог для ввода диапазона чисел с плавающей точкой
+  /// Р”РёР°Р»РѕРі РґР»СЏ РІРІРѕРґР° РґРёР°РїР°Р·РѕРЅР° С‡РёСЃРµР» СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№
   /// </summary>
   public sealed class SingleRangeDialog : BaseNumRangeDialog<Single>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает управляющий элемент и провайдер для него
+    /// РЎРѕР·РґР°РµС‚ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РЅРµРіРѕ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <returns>Провайдер управляющего элемента</returns>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <returns>РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</returns>
     protected override EFPNumEditBoxBase<float> CreateControlProvider(EFPBaseProvider baseProvider)
     {
       return new EFPSingleEditBox(baseProvider, new SingleEditBox());
     }
 
     /// <summary>
-    /// Записывает значение в секцию конфигурации
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="name">Имя для параметра</param>
-    /// <param name="value">Значение</param>
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
     protected override void WriteConfigValue(string name, float? value)
     {
       ConfigPart.SetNullableSingle(name, value);
     }
 
     /// <summary>
-    /// Читает значение из секции конфигурации
-    /// <param name="name">Имя для параметра</param>
+    /// Р§РёС‚Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
     /// </summary>
-    /// <returns>Значение</returns>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     protected override float? ReadConfigValue(string name)
     {
       return ConfigPart.GetNullableSingle(name);
@@ -666,37 +666,37 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог для ввода диапазона чисел с плавающей точкой
+  /// Р”РёР°Р»РѕРі РґР»СЏ РІРІРѕРґР° РґРёР°РїР°Р·РѕРЅР° С‡РёСЃРµР» СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№
   /// </summary>
   public sealed class DoubleRangeDialog : BaseNumRangeDialog<Double>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает управляющий элемент и провайдер для него
+    /// РЎРѕР·РґР°РµС‚ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РЅРµРіРѕ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <returns>Провайдер управляющего элемента</returns>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <returns>РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</returns>
     protected override EFPNumEditBoxBase<double> CreateControlProvider(EFPBaseProvider baseProvider)
     {
       return new EFPDoubleEditBox(baseProvider, new DoubleEditBox());
     }
 
     /// <summary>
-    /// Записывает значение в секцию конфигурации
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="name">Имя для параметра</param>
-    /// <param name="value">Значение</param>
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
     protected override void WriteConfigValue(string name, double? value)
     {
       ConfigPart.SetNullableDouble(name, value);
     }
 
     /// <summary>
-    /// Читает значение из секции конфигурации
-    /// <param name="name">Имя для параметра</param>
+    /// Р§РёС‚Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
     /// </summary>
-    /// <returns>Значение</returns>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     protected override double? ReadConfigValue(string name)
     {
       return ConfigPart.GetNullableDouble(name);
@@ -706,37 +706,37 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог для ввода диапазона чисел с плавающей точкой
+  /// Р”РёР°Р»РѕРі РґР»СЏ РІРІРѕРґР° РґРёР°РїР°Р·РѕРЅР° С‡РёСЃРµР» СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№
   /// </summary>
   public sealed class DecimalRangeDialog : BaseNumRangeDialog<Decimal>
   {
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает управляющий элемент и провайдер для него
+    /// РЎРѕР·РґР°РµС‚ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РЅРµРіРѕ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <returns>Провайдер управляющего элемента</returns>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <returns>РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</returns>
     protected override EFPNumEditBoxBase<decimal> CreateControlProvider(EFPBaseProvider baseProvider)
     {
       return new EFPDecimalEditBox(baseProvider, new DecimalEditBox());
     }
 
     /// <summary>
-    /// Записывает значение в секцию конфигурации
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="name">Имя для параметра</param>
-    /// <param name="value">Значение</param>
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <param name="value">Р—РЅР°С‡РµРЅРёРµ</param>
     protected override void WriteConfigValue(string name, decimal? value)
     {
       ConfigPart.SetNullableDecimal(name, value);
     }
 
     /// <summary>
-    /// Читает значение из секции конфигурации
-    /// <param name="name">Имя для параметра</param>
+    /// Р§РёС‚Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+    /// <param name="name">РРјСЏ РґР»СЏ РїР°СЂР°РјРµС‚СЂР°</param>
     /// </summary>
-    /// <returns>Значение</returns>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     protected override decimal? ReadConfigValue(string name)
     {
       return ConfigPart.GetNullableDecimal(name);

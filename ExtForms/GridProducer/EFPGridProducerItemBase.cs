@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,15 +11,15 @@ namespace FreeLibSet.Forms
 {
 
   /// <summary>
-  /// Структура, содержащая информацию о строке EFPDataGridView или EFPDataTreeView,
-  /// которая используется для вызова событий объектов EFPGridProducer
+  /// РЎС‚СЂСѓРєС‚СѓСЂР°, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃС‚СЂРѕРєРµ EFPDataGridView РёР»Рё EFPDataTreeView,
+  /// РєРѕС‚РѕСЂР°СЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РІС‹Р·РѕРІР° СЃРѕР±С‹С‚РёР№ РѕР±СЉРµРєС‚РѕРІ EFPGridProducer
   /// </summary>
   public struct EFPDataViewRowInfo
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Заполняет структуру
+    /// Р—Р°РїРѕР»РЅСЏРµС‚ СЃС‚СЂСѓРєС‚СѓСЂСѓ
     /// </summary>
     /// <param name="controlProvider"></param>
     /// <param name="dataBoundItem"></param>
@@ -35,44 +35,44 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер табличного или иерархического просмотра
+    /// РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РёР»Рё РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public IEFPDataView ControlProvider { get { return _ControlProvider; } }
     private IEFPDataView _ControlProvider;
 
 
     /// <summary>
-    /// Объект, связанный с текущей строкой просмотра.
-    /// Обычно, это строка данных DataRow.
-    /// Используйте свойство Values или типизированные методы для извлечения данных
+    /// РћР±СЉРµРєС‚, СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕРєРѕР№ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РћР±С‹С‡РЅРѕ, СЌС‚Рѕ СЃС‚СЂРѕРєР° РґР°РЅРЅС‹С… DataRow.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃРІРѕР№СЃС‚РІРѕ Values РёР»Рё С‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РґР°РЅРЅС‹С…
     /// </summary>
     public object DataBoundItem { get { return _DataBoundItem; } }
     private object _DataBoundItem;
 
     /// <summary>
-    /// Интерфейс для извлечения значений полей из строки данных
+    /// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РїРѕР»РµР№ РёР· СЃС‚СЂРѕРєРё РґР°РЅРЅС‹С…
     /// </summary>
     public INamedValuesAccess Values { get { return _Values; } }
     private INamedValuesAccess _Values;
 
     /// <summary>
-    /// Индекс строки табличного просмотра
-    /// Для иерархического просмотра возвращает свойство TreeNodeAdv.Row
+    /// РРЅРґРµРєСЃ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
+    /// Р”Р»СЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ TreeNodeAdv.Row
     /// </summary>
     public int RowIndex { get { return _RowIndex; } }
     private int _RowIndex;
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает "RowIndex=XXX".
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "RowIndex=XXX".
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return "RowIndex=" + _RowIndex.ToString();
@@ -81,14 +81,14 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
-  #region Делегат
+  #region Р”РµР»РµРіР°С‚
 
   /// <summary>
-  /// Базовый класс для аргументов событий, связанных с EFPGridProducer.
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ СЃРѕР±С‹С‚РёР№, СЃРІСЏР·Р°РЅРЅС‹С… СЃ EFPGridProducer.
   /// </summary>
   public class EFPGridProducerBaseEventArgs : EventArgs
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPGridProducerBaseEventArgs(EFPGridProducerItemBase owner)
     {
@@ -101,13 +101,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private EFPGridProducerItemBase _Owner;
 
     /// <summary>
-    /// Список имен исходных столбцов.
-    /// Если столбец не является вычисляемым, то возвращает массив из одного элемента, содержащего условное имя столбца или всплывающей подсказки
+    /// РЎРїРёСЃРѕРє РёРјРµРЅ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ СѓСЃР»РѕРІРЅРѕРµ РёРјСЏ СЃС‚РѕР»Р±С†Р° РёР»Рё РІСЃРїР»С‹РІР°СЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё
     /// </summary>
     public string[] SourceColumnNames { get { return _SourceColumnNames; } }
     private string[] _SourceColumnNames;
@@ -116,168 +116,168 @@ namespace FreeLibSet.Forms
     private EFPDataViewRowInfo _RowInfo;
 
     /// <summary>
-    /// Провайдер табличного или иерархического просмотра
+    /// РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РёР»Рё РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public IEFPDataView ControlProvider { get { return _RowInfo.ControlProvider; } }
 
     /// <summary>
-    /// Объект, связанный с текущей строкой просмотра.
-    /// Обычно, это строка данных DataRow.
-    /// Используйте свойство Values или типизированные методы для извлечения данных
+    /// РћР±СЉРµРєС‚, СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕРєРѕР№ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РћР±С‹С‡РЅРѕ, СЌС‚Рѕ СЃС‚СЂРѕРєР° РґР°РЅРЅС‹С… DataRow.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃРІРѕР№СЃС‚РІРѕ Values РёР»Рё С‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ РґР°РЅРЅС‹С…
     /// </summary>
     public object DataBoundItem { get { return _RowInfo.DataBoundItem; } }
 
     /// <summary>
-    /// Интерфейс для извлечения значений полей из строки данных
+    /// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ РїРѕР»РµР№ РёР· СЃС‚СЂРѕРєРё РґР°РЅРЅС‹С…
     /// </summary>
     public INamedValuesAccess Values { get { return _RowInfo.Values; } }
 
     /// <summary>
-    /// Индекс строки табличного просмотра
-    /// Для иерархического просмотра возвращает свойство TreeNodeAdv.Row
+    /// РРЅРґРµРєСЃ СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
+    /// Р”Р»СЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ TreeNodeAdv.Row
     /// </summary>
     public int RowIndex { get { return _RowInfo.RowIndex; } }
 
     /// <summary>
-    /// Произвольные пользовательские данные, присоединенные к объекту
+    /// РџСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ, РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Рµ Рє РѕР±СЉРµРєС‚Сѓ
     /// </summary>
-    public object Tag { get { return _Owner.Tag; } } // нельзя использовать локальную копию
+    public object Tag { get { return _Owner.Tag; } } // РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р»РѕРєР°Р»СЊРЅСѓСЋ РєРѕРїРёСЋ
 
     #endregion
 
-    #region Методы форматированного доступа к полям строки по имени
+    #region РњРµС‚РѕРґС‹ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РґРѕСЃС‚СѓРїР° Рє РїРѕР»СЏРј СЃС‚СЂРѕРєРё РїРѕ РёРјРµРЅРё
 
     /// <summary>
-    /// Получить строковое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public string GetString(string columnName)
     {
       return DataTools.GetString(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public int GetInt(string columnName)
     {
       return DataTools.GetInt(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public long GetInt64(string columnName)
     {
       return DataTools.GetInt64(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public float GetSingle(string columnName)
     {
       return DataTools.GetSingle(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public double GetDouble(string columnName)
     {
       return DataTools.GetDouble(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public decimal GetDecimal(string columnName)
     {
       return DataTools.GetDecimal(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить значение логического поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ РїРѕР»СЏ.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public bool GetBool(string columnName)
     {
       return DataTools.GetBool(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается неинициализированная дата.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РґР°С‚Сѓ Рё/РёР»Рё РІСЂРµРјСЏ.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РЅРµРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅР°СЏ РґР°С‚Р°.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public DateTime GetDateTime(string columnName)
     {
       return DataTools.GetDateTime(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается null.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РґР°С‚Сѓ Рё/РёР»Рё РІСЂРµРјСЏ.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public DateTime? GetNullableDateTime(string columnName)
     {
       return DataTools.GetNullableDateTime(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить значение поля, содержащего интервал времени.
-    /// Если поле содержит DBNull, возвращается TimeSpan.Zero.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёРЅС‚РµСЂРІР°Р» РІСЂРµРјРµРЅРё.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ TimeSpan.Zero.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public TimeSpan GetTimeSpan(string columnName)
     {
       return DataTools.GetTimeSpan(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Получить значение поля типа Guid.
-    /// Если поле содержит DBNull, возвращается Guid.Empty.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ С‚РёРїР° Guid.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Guid.Empty.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public Guid GetGuid(string columnName)
     {
       return DataTools.GetGuid(Values.GetValue(columnName));
     }
 
     /// <summary>
-    /// Возвращает true, если поле содержит значение null или DBNull.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёРµ null РёР»Рё DBNull.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Признак пустого значения</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>РџСЂРёР·РЅР°Рє РїСѓСЃС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</returns>
     public bool IsNull(string columnName)
     {
       object v = Values.GetValue(columnName);
@@ -285,12 +285,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить значение перечислимого типа.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РёРјРѕРіРѕ С‚РёРїР°.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public T GetEnum<T>(string columnName)
       where T : struct
     {
@@ -299,140 +299,140 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Методы форматированного доступа по индексу исходного столбца
+    #region РњРµС‚РѕРґС‹ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РґРѕСЃС‚СѓРїР° РїРѕ РёРЅРґРµРєСЃСѓ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°
 
     /// <summary>
-    /// Получить строковое значение поля.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public string GetString(int sourceColumnIndex)
     {
       return DataTools.GetString(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public int GetInt(int sourceColumnIndex)
     {
       return DataTools.GetInt(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public long GetInt64(int sourceColumnIndex)
     {
       return DataTools.GetInt64(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public float GetSingle(int sourceColumnIndex)
     {
       return DataTools.GetSingle(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public double GetDouble(int sourceColumnIndex)
     {
       return DataTools.GetDouble(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить числовое значение поля.
+    /// РџРѕР»СѓС‡РёС‚СЊ С‡РёСЃР»РѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public decimal GetDecimal(int sourceColumnIndex)
     {
       return DataTools.GetDecimal(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить значение логического поля.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public bool GetBool(int sourceColumnIndex)
     {
       return DataTools.GetBool(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается неинициализированная дата.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РґР°С‚Сѓ Рё/РёР»Рё РІСЂРµРјСЏ.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РЅРµРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅР°СЏ РґР°С‚Р°.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public DateTime GetDateTime(int sourceColumnIndex)
     {
       return DataTools.GetDateTime(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается null.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РґР°С‚Сѓ Рё/РёР»Рё РІСЂРµРјСЏ.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public DateTime? GetNullableDateTime(int sourceColumnIndex)
     {
       return DataTools.GetNullableDateTime(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить значение поля, содержащего интервал времени.
-    /// Если поле содержит DBNull, возвращается TimeSpan.Zero.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёРЅС‚РµСЂРІР°Р» РІСЂРµРјРµРЅРё.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ TimeSpan.Zero.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public TimeSpan GetTimeSpan(int sourceColumnIndex)
     {
       return DataTools.GetTimeSpan(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Получить значение поля типа Guid.
-    /// Если поле содержит DBNull, возвращается Guid.Empty.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ С‚РёРїР° Guid.
+    /// Р•СЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ DBNull, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Guid.Empty.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public Guid GetGuid(int sourceColumnIndex)
     {
       return DataTools.GetGuid(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
-    /// Возвращает true, если поле содержит значение null или DBNull.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶РёС‚ Р·РЅР°С‡РµРЅРёРµ null РёР»Рё DBNull.
+    /// РРјСЏ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІ СЃРїРёСЃРєРµ РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames, Р·Р°РґР°РЅРЅС‹С… РїСЂРё РѕР±СЉСЏРІР»РµРЅРёРё РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Признак пустого значения</returns>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>РџСЂРёР·РЅР°Рє РїСѓСЃС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</returns>
     public bool IsNull(int sourceColumnIndex)
     {
       object v = Values.GetValue(SourceColumnNames[sourceColumnIndex]);
@@ -440,12 +440,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить значение перечислимого типа.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµС‡РёСЃР»РёРјРѕРіРѕ С‚РёРїР°.
     /// </summary>
-    /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
-    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
-    /// <returns>Значение</returns>
+    /// <typeparam name="T">РўРёРї РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ</typeparam>
+    /// <param name="sourceColumnIndex">РРЅРґРµРєСЃ РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ РјР°СЃСЃРёРІРµ SourceColumnNames.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, С‚Рѕ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёРµ 0, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public T GetEnum<T>(int sourceColumnIndex)
       where T : struct
     {
@@ -455,20 +455,20 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
-  #region Перечисление EFPGridProducerValueReason
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ EFPGridProducerValueReason
 
   /// <summary>
-  /// Причина вызова события EFPGridProducerColumn.ValueNeeded
+  /// РџСЂРёС‡РёРЅР° РІС‹Р·РѕРІР° СЃРѕР±С‹С‚РёСЏ EFPGridProducerColumn.ValueNeeded
   /// </summary>
   public enum EFPGridProducerValueReason
   {
     /// <summary>
-    /// Требуется значение ячейки
+    /// РўСЂРµР±СѓРµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ СЏС‡РµР№РєРё
     /// </summary>
     Value,
 
     /// <summary>
-    /// Требуется всплывающая подсказка
+    /// РўСЂРµР±СѓРµС‚СЃСЏ РІСЃРїР»С‹РІР°СЋС‰Р°СЏ РїРѕРґСЃРєР°Р·РєР°
     /// </summary>
     ToolTipText
   }
@@ -476,11 +476,11 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Аргументы событий EFPGridProducerColumn и EFPGridProducerToolTip.ValueNeeded
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёР№ EFPGridProducerColumn Рё EFPGridProducerToolTip.ValueNeeded
   /// </summary>
   public class EFPGridProducerValueNeededEventArgs : EFPGridProducerBaseEventArgs
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPGridProducerValueNeededEventArgs(EFPGridProducerItemBase owner)
       : base(owner)
@@ -489,11 +489,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Причина вызова события EFPGridProducerColumn.ValueNeeded.
-    /// Для события EFPGridProducerToolTip.ValueNeeded всегда возвращает ToolTipText
+    /// РџСЂРёС‡РёРЅР° РІС‹Р·РѕРІР° СЃРѕР±С‹С‚РёСЏ EFPGridProducerColumn.ValueNeeded.
+    /// Р”Р»СЏ СЃРѕР±С‹С‚РёСЏ EFPGridProducerToolTip.ValueNeeded РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ ToolTipText
     /// </summary>
     public EFPGridProducerValueReason Reason
     {
@@ -503,7 +503,7 @@ namespace FreeLibSet.Forms
     private EFPGridProducerValueReason _Reason;
 
     /// <summary>
-    /// Сюда должно быть записано вычисленное значение
+    /// РЎСЋРґР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРёСЃР°РЅРѕ РІС‹С‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     public object Value
     {
@@ -513,7 +513,7 @@ namespace FreeLibSet.Forms
     private object _Value;
 
     /// <summary>
-    /// Текст всплывающей подсказки
+    /// РўРµРєСЃС‚ РІСЃРїР»С‹РІР°СЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё
     /// </summary>
     public string ToolTipText
     {
@@ -526,21 +526,21 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события GridProducerUserColumn.ValueNeeded
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ GridProducerUserColumn.ValueNeeded
   /// </summary>
-  /// <param name="sender">Описатель столбца GridProducerColumn</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РћРїРёСЃР°С‚РµР»СЊ СЃС‚РѕР»Р±С†Р° GridProducerColumn</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void EFPGridProducerValueNeededEventHandler(object sender,
     EFPGridProducerValueNeededEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Базовый класс для EFPGridProducerColumn и EFPGridProducerToolTip
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ EFPGridProducerColumn Рё EFPGridProducerToolTip
   /// </summary>
   public abstract class EFPGridProducerItemBase : IObjectWithCode
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPGridProducerItemBase(string name, string[] sourceColumnNames)
     {
@@ -548,7 +548,7 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(name))
         throw new ArgumentNullException("name");
       if (name[0] >= '0' && name[0] <= '9')
-        throw new ArgumentException("Имя не может начинаться с цифры, т.к. это несовместимо с сохранением настройки просмотра", "name");
+        throw new ArgumentException("РРјСЏ РЅРµ РјРѕР¶РµС‚ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ С†РёС„СЂС‹, С‚.Рє. СЌС‚Рѕ РЅРµСЃРѕРІРјРµСЃС‚РёРјРѕ СЃ СЃРѕС…СЂР°РЅРµРЅРёРµРј РЅР°СЃС‚СЂРѕР№РєРё РїСЂРѕСЃРјРѕС‚СЂР°", "name");
 
       EFPApp.CheckMainThread();
 #endif
@@ -557,22 +557,22 @@ namespace FreeLibSet.Forms
 
       if (sourceColumnNames != null)
       {
-        // может быть пустой массив
+        // РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ
         for (int i = 0; i < sourceColumnNames.Length; i++)
         {
           if (String.IsNullOrEmpty(sourceColumnNames[i]))
-            throw new ArgumentException("SourceColumnNames не может содержать пустые элементы", "sourceColumnNames");
+            throw new ArgumentException("SourceColumnNames РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РїСѓСЃС‚С‹Рµ СЌР»РµРјРµРЅС‚С‹", "sourceColumnNames");
           if (sourceColumnNames[i].IndexOf(',') >= 0)
-            throw new ArgumentException("Элементы в SourceColumnNames не могут содержать запятые", "sourceColumnNames");
+            throw new ArgumentException("Р­Р»РµРјРµРЅС‚С‹ РІ SourceColumnNames РЅРµ РјРѕРіСѓС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ Р·Р°РїСЏС‚С‹Рµ", "sourceColumnNames");
 
           // 21.05.2021
           if (String.Equals(name, sourceColumnNames[i], StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("Элемент в SourceColumnNames совпадает с именем вычисляемого столбца/подсказки \""+name+"\"", "sourceColumnNames");
+            throw new ArgumentException("Р­Р»РµРјРµРЅС‚ РІ SourceColumnNames СЃРѕРІРїР°РґР°РµС‚ СЃ РёРјРµРЅРµРј РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°/РїРѕРґСЃРєР°Р·РєРё \""+name+"\"", "sourceColumnNames");
 
           for (int j = 0; j < i; j++)
           {
             if (String.Equals(sourceColumnNames[i], sourceColumnNames[j], StringComparison.OrdinalIgnoreCase))
-              throw new ArgumentException("Два одинаковых элемента \"" + sourceColumnNames[i] + "\" в SourceColumnNames", "sourceColumnNames");
+              throw new ArgumentException("Р”РІР° РѕРґРёРЅР°РєРѕРІС‹С… СЌР»РµРјРµРЅС‚Р° \"" + sourceColumnNames[i] + "\" РІ SourceColumnNames", "sourceColumnNames");
           }
         }
 
@@ -583,12 +583,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Основные свойства
+    #region РћСЃРЅРѕРІРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Условное имя.
-    /// Для простого, невычисляемого столбца/подсказки равно имени поля
-    /// Задается в конструкторе.
+    /// РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ.
+    /// Р”Р»СЏ РїСЂРѕСЃС‚РѕРіРѕ, РЅРµРІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°/РїРѕРґСЃРєР°Р·РєРё СЂР°РІРЅРѕ РёРјРµРЅРё РїРѕР»СЏ
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public string Name { get { return _Name; } }
     private string _Name;
@@ -596,7 +596,7 @@ namespace FreeLibSet.Forms
     string IObjectWithCode.Code { get { return _Name; } }
 
     /// <summary>
-    /// Возвращает свойство Name
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ Name
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -605,10 +605,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Имя для отображения в настройке просмотра. Если не задано в явном
-    /// виде, то возвращает свойство HeaderText или ColumnName (если HeaderText пустой).
-    /// Также свойство используется для отображения всплывающей подсказки при 
-    /// наведении курсора на заголовок столбца, если явно не определено свойство HeaderToolTipText
+    /// РРјСЏ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІ РЅР°СЃС‚СЂРѕР№РєРµ РїСЂРѕСЃРјРѕС‚СЂР°. Р•СЃР»Рё РЅРµ Р·Р°РґР°РЅРѕ РІ СЏРІРЅРѕРј
+    /// РІРёРґРµ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ HeaderText РёР»Рё ColumnName (РµСЃР»Рё HeaderText РїСѓСЃС‚РѕР№).
+    /// РўР°РєР¶Рµ СЃРІРѕР№СЃС‚РІРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЃРїР»С‹РІР°СЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё РїСЂРё 
+    /// РЅР°РІРµРґРµРЅРёРё РєСѓСЂСЃРѕСЂР° РЅР° Р·Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°, РµСЃР»Рё СЏРІРЅРѕ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ HeaderToolTipText
     /// </summary>
     public virtual string DisplayName
     {
@@ -627,7 +627,7 @@ namespace FreeLibSet.Forms
     private string _DisplayName;
 
     /// <summary>
-    /// Переопределяется для EFPGridProducerColumn
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РґР»СЏ EFPGridProducerColumn
     /// </summary>
     /// <returns></returns>
     protected virtual string GetDefaultDisplayName()
@@ -636,7 +636,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Произвольные пользовательские данные
+    /// РџСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ
     /// </summary>
     public object Tag { get { return _Tag; } set { _Tag = value; } }
     private object _Tag;
@@ -646,24 +646,24 @@ namespace FreeLibSet.Forms
     #region SourceColumnNames
 
     /// <summary>
-    /// Возвращает true, если столбец/подсказка является вычисляемым, а не извлекает данные из источника данных (таблицы)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃС‚РѕР»Р±РµС†/РїРѕРґСЃРєР°Р·РєР° СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, Р° РЅРµ РёР·РІР»РµРєР°РµС‚ РґР°РЅРЅС‹Рµ РёР· РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С… (С‚Р°Р±Р»РёС†С‹)
     /// </summary>
     public bool IsCalculated { get { return _SourceColumnNames != null; } }
 
     /// <summary>
-    /// Исходные столбцы для вычисляемого столбца.
-    /// Если столбец извлекает данные из источника, то свойство равно null.
-    /// Если столбец не нуждается в данных исходных столбцов, то свойство равно пустому массиву строк.
+    /// РСЃС…РѕРґРЅС‹Рµ СЃС‚РѕР»Р±С†С‹ РґР»СЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РёР·РІР»РµРєР°РµС‚ РґР°РЅРЅС‹Рµ РёР· РёСЃС‚РѕС‡РЅРёРєР°, С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СЂР°РІРЅРѕ null.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ РЅСѓР¶РґР°РµС‚СЃСЏ РІ РґР°РЅРЅС‹С… РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ, С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СЂР°РІРЅРѕ РїСѓСЃС‚РѕРјСѓ РјР°СЃСЃРёРІСѓ СЃС‚СЂРѕРє.
     /// </summary>
     public string[] SourceColumnNames { get { return _SourceColumnNames; } }
     private string[] _SourceColumnNames;
 
     /// <summary>
-    /// Получить имена полей, которые должны быть в наборе данных.
-    /// Если столбец является вычисляемым, в список добавляются имена исходных столбцов SourceColumnNames.
-    /// Иначе добавляется имя Name для невычисляемого столбца/подсказки
+    /// РџРѕР»СѓС‡РёС‚СЊ РёРјРµРЅР° РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ РЅР°Р±РѕСЂРµ РґР°РЅРЅС‹С….
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, РІ СЃРїРёСЃРѕРє РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РёРјРµРЅР° РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames.
+    /// РРЅР°С‡Рµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РёРјСЏ Name РґР»СЏ РЅРµРІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°/РїРѕРґСЃРєР°Р·РєРё
     /// </summary>
-    /// <param name="columns">Список для добавления имен полей</param>
+    /// <param name="columns">РЎРїРёСЃРѕРє РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РёРјРµРЅ РїРѕР»РµР№</param>
     public virtual void GetColumnNames(IList<string> columns)
     {
 #if DEBUG
@@ -682,17 +682,17 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Событие ValueNeeded
+    #region РЎРѕР±С‹С‚РёРµ ValueNeeded
 
     /// <summary>
-    /// Обработчик вызывается для вычисляемого столбца каждый раз, когда требуется получить значение.
-    /// Для невычисляемого столбца не вызывается
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РІС‹Р·С‹РІР°РµС‚СЃСЏ РґР»СЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° РєР°Р¶РґС‹Р№ СЂР°Р·, РєРѕРіРґР° С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ.
+    /// Р”Р»СЏ РЅРµРІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ
     /// </summary>
     public event EFPGridProducerValueNeededEventHandler ValueNeeded;
 
     /// <summary>
-    /// Получение значения вычисляемого столбца/подсказки.
-    /// Если столбец/подсказка не является вычисляемым, метод не вызывается
+    /// РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°/РїРѕРґСЃРєР°Р·РєРё.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС†/РїРѕРґСЃРєР°Р·РєР° РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, РјРµС‚РѕРґ РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ
     /// </summary>
     /// <param name="args"></param>
     protected virtual void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)
@@ -702,7 +702,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Чтобы каждый раз не создавать новый объект аргументов
+    /// Р§С‚РѕР±С‹ РєР°Р¶РґС‹Р№ СЂР°Р· РЅРµ СЃРѕР·РґР°РІР°С‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ Р°СЂРіСѓРјРµРЅС‚РѕРІ
     /// </summary>
     private EFPGridProducerValueNeededEventArgs _ValueNeededArgs;
 
@@ -721,7 +721,7 @@ namespace FreeLibSet.Forms
         _ValueNeededArgs.Value = null;
         _ValueNeededArgs.ToolTipText = null;
         OnValueNeeded(_ValueNeededArgs);
-        _ValueNeededArgs.RowInfo = new EFPDataViewRowInfo(); // освобождаем память
+        _ValueNeededArgs.RowInfo = new EFPDataViewRowInfo(); // РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
         value = _ValueNeededArgs.Value;
         toolTipText = _ValueNeededArgs.ToolTipText;
       }
@@ -736,10 +736,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Пустое значение.
-    /// Используется методом GetValue(), когда значение поля или значение, вычисленное обработчиком события ValueNeeded,
-    /// равно null или DBNull.
-    /// По умолчанию - null.
+    /// РџСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјРµС‚РѕРґРѕРј GetValue(), РєРѕРіРґР° Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РёР»Рё Р·РЅР°С‡РµРЅРёРµ, РІС‹С‡РёСЃР»РµРЅРЅРѕРµ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј СЃРѕР±С‹С‚РёСЏ ValueNeeded,
+    /// СЂР°РІРЅРѕ null РёР»Рё DBNull.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - null.
     /// </summary>
     public object EmptyValue
     {

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using FreeLibSet.Forms;
@@ -38,7 +38,7 @@ namespace EFPCommandItemsDemo
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
 
@@ -51,7 +51,7 @@ namespace EFPCommandItemsDemo
       ciNew.Click += new EventHandler(ciNew_Click);
 
       EFPCommandItem ciWizard = new EFPCommandItem("File", "WizardTest");
-      ciWizard.MenuText = "Тест запуска Wizard";
+      ciWizard.MenuText = "РўРµСЃС‚ Р·Р°РїСѓСЃРєР° Wizard";
       ciWizard.ImageKey = "ArrowRight";
       ciWizard.ShortCut = Keys.F4;
       ciWizard.Click += new EventHandler(ciWizard_Click);

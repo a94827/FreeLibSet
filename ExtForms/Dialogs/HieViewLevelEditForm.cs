@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -14,19 +14,19 @@ using FreeLibSet.Config;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Форма настройки уровней.
-  /// Может использоваться как форма диалога или встраивать панель MainPanel в 
-  /// окно параметров отчета
-  /// Используется HieViewLevelConfigEditHandler
+  /// Р¤РѕСЂРјР° РЅР°СЃС‚СЂРѕР№РєРё СѓСЂРѕРІРЅРµР№.
+  /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РєР°Рє С„РѕСЂРјР° РґРёР°Р»РѕРіР° РёР»Рё РІСЃС‚СЂР°РёРІР°С‚СЊ РїР°РЅРµР»СЊ MainPanel РІ 
+  /// РѕРєРЅРѕ РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚С‡РµС‚Р°
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ HieViewLevelConfigEditHandler
   /// </summary>
   internal partial class HieViewLevelEditForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public HieViewLevelEditForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Детализация");
+      Icon = EFPApp.MainImageIcon("Р”РµС‚Р°Р»РёР·Р°С†РёСЏ");
     }
 
     #endregion
@@ -35,34 +35,34 @@ namespace FreeLibSet.Forms
 #if XXX
 
   /// <summary>
-  /// Редактор уровней детализации (флажки использования и порядок уровней)
-  /// с помощью табличного просмотра.
-  /// Редактор используется в блоках диалога параметров иерархического отчета.
-  /// В конструкторе указывается ссылка на пустую панель для размещения элементов редактора
-  /// и BaseProvider.
-  /// Затем устанавливается свойство HieConfig, которое ссылается на объект,
-  /// содержащий текущий список уровней. При этом, в табличный просмотр добавляются строки.
-  /// Когда пользователь изменяет выбранность строк или переставляет уровни,
-  /// изменение немедленно вносятся в присоединенный EFPHieViewConfig.
-  /// Если изменения в других частях диалога параметров отчета приводят к изменению
-  /// списка доступных уровней иерархии, то устанавливаются свойства объектов
-  /// HieViewLevel.Visible, Required и др. Затем должен быть вызван метод
-  /// ЭТОГО ОБЪЕКТА RefreshTable() для обновления строк табличного просмотра и
-  /// поля образца.
+  /// Р РµРґР°РєС‚РѕСЂ СѓСЂРѕРІРЅРµР№ РґРµС‚Р°Р»РёР·Р°С†РёРё (С„Р»Р°Р¶РєРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ Рё РїРѕСЂСЏРґРѕРє СѓСЂРѕРІРЅРµР№)
+  /// СЃ РїРѕРјРѕС‰СЊСЋ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+  /// Р РµРґР°РєС‚РѕСЂ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ Р±Р»РѕРєР°С… РґРёР°Р»РѕРіР° РїР°СЂР°РјРµС‚СЂРѕРІ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РѕС‚С‡РµС‚Р°.
+  /// Р’ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ СѓРєР°Р·С‹РІР°РµС‚СЃСЏ СЃСЃС‹Р»РєР° РЅР° РїСѓСЃС‚СѓСЋ РїР°РЅРµР»СЊ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ СЂРµРґР°РєС‚РѕСЂР°
+  /// Рё BaseProvider.
+  /// Р—Р°С‚РµРј СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ HieConfig, РєРѕС‚РѕСЂРѕРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ РЅР° РѕР±СЉРµРєС‚,
+  /// СЃРѕРґРµСЂР¶Р°С‰РёР№ С‚РµРєСѓС‰РёР№ СЃРїРёСЃРѕРє СѓСЂРѕРІРЅРµР№. РџСЂРё СЌС‚РѕРј, РІ С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ СЃС‚СЂРѕРєРё.
+  /// РљРѕРіРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РёР·РјРµРЅСЏРµС‚ РІС‹Р±СЂР°РЅРЅРѕСЃС‚СЊ СЃС‚СЂРѕРє РёР»Рё РїРµСЂРµСЃС‚Р°РІР»СЏРµС‚ СѓСЂРѕРІРЅРё,
+  /// РёР·РјРµРЅРµРЅРёРµ РЅРµРјРµРґР»РµРЅРЅРѕ РІРЅРѕСЃСЏС‚СЃСЏ РІ РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Р№ EFPHieViewConfig.
+  /// Р•СЃР»Рё РёР·РјРµРЅРµРЅРёСЏ РІ РґСЂСѓРіРёС… С‡Р°СЃС‚СЏС… РґРёР°Р»РѕРіР° РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚С‡РµС‚Р° РїСЂРёРІРѕРґСЏС‚ Рє РёР·РјРµРЅРµРЅРёСЋ
+  /// СЃРїРёСЃРєР° РґРѕСЃС‚СѓРїРЅС‹С… СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё, С‚Рѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°СЋС‚СЃСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚РѕРІ
+  /// HieViewLevel.Visible, Required Рё РґСЂ. Р—Р°С‚РµРј РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РІР°РЅ РјРµС‚РѕРґ
+  /// Р­РўРћР“Рћ РћР‘РЄР•РљРўРђ RefreshTable() РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃС‚СЂРѕРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° Рё
+  /// РїРѕР»СЏ РѕР±СЂР°Р·С†Р°.
   /// 
-  /// Если требуется нестандартный редактор уровней, его можно собрать из отдельных частей,
-  /// используя дочерние классы компонентов
+  /// Р•СЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ СЂРµРґР°РєС‚РѕСЂ СѓСЂРѕРІРЅРµР№, РµРіРѕ РјРѕР¶РЅРѕ СЃРѕР±СЂР°С‚СЊ РёР· РѕС‚РґРµР»СЊРЅС‹С… С‡Р°СЃС‚РµР№,
+  /// РёСЃРїРѕР»СЊР·СѓСЏ РґРѕС‡РµСЂРЅРёРµ РєР»Р°СЃСЃС‹ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
   /// </summary>
   public class EFPHieViewConfigEditor
   {
-    #region Табличный просмотр основного редактора
+    #region РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РѕСЃРЅРѕРІРЅРѕРіРѕ СЂРµРґР°РєС‚РѕСЂР°
 
     /// <summary>
-    /// Табличный просмотр для редактирования списка уровней
+    /// РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЃРїРёСЃРєР° СѓСЂРѕРІРЅРµР№
     /// </summary>
     public class EFPLevelGridView : EFPDataGridView
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public EFPLevelGridView(Control ParentControl, EFPBaseProvider BaseProvider)
         : base(BaseProvider, new DataGridView())
@@ -76,8 +76,8 @@ namespace FreeLibSet.Forms
 
         base.Control.AutoGenerateColumns = false;
         base.Columns.AddImage();
-        base.Columns.AddBool("Flag", true, "Флаг");
-        base.Columns.AddTextFill("Name", true, "Название", 100, 10);
+        base.Columns.AddBool("Flag", true, "Р¤Р»Р°Рі");
+        base.Columns.AddTextFill("Name", true, "РќР°Р·РІР°РЅРёРµ", 100, 10);
         base.Columns.AddInt("RowOrder", true, "RowOrder", 3);
         base.Columns.LastAdded.GridColumn.ReadOnly = true;
         base.DisableOrdering();
@@ -107,7 +107,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Обработчики
+      #region РћР±СЂР°Р±РѕС‚С‡РёРєРё
 
       private bool OrderRuleViolated;
 
@@ -118,14 +118,14 @@ namespace FreeLibSet.Forms
         DataRow Row = Args.DataRow;
         if (Row == null)
           return;
-        // !!! Не реализовано
+        // !!! РќРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ
         //if (DataTools.GetBool(Row, "RowOrderIsFixed"))
         //  Args.UserImage = EFPApp.MainImages.Images["Anchor"];
         if (DataTools.GetBool(Row, "FlagIsFixed"))
         {
           Args.Grayed = true;
           if (!DataTools.GetBool(Row, "Flag"))
-            Args.AddRowError("Этот уровень детализации является обязательным");
+            Args.AddRowError("Р­С‚РѕС‚ СѓСЂРѕРІРµРЅСЊ РґРµС‚Р°Р»РёР·Р°С†РёРё СЏРІР»СЏРµС‚СЃСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рј");
         }
 
         if (!Args.DataRow.IsNull("ViolatedOrderRuleIndex"))
@@ -133,7 +133,7 @@ namespace FreeLibSet.Forms
           int RuleIndex = DataTools.GetInt(Args.DataRow, "ViolatedOrderRuleIndex");
           EFPHieViewLevel lvl1 = HieConfig.AllLevels[HieConfig.OrderRules[RuleIndex].UpperLevelIndex];
           EFPHieViewLevel lvl2 = HieConfig.AllLevels[HieConfig.OrderRules[RuleIndex].LowerLevelIndex];
-          Args.AddRowWarning("Уровень \"" + lvl1.DisplayName + "\" должен идти перед уровнем \"" + lvl2.DisplayName + "\"");
+          Args.AddRowWarning("РЈСЂРѕРІРµРЅСЊ \"" + lvl1.DisplayName + "\" РґРѕР»Р¶РµРЅ РёРґС‚Рё РїРµСЂРµРґ СѓСЂРѕРІРЅРµРј \"" + lvl2.DisplayName + "\"");
           OrderRuleViolated = true;
         }
       }
@@ -155,9 +155,9 @@ namespace FreeLibSet.Forms
               Cfg = Name.Substring(p + 1);
               Name = Name.Substring(0, p);
             }
-            Args.ToolTipText = "Уровень: " + Name;
+            Args.ToolTipText = "РЈСЂРѕРІРµРЅСЊ: " + Name;
             if (Cfg != null)
-              Args.ToolTipText += Environment.NewLine+ + "Настройка: " + Cfg;
+              Args.ToolTipText += Environment.NewLine+ + "РќР°СЃС‚СЂРѕР№РєР°: " + Cfg;
             break;
           case 2:
             Args.IndentLevel = Args.RowIndex;
@@ -184,7 +184,7 @@ namespace FreeLibSet.Forms
         {
           if (FHieConfig.SelectedLevelCount == 0)
           {
-            Args.SetError("Должен быть выбран хотя бы один уровень иерархии");
+            Args.SetError("Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё");
             return;
           }
 
@@ -194,7 +194,7 @@ namespace FreeLibSet.Forms
             {
               if (!FHieConfig.GetSelected(FHieConfig.AllLevels[i].Name))
               {
-                Args.SetError("Уровень \"" + FHieConfig.AllLevels[i].DisplayName + "\" должен быть выбран");
+                Args.SetError("РЈСЂРѕРІРµРЅСЊ \"" + FHieConfig.AllLevels[i].DisplayName + "\" РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ");
                 return;
               }
             }
@@ -211,7 +211,7 @@ namespace FreeLibSet.Forms
         EFPHieViewLevel Level = HieConfig.AllLevels[LevelIndex];
         if (Level.ParamEditor == null)
         {
-          EFPApp.ShowTempMessage("Этот уровень иерархии не настраивается");
+          EFPApp.ShowTempMessage("Р­С‚РѕС‚ СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё РЅРµ РЅР°СЃС‚СЂР°РёРІР°РµС‚СЃСЏ");
           return;
         }
 
@@ -224,13 +224,13 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-  #region Свойство HieConfig
+  #region РЎРІРѕР№СЃС‚РІРѕ HieConfig
 
       /// <summary>
-      /// Присоединенная конфигурация уровней. Действия пользователя сразу приводят
-      /// к изменению ее свойств
-      /// При установке свойства выполняется присоединение источника данных
-      /// HieViewLevelConfig.View к табличному просмотру
+      /// РџСЂРёСЃРѕРµРґРёРЅРµРЅРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ СѓСЂРѕРІРЅРµР№. Р”РµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃСЂР°Р·Сѓ РїСЂРёРІРѕРґСЏС‚
+      /// Рє РёР·РјРµРЅРµРЅРёСЋ РµРµ СЃРІРѕР№СЃС‚РІ
+      /// РџСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С…
+      /// HieViewLevelConfig.View Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ
       /// </summary>
       public EFPHieViewConfig HieConfig
       {
@@ -256,10 +256,10 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Событие Changed
+  #region РЎРѕР±С‹С‚РёРµ Changed
 
       /// <summary>
-      /// Событие вызывается при изменении настройки
+      /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РёР·РјРµРЅРµРЅРёРё РЅР°СЃС‚СЂРѕР№РєРё
       /// </summary>
       public event EventHandler Changed;
 
@@ -274,14 +274,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-  #region Табличный просмотр примера
+  #region РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РїСЂРёРјРµСЂР°
 
     /// <summary>
-    /// Табличный просмотр примера
+    /// РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РїСЂРёРјРµСЂР°
     /// </summary>
     public class EFPSampleGridView : EFPDataGridView
     {
-  #region Конструктор примера
+  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїСЂРёРјРµСЂР°
 
       public EFPSampleGridView(Control ParentControl, EFPBaseProvider BaseProvider)
         : base(BaseProvider, new DataGridView())
@@ -290,9 +290,9 @@ namespace FreeLibSet.Forms
         ParentControl.Controls.Add(base.Control);
 
         SampleTable = new DataTable();
-        SampleTable.Columns.Add("Текст", typeof(string));
-        SampleTable.Columns.Add("Отступ", typeof(int));
-        SampleTable.Columns.Add("Уровень", typeof(int));
+        SampleTable.Columns.Add("РўРµРєСЃС‚", typeof(string));
+        SampleTable.Columns.Add("РћС‚СЃС‚СѓРї", typeof(int));
+        SampleTable.Columns.Add("РЈСЂРѕРІРµРЅСЊ", typeof(int));
 
         base.Control.ReadOnly = true;
         base.Control.ColumnHeadersVisible = false;
@@ -300,19 +300,19 @@ namespace FreeLibSet.Forms
         base.Control.MultiSelect = false;
         base.Control.AutoGenerateColumns = false;
 
-        base.Columns.AddTextFill("Текст", true, String.Empty, 100, 5);
+        base.Columns.AddTextFill("РўРµРєСЃС‚", true, String.Empty, 100, 5);
         base.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(SampleHandler_GetCellAttributes);
         base.HideSelection = true;
         base.ReadOnly = true;
         base.CanView = false;
 
-        // Команды меню не нужны
+        // РљРѕРјР°РЅРґС‹ РјРµРЅСЋ РЅРµ РЅСѓР¶РЅС‹
         // SampleHandler.SetCommandItems(null);
 
         base.Control.DataSource = SampleTable;
 
-        // Обновление примера выполняем по таймеру, т.к. события, приводящие к 
-        // обновлению, могут возникать много раз за одно реальное изменение
+        // РћР±РЅРѕРІР»РµРЅРёРµ РїСЂРёРјРµСЂР° РІС‹РїРѕР»РЅСЏРµРј РїРѕ С‚Р°Р№РјРµСЂСѓ, С‚.Рє. СЃРѕР±С‹С‚РёСЏ, РїСЂРёРІРѕРґСЏС‰РёРµ Рє 
+        // РѕР±РЅРѕРІР»РµРЅРёСЋ, РјРѕРіСѓС‚ РІРѕР·РЅРёРєР°С‚СЊ РјРЅРѕРіРѕ СЂР°Р· Р·Р° РѕРґРЅРѕ СЂРµР°Р»СЊРЅРѕРµ РёР·РјРµРЅРµРЅРёРµ
         SampleTimer = new Timer();
         SampleTimer.Interval = 100;
         SampleTimer.Tick += new EventHandler(SampleTimer_Tick);
@@ -322,17 +322,17 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Таблица данных для просмотра
+  #region РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С… РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°
 
       private DataTable SampleTable;
 
   #endregion
 
-  #region Свойство HieConfig
+  #region РЎРІРѕР№СЃС‚РІРѕ HieConfig
 
       /// <summary>
-      /// Отображаемая конфигурация.
-      /// Установка свойства приводит к обновлению окна примера
+      /// РћС‚РѕР±СЂР°Р¶Р°РµРјР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ.
+      /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РїСЂРёРІРѕРґРёС‚ Рє РѕР±РЅРѕРІР»РµРЅРёСЋ РѕРєРЅР° РїСЂРёРјРµСЂР°
       /// </summary>
       public EFPHieViewConfig HieConfig
       {
@@ -347,15 +347,15 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Обработка таблчиного просмотра
+  #region РћР±СЂР°Р±РѕС‚РєР° С‚Р°Р±Р»С‡РёРЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
 
       void SampleHandler_GetCellAttributes(object Sender, EFPDataGridViewCellAttributesEventArgs Args)
       {
         DataRow Row = Args.DataRow;
         if (Row == null)
           return;
-        Args.IndentLevel = DataTools.GetInt(Row, "Отступ");
-        int Level = DataTools.GetInt(Row, "Уровень");
+        Args.IndentLevel = DataTools.GetInt(Row, "РћС‚СЃС‚СѓРї");
+        int Level = DataTools.GetInt(Row, "РЈСЂРѕРІРµРЅСЊ");
         switch (Level)
         {
           case -1:
@@ -377,10 +377,10 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Обработка таймера
+  #region РћР±СЂР°Р±РѕС‚РєР° С‚Р°Р№РјРµСЂР°
 
       /// <summary>
-      /// Отложенное обновление окна примера
+      /// РћС‚Р»РѕР¶РµРЅРЅРѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ РѕРєРЅР° РїСЂРёРјРµСЂР°
       /// </summary>
       private bool SampleIsDirty;
 
@@ -415,9 +415,9 @@ namespace FreeLibSet.Forms
               for (int i = 1; i < Levels.Length; i++)
               {
                 EFPHieViewLevel Level = Levels[i];
-                SampleTable.Rows.Add("Итого: " + Level.DisplayName, Levels.Length - i, i);
+                SampleTable.Rows.Add("РС‚РѕРіРѕ: " + Level.DisplayName, Levels.Length - i, i);
               }
-              SampleTable.Rows.Add("Итого", 0, -1);
+              SampleTable.Rows.Add("РС‚РѕРіРѕ", 0, -1);
             }
           }
           finally
@@ -432,7 +432,7 @@ namespace FreeLibSet.Forms
             base.Control.Invalidate();
           }
 
-          SampleIsDirty = false; // еще раз, т.к. испорчено CheckOrderRules
+          SampleIsDirty = false; // РµС‰Рµ СЂР°Р·, С‚.Рє. РёСЃРїРѕСЂС‡РµРЅРѕ CheckOrderRules
         } // SampleIsDirty
       }
 
@@ -441,14 +441,14 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Обработчик закладки TabControl
+  #region РћР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РєР»Р°РґРєРё TabControl
 
     /// <summary>
-    /// Обработчик объекта TabPage для инициализации значка и сообщения об ошибке
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РѕР±СЉРµРєС‚Р° TabPage РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р·РЅР°С‡РєР° Рё СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ
     /// </summary>
     public class TabPageController
     {
-  #region Конструктор
+  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public TabPageController(TabPage TabPage)
       {
@@ -462,10 +462,10 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Свойство HieConfig
+  #region РЎРІРѕР№СЃС‚РІРѕ HieConfig
 
       /// <summary>
-      /// Установка свойства приводит к обновлению текста закладки
+      /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РїСЂРёРІРѕРґРёС‚ Рє РѕР±РЅРѕРІР»РµРЅРёСЋ С‚РµРєСЃС‚Р° Р·Р°РєР»Р°РґРєРё
       /// </summary>
       public EFPHieViewConfig HieConfig
       {
@@ -479,34 +479,34 @@ namespace FreeLibSet.Forms
 
           if (FHieConfig == null)
           {
-            TabPage.ToolTipText = "Уровни не присоединены";
+            TabPage.ToolTipText = "РЈСЂРѕРІРЅРё РЅРµ РїСЂРёСЃРѕРµРґРёРЅРµРЅС‹";
             TabPage.ImageKey = "UnknownState";
           }
           else
           {
             if (HieConfig.SelectedLevelCount == 0)
             {
-              TabPage.ToolTipText = "Уровни не выбраны";
+              TabPage.ToolTipText = "РЈСЂРѕРІРЅРё РЅРµ РІС‹Р±СЂР°РЅС‹";
               TabPage.ImageKey = "Error";
             }
             else if (HieConfig.UnselectedRequiredLevels.Length > 0)
             {
               if (HieConfig.UnselectedRequiredLevels.Length > 1)
-                TabPage.ToolTipText = "Не выбраны обязательные уровни: " + HieConfig.UnselectedRequiredLevelsTitle;
+                TabPage.ToolTipText = "РќРµ РІС‹Р±СЂР°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ СѓСЂРѕРІРЅРё: " + HieConfig.UnselectedRequiredLevelsTitle;
               else
-                TabPage.ToolTipText = "Не выбран обязательный уровень: " + HieConfig.UnselectedRequiredLevelsTitle;
+                TabPage.ToolTipText = "РќРµ РІС‹Р±СЂР°РЅ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ: " + HieConfig.UnselectedRequiredLevelsTitle;
               TabPage.ImageKey = "Error";
             }
             else
             {
-              TabPage.ToolTipText = "Выбранные уровни: " + HieConfig.SelectedLevelsTitle;
+              TabPage.ToolTipText = "Р’С‹Р±СЂР°РЅРЅС‹Рµ СѓСЂРѕРІРЅРё: " + HieConfig.SelectedLevelsTitle;
               if (HieConfig.OrderRules.HasViolation)
               {
                 TabPage.ImageKey = "Warning";
-                TabPage.ToolTipText += Environment.NewLine+"Неправильный порядок уровней";
+                TabPage.ToolTipText += Environment.NewLine+"РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ РїРѕСЂСЏРґРѕРє СѓСЂРѕРІРЅРµР№";
               }
               else
-                TabPage.ImageKey = "Детализация";
+                TabPage.ImageKey = "Р”РµС‚Р°Р»РёР·Р°С†РёСЏ";
             }
           }
 
@@ -519,11 +519,11 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Конструктор
+  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Размещение на панели табличного просмотра с панелью инструментов и
-    /// CheckBox'а с параметрами
+    /// Р Р°Р·РјРµС‰РµРЅРёРµ РЅР° РїР°РЅРµР»Рё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° СЃ РїР°РЅРµР»СЊСЋ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ Рё
+    /// CheckBox'Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
     /// </summary>
     /// <param name="ParentControl"></param>
     public EFPHieViewConfigEditor(Control ParentControl, EFPBaseProvider BaseProvider)
@@ -549,15 +549,15 @@ namespace FreeLibSet.Forms
       efpMainGridHandler = new EFPLevelGridView(Form.grpMain, BaseProvider);
 
       efpHideExtraSumRows = new EFPCheckBox(BaseProvider, Form.cbHideExtraSumRows);
-      efpHideExtraSumRows.ToolTipText = "Если флажок установлен, то для уровней иерархии, содержащих единственную строку данных не будет выводиться итоговая строка." +Environment.NewLine+
-        "Если флажок снят, то строка промежуточных итогов будет выводиться всегда";
+      efpHideExtraSumRows.ToolTipText = "Р•СЃР»Рё С„Р»Р°Р¶РѕРє СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РґР»СЏ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё, СЃРѕРґРµСЂР¶Р°С‰РёС… РµРґРёРЅСЃС‚РІРµРЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ РґР°РЅРЅС‹С… РЅРµ Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ РёС‚РѕРіРѕРІР°СЏ СЃС‚СЂРѕРєР°." +Environment.NewLine+
+        "Р•СЃР»Рё С„Р»Р°Р¶РѕРє СЃРЅСЏС‚, С‚Рѕ СЃС‚СЂРѕРєР° РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅС‹С… РёС‚РѕРіРѕРІ Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ РІСЃРµРіРґР°";
       efpHideExtraSumRows.CheckedEx.ValueChanged += new EventHandler(efpHideExtraSumRows_CheckedChanged);
 
 
 
       efpSample = new EFPSampleGridView(Form.grpSample, BaseProvider);
 
-      // Запрет закрытия формы, если не выбрано ни одного уровня
+      // Р—Р°РїСЂРµС‚ Р·Р°РєСЂС‹С‚РёСЏ С„РѕСЂРјС‹, РµСЃР»Рё РЅРµ РІС‹Р±СЂР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
       EFPFormCheck Checker = new EFPFormCheck();
       Checker.Validating += new EFPValidatingEventHandler(Checker_Validating);
       Checker.FocusControl = efpMainGridHandler.Control;
@@ -568,10 +568,10 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Элементы управления
+  #region Р­Р»РµРјРµРЅС‚С‹ СѓРїСЂР°РІР»РµРЅРёСЏ
 
     /// <summary>
-    /// Основной обработчик табличного просмотра (создается в конструкторе)
+    /// РћСЃРЅРѕРІРЅРѕР№ РѕР±СЂР°Р±РѕС‚С‡РёРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° (СЃРѕР·РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ)
     /// </summary>
     private EFPLevelGridView efpMainGridHandler;
 
@@ -583,13 +583,13 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Редактируемая конфигурация
+  #region Р РµРґР°РєС‚РёСЂСѓРµРјР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ
 
     /// <summary>
-    /// Присоединенная конфигурация уровней. Действия пользователя сразу приводят
-    /// к изменению ее свойств
-    /// При установке свойства выполняется присоединение источника данных
-    /// HieViewLevelConfig.View к табличному просмотру
+    /// РџСЂРёСЃРѕРµРґРёРЅРµРЅРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ СѓСЂРѕРІРЅРµР№. Р”РµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃСЂР°Р·Сѓ РїСЂРёРІРѕРґСЏС‚
+    /// Рє РёР·РјРµРЅРµРЅРёСЋ РµРµ СЃРІРѕР№СЃС‚РІ
+    /// РџСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С…
+    /// HieViewLevelConfig.View Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ
     /// </summary>
     public EFPHieViewConfig HieConfig
     {
@@ -615,7 +615,7 @@ namespace FreeLibSet.Forms
   #endregion
 
 
-  #region Обработчики
+  #region РћР±СЂР°Р±РѕС‚С‡РёРєРё
 
     void efpHideExtraSumRows_CheckedChanged(object Sender, EventArgs Args)
     {
@@ -633,14 +633,14 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Статический метод редактирования - открытие диалога
+  #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ - РѕС‚РєСЂС‹С‚РёРµ РґРёР°Р»РѕРіР°
 
     public static bool PerformEdit(EFPHieViewConfig HieConfig)
     {
       HieViewLevelEditForm Form = new HieViewLevelEditForm();
       //EFPFormProvider efpForm = new EFPFormProvider(Form);
 
-      // Подбираем высоту строки
+      // РџРѕРґР±РёСЂР°РµРј РІС‹СЃРѕС‚Сѓ СЃС‚СЂРѕРєРё
       int RH = Form.MainGrid.Font.Height + 9;
       int WantedGridH = RH * HieConfig.AllLevels.Length;
       int IncH = WantedGridH - Form.MainGrid.ClientSize.Height;

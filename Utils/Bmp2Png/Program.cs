@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgeyevAV.ExtForms;
@@ -22,7 +22,7 @@ namespace Bmp2Png
       }
       catch (Exception e)
       {
-        DebugTools.ShowException(e, "Ошибка запуска программы");
+        DebugTools.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
   }

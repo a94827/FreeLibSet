@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,18 +10,18 @@ using FreeLibSet.Core;
 namespace FreeLibSet.DependedValues
 {
   /// <summary>
-  /// Вычислимое выражение, определяемое с помощью строки выражения
+  /// Р’С‹С‡РёСЃР»РёРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ, РѕРїСЂРµРґРµР»СЏРµРјРѕРµ СЃ РїРѕРјРѕС‰СЊСЋ СЃС‚СЂРѕРєРё РІС‹СЂР°Р¶РµРЅРёСЏ
   /// </summary>
   /// <typeparam name="T"></typeparam>
   public sealed class DepEvalExpr<T> : DepExprOA<T>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚
     /// </summary>
-    /// <param name="expression">Текстовое представление вычисляемого выражения</param>
-    /// <param name="args">Аргументы</param>
+    /// <param name="expression">РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹</param>
     public DepEvalExpr(string expression, IDepValue[] args)
       : base(args, null)
     {
@@ -30,33 +30,33 @@ namespace FreeLibSet.DependedValues
 
       _Expression = expression;
 
-      InitParsedExpression(); // чтобы выбросить исключение, если выражение неверное
+      InitParsedExpression(); // С‡С‚РѕР±С‹ РІС‹Р±СЂРѕСЃРёС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РІС‹СЂР°Р¶РµРЅРёРµ РЅРµРІРµСЂРЅРѕРµ
 
-      base.BaseSetValue(Calculate(), false); // Сразу вычисляем значение
+      base.BaseSetValue(Calculate(), false); // РЎСЂР°Р·Сѓ РІС‹С‡РёСЃР»СЏРµРј Р·РЅР°С‡РµРЅРёРµ
     }
 
     #endregion
 
-    #region Вычисляемое выражение
+    #region Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
 
     /// <summary>
-    /// Текстовое представление вычисляемого выражения.
-    /// Задается в конструкторе
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string Expression { get { return _Expression; } }
     private readonly string _Expression;
 
     /// <summary>
-    /// Интерфейс, выполняющий вычисления.
-    /// Создается в конструкторе и после выполнения десериализации
+    /// РРЅС‚РµСЂС„РµР№СЃ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РІС‹С‡РёСЃР»РµРЅРёСЏ.
+    /// РЎРѕР·РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ Рё РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµСЃРµСЂРёР°Р»РёР·Р°С†РёРё
     /// </summary>
     [NonSerialized]
     IExpression _ParsedExpression;
 
 
     /// <summary>
-    /// Инициализация вычисляемого выражения (поля _ParsedExpression) на основании текстового представления (поле _Expression).
-    /// Метод выбрасывает исключение в случае ошибок в выражении.
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ (РїРѕР»СЏ _ParsedExpression) РЅР° РѕСЃРЅРѕРІР°РЅРёРё С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ (РїРѕР»Рµ _Expression).
+    /// РњРµС‚РѕРґ РІС‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ РІ СЃР»СѓС‡Р°Рµ РѕС€РёР±РѕРє РІ РІС‹СЂР°Р¶РµРЅРёРё.
     /// </summary>
     private void InitParsedExpression()
     {
@@ -65,27 +65,27 @@ namespace FreeLibSet.DependedValues
       _ParserList.Parse(pd);
 
       //if (pd.FirstErrorToken != null)
-      //  throw new FreeLibSet.Core.ParsingException("Ошибка парсинга: " + pd.FirstErrorToken.ErrorMessage.Value.Text);
+      //  throw new FreeLibSet.Core.ParsingException("РћС€РёР±РєР° РїР°СЂСЃРёРЅРіР°: " + pd.FirstErrorToken.ErrorMessage.Value.Text);
 
       _ParsedExpression = _ParserList.CreateExpression(pd, true);
 
 #if DEBUG
       if (_ParsedExpression == null)
-        throw new NullReferenceException("ParserList.CreateExpression() не вернул вычисляемое выражение");
+        throw new NullReferenceException("ParserList.CreateExpression() РЅРµ РІРµСЂРЅСѓР» РІС‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ");
 #endif
     }
 
     #endregion
 
-    #region Выполнение расчета
+    #region Р’С‹РїРѕР»РЅРµРЅРёРµ СЂР°СЃС‡РµС‚Р°
 
     /// <summary>
-    /// Вычисление выражения
+    /// Р’С‹С‡РёСЃР»РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ
     /// </summary>
-    /// <returns>Результат</returns>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚</returns>
     protected override T Calculate()
     {
-      if (_ParsedExpression == null) // после десериализации
+      if (_ParsedExpression == null) // РїРѕСЃР»Рµ РґРµСЃРµСЂРёР°Р»РёР·Р°С†РёРё
         InitParsedExpression();
 
       object res = _ParsedExpression.Calc();
@@ -94,11 +94,11 @@ namespace FreeLibSet.DependedValues
 
     #endregion
 
-    #region Парсер
+    #region РџР°СЂСЃРµСЂ
 
     /// <summary>
-    /// Парсер, распознающий лексемы "@1", "@2".
-    /// Создает лексему "Argument". В качестве AuxData используется номер аргумента
+    /// РџР°СЂСЃРµСЂ, СЂР°СЃРїРѕР·РЅР°СЋС‰РёР№ Р»РµРєСЃРµРјС‹ "@1", "@2".
+    /// РЎРѕР·РґР°РµС‚ Р»РµРєСЃРµРјСѓ "Argument". Р’ РєР°С‡РµСЃС‚РІРµ AuxData РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РЅРѕРјРµСЂ Р°СЂРіСѓРјРµРЅС‚Р°
     /// </summary>
     private class ArgParser : IParser
     {
@@ -118,11 +118,11 @@ namespace FreeLibSet.DependedValues
         string argName = data.Text.Text.Substring(data.CurrPos + 1, ndig);
         int argNum = 0;
         if (ndig == 0)
-          err = new ErrorMessageItem(ErrorMessageKind.Error, "После \"@\" должен идти номер аргумента");
+          err = new ErrorMessageItem(ErrorMessageKind.Error, "РџРѕСЃР»Рµ \"@\" РґРѕР»Р¶РµРЅ РёРґС‚Рё РЅРѕРјРµСЂ Р°СЂРіСѓРјРµРЅС‚Р°");
         else if (!int.TryParse(argName, out argNum))
-          err = new ErrorMessageItem(ErrorMessageKind.Error, "Строку \"" + argName + "\" нельзя преобразовать в число");
+          err = new ErrorMessageItem(ErrorMessageKind.Error, "РЎС‚СЂРѕРєСѓ \"" + argName + "\" РЅРµР»СЊР·СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚СЊ РІ С‡РёСЃР»Рѕ");
         else if (argNum < 1 || argNum > args.Length)
-          err = new ErrorMessageItem(ErrorMessageKind.Error, "Номер аргумента должен быть в диапазоне от 1 до " + args.Length.ToString());
+          err = new ErrorMessageItem(ErrorMessageKind.Error, "РќРѕРјРµСЂ Р°СЂРіСѓРјРµРЅС‚Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ " + args.Length.ToString());
         Token tk = new Token(data, this, "Argument", data.CurrPos, ndig + 1, argNum, err);
         data.Tokens.Add(tk);
       }
@@ -132,7 +132,7 @@ namespace FreeLibSet.DependedValues
         Token currToken = data.CurrToken;
         data.SkipToken();
         if (leftExpression != null)
-          currToken.SetError("Аргумент не должен идти непосредственно после другого выражения. Ожидалась операция");
+          currToken.SetError("РђСЂРіСѓРјРµРЅС‚ РЅРµ РґРѕР»Р¶РµРЅ РёРґС‚Рё РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РїРѕСЃР»Рµ РґСЂСѓРіРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ. РћР¶РёРґР°Р»Р°СЃСЊ РѕРїРµСЂР°С†РёСЏ");
 
         IDepValue[] args = (IDepValue[])(data.UserData["Args"]);
         int argNum = (int)(currToken.AuxData);
@@ -145,7 +145,7 @@ namespace FreeLibSet.DependedValues
 
     private class ArgExpression : IExpression
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public ArgExpression(IDepValue arg, Token token)
       {
@@ -189,7 +189,7 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Парсер
+    /// РџР°СЂСЃРµСЂ
     /// </summary>
     private static readonly ParserList _ParserList = CreateParserList();
 
@@ -197,7 +197,7 @@ namespace FreeLibSet.DependedValues
     {
       ParserList pl = new ParserList();
 
-      FunctionParser fp = new FunctionParser(); // перед MathOpParser
+      FunctionParser fp = new FunctionParser(); // РїРµСЂРµРґ MathOpParser
       ExcelFunctions.AddFunctions(fp);
       pl.Add(fp);
 

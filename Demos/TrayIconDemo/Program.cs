@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgeyevAV.ExtForms;
@@ -31,7 +31,7 @@ namespace TrayIconDemo
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска приложения");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ");
       }
     }
 

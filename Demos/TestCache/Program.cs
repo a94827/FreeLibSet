@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgeyevAV.ExtForms;
@@ -22,7 +22,7 @@ namespace TestCache
       }
       catch(Exception e)
       {
-        DebugTools.ShowException(e, "Ошибка запуска программы");
+        DebugTools.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
 
@@ -34,11 +34,11 @@ namespace TestCache
       EFPApp.InitApp();
 
       RadioSelectDialog dlg = new RadioSelectDialog();
-      dlg.Title = "Тестирование Cache";
+      dlg.Title = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ Cache";
       dlg.Items = new string[] { 
-        "Основной тест", 
-        "Тест взаимной блокировки GetItem()/Clear()",
-        "Тест взаимной блокировки GetItem()/GetItem() (ошибки)"};
+        "РћСЃРЅРѕРІРЅРѕР№ С‚РµСЃС‚", 
+        "РўРµСЃС‚ РІР·Р°РёРјРЅРѕР№ Р±Р»РѕРєРёСЂРѕРІРєРё GetItem()/Clear()",
+        "РўРµСЃС‚ РІР·Р°РёРјРЅРѕР№ Р±Р»РѕРєРёСЂРѕРІРєРё GetItem()/GetItem() (РѕС€РёР±РєРё)"};
 
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
@@ -50,7 +50,7 @@ namespace TestCache
           if (!ParamForm.PerformSetup(out ThreadCount))
             return;
 
-          // Надо очистить все элементы кэша
+          // РќР°РґРѕ РѕС‡РёСЃС‚РёС‚СЊ РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РєСЌС€Р°
           if (!Cache.Params.PersistDir.IsEmpty)
             FileTools.ClearDirAsPossible(Cache.Params.PersistDir);
 

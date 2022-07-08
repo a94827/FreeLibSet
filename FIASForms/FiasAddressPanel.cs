@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -17,7 +17,7 @@ namespace FreeLibSet.Controls.FIAS
 
   public partial class FiasAddressPanel : UserControl
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public FiasAddressPanel()
     {
@@ -50,11 +50,11 @@ namespace FreeLibSet.Controls.FIAS
 
     #endregion
 
-    #region Видимость полос
+    #region Р’РёРґРёРјРѕСЃС‚СЊ РїРѕР»РѕСЃ
 
     /// <summary>
-    /// Флажки видимости полос.
-    /// Нужна отдельная коллекция, так как нельзя использовать Control.Visible до вывода формы на экран
+    /// Р¤Р»Р°Р¶РєРё РІРёРґРёРјРѕСЃС‚Рё РїРѕР»РѕСЃ.
+    /// РќСѓР¶РЅР° РѕС‚РґРµР»СЊРЅР°СЏ РєРѕР»Р»РµРєС†РёСЏ, С‚Р°Рє РєР°Рє РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Control.Visible РґРѕ РІС‹РІРѕРґР° С„РѕСЂРјС‹ РЅР° СЌРєСЂР°РЅ
     /// </summary>
     private Dictionary<FiasLevel, bool> _VisibleLevels;
 
@@ -153,7 +153,7 @@ namespace FreeLibSet.Controls.FIAS
       }
 
       MainTLP.RowStyles[rowIndex] = new RowStyle(SizeType.Absolute, value ?
-        (btnRegionSel.Height + btnRegionSel.Margin.Bottom) : // = 27 при 96dpi
+        (btnRegionSel.Height + btnRegionSel.Margin.Bottom) : // = 27 РїСЂРё 96dpi
         0);
     }
 
@@ -169,7 +169,7 @@ namespace FreeLibSet.Controls.FIAS
         edPostalCode.Visible = value;
 
         MainTLP.RowStyles[11] = new RowStyle(SizeType.Absolute, value ?
-          (edPostalCode.Height + edPostalCode.Margin.Bottom) : // = 23 при 96dpi
+          (edPostalCode.Height + edPostalCode.Margin.Bottom) : // = 23 РїСЂРё 96dpi
           0);
       }
     }

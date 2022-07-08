@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.Collections
   [TestFixture]
   public class OrderSortedListTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_simple()
@@ -58,7 +58,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Доступ к значениям
+    #region Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј
 
     [Test]
     public void Item_get([Values(false, true)]bool useComparer)
@@ -160,7 +160,7 @@ namespace ExtTools_tests.Collections
     }
 
     [TestCase(false, "BBB", -1)]
-    //[TestCase(true, "BBB", 1)] // этот вариант не работает
+    //[TestCase(true, "BBB", 1)] // СЌС‚РѕС‚ РІР°СЂРёР°РЅС‚ РЅРµ СЂР°Р±РѕС‚Р°РµС‚
     [TestCase(false, "CCC", 0)]
     [TestCase(true, "CCC", 0)]
     public void Keys_IndexOf_Contains([Values(false, true)]bool useComparer, string key, int wanted)
@@ -312,7 +312,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     [Test]
     public void Clear([Values(false, true)]bool useComparer)
@@ -420,7 +420,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [Test]
     public void Serialization([Values(true, false)] bool useComparer)

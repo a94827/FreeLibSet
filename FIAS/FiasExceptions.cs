@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,18 +9,18 @@ using System.Runtime.Serialization;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Исключение выбрасывается, если настройки, заданные в классе FiasDBSettings, не позволяют выполнить
-  /// операцию. Например, требуется получить информацию из таблицы домов, а DBxSettings.UseHouse=false
+  /// РСЃРєР»СЋС‡РµРЅРёРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ, РµСЃР»Рё РЅР°СЃС‚СЂРѕР№РєРё, Р·Р°РґР°РЅРЅС‹Рµ РІ РєР»Р°СЃСЃРµ FiasDBSettings, РЅРµ РїРѕР·РІРѕР»СЏСЋС‚ РІС‹РїРѕР»РЅРёС‚СЊ
+  /// РѕРїРµСЂР°С†РёСЋ. РќР°РїСЂРёРјРµСЂ, С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ РёР· С‚Р°Р±Р»РёС†С‹ РґРѕРјРѕРІ, Р° DBxSettings.UseHouse=false
   /// </summary>
   [Serializable]
   public class FiasDBSettingsException : InvalidOperationException
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект исключения с заданным сообщением
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ СЃ Р·Р°РґР°РЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public FiasDBSettingsException(string message)
       : this(message, null)
     {
@@ -28,17 +28,17 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Создает объект исключения с заданным сообщением и вложенным исключением
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ СЃ Р·Р°РґР°РЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј Рё РІР»РѕР¶РµРЅРЅС‹Рј РёСЃРєР»СЋС‡РµРЅРёРµРј
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
-    /// <param name="innerException">Вложенное исключение</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+    /// <param name="innerException">Р’Р»РѕР¶РµРЅРЅРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ</param>
     public FiasDBSettingsException(string message, Exception innerException)
       : base(message, innerException)
     {
     }
 
     /// <summary>
-    /// Эта версия конструктора нужна для правильной десериализации
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РЅСѓР¶РЅР° РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ РґРµСЃРµСЂРёР°Р»РёР·Р°С†РёРё
     /// </summary>
     protected FiasDBSettingsException(SerializationInfo info, StreamingContext context)
       : base(info, context)
@@ -49,17 +49,17 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Исключение выбрасывается, если настройки, переданные конструктору FiasDB, не совпадают с существующими в базе данных
+  /// РСЃРєР»СЋС‡РµРЅРёРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ, РµСЃР»Рё РЅР°СЃС‚СЂРѕР№РєРё, РїРµСЂРµРґР°РЅРЅС‹Рµ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂСѓ FiasDB, РЅРµ СЃРѕРІРїР°РґР°СЋС‚ СЃ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРјРё РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
   /// </summary>
   [Serializable]
   public class FiasDBSettingsDifferentException : InvalidOperationException
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект исключения с заданным сообщением
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ СЃ Р·Р°РґР°РЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public FiasDBSettingsDifferentException(string message)
       : this(message, null)
     {
@@ -67,17 +67,17 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Создает объект исключения с заданным сообщением и вложенным исключением
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ СЃ Р·Р°РґР°РЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј Рё РІР»РѕР¶РµРЅРЅС‹Рј РёСЃРєР»СЋС‡РµРЅРёРµРј
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
-    /// <param name="innerException">Вложенное исключение</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+    /// <param name="innerException">Р’Р»РѕР¶РµРЅРЅРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ</param>
     public FiasDBSettingsDifferentException(string message, Exception innerException)
       : base(message, innerException)
     {
     }
 
     /// <summary>
-    /// Эта версия конструктора нужна для правильной десериализации
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РЅСѓР¶РЅР° РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ РґРµСЃРµСЂРёР°Р»РёР·Р°С†РёРё
     /// </summary>
     protected FiasDBSettingsDifferentException(SerializationInfo info, StreamingContext context)
       : base(info, context)

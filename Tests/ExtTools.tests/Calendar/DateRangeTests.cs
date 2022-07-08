@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -215,7 +215,7 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(CreateDate(sDate6), res1.LastDate, "LastDate");
       Assert.AreEqual("123", res1.Tag, "Tag");
 
-      // Такой же результат дает оператор "|"
+      // РўР°РєРѕР№ Р¶Рµ СЂРµР·СѓР»СЊС‚Р°С‚ РґР°РµС‚ РѕРїРµСЂР°С‚РѕСЂ "|"
       DateRange res2 = sut | arg;
       Assert.AreEqual(res1, res2, "Operator |");
     }
@@ -369,7 +369,7 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(31, cnt, "Count");
     }
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     public static DateTime CreateDate(string s)
     {

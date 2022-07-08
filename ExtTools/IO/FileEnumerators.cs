@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -8,95 +8,95 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.IO
 {
-  #region Перечисление PathEnumerateKind
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ PathEnumerateKind
 
   /// <summary>
-  /// Что должно перечисляться: файлы, каталоги или то и другое
+  /// Р§С‚Рѕ РґРѕР»Р¶РЅРѕ РїРµСЂРµС‡РёСЃР»СЏС‚СЊСЃСЏ: С„Р°Р№Р»С‹, РєР°С‚Р°Р»РѕРіРё РёР»Рё С‚Рѕ Рё РґСЂСѓРіРѕРµ
   /// </summary>
   public enum PathEnumerateKind
   {
     /// <summary>
-    /// Перечислитель будет возвращать имена файлов.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ РёРјРµРЅР° С„Р°Р№Р»РѕРІ.
     /// </summary>
     Files,
 
     /// <summary>
-    /// Перечислитель будет возвращать имена каталогов. Файлы просматриваться не будут.
-    /// Корневой каталог не возвращается при перечислении.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ РёРјРµРЅР° РєР°С‚Р°Р»РѕРіРѕРІ. Р¤Р°Р№Р»С‹ РїСЂРѕСЃРјР°С‚СЂРёРІР°С‚СЊСЃСЏ РЅРµ Р±СѓРґСѓС‚.
+    /// РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСЂРё РїРµСЂРµС‡РёСЃР»РµРЅРёРё.
     /// </summary>
     Directories,
 
     /// <summary>
-    /// Перечислитель будет возвращать и имена файлов и имена каталогов.
-    /// Корневой каталог не возвращается при перечислении.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ Рё РёРјРµРЅР° С„Р°Р№Р»РѕРІ Рё РёРјРµРЅР° РєР°С‚Р°Р»РѕРіРѕРІ.
+    /// РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСЂРё РїРµСЂРµС‡РёСЃР»РµРЅРёРё.
     /// </summary>
     FilesAndDirectories
   }
 
   #endregion
 
-  #region Перечисление PathEnumerateMode
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ PathEnumerateMode
 
   /// <summary>
-  /// Порядок перебора файлов и каталогов в пределах родительского каталога с помощью FileEnumerable
+  /// РџРѕСЂСЏРґРѕРє РїРµСЂРµР±РѕСЂР° С„Р°Р№Р»РѕРІ Рё РєР°С‚Р°Р»РѕРіРѕРІ РІ РїСЂРµРґРµР»Р°С… СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РєР°С‚Р°Р»РѕРіР° СЃ РїРѕРјРѕС‰СЊСЋ FileEnumerable
   /// </summary>
   public enum PathEnumerateMode
   {
     /// <summary>
-    /// Сначала файлы, потом каталоги. Этот режим используется по умолчанию.
+    /// РЎРЅР°С‡Р°Р»Р° С„Р°Р№Р»С‹, РїРѕС‚РѕРј РєР°С‚Р°Р»РѕРіРё. Р­С‚РѕС‚ СЂРµР¶РёРј РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
     /// </summary>
     FilesAndDirectories,
 
     /// <summary>
-    /// Сначала вложенные каталоги, потом - файлы в текущем каталоге
+    /// РЎРЅР°С‡Р°Р»Р° РІР»РѕР¶РµРЅРЅС‹Рµ РєР°С‚Р°Р»РѕРіРё, РїРѕС‚РѕРј - С„Р°Р№Р»С‹ РІ С‚РµРєСѓС‰РµРј РєР°С‚Р°Р»РѕРіРµ
     /// </summary>
     DirectoriesAndFiles,
 
     /// <summary>
-    /// Нерекурсивный перебор файлов
+    /// РќРµСЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РїРµСЂРµР±РѕСЂ С„Р°Р№Р»РѕРІ
     /// </summary>
     FilesOnly,
 
     /// <summary>
-    /// Рекурсивный просмотр вложенных каталогов без просмотра файлов в текущем каталоге
+    /// Р РµРєСѓСЂСЃРёРІРЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РІР»РѕР¶РµРЅРЅС‹С… РєР°С‚Р°Р»РѕРіРѕРІ Р±РµР· РїСЂРѕСЃРјРѕС‚СЂР° С„Р°Р№Р»РѕРІ РІ С‚РµРєСѓС‰РµРј РєР°С‚Р°Р»РѕРіРµ
     /// </summary>
     DirectoriesOnly,
 
     /// <summary>
-    /// Текущий каталог должен быть пропущен
+    /// РўРµРєСѓС‰РёР№ РєР°С‚Р°Р»РѕРі РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСЂРѕРїСѓС‰РµРЅ
     /// </summary>
     None
   }
 
   #endregion
 
-  #region Перечисление PathEnumarateSort
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ PathEnumarateSort
 
   /// <summary>
-  /// Порядок сортировки файлов и каталогов при переборе
+  /// РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё С„Р°Р№Р»РѕРІ Рё РєР°С‚Р°Р»РѕРіРѕРІ РїСЂРё РїРµСЂРµР±РѕСЂРµ
   /// </summary>
   public enum PathEnumerateSort
   {
     /// <summary>
-    /// Порядок не определен.
+    /// РџРѕСЂСЏРґРѕРє РЅРµ РѕРїСЂРµРґРµР»РµРЅ.
     /// </summary>
     None,
 
     /// <summary>
-    /// Сортировка по имени
+    /// РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РёРјРµРЅРё
     /// </summary>
     ByName,
 
     /// <summary>
-    /// Сортировка по расширению.
-    /// Для сложных расширений, типа "*.fb2.zip" используется только последнее расширение
+    /// РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ СЂР°СЃС€РёСЂРµРЅРёСЋ.
+    /// Р”Р»СЏ СЃР»РѕР¶РЅС‹С… СЂР°СЃС€РёСЂРµРЅРёР№, С‚РёРїР° "*.fb2.zip" РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїРѕСЃР»РµРґРЅРµРµ СЂР°СЃС€РёСЂРµРЅРёРµ
     /// </summary>
     ByExtension
   }
 
   #endregion
 
-  #region Перечисление PathEnumerateStage
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ PathEnumerateStage
 
   internal enum PathEnumerateStage
   {
@@ -109,12 +109,12 @@ namespace FreeLibSet.IO
   #endregion
 
   /// <summary>
-  /// Аргументы события.
-  /// Аргументы создаются AbsPathEnumerable.Enumerator в процессе перебора перед просмотром очередного каталога.
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ.
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР·РґР°СЋС‚СЃСЏ AbsPathEnumerable.Enumerator РІ РїСЂРѕС†РµСЃСЃРµ РїРµСЂРµР±РѕСЂР° РїРµСЂРµРґ РїСЂРѕСЃРјРѕС‚СЂРѕРј РѕС‡РµСЂРµРґРЅРѕРіРѕ РєР°С‚Р°Р»РѕРіР°.
   /// </summary>
   public sealed class EnumDirectoryEventArgs : EventArgs
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EnumDirectoryEventArgs(AbsPath directory, RelPath directoryRel, int level)
     {
@@ -126,7 +126,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Инициализация настраиваемых свойств
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅР°СЃС‚СЂР°РёРІР°РµРјС‹С… СЃРІРѕР№СЃС‚РІ
     /// </summary>
     /// <param name="source"></param>
     internal void Init(PathEnumerableBase source)
@@ -142,32 +142,32 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Фиксированные свойства
+    #region Р¤РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Просматриваемый каталог - Абсолютный путь
+    /// РџСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ РєР°С‚Р°Р»РѕРі - РђР±СЃРѕР»СЋС‚РЅС‹Р№ РїСѓС‚СЊ
     /// </summary>
     public AbsPath Directory { get { return _Directory; } }
     private AbsPath _Directory;
 
 
     /// <summary>
-    /// Просматриваемый каталог - Путь относительно RootDirectory
+    /// РџСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ РєР°С‚Р°Р»РѕРі - РџСѓС‚СЊ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ RootDirectory
     /// </summary>
     public RelPath DirectoryRel { get { return _DirectoryRel; } }
     private RelPath _DirectoryRel;
 
     /// <summary>
-    /// Уровень вложения каталога Directory относительно базового каталога, с которого начинается перебор.
-    /// При первом вызове события для RootDirectory имеет значение 0. Для подкаталогов первого уровня - 1, и т.д.
+    /// РЈСЂРѕРІРµРЅСЊ РІР»РѕР¶РµРЅРёСЏ РєР°С‚Р°Р»РѕРіР° Directory РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ Р±Р°Р·РѕРІРѕРіРѕ РєР°С‚Р°Р»РѕРіР°, СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚СЃСЏ РїРµСЂРµР±РѕСЂ.
+    /// РџСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ СЃРѕР±С‹С‚РёСЏ РґР»СЏ RootDirectory РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ 0. Р”Р»СЏ РїРѕРґРєР°С‚Р°Р»РѕРіРѕРІ РїРµСЂРІРѕРіРѕ СѓСЂРѕРІРЅСЏ - 1, Рё С‚.Рґ.
     /// </summary>
     public int Level { get { return _Level; } }
     private int _Level;
 
     /// <summary>
-    /// Для отладки
+    /// Р”Р»СЏ РѕС‚Р»Р°РґРєРё
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return Directory.Path + " (Level=" + Level.ToString() + ")";
@@ -175,17 +175,17 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Настраиваемые свойства
+    #region РќР°СЃС‚СЂР°РёРІР°РµРјС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     private void CheckNotReadOnly()
     {
       if (_Stage != PathEnumerateStage.Start)
-        throw new ObjectReadOnlyException("Менять значения свойство можно только в обработчике события BeforeDirectory");
+        throw new ObjectReadOnlyException("РњРµРЅСЏС‚СЊ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІРѕ РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РІ РѕР±СЂР°Р±РѕС‚С‡РёРєРµ СЃРѕР±С‹С‚РёСЏ BeforeDirectory");
     }
 
     /// <summary>
-    /// Режим просмотра каталога.
-    /// Пользовательский обработчик может, например, пропустить ненужный каталог
+    /// Р РµР¶РёРј РїСЂРѕСЃРјРѕС‚СЂР° РєР°С‚Р°Р»РѕРіР°.
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє РјРѕР¶РµС‚, РЅР°РїСЂРёРјРµСЂ, РїСЂРѕРїСѓСЃС‚РёС‚СЊ РЅРµРЅСѓР¶РЅС‹Р№ РєР°С‚Р°Р»РѕРі
     /// </summary>
     public PathEnumerateMode EnumerateMode
     {
@@ -199,7 +199,7 @@ namespace FreeLibSet.IO
     private PathEnumerateMode _EnumerateMode;
 
     /// <summary>
-    /// Маска для перечисления файлов. 
+    /// РњР°СЃРєР° РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ С„Р°Р№Р»РѕРІ. 
     /// </summary>
     public string FileSearchPattern
     {
@@ -213,7 +213,7 @@ namespace FreeLibSet.IO
     private string _FileSearchPattern;
 
     /// <summary>
-    /// Сортировка файлов при переборе. 
+    /// РЎРѕСЂС‚РёСЂРѕРІРєР° С„Р°Р№Р»РѕРІ РїСЂРё РїРµСЂРµР±РѕСЂРµ. 
     /// </summary>
     public PathEnumerateSort FileSort
     {
@@ -227,7 +227,7 @@ namespace FreeLibSet.IO
     private PathEnumerateSort _FileSort;
 
     /// <summary>
-    /// Если установить в true, то файлы будут перебираться в обратном порядке сортировки.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІ true, С‚Рѕ С„Р°Р№Р»С‹ Р±СѓРґСѓС‚ РїРµСЂРµР±РёСЂР°С‚СЊСЃСЏ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё.
     /// </summary>
     public bool ReverseFiles
     {
@@ -241,7 +241,7 @@ namespace FreeLibSet.IO
     private bool _ReverseFiles;
 
     /// <summary>
-    /// Маска для перечисления каталогов. 
+    /// РњР°СЃРєР° РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РєР°С‚Р°Р»РѕРіРѕРІ. 
     /// </summary>
     public string DirectorySearchPattern
     {
@@ -255,7 +255,7 @@ namespace FreeLibSet.IO
     private string _DirectorySearchPattern;
 
     /// <summary>
-    /// Сортировка каталогов при переборе. 
+    /// РЎРѕСЂС‚РёСЂРѕРІРєР° РєР°С‚Р°Р»РѕРіРѕРІ РїСЂРё РїРµСЂРµР±РѕСЂРµ. 
     /// </summary>
     public PathEnumerateSort DirectorySort
     {
@@ -269,7 +269,7 @@ namespace FreeLibSet.IO
     private PathEnumerateSort _DirectorySort;
 
     /// <summary>
-    /// Если установить в true, то файлы будут перебираться в обратном порядке сортировки.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІ true, С‚Рѕ С„Р°Р№Р»С‹ Р±СѓРґСѓС‚ РїРµСЂРµР±РёСЂР°С‚СЊСЃСЏ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё.
     /// </summary>
     public bool ReverseDirectories
     {
@@ -284,14 +284,14 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Внутренние поля, используемые перечислителем
+    #region Р’РЅСѓС‚СЂРµРЅРЅРёРµ РїРѕР»СЏ, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РїРµСЂРµС‡РёСЃР»РёС‚РµР»РµРј
 
     internal string[] Items;
 
     internal int CurrentIndex;
 
     /// <summary>
-    /// Используется в состоянии Stage=Directory.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРё Stage=Directory.
     /// </summary>
     internal bool SubDirFlag;
 
@@ -299,10 +299,10 @@ namespace FreeLibSet.IO
     private PathEnumerateStage _Stage;
 
     /// <summary>
-    /// Переходит к следующему этапу перебора.
-    /// Только меняет свойство Stage с текущего состояние на следующее, исходя из EnumerateMode.
-    /// Загрузка элементов не выполняется
-    /// Для состояния Finish ничего не делает.
+    /// РџРµСЂРµС…РѕРґРёС‚ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ СЌС‚Р°РїСѓ РїРµСЂРµР±РѕСЂР°.
+    /// РўРѕР»СЊРєРѕ РјРµРЅСЏРµС‚ СЃРІРѕР№СЃС‚РІРѕ Stage СЃ С‚РµРєСѓС‰РµРіРѕ СЃРѕСЃС‚РѕСЏРЅРёРµ РЅР° СЃР»РµРґСѓСЋС‰РµРµ, РёСЃС…РѕРґСЏ РёР· EnumerateMode.
+    /// Р—Р°РіСЂСѓР·РєР° СЌР»РµРјРµРЅС‚РѕРІ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
+    /// Р”Р»СЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ Finish РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚.
     /// </summary>
     private void SetNextStageValue()
     {
@@ -353,9 +353,9 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Переходит к следующему этапу перебора.
-    /// и загружает списки файлов или каталогов, в зависимости от Stage.
-    /// CurrentIndex принимает значение (-1).
+    /// РџРµСЂРµС…РѕРґРёС‚ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ СЌС‚Р°РїСѓ РїРµСЂРµР±РѕСЂР°.
+    /// Рё Р·Р°РіСЂСѓР¶Р°РµС‚ СЃРїРёСЃРєРё С„Р°Р№Р»РѕРІ РёР»Рё РєР°С‚Р°Р»РѕРіРѕРІ, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ Stage.
+    /// CurrentIndex РїСЂРёРЅРёРјР°РµС‚ Р·РЅР°С‡РµРЅРёРµ (-1).
     /// </summary>
     internal void SetNextStage()
     {
@@ -409,9 +409,9 @@ namespace FreeLibSet.IO
       if (res != 0)
         return res;
 
-      // Эта проверка лишняя.
-      // В Windows никогда не будет одинаковых имен, отоичающихся регистром,
-      // поэтому предыдущее условие всегда будет выполнено
+      // Р­С‚Р° РїСЂРѕРІРµСЂРєР° Р»РёС€РЅСЏСЏ.
+      // Р’ Windows РЅРёРєРѕРіРґР° РЅРµ Р±СѓРґРµС‚ РѕРґРёРЅР°РєРѕРІС‹С… РёРјРµРЅ, РѕС‚РѕРёС‡Р°СЋС‰РёС…СЃСЏ СЂРµРіРёСЃС‚СЂРѕРј,
+      // РїРѕСЌС‚РѕРјСѓ РїСЂРµРґС‹РґСѓС‰РµРµ СѓСЃР»РѕРІРёРµ РІСЃРµРіРґР° Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅРѕ
       // if (AbsPath.ComparisonType == StringComparison.Ordinal)
       return String.Compare(x2, y2, StringComparison.Ordinal);
     }
@@ -419,7 +419,7 @@ namespace FreeLibSet.IO
 
     private static int ByExtensionComparison(string x, string y)
     {
-      #region Сравнение расширения
+      #region РЎСЂР°РІРЅРµРЅРёРµ СЂР°СЃС€РёСЂРµРЅРёСЏ
 
       string x3 = System.IO.Path.GetExtension(x);
       string y3 = System.IO.Path.GetExtension(y);
@@ -437,7 +437,7 @@ namespace FreeLibSet.IO
 
       #endregion
 
-      #region Сравнение имени
+      #region РЎСЂР°РІРЅРµРЅРёРµ РёРјРµРЅРё
 
       string x2 = System.IO.Path.GetFileNameWithoutExtension(x);
       string y2 = System.IO.Path.GetFileNameWithoutExtension(y);
@@ -454,28 +454,28 @@ namespace FreeLibSet.IO
   }
 
   /// <summary>
-  /// Делегат для события EnumDirectory
+  /// Р”РµР»РµРіР°С‚ РґР»СЏ СЃРѕР±С‹С‚РёСЏ EnumDirectory
   /// </summary>
-  /// <param name="sender">AbsPatheEnumerable или RelPathEnumerable</param>
-  /// <param name="args">Аргументы события. В них можно задавать правила перебора для очередного каталога</param>
+  /// <param name="sender">AbsPatheEnumerable РёР»Рё RelPathEnumerable</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ. Р’ РЅРёС… РјРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ РїСЂР°РІРёР»Р° РїРµСЂРµР±РѕСЂР° РґР»СЏ РѕС‡РµСЂРµРґРЅРѕРіРѕ РєР°С‚Р°Р»РѕРіР°</param>
   public delegate void EnumDirectoryEventHandler(object sender, EnumDirectoryEventArgs args);
 
   /// <summary>
-  /// Базовый класс для AbsPathEnumerable (и RelPathEnumerable, когда будет реализован)
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ AbsPathEnumerable (Рё RelPathEnumerable, РєРѕРіРґР° Р±СѓРґРµС‚ СЂРµР°Р»РёР·РѕРІР°РЅ)
   /// </summary>
   public class PathEnumerableBase
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект, присваивая значения свойствам RootDirectory и EnumerateKind.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёСЃРІР°РёРІР°СЏ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°Рј RootDirectory Рё EnumerateKind.
     /// </summary>
-    /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
-    /// <param name="enumerateKind">Что должно возвращаться при перечислении: файлы и/или каталоги</param>
+    /// <param name="rootDirectory">РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
+    /// <param name="enumerateKind">Р§С‚Рѕ РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ РїСЂРё РїРµСЂРµС‡РёСЃР»РµРЅРёРё: С„Р°Р№Р»С‹ Рё/РёР»Рё РєР°С‚Р°Р»РѕРіРё</param>
     protected PathEnumerableBase(AbsPath rootDirectory, PathEnumerateKind enumerateKind)
     {
       if (rootDirectory.IsEmpty)
-        throw new ArgumentException("Не задан корневой каталог для перечисления");
+        throw new ArgumentException("РќРµ Р·Р°РґР°РЅ РєРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ");
 
       _RootDirectory = rootDirectory;
       _EnumerateKind = enumerateKind;
@@ -488,90 +488,90 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Свойства, управляющие перебором
+    #region РЎРІРѕР№СЃС‚РІР°, СѓРїСЂР°РІР»СЏСЋС‰РёРµ РїРµСЂРµР±РѕСЂРѕРј
 
     /// <summary>
-    /// Корневой каталог для перечисления.
-    /// Не может быть пустым.
-    /// Задается в конструкторе.
+    /// РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ.
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public AbsPath RootDirectory { get { return _RootDirectory; } }
     private AbsPath _RootDirectory;
 
     /// <summary>
-    /// Что должно возвращаться при перечислении: файлы и/или каталоги.
-    /// Задается в конструкторе.
+    /// Р§С‚Рѕ РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ РїСЂРё РїРµСЂРµС‡РёСЃР»РµРЅРёРё: С„Р°Р№Р»С‹ Рё/РёР»Рё РєР°С‚Р°Р»РѕРіРё.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public PathEnumerateKind EnumerateKind { get { return _EnumerateKind; } }
     private PathEnumerateKind _EnumerateKind;
 
     /// <summary>
-    /// Режим перебора. По умолчанию - FilesAndDirectories - сначала файлы, потом - подкаталоги.
+    /// Р РµР¶РёРј РїРµСЂРµР±РѕСЂР°. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FilesAndDirectories - СЃРЅР°С‡Р°Р»Р° С„Р°Р№Р»С‹, РїРѕС‚РѕРј - РїРѕРґРєР°С‚Р°Р»РѕРіРё.
     /// </summary>
     public PathEnumerateMode EnumerateMode { get { return _EnumerateMode; } set { _EnumerateMode = value; } }
     private PathEnumerateMode _EnumerateMode;
 
     /// <summary>
-    /// Маска для перечисления файлов. По умолчанию - "*" - все файлы.
+    /// РњР°СЃРєР° РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ С„Р°Р№Р»РѕРІ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - "*" - РІСЃРµ С„Р°Р№Р»С‹.
     /// </summary>
     public string FileSearchPattern { get { return _FileSearchPattern; } set { _FileSearchPattern = value; } }
     private string _FileSearchPattern;
 
     /// <summary>
-    /// Сортировка файлов при переборе. По умолчанию - None - порядок не определен.
+    /// РЎРѕСЂС‚РёСЂРѕРІРєР° С„Р°Р№Р»РѕРІ РїСЂРё РїРµСЂРµР±РѕСЂРµ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - None - РїРѕСЂСЏРґРѕРє РЅРµ РѕРїСЂРµРґРµР»РµРЅ.
     /// </summary>
     public PathEnumerateSort FileSort { get { return _FileSort; } set { _FileSort = value; } }
     private PathEnumerateSort _FileSort;
 
     /// <summary>
-    /// Если установить в true, то файлы будут перебираться в обратном порядке сортировки.
-    /// По умолчанию - false.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІ true, С‚Рѕ С„Р°Р№Р»С‹ Р±СѓРґСѓС‚ РїРµСЂРµР±РёСЂР°С‚СЊСЃСЏ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false.
     /// </summary>
     public bool ReverseFiles { get { return _ReverseFiles; } set { _ReverseFiles = value; } }
     private bool _ReverseFiles;
 
     /// <summary>
-    /// Маска для перечисления каталогов. По умолчанию - "*" - все каталоги.
+    /// РњР°СЃРєР° РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РєР°С‚Р°Р»РѕРіРѕРІ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - "*" - РІСЃРµ РєР°С‚Р°Р»РѕРіРё.
     /// </summary>
     public string DirectorySearchPattern { get { return _DirectorySearchPattern; } set { _DirectorySearchPattern = value; } }
     private string _DirectorySearchPattern;
 
 
     /// <summary>
-    /// Сортировка каталогов при переборе. По умолчанию - None - порядок не определен.
+    /// РЎРѕСЂС‚РёСЂРѕРІРєР° РєР°С‚Р°Р»РѕРіРѕРІ РїСЂРё РїРµСЂРµР±РѕСЂРµ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - None - РїРѕСЂСЏРґРѕРє РЅРµ РѕРїСЂРµРґРµР»РµРЅ.
     /// </summary>
     public PathEnumerateSort DirectorySort { get { return _DirectorySort; } set { _DirectorySort = value; } }
     private PathEnumerateSort _DirectorySort;
 
     /// <summary>
-    /// Если установить в true, то файлы будут перебираться в обратном порядке сортировки.
-    /// По умолчанию - false.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РІ true, С‚Рѕ С„Р°Р№Р»С‹ Р±СѓРґСѓС‚ РїРµСЂРµР±РёСЂР°С‚СЊСЃСЏ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false.
     /// </summary>
     public bool ReverseDirectories { get { return _ReverseDirectories; } set { _ReverseDirectories = value; } }
     private bool _ReverseDirectories;
 
     #endregion
 
-    #region События перебора каталога
+    #region РЎРѕР±С‹С‚РёСЏ РїРµСЂРµР±РѕСЂР° РєР°С‚Р°Р»РѕРіР°
 
     /// <summary>
-    /// Событие вызывается перед просмотром каждого каталога.
-    /// Как минимум, вызывается один раз для просмотра корневого каталога.
-    /// В аргументы события копируются настройки просмотра из этого объекта, а обработчик может их изменить.
-    /// Например, можно пропустить ненужные каталоги
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РїСЂРѕСЃРјРѕС‚СЂРѕРј РєР°Р¶РґРѕРіРѕ РєР°С‚Р°Р»РѕРіР°.
+    /// РљР°Рє РјРёРЅРёРјСѓРј, РІС‹Р·С‹РІР°РµС‚СЃСЏ РѕРґРёРЅ СЂР°Р· РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РєРѕСЂРЅРµРІРѕРіРѕ РєР°С‚Р°Р»РѕРіР°.
+    /// Р’ Р°СЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ РєРѕРїРёСЂСѓСЋС‚СЃСЏ РЅР°СЃС‚СЂРѕР№РєРё РїСЂРѕСЃРјРѕС‚СЂР° РёР· СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р°, Р° РѕР±СЂР°Р±РѕС‚С‡РёРє РјРѕР¶РµС‚ РёС… РёР·РјРµРЅРёС‚СЊ.
+    /// РќР°РїСЂРёРјРµСЂ, РјРѕР¶РЅРѕ РїСЂРѕРїСѓСЃС‚РёС‚СЊ РЅРµРЅСѓР¶РЅС‹Рµ РєР°С‚Р°Р»РѕРіРё
     /// </summary>
     public event EnumDirectoryEventHandler BeforeDirectory;
 
     /// <summary>
-    /// Событие вызывается после просмотра каждого каталога, для которого вызывалось событие BeforeDirectory.
-    /// Событие вызывается, даже если каталог пропускается установкой свойство EnumerateMode=None.
-    /// Обработчик события не может менять свойства в аргументах события но может, например, удалить каталог.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ РїСЂРѕСЃРјРѕС‚СЂР° РєР°Р¶РґРѕРіРѕ РєР°С‚Р°Р»РѕРіР°, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РІС‹Р·С‹РІР°Р»РѕСЃСЊ СЃРѕР±С‹С‚РёРµ BeforeDirectory.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ, РґР°Р¶Рµ РµСЃР»Рё РєР°С‚Р°Р»РѕРі РїСЂРѕРїСѓСЃРєР°РµС‚СЃСЏ СѓСЃС‚Р°РЅРѕРІРєРѕР№ СЃРІРѕР№СЃС‚РІРѕ EnumerateMode=None.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РЅРµ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊ СЃРІРѕР№СЃС‚РІР° РІ Р°СЂРіСѓРјРµРЅС‚Р°С… СЃРѕР±С‹С‚РёСЏ РЅРѕ РјРѕР¶РµС‚, РЅР°РїСЂРёРјРµСЂ, СѓРґР°Р»РёС‚СЊ РєР°С‚Р°Р»РѕРі.
     /// </summary>
     public event EnumDirectoryEventHandler AfterDirectory;
 
     #endregion
 
-    #region Общая реализация перечислителя
+    #region РћР±С‰Р°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЏ
 
     internal bool MoveNext(Stack<EnumDirectoryEventArgs> stack)
     {
@@ -609,7 +609,7 @@ namespace FreeLibSet.IO
                 {
                   case PathEnumerateKind.Directories:
                   case PathEnumerateKind.FilesAndDirectories:
-                    return true;  // требуется вернуть текущий каталог
+                    return true;  // С‚СЂРµР±СѓРµС‚СЃСЏ РІРµСЂРЅСѓС‚СЊ С‚РµРєСѓС‰РёР№ РєР°С‚Р°Р»РѕРі
                 }
               }
               else
@@ -644,7 +644,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Создает новый объект EnumDirectoryEventArgs, вызывает событие BeforeDirectory, и добавляет объект в стек
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ EnumDirectoryEventArgs, РІС‹Р·С‹РІР°РµС‚ СЃРѕР±С‹С‚РёРµ BeforeDirectory, Рё РґРѕР±Р°РІР»СЏРµС‚ РѕР±СЉРµРєС‚ РІ СЃС‚РµРє
     /// </summary>
     private void PushDirectory(Stack<EnumDirectoryEventArgs> stack, string relDir, int level)
     {
@@ -653,8 +653,8 @@ namespace FreeLibSet.IO
       if (BeforeDirectory != null)
         BeforeDirectory(this, args);
 
-      // Корректируем режим перебора.
-      // Если перебираются только каталоги, отменяем перебор файлов
+      // РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЂРµР¶РёРј РїРµСЂРµР±РѕСЂР°.
+      // Р•СЃР»Рё РїРµСЂРµР±РёСЂР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РєР°С‚Р°Р»РѕРіРё, РѕС‚РјРµРЅСЏРµРј РїРµСЂРµР±РѕСЂ С„Р°Р№Р»РѕРІ
       if (this.EnumerateKind == PathEnumerateKind.Directories)
       {
         switch (args.EnumerateMode)
@@ -674,13 +674,13 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Вызывает событие AfterDirectory и удаляет EnumDirectoryEventArgs из стека
+    /// Р’С‹Р·С‹РІР°РµС‚ СЃРѕР±С‹С‚РёРµ AfterDirectory Рё СѓРґР°Р»СЏРµС‚ EnumDirectoryEventArgs РёР· СЃС‚РµРєР°
     /// </summary>
     private void PopDirectory(Stack<EnumDirectoryEventArgs> stack)
     {
 #if DEBUG
       if (stack.Count == 0)
-        throw new BugException("Пустой стек");
+        throw new BugException("РџСѓСЃС‚РѕР№ СЃС‚РµРє");
 #endif
       EnumDirectoryEventArgs args = stack.Peek();
       if (AfterDirectory != null)
@@ -693,20 +693,20 @@ namespace FreeLibSet.IO
   }
 
   /// <summary>
-  /// Рекурсивное перечисление файлов и подкаталогов в каталоге.
-  /// В отличие от System.Directory.GetFiles() и System.Directory.EnumerateFiles() (в Net Framework 4),
-  /// позволяет управлять процессом перебора, чтобы не просматривать каталоги, которые не нужны.
-  /// Имена файлов и каталогов задаются как структуры AbsPath.
+  /// Р РµРєСѓСЂСЃРёРІРЅРѕРµ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ С„Р°Р№Р»РѕРІ Рё РїРѕРґРєР°С‚Р°Р»РѕРіРѕРІ РІ РєР°С‚Р°Р»РѕРіРµ.
+  /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ System.Directory.GetFiles() Рё System.Directory.EnumerateFiles() (РІ Net Framework 4),
+  /// РїРѕР·РІРѕР»СЏРµС‚ СѓРїСЂР°РІР»СЏС‚СЊ РїСЂРѕС†РµСЃСЃРѕРј РїРµСЂРµР±РѕСЂР°, С‡С‚РѕР±С‹ РЅРµ РїСЂРѕСЃРјР°С‚СЂРёРІР°С‚СЊ РєР°С‚Р°Р»РѕРіРё, РєРѕС‚РѕСЂС‹Рµ РЅРµ РЅСѓР¶РЅС‹.
+  /// РРјРµРЅР° С„Р°Р№Р»РѕРІ Рё РєР°С‚Р°Р»РѕРіРѕРІ Р·Р°РґР°СЋС‚СЃСЏ РєР°Рє СЃС‚СЂСѓРєС‚СѓСЂС‹ AbsPath.
   /// </summary>
   public sealed class AbsPathEnumerable : PathEnumerableBase, IEnumerable<AbsPath>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает объект, присваивая значения свойствам RootDirectory и EnumerateKind.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёСЃРІР°РёРІР°СЏ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°Рј RootDirectory Рё EnumerateKind.
     /// </summary>
-    /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
-    /// <param name="enumerateKind">Что должно возвращаться при перечислении: файлы и/или каталоги</param>
+    /// <param name="rootDirectory">РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
+    /// <param name="enumerateKind">Р§С‚Рѕ РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ РїСЂРё РїРµСЂРµС‡РёСЃР»РµРЅРёРё: С„Р°Р№Р»С‹ Рё/РёР»Рё РєР°С‚Р°Р»РѕРіРё</param>
     public AbsPathEnumerable(AbsPath rootDirectory, PathEnumerateKind enumerateKind)
       : base(rootDirectory, enumerateKind)
     {
@@ -714,10 +714,10 @@ namespace FreeLibSet.IO
 
 
     /// <summary>
-    /// Создает объект, присваивая значения свойствам RootDirectory.
-    /// EnumerateKind принимает значение Files, то есть перечисляться будут имена файлов.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёСЃРІР°РёРІР°СЏ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°Рј RootDirectory.
+    /// EnumerateKind РїСЂРёРЅРёРјР°РµС‚ Р·РЅР°С‡РµРЅРёРµ Files, С‚Рѕ РµСЃС‚СЊ РїРµСЂРµС‡РёСЃР»СЏС‚СЊСЃСЏ Р±СѓРґСѓС‚ РёРјРµРЅР° С„Р°Р№Р»РѕРІ.
     /// </summary>
-    /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
+    /// <param name="rootDirectory">РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
     public AbsPathEnumerable(AbsPath rootDirectory)
       : this(rootDirectory, PathEnumerateKind.Files)
     {
@@ -725,14 +725,14 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Перечислитель
+    #region РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
 
     /// <summary>
-    /// Перечислитель
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
     /// </summary>
     public struct Enumerator : IEnumerator<AbsPath>
     {
-      #region Защищенный конструктор
+      #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal Enumerator(AbsPathEnumerable owner)
       {
@@ -742,7 +742,7 @@ namespace FreeLibSet.IO
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       private AbsPathEnumerable _Owner;
 
@@ -753,7 +753,7 @@ namespace FreeLibSet.IO
       #region IEnumerator<AbsPath> Members
 
       /// <summary>
-      /// Возвращает очередной файл или каталог
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‡РµСЂРµРґРЅРѕР№ С„Р°Р№Р» РёР»Рё РєР°С‚Р°Р»РѕРі
       /// </summary>
       public AbsPath Current
       {
@@ -770,7 +770,7 @@ namespace FreeLibSet.IO
       }
 
       /// <summary>
-      /// Ничего не делает
+      /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
       /// </summary>
       public void Dispose()
       {
@@ -779,9 +779,9 @@ namespace FreeLibSet.IO
       object System.Collections.IEnumerator.Current { get { return Current; } }
 
       /// <summary>
-      /// Переход к следующему файлу или каталогу
+      /// РџРµСЂРµС…РѕРґ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ С„Р°Р№Р»Сѓ РёР»Рё РєР°С‚Р°Р»РѕРіСѓ
       /// </summary>
-      /// <returns>true, если перебор еще не закончен</returns>
+      /// <returns>true, РµСЃР»Рё РїРµСЂРµР±РѕСЂ РµС‰Рµ РЅРµ Р·Р°РєРѕРЅС‡РµРЅ</returns>
       public bool MoveNext()
       {
         if (_Stack == null)
@@ -790,7 +790,7 @@ namespace FreeLibSet.IO
       }
 
       /// <summary>
-      /// Сброс перечислителя в исходное состояние
+      /// РЎР±СЂРѕСЃ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЏ РІ РёСЃС…РѕРґРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
       /// </summary>
       void System.Collections.IEnumerator.Reset()
       {
@@ -802,12 +802,12 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Интерфейс IEnumerable<AbsPath>
+    #region РРЅС‚РµСЂС„РµР№СЃ IEnumerable<AbsPath>
 
     /// <summary>
-    /// Создает перечислитель
+    /// РЎРѕР·РґР°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
     /// </summary>
-    /// <returns>Перечислитель</returns>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ</returns>
     public Enumerator GetEnumerator()
     {
       return new Enumerator(this);
@@ -825,10 +825,10 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает количество файлов и/или каталогов, выполнив перечисление
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ Рё/РёР»Рё РєР°С‚Р°Р»РѕРіРѕРІ, РІС‹РїРѕР»РЅРёРІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ
     /// </summary>
     /// <returns></returns>
     public int GetCount()
@@ -840,7 +840,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает массив путей, выполнив перечисление
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РїСѓС‚РµР№, РІС‹РїРѕР»РЅРёРІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ
     /// </summary>
     public AbsPath[] ToArray()
     {
@@ -854,20 +854,20 @@ namespace FreeLibSet.IO
   }
 
   /// <summary>
-  /// Рекурсивное перечисление файлов и подкаталогов в каталоге.
-  /// В отличие от System.Directory.GetFiles() и System.Directory.EnumerateFiles() (в Net Framework 4),
-  /// позволяет управлять процессом перебора, чтобы не просматривать каталоги, которые не нужны.
-  /// Имена файлов и каталогов задаются как структуры RelPath.
+  /// Р РµРєСѓСЂСЃРёРІРЅРѕРµ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ С„Р°Р№Р»РѕРІ Рё РїРѕРґРєР°С‚Р°Р»РѕРіРѕРІ РІ РєР°С‚Р°Р»РѕРіРµ.
+  /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ System.Directory.GetFiles() Рё System.Directory.EnumerateFiles() (РІ Net Framework 4),
+  /// РїРѕР·РІРѕР»СЏРµС‚ СѓРїСЂР°РІР»СЏС‚СЊ РїСЂРѕС†РµСЃСЃРѕРј РїРµСЂРµР±РѕСЂР°, С‡С‚РѕР±С‹ РЅРµ РїСЂРѕСЃРјР°С‚СЂРёРІР°С‚СЊ РєР°С‚Р°Р»РѕРіРё, РєРѕС‚РѕСЂС‹Рµ РЅРµ РЅСѓР¶РЅС‹.
+  /// РРјРµРЅР° С„Р°Р№Р»РѕРІ Рё РєР°С‚Р°Р»РѕРіРѕРІ Р·Р°РґР°СЋС‚СЃСЏ РєР°Рє СЃС‚СЂСѓРєС‚СѓСЂС‹ RelPath.
   /// </summary>
   public sealed class RelPathEnumerable : PathEnumerableBase, IEnumerable<RelPath>
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает объект, присваивая значения свойствам RootDirectory и EnumerateKind.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёСЃРІР°РёРІР°СЏ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°Рј RootDirectory Рё EnumerateKind.
     /// </summary>
-    /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
-    /// <param name="enumerateKind">Что должно возвращаться при перечислении: файлы и/или каталоги</param>
+    /// <param name="rootDirectory">РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
+    /// <param name="enumerateKind">Р§С‚Рѕ РґРѕР»Р¶РЅРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ РїСЂРё РїРµСЂРµС‡РёСЃР»РµРЅРёРё: С„Р°Р№Р»С‹ Рё/РёР»Рё РєР°С‚Р°Р»РѕРіРё</param>
     public RelPathEnumerable(AbsPath rootDirectory, PathEnumerateKind enumerateKind)
       : base(rootDirectory, enumerateKind)
     {
@@ -876,28 +876,28 @@ namespace FreeLibSet.IO
 
 
     /// <summary>
-    /// Создает объект, присваивая значения свойствам RootDirectory.
-    /// EnumerateKind принимает значение Files, то есть перечисляться будут имена файлов.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РїСЂРёСЃРІР°РёРІР°СЏ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР°Рј RootDirectory.
+    /// EnumerateKind РїСЂРёРЅРёРјР°РµС‚ Р·РЅР°С‡РµРЅРёРµ Files, С‚Рѕ РµСЃС‚СЊ РїРµСЂРµС‡РёСЃР»СЏС‚СЊСЃСЏ Р±СѓРґСѓС‚ РёРјРµРЅР° С„Р°Р№Р»РѕРІ.
     /// </summary>
-    /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
+    /// <param name="rootDirectory">РљРѕСЂРЅРµРІРѕР№ РєР°С‚Р°Р»РѕРі РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
     public RelPathEnumerable(AbsPath rootDirectory)
       : this(rootDirectory, PathEnumerateKind.Files)
     {
     }
 
-    // Количество символов в базовом каталоге, чтобы быстрее обрезать путь при переборе
+    // РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ Р±Р°Р·РѕРІРѕРј РєР°С‚Р°Р»РѕРіРµ, С‡С‚РѕР±С‹ Р±С‹СЃС‚СЂРµРµ РѕР±СЂРµР·Р°С‚СЊ РїСѓС‚СЊ РїСЂРё РїРµСЂРµР±РѕСЂРµ
     private int _RootDirectoryLen;
 
     #endregion
 
-    #region Перечислитель
+    #region РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
 
     /// <summary>
-    /// Перечислитель
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
     /// </summary>
     public struct Enumerator : IEnumerator<RelPath>
     {
-      #region Защищенный конструктор
+      #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal Enumerator(RelPathEnumerable owner)
       {
@@ -907,7 +907,7 @@ namespace FreeLibSet.IO
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       private RelPathEnumerable _Owner;
 
@@ -918,16 +918,16 @@ namespace FreeLibSet.IO
       #region IEnumerator<RelPath> Members
 
       /// <summary>
-      /// Возвращает очередной файл или каталог
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‡РµСЂРµРґРЅРѕР№ С„Р°Р№Р» РёР»Рё РєР°С‚Р°Р»РѕРі
       /// </summary>
       public RelPath Current
       {
         get
         {
           if (_Stack == null)
-            return new RelPath(String.Empty); // заглушка
+            return new RelPath(String.Empty); // Р·Р°РіР»СѓС€РєР°
           if (_Stack.Count == 0)
-            return new RelPath(String.Empty); // заглушка
+            return new RelPath(String.Empty); // Р·Р°РіР»СѓС€РєР°
 
           EnumDirectoryEventArgs args = _Stack.Peek();
           return new RelPath(args.Items[args.CurrentIndex].Substring(_Owner._RootDirectoryLen));
@@ -935,7 +935,7 @@ namespace FreeLibSet.IO
       }
 
       /// <summary>
-      /// Ничего не делает
+      /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
       /// </summary>
       public void Dispose()
       {
@@ -944,9 +944,9 @@ namespace FreeLibSet.IO
       object System.Collections.IEnumerator.Current { get { return Current; } }
 
       /// <summary>
-      /// Переход к следующему файлу или каталогу
+      /// РџРµСЂРµС…РѕРґ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ С„Р°Р№Р»Сѓ РёР»Рё РєР°С‚Р°Р»РѕРіСѓ
       /// </summary>
-      /// <returns>true, если перебор еще не закончен</returns>
+      /// <returns>true, РµСЃР»Рё РїРµСЂРµР±РѕСЂ РµС‰Рµ РЅРµ Р·Р°РєРѕРЅС‡РµРЅ</returns>
       public bool MoveNext()
       {
         if (_Stack == null)
@@ -955,7 +955,7 @@ namespace FreeLibSet.IO
       }
 
       /// <summary>
-      /// Сброс перечислителя в исходное состояние
+      /// РЎР±СЂРѕСЃ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЏ РІ РёСЃС…РѕРґРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
       /// </summary>
       void System.Collections.IEnumerator.Reset()
       {
@@ -967,12 +967,12 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Интерфейс IEnumerable<RelPath>
+    #region РРЅС‚РµСЂС„РµР№СЃ IEnumerable<RelPath>
 
     /// <summary>
-    /// Создает перечислитель
+    /// РЎРѕР·РґР°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ
     /// </summary>
-    /// <returns>Перечислитель</returns>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ</returns>
     public Enumerator GetEnumerator()
     {
       return new Enumerator(this);
@@ -990,10 +990,10 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает количество файлов и/или каталогов, выполнив перечисление
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ С„Р°Р№Р»РѕРІ Рё/РёР»Рё РєР°С‚Р°Р»РѕРіРѕРІ, РІС‹РїРѕР»РЅРёРІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ
     /// </summary>
     /// <returns></returns>
     public int GetCount()
@@ -1005,7 +1005,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает массив путей, выполнив перечисление
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РїСѓС‚РµР№, РІС‹РїРѕР»РЅРёРІ РїРµСЂРµС‡РёСЃР»РµРЅРёРµ
     /// </summary>
     public RelPath[] ToArray()
     {

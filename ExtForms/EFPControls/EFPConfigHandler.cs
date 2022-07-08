@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,25 +10,25 @@ using FreeLibSet.Collections;
 
 namespace FreeLibSet.Forms
 {
-  #region Перечисление EFPConfigPurpose
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ EFPConfigPurpose
 
   /// <summary>
-  /// Назначение действия, выполняемого EFPConfigHandler
+  /// РќР°Р·РЅР°С‡РµРЅРёРµ РґРµР№СЃС‚РІРёСЏ, РІС‹РїРѕР»РЅСЏРµРјРѕРіРѕ EFPConfigHandler
   /// </summary>
   public enum EFPConfigPurpose
   {
     /// <summary>
-    /// Чтение/запись именной секции конфигурации с именем, заданным свойством ConfigSectionName
+    /// Р§С‚РµРЅРёРµ/Р·Р°РїРёСЃСЊ РёРјРµРЅРЅРѕР№ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё СЃ РёРјРµРЅРµРј, Р·Р°РґР°РЅРЅС‹Рј СЃРІРѕР№СЃС‚РІРѕРј ConfigSectionName
     /// </summary>
     Config,
 
     /// <summary>
-    /// Чтение/сохранение композиции открытых окон пользовательского интерфейса
+    /// Р§С‚РµРЅРёРµ/СЃРѕС…СЂР°РЅРµРЅРёРµ РєРѕРјРїРѕР·РёС†РёРё РѕС‚РєСЂС‹С‚С‹С… РѕРєРѕРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
     /// </summary>
     Composition,
 
     /// <summary>
-    /// Идет сбор именных секций конфигурации для предварительной загрузки при показе формы
+    /// РРґРµС‚ СЃР±РѕСЂ РёРјРµРЅРЅС‹С… СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґР»СЏ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕР№ Р·Р°РіСЂСѓР·РєРё РїСЂРё РїРѕРєР°Р·Рµ С„РѕСЂРјС‹
     /// </summary>
     Preload,
   }
@@ -36,16 +36,16 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Дополнительная информация, передаваемая методам интерфейса IEFPConfigurable.
-  /// В текущей реализации содержит только назначение действия (чтение/запись именной секции конфигурации
-  /// или композиции окон)
+  /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ, РїРµСЂРµРґР°РІР°РµРјР°СЏ РјРµС‚РѕРґР°Рј РёРЅС‚РµСЂС„РµР№СЃР° IEFPConfigurable.
+  /// Р’ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё СЃРѕРґРµСЂР¶РёС‚ С‚РѕР»СЊРєРѕ РЅР°Р·РЅР°С‡РµРЅРёРµ РґРµР№СЃС‚РІРёСЏ (С‡С‚РµРЅРёРµ/Р·Р°РїРёСЃСЊ РёРјРµРЅРЅРѕР№ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+  /// РёР»Рё РєРѕРјРїРѕР·РёС†РёРё РѕРєРѕРЅ)
   /// </summary>
   public class EFPConfigActionInfo : IReadOnlyObject
   {
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Назначение выполняемого действия
+    /// РќР°Р·РЅР°С‡РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµРјРѕРіРѕ РґРµР№СЃС‚РІРёСЏ
     /// </summary>
     public EFPConfigPurpose Purpose
     {
@@ -59,9 +59,9 @@ namespace FreeLibSet.Forms
     private EFPConfigPurpose _Purpose;
 
     /// <summary>
-    /// Возвращает Purpose
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Purpose
     /// </summary>
-    /// <returns>Тестовое представление</returns>
+    /// <returns>РўРµСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return Purpose.ToString();
@@ -72,13 +72,13 @@ namespace FreeLibSet.Forms
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если объект был переведен в режим "только чтение" вызовом SetReadOnly().
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЉРµРєС‚ Р±С‹Р» РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ" РІС‹Р·РѕРІРѕРј SetReadOnly().
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Выбрасывает исключение, если IsReadOnly=true
+    /// Р’С‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё IsReadOnly=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -87,8 +87,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Переводит объект в режим "только чтение".
-    /// Вызывается из EFPConfigHandler
+    /// РџРµСЂРµРІРѕРґРёС‚ РѕР±СЉРµРєС‚ РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· EFPConfigHandler
     /// </summary>
     public void SetReadOnly()
     {
@@ -99,54 +99,54 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Интерфейс, реализуемый EFPControlBase, EFPFormProvider и другими классами, использующими EFPControlHandler.
-  /// Определяет методы чтения / записи секций конфигурации и получения списка категорий
+  /// РРЅС‚РµСЂС„РµР№СЃ, СЂРµР°Р»РёР·СѓРµРјС‹Р№ EFPControlBase, EFPFormProvider Рё РґСЂСѓРіРёРјРё РєР»Р°СЃСЃР°РјРё, РёСЃРїРѕР»СЊР·СѓСЋС‰РёРјРё EFPControlHandler.
+  /// РћРїСЂРµРґРµР»СЏРµС‚ РјРµС‚РѕРґС‹ С‡С‚РµРЅРёСЏ / Р·Р°РїРёСЃРё СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё Рё РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРёСЃРєР° РєР°С‚РµРіРѕСЂРёР№
   /// </summary>
   public interface IEFPConfigurable
   {
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Получить список категорий, которые должны быть обработаны
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РѕР±СЂР°Р±РѕС‚Р°РЅС‹
     /// </summary>
-    /// <param name="categories">Список для добавления категорий</param>
-    /// <param name="rwMode">Чтение или запись</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="categories">РЎРїРёСЃРѕРє РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РєР°С‚РµРіРѕСЂРёР№</param>
+    /// <param name="rwMode">Р§С‚РµРЅРёРµ РёР»Рё Р·Р°РїРёСЃСЊ</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     void GetConfigCategories(ICollection<string> categories, EFPConfigMode rwMode, EFPConfigActionInfo actionInfo);
 
     /// <summary>
-    /// Выполнить запись одной секции конфигурации
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ Р·Р°РїРёСЃСЊ РѕРґРЅРѕР№ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="category">Категория записываемой секции</param>
-    /// <param name="cfg">Объект для записb значений</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ Р·Р°РїРёСЃС‹РІР°РµРјРѕР№ СЃРµРєС†РёРё</param>
+    /// <param name="cfg">РћР±СЉРµРєС‚ РґР»СЏ Р·Р°РїРёСЃb Р·РЅР°С‡РµРЅРёР№</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     void WriteConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo);
 
     /// <summary>
-    /// Выполнить чтение одной секции конфигурации
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ С‡С‚РµРЅРёРµ РѕРґРЅРѕР№ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="category">Категория считываемой секции</param>
-    /// <param name="cfg">Объект для чтения значений</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ СЃС‡РёС‚С‹РІР°РµРјРѕР№ СЃРµРєС†РёРё</param>
+    /// <param name="cfg">РћР±СЉРµРєС‚ РґР»СЏ С‡С‚РµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     void ReadConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo);
 
     #endregion
   }
 
   /// <summary>
-  /// Содержит имя секции конфигурации, список категорий, флажки изменений и события чтения/записи. 
-  /// Используется в EFPFormProvider и EFPControlBase.
-  /// Не применяется для сохранения истории и пользовательских наборов, т.к не содержит свойсва UserSetName.
+  /// РЎРѕРґРµСЂР¶РёС‚ РёРјСЏ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё, СЃРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёР№, С„Р»Р°Р¶РєРё РёР·РјРµРЅРµРЅРёР№ Рё СЃРѕР±С‹С‚РёСЏ С‡С‚РµРЅРёСЏ/Р·Р°РїРёСЃРё. 
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ EFPFormProvider Рё EFPControlBase.
+  /// РќРµ РїСЂРёРјРµРЅСЏРµС‚СЃСЏ РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РёСЃС‚РѕСЂРёРё Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… РЅР°Р±РѕСЂРѕРІ, С‚.Рє РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃРІРѕР№СЃРІР° UserSetName.
   /// 
-  /// Реализация интерфейса IEFPConfigurable выполняет опрос присоединенных источников
+  /// Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° IEFPConfigurable РІС‹РїРѕР»РЅСЏРµС‚ РѕРїСЂРѕСЃ РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹С… РёСЃС‚РѕС‡РЅРёРєРѕРІ
   /// </summary>
   public sealed class EFPConfigHandler : IEFPConfigurable
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает новый объект без установки ConfigSectionName.
-    /// Список категорий пустой.
+    /// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ Р±РµР· СѓСЃС‚Р°РЅРѕРІРєРё ConfigSectionName.
+    /// РЎРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёР№ РїСѓСЃС‚РѕР№.
     /// </summary>
     public EFPConfigHandler()
     {
@@ -158,11 +158,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство ConfigSectionName
+    #region РЎРІРѕР№СЃС‚РІРѕ ConfigSectionName
 
     /// <summary>
-    /// Имя секции конфигурации.
-    /// По умолчанию – пустая строка.
+    /// РРјСЏ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ вЂ“ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°.
     /// </summary>
     public string ConfigSectionName
     {
@@ -179,11 +179,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Источники данных
+    #region РСЃС‚РѕС‡РЅРёРєРё РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Список источников данных.
-    /// EFPControlBase и EFPFormProvider добавляют себя в этот список сразу после создания EFPConfigHandler
+    /// РЎРїРёСЃРѕРє РёСЃС‚РѕС‡РЅРёРєРѕРІ РґР°РЅРЅС‹С….
+    /// EFPControlBase Рё EFPFormProvider РґРѕР±Р°РІР»СЏСЋС‚ СЃРµР±СЏ РІ СЌС‚РѕС‚ СЃРїРёСЃРѕРє СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ EFPConfigHandler
     /// </summary>
     public IList<IEFPConfigurable> Sources { get { return _Sources; } }
     private List<IEFPConfigurable> _Sources;
@@ -193,12 +193,12 @@ namespace FreeLibSet.Forms
     #region IEFPConfigurable Members
 
     /// <summary>
-    /// Построение списка категорий.
-    /// Опрашивает все источники данных в списке Sources.
+    /// РџРѕСЃС‚СЂРѕРµРЅРёРµ СЃРїРёСЃРєР° РєР°С‚РµРіРѕСЂРёР№.
+    /// РћРїСЂР°С€РёРІР°РµС‚ РІСЃРµ РёСЃС‚РѕС‡РЅРёРєРё РґР°РЅРЅС‹С… РІ СЃРїРёСЃРєРµ Sources.
     /// </summary>
-    /// <param name="categories">Заполняемый список категорий</param>
-    /// <param name="rwMode">Режим: Чтение или запись данных</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="categories">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє РєР°С‚РµРіРѕСЂРёР№</param>
+    /// <param name="rwMode">Р РµР¶РёРј: Р§С‚РµРЅРёРµ РёР»Рё Р·Р°РїРёСЃСЊ РґР°РЅРЅС‹С…</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     public void GetConfigCategories(ICollection<string> categories, EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
     {
       for (int i = 0; i < _Sources.Count; i++)
@@ -206,12 +206,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Записывает секцию конфигурации.
-    /// Вызывает методы всех объектов из списка Sources
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґС‹ РІСЃРµС… РѕР±СЉРµРєС‚РѕРІ РёР· СЃРїРёСЃРєР° Sources
     /// </summary>
-    /// <param name="category">Категория</param>
-    /// <param name="cfg">Записываемая секция конфигурации</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ</param>
+    /// <param name="cfg">Р—Р°РїРёСЃС‹РІР°РµРјР°СЏ СЃРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     public void WriteConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo)
     {
       for (int i = 0; i < _Sources.Count; i++)
@@ -219,12 +219,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Считывает секцию конфигурации.
-    /// Вызывает методы всех объектов из списка Sources
+    /// РЎС‡РёС‚С‹РІР°РµС‚ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґС‹ РІСЃРµС… РѕР±СЉРµРєС‚РѕРІ РёР· СЃРїРёСЃРєР° Sources
     /// </summary>
-    /// <param name="category">Категория</param>
-    /// <param name="cfg">Считываемая секция конфигурации</param>
-    /// <param name="actionInfo">Информация о выполняемом действии</param>
+    /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ</param>
+    /// <param name="cfg">РЎС‡РёС‚С‹РІР°РµРјР°СЏ СЃРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
+    /// <param name="actionInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹РїРѕР»РЅСЏРµРјРѕРј РґРµР№СЃС‚РІРёРё</param>
     public void ReadConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo)
     {
       for (int i = 0; i < _Sources.Count; i++)
@@ -233,14 +233,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Флажки
+    #region Р¤Р»Р°Р¶РєРё
 
     /// <summary>
-    /// Для эмуляции именного индексированного свойства Changed.
+    /// Р”Р»СЏ СЌРјСѓР»СЏС†РёРё РёРјРµРЅРЅРѕРіРѕ РёРЅРґРµРєСЃРёСЂРѕРІР°РЅРЅРѕРіРѕ СЃРІРѕР№СЃС‚РІР° Changed.
     /// </summary>
     public sealed class ChangeFlags
     {
-      #region Защищенный конструктор
+      #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal ChangeFlags(EFPConfigHandler owner)
       {
@@ -250,28 +250,28 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       private EFPConfigHandler _Owner;
 
       /// <summary>
-      /// Коллекция установленных флажков
-      /// Ключ - категория
-      /// Значение - не используется
+      /// РљРѕР»Р»РµРєС†РёСЏ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… С„Р»Р°Р¶РєРѕРІ
+      /// РљР»СЋС‡ - РєР°С‚РµРіРѕСЂРёСЏ
+      /// Р—РЅР°С‡РµРЅРёРµ - РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
       /// </summary>
       private Dictionary<string, object> _Flags;
 
       /// <summary>
-      /// Чтение или установка признака изменения для категории
-      /// Это свойство устанавливается, например, после изменения фильтров.
-      /// Через некоторое время, по таймеру будет вызван метод ReadConfig().
-      /// Если, например, поле CurrentId нужно записать в секцию "GridView" только при закрытии формы, 
-      /// следует установить флаг в обработчике OnHidden() перед вызовом метода базового класса.
-      /// Флажки можно задавать и для несуществующих категорий. Они игнорируются.
-      /// Нужно, т.к. внешний код может убрать категорию из списка, вызвав Remove().
+      /// Р§С‚РµРЅРёРµ РёР»Рё СѓСЃС‚Р°РЅРѕРІРєР° РїСЂРёР·РЅР°РєР° РёР·РјРµРЅРµРЅРёСЏ РґР»СЏ РєР°С‚РµРіРѕСЂРёРё
+      /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ, РЅР°РїСЂРёРјРµСЂ, РїРѕСЃР»Рµ РёР·РјРµРЅРµРЅРёСЏ С„РёР»СЊС‚СЂРѕРІ.
+      /// Р§РµСЂРµР· РЅРµРєРѕС‚РѕСЂРѕРµ РІСЂРµРјСЏ, РїРѕ С‚Р°Р№РјРµСЂСѓ Р±СѓРґРµС‚ РІС‹Р·РІР°РЅ РјРµС‚РѕРґ ReadConfig().
+      /// Р•СЃР»Рё, РЅР°РїСЂРёРјРµСЂ, РїРѕР»Рµ CurrentId РЅСѓР¶РЅРѕ Р·Р°РїРёСЃР°С‚СЊ РІ СЃРµРєС†РёСЋ "GridView" С‚РѕР»СЊРєРѕ РїСЂРё Р·Р°РєСЂС‹С‚РёРё С„РѕСЂРјС‹, 
+      /// СЃР»РµРґСѓРµС‚ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ С„Р»Р°Рі РІ РѕР±СЂР°Р±РѕС‚С‡РёРєРµ OnHidden() РїРµСЂРµРґ РІС‹Р·РѕРІРѕРј РјРµС‚РѕРґР° Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°.
+      /// Р¤Р»Р°Р¶РєРё РјРѕР¶РЅРѕ Р·Р°РґР°РІР°С‚СЊ Рё РґР»СЏ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РєР°С‚РµРіРѕСЂРёР№. РћРЅРё РёРіРЅРѕСЂРёСЂСѓСЋС‚СЃСЏ.
+      /// РќСѓР¶РЅРѕ, С‚.Рє. РІРЅРµС€РЅРёР№ РєРѕРґ РјРѕР¶РµС‚ СѓР±СЂР°С‚СЊ РєР°С‚РµРіРѕСЂРёСЋ РёР· СЃРїРёСЃРєР°, РІС‹Р·РІР°РІ Remove().
       /// </summary>
-      /// <param name="category">Категория</param>
-      /// <returns>Наличие изменений</returns>
+      /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ</param>
+      /// <returns>РќР°Р»РёС‡РёРµ РёР·РјРµРЅРµРЅРёР№</returns>
       public bool this[string category]
       {
         get { return _Flags.ContainsKey(category); }
@@ -286,7 +286,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       internal void Clear()
       {
@@ -299,14 +299,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Флажки изменений по категориям
+    /// Р¤Р»Р°Р¶РєРё РёР·РјРµРЅРµРЅРёР№ РїРѕ РєР°С‚РµРіРѕСЂРёСЏРј
     /// </summary>
     public ChangeFlags Changed { get { return _Changed; } }
     private ChangeFlags _Changed;
 
     #endregion
 
-    #region Объекты EFPConfigActionInfo
+    #region РћР±СЉРµРєС‚С‹ EFPConfigActionInfo
 
     static EFPConfigHandler()
     {
@@ -329,20 +329,20 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Чтение и запись
+    #region Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ
 
     /// <summary>
-    /// Единственный список для сбора списка категорий
+    /// Р•РґРёРЅСЃС‚РІРµРЅРЅС‹Р№ СЃРїРёСЃРѕРє РґР»СЏ СЃР±РѕСЂР° СЃРїРёСЃРєР° РєР°С‚РµРіРѕСЂРёР№
     /// </summary>
     private SingleScopeStringList _Categories;
 
     /// <summary>
-    /// Записывает все данные, независимо от флажков.
-    /// Флажки сбрасываются.
-    /// Если свойство ConfigSectionName не установлено, никаких действий не выполняется.
-    /// Перед использованием этого метода рекомендуется вызывать IEFPConfigManager.Preload()
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІСЃРµ РґР°РЅРЅС‹Рµ, РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ С„Р»Р°Р¶РєРѕРІ.
+    /// Р¤Р»Р°Р¶РєРё СЃР±СЂР°СЃС‹РІР°СЋС‚СЃСЏ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ ConfigSectionName РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµРґ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј СЌС‚РѕРіРѕ РјРµС‚РѕРґР° СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РІС‹Р·С‹РІР°С‚СЊ IEFPConfigManager.Preload()
     /// </summary>
-    /// <param name="configManager">Менеджер секций конфигурации EFPApp.ConfigManager</param>
+    /// <param name="configManager">РњРµРЅРµРґР¶РµСЂ СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё EFPApp.ConfigManager</param>
     public void WriteConfig(IEFPConfigManager configManager)
     {
       if (configManager == null)
@@ -368,10 +368,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Записывает только измененные данные и сбрасывает флажки   
-    /// Если свойство ConfigSectionName не установлено, никаких действий не выполняется.
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ С‚РѕР»СЊРєРѕ РёР·РјРµРЅРµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ Рё СЃР±СЂР°СЃС‹РІР°РµС‚ С„Р»Р°Р¶РєРё   
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ ConfigSectionName РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="configManager">Менеджер секций конфигурации EFPApp.ConfigManager</param>
+    /// <param name="configManager">РњРµРЅРµРґР¶РµСЂ СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё EFPApp.ConfigManager</param>
     public void WriteConfigChanges(IEFPConfigManager configManager)
     {
       if (configManager == null)
@@ -404,11 +404,11 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Считывает данные для всех категорий, сбрасывает флажки
-    /// Если свойство ConfigSectionName не установлено, никаких действий не выполняется.
-    /// Перед использованием этого метода рекомендуется вызывать IEFPConfigManager.Preload()
+    /// РЎС‡РёС‚С‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РґР»СЏ РІСЃРµС… РєР°С‚РµРіРѕСЂРёР№, СЃР±СЂР°СЃС‹РІР°РµС‚ С„Р»Р°Р¶РєРё
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ ConfigSectionName РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµРґ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј СЌС‚РѕРіРѕ РјРµС‚РѕРґР° СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РІС‹Р·С‹РІР°С‚СЊ IEFPConfigManager.Preload()
     /// </summary>
-    /// <param name="configManager">Менеджер секций конфигурации EFPApp.ConfigManager</param>
+    /// <param name="configManager">РњРµРЅРµРґР¶РµСЂ СЃРµРєС†РёР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё EFPApp.ConfigManager</param>
     public void ReadConfig(IEFPConfigManager configManager)
     {
       if (configManager == null)
@@ -435,12 +435,12 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вызывает Write для всех категорий, несмотря на флажки. Флажки не сбрасываются.
-    /// Для каждой категории создается вложенная секция с именем, равным категории.
-    /// Используется при сохранении композиции рабочего стола.
-    /// Работа метода не зависит от свойства ConfigSectionName.
+    /// Р’С‹Р·С‹РІР°РµС‚ Write РґР»СЏ РІСЃРµС… РєР°С‚РµРіРѕСЂРёР№, РЅРµСЃРјРѕС‚СЂСЏ РЅР° С„Р»Р°Р¶РєРё. Р¤Р»Р°Р¶РєРё РЅРµ СЃР±СЂР°СЃС‹РІР°СЋС‚СЃСЏ.
+    /// Р”Р»СЏ РєР°Р¶РґРѕР№ РєР°С‚РµРіРѕСЂРёРё СЃРѕР·РґР°РµС‚СЃСЏ РІР»РѕР¶РµРЅРЅР°СЏ СЃРµРєС†РёСЏ СЃ РёРјРµРЅРµРј, СЂР°РІРЅС‹Рј РєР°С‚РµРіРѕСЂРёРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё РєРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°.
+    /// Р Р°Р±РѕС‚Р° РјРµС‚РѕРґР° РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ СЃРІРѕР№СЃС‚РІР° ConfigSectionName.
     /// </summary>
-    /// <param name="cfg">Секция для создания дочерних элементов</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РґРѕС‡РµСЂРЅРёС… СЌР»РµРјРµРЅС‚РѕРІ</param>
     public void WriteComposition(CfgPart cfg)
     {
       if (cfg == null)
@@ -460,13 +460,13 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вызывает Read для всех категорий.
-    /// Для каждой категории используется вложенная секция с именем, равным категории.
-    /// Если какой-либо секции нет, событие Read не вызывается
-    /// Используется при восстановлении композиции рабочего стола. Флажки сбрасываются.
-    /// Работа метода не зависит от свойства ConfigSectionName.
+    /// Р’С‹Р·С‹РІР°РµС‚ Read РґР»СЏ РІСЃРµС… РєР°С‚РµРіРѕСЂРёР№.
+    /// Р”Р»СЏ РєР°Р¶РґРѕР№ РєР°С‚РµРіРѕСЂРёРё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІР»РѕР¶РµРЅРЅР°СЏ СЃРµРєС†РёСЏ СЃ РёРјРµРЅРµРј, СЂР°РІРЅС‹Рј РєР°С‚РµРіРѕСЂРёРё.
+    /// Р•СЃР»Рё РєР°РєРѕР№-Р»РёР±Рѕ СЃРµРєС†РёРё РЅРµС‚, СЃРѕР±С‹С‚РёРµ Read РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРё РєРѕРјРїРѕР·РёС†РёРё СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°. Р¤Р»Р°Р¶РєРё СЃР±СЂР°СЃС‹РІР°СЋС‚СЃСЏ.
+    /// Р Р°Р±РѕС‚Р° РјРµС‚РѕРґР° РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ СЃРІРѕР№СЃС‚РІР° ConfigSectionName.
     /// </summary>
-    /// <param name="cfg">Секция для создания дочерних элементов</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РґРѕС‡РµСЂРЅРёС… СЌР»РµРјРµРЅС‚РѕРІ</param>
     public void ReadComposition(CfgPart cfg)
     {
       if (cfg == null)
@@ -479,20 +479,20 @@ namespace FreeLibSet.Forms
       {
         CfgPart cfgChild = cfg.GetChild(_Categories[i], false);
         if (cfgChild == null)
-          cfgChild = CfgPart.Empty; // вызывать ReadConfigPart() все равно нужно, иначе источник окажется в некомплектном состоянии
+          cfgChild = CfgPart.Empty; // РІС‹Р·С‹РІР°С‚СЊ ReadConfigPart() РІСЃРµ СЂР°РІРЅРѕ РЅСѓР¶РЅРѕ, РёРЅР°С‡Рµ РёСЃС‚РѕС‡РЅРёРє РѕРєР°Р¶РµС‚СЃСЏ РІ РЅРµРєРѕРјРїР»РµРєС‚РЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё
         ReadConfigPart(_Categories[i], cfgChild, _CompositionInfoObject);
       }
     }
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Добавляет в список секции конфигурации для последующей предварительной загрузки
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЃРїРёСЃРѕРє СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґР»СЏ РїРѕСЃР»РµРґСѓСЋС‰РµР№ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕР№ Р·Р°РіСЂСѓР·РєРё
     /// </summary>
-    /// <param name="configInfos">Заполняемый список</param>
-    /// <param name="rwMode">Предополагаемый режим работы - чтение или запись секций</param>
+    /// <param name="configInfos">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ СЃРїРёСЃРѕРє</param>
+    /// <param name="rwMode">РџСЂРµРґРѕРїРѕР»Р°РіР°РµРјС‹Р№ СЂРµР¶РёРј СЂР°Р±РѕС‚С‹ - С‡С‚РµРЅРёРµ РёР»Рё Р·Р°РїРёСЃСЊ СЃРµРєС†РёР№</param>
     public void GetPreloadConfigSections(ICollection<EFPConfigSectionInfo> configInfos, EFPConfigMode rwMode)
     {
       if (ConfigSectionName.Length == 0)
@@ -512,17 +512,17 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Подавляет чтение/запись секции конфигурации одной категории.
-  /// Этот объект может быть добавлен к списку EFPConfigHandler.Sources
+  /// РџРѕРґР°РІР»СЏРµС‚ С‡С‚РµРЅРёРµ/Р·Р°РїРёСЃСЊ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РѕРґРЅРѕР№ РєР°С‚РµРіРѕСЂРёРё.
+  /// Р­С‚РѕС‚ РѕР±СЉРµРєС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅ Рє СЃРїРёСЃРєСѓ EFPConfigHandler.Sources
   /// </summary>
   public sealed class EFPConfigCategorySuppressor : IEFPConfigurable
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает подавитель
+    /// РЎРѕР·РґР°РµС‚ РїРѕРґР°РІРёС‚РµР»СЊ
     /// </summary>
-    /// <param name="suppressedCategory">Категория, чтение/запись которой нужно запретить</param>
+    /// <param name="suppressedCategory">РљР°С‚РµРіРѕСЂРёСЏ, С‡С‚РµРЅРёРµ/Р·Р°РїРёСЃСЊ РєРѕС‚РѕСЂРѕР№ РЅСѓР¶РЅРѕ Р·Р°РїСЂРµС‚РёС‚СЊ</param>
     public EFPConfigCategorySuppressor(string suppressedCategory)
     {
       if (String.IsNullOrEmpty(suppressedCategory))
@@ -532,18 +532,18 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Подавляемая категория
+    /// РџРѕРґР°РІР»СЏРµРјР°СЏ РєР°С‚РµРіРѕСЂРёСЏ
     /// </summary>
     public string SuppressedCategory { get { return _SuppressedCategory; } }
     private string _SuppressedCategory;
 
     /// <summary>
-    /// Возвращает отладочную информацию
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‚Р»Р°РґРѕС‡РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return "SuppressedCategory=" + SuppressedCategory;
@@ -554,11 +554,11 @@ namespace FreeLibSet.Forms
     #region IEFPConfigurable Members
 
     /// <summary>
-    /// Удаляет из списка категорию SuppressedCategory
+    /// РЈРґР°Р»СЏРµС‚ РёР· СЃРїРёСЃРєР° РєР°С‚РµРіРѕСЂРёСЋ SuppressedCategory
     /// </summary>
-    /// <param name="categories">Заполняеымый список</param>
-    /// <param name="rwMode">Игнорируется</param>
-    /// <param name="actionInfo">Игнорируется</param>
+    /// <param name="categories">Р—Р°РїРѕР»РЅСЏРµС‹РјС‹Р№ СЃРїРёСЃРѕРє</param>
+    /// <param name="rwMode">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <param name="actionInfo">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public void GetConfigCategories(ICollection<string> categories, EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
     {
       categories.Remove(SuppressedCategory);

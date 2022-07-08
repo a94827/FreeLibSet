@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,15 +12,15 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Диалог для выбора уровней адреса.
-  /// Редактируемым значением является структура FiasLevelSet.
+  /// Р”РёР°Р»РѕРі РґР»СЏ РІС‹Р±РѕСЂР° СѓСЂРѕРІРЅРµР№ Р°РґСЂРµСЃР°.
+  /// Р РµРґР°РєС‚РёСЂСѓРµРјС‹Рј Р·РЅР°С‡РµРЅРёРµРј СЏРІР»СЏРµС‚СЃСЏ СЃС‚СЂСѓРєС‚СѓСЂР° FiasLevelSet.
   /// </summary>
   public sealed class FiasLevelSetDialog
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект с параметрами по умолчанию
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃ РїР°СЂР°РјРµС‚СЂР°РјРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
     public FiasLevelSetDialog(FiasUI ui)
     {
@@ -28,7 +28,7 @@ namespace FreeLibSet.Forms.FIAS
         throw new ArgumentNullException("ui");
       _UI = ui;
 
-      _Title = "Уровни адресных объектов";
+      _Title = "РЈСЂРѕРІРЅРё Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ";
       _AvailableLevels = FiasLevelSet.AllLevels;
       _Value = FiasLevelSet.Empty;
       _DialogPosition = new EFPDialogPosition();
@@ -36,17 +36,17 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Пользовательский интерфейс.
-    /// Задается в конструкторе.
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public FiasUI UI { get { return _UI; } }
     private FiasUI _UI;
 
     /// <summary>
-    /// Заголовок формы
+    /// Р—Р°РіРѕР»РѕРІРѕРє С„РѕСЂРјС‹
     /// </summary>
     public string Title
     {
@@ -56,8 +56,8 @@ namespace FreeLibSet.Forms.FIAS
     private string _Title;
 
     /// <summary>
-    /// Уровени, из которых можно выбирать
-    /// По умолчанию - FiasLevelSet.AllLevels
+    /// РЈСЂРѕРІРµРЅРё, РёР· РєРѕС‚РѕСЂС‹С… РјРѕР¶РЅРѕ РІС‹Р±РёСЂР°С‚СЊ
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FiasLevelSet.AllLevels
     /// </summary>
     public FiasLevelSet AvailableLevels
     {
@@ -67,8 +67,8 @@ namespace FreeLibSet.Forms.FIAS
     private FiasLevelSet _AvailableLevels;
 
     /// <summary>
-    /// Может ли набор быть пустым?
-    /// По умолчанию - false - должен быть выбран хотя бы один уровень.
+    /// РњРѕР¶РµС‚ Р»Рё РЅР°Р±РѕСЂ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -79,8 +79,8 @@ namespace FreeLibSet.Forms.FIAS
 
 
     /// <summary>
-    /// Основное свойство - редактируемый набор уровней.
-    /// По умолчанию - FiasLevelSet.Empty - не выбрано ни одного уровня
+    /// РћСЃРЅРѕРІРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ - СЂРµРґР°РєС‚РёСЂСѓРµРјС‹Р№ РЅР°Р±РѕСЂ СѓСЂРѕРІРЅРµР№.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FiasLevelSet.Empty - РЅРµ РІС‹Р±СЂР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
     /// </summary>
     public FiasLevelSet Value
     {
@@ -93,8 +93,8 @@ namespace FreeLibSet.Forms.FIAS
     private FiasLevelSet _Value;
 
     /// <summary>
-    /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
+    /// РџРѕР·РёС†РёСЏ Р±Р»РѕРєР° РґРёР°Р»РѕРіР° РЅР° СЌРєСЂР°РЅРµ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ Р±Р»РѕРє РґРёР°Р»РѕРіР° С†РµРЅС‚СЂРёСЂСѓРµС‚СЃСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ EFPApp.DefaultScreen.
     /// </summary>
     public EFPDialogPosition DialogPosition 
     { 
@@ -111,12 +111,12 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Вывод диалога
+    #region Р’С‹РІРѕРґ РґРёР°Р»РѕРіР°
 
     /// <summary>
-    /// Выводит диалог на экран
+    /// Р’С‹РІРѕРґРёС‚ РґРёР°Р»РѕРі РЅР° СЌРєСЂР°РЅ
     /// </summary>
-    /// <returns>Результат работы диалога</returns>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЂР°Р±РѕС‚С‹ РґРёР°Р»РѕРіР°</returns>
     public DialogResult ShowDialog()
     {
       FiasLevel[] AvailableLevels2 = AvailableLevels.ToArray();
@@ -127,7 +127,7 @@ namespace FreeLibSet.Forms.FIAS
 
       ListSelectDialog dlg = new ListSelectDialog();
       dlg.Title = Title;
-      dlg.ListTitle = "Уровни";
+      dlg.ListTitle = "РЈСЂРѕРІРЅРё";
       dlg.Items = items;
       dlg.MultiSelect = true;
       dlg.CanBeEmpty = this.CanBeEmpty;
@@ -154,19 +154,19 @@ namespace FreeLibSet.Forms.FIAS
   }
 
   /// <summary>
-  /// Комбоблок для выбора уровней адреса.
-  /// Редактируемым значением является структура FiasLevelSet.
+  /// РљРѕРјР±РѕР±Р»РѕРє РґР»СЏ РІС‹Р±РѕСЂР° СѓСЂРѕРІРЅРµР№ Р°РґСЂРµСЃР°.
+  /// Р РµРґР°РєС‚РёСЂСѓРµРјС‹Рј Р·РЅР°С‡РµРЅРёРµРј СЏРІР»СЏРµС‚СЃСЏ СЃС‚СЂСѓРєС‚СѓСЂР° FiasLevelSet.
   /// </summary>
   public class EFPFiasLevelSetComboBox : EFPUserSelComboBox
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер комбоблока
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ РєРѕРјР±РѕР±Р»РѕРєР°
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
-    /// <param name="ui">Ссылка на объект FiasUI</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
+    /// <param name="ui">РЎСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚ FiasUI</param>
     public EFPFiasLevelSetComboBox(EFPBaseProvider baseProvider, UserSelComboBox control, FiasUI ui)
       : base(baseProvider, control)
     {
@@ -188,18 +188,18 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Основные свойства
+    #region РћСЃРЅРѕРІРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Пользовательский интерфейс.
-    /// Задается в конструкторе.
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public FiasUI UI { get { return _UI; } }
     private FiasUI _UI;
 
     /// <summary>
-    /// Уровени, из которых можно выбирать
-    /// По умолчанию - FiasLevelSet.AllLevels
+    /// РЈСЂРѕРІРµРЅРё, РёР· РєРѕС‚РѕСЂС‹С… РјРѕР¶РЅРѕ РІС‹Р±РёСЂР°С‚СЊ
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FiasLevelSet.AllLevels
     /// </summary>
     public FiasLevelSet AvailableLevels
     {
@@ -216,11 +216,11 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Свойство CanBeEmpty
+    #region РЎРІРѕР№СЃС‚РІРѕ CanBeEmpty
 
     /// <summary>
-    /// Может ли набор быть пустым?
-    /// По умолчанию - Error- должен быть выбран хотя бы один уровень.
+    /// РњРѕР¶РµС‚ Р»Рё РЅР°Р±РѕСЂ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error- РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -237,9 +237,9 @@ namespace FreeLibSet.Forms.FIAS
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли набор быть пустым?
-    /// По умолчанию - false - должен быть выбран хотя бы один уровень.
-    /// Дублирует CanBeEmptyMode
+    /// РњРѕР¶РµС‚ Р»Рё РЅР°Р±РѕСЂ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ.
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
@@ -249,11 +249,11 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Текущее значение
+    #region РўРµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ
 
     /// <summary>
-    /// Основное свойство - редактируемый набор уровней.
-    /// По умолчанию - FiasLevelSet.Empty - не выбрано ни одного уровня
+    /// РћСЃРЅРѕРІРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ - СЂРµРґР°РєС‚РёСЂСѓРµРјС‹Р№ РЅР°Р±РѕСЂ СѓСЂРѕРІРЅРµР№.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FiasLevelSet.Empty - РЅРµ РІС‹Р±СЂР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
     /// </summary>
     public FiasLevelSet Value
     {
@@ -271,21 +271,21 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Проверка
+    #region РџСЂРѕРІРµСЂРєР°
 
     /// <summary>
-    /// Проверка значения
+    /// РџСЂРѕРІРµСЂРєР° Р·РЅР°С‡РµРЅРёСЏ
     /// </summary>
     protected override void OnValidate()
     {
       base.OnValidate();
       if (ValidateState == UIValidateState.Error)
-        return; // формальность
+        return; // С„РѕСЂРјР°Р»СЊРЅРѕСЃС‚СЊ
 
       FiasLevelSet extra = _Value - _AvailableLevels;
       if (!extra.IsEmpty)
       {
-        SetError("Выбраны недопустимые уровни: " + extra.ToString());
+        SetError("Р’С‹Р±СЂР°РЅС‹ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Рµ СѓСЂРѕРІРЅРё: " + extra.ToString());
         return;
       }
 
@@ -294,10 +294,10 @@ namespace FreeLibSet.Forms.FIAS
         switch (CanBeEmptyMode)
         {
           case UIValidateState.Error:
-            SetError("Уровни не выбраны");
+            SetError("РЈСЂРѕРІРЅРё РЅРµ РІС‹Р±СЂР°РЅС‹");
             break;
           case UIValidateState.Warning:
-            SetWarning("Уровни не выбраны");
+            SetWarning("РЈСЂРѕРІРЅРё РЅРµ РІС‹Р±СЂР°РЅС‹");
             break;
         }
       }
@@ -305,7 +305,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Выбор из списка
+    #region Р’С‹Р±РѕСЂ РёР· СЃРїРёСЃРєР°
 
     void Control_PopupClick(object sender, EventArgs args)
     {

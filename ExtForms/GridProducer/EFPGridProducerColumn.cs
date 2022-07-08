@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -19,14 +19,14 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация свойства EFPGridProducer.Columns
+  /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° EFPGridProducer.Columns
   /// </summary>
   public class EFPGridProducerColumns : NamedList<EFPGridProducerColumn>
   {
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает последний добавленный столбнц
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёР№ РґРѕР±Р°РІР»РµРЅРЅС‹Р№ СЃС‚РѕР»Р±РЅС†
     /// </summary>
     public EFPGridProducerColumn LastAdded
     {
@@ -41,18 +41,18 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Методы добавления столбцов
+    #region РњРµС‚РѕРґС‹ РґРѕР±Р°РІР»РµРЅРёСЏ СЃС‚РѕР»Р±С†РѕРІ
 
-    #region Текстовые столбцы
+    #region РўРµРєСЃС‚РѕРІС‹Рµ СЃС‚РѕР»Р±С†С‹
 
     /// <summary>
-    /// Добавляет текстовый столбец
+    /// Р”РѕР±Р°РІР»СЏРµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ СЃС‚РѕР»Р±РµС†
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина в текстовых единицах</param>
-    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="minTextWidth">РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddText(string columnName, string headerText, int textWidth, int minTextWidth)
     {
       EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
@@ -66,16 +66,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет вычисляемый текстовый столбец
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ С‚РµРєСЃС‚РѕРІС‹Р№ СЃС‚РѕР»Р±РµС†
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина в текстовых единицах</param>
-    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="minTextWidth">РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserText(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText, int textWidth, int minTextWidth)
@@ -96,13 +96,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить столбец для отображения числового поля.
-    /// Значения должны быть целочисленными.
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ.
+    /// Р—РЅР°С‡РµРЅРёСЏ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ С†РµР»РѕС‡РёСЃР»РµРЅРЅС‹РјРё.
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddInt(string columnName, string headerText, int textWidth)
     {
       EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
@@ -117,16 +117,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец для отображения чисел.
-    /// Значения должны быть целочисленными.
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‡РёСЃРµР».
+    /// Р—РЅР°С‡РµРЅРёСЏ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ С†РµР»РѕС‡РёСЃР»РµРЅРЅС‹РјРё.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserInt(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText, int textWidth)
@@ -150,18 +150,18 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Добавить столбец для отображения дробных (или целых) чисел.
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґСЂРѕР±РЅС‹С… (РёР»Рё С†РµР»С‹С…) С‡РёСЃРµР».
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
-    /// <param name="decimalPlaces">Количество знаков после десятичной точки. 0 - для отображения целых чисел</param>
-    /// <param name="sizeGroup">Группа однотипных столбцов</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="decimalPlaces">РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ РґРµСЃСЏС‚РёС‡РЅРѕР№ С‚РѕС‡РєРё. 0 - РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С†РµР»С‹С… С‡РёСЃРµР»</param>
+    /// <param name="sizeGroup">Р“СЂСѓРїРїР° РѕРґРЅРѕС‚РёРїРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddFixedPoint(string columnName, string headerText, int textWidth, int decimalPlaces, string sizeGroup)
     {
       if (decimalPlaces < 0)
-        throw new ArgumentException("Количество знаков после запятой не может быть отрицательным", "decimalPlaces");
+        throw new ArgumentException("РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ Р·Р°РїСЏС‚РѕР№ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рј", "decimalPlaces");
 
       EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
       item.HeaderText = headerText;
@@ -170,7 +170,7 @@ namespace FreeLibSet.Forms
       if (decimalPlaces > 0)
       {
         item.Format = "0." + new string('0', decimalPlaces);
-        item.MinTextWidth = decimalPlaces + 2; // место для точки
+        item.MinTextWidth = decimalPlaces + 2; // РјРµСЃС‚Рѕ РґР»СЏ С‚РѕС‡РєРё
       }
       else
       {
@@ -184,17 +184,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец для отображения дробных (или целых) чисел.
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґСЂРѕР±РЅС‹С… (РёР»Рё С†РµР»С‹С…) С‡РёСЃРµР».
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
-    /// <param name="decimalPlaces">Количество знаков после десятичной точки. 0 - для отображения целых чисел</param>
-    /// <param name="sizeGroup">Группа однотипных столбцов</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="decimalPlaces">РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ РґРµСЃСЏС‚РёС‡РЅРѕР№ С‚РѕС‡РєРё. 0 - РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С†РµР»С‹С… С‡РёСЃРµР»</param>
+    /// <param name="sizeGroup">Р“СЂСѓРїРїР° РѕРґРЅРѕС‚РёРїРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserFixedPoint(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText, int textWidth, int decimalPlaces, string sizeGroup)
@@ -211,7 +211,7 @@ namespace FreeLibSet.Forms
       if (decimalPlaces > 0)
       {
         item.Format = "0." + new string('0', decimalPlaces);
-        item.MinTextWidth = decimalPlaces + 2; // место для точки
+        item.MinTextWidth = decimalPlaces + 2; // РјРµСЃС‚Рѕ РґР»СЏ С‚РѕС‡РєРё
       }
       else
       {
@@ -225,36 +225,36 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить столбец для отображения даты (без компонента времени)
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ (Р±РµР· РєРѕРјРїРѕРЅРµРЅС‚Р° РІСЂРµРјРµРЅРё)
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddDate(string columnName, string headerText)
     {
       return AddDateTime(columnName, headerText, EditableDateTimeFormatterKind.Date);
     }
 
     /// <summary>
-    /// Добавить столбец для отображения даты (без компонента времени).
-    /// Заголовок столбца равен <paramref name="columnName"/>
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ (Р±РµР· РєРѕРјРїРѕРЅРµРЅС‚Р° РІСЂРµРјРµРЅРё).
+    /// Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р° СЂР°РІРµРЅ <paramref name="columnName"/>
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddDate(string columnName)
     {
       return AddDateTime(columnName, columnName, EditableDateTimeFormatterKind.Date);
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец для отображения даты (без компонента времени)
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ (Р±РµР· РєРѕРјРїРѕРЅРµРЅС‚Р° РІСЂРµРјРµРЅРё)
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserDate(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText)
@@ -264,23 +264,23 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Добавить столбец для отображения даты и времени
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddDateTime(string columnName, string headerText)
     {
       return AddDateTime(columnName, headerText, EditableDateTimeFormatterKind.DateTime);
     }
 
     /// <summary>
-    /// Добавить столбец для отображения даты и/или времени
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ Рё/РёР»Рё РІСЂРµРјРµРЅРё
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="kind">Тип даты/времени</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="kind">РўРёРї РґР°С‚С‹/РІСЂРµРјРµРЅРё</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddDateTime(string columnName, string headerText, EditableDateTimeFormatterKind kind)
     {
       EditableDateTimeFormatter formatter = EditableDateTimeFormatters.Get(kind);
@@ -301,11 +301,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить столбец для отображения даты и времени.
-    /// Заголовок столбца равен <paramref name="columnName"/>.
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё.
+    /// Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р° СЂР°РІРµРЅ <paramref name="columnName"/>.
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddDateTime(string columnName)
     {
       return AddDateTime(columnName, columnName, EditableDateTimeFormatterKind.DateTime);
@@ -313,14 +313,14 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Добавить вычисляемый столбец для отображения даты и времени
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ Рё РІСЂРµРјРµРЅРё
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserDateTime(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText)
@@ -329,15 +329,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец для отображения даты и/или времени
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґР°С‚С‹ Рё/РёР»Рё РІСЂРµРјРµРЅРё
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="kind">Формат даты/времени</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="kind">Р¤РѕСЂРјР°С‚ РґР°С‚С‹/РІСЂРµРјРµРЅРё</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserDateTime(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText, EditableDateTimeFormatterKind kind)
@@ -366,25 +366,25 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить столбец для отображения денежных сумм
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРµРЅРµР¶РЅС‹С… СЃСѓРјРј
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddMoney(string columnName, string headerText)
     {
       return AddMoney(columnName, headerText, false);
     }
 
     /// <summary>
-    /// Добавить столбец для отображения денежных сумм
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРµРЅРµР¶РЅС‹С… СЃСѓРјРј
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="showPlusSign">Если true, то для положительных числовых значений будет
-    /// отображаться знак "+". 
-    /// Может быть удобно для столбцов, содержащих разности</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="showPlusSign">Р•СЃР»Рё true, С‚Рѕ РґР»СЏ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹С… С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ Р±СѓРґРµС‚
+    /// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ Р·РЅР°Рє "+". 
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ СѓРґРѕР±РЅРѕ РґР»СЏ СЃС‚РѕР»Р±С†РѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС… СЂР°Р·РЅРѕСЃС‚Рё</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddMoney(string columnName, string headerText, bool showPlusSign)
     {
       EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
@@ -403,25 +403,25 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить столбец для отображения денежных сумм.
-    /// Заголовок столбца равен <paramref name="columnName"/>.
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРµРЅРµР¶РЅС‹С… СЃСѓРјРј.
+    /// Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р° СЂР°РІРµРЅ <paramref name="columnName"/>.
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddMoney(string columnName)
     {
       return AddMoney(columnName, columnName);
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец для отображения денежных сумм.
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРµРЅРµР¶РЅС‹С… СЃСѓРјРј.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserMoney(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText)
@@ -430,17 +430,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец для отображения денежных сумм.
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРµРЅРµР¶РЅС‹С… СЃСѓРјРј.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="showPlusSign">Если true, то для положительных числовых значений будет
-    /// отображаться знак "+". 
-    /// Может быть удобно для столбцов, содержащих разности</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="showPlusSign">Р•СЃР»Рё true, С‚Рѕ РґР»СЏ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹С… С‡РёСЃР»РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ Р±СѓРґРµС‚
+    /// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ Р·РЅР°Рє "+". 
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ СѓРґРѕР±РЅРѕ РґР»СЏ СЃС‚РѕР»Р±С†РѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС… СЂР°Р·РЅРѕСЃС‚Рё</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddUserMoney(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText, bool showPlusSign)
@@ -465,14 +465,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить денежный столбец, являющийся суммой двух или более других столбцов
-    /// типа decimal. Если все столбцы в строке имеют значение DBNull, то значение
-    /// не выводится
+    /// Р”РѕР±Р°РІРёС‚СЊ РґРµРЅРµР¶РЅС‹Р№ СЃС‚РѕР»Р±РµС†, СЏРІР»СЏСЋС‰РёР№СЃСЏ СЃСѓРјРјРѕР№ РґРІСѓС… РёР»Рё Р±РѕР»РµРµ РґСЂСѓРіРёС… СЃС‚РѕР»Р±С†РѕРІ
+    /// С‚РёРїР° decimal. Р•СЃР»Рё РІСЃРµ СЃС‚РѕР»Р±С†С‹ РІ СЃС‚СЂРѕРєРµ РёРјРµСЋС‚ Р·РЅР°С‡РµРЅРёРµ DBNull, С‚Рѕ Р·РЅР°С‡РµРЅРёРµ
+    /// РЅРµ РІС‹РІРѕРґРёС‚СЃСЏ
     /// </summary>
-    /// <param name="name">Условное имя столбца</param>
-    /// <param name="sourceColumnNames">Имена исходных (суммируемых) столбцов</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РРјРµРЅР° РёСЃС…РѕРґРЅС‹С… (СЃСѓРјРјРёСЂСѓРµРјС‹С…) СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerSumColumn AddSumMoney(string name, string sourceColumnNames,
       string headerText)
     {
@@ -490,22 +490,22 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Перечислимые значения
+    #region РџРµСЂРµС‡РёСЃР»РёРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 
     /// <summary>
-    /// Добавляет текстовый столбец для отображения перечислимого значения, которое
-    /// вычисляется на основании числового поля.
-    /// Перечислимые значения должны идти по порядку (0,1,2, ...).
-    /// Добавляемый столбец имеет имя "<paramref name="sourceColumnName"/>_Text".
-    /// Для показа текста "нерегулярных" перечислений используйте AddUserText().
+    /// Р”РѕР±Р°РІР»СЏРµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РїРµСЂРµС‡РёСЃР»РёРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ
+    /// РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РЅР° РѕСЃРЅРѕРІР°РЅРёРё С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґРѕР»Р¶РЅС‹ РёРґС‚Рё РїРѕ РїРѕСЂСЏРґРєСѓ (0,1,2, ...).
+    /// Р”РѕР±Р°РІР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РёРјРµРµС‚ РёРјСЏ "<paramref name="sourceColumnName"/>_Text".
+    /// Р”Р»СЏ РїРѕРєР°Р·Р° С‚РµРєСЃС‚Р° "РЅРµСЂРµРіСѓР»СЏСЂРЅС‹С…" РїРµСЂРµС‡РёСЃР»РµРЅРёР№ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ AddUserText().
     /// </summary>
-    /// <param name="sourceColumnName">Имя целочисленного столбца, содержащего исходное значение</param>
-    /// <param name="textValues">Список текстовых значений, которые показываются в создаваемом
-    /// столбце</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина в текстовых единицах</param>
-    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="sourceColumnName">РРјСЏ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="textValues">РЎРїРёСЃРѕРє С‚РµРєСЃС‚РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№, РєРѕС‚РѕСЂС‹Рµ РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ РІ СЃРѕР·РґР°РІР°РµРјРѕРј
+    /// СЃС‚РѕР»Р±С†Рµ</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="minTextWidth">РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerEnumColumn AddEnumText(string sourceColumnName,
       string[] textValues,
       string headerText, int textWidth, int minTextWidth)
@@ -522,39 +522,39 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет столбец значка для отображения перечислимого значения, которое
-    /// вычисляется на основании числового поля.
-    /// Перечислимые значения должны идти по порядку (0,1,2, ...).
-    /// Добавляемый столбец имеет имя "<paramref name="sourceColumnName"/>_Image".
-    /// Для показа текста "нерегулярных" перечислений используйте AddUserImage().
+    /// Р”РѕР±Р°РІР»СЏРµС‚ СЃС‚РѕР»Р±РµС† Р·РЅР°С‡РєР° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РїРµСЂРµС‡РёСЃР»РёРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ
+    /// РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РЅР° РѕСЃРЅРѕРІР°РЅРёРё С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґРѕР»Р¶РЅС‹ РёРґС‚Рё РїРѕ РїРѕСЂСЏРґРєСѓ (0,1,2, ...).
+    /// Р”РѕР±Р°РІР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РёРјРµРµС‚ РёРјСЏ "<paramref name="sourceColumnName"/>_Image".
+    /// Р”Р»СЏ РїРѕРєР°Р·Р° С‚РµРєСЃС‚Р° "РЅРµСЂРµРіСѓР»СЏСЂРЅС‹С…" РїРµСЂРµС‡РёСЃР»РµРЅРёР№ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ AddUserImage().
     /// </summary>
-    /// <param name="sourceColumnName">Имя целочисленного столбца, содержащего исходное значение</param>
-    /// <param name="imageKeys">Список тегов в EFPApp.MainImages, которые показываются в создаваемом
-    /// столбце</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="sourceColumnName">РРјСЏ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="imageKeys">РЎРїРёСЃРѕРє С‚РµРіРѕРІ РІ EFPApp.MainImages, РєРѕС‚РѕСЂС‹Рµ РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ РІ СЃРѕР·РґР°РІР°РµРјРѕРј
+    /// СЃС‚РѕР»Р±С†Рµ</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerEnumImageColumn AddEnumImage(string sourceColumnName,
       string[] imageKeys,
       string headerText)
     {
       EFPGridProducerEnumImageColumn item = new EFPGridProducerEnumImageColumn(sourceColumnName, imageKeys);
       item.HeaderText = headerText;
-      item.CustomOrderSourceColumnName = sourceColumnName; // TODO: 05.07.2021. Порядок строк при сортировке столбцов для AddEnumText() и AddEnumImage() не совпадают
+      item.CustomOrderSourceColumnName = sourceColumnName; // TODO: 05.07.2021. РџРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РїСЂРё СЃРѕСЂС‚РёСЂРѕРІРєРµ СЃС‚РѕР»Р±С†РѕРІ РґР»СЏ AddEnumText() Рё AddEnumImage() РЅРµ СЃРѕРІРїР°РґР°СЋС‚
 
       Add(item);
       return item;
     }
     /// <summary>
-    /// Добавляет столбец значка для отображения перечислимого значения, которое
-    /// вычисляется на основании числового поля.
-    /// Перечислимые значения должны идти по порядку (0,1,2, ...).
-    /// Добавляемый столбец имеет имя "<paramref name="sourceColumnName"/>_Image".
-    /// Для показа текста "нерегулярных" перечислений используйте AddUserImage().
+    /// Р”РѕР±Р°РІР»СЏРµС‚ СЃС‚РѕР»Р±РµС† Р·РЅР°С‡РєР° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РїРµСЂРµС‡РёСЃР»РёРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ
+    /// РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РЅР° РѕСЃРЅРѕРІР°РЅРёРё С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґРѕР»Р¶РЅС‹ РёРґС‚Рё РїРѕ РїРѕСЂСЏРґРєСѓ (0,1,2, ...).
+    /// Р”РѕР±Р°РІР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† РёРјРµРµС‚ РёРјСЏ "<paramref name="sourceColumnName"/>_Image".
+    /// Р”Р»СЏ РїРѕРєР°Р·Р° С‚РµРєСЃС‚Р° "РЅРµСЂРµРіСѓР»СЏСЂРЅС‹С…" РїРµСЂРµС‡РёСЃР»РµРЅРёР№ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ AddUserImage().
     /// </summary>
-    /// <param name="sourceColumnName">Имя целочисленного столбца, содержащего исходное значение</param>
-    /// <param name="imageKeys">Список тегов в EFPApp.MainImages, которые показываются в создаваемом
-    /// столбце</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="sourceColumnName">РРјСЏ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РёСЃС…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="imageKeys">РЎРїРёСЃРѕРє С‚РµРіРѕРІ РІ EFPApp.MainImages, РєРѕС‚РѕСЂС‹Рµ РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ РІ СЃРѕР·РґР°РІР°РµРјРѕРј
+    /// СЃС‚РѕР»Р±С†Рµ</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerEnumImageColumn AddEnumImage(string sourceColumnName,
       string[] imageKeys)
     {
@@ -563,21 +563,21 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Текстовое представление дат
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР°С‚
 
 #if XXX
     /// <summary>
-    /// Добавление расчетного столбца для вывода месяца и года в виде текста ("Март 2013 г.")
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ СЂР°СЃС‡РµС‚РЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РґР»СЏ РІС‹РІРѕРґР° РјРµСЃСЏС†Р° Рё РіРѕРґР° РІ РІРёРґРµ С‚РµРєСЃС‚Р° ("РњР°СЂС‚ 2013 Рі.")
     /// </summary>
-    /// <param name="columnPrefixName">Префикс имени столбца. Таблица должна содержать столбцы "ПрефиксГод" и "ПрефиксМесяц"</param>
-    /// <param name="HeaderText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnPrefixName">РџСЂРµС„РёРєСЃ РёРјРµРЅРё СЃС‚РѕР»Р±С†Р°. РўР°Р±Р»РёС†Р° РґРѕР»Р¶РЅР° СЃРѕРґРµСЂР¶Р°С‚СЊ СЃС‚РѕР»Р±С†С‹ "РџСЂРµС„РёРєСЃР“РѕРґ" Рё "РџСЂРµС„РёРєСЃРњРµСЃСЏС†"</param>
+    /// <param name="HeaderText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public GridProducerUserColumn AddYearMonth(string columnPrefixName, string HeaderText)
     {
-      GridProducerUserColumn Col = AddUserText(columnPrefixName, columnPrefixName + "Год," + columnPrefixName + "Месяц",
+      GridProducerUserColumn Col = AddUserText(columnPrefixName, columnPrefixName + "Р“РѕРґ," + columnPrefixName + "РњРµСЃСЏС†",
         new GridProducerUserColumnValueNeededEventHandler(YearMonthColumnValueNeeded),
         HeaderText,
-        16 /* "Сентябрь 2012 г."*/,
+        16 /* "РЎРµРЅС‚СЏР±СЂСЊ 2012 Рі."*/,
         12);
       Col.TextAlign = HorizontalAlignment.Center;
       Col.SizeGroup = "YearMonth";
@@ -598,19 +598,19 @@ namespace FreeLibSet.Forms
 #endif
 
     /// <summary>
-    /// Добавить вычисляемый текстовый столбец для отображения интервала дат на основании двух
-    /// полей с датой.
-    /// Для отображения текста используется DateRangeFormatter.
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ С‚РµРєСЃС‚РѕРІС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚ РЅР° РѕСЃРЅРѕРІР°РЅРёРё РґРІСѓС…
+    /// РїРѕР»РµР№ СЃ РґР°С‚РѕР№.
+    /// Р”Р»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‚РµРєСЃС‚Р° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ DateRangeFormatter.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="firstColumnName">Имя поля с начальной датой диапазона</param>
-    /// <param name="lastColumnName">Имя поля с конечной датой диапазона</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="longFormat">Использование длинного (true) или короткого (false) формата отображения.
-    /// См. класс DateRangeFormatter</param>
-    /// <param name="textWidth">Ширина в текстовых единицах</param>
-    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="firstColumnName">РРјСЏ РїРѕР»СЏ СЃ РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚РѕР№ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastColumnName">РРјСЏ РїРѕР»СЏ СЃ РєРѕРЅРµС‡РЅРѕР№ РґР°С‚РѕР№ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="longFormat">РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РґР»РёРЅРЅРѕРіРѕ (true) РёР»Рё РєРѕСЂРѕС‚РєРѕРіРѕ (false) С„РѕСЂРјР°С‚Р° РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ.
+    /// РЎРј. РєР»Р°СЃСЃ DateRangeFormatter</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="minTextWidth">РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddDateRange(string name, string firstColumnName, string lastColumnName,
       string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
@@ -621,18 +621,18 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить вычисляемый текстовый столбец для отображения интервала дат на основании двух
-    /// полей с датой.
-    /// Для отображения текста используется DateRangeFormatter.
-    /// Эта версия вычисляет ширину столбца автоматически.
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ С‚РµРєСЃС‚РѕРІС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚ РЅР° РѕСЃРЅРѕРІР°РЅРёРё РґРІСѓС…
+    /// РїРѕР»РµР№ СЃ РґР°С‚РѕР№.
+    /// Р”Р»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‚РµРєСЃС‚Р° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ DateRangeFormatter.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РІС‹С‡РёСЃР»СЏРµС‚ С€РёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р° Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="firstColumnName">Имя поля с начальной датой диапазона</param>
-    /// <param name="lastColumnName">Имя поля с конечной датой диапазона</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="longFormat">Использование длинного (true) или короткого (false) формата отображения.
-    /// См. класс DateRangeFormatter</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="firstColumnName">РРјСЏ РїРѕР»СЏ СЃ РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚РѕР№ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastColumnName">РРјСЏ РїРѕР»СЏ СЃ РєРѕРЅРµС‡РЅРѕР№ РґР°С‚РѕР№ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="longFormat">РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РґР»РёРЅРЅРѕРіРѕ (true) РёР»Рё РєРѕСЂРѕС‚РєРѕРіРѕ (false) С„РѕСЂРјР°С‚Р° РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ.
+    /// РЎРј. РєР»Р°СЃСЃ DateRangeFormatter</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddDateRange(string name, string firstColumnName, string lastColumnName,
       string headerText, bool longFormat)
     {
@@ -644,7 +644,7 @@ namespace FreeLibSet.Forms
       else
         item.ValueNeeded += new EFPGridProducerValueNeededEventHandler(DateRangeColumn_ShortValueNeeded);
       // 05.07.2019.
-      // Определяем ширину столбца
+      // РћРїСЂРµРґРµР»СЏРµРј С€РёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р°
       if (longFormat)
         item.TextWidth = DateRangeFormatter.Default.DateRangeLongTextLength;
       else
@@ -677,16 +677,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает столбец для отображения столбца, содержащего номер дня в диапазоне от 1 до 365 как месяца и дня (структура MonthDay).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// РЎРѕР·РґР°РµС‚ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РЅРѕРјРµСЂ РґРЅСЏ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 365 РєР°Рє РјРµСЃСЏС†Р° Рё РґРЅСЏ (СЃС‚СЂСѓРєС‚СѓСЂР° MonthDay).
+    /// Р”Р»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃ DateRangeFormatter.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца табличного просмотра</param>
-    /// <param name="sourceColumnName">Имя числового столбца в базе данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="longFormat">true - использовать длинный формат, false-использовать короткий формат</param>
-    /// <param name="textWidth">Ширина в текстовых единицах</param>
-    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="sourceColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="longFormat">true - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»РёРЅРЅС‹Р№ С„РѕСЂРјР°С‚, false-РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="minTextWidth">РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddMonthDay(string name, string sourceColumnName, string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
       EFPGridProducerColumn item = AddMonthDay(name, sourceColumnName, headerText, longFormat);
@@ -696,15 +696,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает текстовый столбец для отображения числового поля с номером дня в диапазоне от 1 до 365 как месяца и дня (структура MonthDay).
-    /// Для текстового представления используется класс DateRangeFormatter.
-    /// Эта версия вычисляет ширину столбца автоматически.
+    /// РЎРѕР·РґР°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ СЃ РЅРѕРјРµСЂРѕРј РґРЅСЏ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 365 РєР°Рє РјРµСЃСЏС†Р° Рё РґРЅСЏ (СЃС‚СЂСѓРєС‚СѓСЂР° MonthDay).
+    /// Р”Р»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃ DateRangeFormatter.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РІС‹С‡РёСЃР»СЏРµС‚ С€РёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р° Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца табличного просмотра</param>
-    /// <param name="sourceColumnName">Имя числового столбца в базе данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="longFormat">true - использовать длинный формат, false-использовать короткий формат</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="sourceColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="longFormat">true - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»РёРЅРЅС‹Р№ С„РѕСЂРјР°С‚, false-РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddMonthDay(string name, string sourceColumnName, string headerText, bool longFormat)
     {
       EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { sourceColumnName });
@@ -751,17 +751,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает столбец для отображения двух столбоц, содержащих номер дня в диапазоне от 1 до 365 как диапазона дней в году (структура MonthDayRange).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// РЎРѕР·РґР°РµС‚ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРІСѓС… СЃС‚РѕР»Р±РѕС†, СЃРѕРґРµСЂР¶Р°С‰РёС… РЅРѕРјРµСЂ РґРЅСЏ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 365 РєР°Рє РґРёР°РїР°Р·РѕРЅР° РґРЅРµР№ РІ РіРѕРґСѓ (СЃС‚СЂСѓРєС‚СѓСЂР° MonthDayRange).
+    /// Р”Р»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃ DateRangeFormatter.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца табличного просмотра</param>
-    /// <param name="firstDayColumnName">Имя числового столбца в базе данных, задающего первый день диапазона</param>
-    /// <param name="lastDayColumnName">Имя числового столбца в базе данных, задающего последний день диапазона</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="longFormat">true - использовать длинный формат, false-использовать короткий формат</param>
-    /// <param name="textWidth">Ширина в текстовых единицах</param>
-    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="firstDayColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…, Р·Р°РґР°СЋС‰РµРіРѕ РїРµСЂРІС‹Р№ РґРµРЅСЊ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastDayColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…, Р·Р°РґР°СЋС‰РµРіРѕ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="longFormat">true - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»РёРЅРЅС‹Р№ С„РѕСЂРјР°С‚, false-РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚</param>
+    /// <param name="textWidth">РЁРёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <param name="minTextWidth">РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° РІ С‚РµРєСЃС‚РѕРІС‹С… РµРґРёРЅРёС†Р°С…</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddMonthDayRange(string name, string firstDayColumnName, string lastDayColumnName, string headerText, bool longFormat, int textWidth, int minTextWidth)
     {
       EFPGridProducerColumn item = AddMonthDayRange(name, firstDayColumnName, lastDayColumnName, headerText, longFormat);
@@ -771,16 +771,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает столбец для отображения двух столбоц, содержащих номер дня в диапазоне от 1 до 365 как диапазона дней в году (структура MonthDayRange).
-    /// Для текстового представления используется класс DateRangeFormatter.
-    /// Эта версия вычисляет ширину столбца автоматически.
+    /// РЎРѕР·РґР°РµС‚ СЃС‚РѕР»Р±РµС† РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РґРІСѓС… СЃС‚РѕР»Р±РѕС†, СЃРѕРґРµСЂР¶Р°С‰РёС… РЅРѕРјРµСЂ РґРЅСЏ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 365 РєР°Рє РґРёР°РїР°Р·РѕРЅР° РґРЅРµР№ РІ РіРѕРґСѓ (СЃС‚СЂСѓРєС‚СѓСЂР° MonthDayRange).
+    /// Р”Р»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃ DateRangeFormatter.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РІС‹С‡РёСЃР»СЏРµС‚ С€РёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р° Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё.
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца табличного просмотра</param>
-    /// <param name="firstDayColumnName">Имя числового столбца в базе данных, задающего первый день диапазона</param>
-    /// <param name="lastDayColumnName">Имя числового столбца в базе данных, задающего последний день диапазона</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="longFormat">true - использовать длинный формат, false-использовать короткий формат</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="firstDayColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…, Р·Р°РґР°СЋС‰РµРіРѕ РїРµСЂРІС‹Р№ РґРµРЅСЊ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastDayColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…, Р·Р°РґР°СЋС‰РµРіРѕ РїРѕСЃР»РµРґРЅРёР№ РґРµРЅСЊ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="longFormat">true - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»РёРЅРЅС‹Р№ С„РѕСЂРјР°С‚, false-РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєРѕСЂРѕС‚РєРёР№ С„РѕСЂРјР°С‚</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerColumn AddMonthDayRange(string name, string firstDayColumnName, string lastDayColumnName, string headerText, bool longFormat)
     {
       EFPGridProducerColumn item = new EFPGridProducerColumn(name, new string[] { firstDayColumnName, lastDayColumnName });
@@ -831,11 +831,11 @@ namespace FreeLibSet.Forms
     #region CheckBox
 
     /// <summary>
-    /// Добавить столбец-флажок для логического поля
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃС‚РѕР»Р±РµС†-С„Р»Р°Р¶РѕРє РґР»СЏ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ РїРѕР»СЏ
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerCheckBoxColumn AddBool(string columnName, string headerText)
     {
       EFPGridProducerCheckBoxColumn item = new EFPGridProducerCheckBoxColumn(columnName);
@@ -846,14 +846,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец-флажок для логического поля
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС†-С„Р»Р°Р¶РѕРє РґР»СЏ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ РїРѕР»СЏ
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerCheckBoxColumn AddUserBool(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText)
@@ -872,17 +872,17 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Значок
+    #region Р—РЅР°С‡РѕРє
 
     /// <summary>
-    /// Добавить вычисляемый столбец с картинкой
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† СЃ РєР°СЂС‚РёРЅРєРѕР№
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="headerText">Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerImageColumn AddUserImage(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText)
@@ -899,13 +899,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить вычисляемый столбец с картинкой
+    /// Р”РѕР±Р°РІРёС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† СЃ РєР°СЂС‚РёРЅРєРѕР№
     /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <returns>Описание столбца</returns>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РЎРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»РµР№</param>
+    /// <param name="valueNeeded">РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ СЂР°СЃС‡РµС‚ Р·РЅР°С‡РµРЅРёР№.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїСЂРѕСЂРёСЃРѕРІРєРµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <returns>РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</returns>
     public EFPGridProducerImageColumn AddUserImage(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded)
     {
@@ -916,12 +916,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Выводит список столбцов (для отладки)
+    /// Р’С‹РІРѕРґРёС‚ СЃРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ (РґР»СЏ РѕС‚Р»Р°РґРєРё)
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       string s = "";
@@ -957,14 +957,14 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
-  #region Делегаты
+  #region Р”РµР»РµРіР°С‚С‹
 
   /// <summary>
-  /// Аргументы события EFPGridProducerColumn.CellClick
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ EFPGridProducerColumn.CellClick
   /// </summary>
   public class EFPGridProducerCellClickEventArgs : EFPGridProducerBaseEventArgs
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPGridProducerCellClickEventArgs(EFPGridProducerItemBase owner)
       : base(owner)
@@ -974,24 +974,24 @@ namespace FreeLibSet.Forms
     #endregion
 
 
-    // Нет новых свойств
+    // РќРµС‚ РЅРѕРІС‹С… СЃРІРѕР№СЃС‚РІ
   }
 
   /// <summary>
-  /// Делегат события EFPGridProducerColumn.CellClick
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ EFPGridProducerColumn.CellClick
   /// </summary>
-  /// <param name="sender">Объект EFPGridProducerColumn</param>
+  /// <param name="sender">РћР±СЉРµРєС‚ EFPGridProducerColumn</param>
   /// <param name="args"></param>
   public delegate void EFPGridProducerCellClickEventHandler(object sender,
     EFPGridProducerCellClickEventArgs args);
 
 
   /// <summary>
-  /// Аргументы события EFPGridProducerColumn.CellEdit
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ EFPGridProducerColumn.CellEdit
   /// </summary>
   public class EFPGridProducerCellEditEventArgs : EFPGridProducerBaseEventArgs
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal EFPGridProducerCellEditEventArgs(EFPGridProducerItemBase owner)
       : base(owner)
@@ -1002,7 +1002,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Свойство должно быть установлено в true, если редактирование выполнено и дальнейшие действия не требуются
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, РµСЃР»Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РІС‹РїРѕР»РЅРµРЅРѕ Рё РґР°Р»СЊРЅРµР№С€РёРµ РґРµР№СЃС‚РІРёСЏ РЅРµ С‚СЂРµР±СѓСЋС‚СЃСЏ
     /// </summary>
     public bool Handled
     {
@@ -1013,9 +1013,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события EFPGridProducerColumn.CellEdit
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ EFPGridProducerColumn.CellEdit
   /// </summary>
-  /// <param name="sender">Объект EFPGridProducerColumn</param>
+  /// <param name="sender">РћР±СЉРµРєС‚ EFPGridProducerColumn</param>
   /// <param name="args"></param>
   public delegate void EFPGridProducerCellEditEventHandler(object sender,
     EFPGridProducerCellEditEventArgs args);
@@ -1023,33 +1023,33 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Описание одного возможного столбца.
-  /// Данные извлекаются из источника данных или столбец может быть вычисляемыми.
+  /// РћРїРёСЃР°РЅРёРµ РѕРґРЅРѕРіРѕ РІРѕР·РјРѕР¶РЅРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
+  /// Р”Р°РЅРЅС‹Рµ РёР·РІР»РµРєР°СЋС‚СЃСЏ РёР· РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С… РёР»Рё СЃС‚РѕР»Р±РµС† РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹РјРё.
   /// </summary>
   public class EFPGridProducerColumn : EFPGridProducerItemBase, IEFPGridProducerColumn
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает описание столбца с заданным именем.
-    /// Данные будут извлекаться из источника данных 
+    /// РЎРѕР·РґР°РµС‚ РѕРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р° СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј.
+    /// Р”Р°РЅРЅС‹Рµ Р±СѓРґСѓС‚ РёР·РІР»РµРєР°С‚СЊСЃСЏ РёР· РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С… 
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
     public EFPGridProducerColumn(string columnName)
       : this(columnName, null)
     {
     }
 
     /// <summary>
-    /// Создание вычисляемого столбца.
-    /// Если <paramref name="sourceColumnNames"/> задано, то столбец будет вычисляемым.
-    /// Если столбец извлекает данные не из источника данных, то следует задать пустой массив <paramref name="sourceColumnNames"/>=DataTools.EmptyStrings.
+    /// РЎРѕР·РґР°РЅРёРµ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
+    /// Р•СЃР»Рё <paramref name="sourceColumnNames"/> Р·Р°РґР°РЅРѕ, С‚Рѕ СЃС‚РѕР»Р±РµС† Р±СѓРґРµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹Рј.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РёР·РІР»РµРєР°РµС‚ РґР°РЅРЅС‹Рµ РЅРµ РёР· РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С…, С‚Рѕ СЃР»РµРґСѓРµС‚ Р·Р°РґР°С‚СЊ РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ <paramref name="sourceColumnNames"/>=DataTools.EmptyStrings.
     /// </summary>
-    /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Имена столбов, на основании которых производится вычисления.
-    /// Если null, то столбец является обычным, а невычисляемым.
-    /// Для создания вычисляемого столбца, не использующего данные других столбцов (например для нумерации строк),
-    /// задайте пустой массив DataTools.EmptyStrings</param>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ СЌС‚РѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РРјРµРЅР° СЃС‚РѕР»Р±РѕРІ, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ СЃС‚РѕР»Р±РµС† СЏРІР»СЏРµС‚СЃСЏ РѕР±С‹С‡РЅС‹Рј, Р° РЅРµРІС‹С‡РёСЃР»СЏРµРјС‹Рј.
+    /// Р”Р»СЏ СЃРѕР·РґР°РЅРёСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°, РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‰РµРіРѕ РґР°РЅРЅС‹Рµ РґСЂСѓРіРёС… СЃС‚РѕР»Р±С†РѕРІ (РЅР°РїСЂРёРјРµСЂ РґР»СЏ РЅСѓРјРµСЂР°С†РёРё СЃС‚СЂРѕРє),
+    /// Р·Р°РґР°Р№С‚Рµ РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ DataTools.EmptyStrings</param>
     public EFPGridProducerColumn(string name, string[] sourceColumnNames)
       : base(name, sourceColumnNames)
     {
@@ -1065,10 +1065,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Общие свойства столбца
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР° СЃС‚РѕР»Р±С†Р°
 
     /// <summary>
-    /// Заголовок столбца в табличном просмотре
+    /// Р—Р°РіРѕР»РѕРІРѕРє СЃС‚РѕР»Р±С†Р° РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ
     /// </summary>
     public string HeaderText
     {
@@ -1087,7 +1087,7 @@ namespace FreeLibSet.Forms
     private string _HeaderText;
 
     /// <summary>
-    /// Используется, когда свойство DisplayName не задано в явном виде
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РєРѕРіРґР° СЃРІРѕР№СЃС‚РІРѕ DisplayName РЅРµ Р·Р°РґР°РЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ
     /// </summary>
     /// <returns></returns>
     protected override string GetDefaultDisplayName()
@@ -1099,8 +1099,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Всплывающая подсказка при наведении курсора на заголок столбца.
-    /// Если свойство не установлено в явном виде, возвращает DisplayName
+    /// Р’СЃРїР»С‹РІР°СЋС‰Р°СЏ РїРѕРґСЃРєР°Р·РєР° РїСЂРё РЅР°РІРµРґРµРЅРёРё РєСѓСЂСЃРѕСЂР° РЅР° Р·Р°РіРѕР»РѕРє СЃС‚РѕР»Р±С†Р°.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, РІРѕР·РІСЂР°С‰Р°РµС‚ DisplayName
     /// </summary>
     public string HeaderToolTipText
     {
@@ -1119,7 +1119,7 @@ namespace FreeLibSet.Forms
     private string _HeaderToolTipText;
 
     /// <summary>
-    /// Ширина столбца в символах
+    /// РЁРёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РІ СЃРёРјРІРѕР»Р°С…
     /// </summary>
     public int TextWidth
     {
@@ -1127,14 +1127,14 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException("value", value, "Ширина столбца не может быть меньше 1 символа");
+          throw new ArgumentOutOfRangeException("value", value, "РЁРёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ 1 СЃРёРјРІРѕР»Р°");
         _TextWidth = value;
       }
     }
     private int _TextWidth;
 
     /// <summary>
-    /// Минимальная ширина столбца в символах
+    /// РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РІ СЃРёРјРІРѕР»Р°С…
     /// </summary>
     public int MinTextWidth
     {
@@ -1142,7 +1142,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException("value", value, "Минимальная ширина столбца не может быть меньше 1 символа");
+          throw new ArgumentOutOfRangeException("value", value, "РњРёРЅРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° СЃС‚РѕР»Р±С†Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ 1 СЃРёРјРІРѕР»Р°");
         _MinTextWidth = value;
       }
     }
@@ -1151,8 +1151,8 @@ namespace FreeLibSet.Forms
     private const string NonResizableSizeGroup = "-";
 
     /// <summary>
-    /// Имя группы для синхронного изменения размеров. См. EFPDataGridViewColumn.SizeGroup
-    /// Это свойство несовместимо со сбросом свойства Resizable=false
+    /// РРјСЏ РіСЂСѓРїРїС‹ РґР»СЏ СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РёР·РјРµРЅРµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ. РЎРј. EFPDataGridViewColumn.SizeGroup
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РЅРµСЃРѕРІРјРµСЃС‚РёРјРѕ СЃРѕ СЃР±СЂРѕСЃРѕРј СЃРІРѕР№СЃС‚РІР° Resizable=false
     /// </summary>
     public string SizeGroup
     {
@@ -1168,7 +1168,7 @@ namespace FreeLibSet.Forms
     private string _SizeGroup;
 
     /// <summary>
-    /// Если true (по умолчанию), то пользователь может менять гирину столбца.
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊ РіРёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р°.
     /// </summary>
     public bool Resizable
     {
@@ -1186,94 +1186,94 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Горизонтальное выравнивание текста в столбце
+    /// Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕРµ РІС‹СЂР°РІРЅРёРІР°РЅРёРµ С‚РµРєСЃС‚Р° РІ СЃС‚РѕР»Р±С†Рµ
     /// </summary>
     public HorizontalAlignment TextAlign { get { return _TextAlign; } set { _TextAlign = value; } }
     private HorizontalAlignment _TextAlign;
 
     /// <summary>
-    /// Число строк текста для отображения в ячейке.
-    /// Значение по умолчанию: 1. Если задано значение, большее 1, то для столбца 
-    /// устанавливается свойство DataGridViewCellStyle.WrapMode=True, а высота
-    /// всех строк в просмотре будет увеличена
+    /// Р§РёСЃР»Рѕ СЃС‚СЂРѕРє С‚РµРєСЃС‚Р° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІ СЏС‡РµР№РєРµ.
+    /// Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ: 1. Р•СЃР»Рё Р·Р°РґР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ, Р±РѕР»СЊС€РµРµ 1, С‚Рѕ РґР»СЏ СЃС‚РѕР»Р±С†Р° 
+    /// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ DataGridViewCellStyle.WrapMode=True, Р° РІС‹СЃРѕС‚Р°
+    /// РІСЃРµС… СЃС‚СЂРѕРє РІ РїСЂРѕСЃРјРѕС‚СЂРµ Р±СѓРґРµС‚ СѓРІРµР»РёС‡РµРЅР°
     /// </summary>
     public int TextRowHeight { get { return _TextRowHeight; } set { _TextRowHeight = value; } }
     private int _TextRowHeight;
 
     /// <summary>
-    /// Форматирование данных при отображении.
-    /// Используется для установки свойства DataGridViewCellStyle.Format.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РґР°РЅРЅС‹С… РїСЂРё РѕС‚РѕР±СЂР°Р¶РµРЅРёРё.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° DataGridViewCellStyle.Format.
     /// </summary>
     public string Format { get { return _Format; } set { _Format = value; } }
     private string _Format;
 
     /// <summary>
-    /// Форматизатор для столбца.
-    /// Используется для установки свойства DataGridViewCellStyle.FormatProvider.
+    /// Р¤РѕСЂРјР°С‚РёР·Р°С‚РѕСЂ РґР»СЏ СЃС‚РѕР»Р±С†Р°.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІР° DataGridViewCellStyle.FormatProvider.
     /// </summary>
     public IFormatProvider FormatProvider { get { return _FormatProvider; } set { _FormatProvider = value; } }
     private IFormatProvider _FormatProvider;
 
     /// <summary>
-    /// Установка в true предотвращает редактирование столбца "По месту"
+    /// РЈСЃС‚Р°РЅРѕРІРєР° РІ true РїСЂРµРґРѕС‚РІСЂР°С‰Р°РµС‚ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЃС‚РѕР»Р±С†Р° "РџРѕ РјРµСЃС‚Сѓ"
     /// </summary>
     public bool ReadOnly { get { return _ReadOnly; } set { _ReadOnly = value; } }
     private bool _ReadOnly;
 
     /// <summary>
-    /// Установка в true разрешает быстрый поиск по первым буквам для этого столбца
+    /// РЈСЃС‚Р°РЅРѕРІРєР° РІ true СЂР°Р·СЂРµС€Р°РµС‚ Р±С‹СЃС‚СЂС‹Р№ РїРѕРёСЃРє РїРѕ РїРµСЂРІС‹Рј Р±СѓРєРІР°Рј РґР»СЏ СЌС‚РѕРіРѕ СЃС‚РѕР»Р±С†Р°
     /// </summary>
     public bool CanIncSearch { get { return _CanIncSearch; } set { _CanIncSearch = value; } }
     private bool _CanIncSearch;
 
     /// <summary>
-    /// Используется при поиске по первым буквам
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РїРѕРёСЃРєРµ РїРѕ РїРµСЂРІС‹Рј Р±СѓРєРІР°Рј
     /// </summary>
     public IMaskProvider MaskProvider { get { return _MaskProvider; } set { _MaskProvider = value; } }
     private IMaskProvider _MaskProvider;
 
     /// <summary>
-    /// Цветовое оформление для столбца
+    /// Р¦РІРµС‚РѕРІРѕРµ РѕС„РѕСЂРјР»РµРЅРёРµ РґР»СЏ СЃС‚РѕР»Р±С†Р°
     /// </summary>
     public EFPDataGridViewColorType ColorType { get { return _ColorType; } set { _ColorType = value; } }
     private EFPDataGridViewColorType _ColorType;
 
     /// <summary>
-    /// Признак вывода бледным шрифтом
+    /// РџСЂРёР·РЅР°Рє РІС‹РІРѕРґР° Р±Р»РµРґРЅС‹Рј С€СЂРёС„С‚РѕРј
     /// </summary>
     public bool Grayed { get { return _Grayed; } set { _Grayed = value; } }
     private bool _Grayed;
 
     /// <summary>
-    /// Формат столбца при сохранении просмотра в DBF-формате
+    /// Р¤РѕСЂРјР°С‚ СЃС‚РѕР»Р±С†Р° РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё РїСЂРѕСЃРјРѕС‚СЂР° РІ DBF-С„РѕСЂРјР°С‚Рµ
     /// </summary>
     public DbfFieldInfo DbfInfo { get { return _DbfInfo; } set { _DbfInfo = value; } }
     private DbfFieldInfo _DbfInfo;
 
 
     /// <summary>
-    /// Имя столбца, используемого для произвольной сортировки.
-    /// По умолчанию для невычисляемых столбцов устанавливается равным Name.
-    /// Для вычисляемых столбцов - пустая строка
+    /// РРјСЏ СЃС‚РѕР»Р±С†Р°, РёСЃРїРѕР»СЊР·СѓРµРјРѕРіРѕ РґР»СЏ РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ РЅРµРІС‹С‡РёСЃР»СЏРµРјС‹С… СЃС‚РѕР»Р±С†РѕРІ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЂР°РІРЅС‹Рј Name.
+    /// Р”Р»СЏ РІС‹С‡РёСЃР»СЏРµРјС‹С… СЃС‚РѕР»Р±С†РѕРІ - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°
     /// </summary>
     public string CustomOrderSourceColumnName { get { return _CustomOrderSourceColumnName; } set { _CustomOrderSourceColumnName = value; } }
     private string _CustomOrderSourceColumnName;
 
     /// <summary>
-    /// Тип данных для столбца. Используется в таблице-повторителе EFPGridProducerDataTableRepeater
+    /// РўРёРї РґР°РЅРЅС‹С… РґР»СЏ СЃС‚РѕР»Р±С†Р°. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ С‚Р°Р±Р»РёС†Рµ-РїРѕРІС‚РѕСЂРёС‚РµР»Рµ EFPGridProducerDataTableRepeater
     /// </summary>
     public Type DataType { get { return _DataType; } set { _DataType = value; } }
     private Type _DataType;
 
     #endregion
 
-    #region Создания столбца для табличного просмотра EFPDataGridView
+    #region РЎРѕР·РґР°РЅРёСЏ СЃС‚РѕР»Р±С†Р° РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° EFPDataGridView
 
     /// <summary>
-    /// Создает объект столбца для табличного просмотра Windows Forms.
-    /// Столбец не добавляется в просмотр.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃС‚РѕР»Р±С†Р° РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° Windows Forms.
+    /// РЎС‚РѕР»Р±РµС† РЅРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РІ РїСЂРѕСЃРјРѕС‚СЂ.
     /// </summary>
-    /// <returns>Объект столбца, производный от DataGridViewColumn</returns>
+    /// <returns>РћР±СЉРµРєС‚ СЃС‚РѕР»Р±С†Р°, РїСЂРѕРёР·РІРѕРґРЅС‹Р№ РѕС‚ DataGridViewColumn</returns>
     public virtual DataGridViewColumn CreateColumn()
     {
       DataGridViewTextBoxColumn gridColumn = new DataGridViewTextBoxColumn();
@@ -1282,8 +1282,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Инициализирует свойства DataGridViewColumn.
-    /// Используется в методах CreateColumn()
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІР° DataGridViewColumn.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РјРµС‚РѕРґР°С… CreateColumn()
     /// </summary>
     /// <param name="column"></param>
     protected void InitColumn(DataGridViewColumn column)
@@ -1315,12 +1315,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Применить настроенную конфигурацию табличного просмотра к столбцу Windows Forms.
-    /// Устанавливает свойства DataGridViewColumn.AutoSizeMode, Width, FillWeight и, возможно, другие. 
+    /// РџСЂРёРјРµРЅРёС‚СЊ РЅР°СЃС‚СЂРѕРµРЅРЅСѓСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° Рє СЃС‚РѕР»Р±С†Сѓ Windows Forms.
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІР° DataGridViewColumn.AutoSizeMode, Width, FillWeight Рё, РІРѕР·РјРѕР¶РЅРѕ, РґСЂСѓРіРёРµ. 
     /// </summary>
-    /// <param name="column">Столбец Windows Forms, </param>
-    /// <param name="config">Конфигурация столбца</param>
-    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    /// <param name="column">РЎС‚РѕР»Р±РµС† Windows Forms, </param>
+    /// <param name="config">РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="controlProvider">РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
     public virtual void ApplyConfig(DataGridViewColumn column, EFPDataGridViewConfigColumn config, EFPDataGridView controlProvider)
     {
       bool IsImgColumn = column is DataGridViewImageColumn || column is DataGridViewCheckBoxColumn;
@@ -1352,13 +1352,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Создание столбца иерархического просмотра EFPDataTreeView
+    #region РЎРѕР·РґР°РЅРёРµ СЃС‚РѕР»Р±С†Р° РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° EFPDataTreeView
 
     /// <summary>
-    /// Создает столбец для иерархического просмотра TreeViewAdv
+    /// РЎРѕР·РґР°РµС‚ СЃС‚РѕР»Р±РµС† РґР»СЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° TreeViewAdv
     /// </summary>
-    /// <param name="config">Конфигурация столбца</param>
-    /// <returns>Столбец TreeViewAdv</returns>
+    /// <param name="config">РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РЎС‚РѕР»Р±РµС† TreeViewAdv</returns>
     public virtual TreeColumn CreateTreeColumn(EFPDataGridViewConfigColumn config)
     {
       TreeColumn column = new TreeColumn(DisplayName, TextWidth * 10);
@@ -1375,10 +1375,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает присоединяемый элемент для столбца TreeViewAdv.
-    /// Непереопределенный метод возвращает NodeTextBox
+    /// РЎРѕР·РґР°РµС‚ РїСЂРёСЃРѕРµРґРёРЅСЏРµРјС‹Р№ СЌР»РµРјРµРЅС‚ РґР»СЏ СЃС‚РѕР»Р±С†Р° TreeViewAdv.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ NodeTextBox
     /// </summary>
-    /// <returns>Присоединяемый элемент</returns>
+    /// <returns>РџСЂРёСЃРѕРµРґРёРЅСЏРµРјС‹Р№ СЌР»РµРјРµРЅС‚</returns>
     public virtual BindableControl CreateNodeControl()
     {
       NodeTextBox tb = new NodeTextBox();
@@ -1388,7 +1388,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Ничего не делает
+    /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
     /// </summary>
     /// <param name="nodeControl"></param>
     /// <param name="config"></param>
@@ -1430,14 +1430,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Получение значения
+    #region РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ
 
     /// <summary>
-    /// Получение значение вычисляемого поля. Вызывает виртуальный метод OnValueNeeded().
-    /// Если столбец/подсказка не являются вычисляемым, возвращается значение <paramref name="rowInfo"/>.Values.GetValue(Name).
+    /// РџРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёРµ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ РїРѕР»СЏ. Р’С‹Р·С‹РІР°РµС‚ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ OnValueNeeded().
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС†/РїРѕРґСЃРєР°Р·РєР° РЅРµ СЏРІР»СЏСЋС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ <paramref name="rowInfo"/>.Values.GetValue(Name).
     /// </summary>
-    /// <param name="rowInfo">Информация о строке</param>
-    /// <returns>Вычисленное значение</returns>
+    /// <param name="rowInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‚СЂРѕРєРµ</param>
+    /// <returns>Р’С‹С‡РёСЃР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
     public object GetValue(EFPDataViewRowInfo rowInfo)
     {
       object value;
@@ -1448,12 +1448,12 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вызывается при необходимости получения всплывающей подсказки для данной ячейки
-    /// при наведении курсора. Если возвращается пустая строка, то нет дополнительной подсказки для ячейки
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РїРѕР»СѓС‡РµРЅРёСЏ РІСЃРїР»С‹РІР°СЋС‰РµР№ РїРѕРґСЃРєР°Р·РєРё РґР»СЏ РґР°РЅРЅРѕР№ СЏС‡РµР№РєРё
+    /// РїСЂРё РЅР°РІРµРґРµРЅРёРё РєСѓСЂСЃРѕСЂР°. Р•СЃР»Рё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, С‚Рѕ РЅРµС‚ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ РїРѕРґСЃРєР°Р·РєРё РґР»СЏ СЏС‡РµР№РєРё
     /// </summary>
-    /// <param name="rowInfo">Информация о строке</param>
-    /// <param name="columnName">Игнорируется. Сделано для симметрии с остальными обработчиками</param>
-    /// <returns>Текст подсказки</returns>
+    /// <param name="rowInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‚СЂРѕРєРµ</param>
+    /// <param name="columnName">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ. РЎРґРµР»Р°РЅРѕ РґР»СЏ СЃРёРјРјРµС‚СЂРёРё СЃ РѕСЃС‚Р°Р»СЊРЅС‹РјРё РѕР±СЂР°Р±РѕС‚С‡РёРєР°РјРё</param>
+    /// <returns>РўРµРєСЃС‚ РїРѕРґСЃРєР°Р·РєРё</returns>
     public string GetCellToolTipText(EFPDataViewRowInfo rowInfo, string columnName)
     {
       object value;
@@ -1468,16 +1468,16 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Событие GetCellAttributes
+    #region РЎРѕР±С‹С‚РёРµ GetCellAttributes
 
     /// <summary>
-    /// Событие вызывается при форматировании ячейки с возможностью задания 
-    /// цветовых атрибутов и отформатированного значения
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРё СЏС‡РµР№РєРё СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р·Р°РґР°РЅРёСЏ 
+    /// С†РІРµС‚РѕРІС‹С… Р°С‚СЂРёР±СѓС‚РѕРІ Рё РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
     /// </summary>
     public event EFPDataGridViewCellAttributesEventHandler GetCellAttributes;
 
     ///// <summary>
-    ///// Возвращает true, если для столбца заданы форматирующие обработчики
+    ///// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР»СЏ СЃС‚РѕР»Р±С†Р° Р·Р°РґР°РЅС‹ С„РѕСЂРјР°С‚РёСЂСѓСЋС‰РёРµ РѕР±СЂР°Р±РѕС‚С‡РёРєРё
     ///// </summary>
     //public bool HasGetCellAttributes
     //{
@@ -1485,9 +1485,9 @@ namespace FreeLibSet.Forms
     //}
 
     /// <summary>
-    /// Вызов события GetCellAttributes из DocGridHandler
+    /// Р’С‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ GetCellAttributes РёР· DocGridHandler
     /// </summary>
-    /// <param name="args">Аргументы, передаваемые обработчику</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹, РїРµСЂРµРґР°РІР°РµРјС‹Рµ РѕР±СЂР°Р±РѕС‚С‡РёРєСѓ</param>
     internal void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
     {
       if (GetCellAttributes != null)
@@ -1496,19 +1496,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Событие CellClick
+    #region РЎРѕР±С‹С‚РёРµ CellClick
 
     /// <summary>
-    /// Событие вызывается при одинарном щелчке левой кнопки мыши по ячейке таблицы.
-    /// Используется для столбцов CheckBox.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕРґРёРЅР°СЂРЅРѕРј С‰РµР»С‡РєРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё РїРѕ СЏС‡РµР№РєРµ С‚Р°Р±Р»РёС†С‹.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЃС‚РѕР»Р±С†РѕРІ CheckBox.
     /// </summary>
     public event EFPGridProducerCellClickEventHandler CellClick;
 
     /// <summary>
-    /// Вызывается при одинарном щелчке левой кнопки мыши по ячейке таблицы.
-    /// Вызывает обработчик события CellClick, если он установлен
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕРґРёРЅР°СЂРЅРѕРј С‰РµР»С‡РєРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё РїРѕ СЏС‡РµР№РєРµ С‚Р°Р±Р»РёС†С‹.
+    /// Р’С‹Р·С‹РІР°РµС‚ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ CellClick, РµСЃР»Рё РѕРЅ СѓСЃС‚Р°РЅРѕРІР»РµРЅ
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected virtual void OnCellClick(EFPGridProducerCellClickEventArgs args)
     {
       if (CellClick != null)
@@ -1516,12 +1516,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается при одинарном щелчке левой кнопки мыши по ячейке таблицы.
-    /// Используется для столбцов CheckBox.
-    /// Вызывает виртуальный метод OnCellClick()
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕРґРёРЅР°СЂРЅРѕРј С‰РµР»С‡РєРµ Р»РµРІРѕР№ РєРЅРѕРїРєРё РјС‹С€Рё РїРѕ СЏС‡РµР№РєРµ С‚Р°Р±Р»РёС†С‹.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЃС‚РѕР»Р±С†РѕРІ CheckBox.
+    /// Р’С‹Р·С‹РІР°РµС‚ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ OnCellClick()
     /// </summary>
-    /// <param name="rowInfo">Информация о строке</param>
-    /// <param name="columnName">Игнорируется, т.к. EFPGridProducerColumn и всегда относится к единственному столбцу просмотра</param>
+    /// <param name="rowInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‚СЂРѕРєРµ</param>
+    /// <param name="columnName">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ, С‚.Рє. EFPGridProducerColumn Рё РІСЃРµРіРґР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РµРґРёРЅСЃС‚РІРµРЅРЅРѕРјСѓ СЃС‚РѕР»Р±С†Сѓ РїСЂРѕСЃРјРѕС‚СЂР°</param>
     public void PerformCellClick(EFPDataViewRowInfo rowInfo, string columnName)
     {
       EFPGridProducerCellClickEventArgs args = new EFPGridProducerCellClickEventArgs(this);
@@ -1531,16 +1531,16 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Событие CellEdit
+    #region РЎРѕР±С‹С‚РёРµ CellEdit
 
     /// <summary>
-    /// Событие вызывается при попытке редактирования ячейки, связанной со столбцом.
-    /// Метод вызывается до стандартной обработки, например, посылки извещения EFPDataGridView.Editdata
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРѕРїС‹С‚РєРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЏС‡РµР№РєРё, СЃРІСЏР·Р°РЅРЅРѕР№ СЃРѕ СЃС‚РѕР»Р±С†РѕРј.
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРё, РЅР°РїСЂРёРјРµСЂ, РїРѕСЃС‹Р»РєРё РёР·РІРµС‰РµРЅРёСЏ EFPDataGridView.Editdata
     /// </summary>
     public event EFPGridProducerCellEditEventHandler CellEdit;
 
     /// <summary>
-    /// Вызывает обработчик события CellEdit, если он установлен
+    /// Р’С‹Р·С‹РІР°РµС‚ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ CellEdit, РµСЃР»Рё РѕРЅ СѓСЃС‚Р°РЅРѕРІР»РµРЅ
     /// </summary>
     /// <param name="args"></param>
     protected virtual void OnCellEdit(EFPGridProducerCellEditEventArgs args)
@@ -1550,12 +1550,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается при попытке редактирования ячейки, связанной со столбцом.
-    /// Метод вызывается до стандартной обработки, например, посылки извещения EFPDataGridView.Editdata
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРѕРїС‹С‚РєРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЏС‡РµР№РєРё, СЃРІСЏР·Р°РЅРЅРѕР№ СЃРѕ СЃС‚РѕР»Р±С†РѕРј.
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРё, РЅР°РїСЂРёРјРµСЂ, РїРѕСЃС‹Р»РєРё РёР·РІРµС‰РµРЅРёСЏ EFPDataGridView.Editdata
     /// </summary>
-    /// <param name="rowInfo">Информация о строке просмотра</param>
-    /// <param name="columnName">Игнорируется, т.к. EFPGridProducerColumn и всегда относится к единственному столбцу просмотра</param>
-    /// <returns>true, если редактирование выполнено и дальнейшее редактирование не должно выполняться</returns>
+    /// <param name="rowInfo">РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‚СЂРѕРєРµ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="columnName">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ, С‚.Рє. EFPGridProducerColumn Рё РІСЃРµРіРґР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РµРґРёРЅСЃС‚РІРµРЅРЅРѕРјСѓ СЃС‚РѕР»Р±С†Сѓ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <returns>true, РµСЃР»Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РІС‹РїРѕР»РЅРµРЅРѕ Рё РґР°Р»СЊРЅРµР№С€РµРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РЅРµ РґРѕР»Р¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ</returns>
     public bool PerformCellEdit(EFPDataViewRowInfo rowInfo, string columnName)
     {
       EFPGridProducerCellEditEventArgs args = new EFPGridProducerCellEditEventArgs(this);
@@ -1566,20 +1566,20 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства для печати
+    #region РЎРІРѕР№СЃС‚РІР° РґР»СЏ РїРµС‡Р°С‚Рё
 
     /// <summary>
-    /// Многострочные заголовки при печати таблицы
+    /// РњРЅРѕРіРѕСЃС‚СЂРѕС‡РЅС‹Рµ Р·Р°РіРѕР»РѕРІРєРё РїСЂРё РїРµС‡Р°С‚Рё С‚Р°Р±Р»РёС†С‹
     /// </summary>
     public string[] PrintHeaders { get { return _PrintHeaders; } set { _PrintHeaders = value; } }
     private string[] _PrintHeaders;
 
     /// <summary>
-    /// Многострочные заголовки при печати таблицы (свойство PrintHeaders)
-    /// Версия для установки в виде одной строки с заменой символов:
-    /// "|" - разделитель многострочного заголовка
-    /// "^" - мягкий перенос
-    /// "_" - неразрывный пробел
+    /// РњРЅРѕРіРѕСЃС‚СЂРѕС‡РЅС‹Рµ Р·Р°РіРѕР»РѕРІРєРё РїСЂРё РїРµС‡Р°С‚Рё С‚Р°Р±Р»РёС†С‹ (СЃРІРѕР№СЃС‚РІРѕ PrintHeaders)
+    /// Р’РµСЂСЃРёСЏ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё РІ РІРёРґРµ РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё СЃ Р·Р°РјРµРЅРѕР№ СЃРёРјРІРѕР»РѕРІ:
+    /// "|" - СЂР°Р·РґРµР»РёС‚РµР»СЊ РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅРѕРіРѕ Р·Р°РіРѕР»РѕРІРєР°
+    /// "^" - РјСЏРіРєРёР№ РїРµСЂРµРЅРѕСЃ
+    /// "_" - РЅРµСЂР°Р·СЂС‹РІРЅС‹Р№ РїСЂРѕР±РµР»
     /// </summary>
     public string PrintHeadersSpec
     {
@@ -1589,15 +1589,15 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Получить имена полей, которые должны быть в наборе данных.
-    /// Если столбец является вычисляемым, в список добавляются имена исходных столбцов SourceColumnNames.
-    /// Иначе добавляется имя Name для невычисляемого столбца/подсказки/.
-    /// Также в список добавляется CustomOrderSourceColumnName.
+    /// РџРѕР»СѓС‡РёС‚СЊ РёРјРµРЅР° РїРѕР»РµР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ РЅР°Р±РѕСЂРµ РґР°РЅРЅС‹С….
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, РІ СЃРїРёСЃРѕРє РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РёРјРµРЅР° РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ SourceColumnNames.
+    /// РРЅР°С‡Рµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РёРјСЏ Name РґР»СЏ РЅРµРІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р°/РїРѕРґСЃРєР°Р·РєРё/.
+    /// РўР°РєР¶Рµ РІ СЃРїРёСЃРѕРє РґРѕР±Р°РІР»СЏРµС‚СЃСЏ CustomOrderSourceColumnName.
     /// </summary>
-    /// <param name="columns">Список для добавления имен полей</param>
+    /// <param name="columns">РЎРїРёСЃРѕРє РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РёРјРµРЅ РїРѕР»РµР№</param>
     public override void GetColumnNames(IList<string> columns)
     {
       base.GetColumnNames(columns);
@@ -1606,23 +1606,23 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает желаемую ширину столбца в пикселях.
-    /// Непереопределенный метод вычисляет ширину исходя из свойства TextWidth.
-    /// Переопределяется для столбцов c CheckBox и значком
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р¶РµР»Р°РµРјСѓСЋ С€РёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р° РІ РїРёРєСЃРµР»СЏС….
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІС‹С‡РёСЃР»СЏРµС‚ С€РёСЂРёРЅСѓ РёСЃС…РѕРґСЏ РёР· СЃРІРѕР№СЃС‚РІР° TextWidth.
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РґР»СЏ СЃС‚РѕР»Р±С†РѕРІ c CheckBox Рё Р·РЅР°С‡РєРѕРј
     /// </summary>
-    /// <param name="measures">Объект для вычисления размеров, присоединенный к табличному просмотру.</param>
-    /// <returns>Ширина в пикселях</returns>
+    /// <param name="measures">РћР±СЉРµРєС‚ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ, РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Р№ Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ.</param>
+    /// <returns>РЁРёСЂРёРЅР° РІ РїРёРєСЃРµР»СЏС…</returns>
     public virtual int GetWidth(IEFPGridControlMeasures measures)
     {
       int tw = this.TextWidth;
       if (tw < 1)
-        tw = 1; // Если не установлено
+        tw = 1; // Р•СЃР»Рё РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ
       return measures.GetTextColumnWidth(/*TextWidth*/tw /*25.12.2020*/);
     }
 
     ///// <summary>
-    ///// Вызывается при обновлении табличного просмотра. Если столбец использует
-    ///// буферизацию, то она должна быть сброшена
+    ///// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°. Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РёСЃРїРѕР»СЊР·СѓРµС‚
+    ///// Р±СѓС„РµСЂРёР·Р°С†РёСЋ, С‚Рѕ РѕРЅР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СЃР±СЂРѕС€РµРЅР°
     ///// </summary>
     //public virtual void Refresh()
     //{
@@ -1632,16 +1632,16 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Расширенный класс столбца типа CheckBox
+  /// Р Р°СЃС€РёСЂРµРЅРЅС‹Р№ РєР»Р°СЃСЃ СЃС‚РѕР»Р±С†Р° С‚РёРїР° CheckBox
   /// </summary>
   public class EFPGridProducerCheckBoxColumn : EFPGridProducerColumn
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает столбец, отображающий значение поля
+    /// РЎРѕР·РґР°РµС‚ СЃС‚РѕР»Р±РµС†, РѕС‚РѕР±СЂР°Р¶Р°СЋС‰РёР№ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
     public EFPGridProducerCheckBoxColumn(string columnName)
       : this(columnName, null)
     {
@@ -1649,11 +1649,11 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Создает вычисляемый столбец
+    /// РЎРѕР·РґР°РµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС†
     /// </summary>
-    /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Имена столбов, на основании которых производится вычисления.
-    /// Если null, то столбец является обычным, а не вычисляемым.</param>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ СЌС‚РѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РРјРµРЅР° СЃС‚РѕР»Р±РѕРІ, РЅР° РѕСЃРЅРѕРІР°РЅРёРё РєРѕС‚РѕСЂС‹С… РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ.
+    /// Р•СЃР»Рё null, С‚Рѕ СЃС‚РѕР»Р±РµС† СЏРІР»СЏРµС‚СЃСЏ РѕР±С‹С‡РЅС‹Рј, Р° РЅРµ РІС‹С‡РёСЃР»СЏРµРјС‹Рј.</param>
     public EFPGridProducerCheckBoxColumn(string name, string[] sourceColumnNames)
       : base(name, sourceColumnNames)
     {
@@ -1665,13 +1665,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Переопределяемые методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµРјС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает объект столбца для табличного просмотра Windows Forms.
-    /// Столбец не добавляется в просмотр.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃС‚РѕР»Р±С†Р° РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° Windows Forms.
+    /// РЎС‚РѕР»Р±РµС† РЅРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РІ РїСЂРѕСЃРјРѕС‚СЂ.
     /// </summary>
-    /// <returns>Объект столбца</returns>
+    /// <returns>РћР±СЉРµРєС‚ СЃС‚РѕР»Р±С†Р°</returns>
     public override DataGridViewColumn CreateColumn()
     {
       ExtDataGridViewCheckBoxColumn column = new ExtDataGridViewCheckBoxColumn();
@@ -1680,10 +1680,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает желаемую ширину столбца в пикселях.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р¶РµР»Р°РµРјСѓСЋ С€РёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р° РІ РїРёРєСЃРµР»СЏС….
     /// </summary>
-    /// <param name="measures">Объект для вычисления размеров, присоединенный к табличному просмотру.</param>
-    /// <returns>Ширина в пикселях</returns>
+    /// <param name="measures">РћР±СЉРµРєС‚ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ, РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Р№ Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ.</param>
+    /// <returns>РЁРёСЂРёРЅР° РІ РїРёРєСЃРµР»СЏС…</returns>
     public override int GetWidth(IEFPGridControlMeasures measures)
     {
       return measures.CheckBoxColumnWidth;
@@ -1694,17 +1694,17 @@ namespace FreeLibSet.Forms
 
 
   /// <summary>
-  /// Вычисляемый столбец с изображением
+  /// Р’С‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† СЃ РёР·РѕР±СЂР°Р¶РµРЅРёРµРј
   /// </summary>
   public class EFPGridProducerImageColumn : EFPGridProducerColumn
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает описатель столбца
+    /// РЎРѕР·РґР°РµС‚ РѕРїРёСЃР°С‚РµР»СЊ СЃС‚РѕР»Р±С†Р°
     /// </summary>
-    /// <param name="columnName">Имя вычисляемого столбца изображения</param>
-    /// <param name="sourceColumnNames">Имена исходных стобцов. Имена разделяются запятыми</param>
+    /// <param name="columnName">РРјСЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</param>
+    /// <param name="sourceColumnNames">РРјРµРЅР° РёСЃС…РѕРґРЅС‹С… СЃС‚РѕР±С†РѕРІ. РРјРµРЅР° СЂР°Р·РґРµР»СЏСЋС‚СЃСЏ Р·Р°РїСЏС‚С‹РјРё</param>
     public EFPGridProducerImageColumn(string columnName, string[] sourceColumnNames)
       : base(columnName, sourceColumnNames)
     {
@@ -1717,13 +1717,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Создает объект столбца для табличного просмотра Windows Forms.
-    /// Столбец не добавляется в просмотр.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃС‚РѕР»Р±С†Р° РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° Windows Forms.
+    /// РЎС‚РѕР»Р±РµС† РЅРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РІ РїСЂРѕСЃРјРѕС‚СЂ.
     /// </summary>
-    /// <returns>Объект столбца</returns>
+    /// <returns>РћР±СЉРµРєС‚ СЃС‚РѕР»Р±С†Р°</returns>
     public override DataGridViewColumn CreateColumn()
     {
       DataGridViewImageColumn col = new DataGridViewImageColumn();
@@ -1732,10 +1732,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает желаемую ширину столбца в пикселях.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р¶РµР»Р°РµРјСѓСЋ С€РёСЂРёРЅСѓ СЃС‚РѕР»Р±С†Р° РІ РїРёРєСЃРµР»СЏС….
     /// </summary>
-    /// <param name="measures">Объект для вычисления размеров, присоединенный к табличному просмотру.</param>
-    /// <returns>Ширина в пикселях</returns>
+    /// <param name="measures">РћР±СЉРµРєС‚ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ, РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Р№ Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ.</param>
+    /// <returns>РЁРёСЂРёРЅР° РІ РїРёРєСЃРµР»СЏС…</returns>
     public override int GetWidth(IEFPGridControlMeasures measures)
     {
       return measures.ImageColumnWidth;
@@ -1746,19 +1746,19 @@ namespace FreeLibSet.Forms
 
 
   /// <summary>
-  /// Столбец данных, возвращающий вычисляемое значение на
-  /// основании одного целочисленного столбца данных, содержащего перечислимое значение 0,1,2,...
+  /// РЎС‚РѕР»Р±РµС† РґР°РЅРЅС‹С…, РІРѕР·РІСЂР°С‰Р°СЋС‰РёР№ РІС‹С‡РёСЃР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅР°
+  /// РѕСЃРЅРѕРІР°РЅРёРё РѕРґРЅРѕРіРѕ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РґР°РЅРЅС‹С…, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ 0,1,2,...
   /// </summary>
   public class EFPGridProducerEnumColumn : EFPGridProducerColumn
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создание пользовательского столбца.
-    /// Столбец получает имя "<paramref name="sourceColumnName"/>_Text".
+    /// РЎРѕР·РґР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
+    /// РЎС‚РѕР»Р±РµС† РїРѕР»СѓС‡Р°РµС‚ РёРјСЏ "<paramref name="sourceColumnName"/>_Text".
     /// </summary>
-    /// <param name="sourceColumnName">Имя числового столбца в таблице данных</param>
-    /// <param name="textValues">Список текстовых значений</param>
+    /// <param name="sourceColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р° РІ С‚Р°Р±Р»РёС†Рµ РґР°РЅРЅС‹С…</param>
+    /// <param name="textValues">РЎРїРёСЃРѕРє С‚РµРєСЃС‚РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№</param>
     public EFPGridProducerEnumColumn(string sourceColumnName, string[] textValues)
       : this(sourceColumnName + "_Text", new string [] { sourceColumnName }, textValues)
     {
@@ -1766,11 +1766,11 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Эта версия предназначена для создания классов-наследников. Используется в ExtDBDocForms.dll.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РєР»Р°СЃСЃРѕРІ-РЅР°СЃР»РµРґРЅРёРєРѕРІ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ ExtDBDocForms.dll.
     /// </summary>
-    /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Исходные столбцы</param>
-    /// <param name="textValues">Список текстовых значений</param>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ СЌС‚РѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РСЃС…РѕРґРЅС‹Рµ СЃС‚РѕР»Р±С†С‹</param>
+    /// <param name="textValues">РЎРїРёСЃРѕРє С‚РµРєСЃС‚РѕРІС‹С… Р·РЅР°С‡РµРЅРёР№</param>
     protected EFPGridProducerEnumColumn(string name, string[] sourceColumnNames, string[] textValues)
       : base(name, sourceColumnNames)
     {
@@ -1782,27 +1782,27 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Текстовые значения для перечисления
+    /// РўРµРєСЃС‚РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ
     /// </summary>
     public string[] TextValues { get { return _TextValues; } }
     private string[] _TextValues;
 
     /// <summary>
-    /// Если true (по умолчанию), то значение поля NULL интерпретируется как 0.
-    /// Если false, то для значения NULL будет выводиться пустое значение
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ NULL РёРЅС‚РµСЂРїСЂРµС‚РёСЂСѓРµС‚СЃСЏ РєР°Рє 0.
+    /// Р•СЃР»Рё false, С‚Рѕ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ NULL Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     public bool NullIsZero { get { return _NullIsZero; } set { _NullIsZero = value; } }
     private bool _NullIsZero;
 
     #endregion
 
-    #region Переопределяемые методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµРјС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вычисляет значение
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     /// <param name="args"></param>
     protected override void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)
@@ -1823,11 +1823,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает значение числового поля.
-    /// Непереопределенный метод возвращает значение исходного поля.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РёСЃС…РѕРґРЅРѕРіРѕ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="args">Аргументы события ValueNeeded</param>
-    /// <returns>Значение поля</returns>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ ValueNeeded</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</returns>
     protected virtual object GetSourceValue(EFPGridProducerValueNeededEventArgs args)
     {
       return args.Values.GetValue(SourceColumnNames[0]);
@@ -1837,30 +1837,30 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Столбец данных с изображениями из списка EFPApp.ImageKeys.
-  /// Изображение берется на основании одного целочисленного столбца данных, содержащего перечислимое значение.
+  /// РЎС‚РѕР»Р±РµС† РґР°РЅРЅС‹С… СЃ РёР·РѕР±СЂР°Р¶РµРЅРёСЏРјРё РёР· СЃРїРёСЃРєР° EFPApp.ImageKeys.
+  /// РР·РѕР±СЂР°Р¶РµРЅРёРµ Р±РµСЂРµС‚СЃСЏ РЅР° РѕСЃРЅРѕРІР°РЅРёРё РѕРґРЅРѕРіРѕ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° РґР°РЅРЅС‹С…, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ.
   /// </summary>
   public class EFPGridProducerEnumImageColumn : EFPGridProducerImageColumn
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создание пользовательского столбца.
-    /// Столбец получает имя "<paramref name="sourceColumnName"/>_Image".
+    /// РЎРѕР·РґР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ СЃС‚РѕР»Р±С†Р°.
+    /// РЎС‚РѕР»Р±РµС† РїРѕР»СѓС‡Р°РµС‚ РёРјСЏ "<paramref name="sourceColumnName"/>_Image".
     /// </summary>
-    /// <param name="sourceColumnName">Имя числового столбца, содержащего перечислимое значение</param>
-    /// <param name="imageKeys">Список тегов изображений в EFPApp.ImageKeys</param>
+    /// <param name="sourceColumnName">РРјСЏ С‡РёСЃР»РѕРІРѕРіРѕ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ РїРµСЂРµС‡РёСЃР»РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="imageKeys">РЎРїРёСЃРѕРє С‚РµРіРѕРІ РёР·РѕР±СЂР°Р¶РµРЅРёР№ РІ EFPApp.ImageKeys</param>
     public EFPGridProducerEnumImageColumn(string sourceColumnName, string[] imageKeys)
       : this(sourceColumnName + "_Image", new string [] { sourceColumnName }, imageKeys)
     {
     }
 
     /// <summary>
-    /// Эта версия предназначена для создания классов-наследников. Используется в ExtDBDocForms.dll.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РєР»Р°СЃСЃРѕРІ-РЅР°СЃР»РµРґРЅРёРєРѕРІ. РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ ExtDBDocForms.dll.
     /// </summary>
-    /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Исходные столбцы</param>
-    /// <param name="imageKeys">Список тегов изображений в EFPApp.ImageKeys</param>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ СЌС‚РѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РСЃС…РѕРґРЅС‹Рµ СЃС‚РѕР»Р±С†С‹</param>
+    /// <param name="imageKeys">РЎРїРёСЃРѕРє С‚РµРіРѕРІ РёР·РѕР±СЂР°Р¶РµРЅРёР№ РІ EFPApp.ImageKeys</param>
     protected EFPGridProducerEnumImageColumn(string name, string[] sourceColumnNames, string[] imageKeys)
       : base(name, sourceColumnNames)
     {
@@ -1874,31 +1874,31 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Список тегов изображений в EFPApp.ImageKeys для перечисления.
-    /// Задается в конструкторе
+    /// РЎРїРёСЃРѕРє С‚РµРіРѕРІ РёР·РѕР±СЂР°Р¶РµРЅРёР№ РІ EFPApp.ImageKeys РґР»СЏ РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string[] ImageKeys { get { return _ImageKeys; } }
     private string[] _ImageKeys;
 
     /// <summary>
-    /// Если true (по умолчанию), то значение поля NULL интерпретируется как 0.
-    /// Если false, то для значения NULL будет выводиться пустое изображение
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ NULL РёРЅС‚РµСЂРїСЂРµС‚РёСЂСѓРµС‚СЃСЏ РєР°Рє 0.
+    /// Р•СЃР»Рё false, С‚Рѕ РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ NULL Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ РїСѓСЃС‚РѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
     /// </summary>
     public bool NullIsZero { get { return _NullIsZero; } set { _NullIsZero = value; } }
     private bool _NullIsZero;
 
     /// <summary>
-    /// Изображение, используемое, если значение поля выходит за пределы списка ImageKeys.
-    /// По умолчанию - "Error".
+    /// РР·РѕР±СЂР°Р¶РµРЅРёРµ, РёСЃРїРѕР»СЊР·СѓРµРјРѕРµ, РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РІС‹С…РѕРґРёС‚ Р·Р° РїСЂРµРґРµР»С‹ СЃРїРёСЃРєР° ImageKeys.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - "Error".
     /// </summary>
     public string ErrorImageKey { get { return _ErrorImageKey; } set { _ErrorImageKey = value; } }
     private string _ErrorImageKey;
 
     /// <summary>
-    /// Тексты всплывающих подсказок, соответствующие массиву ImageKeys.
+    /// РўРµРєСЃС‚С‹ РІСЃРїР»С‹РІР°СЋС‰РёС… РїРѕРґСЃРєР°Р·РѕРє, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РјР°СЃСЃРёРІСѓ ImageKeys.
     /// </summary>
     public string[] ToolTipTexts
     {
@@ -1908,7 +1908,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _ImageKeys.Length)
-            throw new ArgumentException("Неправильная длина массива подсказок");
+            throw new ArgumentException("РќРµРїСЂР°РІРёР»СЊРЅР°СЏ РґР»РёРЅР° РјР°СЃСЃРёРІР° РїРѕРґСЃРєР°Р·РѕРє");
           _ToolTipTexts = value;
         }
       }
@@ -1916,8 +1916,8 @@ namespace FreeLibSet.Forms
     private string[] _ToolTipTexts;
 
     /// <summary>
-    /// Сплывающая подсказка, соответствующая значению NULL, при NullIsZero=false.
-    /// По умолчанию - пустая строка
+    /// РЎРїР»С‹РІР°СЋС‰Р°СЏ РїРѕРґСЃРєР°Р·РєР°, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰Р°СЏ Р·РЅР°С‡РµРЅРёСЋ NULL, РїСЂРё NullIsZero=false.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°
     /// </summary>
     public string EmptyToolTipText
     {
@@ -1928,12 +1928,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Переопределяемые методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµРјС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вычисляет значение
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected override void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)
     {
       object val = GetSourceValue(args);
@@ -1949,7 +1949,7 @@ namespace FreeLibSet.Forms
         if (srcVal < 0 || srcVal >= ImageKeys.Length)
         {
           imageKey = ErrorImageKey;
-          args.ToolTipText = "Неправильное значение: " + srcVal.ToString();
+          args.ToolTipText = "РќРµРїСЂР°РІРёР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ: " + srcVal.ToString();
         }
         else
         {
@@ -1964,11 +1964,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает значение числового поля.
-    /// Непереопределенный метод возвращает значение исходного поля.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ РїРѕР»СЏ.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РёСЃС…РѕРґРЅРѕРіРѕ РїРѕР»СЏ.
     /// </summary>
-    /// <param name="args">Аргументы события ValueNeeded</param>
-    /// <returns>Значение поля</returns>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ ValueNeeded</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</returns>
     protected virtual object GetSourceValue(EFPGridProducerValueNeededEventArgs args)
     {
       return args.Values.GetValue(SourceColumnNames[0]);
@@ -1978,19 +1978,19 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Столбец, содержащий номера строк в табличном просмотре (1,2, ...)
+  /// РЎС‚РѕР»Р±РµС†, СЃРѕРґРµСЂР¶Р°С‰РёР№ РЅРѕРјРµСЂР° СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ (1,2, ...)
   /// </summary>
   public class EFPGridProducerRowOrderColumn : EFPGridProducerColumn
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает вычисляемый столбец c заданным именем и возможностью пропуска нумерации
+    /// РЎРѕР·РґР°РµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† c Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј Рё РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РїСЂРѕРїСѓСЃРєР° РЅСѓРјРµСЂР°С†РёРё
     /// </summary>
     public EFPGridProducerRowOrderColumn(string name, string filterColumnName, int filterValue)
       : base(name, GetSourceColumnNames(filterColumnName))
     {
-      HeaderText = "№ п/п";
+      HeaderText = "в„– Рї/Рї";
       TextAlign = HorizontalAlignment.Right;
       _FilterColumnName = filterColumnName;
       _FilterValue = filterValue;
@@ -2005,7 +2005,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает вычисляемый столбец c заданным именем. Нумеруются все строки
+    /// РЎРѕР·РґР°РµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† c Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј. РќСѓРјРµСЂСѓСЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё
     /// </summary>
     public EFPGridProducerRowOrderColumn(string name)
       : this( name, String.Empty, 0)
@@ -2013,7 +2013,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает вычисляемый столбец с именем "RowOrder"
+    /// РЎРѕР·РґР°РµС‚ РІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС† СЃ РёРјРµРЅРµРј "RowOrder"
     /// </summary>
     public EFPGridProducerRowOrderColumn()
       : this("RowOrder")
@@ -2022,32 +2022,32 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Имя поля для определения строк, подлежащих нумерации
-    /// Если свойство не задано, нумеруются все строки
-    /// Иначе нумерация выводится только для строк, проходящих фильтр.
-    /// Прочие строки содержат пустое поле. Нумерация НЕ СДВИГАЕТСЯ, поэтому
-    /// можно использовать только для пропуска итоговой строки.
-    /// Задается в конструкторе
+    /// РРјСЏ РїРѕР»СЏ РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ СЃС‚СЂРѕРє, РїРѕРґР»РµР¶Р°С‰РёС… РЅСѓРјРµСЂР°С†РёРё
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ Р·Р°РґР°РЅРѕ, РЅСѓРјРµСЂСѓСЋС‚СЃСЏ РІСЃРµ СЃС‚СЂРѕРєРё
+    /// РРЅР°С‡Рµ РЅСѓРјРµСЂР°С†РёСЏ РІС‹РІРѕРґРёС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ СЃС‚СЂРѕРє, РїСЂРѕС…РѕРґСЏС‰РёС… С„РёР»СЊС‚СЂ.
+    /// РџСЂРѕС‡РёРµ СЃС‚СЂРѕРєРё СЃРѕРґРµСЂР¶Р°С‚ РїСѓСЃС‚РѕРµ РїРѕР»Рµ. РќСѓРјРµСЂР°С†РёСЏ РќР• РЎР”Р’РР“РђР•РўРЎРЇ, РїРѕСЌС‚РѕРјСѓ
+    /// РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРѕРїСѓСЃРєР° РёС‚РѕРіРѕРІРѕР№ СЃС‚СЂРѕРєРё.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public string FilterColumnName { get { return _FilterColumnName; } }
     private string _FilterColumnName;
 
     /// <summary>
-    /// Значение поля для фильтра, заданного FilterColumnName
-    /// Задается в конструкторе
+    /// Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РґР»СЏ С„РёР»СЊС‚СЂР°, Р·Р°РґР°РЅРЅРѕРіРѕ FilterColumnName
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public int FilterValue { get { return _FilterValue; } }
     private int _FilterValue;
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вычисляет значение
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     /// <param name="args"></param>
     protected override void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)
@@ -2067,30 +2067,30 @@ namespace FreeLibSet.Forms
 
 #if XXX
 
-  #region Перечисление GridProducerDBFileInfoColumnKind
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ GridProducerDBFileInfoColumnKind
 
   /// <summary>
-  /// Тип отображаемыз данных для столбца GridProducerDBFileInfoColumn
+  /// РўРёРї РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹Р· РґР°РЅРЅС‹С… РґР»СЏ СЃС‚РѕР»Р±С†Р° GridProducerDBFileInfoColumn
   /// </summary>
   public enum GridProducerDBFileInfoColumnKind
   {
     /// <summary>
-    /// Имя файла
+    /// РРјСЏ С„Р°Р№Р»Р°
     /// </summary>
     Name,
 
     /// <summary>
-    /// Размер файла в байтах
+    /// Р Р°Р·РјРµСЂ С„Р°Р№Р»Р° РІ Р±Р°Р№С‚Р°С…
     /// </summary>
     Length,
 
     /// <summary>
-    /// Время создания файла
+    /// Р’СЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ С„Р°Р№Р»Р°
     /// </summary>
     CreationTime,
 
     /// <summary>
-    /// Время последней записи файла
+    /// Р’СЂРµРјСЏ РїРѕСЃР»РµРґРЅРµР№ Р·Р°РїРёСЃРё С„Р°Р№Р»Р°
     /// </summary>
     LastWriteTime
   }
@@ -2098,24 +2098,24 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Столбец для вывода атрибутов файла, хранящегося в базе данных
-  /// Значения извлекается с помощью метода AccDepClientExec.GetDBFileInfo()
+  /// РЎС‚РѕР»Р±РµС† РґР»СЏ РІС‹РІРѕРґР° Р°С‚СЂРёР±СѓС‚РѕРІ С„Р°Р№Р»Р°, С…СЂР°РЅСЏС‰РµРіРѕСЃСЏ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
+  /// Р—РЅР°С‡РµРЅРёСЏ РёР·РІР»РµРєР°РµС‚СЃСЏ СЃ РїРѕРјРѕС‰СЊСЋ РјРµС‚РѕРґР° AccDepClientExec.GetDBFileInfo()
   /// </summary>
   public class GridProducerDBFileInfoColumn : GridProducerColumn
   {
-  #region Конструкторы
+  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создание столбца.
-    /// Полученный объект должен быть добавлен в описание просмотра с помощью
+    /// РЎРѕР·РґР°РЅРёРµ СЃС‚РѕР»Р±С†Р°.
+    /// РџРѕР»СѓС‡РµРЅРЅС‹Р№ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅ РІ РѕРїРёСЃР°РЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР° СЃ РїРѕРјРѕС‰СЊСЋ
     /// GridProducerColumns.Add()
-    /// Версия с возможностью задания имени поля
+    /// Р’РµСЂСЃРёСЏ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р·Р°РґР°РЅРёСЏ РёРјРµРЅРё РїРѕР»СЏ
     /// </summary>
-    /// <param name="Kind">Тип столбца (имя файла, размер, время)</param>
-    /// <param name="SourceTableName">Имя таблицы в базе данных, которая хранит ссылки на файл</param>
-    /// <param name="SourceColumnName">Имя поля в таблице базы данных, которое содержит ссылку на файл</param>
-    /// <param name="ColumnName">Имя добавляемого столбца (например, "ИмяФайла"). Не должно совпадать с именем поля в базе данных.
-    /// Если не задано, то имя создается автоматически на основе имени исходного столбца и типа</param>
+    /// <param name="Kind">РўРёРї СЃС‚РѕР»Р±С†Р° (РёРјСЏ С„Р°Р№Р»Р°, СЂР°Р·РјРµСЂ, РІСЂРµРјСЏ)</param>
+    /// <param name="SourceTableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂР°СЏ С…СЂР°РЅРёС‚ СЃСЃС‹Р»РєРё РЅР° С„Р°Р№Р»</param>
+    /// <param name="SourceColumnName">РРјСЏ РїРѕР»СЏ РІ С‚Р°Р±Р»РёС†Рµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂРѕРµ СЃРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РєСѓ РЅР° С„Р°Р№Р»</param>
+    /// <param name="ColumnName">РРјСЏ РґРѕР±Р°РІР»СЏРµРјРѕРіРѕ СЃС‚РѕР»Р±С†Р° (РЅР°РїСЂРёРјРµСЂ, "РРјСЏР¤Р°Р№Р»Р°"). РќРµ РґРѕР»Р¶РЅРѕ СЃРѕРІРїР°РґР°С‚СЊ СЃ РёРјРµРЅРµРј РїРѕР»СЏ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// Р•СЃР»Рё РЅРµ Р·Р°РґР°РЅРѕ, С‚Рѕ РёРјСЏ СЃРѕР·РґР°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РЅР° РѕСЃРЅРѕРІРµ РёРјРµРЅРё РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° Рё С‚РёРїР°</param>
     public GridProducerDBFileInfoColumn(GridProducerDBFileInfoColumnKind Kind, string SourceTableName, string SourceColumnName, string ColumnName)
       : base(GetColumnName(ColumnName, SourceColumnName, Kind))
     {
@@ -2125,7 +2125,7 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(SourceColumnName))
         throw new ArgumentNullException("SourceColumnName");
       if (ColumnName == SourceColumnName)
-        throw new ArgumentException("Имя столбца не должно совпадать с именем исходного столбца \"" +
+        throw new ArgumentException("РРјСЏ СЃС‚РѕР»Р±С†Р° РЅРµ РґРѕР»Р¶РЅРѕ СЃРѕРІРїР°РґР°С‚СЊ СЃ РёРјРµРЅРµРј РёСЃС…РѕРґРЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° \"" +
           SourceColumnName + "\"", "SourceColumnName");
 #endif
       FSourceTableName = SourceTableName;
@@ -2134,12 +2134,12 @@ namespace FreeLibSet.Forms
       switch (Kind)
       {
         case GridProducerDBFileInfoColumnKind.Name:
-          HeaderText = "Имя файла";
+          HeaderText = "РРјСЏ С„Р°Р№Р»Р°";
           Align = HorizontalAlignment.Left;
           break;
 
         case GridProducerDBFileInfoColumnKind.Length:
-          HeaderText = "Размер, байт";
+          HeaderText = "Р Р°Р·РјРµСЂ, Р±Р°Р№С‚";
           Align = HorizontalAlignment.Right;
           SizeGroup = "FileLength";
           TextWidth = 11;
@@ -2149,7 +2149,7 @@ namespace FreeLibSet.Forms
           break;
 
         case GridProducerDBFileInfoColumnKind.CreationTime:
-          HeaderText = "Время создания";
+          HeaderText = "Р’СЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ";
           Align = HorizontalAlignment.Center;
           TextWidth = 19;
           MinTextWidth = 19;
@@ -2159,7 +2159,7 @@ namespace FreeLibSet.Forms
           break;
 
         case GridProducerDBFileInfoColumnKind.LastWriteTime:
-          HeaderText = "Время записи";
+          HeaderText = "Р’СЂРµРјСЏ Р·Р°РїРёСЃРё";
           Align = HorizontalAlignment.Center;
           TextWidth = 19;
           MinTextWidth = 19;
@@ -2169,7 +2169,7 @@ namespace FreeLibSet.Forms
           break;
 
         default:
-          throw new ArgumentException("Неизвестный тип столбца: " + Kind.ToString(), "Kind");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї СЃС‚РѕР»Р±С†Р°: " + Kind.ToString(), "Kind");
       }
     }
 
@@ -2185,15 +2185,15 @@ namespace FreeLibSet.Forms
         switch (Kind)
         {
           case GridProducerDBFileInfoColumnKind.Name:
-            Suffix = "Имя"; break;
+            Suffix = "РРјСЏ"; break;
           case GridProducerDBFileInfoColumnKind.Length:
-            Suffix = "Размер"; break;
+            Suffix = "Р Р°Р·РјРµСЂ"; break;
           case GridProducerDBFileInfoColumnKind.CreationTime:
-            Suffix = "ВремяСоздания"; break;
+            Suffix = "Р’СЂРµРјСЏРЎРѕР·РґР°РЅРёСЏ"; break;
           case GridProducerDBFileInfoColumnKind.LastWriteTime:
-            Suffix = "ВремяЗаписи"; break;
+            Suffix = "Р’СЂРµРјСЏР—Р°РїРёСЃРё"; break;
           default:
-            throw new ArgumentException("Неизвестный Kind");
+            throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Kind");
         }
         return SourceColumnName + Suffix;
       }
@@ -2202,14 +2202,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создание столбца.
-    /// Полученный объект должен быть добавлен в описание просмотра с помощью
+    /// РЎРѕР·РґР°РЅРёРµ СЃС‚РѕР»Р±С†Р°.
+    /// РџРѕР»СѓС‡РµРЅРЅС‹Р№ РѕР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅ РІ РѕРїРёСЃР°РЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР° СЃ РїРѕРјРѕС‰СЊСЋ
     /// GridProducerColumns.Add()
-    /// Версия для автоматического имени поля
+    /// Р’РµСЂСЃРёСЏ РґР»СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРіРѕ РёРјРµРЅРё РїРѕР»СЏ
     /// </summary>
-    /// <param name="Kind">Тип столбца (имя файла, размер, время)</param>
-    /// <param name="SourceTableName">Имя таблицы в базе данных, которая хранит ссылки на файл</param>
-    /// <param name="SourceColumnName">Имя поля в таблице базы данных, которое содержит ссылку на файл</param>
+    /// <param name="Kind">РўРёРї СЃС‚РѕР»Р±С†Р° (РёРјСЏ С„Р°Р№Р»Р°, СЂР°Р·РјРµСЂ, РІСЂРµРјСЏ)</param>
+    /// <param name="SourceTableName">РРјСЏ С‚Р°Р±Р»РёС†С‹ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂР°СЏ С…СЂР°РЅРёС‚ СЃСЃС‹Р»РєРё РЅР° С„Р°Р№Р»</param>
+    /// <param name="SourceColumnName">РРјСЏ РїРѕР»СЏ РІ С‚Р°Р±Р»РёС†Рµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂРѕРµ СЃРѕРґРµСЂР¶РёС‚ СЃСЃС‹Р»РєСѓ РЅР° С„Р°Р№Р»</param>
     public GridProducerDBFileInfoColumn(GridProducerDBFileInfoColumnKind Kind, string SourceTableName, string SourceColumnName)
       : this(Kind, SourceTableName, SourceColumnName, null)
     {
@@ -2217,7 +2217,7 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Свойства
+  #region РЎРІРѕР№СЃС‚РІР°
 
     public string SourceTableName { get { return FSourceTableName; } }
     private string FSourceTableName;
@@ -2230,10 +2230,10 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Переопределенные методы
+  #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Требуемые поля
+    /// РўСЂРµР±СѓРµРјС‹Рµ РїРѕР»СЏ
     /// </summary>
     public override string[] FieldNames { get { return new string[1] { SourceColumnName }; } }
 
@@ -2250,13 +2250,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Статический метод извлечения значения из структуры атрибутов файла
-    /// Может быть использован отдельно из кода прикладного модуля при реализации
-    /// табличных просмотров без GridProducer
+    /// РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ РёР·РІР»РµС‡РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РёР· СЃС‚СЂСѓРєС‚СѓСЂС‹ Р°С‚СЂРёР±СѓС‚РѕРІ С„Р°Р№Р»Р°
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅ РѕС‚РґРµР»СЊРЅРѕ РёР· РєРѕРґР° РїСЂРёРєР»Р°РґРЅРѕРіРѕ РјРѕРґСѓР»СЏ РїСЂРё СЂРµР°Р»РёР·Р°С†РёРё
+    /// С‚Р°Р±Р»РёС‡РЅС‹С… РїСЂРѕСЃРјРѕС‚СЂРѕРІ Р±РµР· GridProducer
     /// </summary>
-    /// <param name="fi">Структура атрибутов файла</param>
-    /// <param name="Kind">Тип извлекаемого значения</param>
-    /// <returns>Значение</returns>
+    /// <param name="fi">РЎС‚СЂСѓРєС‚СѓСЂР° Р°С‚СЂРёР±СѓС‚РѕРІ С„Р°Р№Р»Р°</param>
+    /// <param name="Kind">РўРёРї РёР·РІР»РµРєР°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public static object GetValue(AccDepFileInfo FileInfo, GridProducerDBFileInfoColumnKind Kind)
     {
       switch (Kind)
@@ -2278,30 +2278,30 @@ namespace FreeLibSet.Forms
   }
 #endif
 
-  #region Перечисление EFPGridProducerSumColumnMode
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ EFPGridProducerSumColumnMode
 
   /// <summary>
-  /// Вычисляемая агрегатная функция для столбца, значение в котором является вычисляемым из другимх столбцов
+  /// Р’С‹С‡РёСЃР»СЏРµРјР°СЏ Р°РіСЂРµРіР°С‚РЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ СЃС‚РѕР»Р±С†Р°, Р·РЅР°С‡РµРЅРёРµ РІ РєРѕС‚РѕСЂРѕРј СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј РёР· РґСЂСѓРіРёРјС… СЃС‚РѕР»Р±С†РѕРІ
   /// </summary>
   public enum EFPGridProducerSumColumnMode
   {
     /// <summary>
-    /// Сумма
+    /// РЎСѓРјРјР°
     /// </summary>
     Sum,
 
     /// <summary>
-    /// Минимальное значение
+    /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     Min,
 
     /// <summary>
-    /// Максимальное значение
+    /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     Max,
 
     /// <summary>
-    /// Среднее значение
+    /// РЎСЂРµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     Average
   }
@@ -2309,19 +2309,19 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Столбец, содержащий сумму нескольких значений.
-  /// Также можно вычислить минимальное, максимальное или среднее значение
-  /// Если все столбцы содержат DBNull, то возвращаемое значение также есть DBNull
+  /// РЎС‚РѕР»Р±РµС†, СЃРѕРґРµСЂР¶Р°С‰РёР№ СЃСѓРјРјСѓ РЅРµСЃРєРѕР»СЊРєРёС… Р·РЅР°С‡РµРЅРёР№.
+  /// РўР°РєР¶Рµ РјРѕР¶РЅРѕ РІС‹С‡РёСЃР»РёС‚СЊ РјРёРЅРёРјР°Р»СЊРЅРѕРµ, РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР»Рё СЃСЂРµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ
+  /// Р•СЃР»Рё РІСЃРµ СЃС‚РѕР»Р±С†С‹ СЃРѕРґРµСЂР¶Р°С‚ DBNull, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚Р°РєР¶Рµ РµСЃС‚СЊ DBNull
   /// </summary>
   public class EFPGridProducerSumColumn : EFPGridProducerColumn
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создание столбца, содержащего сумму других столбов
+    /// РЎРѕР·РґР°РЅРёРµ СЃС‚РѕР»Р±С†Р°, СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ СЃСѓРјРјСѓ РґСЂСѓРіРёС… СЃС‚РѕР»Р±РѕРІ
     /// </summary>
-    /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Имена суммируемых столбов</param>
+    /// <param name="name">РЈСЃР»РѕРІРЅРѕРµ РёРјСЏ СЌС‚РѕРіРѕ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="sourceColumnNames">РРјРµРЅР° СЃСѓРјРјРёСЂСѓРµРјС‹С… СЃС‚РѕР»Р±РѕРІ</param>
     public EFPGridProducerSumColumn(string name, string[] sourceColumnNames)
       : base(name, sourceColumnNames)
     {
@@ -2330,20 +2330,20 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Вычисляемая функция. По умолчанию - Sum
+    /// Р’С‹С‡РёСЃР»СЏРµРјР°СЏ С„СѓРЅРєС†РёСЏ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Sum
     /// </summary>
     public EFPGridProducerSumColumnMode Mode { get { return _Mode; } set { _Mode = value; } }
     private EFPGridProducerSumColumnMode _Mode;
 
     #endregion
 
-    #region Переопределяемые методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµРјС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вычисляет значение
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     /// <param name="args"></param>
     protected override void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)

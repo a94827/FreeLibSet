@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgeyevAV.ExtForms;
@@ -20,13 +20,13 @@ namespace EFPAppRemoteExitDemo
       try
       {
         EFPApp.ShowMainWindow();
-        EFPApp.MainWindowTitle = "Клиент";
+        EFPApp.MainWindowTitle = "РљР»РёРµРЅС‚";
 
 
-      #region Команды главного меню
+      #region РљРѕРјР°РЅРґС‹ РіР»Р°РІРЅРѕРіРѕ РјРµРЅСЋ
 
       EFPCommandItem MenuFile = new EFPCommandItem("Menu", "File");
-      MenuFile.MenuText = "Файл";
+      MenuFile.MenuText = "Р¤Р°Р№Р»";
       EFPApp.CommandItems.Add(MenuFile);
 
       EFPCommandItem ciNew = EFPApp.CommandItems.CreateCommand(EFPAppStdCommandItems.New);
@@ -34,7 +34,7 @@ namespace EFPAppRemoteExitDemo
       ciNew.Parent = MenuFile;
       EFPApp.CommandItems.Add(ciNew);
 
-      // Обычная команда выхода
+      // РћР±С‹С‡РЅР°СЏ РєРѕРјР°РЅРґР° РІС‹С…РѕРґР°
       EFPCommandItem ciExit = EFPApp.CommandItems.CreateCommand(EFPAppStdCommandItems.Exit);
       ciExit.Parent = MenuFile;
       ciExit.GroupBegin = true;
@@ -49,24 +49,24 @@ namespace EFPAppRemoteExitDemo
       #endregion
 
 
-      // Изображаем серверную форму.
-        // В настоящем приложении, конечно, форма находится в другом процессе, а запрос выполняется через удаленный доступ
+      // РР·РѕР±СЂР°Р¶Р°РµРј СЃРµСЂРІРµСЂРЅСѓСЋ С„РѕСЂРјСѓ.
+        // Р’ РЅР°СЃС‚РѕСЏС‰РµРј РїСЂРёР»РѕР¶РµРЅРёРё, РєРѕРЅРµС‡РЅРѕ, С„РѕСЂРјР° РЅР°С…РѕРґРёС‚СЃСЏ РІ РґСЂСѓРіРѕРј РїСЂРѕС†РµСЃСЃРµ, Р° Р·Р°РїСЂРѕСЃ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ С‡РµСЂРµР· СѓРґР°Р»РµРЅРЅС‹Р№ РґРѕСЃС‚СѓРї
         ServerForm ServerForm = new ServerForm();
         ServerForm.Show();
 
 
-        // Создаем обработчик "клиента"
+        // РЎРѕР·РґР°РµРј РѕР±СЂР°Р±РѕС‚С‡РёРє "РєР»РёРµРЅС‚Р°"
         new ClientHandler(ServerForm);
 
         Application.Run();
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
 
-    #region Команды главного меню
+    #region РљРѕРјР°РЅРґС‹ РіР»Р°РІРЅРѕРіРѕ РјРµРЅСЋ
 
     static void ciNew_Click(object sender, EventArgs e)
     {
@@ -75,7 +75,7 @@ namespace EFPAppRemoteExitDemo
 
     static void ciExit_Click(object sender, EventArgs e)
     {
-      EFPApp.Exit(); // обычный выход
+      EFPApp.Exit(); // РѕР±С‹С‡РЅС‹Р№ РІС‹С…РѕРґ
     }
 
 

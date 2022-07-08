@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgeyevAV.ExtForms;
@@ -74,7 +74,7 @@ namespace FIASDemo
         TempDirectory.RootDir = new AbsPath(FileTools.ApplicationBaseDir, "Temp");
         Cache.Params.PersistDir = new AbsPath(FileTools.ApplicationBaseDir, "PersistCache");
 
-        // создаем log-файл для трассировки запросов
+        // СЃРѕР·РґР°РµРј log-С„Р°Р№Р» РґР»СЏ С‚СЂР°СЃСЃРёСЂРѕРІРєРё Р·Р°РїСЂРѕСЃРѕРІ
         FileTools.ForceDirs(TempDirectory.RootDir);
         AbsPath traceFile = new AbsPath(TempDirectory.RootDir, "trace.log");
         Trace.AutoFlush = true;
@@ -105,7 +105,7 @@ namespace FIASDemo
 
             DataRow row = selForm.efpGrid.CurrentDataRow;
 
-            using (Splash spl = new Splash("Подключение к базе данных"))
+            using (Splash spl = new Splash("РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…"))
             {
               string provider = DataTools.GetString(row, "ProviderName");
               string constr = DataTools.GetString(row, "ConnectionString");
@@ -116,7 +116,7 @@ namespace FIASDemo
               settings.AsXmlText = xml;
 
               fiasDB = new FiasDB(DB, settings);
-              fiasDB.DB.TraceEnabled = true; // трассировка запросов
+              fiasDB.DB.TraceEnabled = true; // С‚СЂР°СЃСЃРёСЂРѕРІРєР° Р·Р°РїСЂРѕСЃРѕРІ
             }
           }
 
@@ -129,7 +129,7 @@ namespace FIASDemo
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
   }

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -8,15 +8,15 @@ using System.Text;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Параметры поиска адресных объектов
+  /// РџР°СЂР°РјРµС‚СЂС‹ РїРѕРёСЃРєР° Р°РґСЂРµСЃРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
   /// </summary>
   [Serializable]
   public sealed class FiasAddressSearchParams
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает набор параметров
+    /// РЎРѕР·РґР°РµС‚ РЅР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
     public FiasAddressSearchParams()
     {
@@ -26,59 +26,59 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Текст в наименовании адресного объекта
+    /// РўРµРєСЃС‚ РІ РЅР°РёРјРµРЅРѕРІР°РЅРёРё Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
     /// </summary>
     public string Text { get { return _Text; } set { _Text = value; } }
     private string _Text;
 
     /// <summary>
-    /// Уровни, среди которых выполняется поиск.
-    /// Если null, то среди всех уровней
+    /// РЈСЂРѕРІРЅРё, СЃСЂРµРґРё РєРѕС‚РѕСЂС‹С… РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє.
+    /// Р•СЃР»Рё null, С‚Рѕ СЃСЂРµРґРё РІСЃРµС… СѓСЂРѕРІРЅРµР№
     /// </summary>
     public FiasLevel[] Levels { get { return _Levels; } set { _Levels = value; } }
     private FiasLevel[] _Levels;
 
     /// <summary>
-    /// Если true (по умолчанию), то выполнять поиск только среди актуальных записей.
-    /// Значение false не может использоваться, если FiasDBConfig.UseHistory=false.
+    /// Р•СЃР»Рё true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РІС‹РїРѕР»РЅСЏС‚СЊ РїРѕРёСЃРє С‚РѕР»СЊРєРѕ СЃСЂРµРґРё Р°РєС‚СѓР°Р»СЊРЅС‹С… Р·Р°РїРёСЃРµР№.
+    /// Р—РЅР°С‡РµРЅРёРµ false РЅРµ РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ, РµСЃР»Рё FiasDBConfig.UseHistory=false.
     /// </summary>
     public bool ActualOnly { get { return _ActualOnly; } set { _ActualOnly = value; } }
     private bool _ActualOnly;
 
     /// <summary>
-    /// Начальный адрес (например, город), в котором нужно выполнять поиск (улиц)
+    /// РќР°С‡Р°Р»СЊРЅС‹Р№ Р°РґСЂРµСЃ (РЅР°РїСЂРёРјРµСЂ, РіРѕСЂРѕРґ), РІ РєРѕС‚РѕСЂРѕРј РЅСѓР¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊ РїРѕРёСЃРє (СѓР»РёС†)
     /// </summary>
     public FiasAddress StartAddress { get { return _StartAddress; } set { _StartAddress = value; } }
     private FiasAddress _StartAddress;
 
     /// <summary>
-    /// Возвращает true, если параметры не заданы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїР°СЂР°РјРµС‚СЂС‹ РЅРµ Р·Р°РґР°РЅС‹
     /// </summary>
     public bool IsEmpty { get { return String.IsNullOrEmpty(Text); } }
 
     #endregion
 
-    #region Текстовое представление
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
     /// <summary>
-    /// Текстовое представление параметров поиска
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ РїРѕРёСЃРєР°
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (IsEmpty)
-        return "Параметры поиска не заданы";
+        return "РџР°СЂР°РјРµС‚СЂС‹ РїРѕРёСЃРєР° РЅРµ Р·Р°РґР°РЅС‹";
 
       StringBuilder sb = new StringBuilder();
-      sb.Append("Искать \"");
+      sb.Append("РСЃРєР°С‚СЊ \"");
       sb.Append(_Text);
       sb.Append("\"");
-      sb.Append(", уровни: ");
+      sb.Append(", СѓСЂРѕРІРЅРё: ");
       if (_Levels == null)
-        sb.Append(" Все адресные объекты");
+        sb.Append(" Р’СЃРµ Р°РґСЂРµСЃРЅС‹Рµ РѕР±СЉРµРєС‚С‹");
       else
       {
         for (int i = 0; i < _Levels.Length; i++)
@@ -89,12 +89,12 @@ namespace FreeLibSet.FIAS
         }
       }
       if (_ActualOnly)
-        sb.Append(", только актуальные");
+        sb.Append(", С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ");
       else
-        sb.Append(", включая исторические");
-      sb.Append(", в: ");
+        sb.Append(", РІРєР»СЋС‡Р°СЏ РёСЃС‚РѕСЂРёС‡РµСЃРєРёРµ");
+      sb.Append(", РІ: ");
       if (_StartAddress.IsEmpty)
-        sb.Append("Весь справочник");
+        sb.Append("Р’РµСЃСЊ СЃРїСЂР°РІРѕС‡РЅРёРє");
       else
         sb.Append(_StartAddress.ToString());
 

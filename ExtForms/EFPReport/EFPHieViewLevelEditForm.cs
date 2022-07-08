@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,60 +15,60 @@ using AgeyevAV.Config;
 namespace ClientAccDep
 {
   /// <summary>
-  /// Форма настройки уровней.
-  /// Может использоваться как форма диалога или встраивать панель MainPanel в 
-  /// окно параметров отчета
-  /// Используется HieViewLevelConfigEditHandler
+  /// Р¤РѕСЂРјР° РЅР°СЃС‚СЂРѕР№РєРё СѓСЂРѕРІРЅРµР№.
+  /// РњРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РєР°Рє С„РѕСЂРјР° РґРёР°Р»РѕРіР° РёР»Рё РІСЃС‚СЂР°РёРІР°С‚СЊ РїР°РЅРµР»СЊ MainPanel РІ 
+  /// РѕРєРЅРѕ РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚С‡РµС‚Р°
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ HieViewLevelConfigEditHandler
   /// </summary>
   internal partial class HieViewLevelEditForm : Form
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public HieViewLevelEditForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Детализация");
+      Icon = EFPApp.MainImageIcon("Р”РµС‚Р°Р»РёР·Р°С†РёСЏ");
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Конфигурация уровней иерархии в просмотре HieView.
-  /// Хранит список отмеченных уровней и их порядок.
-  /// Этот объект не привязан к управляющим элементам и должен хранится
-  /// в параметрах отчета (классе, производном от ReportParams).
-  /// Для редактирования используется класс HieViewLevelConfigHandler
-  /// Текущая конфигурация хранится в таблице, доступ к которой возможен через
-  /// свойство View
+  /// РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё РІ РїСЂРѕСЃРјРѕС‚СЂРµ HieView.
+  /// РҐСЂР°РЅРёС‚ СЃРїРёСЃРѕРє РѕС‚РјРµС‡РµРЅРЅС‹С… СѓСЂРѕРІРЅРµР№ Рё РёС… РїРѕСЂСЏРґРѕРє.
+  /// Р­С‚РѕС‚ РѕР±СЉРµРєС‚ РЅРµ РїСЂРёРІСЏР·Р°РЅ Рє СѓРїСЂР°РІР»СЏСЋС‰РёРј СЌР»РµРјРµРЅС‚Р°Рј Рё РґРѕР»Р¶РµРЅ С…СЂР°РЅРёС‚СЃСЏ
+  /// РІ РїР°СЂР°РјРµС‚СЂР°С… РѕС‚С‡РµС‚Р° (РєР»Р°СЃСЃРµ, РїСЂРѕРёР·РІРѕРґРЅРѕРј РѕС‚ ReportParams).
+  /// Р”Р»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃ HieViewLevelConfigHandler
+  /// РўРµРєСѓС‰Р°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ С…СЂР°РЅРёС‚СЃСЏ РІ С‚Р°Р±Р»РёС†Рµ, РґРѕСЃС‚СѓРї Рє РєРѕС‚РѕСЂРѕР№ РІРѕР·РјРѕР¶РµРЅ С‡РµСЂРµР·
+  /// СЃРІРѕР№СЃС‚РІРѕ View
   /// </summary>
   public class HieViewLevelConfig
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создать настраиваемую конфигурацию уровней иерархии
-    /// Полный список уровней должен быть заполнен в порядке сортировки уровней
-    /// по умолчанию. Нулевым элементом коллекции должен быть наиболее вложенный
-    /// уровень, а последним - самый внешний
+    /// РЎРѕР·РґР°С‚СЊ РЅР°СЃС‚СЂР°РёРІР°РµРјСѓСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
+    /// РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє СѓСЂРѕРІРЅРµР№ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РІ РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё СѓСЂРѕРІРЅРµР№
+    /// РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ. РќСѓР»РµРІС‹Рј СЌР»РµРјРµРЅС‚РѕРј РєРѕР»Р»РµРєС†РёРё РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅР°РёР±РѕР»РµРµ РІР»РѕР¶РµРЅРЅС‹Р№
+    /// СѓСЂРѕРІРµРЅСЊ, Р° РїРѕСЃР»РµРґРЅРёРј - СЃР°РјС‹Р№ РІРЅРµС€РЅРёР№
     /// </summary>
-    /// <param name="AllLevels">Полный список возможных уровней</param>
+    /// <param name="AllLevels">РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє РІРѕР·РјРѕР¶РЅС‹С… СѓСЂРѕРІРЅРµР№</param>
     public HieViewLevelConfig(ICollection<HieViewLevel> AllLevels)
     {
       FAllLevels = new HieViewLevel[AllLevels.Count];
       AllLevels.CopyTo(FAllLevels, 0);
 
       FTable = new DataTable();
-      FTable.Columns.Add("LevelIndex", typeof(int)); // порядок в AllLevels
-      FTable.Columns.Add("Flag", typeof(bool)); // Наличие флажка
-      FTable.Columns.Add("Name", typeof(string)); // название
-      FTable.Columns.Add("ImageKey", typeof(string)); // изображение для просмотра
-      FTable.Columns.Add("FlagIsFixed", typeof(bool)); // true, если флажок нельзя сбрасывать
-      FTable.Columns.Add("Visible", typeof(bool)); // false для скрытых строк
-      FTable.Columns.Add("RowOrder", typeof(int)); // порядок следования уровней
-      FTable.Columns.Add("DefRowOrder", typeof(int)); // порядок следования только видимых уровней по умолчанию
-      FTable.Columns.Add("RowOrderIsFixed", typeof(bool)); // true, если эту строку нельзя передвигать
-      FTable.Columns.Add("ViolatedOrderRuleIndex", typeof(int)); // номер правила, которое было нарушено или DBNull
+      FTable.Columns.Add("LevelIndex", typeof(int)); // РїРѕСЂСЏРґРѕРє РІ AllLevels
+      FTable.Columns.Add("Flag", typeof(bool)); // РќР°Р»РёС‡РёРµ С„Р»Р°Р¶РєР°
+      FTable.Columns.Add("Name", typeof(string)); // РЅР°Р·РІР°РЅРёРµ
+      FTable.Columns.Add("ImageKey", typeof(string)); // РёР·РѕР±СЂР°Р¶РµРЅРёРµ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°
+      FTable.Columns.Add("FlagIsFixed", typeof(bool)); // true, РµСЃР»Рё С„Р»Р°Р¶РѕРє РЅРµР»СЊР·СЏ СЃР±СЂР°СЃС‹РІР°С‚СЊ
+      FTable.Columns.Add("Visible", typeof(bool)); // false РґР»СЏ СЃРєСЂС‹С‚С‹С… СЃС‚СЂРѕРє
+      FTable.Columns.Add("RowOrder", typeof(int)); // РїРѕСЂСЏРґРѕРє СЃР»РµРґРѕРІР°РЅРёСЏ СѓСЂРѕРІРЅРµР№
+      FTable.Columns.Add("DefRowOrder", typeof(int)); // РїРѕСЂСЏРґРѕРє СЃР»РµРґРѕРІР°РЅРёСЏ С‚РѕР»СЊРєРѕ РІРёРґРёРјС‹С… СѓСЂРѕРІРЅРµР№ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+      FTable.Columns.Add("RowOrderIsFixed", typeof(bool)); // true, РµСЃР»Рё СЌС‚Сѓ СЃС‚СЂРѕРєСѓ РЅРµР»СЊР·СЏ РїРµСЂРµРґРІРёРіР°С‚СЊ
+      FTable.Columns.Add("ViolatedOrderRuleIndex", typeof(int)); // РЅРѕРјРµСЂ РїСЂР°РІРёР»Р°, РєРѕС‚РѕСЂРѕРµ Р±С‹Р»Рѕ РЅР°СЂСѓС€РµРЅРѕ РёР»Рё DBNull
 
       DataTools.SetPrimaryKey(FTable, "LevelIndex");
       FTable.DefaultView.Sort = "RowOrder";
@@ -89,22 +89,22 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Список всех возможных уровней иерархии
-    /// Задается в конструкторе. При сортировке по умолчанию AllLevels[0]
-    /// соответствует самому вложенному уровню
+    /// РЎРїРёСЃРѕРє РІСЃРµС… РІРѕР·РјРѕР¶РЅС‹С… СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ. РџСЂРё СЃРѕСЂС‚РёСЂРѕРІРєРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ AllLevels[0]
+    /// СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃР°РјРѕРјСѓ РІР»РѕР¶РµРЅРЅРѕРјСѓ СѓСЂРѕРІРЅСЋ
     /// </summary>
     public HieViewLevel[] AllLevels { get { return FAllLevels; } }
     private HieViewLevel[] FAllLevels;
 
     /// <summary>
-    /// Возвращает объект уровня из массива AllLevels по коду (свойству HieViewLevel.NamePart)
-    /// Возвращает null, если уровень не найден
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ СѓСЂРѕРІРЅСЏ РёР· РјР°СЃСЃРёРІР° AllLevels РїРѕ РєРѕРґСѓ (СЃРІРѕР№СЃС‚РІСѓ HieViewLevel.NamePart)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё СѓСЂРѕРІРµРЅСЊ РЅРµ РЅР°Р№РґРµРЅ
     /// </summary>
-    /// <param name="LevelName">Имя уровня для поиска</param>
-    /// <returns>Объект уровня или null</returns>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ РґР»СЏ РїРѕРёСЃРєР°</param>
+    /// <returns>РћР±СЉРµРєС‚ СѓСЂРѕРІРЅСЏ РёР»Рё null</returns>
     public HieViewLevel this[string LevelName]
     {
       get
@@ -119,12 +119,12 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Возвращает индекс заданного упровня иерерахии (LevelIndex) в массиве
-    /// всех уровней. Индекс не зависит от наличия выбранных уровней и порядка
-    /// сортировки.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ Р·Р°РґР°РЅРЅРѕРіРѕ СѓРїСЂРѕРІРЅСЏ РёРµСЂРµСЂР°С…РёРё (LevelIndex) РІ РјР°СЃСЃРёРІРµ
+    /// РІСЃРµС… СѓСЂРѕРІРЅРµР№. РРЅРґРµРєСЃ РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ РЅР°Р»РёС‡РёСЏ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ Рё РїРѕСЂСЏРґРєР°
+    /// СЃРѕСЂС‚РёСЂРѕРІРєРё.
     /// </summary>
-    /// <param name="LevelName">Имя уровня</param>
-    /// <returns>Индекс в массиве AllLevels</returns>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ</param>
+    /// <returns>РРЅРґРµРєСЃ РІ РјР°СЃСЃРёРІРµ AllLevels</returns>
     public int IndexOf(string LevelName)
     {
       for (int i = 0; i < AllLevels.Length; i++)
@@ -137,7 +137,7 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// ВОзвращает true, если хотя бы для одного уровня иерархии есть редактор параметра
+    /// Р’РћР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С…РѕС‚СЏ Р±С‹ РґР»СЏ РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё РµСЃС‚СЊ СЂРµРґР°РєС‚РѕСЂ РїР°СЂР°РјРµС‚СЂР°
     /// </summary>
     public bool HasParamEditor
     {
@@ -153,10 +153,10 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Список выбранных уровней в заданном порядке
-    /// Нулевой элемент соответствует самому вложенному уровню (с номерами строк),
-    /// последний элемент - самому внешнему, то есть в порядке, который использует
-    /// свойство HieViewHandler.Levels
+    /// РЎРїРёСЃРѕРє РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ РІ Р·Р°РґР°РЅРЅРѕРј РїРѕСЂСЏРґРєРµ
+    /// РќСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃР°РјРѕРјСѓ РІР»РѕР¶РµРЅРЅРѕРјСѓ СѓСЂРѕРІРЅСЋ (СЃ РЅРѕРјРµСЂР°РјРё СЃС‚СЂРѕРє),
+    /// РїРѕСЃР»РµРґРЅРёР№ СЌР»РµРјРµРЅС‚ - СЃР°РјРѕРјСѓ РІРЅРµС€РЅРµРјСѓ, С‚Рѕ РµСЃС‚СЊ РІ РїРѕСЂСЏРґРєРµ, РєРѕС‚РѕСЂС‹Р№ РёСЃРїРѕР»СЊР·СѓРµС‚
+    /// СЃРІРѕР№СЃС‚РІРѕ HieViewHandler.Levels
     /// </summary>
     public HieViewLevel[] SelectedLevels
     {
@@ -192,9 +192,9 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Список имен выбранных уровней иерархии в заданном порядке
-    /// Свойство может быть использовано для передачи списка уровней серверу
-    /// Нулевой элемент массива соответствует наиболее вложенному уровню
+    /// РЎРїРёСЃРѕРє РёРјРµРЅ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё РІ Р·Р°РґР°РЅРЅРѕРј РїРѕСЂСЏРґРєРµ
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ РґР»СЏ РїРµСЂРµРґР°С‡Рё СЃРїРёСЃРєР° СѓСЂРѕРІРЅРµР№ СЃРµСЂРІРµСЂСѓ
+    /// РќСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ РјР°СЃСЃРёРІР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РЅР°РёР±РѕР»РµРµ РІР»РѕР¶РµРЅРЅРѕРјСѓ СѓСЂРѕРІРЅСЋ
     /// </summary>
     public string[] SelectedNames
     {
@@ -230,9 +230,9 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Альтернативный доступ к списку имен выбранных уровней (свойство SelectedNames)
-    /// в виде строки с именами, разделенных запятыми
-    /// Уровни задаются от наиболее вложенного к внешнему
+    /// РђР»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹Р№ РґРѕСЃС‚СѓРї Рє СЃРїРёСЃРєСѓ РёРјРµРЅ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ (СЃРІРѕР№СЃС‚РІРѕ SelectedNames)
+    /// РІ РІРёРґРµ СЃС‚СЂРѕРєРё СЃ РёРјРµРЅР°РјРё, СЂР°Р·РґРµР»РµРЅРЅС‹С… Р·Р°РїСЏС‚С‹РјРё
+    /// РЈСЂРѕРІРЅРё Р·Р°РґР°СЋС‚СЃСЏ РѕС‚ РЅР°РёР±РѕР»РµРµ РІР»РѕР¶РµРЅРЅРѕРіРѕ Рє РІРЅРµС€РЅРµРјСѓ
     /// </summary>
     public string SelectedNamesCSV
     {
@@ -250,12 +250,12 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Возвращает отображаемые названия DisplayName выбранных уровней SelectedLevels в виде
-    /// строки, разделенной запятыми.
-    /// Свойство может быть использовано в качестве заголовка поля "Hie_Text" при 
-    /// инициализации столбцов табличного просмотра.
-    /// Порядок элементов является обратным по отношению к SelectedLevels. То есть
-    /// сначала идет самый внешний уровень иерархии, а потом - вложенные
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹Рµ РЅР°Р·РІР°РЅРёСЏ DisplayName РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ SelectedLevels РІ РІРёРґРµ
+    /// СЃС‚СЂРѕРєРё, СЂР°Р·РґРµР»РµРЅРЅРѕР№ Р·Р°РїСЏС‚С‹РјРё.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ РІ РєР°С‡РµСЃС‚РІРµ Р·Р°РіРѕР»РѕРІРєР° РїРѕР»СЏ "Hie_Text" РїСЂРё 
+    /// РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ СЏРІР»СЏРµС‚СЃСЏ РѕР±СЂР°С‚РЅС‹Рј РїРѕ РѕС‚РЅРѕС€РµРЅРёСЋ Рє SelectedLevels. РўРѕ РµСЃС‚СЊ
+    /// СЃРЅР°С‡Р°Р»Р° РёРґРµС‚ СЃР°РјС‹Р№ РІРЅРµС€РЅРёР№ СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё, Р° РїРѕС‚РѕРј - РІР»РѕР¶РµРЅРЅС‹Рµ
     /// </summary>
     public string SelectedLevelsTitle
     {
@@ -275,8 +275,8 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Возвращает количество выбранных уровней SelectedLevels.Length,
-    /// но работает быстрее, чем обращение к SelectedLevels
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹Р±СЂР°РЅРЅС‹С… СѓСЂРѕРІРЅРµР№ SelectedLevels.Length,
+    /// РЅРѕ СЂР°Р±РѕС‚Р°РµС‚ Р±С‹СЃС‚СЂРµРµ, С‡РµРј РѕР±СЂР°С‰РµРЅРёРµ Рє SelectedLevels
     /// </summary>
     public int SelectedLevelCount
     {
@@ -293,34 +293,34 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Таблица, используемая в редакторе уровней.
-    /// Список строк соответствует текущему порядку уровней (поле "RowOrder").
-    /// В отличие от списка уровней, в таблиц порядок строк обратный. Первой строкой
-    /// идет самый внешний уровень, а последней - самый внутренний. Строка "Итого"
-    /// в таблицу не входит
+    /// РўР°Р±Р»РёС†Р°, РёСЃРїРѕР»СЊР·СѓРµРјР°СЏ РІ СЂРµРґР°РєС‚РѕСЂРµ СѓСЂРѕРІРЅРµР№.
+    /// РЎРїРёСЃРѕРє СЃС‚СЂРѕРє СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С‚РµРєСѓС‰РµРјСѓ РїРѕСЂСЏРґРєСѓ СѓСЂРѕРІРЅРµР№ (РїРѕР»Рµ "RowOrder").
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ СЃРїРёСЃРєР° СѓСЂРѕРІРЅРµР№, РІ С‚Р°Р±Р»РёС† РїРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РѕР±СЂР°С‚РЅС‹Р№. РџРµСЂРІРѕР№ СЃС‚СЂРѕРєРѕР№
+    /// РёРґРµС‚ СЃР°РјС‹Р№ РІРЅРµС€РЅРёР№ СѓСЂРѕРІРµРЅСЊ, Р° РїРѕСЃР»РµРґРЅРµР№ - СЃР°РјС‹Р№ РІРЅСѓС‚СЂРµРЅРЅРёР№. РЎС‚СЂРѕРєР° "РС‚РѕРіРѕ"
+    /// РІ С‚Р°Р±Р»РёС†Сѓ РЅРµ РІС…РѕРґРёС‚
     /// </summary>
     public DataView View { get { return FTable.DefaultView; } }
     private DataTable FTable;
 
     /// <summary>
-    /// true, если в иерархическом просмотре должны быть скрыты лишние строки сумм
-    /// По умолчанию - false
+    /// true, РµСЃР»Рё РІ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЃРєСЂС‹С‚С‹ Р»РёС€РЅРёРµ СЃС‚СЂРѕРєРё СЃСѓРјРј
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false
     /// </summary>
     public bool HideExtraSumRows;
 
     /// <summary>
-    /// Если свойство установлено, то пользователь не может изменять свойство
-    /// HideExtraSumRows в редакторе. Оно такэе не будет читаться и записываться
-    /// в секции конфигурации
-    /// По умолчанию - false (можно редактировать)
-    /// Установка свойства должна выполняться до вызова ReadConfig и до создания
-    /// редактора
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РјРѕР¶РµС‚ РёР·РјРµРЅСЏС‚СЊ СЃРІРѕР№СЃС‚РІРѕ
+    /// HideExtraSumRows РІ СЂРµРґР°РєС‚РѕСЂРµ. РћРЅРѕ С‚Р°РєСЌРµ РЅРµ Р±СѓРґРµС‚ С‡РёС‚Р°С‚СЊСЃСЏ Рё Р·Р°РїРёСЃС‹РІР°С‚СЊСЃСЏ
+    /// РІ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false (РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ)
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РґРѕР»Р¶РЅР° РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РґРѕ РІС‹Р·РѕРІР° ReadConfig Рё РґРѕ СЃРѕР·РґР°РЅРёСЏ
+    /// СЂРµРґР°РєС‚РѕСЂР°
     /// </summary>
     public bool HideExtraSumRowsFixed;
 
     /// <summary>
-    /// Массив уровней, у которых выставлены признаки Required и Visible, но которые
-    /// не выбраны (ошибки)
+    /// РњР°СЃСЃРёРІ СѓСЂРѕРІРЅРµР№, Сѓ РєРѕС‚РѕСЂС‹С… РІС‹СЃС‚Р°РІР»РµРЅС‹ РїСЂРёР·РЅР°РєРё Required Рё Visible, РЅРѕ РєРѕС‚РѕСЂС‹Рµ
+    /// РЅРµ РІС‹Р±СЂР°РЅС‹ (РѕС€РёР±РєРё)
     /// </summary>
     public HieViewLevel[] UnselectedRequiredLevels
     {
@@ -357,7 +357,7 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     public void RefreshTable()
     {
@@ -392,7 +392,7 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Заполнить поля ViolatedOrderRuleIndex
+    /// Р—Р°РїРѕР»РЅРёС‚СЊ РїРѕР»СЏ ViolatedOrderRuleIndex
     /// </summary>
     public void CheckOrderRules()
     {
@@ -415,7 +415,7 @@ namespace ClientAccDep
         if (RowOrder1 < RowOrder2)
           continue;
 
-        // Устанавливаем признак ошибки для обеих строк
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїСЂРёР·РЅР°Рє РѕС€РёР±РєРё РґР»СЏ РѕР±РµРёС… СЃС‚СЂРѕРє
         Row1["ViolatedOrderRuleIndex"] = i;
         Row2["ViolatedOrderRuleIndex"] = i;
         OrderRules[i].FViolated = true;
@@ -423,7 +423,7 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Применить установленную конфигурацию к просмотру
+    /// РџСЂРёРјРµРЅРёС‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅСѓСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ Рє РїСЂРѕСЃРјРѕС‚СЂСѓ
     /// </summary>
     /// <param name="HieViewHandler"></param>
     public void CopyTo(HieViewHandler HieViewHandler)
@@ -434,11 +434,11 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Правила для порядка уровней
+    #region РџСЂР°РІРёР»Р° РґР»СЏ РїРѕСЂСЏРґРєР° СѓСЂРѕРІРЅРµР№
 
     public class OrderRule
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public OrderRule(string UpperLevelName, string LowerLevelName)
       {
@@ -448,7 +448,7 @@ namespace ClientAccDep
         if (String.IsNullOrEmpty(LowerLevelName))
           throw new ArgumentNullException("LowerLevelName");
         if (UpperLevelName == LowerLevelName)
-          throw new BugException("Верхний и нижний уровни не могут совпадать: " + UpperLevelName);
+          throw new BugException("Р’РµСЂС…РЅРёР№ Рё РЅРёР¶РЅРёР№ СѓСЂРѕРІРЅРё РЅРµ РјРѕРіСѓС‚ СЃРѕРІРїР°РґР°С‚СЊ: " + UpperLevelName);
 #endif
 
         FUpperLevelName = UpperLevelName;
@@ -457,7 +457,7 @@ namespace ClientAccDep
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public string UpperLevelName { get { return FUpperLevelName; } }
       private string FUpperLevelName;
@@ -470,7 +470,7 @@ namespace ClientAccDep
       internal int LowerLevelIndex;
 
       /// <summary>
-      /// Возвращает true, если правило нарушено
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїСЂР°РІРёР»Рѕ РЅР°СЂСѓС€РµРЅРѕ
       /// </summary>
       public bool Violated { get { return FViolated; } }
       internal bool FViolated;
@@ -480,7 +480,7 @@ namespace ClientAccDep
 
     public class OrderRuleList : List<OrderRule>
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       internal OrderRuleList(HieViewLevelConfig Owner)
       {
@@ -489,12 +489,12 @@ namespace ClientAccDep
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       private HieViewLevelConfig FOwner;
 
       /// <summary>
-      /// Возвращает true, если хотя бы одно из правил нарушено
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕ РёР· РїСЂР°РІРёР» РЅР°СЂСѓС€РµРЅРѕ
       /// </summary>
       public bool HasViolation
       {
@@ -511,7 +511,7 @@ namespace ClientAccDep
 
       #endregion
 
-      #region Методы
+      #region РњРµС‚РѕРґС‹
 
       public new void Add(OrderRule Rule)
       {
@@ -538,17 +538,17 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Список правил взаимного расположения уровней
+    /// РЎРїРёСЃРѕРє РїСЂР°РІРёР» РІР·Р°РёРјРЅРѕРіРѕ СЂР°СЃРїРѕР»РѕР¶РµРЅРёСЏ СѓСЂРѕРІРЅРµР№
     /// </summary>
     public OrderRuleList OrderRules { get { return FOrderRules; } }
     private OrderRuleList FOrderRules;
 
     #endregion
 
-    #region Вспомогательные методы установки значений
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёР№
 
     /// <summary>
-    /// Устанавливает свойство "Visible" для уровня, если он существует
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ "Visible" РґР»СЏ СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
     /// <param name="LevelName"></param>
     /// <param name="Visible"></param>
@@ -561,13 +561,13 @@ namespace ClientAccDep
 
 #if XXX
     /// <summary>
-    /// Устанавливает свойство "Visible" для уровня, если он существует.
-    /// Может быть также сброшено свойство Selected, когда Visible=false,
-    /// а UnselectInvisible=true
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ "Visible" РґР»СЏ СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚.
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ С‚Р°РєР¶Рµ СЃР±СЂРѕС€РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ Selected, РєРѕРіРґР° Visible=false,
+    /// Р° UnselectInvisible=true
     /// </summary>
-    /// <param name="LevelName">Имя уровня иерархии</param>
-    /// <param name="Visible">Значение свойства Visible</param>
-    /// <param name="UnselectInvisible">Если true, то будет установлено Selected=false при Visible=false</param>
+    /// <param name="LevelName">РРјСЏ СѓСЂРѕРІРЅСЏ РёРµСЂР°СЂС…РёРё</param>
+    /// <param name="Visible">Р—РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° Visible</param>
+    /// <param name="UnselectInvisible">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ Selected=false РїСЂРё Visible=false</param>
     public void SetVisible(string LevelName, bool Visible, bool UnselectInvisible)
     {
       HieViewLevel lvl = this[LevelName];
@@ -590,7 +590,7 @@ namespace ClientAccDep
     }
 
     /// <summary>
-    /// Устанавливает свойство "Required" для уровня, если он существует
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ "Required" РґР»СЏ СѓСЂРѕРІРЅСЏ, РµСЃР»Рё РѕРЅ СЃСѓС‰РµСЃС‚РІСѓРµС‚
     /// </summary>
     /// <param name="LevelName"></param>
     /// <param name="Required"></param>
@@ -630,10 +630,10 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Чтение и запись конфигурации
+    #region Р§С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 
     /// <summary>
-    /// Установка порядка строк и флажков в значение по умолчанию
+    /// РЈСЃС‚Р°РЅРѕРІРєР° РїРѕСЂСЏРґРєР° СЃС‚СЂРѕРє Рё С„Р»Р°Р¶РєРѕРІ РІ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
     public void SetDefaultConfig()
     {
@@ -655,11 +655,11 @@ namespace ClientAccDep
       if (Config == null)
         return;
 
-      CfgPart PartFlag = Config.GetChild("УровниИерархии", true);
-      CfgPart PartOrd = Config.GetChild("ПорядокИерархии", true);
+      CfgPart PartFlag = Config.GetChild("РЈСЂРѕРІРЅРёРРµСЂР°СЂС…РёРё", true);
+      CfgPart PartOrd = Config.GetChild("РџРѕСЂСЏРґРѕРєРРµСЂР°СЂС…РёРё", true);
       CfgPart PartParams = null;
       if (HasParamEditor)
-        PartParams = Config.GetChild("ПараметрыУровнейИерархии", true);
+        PartParams = Config.GetChild("РџР°СЂР°РјРµС‚СЂС‹РЈСЂРѕРІРЅРµР№РРµСЂР°СЂС…РёРё", true);
       for (int i = 0; i < AllLevels.Length; i++)
       {
         if (AllLevels[i].Visible)
@@ -678,7 +678,7 @@ namespace ClientAccDep
       }
 
       if (!HideExtraSumRowsFixed)
-        Config.SetBool("СкрыватьЛишниеПодытоги", HideExtraSumRows);
+        Config.SetBool("РЎРєСЂС‹РІР°С‚СЊР›РёС€РЅРёРµРџРѕРґС‹С‚РѕРіРё", HideExtraSumRows);
     }
 
     public void ReadConfig(CfgPart Config)
@@ -688,9 +688,9 @@ namespace ClientAccDep
         SetDefaultConfig();
         return;
       }
-      CfgPart PartFlag = Config.GetChild("УровниИерархии", false);
-      CfgPart PartOrd = Config.GetChild("ПорядокИерархии", false);
-      CfgPart PartParams = Config.GetChild("ПараметрыУровнейИерархии", false);
+      CfgPart PartFlag = Config.GetChild("РЈСЂРѕРІРЅРёРРµСЂР°СЂС…РёРё", false);
+      CfgPart PartOrd = Config.GetChild("РџРѕСЂСЏРґРѕРєРРµСЂР°СЂС…РёРё", false);
+      CfgPart PartParams = Config.GetChild("РџР°СЂР°РјРµС‚СЂС‹РЈСЂРѕРІРЅРµР№РРµСЂР°СЂС…РёРё", false);
       for (int i = 0; i < AllLevels.Length; i++)
       {
         if (AllLevels[i].Visible)
@@ -706,8 +706,8 @@ namespace ClientAccDep
           Row["RowOrder"] = Order;
           if (AllLevels[i].ParamEditor != null)
           {
-            // Вызвать метод чтения значения параметра надо, даже если для него
-            // нет секции конфигурации. В этом случае используется пустая секция
+            // Р’С‹Р·РІР°С‚СЊ РјРµС‚РѕРґ С‡С‚РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР° РЅР°РґРѕ, РґР°Р¶Рµ РµСЃР»Рё РґР»СЏ РЅРµРіРѕ
+            // РЅРµС‚ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё. Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃРµРєС†РёСЏ
             CfgPart PartParam = null;
             if (PartParams != null)
               PartParam = PartParams.GetChild(AllLevels[i].Name, false);
@@ -719,39 +719,39 @@ namespace ClientAccDep
       }
 
       if (!HideExtraSumRowsFixed)
-        HideExtraSumRows = Config.GetBool("СкрыватьЛишниеПодытоги");
+        HideExtraSumRows = Config.GetBool("РЎРєСЂС‹РІР°С‚СЊР›РёС€РЅРёРµРџРѕРґС‹С‚РѕРіРё");
 
-      RefreshTable(); // мог поменяться текст для поля "Название"
+      RefreshTable(); // РјРѕРі РїРѕРјРµРЅСЏС‚СЊСЃСЏ С‚РµРєСЃС‚ РґР»СЏ РїРѕР»СЏ "РќР°Р·РІР°РЅРёРµ"
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Редактирование уровней детализации (флажки использования и порядок уровней)
-  /// с помощью табличного просмотра.
-  /// Редактор используется в блоках диалога параметров иерархического отчета.
-  /// В конструкторе указывается ссылка на объект MainGridHandler, который используется
-  /// для редактирования (до вызова SetCommandItems). Конструктор добавляет в
-  /// просмотр столбцы картинок и названий.
-  /// Затем устанавливается свойство HieConfig, которое ссылается на объект,
-  /// содержащий текущий список уровней. В табличный просмотр добавляются строки.
-  /// Когда пользователь изменяет выбранность строк или переставляет уровни,
-  /// изменение немедленно вносятся в присоединенный HieViewLevelConfig.
-  /// Если изменения в других частях диалога параметров отчета приводят к изменению
-  /// списка доступных уровней иерархии, то устанавливаются свойства объектов
-  /// HieViewLevel.Visible, Required и др. Затем должен быть вызван метод
-  /// ЭТОГО ОБЪЕКТА RefreshTable() для обновления строк табличного просмотра и
-  /// поля образца
+  /// Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СѓСЂРѕРІРЅРµР№ РґРµС‚Р°Р»РёР·Р°С†РёРё (С„Р»Р°Р¶РєРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ Рё РїРѕСЂСЏРґРѕРє СѓСЂРѕРІРЅРµР№)
+  /// СЃ РїРѕРјРѕС‰СЊСЋ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+  /// Р РµРґР°РєС‚РѕСЂ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ Р±Р»РѕРєР°С… РґРёР°Р»РѕРіР° РїР°СЂР°РјРµС‚СЂРѕРІ РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРіРѕ РѕС‚С‡РµС‚Р°.
+  /// Р’ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ СѓРєР°Р·С‹РІР°РµС‚СЃСЏ СЃСЃС‹Р»РєР° РЅР° РѕР±СЉРµРєС‚ MainGridHandler, РєРѕС‚РѕСЂС‹Р№ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
+  /// РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ (РґРѕ РІС‹Р·РѕРІР° SetCommandItems). РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґРѕР±Р°РІР»СЏРµС‚ РІ
+  /// РїСЂРѕСЃРјРѕС‚СЂ СЃС‚РѕР»Р±С†С‹ РєР°СЂС‚РёРЅРѕРє Рё РЅР°Р·РІР°РЅРёР№.
+  /// Р—Р°С‚РµРј СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СЃРІРѕР№СЃС‚РІРѕ HieConfig, РєРѕС‚РѕСЂРѕРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ РЅР° РѕР±СЉРµРєС‚,
+  /// СЃРѕРґРµСЂР¶Р°С‰РёР№ С‚РµРєСѓС‰РёР№ СЃРїРёСЃРѕРє СѓСЂРѕРІРЅРµР№. Р’ С‚Р°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ СЃС‚СЂРѕРєРё.
+  /// РљРѕРіРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РёР·РјРµРЅСЏРµС‚ РІС‹Р±СЂР°РЅРЅРѕСЃС‚СЊ СЃС‚СЂРѕРє РёР»Рё РїРµСЂРµСЃС‚Р°РІР»СЏРµС‚ СѓСЂРѕРІРЅРё,
+  /// РёР·РјРµРЅРµРЅРёРµ РЅРµРјРµРґР»РµРЅРЅРѕ РІРЅРѕСЃСЏС‚СЃСЏ РІ РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Р№ HieViewLevelConfig.
+  /// Р•СЃР»Рё РёР·РјРµРЅРµРЅРёСЏ РІ РґСЂСѓРіРёС… С‡Р°СЃС‚СЏС… РґРёР°Р»РѕРіР° РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚С‡РµС‚Р° РїСЂРёРІРѕРґСЏС‚ Рє РёР·РјРµРЅРµРЅРёСЋ
+  /// СЃРїРёСЃРєР° РґРѕСЃС‚СѓРїРЅС‹С… СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё, С‚Рѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°СЋС‚СЃСЏ СЃРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚РѕРІ
+  /// HieViewLevel.Visible, Required Рё РґСЂ. Р—Р°С‚РµРј РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РІР°РЅ РјРµС‚РѕРґ
+  /// Р­РўРћР“Рћ РћР‘РЄР•РљРўРђ RefreshTable() РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃС‚СЂРѕРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° Рё
+  /// РїРѕР»СЏ РѕР±СЂР°Р·С†Р°
   /// </summary>
   public class HieViewLevelConfigEditHandler
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
 
     /// <summary>
-    /// Размещение на панели табличного просмотра с панелью инструментов и
-    /// CheckBox'а с параметрами
+    /// Р Р°Р·РјРµС‰РµРЅРёРµ РЅР° РїР°РЅРµР»Рё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° СЃ РїР°РЅРµР»СЊСЋ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ Рё
+    /// CheckBox'Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
     /// </summary>
     /// <param name="ParentControl"></param>
     public HieViewLevelConfigEditHandler(Control ParentControl, EFPBaseProvider BaseProvider)
@@ -780,14 +780,14 @@ namespace ClientAccDep
       FMainGridHandler.ToolBarPanel = Form.panSpb;
 
       efpHideExtraSumRows = new EFPCheckBox(BaseProvider, Form.cbHideExtraSumRows);
-      efpHideExtraSumRows.ToolTipText = "Если флажок установлен, то для уровней иерархии, содержащих единственную строку данных не будет выводиться итоговая строка.\r\n" +
-        "Если флажок снят, то строка промежуточных итогов будет выводиться всегда";
+      efpHideExtraSumRows.ToolTipText = "Р•СЃР»Рё С„Р»Р°Р¶РѕРє СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РґР»СЏ СѓСЂРѕРІРЅРµР№ РёРµСЂР°СЂС…РёРё, СЃРѕРґРµСЂР¶Р°С‰РёС… РµРґРёРЅСЃС‚РІРµРЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ РґР°РЅРЅС‹С… РЅРµ Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ РёС‚РѕРіРѕРІР°СЏ СЃС‚СЂРѕРєР°.\r\n" +
+        "Р•СЃР»Рё С„Р»Р°Р¶РѕРє СЃРЅСЏС‚, С‚Рѕ СЃС‚СЂРѕРєР° РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅС‹С… РёС‚РѕРіРѕРІ Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ РІСЃРµРіРґР°";
       efpHideExtraSumRows.CheckedEx.ValueChanged += new EventHandler(efpHideExtraSumRows_CheckedChanged);
 
       SampleHandler = new EFPAccDepGrid(BaseProvider, Form.SampleGrid);
       InitSampleHandler();
 
-      // Запрет закрытия формы, если не выбрано ни одного уровня
+      // Р—Р°РїСЂРµС‚ Р·Р°РєСЂС‹С‚РёСЏ С„РѕСЂРјС‹, РµСЃР»Рё РЅРµ РІС‹Р±СЂР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
       EFPFormCheck Checker = new EFPFormCheck();
       Checker.Validating += new EFPValidatingEventHandler(Checker_Validating);
       Checker.FocusControl = FMainGridHandler.Control;
@@ -798,8 +798,8 @@ namespace ClientAccDep
     {
       MainGridHandler.Control.AutoGenerateColumns = false;
       MainGridHandler.Columns.AddImage();
-      MainGridHandler.Columns.AddBool("Flag", true, "Флаг");
-      MainGridHandler.Columns.AddTextFill("Name", true, "Название", 100, 10);
+      MainGridHandler.Columns.AddBool("Flag", true, "Р¤Р»Р°Рі");
+      MainGridHandler.Columns.AddTextFill("Name", true, "РќР°Р·РІР°РЅРёРµ", 100, 10);
       MainGridHandler.Columns.AddInt("RowOrder", true, "RowOrder", 3);
       MainGridHandler.Columns.LastAdded.GridColumn.ReadOnly = true;
       MainGridHandler.DisableOrdering();
@@ -827,10 +827,10 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Основной обработчик табличного просмотра (задается в конструкторе)
+    /// РћСЃРЅРѕРІРЅРѕР№ РѕР±СЂР°Р±РѕС‚С‡РёРє С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° (Р·Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ)
     /// </summary>
     public EFPAccDepGrid MainGridHandler { get { return FMainGridHandler; } }
     private EFPAccDepGrid FMainGridHandler;
@@ -838,10 +838,10 @@ namespace ClientAccDep
     private EFPCheckBox efpHideExtraSumRows;
 
     /// <summary>
-    /// Присоединенная конфигурация уровней. Действия пользователя сразу приводят
-    /// к изменению ее свойств
-    /// При установке свойства выполняется присоединение источника данных
-    /// HieViewLevelConfig.View к табличному просмотру
+    /// РџСЂРёСЃРѕРµРґРёРЅРµРЅРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ СѓСЂРѕРІРЅРµР№. Р”РµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃСЂР°Р·Сѓ РїСЂРёРІРѕРґСЏС‚
+    /// Рє РёР·РјРµРЅРµРЅРёСЋ РµРµ СЃРІРѕР№СЃС‚РІ
+    /// РџСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С…
+    /// HieViewLevelConfig.View Рє С‚Р°Р±Р»РёС‡РЅРѕРјСѓ РїСЂРѕСЃРјРѕС‚СЂСѓ
     /// </summary>
     public HieViewLevelConfig HieConfig
     {
@@ -880,11 +880,11 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Обновляет таблицу настроек, вызывая HieViewLevelConfigEditHandler.RefreshTable().
-    /// Затем обновляется таблица примеров
+    /// РћР±РЅРѕРІР»СЏРµС‚ С‚Р°Р±Р»РёС†Сѓ РЅР°СЃС‚СЂРѕРµРє, РІС‹Р·С‹РІР°СЏ HieViewLevelConfigEditHandler.RefreshTable().
+    /// Р—Р°С‚РµРј РѕР±РЅРѕРІР»СЏРµС‚СЃСЏ С‚Р°Р±Р»РёС†Р° РїСЂРёРјРµСЂРѕРІ
     /// </summary>
     public void RefreshTable()
     {
@@ -895,7 +895,7 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Обработчики
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё
 
     private bool OrderRuleViolated;
 
@@ -906,14 +906,14 @@ namespace ClientAccDep
       DataRow Row = Args.DataRow;
       if (Row == null)
         return;
-      // !!! Не реализовано
+      // !!! РќРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ
       //if (DataTools.GetBool(Row, "RowOrderIsFixed"))
       //  Args.UserImage = ClientApp.MainImages.Images["Anchor"];
       if (DataTools.GetBool(Row, "FlagIsFixed"))
       {
         Args.Grayed = true;
         if (!DataTools.GetBool(Row, "Flag"))
-          Args.AddRowError("Этот уровень детализации является обязательным");
+          Args.AddRowError("Р­С‚РѕС‚ СѓСЂРѕРІРµРЅСЊ РґРµС‚Р°Р»РёР·Р°С†РёРё СЏРІР»СЏРµС‚СЃСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рј");
       }
 
       if (!Args.DataRow.IsNull("ViolatedOrderRuleIndex"))
@@ -921,7 +921,7 @@ namespace ClientAccDep
         int RuleIndex = DataTools.GetInt(Args.DataRow, "ViolatedOrderRuleIndex");
         HieViewLevel lvl1 = HieConfig.AllLevels[HieConfig.OrderRules[RuleIndex].UpperLevelIndex];
         HieViewLevel lvl2 = HieConfig.AllLevels[HieConfig.OrderRules[RuleIndex].LowerLevelIndex];
-        Args.AddRowWarning("Уровень \"" + lvl1.DisplayName + "\" должен идти перед уровнем \"" + lvl2.DisplayName + "\"");
+        Args.AddRowWarning("РЈСЂРѕРІРµРЅСЊ \"" + lvl1.DisplayName + "\" РґРѕР»Р¶РµРЅ РёРґС‚Рё РїРµСЂРµРґ СѓСЂРѕРІРЅРµРј \"" + lvl2.DisplayName + "\"");
         OrderRuleViolated = true;
       }
     }
@@ -943,9 +943,9 @@ namespace ClientAccDep
             Cfg = Name.Substring(p + 1);
             Name = Name.Substring(0, p);
           }
-          Args.ToolTipText = "Уровень: " + Name;
+          Args.ToolTipText = "РЈСЂРѕРІРµРЅСЊ: " + Name;
           if (Cfg != null)
-            Args.ToolTipText += "\r\n" + "Настройка: " + Cfg;
+            Args.ToolTipText += "\r\n" + "РќР°СЃС‚СЂРѕР№РєР°: " + Cfg;
           break;
         case 2:
           Args.IndentLevel = Args.RowIndex;
@@ -978,7 +978,7 @@ namespace ClientAccDep
       {
         if (FHieConfig.SelectedLevelCount == 0)
         {
-          Args.SetError("Должен быть выбран хотя бы один уровень иерархии");
+          Args.SetError("Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё");
           return;
         }
 
@@ -988,7 +988,7 @@ namespace ClientAccDep
           {
             if (!FHieConfig.GetSelected(FHieConfig.AllLevels[i].Name))
             {
-              Args.SetError("Уровень \"" + FHieConfig.AllLevels[i].DisplayName + "\" должен быть выбран");
+              Args.SetError("РЈСЂРѕРІРµРЅСЊ \"" + FHieConfig.AllLevels[i].DisplayName + "\" РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ");
               return;
             }
           }
@@ -1005,7 +1005,7 @@ namespace ClientAccDep
       HieViewLevel Level = HieConfig.AllLevels[LevelIndex];
       if (Level.ParamEditor == null)
       {
-        EFPApp.ShowTempMessage("Этот уровень иерархии не настраивается");
+        EFPApp.ShowTempMessage("Р­С‚РѕС‚ СѓСЂРѕРІРµРЅСЊ РёРµСЂР°СЂС…РёРё РЅРµ РЅР°СЃС‚СЂР°РёРІР°РµС‚СЃСЏ");
         return;
       }
 
@@ -1018,7 +1018,7 @@ namespace ClientAccDep
 
     #endregion
 
-    #region Окно примеров
+    #region РћРєРЅРѕ РїСЂРёРјРµСЂРѕРІ
 
     private DataTable SampleTable;
 
@@ -1027,9 +1027,9 @@ namespace ClientAccDep
     private void InitSampleHandler()
     {
       SampleTable = new DataTable();
-      SampleTable.Columns.Add("Текст", typeof(string));
-      SampleTable.Columns.Add("Отступ", typeof(int));
-      SampleTable.Columns.Add("Уровень", typeof(int));
+      SampleTable.Columns.Add("РўРµРєСЃС‚", typeof(string));
+      SampleTable.Columns.Add("РћС‚СЃС‚СѓРї", typeof(int));
+      SampleTable.Columns.Add("РЈСЂРѕРІРµРЅСЊ", typeof(int));
 
       SampleHandler.Control.ReadOnly = true;
       SampleHandler.Control.ColumnHeadersVisible = false;
@@ -1037,19 +1037,19 @@ namespace ClientAccDep
       SampleHandler.Control.MultiSelect = false;
       SampleHandler.Control.AutoGenerateColumns = false;
 
-      SampleHandler.Columns.AddTextFill("Текст", true, String.Empty, 100, 5);
+      SampleHandler.Columns.AddTextFill("РўРµРєСЃС‚", true, String.Empty, 100, 5);
       SampleHandler.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(SampleHandler_GetCellAttributes);
       SampleHandler.HideSelection = true;
       SampleHandler.ReadOnly = true;
       SampleHandler.CanView = false;
 
-      // Команды меню не нужны
+      // РљРѕРјР°РЅРґС‹ РјРµРЅСЋ РЅРµ РЅСѓР¶РЅС‹
       // SampleHandler.SetCommandItems(null);
 
       SampleHandler.Control.DataSource = SampleTable;
 
-      // Обновление примера выполняем по таймеру, т.к. события, приводящие к 
-      // обновлению, могут возникать много раз за одно реальное изменение
+      // РћР±РЅРѕРІР»РµРЅРёРµ РїСЂРёРјРµСЂР° РІС‹РїРѕР»РЅСЏРµРј РїРѕ С‚Р°Р№РјРµСЂСѓ, С‚.Рє. СЃРѕР±С‹С‚РёСЏ, РїСЂРёРІРѕРґСЏС‰РёРµ Рє 
+      // РѕР±РЅРѕРІР»РµРЅРёСЋ, РјРѕРіСѓС‚ РІРѕР·РЅРёРєР°С‚СЊ РјРЅРѕРіРѕ СЂР°Р· Р·Р° РѕРґРЅРѕ СЂРµР°Р»СЊРЅРѕРµ РёР·РјРµРЅРµРЅРёРµ
       SampleTimer = new Timer();
       SampleTimer.Interval = 100;
       SampleTimer.Tick += new EventHandler(SampleTimer_Tick);
@@ -1069,8 +1069,8 @@ namespace ClientAccDep
       DataRow Row = Args.DataRow;
       if (Row == null)
         return;
-      Args.IndentLevel = DataTools.GetInt(Row, "Отступ");
-      int Level = DataTools.GetInt(Row, "Уровень");
+      Args.IndentLevel = DataTools.GetInt(Row, "РћС‚СЃС‚СѓРї");
+      int Level = DataTools.GetInt(Row, "РЈСЂРѕРІРµРЅСЊ");
       switch (Level)
       {
         case -1:
@@ -1095,7 +1095,7 @@ namespace ClientAccDep
     private Timer SampleTimer;
 
     /// <summary>
-    /// Обновление таблички примеров
+    /// РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС‡РєРё РїСЂРёРјРµСЂРѕРІ
     /// </summary>
     private void InvalidateSample()
     {
@@ -1126,9 +1126,9 @@ namespace ClientAccDep
             for (int i = 1; i < Levels.Length; i++)
             {
               HieViewLevel Level = Levels[i];
-              SampleTable.Rows.Add("Итого: " + Level.DisplayName, Levels.Length - i, i);
+              SampleTable.Rows.Add("РС‚РѕРіРѕ: " + Level.DisplayName, Levels.Length - i, i);
             }
-            SampleTable.Rows.Add("Итого", 0, -1);
+            SampleTable.Rows.Add("РС‚РѕРіРѕ", 0, -1);
           }
         }
         finally
@@ -1143,14 +1143,14 @@ namespace ClientAccDep
           MainGridHandler.Control.Invalidate();
         }
 
-        // Также обновляем подсказку, если она есть
+        // РўР°РєР¶Рµ РѕР±РЅРѕРІР»СЏРµРј РїРѕРґСЃРєР°Р·РєСѓ, РµСЃР»Рё РѕРЅР° РµСЃС‚СЊ
         InitControlledObject();
-        SampleIsDirty = false; // еще раз, т.к. испорчено CheckOrderRules
+        SampleIsDirty = false; // РµС‰Рµ СЂР°Р·, С‚.Рє. РёСЃРїРѕСЂС‡РµРЅРѕ CheckOrderRules
       } // SampleIsDirty
     }
 
     /// <summary>
-    /// Обновление подсказки для закладки ControlledTabPage
+    /// РћР±РЅРѕРІР»РµРЅРёРµ РїРѕРґСЃРєР°Р·РєРё РґР»СЏ Р·Р°РєР»Р°РґРєРё ControlledTabPage
     /// </summary>
     private void InitControlledObject()
     {
@@ -1162,48 +1162,48 @@ namespace ClientAccDep
 
       if (FHieConfig == null)
       {
-        FControlledTabPage.ToolTipText = "Уровни не присоединены";
+        FControlledTabPage.ToolTipText = "РЈСЂРѕРІРЅРё РЅРµ РїСЂРёСЃРѕРµРґРёРЅРµРЅС‹";
         FControlledTabPage.ImageKey = "UnknownState";
       }
       else
       {
         if (FHieConfig.SelectedLevelCount == 0)
         {
-          FControlledTabPage.ToolTipText = "Уровни не выбраны";
+          FControlledTabPage.ToolTipText = "РЈСЂРѕРІРЅРё РЅРµ РІС‹Р±СЂР°РЅС‹";
           FControlledTabPage.ImageKey = "Error";
         }
         else if (FHieConfig.UnselectedRequiredLevels.Length > 0)
         {
           if (FHieConfig.UnselectedRequiredLevels.Length > 1)
-            FControlledTabPage.ToolTipText = "Не выбраны обязательные уровни: " + FHieConfig.UnselectedRequiredLevelsTitle;
+            FControlledTabPage.ToolTipText = "РќРµ РІС‹Р±СЂР°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ СѓСЂРѕРІРЅРё: " + FHieConfig.UnselectedRequiredLevelsTitle;
           else
-            FControlledTabPage.ToolTipText = "Не выбран обязательный уровень: " + FHieConfig.UnselectedRequiredLevelsTitle;
+            FControlledTabPage.ToolTipText = "РќРµ РІС‹Р±СЂР°РЅ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ: " + FHieConfig.UnselectedRequiredLevelsTitle;
           FControlledTabPage.ImageKey = "Error";
         }
         else
         {
-          FControlledTabPage.ToolTipText = "Выбранные уровни: " + FHieConfig.SelectedLevelsTitle;
+          FControlledTabPage.ToolTipText = "Р’С‹Р±СЂР°РЅРЅС‹Рµ СѓСЂРѕРІРЅРё: " + FHieConfig.SelectedLevelsTitle;
           if (FHieConfig.OrderRules.HasViolation)
           {
             FControlledTabPage.ImageKey = "Warning";
-            FControlledTabPage.ToolTipText += "\r\nНеправильный порядок уровней";
+            FControlledTabPage.ToolTipText += "\r\nРќРµРїСЂР°РІРёР»СЊРЅС‹Р№ РїРѕСЂСЏРґРѕРє СѓСЂРѕРІРЅРµР№";
           }
           else
-            FControlledTabPage.ImageKey = "Детализация";
+            FControlledTabPage.ImageKey = "Р”РµС‚Р°Р»РёР·Р°С†РёСЏ";
         }
       }
     }
 
     #endregion
 
-    #region Статический метод редактирования - открытие диалога
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ - РѕС‚РєСЂС‹С‚РёРµ РґРёР°Р»РѕРіР°
 
     public static bool PerformEdit(HieViewLevelConfig HieConfig)
     {
       HieViewLevelEditForm Form = new HieViewLevelEditForm();
       //EFPFormProvider efpForm = new EFPFormProvider(Form);
 
-      // Подбираем высоту строки
+      // РџРѕРґР±РёСЂР°РµРј РІС‹СЃРѕС‚Сѓ СЃС‚СЂРѕРєРё
       int RH = Form.MainGrid.Font.Height + 9;
       int WantedGridH = RH * HieConfig.AllLevels.Length;
       int IncH = WantedGridH - Form.MainGrid.ClientSize.Height;

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,63 +9,63 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Этот класс используется в качестве базового класса для специфических форматизаторов баз данных и для DataViewDBxSqlFormatter
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РєР°С‡РµСЃС‚РІРµ Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР° РґР»СЏ СЃРїРµС†РёС„РёС‡РµСЃРєРёС… С„РѕСЂРјР°С‚РёР·Р°С‚РѕСЂРѕРІ Р±Р°Р· РґР°РЅРЅС‹С… Рё РґР»СЏ DataViewDBxSqlFormatter
   /// </summary>                                         
   public abstract class BaseDBxSqlFormatter : DBxSqlFormatter
   {
-    #region Имена таблиц и полей
+    #region РРјРµРЅР° С‚Р°Р±Р»РёС† Рё РїРѕР»РµР№
 
     /// <summary>
-    /// Способ оборочивания имен таблиц, альясов и полей.
-    /// Обычно используются кавычки, но для DataView, MS SQL Server и Access должны использоваться квадратные скобки
+    /// РЎРїРѕСЃРѕР± РѕР±РѕСЂРѕС‡РёРІР°РЅРёСЏ РёРјРµРЅ С‚Р°Р±Р»РёС†, Р°Р»СЊСЏСЃРѕРІ Рё РїРѕР»РµР№.
+    /// РћР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РєР°РІС‹С‡РєРё, РЅРѕ РґР»СЏ DataView, MS SQL Server Рё Access РґРѕР»Р¶РЅС‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РєРІР°РґСЂР°С‚РЅС‹Рµ СЃРєРѕР±РєРё
     /// </summary>
     protected enum EnvelopMode
     {
       /// <summary>
-      /// Основной вариант - имена заключаются в двойные кавычки
+      /// РћСЃРЅРѕРІРЅРѕР№ РІР°СЂРёР°РЅС‚ - РёРјРµРЅР° Р·Р°РєР»СЋС‡Р°СЋС‚СЃСЏ РІ РґРІРѕР№РЅС‹Рµ РєР°РІС‹С‡РєРё
       /// </summary>
       Quotation,
 
       /// <summary>
-      /// Для баз данных Microsoft - квадратные скобки
+      /// Р”Р»СЏ Р±Р°Р· РґР°РЅРЅС‹С… Microsoft - РєРІР°РґСЂР°С‚РЅС‹Рµ СЃРєРѕР±РєРё
       /// </summary>
       Brackets,
 
       /// <summary>
-      /// Имена не должны экранироваться
+      /// РРјРµРЅР° РЅРµ РґРѕР»Р¶РЅС‹ СЌРєСЂР°РЅРёСЂРѕРІР°С‚СЊСЃСЏ
       /// </summary>
       None,
 
       /// <summary>
-      /// Все методы реализуются производным классом самостоятельно.
-      /// BaseDBxSqlFormatter вызывает исключение
+      /// Р’СЃРµ РјРµС‚РѕРґС‹ СЂРµР°Р»РёР·СѓСЋС‚СЃСЏ РїСЂРѕРёР·РІРѕРґРЅС‹Рј РєР»Р°СЃСЃРѕРј СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ.
+      /// BaseDBxSqlFormatter РІС‹Р·С‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ
       /// </summary>
       Unsupported
     }
 
     /// <summary>
-    /// Правила обрамления имен таблиц, полей и индексов.
-    /// По умолчанию, имена заключаются в кавычки
+    /// РџСЂР°РІРёР»Р° РѕР±СЂР°РјР»РµРЅРёСЏ РёРјРµРЅ С‚Р°Р±Р»РёС†, РїРѕР»РµР№ Рё РёРЅРґРµРєСЃРѕРІ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, РёРјРµРЅР° Р·Р°РєР»СЋС‡Р°СЋС‚СЃСЏ РІ РєР°РІС‹С‡РєРё
     /// </summary>
     protected virtual EnvelopMode NameEnvelopMode { get { return EnvelopMode.Quotation; } }
 
     /// <summary>
-    /// Форматирование имени таблицы.
-    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства NameEnvelopMode
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РёРјРµРЅРё С‚Р°Р±Р»РёС†С‹.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ Р·Р°РєР»СЋС‡Р°РµС‚ РёРјСЏ РІ РєР°РІС‹С‡РєРё РёР»Рё СЃРєРѕР±РєРё, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРІРѕР№СЃС‚РІР° NameEnvelopMode
     /// </summary>
-    /// <param name="buffer">Буфер для формирования SQL-запроса</param>
-    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
     protected override void OnFormatTableName(DBxSqlBuffer buffer, string tableName)
     {
       DoFormatName(buffer, tableName);
     }
 
     /// <summary>
-    /// Форматирование имени поля.
-    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства NameEnvelopMode
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РёРјРµРЅРё РїРѕР»СЏ.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ Р·Р°РєР»СЋС‡Р°РµС‚ РёРјСЏ РІ РєР°РІС‹С‡РєРё РёР»Рё СЃРєРѕР±РєРё, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРІРѕР№СЃС‚РІР° NameEnvelopMode
     /// </summary>
-    /// <param name="buffer">Буфер для формирования SQL-запроса</param>
-    /// <param name="columnName">Имя столбца</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
     protected override void OnFormatColumnName(DBxSqlBuffer buffer, string columnName)
     {
       DoFormatName(buffer, columnName);
@@ -89,21 +89,21 @@ namespace FreeLibSet.Data
           buffer.SB.Append(name);
           break;
         case EnvelopMode.Unsupported:
-          throw new NotSupportedException("Метод должен быть реализован в производном классе");
+          throw new NotSupportedException("РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЂРµР°Р»РёР·РѕРІР°РЅ РІ РїСЂРѕРёР·РІРѕРґРЅРѕРј РєР»Р°СЃСЃРµ");
         default:
-          throw new BugException("Недопустимое значение свойства NameEnvelopMode=" + NameEnvelopMode.ToString());
+          throw new BugException("РќРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° NameEnvelopMode=" + NameEnvelopMode.ToString());
       }
     }
 
 
     /// <summary>
-    /// Форматирование имени поля и альяса таблицы для запросов SELECT c конструкцией JOIN.
-    /// Непереопределенный метод вызывает OnFormatTableName() для форматирования альяса, добавляет точку и 
-    /// форматирует имя поля вызовом OnFormatColumnName()
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РёРјРµРЅРё РїРѕР»СЏ Рё Р°Р»СЊСЏСЃР° С‚Р°Р±Р»РёС†С‹ РґР»СЏ Р·Р°РїСЂРѕСЃРѕРІ SELECT c РєРѕРЅСЃС‚СЂСѓРєС†РёРµР№ JOIN.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ OnFormatTableName() РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Р°Р»СЊСЏСЃР°, РґРѕР±Р°РІР»СЏРµС‚ С‚РѕС‡РєСѓ Рё 
+    /// С„РѕСЂРјР°С‚РёСЂСѓРµС‚ РёРјСЏ РїРѕР»СЏ РІС‹Р·РѕРІРѕРј OnFormatColumnName()
     /// </summary>
-    /// <param name="buffer">Буфер для формирования SQL-запроса</param>
-    /// <param name="tableAlias">Альяс таблицы (до точки)</param>
-    /// <param name="columnName">Имя столбца (после точки)</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="tableAlias">РђР»СЊСЏСЃ С‚Р°Р±Р»РёС†С‹ (РґРѕ С‚РѕС‡РєРё)</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р° (РїРѕСЃР»Рµ С‚РѕС‡РєРё)</param>
     protected override void OnFormatColumnName(DBxSqlBuffer buffer, string tableAlias, string columnName)
     {
       OnFormatTableName(buffer, tableAlias);
@@ -113,20 +113,20 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Типы данных
+    #region РўРёРїС‹ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Форматирование типа поля для операторов CREATE/ALTER TABLE ADD/ALTER COLUMN. 
-    /// Добавляется только тип данных, например, "CHAR(20)".
-    /// Имя столбца и выражение NULL/NOT NULL не добавляется.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‚РёРїР° РїРѕР»СЏ РґР»СЏ РѕРїРµСЂР°С‚РѕСЂРѕРІ CREATE/ALTER TABLE ADD/ALTER COLUMN. 
+    /// Р”РѕР±Р°РІР»СЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ С‚РёРї РґР°РЅРЅС‹С…, РЅР°РїСЂРёРјРµСЂ, "CHAR(20)".
+    /// РРјСЏ СЃС‚РѕР»Р±С†Р° Рё РІС‹СЂР°Р¶РµРЅРёРµ NULL/NOT NULL РЅРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="buffer">Буфер для создания SQL-запроса</param>
-    /// <param name="column">Описание столбца</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="column">РћРїРёСЃР°РЅРёРµ СЃС‚РѕР»Р±С†Р°</param>
     protected override void OnFormatValueType(DBxSqlBuffer buffer, DBxColumnStruct column)
     {
       switch (column.ColumnType)
       {
-        #region Строка
+        #region РЎС‚СЂРѕРєР°
 
         case DBxColumnType.String:
           buffer.SB.Append("CHAR(");
@@ -136,7 +136,7 @@ namespace FreeLibSet.Data
 
         #endregion
 
-        #region Логический
+        #region Р›РѕРіРёС‡РµСЃРєРёР№
 
         case DBxColumnType.Boolean:
           buffer.SB.Append("BOOLEAN");
@@ -144,11 +144,11 @@ namespace FreeLibSet.Data
 
         #endregion
 
-        #region Числа
+        #region Р§РёСЃР»Р°
 
         case DBxColumnType.Int:
           if (column.MinValue == 0 && column.MaxValue == 0)
-            buffer.SB.Append("INTEGER"); // основной тип
+            buffer.SB.Append("INTEGER"); // РѕСЃРЅРѕРІРЅРѕР№ С‚РёРї
           else if (column.MinValue >= Int16.MinValue && column.MaxValue <= Int16.MaxValue)
             buffer.SB.Append("SMALLINT");
           else if (column.MinValue >= Int32.MinValue && column.MaxValue <= Int32.MaxValue)
@@ -166,19 +166,19 @@ namespace FreeLibSet.Data
             buffer.SB.Append("DOUBLE PRECISION");
           break;
 
-        case DBxColumnType.Money: // Отдельного денежного типа нет
+        case DBxColumnType.Money: // РћС‚РґРµР»СЊРЅРѕРіРѕ РґРµРЅРµР¶РЅРѕРіРѕ С‚РёРїР° РЅРµС‚
           buffer.SB.Append("NUMERIC(18,2)");
           break;
 
         #endregion
 
-        #region Дата / время
+        #region Р”Р°С‚Р° / РІСЂРµРјСЏ
 
-        case DBxColumnType.Date: // Только дата
+        case DBxColumnType.Date: // РўРѕР»СЊРєРѕ РґР°С‚Р°
           buffer.SB.Append("DATE");
           break;
 
-        case DBxColumnType.DateTime: // Дата и время
+        case DBxColumnType.DateTime: // Р”Р°С‚Р° Рё РІСЂРµРјСЏ
           buffer.SB.Append("TIMESTAMP");
           break;
 
@@ -191,7 +191,7 @@ namespace FreeLibSet.Data
         #region GUID
 
         case DBxColumnType.Guid:
-          buffer.SB.Append("CHAR(36)"); // 32 символа + 4 разделителя "-"
+          buffer.SB.Append("CHAR(36)"); // 32 СЃРёРјРІРѕР»Р° + 4 СЂР°Р·РґРµР»РёС‚РµР»СЏ "-"
           break;
 
         #endregion
@@ -199,7 +199,7 @@ namespace FreeLibSet.Data
         #region MEMO
 
         case DBxColumnType.Memo:
-          buffer.SB.Append("CLOB"); // Интересно, его кто-нибудь поддерживает?
+          buffer.SB.Append("CLOB"); // РРЅС‚РµСЂРµСЃРЅРѕ, РµРіРѕ РєС‚Рѕ-РЅРёР±СѓРґСЊ РїРѕРґРґРµСЂР¶РёРІР°РµС‚?
           break;
 
         case DBxColumnType.Xml:
@@ -213,24 +213,24 @@ namespace FreeLibSet.Data
         #endregion
 
         default:
-          throw new BugException("Неизвестный тип поля " + column.ColumnType.ToString());
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї РїРѕР»СЏ " + column.ColumnType.ToString());
       }
     }
 
     #endregion
 
-    #region Выражения
+    #region Р’С‹СЂР°Р¶РµРЅРёСЏ
 
     /// <summary>
-    /// Форматирование части выражения, возвращающего значение столбца.
-    /// Если столбец поддерживает значения NULL и установлено свойство DBxFormatExpressionInfo.NullAsDefaultValue,
-    /// то выполяется форматирование функции COALESCE().
-    /// Иначе в запрос добавляется имя поля с помощью OnFormatColumnName(). Перед этим выполняется поиск альяса таблицы в списке DBxSqlBuffer.ColumnTableAliases.
-    /// При необходимости, перед именем столбца выводится альяс таблицы.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‡Р°СЃС‚Рё РІС‹СЂР°Р¶РµРЅРёСЏ, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРіРѕ Р·РЅР°С‡РµРЅРёРµ СЃС‚РѕР»Р±С†Р°.
+    /// Р•СЃР»Рё СЃС‚РѕР»Р±РµС† РїРѕРґРґРµСЂР¶РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёСЏ NULL Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DBxFormatExpressionInfo.NullAsDefaultValue,
+    /// С‚Рѕ РІС‹РїРѕР»СЏРµС‚СЃСЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„СѓРЅРєС†РёРё COALESCE().
+    /// РРЅР°С‡Рµ РІ Р·Р°РїСЂРѕСЃ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РёРјСЏ РїРѕР»СЏ СЃ РїРѕРјРѕС‰СЊСЋ OnFormatColumnName(). РџРµСЂРµРґ СЌС‚РёРј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє Р°Р»СЊСЏСЃР° С‚Р°Р±Р»РёС†С‹ РІ СЃРїРёСЃРєРµ DBxSqlBuffer.ColumnTableAliases.
+    /// РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё, РїРµСЂРµРґ РёРјРµРЅРµРј СЃС‚РѕР»Р±С†Р° РІС‹РІРѕРґРёС‚СЃСЏ Р°Р»СЊСЏСЃ С‚Р°Р±Р»РёС†С‹.
     /// </summary>
-    /// <param name="buffer">Буфер для создания SQL-запроса</param>
-    /// <param name="column">Выражение - имя поля</param>
-    /// <param name="formatInfo">Параметры форматирования</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="column">Р’С‹СЂР°Р¶РµРЅРёРµ - РёРјСЏ РїРѕР»СЏ</param>
+    /// <param name="formatInfo">РџР°СЂР°РјРµС‚СЂС‹ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ</param>
     protected override void OnFormatColumn(DBxSqlBuffer buffer, DBxColumn column, DBxFormatExpressionInfo formatInfo)
     {
       string tableAlias;
@@ -242,7 +242,7 @@ namespace FreeLibSet.Data
       {
         actualName = actualName.Substring(lastDotPos + 1);
         if (String.IsNullOrEmpty(tableAlias))
-          throw new InvalidOperationException("Для ссылочного столбца \"" + column.ColumnName + "\" не найден альяс таблицы");
+          throw new InvalidOperationException("Р”Р»СЏ СЃСЃС‹Р»РѕС‡РЅРѕРіРѕ СЃС‚РѕР»Р±С†Р° \"" + column.ColumnName + "\" РЅРµ РЅР°Р№РґРµРЅ Р°Р»СЊСЏСЃ С‚Р°Р±Р»РёС†С‹");
       }
 
       bool useCoalesce = false;
@@ -263,10 +263,10 @@ namespace FreeLibSet.Data
       if (useCoalesce)
       {
         if (wantedType == DBxColumnType.Unknown)
-          throw new InvalidOperationException("Для столбца \"" + column.ColumnName + "\" требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных");
+          throw new InvalidOperationException("Р”Р»СЏ СЃС‚РѕР»Р±С†Р° \"" + column.ColumnName + "\" С‚СЂРµР±СѓРµС‚СЃСЏ РѕР±СЂР°Р±РѕС‚РєР° Р·РЅР°С‡РµРЅРёСЏ NULL. РќРµ РЅР°Р№РґРµРЅРѕ РѕРїРёСЃР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ СЃС‚РѕР»Р±С†Р° Рё РЅРµ РїРµСЂРµРґР°РЅ С‚СЂРµР±СѓРµРјС‹Р№ С‚РёРї РґР°РЅРЅС‹С…");
 
         DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(DBxTools.GetDefaultValue(wantedType), wantedType));
-        OnFormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // рекурсивный вызов форматировщика, но уже без флага 
+        OnFormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ С„РѕСЂРјР°С‚РёСЂРѕРІС‰РёРєР°, РЅРѕ СѓР¶Рµ Р±РµР· С„Р»Р°РіР° 
       }
       else
       {
@@ -278,17 +278,17 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Форматирование выражения-функции или математической операции.
-    /// Для форматирования аргументов используется рекурсивный вызов FormatExpression()
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ-С„СѓРЅРєС†РёРё РёР»Рё РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕР№ РѕРїРµСЂР°С†РёРё.
+    /// Р”Р»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ FormatExpression()
     /// </summary>
-    /// <param name="buffer">Буфер для создания SQL-запроса</param>
-    /// <param name="function">Выражение - функция</param>
-    /// <param name="formatInfo">Параметры форматирования</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="function">Р’С‹СЂР°Р¶РµРЅРёРµ - С„СѓРЅРєС†РёСЏ</param>
+    /// <param name="formatInfo">РџР°СЂР°РјРµС‚СЂС‹ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ</param>
     protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
     {
       switch (function.Function)
       {
-        #region Арифметические операции
+        #region РђСЂРёС„РјРµС‚РёС‡РµСЃРєРёРµ РѕРїРµСЂР°С†РёРё
 
         case DBxFunctionKind.Add:
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
@@ -339,7 +339,7 @@ namespace FreeLibSet.Data
 
         #endregion
 
-        #region Функции
+        #region Р¤СѓРЅРєС†РёРё
 
         case DBxFunctionKind.Abs:
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
@@ -348,13 +348,13 @@ namespace FreeLibSet.Data
           break;
 
         case DBxFunctionKind.Coalesce:
-          // Определяем тип данных из константы
+          // РћРїСЂРµРґРµР»СЏРµРј С‚РёРї РґР°РЅРЅС‹С… РёР· РєРѕРЅСЃС‚Р°РЅС‚С‹
           for (int i = function.Arguments.Length - 1; i >= 1; i--)
           {
             DBxConst constExpr = function.Arguments[i].GetConst();
             if (constExpr != null)
             {
-              formatInfo.WantedColumnType = constExpr.ColumnType; // переопределяем переданный тип
+              formatInfo.WantedColumnType = constExpr.ColumnType; // РїРµСЂРµРѕРїСЂРµРґРµР»СЏРµРј РїРµСЂРµРґР°РЅРЅС‹Р№ С‚РёРї
               break;
             }
           }
@@ -369,7 +369,7 @@ namespace FreeLibSet.Data
           break;
 
         case DBxFunctionKind.Substring:
-          // Первый аргумент - строка, второй и третий - числа
+          // РџРµСЂРІС‹Р№ Р°СЂРіСѓРјРµРЅС‚ - СЃС‚СЂРѕРєР°, РІС‚РѕСЂРѕР№ Рё С‚СЂРµС‚РёР№ - С‡РёСЃР»Р°
           buffer.SB.Append(GetFunctionName(function.Function));
           buffer.SB.Append('(');
           formatInfo.NoParentheses = true;
@@ -387,7 +387,7 @@ namespace FreeLibSet.Data
         #endregion
 
         default:
-          throw new BugException("Неизвестная функция " + function.Function.ToString());
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅР°СЏ С„СѓРЅРєС†РёСЏ " + function.Function.ToString());
       }
     }
 
@@ -407,11 +407,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если выражение <paramref name="expression"/> требуется заключать в круглые скобки для правильного порядка вычислений.
-    /// Возвращает true для выражений-математических операций.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІС‹СЂР°Р¶РµРЅРёРµ <paramref name="expression"/> С‚СЂРµР±СѓРµС‚СЃСЏ Р·Р°РєР»СЋС‡Р°С‚СЊ РІ РєСЂСѓРіР»С‹Рµ СЃРєРѕР±РєРё РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕРіРѕ РїРѕСЂСЏРґРєР° РІС‹С‡РёСЃР»РµРЅРёР№.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true РґР»СЏ РІС‹СЂР°Р¶РµРЅРёР№-РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёС… РѕРїРµСЂР°С†РёР№.
     /// </summary>
-    /// <param name="expression">Выражение, которое, может быть, нужно заключать в скобки</param>
-    /// <returns>true, если скобки требуются</returns>
+    /// <param name="expression">Р’С‹СЂР°Р¶РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ, РјРѕР¶РµС‚ Р±С‹С‚СЊ, РЅСѓР¶РЅРѕ Р·Р°РєР»СЋС‡Р°С‚СЊ РІ СЃРєРѕР±РєРё</param>
+    /// <returns>true, РµСЃР»Рё СЃРєРѕР±РєРё С‚СЂРµР±СѓСЋС‚СЃСЏ</returns>
     protected override bool OnAreParenthesesRequired(DBxExpression expression)
     {
       DBxFunction f = expression as DBxFunction;
@@ -434,12 +434,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает имя функции.
-    /// Для некоторых провайдеров функции называются нестандартным образом.
-    /// Например, для MS SQL Server и DataView, функция COALSECE() называется ISNULL(), хотя делает то же самое.
-    /// Если СУБД реализует функцию с другими аргументами, то требуется переопределение метода OnFormatFunction()
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С„СѓРЅРєС†РёРё.
+    /// Р”Р»СЏ РЅРµРєРѕС‚РѕСЂС‹С… РїСЂРѕРІР°Р№РґРµСЂРѕРІ С„СѓРЅРєС†РёРё РЅР°Р·С‹РІР°СЋС‚СЃСЏ РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹Рј РѕР±СЂР°Р·РѕРј.
+    /// РќР°РїСЂРёРјРµСЂ, РґР»СЏ MS SQL Server Рё DataView, С„СѓРЅРєС†РёСЏ COALSECE() РЅР°Р·С‹РІР°РµС‚СЃСЏ ISNULL(), С…РѕС‚СЏ РґРµР»Р°РµС‚ С‚Рѕ Р¶Рµ СЃР°РјРѕРµ.
+    /// Р•СЃР»Рё РЎРЈР‘Р” СЂРµР°Р»РёР·СѓРµС‚ С„СѓРЅРєС†РёСЋ СЃ РґСЂСѓРіРёРјРё Р°СЂРіСѓРјРµРЅС‚Р°РјРё, С‚Рѕ С‚СЂРµР±СѓРµС‚СЃСЏ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРёРµ РјРµС‚РѕРґР° OnFormatFunction()
     /// </summary>
-    /// <param name="function">Функция</param>
+    /// <param name="function">Р¤СѓРЅРєС†РёСЏ</param>
     protected virtual string GetFunctionName(DBxFunctionKind function)
     {
       switch (function)
@@ -451,17 +451,17 @@ namespace FreeLibSet.Data
         case DBxFunctionKind.Upper: return "UPPER";
         case DBxFunctionKind.Substring: return "SUBSTRING";
         default:
-          throw new ArgumentException("Неизвестная функция " + function.ToString(), "function");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅР°СЏ С„СѓРЅРєС†РёСЏ " + function.ToString(), "function");
       }
     }
 
     /// <summary>
-    /// Форматирование выражения-функции или математической операции.
-    /// Для форматирования аргументов используется рекурсивный вызов FormatExpression()
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ-С„СѓРЅРєС†РёРё РёР»Рё РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕР№ РѕРїРµСЂР°С†РёРё.
+    /// Р”Р»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ FormatExpression()
     /// </summary>
-    /// <param name="buffer">Буфер для создания SQL-запроса</param>
-    /// <param name="function">Выражение - функция</param>
-    /// <param name="formatInfo">Параметры форматирования</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃР°</param>
+    /// <param name="function">Р’С‹СЂР°Р¶РµРЅРёРµ - С„СѓРЅРєС†РёСЏ</param>
+    /// <param name="formatInfo">РџР°СЂР°РјРµС‚СЂС‹ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ</param>
     protected override void OnFormatAgregateFunction(DBxSqlBuffer buffer, DBxAgregateFunction function, DBxFormatExpressionInfo formatInfo)
     {
       buffer.SB.Append(GetFunctionName(function.Function));
@@ -475,7 +475,7 @@ namespace FreeLibSet.Data
 
     private string GetFunctionName(DBxAgregateFunctionKind kind)
     {
-      // Можно было бы вернуть Kind.ToString().ToUpperInvariant(), но это небезопасно с точки зрения иньекции кода
+      // РњРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹ РІРµСЂРЅСѓС‚СЊ Kind.ToString().ToUpperInvariant(), РЅРѕ СЌС‚Рѕ РЅРµР±РµР·РѕРїР°СЃРЅРѕ СЃ С‚РѕС‡РєРё Р·СЂРµРЅРёСЏ РёРЅСЊРµРєС†РёРё РєРѕРґР°
       switch (kind)
       { 
         case DBxAgregateFunctionKind.Sum:
@@ -485,26 +485,26 @@ namespace FreeLibSet.Data
         case DBxAgregateFunctionKind.Avg:
           return kind.ToString().ToUpperInvariant();
         default:
-          throw new ArgumentException("Неизвестная агрегатная функция " + kind.ToString());
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅР°СЏ Р°РіСЂРµРіР°С‚РЅР°СЏ С„СѓРЅРєС†РёСЏ " + kind.ToString());
       }
     }
 
     #endregion
 
-    #region Значения
+    #region Р—РЅР°С‡РµРЅРёСЏ
 
     /// <summary>
-    /// Форматирование значения поля
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>,
-    /// возможно, заключенное в апострофы.
-    /// Также отвечает за экранирование символов строкового значения, например, удвоение апострофов.
-    /// Метод не выполняет форматирование самостоятельно, а вызывает один из методов OnFormatXxxValue() для значения соответствующего типа.
-    /// Идентичные действия выполняются методом DataTools.FormatDataValue() в ExtTools.dll.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>,
+    /// РІРѕР·РјРѕР¶РЅРѕ, Р·Р°РєР»СЋС‡РµРЅРЅРѕРµ РІ Р°РїРѕСЃС‚СЂРѕС„С‹.
+    /// РўР°РєР¶Рµ РѕС‚РІРµС‡Р°РµС‚ Р·Р° СЌРєСЂР°РЅРёСЂРѕРІР°РЅРёРµ СЃРёРјРІРѕР»РѕРІ СЃС‚СЂРѕРєРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, СѓРґРІРѕРµРЅРёРµ Р°РїРѕСЃС‚СЂРѕС„РѕРІ.
+    /// РњРµС‚РѕРґ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ, Р° РІС‹Р·С‹РІР°РµС‚ РѕРґРёРЅ РёР· РјРµС‚РѕРґРѕРІ OnFormatXxxValue() РґР»СЏ Р·РЅР°С‡РµРЅРёСЏ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ С‚РёРїР°.
+    /// РРґРµРЅС‚РёС‡РЅС‹Рµ РґРµР№СЃС‚РІРёСЏ РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ РјРµС‚РѕРґРѕРј DataTools.FormatDataValue() РІ ExtTools.dll.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
-    /// <param name="columnType">Тип значения</param>
-    protected sealed /*временно*/ override void OnFormatValue(DBxSqlBuffer buffer, object value, DBxColumnType columnType)
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="columnType">РўРёРї Р·РЅР°С‡РµРЅРёСЏ</param>
+    protected sealed /*РІСЂРµРјРµРЅРЅРѕ*/ override void OnFormatValue(DBxSqlBuffer buffer, object value, DBxColumnType columnType)
     {
       if (value == null)
       {
@@ -519,12 +519,12 @@ namespace FreeLibSet.Data
 
       if (value is String)
       {
-        //// Для DataView строка берется в апострофы. Также выполняются замены
-        //// См. раздел справки "DataColumn.Expression Property"
+        //// Р”Р»СЏ DataView СЃС‚СЂРѕРєР° Р±РµСЂРµС‚СЃСЏ РІ Р°РїРѕСЃС‚СЂРѕС„С‹. РўР°РєР¶Рµ РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ Р·Р°РјРµРЅС‹
+        //// РЎРј. СЂР°Р·РґРµР» СЃРїСЂР°РІРєРё "DataColumn.Expression Property"
 
         // 15.02.2016
-        // Для строковой константы удваиваем апострофы
-        // Остальные символы не заменяются
+        // Р”Р»СЏ СЃС‚СЂРѕРєРѕРІРѕР№ РєРѕРЅСЃС‚Р°РЅС‚С‹ СѓРґРІР°РёРІР°РµРј Р°РїРѕСЃС‚СЂРѕС„С‹
+        // РћСЃС‚Р°Р»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹ РЅРµ Р·Р°РјРµРЅСЏСЋС‚СЃСЏ
 
         string s = (string)value;
 
@@ -547,12 +547,12 @@ namespace FreeLibSet.Data
 
       if (DataTools.IsIntegerType(value.GetType()))
       {
-        OnFormatIntValue(buffer, DataTools.GetInt(value)); // нельзя использовать преобразование "(int)value", так как byte -> int вызывает исключение
+        OnFormatIntValue(buffer, DataTools.GetInt(value)); // РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ "(int)value", С‚Р°Рє РєР°Рє byte -> int РІС‹Р·С‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ
         return;
       }
 
-      // Числа с плавающей точкой преобразуем с использованием точки,
-      // а не разделителя по умолчанию
+      // Р§РёСЃР»Р° СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№ РїСЂРµРѕР±СЂР°Р·СѓРµРј СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј С‚РѕС‡РєРё,
+      // Р° РЅРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
       if (value is Single)
       {
         OnFormatSingleValue(buffer, (float)value);
@@ -618,16 +618,16 @@ namespace FreeLibSet.Data
         return;
       }
 
-      throw new NotImplementedException("Значение " + value.ToString() + " имеет неизвестный тип " + value.GetType().ToString());
+      throw new NotImplementedException("Р—РЅР°С‡РµРЅРёРµ " + value.ToString() + " РёРјРµРµС‚ РЅРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї " + value.GetType().ToString());
     }
 
     /// <summary>
-    /// Форматирование строкового значения
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>, заключенное в апострофы.
-    /// Если строка содержит апострофы, то они удваиваются.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>, Р·Р°РєР»СЋС‡РµРЅРЅРѕРµ РІ Р°РїРѕСЃС‚СЂРѕС„С‹.
+    /// Р•СЃР»Рё СЃС‚СЂРѕРєР° СЃРѕРґРµСЂР¶РёС‚ Р°РїРѕСЃС‚СЂРѕС„С‹, С‚Рѕ РѕРЅРё СѓРґРІР°РёРІР°СЋС‚СЃСЏ.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatStringValue(DBxSqlBuffer buffer, string value)
     {
       buffer.SB.Append(@"'");
@@ -642,82 +642,82 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Форматирование числового значения
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatIntValue(DBxSqlBuffer buffer, int value)
     {
       buffer.SB.Append(StdConvert.ToString(value));
     }
 
     /// <summary>
-    /// Форматирование числового значения
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatInt64Value(DBxSqlBuffer buffer, long value)
     {
       buffer.SB.Append(StdConvert.ToString(value));
     }
 
     /// <summary>
-    /// Форматирование числового значения
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatSingleValue(DBxSqlBuffer buffer, float value)
     {
       buffer.SB.Append(StdConvert.ToString(value));
     }
 
     /// <summary>
-    /// Форматирование числового значения
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatDoubleValue(DBxSqlBuffer buffer, double value)
     {
       buffer.SB.Append(StdConvert.ToString(value));
     }
 
     /// <summary>
-    /// Форматирование числового значения
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С‡РёСЃР»РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatDecimalValue(DBxSqlBuffer buffer, decimal value)
     {
       buffer.SB.Append(StdConvert.ToString(value));
     }
 
     /// <summary>
-    /// Форматирование логического значения.
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
-    /// Непереопределенный метод записывает "TRUE" или "FALSE".
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ Р·Р°РїРёСЃС‹РІР°РµС‚ "TRUE" РёР»Рё "FALSE".
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatBooleanValue(DBxSqlBuffer buffer, bool value)
     {
       buffer.SB.Append(value ? "TRUE" : "FALSE");
     }
 
     /// <summary>
-    /// Преобразование значения даты и/или времени.
-    /// Этот метод вызывается из OnFormatValue().
-    /// Даты задаются в формате "#M/D/YYYY#"
-    /// Дата и время задается в формате "#M/D/YYYY H:M:S#"
+    /// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РґР°С‚С‹ Рё/РёР»Рё РІСЂРµРјРµРЅРё.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· OnFormatValue().
+    /// Р”Р°С‚С‹ Р·Р°РґР°СЋС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ "#M/D/YYYY#"
+    /// Р”Р°С‚Р° Рё РІСЂРµРјСЏ Р·Р°РґР°РµС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ "#M/D/YYYY H:M:S#"
     /// </summary>
-    /// <param name="buffer">Буфер для записи значения</param>
-    /// <param name="value">Записываемое значение</param>
-    /// <param name="useDate">если true, то должен быть записан компонент даты</param>
-    /// <param name="useTime">если true, то должен быть записан компонент времени</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё Р·РЅР°С‡РµРЅРёСЏ</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <param name="useDate">РµСЃР»Рё true, С‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРёСЃР°РЅ РєРѕРјРїРѕРЅРµРЅС‚ РґР°С‚С‹</param>
+    /// <param name="useTime">РµСЃР»Рё true, С‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРёСЃР°РЅ РєРѕРјРїРѕРЅРµРЅС‚ РІСЂРµРјРµРЅРё</param>
     protected virtual void OnFormatDateTimeValue(DBxSqlBuffer buffer, DateTime value, bool useDate, bool useTime)
     {
       buffer.SB.Append('#');
@@ -744,23 +744,23 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Форматирование значения типа GUID.
-    /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
-    /// Вызывает метод Guid.ToString("D") для получения строки длиной 36 символов (без скобок, но с разделителями "-").
-    /// Затем вызывает OnFormatStringValue() для записи строки.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° GUID.
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB Р·РЅР°С‡РµРЅРёРµ <paramref name="value"/>.
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ Guid.ToString("D") РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚СЂРѕРєРё РґР»РёРЅРѕР№ 36 СЃРёРјРІРѕР»РѕРІ (Р±РµР· СЃРєРѕР±РѕРє, РЅРѕ СЃ СЂР°Р·РґРµР»РёС‚РµР»СЏРјРё "-").
+    /// Р—Р°С‚РµРј РІС‹Р·С‹РІР°РµС‚ OnFormatStringValue() РґР»СЏ Р·Р°РїРёСЃРё СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="value">Записываемое значение</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="value">Р—Р°РїРёСЃС‹РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     protected virtual void OnFormatGuidValue(DBxSqlBuffer buffer, Guid value)
     {
       OnFormatStringValue(buffer, value.ToString("D"));
     }
 
     /// <summary>
-    /// Форматирование логического значения.
-    /// Записывает в <paramref name="buffer"/>.SB текст "NULL".
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ <paramref name="buffer"/>.SB С‚РµРєСЃС‚ "NULL".
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
     protected virtual void OnFormatNullValue(DBxSqlBuffer buffer)
     {
       buffer.SB.Append("NULL");
@@ -768,13 +768,13 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Фильтры
+    #region Р¤РёР»СЊС‚СЂС‹
 
     /// <summary>
-    /// Получить знак для условия ValueFilterKind 
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°Рє РґР»СЏ СѓСЃР»РѕРІРёСЏ ValueFilterKind 
     /// </summary>
-    /// <param name="kind">Тип сравнения</param>
-    /// <returns>Знак операции сравнения</returns>
+    /// <param name="kind">РўРёРї СЃСЂР°РІРЅРµРЅРёСЏ</param>
+    /// <returns>Р—РЅР°Рє РѕРїРµСЂР°С†РёРё СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     protected virtual string GetSignStr(CompareKind kind)
     {
       switch (kind)
@@ -785,17 +785,17 @@ namespace FreeLibSet.Data
         case CompareKind.GreaterThan: return ">";
         case CompareKind.GreaterOrEqualThan: return ">=";
         case CompareKind.NotEqual: return "<>";
-        default: throw new ArgumentException("Неизвестный Kind: " + kind.ToString());
+        default: throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Kind: " + kind.ToString());
       }
     }
 
-    #region Фильтры "Выражение IN (Список значений)"
+    #region Р¤РёР»СЊС‚СЂС‹ "Р’С‹СЂР°Р¶РµРЅРёРµ IN (РЎРїРёСЃРѕРє Р·РЅР°С‡РµРЅРёР№)"
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatIdsFilter(DBxSqlBuffer buffer, IdsFilter filter)
     {
       if (filter.Ids.Count == 1)
@@ -826,13 +826,13 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
     {
-      // Есть ли в списке значений значение по умолчанию
+      // Р•СЃС‚СЊ Р»Рё РІ СЃРїРёСЃРєРµ Р·РЅР°С‡РµРЅРёР№ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
       bool hasDefaultValue = false;
       foreach (object v in filter.Values)
       {
@@ -845,13 +845,13 @@ namespace FreeLibSet.Data
 
       if (filter.Values.Length == 1)
       {
-        // Как обычный ValueFilter
+        // РљР°Рє РѕР±С‹С‡РЅС‹Р№ ValueFilter
         CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.Values.GetValue(0)), CompareKind.Equal, hasDefaultValue, filter.ColumnType);
         FormatFilter(buffer, filter2);
         return;
       }
 
-      // Сложный фильтр использует IN
+      // РЎР»РѕР¶РЅС‹Р№ С„РёР»СЊС‚СЂ РёСЃРїРѕР»СЊР·СѓРµС‚ IN
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
       formatInfo.NullAsDefaultValue = hasDefaultValue;
       if (filter.ColumnType == DBxColumnType.Unknown)
@@ -882,10 +882,10 @@ namespace FreeLibSet.Data
 
    
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatInSelectFilter(DBxSqlBuffer buffer, InSelectFilter filter)
     {
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
@@ -904,14 +904,14 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Строковые фильтры
+    #region РЎС‚СЂРѕРєРѕРІС‹Рµ С„РёР»СЊС‚СЂС‹
 
     /// <summary>
-    /// Форматирование фильтра.
-    /// Непереопределенная реализация заменяет StringValueFilter на CompareFilter с вызовом функции UPPER()
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РјРµРЅСЏРµС‚ StringValueFilter РЅР° CompareFilter СЃ РІС‹Р·РѕРІРѕРј С„СѓРЅРєС†РёРё UPPER()
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatStringValueFilter(DBxSqlBuffer buffer, StringValueFilter filter)
     {
       bool ignoreCase = filter.IgnoreCase && StringIsCaseSensitive(filter.Value);
@@ -932,10 +932,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
     {
       bool ignoreCase = filter.IgnoreCase && StringIsCaseSensitive(filter.Value);
@@ -961,13 +961,13 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Окружение специальных символов в строке для фильтров, основанных на предложении LIKE
+    /// РћРєСЂСѓР¶РµРЅРёРµ СЃРїРµС†РёР°Р»СЊРЅС‹С… СЃРёРјРІРѕР»РѕРІ РІ СЃС‚СЂРѕРєРµ РґР»СЏ С„РёР»СЊС‚СЂРѕРІ, РѕСЃРЅРѕРІР°РЅРЅС‹С… РЅР° РїСЂРµРґР»РѕР¶РµРЅРёРё LIKE
     /// </summary>
-    /// <param name="buffer">Буфер для записи строки</param>
-    /// <param name="value">Строка, возможно содержащая символы</param>
-    /// <param name="chars">Символы, которые требуется окружить</param>
-    /// <param name="prefix">Окружение слева</param>
-    /// <param name="suffix">Окружение справа</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё СЃС‚СЂРѕРєРё</param>
+    /// <param name="value">РЎС‚СЂРѕРєР°, РІРѕР·РјРѕР¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‰Р°СЏ СЃРёРјРІРѕР»С‹</param>
+    /// <param name="chars">РЎРёРјРІРѕР»С‹, РєРѕС‚РѕСЂС‹Рµ С‚СЂРµР±СѓРµС‚СЃСЏ РѕРєСЂСѓР¶РёС‚СЊ</param>
+    /// <param name="prefix">РћРєСЂСѓР¶РµРЅРёРµ СЃР»РµРІР°</param>
+    /// <param name="suffix">РћРєСЂСѓР¶РµРЅРёРµ СЃРїСЂР°РІР°</param>
     protected static void MakeEscapedChars(DBxSqlBuffer buffer, string value, char[] chars, string prefix, string suffix)
     {
       if (String.IsNullOrEmpty(value))
@@ -983,29 +983,29 @@ namespace FreeLibSet.Data
         char c = value[i];
         if (Array.IndexOf<char>(chars, c) >= 0)
         {
-          // Спецсимвол
+          // РЎРїРµС†СЃРёРјРІРѕР»
           buffer.SB.Append(prefix);
           buffer.SB.Append(c);
           buffer.SB.Append(suffix);
         }
         else
-          // Обычный символ
+          // РћР±С‹С‡РЅС‹Р№ СЃРёРјРІРѕР»
           buffer.SB.Append(c);
       }
     }
 
     /// <summary>
-    /// Форматирование фильтра.
-    /// Непереопределенная реализация заменяет StringValueFilter на CompareFilter с вызовом функций UPPER() и SUBSTRING()
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РјРµРЅСЏРµС‚ StringValueFilter РЅР° CompareFilter СЃ РІС‹Р·РѕРІРѕРј С„СѓРЅРєС†РёР№ UPPER() Рё SUBSTRING()
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatSubstringFilter(DBxSqlBuffer buffer, SubstringFilter filter)
     {
       bool ignoreCase = filter.IgnoreCase && StringIsCaseSensitive(filter.Value);
 
       // 24.06.2019.
-      // То же, что и классе DataViewDBxSqlFormatter, но с переводом к верхнему регистру
+      // РўРѕ Р¶Рµ, С‡С‚Рѕ Рё РєР»Р°СЃСЃРµ DataViewDBxSqlFormatter, РЅРѕ СЃ РїРµСЂРµРІРѕРґРѕРј Рє РІРµСЂС…РЅРµРјСѓ СЂРµРіРёСЃС‚СЂСѓ
       DBxExpression expr1, expr2;
       if (ignoreCase)
       {
@@ -1029,11 +1029,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возращает true, если переданная строка содержит буквенные символы.
-    /// В этом случае имеет значение режим сравнения для строковых фильтров.
+    /// Р’РѕР·СЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїРµСЂРµРґР°РЅРЅР°СЏ СЃС‚СЂРѕРєР° СЃРѕРґРµСЂР¶РёС‚ Р±СѓРєРІРµРЅРЅС‹Рµ СЃРёРјРІРѕР»С‹.
+    /// Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ СЂРµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ РґР»СЏ СЃС‚СЂРѕРєРѕРІС‹С… С„РёР»СЊС‚СЂРѕРІ.
     /// </summary>
-    /// <param name="s">Проверяемое строковое выражение</param>
-    /// <returns>Чувствительность к регистру</returns>
+    /// <param name="s">РџСЂРѕРІРµСЂСЏРµРјРѕРµ СЃС‚СЂРѕРєРѕРІРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ</param>
+    /// <returns>Р§СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚СЊ Рє СЂРµРіРёСЃС‚СЂСѓ</returns>
     protected static bool StringIsCaseSensitive(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -1043,13 +1043,13 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Фильтры по диапазонам
+    #region Р¤РёР»СЊС‚СЂС‹ РїРѕ РґРёР°РїР°Р·РѕРЅР°Рј
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatNumRangeFilter(DBxSqlBuffer buffer, NumRangeFilter filter)
     {
       if (filter.MinValue.HasValue)
@@ -1099,29 +1099,29 @@ namespace FreeLibSet.Data
         }
         else
         {
-          // Вырожденный фильтр
+          // Р’С‹СЂРѕР¶РґРµРЅРЅС‹Р№ С„РёР»СЊС‚СЂ
           buffer.FormatFilter(DummyFilter.AlwaysTrue);
         }
       }
     }
 
     /// <summary>
-    /// Возвращает true, если реализация SQL поддерживает инструкцию BETWEEN.
-    /// Непереопределенная реализация возвращает true
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЂРµР°Р»РёР·Р°С†РёСЏ SQL РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РёРЅСЃС‚СЂСѓРєС†РёСЋ BETWEEN.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚ true
     /// </summary>
     protected virtual bool BetweenInstructionSupported { get { return true; } }
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatDateRangeFilter(DBxSqlBuffer buffer, DateRangeFilter filter)
     {
-      // Так как поле может содержать компонент времени, нельзя использовать конструкцию
-      // "Значение <= #КонечнаяДата#". Вместо этого надо использовать конструкцию
-      // "Значение < #КонечнаяДата+1#"
-      // Поэтому же нельзя использовать упрощенный фильтр на равенство при MinValue=MaxValue
+      // РўР°Рє РєР°Рє РїРѕР»Рµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕРјРїРѕРЅРµРЅС‚ РІСЂРµРјРµРЅРё, РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєРѕРЅСЃС‚СЂСѓРєС†РёСЋ
+      // "Р—РЅР°С‡РµРЅРёРµ <= #РљРѕРЅРµС‡РЅР°СЏР”Р°С‚Р°#". Р’РјРµСЃС‚Рѕ СЌС‚РѕРіРѕ РЅР°РґРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєРѕРЅСЃС‚СЂСѓРєС†РёСЋ
+      // "Р—РЅР°С‡РµРЅРёРµ < #РљРѕРЅРµС‡РЅР°СЏР”Р°С‚Р°+1#"
+      // РџРѕСЌС‚РѕРјСѓ Р¶Рµ РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СѓРїСЂРѕС‰РµРЅРЅС‹Р№ С„РёР»СЊС‚СЂ РЅР° СЂР°РІРµРЅСЃС‚РІРѕ РїСЂРё MinValue=MaxValue
 
       if (filter.MinValue.HasValue)
       {
@@ -1147,18 +1147,18 @@ namespace FreeLibSet.Data
         }
         else
         {
-          // Вырожденный фильтр
+          // Р’С‹СЂРѕР¶РґРµРЅРЅС‹Р№ С„РёР»СЊС‚СЂ
           buffer.FormatFilter(DummyFilter.AlwaysTrue);
         }
       }
     }
 
     /// <summary>
-    /// Форматирование фильтра.
-    /// Непереопределенная реализация заменяет фильтр на два CompareFilter, объединенных AndFilter и функкии COALESCE для учета значения NULL
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РјРµРЅСЏРµС‚ С„РёР»СЊС‚СЂ РЅР° РґРІР° CompareFilter, РѕР±СЉРµРґРёРЅРµРЅРЅС‹С… AndFilter Рё С„СѓРЅРєРєРёРё COALESCE РґР»СЏ СѓС‡РµС‚Р° Р·РЅР°С‡РµРЅРёСЏ NULL
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatDateRangeInclusionFilter(DBxSqlBuffer buffer, DateRangeInclusionFilter filter)
     {
       DBxFunction expr1 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.Value));
@@ -1173,23 +1173,23 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Форматирование фильтра.
-    /// Непереопределенная реализация использует один или два CompareFilter
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РёСЃРїРѕР»СЊР·СѓРµС‚ РѕРґРёРЅ РёР»Рё РґРІР° CompareFilter
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatDateRangeCrossFilter(DBxSqlBuffer buffer, DateRangeCrossFilter filter)
     {
       // 30.06.2019
-      // Исправлено, чтобы больше не использовать DateTime.MinValue и MaxValue.
-      // Вместо этого используем сам диапазон.
-      // Нужно, на случай, если провайдер базы данных (SQLite) не поддерживает весь диапазон дат DateTime
+      // РСЃРїСЂР°РІР»РµРЅРѕ, С‡С‚РѕР±С‹ Р±РѕР»СЊС€Рµ РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ DateTime.MinValue Рё MaxValue.
+      // Р’РјРµСЃС‚Рѕ СЌС‚РѕРіРѕ РёСЃРїРѕР»СЊР·СѓРµРј СЃР°Рј РґРёР°РїР°Р·РѕРЅ.
+      // РќСѓР¶РЅРѕ, РЅР° СЃР»СѓС‡Р°Р№, РµСЃР»Рё РїСЂРѕРІР°Р№РґРµСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С… (SQLite) РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РІРµСЃСЊ РґРёР°РїР°Р·РѕРЅ РґР°С‚ DateTime
 
       List<DBxFilter> filters = new List<DBxFilter>();
 
       if (filter.FirstDate.HasValue)
       {
-        // Не путать. Первое поле (начальная дата) сравнивается с конечной датой фильтра и наоборот.
+        // РќРµ РїСѓС‚Р°С‚СЊ. РџРµСЂРІРѕРµ РїРѕР»Рµ (РЅР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°) СЃСЂР°РІРЅРёРІР°РµС‚СЃСЏ СЃ РєРѕРЅРµС‡РЅРѕР№ РґР°С‚РѕР№ С„РёР»СЊС‚СЂР° Рё РЅР°РѕР±РѕСЂРѕС‚.
         DBxFunction expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.FirstDate.Value));
         CompareFilter filter2 = new CompareFilter(expr, new DBxConst(filter.FirstDate.Value), CompareKind.GreaterOrEqualThan, false);
         filters.Add(filter2);
@@ -1209,13 +1209,13 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Логические фильтры AND/OR/NOT
+    #region Р›РѕРіРёС‡РµСЃРєРёРµ С„РёР»СЊС‚СЂС‹ AND/OR/NOT
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatAndFilter(DBxSqlBuffer buffer, AndFilter filter)
     {
       for (int i = 0; i < filter.Filters.Length; i++)
@@ -1234,10 +1234,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatOrFilter(DBxSqlBuffer buffer, OrFilter filter)
     {
       for (int i = 0; i < filter.Filters.Length; i++)
@@ -1257,10 +1257,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatNotFilter(DBxSqlBuffer buffer, NotFilter filter)
     {
       buffer.SB.Append("NOT ");
@@ -1275,11 +1275,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Метод возвращает true, если вокруг дочернего фильтра <paramref name="filter"/> должны быть скобки
-    /// Для большинства фильтров возвращается true
+    /// РњРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІРѕРєСЂСѓРі РґРѕС‡РµСЂРЅРµРіРѕ С„РёР»СЊС‚СЂР° <paramref name="filter"/> РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЃРєРѕР±РєРё
+    /// Р”Р»СЏ Р±РѕР»СЊС€РёРЅСЃС‚РІР° С„РёР»СЊС‚СЂРѕРІ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true
     /// </summary>
-    /// <param name="filter">Фильтр, для которого определяется необходимость окружить его скобками</param>
-    /// <returns>Необходимость в скобках</returns>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РѕРєСЂСѓР¶РёС‚СЊ РµРіРѕ СЃРєРѕР±РєР°РјРё</param>
+    /// <returns>РќРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РІ СЃРєРѕР±РєР°С…</returns>
     protected virtual bool FilterNeedsParentheses(DBxFilter filter)
     {
       // TODO:
@@ -1296,13 +1296,13 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Прочие фильтры
+    #region РџСЂРѕС‡РёРµ С„РёР»СЊС‚СЂС‹
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatCompareFilter(DBxSqlBuffer buffer, CompareFilter filter)
     {
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
@@ -1319,7 +1319,7 @@ namespace FreeLibSet.Data
               OnFormatNullNotNullCompareFilter(buffer, filter.Expression1, cnst2.ColumnType, filter.Kind);
               return;
             default:
-              throw new ArgumentException("В фильтре задано сравнение значения с NULL в режиме " + filter.Kind.ToString() + ". Допускаются только сравнения на равенство и неравенство");
+              throw new ArgumentException("Р’ С„РёР»СЊС‚СЂРµ Р·Р°РґР°РЅРѕ СЃСЂР°РІРЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СЃ NULL РІ СЂРµР¶РёРјРµ " + filter.Kind.ToString() + ". Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ СЃСЂР°РІРЅРµРЅРёСЏ РЅР° СЂР°РІРµРЅСЃС‚РІРѕ Рё РЅРµСЂР°РІРµРЅСЃС‚РІРѕ");
           }
         }
 
@@ -1339,7 +1339,7 @@ namespace FreeLibSet.Data
                 OnFormatNullNotNullCompareFilter(buffer, filter.Expression2, cnst1.ColumnType, filter.Kind);
                 return;
               default:
-                throw new ArgumentException("В фильтре задано сравнение значения с NULL в режиме " + filter.Kind.ToString() + ". Допускаются только сравнения на равенство и неравенство");
+                throw new ArgumentException("Р’ С„РёР»СЊС‚СЂРµ Р·Р°РґР°РЅРѕ СЃСЂР°РІРЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СЃ NULL РІ СЂРµР¶РёРјРµ " + filter.Kind.ToString() + ". Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ СЃСЂР°РІРЅРµРЅРёСЏ РЅР° СЂР°РІРµРЅСЃС‚РІРѕ Рё РЅРµСЂР°РІРµРЅСЃС‚РІРѕ");
             }
           }
 
@@ -1354,12 +1354,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Запись фильтра CompareFilter в режиме сравнения значения с NULL.
+    /// Р—Р°РїРёСЃСЊ С„РёР»СЊС‚СЂР° CompareFilter РІ СЂРµР¶РёРјРµ СЃСЂР°РІРЅРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ СЃ NULL.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="expression">Выражение, которое надо сравнить с NULL (левая часть условия)</param>
-    /// <param name="columnType">Тип данных</param>
-    /// <param name="kind">Режим сравнения: Equal или NotEqual</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="expression">Р’С‹СЂР°Р¶РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ РЅР°РґРѕ СЃСЂР°РІРЅРёС‚СЊ СЃ NULL (Р»РµРІР°СЏ С‡Р°СЃС‚СЊ СѓСЃР»РѕРІРёСЏ)</param>
+    /// <param name="columnType">РўРёРї РґР°РЅРЅС‹С…</param>
+    /// <param name="kind">Р РµР¶РёРј СЃСЂР°РІРЅРµРЅРёСЏ: Equal РёР»Рё NotEqual</param>
     protected virtual void OnFormatNullNotNullCompareFilter(DBxSqlBuffer buffer, DBxExpression expression, DBxColumnType columnType, CompareKind kind)
     {
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
@@ -1376,26 +1376,26 @@ namespace FreeLibSet.Data
           buffer.SB.Append(" IS NOT NULL");
           break;
         default:
-          throw new ArgumentException("Недопустимый kind=" + kind.ToString(), "kind");
+          throw new ArgumentException("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ kind=" + kind.ToString(), "kind");
       }
     }
 
 #if XXX
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="Buffer">Буфер для записи</param>
-    /// <param name="Filter">Фильтр</param>
+    /// <param name="Buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="Filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatValueFilter(DBxSqlBuffer Buffer, ValueFilter Filter)
     {
-      // Для просто значения null используем функцию IsNull()
+      // Р”Р»СЏ РїСЂРѕСЃС‚Рѕ Р·РЅР°С‡РµРЅРёСЏ null РёСЃРїРѕР»СЊР·СѓРµРј С„СѓРЅРєС†РёСЋ IsNull()
       if (Filter.Value == null || Filter.Value is DBNull)
       {
         if (Filter.Kind != ValueFilterKind.Equal)
-          throw new InvalidOperationException("Значение NULL в фильтре сравнения допускается только для сравнения на равенство (поле \"" + Filter.ColumnName + "\")");
+          throw new InvalidOperationException("Р—РЅР°С‡РµРЅРёРµ NULL РІ С„РёР»СЊС‚СЂРµ СЃСЂР°РІРЅРµРЅРёСЏ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ РЅР° СЂР°РІРµРЅСЃС‚РІРѕ (РїРѕР»Рµ \"" + Filter.ColumnName + "\")");
 
         if (Filter.DataType == null)
-          throw new InvalidOperationException("Для сравнения с NULL требуется, чтобы был задан тип значения в свойстве ValueFilter.DataType (поле \"" + Filter.ColumnName + "\")");
+          throw new InvalidOperationException("Р”Р»СЏ СЃСЂР°РІРЅРµРЅРёСЏ СЃ NULL С‚СЂРµР±СѓРµС‚СЃСЏ, С‡С‚РѕР±С‹ Р±С‹Р» Р·Р°РґР°РЅ С‚РёРї Р·РЅР°С‡РµРЅРёСЏ РІ СЃРІРѕР№СЃС‚РІРµ ValueFilter.DataType (РїРѕР»Рµ \"" + Filter.ColumnName + "\")");
 
         Buffer.SB.Append(IsNullFunctionName);
         Buffer.SB.Append("(");
@@ -1409,7 +1409,7 @@ namespace FreeLibSet.Data
 
       if (Filter.Kind == ValueFilterKind.Equal)
       {
-        // Для значений 0 и false используем ISNULL() в комбинации со сравнением
+        // Р”Р»СЏ Р·РЅР°С‡РµРЅРёР№ 0 Рё false РёСЃРїРѕР»СЊР·СѓРµРј ISNULL() РІ РєРѕРјР±РёРЅР°С†РёРё СЃРѕ СЃСЂР°РІРЅРµРЅРёРµРј
         if (DataTools.IsEmptyValue(Filter.Value))
         {
           Buffer.SB.Append(IsNullFunctionName);
@@ -1432,10 +1432,10 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Форматирование фильтра.
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂР°.
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРёСЃРё</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ</param>
     protected override void OnFormatDummyFilter(DBxSqlBuffer buffer, DummyFilter filter)
     {
       if (filter.IsTrue)

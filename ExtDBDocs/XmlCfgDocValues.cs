@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,33 +11,33 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Доступ к конфигурационным данным как к строке данных.
-  /// Дает доступ к полям для одного узла CfgPart. 
-  /// Для доступа к дочерним узлам требуется отдельный экземпляр XmlCfgDocValues.
-  /// "Серые" значения не поддерживаются.
+  /// Р”РѕСЃС‚СѓРї Рє РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹Рј РґР°РЅРЅС‹Рј РєР°Рє Рє СЃС‚СЂРѕРєРµ РґР°РЅРЅС‹С….
+  /// Р”Р°РµС‚ РґРѕСЃС‚СѓРї Рє РїРѕР»СЏРј РґР»СЏ РѕРґРЅРѕРіРѕ СѓР·Р»Р° CfgPart. 
+  /// Р”Р»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕС‡РµСЂРЅРёРј СѓР·Р»Р°Рј С‚СЂРµР±СѓРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅС‹Р№ СЌРєР·РµРјРїР»СЏСЂ XmlCfgDocValues.
+  /// "РЎРµСЂС‹Рµ" Р·РЅР°С‡РµРЅРёСЏ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ.
   /// </summary>
   /// <remarks>
-  /// В отличие от доступа к полям документов и DataRowDocValues, этот объект не имеет доступа к
-  /// списку полей до того, как выполнено обращение к DocValues
+  /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РґРѕСЃС‚СѓРїР° Рє РїРѕР»СЏРј РґРѕРєСѓРјРµРЅС‚РѕРІ Рё DataRowDocValues, СЌС‚РѕС‚ РѕР±СЉРµРєС‚ РЅРµ РёРјРµРµС‚ РґРѕСЃС‚СѓРїР° Рє
+  /// СЃРїРёСЃРєСѓ РїРѕР»РµР№ РґРѕ С‚РѕРіРѕ, РєР°Рє РІС‹РїРѕР»РЅРµРЅРѕ РѕР±СЂР°С‰РµРЅРёРµ Рє DocValues
   /// </remarks>
   public class XmlCfgDocValues : IDBxDocValues
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект доступа для секции
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґРѕСЃС‚СѓРїР° РґР»СЏ СЃРµРєС†РёРё
     /// </summary>
-    /// <param name="part">Секция конфигурации</param>
+    /// <param name="part">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     public XmlCfgDocValues(CfgPart part)
       : this(part, false)
     {
     }
 
     /// <summary>
-    /// Создает объект доступа для секции
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґРѕСЃС‚СѓРїР° РґР»СЏ СЃРµРєС†РёРё
     /// </summary>
-    /// <param name="part">Секция конфигурации</param>
-    /// <param name="isReadOnly">Если true, то будет разрешено только чтение значений, а не запись</param>
+    /// <param name="part">РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
+    /// <param name="isReadOnly">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґРµС‚ СЂР°Р·СЂРµС€РµРЅРѕ С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ Р·РЅР°С‡РµРЅРёР№, Р° РЅРµ Р·Р°РїРёСЃСЊ</param>
     public XmlCfgDocValues(CfgPart part, bool isReadOnly)
     {
       if (part == null)
@@ -50,33 +50,33 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Секции
+    #region РЎРµРєС†РёРё
 
     /// <summary>
-    /// Секция конфигурации, доступ к значениям которой выполняется объектом.
+    /// РЎРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё, РґРѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј РєРѕС‚РѕСЂРѕР№ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕР±СЉРµРєС‚РѕРј.
     /// </summary>
     public CfgPart Part { get { return _Part; } }
     private CfgPart _Part;
 
     #endregion
 
-    #region Доступ к IDBxDocValues
+    #region Р”РѕСЃС‚СѓРї Рє IDBxDocValues
 
     /*
-     * DBxDocValue является структурой, которую не обязательно хранить, а создавать при каждом обращении.
-     * DBxDocValue хранит индекс поля, поэтому словарь должен быстро определять имя по индексу
-     * (можно обычный List).
-     * При обращении к this нужно, наоборот, быстро находить индекс по имени, чтобы не добавлять новые записи.
-     * Используем BidirectionalDictionary
+     * DBxDocValue СЏРІР»СЏРµС‚СЃСЏ СЃС‚СЂСѓРєС‚СѓСЂРѕР№, РєРѕС‚РѕСЂСѓСЋ РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ С…СЂР°РЅРёС‚СЊ, Р° СЃРѕР·РґР°РІР°С‚СЊ РїСЂРё РєР°Р¶РґРѕРј РѕР±СЂР°С‰РµРЅРёРё.
+     * DBxDocValue С…СЂР°РЅРёС‚ РёРЅРґРµРєСЃ РїРѕР»СЏ, РїРѕСЌС‚РѕРјСѓ СЃР»РѕРІР°СЂСЊ РґРѕР»Р¶РµРЅ Р±С‹СЃС‚СЂРѕ РѕРїСЂРµРґРµР»СЏС‚СЊ РёРјСЏ РїРѕ РёРЅРґРµРєСЃСѓ
+     * (РјРѕР¶РЅРѕ РѕР±С‹С‡РЅС‹Р№ List).
+     * РџСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє this РЅСѓР¶РЅРѕ, РЅР°РѕР±РѕСЂРѕС‚, Р±С‹СЃС‚СЂРѕ РЅР°С…РѕРґРёС‚СЊ РёРЅРґРµРєСЃ РїРѕ РёРјРµРЅРё, С‡С‚РѕР±С‹ РЅРµ РґРѕР±Р°РІР»СЏС‚СЊ РЅРѕРІС‹Рµ Р·Р°РїРёСЃРё.
+     * РСЃРїРѕР»СЊР·СѓРµРј BidirectionalDictionary
      */
 
     private BidirectionalDictionary<string, int> _Items;
 
     /// <summary>
-    /// Возвращает структуру для доступа к значению
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє Р·РЅР°С‡РµРЅРёСЋ
     /// </summary>
-    /// <param name="name">Имя параметра</param>
-    /// <returns>Доступ к значению</returns>
+    /// <param name="name">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЋ</returns>
     public DBxDocValue this[string name]
     {
       get
@@ -94,10 +94,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить имя параметра по индексу
+    /// РџРѕР»СѓС‡РёС‚СЊ РёРјСЏ РїР°СЂР°РјРµС‚СЂР° РїРѕ РёРЅРґРµРєСЃСѓ
     /// </summary>
-    /// <param name="index">Условный индекс параметра</param>
-    /// <returns>Имя параметра</returns>
+    /// <param name="index">РЈСЃР»РѕРІРЅС‹Р№ РёРЅРґРµРєСЃ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>РРјСЏ РїР°СЂР°РјРµС‚СЂР°</returns>
     private string GetName(int index)
     {
       string name;
@@ -107,30 +107,30 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Получить имя параметра по индексу
+    /// РџРѕР»СѓС‡РёС‚СЊ РёРјСЏ РїР°СЂР°РјРµС‚СЂР° РїРѕ РёРЅРґРµРєСЃСѓ
     /// </summary>
-    /// <param name="index">Условный индекс параметра</param>
-    /// <returns>Имя параметра</returns>
+    /// <param name="index">РЈСЃР»РѕРІРЅС‹Р№ РёРЅРґРµРєСЃ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>РРјСЏ РїР°СЂР°РјРµС‚СЂР°</returns>
     string IDBxDocValues.GetName(int index)
     {
       return GetName(index);
     }
 
     /// <summary>
-    /// Возвращает GetName(), т.к. в CfgPart нет отображаемых названий параметров
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ GetName(), С‚.Рє. РІ CfgPart РЅРµС‚ РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹С… РЅР°Р·РІР°РЅРёР№ РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
-    /// <param name="index">Условный индекс параметра</param>
-    /// <returns>Имя параметра</returns>
+    /// <param name="index">РЈСЃР»РѕРІРЅС‹Р№ РёРЅРґРµРєСЃ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>РРјСЏ РїР°СЂР°РјРµС‚СЂР°</returns>
     string IDBxDocValues.GetDisplayName(int index)
     {
       return GetName(index);
     }
 
     /// <summary>
-    /// Поиск параметра
+    /// РџРѕРёСЃРє РїР°СЂР°РјРµС‚СЂР°
     /// </summary>
-    /// <param name="name">Имя параметра</param>
-    /// <returns>Индекс или (-1)</returns>
+    /// <param name="name">РРјСЏ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>РРЅРґРµРєСЃ РёР»Рё (-1)</returns>
     int IDBxDocValues.IndexOf(string name)
     {
       int p;
@@ -141,17 +141,17 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Доступ к значению по индексу
+    /// Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЋ РїРѕ РёРЅРґРµРєСЃСѓ
     /// </summary>
-    /// <param name="index">Условный индекс параметра</param>
-    /// <returns>Объект доступа к значению</returns>
+    /// <param name="index">РЈСЃР»РѕРІРЅС‹Р№ РёРЅРґРµРєСЃ РїР°СЂР°РјРµС‚СЂР°</param>
+    /// <returns>РћР±СЉРµРєС‚ РґРѕСЃС‚СѓРїР° Рє Р·РЅР°С‡РµРЅРёСЋ</returns>
     DBxDocValue IDBxDocValues.this[int index]
     {
       get { return new DBxDocValue(this, index); }
     }
 
     /// <summary>
-    /// Возвращает количество поименованных параметров
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРёРјРµРЅРѕРІР°РЅРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
     int IDBxDocValues.Count { get { return _Items.Count; } }
 
@@ -269,13 +269,13 @@ namespace FreeLibSet.Data.Docs
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если разрешен только просмотр значений, но не изменение
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЂР°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РїСЂРѕСЃРјРѕС‚СЂ Р·РЅР°С‡РµРЅРёР№, РЅРѕ РЅРµ РёР·РјРµРЅРµРЅРёРµ
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Р“РµРЅРµСЂРёСЂСѓРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё IsReadOnly=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -285,13 +285,13 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Дочерние объекты
+    #region Р”РѕС‡РµСЂРЅРёРµ РѕР±СЉРµРєС‚С‹
 
     /// <summary>
-    /// Возвращает объект для доступа к дочерней секции с заданным именем
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕС‡РµСЂРЅРµР№ СЃРµРєС†РёРё СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј
     /// </summary>
-    /// <param name="name">Имя дочерней секции конфигурации</param>
-    /// <returns>Объект доступа к значениям</returns>
+    /// <param name="name">РРјСЏ РґРѕС‡РµСЂРЅРµР№ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
+    /// <returns>РћР±СЉРµРєС‚ РґРѕСЃС‚СѓРїР° Рє Р·РЅР°С‡РµРЅРёСЏРј</returns>
     public XmlCfgDocValues GetChild(string name)
     {
       if (_Children == null)

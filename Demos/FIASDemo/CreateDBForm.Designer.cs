@@ -1,4 +1,4 @@
-namespace FIASDemo
+п»їnamespace FIASDemo
 {
   partial class CreateDBForm
   {
@@ -65,7 +65,7 @@ namespace FIASDemo
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
@@ -75,7 +75,7 @@ namespace FIASDemo
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // TheTabControl
@@ -103,7 +103,7 @@ namespace FIASDemo
       this.tpDatabase.Padding = new System.Windows.Forms.Padding(3);
       this.tpDatabase.Size = new System.Drawing.Size(624, 282);
       this.tpDatabase.TabIndex = 0;
-      this.tpDatabase.Text = "База данных";
+      this.tpDatabase.Text = "Р‘Р°Р·Р° РґР°РЅРЅС‹С…";
       this.tpDatabase.UseVisualStyleBackColor = true;
       // 
       // btnBuildConnection
@@ -113,7 +113,7 @@ namespace FIASDemo
       this.btnBuildConnection.Name = "btnBuildConnection";
       this.btnBuildConnection.Size = new System.Drawing.Size(88, 24);
       this.btnBuildConnection.TabIndex = 6;
-      this.btnBuildConnection.Text = "Создать";
+      this.btnBuildConnection.Text = "РЎРѕР·РґР°С‚СЊ";
       this.btnBuildConnection.UseVisualStyleBackColor = true;
       // 
       // edConnectionString
@@ -131,7 +131,7 @@ namespace FIASDemo
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(145, 21);
       this.label3.TabIndex = 4;
-      this.label3.Text = "Строка подключения";
+      this.label3.Text = "РЎС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edName
@@ -149,7 +149,7 @@ namespace FIASDemo
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(145, 21);
       this.label2.TabIndex = 0;
-      this.label2.Text = "Имя базы данных";
+      this.label2.Text = "РРјСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbProvider
@@ -168,7 +168,7 @@ namespace FIASDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(145, 21);
       this.label1.TabIndex = 2;
-      this.label1.Text = "Провайдер базы данных";
+      this.label1.Text = "РџСЂРѕРІР°Р№РґРµСЂ Р±Р°Р·С‹ РґР°РЅРЅС‹С…";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // tpSettings
@@ -179,7 +179,7 @@ namespace FIASDemo
       this.tpSettings.Padding = new System.Windows.Forms.Padding(3);
       this.tpSettings.Size = new System.Drawing.Size(624, 282);
       this.tpSettings.TabIndex = 1;
-      this.tpSettings.Text = "Настройки ФИАС";
+      this.tpSettings.Text = "РќР°СЃС‚СЂРѕР№РєРё Р¤РРђРЎ";
       this.tpSettings.UseVisualStyleBackColor = true;
       // 
       // DBSettingsPanel
@@ -198,7 +198,7 @@ namespace FIASDemo
       this.Controls.Add(this.TheTabControl);
       this.Controls.Add(this.panel1);
       this.Name = "CreateDBForm";
-      this.Text = "Создание базы данных ФИАС";
+      this.Text = "РЎРѕР·РґР°РЅРёРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ";
       this.panel1.ResumeLayout(false);
       this.TheTabControl.ResumeLayout(false);
       this.tpDatabase.ResumeLayout(false);

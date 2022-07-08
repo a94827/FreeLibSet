@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,20 +12,20 @@ using FreeLibSet.Controls.FIAS;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Провайдер просмотра настройки базы данных ФИАС (объекта FiasDBSettings).
-  /// Используется для просмотра настроек из редактора адреса.
-  /// Может также использоваться для редактирования настроек в пользовательском коде,
-  /// хотя в обычных приложениях такая необходимость маловероятна
+  /// РџСЂРѕРІР°Р№РґРµСЂ РїСЂРѕСЃРјРѕС‚СЂР° РЅР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ (РѕР±СЉРµРєС‚Р° FiasDBSettings).
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РЅР°СЃС‚СЂРѕРµРє РёР· СЂРµРґР°РєС‚РѕСЂР° Р°РґСЂРµСЃР°.
+  /// РњРѕР¶РµС‚ С‚Р°РєР¶Рµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РЅР°СЃС‚СЂРѕРµРє РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ,
+  /// С…РѕС‚СЏ РІ РѕР±С‹С‡РЅС‹С… РїСЂРёР»РѕР¶РµРЅРёСЏС… С‚Р°РєР°СЏ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РјР°Р»РѕРІРµСЂРѕСЏС‚РЅР°
   /// </summary>
   public sealed class EFPFiasDBSettingsPanel : EFPControl<FiasDBSettingsPanel>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
     public EFPFiasDBSettingsPanel(EFPBaseProvider baseProvider, FiasDBSettingsPanel control)
       : base(baseProvider, control, false)
     {
@@ -51,17 +51,17 @@ namespace FreeLibSet.Forms.FIAS
       efpUseDates.DisabledChecked = true;
       efpUseDates.EnabledEx = new DepNot(efpUseHistory.CheckedEx);
 
-      this.DBSettings = FiasDBSettings.DefaultSettings; // инициализация начальных значений по умолчанию
+      this.DBSettings = FiasDBSettings.DefaultSettings; // РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅР°С‡Р°Р»СЊРЅС‹С… Р·РЅР°С‡РµРЅРёР№ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     }
 
     /// <summary>
-    /// Возвращает "Настройки БД ФИАС".
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "РќР°СЃС‚СЂРѕР№РєРё Р‘Р” Р¤РРђРЎ".
     /// </summary>
-    protected override string DefaultDisplayName { get { return "Настройки БД ФИАС"; } }
+    protected override string DefaultDisplayName { get { return "РќР°СЃС‚СЂРѕР№РєРё Р‘Р” Р¤РРђРЎ"; } }
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     private EFPCheckBox efpUseHouse, efpUseRoom;
     private EFPUserSelComboBox efpRegionCodes;
@@ -70,14 +70,14 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Выбор регионов
+    #region Р’С‹Р±РѕСЂ СЂРµРіРёРѕРЅРѕРІ
 
     string[] RegionCodes;
 
     private void UpdateRegionCodesText()
     {
       if (RegionCodes == null)
-        efpRegionCodes.Text = "Все";
+        efpRegionCodes.Text = "Р’СЃРµ";
       else
         efpRegionCodes.Text = String.Join(", ", RegionCodes);
       efpRegionCodes.ClearButtonEnabled = (RegionCodes != null);
@@ -94,7 +94,7 @@ namespace FreeLibSet.Forms.FIAS
       }
 
       ListSelectDialog dlg = new ListSelectDialog();
-      dlg.Title = "Выбор регионов";
+      dlg.Title = "Р’С‹Р±РѕСЂ СЂРµРіРёРѕРЅРѕРІ";
       dlg.MultiSelect = true;
       dlg.Items = Codes;
       dlg.SubItems = Names;
@@ -120,12 +120,12 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Текущий объект
+    #region РўРµРєСѓС‰РёР№ РѕР±СЉРµРєС‚
 
     /// <summary>
-    /// Просматриваемый или редактируемый объект.
-    /// Установка свойства инициализирует поля панели.
-    /// При считывании свойства каждый раз создается новый объект
+    /// РџСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹Р№ РёР»Рё СЂРµРґР°РєС‚РёСЂСѓРµРјС‹Р№ РѕР±СЉРµРєС‚.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РїРѕР»СЏ РїР°РЅРµР»Рё.
+    /// РџСЂРё СЃС‡РёС‚С‹РІР°РЅРёРё СЃРІРѕР№СЃС‚РІР° РєР°Р¶РґС‹Р№ СЂР°Р· СЃРѕР·РґР°РµС‚СЃСЏ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚
     /// </summary>
     public FiasDBSettings DBSettings
     {
@@ -171,9 +171,9 @@ namespace FreeLibSet.Forms.FIAS
     #endregion
 
     /// <summary>
-    /// Просмотр настроек базы данных ФИАС
+    /// РџСЂРѕСЃРјРѕС‚СЂ РЅР°СЃС‚СЂРѕРµРє Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ
     /// </summary>
-    /// <param name="dbSettings">Просматриваемые настройки. Не может быть null</param>
+    /// <param name="dbSettings">РџСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
     public static void ShowSettings(FiasDBSettings dbSettings)
     {
       ShowSettings(dbSettings, null);
@@ -185,7 +185,7 @@ namespace FreeLibSet.Forms.FIAS
         throw new ArgumentNullException("dbSettings");
 
       OKCancelForm frm = new OKCancelForm(true);
-      frm.Text = "Просмотр настроек базы данных ФИАС";
+      frm.Text = "РџСЂРѕСЃРјРѕС‚СЂ РЅР°СЃС‚СЂРѕРµРє Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ";
       frm.Icon = EFPApp.MainImageIcon("FIAS.Address");
 
       FiasDBSettingsPanel panel = new FiasDBSettingsPanel();
@@ -198,7 +198,7 @@ namespace FreeLibSet.Forms.FIAS
       {
         // 30.07.2020
         InfoLabel lbl = frm.AddInfoLabel(System.Windows.Forms.DockStyle.Bottom);
-        lbl.Text = "Дата актуальности классификатора: " + source.ActualDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture);
+        lbl.Text = "Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°: " + source.ActualDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture);
         infoLabelH = lbl.Height;
       }
 

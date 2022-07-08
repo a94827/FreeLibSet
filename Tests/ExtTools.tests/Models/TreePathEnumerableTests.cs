@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -40,7 +40,7 @@ namespace ExtTools_tests.Models.Tree
       tbl.Columns.Add("Id", typeof(int));
       tbl.Columns.Add("ParentId", typeof(int));
 
-      // Получаем дерево:
+      // РџРѕР»СѓС‡Р°РµРј РґРµСЂРµРІРѕ:
       // 2 "AAA"
       //   1 "BBB"
       //   3 "CCC"

@@ -24,12 +24,29 @@ using FreeLibSet.Collections;
 
 namespace FreeLibSet.Data.Docs
 {
+  /*
+   * 07.07.2022.
+   * Mono выполняет аварийное завершение программы при сетевом (или междоменном) вызове абстрактного виртуального метода в MarshalByRefObject.
+   * Поэтому в MBR-классе не должно быть методов с сигнатурой public abstract и public virtual.
+   * 
+   * Есть 2 варианта исправления.
+   * 
+   * 1. Создать интерфейс IDBxDocProvider. Реализуется в DBxRealDocProvider и DBxChainDocProvider.
+   * Эти классы наследуют класс DBxDocProviderBase, куда переносятся неабстрактные методы (не реализует интерфейсы).
+   * 
+   * 2. Не менять состав классов, но сделать все public-методы невиртуальными. Они вызывают виртуальные методы DoXXX()
+   * 
+   * Второй способ проще. Есть много групп методов, в которых только один является абстрактным, а остальные его вызывают.
+   * Для первого способа пришлось бы делать класс DBxDocProviderBase абстрактным, чтобы можно было перенести туда методы
+   */
+
+
   /// <summary>
   /// Провайдер для работы с документами
   /// Сам по себе класс DBxDocProvider является потокобезопасным, но производные классы могут ограничивать работу
   /// только тем потоком, который использовался для создания объекта. Привязка к потоку задается при создании DBxDocProvider
   /// </summary>
-  public abstract class DBxDocProvider :
+  public abstract class DBxDocProvider:
     MarshalByRefSponsoredObject,
     IDBxCacheSource,
     IDBxConReadOnlyPKInt32,
@@ -185,8 +202,6 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Абстрактные методы и свойства
-
 #if XXX
     /// <summary>
     /// Текущее время сервера.
@@ -197,13 +212,26 @@ namespace FreeLibSet.Data.Docs
     public abstract DateTime ServerTime { get;}
 #endif
 
+    #region Длительная блокировка
+
     /// <summary>
     /// Установить длительную блокировку
     /// Если какой-либо из документов уже заблокирован, выбрасывается исключение DBxLockDocsException
     /// </summary>
     /// <param name="docSel">Выборка документов, которую требуется заблокировать</param>
     /// <returns>Идентификатор установленной блокировки</returns>
-    public abstract Guid AddLongLock(DBxDocSelection docSel);
+    public Guid AddLongLock(DBxDocSelection docSel)
+    {
+      return DoAddLongLock(docSel);
+    }
+
+    /// <summary>
+    /// Установить длительную блокировку
+    /// Если какой-либо из документов уже заблокирован, выбрасывается исключение DBxLockDocsException
+    /// </summary>
+    /// <param name="docSel">Выборка документов, которую требуется заблокировать</param>
+    /// <returns>Идентификатор установленной блокировки</returns>
+    protected abstract Guid DoAddLongLock(DBxDocSelection docSel);
 
     /// <summary>
     /// Установить длительную блокировку
@@ -216,7 +244,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxDocSelection docSel = new DBxDocSelection(DBIdentity);
       docSel.Add(docTypeName, docIds);
-      return AddLongLock(docSel);
+      return DoAddLongLock(docSel);
     }
 
     /// <summary>
@@ -230,7 +258,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxDocSelection docSel = new DBxDocSelection(DBIdentity);
       docSel.Add(docTypeName, docIds);
-      return AddLongLock(docSel);
+      return DoAddLongLock(docSel);
     }
 
     /// <summary>
@@ -244,7 +272,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxDocSelection docSel = new DBxDocSelection(DBIdentity);
       docSel.Add(docTypeName, docId);
-      return AddLongLock(docSel);
+      return DoAddLongLock(docSel);
     }
 
     /// <summary>
@@ -252,7 +280,21 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="lockGuid">Идентификатор установленной блокировки</param>
     /// <returns>true, если блокировка была удалена. false, если блокировка не найдена (была удалена ранее)</returns>
-    public abstract bool RemoveLongLock(Guid lockGuid);
+    public bool RemoveLongLock(Guid lockGuid)
+    {
+      return DoRemoveLongLock(lockGuid);
+    }
+
+    /// <summary>
+    /// Удалить длительную блокировку
+    /// </summary>
+    /// <param name="lockGuid">Идентификатор установленной блокировки</param>
+    /// <returns>true, если блокировка была удалена. false, если блокировка не найдена (была удалена ранее)</returns>
+    protected abstract bool DoRemoveLongLock(Guid lockGuid);
+
+    #endregion
+
+    #region Вычисляемые поля
 
     /// <summary>
     /// Пересчитать вычисляемые поля в документах.
@@ -260,16 +302,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя вида документов</param>
     /// <param name="docIds">Массив идентификаторов.
     /// null означает пересчет всех документов. Пересчету подлежат в том числе и удаленные документы</param>
-    public abstract void RecalcColumns(string docTypeName, Int32[] docIds);
+    public void RecalcColumns(string docTypeName, Int32[] docIds)
+    {
+      DoRecalcColumns(docTypeName, docIds);
+    }
 
     /// <summary>
-    /// Создание копии провайдера.
-    /// Полученный провайдер можно использовать в отдельном потоке
-    /// Для цепочечных провайдеров создается также копия исходного провайдера
-    /// Этот метод может вызываться из любого потока, даже если текущий DBxDocProvider привязан к другому потоку
+    /// Пересчитать вычисляемые поля в документах.
     /// </summary>
-    /// <returns></returns>
-    public abstract DBxDocProvider Clone();
+    /// <param name="docTypeName">Имя вида документов</param>
+    /// <param name="docIds">Массив идентификаторов.
+    /// null означает пересчет всех документов. Пересчету подлежат в том числе и удаленные документы</param>
+    protected abstract void DoRecalcColumns(string docTypeName, Int32[] docIds);
 
     #endregion
 
@@ -293,12 +337,31 @@ namespace FreeLibSet.Data.Docs
     /// Так как UserPermissions не является сериализуемым то может возникнуть ошибка при передаче через
     /// границы домена / приложения, если не предусмотрено создание объектов в целевом домене
     /// </summary>
-    public abstract UserPermissions UserPermissions { get;}
+    public UserPermissions UserPermissions 
+    {
+      get { return DoGetUserPermissions(); }
+    }
+
+    /// <summary>
+    /// Права, назначенные пользователю (включая классы, определенные в программе).
+    /// Так как UserPermissions не является сериализуемым то может возникнуть ошибка при передаче через
+    /// границы домена / приложения, если не предусмотрено создание объектов в целевом домене
+    /// </summary>
+    protected abstract UserPermissions DoGetUserPermissions();
+    
 
     /// <summary>
     /// Сброс прав пользователя
     /// </summary>
-    public virtual void ResetPermissions()
+    public void ResetPermissions()
+    {
+      DoResetPermissions();
+    }
+
+    /// <summary>
+    /// Сброс прав пользователя
+    /// </summary>
+    protected virtual void DoResetPermissions()
     {
       CheckThread();
       _DocPermissions = null;
@@ -329,7 +392,19 @@ namespace FreeLibSet.Data.Docs
     /// <param name="doc">Проверяемый документ</param>
     /// <param name="reason">Режим доступа</param>
     [DebuggerStepThrough]
-    public virtual void TestDocument(DBxSingleDoc doc, DBxDocPermissionReason reason)
+    public void TestDocument(DBxSingleDoc doc, DBxDocPermissionReason reason)
+    {
+      DoTestDocument(doc, reason);
+    }
+
+    /// <summary>
+    /// Вызывает DocPermissions.TestDocument().
+    /// Метод может быть переопределен производным классом
+    /// </summary>
+    /// <param name="doc">Проверяемый документ</param>
+    /// <param name="reason">Режим доступа</param>
+    [DebuggerStepThrough]
+    protected virtual void DoTestDocument(DBxSingleDoc doc, DBxDocPermissionReason reason)
     {
       DocPermissions.TestDocument(doc, reason);
     }
@@ -593,7 +668,7 @@ namespace FreeLibSet.Data.Docs
                 col.DefaultValue = DataTools.GetEmptyValue(col.DataType);
                 break;
             }
-          }                      
+          }
           else
             col.AllowDBNull = true; // В ссылочные поля точно не нужно записывать 0, включая поле "DocId" 
         }
@@ -708,7 +783,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя таблицы документов</param>
     /// <param name="docIds">Массив идентификаторов</param>
     /// <returns>Таблица документов</returns>
-    public abstract DataTable LoadDocData(string docTypeName, Int32[] docIds);
+    public DataTable LoadDocData(string docTypeName, Int32[] docIds)
+    {
+      return DoLoadDocData(docTypeName, docIds);
+    }
+
+    /// <summary>
+    /// Загрузить документы (без поддокументов)
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документов</param>
+    /// <param name="docIds">Массив идентификаторов</param>
+    /// <returns>Таблица документов</returns>
+    protected abstract DataTable DoLoadDocData(string docTypeName, Int32[] docIds);
 
     /// <summary>
     /// Загрузить документы (без поддокументов)
@@ -716,7 +802,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя таблицы документов</param>
     /// <param name="filter">Условия для отбора документов</param>
     /// <returns>Таблица документов</returns>
-    public abstract DataTable LoadDocData(string docTypeName, DBxFilter filter);
+    public DataTable LoadDocData(string docTypeName, DBxFilter filter)
+    {
+      return DoLoadDocData(docTypeName, filter);
+    }
+
+    /// <summary>
+    /// Загрузить документы (без поддокументов)
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документов</param>
+    /// <param name="filter">Условия для отбора документов</param>
+    /// <returns>Таблица документов</returns>
+    protected abstract DataTable DoLoadDocData(string docTypeName, DBxFilter filter);
 
     /// <summary>
     /// Загрузить поддокументы.
@@ -726,7 +823,20 @@ namespace FreeLibSet.Data.Docs
     /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
     /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
     /// <returns>Таблица поддокументов</returns>
-    public abstract DataTable LoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds);
+    public DataTable LoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
+    {
+      return DoLoadSubDocData(docTypeName, subDocTypeName, docIds);
+    }
+
+    /// <summary>
+    /// Загрузить поддокументы.
+    /// Предполагается, что таблица документов уже загружена
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документов</param>
+    /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
+    /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
+    /// <returns>Таблица поддокументов</returns>
+    protected abstract DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds);
 
     /// <summary>
     /// Применение изменений.
@@ -747,7 +857,7 @@ namespace FreeLibSet.Data.Docs
         OnCacheClearing(data);
       }
 
-      return OnApplyChanges(dataSet, reloadData);
+      return DoApplyChanges(dataSet, reloadData);
     }
 
     private DBxClearCacheData CreateClearCacheData(DataSet dataSet)
@@ -800,7 +910,7 @@ namespace FreeLibSet.Data.Docs
     /// пользователь нажимает кнопку "Применить", чтобы можно было продолжить сеанс редактирования.
     /// Если false, то исправленный набор данных не возвращается</param>
     /// <returns>Набор с исправленными ссылками или null</returns>
-    protected abstract DataSet OnApplyChanges(DataSet dataSet, bool reloadData);
+    protected abstract DataSet DoApplyChanges(DataSet dataSet, bool reloadData);
 
     /// <summary>
     /// Создает и запускает процедуру для асинхронной работы на сервере.
@@ -808,7 +918,18 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="args">Аргументы вызова процедуры</param>
     /// <returns></returns>
-    public abstract DistributedCallData StartServerExecProc(NamedValues args);
+    public DistributedCallData StartServerExecProc(NamedValues args)
+    {
+      return DoStartServerExecProc(args);
+    }
+
+    /// <summary>
+    /// Создает и запускает процедуру для асинхронной работы на сервере.
+    /// Этот метод не должен использоваться в прикладном коде.
+    /// </summary>
+    /// <param name="args">Аргументы вызова процедуры</param>
+    /// <returns></returns>
+    protected abstract DistributedCallData DoStartServerExecProc(NamedValues args);
 
     #endregion
 
@@ -820,7 +941,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя таблицы документа</param>
     /// <param name="docId">Идентификатор документа</param>
     /// <returns>Таблица истории</returns>
-    public abstract DataTable GetDocHistTable(string docTypeName, Int32 docId);
+    public DataTable GetDocHistTable(string docTypeName, Int32 docId)
+    {
+      return DoGetDocHistTable(docTypeName, docId);
+    }
+
+    /// <summary>
+    /// Получить таблицу истории для документа
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документа</param>
+    /// <param name="docId">Идентификатор документа</param>
+    /// <returns>Таблица истории</returns>
+    protected abstract DataTable DoGetDocHistTable(string docTypeName, Int32 docId);
 
     /// <summary>
     /// Получить таблицу действий пользователя или всех пользователей за определенный период
@@ -830,14 +962,37 @@ namespace FreeLibSet.Data.Docs
     /// <param name="userId">Идентификатор пользователя. 0-все пользователи</param>
     /// <param name="singleDocTypeName">Имя таблицы документа. Пустая строка - документы всех видов</param>
     /// <returns>Таблица действий</returns>
-    public abstract DataTable GetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName);
+    public DataTable GetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName)
+    {
+      return DoGetUserActionsTable(firstDate, lastDate, userId, singleDocTypeName);
+    }
+
+    /// <summary>
+    /// Получить таблицу действий пользователя или всех пользователей за определенный период
+    /// </summary>
+    /// <param name="firstDate">Начальная дата</param>
+    /// <param name="lastDate">Конечная дата</param>
+    /// <param name="userId">Идентификатор пользователя. 0-все пользователи</param>
+    /// <param name="singleDocTypeName">Имя таблицы документа. Пустая строка - документы всех видов</param>
+    /// <returns>Таблица действий</returns>
+    protected abstract DataTable DoGetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName);
 
     /// <summary>
     /// Получить таблицу документов для одного действия пользователя
     /// </summary>
     /// <param name="actionId">Идентификатор действия в таблице UserActions</param>
     /// <returns>Таблица документов</returns>
-    public abstract DataTable GetUserActionDocTable(Int32 actionId);
+    public DataTable GetUserActionDocTable(Int32 actionId)
+    {
+      return DoGetUserActionDocTable(actionId);
+    }
+
+    /// <summary>
+    /// Получить таблицу документов для одного действия пользователя
+    /// </summary>
+    /// <param name="actionId">Идентификатор действия в таблице UserActions</param>
+    /// <returns>Таблица документов</returns>
+    protected abstract DataTable DoGetUserActionDocTable(Int32 actionId);
 
     /// <summary>
     /// Возвращает время последнего действия пользователя (включая компонент времени).
@@ -846,7 +1001,19 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="userId">Идентификатор пользователя, для которого надо получить данные</param>
     /// <returns>Время или null</returns>
-    public abstract DateTime? GetUserActionsLastTime(Int32 userId);
+    public DateTime? GetUserActionsLastTime(Int32 userId)
+    {
+      return DoGetUserActionsLastTime(userId);
+    }
+
+    /// <summary>
+    /// Возвращает время последнего действия пользователя (включая компонент времени).
+    /// Время возвращается в формате DataSetDateTime.Unspecified.
+    /// Если для пользователя нет ни одной записи в таблице UserActions, возвращается null
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя, для которого надо получить данные</param>
+    /// <returns>Время или null</returns>
+    protected abstract DateTime? DoGetUserActionsLastTime(Int32 userId);
 
     /// <summary>
     /// Получить таблицу для просмотра ссылок на один документ.
@@ -861,7 +1028,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Таблица ссылок</returns>
     public DataTable GetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique)
     {
-      return GetDocRefTable(docTypeName, docId, showDeleted, unique, null, 0);
+      return DoGetDocRefTable(docTypeName, docId, showDeleted, unique, null, 0);
     }
 
     /// <summary>
@@ -877,7 +1044,25 @@ namespace FreeLibSet.Data.Docs
     /// <param name="fromSingleDocTypeName">Единственный вид документа, из которого берутся ссылки. Если не задано, то берутся ссылки из всех документов</param>
     /// <param name="fromSingleDocId">Идентификатор единственного документа, из которого берутся ссылки. Если 0, то берутся ссылки из всех документов</param>
     /// <returns>Таблица ссылок</returns>
-    public abstract DataTable GetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId);
+    public DataTable GetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId)
+    {
+      return DoGetDocRefTable(docTypeName, docId, showDeleted, unique, fromSingleDocTypeName, fromSingleDocId);
+    }
+
+    /// <summary>
+    /// Получить набор таблиц для просмотра ссылок на один документ.
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документа, на который ищутся ссылки</param>
+    /// <param name="docId">Идентификатор документа, на который ищутся ссылки</param>
+    /// <param name="showDeleted">Надо ли включать в таблицу ссылки из удаленных документов и поддокументов,
+    /// а также ссылки на удаленные поддокументы выбранного документа.
+    /// Не имеет значение, помечен ли сам документ <paramref name="docId"/> на удаление (за исключением ссылок документа на самого себя</param>
+    /// <param name="unique">Если true, то будет возвращено только по одной ссылке из каждого документа.
+    /// Это рекомендуемый вариант для показа таблицы ссылок. Если false, то в таблице может быть несколько ссылок из одного исходного документа</param>
+    /// <param name="fromSingleDocTypeName">Единственный вид документа, из которого берутся ссылки. Если не задано, то берутся ссылки из всех документов</param>
+    /// <param name="fromSingleDocId">Идентификатор единственного документа, из которого берутся ссылки. Если 0, то берутся ссылки из всех документов</param>
+    /// <returns>Таблица ссылок</returns>
+    protected abstract DataTable DoGetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId);
 
     #endregion
 
@@ -891,7 +1076,20 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docId">Идентификатор документа</param>
     /// <param name="docVersion">Версия документа</param>
     /// <returns>Таблица</returns>
-    public abstract DataTable LoadDocDataVersion(string docTypeName, Int32 docId, int docVersion);
+    public DataTable LoadDocDataVersion(string docTypeName, Int32 docId, int docVersion)
+    {
+      return DoLoadDocDataVersion(docTypeName, docId, docVersion);
+    }
+
+    /// <summary>
+    /// Получить таблицу версий строк документа.
+    /// Возвращает таблицу с одной строкой
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документа</param>
+    /// <param name="docId">Идентификатор документа</param>
+    /// <param name="docVersion">Версия документа</param>
+    /// <returns>Таблица</returns>
+    protected abstract DataTable DoLoadDocDataVersion(string docTypeName, Int32 docId, int docVersion);
 
     /// <summary>
     /// Получить таблицу версий строк поддокументов.
@@ -901,7 +1099,20 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docId">Идентификатор документа</param>
     /// <param name="docVersion">Версия документа</param>
     /// <returns>Таблица</returns>
-    public abstract DataTable LoadSubDocDataVersion(string docTypeName, string subDocTypeName, Int32 docId, int docVersion);
+    public DataTable LoadSubDocDataVersion(string docTypeName, string subDocTypeName, Int32 docId, int docVersion)
+    {
+      return DoLoadSubDocDataVersion(docTypeName, subDocTypeName, docId, docVersion);
+    }
+
+    /// <summary>
+    /// Получить таблицу версий строк поддокументов.
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документа</param>
+    /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
+    /// <param name="docId">Идентификатор документа</param>
+    /// <param name="docVersion">Версия документа</param>
+    /// <returns>Таблица</returns>
+    protected abstract DataTable DoLoadSubDocDataVersion(string docTypeName, string subDocTypeName, Int32 docId, int docVersion);
 
     /// <summary>
     /// Возвращает все таблицы данных по документу. Возвращает таблицы документов (с одной строкой) и поддокументов,
@@ -913,7 +1124,22 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя таблицы документа</param>
     /// <param name="docId">Идентификатор документа</param>
     /// <returns>Набор таблиц</returns>
-    public abstract DataSet LoadUnformattedDocData(string docTypeName, Int32 docId);
+    public DataSet LoadUnformattedDocData(string docTypeName, Int32 docId)
+    {
+      return DoLoadUnformattedDocData(docTypeName, docId);
+    }
+
+    /// <summary>
+    /// Возвращает все таблицы данных по документу. Возвращает таблицы документов (с одной строкой) и поддокументов,
+    /// включая удаленные записи. В набор добавляются строки из таблиц UserActions и DocActions.
+    /// В набор добавляются таблицы документов из базы данных истории. Чтобы отличить их от основных
+    /// документов, перед именами таблиц добавляется префикс "Undo_".
+    /// Метод предназначен для отладочных целей
+    /// </summary>
+    /// <param name="docTypeName">Имя таблицы документа</param>
+    /// <param name="docId">Идентификатор документа</param>
+    /// <returns>Набор таблиц</returns>
+    protected abstract DataSet DoLoadUnformattedDocData(string docTypeName, Int32 docId);
 
     #endregion
 
@@ -924,23 +1150,38 @@ namespace FreeLibSet.Data.Docs
      * Доступны только некоторые вызовы
      */
 
-    #region Получение значений полей
+    #region DBCache
 
     /// <summary>
-    /// Доступ к буферизованным данным
-    /// Если метод не переопределен, возвращается null
+    /// Доступ к буферизованным данным.
     /// </summary>
-    public virtual DBxCache DBCache { get { return null; } }
+    public DBxCache DBCache { get { return DoGetDBCache(); } }
+
+    /// <summary>
+    /// Доступ к буферизованным данным.
+    /// Если метод не переопределен, возвращается null.
+    /// </summary>
+    protected virtual DBxCache DoGetDBCache()
+    {
+      return null;  
+    }
 
     /// <summary>
     /// Сброс кэшированных данных
     /// </summary>
-    public virtual void ClearCache()
+    public void ClearCache()
+    {
+      DoClearCache();
+    }
+
+    /// <summary>
+    /// Сброс кэшированных данных
+    /// </summary>
+    protected virtual void DoClearCache()
     {
       CheckThread();
       OnCacheClearing(DBxClearCacheData.AllTables);
     }
-
 
     /// <summary>
     /// Событие вызывается при очистке кэша вызовом ClearCache() или ApplyChanges()
@@ -956,6 +1197,47 @@ namespace FreeLibSet.Data.Docs
       if (CacheClearing != null)
         CacheClearing(this, clearCacheData);
     }
+    /// <summary>
+    /// Обновить строки кэша в DBCache на основании набора данных.
+    /// Предполагается, что набор данных <paramref name="ds"/> был только что загружен из базы данных и содержит актуальные данные.
+    /// Поля с точками, если они есть в таблицах, игнорируются.
+    /// </summary>
+    /// <param name="ds">Набор данных</param>
+    public void UpdateDBCache(DataSet ds)
+    {
+      if (!DBCache.IsValidThread)
+        return; // вызов из чужого потока
+
+      for (int i = 0; i < ds.Tables.Count; i++)
+      {
+        DBxTableCache tc = DBCache.GetIfExists(ds.Tables[i].TableName);
+        if (tc == null)
+          continue;
+
+        List<DataRow> rows = null;
+
+        foreach (DataRow row in ds.Tables[i].Rows)
+        {
+          if (row.RowState == DataRowState.Deleted)
+            continue;
+          Int32 id = (Int32)(row["Id"]);
+          if (IsRealDocId(id))
+          {
+            if (rows == null)
+              rows = new List<DataRow>();
+            rows.Add(row);
+          }
+        }
+
+        if (rows != null)
+          tc.UpdateRows(rows.ToArray());
+
+      } // цикл по таблицам
+    }
+
+    #endregion
+
+    #region GetDocServiceInfo()
 
     ///// <summary>
     ///// Получение значений служебных полей произвольного документа или поддокумента в виде коллекции "Имя-Значение".
@@ -998,6 +1280,7 @@ namespace FreeLibSet.Data.Docs
     {
       return GetDocServiceInfo(docTypeName, docId, false);
     }
+
     /// <summary>
     /// Получение значений служебных полей произвольного документа.
     /// Некоторые поля могут быть не заполнены, если у пользователя нет прав или информация недоступна из-за конфигурации DBxDocTypes.
@@ -1052,50 +1335,11 @@ namespace FreeLibSet.Data.Docs
       return info;
     }
 
-    /// <summary>
-    /// Обновить строки кэша в DBCache на основании набора данных.
-    /// Предполагается, что набор данных <paramref name="ds"/> был только что загружен из базы данных и содержит актуальные данные.
-    /// Поля с точками, если они есть в таблицах, игнорируются.
-    /// </summary>
-    /// <param name="ds">Набор данных</param>
-    public void UpdateDBCache(DataSet ds)
-    {
-      if (!DBCache.IsValidThread)
-        return; // вызов из чужого потока
-
-      for (int i = 0; i < ds.Tables.Count; i++)
-      {
-        DBxTableCache tc = DBCache.GetIfExists(ds.Tables[i].TableName);
-        if (tc == null)
-          continue;
-
-        List<DataRow> rows = null;
-
-        foreach (DataRow row in ds.Tables[i].Rows)
-        {
-          if (row.RowState == DataRowState.Deleted)
-            continue;
-          Int32 id = (Int32)(row["Id"]);
-          if (IsRealDocId(id))
-          {
-            if (rows == null)
-              rows = new List<DataRow>();
-            rows.Add(row);
-          }
-        }
-
-        if (rows != null)
-          tc.UpdateRows(rows.ToArray());
-
-      } // цикл по таблицам
-    }
-
-
     #endregion
 
     #region IDBxConReadOnlyBase Members
 
-    #region FillSelect
+    #region FillSelect()
 
     /// <summary>
     /// Загрузка всей таблицы.
@@ -1156,18 +1400,40 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="info">Параметры для запроса</param>
     /// <returns>Таблица данных</returns>
-    public abstract DataTable FillSelect(DBxSelectInfo info);
+    public DataTable FillSelect(DBxSelectInfo info)
+    {
+      return DoFillSelect(info);
+    }
 
+    /// <summary>
+    /// Выполнение SQL-запроса SELECT с заданием всех возможных параметров
+    /// </summary>
+    /// <param name="info">Параметры для запроса</param>
+    /// <returns>Таблица данных</returns>
+    protected abstract DataTable DoFillSelect(DBxSelectInfo info);
 
     /// <summary>
     /// Получение списка уникальных значений поля SELECT DISTINCT
     /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю
     /// </summary>
-    /// <param name="TableName">Имя таблицы</param>
-    /// <param name="ColumnName">Имя поля</param>
-    /// <param name="Where">Необязательный фильтр записей</param>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="where">Необязательный фильтр записей</param>
     /// <returns>Таблица с единственной колонкой</returns>
-    public abstract DataTable FillUniqueColumnValues(string TableName, string ColumnName, DBxFilter Where);
+    public DataTable FillUniqueColumnValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoFillUniqueColumnValues(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получение списка уникальных значений поля SELECT DISTINCT
+    /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="where">Необязательный фильтр записей</param>
+    /// <returns>Таблица с единственной колонкой</returns>
+    protected abstract DataTable DoFillUniqueColumnValues(string tableName, string columnName, DBxFilter where);
 
     #endregion
 
@@ -1178,7 +1444,17 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Число записей</returns>
-    public abstract int GetRecordCount(string tableName);
+    public int GetRecordCount(string tableName)
+    {
+      return DoGetRecordCount(tableName);
+    }
+
+    /// <summary>
+    /// Получить общее число записей в таблице
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Число записей</returns>
+    protected abstract int DoGetRecordCount(string tableName);
 
     /// <summary>
     /// Получить число записей в таблице, удовлетворяющих условию
@@ -1186,7 +1462,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Условие</param>
     /// <returns>Число записей</returns>
-    public abstract int GetRecordCount(string tableName, DBxFilter where);
+    public int GetRecordCount(string tableName, DBxFilter where)
+    {
+      return DoGetRecordCount(tableName, where);
+    }
+
+    /// <summary>
+    /// Получить число записей в таблице, удовлетворяющих условию
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="where">Условие</param>
+    /// <returns>Число записей</returns>
+    protected abstract int DoGetRecordCount(string tableName, DBxFilter where);
 
     /// <summary>
     /// Возвращает true, если в таблице нет ни одной строки.
@@ -1194,7 +1481,18 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Отсутствие записей</returns>
-    public abstract bool IsTableEmpty(string tableName);
+    public bool IsTableEmpty(string tableName)
+    {
+      return DoIsTableEmpty(tableName);
+    }
+
+    /// <summary>
+    /// Возвращает true, если в таблице нет ни одной строки.
+    /// Тоже самое, что GetRecordCount()==0, но может быть оптимизировано.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Отсутствие записей</returns>
+    protected abstract bool DoIsTableEmpty(string tableName);
 
     #endregion
 
@@ -1209,7 +1507,21 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя числового поля</param>
     /// <param name="where">Фильтр (null для поиска среди всех строк таблицы)</param>
     /// <returns>Максимальное значение</returns>
-    public abstract object GetMaxValue(string tableName, string columnName, DBxFilter where);
+    public object GetMaxValue(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetMaxValue(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить максимальное значение числового поля
+    /// Строки таблицы, содержащие значения NULL, игнорируются.
+    /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя числового поля</param>
+    /// <param name="where">Фильтр (null для поиска среди всех строк таблицы)</param>
+    /// <returns>Максимальное значение</returns>
+    protected abstract object DoGetMaxValue(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить минимальное значение числового поля.
@@ -1220,7 +1532,21 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя числового поля</param>
     /// <param name="where">Фильтр (null для поиска среди всех строк таблицы)</param>
     /// <returns>Минимальное значение</returns>
-    public abstract object GetMinValue(string tableName, string columnName, DBxFilter where);
+    public object GetMinValue(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetMinValue(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить минимальное значение числового поля.
+    /// Строки таблицы, содержащие значения NULL, игнорируются.
+    /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя числового поля</param>
+    /// <param name="where">Фильтр (null для поиска среди всех строк таблицы)</param>
+    /// <returns>Минимальное значение</returns>
+    protected abstract object DoGetMinValue(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить значения полей для строки, содержащей максимальное значение заданного
@@ -1236,7 +1562,27 @@ namespace FreeLibSet.Data.Docs
     /// <param name="maxColumnName">Имя поля, максимальное значение которого является условием выбора строки</param>
     /// <param name="where">Фильтр строк, участвующих в отборе</param>
     /// <returns>Массив значений для полей, заданных в <paramref name="columnNames"/></returns>
-    public abstract object[] GetValuesForMax(string tableName, DBxColumns columnNames,
+    public object[] GetValuesForMax(string tableName, DBxColumns columnNames,
+      string maxColumnName, DBxFilter where)
+    {
+      return DoGetValuesForMax(tableName, columnNames, maxColumnName, where);
+    }
+
+    /// <summary>
+    /// Получить значения полей для строки, содержащей максимальное значение заданного
+    /// поля.
+    /// Строки таблицы, содержащие значения NULL, игнорируются.
+    /// Если не найдено ни одной строки, удовлетворяющей условию <paramref name="where"/>,
+    /// возвращается массив, содержащий одни значения null.
+    /// Имена полей в <paramref name="columnNames"/>, <paramref name="maxColumnName"/> и <paramref name="where"/>
+    /// могут содержать точки. В этом случае используются значения из связанных таблиц.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnNames">Имена полей, значения которых нужно получить</param>
+    /// <param name="maxColumnName">Имя поля, максимальное значение которого является условием выбора строки</param>
+    /// <param name="where">Фильтр строк, участвующих в отборе</param>
+    /// <returns>Массив значений для полей, заданных в <paramref name="columnNames"/></returns>
+    protected abstract object[] DoGetValuesForMax(string tableName, DBxColumns columnNames,
       string maxColumnName, DBxFilter where);
 
     /// <summary>
@@ -1253,7 +1599,27 @@ namespace FreeLibSet.Data.Docs
     /// <param name="minColumnName">Имя поля, минимальное значение которого является условием выбора строки</param>
     /// <param name="where">Фильтр строк, участвующих в отборе</param>
     /// <returns>Массив значений для полей, заданных в <paramref name="columnNames"/></returns>
-    public abstract object[] GetValuesForMin(string tableName, DBxColumns columnNames,
+    public object[] GetValuesForMin(string tableName, DBxColumns columnNames,
+      string minColumnName, DBxFilter where)
+    {
+      return DoGetValuesForMin(tableName, columnNames, minColumnName, where);
+    }
+
+    /// <summary>
+    /// Получить значения полей для строки, содержащей минимальное значение заданного
+    /// поля.
+    /// Строки таблицы, содержащие значения NULL, игнорируются.
+    /// Если не найдено ни одной строки, удовлетворяющей условию <paramref name="where"/>,
+    /// возвращается массив, содержащий одни значения null.
+    /// Имена полей в <paramref name="columnNames"/>, <paramref name="minColumnName"/> и <paramref name="where"/>
+    /// могут содержать точки. В этом случае используются значения из связанных таблиц.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnNames">Имена полей, значения которых нужно получить</param>
+    /// <param name="minColumnName">Имя поля, минимальное значение которого является условием выбора строки</param>
+    /// <param name="where">Фильтр строк, участвующих в отборе</param>
+    /// <returns>Массив значений для полей, заданных в <paramref name="columnNames"/></returns>
+    protected abstract object[] DoGetValuesForMin(string tableName, DBxColumns columnNames,
       string minColumnName, DBxFilter where);
 
     /// <summary>
@@ -1265,7 +1631,21 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя числового поля</param>
     /// <param name="where">Фильтр (null для суммирования всех строк таблицы)</param>
     /// <returns>Суммарное значение или null</returns>
-    public abstract object GetSumValue(string tableName, string columnName, DBxFilter where);
+    public object GetSumValue(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetSumValue(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить суммарное значение числового поля для выбранных записей
+    /// Строки таблицы, содержащие значения NULL, игнорируются
+    /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя числового поля</param>
+    /// <param name="where">Фильтр (null для суммирования всех строк таблицы)</param>
+    /// <returns>Суммарное значение или null</returns>
+    protected abstract object DoGetSumValue(string tableName, string columnName, DBxFilter where);
 
     #endregion
 
@@ -1273,7 +1653,7 @@ namespace FreeLibSet.Data.Docs
 
     #region IDBxConReadOnlyPKInt32 Members
 
-    #region GetValue, GetValues
+    #region GetValue(), GetValues()
 
     /// <summary>
     /// Получение значения для одного поля. Имя поля может содержать точки для
@@ -1290,7 +1670,7 @@ namespace FreeLibSet.Data.Docs
     public object GetValue(string tableName, Int32 id, string columnName)
     {
       object value;
-      GetValue(tableName, id, columnName, out value);
+      DoGetValue(tableName, id, columnName, out value);
       return value;
     }
 
@@ -1300,12 +1680,28 @@ namespace FreeLibSet.Data.Docs
     /// значение поля по ссылке, а как результат возвращается признак того, что
     /// строка найдена
     /// </summary>
-    /// <param name="TableName">Имя таблицы, в которой выполняется поиск</param>
-    /// <param name="Id">Идентификатор строки. Может быть 0, тогда возвращается Value=null</param>
-    /// <param name="ColumnName">Имя поля (может быть с точками)</param>
-    /// <param name="Value">Сюда по ссылке записывается значение</param>
+    /// <param name="tableName">Имя таблицы, в которой выполняется поиск</param>
+    /// <param name="id">Идентификатор строки. Может быть 0, тогда возвращается Value=null</param>
+    /// <param name="columnName">Имя поля (может быть с точками)</param>
+    /// <param name="value">Сюда по ссылке записывается значение</param>
     /// <returns>true, если поле было найдено</returns>
-    public abstract bool GetValue(string TableName, Int32 Id, string ColumnName, out object Value);
+    public bool GetValue(string tableName, Int32 id, string columnName, out object value)
+    {
+      return DoGetValue(tableName, id, columnName, out value);
+    }
+
+    /// <summary>
+    /// Получение значения для одного поля. Имя поля может содержать точки для
+    /// извлечения значения из зависимой таблицы. Расширенная версия возвращает
+    /// значение поля по ссылке, а как результат возвращается признак того, что
+    /// строка найдена
+    /// </summary>
+    /// <param name="tableName">Имя таблицы, в которой выполняется поиск</param>
+    /// <param name="id">Идентификатор строки. Может быть 0, тогда возвращается Value=null</param>
+    /// <param name="columnName">Имя поля (может быть с точками)</param>
+    /// <param name="value">Сюда по ссылке записывается значение</param>
+    /// <returns>true, если поле было найдено</returns>
+    protected abstract bool DoGetValue(string tableName, Int32 id, string columnName, out object value);
 
     /// <summary>
     /// Получить значения для заданного списка полей.
@@ -1318,7 +1714,23 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <returns>Массив значений полей строки</returns>
-    public abstract object[] GetValues(string tableName, Int32 id, DBxColumns columnNames);
+    public object[] GetValues(string tableName, Int32 id, DBxColumns columnNames)
+    {
+      return DoGetValues(tableName, id, columnNames);
+    }
+
+    /// <summary>
+    /// Получить значения для заданного списка полей.
+    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Если <paramref name="id"/>=0, возвращается массив значений null подходящей длины.
+    /// Выбрасывает исключение DBxRecordNotFoundException, если задан идентификатор несуществующей записи.
+    /// Имена полей могут содержать точки для получения значений ссылочных полей с помощью INNER JOIN.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
+    /// <param name="columnNames">Список столбцов</param>
+    /// <returns>Массив значений полей строки</returns>
+    protected abstract object[] DoGetValues(string tableName, Int32 id, DBxColumns columnNames);
 
     /// <summary>
     /// Получить значения для заданного списка полей.
@@ -1334,12 +1746,12 @@ namespace FreeLibSet.Data.Docs
     public object[] GetValues(string tableName, Int32 id, string columnNames)
     {
       DBxColumns columnNames2 = new DBxColumns(columnNames);
-      return GetValues(tableName, id, columnNames2);
+      return DoGetValues(tableName, id, columnNames2);
     }
 
     #endregion
 
-    #region GetIds
+    #region GetIds()
 
     /// <summary>
     /// Получить список идентификаторов в таблице для строк, соответствующих заданному фильтру.
@@ -1348,7 +1760,19 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтры</param>
     /// <returns>Список идентификаторов</returns>
-    public abstract IdList GetIds(string tableName, DBxFilter where);
+    public IdList GetIds(string tableName, DBxFilter where)
+    {
+      return DoGetIds(tableName, where);
+    }
+
+    /// <summary>
+    /// Получить список идентификаторов в таблице для строк, соответствующих заданному фильтру.
+    /// Фильтры по полю Deleted должны быть заданы в явном виде
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="where">Фильтры</param>
+    /// <returns>Список идентификаторов</returns>
+    protected abstract IdList DoGetIds(string tableName, DBxFilter where);
 
     /// <summary>
     /// Получить массив идентификаторов строк с заданным значением поля
@@ -1359,8 +1783,9 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Массив идентификаторов</returns>
     public IdList GetIds(string tableName, string columnName, object value)
     {
-      return GetIds(tableName, new ValueFilter(columnName, value));
+      return DoGetIds(tableName, new ValueFilter(columnName, value));
     }
+
 
     /// <summary>
     /// Получить массив идентификаторов строк с заданными значениями полей
@@ -1389,12 +1814,12 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentException("Не задано ни одного поля для поиска в GetIds для таблицы " + tableName, "columnNames");
 
       DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
-      return GetIds(tableName, filter);
+      return DoGetIds(tableName, filter);
     }
 
     #endregion
 
-    #region FindRecord
+    #region FindRecord()
 
     /// <summary>
     /// Найти запись
@@ -1406,7 +1831,22 @@ namespace FreeLibSet.Data.Docs
     /// Будет возвращена первая из записей, в соответствии с порядком.
     /// Если порядок не задан, какая запись будет возвращена, не определено</param>
     /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    public abstract Int32 FindRecord(string tableName, DBxFilter where, DBxOrder orderBy);
+    public Int32 FindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
+    {
+      return DoFindRecord(tableName, where, orderBy);
+    }
+
+    /// <summary>
+    /// Найти запись
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="where">Условие отбора</param>
+    /// <param name="orderBy">Порядок сортировки. Имеет значение, только если найдено
+    /// больше одной записи, удовлетворяющей условию <paramref name="where"/>.
+    /// Будет возвращена первая из записей, в соответствии с порядком.
+    /// Если порядок не задан, какая запись будет возвращена, не определено</param>
+    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
+    protected abstract Int32 DoFindRecord(string tableName, DBxFilter where, DBxOrder orderBy);
 
     /// <summary>
     /// Найти запись
@@ -1416,7 +1856,20 @@ namespace FreeLibSet.Data.Docs
     /// <param name="singleOnly">Если true и найдено больше одной записи, удовлетворяющей условию
     /// <paramref name="where"/>, то возвращается 0</param>
     /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    public abstract Int32 FindRecord(string tableName, DBxFilter where, bool singleOnly);
+    public Int32 FindRecord(string tableName, DBxFilter where, bool singleOnly)
+    {
+      return DoFindRecord(tableName, where, singleOnly);
+    }
+
+    /// <summary>
+    /// Найти запись
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="where">Условие отбора</param>
+    /// <param name="singleOnly">Если true и найдено больше одной записи, удовлетворяющей условию
+    /// <paramref name="where"/>, то возвращается 0</param>
+    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
+    protected abstract Int32 DoFindRecord(string tableName, DBxFilter where, bool singleOnly);
 
     /// <summary>
     /// Найти строку с заданным значением поля
@@ -1428,7 +1881,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Идентификатор строки или 0</returns>
     public Int32 FindRecord(string tableName, string columnName, object value)
     {
-      return FindRecord(tableName, new ValueFilter(columnName, value));
+      return DoFindRecord(tableName, new ValueFilter(columnName, value), false);
     }
 
     /// <summary>
@@ -1500,12 +1953,12 @@ namespace FreeLibSet.Data.Docs
     /// <param name="where">Фильтр</param>
     public Int32 FindRecord(string tableName, DBxFilter where)
     {
-      return FindRecord(tableName, where, false);
+      return DoFindRecord(tableName, where, false);
     }
 
     #endregion
 
-    #region GetUnuqueValues
+    #region GetUnuqueValues()
 
     // Эти методы реализуются в DBxConBase, каждый отдельно
 
@@ -1518,7 +1971,21 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract string[] GetUniqueStringValues(string tableName, string columnName, DBxFilter where);
+    public string[] GetUniqueStringValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueStringValues(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить строковые значения поля без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    protected abstract string[] DoGetUniqueStringValues(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить числовые значения поля без повторов.
@@ -1529,7 +1996,10 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract int[] GetUniqueIntValues(string tableName, string columnName, DBxFilter where);
+    public int[] GetUniqueIntValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueIntValues(tableName, columnName, where);
+    }
 
     /// <summary>
     /// Получить числовые значения поля без повторов.
@@ -1540,7 +2010,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract long[] GetUniqueInt64Values(string tableName, string columnName, DBxFilter where);
+    protected abstract int[] DoGetUniqueIntValues(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить числовые значения поля без повторов.
@@ -1551,7 +2021,10 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract float[] GetUniqueSingleValues(string tableName, string columnName, DBxFilter where);
+    public long[] GetUniqueInt64Values(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueInt64Values(tableName, columnName, where);
+    }
 
     /// <summary>
     /// Получить числовые значения поля без повторов.
@@ -1562,7 +2035,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract double[] GetUniqueDoubleValues(string tableName, string columnName, DBxFilter where);
+    protected abstract long[] DoGetUniqueInt64Values(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить числовые значения поля без повторов.
@@ -1573,7 +2046,71 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract decimal[] GetUniqueDecimalValues(string tableName, string columnName, DBxFilter where);
+    public float[] GetUniqueSingleValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueSingleValues(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить числовые значения поля без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    protected abstract float[] DoGetUniqueSingleValues(string tableName, string columnName, DBxFilter where);
+
+    /// <summary>
+    /// Получить числовые значения поля без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    public double[] GetUniqueDoubleValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueDoubleValues(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить числовые значения поля без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    protected abstract double[] DoGetUniqueDoubleValues(string tableName, string columnName, DBxFilter where);
+
+    /// <summary>
+    /// Получить числовые значения поля без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    public decimal[] GetUniqueDecimalValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueDecimalValues(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить числовые значения поля без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    protected abstract decimal[] DoGetUniqueDecimalValues(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить значения поля даты и/или времени без повторов.
@@ -1584,7 +2121,21 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract DateTime[] GetUniqueDateTimeValues(string tableName, string columnName, DBxFilter where);
+    public DateTime[] GetUniqueDateTimeValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueDateTimeValues(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить значения поля даты и/или времени без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    protected abstract DateTime[] DoGetUniqueDateTimeValues(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить значения поля GUID без повторов.
@@ -1595,7 +2146,21 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public abstract Guid[] GetUniqueGuidValues(string tableName, string columnName, DBxFilter where);
+    public Guid[] GetUniqueGuidValues(string tableName, string columnName, DBxFilter where)
+    {
+      return DoGetUniqueGuidValues(tableName, columnName, where);
+    }
+
+    /// <summary>
+    /// Получить значения поля GUID без повторов.
+    /// Если в таблице встречаются значения NULL, то они пропускаются.
+    /// Возвращаемый массив сортируется.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
+    /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
+    /// <returns>Массив значений</returns>
+    protected abstract Guid[] DoGetUniqueGuidValues(string tableName, string columnName, DBxFilter where);
 
     #endregion
 
@@ -1635,7 +2200,7 @@ namespace FreeLibSet.Data.Docs
     public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested)
     {
       Int32 loopedId;
-      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, null, out loopedId);
+      return DoGetInheritorIds(tableName, parentIdColumnName, parentId, nested, null, out loopedId);
     }
 
     /// <summary>
@@ -1654,7 +2219,7 @@ namespace FreeLibSet.Data.Docs
     public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where)
     {
       Int32 loopedId;
-      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
+      return DoGetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
     }
 
     /// <summary>
@@ -1673,7 +2238,28 @@ namespace FreeLibSet.Data.Docs
     /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
     /// <param name="loopedId">Сюда записывается идентификатор "зацикленного" узла</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    public abstract IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId);
+    public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
+    {
+      return DoGetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
+    }
+
+    /// <summary>
+    /// Возвращает список идентификаторов дочерних строк для таблиц, в которых реализована
+    /// иерахическая структура с помощью поля, ссылающегося на эту же таблицу, которое задает родительский
+    /// элемент. Родительская строка <paramref name="parentId"/> не входит в список
+    /// Метод не зацикливается, если структура дерева нарушена (зациклено).
+    /// Эта перегрузка возвращает идентификатор "зацикленного" узла. Возвращается только один узел, 
+    /// а не вся цепочка зацикливания. Также таблица может содержать несколько цепочек зацикливания.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="parentIdColumnName">Имя ссылочного столбца, например "ParentId"</param>
+    /// <param name="parentId">Идентификатор родительской строки. Если 0, то будут возвращены 
+    /// идентификаторы строк узлов верхнего уровня или всех строк (при <paramref name="nested"/>=true)</param>
+    /// <param name="nested">true, если требуется рекурсивный поиск. false, если требуется вернуть только непосредственные дочерние элементы</param>
+    /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
+    /// <param name="loopedId">Сюда записывается идентификатор "зацикленного" узла</param>
+    /// <returns>Список идентификаторов дочерних элементов</returns>
+    protected abstract IdList DoGetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId);
 
     #endregion
 
@@ -1826,7 +2412,17 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="md5">Контрольная сумма</param>
     /// <returns>Идентификатор записи или 0, если таких данных нет</returns>
-    public abstract Int32 InternalFindBinData(string md5);
+    public Int32 InternalFindBinData(string md5)
+    {
+      return DoInternalFindBinData(md5);
+    }
+
+    /// <summary>
+    /// Внутренний метод получения идентификатора двоичных данных
+    /// </summary>
+    /// <param name="md5">Контрольная сумма</param>
+    /// <returns>Идентификатор записи или 0, если таких данных нет</returns>
+    protected abstract Int32 DoInternalFindBinData(string md5);
 
     /// <summary>
     /// Нельзя использовать в системе буферизации просто байтовый массив.
@@ -1948,7 +2544,23 @@ namespace FreeLibSet.Data.Docs
     /// <param name="preloadIds">Идентификаторы документов, поддокументов и двочных данных,
     /// которые желательно загрузить</param>
     /// <returns>Словарь загруженных данных. Ключ - идентификатор двоичных данных. Значение - загруженные данные</returns>
-    public abstract Dictionary<Int32, byte[]> InternalGetBinData2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds);
+    public Dictionary<Int32, byte[]> InternalGetBinData2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds)
+    {
+      return DoInternalGetBinData2(tableName, columnName, wantedId, docVersion, preloadIds);
+    }
+
+    /// <summary>
+    /// Метод получения двоичных данных, реализуемый в DBxRealDocProvider.
+    /// Этот метод не должен использоваться в прикладном коде.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
+    /// <param name="columnName">Имя числового столбца, содержащего идентификатор двоичных данных</param>
+    /// <param name="wantedId">Идентификатор документа, поддокумента и двочных данных, которые нужно получить</param>
+    /// <param name="docVersion">Версия документа. 0 - текущая версия</param>
+    /// <param name="preloadIds">Идентификаторы документов, поддокументов и двочных данных,
+    /// которые желательно загрузить</param>
+    /// <returns>Словарь загруженных данных. Ключ - идентификатор двоичных данных. Значение - загруженные данные</returns>
+    protected abstract Dictionary<Int32, byte[]> DoInternalGetBinData2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds);
 
     /// <summary>
     /// Получить длину блока двоичных данных по идентификатору двочиных данных.
@@ -2009,8 +2621,8 @@ namespace FreeLibSet.Data.Docs
         return StoredFileInfo.Empty;
       CheckIsRealDocId(id);
 
-      Int32 FileId = DataTools.GetInt(GetValue(tableName, id, columnName));
-      return GetDBFileInfo(FileId);
+      Int32 fileId = DataTools.GetInt(GetValue(tableName, id, columnName));
+      return GetDBFileInfo(fileId);
     }
 
     #endregion
@@ -2062,7 +2674,20 @@ namespace FreeLibSet.Data.Docs
     /// <param name="binDataId">Сюда помещается идентификатор двоичных данных,
     /// возвращаемый методом InternalFindBinData()</param>
     /// <returns>Идентификатор записи файла в базе данных</returns>
-    public abstract Int32 InternalFindDBFile(StoredFileInfo fileInfo, string md5, out Int32 binDataId);
+    public Int32 InternalFindDBFile(StoredFileInfo fileInfo, string md5, out Int32 binDataId)
+    {
+      return DoInternalFindDBFile(fileInfo, md5, out binDataId);
+    }
+
+    /// <summary>
+    /// Внутренний метод получения идентификатора хранимого файла
+    /// </summary>
+    /// <param name="fileInfo">Информация о файле</param>
+    /// <param name="md5">Контрольная сумма содержимого файла</param>
+    /// <param name="binDataId">Сюда помещается идентификатор двоичных данных,
+    /// возвращаемый методом InternalFindBinData()</param>
+    /// <returns>Идентификатор записи файла в базе данных</returns>
+    protected abstract Int32 DoInternalFindDBFile(StoredFileInfo fileInfo, string md5, out Int32 binDataId);
 
 
     /// <summary>
@@ -2185,7 +2810,23 @@ namespace FreeLibSet.Data.Docs
     /// <param name="preloadIds">Идентификаторы документов, поддокументов и файлов,
     /// которые желательно загрузить</param>
     /// <returns>Словарь загруженных данных. Ключ - идентификатор файла. Значение - контейнер с файлом</returns>
-    public abstract Dictionary<Int32, FileContainer> InternalGetDBFile2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds);
+    public Dictionary<Int32, FileContainer> InternalGetDBFile2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds)
+    {
+      return DoInternalGetDBFile2(tableName, columnName, wantedId, docVersion, preloadIds);
+    }
+
+    /// <summary>
+    /// Метод получения файла, реализуемый в DBxRealDocProvider.
+    /// Этот метод не должен использоваться в прикладном коде.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
+    /// <param name="columnName">Имя числового столбца, содержащего идентификатор файла</param>
+    /// <param name="wantedId">Идентификатор документа, поддокумента и файла, который нужно получить</param>
+    /// <param name="docVersion">Версия документа. 0 - текущая версия</param>
+    /// <param name="preloadIds">Идентификаторы документов, поддокументов и файлов,
+    /// которые желательно загрузить</param>
+    /// <returns>Словарь загруженных данных. Ключ - идентификатор файла. Значение - контейнер с файлом</returns>
+    protected abstract Dictionary<Int32, FileContainer> DoInternalGetDBFile2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds);
 
     #endregion
 
@@ -2209,7 +2850,17 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="request">Данные запроса</param>
     /// <returns>Загруженные страницы страницы</returns>
-    public abstract DBxCacheLoadResponse LoadCachePages(DBxCacheLoadRequest request);
+    public DBxCacheLoadResponse LoadCachePages(DBxCacheLoadRequest request)
+    {
+      return DoLoadCachePages(request);
+    }
+
+    /// <summary>
+    /// Загрузить страницы кэша
+    /// </summary>
+    /// <param name="request">Данные запроса</param>
+    /// <returns>Загруженные страницы страницы</returns>
+    protected abstract DBxCacheLoadResponse DoLoadCachePages(DBxCacheLoadRequest request);
 
     /// <summary>
     /// Очистить страницы таблицы кэша
@@ -2217,7 +2868,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <param name="firstIds">Начальные идентификаторы страниц</param>
-    public abstract void ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds);
+    public void ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    {
+      DoClearCachePages(tableName, columnNames, firstIds);
+    }
+
+    /// <summary>
+    /// Очистить страницы таблицы кэша
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="columnNames">Список столбцов</param>
+    /// <param name="firstIds">Начальные идентификаторы страниц</param>
+    protected abstract void DoClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds);
 
     /// <summary>
     /// Получение текстового представления для документа / поддокумента
@@ -2225,7 +2887,18 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы. Должно быть задано имя существующего документа или поддокумента</param>
     /// <param name="id">Идентификатор. Если задано значение 0, возвращается пустая строка</param>
     /// <returns>Текстовое представление</returns>
-    public abstract string GetTextValue(string tableName, Int32 id);
+    public string GetTextValue(string tableName, Int32 id)
+    {
+      return DoGetTextValue(tableName, id);
+    }
+
+    /// <summary>
+    /// Получение текстового представления для документа / поддокумента
+    /// </summary>
+    /// <param name="tableName">Имя таблицы. Должно быть задано имя существующего документа или поддокумента</param>
+    /// <param name="id">Идентификатор. Если задано значение 0, возвращается пустая строка</param>
+    /// <returns>Текстовое представление</returns>
+    protected abstract string DoGetTextValue(string tableName, Int32 id);
 
     /// <summary>
     /// Получение текстового представления для нескольких документов или поддокументов одного вида.
@@ -2320,10 +2993,21 @@ namespace FreeLibSet.Data.Docs
       pimaryDS.Tables.Add(table);
       pimaryDS.AcceptChanges();
 
-
-
       return InternalGetTextValue(table.TableName, id, pimaryDS);
     }
+
+    /// <summary>
+    /// Внутренний метод получения текста.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы документа или поддокумента</param>
+    /// <param name="id">Идентификатор документа или поддокумента</param>
+    /// <param name="primaryDS">Первичный набор данных</param>
+    /// <returns>Текст для документа или поддокумента</returns>
+    public /*internal protected */ string InternalGetTextValue(string tableName, Int32 id, DataSet primaryDS)
+    {
+      return DoInternalGetTextValue(tableName, id, primaryDS);
+    }
+    // Нельзя сделать internal protected, т.к. будет ошибка вызова удаленного метода
 
 
     /// <summary>
@@ -2333,8 +3017,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор документа или поддокумента</param>
     /// <param name="primaryDS">Первичный набор данных</param>
     /// <returns>Текст для документа или поддокумента</returns>
-    public /*internal protected */ abstract string InternalGetTextValue(string tableName, Int32 id, DataSet primaryDS);
-    // Нельзя сделать internal protected, т.к. будет ошибка вызова удаленного метода
+    protected abstract string DoInternalGetTextValue(string tableName, Int32 id, DataSet primaryDS);
 
     #endregion
 
@@ -2542,9 +3225,30 @@ namespace FreeLibSet.Data.Docs
 
     #region ICloneable Members
 
+    /// <summary>
+    /// Создание копии провайдера.
+    /// Полученный провайдер можно использовать в отдельном потоке
+    /// Для цепочечных провайдеров создается также копия исходного провайдера
+    /// Этот метод может вызываться из любого потока, даже если текущий DBxDocProvider привязан к другому потоку
+    /// </summary>
+    /// <returns></returns>
+    public DBxDocProvider Clone()
+    {
+      return DoClone();
+    }
+
+    /// <summary>
+    /// Создание копии провайдера.
+    /// Полученный провайдер можно использовать в отдельном потоке
+    /// Для цепочечных провайдеров создается также копия исходного провайдера
+    /// Этот метод может вызываться из любого потока, даже если текущий DBxDocProvider привязан к другому потоку
+    /// </summary>
+    /// <returns></returns>
+    protected abstract DBxDocProvider DoClone();
+
     object ICloneable.Clone()
     {
-      return Clone();
+      return DoClone();
     }
 
     #endregion
@@ -2556,7 +3260,17 @@ namespace FreeLibSet.Data.Docs
     /// Используется в блоках catch.
     /// </summary>
     /// <param name="e">Исключение</param>
-    public virtual void AddExceptionInfo(Exception e)
+    public void AddExceptionInfo(Exception e)
+    {
+      DoAddExceptionInfo(e);
+    }
+
+    /// <summary>
+    /// Добавляет отладочную информацию в объект исключения.
+    /// Используется в блоках catch.
+    /// </summary>
+    /// <param name="e">Исключение</param>
+    protected virtual void DoAddExceptionInfo(Exception e)
     {
       try
       {

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -14,14 +14,14 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Главное окно интерфейса
+  /// Р“Р»Р°РІРЅРѕРµ РѕРєРЅРѕ РёРЅС‚РµСЂС„РµР№СЃР°
   /// </summary>
   public abstract class EFPAppMainWindowLayout : IEnumerable<Form>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект, к которому пока не присоединено окно (MainWindow=null).
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, Рє РєРѕС‚РѕСЂРѕРјСѓ РїРѕРєР° РЅРµ РїСЂРёСЃРѕРµРґРёРЅРµРЅРѕ РѕРєРЅРѕ (MainWindow=null).
     /// </summary>
     public EFPAppMainWindowLayout()
     {
@@ -32,10 +32,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс, к которому относится это главное окно
+    /// РРЅС‚РµСЂС„РµР№СЃ, Рє РєРѕС‚РѕСЂРѕРјСѓ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЌС‚Рѕ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ
     /// </summary>
     public EFPAppInterface Interface
     {
@@ -45,24 +45,24 @@ namespace FreeLibSet.Forms
     private EFPAppInterface _Interface;
 
     /// <summary>
-    /// Возвращает заголовок главного окна, если свойство MainWindow установлено.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·Р°РіРѕР»РѕРІРѕРє РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°, РµСЃР»Рё СЃРІРѕР№СЃС‚РІРѕ MainWindow СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
     /// </summary>
-    /// <returns>текстовое представление</returns>
+    /// <returns>С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       if (MainWindow == null)
-        return "Нет окна";
+        return "РќРµС‚ РѕРєРЅР°";
       else
         return MainWindow.Text;
     }
 
     #endregion
 
-    #region Главное окно
+    #region Р“Р»Р°РІРЅРѕРµ РѕРєРЅРѕ
 
     /// <summary>
-    /// Главное окно, присоединенное к текущему объекту.
-    /// Это свойство не следует использовать в пользовательском коде
+    /// Р“Р»Р°РІРЅРѕРµ РѕРєРЅРѕ, РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅРѕРµ Рє С‚РµРєСѓС‰РµРјСѓ РѕР±СЉРµРєС‚Сѓ.
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РЅРµ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
     /// </summary>
     public Form MainWindow
     {
@@ -73,7 +73,7 @@ namespace FreeLibSet.Forms
         if (value == null)
           throw new ArgumentNullException();
         if (_MainWindow != null)
-          throw new InvalidOperationException("Повторная установка свойства");
+          throw new InvalidOperationException("РџРѕРІС‚РѕСЂРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР°");
 #endif
         _MainWindow = value;
         _MainWindow.SizeChanged += new EventHandler(MainWindow_SizeChanged);
@@ -83,9 +83,9 @@ namespace FreeLibSet.Forms
     private Form _MainWindow;
 
     /// <summary>
-    /// Закрывает текущее главное окно без попытки завершить приложение
+    /// Р—Р°РєСЂС‹РІР°РµС‚ С‚РµРєСѓС‰РµРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ Р±РµР· РїРѕРїС‹С‚РєРё Р·Р°РІРµСЂС€РёС‚СЊ РїСЂРёР»РѕР¶РµРЅРёРµ
     /// </summary>
-    /// <returns>true, если окно было успешно закрыто</returns>
+    /// <returns>true, РµСЃР»Рё РѕРєРЅРѕ Р±С‹Р»Рѕ СѓСЃРїРµС€РЅРѕ Р·Р°РєСЂС‹С‚Рѕ</returns>
     public bool CloseMainWindow()
     {
       if (!MainWindow.Visible)
@@ -105,15 +105,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если в данный момент выполняется метод CloseMainWindow()
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РјРµС‚РѕРґ CloseMainWindow()
     /// </summary>
     public bool InsideCloseMainWindow { get { return _InsideCloseMainWindow; } }
     private bool _InsideCloseMainWindow;
 
     /// <summary>
-    /// Если в интерфейсе MDI открыто больше одного главного окна,
-    /// то возвращается строка "#1", "#2", ...
-    /// Если есть только одно главного окно, или интерфейс SDI, возвращается пустая строка
+    /// Р•СЃР»Рё РІ РёРЅС‚РµСЂС„РµР№СЃРµ MDI РѕС‚РєСЂС‹С‚Рѕ Р±РѕР»СЊС€Рµ РѕРґРЅРѕРіРѕ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°,
+    /// С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃС‚СЂРѕРєР° "#1", "#2", ...
+    /// Р•СЃР»Рё РµСЃС‚СЊ С‚РѕР»СЊРєРѕ РѕРґРЅРѕ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅРѕ, РёР»Рё РёРЅС‚РµСЂС„РµР№СЃ SDI, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°
     /// </summary>
     public string MainWindowNumberText
     {
@@ -123,31 +123,31 @@ namespace FreeLibSet.Forms
     private string _MainWindowNumberText;
 
     /// <summary>
-    /// Возвращает состояние (Normal или Maximized), которое было до минимизации.
-    /// Если в текущий момент окно не свернуто, возвращает Form.WindowState
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ (Normal РёР»Рё Maximized), РєРѕС‚РѕСЂРѕРµ Р±С‹Р»Рѕ РґРѕ РјРёРЅРёРјРёР·Р°С†РёРё.
+    /// Р•СЃР»Рё РІ С‚РµРєСѓС‰РёР№ РјРѕРјРµРЅС‚ РѕРєРЅРѕ РЅРµ СЃРІРµСЂРЅСѓС‚Рѕ, РІРѕР·РІСЂР°С‰Р°РµС‚ Form.WindowState
     /// </summary>
     public FormWindowState WindowStateBeforeMinimized { get { return _WindowStateBeforeMinimized; } }
     private FormWindowState _WindowStateBeforeMinimized;
 
     #endregion
 
-    #region Дочерние окна
+    #region Р”РѕС‡РµСЂРЅРёРµ РѕРєРЅР°
 
     /// <summary>
-    /// Список с поддержкой для Z-order
+    /// РЎРїРёСЃРѕРє СЃ РїРѕРґРґРµСЂР¶РєРѕР№ РґР»СЏ Z-order
     /// </summary>
     private ListWithMRU<Form> _ChildForms;
 
     /// <summary>
-    /// Возвращает список дочерних форм, обслуживаемых данным окном.
-    /// Если <paramref name="useZOrder"/>=true, то список сортируется по порядку размещения окон 
-    /// в текущем главном окне (CurrentChildForm будет первым в списке).
-    /// Если <paramref name="useZOrder"/>=false, то список сортируется по порядку открытия окон в данном главном окне
-    /// Для интерфейса SDI возвращает массив из одной формы (равным свойству Form).
-    /// Если интерфейс SDI вывел «пустышку», то метод возвращает пустой массив.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РґРѕС‡РµСЂРЅРёС… С„РѕСЂРј, РѕР±СЃР»СѓР¶РёРІР°РµРјС‹С… РґР°РЅРЅС‹Рј РѕРєРЅРѕРј.
+    /// Р•СЃР»Рё <paramref name="useZOrder"/>=true, С‚Рѕ СЃРїРёСЃРѕРє СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ РїРѕ РїРѕСЂСЏРґРєСѓ СЂР°Р·РјРµС‰РµРЅРёСЏ РѕРєРѕРЅ 
+    /// РІ С‚РµРєСѓС‰РµРј РіР»Р°РІРЅРѕРј РѕРєРЅРµ (CurrentChildForm Р±СѓРґРµС‚ РїРµСЂРІС‹Рј РІ СЃРїРёСЃРєРµ).
+    /// Р•СЃР»Рё <paramref name="useZOrder"/>=false, С‚Рѕ СЃРїРёСЃРѕРє СЃРѕСЂС‚РёСЂСѓРµС‚СЃСЏ РїРѕ РїРѕСЂСЏРґРєСѓ РѕС‚РєСЂС‹С‚РёСЏ РѕРєРѕРЅ РІ РґР°РЅРЅРѕРј РіР»Р°РІРЅРѕРј РѕРєРЅРµ
+    /// Р”Р»СЏ РёРЅС‚РµСЂС„РµР№СЃР° SDI РІРѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· РѕРґРЅРѕР№ С„РѕСЂРјС‹ (СЂР°РІРЅС‹Рј СЃРІРѕР№СЃС‚РІСѓ Form).
+    /// Р•СЃР»Рё РёРЅС‚РµСЂС„РµР№СЃ SDI РІС‹РІРµР» В«РїСѓСЃС‚С‹С€РєСѓВ», С‚Рѕ РјРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ.
     /// </summary>
-    /// <param name="useZOrder">Нужно ли сортировать окна по порядку активации</param>
-    /// <returns>Массив форм</returns>
+    /// <param name="useZOrder">РќСѓР¶РЅРѕ Р»Рё СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РѕРєРЅР° РїРѕ РїРѕСЂСЏРґРєСѓ Р°РєС‚РёРІР°С†РёРё</param>
+    /// <returns>РњР°СЃСЃРёРІ С„РѕСЂРј</returns>
     public Form[] GetChildForms(bool useZOrder)
     {
       if (useZOrder)
@@ -158,8 +158,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Возвращает дочернюю форму, которая является текущей (или была текущей в последний раз) в пределах главного окна.
-    /// Для SDI всегда возвращает один объект Form.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРѕС‡РµСЂРЅСЋСЋ С„РѕСЂРјСѓ, РєРѕС‚РѕСЂР°СЏ СЏРІР»СЏРµС‚СЃСЏ С‚РµРєСѓС‰РµР№ (РёР»Рё Р±С‹Р»Р° С‚РµРєСѓС‰РµР№ РІ РїРѕСЃР»РµРґРЅРёР№ СЂР°Р·) РІ РїСЂРµРґРµР»Р°С… РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°.
+    /// Р”Р»СЏ SDI РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ РѕРґРёРЅ РѕР±СЉРµРєС‚ Form.
     /// </summary>
     public Form CurrentChildForm
     {
@@ -174,16 +174,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает количество дочерних форм в этом окне.
-    /// Для интерфейса SDI возвращает 1, если форма не "пустышка".
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РґРѕС‡РµСЂРЅРёС… С„РѕСЂРј РІ СЌС‚РѕРј РѕРєРЅРµ.
+    /// Р”Р»СЏ РёРЅС‚РµСЂС„РµР№СЃР° SDI РІРѕР·РІСЂР°С‰Р°РµС‚ 1, РµСЃР»Рё С„РѕСЂРјР° РЅРµ "РїСѓСЃС‚С‹С€РєР°".
     /// </summary>
     public int ChildFormCount { get { return _ChildForms.Count; } }
 
     /// <summary>
-    /// Возвращает true, если форма относится к этому главному окну (или сама является главным окном)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С„РѕСЂРјР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє СЌС‚РѕРјСѓ РіР»Р°РІРЅРѕРјСѓ РѕРєРЅСѓ (РёР»Рё СЃР°РјР° СЏРІР»СЏРµС‚СЃСЏ РіР»Р°РІРЅС‹Рј РѕРєРЅРѕРј)
     /// </summary>
-    /// <param name="form">Искомая форма</param>
-    /// <returns>Наличие формы</returns>
+    /// <param name="form">РСЃРєРѕРјР°СЏ С„РѕСЂРјР°</param>
+    /// <returns>РќР°Р»РёС‡РёРµ С„РѕСЂРјС‹</returns>
     public bool ContainsForm(Form form)
     {
       if (form == null)
@@ -199,11 +199,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти дочернюю форму заданного класса.
-    /// Возвращает первую найденную форму или null
+    /// РќР°Р№С‚Рё РґРѕС‡РµСЂРЅСЋСЋ С„РѕСЂРјСѓ Р·Р°РґР°РЅРЅРѕРіРѕ РєР»Р°СЃСЃР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІСѓСЋ РЅР°Р№РґРµРЅРЅСѓСЋ С„РѕСЂРјСѓ РёР»Рё null
     /// </summary>
-    /// <param name="formType">Тип формы</param>
-    /// <returns>Найденная форма или null</returns>
+    /// <param name="formType">РўРёРї С„РѕСЂРјС‹</param>
+    /// <returns>РќР°Р№РґРµРЅРЅР°СЏ С„РѕСЂРјР° РёР»Рё null</returns>
     public Form FindChildForm(Type formType)
     {
       Form[] forms = GetChildForms(false);
@@ -216,11 +216,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти дочернюю форму заданного класса.
-    /// Возвращает первую найденную форму или null
+    /// РќР°Р№С‚Рё РґРѕС‡РµСЂРЅСЋСЋ С„РѕСЂРјСѓ Р·Р°РґР°РЅРЅРѕРіРѕ РєР»Р°СЃСЃР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІСѓСЋ РЅР°Р№РґРµРЅРЅСѓСЋ С„РѕСЂРјСѓ РёР»Рё null
     /// </summary>
-    /// <typeparam name="T">Класс формы</typeparam>
-    /// <returns>Найденная форма или null</returns>
+    /// <typeparam name="T">РљР»Р°СЃСЃ С„РѕСЂРјС‹</typeparam>
+    /// <returns>РќР°Р№РґРµРЅРЅР°СЏ С„РѕСЂРјР° РёР»Рё null</returns>
     public T FindChildForm<T>()
       where T : Form
     {
@@ -234,10 +234,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти все дочерние формы заданного класса
+    /// РќР°Р№С‚Рё РІСЃРµ РґРѕС‡РµСЂРЅРёРµ С„РѕСЂРјС‹ Р·Р°РґР°РЅРЅРѕРіРѕ РєР»Р°СЃСЃР°
     /// </summary>
-    /// <param name="formType">Тип формы</param>
-    /// <returns>Массив форм</returns>
+    /// <param name="formType">РўРёРї С„РѕСЂРјС‹</param>
+    /// <returns>РњР°СЃСЃРёРІ С„РѕСЂРј</returns>
     public Form[] FindChildForms(Type formType)
     {
       List<Form> list = new List<Form>();
@@ -256,10 +256,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти все дочерние формы заданного класса
+    /// РќР°Р№С‚Рё РІСЃРµ РґРѕС‡РµСЂРЅРёРµ С„РѕСЂРјС‹ Р·Р°РґР°РЅРЅРѕРіРѕ РєР»Р°СЃСЃР°
     /// </summary>
-    /// <typeparam name="T">Класс формы</typeparam>
-    /// <returns>Массив форм</returns>
+    /// <typeparam name="T">РљР»Р°СЃСЃ С„РѕСЂРјС‹</typeparam>
+    /// <returns>РњР°СЃСЃРёРІ С„РѕСЂРј</returns>
     public T[] FindChildForms<T>()
       where T : Form
     {
@@ -280,10 +280,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Подготовка дочернего окна к присоединению.
-    /// Добавляет окно в список ChildForms и присоединяет необходимые обработчики форм.
+    /// РџРѕРґРіРѕС‚РѕРІРєР° РґРѕС‡РµСЂРЅРµРіРѕ РѕРєРЅР° Рє РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЋ.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РѕРєРЅРѕ РІ СЃРїРёСЃРѕРє ChildForms Рё РїСЂРёСЃРѕРµРґРёРЅСЏРµС‚ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РѕР±СЂР°Р±РѕС‚С‡РёРєРё С„РѕСЂРј.
     /// </summary>
-    /// <param name="form">Дочернее окно</param>
+    /// <param name="form">Р”РѕС‡РµСЂРЅРµРµ РѕРєРЅРѕ</param>
     protected void PrepareChildForm(Form form)
     {
       if (form == null)
@@ -292,28 +292,28 @@ namespace FreeLibSet.Forms
         throw new ObjectDisposedException("form");
 
       if (_ChildForms.Contains(form))
-        throw new InvalidOperationException("Форма " + form.ToString() + " уже есть в списке форм главного окна");
+        throw new InvalidOperationException("Р¤РѕСЂРјР° " + form.ToString() + " СѓР¶Рµ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ С„РѕСЂРј РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°");
 
       _ChildForms.Add(form);
 
       form.Activated += new EventHandler(Form_Activated);
-      form.Enter += new EventHandler(Form_Activated); // дубль
+      form.Enter += new EventHandler(Form_Activated); // РґСѓР±Р»СЊ
       form.VisibleChanged += new EventHandler(Form_VisibleChanged);
     }
 
     void Form_Activated(object sender, EventArgs args)
     {
       if (Interface == null)
-        return; // 10.06.2021, чтобы не зацикливалось при ошибочном вызове
+        return; // 10.06.2021, С‡С‚РѕР±С‹ РЅРµ Р·Р°С†РёРєР»РёРІР°Р»РѕСЃСЊ РїСЂРё РѕС€РёР±РѕС‡РЅРѕРј РІС‹Р·РѕРІРµ
 
       Form form = (Form)sender;
       if (Interface.CurrentChildForm == form)
-        return; // не изменилось
+        return; // РЅРµ РёР·РјРµРЅРёР»РѕСЃСЊ
 
       _ChildForms.Touch(form);
-      Interface.MainWindowActivated(this); // иначе EFPApp получит неверную текущую форму
+      Interface.MainWindowActivated(this); // РёРЅР°С‡Рµ EFPApp РїРѕР»СѓС‡РёС‚ РЅРµРІРµСЂРЅСѓСЋ С‚РµРєСѓС‰СѓСЋ С„РѕСЂРјСѓ
 
-      //System.Diagnostics.Trace.WriteLine("Activated для формы " + Form.Text);
+      //System.Diagnostics.Trace.WriteLine("Activated РґР»СЏ С„РѕСЂРјС‹ " + Form.Text);
 
       EFPApp.TestInterfaceChanged();
     }
@@ -321,7 +321,7 @@ namespace FreeLibSet.Forms
     void Form_VisibleChanged(object sender, EventArgs args)
     {
       if (Interface == null)
-        return; // 10.06.2021, чтобы не зацикливалось при ошибочном вызове
+        return; // 10.06.2021, С‡С‚РѕР±С‹ РЅРµ Р·Р°С†РёРєР»РёРІР°Р»РѕСЃСЊ РїСЂРё РѕС€РёР±РѕС‡РЅРѕРј РІС‹Р·РѕРІРµ
 
       Form form = (Form)sender;
       if (form.Visible)
@@ -337,25 +337,25 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Упорядочить дочерние окна.
-    /// Применимо только для интерфейса MDI
+    /// РЈРїРѕСЂСЏРґРѕС‡РёС‚СЊ РґРѕС‡РµСЂРЅРёРµ РѕРєРЅР°.
+    /// РџСЂРёРјРµРЅРёРјРѕ С‚РѕР»СЊРєРѕ РґР»СЏ РёРЅС‚РµСЂС„РµР№СЃР° MDI
     /// </summary>
-    /// <param name="mdiLayout">Способ упорядочения</param>
+    /// <param name="mdiLayout">РЎРїРѕСЃРѕР± СѓРїРѕСЂСЏРґРѕС‡РµРЅРёСЏ</param>
     public virtual void LayoutChildForms(MdiLayout mdiLayout)
     {
-      throw new InvalidOperationException("Не реализовано для интерфейса " + Interface.Name);
+      throw new InvalidOperationException("РќРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РґР»СЏ РёРЅС‚РµСЂС„РµР№СЃР° " + Interface.Name);
     }
 
     /// <summary>
-    /// Закрыть все дочерние окна.
-    /// Для SDI закрывается единственное окно
+    /// Р—Р°РєСЂС‹С‚СЊ РІСЃРµ РґРѕС‡РµСЂРЅРёРµ РѕРєРЅР°.
+    /// Р”Р»СЏ SDI Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРµ РѕРєРЅРѕ
     /// </summary>
-    /// <returns>true, если все окна были закрыты.
-    /// false, если пользователь отказался закрывать одно из окон</returns>
+    /// <returns>true, РµСЃР»Рё РІСЃРµ РѕРєРЅР° Р±С‹Р»Рё Р·Р°РєСЂС‹С‚С‹.
+    /// false, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РѕС‚РєР°Р·Р°Р»СЃСЏ Р·Р°РєСЂС‹РІР°С‚СЊ РѕРґРЅРѕ РёР· РѕРєРѕРЅ</returns>
     public bool CloseAllChildren()
     {
       bool res;
-      EFPApp.BeginUpdateInterface(); // Исправлено 13.09.2021
+      EFPApp.BeginUpdateInterface(); // РСЃРїСЂР°РІР»РµРЅРѕ 13.09.2021
       try
       {
         res = DoCloseAllChildren();
@@ -382,10 +382,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Статические методы декорирования
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ РјРµС‚РѕРґС‹ РґРµРєРѕСЂРёСЂРѕРІР°РЅРёСЏ
 
     /// <summary>
-    /// Добавляет в форму четыре объекта ToolStripPanel для меню и панелей инструментов, статусную строку
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІ С„РѕСЂРјСѓ С‡РµС‚С‹СЂРµ РѕР±СЉРµРєС‚Р° ToolStripPanel РґР»СЏ РјРµРЅСЋ Рё РїР°РЅРµР»РµР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ, СЃС‚Р°С‚СѓСЃРЅСѓСЋ СЃС‚СЂРѕРєСѓ
     /// </summary>
     /// <param name="mainWindow"></param>
     protected static void DecorateMainWindow(Form mainWindow)
@@ -424,7 +424,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики главного окна
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°
 
     private void MainWindow_SizeChanged(object sender, EventArgs args)
     {
@@ -442,15 +442,15 @@ namespace FreeLibSet.Forms
 
       if (EFPApp.Interface == this.Interface && (!EFPApp.InsideInterfaceAssignation))
       {
-        // Закрываем последнее главное окно?
+        // Р—Р°РєСЂС‹РІР°РµРј РїРѕСЃР»РµРґРЅРµРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ?
         bool closeApp = (EFPApp.Interface.MainWindowCount == 1) && (!InsideCloseMainWindow);
         if ((!closeApp) && (!Interface.IsSDI) && (!InsideCloseMainWindow))
         {
           RadioSelectDialog dlg = new RadioSelectDialog();
-          dlg.Title = "Закрытие окна " + this.MainWindow.Text;
-          //dlg.ImageKey = "CloseWindow"; // значок слишком реалистично выглядит - кнопка закрытия вместо системного меню
-          dlg.GroupTitle = "Что надо сделать";
-          dlg.Items = new string[] { "Закрыть текущее главное окно", "Завершить работу" };
+          dlg.Title = "Р—Р°РєСЂС‹С‚РёРµ РѕРєРЅР° " + this.MainWindow.Text;
+          //dlg.ImageKey = "CloseWindow"; // Р·РЅР°С‡РѕРє СЃР»РёС€РєРѕРј СЂРµР°Р»РёСЃС‚РёС‡РЅРѕ РІС‹РіР»СЏРґРёС‚ - РєРЅРѕРїРєР° Р·Р°РєСЂС‹С‚РёСЏ РІРјРµСЃС‚Рѕ СЃРёСЃС‚РµРјРЅРѕРіРѕ РјРµРЅСЋ
+          dlg.GroupTitle = "Р§С‚Рѕ РЅР°РґРѕ СЃРґРµР»Р°С‚СЊ";
+          dlg.Items = new string[] { "Р—Р°РєСЂС‹С‚СЊ С‚РµРєСѓС‰РµРµ РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ", "Р—Р°РІРµСЂС€РёС‚СЊ СЂР°Р±РѕС‚Сѓ" };
           dlg.ImageKeys = new string[] { "CloseWindow", "Exit" };
           if (dlg.ShowDialog() != DialogResult.OK)
           {
@@ -487,10 +487,10 @@ namespace FreeLibSet.Forms
       {
         if (Interface.MainWindowCount == 0)
         {
-          // Приложение все еще может оставаться запущенным. Если его второй раз закрыть,
-          // ничего плохого не случится
-          // А вот если не закрыть, то видимых на экране форм не будет, а процесс в
-          // памяти останется
+          // РџСЂРёР»РѕР¶РµРЅРёРµ РІСЃРµ РµС‰Рµ РјРѕР¶РµС‚ РѕСЃС‚Р°РІР°С‚СЊСЃСЏ Р·Р°РїСѓС‰РµРЅРЅС‹Рј. Р•СЃР»Рё РµРіРѕ РІС‚РѕСЂРѕР№ СЂР°Р· Р·Р°РєСЂС‹С‚СЊ,
+          // РЅРёС‡РµРіРѕ РїР»РѕС…РѕРіРѕ РЅРµ СЃР»СѓС‡РёС‚СЃСЏ
+          // Рђ РІРѕС‚ РµСЃР»Рё РЅРµ Р·Р°РєСЂС‹С‚СЊ, С‚Рѕ РІРёРґРёРјС‹С… РЅР° СЌРєСЂР°РЅРµ С„РѕСЂРј РЅРµ Р±СѓРґРµС‚, Р° РїСЂРѕС†РµСЃСЃ РІ
+          // РїР°РјСЏС‚Рё РѕСЃС‚Р°РЅРµС‚СЃСЏ
           Application.Exit();
         }
       }
@@ -512,10 +512,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Элементы оформления главного окна
+    #region Р­Р»РµРјРµРЅС‚С‹ РѕС„РѕСЂРјР»РµРЅРёСЏ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°
 
     /// <summary>
-    /// Главное меню 
+    /// Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ 
     /// </summary>
     public EFPMainMenu MainMenu
     {
@@ -525,7 +525,7 @@ namespace FreeLibSet.Forms
     private EFPMainMenu _MainMenu;
 
     /// <summary>
-    /// Список панелей инструментов, видимостью которых можно управлять
+    /// РЎРїРёСЃРѕРє РїР°РЅРµР»РµР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ, РІРёРґРёРјРѕСЃС‚СЊСЋ РєРѕС‚РѕСЂС‹С… РјРѕР¶РЅРѕ СѓРїСЂР°РІР»СЏС‚СЊ
     /// </summary>
     public EFPAppToolBars ToolBars
     {
@@ -535,7 +535,7 @@ namespace FreeLibSet.Forms
     private EFPAppToolBars _ToolBars;
 
     /// <summary>
-    /// Статусная строка, которой можно управлять
+    /// РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°, РєРѕС‚РѕСЂРѕР№ РјРѕР¶РЅРѕ СѓРїСЂР°РІР»СЏС‚СЊ
     /// </summary>
     public EFPAppStatusBar StatusBar
     {
@@ -546,21 +546,21 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Инициализирует главное меню, панели инструментов и статусную строку для главного окна
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РіР»Р°РІРЅРѕРµ РјРµРЅСЋ, РїР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ Рё СЃС‚Р°С‚СѓСЃРЅСѓСЋ СЃС‚СЂРѕРєСѓ РґР»СЏ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°
     /// </summary>
     internal void InitCommandItems()
     {
-      // Делаем видимыми или невидимыми нужные команды ?? надо ли?
+      // Р”РµР»Р°РµРј РІРёРґРёРјС‹РјРё РёР»Рё РЅРµРІРёРґРёРјС‹РјРё РЅСѓР¶РЅС‹Рµ РєРѕРјР°РЅРґС‹ ?? РЅР°РґРѕ Р»Рё?
       EFPApp.CommandItems.InitMenuVisible();
 
       if (!Interface.ObsoleteMode)
       {
 #if DEBUG
         if (_MainMenu != null || _ToolBars != null || _StatusBar != null)
-          throw new BugException("Повторная инициализация");
+          throw new BugException("РџРѕРІС‚РѕСЂРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ");
 #endif
 
-        #region Главное меню
+        #region Р“Р»Р°РІРЅРѕРµ РјРµРЅСЋ
 
         _MainMenu = new EFPMainMenu();
         _MainMenu.Name = "TheMainMenu";
@@ -570,7 +570,7 @@ namespace FreeLibSet.Forms
 
         #endregion
 
-        #region Панели инструментов
+        #region РџР°РЅРµР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
 
         _ToolBars = new EFPAppToolBars();
         for (int i = 0; i < EFPApp.ToolBars.Count; i++)
@@ -600,9 +600,9 @@ namespace FreeLibSet.Forms
         }
 
         // 22.11.2018
-        // Команда "Восстановить"
+        // РљРѕРјР°РЅРґР° "Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ"
         EFPCommandItem ciRestore = new EFPCommandItem("View", "RestoreToolBars");
-        ciRestore.MenuText = "Восстановить";
+        ciRestore.MenuText = "Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ";
         ciRestore.Click += new EventHandler(EFPAppCommandItemHelpers.RestoreToolBars_Click);
         ciRestore.GroupBegin = true;
         _ToolBars.ContextMenu.Add(ciRestore);
@@ -611,7 +611,7 @@ namespace FreeLibSet.Forms
 
         #endregion
 
-        #region Статусная строка
+        #region РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°
 
         _StatusBar = new EFPAppStatusBar();
 
@@ -633,7 +633,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Восстанавливает видиммость и положение панелей инструментов
+    /// Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РІРёРґРёРјРјРѕСЃС‚СЊ Рё РїРѕР»РѕР¶РµРЅРёРµ РїР°РЅРµР»РµР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public void RestoreToolBars()
     {
@@ -649,7 +649,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Хранение видимости панелей инструментов и статусной строки
+    #region РҐСЂР°РЅРµРЅРёРµ РІРёРґРёРјРѕСЃС‚Рё РїР°РЅРµР»РµР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ Рё СЃС‚Р°С‚СѓСЃРЅРѕР№ СЃС‚СЂРѕРєРё
 
     internal void WriteLayoutConfig(CfgPart cfg)
     {
@@ -686,8 +686,8 @@ namespace FreeLibSet.Forms
         for (int i = 0; i < ToolBars.Count; i++)
         {
           EFPAppToolBar toolBar = ToolBars[i];
-          // Список панелей инструментов мог поменяться и в секции конфигурации записаны не все панели
-          // Для отсутствующих секций оставляем параметры панелей "как есть".
+          // РЎРїРёСЃРѕРє РїР°РЅРµР»РµР№ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РјРѕРі РїРѕРјРµРЅСЏС‚СЊСЃСЏ Рё РІ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё Р·Р°РїРёСЃР°РЅС‹ РЅРµ РІСЃРµ РїР°РЅРµР»Рё
+          // Р”Р»СЏ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РёС… СЃРµРєС†РёР№ РѕСЃС‚Р°РІР»СЏРµРј РїР°СЂР°РјРµС‚СЂС‹ РїР°РЅРµР»РµР№ "РєР°Рє РµСЃС‚СЊ".
           CfgPart cfgOneTB = cfgToolBars.GetChild(toolBar.Name, false);
           if (cfgOneTB != null)
           {
@@ -711,11 +711,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Расположение окон
+    #region Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ РѕРєРѕРЅ
 
     /// <summary>
-    /// Отслеживание положения главного окна.
-    /// Для интерфейса SDI равно null
+    /// РћС‚СЃР»РµР¶РёРІР°РЅРёРµ РїРѕР»РѕР¶РµРЅРёСЏ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР°.
+    /// Р”Р»СЏ РёРЅС‚РµСЂС„РµР№СЃР° SDI СЂР°РІРЅРѕ null
     /// </summary>
     public EFPFormBounds Bounds
     {
@@ -729,9 +729,9 @@ namespace FreeLibSet.Forms
     #region IEnumerable<EFPAppMainWindowLayout> Members
 
     /// <summary>
-    /// Возвращает перечислитель по дочерним окнам в порядке их добавления (ZOrder=false)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РїРѕ РґРѕС‡РµСЂРЅРёРј РѕРєРЅР°Рј РІ РїРѕСЂСЏРґРєРµ РёС… РґРѕР±Р°РІР»РµРЅРёСЏ (ZOrder=false)
     /// </summary>
-    /// <returns>Перечислитель</returns>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ</returns>
     public IEnumerator<Form> GetEnumerator()
     {
       return _ChildForms.GetEnumerator();
@@ -743,12 +743,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает перечислитель по дочерним окнам.
-    /// Если <paramref name="useZOrder"/>=true, то окна перебираются по порядку активации (CurrentChildForm будет первым в списке).
-    /// Если <paramref name="useZOrder"/>=false, то окна перебираются по порядку открытия окон (#1, #2)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РїРѕ РґРѕС‡РµСЂРЅРёРј РѕРєРЅР°Рј.
+    /// Р•СЃР»Рё <paramref name="useZOrder"/>=true, С‚Рѕ РѕРєРЅР° РїРµСЂРµР±РёСЂР°СЋС‚СЃСЏ РїРѕ РїРѕСЂСЏРґРєСѓ Р°РєС‚РёРІР°С†РёРё (CurrentChildForm Р±СѓРґРµС‚ РїРµСЂРІС‹Рј РІ СЃРїРёСЃРєРµ).
+    /// Р•СЃР»Рё <paramref name="useZOrder"/>=false, С‚Рѕ РѕРєРЅР° РїРµСЂРµР±РёСЂР°СЋС‚СЃСЏ РїРѕ РїРѕСЂСЏРґРєСѓ РѕС‚РєСЂС‹С‚РёСЏ РѕРєРѕРЅ (#1, #2)
     /// </summary>
-    /// <param name="useZOrder">Нужно ли сортировать окна по порядку активации</param>
-    /// <returns>Перечислитель</returns>
+    /// <param name="useZOrder">РќСѓР¶РЅРѕ Р»Рё СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РѕРєРЅР° РїРѕ РїРѕСЂСЏРґРєСѓ Р°РєС‚РёРІР°С†РёРё</param>
+    /// <returns>РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ</returns>
     public IEnumerator<Form> GetEnumerator(bool useZOrder)
     {
       if (useZOrder)
@@ -762,17 +762,17 @@ namespace FreeLibSet.Forms
     #region Snapshot
 
     /// <summary>
-    /// Прорисовка главного окна для рисунка предварительного просмотра композиции.
-    /// Непереопределенный метод вызывает метод Control.DrawToBitmap().
-    /// Переопределяется для интерфейса MDI.
+    /// РџСЂРѕСЂРёСЃРѕРІРєР° РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР° РґР»СЏ СЂРёСЃСѓРЅРєР° РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РєРѕРјРїРѕР·РёС†РёРё.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ Control.DrawToBitmap().
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РґР»СЏ РёРЅС‚РµСЂС„РµР№СЃР° MDI.
     /// </summary>
-    /// <param name="bitmap">Изображение, на котором требуется выполнить рисование</param>
-    /// <param name="area">Координаты в пределах изображения <paramref name="bitmap"/>,
-    /// в которые требуется вписать изображение окна</param>
-    /// <param name="forComposition">Если true, то будут сохранены только те, окна,
-    /// которые могут быть записаны в композицию окон.
-    /// Если false, то будут включены все окна.
-    /// Параметр учитывается только для интерфейса MDI.</param>
+    /// <param name="bitmap">РР·РѕР±СЂР°Р¶РµРЅРёРµ, РЅР° РєРѕС‚РѕСЂРѕРј С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹РїРѕР»РЅРёС‚СЊ СЂРёСЃРѕРІР°РЅРёРµ</param>
+    /// <param name="area">РљРѕРѕСЂРґРёРЅР°С‚С‹ РІ РїСЂРµРґРµР»Р°С… РёР·РѕР±СЂР°Р¶РµРЅРёСЏ <paramref name="bitmap"/>,
+    /// РІ РєРѕС‚РѕСЂС‹Рµ С‚СЂРµР±СѓРµС‚СЃСЏ РІРїРёСЃР°С‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РѕРєРЅР°</param>
+    /// <param name="forComposition">Р•СЃР»Рё true, С‚Рѕ Р±СѓРґСѓС‚ СЃРѕС…СЂР°РЅРµРЅС‹ С‚РѕР»СЊРєРѕ С‚Рµ, РѕРєРЅР°,
+    /// РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ Р±С‹С‚СЊ Р·Р°РїРёСЃР°РЅС‹ РІ РєРѕРјРїРѕР·РёС†РёСЋ РѕРєРѕРЅ.
+    /// Р•СЃР»Рё false, С‚Рѕ Р±СѓРґСѓС‚ РІРєР»СЋС‡РµРЅС‹ РІСЃРµ РѕРєРЅР°.
+    /// РџР°СЂР°РјРµС‚СЂ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ РёРЅС‚РµСЂС„РµР№СЃР° MDI.</param>
     internal protected virtual void DrawMainWindowSnapshot(Bitmap bitmap, Rectangle area, bool forComposition)
     {
       MainWindow.DrawToBitmap(bitmap, area);
@@ -782,19 +782,19 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Класс для поиска элементов ToolStripPanel и StatusBar на произвольной форме.
-  /// Не должен использоваться в пользовательском коде
+  /// РљР»Р°СЃСЃ РґР»СЏ РїРѕРёСЃРєР° СЌР»РµРјРµРЅС‚РѕРІ ToolStripPanel Рё StatusBar РЅР° РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ С„РѕСЂРјРµ.
+  /// РќРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
   /// </summary>
   public sealed class FormToolStripInfo
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Выполняет перебор управляющих элементов формы и заполняет свойства найденными
-    /// элементами.
-    /// Обрабатывает элементы ToolStripPanel, ToolStripContainer и StatusStrip
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµР±РѕСЂ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ С„РѕСЂРјС‹ Рё Р·Р°РїРѕР»РЅСЏРµС‚ СЃРІРѕР№СЃС‚РІР° РЅР°Р№РґРµРЅРЅС‹РјРё
+    /// СЌР»РµРјРµРЅС‚Р°РјРё.
+    /// РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ СЌР»РµРјРµРЅС‚С‹ ToolStripPanel, ToolStripContainer Рё StatusStrip
     /// </summary>
-    /// <param name="form">Форма</param>
+    /// <param name="form">Р¤РѕСЂРјР°</param>
     public FormToolStripInfo(Form form)
     {
       if (form == null)
@@ -833,45 +833,45 @@ namespace FreeLibSet.Forms
         //}
       }
 
-      // Статусная строка может быть на панели
+      // РЎС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР° РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅР° РїР°РЅРµР»Рё
       _StatusBar = WinFormsTools.FindControl<StatusStrip>(form, true);
     }
 
     #endregion
 
-    #region Найденные элементы
+    #region РќР°Р№РґРµРЅРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
 
     /// <summary>
-    /// Найденная панель для размещения сверху формы.
-    /// Возвращает null, если панель не найдена.
+    /// РќР°Р№РґРµРЅРЅР°СЏ РїР°РЅРµР»СЊ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ СЃРІРµСЂС…Сѓ С„РѕСЂРјС‹.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё РїР°РЅРµР»СЊ РЅРµ РЅР°Р№РґРµРЅР°.
     /// </summary>
     public ToolStripPanel StripPanelTop { get { return _StripPanelTop; } }
     private readonly ToolStripPanel _StripPanelTop;
 
     /// <summary>
-    /// Найденная панель для размещения снизу формы.
-    /// Возвращает null, если панель не найдена.
+    /// РќР°Р№РґРµРЅРЅР°СЏ РїР°РЅРµР»СЊ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ СЃРЅРёР·Сѓ С„РѕСЂРјС‹.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё РїР°РЅРµР»СЊ РЅРµ РЅР°Р№РґРµРЅР°.
     /// </summary>
     public ToolStripPanel StripPanelBottom { get { return _StripPanelBottom; } }
     private readonly ToolStripPanel _StripPanelBottom;
 
     /// <summary>
-    /// Найденная вертикальная панель для размещения в левой части формы.
-    /// Возвращает null, если панель не найдена.
+    /// РќР°Р№РґРµРЅРЅР°СЏ РІРµСЂС‚РёРєР°Р»СЊРЅР°СЏ РїР°РЅРµР»СЊ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РІ Р»РµРІРѕР№ С‡Р°СЃС‚Рё С„РѕСЂРјС‹.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё РїР°РЅРµР»СЊ РЅРµ РЅР°Р№РґРµРЅР°.
     /// </summary>
     public ToolStripPanel StripPanelLeft { get { return _StripPanelLeft; } }
     private readonly ToolStripPanel _StripPanelLeft;
 
     /// <summary>
-    /// Найденная вертикальная панель для размещения в правой части формы.
-    /// Возвращает null, если панель не найдена.
+    /// РќР°Р№РґРµРЅРЅР°СЏ РІРµСЂС‚РёРєР°Р»СЊРЅР°СЏ РїР°РЅРµР»СЊ РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ РІ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё С„РѕСЂРјС‹.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё РїР°РЅРµР»СЊ РЅРµ РЅР°Р№РґРµРЅР°.
     /// </summary>
     public ToolStripPanel StripPanelRight { get { return _StripPanelRight; } }
     private readonly ToolStripPanel _StripPanelRight;
 
     /// <summary>
-    /// Найденная статусная строка.
-    /// Возвращает null, если статусная строка не найдена.
+    /// РќР°Р№РґРµРЅРЅР°СЏ СЃС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё СЃС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂРѕРєР° РЅРµ РЅР°Р№РґРµРЅР°.
     /// </summary>
     public StatusStrip StatusBar { get { return _StatusBar; } }
     private readonly StatusStrip _StatusBar;
@@ -880,16 +880,16 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Помощник для установки начальной позиции окон для эмуляции DefaultLocation.
-  /// Используется в интерфейсе MDI и SDI.
-  /// Не следует использовать в пользовательском коде.
+  /// РџРѕРјРѕС‰РЅРёРє РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё РЅР°С‡Р°Р»СЊРЅРѕР№ РїРѕР·РёС†РёРё РѕРєРѕРЅ РґР»СЏ СЌРјСѓР»СЏС†РёРё DefaultLocation.
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РёРЅС‚РµСЂС„РµР№СЃРµ MDI Рё SDI.
+  /// РќРµ СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ.
   /// </summary>
   public sealed class FormStartPositionCascadeHelper
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализирует объект
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РѕР±СЉРµРєС‚
     /// </summary>
     public FormStartPositionCascadeHelper()
     {
@@ -898,10 +898,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Размещение нового окна
+    #region Р Р°Р·РјРµС‰РµРЅРёРµ РЅРѕРІРѕРіРѕ РѕРєРЅР°
 
     /// <summary>
-    /// Смещение для нового окна относительно предыдущего
+    /// РЎРјРµС‰РµРЅРёРµ РґР»СЏ РЅРѕРІРѕРіРѕ РѕРєРЅР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РїСЂРµРґС‹РґСѓС‰РµРіРѕ
     /// </summary>
     public Size Delta
     {
@@ -913,21 +913,21 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Результат для предыдущей формы
+    /// Р РµР·СѓР»СЊС‚Р°С‚ РґР»СЏ РїСЂРµРґС‹РґСѓС‰РµР№ С„РѕСЂРјС‹
     /// </summary>
     private Point _PrevLocation;
 
     /// <summary>
-    /// Размещение окна в области с отступом
+    /// Р Р°Р·РјРµС‰РµРЅРёРµ РѕРєРЅР° РІ РѕР±Р»Р°СЃС‚Рё СЃ РѕС‚СЃС‚СѓРїРѕРј
     /// </summary>
-    /// <param name="form">Форма, которую требуется разместить</param>
-    /// <param name="area">Область</param>
+    /// <param name="form">Р¤РѕСЂРјР°, РєРѕС‚РѕСЂСѓСЋ С‚СЂРµР±СѓРµС‚СЃСЏ СЂР°Р·РјРµСЃС‚РёС‚СЊ</param>
+    /// <param name="area">РћР±Р»Р°СЃС‚СЊ</param>
     public void SetStartPosition(Form form, Rectangle area)
     {
       FormWindowState OldState = form.WindowState;
       try
       {
-        // чтобы работать с настоящими размерами
+        // С‡С‚РѕР±С‹ СЂР°Р±РѕС‚Р°С‚СЊ СЃ РЅР°СЃС‚РѕСЏС‰РёРјРё СЂР°Р·РјРµСЂР°РјРё
         form.WindowState = FormWindowState.Normal;
 
         if (form.StartPosition == FormStartPosition.WindowsDefaultBounds)
@@ -935,7 +935,7 @@ namespace FreeLibSet.Forms
           form.StartPosition = FormStartPosition.WindowsDefaultLocation;
           Size sz = new Size(area.Width * 3 / 4, area.Height * 3 / 4);
           sz = WinFormsTools.Max(sz, form.MinimumSize);
-          sz = WinFormsTools.Max(sz, new Size(600, 400)); // размеры от фонаря
+          sz = WinFormsTools.Max(sz, new Size(600, 400)); // СЂР°Р·РјРµСЂС‹ РѕС‚ С„РѕРЅР°СЂСЏ
           form.Size = sz;
         }
 
@@ -943,8 +943,8 @@ namespace FreeLibSet.Forms
         {
           form.StartPosition = FormStartPosition.Manual;
 
-          // Сдвиг
-          if (_PrevLocation.X == int.MaxValue) // первый вызов
+          // РЎРґРІРёРі
+          if (_PrevLocation.X == int.MaxValue) // РїРµСЂРІС‹Р№ РІС‹Р·РѕРІ
             _PrevLocation = area.Location;
           else
             _PrevLocation = Point.Add(_PrevLocation, Delta);
@@ -964,7 +964,7 @@ namespace FreeLibSet.Forms
 
         if (form.StartPosition == FormStartPosition.Manual)
         {
-          // Корректируем размеры
+          // РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЂР°Р·РјРµСЂС‹
           WinFormsTools.PlaceFormInRectangle(form, area);
         }
       }
@@ -976,11 +976,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Этот метод вызывается, когда закрываются все дочерние окна.
-    /// В следующий раз окно откроется в левом верхнем углу без смещения, как для первого окна.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° Р·Р°РєСЂС‹РІР°СЋС‚СЃСЏ РІСЃРµ РґРѕС‡РµСЂРЅРёРµ РѕРєРЅР°.
+    /// Р’ СЃР»РµРґСѓСЋС‰РёР№ СЂР°Р· РѕРєРЅРѕ РѕС‚РєСЂРѕРµС‚СЃСЏ РІ Р»РµРІРѕРј РІРµСЂС…РЅРµРј СѓРіР»Сѓ Р±РµР· СЃРјРµС‰РµРЅРёСЏ, РєР°Рє РґР»СЏ РїРµСЂРІРѕРіРѕ РѕРєРЅР°.
     /// </summary>
     public void ResetStartPosition()
     {

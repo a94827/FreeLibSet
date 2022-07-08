@@ -1,4 +1,4 @@
-namespace FreeLibSet.Controls
+п»їnamespace FreeLibSet.Controls
 {
   partial class TwoListSelector
   {
@@ -76,7 +76,7 @@ namespace FreeLibSet.Controls
       this.groupBox1.Size = new System.Drawing.Size(271, 294);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Доступно";
+      this.groupBox1.Text = "Р”РѕСЃС‚СѓРїРЅРѕ";
       // 
       // AvailableGrid
       // 
@@ -100,7 +100,7 @@ namespace FreeLibSet.Controls
       this.groupBox2.Size = new System.Drawing.Size(271, 294);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Выбрано";
+      this.groupBox2.Text = "Р’С‹Р±СЂР°РЅРѕ";
       // 
       // SelectedGrid
       // 
@@ -171,27 +171,27 @@ namespace FreeLibSet.Controls
     private System.Windows.Forms.Panel panel1;
 
     /// <summary>
-    /// Список "Доступные"
+    /// РЎРїРёСЃРѕРє "Р”РѕСЃС‚СѓРїРЅС‹Рµ"
     /// </summary>
     public System.Windows.Forms.DataGridView AvailableGrid;
 
     /// <summary>
-    /// Список "Выбранные"
+    /// РЎРїРёСЃРѕРє "Р’С‹Р±СЂР°РЅРЅС‹Рµ"
     /// </summary>
     public System.Windows.Forms.DataGridView SelectedGrid;
 
     /// <summary>
-    /// Кнопка "Добавить"
+    /// РљРЅРѕРїРєР° "Р”РѕР±Р°РІРёС‚СЊ"
     /// </summary>
     public System.Windows.Forms.Button AddButton;
 
     /// <summary>
-    /// Кнопка "Удалить"
+    /// РљРЅРѕРїРєР° "РЈРґР°Р»РёС‚СЊ"
     /// </summary>
     public System.Windows.Forms.Button RemoveButton;
 
     /// <summary>
-    /// Панель инструментов для списка выбранных элементов
+    /// РџР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РґР»СЏ СЃРїРёСЃРєР° РІС‹Р±СЂР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
     /// </summary>
     public System.Windows.Forms.Panel SelectedToolBarPanel;
   }

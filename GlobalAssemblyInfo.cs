@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System.Reflection;
@@ -6,10 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Агеев Александр Владимирович")]
+[assembly: AssemblyCompany("РђРіРµРµРІ РђР»РµРєСЃР°РЅРґСЂ Р’Р»Р°РґРёРјРёСЂРѕРІРёС‡")]
 [assembly: AssemblyProduct("Freeware Library Set")]
-[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2006-2022 г. Свободное программное обеспечение (Free Software)")]
+[assembly: AssemblyCopyright("В© РђРіРµРµРІ Рђ.Р’., Рі.РўСЋРјРµРЅСЊ, 2006-2022 Рі. РЎРІРѕР±РѕРґРЅРѕРµ РїСЂРѕРіСЂР°РјРјРЅРѕРµ РѕР±РµСЃРїРµС‡РµРЅРёРµ (Free Software)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("2.0.0.321")]
+[assembly: AssemblyVersion("2.0.0.322")]

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,16 +9,16 @@ using System.Security;
 using System.IO;
 using FreeLibSet.Core;
 
-// Работа с Реестром Windows с управлением способром виртулиазации для 64-битных версий Windows
-// В Net Framework 4 это реализовано классом RegistryKey, но в Net Framework 2 такой возможности нет
+// Р Р°Р±РѕС‚Р° СЃ Р РµРµСЃС‚СЂРѕРј Windows СЃ СѓРїСЂР°РІР»РµРЅРёРµРј СЃРїРѕСЃРѕР±СЂРѕРј РІРёСЂС‚СѓР»РёР°Р·Р°С†РёРё РґР»СЏ 64-Р±РёС‚РЅС‹С… РІРµСЂСЃРёР№ Windows
+// Р’ Net Framework 4 СЌС‚Рѕ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РєР»Р°СЃСЃРѕРј RegistryKey, РЅРѕ РІ Net Framework 2 С‚Р°РєРѕР№ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РЅРµС‚
 
 namespace FreeLibSet.Win32
 {
-  #region Перечисление RegistryView2
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ RegistryView2
 
   /// <summary>
-  /// Способ виртуализации при просмотре реестра в RegistryKey2.
-  /// Идентично перечислению Microsoft.Win32.RegistryView в Net Framework 4/
+  /// РЎРїРѕСЃРѕР± РІРёСЂС‚СѓР°Р»РёР·Р°С†РёРё РїСЂРё РїСЂРѕСЃРјРѕС‚СЂРµ СЂРµРµСЃС‚СЂР° РІ RegistryKey2.
+  /// РРґРµРЅС‚РёС‡РЅРѕ РїРµСЂРµС‡РёСЃР»РµРЅРёСЋ Microsoft.Win32.RegistryView РІ Net Framework 4/
   /// </summary>
   public enum RegistryView2
   {
@@ -41,18 +41,18 @@ namespace FreeLibSet.Win32
   #endregion
 
   /// <summary>
-  /// В Net Framework 2 нет возможности использовать RegistryView.
-  /// Для доступа к узлам реестра используйте статический метод OpenBaseKey() и, далее, OpenSubKey()/CreateSubKey.
-  /// Обычно удобнее использовать класс RegistryTree2, который автоматически откывает нужные родительские узлы
-  /// и обеспечивает их буферизацию.
-  /// Класс с большими упрощениями взят из Mono и модифицирован.
+  /// Р’ Net Framework 2 РЅРµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ RegistryView.
+  /// Р”Р»СЏ РґРѕСЃС‚СѓРїР° Рє СѓР·Р»Р°Рј СЂРµРµСЃС‚СЂР° РёСЃРїРѕР»СЊР·СѓР№С‚Рµ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ OpenBaseKey() Рё, РґР°Р»РµРµ, OpenSubKey()/CreateSubKey.
+  /// РћР±С‹С‡РЅРѕ СѓРґРѕР±РЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєР»Р°СЃСЃ RegistryTree2, РєРѕС‚РѕСЂС‹Р№ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕС‚РєС‹РІР°РµС‚ РЅСѓР¶РЅС‹Рµ СЂРѕРґРёС‚РµР»СЊСЃРєРёРµ СѓР·Р»С‹
+  /// Рё РѕР±РµСЃРїРµС‡РёРІР°РµС‚ РёС… Р±СѓС„РµСЂРёР·Р°С†РёСЋ.
+  /// РљР»Р°СЃСЃ СЃ Р±РѕР»СЊС€РёРјРё СѓРїСЂРѕС‰РµРЅРёСЏРјРё РІР·СЏС‚ РёР· Mono Рё РјРѕРґРёС„РёС†РёСЂРѕРІР°РЅ.
   /// </summary>
   public sealed class RegistryKey2 : DisposableObject
   {
-    #region Поддержка операционной системы
+    #region РџРѕРґРґРµСЂР¶РєР° РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹
 
     /// <summary>
-    /// Возвращает true для OS Windows, которые поддерживают работу с реестром
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true РґР»СЏ OS Windows, РєРѕС‚РѕСЂС‹Рµ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚ СЂР°Р±РѕС‚Сѓ СЃ СЂРµРµСЃС‚СЂРѕРј
     /// </summary>
     public static bool IsSupported
     {
@@ -71,14 +71,14 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Доступ к корневым узлам
+    #region Р”РѕСЃС‚СѓРї Рє РєРѕСЂРЅРµРІС‹Рј СѓР·Р»Р°Рј
 
     /// <summary>
-    /// Открывает корневой раздел реестра
+    /// РћС‚РєСЂС‹РІР°РµС‚ РєРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР» СЂРµРµСЃС‚СЂР°
     /// </summary>
-    /// <param name="hKey">Корневой раздел</param>
-    /// <param name="view">Способ виртуализации</param>
-    /// <returns>Корневой раздел</returns>
+    /// <param name="hKey">РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР»</param>
+    /// <param name="view">РЎРїРѕСЃРѕР± РІРёСЂС‚СѓР°Р»РёР·Р°С†РёРё</param>
+    /// <returns>РљРѕСЂРЅРµРІРѕР№ СЂР°Р·РґРµР»</returns>
     public static RegistryKey2 OpenBaseKey(Microsoft.Win32.RegistryHive hKey, RegistryView2 view)
     {
       if (!IsSupported)
@@ -87,7 +87,7 @@ namespace FreeLibSet.Win32
       if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         view = RegistryView2.Default; // 11.12.2018
 
-      long dictKey = ((long)(int)view << 32) | ((uint)(int)hKey); // почему так - см. справку к предупреждению компилятора CS0675
+      long dictKey = ((long)(int)view << 32) | ((uint)(int)hKey); // РїРѕС‡РµРјСѓ С‚Р°Рє - СЃРј. СЃРїСЂР°РІРєСѓ Рє РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЋ РєРѕРјРїРёР»СЏС‚РѕСЂР° CS0675
 
       RegistryKey2 res;
       lock (_BaseKeys)
@@ -103,7 +103,7 @@ namespace FreeLibSet.Win32
             case Microsoft.Win32.RegistryHive.Users: Name = "HKEY_USERS"; break;
             case Microsoft.Win32.RegistryHive.CurrentConfig: Name = "HKEY_CURRENT_CONFIG"; break;
             default:
-              throw new ArgumentException("Неподдерживаемый hKey", "hKey");
+              throw new ArgumentException("РќРµРїРѕРґРґРµСЂР¶РёРІР°РµРјС‹Р№ hKey", "hKey");
           }
 
           res = new RegistryKey2(Name, (IntPtr)hKey, false, view);
@@ -114,13 +114,13 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Так как RegistryKey2 является DisposableObject(), лучше не доводить дела до вызова деструктора, чтобы "не портить статистику" в отладочном режиме
+    /// РўР°Рє РєР°Рє RegistryKey2 СЏРІР»СЏРµС‚СЃСЏ DisposableObject(), Р»СѓС‡С€Рµ РЅРµ РґРѕРІРѕРґРёС‚СЊ РґРµР»Р° РґРѕ РІС‹Р·РѕРІР° РґРµСЃС‚СЂСѓРєС‚РѕСЂР°, С‡С‚РѕР±С‹ "РЅРµ РїРѕСЂС‚РёС‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ" РІ РѕС‚Р»Р°РґРѕС‡РЅРѕРј СЂРµР¶РёРјРµ
     /// </summary>
     private static Dictionary<long, RegistryKey2> _BaseKeys = new Dictionary<long, RegistryKey2>(); // 22.05.2020
 
     #endregion
 
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     const int OpenRegKeyRead = 0x00020019;
     const int OpenRegKeyWrite = 0x00020006;
@@ -133,7 +133,7 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Конструкторы и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё Dispose
 
     //
     internal RegistryKey2(string name, IntPtr handle, bool ownHandle, RegistryView2 view)
@@ -178,16 +178,16 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Полный путь к узлу реестра, напаример "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows"
+    /// РџРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє СѓР·Р»Сѓ СЂРµРµСЃС‚СЂР°, РЅР°РїР°СЂРёРјРµСЂ "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows"
     /// </summary>
     public string Name { get { return _Name; } }
     private string _Name;
 
     /// <summary>
-    /// Режим доступа для Windows-32/64
+    /// Р РµР¶РёРј РґРѕСЃС‚СѓРїР° РґР»СЏ Windows-32/64
     /// </summary>
     public RegistryView2 View { get { return _View; } }
     private RegistryView2 _View;
@@ -198,12 +198,12 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Доступ к дочерним узлам
+    #region Р”РѕСЃС‚СѓРї Рє РґРѕС‡РµСЂРЅРёРј СѓР·Р»Р°Рј
 
     /// <summary>
-    /// Возвращает список имен дочерних узлов
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РёРјРµРЅ РґРѕС‡РµСЂРЅРёС… СѓР·Р»РѕРІ
     /// </summary>
-    /// <returns>Список имен</returns>
+    /// <returns>РЎРїРёСЃРѕРє РёРјРµРЅ</returns>
     public string[] GetSubKeyNames()
     {
       StringBuilder buffer = new StringBuilder(BufferMaxLength);
@@ -258,11 +258,11 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Открывает дочерний узел с заданным именем на чтение или на запись.
-    /// Возвращает null, если нет такого дочернего узла.
+    /// РћС‚РєСЂС‹РІР°РµС‚ РґРѕС‡РµСЂРЅРёР№ СѓР·РµР» СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј РЅР° С‡С‚РµРЅРёРµ РёР»Рё РЅР° Р·Р°РїРёСЃСЊ.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё РЅРµС‚ С‚Р°РєРѕРіРѕ РґРѕС‡РµСЂРЅРµРіРѕ СѓР·Р»Р°.
     /// </summary>
-    /// <param name="name">Имя дочернего узла (без слэшей)</param>
-    /// <param name="writable">true если требуется запись значений или дочерниз узлов</param>
+    /// <param name="name">РРјСЏ РґРѕС‡РµСЂРЅРµРіРѕ СѓР·Р»Р° (Р±РµР· СЃР»СЌС€РµР№)</param>
+    /// <param name="writable">true РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ Р·Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёР№ РёР»Рё РґРѕС‡РµСЂРЅРёР· СѓР·Р»РѕРІ</param>
     /// <returns></returns>
     public RegistryKey2 OpenSubKey(string name, bool writable)
     {
@@ -280,7 +280,7 @@ namespace FreeLibSet.Win32
           access | (int)View,
           out childHandle);
 
-      // TODO: В Windows-98 ChildHandle=0 (11.12.2018)
+      // TODO: Р’ Windows-98 ChildHandle=0 (11.12.2018)
 
       if (result == Win32ResultCode.FileNotFound || result == Win32ResultCode.MarkedForDeletion)
         return null;
@@ -303,10 +303,10 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Создает дочерний узел
+    /// РЎРѕР·РґР°РµС‚ РґРѕС‡РµСЂРЅРёР№ СѓР·РµР»
     /// </summary>
-    /// <param name="name">Имя дочернего узла (без слэшей)</param>
-    /// <returns>Созданный узел</returns>
+    /// <param name="name">РРјСЏ РґРѕС‡РµСЂРЅРµРіРѕ СѓР·Р»Р° (Р±РµР· СЃР»СЌС€РµР№)</param>
+    /// <returns>РЎРѕР·РґР°РЅРЅС‹Р№ СѓР·РµР»</returns>
     public RegistryKey2 CreateSubKey(string name)
     {
       IntPtr childHandle;
@@ -400,7 +400,7 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Deletes a subkey and any child subkeys recursively. The string subkey is
     /// not case-sensitive.
-    /// Эта версия выбрасывает исключение, если подраздела не существует.
+    /// Р­С‚Р° РІРµСЂСЃРёСЏ РІС‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РїРѕРґСЂР°Р·РґРµР»Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.
     /// </summary>
     /// <param name="subkey">The subkey to delete.</param>
     public void DeleteSubKeyTree(string subkey)
@@ -413,7 +413,7 @@ namespace FreeLibSet.Win32
     /// not case-sensitive.
     /// </summary>
     /// <param name="subkey">The subkey to delete.</param>
-    /// <param name="throwOnMissingSubKey">Надо ли выбрасывать исключение, если раздела не существует</param>
+    /// <param name="throwOnMissingSubKey">РќР°РґРѕ Р»Рё РІС‹Р±СЂР°СЃС‹РІР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё СЂР°Р·РґРµР»Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚</param>
     public void DeleteSubKeyTree(string subkey, bool throwOnMissingSubKey)
     {
       RegistryKey2 child = OpenSubKey(subkey, true);
@@ -446,7 +446,7 @@ namespace FreeLibSet.Win32
     private void DeleteChildKeysAndValues()
     {
       if (!_OwnHandle)
-        throw new InvalidOperationException("Корневой узел нельзя чистить");
+        throw new InvalidOperationException("РљРѕСЂРЅРµРІРѕР№ СѓР·РµР» РЅРµР»СЊР·СЏ С‡РёСЃС‚РёС‚СЊ");
 
       string[] subKeys = GetSubKeyNames();
       for (int i = 0; i < subKeys.Length; i++)
@@ -469,7 +469,7 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Извлечение значений
+    #region РР·РІР»РµС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёР№
 
     const int BufferMaxLength = 1024;
 
@@ -507,9 +507,9 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Возвращает список значений
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє Р·РЅР°С‡РµРЅРёР№
     /// </summary>
-    /// <returns>Массив имен</returns>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     public string[] GetValueNames()
     {
       List<string> values = new List<string>();
@@ -539,10 +539,10 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Возвращает значение
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
-    /// <param name="name">Имя</param>
-    /// <returns>Значение</returns>
+    /// <param name="name">РРјСЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ</returns>
     public object GetValue(string name)
     {
       return GetValue(name, null);
@@ -671,7 +671,7 @@ namespace FreeLibSet.Win32
       if (isMultiLine)
       {
         // 22.01.2019
-        // Для многострочного текста удаляем последние два символа "\0\0"
+        // Р”Р»СЏ РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅРѕРіРѕ С‚РµРєСЃС‚Р° СѓРґР°Р»СЏРµРј РїРѕСЃР»РµРґРЅРёРµ РґРІР° СЃРёРјРІРѕР»Р° "\0\0"
         if (res.Length == 0)
           return res;
         if (res[res.Length - 1] == '\0')
@@ -883,7 +883,7 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Вспомогательные методы
+    #region Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
     /// Writes all the attributes of the specified open registry key into the registry.
@@ -936,9 +936,9 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Возвращает свойство Name
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ Name
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return this.Name;
@@ -946,7 +946,7 @@ namespace FreeLibSet.Win32
 
     #endregion
 
-    #region Импорт функций Windows
+    #region РРјРїРѕСЂС‚ С„СѓРЅРєС†РёР№ Windows
 
     private static class NativeMethods
     {

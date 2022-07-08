@@ -1,4 +1,4 @@
-namespace TestMemoryTools
+п»їnamespace TestMemoryTools
 {
   partial class MainForm
   {
@@ -67,7 +67,7 @@ namespace TestMemoryTools
       this.groupBox1.Size = new System.Drawing.Size(663, 94);
       this.groupBox1.TabIndex = 1;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Свойства MemoryTools";
+      this.groupBox1.Text = "РЎРІРѕР№СЃС‚РІР° MemoryTools";
       // 
       // lblTotalPhysicalMemory
       // 
@@ -149,7 +149,7 @@ namespace TestMemoryTools
       this.groupBox2.Size = new System.Drawing.Size(663, 419);
       this.groupBox2.TabIndex = 0;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Выделение блоков памяти";
+      this.groupBox2.Text = "Р’С‹РґРµР»РµРЅРёРµ Р±Р»РѕРєРѕРІ РїР°РјСЏС‚Рё";
       // 
       // btnInfo
       // 
@@ -158,7 +158,7 @@ namespace TestMemoryTools
       this.btnInfo.Name = "btnInfo";
       this.btnInfo.Size = new System.Drawing.Size(132, 24);
       this.btnInfo.TabIndex = 10;
-      this.btnInfo.Text = "Инфо";
+      this.btnInfo.Text = "РРЅС„Рѕ";
       this.btnInfo.UseVisualStyleBackColor = true;
       // 
       // btnFree
@@ -167,7 +167,7 @@ namespace TestMemoryTools
       this.btnFree.Name = "btnFree";
       this.btnFree.Size = new System.Drawing.Size(132, 24);
       this.btnFree.TabIndex = 9;
-      this.btnFree.Text = "Удалить";
+      this.btnFree.Text = "РЈРґР°Р»РёС‚СЊ";
       this.btnFree.UseVisualStyleBackColor = true;
       // 
       // label6
@@ -176,7 +176,7 @@ namespace TestMemoryTools
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(33, 20);
       this.label6.TabIndex = 8;
-      this.label6.Text = "МБ";
+      this.label6.Text = "РњР‘";
       this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edSize
@@ -197,7 +197,7 @@ namespace TestMemoryTools
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(33, 20);
       this.label5.TabIndex = 6;
-      this.label5.Text = "по";
+      this.label5.Text = "РїРѕ";
       this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // label4
@@ -206,7 +206,7 @@ namespace TestMemoryTools
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(52, 20);
       this.label4.TabIndex = 5;
-      this.label4.Text = "блок(ов)";
+      this.label4.Text = "Р±Р»РѕРє(РѕРІ)";
       this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edCount
@@ -243,7 +243,7 @@ namespace TestMemoryTools
       this.btnAlloc.Name = "btnAlloc";
       this.btnAlloc.Size = new System.Drawing.Size(132, 24);
       this.btnAlloc.TabIndex = 1;
-      this.btnAlloc.Text = "Добавить";
+      this.btnAlloc.Text = "Р”РѕР±Р°РІРёС‚СЊ";
       this.btnAlloc.UseVisualStyleBackColor = true;
       // 
       // lb1
@@ -274,7 +274,7 @@ namespace TestMemoryTools
       this.label8.Name = "label8";
       this.label8.Size = new System.Drawing.Size(124, 23);
       this.label8.TabIndex = 11;
-      this.label8.Text = "Всего выделено";
+      this.label8.Text = "Р’СЃРµРіРѕ РІС‹РґРµР»РµРЅРѕ";
       this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // lblGCGetTotalMemory

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,14 +13,14 @@ namespace FreeLibSet.Forms.Docs
   #region EFPDBxErrorGridViewDocSelEventArgs
 
   /// <summary>
-  /// Аргументы события EFPDBxErrorGridView.GetDocSel
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ EFPDBxErrorGridView.GetDocSel
   /// </summary>
   public class EFPDBxErrorGridViewDocSelEventArgs : EventArgs
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создается в EFPDBxErrorGridView
+    /// РЎРѕР·РґР°РµС‚СЃСЏ РІ EFPDBxErrorGridView
     /// </summary>
     /// <param name="items"></param>
     /// <param name="ui"></param>
@@ -35,42 +35,42 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Сообщения об ошибках, для которых требуется создать выборку документов
+    /// РЎРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєР°С…, РґР»СЏ РєРѕС‚РѕСЂС‹С… С‚СЂРµР±СѓРµС‚СЃСЏ СЃРѕР·РґР°С‚СЊ РІС‹Р±РѕСЂРєСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public ErrorMessageItem[] Items { get { return _Items; } }
     private ErrorMessageItem[] _Items;
 
     /// <summary>
-    /// Доступ к интерфейсу документов
+    /// Р”РѕСЃС‚СѓРї Рє РёРЅС‚РµСЂС„РµР№СЃСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public DBUI UI { get { return _UI; } }
     private DBUI _UI;
 
     /// <summary>
-    /// Причина, по которой требуется создать выборку
+    /// РџСЂРёС‡РёРЅР°, РїРѕ РєРѕС‚РѕСЂРѕР№ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРѕР·РґР°С‚СЊ РІС‹Р±РѕСЂРєСѓ
     /// </summary>
     public EFPDBxGridViewDocSelReason Reason { get { return _Reason; } }
     private EFPDBxGridViewDocSelReason _Reason;
 
     /// <summary>
-    /// Сюда должны быть добавлены ссылки на документы
+    /// РЎСЋРґР° РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅС‹ СЃСЃС‹Р»РєРё РЅР° РґРѕРєСѓРјРµРЅС‚С‹
     /// </summary>
     public DBxDocSelection DocSel { get { return _DocSel; } }
     private DBxDocSelection _DocSel;
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Добавить ссылку на документ в выборку.
-    /// Также добавляются все связанные документы
+    /// Р”РѕР±Р°РІРёС‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РґРѕРєСѓРјРµРЅС‚ РІ РІС‹Р±РѕСЂРєСѓ.
+    /// РўР°РєР¶Рµ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ РІСЃРµ СЃРІСЏР·Р°РЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹
     /// </summary>
-    /// <param name="docTypeName">Вид документа</param>
-    /// <param name="docId">Идентификатор документа</param>
+    /// <param name="docTypeName">Р’РёРґ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <param name="docId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р°</param>
     public void Add(string docTypeName, Int32 docId)
     {
       UI.DocTypes[docTypeName].PerformGetDocSel(DocSel, docId, Reason);
@@ -80,30 +80,30 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события EFPDBxErrorGridView.GetDocSel
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ EFPDBxErrorGridView.GetDocSel
   /// </summary>
-  /// <param name="sender">Объект EFPDBxErrorGridView</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РћР±СЉРµРєС‚ EFPDBxErrorGridView</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void EFPDBxErrorGridViewDocSelEventHandler(object sender,
     EFPDBxErrorGridViewDocSelEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Расширение табличного просмотра со списком ошибок для работы со ссылками на документы.
-  /// Добавляется событие GetDocSel.
-  /// Поддерживает просмотр и редактирование документов, на которые есть ссылки в сообщениях в списке.
+  /// Р Р°СЃС€РёСЂРµРЅРёРµ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° СЃРѕ СЃРїРёСЃРєРѕРј РѕС€РёР±РѕРє РґР»СЏ СЂР°Р±РѕС‚С‹ СЃРѕ СЃСЃС‹Р»РєР°РјРё РЅР° РґРѕРєСѓРјРµРЅС‚С‹.
+  /// Р”РѕР±Р°РІР»СЏРµС‚СЃСЏ СЃРѕР±С‹С‚РёРµ GetDocSel.
+  /// РџРѕРґРґРµСЂР¶РёРІР°РµС‚ РїСЂРѕСЃРјРѕС‚СЂ Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ, РЅР° РєРѕС‚РѕСЂС‹Рµ РµСЃС‚СЊ СЃСЃС‹Р»РєРё РІ СЃРѕРѕР±С‰РµРЅРёСЏС… РІ СЃРїРёСЃРєРµ.
   /// </summary>
   public class EFPDBxErrorGridView : EFPErrorDataGridView
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает провайдер табличного просмотра
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Табличный просмотр</param>
-    /// <param name="ui">Интерфейс доступа к документам</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ</param>
+    /// <param name="ui">РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј</param>
     public EFPDBxErrorGridView(EFPBaseProvider baseProvider, DataGridView control, DBUI ui)
       : base(baseProvider, control)
     {
@@ -111,10 +111,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер табличного просмотра
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
-    /// <param name="controlWithPreview">Табличный просмотр и панель инструментов</param>
-    /// <param name="ui">Интерфейс доступа к документам</param>
+    /// <param name="controlWithPreview">РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="ui">РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј</param>
     public EFPDBxErrorGridView(IEFPControlWithToolBar<DataGridView> controlWithPreview, DBUI ui)
       : base(controlWithPreview)
     {
@@ -132,21 +132,21 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Система работы с документами на стороне клиента.
-    /// Задается в конструкторе
+    /// РЎРёСЃС‚РµРјР° СЂР°Р±РѕС‚С‹ СЃ РґРѕРєСѓРјРµРЅС‚Р°РјРё РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public DBUI UI { get { return _UI; } }
     private DBUI _UI;
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Вызывает обработчик события ErrorMessagesChanged, если он присоединен.
+    /// Р’С‹Р·С‹РІР°РµС‚ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ ErrorMessagesChanged, РµСЃР»Рё РѕРЅ РїСЂРёСЃРѕРµРґРёРЅРµРЅ.
     /// </summary>
     protected override void OnErrorMessagesChanged()
     {
@@ -155,8 +155,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация свойства ReadOnly после изменения списка сообщений и присоединения обработчика.
-    /// Учитывается наличие обработчика события GetDocSel
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° ReadOnly РїРѕСЃР»Рµ РёР·РјРµРЅРµРЅРёСЏ СЃРїРёСЃРєР° СЃРѕРѕР±С‰РµРЅРёР№ Рё РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєР°.
+    /// РЈС‡РёС‚С‹РІР°РµС‚СЃСЏ РЅР°Р»РёС‡РёРµ РѕР±СЂР°Р±РѕС‚С‡РёРєР° СЃРѕР±С‹С‚РёСЏ GetDocSel
     /// </summary>
     protected override void InitEditCommandItems()
     {
@@ -171,20 +171,20 @@ namespace FreeLibSet.Forms.Docs
         if (!CommandItems.IsReadOnly) // 05.12.2016
           CommandItems.EnterAsOk = false;
       }
-      // иначе базовый класс правильно установил свойство
+      // РёРЅР°С‡Рµ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РїСЂР°РІРёР»СЊРЅРѕ СѓСЃС‚Р°РЅРѕРІРёР» СЃРІРѕР№СЃС‚РІРѕ
     }
 
     #endregion
 
-    #region Редактирование
+    #region Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
 
     /// <summary>
-    /// Редактирование или просмотр документов.
-    /// Вызывает обработчик события GetDocSel для получения выборки документов.
-    /// Затем, если получена непустая выборка, документы открываются на просмотр или редактирование.
+    /// Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РёР»Рё РїСЂРѕСЃРјРѕС‚СЂ РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р’С‹Р·С‹РІР°РµС‚ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ GetDocSel РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+    /// Р—Р°С‚РµРј, РµСЃР»Рё РїРѕР»СѓС‡РµРЅР° РЅРµРїСѓСЃС‚Р°СЏ РІС‹Р±РѕСЂРєР°, РґРѕРєСѓРјРµРЅС‚С‹ РѕС‚РєСЂС‹РІР°СЋС‚СЃСЏ РЅР° РїСЂРѕСЃРјРѕС‚СЂ РёР»Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ.
     /// </summary>
-    /// <param name="args">Не используется</param>
-    /// <returns>Возвращает true, если событие было обработано</returns>
+    /// <param name="args">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
+    /// <returns>Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЃРѕР±С‹С‚РёРµ Р±С‹Р»Рѕ РѕР±СЂР°Р±РѕС‚Р°РЅРѕ</returns>
     protected override bool OnEditData(EventArgs args)
     {
       if (State == EFPDataGridViewState.Edit && base.HasEditMessageHandler)
@@ -199,18 +199,18 @@ namespace FreeLibSet.Forms.Docs
           {
             if (!docSel.IsEmpty)
             {
-              // Всегда берем первую таблицу для редактирования
+              // Р’СЃРµРіРґР° Р±РµСЂРµРј РїРµСЂРІСѓСЋ С‚Р°Р±Р»РёС†Сѓ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
               string docTypeName = docSel.TableNames[0];
               Int32[] docIds = docSel[docTypeName];
               if (docIds.Length > 1 && (!UI.DocTypes[docTypeName].CanMultiEdit))
-                UI.ShowDocSel(docSel); // групповое редактирование запрещено
+                UI.ShowDocSel(docSel); // РіСЂСѓРїРїРѕРІРѕРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ Р·Р°РїСЂРµС‰РµРЅРѕ
               else
                 UI.DocTypes[docTypeName].PerformEditing(docIds, State, false);
               return true;
             }
           }
 
-          EFPApp.ShowTempMessage("Нет связанных с сообщением документов");
+          EFPApp.ShowTempMessage("РќРµС‚ СЃРІСЏР·Р°РЅРЅС‹С… СЃ СЃРѕРѕР±С‰РµРЅРёРµРј РґРѕРєСѓРјРµРЅС‚РѕРІ");
           return true;
       }
 
@@ -219,17 +219,17 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Команды локального меню
+    #region РљРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
 
     /// <summary>
-    /// Возвращает команды локального меню
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
     /// </summary>
     public new EFPDBxErrorGridViewCommandItems CommandItems { get { return (EFPDBxErrorGridViewCommandItems)(base.CommandItems); } }
 
     /// <summary>
-    /// Создает EFPDBxErrorGridViewCommandItems
+    /// РЎРѕР·РґР°РµС‚ EFPDBxErrorGridViewCommandItems
     /// </summary>
-    /// <returns>Созданный список команд</returns>
+    /// <returns>РЎРѕР·РґР°РЅРЅС‹Р№ СЃРїРёСЃРѕРє РєРѕРјР°РЅРґ</returns>
     protected override EFPControlCommandItems GetCommandItems()
     {
       return new EFPDBxErrorGridViewCommandItems(this);
@@ -237,12 +237,12 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Событие GetDocSel
+    #region РЎРѕР±С‹С‚РёРµ GetDocSel
 
     /// <summary>
-    /// Если обработчик установлен, то при копировании ячеек в буфер обмена будет
-    /// помещена выборка документов (объект DBxDocSelection).
-    /// Также будет добавлена команда "Отправить" -> "Выборка"
+    /// Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РїСЂРё РєРѕРїРёСЂРѕРІР°РЅРёРё СЏС‡РµРµРє РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° Р±СѓРґРµС‚
+    /// РїРѕРјРµС‰РµРЅР° РІС‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ (РѕР±СЉРµРєС‚ DBxDocSelection).
+    /// РўР°РєР¶Рµ Р±СѓРґРµС‚ РґРѕР±Р°РІР»РµРЅР° РєРѕРјР°РЅРґР° "РћС‚РїСЂР°РІРёС‚СЊ" -> "Р’С‹Р±РѕСЂРєР°"
     /// </summary>
     public event EFPDBxErrorGridViewDocSelEventHandler GetDocSel
     {
@@ -260,7 +260,7 @@ namespace FreeLibSet.Forms.Docs
     private EFPDBxErrorGridViewDocSelEventHandler _GetDocSel;
 
     /// <summary>
-    /// В случае пеоеопределения метода также должно быть переопределено свойство HasGetDocSelHandler
+    /// Р’ СЃР»СѓС‡Р°Рµ РїРµРѕРµРѕРїСЂРµРґРµР»РµРЅРёСЏ РјРµС‚РѕРґР° С‚Р°РєР¶Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ HasGetDocSelHandler
     /// </summary>
     /// <param name="args"></param>
     protected virtual void OnGetDocSel(EFPDBxErrorGridViewDocSelEventArgs args)
@@ -270,26 +270,26 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если есть установленный обработчик GetDocSel
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РµСЃС‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє GetDocSel
     /// </summary>
     public virtual bool HasGetDocSelHandler { get { return _GetDocSel != null; } }
 
     /// <summary>
-    /// Создание выборки документов для выбранных строк в табличном просмотре.
+    /// РЎРѕР·РґР°РЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ РґР»СЏ РІС‹Р±СЂР°РЅРЅС‹С… СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ.
     /// </summary>
-    /// <param name="reason">Причина создания выборки</param>
-    /// <returns>Выборка документов или null</returns>
+    /// <param name="reason">РџСЂРёС‡РёРЅР° СЃРѕР·РґР°РЅРёСЏ РІС‹Р±РѕСЂРєРё</param>
+    /// <returns>Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ РёР»Рё null</returns>
     public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason)
     {
       return CreateDocSel(reason, null);
     }
 
     /// <summary>
-    /// Создание выборки документов для указанных строк в табличном просмотре.
+    /// РЎРѕР·РґР°РЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ РґР»СЏ СѓРєР°Р·Р°РЅРЅС‹С… СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС‡РЅРѕРј РїСЂРѕСЃРјРѕС‚СЂРµ.
     /// </summary>
-    /// <param name="reason">Причина создания выборки</param>
-    /// <param name="rowIndices">Индексы строк</param>
-    /// <returns>Выборка документов или null</returns>
+    /// <param name="reason">РџСЂРёС‡РёРЅР° СЃРѕР·РґР°РЅРёСЏ РІС‹Р±РѕСЂРєРё</param>
+    /// <param name="rowIndices">РРЅРґРµРєСЃС‹ СЃС‚СЂРѕРє</param>
+    /// <returns>Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ РёР»Рё null</returns>
     public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason, int[] rowIndices)
     {
       if (!HasGetDocSelHandler)
@@ -310,7 +310,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = null;
       try
       {
-        EFPApp.BeginWait("Создание выборки документов", "Выборка");
+        EFPApp.BeginWait("РЎРѕР·РґР°РЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ", "Р’С‹Р±РѕСЂРєР°");
         try
         {
           EFPDBxErrorGridViewDocSelEventArgs args = new EFPDBxErrorGridViewDocSelEventArgs(items, UI, reason);
@@ -325,7 +325,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка создания выборки документов для табличного просмотра");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°");
       }
       return docSel;
     }
@@ -335,18 +335,18 @@ namespace FreeLibSet.Forms.Docs
 
 
   /// <summary>
-  /// Команды локального меню для EFPDBxErrorGridView.
-  /// Добавляет команду "Отправить" - "Выборка документов".
-  /// Поддерживает копирование выборки документов в буфер обмена
+  /// РљРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ РґР»СЏ EFPDBxErrorGridView.
+  /// Р”РѕР±Р°РІР»СЏРµС‚ РєРѕРјР°РЅРґСѓ "РћС‚РїСЂР°РІРёС‚СЊ" - "Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ".
+  /// РџРѕРґРґРµСЂР¶РёРІР°РµС‚ РєРѕРїРёСЂРѕРІР°РЅРёРµ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°
   /// </summary>
   public class EFPDBxErrorGridViewCommandItems : EFPDataGridViewCommandItems
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Используется EFPDBxErrorGridView
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ EFPDBxErrorGridView
     /// </summary>
-    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    /// <param name="controlProvider">РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
     public EFPDBxErrorGridViewCommandItems(EFPDBxErrorGridView controlProvider)
       : base(controlProvider)
     {
@@ -354,39 +354,39 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер табличного просмотра
+    /// РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
     /// </summary>
     public new EFPDBxErrorGridView ControlProvider { get { return (EFPDBxErrorGridView)(base.ControlProvider); } }
 
     /// <summary>
-    /// Добавляет команду "Отправить" - "Выборка документов"
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РєРѕРјР°РЅРґСѓ "РћС‚РїСЂР°РІРёС‚СЊ" - "Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ"
     /// </summary>
     protected override void OnPrepare()
     {
       base.OnPrepare();
 
 
-      if (ControlProvider.HasGetDocSelHandler /*&& AccDepMainMenu.MenuSendTo != null*/) // Есть обработчик
+      if (ControlProvider.HasGetDocSelHandler /*&& AccDepMainMenu.MenuSendTo != null*/) // Р•СЃС‚СЊ РѕР±СЂР°Р±РѕС‚С‡РёРє
       {
         EFPCommandItem ci = new EFPCommandItem("Send", "DocSel");
-        ci.MenuText = "Выборка документов";
+        ci.MenuText = "Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ";
         ci.ImageKey = "DBxDocSelection";
         ci.Parent = base.MenuSendTo;
         ci.Click += ciSendToDocSel_Click;
-        ci.Usage = EFPCommandItemUsage.Menu; // без кнопки
+        ci.Usage = EFPCommandItemUsage.Menu; // Р±РµР· РєРЅРѕРїРєРё
         Add(ci);
       }
     }
 
     #endregion
 
-    #region Буфер обмена
+    #region Р‘СѓС„РµСЂ РѕР±РјРµРЅР°
 
     /// <summary>
-    /// Добавляет выборку документов (объект DBxDocSelection) в набор форматов для буфера обмена
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РІС‹Р±РѕСЂРєСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ (РѕР±СЉРµРєС‚ DBxDocSelection) РІ РЅР°Р±РѕСЂ С„РѕСЂРјР°С‚РѕРІ РґР»СЏ Р±СѓС„РµСЂР° РѕР±РјРµРЅР°
     /// </summary>
     /// <param name="args"></param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
@@ -400,14 +400,14 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Отправить
+    #region РћС‚РїСЂР°РІРёС‚СЊ
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
       DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Выборка не содержит документов");
+        EFPApp.ShowTempMessage("Р’С‹Р±РѕСЂРєР° РЅРµ СЃРѕРґРµСЂР¶РёС‚ РґРѕРєСѓРјРµРЅС‚РѕРІ");
         return;
       }
       ControlProvider.UI.ShowDocSel(docSel);
@@ -417,16 +417,16 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Страница отчета со списком ошибок
+  /// РЎС‚СЂР°РЅРёС†Р° РѕС‚С‡РµС‚Р° СЃРѕ СЃРїРёСЃРєРѕРј РѕС€РёР±РѕРє
   /// </summary>
   public class EFPReportDBxErrorMessageListPage : EFPReportErrorMessageListPage
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает страницу отчета
+    /// РЎРѕР·РґР°РµС‚ СЃС‚СЂР°РЅРёС†Сѓ РѕС‚С‡РµС‚Р°
     /// </summary>
-    /// <param name="ui">Интерфейс для доступа к документам</param>
+    /// <param name="ui">РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј</param>
     public EFPReportDBxErrorMessageListPage(DBUI ui)
     {
       if (ui == null)
@@ -436,23 +436,23 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс доступа к документам
+    /// РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј
     /// </summary>
     public DBUI UI { get { return _UI; } }
     private DBUI _UI;
 
     #endregion
 
-    #region Табличный просмотр
+    #region РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ
 
     /// <summary>
-    /// Создает EFPDBxErrorGridView 
+    /// РЎРѕР·РґР°РµС‚ EFPDBxErrorGridView 
     /// </summary>
-    /// <param name="control">Табличный просмотр</param>
-    /// <returns>Провайдер управляющего элемента</returns>
+    /// <param name="control">РўР°Р±Р»РёС‡РЅС‹Р№ РїСЂРѕСЃРјРѕС‚СЂ</param>
+    /// <returns>РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</returns>
     protected override EFPErrorDataGridView CreateControlProvider(DataGridView control)
     {
       EFPDBxErrorGridView controlProvider = new EFPDBxErrorGridView(BaseProvider, control, UI);
@@ -463,10 +463,10 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Событие GetDocSel
+    #region РЎРѕР±С‹С‚РёРµ GetDocSel
 
     /// <summary>
-    /// Событие для получения выборки документов
+    /// РЎРѕР±С‹С‚РёРµ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ
     /// </summary>
     public event EFPDBxErrorGridViewDocSelEventHandler GetDocSel;
 

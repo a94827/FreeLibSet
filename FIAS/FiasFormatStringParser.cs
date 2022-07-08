@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,68 +12,68 @@ using FreeLibSet.Core;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Выполняет парсинг строки форматирования, применяемой методом FiasHandler.Format()
+  /// Р’С‹РїРѕР»РЅСЏРµС‚ РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ, РїСЂРёРјРµРЅСЏРµРјРѕР№ РјРµС‚РѕРґРѕРј FiasHandler.Format()
   /// </summary>
   public static class FiasFormatStringParser
   {
-    #region Константы TypeFormXXX
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹ TypeFormXXX
 
     /// <summary>
-    /// Выводится имя + сокращение
+    /// Р’С‹РІРѕРґРёС‚СЃСЏ РёРјСЏ + СЃРѕРєСЂР°С‰РµРЅРёРµ
     /// </summary>
     internal const int TypeFormNameAndAbbr = 0x100;
 
     /// <summary>
-    /// Выводится имя (".NAME")
+    /// Р’С‹РІРѕРґРёС‚СЃСЏ РёРјСЏ (".NAME")
     /// </summary>
     internal const int TypeFormName = 0x200;
 
     /// <summary>
-    /// Выводится тип объекта (".TYPE")
+    /// Р’С‹РІРѕРґРёС‚СЃСЏ С‚РёРї РѕР±СЉРµРєС‚Р° (".TYPE")
     /// </summary>
     internal const int TypeFormType = 0x300;
 
     /// <summary>
-    /// Выводится сокращение (".ABBR")
+    /// Р’С‹РІРѕРґРёС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёРµ (".ABBR")
     /// </summary>
     internal const int TypeFormAbbr = 0x400;
 
     /// <summary>
-    /// Выводится номер (".NUM")
+    /// Р’С‹РІРѕРґРёС‚СЃСЏ РЅРѕРјРµСЂ (".NUM")
     /// </summary>
     internal const int TypeFormNum = 0x500;
 
     /// <summary>
-    /// Выводится текст, начиная с заданного уровня
+    /// Р’С‹РІРѕРґРёС‚СЃСЏ С‚РµРєСЃС‚, РЅР°С‡РёРЅР°СЏ СЃ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ
     /// </summary>
     internal const int TypeFormAt = 0x600;
 
     /// <summary>
-    /// Устойчивый идентификатор адресного объекта.
+    /// РЈСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.
     /// </summary>
     internal const int TypeFormGuid = 0x700;
 
     /// <summary>
-    /// Идентификатор записи в базе данных
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     /// </summary>
     internal const int TypeFormRecId = 0x800;
 
     /// <summary>
-    /// Маска для выделения уровня объекта
+    /// РњР°СЃРєР° РґР»СЏ РІС‹РґРµР»РµРЅРёСЏ СѓСЂРѕРІРЅСЏ РѕР±СЉРµРєС‚Р°
     /// </summary>
     internal const int TypeLevelMask = 0xFF;
 
     /// <summary>
-    /// Маска для выделения константы TypeFormXXX
+    /// РњР°СЃРєР° РґР»СЏ РІС‹РґРµР»РµРЅРёСЏ РєРѕРЅСЃС‚Р°РЅС‚С‹ TypeFormXXX
     /// </summary>
     internal const int TypeFormMask = 0xFF00;
 
     #endregion
 
-    #region Константы TypeXXX, не привязанные к уровню объекта
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹ TypeXXX, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅС‹Рµ Рє СѓСЂРѕРІРЅСЋ РѕР±СЉРµРєС‚Р°
 
     /// <summary>
-    /// Константа
+    /// РљРѕРЅСЃС‚Р°РЅС‚Р°
     /// </summary>
     internal const int TypeFormConst = 0x1000;
 
@@ -144,7 +144,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Статический конструктор
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     static FiasFormatStringParser()
     {
@@ -347,47 +347,47 @@ namespace FreeLibSet.FIAS
       _TheParserList1 = new ParserList();
       _TheParserList1.Add(new TypeParser());
       _TheParserList1.Add(new ComplexSepParser());
-      _TheParserList1.Add(new SimpleSepParser()); // после ComplexSepParser
+      _TheParserList1.Add(new SimpleSepParser()); // РїРѕСЃР»Рµ ComplexSepParser
       _TheParserList1.Add(new BraceParser());
 
       _TheParserList2 = new ParserList();
       _TheParserList2.Add(new TypeParser());
       _TheParserList2.Add(new StrConstParser());
       _TheParserList2.Add(new SpaceParser());
-      _TheParserList2.Add(new BraceParser()); // для завершающей фигурной скобки
+      _TheParserList2.Add(new BraceParser()); // РґР»СЏ Р·Р°РІРµСЂС€Р°СЋС‰РµР№ С„РёРіСѓСЂРЅРѕР№ СЃРєРѕР±РєРё
     }
 
     #endregion
 
-    #region Константы
+    #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
     /// <summary>
-    /// Список допустимых типов компонентов адреса
+    /// РЎРїРёСЃРѕРє РґРѕРїСѓСЃС‚РёРјС‹С… С‚РёРїРѕРІ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ Р°РґСЂРµСЃР°
     /// </summary>
     public static readonly string[] ComponentTypes;
 
     private static readonly StringArrayIndexer _ComponentTypeIndexer;
 
     /// <summary>
-    /// Значения для поля FiasParsedFormatString.ItemType, соответствующие массиву ComponentTypes
+    /// Р—РЅР°С‡РµРЅРёСЏ РґР»СЏ РїРѕР»СЏ FiasParsedFormatString.ItemType, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РјР°СЃСЃРёРІСѓ ComponentTypes
     /// </summary>
     private static readonly int[] _ComponentTypeValues;
 
     /// <summary>
-    /// Формат, используемый по умолчанию
+    /// Р¤РѕСЂРјР°С‚, РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
     public static string DefaultFormat = "TEXT";
 
     #endregion
 
-    #region Парсинг
+    #region РџР°СЂСЃРёРЅРі
 
     /// <summary>
-    /// Выполняет парсинг строки форматирования и возвращает внутренний объект FiasParsedFormatString.
-    /// В случае неудачи генерируется исключение
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString.
+    /// Р’ СЃР»СѓС‡Р°Рµ РЅРµСѓРґР°С‡Рё РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="format">Строка формата</param>
-    /// <returns>Результат парсинга - внутренний объект FiasParsedFormatString</returns>
+    /// <param name="format">РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚Р°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РїР°СЂСЃРёРЅРіР° - РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString</returns>
     public static FiasParsedFormatString Parse(string format)
     {
       FiasParsedFormatString parsedFormat;
@@ -400,12 +400,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Выполняет парсинг строки форматирования и создает внутренний объект FiasParsedFormatString в случае успеха.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Рё СЃРѕР·РґР°РµС‚ РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°.
     /// </summary>
-    /// <param name="format">Строка формата</param>
-    /// <param name="parsedFormat">Сюда записывается результат парсинга - внутренний объект FiasParsedFormatString в случае успеха</param>
-    /// <param name="errorMessage">Сюда записывается текст сообщения об ошибке в случае неудачи</param>
-    /// <returns>true, если парсинг успешно выполнен</returns>
+    /// <param name="format">РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚Р°</param>
+    /// <param name="parsedFormat">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚ РїР°СЂСЃРёРЅРіР° - РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°</param>
+    /// <param name="errorMessage">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РІ СЃР»СѓС‡Р°Рµ РЅРµСѓРґР°С‡Рё</param>
+    /// <returns>true, РµСЃР»Рё РїР°СЂСЃРёРЅРі СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅ</returns>
     public static bool TryParse(string format, out FiasParsedFormatString parsedFormat, out string errorMessage)
     {
       int errorStart;
@@ -415,14 +415,14 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Выполняет парсинг строки форматирования и создает внутренний объект FiasParsedFormatString в случае успеха.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Рё СЃРѕР·РґР°РµС‚ РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°.
     /// </summary>
-    /// <param name="format">Строка формата</param>
-    /// <param name="parsedFormat">Сюда записывается результат парсинга - внутренний объект FiasParsedFormatString в случае успеха</param>
-    /// <param name="errorMessage">Сюда записывается текст сообщения об ошибке в случае неудачи</param>
-    /// <param name="errorStart">В случае ошибки сюда помещается начало ошибочной лексемы</param>
-    /// <param name="errorLen">В случае ошибки сюда помещается длина ошибочной лексемы</param>
-    /// <returns>true, если парсинг успешно выполнен</returns>
+    /// <param name="format">РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚Р°</param>
+    /// <param name="parsedFormat">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚ РїР°СЂСЃРёРЅРіР° - РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°</param>
+    /// <param name="errorMessage">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РІ СЃР»СѓС‡Р°Рµ РЅРµСѓРґР°С‡Рё</param>
+    /// <param name="errorStart">Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё СЃСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РЅР°С‡Р°Р»Рѕ РѕС€РёР±РѕС‡РЅРѕР№ Р»РµРєСЃРµРјС‹</param>
+    /// <param name="errorLen">Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё СЃСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РґР»РёРЅР° РѕС€РёР±РѕС‡РЅРѕР№ Р»РµРєСЃРµРјС‹</param>
+    /// <returns>true, РµСЃР»Рё РїР°СЂСЃРёРЅРі СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅ</returns>
     public static bool TryParse(string format, out FiasParsedFormatString parsedFormat, out string errorMessage, out int errorStart, out int errorLen)
     {
       ParsingData pd;
@@ -430,16 +430,16 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Выполняет парсинг строки форматирования и создает внутренний объект FiasParsedFormatString в случае успеха.
-    /// Эта перегрузка предназначена для отладочных целей и возвращает объект парсинга строки
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ Рё СЃРѕР·РґР°РµС‚ РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°.
+    /// Р­С‚Р° РїРµСЂРµРіСЂСѓР·РєР° РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»РµР№ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ РїР°СЂСЃРёРЅРіР° СЃС‚СЂРѕРєРё
     /// </summary>
-    /// <param name="format">Строка формата</param>
-    /// <param name="parsedFormat">Сюда записывается результат парсинга - внутренний объект FiasParsedFormatString в случае успеха</param>
-    /// <param name="errorMessage">Сюда записывается текст сообщения об ошибке в случае неудачи</param>
-    /// <param name="errorStart">В случае ошибки сюда помещается начало ошибочной лексемы</param>
-    /// <param name="errorLen">В случае ошибки сюда помещается длина ошибочной лексемы</param>
-    /// <param name="pd">Сюда помещаются данные парсинга</param>
-    /// <returns>true, если парсинг успешно выполнен</returns>
+    /// <param name="format">РЎС‚СЂРѕРєР° С„РѕСЂРјР°С‚Р°</param>
+    /// <param name="parsedFormat">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚ РїР°СЂСЃРёРЅРіР° - РІРЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚ FiasParsedFormatString РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°</param>
+    /// <param name="errorMessage">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РІ СЃР»СѓС‡Р°Рµ РЅРµСѓРґР°С‡Рё</param>
+    /// <param name="errorStart">Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё СЃСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РЅР°С‡Р°Р»Рѕ РѕС€РёР±РѕС‡РЅРѕР№ Р»РµРєСЃРµРјС‹</param>
+    /// <param name="errorLen">Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё СЃСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РґР»РёРЅР° РѕС€РёР±РѕС‡РЅРѕР№ Р»РµРєСЃРµРјС‹</param>
+    /// <param name="pd">РЎСЋРґР° РїРѕРјРµС‰Р°СЋС‚СЃСЏ РґР°РЅРЅС‹Рµ РїР°СЂСЃРёРЅРіР°</param>
+    /// <returns>true, РµСЃР»Рё РїР°СЂСЃРёРЅРі СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅ</returns>
     public static bool TryParse(string format, out FiasParsedFormatString parsedFormat, out string errorMessage, out int errorStart, out int errorLen, out ParsingData pd)
     {
       pd = new ParsingData(format);
@@ -484,7 +484,7 @@ namespace FreeLibSet.FIAS
           case "{":
             if (openBracesToken != null)
             {
-              token.SetError("Вложенные фигурные скобки не допускаются");
+              token.SetError("Р’Р»РѕР¶РµРЅРЅС‹Рµ С„РёРіСѓСЂРЅС‹Рµ СЃРєРѕР±РєРё РЅРµ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ");
               return null;
             }
             openBracesToken = token;
@@ -494,7 +494,7 @@ namespace FreeLibSet.FIAS
           case "}":
             if (openBracesToken == null)
             {
-              token.SetError("Не было открывающей скобки");
+              token.SetError("РќРµ Р±С‹Р»Рѕ РѕС‚РєСЂС‹РІР°СЋС‰РµР№ СЃРєРѕР±РєРё");
               return null;
             }
             openBracesToken = null;
@@ -502,12 +502,12 @@ namespace FreeLibSet.FIAS
             {
               if (currItem.Suffix != null)
               {
-                token.SetError("Внутренняя ошибка. Есть суффикс, но нет типа компонента");
+                token.SetError("Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР°. Р•СЃС‚СЊ СЃСѓС„С„РёРєСЃ, РЅРѕ РЅРµС‚ С‚РёРїР° РєРѕРјРїРѕРЅРµРЅС‚Р°");
                 return null;
               }
               if (currItem.Prefix == null)
               {
-                token.SetError("Пустой компонент");
+                token.SetError("РџСѓСЃС‚РѕР№ РєРѕРјРїРѕРЅРµРЅС‚");
                 return null;
               }
               currItem.ItemType = TypeFormConst;
@@ -526,20 +526,20 @@ namespace FreeLibSet.FIAS
             if (pType < 0)
             {
               if (sType.Length == 0)
-                token.SetError("Внутренняя ошибка. Тип компонента имеет нулевую длину");
+                token.SetError("Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР°. РўРёРї РєРѕРјРїРѕРЅРµРЅС‚Р° РёРјРµРµС‚ РЅСѓР»РµРІСѓСЋ РґР»РёРЅСѓ");
               else if (sType[0] == '.' || sType[sType.Length - 1] == '.')
-                token.SetError("Тип компонента не может начинаться или заканчиваться на точку");
+                token.SetError("РўРёРї РєРѕРјРїРѕРЅРµРЅС‚Р° РЅРµ РјРѕР¶РµС‚ РЅР°С‡РёРЅР°С‚СЊСЃСЏ РёР»Рё Р·Р°РєР°РЅС‡РёРІР°С‚СЊСЃСЏ РЅР° С‚РѕС‡РєСѓ");
               else if (sType.IndexOf("..", StringComparison.Ordinal) >= 0)
-                token.SetError("В типе компонента не могут быть две точки подряд");
+                token.SetError("Р’ С‚РёРїРµ РєРѕРјРїРѕРЅРµРЅС‚Р° РЅРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РґРІРµ С‚РѕС‡РєРё РїРѕРґСЂСЏРґ");
               else
-                token.SetError("Неизвестный тип компонента \"" + sType + "\"");
+                token.SetError("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї РєРѕРјРїРѕРЅРµРЅС‚Р° \"" + sType + "\"");
               return null;
             }
             if (openBracesToken != null)
             {
               if (currItem.ItemType != 0)
               {
-                token.SetError("Внутри фигурных скобок может быть только один тип компонента");
+                token.SetError("Р’РЅСѓС‚СЂРё С„РёРіСѓСЂРЅС‹С… СЃРєРѕР±РѕРє РјРѕР¶РµС‚ Р±С‹С‚СЊ С‚РѕР»СЊРєРѕ РѕРґРёРЅ С‚РёРї РєРѕРјРїРѕРЅРµРЅС‚Р°");
                 return null;
               }
 
@@ -547,7 +547,7 @@ namespace FreeLibSet.FIAS
             }
             else
             {
-              // Одиночный тип вне фигурных скобок
+              // РћРґРёРЅРѕС‡РЅС‹Р№ С‚РёРї РІРЅРµ С„РёРіСѓСЂРЅС‹С… СЃРєРѕР±РѕРє
               currItem = new FiasParsedFormatString.FormatItem();
               currItem.ItemType = _ComponentTypeValues[pType];
               if (currSepToken != null)
@@ -562,14 +562,14 @@ namespace FreeLibSet.FIAS
           case "String":
             if (openBracesToken == null)
             {
-              token.SetError("Внутренняя ошибка. Строка вне фигурных скобок");
+              token.SetError("Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР°. РЎС‚СЂРѕРєР° РІРЅРµ С„РёРіСѓСЂРЅС‹С… СЃРєРѕР±РѕРє");
               return null;
             }
             if (currItem.ItemType == 0)
             {
               if (currItem.Prefix != null)
               {
-                token.SetError("Два префикса подряд не допускаются");
+                token.SetError("Р”РІР° РїСЂРµС„РёРєСЃР° РїРѕРґСЂСЏРґ РЅРµ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ");
                 return null;
               }
               currItem.Prefix = token.AuxData.ToString();
@@ -578,7 +578,7 @@ namespace FreeLibSet.FIAS
             {
               if (currItem.Suffix != null)
               {
-                token.SetError("Два суффикса подряд не допускаются");
+                token.SetError("Р”РІР° СЃСѓС„С„РёРєСЃР° РїРѕРґСЂСЏРґ РЅРµ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ");
                 return null;
               }
               currItem.Suffix = token.AuxData.ToString();
@@ -588,37 +588,37 @@ namespace FreeLibSet.FIAS
           case "Sep":
             if (currSepToken != null)
             {
-              token.SetError("Не могут идти два разделителя подряд");
+              token.SetError("РќРµ РјРѕРіСѓС‚ РёРґС‚Рё РґРІР° СЂР°Р·РґРµР»РёС‚РµР»СЏ РїРѕРґСЂСЏРґ");
               return null;
             }
             currSepToken = token;
             if (openBracesToken != null)
             {
-              token.SetError("Внутренняя ошибка. Обнаружен разделитель внутри фигурных скобок");
+              token.SetError("Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР°. РћР±РЅР°СЂСѓР¶РµРЅ СЂР°Р·РґРµР»РёС‚РµР»СЊ РІРЅСѓС‚СЂРё С„РёРіСѓСЂРЅС‹С… СЃРєРѕР±РѕРє");
               return null;
             }
             if (res.Items.Count == 0)
             {
-              token.SetError("Разделитель не может идти до первого компонента");
+              token.SetError("Р Р°Р·РґРµР»РёС‚РµР»СЊ РЅРµ РјРѕР¶РµС‚ РёРґС‚Рё РґРѕ РїРµСЂРІРѕРіРѕ РєРѕРјРїРѕРЅРµРЅС‚Р°");
               return null;
             }
             break;
 
           default:
-            token.SetError("Внутренняя ошибка. Неизвестная лексема \"" + token.TokenType + "\"");
+            token.SetError("Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР°. РќРµРёР·РІРµСЃС‚РЅР°СЏ Р»РµРєСЃРµРјР° \"" + token.TokenType + "\"");
             return null;
         }
       }
 
       if (openBracesToken != null)
       {
-        openBracesToken.SetError("Не найдена парная закрывающая скобка");
+        openBracesToken.SetError("РќРµ РЅР°Р№РґРµРЅР° РїР°СЂРЅР°СЏ Р·Р°РєСЂС‹РІР°СЋС‰Р°СЏ СЃРєРѕР±РєР°");
         return null;
       }
 
       if (currSepToken != null)
       {
-        currSepToken.SetError("Разделитель не может идти после последнего компонента");
+        currSepToken.SetError("Р Р°Р·РґРµР»РёС‚РµР»СЊ РЅРµ РјРѕР¶РµС‚ РёРґС‚Рё РїРѕСЃР»Рµ РїРѕСЃР»РµРґРЅРµРіРѕ РєРѕРјРїРѕРЅРµРЅС‚Р°");
         return null;
       }
 
@@ -626,12 +626,12 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Проверка корректности строки формата.
-    /// Отличается от TryParse() только тем, что не возвращает объект FiasParsedFormatString.
+    /// РџСЂРѕРІРµСЂРєР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚Р°.
+    /// РћС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ TryParse() С‚РѕР»СЊРєРѕ С‚РµРј, С‡С‚Рѕ РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ FiasParsedFormatString.
     /// </summary>
-    /// <param name="format">Проверяемая строка форматирования</param>
-    /// <param name="errorMessage">Сюда помещается сообщение об ошибке, если формат неправильный</param>
-    /// <returns>true, если строка форматирования является допустимой.</returns>
+    /// <param name="format">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ</param>
+    /// <param name="errorMessage">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ, РµСЃР»Рё С„РѕСЂРјР°С‚ РЅРµРїСЂР°РІРёР»СЊРЅС‹Р№</param>
+    /// <returns>true, РµСЃР»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЏРІР»СЏРµС‚СЃСЏ РґРѕРїСѓСЃС‚РёРјРѕР№.</returns>
     public static bool IsValidFormat(string format, out string errorMessage)
     {
       FiasParsedFormatString parsedFormat;
@@ -639,11 +639,11 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Проверка корректности строки формата.
-    /// Отличается от TryParse() только тем, что не возвращает объект FiasParsedFormatString.
+    /// РџСЂРѕРІРµСЂРєР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚Р°.
+    /// РћС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ TryParse() С‚РѕР»СЊРєРѕ С‚РµРј, С‡С‚Рѕ РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ FiasParsedFormatString.
     /// </summary>
-    /// <param name="format">Проверяемая строка форматирования</param>
-    /// <returns>true, если строка форматирования является допустимой.</returns>
+    /// <param name="format">РџСЂРѕРІРµСЂСЏРµРјР°СЏ СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ</param>
+    /// <returns>true, РµСЃР»Рё СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЏРІР»СЏРµС‚СЃСЏ РґРѕРїСѓСЃС‚РёРјРѕР№.</returns>
     public static bool IsValidFormat(string format)
     {
       FiasParsedFormatString parsedFormat;
@@ -653,20 +653,20 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Классы парсеров
+    #region РљР»Р°СЃСЃС‹ РїР°СЂСЃРµСЂРѕРІ
 
     /// <summary>
-    /// Основной список парсеров
+    /// РћСЃРЅРѕРІРЅРѕР№ СЃРїРёСЃРѕРє РїР°СЂСЃРµСЂРѕРІ
     /// </summary>
     private static readonly ParserList _TheParserList1;
 
     /// <summary>
-    /// Дополнительный список парсеров, применяемый внутри фигурных скобок
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ СЃРїРёСЃРѕРє РїР°СЂСЃРµСЂРѕРІ, РїСЂРёРјРµРЅСЏРµРјС‹Р№ РІРЅСѓС‚СЂРё С„РёРіСѓСЂРЅС‹С… СЃРєРѕР±РѕРє
     /// </summary>
     private static readonly ParserList _TheParserList2;
 
     /// <summary>
-    /// Парсинг выводимого типа - последовательность латинских символов и точки
+    /// РџР°СЂСЃРёРЅРі РІС‹РІРѕРґРёРјРѕРіРѕ С‚РёРїР° - РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ Р»Р°С‚РёРЅСЃРєРёС… СЃРёРјРІРѕР»РѕРІ Рё С‚РѕС‡РєРё
     /// </summary>
     private class TypeParser : IParser
     {
@@ -697,7 +697,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Парсинг разделителя в кавычках
+    /// РџР°СЂСЃРёРЅРі СЂР°Р·РґРµР»РёС‚РµР»СЏ РІ РєР°РІС‹С‡РєР°С…
     /// </summary>
     private class ComplexSepParser : IParser
     {
@@ -705,10 +705,10 @@ namespace FreeLibSet.FIAS
 
       void IParser.Parse(ParsingData data)
       {
-        #region Ведущие пробелы
+        #region Р’РµРґСѓС‰РёРµ РїСЂРѕР±РµР»С‹
 
-        // Не будем ориентироваться на свойство ParsingData.CurrPos, т.к. будет ли оно обновляться при вызове Tokens.Add(), зависит от реализации.
-        // А здесь может потребоваться добавить не одну лексему, а три (Space, Sep, Space)
+        // РќРµ Р±СѓРґРµРј РѕСЂРёРµРЅС‚РёСЂРѕРІР°С‚СЊСЃСЏ РЅР° СЃРІРѕР№СЃС‚РІРѕ ParsingData.CurrPos, С‚.Рє. Р±СѓРґРµС‚ Р»Рё РѕРЅРѕ РѕР±РЅРѕРІР»СЏС‚СЊСЃСЏ РїСЂРё РІС‹Р·РѕРІРµ Tokens.Add(), Р·Р°РІРёСЃРёС‚ РѕС‚ СЂРµР°Р»РёР·Р°С†РёРё.
+        // Рђ Р·РґРµСЃСЊ РјРѕР¶РµС‚ РїРѕС‚СЂРµР±РѕРІР°С‚СЊСЃСЏ РґРѕР±Р°РІРёС‚СЊ РЅРµ РѕРґРЅСѓ Р»РµРєСЃРµРјСѓ, Р° С‚СЂРё (Space, Sep, Space)
         int currPos = data.CurrPos;
 
         int cntSpace1 = 0;
@@ -721,7 +721,7 @@ namespace FreeLibSet.FIAS
         }
 
         if (data.GetChar(currPos + cntSpace1) != '\"')
-          return; // если не кавычка, то это не наше
+          return; // РµСЃР»Рё РЅРµ РєР°РІС‹С‡РєР°, С‚Рѕ СЌС‚Рѕ РЅРµ РЅР°С€Рµ
 
         if (cntSpace1 > 0)
         {
@@ -731,7 +731,7 @@ namespace FreeLibSet.FIAS
 
         #endregion
 
-        #region Текст в кавычках
+        #region РўРµРєСЃС‚ РІ РєР°РІС‹С‡РєР°С…
 
         StringBuilder sb = new StringBuilder();
         bool quoteFound = false;
@@ -742,13 +742,13 @@ namespace FreeLibSet.FIAS
           {
             if (data.GetChar(nextpos + 1) == '\"')
             {
-              // Задвоенная кавычка
+              // Р—Р°РґРІРѕРµРЅРЅР°СЏ РєР°РІС‹С‡РєР°
               nextpos += 2;
               sb.Append('\"');
             }
             else
             {
-              // Конец разделителя
+              // РљРѕРЅРµС† СЂР°Р·РґРµР»РёС‚РµР»СЏ
               nextpos++;
               quoteFound = true;
               break;
@@ -756,7 +756,7 @@ namespace FreeLibSet.FIAS
           }
           else
           {
-            // Обычный символ
+            // РћР±С‹С‡РЅС‹Р№ СЃРёРјРІРѕР»
             sb.Append(data.GetChar(nextpos));
             nextpos++;
           }
@@ -767,13 +767,13 @@ namespace FreeLibSet.FIAS
         currPos += sepToken.Length;
         if (!quoteFound)
         {
-          sepToken.SetError("Не найдена завершающая кавычка разделителя");
+          sepToken.SetError("РќРµ РЅР°Р№РґРµРЅР° Р·Р°РІРµСЂС€Р°СЋС‰Р°СЏ РєР°РІС‹С‡РєР° СЂР°Р·РґРµР»РёС‚РµР»СЏ");
           return;
         }
 
         #endregion
 
-        #region Завершающие пробелы
+        #region Р—Р°РІРµСЂС€Р°СЋС‰РёРµ РїСЂРѕР±РµР»С‹
 
         int cntSpace2 = 0;
         for (int i = currPos; i < data.Text.Text.Length; i++)
@@ -799,7 +799,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Парсинг простого разделителя (без кавычек)
+    /// РџР°СЂСЃРёРЅРі РїСЂРѕСЃС‚РѕРіРѕ СЂР°Р·РґРµР»РёС‚РµР»СЏ (Р±РµР· РєР°РІС‹С‡РµРє)
     /// </summary>
     private class SimpleSepParser : IParser
     {
@@ -857,7 +857,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Форматы для отдельных уровней
+    #region Р¤РѕСЂРјР°С‚С‹ РґР»СЏ РѕС‚РґРµР»СЊРЅС‹С… СѓСЂРѕРІРЅРµР№
 
     private static Dictionary<FiasLevel, FiasParsedFormatString> _LevelFormats;
 
@@ -889,20 +889,20 @@ namespace FreeLibSet.FIAS
       if (_LevelFormats.TryGetValue(level, out res))
         return res;
       else
-        throw new ArgumentException("Неизвестный уровень: " + level.ToString(), "level");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ СѓСЂРѕРІРµРЅСЊ: " + level.ToString(), "level");
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Результат парсинга строки форматирования методом FiasFormatStringParser.Parse().
-  /// Этот класс не имеет открытых членов.
-  /// Объект результата парсинга можно передавать соответствующей перегрузке метода FiasHandler.Format().
+  /// Р РµР·СѓР»СЊС‚Р°С‚ РїР°СЂСЃРёРЅРіР° СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РјРµС‚РѕРґРѕРј FiasFormatStringParser.Parse().
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ РёРјРµРµС‚ РѕС‚РєСЂС‹С‚С‹С… С‡Р»РµРЅРѕРІ.
+  /// РћР±СЉРµРєС‚ СЂРµР·СѓР»СЊС‚Р°С‚Р° РїР°СЂСЃРёРЅРіР° РјРѕР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµР№ РїРµСЂРµРіСЂСѓР·РєРµ РјРµС‚РѕРґР° FiasHandler.Format().
   /// </summary>
   public sealed class FiasParsedFormatString
   {
-    #region Защищенный конструктор
+    #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasParsedFormatString()
     {
@@ -911,39 +911,39 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Компоненты
+    #region РљРѕРјРїРѕРЅРµРЅС‚С‹
 
     internal struct FormatItem
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       /// <summary>
-      /// Разделитель, выводимый перед этим компонентом
+      /// Р Р°Р·РґРµР»РёС‚РµР»СЊ, РІС‹РІРѕРґРёРјС‹Р№ РїРµСЂРµРґ СЌС‚РёРј РєРѕРјРїРѕРЅРµРЅС‚РѕРј
       /// </summary>
       public string Separator;
 
       /// <summary>
-      /// Префикс.
-      /// Для компонента-константы сюда помещается константное значение
+      /// РџСЂРµС„РёРєСЃ.
+      /// Р”Р»СЏ РєРѕРјРїРѕРЅРµРЅС‚Р°-РєРѕРЅСЃС‚Р°РЅС‚С‹ СЃСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
       /// </summary>
       public string Prefix;
 
       ///// <summary>
-      ///// Код компонента.
-      ///// Для компонента-константы имеет значение "CONST".
+      ///// РљРѕРґ РєРѕРјРїРѕРЅРµРЅС‚Р°.
+      ///// Р”Р»СЏ РєРѕРјРїРѕРЅРµРЅС‚Р°-РєРѕРЅСЃС‚Р°РЅС‚С‹ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ "CONST".
       ///// </summary>
       //public string ItemType;
 
       /// <summary>
-      /// Числовой код компонента.
-      /// Состоит из комбинации TypeFormXXX (константы) и (int)FiasLevel
-      /// Для компонента-константы имеет значение TypeConst.
+      /// Р§РёСЃР»РѕРІРѕР№ РєРѕРґ РєРѕРјРїРѕРЅРµРЅС‚Р°.
+      /// РЎРѕСЃС‚РѕРёС‚ РёР· РєРѕРјР±РёРЅР°С†РёРё TypeFormXXX (РєРѕРЅСЃС‚Р°РЅС‚С‹) Рё (int)FiasLevel
+      /// Р”Р»СЏ РєРѕРјРїРѕРЅРµРЅС‚Р°-РєРѕРЅСЃС‚Р°РЅС‚С‹ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ TypeConst.
       /// </summary>
       public int ItemType;
 
 
       /// <summary>
-      /// Суффикс
+      /// РЎСѓС„С„РёРєСЃ
       /// </summary>
       public string Suffix;
 

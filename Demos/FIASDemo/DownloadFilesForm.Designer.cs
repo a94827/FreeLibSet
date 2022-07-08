@@ -1,4 +1,4 @@
-namespace FIASDemo
+п»їnamespace FIASDemo
 {
   partial class DownloadFilesForm
   {
@@ -75,7 +75,7 @@ namespace FIASDemo
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(127, 20);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Куда скачать";
+      this.label1.Text = "РљСѓРґР° СЃРєР°С‡Р°С‚СЊ";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edDir
@@ -92,7 +92,7 @@ namespace FIASDemo
       this.btnBrowse.Name = "btnBrowse";
       this.btnBrowse.Size = new System.Drawing.Size(88, 24);
       this.btnBrowse.TabIndex = 2;
-      this.btnBrowse.Text = "Обзор";
+      this.btnBrowse.Text = "РћР±Р·РѕСЂ";
       this.btnBrowse.UseVisualStyleBackColor = true;
       // 
       // label2
@@ -101,7 +101,7 @@ namespace FIASDemo
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(337, 20);
       this.label2.TabIndex = 3;
-      this.label2.Text = "Скачать обновления, новее чем (текущая дата актульности)";
+      this.label2.Text = "РЎРєР°С‡Р°С‚СЊ РѕР±РЅРѕРІР»РµРЅРёСЏ, РЅРѕРІРµРµ С‡РµРј (С‚РµРєСѓС‰Р°СЏ РґР°С‚Р° Р°РєС‚СѓР»СЊРЅРѕСЃС‚Рё)";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edActualDate
@@ -117,7 +117,7 @@ namespace FIASDemo
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(127, 20);
       this.label3.TabIndex = 5;
-      this.label3.Text = "Формат обновлений";
+      this.label3.Text = "Р¤РѕСЂРјР°С‚ РѕР±РЅРѕРІР»РµРЅРёР№";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbFormat
@@ -136,7 +136,7 @@ namespace FIASDemo
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -146,7 +146,7 @@ namespace FIASDemo
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // DownloadFilesForm
@@ -160,7 +160,7 @@ namespace FIASDemo
       this.Controls.Add(this.panel1);
       this.Name = "DownloadFilesForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Скачивание файлов обновлений";
+      this.Text = "РЎРєР°С‡РёРІР°РЅРёРµ С„Р°Р№Р»РѕРІ РѕР±РЅРѕРІР»РµРЅРёР№";
       this.panel1.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();

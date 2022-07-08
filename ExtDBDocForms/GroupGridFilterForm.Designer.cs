@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms.Docs
+п»їnamespace FreeLibSet.Forms.Docs
 {
   partial class GroupGridFilterForm
   {
@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms.Docs
       this.grpTree.Size = new System.Drawing.Size(355, 250);
       this.grpTree.TabIndex = 0;
       this.grpTree.TabStop = false;
-      this.grpTree.Text = "Группа";
+      this.grpTree.Text = "Р“СЂСѓРїРїР°";
       // 
       // tvGroup
       // 
@@ -78,7 +78,7 @@ namespace FreeLibSet.Forms.Docs
       this.cbIncludeNestedGroups.Name = "cbIncludeNestedGroups";
       this.cbIncludeNestedGroups.Size = new System.Drawing.Size(170, 17);
       this.cbIncludeNestedGroups.TabIndex = 0;
-      this.cbIncludeNestedGroups.Text = "Включая вложенные группы";
+      this.cbIncludeNestedGroups.Text = "Р’РєР»СЋС‡Р°СЏ РІР»РѕР¶РµРЅРЅС‹Рµ РіСЂСѓРїРїС‹";
       this.cbIncludeNestedGroups.UseVisualStyleBackColor = true;
       // 
       // GroupGridFilterForm

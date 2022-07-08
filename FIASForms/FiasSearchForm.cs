@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -15,11 +15,11 @@ using FreeLibSet.Controls;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Форма поиска адресного объекта
+  /// Р¤РѕСЂРјР° РїРѕРёСЃРєР° Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
   /// </summary>
   internal partial class FiasSearchForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public FiasSearchForm()
     {
@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public EFPHistComboBox efpText;
 
@@ -61,22 +61,22 @@ namespace FreeLibSet.Forms.FIAS
   }
 
   /// <summary>
-  /// Форма просмотра списка адресов - результатов поиска
+  /// Р¤РѕСЂРјР° РїСЂРѕСЃРјРѕС‚СЂР° СЃРїРёСЃРєР° Р°РґСЂРµСЃРѕРІ - СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РїРѕРёСЃРєР°
   /// </summary>
   internal class FiasSearchResultForm : OKCancelGridForm
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public FiasSearchResultForm(FiasUI ui, FiasAddress[] addresses)
     {
       _UI = ui;
       _Addresses = addresses;
 
-      base.Text = "Результаты поиска (" + addresses.Length.ToString() + ")";
+      base.Text = "Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР° (" + addresses.Length.ToString() + ")";
       base.Icon = EFPApp.MainImageIcon("Find");
 
       gh = new EFPDataGridView(ControlWithToolBar);
-      gh.Columns.AddTextFill("AddressText", false, "Адрес", 100, 10);
+      gh.Columns.AddTextFill("AddressText", false, "РђРґСЂРµСЃ", 100, 10);
       if (ui.ShowGuids)
       {
         gh.Columns.AddText("AOGUID", false, "AOGUID", 36, 36);
@@ -84,18 +84,18 @@ namespace FreeLibSet.Forms.FIAS
       }
       if (ui.ShowGuids)
       {
-        gh.Columns.AddText("RecId", false, "RecId (неустойчивый идентификатор записи)", 36, 36);
+        gh.Columns.AddText("RecId", false, "RecId (РЅРµСѓСЃС‚РѕР№С‡РёРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїРёСЃРё)", 36, 36);
         gh.Columns.LastAdded.CanIncSearch = true;
       }
       if (ui.DBSettings.UseHistory)
       {
-        gh.Columns.AddBool("Actuality", false, "Актуальность");
+        gh.Columns.AddBool("Actuality", false, "РђРєС‚СѓР°Р»СЊРЅРѕСЃС‚СЊ");
         gh.Columns.AddBool("Live", false, "Live");
       }
       if (ui.DBSettings.UseDates)
       {
-        gh.Columns.AddDate("STARTDATE", false, "Дата начала действия");
-        gh.Columns.AddDate("ENDDATE", false, "Дата окончание действия");
+        gh.Columns.AddDate("STARTDATE", false, "Р”Р°С‚Р° РЅР°С‡Р°Р»Р° РґРµР№СЃС‚РІРёСЏ");
+        gh.Columns.AddDate("ENDDATE", false, "Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёРµ РґРµР№СЃС‚РІРёСЏ");
       }
       gh.DisableOrdering();
       gh.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(gh_GetRowAttributes);
@@ -109,9 +109,9 @@ namespace FreeLibSet.Forms.FIAS
       gh.CommandItems.EnterAsOk = true;
 
       EFPCommandItem ciDetails = new EFPCommandItem("View", "Details");
-      ciDetails.MenuText = "Подробности";
+      ciDetails.MenuText = "РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё";
       ciDetails.ImageKey = "Fias.Details";
-      ciDetails.ToolTipText = "Подробная информация по каждому уровню классификатора ФИАС";
+      ciDetails.ToolTipText = "РџРѕРґСЂРѕР±РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РїРѕ РєР°Р¶РґРѕРјСѓ СѓСЂРѕРІРЅСЋ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ";
       ciDetails.Click += new EventHandler(ciDetails_Click);
       ciDetails.GroupBegin = true;
       ciDetails.GroupEnd = true;
@@ -120,14 +120,14 @@ namespace FreeLibSet.Forms.FIAS
       if (addresses.Length == FiasTools.AddressSearchLimit)
       {
         InfoLabel lbl = base.AddInfoLabel(DockStyle.Bottom);
-        lbl.Text = "Количество найденных объектов было ограничено";
+        lbl.Text = "РљРѕР»РёС‡РµСЃС‚РІРѕ РЅР°Р№РґРµРЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ Р±С‹Р»Рѕ РѕРіСЂР°РЅРёС‡РµРЅРѕ";
         lbl.Icon = MessageBoxIcon.Warning;
       }
     }
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     public readonly EFPDataGridView gh;
 
@@ -136,7 +136,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Обработчики табличного просмотра
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
 
     void gh_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
@@ -205,7 +205,7 @@ namespace FreeLibSet.Forms.FIAS
       FiasAddress addr = _Addresses[gh.CurrentRowIndex];
       FiasAddressDialog dlg = new FiasAddressDialog(_UI);
       dlg.EditorLevel = FiasEditorLevel.Street;
-      dlg.Title = "Просмотр адреса";
+      dlg.Title = "РџСЂРѕСЃРјРѕС‚СЂ Р°РґСЂРµСЃР°";
       dlg.Address = addr;
       dlg.ReadOnly = true;
       dlg.InsideSearch = true;
@@ -214,7 +214,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Команды меню
+    #region РљРѕРјР°РЅРґС‹ РјРµРЅСЋ
 
     private void ciDetails_Click(object sender, EventArgs args)
     {

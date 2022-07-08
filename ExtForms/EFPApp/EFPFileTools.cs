@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,15 +13,15 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Функции работы с файлами и каталогами.
-  /// Расширяет методы класса FileTools выводом заставок
+  /// Р¤СѓРЅРєС†РёРё СЂР°Р±РѕС‚С‹ СЃ С„Р°Р№Р»Р°РјРё Рё РєР°С‚Р°Р»РѕРіР°РјРё.
+  /// Р Р°СЃС€РёСЂСЏРµС‚ РјРµС‚РѕРґС‹ РєР»Р°СЃСЃР° FileTools РІС‹РІРѕРґРѕРј Р·Р°СЃС‚Р°РІРѕРє
   /// </summary>
   public static class EFPFileTools
   {
-    #region Асинхронное выполнение с заставкой
+    #region РђСЃРёРЅС…СЂРѕРЅРЅРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ СЃ Р·Р°СЃС‚Р°РІРєРѕР№
 
     /// <summary>
-    /// Процедура, которую можно выполнять асинхронно, но с ожиданием
+    /// РџСЂРѕС†РµРґСѓСЂР°, РєРѕС‚РѕСЂСѓСЋ РјРѕР¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ, РЅРѕ СЃ РѕР¶РёРґР°РЅРёРµРј
     /// </summary>
     /// <param name="args"></param>
     /// <returns></returns>
@@ -29,7 +29,7 @@ namespace FreeLibSet.Forms
 
     private class ThreadInfo
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public ExecDelegate Proc;
 
@@ -41,7 +41,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Процедура в потоке
+      #region РџСЂРѕС†РµРґСѓСЂР° РІ РїРѕС‚РѕРєРµ
 
       public void AsyncProc(object dummy)
       {
@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms
         {
           Res = Proc(Args);
           if (Res == null)
-            throw new BugException("Процедура не вернула результат");
+            throw new BugException("РџСЂРѕС†РµРґСѓСЂР° РЅРµ РІРµСЂРЅСѓР»Р° СЂРµР·СѓР»СЊС‚Р°С‚");
         }
         catch (Exception e)
         {
@@ -71,7 +71,7 @@ namespace FreeLibSet.Forms
       try
       {
         if (!ThreadPool.QueueUserWorkItem(info.AsyncProc))
-          throw new InvalidOperationException("Не удалось поставить процедуру в очередь");
+          throw new InvalidOperationException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕСЃС‚Р°РІРёС‚СЊ РїСЂРѕС†РµРґСѓСЂСѓ РІ РѕС‡РµСЂРµРґСЊ");
 
         while (info.Res == null && info.Exception == null)
         {
@@ -91,17 +91,17 @@ namespace FreeLibSet.Forms
     }
     #endregion
 
-    #region Проверка имени файла и каталога
+    #region РџСЂРѕРІРµСЂРєР° РёРјРµРЅРё С„Р°Р№Р»Р° Рё РєР°С‚Р°Р»РѕРіР°
 
     /// <summary>
-    /// Проверка имени каталога, завершающегося обратной чертой.
-    /// Может проверять реальное существование каталога, в зависимости от режима.
-    /// В режиме <paramref name="mode"/>=None всегда возвращает true.
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅРё РєР°С‚Р°Р»РѕРіР°, Р·Р°РІРµСЂС€Р°СЋС‰РµРіРѕСЃСЏ РѕР±СЂР°С‚РЅРѕР№ С‡РµСЂС‚РѕР№.
+    /// РњРѕР¶РµС‚ РїСЂРѕРІРµСЂСЏС‚СЊ СЂРµР°Р»СЊРЅРѕРµ СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ РєР°С‚Р°Р»РѕРіР°, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂРµР¶РёРјР°.
+    /// Р’ СЂРµР¶РёРјРµ <paramref name="mode"/>=None РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ true.
     /// </summary>
-    /// <param name="dirName">Имя каталога, выбранное пользователем</param>
-    /// <param name="mode">Режим проверки. Значение FileExists не допускается</param>
-    /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
-    /// <returns>true - имя каталога правильное</returns>
+    /// <param name="dirName">РРјСЏ РєР°С‚Р°Р»РѕРіР°, РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј</param>
+    /// <param name="mode">Р РµР¶РёРј РїСЂРѕРІРµСЂРєРё. Р—РЅР°С‡РµРЅРёРµ FileExists РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ</param>
+    /// <param name="errorText">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ</param>
+    /// <returns>true - РёРјСЏ РєР°С‚Р°Р»РѕРіР° РїСЂР°РІРёР»СЊРЅРѕРµ</returns>
     public static bool TestDirSlashedPath(string dirName, TestPathMode mode, out string errorText)
     {
       bool res;
@@ -109,7 +109,7 @@ namespace FreeLibSet.Forms
       {
         case TestPathMode.None:
         case TestPathMode.FormatOnly:
-          // Заставка не нужна
+          // Р—Р°СЃС‚Р°РІРєР° РЅРµ РЅСѓР¶РЅР°
           res = FileTools.TestDirSlashedPath(dirName, mode, out errorText);
           break;
         default:
@@ -117,7 +117,7 @@ namespace FreeLibSet.Forms
           NamedValues dispargs = new NamedValues();
           dispargs["DirName"] = dirName;
           dispargs["Mode"] = mode;
-          NamedValues dispres = ExecuteAsync(AsyncTestDirSlashedPath, dispargs, "Проверка существования каталога \"" + dirName + "\"", "Open");
+          NamedValues dispres = ExecuteAsync(AsyncTestDirSlashedPath, dispargs, "РџСЂРѕРІРµСЂРєР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ РєР°С‚Р°Р»РѕРіР° \"" + dirName + "\"", "Open");
           errorText = (string)(dispres["ErrorText"]);
           res = (bool)(dispres["Res"]);
           break;
@@ -137,14 +137,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Проверка имени файла
-    /// Может проверять реальное существование каталога и файла, в зависимости от режима.
-    /// В режиме <paramref name="mode"/>=None всегда возвращает true.
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅРё С„Р°Р№Р»Р°
+    /// РњРѕР¶РµС‚ РїСЂРѕРІРµСЂСЏС‚СЊ СЂРµР°Р»СЊРЅРѕРµ СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ РєР°С‚Р°Р»РѕРіР° Рё С„Р°Р№Р»Р°, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂРµР¶РёРјР°.
+    /// Р’ СЂРµР¶РёРјРµ <paramref name="mode"/>=None РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ true.
     /// </summary>
-    /// <param name="fileName">Имя файла, выбранное пользователем</param>
-    /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
-    /// <param name="mode">Режим проверки</param>
-    /// <returns>true - имя файла правильное</returns>
+    /// <param name="fileName">РРјСЏ С„Р°Р№Р»Р°, РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј</param>
+    /// <param name="errorText">РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ</param>
+    /// <param name="mode">Р РµР¶РёРј РїСЂРѕРІРµСЂРєРё</param>
+    /// <returns>true - РёРјСЏ С„Р°Р№Р»Р° РїСЂР°РІРёР»СЊРЅРѕРµ</returns>
     public static bool TestFilePath(string fileName, TestPathMode mode, out string errorText)
     {
       bool res;
@@ -152,14 +152,14 @@ namespace FreeLibSet.Forms
       {
         case TestPathMode.None:
         case TestPathMode.FormatOnly:
-          // Заставка не нужна
+          // Р—Р°СЃС‚Р°РІРєР° РЅРµ РЅСѓР¶РЅР°
           res = FileTools.TestFilePath(fileName, mode, out errorText);
           break;
         default:
           NamedValues dispargs = new NamedValues();
           dispargs["FileName"] = fileName;
           dispargs["Mode"] = mode;
-          NamedValues dispres = ExecuteAsync(AsyncTestFilePath, dispargs, "Проверка существования файла \"" + fileName + "\"", "Open");
+          NamedValues dispres = ExecuteAsync(AsyncTestFilePath, dispargs, "РџСЂРѕРІРµСЂРєР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ С„Р°Р№Р»Р° \"" + fileName + "\"", "Open");
           errorText = (string)(dispres["ErrorText"]);
           res = (bool)(dispres["Res"]);
           break;

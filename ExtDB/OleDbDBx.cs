@@ -1,6 +1,11 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+// 06.07.2022
+// В Mono почему-то нет класса OleDbConnectionStringBuilder.
+// Это не имеет практического значения, так как OleDbConnection - это просто заглушка в Mono.
+#if !MONO 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -1803,3 +1808,4 @@ namespace FreeLibSet.Data.OleDb
     #endregion
   }
 }
+#endif // !MONO

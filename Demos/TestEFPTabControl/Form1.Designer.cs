@@ -1,4 +1,4 @@
-namespace TestEFPTabControl
+Ôªønamespace TestEFPTabControl
 {
   partial class Form1
   {
@@ -49,7 +49,7 @@ namespace TestEFPTabControl
       this.btnAdd.Name = "btnAdd";
       this.btnAdd.Size = new System.Drawing.Size(88, 24);
       this.btnAdd.TabIndex = 0;
-      this.btnAdd.Text = "ƒÓ·‡‚ËÚ¸";
+      this.btnAdd.Text = "–î–æ–±–∞–≤–∏—Ç—å";
       this.btnAdd.UseVisualStyleBackColor = true;
       // 
       // TheTC

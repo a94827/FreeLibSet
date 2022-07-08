@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,19 +12,19 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms.FIAS
 {
   /// <summary>
-  /// Провайдер комбоблока для выбора адреса.
-  /// В текстовом поле отображается выбранный адрес, а при открытии выпадающего списка показывается диалог редактирования адреса FiasAddressDialog
+  /// РџСЂРѕРІР°Р№РґРµСЂ РєРѕРјР±РѕР±Р»РѕРєР° РґР»СЏ РІС‹Р±РѕСЂР° Р°РґСЂРµСЃР°.
+  /// Р’ С‚РµРєСЃС‚РѕРІРѕРј РїРѕР»Рµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РІС‹Р±СЂР°РЅРЅС‹Р№ Р°РґСЂРµСЃ, Р° РїСЂРё РѕС‚РєСЂС‹С‚РёРё РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР° РїРѕРєР°Р·С‹РІР°РµС‚СЃСЏ РґРёР°Р»РѕРі СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ Р°РґСЂРµСЃР° FiasAddressDialog
   /// </summary>
   public class EFPFiasAddressComboBox : EFPUserSelComboBox
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер комбоблока
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ РєРѕРјР±РѕР±Р»РѕРєР°
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент - комбоблок</param>
-    /// <param name="ui">Интерфейс доступа к адресам</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ - РєРѕРјР±РѕР±Р»РѕРє</param>
+    /// <param name="ui">РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє Р°РґСЂРµСЃР°Рј</param>
     public EFPFiasAddressComboBox(EFPBaseProvider baseProvider, UserSelComboBox control, FiasUI ui)
       : base(baseProvider, control)
     {
@@ -45,23 +45,23 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает "Адрес".
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ "РђРґСЂРµСЃ".
     /// </summary>
-    protected override string DefaultDisplayName { get { return "Адрес"; } }
+    protected override string DefaultDisplayName { get { return "РђРґСЂРµСЃ"; } }
 
     /// <summary>
-    /// Интерфейс доступа к адресам.
-    /// Задается в конструкторе
+    /// РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° Рє Р°РґСЂРµСЃР°Рј.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public FiasUI UI { get { return _UI; } }
     private FiasUI _UI;
 
     /// <summary>
-    /// Уровень, до которого можно вводить адрес.
-    /// По умолчанию - FiasLevel.Room.
+    /// РЈСЂРѕРІРµРЅСЊ, РґРѕ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ РІРІРѕРґРёС‚СЊ Р°РґСЂРµСЃ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FiasLevel.Room.
     /// </summary>
     public FiasEditorLevel EditorLevel
     {
@@ -69,14 +69,14 @@ namespace FreeLibSet.Forms.FIAS
       set
       {
         _EditorLevel = value;
-        this.Address = Address; // Инициализация текста
+        this.Address = Address; // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С‚РµРєСЃС‚Р°
       }
     }
     private FiasEditorLevel _EditorLevel;
 
     /// <summary>
-    /// Можно ли редактировать почтовый индекс?
-    /// По умолчанию - true
+    /// РњРѕР¶РЅРѕ Р»Рё СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РїРѕС‡С‚РѕРІС‹Р№ РёРЅРґРµРєСЃ?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true
     /// </summary>
     public bool PostalCodeEditable
     {
@@ -86,11 +86,11 @@ namespace FreeLibSet.Forms.FIAS
     private bool _PostalCodeEditable;
 
     /// <summary>
-    /// Задает минимальный уровень адреса, который должен быть выбран из справочника, а не задан вручную.
-    /// По умолчанию - FiasLevel.City, то есть регион, район и город должны быть в справочнике ФИАС, а населенный пункт,
-    /// при необходимости - введен вручную, если его нет в справочнике.
-    /// Значение Unknown отключает все проверки. 
-    /// Допускаются любые значения, включая House и Room, если они не выходят за пределы FiasEditorLevel.
+    /// Р—Р°РґР°РµС‚ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ Р°РґСЂРµСЃР°, РєРѕС‚РѕСЂС‹Р№ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР°, Р° РЅРµ Р·Р°РґР°РЅ РІСЂСѓС‡РЅСѓСЋ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - FiasLevel.City, С‚Рѕ РµСЃС‚СЊ СЂРµРіРёРѕРЅ, СЂР°Р№РѕРЅ Рё РіРѕСЂРѕРґ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ Р¤РРђРЎ, Р° РЅР°СЃРµР»РµРЅРЅС‹Р№ РїСѓРЅРєС‚,
+    /// РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё - РІРІРµРґРµРЅ РІСЂСѓС‡РЅСѓСЋ, РµСЃР»Рё РµРіРѕ РЅРµС‚ РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ.
+    /// Р—РЅР°С‡РµРЅРёРµ Unknown РѕС‚РєР»СЋС‡Р°РµС‚ РІСЃРµ РїСЂРѕРІРµСЂРєРё. 
+    /// Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ Р»СЋР±С‹Рµ Р·РЅР°С‡РµРЅРёСЏ, РІРєР»СЋС‡Р°СЏ House Рё Room, РµСЃР»Рё РѕРЅРё РЅРµ РІС‹С…РѕРґСЏС‚ Р·Р° РїСЂРµРґРµР»С‹ FiasEditorLevel.
     /// </summary>
     public FiasLevel MinRefBookLevel
     {
@@ -106,8 +106,8 @@ namespace FreeLibSet.Forms.FIAS
     private FiasLevel _MinRefBookLevel;
 
     /// <summary>
-    /// Формат вывода текста адреса.
-    /// По умолчанию - "TEXT"
+    /// Р¤РѕСЂРјР°С‚ РІС‹РІРѕРґР° С‚РµРєСЃС‚Р° Р°РґСЂРµСЃР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - "TEXT"
     /// </summary>
     public string TextFormat
     {
@@ -116,7 +116,7 @@ namespace FreeLibSet.Forms.FIAS
       {
         string errorMessage;
         if (!FiasFormatStringParser.IsValidFormat(value, out errorMessage))
-          throw new ArgumentException("Неправильный формат для текстового вывода адреса. " + errorMessage);
+          throw new ArgumentException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ РґР»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ РІС‹РІРѕРґР° Р°РґСЂРµСЃР°. " + errorMessage);
         _TextFormat = value;
 
         InitTextAndImage();
@@ -125,7 +125,7 @@ namespace FreeLibSet.Forms.FIAS
     private string _TextFormat;
 
     /// <summary>
-    /// Редактируемый адрес
+    /// Р РµРґР°РєС‚РёСЂСѓРµРјС‹Р№ Р°РґСЂРµСЃ
     /// </summary>
     public FiasAddress Address
     {
@@ -155,11 +155,11 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Свойства CanBeEmpty и CanBePartial
+    #region РЎРІРѕР№СЃС‚РІР° CanBeEmpty Рё CanBePartial
 
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// По умолчанию - Error - адрес должен быть заполнен.
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error - Р°РґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -175,8 +175,8 @@ namespace FreeLibSet.Forms.FIAS
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли адрес быть пустым?
-    /// Дублирует CanBeEmptyMode
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј?
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ CanBeEmptyMode
     /// </summary>
     public bool CanBeEmpty
     {
@@ -185,9 +185,9 @@ namespace FreeLibSet.Forms.FIAS
     }
 
     /// <summary>
-    /// Может ли адрес быть заполненным частично (например, введен только регион)?
-    /// По умолчанию - Error - адрес должен быть заполнен согласно свойству EditorLevel.
-    /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРЅС‹Рј С‡Р°СЃС‚РёС‡РЅРѕ (РЅР°РїСЂРёРјРµСЂ, РІРІРµРґРµРЅ С‚РѕР»СЊРєРѕ СЂРµРіРёРѕРЅ)?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error - Р°РґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ СЃРѕРіР»Р°СЃРЅРѕ СЃРІРѕР№СЃС‚РІСѓ EditorLevel.
+    /// РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё EditorLevel=Room, С‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ, РєР°Рє РјРёРЅРёРјСѓРј, РґРѕРј.
     /// </summary>
     public UIValidateState CanBePartialMode
     {
@@ -203,10 +203,10 @@ namespace FreeLibSet.Forms.FIAS
     private UIValidateState _CanBePartialMode;
 
     /// <summary>
-    /// Может ли адрес быть заполненным частично (например, введен только регион)?
-    /// По умолчанию - false - адрес должен быть заполнен согласно свойству EditorLevel.
-    /// Например, если EditorLevel=Room, то должен быть задан, как минимум, дом.
-    /// Дублирует свойство CanBePartialMode
+    /// РњРѕР¶РµС‚ Р»Рё Р°РґСЂРµСЃ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРЅС‹Рј С‡Р°СЃС‚РёС‡РЅРѕ (РЅР°РїСЂРёРјРµСЂ, РІРІРµРґРµРЅ С‚РѕР»СЊРєРѕ СЂРµРіРёРѕРЅ)?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - Р°РґСЂРµСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ СЃРѕРіР»Р°СЃРЅРѕ СЃРІРѕР№СЃС‚РІСѓ EditorLevel.
+    /// РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё EditorLevel=Room, С‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ, РєР°Рє РјРёРЅРёРјСѓРј, РґРѕРј.
+    /// Р”СѓР±Р»РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ CanBePartialMode
     /// </summary>
     public bool CanBePartial
     {
@@ -216,7 +216,7 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Обработчики комбоблока
+    #region РћР±СЂР°Р±РѕС‚С‡РёРєРё РєРѕРјР±РѕР±Р»РѕРєР°
 
     void Control_PopupClick(object sender, EventArgs args)
     {
@@ -238,10 +238,10 @@ namespace FreeLibSet.Forms.FIAS
 
     #endregion
 
-    #region Проверка
+    #region РџСЂРѕРІРµСЂРєР°
 
     /// <summary>
-    /// Проверка
+    /// РџСЂРѕРІРµСЂРєР°
     /// </summary>
     protected override void OnValidate()
     {

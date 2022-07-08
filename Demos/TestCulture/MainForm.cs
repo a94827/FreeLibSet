@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,7 +14,7 @@ namespace TestCulture
 {
   public partial class MainForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public MainForm()
     {
@@ -22,13 +22,13 @@ namespace TestCulture
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
-      #region Выбор культуры
+      #region Р’С‹Р±РѕСЂ РєСѓР»СЊС‚СѓСЂС‹
 
       AllCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
       SortedDictionary<string, CultureInfo> dict = new SortedDictionary<string, CultureInfo>();
       for (int i = 0; i < AllCultures.Length; i++)
         dict[AllCultures[i].DisplayName] = AllCultures[i];
-      dict[CultureInfo.CurrentCulture.DisplayName] = CultureInfo.CurrentCulture; // заменяем текущей культурой
+      dict[CultureInfo.CurrentCulture.DisplayName] = CultureInfo.CurrentCulture; // Р·Р°РјРµРЅСЏРµРј С‚РµРєСѓС‰РµР№ РєСѓР»СЊС‚СѓСЂРѕР№
       AllCultures = new CultureInfo[dict.Count];
       dict.Values.CopyTo(AllCultures, 0);
 
@@ -40,7 +40,7 @@ namespace TestCulture
         names[i] = AllCultures[i].DisplayName;
         if (Object.ReferenceEquals(AllCultures[i], CultureInfo.CurrentCulture))
         {
-          names[i] += " (Текущая)";
+          names[i] += " (РўРµРєСѓС‰Р°СЏ)";
           selIndex = i;
         }
       }
@@ -53,12 +53,12 @@ namespace TestCulture
       InfoTime = DateTime.Now;
       InfoValue = 123456789.12m;
 
-      #region Таблица параметров
+      #region РўР°Р±Р»РёС†Р° РїР°СЂР°РјРµС‚СЂРѕРІ
 
       efpInfo = new EFPDataGridView(efpForm, grInfo);
-      efpInfo.Columns.AddText("Параметр", false, "Параметр", 20);
-      efpInfo.Columns.AddTextFill("Значение", 50);
-      efpInfo.Columns.AddTextFill("Пример", 50);
+      efpInfo.Columns.AddText("РџР°СЂР°РјРµС‚СЂ", false, "РџР°СЂР°РјРµС‚СЂ", 20);
+      efpInfo.Columns.AddTextFill("Р—РЅР°С‡РµРЅРёРµ", 50);
+      efpInfo.Columns.AddTextFill("РџСЂРёРјРµСЂ", 50);
       efpInfo.DisableOrdering();
       efpInfo.ReadOnly = true;
       efpInfo.Control.ReadOnly = true;
@@ -69,11 +69,11 @@ namespace TestCulture
 
       #endregion
 
-      #region Стандартные форматы
+      #region РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ С„РѕСЂРјР°С‚С‹
 
       efpFormats = new EFPDataGridView(efpForm, grFormats);
-      efpFormats.Columns.AddText("Формат", false, "Формат", 6);
-      efpFormats.Columns.AddTextFill("Значение");
+      efpFormats.Columns.AddText("Р¤РѕСЂРјР°С‚", false, "Р¤РѕСЂРјР°С‚", 6);
+      efpFormats.Columns.AddTextFill("Р—РЅР°С‡РµРЅРёРµ");
       efpFormats.DisableOrdering();
       efpFormats.ReadOnly = true;
       efpFormats.Control.ReadOnly = true;
@@ -103,7 +103,7 @@ namespace TestCulture
       #endregion
 
 
-      #region Кнопка
+      #region РљРЅРѕРїРєР°
 
       btnTest.Image = EFPApp.MainImages.Images["Ok"];
       btnTest.ImageAlign = ContentAlignment.MiddleLeft;
@@ -115,7 +115,7 @@ namespace TestCulture
 
     #endregion
 
-    #region Список культур
+    #region РЎРїРёСЃРѕРє РєСѓР»СЊС‚СѓСЂ
 
     CultureInfo[] AllCultures;
 
@@ -135,7 +135,7 @@ namespace TestCulture
 
     #endregion
 
-    #region Список параметров
+    #region РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ
 
     EFPDataGridView efpInfo;
 
@@ -203,7 +203,7 @@ namespace TestCulture
 
     #endregion
 
-    #region Стандартные форматы
+    #region РЎС‚Р°РЅРґР°СЂС‚РЅС‹Рµ С„РѕСЂРјР°С‚С‹
 
     EFPDataGridView efpFormats;
 
@@ -262,7 +262,7 @@ namespace TestCulture
 
     #endregion
 
-    #region Тестирование
+    #region РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ
 
     void efpTest_Click(object sender, EventArgs args)
     {

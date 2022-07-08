@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 namespace FreeLibSet.Russian.PhoneticAlgorithms
 {
   /// <summary>
-  /// Daitch–Mokotoff Soundex
+  /// DaitchвЂ“Mokotoff Soundex
   /// </summary>
   public static class DMSoundex
   {
@@ -15,54 +15,54 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     private static readonly int[] _EmptyInts = new int[0];
 
 
-    // Описание процесса кодирования здесь:
+    // РћРїРёСЃР°РЅРёРµ РїСЂРѕС†РµСЃСЃР° РєРѕРґРёСЂРѕРІР°РЅРёСЏ Р·РґРµСЃСЊ:
     // http://www.jewishgen.org/InfoFiles/soundex.html
 
-    // Расширение для использования русского языка здесь:
+    // Р Р°СЃС€РёСЂРµРЅРёРµ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СЂСѓСЃСЃРєРѕРіРѕ СЏР·С‹РєР° Р·РґРµСЃСЊ:
     // https://github.com/iourinski/DMSoundex/blob/master/DMSoundex.pm
 
-    #region Статические таблицы
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ С‚Р°Р±Р»РёС†С‹
 
     /// <summary>
-    /// Полный список допустимых символов
+    /// РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє РґРѕРїСѓСЃС‚РёРјС‹С… СЃРёРјРІРѕР»РѕРІ
     /// </summary>
     private static Dictionary<char, object> _ValidChars;
 
     /// <summary>
-    /// Общие коды.
-    /// Ключ: символ или комбинация символов, подлежащая кодированию.
-    /// Значение: массив строк, как правило, из одного элемента.
-    /// Элемент массива содержит строку из, как правило, одного символа, задающих коды.
-    /// Если массив содержит пустую строку, последовательность не кодируется.
-    /// Если массив содержит несколько элементов, происходит "ветвление", и в результате 
-    /// будет несколько кодов.
+    /// РћР±С‰РёРµ РєРѕРґС‹.
+    /// РљР»СЋС‡: СЃРёРјРІРѕР» РёР»Рё РєРѕРјР±РёРЅР°С†РёСЏ СЃРёРјРІРѕР»РѕРІ, РїРѕРґР»РµР¶Р°С‰Р°СЏ РєРѕРґРёСЂРѕРІР°РЅРёСЋ.
+    /// Р—РЅР°С‡РµРЅРёРµ: РјР°СЃСЃРёРІ СЃС‚СЂРѕРє, РєР°Рє РїСЂР°РІРёР»Рѕ, РёР· РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°.
+    /// Р­Р»РµРјРµРЅС‚ РјР°СЃСЃРёРІР° СЃРѕРґРµСЂР¶РёС‚ СЃС‚СЂРѕРєСѓ РёР·, РєР°Рє РїСЂР°РІРёР»Рѕ, РѕРґРЅРѕРіРѕ СЃРёРјРІРѕР»Р°, Р·Р°РґР°СЋС‰РёС… РєРѕРґС‹.
+    /// Р•СЃР»Рё РјР°СЃСЃРёРІ СЃРѕРґРµСЂР¶РёС‚ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ, РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РЅРµ РєРѕРґРёСЂСѓРµС‚СЃСЏ.
+    /// Р•СЃР»Рё РјР°СЃСЃРёРІ СЃРѕРґРµСЂР¶РёС‚ РЅРµСЃРєРѕР»СЊРєРѕ СЌР»РµРјРµРЅС‚РѕРІ, РїСЂРѕРёСЃС…РѕРґРёС‚ "РІРµС‚РІР»РµРЅРёРµ", Рё РІ СЂРµР·СѓР»СЊС‚Р°С‚Рµ 
+    /// Р±СѓРґРµС‚ РЅРµСЃРєРѕР»СЊРєРѕ РєРѕРґРѕРІ.
     /// </summary>
     private static Dictionary<string, string[]> _Generic;
 
     /// <summary>
-    /// Коды, когда комбинация находится в начале слова
+    /// РљРѕРґС‹, РєРѕРіРґР° РєРѕРјР±РёРЅР°С†РёСЏ РЅР°С…РѕРґРёС‚СЃСЏ РІ РЅР°С‡Р°Р»Рµ СЃР»РѕРІР°
     /// </summary>
     private static Dictionary<string, string[]> _Beginning;
 
     /// <summary>
-    /// Коды, если следующий символ является гласной
+    /// РљРѕРґС‹, РµСЃР»Рё СЃР»РµРґСѓСЋС‰РёР№ СЃРёРјРІРѕР» СЏРІР»СЏРµС‚СЃСЏ РіР»Р°СЃРЅРѕР№
     /// </summary>
     private static Dictionary<string, string[]> _BeforeVowel;
 
     /// <summary>
-    /// Максимальная длина кодируемой последовательности символов в исходной строке
+    /// РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° РєРѕРґРёСЂСѓРµРјРѕР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё СЃРёРјРІРѕР»РѕРІ РІ РёСЃС…РѕРґРЅРѕР№ СЃС‚СЂРѕРєРµ
     /// </summary>
     private static int _MaxSeqLength;
 
     /// <summary>
-    /// Гласные буквы.
-    /// Ключ - символ буквы
-    /// Значение - null (не используется)
+    /// Р“Р»Р°СЃРЅС‹Рµ Р±СѓРєРІС‹.
+    /// РљР»СЋС‡ - СЃРёРјРІРѕР» Р±СѓРєРІС‹
+    /// Р—РЅР°С‡РµРЅРёРµ - null (РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
     /// </summary>
     private static Dictionary<char, object> _Vowels;
 
     /// <summary>
-    /// Статический конструктор инициализирует таблицы
+    /// РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ С‚Р°Р±Р»РёС†С‹
     /// </summary>
     static DMSoundex()
     {
@@ -71,16 +71,16 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     private static void FillCodes()
     {
-      #region Допустимые символы
+      #region Р”РѕРїСѓСЃС‚РёРјС‹Рµ СЃРёРјРІРѕР»С‹
 
-      string aValidChars = "abcdefghijklmnopqrstuvwxyz" + "абвгдежзийклмнопрстуфхцчшщъыьэюя";
+      string aValidChars = "abcdefghijklmnopqrstuvwxyz" + "Р°Р±РІРіРґРµР¶Р·РёР№РєР»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰СЉС‹СЊСЌСЋСЏ";
       _ValidChars = new Dictionary<char, object>(aValidChars.Length);
       for (int i = 0; i < aValidChars.Length; i++)
         _ValidChars.Add(aValidChars[i], null);
 
       #endregion
 
-      #region Кодировочная таблица
+      #region РљРѕРґРёСЂРѕРІРѕС‡РЅР°СЏ С‚Р°Р±Р»РёС†Р°
 
       _Beginning = new Dictionary<string, string[]>();
       _BeforeVowel = new Dictionary<string, string[]>();
@@ -88,12 +88,12 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
       _Codes2Dict = new Dictionary<string, string[]>();
 
-      // Таблица взята из:
+      // РўР°Р±Р»РёС†Р° РІР·СЏС‚Р° РёР·:
       // http://www.jewishgen.org/InfoFiles/soundex.html
-      // Убраны польские и румынские буквы с закорючками
+      // РЈР±СЂР°РЅС‹ РїРѕР»СЊСЃРєРёРµ Рё СЂСѓРјС‹РЅСЃРєРёРµ Р±СѓРєРІС‹ СЃ Р·Р°РєРѕСЂСЋС‡РєР°РјРё
 
       // 23.08.2017
-      // Убрал для комбинаций, начинающихся с A, E, I, O, U, J, and Y код для начала слова
+      // РЈР±СЂР°Р» РґР»СЏ РєРѕРјР±РёРЅР°С†РёР№, РЅР°С‡РёРЅР°СЋС‰РёС…СЃСЏ СЃ A, E, I, O, U, J, and Y РєРѕРґ РґР»СЏ РЅР°С‡Р°Р»Р° СЃР»РѕРІР°
 
       AddCodes("AI,AJ,AY", /*"0"*/null, "1", "NC");
       AddCodes("AU", /*"0"*/null, "7", "NC");
@@ -163,63 +163,63 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       AddCodes("ZH,ZS,ZSCH,ZSH", "4");
       AddCodes("Z", "4");
 
-      AddCodes("ай,ау", "0", "1", "NC");
-      AddCodes("а", "0", "NC", "NC");
-      AddCodes("б", "7");
-      AddCodes("в", "7");
-      AddCodes("г", "5");
-      AddCodes("дж", "4");
-      AddCodes("дрз", "4");
-      AddCodes("дщ,дш", "4");
-      AddCodes("д,дт", "3");
-      AddCodes("ей,еу", "0", "1", "NC");
-      AddCodes("е", "0/1", "NC", "NC"); // может быть буква "ё"
-      AddCodes("ж", "4");
-      AddCodes("здз,здж,ждж", "2", "4", "4");
-      AddCodes("з", "4");
-      AddCodes("иа,ио,иу", "1", "NC", "NC");
-      AddCodes("и", "1", "NC", "NC");
-      AddCodes("й", "1", "NC", "NC");
-      AddCodes("кс", "5", "54", "54");
-      AddCodes("к", "5");
-      AddCodes("л", "8");
-      AddCodes("мн", null, "66", "66");
-      AddCodes("м", "6");
-      AddCodes("нм", null, "66", "66");
-      AddCodes("н", "6");
-      AddCodes("ой", "0", "1", "NC");
-      AddCodes("о", "0", "NC", "NC");
-      AddCodes("пф", "7");
-      AddCodes("п", "7");
-      AddCodes("рщ,рш", "4");
-      AddCodes("р", "9");
-      AddCodes("стж", "4");
-      AddCodes("стр,стрс", "2", "4", "4"); // ?
-      AddCodes("сд", "2", "43", "43"); // ?
-      AddCodes("с", "4");
-      AddCodes("тс,тш,тч,ттч,ттс,тц", "4");
-      AddCodes("тж,тз", "4");
-      AddCodes("т", "3");
-      AddCodes("уй", "0", "1", "NC");
-      AddCodes("у,уе", "0", "NC", "NC");
-      AddCodes("фб", "7");
-      AddCodes("ф", "7");
-      AddCodes("х", "5");
-      AddCodes("ц", "4");
-      AddCodes("чт", "2", "43", "43");
-      AddCodes("ч,чс", "4");
-      AddCodes("шд", "2", "43", "43");
-      AddCodes("шт", "2", "43", "43");
-      AddCodes("шщ", "4");
-      AddCodes("шч,сч", "4");
-      AddCodes("ш", "4");
-      AddCodes("щт", "2", "43", "43");
-      AddCodes("щ", "4");
-      AddCodes("ъ,ь", "NC");
-      AddCodes("ы", "0", "NC", "NC");
-      AddCodes("э", "1", "NC", "NC");
-      AddCodes("ю", "1", "NC", "NC");
-      AddCodes("я", "1", "NC", "NC");
+      AddCodes("Р°Р№,Р°Сѓ", "0", "1", "NC");
+      AddCodes("Р°", "0", "NC", "NC");
+      AddCodes("Р±", "7");
+      AddCodes("РІ", "7");
+      AddCodes("Рі", "5");
+      AddCodes("РґР¶", "4");
+      AddCodes("РґСЂР·", "4");
+      AddCodes("РґС‰,РґС€", "4");
+      AddCodes("Рґ,РґС‚", "3");
+      AddCodes("РµР№,РµСѓ", "0", "1", "NC");
+      AddCodes("Рµ", "0/1", "NC", "NC"); // РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±СѓРєРІР° "С‘"
+      AddCodes("Р¶", "4");
+      AddCodes("Р·РґР·,Р·РґР¶,Р¶РґР¶", "2", "4", "4");
+      AddCodes("Р·", "4");
+      AddCodes("РёР°,РёРѕ,РёСѓ", "1", "NC", "NC");
+      AddCodes("Рё", "1", "NC", "NC");
+      AddCodes("Р№", "1", "NC", "NC");
+      AddCodes("РєСЃ", "5", "54", "54");
+      AddCodes("Рє", "5");
+      AddCodes("Р»", "8");
+      AddCodes("РјРЅ", null, "66", "66");
+      AddCodes("Рј", "6");
+      AddCodes("РЅРј", null, "66", "66");
+      AddCodes("РЅ", "6");
+      AddCodes("РѕР№", "0", "1", "NC");
+      AddCodes("Рѕ", "0", "NC", "NC");
+      AddCodes("РїС„", "7");
+      AddCodes("Рї", "7");
+      AddCodes("СЂС‰,СЂС€", "4");
+      AddCodes("СЂ", "9");
+      AddCodes("СЃС‚Р¶", "4");
+      AddCodes("СЃС‚СЂ,СЃС‚СЂСЃ", "2", "4", "4"); // ?
+      AddCodes("СЃРґ", "2", "43", "43"); // ?
+      AddCodes("СЃ", "4");
+      AddCodes("С‚СЃ,С‚С€,С‚С‡,С‚С‚С‡,С‚С‚СЃ,С‚С†", "4");
+      AddCodes("С‚Р¶,С‚Р·", "4");
+      AddCodes("С‚", "3");
+      AddCodes("СѓР№", "0", "1", "NC");
+      AddCodes("Сѓ,СѓРµ", "0", "NC", "NC");
+      AddCodes("С„Р±", "7");
+      AddCodes("С„", "7");
+      AddCodes("С…", "5");
+      AddCodes("С†", "4");
+      AddCodes("С‡С‚", "2", "43", "43");
+      AddCodes("С‡,С‡СЃ", "4");
+      AddCodes("С€Рґ", "2", "43", "43");
+      AddCodes("С€С‚", "2", "43", "43");
+      AddCodes("С€С‰", "4");
+      AddCodes("С€С‡,СЃС‡", "4");
+      AddCodes("С€", "4");
+      AddCodes("С‰С‚", "2", "43", "43");
+      AddCodes("С‰", "4");
+      AddCodes("СЉ,СЊ", "NC");
+      AddCodes("С‹", "0", "NC", "NC");
+      AddCodes("СЌ", "1", "NC", "NC");
+      AddCodes("СЋ", "1", "NC", "NC");
+      AddCodes("СЏ", "1", "NC", "NC");
 
 #if DEBUG
       CheckDict(_Beginning);
@@ -227,13 +227,13 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       CheckDict(_Generic);
 #endif
 
-      _Codes2Dict = null; // очищаем ненужный список
+      _Codes2Dict = null; // РѕС‡РёС‰Р°РµРј РЅРµРЅСѓР¶РЅС‹Р№ СЃРїРёСЃРѕРє
 
       #endregion
 
-      #region Гласные
+      #region Р“Р»Р°СЃРЅС‹Рµ
 
-      string aVowels = "aouiey" + "аеиоуэюя"/*ё*/;
+      string aVowels = "aouiey" + "Р°РµРёРѕСѓСЌСЋСЏ"/*С‘*/;
 
       _Vowels = new Dictionary<char, object>(aVowels.Length);
       for (int i = 0; i < aVowels.Length; i++)
@@ -258,7 +258,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         for (int j = 0; j < key.Length; j++)
         {
           if (!_ValidChars.ContainsKey(key[j]))
-            throw new Exception("Ключ \"" + key + "\" содержит недопустимый символ \"" + key[j] + "\"");
+            throw new Exception("РљР»СЋС‡ \"" + key + "\" СЃРѕРґРµСЂР¶РёС‚ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Р№ СЃРёРјРІРѕР» \"" + key[j] + "\"");
         }
 #endif
 
@@ -270,42 +270,42 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     }
 
     /// <summary>
-    /// Используется только в процессе инициализации.
-    /// На нужно получить мнжество маленьких массивов, вида {"1"}.
-    /// Было бы плохо использовать отдельные экземпляры для одинаковых массивов
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ РїСЂРѕС†РµСЃСЃРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё.
+    /// РќР° РЅСѓР¶РЅРѕ РїРѕР»СѓС‡РёС‚СЊ РјРЅР¶РµСЃС‚РІРѕ РјР°Р»РµРЅСЊРєРёС… РјР°СЃСЃРёРІРѕРІ, РІРёРґР° {"1"}.
+    /// Р‘С‹Р»Рѕ Р±С‹ РїР»РѕС…Рѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РѕС‚РґРµР»СЊРЅС‹Рµ СЌРєР·РµРјРїР»СЏСЂС‹ РґР»СЏ РѕРґРёРЅР°РєРѕРІС‹С… РјР°СЃСЃРёРІРѕРІ
     /// </summary>
     private static Dictionary<string, string[]> _Codes2Dict;
 
     /// <summary>
-    /// Коды для некодируемой последовательности символов "NC"
+    /// РљРѕРґС‹ РґР»СЏ РЅРµРєРѕРґРёСЂСѓРµРјРѕР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё СЃРёРјРІРѕР»РѕРІ "NC"
     /// </summary>
     private static readonly string[] _NonCodedCodes = new string[1] { String.Empty };
 
     private static void AddCodes2(Dictionary<string, string[]> dict, string key, string xValue)
     {
       if (String.IsNullOrEmpty(xValue))
-        return; // комбинация не используется. Это не тоже самое, что "не кодируется"
+        return; // РєРѕРјР±РёРЅР°С†РёСЏ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ. Р­С‚Рѕ РЅРµ С‚РѕР¶Рµ СЃР°РјРѕРµ, С‡С‚Рѕ "РЅРµ РєРѕРґРёСЂСѓРµС‚СЃСЏ"
 
       string[] aValues;
       if (!_Codes2Dict.TryGetValue(xValue, out aValues))
       {
-        if (xValue == "NC") // не кодируется
+        if (xValue == "NC") // РЅРµ РєРѕРґРёСЂСѓРµС‚СЃСЏ
           aValues = _NonCodedCodes;
         else
         {
           aValues = xValue.Split('/');
 #if DEBUG
           if (aValues.Length == 0)
-            throw new Exception("Нет кодов для ключа \"" + key + "\"");
+            throw new Exception("РќРµС‚ РєРѕРґРѕРІ РґР»СЏ РєР»СЋС‡Р° \"" + key + "\"");
           for (int i = 0; i < aValues.Length; i++)
           {
             if (String.IsNullOrEmpty(aValues[i]))
-              throw new Exception("Пустое значение при разбиении \"" + xValue + "\"");
+              throw new Exception("РџСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРё СЂР°Р·Р±РёРµРЅРёРё \"" + xValue + "\"");
             for (int j = 0; j < aValues[i].Length; j++)
             {
               char ch = aValues[i][j];
               if (ch < '0' || ch > '9')
-                throw new Exception("Недопустимый символ \"" + ch + "\" в значении \"" + xValue + "\"");
+                throw new Exception("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ СЃРёРјРІРѕР» \"" + ch + "\" РІ Р·РЅР°С‡РµРЅРёРё \"" + xValue + "\"");
             }
           }
 #endif
@@ -321,7 +321,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     private static void CheckDict(Dictionary<string, string[]> dict)
     {
-      #region Проверка символов в последовательностях
+      #region РџСЂРѕРІРµСЂРєР° СЃРёРјРІРѕР»РѕРІ РІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЏС…
 
       foreach (KeyValuePair<string, string[]> pair in dict)
       {
@@ -329,19 +329,19 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         for (int i = 0; i < s.Length; i++)
         {
           if (!_ValidChars.ContainsKey(s[i]))
-            throw new Exception("Последовательность \"" + s + "\" содержит недопустимый символ \"" + s[i] + "\"");
+            throw new Exception("РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ \"" + s + "\" СЃРѕРґРµСЂР¶РёС‚ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Р№ СЃРёРјРІРѕР» \"" + s[i] + "\"");
         }
       }
 
       #endregion
 
-      #region Проверка полноты последовательностей
+      #region РџСЂРѕРІРµСЂРєР° РїРѕР»РЅРѕС‚С‹ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚РµР№
 
       foreach (KeyValuePair<char, object> pair in _ValidChars)
       {
         string s = new string(pair.Key, 1);
         if (!dict.ContainsKey(s))
-          throw new Exception("Словарь не содержит одиночного символа \"" + s + "\" (0x" + ((int)pair.Key).ToString("x") + ")");
+          throw new Exception("РЎР»РѕРІР°СЂСЊ РЅРµ СЃРѕРґРµСЂР¶РёС‚ РѕРґРёРЅРѕС‡РЅРѕРіРѕ СЃРёРјРІРѕР»Р° \"" + s + "\" (0x" + ((int)pair.Key).ToString("x") + ")");
       }
 
       #endregion
@@ -351,40 +351,40 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     #endregion
 
-    #region Накопление кодов
+    #region РќР°РєРѕРїР»РµРЅРёРµ РєРѕРґРѕРІ
 
-    // Можно было бы, конечно, использовать простой String или StringBuilder, но есть возможность
-    // использовать числовые значения, а не выделять строки
+    // РњРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹, РєРѕРЅРµС‡РЅРѕ, РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїСЂРѕСЃС‚РѕР№ String РёР»Рё StringBuilder, РЅРѕ РµСЃС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ
+    // РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‡РёСЃР»РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, Р° РЅРµ РІС‹РґРµР»СЏС‚СЊ СЃС‚СЂРѕРєРё
 
     private struct CodeAccumulator
     {
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       /// <summary>
-      /// Число в диапазоне от 0 до 999999 в процессе накопления
+      /// Р§РёСЃР»Рѕ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 0 РґРѕ 999999 РІ РїСЂРѕС†РµСЃСЃРµ РЅР°РєРѕРїР»РµРЅРёСЏ
       /// </summary>
       public int Value { get { return _Value; } }
       private int _Value;
 
       /// <summary>
-      /// Количество накопленных значений в диапазоне от 0 до 6
+      /// РљРѕР»РёС‡РµСЃС‚РІРѕ РЅР°РєРѕРїР»РµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёР№ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 0 РґРѕ 6
       /// </summary>
       public int Count { get { return _Count; } }
       private int _Count;
 
       #endregion
 
-      #region Добавление кода
+      #region Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРґР°
 
       private static readonly int[] _Muls = new int[6] { 100000, 10000, 1000, 100, 10, 1 };
 
       /// <summary>
-      /// Добавление одного кода.
-      /// Добавление более, чем шестого символа, отбрпасывается
+      /// Р”РѕР±Р°РІР»РµРЅРёРµ РѕРґРЅРѕРіРѕ РєРѕРґР°.
+      /// Р”РѕР±Р°РІР»РµРЅРёРµ Р±РѕР»РµРµ, С‡РµРј С€РµСЃС‚РѕРіРѕ СЃРёРјРІРѕР»Р°, РѕС‚Р±СЂРїР°СЃС‹РІР°РµС‚СЃСЏ
       /// </summary>
-      /// <param name="curr">Текущее накопленное значение</param>
-      /// <param name="ch">Символ в диапазоне от '0' до '9' </param>
-      /// <returns>Новое накопленное значение</returns>
+      /// <param name="curr">РўРµРєСѓС‰РµРµ РЅР°РєРѕРїР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+      /// <param name="ch">РЎРёРјРІРѕР» РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ '0' РґРѕ '9' </param>
+      /// <returns>РќРѕРІРѕРµ РЅР°РєРѕРїР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
       public static CodeAccumulator operator +(CodeAccumulator curr, char ch)
       {
 #if DEBUG
@@ -392,10 +392,10 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
           throw new ArgumentException("ch");
 #endif
 
-        int nCh = ch - '0'; // в диапазоне от 0 до 9
+        int nCh = ch - '0'; // РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 0 РґРѕ 9
 
         if (curr._Count >= 6)
-          return curr; // отбрасываем
+          return curr; // РѕС‚Р±СЂР°СЃС‹РІР°РµРј
 
         int v2 = _Muls[curr._Count] * nCh;
 
@@ -406,12 +406,12 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       }
 
       /// <summary>
-      /// Добавление нескольких кода.
-      /// Добавление более, чем шестого символа, отбрпасывается
+      /// Р”РѕР±Р°РІР»РµРЅРёРµ РЅРµСЃРєРѕР»СЊРєРёС… РєРѕРґР°.
+      /// Р”РѕР±Р°РІР»РµРЅРёРµ Р±РѕР»РµРµ, С‡РµРј С€РµСЃС‚РѕРіРѕ СЃРёРјРІРѕР»Р°, РѕС‚Р±СЂРїР°СЃС‹РІР°РµС‚СЃСЏ
       /// </summary>
-      /// <param name="curr">Текущее накопленное значение</param>
-      /// <param name="chars">Символы в диапазоне от '0' до '9' </param>
-      /// <returns>Новое накопленное значение</returns>
+      /// <param name="curr">РўРµРєСѓС‰РµРµ РЅР°РєРѕРїР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+      /// <param name="chars">РЎРёРјРІРѕР»С‹ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ '0' РґРѕ '9' </param>
+      /// <returns>РќРѕРІРѕРµ РЅР°РєРѕРїР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ</returns>
       public static CodeAccumulator operator +(CodeAccumulator curr, string chars)
       {
         CodeAccumulator res = curr;
@@ -422,7 +422,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
       #endregion
 
-      #region Текстовое представление
+      #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
       public override string ToString()
       {
@@ -431,7 +431,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
       #endregion
 
-      #region Статические свойства
+      #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ СЃРІРѕР№СЃС‚РІР°
 
       public static readonly CodeAccumulator[] EmptyArray = new CodeAccumulator[0];
 
@@ -440,16 +440,16 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     #endregion
 
-    #region Основной методы вычисления
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґС‹ РІС‹С‡РёСЃР»РµРЅРёСЏ
 
     /// <summary>
-    /// Вычисляет функцию Daitch–Mokotoff Soundex.
-    /// Возвращает список 6-символьных кодов, представляемых в текстовом формате.
-    /// Обычно возвращается единственный код, но некоторые комбинации символов могут
-    /// порождать несколько вариантов
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ С„СѓРЅРєС†РёСЋ DaitchвЂ“Mokotoff Soundex.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє 6-СЃРёРјРІРѕР»СЊРЅС‹С… РєРѕРґРѕРІ, РїСЂРµРґСЃС‚Р°РІР»СЏРµРјС‹С… РІ С‚РµРєСЃС‚РѕРІРѕРј С„РѕСЂРјР°С‚Рµ.
+    /// РћР±С‹С‡РЅРѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РєРѕРґ, РЅРѕ РЅРµРєРѕС‚РѕСЂС‹Рµ РєРѕРјР±РёРЅР°С†РёРё СЃРёРјРІРѕР»РѕРІ РјРѕРіСѓС‚
+    /// РїРѕСЂРѕР¶РґР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ РІР°СЂРёР°РЅС‚РѕРІ
     /// </summary>
-    /// <param name="s">Преобразуемая строка </param>
-    /// <returns>Массив кодов DM-Soundex</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР° </param>
+    /// <returns>РњР°СЃСЃРёРІ РєРѕРґРѕРІ DM-Soundex</returns>
     public static string[] Calculate(string s)
     {
       CodeAccumulator[] a = DoCalculate(s, null);
@@ -463,15 +463,15 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     }
 
     /// <summary>
-    /// Вычисляет функцию Daitch–Mokotoff Soundex.
-    /// Возвращает список 6-символьных кодов, представляемых в текстовом формате.
-    /// Обычно возвращается единственный код, но некоторые комбинации символов могут
-    /// порождать несколько вариантов.
-    /// Версия, выдающая отладочную информацию
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ С„СѓРЅРєС†РёСЋ DaitchвЂ“Mokotoff Soundex.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє 6-СЃРёРјРІРѕР»СЊРЅС‹С… РєРѕРґРѕРІ, РїСЂРµРґСЃС‚Р°РІР»СЏРµРјС‹С… РІ С‚РµРєСЃС‚РѕРІРѕРј С„РѕСЂРјР°С‚Рµ.
+    /// РћР±С‹С‡РЅРѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РєРѕРґ, РЅРѕ РЅРµРєРѕС‚РѕСЂС‹Рµ РєРѕРјР±РёРЅР°С†РёРё СЃРёРјРІРѕР»РѕРІ РјРѕРіСѓС‚
+    /// РїРѕСЂРѕР¶РґР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ РІР°СЂРёР°РЅС‚РѕРІ.
+    /// Р’РµСЂСЃРёСЏ, РІС‹РґР°СЋС‰Р°СЏ РѕС‚Р»Р°РґРѕС‡РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ
     /// </summary>
-    /// <param name="s">Преобразуемая строка</param>
-    /// <param name="debugInfo">Сюда помещается отладочная информация</param>
-    /// <returns>Массив кодов DM-Soundex</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР°</param>
+    /// <param name="debugInfo">РЎСЋРґР° РїРѕРјРµС‰Р°РµС‚СЃСЏ РѕС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ</param>
+    /// <returns>РњР°СЃСЃРёРІ РєРѕРґРѕРІ DM-Soundex</returns>
     public static string[] Calculate(string s, out DMSoundexCodingPart[] debugInfo)
     {
       List<DMSoundexCodingPart> debugList = new List<DMSoundexCodingPart>();
@@ -488,13 +488,13 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     }
 
     /// <summary>
-    /// Вычисляет функцию Daitch–Mokotoff Soundex.
-    /// Возвращает список числовых кодов в диапазоне от 0 до 999999
-    /// Обычно возвращается единственный код, но некоторые комбинации символов могут
-    /// порождать несколько вариантов
+    /// Р’С‹С‡РёСЃР»СЏРµС‚ С„СѓРЅРєС†РёСЋ DaitchвЂ“Mokotoff Soundex.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє С‡РёСЃР»РѕРІС‹С… РєРѕРґРѕРІ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 0 РґРѕ 999999
+    /// РћР±С‹С‡РЅРѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РєРѕРґ, РЅРѕ РЅРµРєРѕС‚РѕСЂС‹Рµ РєРѕРјР±РёРЅР°С†РёРё СЃРёРјРІРѕР»РѕРІ РјРѕРіСѓС‚
+    /// РїРѕСЂРѕР¶РґР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ РІР°СЂРёР°РЅС‚РѕРІ
     /// </summary>
-    /// <param name="s">Преобразуемая строка </param>
-    /// <returns>Массив кодов DM-Soundex</returns>
+    /// <param name="s">РџСЂРµРѕР±СЂР°Р·СѓРµРјР°СЏ СЃС‚СЂРѕРєР° </param>
+    /// <returns>РњР°СЃСЃРёРІ РєРѕРґРѕРІ DM-Soundex</returns>
     public static int[] CalculateInt(string s)
     {
       CodeAccumulator[] a = DoCalculate(s, null);
@@ -510,7 +510,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     #endregion
 
-    #region Реализация вычисления
+    #region Р РµР°Р»РёР·Р°С†РёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ
 
     private static CodeAccumulator[] DoCalculate(string s, List<DMSoundexCodingPart> debugList)
     {
@@ -519,22 +519,22 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       if (s.Length == 0)
         return CodeAccumulator.EmptyArray;
 
-      // Чаще всего бывает один код, лищь иногда происходит "ветвление"
-      CodeAccumulator singleCode = new CodeAccumulator(); // единственный результат
-      List<CodeAccumulator> multiCodes = null; // множественный результат
+      // Р§Р°С‰Рµ РІСЃРµРіРѕ Р±С‹РІР°РµС‚ РѕРґРёРЅ РєРѕРґ, Р»РёС‰СЊ РёРЅРѕРіРґР° РїСЂРѕРёСЃС…РѕРґРёС‚ "РІРµС‚РІР»РµРЅРёРµ"
+      CodeAccumulator singleCode = new CodeAccumulator(); // РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚
+      List<CodeAccumulator> multiCodes = null; // РјРЅРѕР¶РµСЃС‚РІРµРЅРЅС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚
 
       int pos = 0;
       while (pos < s.Length)
       {
-        // Какую самую длинную последовательность можно найти
+        // РљР°РєСѓСЋ СЃР°РјСѓСЋ РґР»РёРЅРЅСѓСЋ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РјРѕР¶РЅРѕ РЅР°Р№С‚Рё
         int n = Math.Min(_MaxSeqLength, s.Length - pos);
 
-        // Пытаемся найти последовательности в порядке укорачивания
+        // РџС‹С‚Р°РµРјСЃСЏ РЅР°Р№С‚Рё РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РІ РїРѕСЂСЏРґРєРµ СѓРєРѕСЂР°С‡РёРІР°РЅРёСЏ
         string[] codes = null;
         string seq = null;
         for (int len = n; len > 0; len--)
         {
-          seq = s.Substring(pos, len); // проверяемая последовательность
+          seq = s.Substring(pos, len); // РїСЂРѕРІРµСЂСЏРµРјР°СЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ
           if (pos == 0)
             _Beginning.TryGetValue(seq, out codes);
           else
@@ -555,7 +555,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         }
 
         // 23.08.2017
-        // Выбрасываем парные буквы
+        // Р’С‹Р±СЂР°СЃС‹РІР°РµРј РїР°СЂРЅС‹Рµ Р±СѓРєРІС‹
         if (seq.Length == 1 && pos > 0)
         {
           if (s[pos - 1] == seq[0])
@@ -564,9 +564,9 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
 #if DEBUG
         if (codes == null)
-          throw new Exception("Внутрення ошибка. Не найдена последовательность");
+          throw new Exception("Р’РЅСѓС‚СЂРµРЅРЅСЏ РѕС€РёР±РєР°. РќРµ РЅР°Р№РґРµРЅР° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ");
         if (codes.Length == 0)
-          throw new Exception("Внутрення ошибка. Найдены пустые коды для последовательности \"" + seq + "\"");
+          throw new Exception("Р’РЅСѓС‚СЂРµРЅРЅСЏ РѕС€РёР±РєР°. РќР°Р№РґРµРЅС‹ РїСѓСЃС‚С‹Рµ РєРѕРґС‹ РґР»СЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё \"" + seq + "\"");
 #endif
 
         if (debugList != null)
@@ -577,13 +577,13 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
         if (codes.Length > 1)
         {
-          // Переходим к множественным кодам
+          // РџРµСЂРµС…РѕРґРёРј Рє РјРЅРѕР¶РµСЃС‚РІРµРЅРЅС‹Рј РєРѕРґР°Рј
           if (multiCodes == null)
           {
             multiCodes = new List<CodeAccumulator>();
             multiCodes.Add(singleCode);
           }
-          // Выполняем ветвление
+          // Р’С‹РїРѕР»РЅСЏРµРј РІРµС‚РІР»РµРЅРёРµ
           int n2 = multiCodes.Count;
           for (int i = 0; i < n2; i++)
           {
@@ -595,7 +595,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         }
         else // Codes.Length=1
         {
-          // Простое добавление кодов
+          // РџСЂРѕСЃС‚РѕРµ РґРѕР±Р°РІР»РµРЅРёРµ РєРѕРґРѕРІ
           if (multiCodes == null)
             singleCode += codes[0];
           else
@@ -613,7 +613,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         return new CodeAccumulator[1] { singleCode };
       else
       {
-        // Убираем возможно повторяющиеся коды
+        // РЈР±РёСЂР°РµРј РІРѕР·РјРѕР¶РЅРѕ РїРѕРІС‚РѕСЂСЏСЋС‰РёРµСЃСЏ РєРѕРґС‹
         for (int i = multiCodes.Count - 1; i >= 1; i--)
         {
           bool remove = false;
@@ -635,12 +635,12 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     #endregion
 
-    #region Подготовка строки
+    #region РџРѕРґРіРѕС‚РѕРІРєР° СЃС‚СЂРѕРєРё
 
     /// <summary>
-    /// Удаление всех символов, кроме ValidChars.
-    /// Преведение к нижнему регистру.
-    /// Замена "ё"
+    /// РЈРґР°Р»РµРЅРёРµ РІСЃРµС… СЃРёРјРІРѕР»РѕРІ, РєСЂРѕРјРµ ValidChars.
+    /// РџСЂРµРІРµРґРµРЅРёРµ Рє РЅРёР¶РЅРµРјСѓ СЂРµРіРёСЃС‚СЂСѓ.
+    /// Р—Р°РјРµРЅР° "С‘"
     /// </summary>
     /// <param name="s"></param>
     /// <returns></returns>
@@ -650,16 +650,16 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         return String.Empty;
 
       s = s.ToLowerInvariant();
-      s = s.Replace('ё', 'е');
+      s = s.Replace('С‘', 'Рµ');
 
       for (int i = 0; i < s.Length; i++)
       {
         if (!_ValidChars.ContainsKey(s[i]))
         {
-          // Есть плохой символ
+          // Р•СЃС‚СЊ РїР»РѕС…РѕР№ СЃРёРјРІРѕР»
           if (i == (s.Length - 1))
           {
-            // плохим оказался последний символ
+            // РїР»РѕС…РёРј РѕРєР°Р·Р°Р»СЃСЏ РїРѕСЃР»РµРґРЅРёР№ СЃРёРјРІРѕР»
             return s.Substring(0, s.Length - 1);
           }
 
@@ -674,7 +674,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         }
       }
 
-      // Все символы хорошие
+      // Р’СЃРµ СЃРёРјРІРѕР»С‹ С…РѕСЂРѕС€РёРµ
       return s;
     }
 
@@ -682,19 +682,19 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
   }
 
   /// <summary>
-  /// Отладочная информация о разбиении строки на коды DM-Soundex.
-  /// Для строки может быть получен массив таких структур
+  /// РћС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЂР°Р·Р±РёРµРЅРёРё СЃС‚СЂРѕРєРё РЅР° РєРѕРґС‹ DM-Soundex.
+  /// Р”Р»СЏ СЃС‚СЂРѕРєРё РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕР»СѓС‡РµРЅ РјР°СЃСЃРёРІ С‚Р°РєРёС… СЃС‚СЂСѓРєС‚СѓСЂ
   /// </summary>
   [Serializable]
   public struct DMSoundexCodingPart
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚
     /// </summary>
-    /// <param name="sequence">Последовательность символов в исходной строке</param>
-    /// <param name="codes">Примененные коды</param>
+    /// <param name="sequence">РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ РІ РёСЃС…РѕРґРЅРѕР№ СЃС‚СЂРѕРєРµ</param>
+    /// <param name="codes">РџСЂРёРјРµРЅРµРЅРЅС‹Рµ РєРѕРґС‹</param>
     public DMSoundexCodingPart(string sequence, string[] codes)
     {
       _Sequence = sequence;
@@ -703,28 +703,28 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Последовательность символов в исходной строке
+    /// РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ РІ РёСЃС…РѕРґРЅРѕР№ СЃС‚СЂРѕРєРµ
     /// </summary>
     public string Sequence { get { return _Sequence; } }
     private string _Sequence;
 
     /// <summary>
-    /// Примененные коды.
+    /// РџСЂРёРјРµРЅРµРЅРЅС‹Рµ РєРѕРґС‹.
     /// </summary>
     public string[] Codes { get { return _Codes; } }
     private string[] _Codes;
 
     #endregion
 
-    #region Текстовое представление
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
     /// <summary>
-    /// Возвращает текстовое представление в виде "Sequence"=Codes
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІ РІРёРґРµ "Sequence"=Codes
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       StringBuilder sb = new StringBuilder();
@@ -733,9 +733,9 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     }
 
     /// <summary>
-    /// Возвращает текстовое представление в виде "Sequence"=Codes
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІ РІРёРґРµ "Sequence"=Codes
     /// </summary>
-    /// <param name="sb">Буфер для заполнения</param>
+    /// <param name="sb">Р‘СѓС„РµСЂ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ</param>
     public void ToString(StringBuilder sb)
     {
       sb.Append("\"");
@@ -769,10 +769,10 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     }
 
     /// <summary>
-    /// Выводит части через запятую
+    /// Р’С‹РІРѕРґРёС‚ С‡Р°СЃС‚Рё С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ
     /// </summary>
-    /// <param name="info">Массив частей</param>
-    /// <returns>Текстовое представление</returns>
+    /// <param name="info">РњР°СЃСЃРёРІ С‡Р°СЃС‚РµР№</param>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public static string ToString(DMSoundexCodingPart[] info)
     {
       StringBuilder sb = new StringBuilder();

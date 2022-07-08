@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,7 +19,7 @@ namespace FIASDemo
 {
   public partial class MainForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public MainForm(FiasDB fiasDB, CfgPart cfg)
     {
@@ -30,9 +30,9 @@ namespace FIASDemo
       this.cfg = cfg;
       this.UI = new FiasUI(fiasDB.Source);
 
-      #region Вкладка "Адрес"
+      #region Р’РєР»Р°РґРєР° "РђРґСЂРµСЃ"
 
-      #region Редактор адреса
+      #region Р РµРґР°РєС‚РѕСЂ Р°РґСЂРµСЃР°
 
       cbLevel.Items.AddRange(FiasEnumNames.FiasEditorLevelNames);
       string[] AvailableLevelCodes = new string[FiasEnumNames.FiasEditorLevelNames.Length];
@@ -61,20 +61,20 @@ namespace FIASDemo
 
       #endregion
 
-      #region Текущий адрес
+      #region РўРµРєСѓС‰РёР№ Р°РґСЂРµСЃ
 
       btnFormat.Image = EFPApp.MainImages.Images["Font"];
       btnFormat.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpFormat = new EFPButton(efpForm, btnFormat);
-      efpFormat.DisplayName = "Тестирование Format()";
-      efpFormat.ToolTipText = "Тестирование метода FiasHandler.Format()";
+      efpFormat.DisplayName = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ Format()";
+      efpFormat.ToolTipText = "РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РјРµС‚РѕРґР° FiasHandler.Format()";
       efpFormat.Click += new EventHandler(efpFormat_Click);
 
       efpMessages = new EFPErrorDataGridView(efpForm, grMessages);
 
       #endregion
 
-      #region Сохранение адреса как строки
+      #region РЎРѕС…СЂР°РЅРµРЅРёРµ Р°РґСЂРµСЃР° РєР°Рє СЃС‚СЂРѕРєРё
 
       efpVFormat = new EFPListComboBox(efpForm, cbVFormat);
       efpVText = new EFPHistComboBox(efpForm, cbVText);
@@ -113,7 +113,7 @@ namespace FIASDemo
       EFPButton efpFromVText = new EFPButton(efpForm, btnFromVText);
       btnFromVText.Click += new EventHandler(efpFromVText_Click);
 
-      #region Поиск по Guid
+      #region РџРѕРёСЃРє РїРѕ Guid
 
       efpGuid = new EFPHistComboBox(efpForm, cbGuid);
       efpGuid.HistList = cfg.GetHist("AddressGuid");
@@ -132,7 +132,7 @@ namespace FIASDemo
 
       #endregion
 
-      #region Вкладка "Классификатор"
+      #region Р’РєР»Р°РґРєР° "РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ"
 
       efpActualDate = new EFPDateBox(efpForm, edActualDate);
       efpActualDate.ReadOnly = true;
@@ -168,7 +168,7 @@ namespace FIASDemo
 
       #endregion
 
-      #region Вкладка "Поиск"
+      #region Р’РєР»Р°РґРєР° "РџРѕРёСЃРє"
 
       ParseSettings = new OldFiasParseSettings(fiasDB.Source);
       try { ParseSettings.ReadConfig(cfg.GetChild("ParseSettings", true)); }
@@ -181,7 +181,7 @@ namespace FIASDemo
       efpBaseAddressButton.Click += new EventHandler(efpBaseAddressButton_Click);
 
       efpSearchLevel = new EFPListComboBox(efpForm, cbSearchLevel);
-      efpSearchLevel.ItemStrings = efpLevel.ItemStrings; // такие же уровни, как в редакторе
+      efpSearchLevel.ItemStrings = efpLevel.ItemStrings; // С‚Р°РєРёРµ Р¶Рµ СѓСЂРѕРІРЅРё, РєР°Рє РІ СЂРµРґР°РєС‚РѕСЂРµ
       efpSearchLevel.Codes = AvailableLevelCodes;
       efpSearchLevel.SelectedCode = cfg.GetEnumDef<FiasLevel>("AddressLevel", FiasLevel.Flat).ToString();
 
@@ -204,11 +204,11 @@ namespace FIASDemo
     #endregion
 
     /// <summary>
-    /// Объект для сохранения настроек
+    /// РћР±СЉРµРєС‚ РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РЅР°СЃС‚СЂРѕРµРє
     /// </summary>
     private CfgPart cfg;
 
-    #region Адрес
+    #region РђРґСЂРµСЃ
 
     void efpVFormat_ValueChanged(object sender, EventArgs args)
     {
@@ -218,7 +218,7 @@ namespace FIASDemo
     }
 
     /// <summary>
-    /// Текущий адрес
+    /// РўРµРєСѓС‰РёР№ Р°РґСЂРµСЃ
     /// </summary>
     public FiasAddress CurrAddress
     {
@@ -229,7 +229,7 @@ namespace FIASDemo
           value = new FiasAddress();
         _CurrAddress = value;
         if (_CurrAddress.IsEmpty)
-          edAddress.Text = "[ пусто ]";
+          edAddress.Text = "[ РїСѓСЃС‚Рѕ ]";
         else
         {
           FiasHandler handler = new FiasHandler(fiasDB.Source);
@@ -276,7 +276,7 @@ namespace FIASDemo
         }
         catch
         {
-          EFPApp.ErrorMessageBox("Неправильный формат GUIDа");
+          EFPApp.ErrorMessageBox("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ GUIDР°");
           return;
         }
 
@@ -320,7 +320,7 @@ namespace FIASDemo
     {
       if (efpLevel.SelectedCode.Length == 0)
       {
-        efpLevel.SetFocus("Не выбран уровень");
+        efpLevel.SetFocus("РќРµ РІС‹Р±СЂР°РЅ СѓСЂРѕРІРµРЅСЊ");
         return;
       }
       FiasEditorLevel editorLevel = (FiasEditorLevel)(Enum.Parse(typeof(FiasEditorLevel), efpLevel.SelectedCode));
@@ -362,17 +362,17 @@ namespace FIASDemo
 
     #endregion
 
-    #region Классификатор
+    #region РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ
 
-    #region Текущая база данных
+    #region РўРµРєСѓС‰Р°СЏ Р±Р°Р·Р° РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Объект классификатора
+    /// РћР±СЉРµРєС‚ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°
     /// </summary>
     private FiasDB fiasDB;
 
     /// <summary>
-    /// Пользовательский интерфейс ФИАС
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ Р¤РРђРЎ
     /// </summary>
     private FiasUI UI;
 
@@ -382,7 +382,7 @@ namespace FIASDemo
 
     private void InitDBStat()
     {
-      efpLoadWeb.Enabled = !fiasDB.IsEmpty; // 26.02.2021 Пока нельзя загрузить полную версию с сайта
+      efpLoadWeb.Enabled = !fiasDB.IsEmpty; // 26.02.2021 РџРѕРєР° РЅРµР»СЊР·СЏ Р·Р°РіСЂСѓР·РёС‚СЊ РїРѕР»РЅСѓСЋ РІРµСЂСЃРёСЋ СЃ СЃР°Р№С‚Р°
 
       efpActualDate.Value = fiasDB.ActualDate;
 
@@ -397,7 +397,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Обновление
+    #region РћР±РЅРѕРІР»РµРЅРёРµ
 
     EFPButton efpLoadWeb;
 
@@ -405,7 +405,7 @@ namespace FIASDemo
     {
       try
       {
-        using (Splash spl = new Splash("Обновление ФИАС"))
+        using (Splash spl = new Splash("РћР±РЅРѕРІР»РµРЅРёРµ Р¤РРђРЎ"))
         {
           FiasDBWebUpdater updater = new FiasDBWebUpdater(fiasDB);
           updater.Splash = spl;
@@ -426,8 +426,8 @@ namespace FIASDemo
         return;
 
       DateInputDialog dlg2 = new DateInputDialog();
-      dlg2.Title = "Загрузка файлов";
-      dlg2.Prompt = "Дата актуальности обновления";
+      dlg2.Title = "Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ";
+      dlg2.Prompt = "Р”Р°С‚Р° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РѕР±РЅРѕРІР»РµРЅРёСЏ";
       dlg2.CanBeEmpty = false;
       if (dlg2.ShowDialog() != DialogResult.OK)
         return;
@@ -436,7 +436,7 @@ namespace FIASDemo
       {
         int cntFiles;
         DateTime startTime = DateTime.Now;
-        using (Splash spl = new Splash("Загрузка файлов ФИАС"))
+        using (Splash spl = new Splash("Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ Р¤РРђРЎ"))
 
         using (FiasDBUpdater up = new FiasDBUpdater(fiasDB))
         {
@@ -445,7 +445,7 @@ namespace FIASDemo
         }
 
         TimeSpan time = DateTime.Now - startTime;
-        EFPApp.MessageBox("Загружено файлов: " + cntFiles.ToString() + ". Время загрузки: " + time.ToString());
+        EFPApp.MessageBox("Р—Р°РіСЂСѓР¶РµРЅРѕ С„Р°Р№Р»РѕРІ: " + cntFiles.ToString() + ". Р’СЂРµРјСЏ Р·Р°РіСЂСѓР·РєРё: " + time.ToString());
       }
       finally
       {
@@ -467,7 +467,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Дополнительно
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ
 
     private void efpClearCache_Click(object sender, EventArgs args)
     {
@@ -493,7 +493,7 @@ namespace FIASDemo
       int MaxHouseLen = 0;
       string MaxHouseStr = String.Empty;
 
-      using (Splash spl = new Splash("Просмотр файлов"))
+      using (Splash spl = new Splash("РџСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»РѕРІ"))
       {
         string[] aFiles = System.IO.Directory.GetFiles(dlg.SelectedPath, "*.dbf", System.IO.SearchOption.TopDirectoryOnly);
         spl.PercentMax = aFiles.Length;
@@ -546,9 +546,9 @@ namespace FIASDemo
         }
       }
 
-      EFPApp.MessageBox("Макс. длина адресного объекта: " + MaxOffNameLen.ToString() + " (" + MaxOffNameStr + ")" +
+      EFPApp.MessageBox("РњР°РєСЃ. РґР»РёРЅР° Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°: " + MaxOffNameLen.ToString() + " (" + MaxOffNameStr + ")" +
         Environment.NewLine +
-        "Макс. длина номера дома: " + MaxHouseLen.ToString() + " (" + MaxHouseStr + ")");
+        "РњР°РєСЃ. РґР»РёРЅР° РЅРѕРјРµСЂР° РґРѕРјР°: " + MaxHouseLen.ToString() + " (" + MaxHouseStr + ")");
     }
 
     private void btnGetAllDownloadFileInfo_Click(object sender, EventArgs args)
@@ -556,11 +556,11 @@ namespace FIASDemo
       try
       {
         DataTable table = FiasDBWebUpdater.GetAllDownloadFileInfo();
-        DebugTools.DebugDataTable(table, "Список доступных обновлений");
+        DebugTools.DebugDataTable(table, "РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… РѕР±РЅРѕРІР»РµРЅРёР№");
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка получения списка обновлений");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РїРѕР»СѓС‡РµРЅРёСЏ СЃРїРёСЃРєР° РѕР±РЅРѕРІР»РµРЅРёР№");
       }   */
     }
 
@@ -573,7 +573,7 @@ namespace FIASDemo
       FiasHandler handler = new FiasHandler(fiasDB.Source);
       ErrorMessageList errors = new ErrorMessageList();
 
-      using (Splash spl = new Splash("Создание DBF-файла"))
+      using (Splash spl = new Splash("РЎРѕР·РґР°РЅРёРµ DBF-С„Р°Р№Р»Р°"))
       {
         DbfStruct dbs = new DbfStruct();
         dbs.AddString("TEXT", 255);
@@ -598,7 +598,7 @@ namespace FIASDemo
         using (DbfFile dbf = new DbfFile(@"c:\temp\addr72.dbf", dbs, Encoding.GetEncoding(1251), DbfFileFormat.dBase3))
         {
           FiasEnumerable en = new FiasEnumerable(fiasDB.Source);
-          en.BaseAddress.AOGuid = new Guid("54049357-326d-4b8f-b224-3c6dc25d6dd3"); // Тюменская область
+          en.BaseAddress.AOGuid = new Guid("54049357-326d-4b8f-b224-3c6dc25d6dd3"); // РўСЋРјРµРЅСЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ
           //en.BaseAddress.AOGuid = new Guid("2771f01d-b335-40ba-ac30-11a7d3b43c26");
 
           en.BottomLevel = FiasLevel.House;
@@ -606,10 +606,10 @@ namespace FIASDemo
           foreach (FiasAddress a in en)
           {
             if ((dbf.RecordCount % 100) == 0)
-              spl.PhaseText = "Записей: " + dbf.RecordCount.ToString() + ". " + a.ToString();
+              spl.PhaseText = "Р—Р°РїРёСЃРµР№: " + dbf.RecordCount.ToString() + ". " + a.ToString();
             dbf.AppendRecord();
             string s = handler.GetTextWithoutPostalCode(a);
-            s = RemoveIfStartsWith(s, "Тюменская Область, ");
+            s = RemoveIfStartsWith(s, "РўСЋРјРµРЅСЃРєР°СЏ РћР±Р»Р°СЃС‚СЊ, ");
             dbf.SetString("TEXT", s);
             dbf.SetInt("AOLEVEL", (int)(a.GuidBottomLevel));
             dbf.SetString("AOGUID", a.AOGuid.ToString());
@@ -640,7 +640,7 @@ namespace FIASDemo
         }
       }
 
-      EFPApp.ShowErrorMessageListDialog(errors, "Результаты загрузки");
+      EFPApp.ShowErrorMessageListDialog(errors, "Р РµР·СѓР»СЊС‚Р°С‚С‹ Р·Р°РіСЂСѓР·РєРё");
     }
 
     public static string RemoveIfStartsWith(string s, string value)
@@ -658,7 +658,7 @@ namespace FIASDemo
     {
       try
       {
-        string srch = "лЕнИн";
+        string srch = "Р»Р•РЅРРЅ";
         DataTable table;
         using (DBxConBase con = fiasDB.DB.MainEntry.CreateCon())
         {
@@ -670,19 +670,19 @@ namespace FIASDemo
           table = con.SQLExecuteDataTable(buffer.SB.ToString());
         }
 
-        DebugTools.DebugDataTable(table, "Поиск \"" + srch + "\"");
+        DebugTools.DebugDataTable(table, "РџРѕРёСЃРє \"" + srch + "\"");
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка поиска");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РїРѕРёСЃРєР°");
       }
     }
 #endif
 
-    #region Поиск
+    #region РџРѕРёСЃРє
 
     /// <summary>
-    /// Базовый адрес для поиска
+    /// Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ РґР»СЏ РїРѕРёСЃРєР°
     /// </summary>
     private OldFiasParseSettings ParseSettings;
 
@@ -694,7 +694,7 @@ namespace FIASDemo
       }
       catch (Exception e)
       {
-        edParseSettingsText.Text = "Ошибка. " + e.Message;
+        edParseSettingsText.Text = "РћС€РёР±РєР°. " + e.Message;
       }
     }
 
@@ -705,7 +705,7 @@ namespace FIASDemo
     void efpBaseAddressButton_Click(object sender, EventArgs args)
     {
       FiasAddressDialog dlg = new FiasAddressDialog(UI);
-      dlg.Title = "Базовый адрес для поиска";
+      dlg.Title = "Р‘Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ РґР»СЏ РїРѕРёСЃРєР°";
       dlg.EditorLevel = FiasEditorLevel.Village;
       dlg.CanBeEmpty = true;
       dlg.CanBePartial = true;
@@ -726,12 +726,12 @@ namespace FIASDemo
 
     private class SearchResForm : SimpleGridForm
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public SearchResForm(FiasUI ui, OldFiasParseSettings parseSettings, string[] lines, FiasAddress[] addresses, FiasAddressConvertGuidMode guidMode)
       {
         if (addresses.Length != lines.Length)
-          throw new BugException("Разная длина массивов");
+          throw new BugException("Р Р°Р·РЅР°СЏ РґР»РёРЅР° РјР°СЃСЃРёРІРѕРІ");
 
         _UI = ui;
         _Lines = lines;
@@ -740,14 +740,14 @@ namespace FIASDemo
         _Convert = new FiasAddressConvert(ui.Source);
         _Convert.GuidMode = guidMode;
 
-        Text = "Результаты поиска адресов (" + lines.Length.ToString() + ")";
+        Text = "Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР° Р°РґСЂРµСЃРѕРІ (" + lines.Length.ToString() + ")";
         Icon = EFPApp.MainImageIcon("Find");
 
         gh = new EFPDataGridView(base.ControlWithToolBar);
-        gh.Columns.AddText("Line", false, "Строка поиска", 30, 25);
-        gh.Columns.AddText("AddressText", false, "Найденный адрес", 70, 25);
+        gh.Columns.AddText("Line", false, "РЎС‚СЂРѕРєР° РїРѕРёСЃРєР°", 30, 25);
+        gh.Columns.AddText("AddressText", false, "РќР°Р№РґРµРЅРЅС‹Р№ Р°РґСЂРµСЃ", 70, 25);
         gh.Columns.AddImage("Error");
-        gh.Columns.AddText("BottomLevel", false, "Найден уровень", 8, 3);
+        gh.Columns.AddText("BottomLevel", false, "РќР°Р№РґРµРЅ СѓСЂРѕРІРµРЅСЊ", 8, 3);
         gh.Columns.AddText("FiasAddressConvert", false, "FiasAddressConvert", 40, 10);
         gh.Control.RowCount = lines.Length;
         gh.DisableOrdering();
@@ -762,21 +762,21 @@ namespace FIASDemo
         gh.EditData += new EventHandler(gh_EditData);
 
         EFPCommandItem ciDetails = new EFPCommandItem("View", "Details");
-        ciDetails.MenuText = "Подробности";
+        ciDetails.MenuText = "РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё";
         ciDetails.ImageKey = "Fias.Details";
-        ciDetails.ToolTipText = "Подробная информация по каждому уровню классификатора ФИАС";
+        ciDetails.ToolTipText = "РџРѕРґСЂРѕР±РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РїРѕ РєР°Р¶РґРѕРјСѓ СѓСЂРѕРІРЅСЋ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР° Р¤РРђРЎ";
         ciDetails.Click += new EventHandler(ciDetails_Click);
         ciDetails.GroupBegin = true;
         ciDetails.GroupEnd = true;
         gh.CommandItems.Add(ciDetails);
 
-        //gh.TopLeftCellToolTipText = "Строк в просмотре: " + lines.Length.ToString();
+        //gh.TopLeftCellToolTipText = "РЎС‚СЂРѕРє РІ РїСЂРѕСЃРјРѕС‚СЂРµ: " + lines.Length.ToString();
 
       }
 
       #endregion
 
-      #region Поля
+      #region РџРѕР»СЏ
 
       private FiasUI _UI;
       private OldFiasParseSettings _ParseSettings;
@@ -789,7 +789,7 @@ namespace FIASDemo
 
       #endregion
 
-      #region Обработчики табличного просмотра
+      #region РћР±СЂР°Р±РѕС‚С‡РёРєРё С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
 
       void gh_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
       {
@@ -820,7 +820,7 @@ namespace FIASDemo
           return;
 
         FiasAddressDialog dlg = new FiasAddressDialog(_UI);
-        dlg.Title = "Найденный адрес для строки " + (gh.CurrentRowIndex + 1).ToString();
+        dlg.Title = "РќР°Р№РґРµРЅРЅС‹Р№ Р°РґСЂРµСЃ РґР»СЏ СЃС‚СЂРѕРєРё " + (gh.CurrentRowIndex + 1).ToString();
         dlg.Address = _Addresses[gh.CurrentRowIndex];
         dlg.ReadOnly = gh.State == EFPDataGridViewState.View;
         dlg.EditorLevel = _ParseSettings.EditorLevel;
@@ -832,7 +832,7 @@ namespace FIASDemo
 
       #endregion
 
-      #region Команды меню
+      #region РљРѕРјР°РЅРґС‹ РјРµРЅСЋ
 
       private void ciDetails_Click(object sender, EventArgs args)
       {
@@ -851,7 +851,7 @@ namespace FIASDemo
       string[] lines = efpSearchText.Control.Lines;
       if (lines.Length == 0)
       {
-        EFPApp.ShowTempMessage("Не задано ни одного адреса");
+        EFPApp.ShowTempMessage("РќРµ Р·Р°РґР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ Р°РґСЂРµСЃР°");
         return;
       }
 
@@ -860,7 +860,7 @@ namespace FIASDemo
 
       FiasHandler handler = new FiasHandler(fiasDB.Source);
       FiasAddress[] a;
-      using (Splash spl = new Splash("Поиск адресов"))
+      using (Splash spl = new Splash("РџРѕРёСЃРє Р°РґСЂРµСЃРѕРІ"))
       {
         a = handler.ParseAddresses(lines, ParseSettings);
       }
@@ -894,13 +894,13 @@ namespace FIASDemo
       ps.CellLevels[4] = FiasLevelSet.FromLevel(FiasLevel.Building);
       ps.CellLevels[5] = FiasLevelSet.FromLevel(FiasLevel.Structure);
 
-      // рп Голышманово, ул Карла Маркса, Дом 1
+      // СЂРї Р“РѕР»С‹С€РјР°РЅРѕРІРѕ, СѓР» РљР°СЂР»Р° РњР°СЂРєСЃР°, Р”РѕРј 1
 
       string[] cells = new string[6];
       cells[0] = "";
-      cells[1] = "рп Голышманово";
-      cells[2] = "ул. Карла Маркса";
-      cells[3] = "Дом 1";
+      cells[1] = "СЂРї Р“РѕР»С‹С€РјР°РЅРѕРІРѕ";
+      cells[2] = "СѓР». РљР°СЂР»Р° РњР°СЂРєСЃР°";
+      cells[3] = "Р”РѕРј 1";
       cells[4] = "";
       cells[5] = "";
 

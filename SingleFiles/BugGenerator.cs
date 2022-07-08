@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,7 +9,7 @@ using System.Threading;
 namespace FreeLibSet
 {
   /// <summary>
-  /// Генерация ошибок (для тестирования)
+  /// Р“РµРЅРµСЂР°С†РёСЏ РѕС€РёР±РѕРє (РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ)
   /// </summary>
   public static class BugGenerator
   {
@@ -17,7 +17,7 @@ namespace FreeLibSet
 
     private class DeadLockThreadObj
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public object Obj1;
 
@@ -27,14 +27,14 @@ namespace FreeLibSet
 
       #endregion
 
-      #region Выполняемая процедура
+      #region Р’С‹РїРѕР»РЅСЏРµРјР°СЏ РїСЂРѕС†РµРґСѓСЂР°
 
       public void Execute()
       {
         lock (Obj2)
         {
           Flag = true;
-          lock (Obj1) // не может быть выполнена
+          lock (Obj1) // РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅР°
           {
           }
         }
@@ -44,9 +44,9 @@ namespace FreeLibSet
     }
 
     /// <summary>
-    /// Создать "мертвую блокировку" в текущем потоке.
-    /// Метод запускает дополнительный поток, а затем создает взаимную блокировку этого потока с текущим, вызвав Monitor.Enter()
-    /// для двух объектов в противоположном порядке
+    /// РЎРѕР·РґР°С‚СЊ "РјРµСЂС‚РІСѓСЋ Р±Р»РѕРєРёСЂРѕРІРєСѓ" РІ С‚РµРєСѓС‰РµРј РїРѕС‚РѕРєРµ.
+    /// РњРµС‚РѕРґ Р·Р°РїСѓСЃРєР°РµС‚ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ РїРѕС‚РѕРє, Р° Р·Р°С‚РµРј СЃРѕР·РґР°РµС‚ РІР·Р°РёРјРЅСѓСЋ Р±Р»РѕРєРёСЂРѕРІРєСѓ СЌС‚РѕРіРѕ РїРѕС‚РѕРєР° СЃ С‚РµРєСѓС‰РёРј, РІС‹Р·РІР°РІ Monitor.Enter()
+    /// РґР»СЏ РґРІСѓС… РѕР±СЉРµРєС‚РѕРІ РІ РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅРѕРј РїРѕСЂСЏРґРєРµ
     /// </summary>
     public static void PerformDeadLock()
     {
@@ -59,11 +59,11 @@ namespace FreeLibSet
         Thread trd = new Thread(threadObj.Execute);
         trd.Start();
 
-        // Дожидаемся запуска процедуры потока, когда она заблокирует Obj2
+        // Р”РѕР¶РёРґР°РµРјСЃСЏ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµРґСѓСЂС‹ РїРѕС‚РѕРєР°, РєРѕРіРґР° РѕРЅР° Р·Р°Р±Р»РѕРєРёСЂСѓРµС‚ Obj2
         while (!threadObj.Flag)
           Thread.Sleep(50);
 
-        lock (threadObj.Obj2) // это не может быть выполнено
+        lock (threadObj.Obj2) // СЌС‚Рѕ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅРѕ
         {
         }
       }

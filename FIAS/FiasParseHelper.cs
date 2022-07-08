@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -9,11 +9,11 @@ using FreeLibSet.Core;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Парсинг адреса с разбиением на колонки
+  /// РџР°СЂСЃРёРЅРі Р°РґСЂРµСЃР° СЃ СЂР°Р·Р±РёРµРЅРёРµРј РЅР° РєРѕР»РѕРЅРєРё
   /// </summary>
   internal class FiasParseHelper
   {
-    #region Фиксированные данные
+    #region Р¤РёРєСЃРёСЂРѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ
 
     public FiasHandler Handler;
 
@@ -23,7 +23,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Основной метод
+    #region РћСЃРЅРѕРІРЅРѕР№ РјРµС‚РѕРґ
 
     public FiasAddress Parse()
     {
@@ -45,51 +45,51 @@ namespace FreeLibSet.FIAS
 
         if (i > 0)
         {
-          // TODO: Проверка совместимости уровней
+          // TODO: РџСЂРѕРІРµСЂРєР° СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё СѓСЂРѕРІРЅРµР№
         }
       }
 
       //_Handler.FillAddress(_BaseAddress);
       _BestAddress = null;
-      //_BestTail = String.Join(",", CellStrings); // надо бы пропускать пустые строки
+      //_BestTail = String.Join(",", CellStrings); // РЅР°РґРѕ Р±С‹ РїСЂРѕРїСѓСЃРєР°С‚СЊ РїСѓСЃС‚С‹Рµ СЃС‚СЂРѕРєРё
       _BestTail = String.Empty;
 
       AddPart(0, CellStrings[0], ParseSettings.CellLevels[0], ParseSettings.BaseAddress.Clone());
 
       if (!String.IsNullOrEmpty(_BestTail))
-        _BestAddress.AddMessage(ErrorMessageKind.Error, "Некуда добавить фрагмент текста \"" + _BestTail + "\", так как все уровни адреса заполнены");
+        _BestAddress.AddMessage(ErrorMessageKind.Error, "РќРµРєСѓРґР° РґРѕР±Р°РІРёС‚СЊ С„СЂР°РіРјРµРЅС‚ С‚РµРєСЃС‚Р° \"" + _BestTail + "\", С‚Р°Рє РєР°Рє РІСЃРµ СѓСЂРѕРІРЅРё Р°РґСЂРµСЃР° Р·Р°РїРѕР»РЅРµРЅС‹");
 
       if (_BestAddress == null)
-        return ParseSettings.BaseAddress; // ничего не нашли
+        return ParseSettings.BaseAddress; // РЅРёС‡РµРіРѕ РЅРµ РЅР°С€Р»Рё
       else
         return _BestAddress;
     }
 
     #endregion
 
-    #region Лучший адрес
+    #region Р›СѓС‡С€РёР№ Р°РґСЂРµСЃ
 
     private FiasAddress _BestAddress;
 
     private string _BestTail;
 
     /// <summary>
-    /// Сравнение адреса-претендента с лучшим существующим адресом.
-    /// Если претендент "лучше", чем старый адрес, возвращается true, и старый адрес щаменяется на новый
+    /// РЎСЂР°РІРЅРµРЅРёРµ Р°РґСЂРµСЃР°-РїСЂРµС‚РµРЅРґРµРЅС‚Р° СЃ Р»СѓС‡С€РёРј СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРј Р°РґСЂРµСЃРѕРј.
+    /// Р•СЃР»Рё РїСЂРµС‚РµРЅРґРµРЅС‚ "Р»СѓС‡С€Рµ", С‡РµРј СЃС‚Р°СЂС‹Р№ Р°РґСЂРµСЃ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true, Рё СЃС‚Р°СЂС‹Р№ Р°РґСЂРµСЃ С‰Р°РјРµРЅСЏРµС‚СЃСЏ РЅР° РЅРѕРІС‹Р№
     /// </summary>
     /// <param name="currentCellIndex"></param>
     /// <param name="s"></param>
-    /// <param name="address">Адрес-претендент</param>
+    /// <param name="address">РђРґСЂРµСЃ-РїСЂРµС‚РµРЅРґРµРЅС‚</param>
     /// <returns></returns>
     private bool CompareWithTheBest(int currentCellIndex, string s, FiasAddress address)
     {
       // 09.03.2021
-      // Если есть "хвост", не пытаемся сохранить адрес
+      // Р•СЃР»Рё РµСЃС‚СЊ "С…РІРѕСЃС‚", РЅРµ РїС‹С‚Р°РµРјСЃСЏ СЃРѕС…СЂР°РЅРёС‚СЊ Р°РґСЂРµСЃ
 
       if (!String.IsNullOrEmpty(s))
         return false;
 
-      // Собираем хвост
+      // РЎРѕР±РёСЂР°РµРј С…РІРѕСЃС‚
       for (int i = currentCellIndex + 1; i < ParseSettings.CellLevels.Length; i++)
       {
         if (!String.IsNullOrEmpty(CellStrings[i]))
@@ -116,24 +116,24 @@ namespace FreeLibSet.FIAS
     private bool DoCompareWithTheBest(string s, FiasAddress address)
     {
       if (address.NameBottomLevel == FiasLevel.Unknown)
-        return false; // пустышка
+        return false; // РїСѓСЃС‚С‹С€РєР°
 
       if (_BestAddress == null)
         return true;
 
-      // 09.09.2021. Проверяем наличие ошибок
+      // 09.09.2021. РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РѕС€РёР±РѕРє
       int cmpSeverity = ErrorMessageList.Compare(address.Messages.Severity, _BestAddress.Messages.Severity);
       if (cmpSeverity != 0)
         return cmpSeverity < 0;
 
-      // Проверяем наличие хвоста
+      // РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ С…РІРѕСЃС‚Р°
       if (s.Length > 0 != _BestTail.Length > 0)
         return s.Length == 0;
 
       FiasLevel testLevel = address.NameBottomLevel;
 
-      int ex1 = GetRBExistance(address, testLevel); // претендент
-      int ex2 = GetRBExistance(_BestAddress, testLevel); // текущий чемпион
+      int ex1 = GetRBExistance(address, testLevel); // РїСЂРµС‚РµРЅРґРµРЅС‚
+      int ex2 = GetRBExistance(_BestAddress, testLevel); // С‚РµРєСѓС‰РёР№ С‡РµРјРїРёРѕРЅ
       if (ex1 != ex2)
         return ex1 < ex2;
 
@@ -149,11 +149,11 @@ namespace FreeLibSet.FIAS
       {
         case FiasTableType.House:
           if (!Handler.Source.DBSettings.UseHouse)
-            return 2; // нет справочника
+            return 2; // РЅРµС‚ СЃРїСЂР°РІРѕС‡РЅРёРєР°
           break;
         case FiasTableType.Room:
           if (!Handler.Source.DBSettings.UseRoom)
-            return 2; // нет справочника
+            return 2; // РЅРµС‚ СЃРїСЂР°РІРѕС‡РЅРёРєР°
           break;
       }
 
@@ -165,7 +165,7 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Рекурсивный метод
+    #region Р РµРєСѓСЂСЃРёРІРЅС‹Р№ РјРµС‚РѕРґ
 
     private bool AddPart(int currentCellIndex, string s, FiasLevelSet levels, FiasAddress address)
     {
@@ -176,15 +176,15 @@ namespace FreeLibSet.FIAS
       if (String.IsNullOrEmpty(s))
         return AddNextPart(currentCellIndex, address);
 
-      FiasLevel lastLevel = address.NameBottomLevel; // последний заполненный уровень
+      FiasLevel lastLevel = address.NameBottomLevel; // РїРѕСЃР»РµРґРЅРёР№ Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ
 
-      // Проверяем все доступные уровни, для которых доступно наследование
+      // РџСЂРѕРІРµСЂСЏРµРј РІСЃРµ РґРѕСЃС‚СѓРїРЅС‹Рµ СѓСЂРѕРІРЅРё, РґР»СЏ РєРѕС‚РѕСЂС‹С… РґРѕСЃС‚СѓРїРЅРѕ РЅР°СЃР»РµРґРѕРІР°РЅРёРµ
       bool res = false;
       if (!levels.IsEmpty)
       {
         foreach (FiasLevel level in levels)
         {
-          // оставшиеся уровни
+          // РѕСЃС‚Р°РІС€РёРµСЃСЏ СѓСЂРѕРІРЅРё
           address.ClearStartingWith(levels.TopLevel);
           FiasLevelSet levels2 = levels.GetBelow(level);
 
@@ -206,7 +206,7 @@ namespace FreeLibSet.FIAS
     private bool AddNextPart(int currentCellIndex, FiasAddress address)
     {
       if (currentCellIndex < (ParseSettings.CellLevels.Length - 1))
-        return AddPart(currentCellIndex + 1, CellStrings[currentCellIndex + 1], ParseSettings.CellLevels[currentCellIndex + 1], address); // рекурсивный вызов для следующего уровня
+        return AddPart(currentCellIndex + 1, CellStrings[currentCellIndex + 1], ParseSettings.CellLevels[currentCellIndex + 1], address); // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ СѓСЂРѕРІРЅСЏ
       else
         return CompareWithTheBest(currentCellIndex, string.Empty, address);
     }
@@ -219,18 +219,18 @@ namespace FreeLibSet.FIAS
       if (pComma >= 0)
       {
         s2 = s.Substring(0, pComma);
-        sOthers = s.Substring(pComma); // включая запятую
+        sOthers = s.Substring(pComma); // РІРєР»СЋС‡Р°СЏ Р·Р°РїСЏС‚СѓСЋ
       }
 
       bool res = false;
       bool aoTypeFound = false;
 
-      // Может ли тип адресного объекта быть до или после именной части
+      // РњРѕР¶РµС‚ Р»Рё С‚РёРї Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° Р±С‹С‚СЊ РґРѕ РёР»Рё РїРѕСЃР»Рµ РёРјРµРЅРЅРѕР№ С‡Р°СЃС‚Рё
       bool aoTypeBeforeName, aoTypeAfterName;
       FiasTools.GetAOTypePlace(level, out aoTypeBeforeName, out aoTypeAfterName);
 
       int[] pSpaces = FindSpacePositions(s2);
-      // Сколько частей, разделенных пробелами, может быть в типе адресного объекта?
+      // РЎРєРѕР»СЊРєРѕ С‡Р°СЃС‚РµР№, СЂР°Р·РґРµР»РµРЅРЅС‹С… РїСЂРѕР±РµР»Р°РјРё, РјРѕР¶РµС‚ Р±С‹С‚СЊ РІ С‚РёРїРµ Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°?
       int maxAOTypeParts = Math.Min(pSpaces.Length, Handler.AOTypes.GetMaxSpaceCount(level) + 1);
 
       if (aoTypeBeforeName)
@@ -238,14 +238,14 @@ namespace FreeLibSet.FIAS
         int pDot = s2.IndexOf('.');
         if (pDot >= 0 && (pSpaces.Length == 0 || pDot < pSpaces[0]))
         {
-          // Предполагаем, что используется сокращение с точкой плюс номер дома, например, "д. 1"
+          // РџСЂРµРґРїРѕР»Р°РіР°РµРј, С‡С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёРµ СЃ С‚РѕС‡РєРѕР№ РїР»СЋСЃ РЅРѕРјРµСЂ РґРѕРјР°, РЅР°РїСЂРёРјРµСЂ, "Рґ. 1"
 
-          string aoType = s2.Substring(0, pDot + 1); // включая точку
-          string nm = s2.Substring(pDot + 1).Trim(); // тут могут быть пробелы
+          string aoType = s2.Substring(0, pDot + 1); // РІРєР»СЋС‡Р°СЏ С‚РѕС‡РєСѓ
+          string nm = s2.Substring(pDot + 1).Trim(); // С‚СѓС‚ РјРѕРіСѓС‚ Р±С‹С‚СЊ РїСЂРѕР±РµР»С‹
           string fullAOType;
           if (IsValidAOType(level, aoType, out fullAOType))
           {
-            // Сокращение подходит для уровня
+            // РЎРѕРєСЂР°С‰РµРЅРёРµ РїРѕРґС…РѕРґРёС‚ РґР»СЏ СѓСЂРѕРІРЅСЏ
             aoTypeFound = true;
             RemoveNumChar(ref nm, level);
             if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
@@ -256,18 +256,18 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      // Перебираем варианты, когда идет тип адресного объекта, а потом - наименование ("город Тюмень")
+      // РџРµСЂРµР±РёСЂР°РµРј РІР°СЂРёР°РЅС‚С‹, РєРѕРіРґР° РёРґРµС‚ С‚РёРї Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, Р° РїРѕС‚РѕРј - РЅР°РёРјРµРЅРѕРІР°РЅРёРµ ("РіРѕСЂРѕРґ РўСЋРјРµРЅСЊ")
       if (aoTypeBeforeName)
       {
         for (int i = 0; i < maxAOTypeParts; i++)
         {
-          // Предполагаем, что используется сокращение с пробелом, например, "дом 1"
+          // РџСЂРµРґРїРѕР»Р°РіР°РµРј, С‡С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёРµ СЃ РїСЂРѕР±РµР»РѕРј, РЅР°РїСЂРёРјРµСЂ, "РґРѕРј 1"
           string aoType = s2.Substring(0, pSpaces[i]);
-          string nm = s2.Substring(pSpaces[i] + 1); // тут могут быть вложенные пробелы
+          string nm = s2.Substring(pSpaces[i] + 1); // С‚СѓС‚ РјРѕРіСѓС‚ Р±С‹С‚СЊ РІР»РѕР¶РµРЅРЅС‹Рµ РїСЂРѕР±РµР»С‹
           string fullAOType;
           if (IsValidAOType(level, aoType, out fullAOType))
           {
-            // Сокращение подходит для уровня
+            // РЎРѕРєСЂР°С‰РµРЅРёРµ РїРѕРґС…РѕРґРёС‚ РґР»СЏ СѓСЂРѕРІРЅСЏ
             aoTypeFound = true;
             RemoveNumChar(ref nm, level);
             if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
@@ -278,18 +278,18 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      // Перебираем варианты, когда идет наименование, а потом - тип адресного объекта ("Тюменский район")
+      // РџРµСЂРµР±РёСЂР°РµРј РІР°СЂРёР°РЅС‚С‹, РєРѕРіРґР° РёРґРµС‚ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ, Р° РїРѕС‚РѕРј - С‚РёРї Р°РґСЂРµСЃРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° ("РўСЋРјРµРЅСЃРєРёР№ СЂР°Р№РѕРЅ")
       if (aoTypeAfterName)
       {
         for (int i = 0; i < maxAOTypeParts; i++)
         {
-          // Предполагаем, что используется сокращение с пробелом, например, "дом 1"
+          // РџСЂРµРґРїРѕР»Р°РіР°РµРј, С‡С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёРµ СЃ РїСЂРѕР±РµР»РѕРј, РЅР°РїСЂРёРјРµСЂ, "РґРѕРј 1"
           string nm = s2.Substring(0, pSpaces[pSpaces.Length - i - 1]);
-          string aoType = s2.Substring(pSpaces[pSpaces.Length - i - 1] + 1); // тут могут быть вложенные пробелы
+          string aoType = s2.Substring(pSpaces[pSpaces.Length - i - 1] + 1); // С‚СѓС‚ РјРѕРіСѓС‚ Р±С‹С‚СЊ РІР»РѕР¶РµРЅРЅС‹Рµ РїСЂРѕР±РµР»С‹
           string fullAOType;
           if (IsValidAOType(level, aoType, out fullAOType))
           {
-            // Сокращение подходит для уровня
+            // РЎРѕРєСЂР°С‰РµРЅРёРµ РїРѕРґС…РѕРґРёС‚ РґР»СЏ СѓСЂРѕРІРЅСЏ
             aoTypeFound = true;
             RemoveNumChar(ref nm, level);
             if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
@@ -299,9 +299,9 @@ namespace FreeLibSet.FIAS
       }
 
       if ((!aoTypeFound) ||
-        level == FiasLevel.Region) // В ФИАСе с лета 2020 года заданы наименования регионов "Тюменская область"
+        level == FiasLevel.Region) // Р’ Р¤РРђРЎРµ СЃ Р»РµС‚Р° 2020 РіРѕРґР° Р·Р°РґР°РЅС‹ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ СЂРµРіРёРѕРЅРѕРІ "РўСЋРјРµРЅСЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ"
       {
-        // Предполагаем номер дома без сокращения, например, "1"
+        // РџСЂРµРґРїРѕР»Р°РіР°РµРј РЅРѕРјРµСЂ РґРѕРјР° Р±РµР· СЃРѕРєСЂР°С‰РµРЅРёСЏ, РЅР°РїСЂРёРјРµСЂ, "1"
         RemoveNumChar(ref s2, level);
         if (AddPartialSubsts(currentCellIndex, String.Empty, s2, sOthers, levels, address, level))
           res = true;
@@ -326,9 +326,9 @@ namespace FreeLibSet.FIAS
       {
         switch (aoType)
         {
-          case "с":
-          case "с.":
-            // это может быть строение или сооружение
+          case "СЃ":
+          case "СЃ.":
+            // СЌС‚Рѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃС‚СЂРѕРµРЅРёРµ РёР»Рё СЃРѕРѕСЂСѓР¶РµРЅРёРµ
             fullAOType = String.Empty;
             return true;
         }
@@ -338,7 +338,7 @@ namespace FreeLibSet.FIAS
       if (Handler.AOTypes.IsValidAOType(level, aoType, out fullAOType, out id))
         return true;
 
-      // Ищем сокращение с точкой или без точки
+      // РС‰РµРј СЃРѕРєСЂР°С‰РµРЅРёРµ СЃ С‚РѕС‡РєРѕР№ РёР»Рё Р±РµР· С‚РѕС‡РєРё
       if (aoType[aoType.Length - 1] != '.')
       {
         if (Handler.AOTypes.IsValidAOType(level, aoType + ".", out fullAOType, out id))
@@ -354,13 +354,13 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Удаляет ведущий символ "№"
+    /// РЈРґР°Р»СЏРµС‚ РІРµРґСѓС‰РёР№ СЃРёРјРІРѕР» "в„–"
     /// </summary>
     /// <param name="s"></param>
     /// <param name="level"></param>
     private static void RemoveNumChar(ref string s, FiasLevel level)
     {
-      if (s[0] == '№' || s[0] == 'N')
+      if (s[0] == 'в„–' || s[0] == 'N')
       {
         switch (level)
         {
@@ -371,15 +371,15 @@ namespace FreeLibSet.FIAS
           case FiasLevel.Room:
             break;
           default:
-            return; // адресный объект может начинаться с номера
+            return; // Р°РґСЂРµСЃРЅС‹Р№ РѕР±СЉРµРєС‚ РјРѕР¶РµС‚ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ РЅРѕРјРµСЂР°
         }
 
-        s = s.Substring(1).Trim(); // может быть пробел после знака номера
+        s = s.Substring(1).Trim(); // РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСЂРѕР±РµР» РїРѕСЃР»Рµ Р·РЅР°РєР° РЅРѕРјРµСЂР°
       }
     }
 
     /// <summary>
-    /// Возвращает массив позиций пробелов в строке
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РїРѕР·РёС†РёР№ РїСЂРѕР±РµР»РѕРІ РІ СЃС‚СЂРѕРєРµ
     /// </summary>
     /// <param name="s"></param>
     /// <returns></returns>
@@ -406,16 +406,16 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Перебор номеров домов с учетом возможных слитных сокращений
+    /// РџРµСЂРµР±РѕСЂ РЅРѕРјРµСЂРѕРІ РґРѕРјРѕРІ СЃ СѓС‡РµС‚РѕРј РІРѕР·РјРѕР¶РЅС‹С… СЃР»РёС‚РЅС‹С… СЃРѕРєСЂР°С‰РµРЅРёР№
     /// </summary>
     /// <param name="currentCellIndex"></param>
-    /// <param name="fullAOType">Сокращение, которое точно подходит для заданного уровня</param>
-    /// <param name="s">Строка с номером дома. Может содержать пробел</param>
-    /// <param name="sOthers">Оставшаяся часть строки, начинающаяся с запятой</param>
-    /// <param name="levels">Оставшиеся уровни, которые можно использовать при анализе строки</param>
+    /// <param name="fullAOType">РЎРѕРєСЂР°С‰РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ С‚РѕС‡РЅРѕ РїРѕРґС…РѕРґРёС‚ РґР»СЏ Р·Р°РґР°РЅРЅРѕРіРѕ СѓСЂРѕРІРЅСЏ</param>
+    /// <param name="s">РЎС‚СЂРѕРєР° СЃ РЅРѕРјРµСЂРѕРј РґРѕРјР°. РњРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РїСЂРѕР±РµР»</param>
+    /// <param name="sOthers">РћСЃС‚Р°РІС€Р°СЏСЃСЏ С‡Р°СЃС‚СЊ СЃС‚СЂРѕРєРё, РЅР°С‡РёРЅР°СЋС‰Р°СЏСЃСЏ СЃ Р·Р°РїСЏС‚РѕР№</param>
+    /// <param name="levels">РћСЃС‚Р°РІС€РёРµСЃСЏ СѓСЂРѕРІРЅРё, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїСЂРё Р°РЅР°Р»РёР·Рµ СЃС‚СЂРѕРєРё</param>
     /// <param name="address"></param>
-    /// <param name="level">Текущий уровень</param>
-    /// <returns>true, если что-нибудь найдено</returns>
+    /// <param name="level">РўРµРєСѓС‰РёР№ СѓСЂРѕРІРµРЅСЊ</param>
+    /// <returns>true, РµСЃР»Рё С‡С‚Рѕ-РЅРёР±СѓРґСЊ РЅР°Р№РґРµРЅРѕ</returns>
     private bool AddPartialSubsts(int currentCellIndex, string fullAOType, string s, string sOthers, FiasLevelSet levels, FiasAddress address, FiasLevel level)
     {
       if (s.Length == 0)
@@ -423,7 +423,7 @@ namespace FreeLibSet.FIAS
 
       bool res = false;
 
-      // Проверяем строку целиком
+      // РџСЂРѕРІРµСЂСЏРµРј СЃС‚СЂРѕРєСѓ С†РµР»РёРєРѕРј
       if (FiasTools.IsValidName(s, level))
       {
         address.ClearStartingWith(level);
@@ -431,11 +431,11 @@ namespace FreeLibSet.FIAS
         address.SetAOType(level, fullAOType);
         address.ClearGuidsStartingWith(level);
         address.ClearRecIdsStartingWith(level);
-        if (AddPart(currentCellIndex, sOthers.TrimStart(',', ' '), levels, address)) // рекурсивный вызов
+        if (AddPart(currentCellIndex, sOthers.TrimStart(',', ' '), levels, address)) // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
           res = true;
       }
 
-      // Проверяем строку целиком
+      // РџСЂРѕРІРµСЂСЏРµРј СЃС‚СЂРѕРєСѓ С†РµР»РёРєРѕРј
       if (FiasTools.IsValidName(s, level))
       {
         address.ClearStartingWith(level);
@@ -443,25 +443,25 @@ namespace FreeLibSet.FIAS
         address.SetAOType(level, fullAOType);
         address.ClearGuidsStartingWith(level);
         address.ClearRecIdsStartingWith(level);
-        if (AddPart(currentCellIndex, sOthers.TrimStart(',', ' '), levels, address)) // рекурсивный вызов
+        if (AddPart(currentCellIndex, sOthers.TrimStart(',', ' '), levels, address)) // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
           res = true;
       }
 
       int pSpace = s.IndexOf(' ');
       if (pSpace >= 0)
       {
-        sOthers = s.Substring(pSpace) + sOthers; // остаток, начиная с пробела
-        s = s.Substring(0, pSpace); // часть строки, в которой можно искать 
+        sOthers = s.Substring(pSpace) + sOthers; // РѕСЃС‚Р°С‚РѕРє, РЅР°С‡РёРЅР°СЏ СЃ РїСЂРѕР±РµР»Р°
+        s = s.Substring(0, pSpace); // С‡Р°СЃС‚СЊ СЃС‚СЂРѕРєРё, РІ РєРѕС‚РѕСЂРѕР№ РјРѕР¶РЅРѕ РёСЃРєР°С‚СЊ 
 
         if (!Handler.AOTypes.GetAOTypeLevels(s).IsEmpty)
-          return false; // текст является сокращением
+          return false; // С‚РµРєСЃС‚ СЏРІР»СЏРµС‚СЃСЏ СЃРѕРєСЂР°С‰РµРЅРёРµРј
       }
 
       if (String.IsNullOrEmpty(s))
         return false;
 
-      // Ищем промежуточные разделители
-      // Лучше в обратном порядке
+      // РС‰РµРј РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅС‹Рµ СЂР°Р·РґРµР»РёС‚РµР»Рё
+      // Р›СѓС‡С€Рµ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ
       bool charSepFound = false;
       for (int p = s.Length - 2; p >= 1; p--)
       {
@@ -478,14 +478,14 @@ namespace FreeLibSet.FIAS
             address.ClearGuidsStartingWith(level);
             address.ClearRecIdsStartingWith(level);
             if (AddPart(currentCellIndex,
-              rightPart + sOthers, // здесь не надо отрезать ведущий разделитель от sOthers
-              levels, address)) // рекурсивный вызов
+              rightPart + sOthers, // Р·РґРµСЃСЊ РЅРµ РЅР°РґРѕ РѕС‚СЂРµР·Р°С‚СЊ РІРµРґСѓС‰РёР№ СЂР°Р·РґРµР»РёС‚РµР»СЊ РѕС‚ sOthers
+              levels, address)) // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
               res = true;
           }
         }
       }
 
-      // Ищем переходы Буква<-->Цифра
+      // РС‰РµРј РїРµСЂРµС…РѕРґС‹ Р‘СѓРєРІР°<-->Р¦РёС„СЂР°
       if (!charSepFound)
       {
         switch (level)
@@ -493,9 +493,9 @@ namespace FreeLibSet.FIAS
           case FiasLevel.House:
           case FiasLevel.Building:
           case FiasLevel.Flat:
-            // Только для уровней, после которых может быть продолжение.
-            // Например, дом "1а" - дом 1, литер А
-            // Но только, если есть единственный такой переход
+            // РўРѕР»СЊРєРѕ РґР»СЏ СѓСЂРѕРІРЅРµР№, РїРѕСЃР»Рµ РєРѕС‚РѕСЂС‹С… РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСЂРѕРґРѕР»Р¶РµРЅРёРµ.
+            // РќР°РїСЂРёРјРµСЂ, РґРѕРј "1Р°" - РґРѕРј 1, Р»РёС‚РµСЂ Рђ
+            // РќРѕ С‚РѕР»СЊРєРѕ, РµСЃР»Рё РµСЃС‚СЊ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ С‚Р°РєРѕР№ РїРµСЂРµС…РѕРґ
             int transPos = -1;
             int transCount = 0;
             for (int i = 1; i < s.Length; i++)
@@ -520,8 +520,8 @@ namespace FreeLibSet.FIAS
                 address.ClearGuidsStartingWith(level);
                 address.ClearRecIdsStartingWith(level);
                 if (AddPart(currentCellIndex,
-                  rightPart + sOthers, // здесь не надо отрезать ведущий разделитель от sOthers
-                  levels, address)) // рекурсивный вызов
+                  rightPart + sOthers, // Р·РґРµСЃСЊ РЅРµ РЅР°РґРѕ РѕС‚СЂРµР·Р°С‚СЊ РІРµРґСѓС‰РёР№ СЂР°Р·РґРµР»РёС‚РµР»СЊ РѕС‚ sOthers
+                  levels, address)) // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
                   res = true;
               }
             }
@@ -534,7 +534,7 @@ namespace FreeLibSet.FIAS
 
 
     /// <summary>
-    /// Сбор номера дома из двух частей, например "1 а" может быть "1а"
+    /// РЎР±РѕСЂ РЅРѕРјРµСЂР° РґРѕРјР° РёР· РґРІСѓС… С‡Р°СЃС‚РµР№, РЅР°РїСЂРёРјРµСЂ "1 Р°" РјРѕР¶РµС‚ Р±С‹С‚СЊ "1Р°"
     /// </summary>
     /// <param name="currentCellIndex"></param>
     /// <param name="fullAOType"></param>
@@ -547,7 +547,7 @@ namespace FreeLibSet.FIAS
     private bool AddHouseNumWithSpace(int currentCellIndex, string fullAOType, string s, string sOthers, FiasLevelSet levels, FiasAddress address, FiasLevel level)
     {
       if (level != FiasLevel.House)
-        return false; // для других уровней не бывает
+        return false; // РґР»СЏ РґСЂСѓРіРёС… СѓСЂРѕРІРЅРµР№ РЅРµ Р±С‹РІР°РµС‚
 
       if (s.Length == 0)
         return false;
@@ -557,9 +557,9 @@ namespace FreeLibSet.FIAS
         return false;
 
       if (s.LastIndexOf(' ') != pSpace)
-        return false; // больше одного пробела
+        return false; // Р±РѕР»СЊС€Рµ РѕРґРЅРѕРіРѕ РїСЂРѕР±РµР»Р°
 
-      // До пробела должны быть цифры, а после - буквы
+      // Р”Рѕ РїСЂРѕР±РµР»Р° РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ С†РёС„СЂС‹, Р° РїРѕСЃР»Рµ - Р±СѓРєРІС‹
 
       string s1 = s.Substring(0, pSpace);
       string s2 = s.Substring(pSpace + 1);
@@ -574,8 +574,8 @@ namespace FreeLibSet.FIAS
           return false;
       }
 
-      // Можно проверить
-      string s3 = s1 + s2; // без пробела
+      // РњРѕР¶РЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ
+      string s3 = s1 + s2; // Р±РµР· РїСЂРѕР±РµР»Р°
 
       if (FiasTools.IsValidName(s3, level))
       {
@@ -584,7 +584,7 @@ namespace FreeLibSet.FIAS
         address.SetAOType(level, fullAOType);
         address.ClearGuidsStartingWith(level);
         address.ClearRecIdsStartingWith(level);
-        if (AddPart(currentCellIndex, sOthers.TrimStart(',', ' '), levels, address)) // рекурсивный вызов
+        if (AddPart(currentCellIndex, sOthers.TrimStart(',', ' '), levels, address)) // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
           return true;
       }
 
@@ -592,8 +592,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Парсинг номеров домов, в которых нет разделителей, например, "дом1корпус2строение3".
-    /// Находим переход "Буква-Цифра" (но не наоборот)
+    /// РџР°СЂСЃРёРЅРі РЅРѕРјРµСЂРѕРІ РґРѕРјРѕРІ, РІ РєРѕС‚РѕСЂС‹С… РЅРµС‚ СЂР°Р·РґРµР»РёС‚РµР»РµР№, РЅР°РїСЂРёРјРµСЂ, "РґРѕРј1РєРѕСЂРїСѓСЃ2СЃС‚СЂРѕРµРЅРёРµ3".
+    /// РќР°С…РѕРґРёРј РїРµСЂРµС…РѕРґ "Р‘СѓРєРІР°-Р¦РёС„СЂР°" (РЅРѕ РЅРµ РЅР°РѕР±РѕСЂРѕС‚)
     /// </summary>
     /// <param name="currentCellIndex"></param>
     /// <param name="s"></param>
@@ -619,7 +619,7 @@ namespace FreeLibSet.FIAS
       if (s.Length == 0)
         return false;
 
-      // Проверяем, что есть только цифры и 
+      // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РµСЃС‚СЊ С‚РѕР»СЊРєРѕ С†РёС„СЂС‹ Рё 
       if (!Char.IsLetter(s[0]))
         return false;
 
@@ -633,7 +633,7 @@ namespace FreeLibSet.FIAS
           if (digitStart < 0)
             digitStart = i;
           else if (!Char.IsDigit(s[i - 1]))
-            moreDigitGroups = true; // Есть другие числовые группы
+            moreDigitGroups = true; // Р•СЃС‚СЊ РґСЂСѓРіРёРµ С‡РёСЃР»РѕРІС‹Рµ РіСЂСѓРїРїС‹
         }
         else if (Char.IsLetter(s[i]))
         {
@@ -642,13 +642,13 @@ namespace FreeLibSet.FIAS
         }
         else
         {
-          // Не буква и не цифра
+          // РќРµ Р±СѓРєРІР° Рё РЅРµ С†РёС„СЂР°
           return false;
         }
       }
 
       if (digitStart < 0)
-        return false; // текст состоит только из букв, например "дом"
+        return false; // С‚РµРєСЃС‚ СЃРѕСЃС‚РѕРёС‚ С‚РѕР»СЊРєРѕ РёР· Р±СѓРєРІ, РЅР°РїСЂРёРјРµСЂ "РґРѕРј"
 
       if (nextLetterStart >= 0)
       {
@@ -658,11 +658,11 @@ namespace FreeLibSet.FIAS
 #endif
         if (moreDigitGroups)
         {
-          // Если есть несколько цифровых групп, например, "дом1стр2", то "стр2" распознаем на следующем такте
+          // Р•СЃР»Рё РµСЃС‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ С†РёС„СЂРѕРІС‹С… РіСЂСѓРїРї, РЅР°РїСЂРёРјРµСЂ, "РґРѕРј1СЃС‚СЂ2", С‚Рѕ "СЃС‚СЂ2" СЂР°СЃРїРѕР·РЅР°РµРј РЅР° СЃР»РµРґСѓСЋС‰РµРј С‚Р°РєС‚Рµ
           sOthers = s.Substring(nextLetterStart) + sOthers;
           s = s.Substring(0, nextLetterStart);
         }
-        // а иначе - это часть текущего уровня, например, "дом1а"
+        // Р° РёРЅР°С‡Рµ - СЌС‚Рѕ С‡Р°СЃС‚СЊ С‚РµРєСѓС‰РµРіРѕ СѓСЂРѕРІРЅСЏ, РЅР°РїСЂРёРјРµСЂ, "РґРѕРј1Р°"
       }
 
 
@@ -670,7 +670,7 @@ namespace FreeLibSet.FIAS
       string nm = s.Substring(digitStart);
       string fullAOType;
       if (IsValidAOType(level, aoType, out fullAOType) &&
-        FiasTools.IsValidName(nm, level)) // это - фиктивное условие, тут все равно только цифры (и, может быть, буквы в конце)
+        FiasTools.IsValidName(nm, level)) // СЌС‚Рѕ - С„РёРєС‚РёРІРЅРѕРµ СѓСЃР»РѕРІРёРµ, С‚СѓС‚ РІСЃРµ СЂР°РІРЅРѕ С‚РѕР»СЊРєРѕ С†РёС„СЂС‹ (Рё, РјРѕР¶РµС‚ Р±С‹С‚СЊ, Р±СѓРєРІС‹ РІ РєРѕРЅС†Рµ)
       {
         address.ClearStartingWith(level);
         address.SetName(level, nm);
@@ -679,7 +679,7 @@ namespace FreeLibSet.FIAS
         address.ClearRecIdsStartingWith(level);
         if (AddPart(currentCellIndex,
           sOthers,
-          levels, address)) // рекурсивный вызов
+          levels, address)) // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
           return true;
       }
 

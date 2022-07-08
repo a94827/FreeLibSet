@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,14 +12,14 @@ using FreeLibSet.Logging;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация свойства EFPApp.FileExtAssociations.
-  /// Поддерживает буферизацию списков ассоциаций по расширению файлов.
-  /// Также реализует буферизацию значков приложений.
-  /// Используется EFPFileAssociationsCommandItemsHandler.
+  /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° EFPApp.FileExtAssociations.
+  /// РџРѕРґРґРµСЂР¶РёРІР°РµС‚ Р±СѓС„РµСЂРёР·Р°С†РёСЋ СЃРїРёСЃРєРѕРІ Р°СЃСЃРѕС†РёР°С†РёР№ РїРѕ СЂР°СЃС€РёСЂРµРЅРёСЋ С„Р°Р№Р»РѕРІ.
+  /// РўР°РєР¶Рµ СЂРµР°Р»РёР·СѓРµС‚ Р±СѓС„РµСЂРёР·Р°С†РёСЋ Р·РЅР°С‡РєРѕРІ РїСЂРёР»РѕР¶РµРЅРёР№.
+  /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ EFPFileAssociationsCommandItemsHandler.
   /// </summary>
   public sealed class EFPAppFileExtAssociations : IDisposable
   {
-    #region Конструктор и Dispose()
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose()
 
     internal EFPAppFileExtAssociations()
     {
@@ -28,7 +28,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Упрощенная реализация без деструктора
+    /// РЈРїСЂРѕС‰РµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р±РµР· РґРµСЃС‚СЂСѓРєС‚РѕСЂР°
     /// </summary>
     void IDisposable.Dispose()
     {
@@ -37,24 +37,24 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Доступ к ассоциациям файлов
+    #region Р”РѕСЃС‚СѓРї Рє Р°СЃСЃРѕС†РёР°С†РёСЏРј С„Р°Р№Р»РѕРІ
 
     /// <summary>
-    /// Возвращает true, если извлечение ассоциаций реализовано для операционной системы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РёР·РІР»РµС‡РµРЅРёРµ Р°СЃСЃРѕС†РёР°С†РёР№ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РґР»СЏ РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹
     /// </summary>
     public bool IsSupported { get { return FileAssociations.IsSupported; } }
 
-    // Неохота использовать систему Cache, т.к. обычно будет немного расширений файлов:
-    // только ".txt", ".html" и ".xml"
+    // РќРµРѕС…РѕС‚Р° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРёСЃС‚РµРјСѓ Cache, С‚.Рє. РѕР±С‹С‡РЅРѕ Р±СѓРґРµС‚ РЅРµРјРЅРѕРіРѕ СЂР°СЃС€РёСЂРµРЅРёР№ С„Р°Р№Р»РѕРІ:
+    // С‚РѕР»СЊРєРѕ ".txt", ".html" Рё ".xml"
 
     private Dictionary<string, FileAssociations> _FADict;
 
     /// <summary>
-    /// Возвращает буферизованные данные файловых ассоциаций.
-    /// Не может возвращать null
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ С„Р°Р№Р»РѕРІС‹С… Р°СЃСЃРѕС†РёР°С†РёР№.
+    /// РќРµ РјРѕР¶РµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ null
     /// </summary>
-    /// <param name="fileExt">Расширение файла, например, ".txt"</param>
-    /// <returns>Файловые ассоциации</returns>
+    /// <param name="fileExt">Р Р°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°, РЅР°РїСЂРёРјРµСЂ, ".txt"</param>
+    /// <returns>Р¤Р°Р№Р»РѕРІС‹Рµ Р°СЃСЃРѕС†РёР°С†РёРё</returns>
     public FileAssociations this[string fileExt]
     {
       get
@@ -70,8 +70,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает буферизованный объект файловых ассоциация для просмотра каталога.
-    /// Для Windows возвращает единственную ассоциацию для запуска Windows Explorer.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ С„Р°Р№Р»РѕРІС‹С… Р°СЃСЃРѕС†РёР°С†РёСЏ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РєР°С‚Р°Р»РѕРіР°.
+    /// Р”Р»СЏ Windows РІРѕР·РІСЂР°С‰Р°РµС‚ РµРґРёРЅСЃС‚РІРµРЅРЅСѓСЋ Р°СЃСЃРѕС†РёР°С†РёСЋ РґР»СЏ Р·Р°РїСѓСЃРєР° Windows Explorer.
     /// </summary>
     public FileAssociations ShowDirectory
     {
@@ -90,11 +90,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Доступ к значкам
+    #region Р”РѕСЃС‚СѓРї Рє Р·РЅР°С‡РєР°Рј
 
     //private struct FileIconInfo
     //{
-    //  #region Конструктор
+    //  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     //  public FileIconInfo(AbsPath IconPath, int IconIndex)
     //  {
@@ -106,23 +106,23 @@ namespace FreeLibSet.Forms
     //}
 
     /// <summary>
-    /// Ключ - путь к файлу плюс индекс значка плюс true/false
-    /// Значение - значок
+    /// РљР»СЋС‡ - РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РїР»СЋСЃ РёРЅРґРµРєСЃ Р·РЅР°С‡РєР° РїР»СЋСЃ true/false
+    /// Р—РЅР°С‡РµРЅРёРµ - Р·РЅР°С‡РѕРє
     /// </summary>
     private Dictionary<string, Image> _IconImageDict;
 
     /// <summary>
-    /// Получить значок из ресурсов файла требуемого размера.
-    /// Буферизация вызовов WinFormsTools.ExtractIcon()
-    /// Если для значка нет требуемого размера, возвращается значок другого размера.
-    /// Если файл не найден или в файле нет значка с заданным индексом, возвращается null.
-    /// Для платформ, отличных от Windows, всегда возвращает null.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РѕРє РёР· СЂРµСЃСѓСЂСЃРѕРІ С„Р°Р№Р»Р° С‚СЂРµР±СѓРµРјРѕРіРѕ СЂР°Р·РјРµСЂР°.
+    /// Р‘СѓС„РµСЂРёР·Р°С†РёСЏ РІС‹Р·РѕРІРѕРІ WinFormsTools.ExtractIcon()
+    /// Р•СЃР»Рё РґР»СЏ Р·РЅР°С‡РєР° РЅРµС‚ С‚СЂРµР±СѓРµРјРѕРіРѕ СЂР°Р·РјРµСЂР°, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ Р·РЅР°С‡РѕРє РґСЂСѓРіРѕРіРѕ СЂР°Р·РјРµСЂР°.
+    /// Р•СЃР»Рё С„Р°Р№Р» РЅРµ РЅР°Р№РґРµРЅ РёР»Рё РІ С„Р°Р№Р»Рµ РЅРµС‚ Р·РЅР°С‡РєР° СЃ Р·Р°РґР°РЅРЅС‹Рј РёРЅРґРµРєСЃРѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null.
+    /// Р”Р»СЏ РїР»Р°С‚С„РѕСЂРј, РѕС‚Р»РёС‡РЅС‹С… РѕС‚ Windows, РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ null.
     /// </summary>
-    /// <param name="filePath">Путь к файлу</param>
-    /// <param name="iconIndex">Индекс значка в файле. 
-    /// См. описание функции Windows ExtractIcon или ExtractIconEx()</param>
-    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - больщой (32x32)</param>
-    /// <returns>Значок или null</returns>
+    /// <param name="filePath">РџСѓС‚СЊ Рє С„Р°Р№Р»Сѓ</param>
+    /// <param name="iconIndex">РРЅРґРµРєСЃ Р·РЅР°С‡РєР° РІ С„Р°Р№Р»Рµ. 
+    /// РЎРј. РѕРїРёСЃР°РЅРёРµ С„СѓРЅРєС†РёРё Windows ExtractIcon РёР»Рё ExtractIconEx()</param>
+    /// <param name="smallIcon">true - РёР·РІР»РµС‡СЊ РјР°Р»РµРЅСЊРєРёР№ Р·РЅР°С‡РѕРє (16x16), false - Р±РѕР»СЊС‰РѕР№ (32x32)</param>
+    /// <returns>Р—РЅР°С‡РѕРє РёР»Рё null</returns>
     public Image GetIconImage(AbsPath filePath, int iconIndex, bool smallIcon)
     {
       string key = filePath.Path + ";" + iconIndex.ToString() + ";" + smallIcon.ToString();
@@ -138,7 +138,7 @@ namespace FreeLibSet.Forms
           e.Data["Path"] = filePath;
           e.Data["IconIndex"] = iconIndex;
           e.Data["SmallIcon"] = smallIcon;
-          LogoutTools.LogoutException(e, "Ошибка извлечения значка из файла");
+          LogoutTools.LogoutException(e, "РћС€РёР±РєР° РёР·РІР»РµС‡РµРЅРёСЏ Р·РЅР°С‡РєР° РёР· С„Р°Р№Р»Р°");
           image = null;
         }
         _IconImageDict.Add(key, image);
@@ -148,10 +148,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Сброс буферизации
+    #region РЎР±СЂРѕСЃ Р±СѓС„РµСЂРёР·Р°С†РёРё
 
     /// <summary>
-    /// Сброс буферизации
+    /// РЎР±СЂРѕСЃ Р±СѓС„РµСЂРёР·Р°С†РёРё
     /// </summary>
     public void Reset()
     {
@@ -170,10 +170,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Пока не знаю, как отслеживать изменения (с помощью SHChangeNotifyRegister ?)
-    /// Класс SystemEvents тут не помогает.
-    /// Пока тупо сбрасываем ассоциации по таймеру. Буферизация будет работать, только если в одном
-    /// окне есть несколько управляющих элементов, использующих EFPFileAssociationsCommandItemsHandler.
+    /// РџРѕРєР° РЅРµ Р·РЅР°СЋ, РєР°Рє РѕС‚СЃР»РµР¶РёРІР°С‚СЊ РёР·РјРµРЅРµРЅРёСЏ (СЃ РїРѕРјРѕС‰СЊСЋ SHChangeNotifyRegister ?)
+    /// РљР»Р°СЃСЃ SystemEvents С‚СѓС‚ РЅРµ РїРѕРјРѕРіР°РµС‚.
+    /// РџРѕРєР° С‚СѓРїРѕ СЃР±СЂР°СЃС‹РІР°РµРј Р°СЃСЃРѕС†РёР°С†РёРё РїРѕ С‚Р°Р№РјРµСЂСѓ. Р‘СѓС„РµСЂРёР·Р°С†РёСЏ Р±СѓРґРµС‚ СЂР°Р±РѕС‚Р°С‚СЊ, С‚РѕР»СЊРєРѕ РµСЃР»Рё РІ РѕРґРЅРѕРј
+    /// РѕРєРЅРµ РµСЃС‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ, РёСЃРїРѕР»СЊР·СѓСЋС‰РёС… EFPFileAssociationsCommandItemsHandler.
     /// </summary>
     internal void ResetFA()
     {

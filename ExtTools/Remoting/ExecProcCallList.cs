@@ -1,7 +1,7 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
-#define DEBUG_THREADS // Если объявлено, то потоки будут проверяться и в Release-сборке
+#define DEBUG_THREADS // Р•СЃР»Рё РѕР±СЉСЏРІР»РµРЅРѕ, С‚Рѕ РїРѕС‚РѕРєРё Р±СѓРґСѓС‚ РїСЂРѕРІРµСЂСЏС‚СЊСЃСЏ Рё РІ Release-СЃР±РѕСЂРєРµ
 #if DEBUG
 #define DEBUG_THREADS
 #endif
@@ -14,19 +14,19 @@ using System.Threading;
 using FreeLibSet.Core;
 
 /*
- * Вызов процедур ExecProc с централизованной обработкой
+ * Р’С‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂ ExecProc СЃ С†РµРЅС‚СЂР°Р»РёР·РѕРІР°РЅРЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРѕР№
  */
 
 namespace FreeLibSet.Remoting
 {
-  #region Делегаты события Finished
+  #region Р”РµР»РµРіР°С‚С‹ СЃРѕР±С‹С‚РёСЏ Finished
 
   /// <summary>
-  /// Аргументы события ExecProcCallItem.Finished
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ ExecProcCallItem.Finished
   /// </summary>
   public class ExecProcCallEventArgs : EventArgs
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     internal ExecProcCallEventArgs(ExecProcCallItem item, NamedValues results, Exception exception)
     {
@@ -37,22 +37,22 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Объект, для которого вызвано событие
+    /// РћР±СЉРµРєС‚, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РІС‹Р·РІР°РЅРѕ СЃРѕР±С‹С‚РёРµ
     /// </summary>
     public ExecProcCallItem Item { get { return _Item; } }
     private readonly ExecProcCallItem _Item;
 
     /// <summary>
-    /// Результаты выполнения процедуры, если она завершена успешно
+    /// Р РµР·СѓР»СЊС‚Р°С‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹, РµСЃР»Рё РѕРЅР° Р·Р°РІРµСЂС€РµРЅР° СѓСЃРїРµС€РЅРѕ
     /// </summary>
     public NamedValues Results { get { return _Results; } }
     private readonly NamedValues _Results;
 
     /// <summary>
-    /// Объект исключения, если событие Finished вызвано по причине аварийного завершения процедуры
+    /// РћР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ, РµСЃР»Рё СЃРѕР±С‹С‚РёРµ Finished РІС‹Р·РІР°РЅРѕ РїРѕ РїСЂРёС‡РёРЅРµ Р°РІР°СЂРёР№РЅРѕРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹
     /// </summary>
     public Exception Exception { get { return _Exception; } }
     private readonly Exception _Exception;
@@ -61,18 +61,18 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Делегат события ExecProcCallItem.Finished
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ ExecProcCallItem.Finished
   /// </summary>
-  /// <param name="sender">Объект для которого вызвано событие</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РћР±СЉРµРєС‚ РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РІС‹Р·РІР°РЅРѕ СЃРѕР±С‹С‚РёРµ</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void ExecProcCallEventHandler(object sender, ExecProcCallEventArgs args);
 
   /// <summary>
-  /// Аргументы события DistributedProcCallItem.Finished
+  /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ DistributedProcCallItem.Finished
   /// </summary>
   public class DistributedProcCallEventArgs : EventArgs
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     internal DistributedProcCallEventArgs(DistributedProcCallItem item, NamedValues results, Exception exception)
     {
@@ -83,22 +83,22 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Объект, для которого вызвано событие
+    /// РћР±СЉРµРєС‚, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РІС‹Р·РІР°РЅРѕ СЃРѕР±С‹С‚РёРµ
     /// </summary>
     public DistributedProcCallItem Item { get { return _Item; } }
     private readonly DistributedProcCallItem _Item;
 
     /// <summary>
-    /// Результаты выполнения процедуры, если она завершена успешно
+    /// Р РµР·СѓР»СЊС‚Р°С‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹, РµСЃР»Рё РѕРЅР° Р·Р°РІРµСЂС€РµРЅР° СѓСЃРїРµС€РЅРѕ
     /// </summary>
     public NamedValues Results { get { return _Results; } }
     private readonly NamedValues _Results;
 
     /// <summary>
-    /// Объект исключения, если событие Finished вызвано по причине аварийного завершения процедуры
+    /// РћР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ, РµСЃР»Рё СЃРѕР±С‹С‚РёРµ Finished РІС‹Р·РІР°РЅРѕ РїРѕ РїСЂРёС‡РёРЅРµ Р°РІР°СЂРёР№РЅРѕРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹
     /// </summary>
     public Exception Exception { get { return _Exception; } }
     private readonly Exception _Exception;
@@ -107,38 +107,38 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Делегат события DistributedProcCallItem.Finished
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ DistributedProcCallItem.Finished
   /// </summary>
-  /// <param name="sender">Объект для которого вызвано событие</param>
-  /// <param name="args">Аргументы события</param>
+  /// <param name="sender">РћР±СЉРµРєС‚ РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ РІС‹Р·РІР°РЅРѕ СЃРѕР±С‹С‚РёРµ</param>
+  /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
   public delegate void DistributedProcCallEventHandler(object sender, DistributedProcCallEventArgs args);
 
   #endregion
 
-  #region Перечисление ExecProcCallItemState
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ ExecProcCallItemState
 
   /// <summary>
-  /// Текущее состояние объекта ExecProcCallItem
+  /// РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РѕР±СЉРµРєС‚Р° ExecProcCallItem
   /// </summary>
   public enum ExecProcCallItemState
   {
     /// <summary>
-    /// Объект ExecProcCallItem создан, но еще не запущен на выполнение
+    /// РћР±СЉРµРєС‚ ExecProcCallItem СЃРѕР·РґР°РЅ, РЅРѕ РµС‰Рµ РЅРµ Р·Р°РїСѓС‰РµРЅ РЅР° РІС‹РїРѕР»РЅРµРЅРёРµ
     /// </summary>
     NotStarted,
 
     /// <summary>
-    /// Процедура выполняется
+    /// РџСЂРѕС†РµРґСѓСЂР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
     /// </summary>
     Executing,
 
     /// <summary>
-    /// Выполнение завершено успешно
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ СѓСЃРїРµС€РЅРѕ
     /// </summary>
     Finished,
 
     /// <summary>
-    /// Выполнение завершено с ошибкой
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ СЃ РѕС€РёР±РєРѕР№
     /// </summary>
     Failed
   }
@@ -146,11 +146,11 @@ namespace FreeLibSet.Remoting
   #endregion
 
   /// <summary>
-  /// Базовый класс для ExecProcCallItem и DistributedProcCallItem
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ ExecProcCallItem Рё DistributedProcCallItem
   /// </summary>
   public abstract class ExecProcCallItemBase : SimpleDisposableObject
   {
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     internal ExecProcCallItemBase()
     {
@@ -163,9 +163,9 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Очистка внутренних данных и вызов события Disposed
+    /// РћС‡РёСЃС‚РєР° РІРЅСѓС‚СЂРµРЅРЅРёС… РґР°РЅРЅС‹С… Рё РІС‹Р·РѕРІ СЃРѕР±С‹С‚РёСЏ Disposed
     /// </summary>
-    /// <param name="disposing">True, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">True, РµСЃР»Рё РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose(), Р° РЅРµ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -187,7 +187,7 @@ namespace FreeLibSet.Remoting
           catch (Exception e)
           {
             AddExceptionInfo(e);
-            LogoutTools.LogoutException(e, "Ошибка вызова ClientSplashWatcher.ClearClientStack()"); // тут не выйдет показать сообщение
+            LogoutTools.LogoutException(e, "РћС€РёР±РєР° РІС‹Р·РѕРІР° ClientSplashWatcher.ClearClientStack()"); // С‚СѓС‚ РЅРµ РІС‹Р№РґРµС‚ РїРѕРєР°Р·Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
             _State = ExecProcCallItemState.Failed; // 16.01.2020
           }
           SplashWatcher = null;
@@ -196,7 +196,7 @@ namespace FreeLibSet.Remoting
 
       base.Dispose(disposing);
 
-      EventHandler ehDisposed = Disposed; // 12.01.2021. Учитываем возможность асинхронного присоединения и отсоединения обработчиков событий
+      EventHandler ehDisposed = Disposed; // 12.01.2021. РЈС‡РёС‚С‹РІР°РµРј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЏ Рё РѕС‚СЃРѕРµРґРёРЅРµРЅРёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕР±С‹С‚РёР№
       if (ehDisposed != null)
       {
         try
@@ -206,7 +206,7 @@ namespace FreeLibSet.Remoting
         catch (Exception e)// 16.01.2020
         {
           AddExceptionInfo(e);
-          LogoutTools.LogoutException(e, "Ошибка вызова обработчика события ExecProcCallItem.Disposed"); // тут не выйдет показать сообщение
+          LogoutTools.LogoutException(e, "РћС€РёР±РєР° РІС‹Р·РѕРІР° РѕР±СЂР°Р±РѕС‚С‡РёРєР° СЃРѕР±С‹С‚РёСЏ ExecProcCallItem.Disposed"); // С‚СѓС‚ РЅРµ РІС‹Р№РґРµС‚ РїРѕРєР°Р·Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
           _State = ExecProcCallItemState.Failed;
         }
       }
@@ -216,21 +216,21 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Событие вызывается после завершения работы с процедурой в ExecProcCallList.
-    /// На момент вызова события Disposed, событие Finished и метод ExecProc.Dispose() уже вызваны.
-    /// Для синхронного вызова гарантируется, что вызов будет выполнен из этого же потока, в котором была запущена процедура.
-    /// Для асинхронного вызова поток может быть любым.
+    /// РЎРѕР±С‹С‚РёРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ Р·Р°РІРµСЂС€РµРЅРёСЏ СЂР°Р±РѕС‚С‹ СЃ РїСЂРѕС†РµРґСѓСЂРѕР№ РІ ExecProcCallList.
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° СЃРѕР±С‹С‚РёСЏ Disposed, СЃРѕР±С‹С‚РёРµ Finished Рё РјРµС‚РѕРґ ExecProc.Dispose() СѓР¶Рµ РІС‹Р·РІР°РЅС‹.
+    /// Р”Р»СЏ СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹Р·РѕРІР° РіР°СЂР°РЅС‚РёСЂСѓРµС‚СЃСЏ, С‡С‚Рѕ РІС‹Р·РѕРІ Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅ РёР· СЌС‚РѕРіРѕ Р¶Рµ РїРѕС‚РѕРєР°, РІ РєРѕС‚РѕСЂРѕРј Р±С‹Р»Р° Р·Р°РїСѓС‰РµРЅР° РїСЂРѕС†РµРґСѓСЂР°.
+    /// Р”Р»СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹Р·РѕРІР° РїРѕС‚РѕРє РјРѕР¶РµС‚ Р±С‹С‚СЊ Р»СЋР±С‹Рј.
     /// </summary>
     public event EventHandler Disposed;
 
     #endregion
 
-    #region Поток
+    #region РџРѕС‚РѕРє
 
 #if DEBUG_THREADS
 
     /// <summary>
-    /// Поток, в котором был создан объект ExecProcCallItem
+    /// РџРѕС‚РѕРє, РІ РєРѕС‚РѕСЂРѕРј Р±С‹Р» СЃРѕР·РґР°РЅ РѕР±СЉРµРєС‚ ExecProcCallItem
     /// </summary>
     private Thread _CallerThread;
 
@@ -244,28 +244,28 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Текущее состояние процедуры
+    /// РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РїСЂРѕС†РµРґСѓСЂС‹
     /// </summary>
     public ExecProcCallItemState State { get { return _State; } internal set { _State = value; } }
     private ExecProcCallItemState _State;
 
     /// <summary>
-    /// Произвольные пользовательские данные, которые могут потребоваться обработчику события Finished.
+    /// РџСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ РїРѕС‚СЂРµР±РѕРІР°С‚СЊСЃСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєСѓ СЃРѕР±С‹С‚РёСЏ Finished.
     /// </summary>
     public NamedValues UserData { get { return _UserData; } }
     private readonly NamedValues _UserData;
 
     /// <summary>
-    /// Идентификатор процедуры ExecProc
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРѕС†РµРґСѓСЂС‹ ExecProc
     /// </summary>
     public abstract Guid Guid { get; }
 
     /// <summary>
-    /// Отображаемое название в списке процедур.
-    /// Если свойство не задано в явном виде, используется IExecProc.DisplayName
+    /// РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РЅР°Р·РІР°РЅРёРµ РІ СЃРїРёСЃРєРµ РїСЂРѕС†РµРґСѓСЂ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ Р·Р°РґР°РЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ IExecProc.DisplayName
     /// </summary>
     public string DisplayName
     {
@@ -282,9 +282,9 @@ namespace FreeLibSet.Remoting
     private string _DisplayName;
 
     /// <summary>
-    /// Если свойство установлено в true, то событие Finished будет вызвано и в случае аварийного
-    /// завершения выполнения процедуры.
-    /// По умолчанию (false), при возникновении ошибки, она обрабатывается без участия события Finished
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true, С‚Рѕ СЃРѕР±С‹С‚РёРµ Finished Р±СѓРґРµС‚ РІС‹Р·РІР°РЅРѕ Рё РІ СЃР»СѓС‡Р°Рµ Р°РІР°СЂРёР№РЅРѕРіРѕ
+    /// Р·Р°РІРµСЂС€РµРЅРёСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (false), РїСЂРё РІРѕР·РЅРёРєРЅРѕРІРµРЅРёРё РѕС€РёР±РєРё, РѕРЅР° РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ Р±РµР· СѓС‡Р°СЃС‚РёСЏ СЃРѕР±С‹С‚РёСЏ Finished
     /// </summary>
     public bool UseFinishedWhenFailed
     {
@@ -301,20 +301,20 @@ namespace FreeLibSet.Remoting
     private bool _UseFinishedWhenFailed;
 
     /// <summary>
-    /// Свойство возвращает true, если процедура была запущена асинхронно.
-    /// Свойство действительно только после запуска процедуры на выполнения
+    /// РЎРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїСЂРѕС†РµРґСѓСЂР° Р±С‹Р»Р° Р·Р°РїСѓС‰РµРЅР° Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµРґСѓСЂС‹ РЅР° РІС‹РїРѕР»РЅРµРЅРёСЏ
     /// </summary>
     public bool IsAsync { get { return _IsAsync; } }
     private bool _IsAsync;
 
     /// <summary>
-    /// Объект процедуры ExecProc или RemoteExecProc
+    /// РћР±СЉРµРєС‚ РїСЂРѕС†РµРґСѓСЂС‹ ExecProc РёР»Рё RemoteExecProc
     /// </summary>
     internal abstract IExecProc InternalExecProc { get; }
 
     #endregion
 
-    #region Событие Finished
+    #region РЎРѕР±С‹С‚РёРµ Finished
 
     internal abstract bool HasFinishedEventHander { get; }
 
@@ -322,22 +322,22 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Закрытые свойства и методы
+    #region Р—Р°РєСЂС‹С‚С‹Рµ СЃРІРѕР№СЃС‚РІР° Рё РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Интерфейс управления асинхронным вызовом.
-    /// Используется независимо от наличия SplashWatcher
+    /// РРЅС‚РµСЂС„РµР№СЃ СѓРїСЂР°РІР»РµРЅРёСЏ Р°СЃРёРЅС…СЂРѕРЅРЅС‹Рј РІС‹Р·РѕРІРѕРј.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РЅР°Р»РёС‡РёСЏ SplashWatcher
     /// </summary>
     internal IAsyncResult AsyncResult;
 
     /// <summary>
-    /// Стек заставок на стороне клиента, возвращаемый ExecProcCallList.CreateSplashStack() 
+    /// РЎС‚РµРє Р·Р°СЃС‚Р°РІРѕРє РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°, РІРѕР·РІСЂР°С‰Р°РµРјС‹Р№ ExecProcCallList.CreateSplashStack() 
     /// </summary>
     internal ClientSplashWatcher SplashWatcher;
 
     /// <summary>
-    /// Интерфейс управления асинхронным вызовом.
-    /// Используется, если ExecProcCallList.CreateSplashStack() вернул стек заставок, которые нужно синхроизировать
+    /// РРЅС‚РµСЂС„РµР№СЃ СѓРїСЂР°РІР»РµРЅРёСЏ Р°СЃРёРЅС…СЂРѕРЅРЅС‹Рј РІС‹Р·РѕРІРѕРј.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ, РµСЃР»Рё ExecProcCallList.CreateSplashStack() РІРµСЂРЅСѓР» СЃС‚РµРє Р·Р°СЃС‚Р°РІРѕРє, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ СЃРёРЅС…СЂРѕРёР·РёСЂРѕРІР°С‚СЊ
     /// </summary>
     internal AsyncResultWithSplashHandler AsyncResultHandler;
 
@@ -360,29 +360,29 @@ namespace FreeLibSet.Remoting
     private void CheckNotStarted()
     {
       if (State != ExecProcCallItemState.NotStarted)
-        throw new InvalidOperationException("Процедура " + DisplayName + " уже запущена");
+        throw new InvalidOperationException("РџСЂРѕС†РµРґСѓСЂР° " + DisplayName + " СѓР¶Рµ Р·Р°РїСѓС‰РµРЅР°");
       // 19.08.2020
-      // Проверка убрана, так как она провоцирует лишний сетевой вызов
+      // РџСЂРѕРІРµСЂРєР° СѓР±СЂР°РЅР°, С‚Р°Рє РєР°Рє РѕРЅР° РїСЂРѕРІРѕС†РёСЂСѓРµС‚ Р»РёС€РЅРёР№ СЃРµС‚РµРІРѕР№ РІС‹Р·РѕРІ
       //if (!FreeLibSet.Remoting.ExecProc.GetCanStart(ExecProc.State))
-      //  throw new InvalidOperationException(" Процедура " + ExecProc.DisplayName + " не готова к запуску, так как находится в состоянии " + ExecProc.State.ToString());
+      //  throw new InvalidOperationException(" РџСЂРѕС†РµРґСѓСЂР° " + ExecProc.DisplayName + " РЅРµ РіРѕС‚РѕРІР° Рє Р·Р°РїСѓСЃРєСѓ, С‚Р°Рє РєР°Рє РЅР°С…РѕРґРёС‚СЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРё " + ExecProc.State.ToString());
     }
 
     internal void SetStarted(bool isAsync)
     {
       CheckNotDisposed();
       //if (FState != ExecProcCallItemState.NotStarted)
-      //  throw new InvalidOperationException("Повторное выполнение для одного и того же объекта ExecProcCallItem не допускается");
+      //  throw new InvalidOperationException("РџРѕРІС‚РѕСЂРЅРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ РґР»СЏ РѕРґРЅРѕРіРѕ Рё С‚РѕРіРѕ Р¶Рµ РѕР±СЉРµРєС‚Р° ExecProcCallItem РЅРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ");
       CheckNotStarted();
 
 
-      // Убрано 28.09.2017 FUserData.SetReadOnly();
+      // РЈР±СЂР°РЅРѕ 28.09.2017 FUserData.SetReadOnly();
       _State = ExecProcCallItemState.Executing;
       _IsAsync = isAsync;
     }
 
     #endregion
 
-    #region Отладка
+    #region РћС‚Р»Р°РґРєР°
 
     internal virtual void AddExceptionInfo(Exception e)
     {
@@ -400,19 +400,19 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Процедура для вызова и обработчик завершения.
-  /// Объект ExecProcCallItem (в отличие от ExecProc) является "одноразовым". 
-  /// Если процедуру требуется выполнить еще раз, то следует создать новый объект (не забывая устанавливать
-  /// свойство ExecProcCallItem.DisposeExecProc=false).
-  /// Несмотря на реализацию интерфейса IDisposable, нет необходимости вызывать метод Dispose()
-  /// из пользовательского кода. Уничтожение объекта выполняется ExecProcCallList.
+  /// РџСЂРѕС†РµРґСѓСЂР° РґР»СЏ РІС‹Р·РѕРІР° Рё РѕР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РІРµСЂС€РµРЅРёСЏ.
+  /// РћР±СЉРµРєС‚ ExecProcCallItem (РІ РѕС‚Р»РёС‡РёРµ РѕС‚ ExecProc) СЏРІР»СЏРµС‚СЃСЏ "РѕРґРЅРѕСЂР°Р·РѕРІС‹Рј". 
+  /// Р•СЃР»Рё РїСЂРѕС†РµРґСѓСЂСѓ С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹РїРѕР»РЅРёС‚СЊ РµС‰Рµ СЂР°Р·, С‚Рѕ СЃР»РµРґСѓРµС‚ СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ (РЅРµ Р·Р°Р±С‹РІР°СЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ
+  /// СЃРІРѕР№СЃС‚РІРѕ ExecProcCallItem.DisposeExecProc=false).
+  /// РќРµСЃРјРѕС‚СЂСЏ РЅР° СЂРµР°Р»РёР·Р°С†РёСЋ РёРЅС‚РµСЂС„РµР№СЃР° IDisposable, РЅРµС‚ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґ Dispose()
+  /// РёР· РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РєРѕРґР°. РЈРЅРёС‡С‚РѕР¶РµРЅРёРµ РѕР±СЉРµРєС‚Р° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ ExecProcCallList.
   /// </summary>
   public sealed class ExecProcCallItem : ExecProcCallItemBase
   {
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     /// <summary>
-    /// Создает элемент для заданной процедуры.
+    /// РЎРѕР·РґР°РµС‚ СЌР»РµРјРµРЅС‚ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РїСЂРѕС†РµРґСѓСЂС‹.
     /// </summary>
     /// <param name="execProc"></param>
     public ExecProcCallItem(IExecProc execProc)
@@ -424,9 +424,9 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Вызывает IExecProc.Dispose(), если <paramref name="disposing"/>=true.
+    /// Р’С‹Р·С‹РІР°РµС‚ IExecProc.Dispose(), РµСЃР»Рё <paramref name="disposing"/>=true.
     /// </summary>
-    /// <param name="disposing">True, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">True, РµСЃР»Рё РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose(), Р° РЅРµ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -440,7 +440,7 @@ namespace FreeLibSet.Remoting
           catch (Exception e) // 16.01.2020
           {
             AddExceptionInfo(e);
-            LogoutTools.LogoutException(e, "Ошибка вызова IExecProc.Dispose()"); // тут не выйдет показать сообщение
+            LogoutTools.LogoutException(e, "РћС€РёР±РєР° РІС‹Р·РѕРІР° IExecProc.Dispose()"); // С‚СѓС‚ РЅРµ РІС‹Р№РґРµС‚ РїРѕРєР°Р·Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
             base.State = ExecProcCallItemState.Failed;
           }
         }
@@ -451,15 +451,15 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает IExecProc.Guid
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ IExecProc.Guid
     /// </summary>
     public override Guid Guid { get { return _ExecProc.Guid; } }
 
     /// <summary>
-    /// Объект процедуры ExecProc или RemoteExecProc
+    /// РћР±СЉРµРєС‚ РїСЂРѕС†РµРґСѓСЂС‹ ExecProc РёР»Рё RemoteExecProc
     /// </summary>
     public IExecProc ExecProc { get { return _ExecProc; } }
     internal override IExecProc InternalExecProc { get { return _ExecProc; } }
@@ -472,15 +472,15 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Событие Finished
+    #region РЎРѕР±С‹С‚РёРµ Finished
 
     /// <summary>
-    /// Событие, вызываемое при успешном завершении процедуры.
-    /// Если установлено свойство UseFinishedWhenFailed, то событие будет вызвано также при аварийном
-    /// завершении процедуры.
-    /// Если обработчик не установлен, результаты, возвращаемые процедурой будут проигнорированы.
-    /// Для синхронного вызова гарантируется, что вызов будет выполнен из этого же потока, в котором была запущена процедура.
-    /// Для асинхронного вызова поток может быть любым.
+    /// РЎРѕР±С‹С‚РёРµ, РІС‹Р·С‹РІР°РµРјРѕРµ РїСЂРё СѓСЃРїРµС€РЅРѕРј Р·Р°РІРµСЂС€РµРЅРёРё РїСЂРѕС†РµРґСѓСЂС‹.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ UseFinishedWhenFailed, С‚Рѕ СЃРѕР±С‹С‚РёРµ Р±СѓРґРµС‚ РІС‹Р·РІР°РЅРѕ С‚Р°РєР¶Рµ РїСЂРё Р°РІР°СЂРёР№РЅРѕРј
+    /// Р·Р°РІРµСЂС€РµРЅРёРё РїСЂРѕС†РµРґСѓСЂС‹.
+    /// Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, СЂРµР·СѓР»СЊС‚Р°С‚С‹, РІРѕР·РІСЂР°С‰Р°РµРјС‹Рµ РїСЂРѕС†РµРґСѓСЂРѕР№ Р±СѓРґСѓС‚ РїСЂРѕРёРіРЅРѕСЂРёСЂРѕРІР°РЅС‹.
+    /// Р”Р»СЏ СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹Р·РѕРІР° РіР°СЂР°РЅС‚РёСЂСѓРµС‚СЃСЏ, С‡С‚Рѕ РІС‹Р·РѕРІ Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅ РёР· СЌС‚РѕРіРѕ Р¶Рµ РїРѕС‚РѕРєР°, РІ РєРѕС‚РѕСЂРѕРј Р±С‹Р»Р° Р·Р°РїСѓС‰РµРЅР° РїСЂРѕС†РµРґСѓСЂР°.
+    /// Р”Р»СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹Р·РѕРІР° РїРѕС‚РѕРє РјРѕР¶РµС‚ Р±С‹С‚СЊ Р»СЋР±С‹Рј.
     /// </summary>
     public event ExecProcCallEventHandler Finished;
 
@@ -493,7 +493,7 @@ namespace FreeLibSet.Remoting
         CheckCallerThread();
 #endif
 
-      ExecProcCallEventHandler ehFinished = Finished; // 12.01.2021. Учитываем возможность асинхронного присоединения и отсоединения обработчиков событий
+      ExecProcCallEventHandler ehFinished = Finished; // 12.01.2021. РЈС‡РёС‚С‹РІР°РµРј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЏ Рё РѕС‚СЃРѕРµРґРёРЅРµРЅРёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕР±С‹С‚РёР№
       if (ehFinished != null)
       {
         ExecProcCallEventArgs args = new ExecProcCallEventArgs(this, results, exception);
@@ -503,7 +503,7 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Отладка
+    #region РћС‚Р»Р°РґРєР°
 
     internal override void AddExceptionInfo(Exception e)
     {
@@ -520,21 +520,21 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Процедура для вызова и обработчик завершения.
-  /// Объект ExecProcCallItem (в отличие от ExecProc) является "одноразовым". 
-  /// Если процедуру требуется выполнить еще раз, то следует создать новый объект (не забывая устанавливать
-  /// свойство ExecProcCallItem.DisposeExecProc=false).
-  /// Несмотря на реализацию интерфейса IDisposable, нет необходимости вызывать метод Dispose()
-  /// из пользовательского кода. Уничтожение объекта выполняется ExecProcCallList.
+  /// РџСЂРѕС†РµРґСѓСЂР° РґР»СЏ РІС‹Р·РѕРІР° Рё РѕР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РІРµСЂС€РµРЅРёСЏ.
+  /// РћР±СЉРµРєС‚ ExecProcCallItem (РІ РѕС‚Р»РёС‡РёРµ РѕС‚ ExecProc) СЏРІР»СЏРµС‚СЃСЏ "РѕРґРЅРѕСЂР°Р·РѕРІС‹Рј". 
+  /// Р•СЃР»Рё РїСЂРѕС†РµРґСѓСЂСѓ С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹РїРѕР»РЅРёС‚СЊ РµС‰Рµ СЂР°Р·, С‚Рѕ СЃР»РµРґСѓРµС‚ СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ (РЅРµ Р·Р°Р±С‹РІР°СЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ
+  /// СЃРІРѕР№СЃС‚РІРѕ ExecProcCallItem.DisposeExecProc=false).
+  /// РќРµСЃРјРѕС‚СЂСЏ РЅР° СЂРµР°Р»РёР·Р°С†РёСЋ РёРЅС‚РµСЂС„РµР№СЃР° IDisposable, РЅРµС‚ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґ Dispose()
+  /// РёР· РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РєРѕРґР°. РЈРЅРёС‡С‚РѕР¶РµРЅРёРµ РѕР±СЉРµРєС‚Р° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ ExecProcCallList.
   /// </summary>
   public sealed class DistributedProcCallItem : ExecProcCallItemBase
   {
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     /// <summary>
-    /// Создает элемент для процедуры, начатой на стороне сервера.
+    /// РЎРѕР·РґР°РµС‚ СЌР»РµРјРµРЅС‚ РґР»СЏ РїСЂРѕС†РµРґСѓСЂС‹, РЅР°С‡Р°С‚РѕР№ РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР°.
     /// </summary>
-    /// <param name="startData">Данные вызова ExecProc.StartDistributedCall() на стороне сервера и переданные клиенту для завершения</param>
+    /// <param name="startData">Р”Р°РЅРЅС‹Рµ РІС‹Р·РѕРІР° ExecProc.StartDistributedCall() РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР° Рё РїРµСЂРµРґР°РЅРЅС‹Рµ РєР»РёРµРЅС‚Сѓ РґР»СЏ Р·Р°РІРµСЂС€РµРЅРёСЏ</param>
     public DistributedProcCallItem(DistributedCallData startData)
     {
       if (startData == null)
@@ -550,9 +550,9 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Вызывает IExecProc.Dispose(), если <paramref name="disposing"/>=true.
+    /// Р’С‹Р·С‹РІР°РµС‚ IExecProc.Dispose(), РµСЃР»Рё <paramref name="disposing"/>=true.
     /// </summary>
-    /// <param name="disposing">True, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">True, РµСЃР»Рё РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose(), Р° РЅРµ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -564,7 +564,7 @@ namespace FreeLibSet.Remoting
         catch (Exception e)
         {
           AddExceptionInfo(e);
-          LogoutTools.LogoutException(e, "Ошибка вызова RemoteSingleCallExecProc.Dispose()"); // тут не выйдет показать сообщение
+          LogoutTools.LogoutException(e, "РћС€РёР±РєР° РІС‹Р·РѕРІР° RemoteSingleCallExecProc.Dispose()"); // С‚СѓС‚ РЅРµ РІС‹Р№РґРµС‚ РїРѕРєР°Р·Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ
           base.State = ExecProcCallItemState.Failed;
         }
       }
@@ -574,20 +574,20 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Возвращает DistributedCallData.Guid
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ DistributedCallData.Guid
     /// </summary>
     public override Guid Guid { get { return _DistributedProc.StartData.Guid; } }
 
     /// <summary>
-    /// Объект процедуры RemoteExecProc или null
+    /// РћР±СЉРµРєС‚ РїСЂРѕС†РµРґСѓСЂС‹ RemoteExecProc РёР»Рё null
     /// </summary>
     internal override IExecProc InternalExecProc { get { return _DistributedProc.MainProc; } }
 
     /// <summary>
-    /// Процедура в стиле APM.
+    /// РџСЂРѕС†РµРґСѓСЂР° РІ СЃС‚РёР»Рµ APM.
     /// </summary>
     public RemoteDistributedProc DistributedProc { get { return _DistributedProc; } }
     private RemoteDistributedProc _DistributedProc;
@@ -599,15 +599,15 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Событие Finished
+    #region РЎРѕР±С‹С‚РёРµ Finished
 
     /// <summary>
-    /// Событие, вызываемое при успешном завершении процедуры.
-    /// Если установлено свойство UseFinishedWhenFailed, то событие будет вызвано также при аварийном
-    /// завершении процедуры.
-    /// Если обработчик не установлен, результаты, возвращаемые процедурой будут проигнорированы.
-    /// Для синхронного вызова гарантируется, что вызов будет выполнен из этого же потока, в котором была запущена процедура.
-    /// Для асинхронного вызова поток может быть любым.
+    /// РЎРѕР±С‹С‚РёРµ, РІС‹Р·С‹РІР°РµРјРѕРµ РїСЂРё СѓСЃРїРµС€РЅРѕРј Р·Р°РІРµСЂС€РµРЅРёРё РїСЂРѕС†РµРґСѓСЂС‹.
+    /// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ UseFinishedWhenFailed, С‚Рѕ СЃРѕР±С‹С‚РёРµ Р±СѓРґРµС‚ РІС‹Р·РІР°РЅРѕ С‚Р°РєР¶Рµ РїСЂРё Р°РІР°СЂРёР№РЅРѕРј
+    /// Р·Р°РІРµСЂС€РµРЅРёРё РїСЂРѕС†РµРґСѓСЂС‹.
+    /// Р•СЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, СЂРµР·СѓР»СЊС‚Р°С‚С‹, РІРѕР·РІСЂР°С‰Р°РµРјС‹Рµ РїСЂРѕС†РµРґСѓСЂРѕР№ Р±СѓРґСѓС‚ РїСЂРѕРёРіРЅРѕСЂРёСЂРѕРІР°РЅС‹.
+    /// Р”Р»СЏ СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹Р·РѕРІР° РіР°СЂР°РЅС‚РёСЂСѓРµС‚СЃСЏ, С‡С‚Рѕ РІС‹Р·РѕРІ Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅ РёР· СЌС‚РѕРіРѕ Р¶Рµ РїРѕС‚РѕРєР°, РІ РєРѕС‚РѕСЂРѕРј Р±С‹Р»Р° Р·Р°РїСѓС‰РµРЅР° РїСЂРѕС†РµРґСѓСЂР°.
+    /// Р”Р»СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹Р·РѕРІР° РїРѕС‚РѕРє РјРѕР¶РµС‚ Р±С‹С‚СЊ Р»СЋР±С‹Рј.
     /// </summary>
     public event DistributedProcCallEventHandler Finished;
 
@@ -620,7 +620,7 @@ namespace FreeLibSet.Remoting
         CheckCallerThread();
 #endif
 
-      DistributedProcCallEventHandler ehFinished = Finished; // 12.01.2021. Учитываем возможность асинхронного присоединения и отсоединения обработчиков событий
+      DistributedProcCallEventHandler ehFinished = Finished; // 12.01.2021. РЈС‡РёС‚С‹РІР°РµРј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЏ Рё РѕС‚СЃРѕРµРґРёРЅРµРЅРёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕР±С‹С‚РёР№
       if (ehFinished != null)
       {
         DistributedProcCallEventArgs args = new DistributedProcCallEventArgs(this, results, exception);
@@ -630,7 +630,7 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Отладка
+    #region РћС‚Р»Р°РґРєР°
 
     internal override void AddExceptionInfo(Exception e)
     {
@@ -646,21 +646,21 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Список ожидания завершения асинхронного вызова процедур
-  /// Единственный экземпляр списка создается в приложении клиента
-  /// (если используется ExtForms, то можно использовать свойство EFPApp.ExecProcList) 
-  /// Для запуска процедуры следует выполнить вызов метода Add(), которому передается аргумент Args и обработчик
-  /// Finished. При этом выполняется ExecuteAsync()
-  /// Далее по таймеру вызывается Process(). Если одна из добавленных процедур закончила работу, вызывается
-  /// обработчик (в основном потоке). Если выполнение завершено с ошибкой, сохраненное исключение выбрасывается
-  /// Данный класс НЕ является ПОТОКОБЕЗОПАСНЫМ. Некоторые методы должны вызываться из основного потока приложения.
+  /// РЎРїРёСЃРѕРє РѕР¶РёРґР°РЅРёСЏ Р·Р°РІРµСЂС€РµРЅРёСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕРіРѕ РІС‹Р·РѕРІР° РїСЂРѕС†РµРґСѓСЂ
+  /// Р•РґРёРЅСЃС‚РІРµРЅРЅС‹Р№ СЌРєР·РµРјРїР»СЏСЂ СЃРїРёСЃРєР° СЃРѕР·РґР°РµС‚СЃСЏ РІ РїСЂРёР»РѕР¶РµРЅРёРё РєР»РёРµРЅС‚Р°
+  /// (РµСЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ ExtForms, С‚Рѕ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРІРѕР№СЃС‚РІРѕ EFPApp.ExecProcList) 
+  /// Р”Р»СЏ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµРґСѓСЂС‹ СЃР»РµРґСѓРµС‚ РІС‹РїРѕР»РЅРёС‚СЊ РІС‹Р·РѕРІ РјРµС‚РѕРґР° Add(), РєРѕС‚РѕСЂРѕРјСѓ РїРµСЂРµРґР°РµС‚СЃСЏ Р°СЂРіСѓРјРµРЅС‚ Args Рё РѕР±СЂР°Р±РѕС‚С‡РёРє
+  /// Finished. РџСЂРё СЌС‚РѕРј РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ ExecuteAsync()
+  /// Р”Р°Р»РµРµ РїРѕ С‚Р°Р№РјРµСЂСѓ РІС‹Р·С‹РІР°РµС‚СЃСЏ Process(). Р•СЃР»Рё РѕРґРЅР° РёР· РґРѕР±Р°РІР»РµРЅРЅС‹С… РїСЂРѕС†РµРґСѓСЂ Р·Р°РєРѕРЅС‡РёР»Р° СЂР°Р±РѕС‚Сѓ, РІС‹Р·С‹РІР°РµС‚СЃСЏ
+  /// РѕР±СЂР°Р±РѕС‚С‡РёРє (РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ). Р•СЃР»Рё РІС‹РїРѕР»РЅРµРЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ СЃ РѕС€РёР±РєРѕР№, СЃРѕС…СЂР°РЅРµРЅРЅРѕРµ РёСЃРєР»СЋС‡РµРЅРёРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ
+  /// Р”Р°РЅРЅС‹Р№ РєР»Р°СЃСЃ РќР• СЏРІР»СЏРµС‚СЃСЏ РџРћРўРћРљРћР‘Р•Р—РћРџРђРЎРќР«Рњ. РќРµРєРѕС‚РѕСЂС‹Рµ РјРµС‚РѕРґС‹ РґРѕР»Р¶РЅС‹ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕС‚РѕРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ.
   /// </summary>
   public class ExecProcCallList
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой список
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє
     /// </summary>
     public ExecProcCallList()
     {
@@ -673,12 +673,12 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Поток
+    #region РџРѕС‚РѕРє
 
 #if DEBUG_THREADS
 
     /// <summary>
-    /// Основной поток (приложения) в котором создан ExecProcCallList
+    /// РћСЃРЅРѕРІРЅРѕР№ РїРѕС‚РѕРє (РїСЂРёР»РѕР¶РµРЅРёСЏ) РІ РєРѕС‚РѕСЂРѕРј СЃРѕР·РґР°РЅ ExecProcCallList
     /// </summary>
     private Thread _MainThread;
 
@@ -692,19 +692,19 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Список
+    #region РЎРїРёСЃРѕРє
 
     /// <summary>
-    /// Список просматриваемых объектов.
-    /// При обращении к списку он блокируется
+    /// РЎРїРёСЃРѕРє РїСЂРѕСЃРјР°С‚СЂРёРІР°РµРјС‹С… РѕР±СЉРµРєС‚РѕРІ.
+    /// РџСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє СЃРїРёСЃРєСѓ РѕРЅ Р±Р»РѕРєРёСЂСѓРµС‚СЃСЏ
     /// </summary>
     private readonly List<ExecProcCallItemBase> _Items;
 
     /// <summary>
-    /// Возвращает true, если процедура ExecProc еще не завершена (или завершение еще не обработано).
-    /// Этот метод может вызываться из любого потока.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РїСЂРѕС†РµРґСѓСЂР° ExecProc РµС‰Рµ РЅРµ Р·Р°РІРµСЂС€РµРЅР° (РёР»Рё Р·Р°РІРµСЂС€РµРЅРёРµ РµС‰Рµ РЅРµ РѕР±СЂР°Р±РѕС‚Р°РЅРѕ).
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°.
     /// </summary>
-    /// <param name="execProc">Искомая процедура</param>
+    /// <param name="execProc">РСЃРєРѕРјР°СЏ РїСЂРѕС†РµРґСѓСЂР°</param>
     /// <returns></returns>
     public bool Contains(IExecProc execProc)
     {
@@ -720,10 +720,10 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Возвращает копию массива процедур в списке.
-    /// Этот метод может вызываться из любого потока
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕРїРёСЋ РјР°СЃСЃРёРІР° РїСЂРѕС†РµРґСѓСЂ РІ СЃРїРёСЃРєРµ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°
     /// </summary>
-    /// <returns>Новый массив</returns>
+    /// <returns>РќРѕРІС‹Р№ РјР°СЃСЃРёРІ</returns>
     public IExecProc[] ToArray()
     {
       List<IExecProc> lst = new List<IExecProc>();
@@ -738,9 +738,9 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Возвращает количество процедур в списке.
-    /// К свойству можно обращаться из любого потока.
-    /// Свойство можно использовать только в отладочных целях, так как список может меняться асинхронно.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕС†РµРґСѓСЂ РІ СЃРїРёСЃРєРµ.
+    /// Рљ СЃРІРѕР№СЃС‚РІСѓ РјРѕР¶РЅРѕ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ РІ РѕС‚Р»Р°РґРѕС‡РЅС‹С… С†РµР»СЏС…, С‚Р°Рє РєР°Рє СЃРїРёСЃРѕРє РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
     /// </summary>
     public int Count
     {
@@ -754,20 +754,20 @@ namespace FreeLibSet.Remoting
     }
 
     ///// <summary>
-    ///// Возвращает процедуру по индексу
+    ///// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРѕС†РµРґСѓСЂСѓ РїРѕ РёРЅРґРµРєСЃСѓ
     ///// </summary>
-    ///// <param name="index">Индекс в списке</param>
-    ///// <returns>Объект IExecProc</returns>
+    ///// <param name="index">РРЅРґРµРєСЃ РІ СЃРїРёСЃРєРµ</param>
+    ///// <returns>РћР±СЉРµРєС‚ IExecProc</returns>
     //public IExecProc this[int index]
     //{
     //  get { return _Items[index].ExecProc; }
     //}
 
     ///// <summary>
-    ///// Возвращает отображаемое имя асинхронной процедуры.
+    ///// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕР№ РїСЂРѕС†РµРґСѓСЂС‹.
     ///// </summary>
-    ///// <param name="index">Индекс процедуры в списке ожидания</param>
-    ///// <returns>Свойство IExecProc.DisplayName, если оно не было переопределено при вызове метода ExecuteAsync()</returns>
+    ///// <param name="index">РРЅРґРµРєСЃ РїСЂРѕС†РµРґСѓСЂС‹ РІ СЃРїРёСЃРєРµ РѕР¶РёРґР°РЅРёСЏ</param>
+    ///// <returns>РЎРІРѕР№СЃС‚РІРѕ IExecProc.DisplayName, РµСЃР»Рё РѕРЅРѕ РЅРµ Р±С‹Р»Рѕ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРѕ РїСЂРё РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° ExecuteAsync()</returns>
     //public string GetDisplayName(int index)
     //{
     //  return _Items[index].DisplayName;
@@ -776,12 +776,12 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Создание заставки SplashStack
+    #region РЎРѕР·РґР°РЅРёРµ Р·Р°СЃС‚Р°РІРєРё SplashStack
 
     /// <summary>
-    /// Создает стек заставок, которым нужно управлять в процессе выполнения процедуры.
-    /// Непереопределенный метод возвращает null, при этом заставки не используются.
-    /// Этот метод может вызываться из любого потока, не обязательно из основного.
+    /// РЎРѕР·РґР°РµС‚ СЃС‚РµРє Р·Р°СЃС‚Р°РІРѕРє, РєРѕС‚РѕСЂС‹Рј РЅСѓР¶РЅРѕ СѓРїСЂР°РІР»СЏС‚СЊ РІ РїСЂРѕС†РµСЃСЃРµ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ null, РїСЂРё СЌС‚РѕРј Р·Р°СЃС‚Р°РІРєРё РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°, РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ.
     /// </summary>
     /// <returns></returns>
     protected virtual ISplashStack CreateSplashStack()
@@ -793,8 +793,8 @@ namespace FreeLibSet.Remoting
     private bool? _SplashStackSupportedFlag;
 
     /// <summary>
-    /// Возвращает true, если данный список поддерживает экранные заставки.
-    /// Доступно из любого потока
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґР°РЅРЅС‹Р№ СЃРїРёСЃРѕРє РїРѕРґРґРµСЂР¶РёРІР°РµС‚ СЌРєСЂР°РЅРЅС‹Рµ Р·Р°СЃС‚Р°РІРєРё.
+    /// Р”РѕСЃС‚СѓРїРЅРѕ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°
     /// </summary>
     /// <returns></returns>
     private bool IsSplashStackSupported()
@@ -806,22 +806,22 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Методы выполнения
+    #region РњРµС‚РѕРґС‹ РІС‹РїРѕР»РЅРµРЅРёСЏ
 
-    #region Для ExecProcCallItem
+    #region Р”Р»СЏ ExecProcCallItem
 
-    #region Синхронное выполнение ExecuteSync()
+    #region РЎРёРЅС…СЂРѕРЅРЅРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ ExecuteSync()
 
     /// <summary>
-    /// Синхронный метод запуска.
-    /// Не рекомендуется вызывать метод для удаленной процедуры, так как может возникнуть ошибка тайм-аута.
-    /// Используйте метод ExecuteAsyncAndWait().
-    /// Этот метод может вызываться из любого потока, как основного, так и рабочего.
+    /// РЎРёРЅС…СЂРѕРЅРЅС‹Р№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°.
+    /// РќРµ СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґ РґР»СЏ СѓРґР°Р»РµРЅРЅРѕР№ РїСЂРѕС†РµРґСѓСЂС‹, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ РІРѕР·РЅРёРєРЅСѓС‚СЊ РѕС€РёР±РєР° С‚Р°Р№Рј-Р°СѓС‚Р°.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ ExecuteAsyncAndWait().
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°, РєР°Рє РѕСЃРЅРѕРІРЅРѕРіРѕ, С‚Р°Рє Рё СЂР°Р±РѕС‡РµРіРѕ.
     /// </summary>
-    /// <param name="item">Вызываемая процедура</param>
-    /// <param name="args">Аргументы, передаваемые функции</param>
-    /// <returns>Если процедура вызвана успешно, то возвращает результаты выполнения.
-    /// Если в процедуре возникло исключение, но оно было обработано в обработчике Finished, то возвращается null</returns>
+    /// <param name="item">Р’С‹Р·С‹РІР°РµРјР°СЏ РїСЂРѕС†РµРґСѓСЂР°</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹, РїРµСЂРµРґР°РІР°РµРјС‹Рµ С„СѓРЅРєС†РёРё</param>
+    /// <returns>Р•СЃР»Рё РїСЂРѕС†РµРґСѓСЂР° РІС‹Р·РІР°РЅР° СѓСЃРїРµС€РЅРѕ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ.
+    /// Р•СЃР»Рё РІ РїСЂРѕС†РµРґСѓСЂРµ РІРѕР·РЅРёРєР»Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ, РЅРѕ РѕРЅРѕ Р±С‹Р»Рѕ РѕР±СЂР°Р±РѕС‚Р°РЅРѕ РІ РѕР±СЂР°Р±РѕС‚С‡РёРєРµ Finished, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ null</returns>
     public virtual NamedValues ExecuteSync(ExecProcCallItem item, NamedValues args)
     {
 #if DEBUG
@@ -846,7 +846,7 @@ namespace FreeLibSet.Remoting
             }
             else
             {
-              // Заставки не используются
+              // Р—Р°СЃС‚Р°РІРєРё РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ
               results = item.InternalExecProc.Execute(args);
             }
           }
@@ -879,7 +879,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Выполнение с созданием заставки в текущем потоке
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ СЃ СЃРѕР·РґР°РЅРёРµРј Р·Р°СЃС‚Р°РІРєРё РІ С‚РµРєСѓС‰РµРј РїРѕС‚РѕРєРµ
     /// </summary>
     /// <param name="proc"></param>
     /// <param name="args"></param>
@@ -890,22 +890,22 @@ namespace FreeLibSet.Remoting
       ISplashStack sstack = CreateSplashStack();
 #if DEBUG
       if (sstack == null)
-        throw new NullReferenceException("CreateSplashStack() вернул null");
+        throw new NullReferenceException("CreateSplashStack() РІРµСЂРЅСѓР» null");
 #endif
 
       ISplashStack oldss = proc.SplashStack;
       try
       {
         proc.SplashStack = sstack;
-        // Никаких SplashWatcher'ов не нужно. Процедура сама управляет заставкой напрямую.
+        // РќРёРєР°РєРёС… SplashWatcher'РѕРІ РЅРµ РЅСѓР¶РЅРѕ. РџСЂРѕС†РµРґСѓСЂР° СЃР°РјР° СѓРїСЂР°РІР»СЏРµС‚ Р·Р°СЃС‚Р°РІРєРѕР№ РЅР°РїСЂСЏРјСѓСЋ.
 
         res = proc.Execute(args);
       }
       finally
       {
-        proc.SplashStack = oldss; // восстанавливаем, вдруг процедура будет еще раз вызвана вне этого ExecProcCallList и без заставки
+        proc.SplashStack = oldss; // РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј, РІРґСЂСѓРі РїСЂРѕС†РµРґСѓСЂР° Р±СѓРґРµС‚ РµС‰Рµ СЂР°Р· РІС‹Р·РІР°РЅР° РІРЅРµ СЌС‚РѕРіРѕ ExecProcCallList Рё Р±РµР· Р·Р°СЃС‚Р°РІРєРё
 
-        // Очищаем стек
+        // РћС‡РёС‰Р°РµРј СЃС‚РµРє
         while (sstack.Splash != null)
           sstack.EndSplash();
       }
@@ -916,15 +916,15 @@ namespace FreeLibSet.Remoting
 
     private class AsyncSplashExecutor
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       /// <summary>
-      /// Процедура, которая выполнятся в основном потоке
+      /// РџСЂРѕС†РµРґСѓСЂР°, РєРѕС‚РѕСЂР°СЏ РІС‹РїРѕР»РЅСЏС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ
       /// </summary>
       public ExecProcCallItem Item;
 
       /// <summary>
-      /// Флажок, устанавливается после того, как выполнение  закончено
+      /// Р¤Р»Р°Р¶РѕРє, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє РІС‹РїРѕР»РЅРµРЅРёРµ  Р·Р°РєРѕРЅС‡РµРЅРѕ
       /// </summary>
       public bool Finished;
 
@@ -932,7 +932,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Выполнение с созданием заставки в отдельном потоке
+    /// Р’С‹РїРѕР»РЅРµРЅРёРµ СЃ СЃРѕР·РґР°РЅРёРµРј Р·Р°СЃС‚Р°РІРєРё РІ РѕС‚РґРµР»СЊРЅРѕРј РїРѕС‚РѕРєРµ
     /// </summary>
     /// <param name="item"></param>
     /// <param name="args"></param>
@@ -962,11 +962,11 @@ namespace FreeLibSet.Remoting
 
       try
       {
-        // Флажок Finished может быть установлен в любой момент.
-        // Может быть, уже и сейчас установлен. 
-        //Thread.Sleep(100); // пауза
-        // this.Sleep(100); // 10.12.2019 Пусть вызывается DoEvents()
-        Thread.Sleep(100); // 20.08.2020 Возвращаем обратно без вызова DoEvents
+        // Р¤Р»Р°Р¶РѕРє Finished РјРѕР¶РµС‚ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РІ Р»СЋР±РѕР№ РјРѕРјРµРЅС‚.
+        // РњРѕР¶РµС‚ Р±С‹С‚СЊ, СѓР¶Рµ Рё СЃРµР№С‡Р°СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅ. 
+        //Thread.Sleep(100); // РїР°СѓР·Р°
+        // this.Sleep(100); // 10.12.2019 РџСѓСЃС‚СЊ РІС‹Р·С‹РІР°РµС‚СЃСЏ DoEvents()
+        Thread.Sleep(100); // 20.08.2020 Р’РѕР·РІСЂР°С‰Р°РµРј РѕР±СЂР°С‚РЅРѕ Р±РµР· РІС‹Р·РѕРІР° DoEvents
 
 
         if (ase.Finished)
@@ -976,13 +976,13 @@ namespace FreeLibSet.Remoting
         ISplashStack sstack = CreateSplashStack();
 #if DEBUG
         if (sstack == null)
-          throw new NullReferenceException("CreateSplashStack() вернул null");
+          throw new NullReferenceException("CreateSplashStack() РІРµСЂРЅСѓР» null");
 #endif
 
         ClientSplashWatcher csw = new ClientSplashWatcher(ssw, sstack);
         try
         {
-          csw.DefaultSplashPhaseText = "Выполняется: " + ase.Item.DisplayName;
+          csw.DefaultSplashPhaseText = "Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ: " + ase.Item.DisplayName;
           csw.UseDefaultSplash = this.UseDefaultSplash;
 
           while (!ase.Finished)
@@ -992,7 +992,7 @@ namespace FreeLibSet.Remoting
               for (int i = 0; i < 9; i++)
               {
                 //Thread.Sleep(100);
-                this.Sleep(100); // 21.01.2021. Метод Sleep разрешено вызывать асинхронно
+                this.Sleep(100); // 21.01.2021. РњРµС‚РѕРґ Sleep СЂР°Р·СЂРµС€РµРЅРѕ РІС‹Р·С‹РІР°С‚СЊ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ
                 csw.UseDefaultSplash = this.UseDefaultSplash;
               }
               //Thread.Sleep(100);// 16.12.2019
@@ -1000,34 +1000,34 @@ namespace FreeLibSet.Remoting
 
               csw.ProcessSplash();
             }
-            catch { } // проглатываем ошибки, например, тайм-аута сети
+            catch { } // РїСЂРѕРіР»Р°С‚С‹РІР°РµРј РѕС€РёР±РєРё, РЅР°РїСЂРёРјРµСЂ, С‚Р°Р№Рј-Р°СѓС‚Р° СЃРµС‚Рё
 
           }
         }
         finally
         {
-          // Очищаем стек
+          // РћС‡РёС‰Р°РµРј СЃС‚РµРє
           csw.UseDefaultSplash = false;
           csw.ClearClientStack();
         }
       }
       catch (Exception e)
       {
-        // Нельзя выпускать исключение из этого метода
+        // РќРµР»СЊР·СЏ РІС‹РїСѓСЃРєР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ РёР· СЌС‚РѕРіРѕ РјРµС‚РѕРґР°
         ase.Item.AddExceptionInfo(e);
-        OnUnhandledException(e, "Ошибка в RunAsyncSplash");
+        OnUnhandledException(e, "РћС€РёР±РєР° РІ RunAsyncSplash");
       }
     }
 
     /// <summary>
-    /// Синхронный метод запуска.
-    /// Не рекомендуется вызывать метод для удаленной процедуры, так как может возникнуть ошибка тайм-аута.
-    /// Используйте метод ExecuteAsyncAndWait().
-    /// Этот метод может вызываться из любого потока, как основного, так и рабочего.
+    /// РЎРёРЅС…СЂРѕРЅРЅС‹Р№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°.
+    /// РќРµ СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґ РґР»СЏ СѓРґР°Р»РµРЅРЅРѕР№ РїСЂРѕС†РµРґСѓСЂС‹, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ РІРѕР·РЅРёРєРЅСѓС‚СЊ РѕС€РёР±РєР° С‚Р°Р№Рј-Р°СѓС‚Р°.
+    /// РСЃРїРѕР»СЊР·СѓР№С‚Рµ РјРµС‚РѕРґ ExecuteAsyncAndWait().
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°, РєР°Рє РѕСЃРЅРѕРІРЅРѕРіРѕ, С‚Р°Рє Рё СЂР°Р±РѕС‡РµРіРѕ.
     /// </summary>
-    /// <param name="execProc">Вызываемая процедура</param>
-    /// <param name="args">Аргументы, передаваемые функции</param>
-    /// <returns>Результаты выполнения.</returns>
+    /// <param name="execProc">Р’С‹Р·С‹РІР°РµРјР°СЏ РїСЂРѕС†РµРґСѓСЂР°</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹, РїРµСЂРµРґР°РІР°РµРјС‹Рµ С„СѓРЅРєС†РёРё</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ.</returns>
     public NamedValues ExecuteSync(IExecProc execProc, NamedValues args)
     {
       ExecProcCallItem item = new ExecProcCallItem(execProc);
@@ -1036,14 +1036,14 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Асинхронное выполнение ExecuteAsync()
+    #region РђСЃРёРЅС…СЂРѕРЅРЅРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ ExecuteAsync()
 
     /// <summary>
-    /// Вызывает процедуру асинхронно и добавляет текущую процедуру в список, вместе с обработчиком завершения.
-    /// Этот метод может вызываться из любого потока.
+    /// Р’С‹Р·С‹РІР°РµС‚ РїСЂРѕС†РµРґСѓСЂСѓ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ Рё РґРѕР±Р°РІР»СЏРµС‚ С‚РµРєСѓС‰СѓСЋ РїСЂРѕС†РµРґСѓСЂСѓ РІ СЃРїРёСЃРѕРє, РІРјРµСЃС‚Рµ СЃ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј Р·Р°РІРµСЂС€РµРЅРёСЏ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°.
     /// </summary>
-    /// <param name="item">Процедура и обработчики</param>
-    /// <param name="args">Аргументы, передаваемые функции</param>
+    /// <param name="item">РџСЂРѕС†РµРґСѓСЂР° Рё РѕР±СЂР°Р±РѕС‚С‡РёРєРё</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹, РїРµСЂРµРґР°РІР°РµРјС‹Рµ С„СѓРЅРєС†РёРё</param>
     public virtual void ExecuteAsync(ExecProcCallItem item, NamedValues args)
     {
 #if DEBUG
@@ -1056,7 +1056,7 @@ namespace FreeLibSet.Remoting
 
         ISplashStack splStack = CreateSplashStack();
         if (splStack == null)
-          item.AsyncResult = item.InternalExecProc.BeginExecute(args, null, null); // здесь может возникнуть исключение, если процедуру нельзя запускать
+          item.AsyncResult = item.InternalExecProc.BeginExecute(args, null, null); // Р·РґРµСЃСЊ РјРѕР¶РµС‚ РІРѕР·РЅРёРєРЅСѓС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РїСЂРѕС†РµРґСѓСЂСѓ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ
         else
         {
           IAsyncResultWithSplash ar2 = item.InternalExecProc.BeginExecuteWithSplash(args, null, null);
@@ -1064,7 +1064,7 @@ namespace FreeLibSet.Remoting
           item.AsyncResultHandler = new AsyncResultWithSplashHandler(ar2);
           item.SplashWatcher = new ClientSplashWatcher(item.AsyncResultHandler, splStack);
           item.SplashWatcher.UseDefaultSplash = this.UseDefaultSplash;
-          item.SplashWatcher.DefaultSplashPhaseText = "Выполняется: " + item.DisplayName;
+          item.SplashWatcher.DefaultSplashPhaseText = "Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ: " + item.DisplayName;
         }
         lock (_Items)
         {
@@ -1087,16 +1087,16 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Универсальный метод Execute()
+    #region РЈРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ Execute()
 
     /// <summary>
-    /// Выполняет синхронный или асинхронный вызов, в зависимости от <paramref name="isAsync"/>.
-    /// Удобно, если одна процедура может вызываться и так и так.
-    /// Этот метод может вызываться из любого потока.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ СЃРёРЅС…СЂРѕРЅРЅС‹Р№ РёР»Рё Р°СЃРёРЅС…СЂРѕРЅРЅС‹Р№ РІС‹Р·РѕРІ, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ <paramref name="isAsync"/>.
+    /// РЈРґРѕР±РЅРѕ, РµСЃР»Рё РѕРґРЅР° РїСЂРѕС†РµРґСѓСЂР° РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Рё С‚Р°Рє Рё С‚Р°Рє.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°.
     /// </summary>
-    /// <param name="isAsync">true - асинхронно, false </param>
-    /// <param name="item">Процедура и обработчики</param>
-    /// <param name="args">Аргументы, передаваемые функции</param>
+    /// <param name="isAsync">true - Р°СЃРёРЅС…СЂРѕРЅРЅРѕ, false </param>
+    /// <param name="item">РџСЂРѕС†РµРґСѓСЂР° Рё РѕР±СЂР°Р±РѕС‚С‡РёРєРё</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹, РїРµСЂРµРґР°РІР°РµРјС‹Рµ С„СѓРЅРєС†РёРё</param>
     public void Execute(bool isAsync, ExecProcCallItem item, NamedValues args)
     {
       if (isAsync)
@@ -1110,12 +1110,12 @@ namespace FreeLibSet.Remoting
     #region ExecuteAsyncAndWait()
 
     /// <summary>
-    /// Используется методом ExecuteAsyncAndWait, принимающим ExecProcCallItem.
-    /// Вторая перегрузка, принимаюшая IExecProc, владеет собственным ExecProcCallItem и может использовать его как промежуточное хранилище.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјРµС‚РѕРґРѕРј ExecuteAsyncAndWait, РїСЂРёРЅРёРјР°СЋС‰РёРј ExecProcCallItem.
+    /// Р’С‚РѕСЂР°СЏ РїРµСЂРµРіСЂСѓР·РєР°, РїСЂРёРЅРёРјР°СЋС€Р°СЏ IExecProc, РІР»Р°РґРµРµС‚ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рј ExecProcCallItem Рё РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РµРіРѕ РєР°Рє РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕРµ С…СЂР°РЅРёР»РёС‰Рµ.
     /// </summary>
     private class ExecProcExecuteAsyncAndWaitHandler
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public NamedValues Results;
 
@@ -1123,7 +1123,7 @@ namespace FreeLibSet.Remoting
 
       #endregion
 
-      #region Метод
+      #region РњРµС‚РѕРґ
 
       public void Item_Finished(object sender, ExecProcCallEventArgs args)
       {
@@ -1135,29 +1135,29 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Асинхронный вызов с ожиданием.
-    /// В отличие от метода ExecuteAsync(), который сразу возвращает управление,
-    /// вызов этого метода не завершается, пока выполнение не будет завершено.
-    /// Метод может вызываться в любом потоке.
-    /// Метод должен использоваться с удаленной процедурой, которая выполняется долго и может вызвать ошибку тайм-аута при использовании ExecuteSync(),
-    /// а использовать ExecuteAsync() нельзя, так как требуется получить результаты в текущем потоке.
-    /// Использование с ExecProc также допускается, хотя в некоторых случаях может быть выгоднее использовать ExecuteSync().
-    /// Фактически, этот метод вызывает ExecuteAsync() и дожидается завершения процедуры. Затем результаты возвращаются в основном потоке.
-    /// Если при выполнении процедуры возникло исключение, то оно перевыбрасывается в основном потоке. Предполагается, что в <paramref name="item"/>
-    /// нет своей обработки ошибок.
+    /// РђСЃРёРЅС…СЂРѕРЅРЅС‹Р№ РІС‹Р·РѕРІ СЃ РѕР¶РёРґР°РЅРёРµРј.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РјРµС‚РѕРґР° ExecuteAsync(), РєРѕС‚РѕСЂС‹Р№ СЃСЂР°Р·Сѓ РІРѕР·РІСЂР°С‰Р°РµС‚ СѓРїСЂР°РІР»РµРЅРёРµ,
+    /// РІС‹Р·РѕРІ СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РЅРµ Р·Р°РІРµСЂС€Р°РµС‚СЃСЏ, РїРѕРєР° РІС‹РїРѕР»РЅРµРЅРёРµ РЅРµ Р±СѓРґРµС‚ Р·Р°РІРµСЂС€РµРЅРѕ.
+    /// РњРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РІ Р»СЋР±РѕРј РїРѕС‚РѕРєРµ.
+    /// РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ СЃ СѓРґР°Р»РµРЅРЅРѕР№ РїСЂРѕС†РµРґСѓСЂРѕР№, РєРѕС‚РѕСЂР°СЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РґРѕР»РіРѕ Рё РјРѕР¶РµС‚ РІС‹Р·РІР°С‚СЊ РѕС€РёР±РєСѓ С‚Р°Р№Рј-Р°СѓС‚Р° РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё ExecuteSync(),
+    /// Р° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ ExecuteAsync() РЅРµР»СЊР·СЏ, С‚Р°Рє РєР°Рє С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ С‚РµРєСѓС‰РµРј РїРѕС‚РѕРєРµ.
+    /// РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЃ ExecProc С‚Р°РєР¶Рµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ, С…РѕС‚СЏ РІ РЅРµРєРѕС‚РѕСЂС‹С… СЃР»СѓС‡Р°СЏС… РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹РіРѕРґРЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ ExecuteSync().
+    /// Р¤Р°РєС‚РёС‡РµСЃРєРё, СЌС‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ ExecuteAsync() Рё РґРѕР¶РёРґР°РµС‚СЃСЏ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹. Р—Р°С‚РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІРѕР·РІСЂР°С‰Р°СЋС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ.
+    /// Р•СЃР»Рё РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РїСЂРѕС†РµРґСѓСЂС‹ РІРѕР·РЅРёРєР»Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ, С‚Рѕ РѕРЅРѕ РїРµСЂРµРІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ. РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РІ <paramref name="item"/>
+    /// РЅРµС‚ СЃРІРѕРµР№ РѕР±СЂР°Р±РѕС‚РєРё РѕС€РёР±РѕРє.
     /// </summary>
-    /// <param name="item">Объект процедуры</param>
-    /// <param name="args">Аргументы процедуры</param>
-    /// <returns>Результаты выполнения процедуры</returns>
+    /// <param name="item">РћР±СЉРµРєС‚ РїСЂРѕС†РµРґСѓСЂС‹</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ РїСЂРѕС†РµРґСѓСЂС‹</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹</returns>
     public virtual NamedValues ExecuteAsyncAndWait(ExecProcCallItem item, NamedValues args)
     {
       if (item == null)
         throw new ArgumentNullException("item");
 
       // 09.12.2019
-      // Создаем копию ExecProcCallItem.
-      // У оригинала может быть не установлено свойство UseFinishedWhenFailed, но есть обработчик события Finished. Тогда обработчик события будет
-      // вызван при появлении ошибки, к чему обработчик не готов
+      // РЎРѕР·РґР°РµРј РєРѕРїРёСЋ ExecProcCallItem.
+      // РЈ РѕСЂРёРіРёРЅР°Р»Р° РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ UseFinishedWhenFailed, РЅРѕ РµСЃС‚СЊ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Finished. РўРѕРіРґР° РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Р±СѓРґРµС‚
+      // РІС‹Р·РІР°РЅ РїСЂРё РїРѕСЏРІР»РµРЅРёРё РѕС€РёР±РєРё, Рє С‡РµРјСѓ РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРµ РіРѕС‚РѕРІ
       ExecProcCallItem item2 = new ExecProcCallItem(item.InternalExecProc);
       item2.DisplayName = item.DisplayName;
 
@@ -1168,14 +1168,14 @@ namespace FreeLibSet.Remoting
       {
         ExecuteAsync(item2, args);
         Thread.Sleep(0); // 19.08.2020
-        // нельзя! ProcessItem(item2); // 20.08.2020
+        // РЅРµР»СЊР·СЏ! ProcessItem(item2); // 20.08.2020
 
         while (item2.State == ExecProcCallItemState.Executing)
         {
           //_ProcessItemCalled = false;
           Sleep(250);
           //if (!_ProcessItemCalled)
-          // нельзя!  Process(); // 20.08.2020. Делаем сами, раз переопределенный метод не вызвал
+          // РЅРµР»СЊР·СЏ!  Process(); // 20.08.2020. Р”РµР»Р°РµРј СЃР°РјРё, СЂР°Р· РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РЅРµ РІС‹Р·РІР°Р»
         }
       }
       finally
@@ -1189,8 +1189,8 @@ namespace FreeLibSet.Remoting
         tempHandler.Exception.Data["AsyncStackTrace"] = tempHandler.Exception.StackTrace;
         //OnFailed(item, TempHandler.Exception);
         // 19.12.2019
-        // Не надо, чтобы вызывался виртуальный метод, который перехватит исключение.
-        // Если собственный обработчик ошибок не установлен для ExecProcCallItem, то пусть исключение выбрасывается.
+        // РќРµ РЅР°РґРѕ, С‡С‚РѕР±С‹ РІС‹Р·С‹РІР°Р»СЃСЏ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ, РєРѕС‚РѕСЂС‹Р№ РїРµСЂРµС…РІР°С‚РёС‚ РёСЃРєР»СЋС‡РµРЅРёРµ.
+        // Р•СЃР»Рё СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РѕС€РёР±РѕРє РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РґР»СЏ ExecProcCallItem, С‚Рѕ РїСѓСЃС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ.
         DoOnFailed(item, tempHandler.Exception);
       }
       else
@@ -1200,15 +1200,15 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Непереопределенный метод вызывает Thread.Sleep().
-    /// Переопределенный метод может дополнительно обрабатывать очередь сообщений приложения, чтобы не "замораживался" пользовательский интерфейс.
-    /// Этот метод может вызываться асинхронно.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ Thread.Sleep().
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РјРѕР¶РµС‚ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ РѕС‡РµСЂРµРґСЊ СЃРѕРѕР±С‰РµРЅРёР№ РїСЂРёР»РѕР¶РµРЅРёСЏ, С‡С‚РѕР±С‹ РЅРµ "Р·Р°РјРѕСЂР°Р¶РёРІР°Р»СЃСЏ" РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
     /// </summary>                                                                                       
-    /// <param name="milliseconds">Интервал ожидания в миллисекундах</param>
+    /// <param name="milliseconds">РРЅС‚РµСЂРІР°Р» РѕР¶РёРґР°РЅРёСЏ РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…</param>
     protected virtual void Sleep(int milliseconds)
     {
       // 21.01.2021.
-      // Убрана проверка. Метод может вызываться асинхронно
+      // РЈР±СЂР°РЅР° РїСЂРѕРІРµСЂРєР°. РњРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ
 
       // #if DEBUG_THREADS
       //CheckMainThread();
@@ -1217,17 +1217,17 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Асинхронный вызов с ожиданием.
-    /// В отличие от метода ExecuteAsync(), который сразу возвращает управление,
-    /// вызов этого метода не завершается, пока выполнение не будет завершено.
-    /// Метод можно вызвать из любого потока.
-    /// Метод должен использоваться с удаленной процедурой, которая выполняется долго и может вызвать ошибку тайм-аута при использовании ExecuteSync(),
-    /// а использовать ExecuteAsync() нельзя, так как требуется получить результаты в текущем потоке.
-    /// Использование с ExecProc также допускается.
+    /// РђСЃРёРЅС…СЂРѕРЅРЅС‹Р№ РІС‹Р·РѕРІ СЃ РѕР¶РёРґР°РЅРёРµРј.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РјРµС‚РѕРґР° ExecuteAsync(), РєРѕС‚РѕСЂС‹Р№ СЃСЂР°Р·Сѓ РІРѕР·РІСЂР°С‰Р°РµС‚ СѓРїСЂР°РІР»РµРЅРёРµ,
+    /// РІС‹Р·РѕРІ СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РЅРµ Р·Р°РІРµСЂС€Р°РµС‚СЃСЏ, РїРѕРєР° РІС‹РїРѕР»РЅРµРЅРёРµ РЅРµ Р±СѓРґРµС‚ Р·Р°РІРµСЂС€РµРЅРѕ.
+    /// РњРµС‚РѕРґ РјРѕР¶РЅРѕ РІС‹Р·РІР°С‚СЊ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°.
+    /// РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ СЃ СѓРґР°Р»РµРЅРЅРѕР№ РїСЂРѕС†РµРґСѓСЂРѕР№, РєРѕС‚РѕСЂР°СЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РґРѕР»РіРѕ Рё РјРѕР¶РµС‚ РІС‹Р·РІР°С‚СЊ РѕС€РёР±РєСѓ С‚Р°Р№Рј-Р°СѓС‚Р° РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё ExecuteSync(),
+    /// Р° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ ExecuteAsync() РЅРµР»СЊР·СЏ, С‚Р°Рє РєР°Рє С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ С‚РµРєСѓС‰РµРј РїРѕС‚РѕРєРµ.
+    /// РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЃ ExecProc С‚Р°РєР¶Рµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="proc">Выполняемая процедура</param>
-    /// <param name="args">Аргументы вызова</param>
-    /// <returns>Результаты вызова</returns>
+    /// <param name="proc">Р’С‹РїРѕР»РЅСЏРµРјР°СЏ РїСЂРѕС†РµРґСѓСЂР°</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ РІС‹Р·РѕРІР°</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚С‹ РІС‹Р·РѕРІР°</returns>
     public virtual NamedValues ExecuteAsyncAndWait(IExecProc proc, NamedValues args)
     {
       ExecProcCallItem item = new ExecProcCallItem(proc);
@@ -1240,22 +1240,22 @@ namespace FreeLibSet.Remoting
       Exception Exception = item.UserData["Exception"] as Exception;
       if (Exception != null)
         throw Exception;
-      throw new BugException("После завершения процедуры возвращен неправильный результат");
+      throw new BugException("РџРѕСЃР»Рµ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹ РІРѕР·РІСЂР°С‰РµРЅ РЅРµРїСЂР°РІРёР»СЊРЅС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚");
     }
 
     #endregion
 
     #endregion
 
-    #region Для DistributedProcCallItem
+    #region Р”Р»СЏ DistributedProcCallItem
 
-    #region Асинхронное выполнение ExecuteAsync()
+    #region РђСЃРёРЅС…СЂРѕРЅРЅРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ ExecuteAsync()
 
     /// <summary>
-    /// Вызывает процедуру асинхронно и добавляет текущую процедуру в список, вместе с обработчиком завершения.
-    /// Этот метод может вызываться из любого потока.
+    /// Р’С‹Р·С‹РІР°РµС‚ РїСЂРѕС†РµРґСѓСЂСѓ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ Рё РґРѕР±Р°РІР»СЏРµС‚ С‚РµРєСѓС‰СѓСЋ РїСЂРѕС†РµРґСѓСЂСѓ РІ СЃРїРёСЃРѕРє, РІРјРµСЃС‚Рµ СЃ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј Р·Р°РІРµСЂС€РµРЅРёСЏ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°.
     /// </summary>
-    /// <param name="item">Процедура и обработчики</param>
+    /// <param name="item">РџСЂРѕС†РµРґСѓСЂР° Рё РѕР±СЂР°Р±РѕС‚С‡РёРєРё</param>
     public virtual void ExecuteAsync(DistributedProcCallItem item)
     {
 #if DEBUG
@@ -1268,7 +1268,7 @@ namespace FreeLibSet.Remoting
 
         ISplashStack splStack = CreateSplashStack();
         if (splStack == null)
-          item.AsyncResult = item.DistributedProc.BeginExecute(null, null); // здесь может возникнуть исключение, если процедуру нельзя запускать
+          item.AsyncResult = item.DistributedProc.BeginExecute(null, null); // Р·РґРµСЃСЊ РјРѕР¶РµС‚ РІРѕР·РЅРёРєРЅСѓС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РїСЂРѕС†РµРґСѓСЂСѓ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ
         else
         {
           IAsyncResultWithSplash ar2 = item.DistributedProc.BeginExecuteWithSplash(null, null);
@@ -1276,7 +1276,7 @@ namespace FreeLibSet.Remoting
           item.AsyncResultHandler = new AsyncResultWithSplashHandler(ar2);
           item.SplashWatcher = new ClientSplashWatcher(item.AsyncResultHandler, splStack);
           item.SplashWatcher.UseDefaultSplash = this.UseDefaultSplash;
-          item.SplashWatcher.DefaultSplashPhaseText = "Выполняется: " + item.DisplayName;
+          item.SplashWatcher.DefaultSplashPhaseText = "Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ: " + item.DisplayName;
         }
 
         if (item.DistributedProc.StartData.IsCompleted)
@@ -1312,12 +1312,12 @@ namespace FreeLibSet.Remoting
     #region ExecuteAsyncAndWait()
 
     /// <summary>
-    /// Используется методом ExecuteAsyncAndWait, принимающим ExecProcCallItem.
-    /// Вторая перегрузка, принимаюшая IExecProc, владеет собственным ExecProcCallItem и может использовать его как промежуточное хранилище.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјРµС‚РѕРґРѕРј ExecuteAsyncAndWait, РїСЂРёРЅРёРјР°СЋС‰РёРј ExecProcCallItem.
+    /// Р’С‚РѕСЂР°СЏ РїРµСЂРµРіСЂСѓР·РєР°, РїСЂРёРЅРёРјР°СЋС€Р°СЏ IExecProc, РІР»Р°РґРµРµС‚ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рј ExecProcCallItem Рё РјРѕР¶РµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РµРіРѕ РєР°Рє РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕРµ С…СЂР°РЅРёР»РёС‰Рµ.
     /// </summary>
     private class DistributedProcExecuteAsyncAndWaitHandler
     {
-      #region Поля
+      #region РџРѕР»СЏ
 
       public NamedValues Results;
 
@@ -1325,7 +1325,7 @@ namespace FreeLibSet.Remoting
 
       #endregion
 
-      #region Метод
+      #region РњРµС‚РѕРґ
 
       public void Item_Finished(object sender, DistributedProcCallEventArgs args)
       {
@@ -1337,26 +1337,26 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Асинхронный вызов с ожиданием.
-    /// В отличие от метода ExecuteAsync(), который сразу возвращает управление,
-    /// вызов этого метода не завершается, пока выполнение не будет завершено.
-    /// Метод может вызываться в любом потоке.
-    /// Метод должен использоваться с удаленной процедурой, которая выполняется долго и может вызвать ошибку тайм-аута при использовании ExecuteSync(),
-    /// а использовать ExecuteAsync() нельзя, так как требуется получить результаты в текущем потоке.
-    /// Фактически, этот метод вызывает ExecuteAsync() и дожидается завершения процедуры. Затем результаты возвращаются в основном потоке.
-    /// Если при выполнении процедуры возникло исключение, то оно перевыбрасывается в основном потоке. Предполагается, что в <paramref name="item"/>
-    /// нет своей обработки ошибок.
+    /// РђСЃРёРЅС…СЂРѕРЅРЅС‹Р№ РІС‹Р·РѕРІ СЃ РѕР¶РёРґР°РЅРёРµРј.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РјРµС‚РѕРґР° ExecuteAsync(), РєРѕС‚РѕСЂС‹Р№ СЃСЂР°Р·Сѓ РІРѕР·РІСЂР°С‰Р°РµС‚ СѓРїСЂР°РІР»РµРЅРёРµ,
+    /// РІС‹Р·РѕРІ СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РЅРµ Р·Р°РІРµСЂС€Р°РµС‚СЃСЏ, РїРѕРєР° РІС‹РїРѕР»РЅРµРЅРёРµ РЅРµ Р±СѓРґРµС‚ Р·Р°РІРµСЂС€РµРЅРѕ.
+    /// РњРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РІ Р»СЋР±РѕРј РїРѕС‚РѕРєРµ.
+    /// РњРµС‚РѕРґ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ СЃ СѓРґР°Р»РµРЅРЅРѕР№ РїСЂРѕС†РµРґСѓСЂРѕР№, РєРѕС‚РѕСЂР°СЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РґРѕР»РіРѕ Рё РјРѕР¶РµС‚ РІС‹Р·РІР°С‚СЊ РѕС€РёР±РєСѓ С‚Р°Р№Рј-Р°СѓС‚Р° РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё ExecuteSync(),
+    /// Р° РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ ExecuteAsync() РЅРµР»СЊР·СЏ, С‚Р°Рє РєР°Рє С‚СЂРµР±СѓРµС‚СЃСЏ РїРѕР»СѓС‡РёС‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ С‚РµРєСѓС‰РµРј РїРѕС‚РѕРєРµ.
+    /// Р¤Р°РєС‚РёС‡РµСЃРєРё, СЌС‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ ExecuteAsync() Рё РґРѕР¶РёРґР°РµС‚СЃСЏ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹. Р—Р°С‚РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІРѕР·РІСЂР°С‰Р°СЋС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ.
+    /// Р•СЃР»Рё РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РїСЂРѕС†РµРґСѓСЂС‹ РІРѕР·РЅРёРєР»Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ, С‚Рѕ РѕРЅРѕ РїРµСЂРµРІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ. РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РІ <paramref name="item"/>
+    /// РЅРµС‚ СЃРІРѕРµР№ РѕР±СЂР°Р±РѕС‚РєРё РѕС€РёР±РѕРє.
     /// </summary>
-    /// <param name="item">Объект процедуры</param>
-    /// <returns>Результаты выполнения процедуры</returns>
+    /// <param name="item">РћР±СЉРµРєС‚ РїСЂРѕС†РµРґСѓСЂС‹</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹</returns>
     public virtual NamedValues ExecuteAsyncAndWait(DistributedProcCallItem item)
     {
       if (item == null)
         throw new ArgumentNullException("item");
 
-      // Создаем копию ExecProcCallItem.
-      // У оригинала может быть не установлено свойство UseFinishedWhenFailed, но есть обработчик события Finished. Тогда обработчик события будет
-      // вызван при появлении ошибки, к чему обработчик не готов
+      // РЎРѕР·РґР°РµРј РєРѕРїРёСЋ ExecProcCallItem.
+      // РЈ РѕСЂРёРіРёРЅР°Р»Р° РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ UseFinishedWhenFailed, РЅРѕ РµСЃС‚СЊ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Finished. РўРѕРіРґР° РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Р±СѓРґРµС‚
+      // РІС‹Р·РІР°РЅ РїСЂРё РїРѕСЏРІР»РµРЅРёРё РѕС€РёР±РєРё, Рє С‡РµРјСѓ РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРµ РіРѕС‚РѕРІ
       DistributedProcCallItem item2 = new DistributedProcCallItem(item.DistributedProc);
       item2.DisplayName = item.DisplayName;
 
@@ -1372,7 +1372,7 @@ namespace FreeLibSet.Remoting
         {
 #if DEBUG
           if (item2.DistributedProc.StartData.IsCompleted)
-            throw new BugException("Застряла процедура, которая уже была выполнена на сервере");
+            throw new BugException("Р—Р°СЃС‚СЂСЏР»Р° РїСЂРѕС†РµРґСѓСЂР°, РєРѕС‚РѕСЂР°СЏ СѓР¶Рµ Р±С‹Р»Р° РІС‹РїРѕР»РЅРµРЅР° РЅР° СЃРµСЂРІРµСЂРµ");
 #endif
           Sleep(250);
         }
@@ -1388,8 +1388,8 @@ namespace FreeLibSet.Remoting
         tempHandler.Exception.Data["AsyncStackTrace"] = tempHandler.Exception.StackTrace;
         //OnFailed(item, TempHandler.Exception);
         // 19.12.2019
-        // Не надо, чтобы вызывался виртуальный метод, который перехватит исключение.
-        // Если собственный обработчик ошибок не установлен для ExecProcCallItem, то пусть исключение выбрасывается.
+        // РќРµ РЅР°РґРѕ, С‡С‚РѕР±С‹ РІС‹Р·С‹РІР°Р»СЃСЏ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ, РєРѕС‚РѕСЂС‹Р№ РїРµСЂРµС…РІР°С‚РёС‚ РёСЃРєР»СЋС‡РµРЅРёРµ.
+        // Р•СЃР»Рё СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РѕС€РёР±РѕРє РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РґР»СЏ ExecProcCallItem, С‚Рѕ РїСѓСЃС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ.
         DoOnFailed(item, tempHandler.Exception);
       }
       else
@@ -1402,7 +1402,7 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Завершение выполнения
+    #region Р—Р°РІРµСЂС€РµРЅРёРµ РІС‹РїРѕР»РЅРµРЅРёСЏ
 
     void Item_Finished(object sender, ExecProcCallEventArgs args)
     {
@@ -1413,11 +1413,11 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Этот метод вызывается в случае успешного выполнения процедуры.
-    /// Этот метод может быть вызван асинхронно в любом потоке: в потоке запуска процедуры, в основном потоке или в дополнительном.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС€РЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹Р·РІР°РЅ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ РІ Р»СЋР±РѕРј РїРѕС‚РѕРєРµ: РІ РїРѕС‚РѕРєРµ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµРґСѓСЂС‹, РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ РёР»Рё РІ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРј.
     /// </summary>
-    /// <param name="item">Описатель процедур</param>
-    /// <param name="results">Результаты выполнения процедуры</param>
+    /// <param name="item">РћРїРёСЃР°С‚РµР»СЊ РїСЂРѕС†РµРґСѓСЂ</param>
+    /// <param name="results">Р РµР·СѓР»СЊС‚Р°С‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹</param>
     protected virtual void OnFinished(ExecProcCallItemBase item, NamedValues results)
     {
       if (item == null)
@@ -1432,14 +1432,14 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Этот метод вызывается в случае аварийного завершения процедуры.
-    /// 1. Устанавливает состояние Failed
-    /// 2. Вызывает обработчик OnFinished(), если UseFinishedWhenFailed = true, иначе перевыбрасывает искочение <paramref name="exception"/>.
-    /// 3. Вызывает <paramref name="item"/>.Dispose() независимо от способа обработки ошибки.
-    /// Метод вызывается в том потоке, который использовался для вызова процедуры.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РІ СЃР»СѓС‡Р°Рµ Р°РІР°СЂРёР№РЅРѕРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС†РµРґСѓСЂС‹.
+    /// 1. РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ Failed
+    /// 2. Р’С‹Р·С‹РІР°РµС‚ РѕР±СЂР°Р±РѕС‚С‡РёРє OnFinished(), РµСЃР»Рё UseFinishedWhenFailed = true, РёРЅР°С‡Рµ РїРµСЂРµРІС‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєРѕС‡РµРЅРёРµ <paramref name="exception"/>.
+    /// 3. Р’С‹Р·С‹РІР°РµС‚ <paramref name="item"/>.Dispose() РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ СЃРїРѕСЃРѕР±Р° РѕР±СЂР°Р±РѕС‚РєРё РѕС€РёР±РєРё.
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РІ С‚РѕРј РїРѕС‚РѕРєРµ, РєРѕС‚РѕСЂС‹Р№ РёСЃРїРѕР»СЊР·РѕРІР°Р»СЃСЏ РґР»СЏ РІС‹Р·РѕРІР° РїСЂРѕС†РµРґСѓСЂС‹.
     /// </summary>
-    /// <param name="item">Описатель процедуры, для которай возникло исключение</param>
-    /// <param name="exception">Объект исключения</param>
+    /// <param name="item">РћРїРёСЃР°С‚РµР»СЊ РїСЂРѕС†РµРґСѓСЂС‹, РґР»СЏ РєРѕС‚РѕСЂР°Р№ РІРѕР·РЅРёРєР»Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ</param>
+    /// <param name="exception">РћР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ</param>
     protected virtual void OnFailed(ExecProcCallItemBase item, Exception exception)
     {
       DoOnFailed(item, exception);
@@ -1474,26 +1474,26 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Обработка сигнала таймера
+    #region РћР±СЂР°Р±РѕС‚РєР° СЃРёРіРЅР°Р»Р° С‚Р°Р№РјРµСЂР°
 
     /// <summary>
-    /// Индекс текущей процедуры в списке FItems.
-    /// Меняется от 0 до _Items.Count-1 по кругу при каждом вызове метода Process()
+    /// РРЅРґРµРєСЃ С‚РµРєСѓС‰РµР№ РїСЂРѕС†РµРґСѓСЂС‹ РІ СЃРїРёСЃРєРµ FItems.
+    /// РњРµРЅСЏРµС‚СЃСЏ РѕС‚ 0 РґРѕ _Items.Count-1 РїРѕ РєСЂСѓРіСѓ РїСЂРё РєР°Р¶РґРѕРј РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° Process()
     /// </summary>
     private int _CurrIndex;
 
     /// <summary>
-    /// Предотвращение вложенных вызовов
+    /// РџСЂРµРґРѕС‚РІСЂР°С‰РµРЅРёРµ РІР»РѕР¶РµРЅРЅС‹С… РІС‹Р·РѕРІРѕРІ
     /// </summary>
     private bool _InsideProcess;
 
     /// <summary>
-    /// Этот метод должен вызываться приложением клиента по таймеру.
-    /// Проверяет завершение очередной процедуры из списка. За один вызов обрабатывается только одна процедура, чтобы метод мог завершиться быстро.
-    /// Если в процессе вызова EndExecute() возникает ислючение, то вызывается метод OnFailed() и тема убирается из списка.
-    /// На стороне клиента должен переопределяться метод OnFailed(). Он может перехватить исключение при вызове базового метода ExecProcCallList.OnFailed()
-    /// и выдать сообщение об ошибке. Если метод OnFailed() не переопределен, то исключение будет выведено в log-файл.
-    /// Этот метод никогда не выбрасывает исключений.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РїСЂРёР»РѕР¶РµРЅРёРµРј РєР»РёРµРЅС‚Р° РїРѕ С‚Р°Р№РјРµСЂСѓ.
+    /// РџСЂРѕРІРµСЂСЏРµС‚ Р·Р°РІРµСЂС€РµРЅРёРµ РѕС‡РµСЂРµРґРЅРѕР№ РїСЂРѕС†РµРґСѓСЂС‹ РёР· СЃРїРёСЃРєР°. Р—Р° РѕРґРёРЅ РІС‹Р·РѕРІ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РѕРґРЅР° РїСЂРѕС†РµРґСѓСЂР°, С‡С‚РѕР±С‹ РјРµС‚РѕРґ РјРѕРі Р·Р°РІРµСЂС€РёС‚СЊСЃСЏ Р±С‹СЃС‚СЂРѕ.
+    /// Р•СЃР»Рё РІ РїСЂРѕС†РµСЃСЃРµ РІС‹Р·РѕРІР° EndExecute() РІРѕР·РЅРёРєР°РµС‚ РёСЃР»СЋС‡РµРЅРёРµ, С‚Рѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ РјРµС‚РѕРґ OnFailed() Рё С‚РµРјР° СѓР±РёСЂР°РµС‚СЃСЏ РёР· СЃРїРёСЃРєР°.
+    /// РќР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р° РґРѕР»Р¶РµРЅ РїРµСЂРµРѕРїСЂРµРґРµР»СЏС‚СЊСЃСЏ РјРµС‚РѕРґ OnFailed(). РћРЅ РјРѕР¶РµС‚ РїРµСЂРµС…РІР°С‚РёС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ РїСЂРё РІС‹Р·РѕРІРµ Р±Р°Р·РѕРІРѕРіРѕ РјРµС‚РѕРґР° ExecProcCallList.OnFailed()
+    /// Рё РІС‹РґР°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ. Р•СЃР»Рё РјРµС‚РѕРґ OnFailed() РЅРµ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅ, С‚Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ Р±СѓРґРµС‚ РІС‹РІРµРґРµРЅРѕ РІ log-С„Р°Р№Р».
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРёРєРѕРіРґР° РЅРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёР№.
     /// </summary>
     public void Process()
     {
@@ -1524,17 +1524,17 @@ namespace FreeLibSet.Remoting
       }
       catch (Exception e)
       {
-        OnUnhandledException(e, "Внутренняя ошибка в ExecProcCallList.Process()");
+        OnUnhandledException(e, "Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° РІ ExecProcCallList.Process()");
       }
       _InsideProcess = false;
     }
 
 
     ///// <summary>
-    ///// Внутренний флажок устанавливается ProcessItem().
-    ///// Используется при асинхронном вызове, чтобы проверить, что метод Sleep() выполнял вызов Process(),
-    ///// а не застял почему-нибудь.
-    ///// О блокировке не стоит беспокоится, не сработает разок, и ладно
+    ///// Р’РЅСѓС‚СЂРµРЅРЅРёР№ С„Р»Р°Р¶РѕРє СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ ProcessItem().
+    ///// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё Р°СЃРёРЅС…СЂРѕРЅРЅРѕРј РІС‹Р·РѕРІРµ, С‡С‚РѕР±С‹ РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ РјРµС‚РѕРґ Sleep() РІС‹РїРѕР»РЅСЏР» РІС‹Р·РѕРІ Process(),
+    ///// Р° РЅРµ Р·Р°СЃС‚СЏР» РїРѕС‡РµРјСѓ-РЅРёР±СѓРґСЊ.
+    ///// Рћ Р±Р»РѕРєРёСЂРѕРІРєРµ РЅРµ СЃС‚РѕРёС‚ Р±РµСЃРїРѕРєРѕРёС‚СЃСЏ, РЅРµ СЃСЂР°Р±РѕС‚Р°РµС‚ СЂР°Р·РѕРє, Рё Р»Р°РґРЅРѕ
     ///// </summary>
     //private bool _ProcessItemCalled; // 20.08.2020
 
@@ -1548,14 +1548,14 @@ namespace FreeLibSet.Remoting
       if (item.IsDisposed)
         return;
 
-      #region Проверка IsCompleted
+      #region РџСЂРѕРІРµСЂРєР° IsCompleted
 
       bool isCompleted;
 
       try
       {
         if (item.AsyncResultHandler == null)
-          isCompleted = item.AsyncResult.IsCompleted; // стандартный вызов
+          isCompleted = item.AsyncResult.IsCompleted; // СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РІС‹Р·РѕРІ
         else
         {
           isCompleted = item.AsyncResultHandler.GetIsCompleted();
@@ -1572,7 +1572,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e2)
         {
-          OnUnhandledException(e2, "Неперехваченная ошибка вызова OnFailed() при аварийном завершении вызова GetIsCompleted()");
+          OnUnhandledException(e2, "РќРµРїРµСЂРµС…РІР°С‡РµРЅРЅР°СЏ РѕС€РёР±РєР° РІС‹Р·РѕРІР° OnFailed() РїСЂРё Р°РІР°СЂРёР№РЅРѕРј Р·Р°РІРµСЂС€РµРЅРёРё РІС‹Р·РѕРІР° GetIsCompleted()");
         }
         lock (_Items)
         {
@@ -1587,17 +1587,17 @@ namespace FreeLibSet.Remoting
         return;
 
       // 19.08.2020
-      // Сначала убираем элемент из списка, а потом делаем все остальное. А не наоборот.
-      // Обработчик события Finished может выполняться произвольно долго. Если не очистить список,
-      // то в ExtForms будет опрашиваться ExecProcCallBack, так как приложение считает, что удаленная процедура все 
-      // еще выполняется на сервере.
+      // РЎРЅР°С‡Р°Р»Р° СѓР±РёСЂР°РµРј СЌР»РµРјРµРЅС‚ РёР· СЃРїРёСЃРєР°, Р° РїРѕС‚РѕРј РґРµР»Р°РµРј РІСЃРµ РѕСЃС‚Р°Р»СЊРЅРѕРµ. Рђ РЅРµ РЅР°РѕР±РѕСЂРѕС‚.
+      // РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Finished РјРѕР¶РµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РїСЂРѕРёР·РІРѕР»СЊРЅРѕ РґРѕР»РіРѕ. Р•СЃР»Рё РЅРµ РѕС‡РёСЃС‚РёС‚СЊ СЃРїРёСЃРѕРє,
+      // С‚Рѕ РІ ExtForms Р±СѓРґРµС‚ РѕРїСЂР°С€РёРІР°С‚СЊСЃСЏ ExecProcCallBack, С‚Р°Рє РєР°Рє РїСЂРёР»РѕР¶РµРЅРёРµ СЃС‡РёС‚Р°РµС‚, С‡С‚Рѕ СѓРґР°Р»РµРЅРЅР°СЏ РїСЂРѕС†РµРґСѓСЂР° РІСЃРµ 
+      // РµС‰Рµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РЅР° СЃРµСЂРІРµСЂРµ.
 
       lock (_Items)
       {
         _Items.Remove(item);
       }
 
-      #region Вызов EndExecute()
+      #region Р’С‹Р·РѕРІ EndExecute()
 
       try
       {
@@ -1612,7 +1612,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e2)
         {
-          OnUnhandledException(e2, "Неперехваченная ошибка вызова OnFailed() при аварийном завершении вызова EndExecute()");
+          OnUnhandledException(e2, "РќРµРїРµСЂРµС…РІР°С‡РµРЅРЅР°СЏ РѕС€РёР±РєР° РІС‹Р·РѕРІР° OnFailed() РїСЂРё Р°РІР°СЂРёР№РЅРѕРј Р·Р°РІРµСЂС€РµРЅРёРё РІС‹Р·РѕРІР° EndExecute()");
         }
       }
 
@@ -1636,14 +1636,14 @@ namespace FreeLibSet.Remoting
       if (item.IsDisposed)
         return;
 
-    #region Проверка IsCompleted
+    #region РџСЂРѕРІРµСЂРєР° IsCompleted
 
       bool IsCompleted;
 
       try
       {
         if (item.AsyncResultHandler == null)
-          IsCompleted = item.AsyncResult.IsCompleted; // стандартный вызов
+          IsCompleted = item.AsyncResult.IsCompleted; // СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РІС‹Р·РѕРІ
         else
         {
           IsCompleted = item.AsyncResultHandler.GetIsCompleted();
@@ -1659,8 +1659,8 @@ namespace FreeLibSet.Remoting
         }
 
         item.AddExceptionInfo(e);
-        // нельзя вызывать! Можно только из потока item. OnFailed(item, e);
-        OnUnhandledException(e, "Неперехваченная ошибка при вызове GetIsCompleted()");
+        // РЅРµР»СЊР·СЏ РІС‹Р·С‹РІР°С‚СЊ! РњРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РёР· РїРѕС‚РѕРєР° item. OnFailed(item, e);
+        OnUnhandledException(e, "РќРµРїРµСЂРµС…РІР°С‡РµРЅРЅР°СЏ РѕС€РёР±РєР° РїСЂРё РІС‹Р·РѕРІРµ GetIsCompleted()");
         return;
       }
 
@@ -1670,17 +1670,17 @@ namespace FreeLibSet.Remoting
         return;
 
       // 19.08.2020
-      // Сначала убираем элемент из списка, а потом делаем все остальное. А не наоборот.
-      // Обработчик события Finished может выполняться произвольно долго. Если не очистить список,
-      // то в ExtForms будет опрашиваться ExecProcCallBack, так как приложение считает, что удаленная процедура все 
-      // еще выполняется на сервере.
+      // РЎРЅР°С‡Р°Р»Р° СѓР±РёСЂР°РµРј СЌР»РµРјРµРЅС‚ РёР· СЃРїРёСЃРєР°, Р° РїРѕС‚РѕРј РґРµР»Р°РµРј РІСЃРµ РѕСЃС‚Р°Р»СЊРЅРѕРµ. Рђ РЅРµ РЅР°РѕР±РѕСЂРѕС‚.
+      // РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ Finished РјРѕР¶РµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РїСЂРѕРёР·РІРѕР»СЊРЅРѕ РґРѕР»РіРѕ. Р•СЃР»Рё РЅРµ РѕС‡РёСЃС‚РёС‚СЊ СЃРїРёСЃРѕРє,
+      // С‚Рѕ РІ ExtForms Р±СѓРґРµС‚ РѕРїСЂР°С€РёРІР°С‚СЊСЃСЏ ExecProcCallBack, С‚Р°Рє РєР°Рє РїСЂРёР»РѕР¶РµРЅРёРµ СЃС‡РёС‚Р°РµС‚, С‡С‚Рѕ СѓРґР°Р»РµРЅРЅР°СЏ РїСЂРѕС†РµРґСѓСЂР° РІСЃРµ 
+      // РµС‰Рµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РЅР° СЃРµСЂРІРµСЂРµ.
 
       lock (_Items)
       {
         _Items.Remove(item);
       }
 
-    #region Вызов EndExecute()
+    #region Р’С‹Р·РѕРІ EndExecute()
 
       try
       {
@@ -1689,8 +1689,8 @@ namespace FreeLibSet.Remoting
       catch (Exception e)
       {
         item.AddExceptionInfo(e);
-        // Нельзя вызывать!  OnFailed(item, e);
-        LogoutTools.LogoutException(e, "Неперехваченная ошибка вызова EndExecute() при аварийном завершении вызова EndExecute()");
+        // РќРµР»СЊР·СЏ РІС‹Р·С‹РІР°С‚СЊ!  OnFailed(item, e);
+        LogoutTools.LogoutException(e, "РќРµРїРµСЂРµС…РІР°С‡РµРЅРЅР°СЏ РѕС€РёР±РєР° РІС‹Р·РѕРІР° EndExecute() РїСЂРё Р°РІР°СЂРёР№РЅРѕРј Р·Р°РІРµСЂС€РµРЅРёРё РІС‹Р·РѕРІР° EndExecute()");
       }
 
     #endregion
@@ -1718,13 +1718,13 @@ namespace FreeLibSet.Remoting
 
 
     /// <summary>
-    /// Этот метод может вызываться приложением клиента, например, при выводе блоков диалога.
-    /// Проверяет завершение всех процедур из списка. 
-    /// Метод можно вызывать только в основном потоке.
-    /// Если в процессе вызова EndExecute() возникает ислючение, то вызывается метод OnFailed() и тема убирается из списка.
-    /// На стороне клиента должен переопределяться метод OnFailed(). Он может перехватить исключение при вызове базового метода ExecProcCallList.OnFailed()
-    /// и выдать сообщение об ошибке. Если метод OnFailed() не переопределен, то исключение будет выведено в log-файл.
-    /// Этот метод никогда не выбрасывает исключений в основном потоке.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РїСЂРёР»РѕР¶РµРЅРёРµРј РєР»РёРµРЅС‚Р°, РЅР°РїСЂРёРјРµСЂ, РїСЂРё РІС‹РІРѕРґРµ Р±Р»РѕРєРѕРІ РґРёР°Р»РѕРіР°.
+    /// РџСЂРѕРІРµСЂСЏРµС‚ Р·Р°РІРµСЂС€РµРЅРёРµ РІСЃРµС… РїСЂРѕС†РµРґСѓСЂ РёР· СЃРїРёСЃРєР°. 
+    /// РњРµС‚РѕРґ РјРѕР¶РЅРѕ РІС‹Р·С‹РІР°С‚СЊ С‚РѕР»СЊРєРѕ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ.
+    /// Р•СЃР»Рё РІ РїСЂРѕС†РµСЃСЃРµ РІС‹Р·РѕРІР° EndExecute() РІРѕР·РЅРёРєР°РµС‚ РёСЃР»СЋС‡РµРЅРёРµ, С‚Рѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ РјРµС‚РѕРґ OnFailed() Рё С‚РµРјР° СѓР±РёСЂР°РµС‚СЃСЏ РёР· СЃРїРёСЃРєР°.
+    /// РќР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р° РґРѕР»Р¶РµРЅ РїРµСЂРµРѕРїСЂРµРґРµР»СЏС‚СЊСЃСЏ РјРµС‚РѕРґ OnFailed(). РћРЅ РјРѕР¶РµС‚ РїРµСЂРµС…РІР°С‚РёС‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ РїСЂРё РІС‹Р·РѕРІРµ Р±Р°Р·РѕРІРѕРіРѕ РјРµС‚РѕРґР° ExecProcCallList.OnFailed()
+    /// Рё РІС‹РґР°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ. Р•СЃР»Рё РјРµС‚РѕРґ OnFailed() РЅРµ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅ, С‚Рѕ РёСЃРєР»СЋС‡РµРЅРёРµ Р±СѓРґРµС‚ РІС‹РІРµРґРµРЅРѕ РІ log-С„Р°Р№Р».
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРёРєРѕРіРґР° РЅРµ РІС‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёР№ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ.
     /// </summary>
     public void ProcessAll()
     {
@@ -1740,7 +1740,7 @@ namespace FreeLibSet.Remoting
         ExecProcCallItemBase[] a;
         lock (_Items)
         {
-          a = _Items.ToArray(); // отдельная копия, так как элементы могут убираться из списка в процессе перебора
+          a = _Items.ToArray(); // РѕС‚РґРµР»СЊРЅР°СЏ РєРѕРїРёСЏ, С‚Р°Рє РєР°Рє СЌР»РµРјРµРЅС‚С‹ РјРѕРіСѓС‚ СѓР±РёСЂР°С‚СЊСЃСЏ РёР· СЃРїРёСЃРєР° РІ РїСЂРѕС†РµСЃСЃРµ РїРµСЂРµР±РѕСЂР°
         }
 
         for (int i = 0; i < a.Length; i++)
@@ -1748,7 +1748,7 @@ namespace FreeLibSet.Remoting
       }
       catch (Exception e)
       {
-        OnUnhandledException(e, "Внутренняя ошибка в ExecProcCallList.ProcessAll()");
+        OnUnhandledException(e, "Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° РІ ExecProcCallList.ProcessAll()");
       }
       _InsideProcess = false;
     }
@@ -1756,10 +1756,10 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Управление видимостью заставок
+    #region РЈРїСЂР°РІР»РµРЅРёРµ РІРёРґРёРјРѕСЃС‚СЊСЋ Р·Р°СЃС‚Р°РІРѕРє
 
     /// <summary>
-    /// Если свойство установлено в true (по умолчанию), то для запущенных процессов будет выводиться заставка по умолчанию
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ true (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РґР»СЏ Р·Р°РїСѓС‰РµРЅРЅС‹С… РїСЂРѕС†РµСЃСЃРѕРІ Р±СѓРґРµС‚ РІС‹РІРѕРґРёС‚СЊСЃСЏ Р·Р°СЃС‚Р°РІРєР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     /// </summary>
     public bool UseDefaultSplash
     {
@@ -1776,16 +1776,16 @@ namespace FreeLibSet.Remoting
 
     #endregion
 
-    #region Обработка ошибок
+    #region РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
 
     /// <summary>
-    /// Метод вызывается при возникновении ошибки, которую нельзя перехватить.
-    /// Этот метод может вызываться из любого потока, основного или рабочего.
-    /// Непереопределенный метод вызывает LogoutTools.LogoutException().
-    /// Переопределенный метод может определить, яляется ли поток подходящим, и выдать, например, сообщение об ошибке.
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РІРѕР·РЅРёРєРЅРѕРІРµРЅРёРё РѕС€РёР±РєРё, РєРѕС‚РѕСЂСѓСЋ РЅРµР»СЊР·СЏ РїРµСЂРµС…РІР°С‚РёС‚СЊ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РёР· Р»СЋР±РѕРіРѕ РїРѕС‚РѕРєР°, РѕСЃРЅРѕРІРЅРѕРіРѕ РёР»Рё СЂР°Р±РѕС‡РµРіРѕ.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚ LogoutTools.LogoutException().
+    /// РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РјРµС‚РѕРґ РјРѕР¶РµС‚ РѕРїСЂРµРґРµР»РёС‚СЊ, СЏР»СЏРµС‚СЃСЏ Р»Рё РїРѕС‚РѕРє РїРѕРґС…РѕРґСЏС‰РёРј, Рё РІС‹РґР°С‚СЊ, РЅР°РїСЂРёРјРµСЂ, СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ.
     /// </summary>
-    /// <param name="e">Объект исключения</param>
-    /// <param name="title">Заголовок</param>
+    /// <param name="e">РћР±СЉРµРєС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ</param>
+    /// <param name="title">Р—Р°РіРѕР»РѕРІРѕРє</param>
     protected virtual void OnUnhandledException(Exception e, string title)
     {
       LogoutTools.LogoutException(e, title);

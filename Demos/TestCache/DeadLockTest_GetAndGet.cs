@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -8,11 +8,11 @@ using AgeyevAV.ExtForms;
 namespace TestCache
 {
   /// <summary>
-  /// Этот тест должен, по идее вызывать исключение, т.к. он выполняет неразрешимую 
+  /// Р­С‚РѕС‚ С‚РµСЃС‚ РґРѕР»Р¶РµРЅ, РїРѕ РёРґРµРµ РІС‹Р·С‹РІР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, С‚.Рє. РѕРЅ РІС‹РїРѕР»РЅСЏРµС‚ РЅРµСЂР°Р·СЂРµС€РёРјСѓСЋ 
   /// </summary>
   internal class DeadLockTest_GetAndGet : ICacheFactory<DeadLockTest_GetAndGet.DummyData>
   {
-    #region Поля
+    #region РџРѕР»СЏ
 
     private bool UseDelay;
 
@@ -31,18 +31,18 @@ namespace TestCache
     {
     }
 
-    #region Процедура, выполняемая в потоке
+    #region РџСЂРѕС†РµРґСѓСЂР°, РІС‹РїРѕР»РЅСЏРµРјР°СЏ РІ РїРѕС‚РѕРєРµ
 
     private void Proc(object dummy)
     {
       try
       {
         DummyData data = Cache.GetItem<DummyData>(new string[] { Key1 }, CachePersistance.MemoryOnly, this, lockTimeout);
-        EFPApp.MessageBox("Данные для ключа " + Key1 + " успешно получено");
+        EFPApp.MessageBox("Р”Р°РЅРЅС‹Рµ РґР»СЏ РєР»СЋС‡Р° " + Key1 + " СѓСЃРїРµС€РЅРѕ РїРѕР»СѓС‡РµРЅРѕ");
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при получении данных для ключа " + Key1);
+        EFPApp.ShowException(e, "РћС€РёР±РєР° РїСЂРё РїРѕР»СѓС‡РµРЅРёРё РґР°РЅРЅС‹С… РґР»СЏ РєР»СЋС‡Р° " + Key1);
       }
       Completed = true;
     }
@@ -67,16 +67,16 @@ namespace TestCache
 
     #endregion
 
-    #region Статический метод запуска
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°
 
     internal static void PerformTest()
     {
       RadioSelectDialog dlg = new RadioSelectDialog();
-      dlg.Title = "Тест рекурсивного вызова GetItem()";
+      dlg.Title = "РўРµСЃС‚ СЂРµРєСѓСЂСЃРёРІРЅРѕРіРѕ РІС‹Р·РѕРІР° GetItem()";
       dlg.Items = new string[] { 
-        "Один объект (ReenteranceException)", 
-        "Два объекта без тайм-аута (зависание)",
-        "Два объекта с тайм-аутом 30 секунд (LockTimeoutException)" };
+        "РћРґРёРЅ РѕР±СЉРµРєС‚ (ReenteranceException)", 
+        "Р”РІР° РѕР±СЉРµРєС‚Р° Р±РµР· С‚Р°Р№Рј-Р°СѓС‚Р° (Р·Р°РІРёСЃР°РЅРёРµ)",
+        "Р”РІР° РѕР±СЉРµРєС‚Р° СЃ С‚Р°Р№Рј-Р°СѓС‚РѕРј 30 СЃРµРєСѓРЅРґ (LockTimeoutException)" };
       if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
         return;
 
@@ -91,7 +91,7 @@ namespace TestCache
           trd.Name = "Test thread";
           trd.Start();
 
-          using (Splash spl = new Splash("Выполняется тест"))
+          using (Splash spl = new Splash("Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ С‚РµСЃС‚"))
           {
             while (!obj.Completed)
             {
@@ -123,7 +123,7 @@ namespace TestCache
           trd2.Name = "Test2 thread";
           trd2.Start();
 
-          using (Splash spl = new Splash("Выполняется тест"))
+          using (Splash spl = new Splash("Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ С‚РµСЃС‚"))
           {
             while (!(obj1.Completed && obj2.Completed))
             {
@@ -132,7 +132,7 @@ namespace TestCache
           }
           break;
       }
-      DebugTools.ShowDebugInfo("Тест успешно выполнен");
+      DebugTools.ShowDebugInfo("РўРµСЃС‚ СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅ");
     }
 
     #endregion

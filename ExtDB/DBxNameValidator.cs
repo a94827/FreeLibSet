@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -8,18 +8,18 @@ using System.Text;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Выполняет проверку имен таблиц и столбцов в DBxConBase при выполнении запросов.
-  /// При проверке корректности имен столбцов добавляет ссылки в DBxSqlBuffer.DBxColumnStruct
+  /// Р’С‹РїРѕР»РЅСЏРµС‚ РїСЂРѕРІРµСЂРєСѓ РёРјРµРЅ С‚Р°Р±Р»РёС† Рё СЃС‚РѕР»Р±С†РѕРІ РІ DBxConBase РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃРѕРІ.
+  /// РџСЂРё РїСЂРѕРІРµСЂРєРµ РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ РґРѕР±Р°РІР»СЏРµС‚ СЃСЃС‹Р»РєРё РІ DBxSqlBuffer.DBxColumnStruct
   /// </summary>
   public sealed class DBxNameValidator
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект для заданной точки подключения к базе данных
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ С‚РѕС‡РєРё РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="entry">Точка подключения к базе данных</param>
-    /// <param name="buffer">Буфер для создания SQL-запросов</param>
+    /// <param name="entry">РўРѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…</param>
+    /// <param name="buffer">Р‘СѓС„РµСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃРѕРІ</param>
     public DBxNameValidator(DBxEntry entry, DBxSqlBuffer buffer)
     {
       if (entry == null)
@@ -34,26 +34,26 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Точка подключения к базе данных
+    /// РўРѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     /// </summary>
     public DBxEntry Entry { get { return _Entry; } }
     private DBxEntry _Entry;
 
     /// <summary>
-    /// Буфер для создания SQL-запросов
+    /// Р‘СѓС„РµСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ SQL-Р·Р°РїСЂРѕСЃРѕРІ
     /// </summary>
     public DBxSqlBuffer Buffer { get { return _Buffer; } }
     private DBxSqlBuffer _Buffer;
 
     /// <summary>
-    /// Если свойство установлено (по умолчанию), то выполняется проверка существования
-    /// описаний таблиц и полей в реальной структуре таблицы.
-    /// Если свойство сброшено в false, проверяется только общая корректность имен (на наличие недопустимых символов)
-    /// Это свойство не дублируется в основном соединении DBxCon. Следовательно, проверка может быть отключена
-    /// только на стороне сервера (безопасность)
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ), С‚Рѕ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРѕРІРµСЂРєР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ
+    /// РѕРїРёСЃР°РЅРёР№ С‚Р°Р±Р»РёС† Рё РїРѕР»РµР№ РІ СЂРµР°Р»СЊРЅРѕР№ СЃС‚СЂСѓРєС‚СѓСЂРµ С‚Р°Р±Р»РёС†С‹.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СЃР±СЂРѕС€РµРЅРѕ РІ false, РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РѕР±С‰Р°СЏ РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ РёРјРµРЅ (РЅР° РЅР°Р»РёС‡РёРµ РЅРµРґРѕРїСѓСЃС‚РёРјС‹С… СЃРёРјРІРѕР»РѕРІ)
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РЅРµ РґСѓР±Р»РёСЂСѓРµС‚СЃСЏ РІ РѕСЃРЅРѕРІРЅРѕРј СЃРѕРµРґРёРЅРµРЅРёРё DBxCon. РЎР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ, РїСЂРѕРІРµСЂРєР° РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚РєР»СЋС‡РµРЅР°
+    /// С‚РѕР»СЊРєРѕ РЅР° СЃС‚РѕСЂРѕРЅРµ СЃРµСЂРІРµСЂР° (Р±РµР·РѕРїР°СЃРЅРѕСЃС‚СЊ)
     /// </summary>
     public bool NameCheckingEnabled
     {
@@ -64,54 +64,54 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Методы проверки
+    #region РњРµС‚РѕРґС‹ РїСЂРѕРІРµСЂРєРё
 
     /// <summary>
-    /// Проверка имени таблицы на допустимость и прав на чтение/запись в таблицу
-    /// Если свойство NameCheckingEnabled установлено, проверяется также наличие описания таблицы в реальной структуре базы данных
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅРё С‚Р°Р±Р»РёС†С‹ РЅР° РґРѕРїСѓСЃС‚РёРјРѕСЃС‚СЊ Рё РїСЂР°РІ РЅР° С‡С‚РµРЅРёРµ/Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Сѓ
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ NameCheckingEnabled СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ С‚Р°РєР¶Рµ РЅР°Р»РёС‡РёРµ РѕРїРёСЃР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ РІ СЂРµР°Р»СЊРЅРѕР№ СЃС‚СЂСѓРєС‚СѓСЂРµ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
     /// </summary>
-    /// <param name="tableName">Проверяемое имя</param>
-    /// <param name="mode">Предстоящий режим использования таблицы (Full - изменение, ReadOnly - чтение)</param>
+    /// <param name="tableName">РџСЂРѕРІРµСЂСЏРµРјРѕРµ РёРјСЏ</param>
+    /// <param name="mode">РџСЂРµРґСЃС‚РѕСЏС‰РёР№ СЂРµР¶РёРј РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ (Full - РёР·РјРµРЅРµРЅРёРµ, ReadOnly - С‡С‚РµРЅРёРµ)</param>
     public void CheckTableName(string tableName, DBxAccessMode mode)
     {
       string errorText;
       if (!Entry.DB.IsValidTableName(tableName, out errorText))
-        throw new ArgumentException("Недопустимое имя таблицы \"" + tableName + "\". " + errorText);
+        throw new ArgumentException("РќРµРґРѕРїСѓСЃС‚РёРјРѕРµ РёРјСЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\". " + errorText);
 
       if (NameCheckingEnabled)
       {
         if (!Entry.DB.Struct.Tables.Contains(tableName))
-          throw new ArgumentException("Определения для таблицы \"" + tableName + "\" не существует для БД \"" + Entry.DB.ToString() + "\"", "tableName");
+          throw new ArgumentException("РћРїСЂРµРґРµР»РµРЅРёСЏ РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\" РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РґР»СЏ Р‘Р” \"" + Entry.DB.ToString() + "\"", "tableName");
       }
 
       switch (mode)
       {
         case DBxAccessMode.Full:
           if (Entry.Permissions.TableModes[tableName] != DBxAccessMode.Full)
-            throw new DBxAccessException("Нет разрешения на запись в таблицу \"" + tableName + "\"");
+            throw new DBxAccessException("РќРµС‚ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Сѓ \"" + tableName + "\"");
           break;
         case DBxAccessMode.ReadOnly:
           if (Entry.Permissions.TableModes[tableName] == DBxAccessMode.None)
-            throw new DBxAccessException("Нет разрешения на доступ к таблице \"" + tableName + "\"");
+            throw new DBxAccessException("РќРµС‚ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° РґРѕСЃС‚СѓРї Рє С‚Р°Р±Р»РёС†Рµ \"" + tableName + "\"");
           break;
       }
     }
 
     /// <summary>
-    /// Проверка имени столбца, включая наличие его в таблице данных и доступа к нему.
-    /// Если имя столбца неправильное или столбец недоступен, то выбрасывается исключение
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅРё СЃС‚РѕР»Р±С†Р°, РІРєР»СЋС‡Р°СЏ РЅР°Р»РёС‡РёРµ РµРіРѕ РІ С‚Р°Р±Р»РёС†Рµ РґР°РЅРЅС‹С… Рё РґРѕСЃС‚СѓРїР° Рє РЅРµРјСѓ.
+    /// Р•СЃР»Рё РёРјСЏ СЃС‚РѕР»Р±С†Р° РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РёР»Рё СЃС‚РѕР»Р±РµС† РЅРµРґРѕСЃС‚СѓРїРµРЅ, С‚Рѕ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="allowDots">Может ли поле содержать точки</param>
-    /// <param name="mode">Режим доступа</param>
-    /// <returns>Возвращает тип столбца</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnName">РРјСЏ СЃС‚РѕР»Р±С†Р°</param>
+    /// <param name="allowDots">РњРѕР¶РµС‚ Р»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё</param>
+    /// <param name="mode">Р РµР¶РёРј РґРѕСЃС‚СѓРїР°</param>
+    /// <returns>Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РёРї СЃС‚РѕР»Р±С†Р°</returns>
     public DBxColumnType CheckTableColumnName(string tableName, string columnName, bool allowDots, DBxAccessMode mode)
     {
       DBxColumnStruct cs = DoCheckTableColumnName(tableName, columnName, allowDots, mode);
       if (cs != null)
       {
-        Buffer.ColumnStructs[columnName] = cs; // не Add(), так как могут быть повторяющиеся вызовы
+        Buffer.ColumnStructs[columnName] = cs; // РЅРµ Add(), С‚Р°Рє РєР°Рє РјРѕРіСѓС‚ Р±С‹С‚СЊ РїРѕРІС‚РѕСЂСЏСЋС‰РёРµСЃСЏ РІС‹Р·РѕРІС‹
         return cs.ColumnType;
       }
       else
@@ -122,7 +122,7 @@ namespace FreeLibSet.Data
     {
       string errorText;
       if (!Entry.DB.IsValidColumnName(columnName, allowDots, out errorText))
-        throw new ArgumentException("Недопустимое имя столбца \"" + columnName + "\". " + errorText, "columnName");
+        throw new ArgumentException("РќРµРґРѕРїСѓСЃС‚РёРјРѕРµ РёРјСЏ СЃС‚РѕР»Р±С†Р° \"" + columnName + "\". " + errorText, "columnName");
 
       int pDot = columnName.IndexOf('.');
 
@@ -133,17 +133,17 @@ namespace FreeLibSet.Data
         if (colDef == null)
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Определения для столбца \"" + mainColumnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "columnName");
+            throw new ArgumentException("РћРїСЂРµРґРµР»РµРЅРёСЏ РґР»СЏ СЃС‚РѕР»Р±С†Р° \"" + mainColumnName + "\" РЅРµС‚ РІ РѕРїСЂРµРґРµР»РµРЅРёРё С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\" Р‘Р” \"" + Entry.DB.ToString() + "\"", "columnName");
           else
             return null;
         }
         if (String.IsNullOrEmpty(colDef.MasterTableName))
-          throw new ArgumentException("Столбец \"" + mainColumnName + "\" таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\" не является ссылочным", "columnName");
+          throw new ArgumentException("РЎС‚РѕР»Р±РµС† \"" + mainColumnName + "\" С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\" Р‘Р” \"" + Entry.DB.ToString() + "\" РЅРµ СЏРІР»СЏРµС‚СЃСЏ СЃСЃС‹Р»РѕС‡РЅС‹Рј", "columnName");
 
         if (NameCheckingEnabled)
           CheckTableName(colDef.MasterTableName, mode);
 
-        // Рекурсивный вызов
+        // Р РµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
         return DoCheckTableColumnName(colDef.MasterTableName, columnName.Substring(pDot + 1), true, mode);
       }
       else
@@ -152,14 +152,14 @@ namespace FreeLibSet.Data
         if (ts == null)
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Нет определения для таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "tableName");
+            throw new ArgumentException("РќРµС‚ РѕРїСЂРµРґРµР»РµРЅРёСЏ РґР»СЏ С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\" Р‘Р” \"" + Entry.DB.ToString() + "\"", "tableName");
           else
             return null; // 22.07.2021
         }
         if (!ts.Columns.Contains(columnName))
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Определения для столбца \"" + columnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "columnName");
+            throw new ArgumentException("РћРїСЂРµРґРµР»РµРЅРёСЏ РґР»СЏ СЃС‚РѕР»Р±С†Р° \"" + columnName + "\" РЅРµС‚ РІ РѕРїСЂРµРґРµР»РµРЅРёРё С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\" Р‘Р” \"" + Entry.DB.ToString() + "\"", "columnName");
           else
             return null;
         }
@@ -172,14 +172,14 @@ namespace FreeLibSet.Data
               switch (Entry.Permissions.ColumnModes[tableName, columnName])
               {
                 case DBxAccessMode.ReadOnly:
-                  throw new DBxAccessException("Запрещено изменение поля \"" + columnName + "\" таблицы \"" + tableName + "\". Есть право только на просмотр поля");
+                  throw new DBxAccessException("Р—Р°РїСЂРµС‰РµРЅРѕ РёР·РјРµРЅРµРЅРёРµ РїРѕР»СЏ \"" + columnName + "\" С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\". Р•СЃС‚СЊ РїСЂР°РІРѕ С‚РѕР»СЊРєРѕ РЅР° РїСЂРѕСЃРјРѕС‚СЂ РїРѕР»СЏ");
                 case DBxAccessMode.None:
-                  throw new DBxAccessException("Запрещен доступ к полю \"" + columnName + "\" таблицы \"" + tableName + "\"");
+                  throw new DBxAccessException("Р—Р°РїСЂРµС‰РµРЅ РґРѕСЃС‚СѓРї Рє РїРѕР»СЋ \"" + columnName + "\" С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"");
               }
               break;
             case DBxAccessMode.ReadOnly:
               if (Entry.Permissions.ColumnModes[tableName, columnName] == DBxAccessMode.None)
-                throw new DBxAccessException("Запрещен доступ к полю \"" + columnName + "\" таблицы \"" + tableName + "\"");
+                throw new DBxAccessException("Р—Р°РїСЂРµС‰РµРЅ РґРѕСЃС‚СѓРї Рє РїРѕР»СЋ \"" + columnName + "\" С‚Р°Р±Р»РёС†С‹ \"" + tableName + "\"");
               break;
           }
         }
@@ -188,20 +188,20 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅ СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ, РІРєР»СЋС‡Р°СЏ РЅР°Р»РёС‡РёРµ РёС… РІ С‚Р°Р±Р»РёС†Рµ РґР°РЅРЅС‹С… Рё РґРѕСЃС‚СѓРїР° Рє РЅРёРј.
+    /// Р•СЃР»Рё РёРјСЏ РєР°РєРѕРіРѕ-Р»РёР±Рѕ СЃС‚РѕР»Р±С†Р° РІ СЃРїРёСЃРєРµ РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РёР»Рё СЃС‚РѕР»Р±РµС† РЅРµРґРѕСЃС‚СѓРїРµРЅ, С‚Рѕ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Список проверяемых имен столбцов</param>
-    /// <param name="allowDots">Могут ли поля содержать точки</param>
-    /// <param name="mode">Режим доступа</param>
-    /// <returns>Возвращает типы столбцов. Длина массива соответствует списку <paramref name="columnNames"/>.</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РЎРїРёСЃРѕРє РїСЂРѕРІРµСЂСЏРµРјС‹С… РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <param name="allowDots">РњРѕРіСѓС‚ Р»Рё РїРѕР»СЏ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё</param>
+    /// <param name="mode">Р РµР¶РёРј РґРѕСЃС‚СѓРїР°</param>
+    /// <returns>Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РёРїС‹ СЃС‚РѕР»Р±С†РѕРІ. Р”Р»РёРЅР° РјР°СЃСЃРёРІР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃРїРёСЃРєСѓ <paramref name="columnNames"/>.</returns>
     public DBxColumnType[] CheckTableColumnNames(string tableName, DBxColumns columnNames, bool allowDots, DBxAccessMode mode)
     {
       if (columnNames == null)
         throw new ArgumentNullException("columnNames");
       if (columnNames.Count == 0)
-        throw new ArgumentException("Пустой список имен полей", "columnNames");
+        throw new ArgumentException("РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№", "columnNames");
 
       DBxColumnType[] columnTypes = new DBxColumnType[columnNames.Count];
 
@@ -211,20 +211,20 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅ СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ, РІРєР»СЋС‡Р°СЏ РЅР°Р»РёС‡РёРµ РёС… РІ С‚Р°Р±Р»РёС†Рµ РґР°РЅРЅС‹С… Рё РґРѕСЃС‚СѓРїР° Рє РЅРёРј.
+    /// Р•СЃР»Рё РёРјСЏ РєР°РєРѕРіРѕ-Р»РёР±Рѕ СЃС‚РѕР»Р±С†Р° РІ СЃРїРёСЃРєРµ РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РёР»Рё СЃС‚РѕР»Р±РµС† РЅРµРґРѕСЃС‚СѓРїРµРЅ, С‚Рѕ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Список проверяемых имен столбцов</param>
-    /// <param name="allowDots">Могут ли поля содержать точки</param>
-    /// <param name="mode">Режим доступа</param>
-    /// <returns>Возвращает типы столбцов. Длина массива соответствует списку <paramref name="columnNames"/>.</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РЎРїРёСЃРѕРє РїСЂРѕРІРµСЂСЏРµРјС‹С… РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ</param>
+    /// <param name="allowDots">РњРѕРіСѓС‚ Р»Рё РїРѕР»СЏ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё</param>
+    /// <param name="mode">Р РµР¶РёРј РґРѕСЃС‚СѓРїР°</param>
+    /// <returns>Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РёРїС‹ СЃС‚РѕР»Р±С†РѕРІ. Р”Р»РёРЅР° РјР°СЃСЃРёРІР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃРїРёСЃРєСѓ <paramref name="columnNames"/>.</returns>
     public DBxColumnType[] CheckTableColumnNames(string tableName, DBxColumnList columnNames, bool allowDots, DBxAccessMode mode)
     {
       if (columnNames == null)
         throw new ArgumentNullException("columnNames");
       if (columnNames.Count == 0)
-        throw new ArgumentException("Пустой список имен полей", "columnNames");
+        throw new ArgumentException("РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє РёРјРµРЅ РїРѕР»РµР№", "columnNames");
 
       DBxColumnType[] columnTypes = new DBxColumnType[columnNames.Count];
 
@@ -236,18 +236,18 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Внутренний объект, используемый при проверке фильтров и порядка сортировки
+    /// Р’РЅСѓС‚СЂРµРЅРЅРёР№ РѕР±СЉРµРєС‚, РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РїСЂРё РїСЂРѕРІРµСЂРєРµ С„РёР»СЊС‚СЂРѕРІ Рё РїРѕСЂСЏРґРєР° СЃРѕСЂС‚РёСЂРѕРІРєРё
     /// </summary>
     private DBxColumnList CheckColumnList;
 
 
     /// <summary>
-    /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Имена полей извлекаются из DBxNamedExpressionList.
-    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение.
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅ СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ, РІРєР»СЋС‡Р°СЏ РЅР°Р»РёС‡РёРµ РёС… РІ С‚Р°Р±Р»РёС†Рµ РґР°РЅРЅС‹С… Рё РґРѕСЃС‚СѓРїР° Рє РЅРёРј.
+    /// РРјРµРЅР° РїРѕР»РµР№ РёР·РІР»РµРєР°СЋС‚СЃСЏ РёР· DBxNamedExpressionList.
+    /// Р•СЃР»Рё РёРјСЏ РєР°РєРѕРіРѕ-Р»РёР±Рѕ СЃС‚РѕР»Р±С†Р° РІ СЃРїРёСЃРєРµ РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РёР»Рё СЃС‚РѕР»Р±РµС† РЅРµРґРѕСЃС‚СѓРїРµРЅ, С‚Рѕ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="expressions">Список проверяемых выражений</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="expressions">РЎРїРёСЃРѕРє РїСЂРѕРІРµСЂСЏРµРјС‹С… РІС‹СЂР°Р¶РµРЅРёР№</param>
     public void CheckExpressionColumnNames(string tableName, DBxNamedExpressionList expressions)
     {
       DBxColumnList list = new DBxColumnList();
@@ -257,12 +257,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Имена полей извлекаются из DBxNamedExpressionList.
-    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение.
+    /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅ СЃРїРёСЃРєР° СЃС‚РѕР»Р±С†РѕРІ, РІРєР»СЋС‡Р°СЏ РЅР°Р»РёС‡РёРµ РёС… РІ С‚Р°Р±Р»РёС†Рµ РґР°РЅРЅС‹С… Рё РґРѕСЃС‚СѓРїР° Рє РЅРёРј.
+    /// РРјРµРЅР° РїРѕР»РµР№ РёР·РІР»РµРєР°СЋС‚СЃСЏ РёР· DBxNamedExpressionList.
+    /// Р•СЃР»Рё РёРјСЏ РєР°РєРѕРіРѕ-Р»РёР±Рѕ СЃС‚РѕР»Р±С†Р° РІ СЃРїРёСЃРєРµ РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РёР»Рё СЃС‚РѕР»Р±РµС† РЅРµРґРѕСЃС‚СѓРїРµРЅ, С‚Рѕ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="expressions">Список проверяемых выражений</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="expressions">РЎРїРёСЃРѕРє РїСЂРѕРІРµСЂСЏРµРјС‹С… РІС‹СЂР°Р¶РµРЅРёР№</param>
     public void CheckExpressionColumnNames(string tableName, IList<DBxExpression> expressions)
     {
       DBxColumnList list = new DBxColumnList();
@@ -273,13 +273,13 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Выполнить проверку имен столбцов в фильтрах.
-    /// Метод собирает список имен в фильтре вызовом DBxFilter.GetColumnNames(),
-    /// а затем вызывает CheckTableColumnName() для всех имен полей
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ РІ С„РёР»СЊС‚СЂР°С….
+    /// РњРµС‚РѕРґ СЃРѕР±РёСЂР°РµС‚ СЃРїРёСЃРѕРє РёРјРµРЅ РІ С„РёР»СЊС‚СЂРµ РІС‹Р·РѕРІРѕРј DBxFilter.GetColumnNames(),
+    /// Р° Р·Р°С‚РµРј РІС‹Р·С‹РІР°РµС‚ CheckTableColumnName() РґР»СЏ РІСЃРµС… РёРјРµРЅ РїРѕР»РµР№
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="filter">Фильтр. Не может быть null</param>
-    /// <param name="allowDots">Может ли поле содержать точки</param>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="filter">Р¤РёР»СЊС‚СЂ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="allowDots">РњРѕР¶РµС‚ Р»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё</param>
     public void CheckFilterColumnNames(string tableName, DBxFilter filter, bool allowDots)
     {
       if (filter == null)
@@ -294,13 +294,13 @@ namespace FreeLibSet.Data
     }
 
     ///// <summary>
-    ///// Выполнить проверку имен столбцов в порядке сортировки.
-    ///// Метод собирает список имен в фильтре вызовом DBxOrder.GetColumnNames(),
-    ///// а затем вызывает CheckTableColumnName() для всех имен полей
+    ///// Р’С‹РїРѕР»РЅРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ РІ РїРѕСЂСЏРґРєРµ СЃРѕСЂС‚РёСЂРѕРІРєРё.
+    ///// РњРµС‚РѕРґ СЃРѕР±РёСЂР°РµС‚ СЃРїРёСЃРѕРє РёРјРµРЅ РІ С„РёР»СЊС‚СЂРµ РІС‹Р·РѕРІРѕРј DBxOrder.GetColumnNames(),
+    ///// Р° Р·Р°С‚РµРј РІС‹Р·С‹РІР°РµС‚ CheckTableColumnName() РґР»СЏ РІСЃРµС… РёРјРµРЅ РїРѕР»РµР№
     ///// </summary>
-    ///// <param name="tableName">Имя таблицы</param>
-    ///// <param name="order">Порядок сортировки. Не может быть null</param>
-    ///// <param name="allowDots">Может ли поле содержать точки</param>
+    ///// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    ///// <param name="order">РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    ///// <param name="allowDots">РњРѕР¶РµС‚ Р»Рё РїРѕР»Рµ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕС‡РєРё</param>
     //public void CheckOrderColumnNames(string tableName, DBxOrder order, bool allowDots)
     //{
     //  if (order == null)
@@ -315,12 +315,12 @@ namespace FreeLibSet.Data
     //}
 
     /// <summary>
-    /// Проверяет, что первичным ключом таблицы является единственное целочисленное поле.
-    /// Если это не так, генерируется DBxPrimaryKeyException.
-    /// Предполагается, что проверка CheckTableName уже выполнена
+    /// РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РїРµСЂРІРёС‡РЅС‹Рј РєР»СЋС‡РѕРј С‚Р°Р±Р»РёС†С‹ СЏРІР»СЏРµС‚СЃСЏ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРµ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРµ РїРѕР»Рµ.
+    /// Р•СЃР»Рё СЌС‚Рѕ РЅРµ С‚Р°Рє, РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ DBxPrimaryKeyException.
+    /// РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РїСЂРѕРІРµСЂРєР° CheckTableName СѓР¶Рµ РІС‹РїРѕР»РЅРµРЅР°
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Имя поля первичного ключа</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <returns>РРјСЏ РїРѕР»СЏ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°</returns>
     public string CheckTablePrimaryKeyInt32(string tableName)
     {
       DBxTableStruct ts = Entry.DB.Struct.Tables[tableName];
@@ -328,11 +328,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает индекс поля первичного ключа в списке столбцов <paramref name="columnNames"/>
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ РїРѕР»СЏ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р° РІ СЃРїРёСЃРєРµ СЃС‚РѕР»Р±С†РѕРІ <paramref name="columnNames"/>
     /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Список столбцов для поиска</param>
-    /// <returns>Индекс столбца или (-1), если столбец не найден</returns>
+    /// <param name="tableName">РРјСЏ С‚Р°Р±Р»РёС†С‹</param>
+    /// <param name="columnNames">РЎРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ РґР»СЏ РїРѕРёСЃРєР°</param>
+    /// <returns>РРЅРґРµРєСЃ СЃС‚РѕР»Р±С†Р° РёР»Рё (-1), РµСЃР»Рё СЃС‚РѕР»Р±РµС† РЅРµ РЅР°Р№РґРµРЅ</returns>
     public int GetPrimaryKeyInt32ColumnIndex(string tableName, DBxColumns columnNames)
     {
       DBxTableStruct ts = Entry.DB.Struct.Tables[tableName];

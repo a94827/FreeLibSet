@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -18,15 +18,15 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Проверка правильности интервала дат для двух управляющих элементов
+  /// РџСЂРѕРІРµСЂРєР° РїСЂР°РІРёР»СЊРЅРѕСЃС‚Рё РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚ РґР»СЏ РґРІСѓС… СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ
   /// </summary>
   public class EFPDateBoxRangeCheck
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект.
-    /// Далее должны быть установлены свойства FirstDateBox и LastDateBox.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚.
+    /// Р”Р°Р»РµРµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ СЃРІРѕР№СЃС‚РІР° FirstDateBox Рё LastDateBox.
     /// </summary>
     public EFPDateBoxRangeCheck()
     {
@@ -34,10 +34,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает объект с заданными свойствами FirstDateBox и LastDateBox.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃ Р·Р°РґР°РЅРЅС‹РјРё СЃРІРѕР№СЃС‚РІР°РјРё FirstDateBox Рё LastDateBox.
     /// </summary>
-    /// <param name="firstDateBox">Провайдер поля ввода начальной даты диапазона</param>
-    /// <param name="lastDateBox">Провайдер поля ввода конечной даты диапазона</param>
+    /// <param name="firstDateBox">РџСЂРѕРІР°Р№РґРµСЂ РїРѕР»СЏ РІРІРѕРґР° РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚С‹ РґРёР°РїР°Р·РѕРЅР°</param>
+    /// <param name="lastDateBox">РџСЂРѕРІР°Р№РґРµСЂ РїРѕР»СЏ РІРІРѕРґР° РєРѕРЅРµС‡РЅРѕР№ РґР°С‚С‹ РґРёР°РїР°Р·РѕРЅР°</param>
     public EFPDateBoxRangeCheck(EFPDateTimeBox firstDateBox, EFPDateTimeBox lastDateBox)
     {
       DoInit();
@@ -67,10 +67,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер для поля ввода начальной даты
+    /// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РїРѕР»СЏ РІРІРѕРґР° РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚С‹
     /// </summary>
     public EFPDateTimeBox FirstDateBox
     {
@@ -95,7 +95,7 @@ namespace FreeLibSet.Forms
     private EFPDateTimeBox _FirstDateBox;
 
     /// <summary>
-    /// Провайдер для поля ввода конечной даты
+    /// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ РїРѕР»СЏ РІРІРѕРґР° РєРѕРЅРµС‡РЅРѕР№ РґР°С‚С‹
     /// </summary>
     public EFPDateTimeBox LastDateBox
     {
@@ -123,7 +123,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Внутренняя реализация
+    #region Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ СЂРµР°Р»РёР·Р°С†РёСЏ
 
     private DepInput<Nullable<DateTime>> _FirstDateInput;
     private DepInput<Nullable<DateTime>> _LastDateInput;
@@ -154,7 +154,7 @@ namespace FreeLibSet.Forms
         if (FirstDateBox.Enabled && LastDateBox.Enabled)
         {
           if (_FirstDateInput.Value.Value > _LastDateInput.Value.Value)
-            args.SetError("Неправильный интервал дат. Начальная дата больше конечной");
+            args.SetError("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ РёРЅС‚РµСЂРІР°Р» РґР°С‚. РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° Р±РѕР»СЊС€Рµ РєРѕРЅРµС‡РЅРѕР№");
         }
       }
     }
@@ -163,18 +163,18 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер для DateRangeBox.
-  /// Содержит два "вложенных" провайдера EFPDateBox.
+  /// РџСЂРѕРІР°Р№РґРµСЂ РґР»СЏ DateRangeBox.
+  /// РЎРѕРґРµСЂР¶РёС‚ РґРІР° "РІР»РѕР¶РµРЅРЅС‹С…" РїСЂРѕРІР°Р№РґРµСЂР° EFPDateBox.
   /// </summary>
   public class EFPDateRangeBox : EFPControl<DateRangeBox>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
     public EFPDateRangeBox(EFPBaseProvider baseProvider, DateRangeBox control)
       : base(new EFPDateRangeBoxBaseProvider(), control, true)
     {
@@ -182,9 +182,9 @@ namespace FreeLibSet.Forms
       ((EFPDateRangeBoxBaseProvider)(this.BaseProvider)).ControlProvider = this;
 
       _First = new EFPDateTimeBox(this.BaseProvider, control.First);
-      _First.DisplayName = "Начальная дата";
+      _First.DisplayName = "РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°";
       _Last = new EFPDateTimeBox(this.BaseProvider, control.Last);
-      _Last.DisplayName = "Конечная дата";
+      _Last.DisplayName = "РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р°";
       new EFPDateBoxRangeCheck(_First, _Last, this);
 
       _First.NValueEx.ValueChanged += new EventHandler(InitCommandItemsState);
@@ -198,27 +198,27 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер поля ввода начальной даты диапазона.
+    /// РџСЂРѕРІР°Р№РґРµСЂ РїРѕР»СЏ РІРІРѕРґР° РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚С‹ РґРёР°РїР°Р·РѕРЅР°.
     /// </summary>
     public EFPDateTimeBox First { get { return _First; } }
     private EFPDateTimeBox _First;
 
     /// <summary>
-    /// Провайдер поля ввода конечной даты диапазона.
+    /// РџСЂРѕРІР°Р№РґРµСЂ РїРѕР»СЏ РІРІРѕРґР° РєРѕРЅРµС‡РЅРѕР№ РґР°С‚С‹ РґРёР°РїР°Р·РѕРЅР°.
     /// </summary>
     public EFPDateTimeBox Last { get { return _Last; } }
     private EFPDateTimeBox _Last;
 
     #endregion
 
-    #region Переопределяемые методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµРјС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Всплывающая подсказка.
-    /// Для элементов задаются подсказки "ToolTipText - начальная дата" и "ToolTipText - конечная дата".
+    /// Р’СЃРїР»С‹РІР°СЋС‰Р°СЏ РїРѕРґСЃРєР°Р·РєР°.
+    /// Р”Р»СЏ СЌР»РµРјРµРЅС‚РѕРІ Р·Р°РґР°СЋС‚СЃСЏ РїРѕРґСЃРєР°Р·РєРё "ToolTipText - РЅР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°" Рё "ToolTipText - РєРѕРЅРµС‡РЅР°СЏ РґР°С‚Р°".
     /// </summary>
     public override string ToolTipText
     {
@@ -232,16 +232,16 @@ namespace FreeLibSet.Forms
         string s = String.Empty;
         if (!String.IsNullOrEmpty(value))
           s = value + " - ";
-        First.ToolTipText = s + "Начальная дата";
-        Last.ToolTipText = s + "Конечная дата";
+        First.ToolTipText = s + "РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°";
+        Last.ToolTipText = s + "РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р°";
       }
     }
 
     private bool _InsideOnValidate;
 
     /// <summary>
-    /// Проверка корректности.
-    /// Вызывает метод проверки для "вложенных" провайдеров.
+    /// РџСЂРѕРІРµСЂРєР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚Рё.
+    /// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ РїСЂРѕРІРµСЂРєРё РґР»СЏ "РІР»РѕР¶РµРЅРЅС‹С…" РїСЂРѕРІР°Р№РґРµСЂРѕРІ.
     /// </summary>
     protected override void OnValidate()
     {
@@ -262,11 +262,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Команды меню
+    #region РљРѕРјР°РЅРґС‹ РјРµРЅСЋ
 
     private class EFPDateRangeBoxBaseProvider : EFPBaseProvider
     {
-      #region Доступ к меню
+      #region Р”РѕСЃС‚СѓРї Рє РјРµРЅСЋ
 
       public EFPDateRangeBox ControlProvider;
 
@@ -284,7 +284,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает EFPDateRangeBoxCommandItems.
+    /// РЎРѕР·РґР°РµС‚ EFPDateRangeBoxCommandItems.
     /// </summary>
     /// <returns></returns>
     protected override EFPControlCommandItems GetCommandItems()
@@ -301,58 +301,58 @@ namespace FreeLibSet.Forms
 
     void Control_MenuButtonClicked(object sender, System.ComponentModel.CancelEventArgs args)
     {
-      PrepareContextMenu(); // иначе меню не будет показано
+      PrepareContextMenu(); // РёРЅР°С‡Рµ РјРµРЅСЋ РЅРµ Р±СѓРґРµС‚ РїРѕРєР°Р·Р°РЅРѕ
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Команды меню для EFPDateRangeBox
+  /// РљРѕРјР°РЅРґС‹ РјРµРЅСЋ РґР»СЏ EFPDateRangeBox
   /// </summary>
   internal sealed class EFPDateRangeBoxCommandItems : EFPControlCommandItems
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public EFPDateRangeBoxCommandItems(EFPDateRangeBox controlProvider)
       :base(controlProvider)
     {
       ciToday = new EFPCommandItem("Edit", "Today");
-      ciToday.MenuText = "Сегодня";
+      ciToday.MenuText = "РЎРµРіРѕРґРЅСЏ";
       ciToday.ShortCut = Keys.Control | Keys.T;
       ciToday.Click += ciToday_Click;
       Add(ciToday);
 
       ci1To2 = new EFPCommandItem("Edit", "LastDateEqualFirst");
-      ci1To2.MenuText = "Конечная дата равна начальной";
+      ci1To2.MenuText = "РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° СЂР°РІРЅР° РЅР°С‡Р°Р»СЊРЅРѕР№";
       ci1To2.ShortCut = Keys.Control | Keys.OemCloseBrackets;
       ci1To2.Click += ci1To2_Click;
       ci1To2.GroupBegin = true;
       Add(ci1To2);
 
-      ci2To1 = new EFPCommandItem("Правка", "FirstDateEqualLast");
-      ci2To1.MenuText = "Начальная дата равна конечной";
+      ci2To1 = new EFPCommandItem("РџСЂР°РІРєР°", "FirstDateEqualLast");
+      ci2To1.MenuText = "РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° СЂР°РІРЅР° РєРѕРЅРµС‡РЅРѕР№";
       ci2To1.ShortCut = Keys.Control | Keys.OemOpenBrackets;
       ci2To1.Click += ci2To1_Click;
       ci2To1.GroupEnd = true;
       Add(ci2To1);
 
       ciMonth = new EFPCommandItem("Edit", "Month");
-      ciMonth.MenuText = "Месяц";
+      ciMonth.MenuText = "РњРµСЃСЏС†";
       ciMonth.ShortCut = Keys.Control | Keys.M;
       ciMonth.Click += ciMonth_Click;
       ciMonth.GroupBegin = true;
       Add(ciMonth);
 
       ciQuarter = new EFPCommandItem("Edit", "Quarter");
-      ciQuarter.MenuText = "Квартал";
+      ciQuarter.MenuText = "РљРІР°СЂС‚Р°Р»";
       ciQuarter.ShortCut = Keys.Control | Keys.Q;
       ciQuarter.Click += ciQuarter_Click;
       Add(ciQuarter);
 
       ciYear = new EFPCommandItem("Edit", "Year");
-      ciYear.MenuText = "Год";
-      ciYear.ShortCut = Keys.Control | Keys.Y; // Redo все равно недоступна, можно занимать
+      ciYear.MenuText = "Р“РѕРґ";
+      ciYear.ShortCut = Keys.Control | Keys.Y; // Redo РІСЃРµ СЂР°РІРЅРѕ РЅРµРґРѕСЃС‚СѓРїРЅР°, РјРѕР¶РЅРѕ Р·Р°РЅРёРјР°С‚СЊ
       ciYear.Click += ciYear_Click;
       Add(ciYear);
 
@@ -372,13 +372,13 @@ namespace FreeLibSet.Forms
       Add(ciPrevPeriod);
 
       ciNextYear = new EFPCommandItem("Edit", "NextYear");
-      ciNextYear.MenuText = "Следующий год";
+      ciNextYear.MenuText = "РЎР»РµРґСѓСЋС‰РёР№ РіРѕРґ";
       ciNextYear.ShortCut = Keys.Control | Keys.Shift | Keys.OemPeriod;
       ciNextYear.Click += new EventHandler(ciNextYear_Click);
       Add(ciNextYear);
 
       ciPrevYear = new EFPCommandItem("Edit", "PrevYear");
-      ciPrevYear.MenuText = "Предыдущий год";
+      ciPrevYear.MenuText = "РџСЂРµРґС‹РґСѓС‰РёР№ РіРѕРґ";
       ciPrevYear.ShortCut = Keys.Control | Keys.Shift | Keys.Oemcomma;
       ciPrevYear.Click += new EventHandler(ciPrevYear_Click);
       ciPrevYear.GroupEnd = true;
@@ -389,13 +389,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     public new EFPDateRangeBox ControlProvider { get { return (EFPDateRangeBox)(base.ControlProvider); } }
 
     #endregion
 
-    #region Команды установки значений
+    #region РљРѕРјР°РЅРґС‹ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёР№
 
     EFPCommandItem ciToday, ci1To2, ci2To1;
 
@@ -417,7 +417,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Команды установки диапазонов
+    #region РљРѕРјР°РЅРґС‹ СѓСЃС‚Р°РЅРѕРІРєРё РґРёР°РїР°Р·РѕРЅРѕРІ
 
     EFPCommandItem ciMonth, ciQuarter, ciYear;
 
@@ -460,15 +460,15 @@ namespace FreeLibSet.Forms
       switch (mode)
       {
         case 1:
-          // Для месяца ничего не делаем
+          // Р”Р»СЏ РјРµСЃСЏС†Р° РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
           break;
         case 2:
-          // Квартал
+          // РљРІР°СЂС‚Р°Р»
           m1 = ((m1 - 1) / 3) * 3 + 1;
           m2 = ((m2 + 2) / 3) * 3;
           break;
         case 3:
-          // Год
+          // Р“РѕРґ
           m1 = 1;
           m2 = 12;
           break;
@@ -479,7 +479,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Следующий / предыдущий период
+    #region РЎР»РµРґСѓСЋС‰РёР№ / РїСЂРµРґС‹РґСѓС‰РёР№ РїРµСЂРёРѕРґ
 
     EFPCommandItem ciNextPeriod, ciPrevPeriod, ciNextYear, ciPrevYear;
 
@@ -503,12 +503,12 @@ namespace FreeLibSet.Forms
         ControlProvider.Last.NValue = lastDate;
       }
       else
-        EFPApp.ShowTempMessage("Нельзя изменить год");
+        EFPApp.ShowTempMessage("РќРµР»СЊР·СЏ РёР·РјРµРЅРёС‚СЊ РіРѕРґ");
     }
 
     #endregion
 
-    #region Управление доступностью команд и текстом справа
+    #region РЈРїСЂР°РІР»РµРЅРёРµ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊСЋ РєРѕРјР°РЅРґ Рё С‚РµРєСЃС‚РѕРј СЃРїСЂР°РІР°
 
     public void InitCommandItemsState()
     {
@@ -623,21 +623,21 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер комбоблока для выбора даты или интервала дат.
-  /// Первоначально комбоблок выглядит как DateBox и позволяет ввести дату вручную.
-  /// При нажатии "стрелочки" открывается диалог выбора интервала дат.
-  /// Текущим значением является DateRange. Пустое значение допускается (при CanBeEmpty=true).
-  /// Полуоткрытые интервалы не поддерживаются.
+  /// РџСЂРѕРІР°Р№РґРµСЂ РєРѕРјР±РѕР±Р»РѕРєР° РґР»СЏ РІС‹Р±РѕСЂР° РґР°С‚С‹ РёР»Рё РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚.
+  /// РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕ РєРѕРјР±РѕР±Р»РѕРє РІС‹РіР»СЏРґРёС‚ РєР°Рє DateBox Рё РїРѕР·РІРѕР»СЏРµС‚ РІРІРµСЃС‚Рё РґР°С‚Сѓ РІСЂСѓС‡РЅСѓСЋ.
+  /// РџСЂРё РЅР°Р¶Р°С‚РёРё "СЃС‚СЂРµР»РѕС‡РєРё" РѕС‚РєСЂС‹РІР°РµС‚СЃСЏ РґРёР°Р»РѕРі РІС‹Р±РѕСЂР° РёРЅС‚РµСЂРІР°Р»Р° РґР°С‚.
+  /// РўРµРєСѓС‰РёРј Р·РЅР°С‡РµРЅРёРµРј СЏРІР»СЏРµС‚СЃСЏ DateRange. РџСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ РґРѕРїСѓСЃРєР°РµС‚СЃСЏ (РїСЂРё CanBeEmpty=true).
+  /// РџРѕР»СѓРѕС‚РєСЂС‹С‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ.
   /// </summary>
   public class EFPDateOrRangeBox : EFPSyncControl<UserMaskedComboBox>, IEFPReadOnlyControl, IEFPSimpleTextBox
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
     public EFPDateOrRangeBox(EFPBaseProvider baseProvider, UserMaskedComboBox control)
       : base(baseProvider, control, true)
     {
@@ -651,10 +651,10 @@ namespace FreeLibSet.Forms
     }
     #endregion
 
-    #region Переопределяемые методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»СЏРµРјС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹ СЃРІРѕР№СЃС‚РІР° Enabled=true Рё ReadOnly=false.
     /// </summary>
     public override bool EnabledState
     {
@@ -662,10 +662,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Блокировка при синхронизации выполняется не через свойство EnabledEx, как
-    /// у других управляющих элементов, а через свойство ReadOnly
+    /// Р‘Р»РѕРєРёСЂРѕРІРєР° РїСЂРё СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РЅРµ С‡РµСЂРµР· СЃРІРѕР№СЃС‚РІРѕ EnabledEx, РєР°Рє
+    /// Сѓ РґСЂСѓРіРёС… СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ, Р° С‡РµСЂРµР· СЃРІРѕР№СЃС‚РІРѕ ReadOnly
     /// </summary>
-    /// <param name="value">True-выключить блокировку, false-включить</param>
+    /// <param name="value">True-РІС‹РєР»СЋС‡РёС‚СЊ Р±Р»РѕРєРёСЂРѕРІРєСѓ, false-РІРєР»СЋС‡РёС‚СЊ</param>
     public override void SyncMasterState(bool value)
     {
       InitReadOnlyEx();
@@ -673,7 +673,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Проверка попадания обних дат диапазона в интервал {Minimum, Maximum}
+    /// РџСЂРѕРІРµСЂРєР° РїРѕРїР°РґР°РЅРёСЏ РѕР±РЅРёС… РґР°С‚ РґРёР°РїР°Р·РѕРЅР° РІ РёРЅС‚РµСЂРІР°Р» {Minimum, Maximum}
     /// </summary>
     protected override void OnValidate()
     {
@@ -681,17 +681,17 @@ namespace FreeLibSet.Forms
       {
         if ((!DataTools.DateInRange(DateRange.FirstDate, Minimum, Maximum)) ||
           (!DataTools.DateInRange(DateRange.LastDate, Minimum, Maximum)))
-          SetError("Дата должна быть в диапазоне " + Formatter.ToString(Minimum, Maximum, true));
+          SetError("Р”Р°С‚Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІ РґРёР°РїР°Р·РѕРЅРµ " + Formatter.ToString(Minimum, Maximum, true));
       }
       else
       {
         switch (CanBeEmptyMode)
         {
           case UIValidateState.Error:
-            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
+            SetError("РџРѕР»Рµ \"" + DisplayName + "\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ");
             break;
           case UIValidateState.Warning:
-            SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
+            SetWarning("РџРѕР»Рµ \"" + DisplayName + "\" , РІРµСЂРѕСЏС‚РЅРѕ, РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ");
             break;
         }
       }
@@ -700,7 +700,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Синхронизированное значение типа DateRange
+    /// РЎРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° DateRange
     /// </summary>
     public override object SyncValue
     {
@@ -716,12 +716,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Команды локального меню
+    #region РљРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
 
     /// <summary>
-    /// Создает объект команд локального меню EFPDateOrRangeBoxCommandItems.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ РєРѕРјР°РЅРґ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ EFPDateOrRangeBoxCommandItems.
     /// </summary>
-    /// <returns>Список команд</returns>
+    /// <returns>РЎРїРёСЃРѕРє РєРѕРјР°РЅРґ</returns>
     protected override EFPControlCommandItems GetCommandItems()
     {
       //if (EFPApp.EasyInterface)
@@ -731,17 +731,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Команды локального меню
+    /// РљРѕРјР°РЅРґС‹ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РјРµРЅСЋ
     /// </summary>
     public new EFPDateOrRangeBoxCommandItems CommandItems { get { return (EFPDateOrRangeBoxCommandItems)(base.CommandItems); } }
 
     #endregion
 
-    #region Выпадающий диалог и кнопка очистки
+    #region Р’С‹РїР°РґР°СЋС‰РёР№ РґРёР°Р»РѕРі Рё РєРЅРѕРїРєР° РѕС‡РёСЃС‚РєРё
 
     void Control_PopupClick(object sender, EventArgs args)
     {
-      InitText(); // на случай частично введенной даты, типа "12.03.19"
+      InitText(); // РЅР° СЃР»СѓС‡Р°Р№ С‡Р°СЃС‚РёС‡РЅРѕ РІРІРµРґРµРЅРЅРѕР№ РґР°С‚С‹, С‚РёРїР° "12.03.19"
 
       if (DateRange.IsEmpty || DateRange.LastDate == DateRange.FirstDate)
         ShowDateDialog();
@@ -749,9 +749,9 @@ namespace FreeLibSet.Forms
         ShowRangeDialog();
     }
 
-    #region Для одиночной даты
+    #region Р”Р»СЏ РѕРґРёРЅРѕС‡РЅРѕР№ РґР°С‚С‹
 
-    #region Класс MyCalendar
+    #region РљР»Р°СЃСЃ MyCalendar
 
     private class MyCalendar : MonthCalendar
     {
@@ -768,7 +768,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          MessageBox.Show(e.Message, "Ошибка вызова OnDateSelected");
+          MessageBox.Show(e.Message, "РћС€РёР±РєР° РІС‹Р·РѕРІР° OnDateSelected");
         }
       }
 
@@ -806,7 +806,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          MessageBox.Show(e.Message, "Ошибка вызова OnDateSelected");
+          MessageBox.Show(e.Message, "РћС€РёР±РєР° РІС‹Р·РѕРІР° OnDateSelected");
         }
         base.OnKeyDown(args);
       }
@@ -814,17 +814,17 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Класс MyCalendarForm
+    #region РљР»Р°СЃСЃ MyCalendarForm
 
     private class MyCalendarForm : Form
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public MyCalendarForm(EFPDateOrRangeBox owner)
       {
         this.SuspendLayout();
-        // Нужно для правильного масшабирования кнопки
-        // Календарик и так всегда правильный
+        // РќСѓР¶РЅРѕ РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕРіРѕ РјР°СЃС€Р°Р±РёСЂРѕРІР°РЅРёСЏ РєРЅРѕРїРєРё
+        // РљР°Р»РµРЅРґР°СЂРёРє Рё С‚Р°Рє РІСЃРµРіРґР° РїСЂР°РІРёР»СЊРЅС‹Р№
         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 
@@ -841,10 +841,10 @@ namespace FreeLibSet.Forms
         base.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         base.AutoSize = true;
 
-        // Если используется тема Windows-XP, то MonthCalendar рисует нормальную рамку
-        // Если используется тема Windows-98, то MonthCalendar не содержит никакой рамки
-        // и получается некрасиво
-        // Пусть лучше будет лишняя рамка
+        // Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РµРјР° Windows-XP, С‚Рѕ MonthCalendar СЂРёСЃСѓРµС‚ РЅРѕСЂРјР°Р»СЊРЅСѓСЋ СЂР°РјРєСѓ
+        // Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РµРјР° Windows-98, С‚Рѕ MonthCalendar РЅРµ СЃРѕРґРµСЂР¶РёС‚ РЅРёРєР°РєРѕР№ СЂР°РјРєРё
+        // Рё РїРѕР»СѓС‡Р°РµС‚СЃСЏ РЅРµРєСЂР°СЃРёРІРѕ
+        // РџСѓСЃС‚СЊ Р»СѓС‡С€Рµ Р±СѓРґРµС‚ Р»РёС€РЅСЏСЏ СЂР°РјРєР°
         TableLayoutPanel pan = new TableLayoutPanel();
         pan.SuspendLayout();
         pan.BorderStyle = BorderStyle.Fixed3D;
@@ -865,11 +865,11 @@ namespace FreeLibSet.Forms
 
         _ToRangeButton = new Button();
         _ToRangeButton.Size = new Size(Calendar.Width, 24);
-        _ToRangeButton.Text = "Диапазон";
+        _ToRangeButton.Text = "Р”РёР°РїР°Р·РѕРЅ";
         _ToRangeButton.Image = EFPApp.MainImages.Images["DateRange"];
         _ToRangeButton.ImageAlign = ContentAlignment.MiddleLeft;
         //ToRangeButton.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-        _ToRangeButton.Margin = Calendar.Margin; // для красоты
+        _ToRangeButton.Margin = Calendar.Margin; // РґР»СЏ РєСЂР°СЃРѕС‚С‹
         _ToRangeButton.Click += new EventHandler(ToRangeButton_Click);
 
         pan.Controls.Add(Calendar, 0, 0);
@@ -882,7 +882,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public readonly MyCalendar Calendar;
 
@@ -890,7 +890,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region Обработчики
+      #region РћР±СЂР°Р±РѕС‚С‡РёРєРё
 
       protected override bool ShowWithoutActivation
       {
@@ -901,7 +901,7 @@ namespace FreeLibSet.Forms
       {
         base.OnDeactivate(args);
 
-        // Закрытие формы при попытке щелкнуть мимо
+        // Р—Р°РєСЂС‹С‚РёРµ С„РѕСЂРјС‹ РїСЂРё РїРѕРїС‹С‚РєРµ С‰РµР»РєРЅСѓС‚СЊ РјРёРјРѕ
         try
         {
           if (Visible)
@@ -909,14 +909,14 @@ namespace FreeLibSet.Forms
         }
         catch /*(Exception e)*/
         {
-          //MessageBox.Show(e.Message, "Ошибка при деактивации календаря");
+          //MessageBox.Show(e.Message, "РћС€РёР±РєР° РїСЂРё РґРµР°РєС‚РёРІР°С†РёРё РєР°Р»РµРЅРґР°СЂСЏ");
         }
       }
 
       void ToRangeButton_Click(object sender, EventArgs args)
       {
         Hide();
-        Calendar.Owner.ShowRangeDialog(); // показываем окно выбора диапазона
+        Calendar.Owner.ShowRangeDialog(); // РїРѕРєР°Р·С‹РІР°РµРј РѕРєРЅРѕ РІС‹Р±РѕСЂР° РґРёР°РїР°Р·РѕРЅР°
       }
 
       private void Calendar_SizeChanged(object sender, EventArgs args)
@@ -930,10 +930,10 @@ namespace FreeLibSet.Forms
     #endregion
 
     /// <summary>
-    /// Форма календарика. Нельзя уничтожать форму изнутри обработчика календаря,
-    /// т.к. будет ошибка обращения к удаленному объекту при нажатии мыши на
-    /// кнопке "текущая дата" (видимо, дефект в MonthCalendar).
-    /// Поэтому форма не уничтожается, а делается скрытой.
+    /// Р¤РѕСЂРјР° РєР°Р»РµРЅРґР°СЂРёРєР°. РќРµР»СЊР·СЏ СѓРЅРёС‡С‚РѕР¶Р°С‚СЊ С„РѕСЂРјСѓ РёР·РЅСѓС‚СЂРё РѕР±СЂР°Р±РѕС‚С‡РёРєР° РєР°Р»РµРЅРґР°СЂСЏ,
+    /// С‚.Рє. Р±СѓРґРµС‚ РѕС€РёР±РєР° РѕР±СЂР°С‰РµРЅРёСЏ Рє СѓРґР°Р»РµРЅРЅРѕРјСѓ РѕР±СЉРµРєС‚Сѓ РїСЂРё РЅР°Р¶Р°С‚РёРё РјС‹С€Рё РЅР°
+    /// РєРЅРѕРїРєРµ "С‚РµРєСѓС‰Р°СЏ РґР°С‚Р°" (РІРёРґРёРјРѕ, РґРµС„РµРєС‚ РІ MonthCalendar).
+    /// РџРѕСЌС‚РѕРјСѓ С„РѕСЂРјР° РЅРµ СѓРЅРёС‡С‚РѕР¶Р°РµС‚СЃСЏ, Р° РґРµР»Р°РµС‚СЃСЏ СЃРєСЂС‹С‚РѕР№.
     /// </summary>
     private MyCalendarForm _CalendarForm;
 
@@ -965,7 +965,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        MessageBox.Show(e.Message, "Ошибка вызова календаря");
+        MessageBox.Show(e.Message, "РћС€РёР±РєР° РІС‹Р·РѕРІР° РєР°Р»РµРЅРґР°СЂСЏ");
       }
     }
 
@@ -981,14 +981,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Для диапазона дат
+    #region Р”Р»СЏ РґРёР°РїР°Р·РѕРЅР° РґР°С‚
 
     private void ShowRangeDialog()
     {
       DateRangeDialog dlg = new DateRangeDialog();
       dlg.Title = DisplayName;
       dlg.CanBeEmpty = CanBeEmpty;
-      dlg.Prompt = "Диапазон значений";
+      dlg.Prompt = "Р”РёР°РїР°Р·РѕРЅ Р·РЅР°С‡РµРЅРёР№";
       dlg.DialogPosition.PopupOwnerControl = Control;
       if (!DateRange.IsEmpty)
       {
@@ -999,7 +999,7 @@ namespace FreeLibSet.Forms
       dlg.Maximum = Maximum;
       dlg.Validators.AddError(new DepEqual<bool>(DepTools.IsNotEmptyEx<DateTime>(dlg.NFirstDateEx),
         DepTools.IsNotEmptyEx(dlg.NLastDateEx)),
-        "Полуоткрытые интервалы не допускаются");
+        "РџРѕР»СѓРѕС‚РєСЂС‹С‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹ РЅРµ РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ");
 
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
@@ -1018,12 +1018,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Текущее значение DateRange/FirstDate/LastDate
+    #region РўРµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ DateRange/FirstDate/LastDate
 
     #region DateRange
 
     /// <summary>
-    /// Доступ к выбранной дате без принудительного создания объекта
+    /// Р”РѕСЃС‚СѓРї Рє РІС‹Р±СЂР°РЅРЅРѕР№ РґР°С‚Рµ Р±РµР· РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРіРѕ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р°
     /// </summary>
     public DateRange DateRange
     {
@@ -1086,9 +1086,9 @@ namespace FreeLibSet.Forms
     #region FirstDate
 
     /// <summary>
-    /// Начальная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается минимально возможная дата.
-    /// Установка значения свойства может привести к изменению конечной даты, если задаваемое значение больше, чем текущая конечная дата.
+    /// РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°.
+    /// РџСѓСЃС‚РѕР№ РґРёР°РїР°Р·РѕРЅ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ. Р•СЃР»Рё DateRange.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјРёРЅРёРјР°Р»СЊРЅРѕ РІРѕР·РјРѕР¶РЅР°СЏ РґР°С‚Р°.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РјРѕР¶РµС‚ РїСЂРёРІРµСЃС‚Рё Рє РёР·РјРµРЅРµРЅРёСЋ РєРѕРЅРµС‡РЅРѕР№ РґР°С‚С‹, РµСЃР»Рё Р·Р°РґР°РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ Р±РѕР»СЊС€Рµ, С‡РµРј С‚РµРєСѓС‰Р°СЏ РєРѕРЅРµС‡РЅР°СЏ РґР°С‚Р°.
     /// </summary>
     public DateTime FirstDate
     {
@@ -1109,7 +1109,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое значение для FirstDate.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ FirstDate.
     /// </summary>
     public DepValue<DateTime> FirstDateEx
     {
@@ -1146,9 +1146,9 @@ namespace FreeLibSet.Forms
     #region LastDate
 
     /// <summary>
-    /// Конечная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается максимально возможная дата.
-    /// Установка значения свойства может привести к изменению начальной даты, если задаваемое значение меньше, чем текущая начальная дата.
+    /// РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°.
+    /// РџСѓСЃС‚РѕР№ РґРёР°РїР°Р·РѕРЅ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ. Р•СЃР»Рё DateRange.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјР°РєСЃРёРјР°Р»СЊРЅРѕ РІРѕР·РјРѕР¶РЅР°СЏ РґР°С‚Р°.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РјРѕР¶РµС‚ РїСЂРёРІРµСЃС‚Рё Рє РёР·РјРµРЅРµРЅРёСЋ РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚С‹, РµСЃР»Рё Р·Р°РґР°РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРµРЅСЊС€Рµ, С‡РµРј С‚РµРєСѓС‰Р°СЏ РЅР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°.
     /// </summary>
     public DateTime LastDate
     {
@@ -1169,7 +1169,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое значение для LastDate.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ LastDate.
     /// </summary>
     public DepValue<DateTime> LastDateEx
     {
@@ -1207,9 +1207,9 @@ namespace FreeLibSet.Forms
     #region NFirstDate
 
     /// <summary>
-    /// Начальная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается минимально возможная дата.
-    /// Установка значения свойства может привести к изменению конечной даты, если задаваемое значение больше, чем текущая конечная дата.
+    /// РќР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°.
+    /// РџСѓСЃС‚РѕР№ РґРёР°РїР°Р·РѕРЅ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ. Р•СЃР»Рё DateRange.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјРёРЅРёРјР°Р»СЊРЅРѕ РІРѕР·РјРѕР¶РЅР°СЏ РґР°С‚Р°.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РјРѕР¶РµС‚ РїСЂРёРІРµСЃС‚Рё Рє РёР·РјРµРЅРµРЅРёСЋ РєРѕРЅРµС‡РЅРѕР№ РґР°С‚С‹, РµСЃР»Рё Р·Р°РґР°РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ Р±РѕР»СЊС€Рµ, С‡РµРј С‚РµРєСѓС‰Р°СЏ РєРѕРЅРµС‡РЅР°СЏ РґР°С‚Р°.
     /// </summary>
     public DateTime? NFirstDate
     {
@@ -1230,7 +1230,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое значение для NFirstDate.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ NFirstDate.
     /// </summary>
     public DepValue<DateTime?> NFirstDateEx
     {
@@ -1267,9 +1267,9 @@ namespace FreeLibSet.Forms
     #region NLastDate
 
     /// <summary>
-    /// Конечная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается максимально возможная дата.
-    /// Установка значения свойства может привести к изменению начальной даты, если задаваемое значение меньше, чем текущая начальная дата.
+    /// РљРѕРЅРµС‡РЅР°СЏ РґР°С‚Р° РґРёР°РїР°Р·РѕРЅР°.
+    /// РџСѓСЃС‚РѕР№ РґРёР°РїР°Р·РѕРЅ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ. Р•СЃР»Рё DateRange.IsEmpty=true, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РјР°РєСЃРёРјР°Р»СЊРЅРѕ РІРѕР·РјРѕР¶РЅР°СЏ РґР°С‚Р°.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° РјРѕР¶РµС‚ РїСЂРёРІРµСЃС‚Рё Рє РёР·РјРµРЅРµРЅРёСЋ РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚С‹, РµСЃР»Рё Р·Р°РґР°РІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРµРЅСЊС€Рµ, С‡РµРј С‚РµРєСѓС‰Р°СЏ РЅР°С‡Р°Р»СЊРЅР°СЏ РґР°С‚Р°.
     /// </summary>
     public DateTime? NLastDate
     {
@@ -1290,7 +1290,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое значение для LastDate.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ LastDate.
     /// </summary>
     public DepValue<DateTime?> NLastDateEx
     {
@@ -1349,8 +1349,8 @@ namespace FreeLibSet.Forms
     private bool _InsideValueChanged;
 
     /// <summary>
-    /// Метод вызывается при изменении значения в управляющем элементе.
-    /// При переопределении обязательно должен вызываться базовый метод
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РёР·РјРµРЅРµРЅРёРё Р·РЅР°С‡РµРЅРёСЏ РІ СѓРїСЂР°РІР»СЏСЋС‰РµРј СЌР»РµРјРµРЅС‚Рµ.
+    /// РџСЂРё РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРёРё РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РµРЅ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р±Р°Р·РѕРІС‹Р№ РјРµС‚РѕРґ
     /// </summary>
     protected virtual void OnValueChanged()
     {
@@ -1382,12 +1382,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства FirstValueEx и LastValueEx
+    #region РЎРІРѕР№СЃС‚РІР° FirstValueEx Рё LastValueEx
 #if XXX
     /// <summary>
-    /// Управляемое значение для начальной даты диапазона Value.FirstDate.
-    /// Управляемое свойство возвращает значение null, если интервал не задан.
-    /// Свойство предназначено только для чтения, а не для установки значения снаружи.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РЅР°С‡Р°Р»СЊРЅРѕР№ РґР°С‚С‹ РґРёР°РїР°Р·РѕРЅР° Value.FirstDate.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ null, РµСЃР»Рё РёРЅС‚РµСЂРІР°Р» РЅРµ Р·Р°РґР°РЅ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРѕ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ, Р° РЅРµ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёСЏ СЃРЅР°СЂСѓР¶Рё.
     /// </summary>
     public DepValue<DateTime?> FirstValueEx
     {
@@ -1408,9 +1408,9 @@ namespace FreeLibSet.Forms
     private DepOutput<DateTime?> _FirstValueEx;
 
     /// <summary>
-    /// Управляемое значение для конечной даты диапазона Value.LastDate.
-    /// Управляемое свойство возвращает значение null, если интервал не задан.
-    /// Свойство предназначено только для чтения, а не для установки значения снаружи.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РєРѕРЅРµС‡РЅРѕР№ РґР°С‚С‹ РґРёР°РїР°Р·РѕРЅР° Value.LastDate.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ null, РµСЃР»Рё РёРЅС‚РµСЂРІР°Р» РЅРµ Р·Р°РґР°РЅ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРѕ С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ, Р° РЅРµ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёСЏ СЃРЅР°СЂСѓР¶Рё.
     /// </summary>
     public DepValue<DateTime?> LastValueEx
     {
@@ -1435,7 +1435,7 @@ namespace FreeLibSet.Forms
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, которое возвращает true, если диапазон задан (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ, РєРѕС‚РѕСЂРѕРµ РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РґРёР°РїР°Р·РѕРЅ Р·Р°РґР°РЅ (NFirstDate.HasValue=true Рё NLastDate.HasValue=true).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -1458,15 +1458,15 @@ namespace FreeLibSet.Forms
     #region CanBeEmpty
 
     /// <summary>
-    /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// Р РµР¶РёРј РїСЂРѕРІРµСЂРєРё РїСѓСЃС‚РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Error
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// РњРѕР¶РЅРѕ Р»Рё РІРІРѕРґРёС‚СЊ РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ. Р”СѓР±Р»РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ CanBeEmptyMode.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false
     /// </summary>
     public bool CanBeEmpty
     {
@@ -1476,12 +1476,12 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство DefaultYear
+    #region РЎРІРѕР№СЃС‚РІРѕ DefaultYear
 
     /// <summary>
-    /// Год по умолчанию
-    /// Если задано ненулевое значение и пользователь ввел только 4 цифры дня и месяца,
-    /// дата будет считаться корректной и использовать выбранный год
+    /// Р“РѕРґ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ РЅРµРЅСѓР»РµРІРѕРµ Р·РЅР°С‡РµРЅРёРµ Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІРІРµР» С‚РѕР»СЊРєРѕ 4 С†РёС„СЂС‹ РґРЅСЏ Рё РјРµСЃСЏС†Р°,
+    /// РґР°С‚Р° Р±СѓРґРµС‚ СЃС‡РёС‚Р°С‚СЊСЃСЏ РєРѕСЂСЂРµРєС‚РЅРѕР№ Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Р№ РіРѕРґ
     /// </summary>
     public int DefaultYear
     {
@@ -1497,7 +1497,7 @@ namespace FreeLibSet.Forms
     private int _DefaultYear;
 
     /// <summary>
-    /// Свойство DefaultYearEx
+    /// РЎРІРѕР№СЃС‚РІРѕ DefaultYearEx
     /// </summary>
     public DepValue<int> DefaultYearEx
     {
@@ -1531,15 +1531,15 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство ReadOnly
+    #region РЎРІРѕР№СЃС‚РІРѕ ReadOnly
 
     /// <summary>
-    /// Если true, то управляющий элемент разрешает только просмотр диапазона дат, но не его изменение
+    /// Р•СЃР»Рё true, С‚Рѕ СѓРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ СЂР°Р·СЂРµС€Р°РµС‚ С‚РѕР»СЊРєРѕ РїСЂРѕСЃРјРѕС‚СЂ РґРёР°РїР°Р·РѕРЅР° РґР°С‚, РЅРѕ РЅРµ РµРіРѕ РёР·РјРµРЅРµРЅРёРµ
     /// </summary>
     public bool ReadOnly
     {
-      // Нельзя использовать свойство Control.ReadOnly напрямую.
-      // Элемент переводится в состояние "Только чтение", если в нем введен интервал дат
+      // РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРІРѕР№СЃС‚РІРѕ Control.ReadOnly РЅР°РїСЂСЏРјСѓСЋ.
+      // Р­Р»РµРјРµРЅС‚ РїРµСЂРµРІРѕРґРёС‚СЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРµ "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ", РµСЃР»Рё РІ РЅРµРј РІРІРµРґРµРЅ РёРЅС‚РµСЂРІР°Р» РґР°С‚
 
       get { return _ReadOnly; }
       set
@@ -1547,7 +1547,7 @@ namespace FreeLibSet.Forms
         if (value == _ReadOnly)
           return;
         _ReadOnly = value;
-        InitText(); // переключает Control.ReadOnly
+        InitText(); // РїРµСЂРµРєР»СЋС‡Р°РµС‚ Control.ReadOnly
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
         UpdateEnabledState();
@@ -1556,7 +1556,7 @@ namespace FreeLibSet.Forms
     private bool _ReadOnly;
 
     /// <summary>
-    /// Управляемое свойство ReadOnly
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ ReadOnly
     /// </summary>
     public DepValue<Boolean> ReadOnlyEx
     {
@@ -1590,15 +1590,15 @@ namespace FreeLibSet.Forms
       }
     }
     /// <summary>
-    /// Выходная часть свойства ReadOnly
+    /// Р’С‹С…РѕРґРЅР°СЏ С‡Р°СЃС‚СЊ СЃРІРѕР№СЃС‚РІР° ReadOnly
     /// </summary>
     private DepInput<Boolean> _ReadOnlyEx;
     /// <summary>
-    /// Основной вход для ReadOnly
+    /// РћСЃРЅРѕРІРЅРѕР№ РІС…РѕРґ РґР»СЏ ReadOnly
     /// </summary>
     private DepInput<Boolean> _ReadOnlyMain;
     /// <summary>
-    /// Дополнительный вход для ReadOnly для выполнения синхронизации
+    /// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ РІС…РѕРґ РґР»СЏ ReadOnly РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё
     /// </summary>
     private DepInput<Boolean> _NotReadOnlySync;
 
@@ -1609,13 +1609,13 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Диапазон допустимых значений
+    #region Р”РёР°РїР°Р·РѕРЅ РґРѕРїСѓСЃС‚РёРјС‹С… Р·РЅР°С‡РµРЅРёР№
 
     /// <summary>
-    /// Минимальная дата, которую можно ввести.
-    /// Если значение свойства установлено и свойство Value меньше заданной даты, будет выдана ошибка
-    /// при проверке контроля.
-    /// По умолчанию ограничение не установлено
+    /// РњРёРЅРёРјР°Р»СЊРЅР°СЏ РґР°С‚Р°, РєРѕС‚РѕСЂСѓСЋ РјРѕР¶РЅРѕ РІРІРµСЃС‚Рё.
+    /// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ Рё СЃРІРѕР№СЃС‚РІРѕ Value РјРµРЅСЊС€Рµ Р·Р°РґР°РЅРЅРѕР№ РґР°С‚С‹, Р±СѓРґРµС‚ РІС‹РґР°РЅР° РѕС€РёР±РєР°
+    /// РїСЂРё РїСЂРѕРІРµСЂРєРµ РєРѕРЅС‚СЂРѕР»СЏ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ
     /// </summary>
     public DateTime? Minimum
     {
@@ -1625,10 +1625,10 @@ namespace FreeLibSet.Forms
     private DateTime? _Minimum;
 
     /// <summary>
-    /// Максимальная дата, которую можно ввести.
-    /// Если значение свойства установлено и свойство Value больше заданной даты, будет выдана ошибка
-    /// при проверке контроля
-    /// По умолчанию ограничение не установлено
+    /// РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР°С‚Р°, РєРѕС‚РѕСЂСѓСЋ РјРѕР¶РЅРѕ РІРІРµСЃС‚Рё.
+    /// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ Рё СЃРІРѕР№СЃС‚РІРѕ Value Р±РѕР»СЊС€Рµ Р·Р°РґР°РЅРЅРѕР№ РґР°С‚С‹, Р±СѓРґРµС‚ РІС‹РґР°РЅР° РѕС€РёР±РєР°
+    /// РїСЂРё РїСЂРѕРІРµСЂРєРµ РєРѕРЅС‚СЂРѕР»СЏ
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ
     /// </summary>
     public DateTime? Maximum
     {
@@ -1639,11 +1639,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство Formatter
+    #region РЎРІРѕР№СЃС‚РІРѕ Formatter
 
     /// <summary>
-    /// Форматировщик диапазона дат.
-    /// Если свойство не установлено в явном виде, возвращает DateRangeFormatter.Default
+    /// Р¤РѕСЂРјР°С‚РёСЂРѕРІС‰РёРє РґРёР°РїР°Р·РѕРЅР° РґР°С‚.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, РІРѕР·РІСЂР°С‰Р°РµС‚ DateRangeFormatter.Default
     /// </summary>
     public DateRangeFormatter Formatter
     {
@@ -1673,7 +1673,7 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        Control.Text = value; // ?? может быть, нужна проверка
+        Control.Text = value; // ?? РјРѕР¶РµС‚ Р±С‹С‚СЊ, РЅСѓР¶РЅР° РїСЂРѕРІРµСЂРєР°
       }
     }
 
@@ -1711,40 +1711,40 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Команды меню для EFPDateRangeBox
+  /// РљРѕРјР°РЅРґС‹ РјРµРЅСЋ РґР»СЏ EFPDateRangeBox
   /// </summary>
   public class EFPDateOrRangeBoxCommandItems : EFPTextBoxCommandItems
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает список команд
+    /// РЎРѕР·РґР°РµС‚ СЃРїРёСЃРѕРє РєРѕРјР°РЅРґ
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    /// <param name="controlProvider">РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
     public EFPDateOrRangeBoxCommandItems(EFPDateOrRangeBox controlProvider)
       : base(controlProvider, false, true)
     {
       ciToday = new EFPCommandItem("Edit", "Today");
-      ciToday.MenuText = "Сегодня";
+      ciToday.MenuText = "РЎРµРіРѕРґРЅСЏ";
       ciToday.ShortCut = Keys.Control | Keys.T;
       ciToday.Click += ciToday_Click;
       Add(ciToday);
 
       ciMonth = new EFPCommandItem("Edit", "Month");
-      ciMonth.MenuText = "Месяц";
+      ciMonth.MenuText = "РњРµСЃСЏС†";
       ciMonth.ShortCut = Keys.Control | Keys.M;
       ciMonth.Click += ciMonth_Click;
       ciMonth.GroupBegin = true;
       Add(ciMonth);
 
       ciQuarter = new EFPCommandItem("Edit", "Quarter");
-      ciQuarter.MenuText = "Квартал";
+      ciQuarter.MenuText = "РљРІР°СЂС‚Р°Р»";
       ciQuarter.ShortCut = Keys.Control | Keys.Q;
       ciQuarter.Click += ciQuarter_Click;
       Add(ciQuarter);
 
       ciYear = new EFPCommandItem("Edit", "Year");
-      ciYear.MenuText = "Год";
+      ciYear.MenuText = "Р“РѕРґ";
       ciYear.ShortCut = Keys.Control | Keys.Y;
       ciYear.Click += ciYear_Click;
       Add(ciYear);
@@ -1754,16 +1754,16 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Общие свойства
+    #region РћР±С‰РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Провайдер управляющего элемента 
+    /// РџСЂРѕРІР°Р№РґРµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° 
     /// </summary>
     public new EFPDateOrRangeBox ControlProvider { get { return (EFPDateOrRangeBox)(base.ControlProvider); } }
 
     #endregion
 
-    #region Команды установки значений
+    #region РљРѕРјР°РЅРґС‹ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёР№
 
     EFPCommandItem ciToday;
     EFPCommandItem ciMonth, ciQuarter, ciYear;
@@ -1810,15 +1810,15 @@ namespace FreeLibSet.Forms
       switch (mode)
       {
         case 1:
-          // Для месяца ничего не делаем
+          // Р”Р»СЏ РјРµСЃСЏС†Р° РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
           break;
         case 2:
-          // Квартал
+          // РљРІР°СЂС‚Р°Р»
           m1 = ((m1 - 1) / 3) * 3 + 1;
           m2 = ((m2 + 2) / 3) * 3;
           break;
         case 3:
-          // Год
+          // Р“РѕРґ
           m1 = 1;
           m2 = 12;
           break;
@@ -1829,10 +1829,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Управление доступностью команд и текстом справа
+    #region РЈРїСЂР°РІР»РµРЅРёРµ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊСЋ РєРѕРјР°РЅРґ Рё С‚РµРєСЃС‚РѕРј СЃРїСЂР°РІР°
 
     /// <summary>
-    /// Инициализация текста для команд
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С‚РµРєСЃС‚Р° РґР»СЏ РєРѕРјР°РЅРґ
     /// </summary>
     public void InitCommandItemsState()
     {

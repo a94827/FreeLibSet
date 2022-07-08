@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +12,7 @@ namespace FIASDemo
 {
   public partial class TestFormatForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public TestFormatForm()
     {
@@ -30,14 +30,14 @@ namespace FIASDemo
       btnDebugParsing.Image = EFPApp.MainImages.Images["Debug"];
       btnDebugParsing.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpDebugParsing = new EFPButton(efpForm, btnDebugParsing);
-      efpDebugParsing.DisplayName = "Парсинг строки";
-      efpDebugParsing.ToolTipText = "Показывает результаты парсинга строки при вызове FiasFormatStringParser.TryParse()";
+      efpDebugParsing.DisplayName = "РџР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё";
+      efpDebugParsing.ToolTipText = "РџРѕРєР°Р·С‹РІР°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РїР°СЂСЃРёРЅРіР° СЃС‚СЂРѕРєРё РїСЂРё РІС‹Р·РѕРІРµ FiasFormatStringParser.TryParse()";
       efpDebugParsing.Click += new EventHandler(efpDebugParsing_Click);
     }
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     EFPTextComboBox efpFormat;
 
@@ -49,7 +49,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Обработчик
+    #region РћР±СЂР°Р±РѕС‚С‡РёРє
 
     private AgeyevAV.Parsing.ParsingData pd;
 
@@ -68,13 +68,13 @@ namespace FIASDemo
         else
         {
           StringBuilder sb = new StringBuilder();
-          sb.Append("Неправильная строка форматирования. ");
+          sb.Append("РќРµРїСЂР°РІРёР»СЊРЅР°СЏ СЃС‚СЂРѕРєР° С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ. ");
           sb.Append(Environment.NewLine);
           sb.Append(errorText);
           sb.Append(Environment.NewLine);
           edRes.Text = sb.ToString();
           //int pText = sb.Length;
-          int pText = edRes.Text.Length; // RichTextBox заменил CRLF на CR - длина поменялась
+          int pText = edRes.Text.Length; // RichTextBox Р·Р°РјРµРЅРёР» CRLF РЅР° CR - РґР»РёРЅР° РїРѕРјРµРЅСЏР»Р°СЃСЊ
           edRes.Text += cbFormat.Text;
           edRes.Select(pText + errorStart, errorLen);
           edRes.SelectionBackColor = Color.Red;
@@ -82,7 +82,7 @@ namespace FIASDemo
       }
       catch (Exception e)
       {
-        edRes.Text = "Ошибка. " + e.Message;
+        edRes.Text = "РћС€РёР±РєР°. " + e.Message;
         edRes.SelectAll();
         edRes.SelectionBackColor = Color.Red;
       }
@@ -90,12 +90,12 @@ namespace FIASDemo
 
     void efpDebugParsing_Click(object sender, EventArgs args)
     {
-      DebugTools.DebugParsingData(pd, "Парсинг строки форматирования");
+      DebugTools.DebugParsingData(pd, "РџР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ");
     }
 
     #endregion
 
-    #region Статический метод запуска
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РјРµС‚РѕРґ Р·Р°РїСѓСЃРєР°
 
     private static string _LastFormat = "TEXT";
 

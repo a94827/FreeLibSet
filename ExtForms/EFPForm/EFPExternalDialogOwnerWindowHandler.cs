@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -10,24 +10,24 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Временный установщик свойства EFPApp.ExternalDialogOwnerWindow
-  /// на текущее активное окно в Windows.
-  /// Disposable-объект следует создавать на время выполнения обработчика события от внешнего приложения,
-  /// например, Excel, чтобы блоки диалога выводились над внешним приложением, а не над основным.
+  /// Р’СЂРµРјРµРЅРЅС‹Р№ СѓСЃС‚Р°РЅРѕРІС‰РёРє СЃРІРѕР№СЃС‚РІР° EFPApp.ExternalDialogOwnerWindow
+  /// РЅР° С‚РµРєСѓС‰РµРµ Р°РєС‚РёРІРЅРѕРµ РѕРєРЅРѕ РІ Windows.
+  /// Disposable-РѕР±СЉРµРєС‚ СЃР»РµРґСѓРµС‚ СЃРѕР·РґР°РІР°С‚СЊ РЅР° РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєР° СЃРѕР±С‹С‚РёСЏ РѕС‚ РІРЅРµС€РЅРµРіРѕ РїСЂРёР»РѕР¶РµРЅРёСЏ,
+  /// РЅР°РїСЂРёРјРµСЂ, Excel, С‡С‚РѕР±С‹ Р±Р»РѕРєРё РґРёР°Р»РѕРіР° РІС‹РІРѕРґРёР»РёСЃСЊ РЅР°Рґ РІРЅРµС€РЅРёРј РїСЂРёР»РѕР¶РµРЅРёРµРј, Р° РЅРµ РЅР°Рґ РѕСЃРЅРѕРІРЅС‹Рј.
   /// 
-  /// Разрешено использовать только в основном потоке приложения, поэтому обычно требуется синхронизация
-  /// потоков.
-  /// Реализовано только для Windows, в других ОС никаких действий пока не выполняется
+  /// Р Р°Р·СЂРµС€РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ РІ РѕСЃРЅРѕРІРЅРѕРј РїРѕС‚РѕРєРµ РїСЂРёР»РѕР¶РµРЅРёСЏ, РїРѕСЌС‚РѕРјСѓ РѕР±С‹С‡РЅРѕ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+  /// РїРѕС‚РѕРєРѕРІ.
+  /// Р РµР°Р»РёР·РѕРІР°РЅРѕ С‚РѕР»СЊРєРѕ РґР»СЏ Windows, РІ РґСЂСѓРіРёС… РћРЎ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РїРѕРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
   /// </summary>
   public class EFPExternalDialogOwnerWindowHandler : SimpleDisposableObject
   {
     // 03.01.2021
-    // Можно иcпользовать базовый класс без деструктора
+    // РњРѕР¶РЅРѕ РёcРїРѕР»СЊР·РѕРІР°С‚СЊ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ Р±РµР· РґРµСЃС‚СЂСѓРєС‚РѕСЂР°
 
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     /// <summary>
-    /// Инициализирует свойство EFPApp.ExternalDialogOwnerWindow, если это поддерживается операционной системой
+    /// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ СЃРІРѕР№СЃС‚РІРѕ EFPApp.ExternalDialogOwnerWindow, РµСЃР»Рё СЌС‚Рѕ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјРѕР№
     /// </summary>
     public EFPExternalDialogOwnerWindowHandler()
     {
@@ -55,10 +55,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Восстанавливает значение свойства EFPApp.ExternalDialogOwnerWindow, как оно было
-    /// на момент вызова конструктора
+    /// Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° EFPApp.ExternalDialogOwnerWindow, РєР°Рє РѕРЅРѕ Р±С‹Р»Рѕ
+    /// РЅР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">true, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose(), Р° РЅРµ РґРµСЃС‚СЂСѓРєС‚РѕСЂ</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -76,7 +76,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     private System.Windows.Forms.IWin32Window _OldDialogOwnerWindow;
 
@@ -84,7 +84,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Функции Windows
+    #region Р¤СѓРЅРєС†РёРё Windows
 
     /// <summary>
     /// The GetForegroundWindow function returns a handle to the foreground window.

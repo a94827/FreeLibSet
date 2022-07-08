@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -7,74 +7,74 @@ using System.Text;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Collections;
 
-// Общие объявления пользовательского интерфейса.
-// Используется классами FreeLibSet.RI.Control (удаленный пользовательский интерфейс)
-// и FreeLibSet.Forms.EFPControlBase (провайдеры Windows Forms)
+// РћР±С‰РёРµ РѕР±СЉСЏРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°.
+// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃР°РјРё FreeLibSet.RI.Control (СѓРґР°Р»РµРЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ)
+// Рё FreeLibSet.Forms.EFPControlBase (РїСЂРѕРІР°Р№РґРµСЂС‹ Windows Forms)
 namespace FreeLibSet.UICore
 {
-  #region Перечисление UIValidateState
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ UIValidateState
 
   /// <summary>
-  /// Результат проверки ошибок
+  /// Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё РѕС€РёР±РѕРє
   /// </summary>
   [Serializable]
   public enum UIValidateState
   {
-    // Числовые значения совпадают с UIValidateState в ExtForms.dll
+    // Р§РёСЃР»РѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ СЃРѕРІРїР°РґР°СЋС‚ СЃ UIValidateState РІ ExtForms.dll
 
     /// <summary>
-    /// Ошибок не найдено
+    /// РћС€РёР±РѕРє РЅРµ РЅР°Р№РґРµРЅРѕ
     /// </summary>
     Ok = 0,
 
     /// <summary>
-    /// Предупреждение
+    /// РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ
     /// </summary>
     Warning = 1,
 
     /// <summary>
-    /// Ошибка
+    /// РћС€РёР±РєР°
     /// </summary>
     Error = 2
   }
 
   #endregion
 
-  #region Интерфейс объекта, поддерживающего проверку ошибок
+  #region РРЅС‚РµСЂС„РµР№СЃ РѕР±СЉРµРєС‚Р°, РїРѕРґРґРµСЂР¶РёРІР°СЋС‰РµРіРѕ РїСЂРѕРІРµСЂРєСѓ РѕС€РёР±РѕРє
 
   /// <summary>
-  /// Интерфейс объекта, поддерживающего проверку ошибок.
-  /// Реализуется EFPControlBase, EFPValidatingEventArgs и некоторыми другими классами.
+  /// РРЅС‚РµСЂС„РµР№СЃ РѕР±СЉРµРєС‚Р°, РїРѕРґРґРµСЂР¶РёРІР°СЋС‰РµРіРѕ РїСЂРѕРІРµСЂРєСѓ РѕС€РёР±РѕРє.
+  /// Р РµР°Р»РёР·СѓРµС‚СЃСЏ EFPControlBase, EFPValidatingEventArgs Рё РЅРµРєРѕС‚РѕСЂС‹РјРё РґСЂСѓРіРёРјРё РєР»Р°СЃСЃР°РјРё.
   /// </summary>
   public interface IUIValidableObject
   {
     /// <summary>
-    /// Установить ошибку
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РѕС€РёР±РєСѓ
     /// </summary>
-    /// <param name="message">Сообщение</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     void SetError(string message);
 
     /// <summary>
-    /// Установить предупреждение.
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ.
     /// </summary>
-    /// <param name="message">Сообщение</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     void SetWarning(string message);
 
     /// <summary>
-    /// Получить текущее состояние проверки
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РїСЂРѕРІРµСЂРєРё
     /// </summary>
     UIValidateState ValidateState { get; }
   }
 
   /// <summary>
-  /// Простой класс для реализации одноразовой проверки
+  /// РџСЂРѕСЃС‚РѕР№ РєР»Р°СЃСЃ РґР»СЏ СЂРµР°Р»РёР·Р°С†РёРё РѕРґРЅРѕСЂР°Р·РѕРІРѕР№ РїСЂРѕРІРµСЂРєРё
   /// </summary>
   public class UISimpleValidableObject : IUIValidableObject
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚
     /// </summary>
     public UISimpleValidableObject()
     {
@@ -83,10 +83,10 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Устанавливает состояние Ok
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ Ok
     /// </summary>
     public void Clear()
     {
@@ -95,10 +95,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Устанавливает состояние ошибки.
-    /// Если уже установлена ошибка, вызов игнорируется.
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ РѕС€РёР±РєРё.
+    /// Р•СЃР»Рё СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅР° РѕС€РёР±РєР°, РІС‹Р·РѕРІ РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public void SetError(string message)
     {
       if (ValidateState != UIValidateState.Error)
@@ -109,10 +109,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Устанавливает предупреждение
-    /// Если уже установлена ошибка или предупреждение, вызов игнорируется.
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ
+    /// Р•СЃР»Рё СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅР° РѕС€РёР±РєР° РёР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ, РІС‹Р·РѕРІ РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="message">Текст сообщения</param>
+    /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public void SetWarning(string message)
     {
       if (ValidateState == UIValidateState.Ok)
@@ -124,16 +124,16 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Текущее состояние
+    /// РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
     /// </summary>
     public UIValidateState ValidateState { get { return _ValidateState; } }
     private UIValidateState _ValidateState;
 
     /// <summary>
-    /// Текст сообщения об ошибке или предупреждения
+    /// РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РёР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЏ
     /// </summary>
     public string Message { get { return _Message; } }
     private string _Message;
@@ -143,56 +143,56 @@ namespace FreeLibSet.UICore
 
   #endregion
 
-  #region Делегат для проверки ошибок
+  #region Р”РµР»РµРіР°С‚ РґР»СЏ РїСЂРѕРІРµСЂРєРё РѕС€РёР±РѕРє
 
   /// <summary>
-  /// Аргумент для события проверки
+  /// РђСЂРіСѓРјРµРЅС‚ РґР»СЏ СЃРѕР±С‹С‚РёСЏ РїСЂРѕРІРµСЂРєРё
   /// </summary>
   public class UIValidatingEventArgs : IUIValidableObject
   {
     /// <summary>
-    /// Создание объекта
+    /// РЎРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р°
     /// </summary>
-    /// <param name="validableObject">Объект, запросивший проверку. Ему передаются сообщения об ошибке или предупреждении</param>
+    /// <param name="validableObject">РћР±СЉРµРєС‚, Р·Р°РїСЂРѕСЃРёРІС€РёР№ РїСЂРѕРІРµСЂРєСѓ. Р•РјСѓ РїРµСЂРµРґР°СЋС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РёР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРё</param>
     public UIValidatingEventArgs(IUIValidableObject validableObject)
     {
       _ValidableObject = validableObject;
     }
 
     /// <summary>
-    /// Объект, запросивший проверку. Ему передаются сообщения об ошибке или предупреждении
+    /// РћР±СЉРµРєС‚, Р·Р°РїСЂРѕСЃРёРІС€РёР№ РїСЂРѕРІРµСЂРєСѓ. Р•РјСѓ РїРµСЂРµРґР°СЋС‚СЃСЏ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РёР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРё
     /// </summary>
     public IUIValidableObject ValidableObject { get { return _ValidableObject; } }
     private IUIValidableObject _ValidableObject;
 
     /// <summary>
-    /// Установить сообщение об ошибке
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
     /// </summary>
-    /// <param name="message">Сообщение</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public void SetError(string message)
     {
       _ValidableObject.SetError(message);
     }
 
     /// <summary>
-    /// Установить предупреждение
+    /// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ
     /// </summary>
-    /// <param name="message">Сообщение</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public void SetWarning(string message)
     {
       _ValidableObject.SetWarning(message);
     }
 
     /// <summary>
-    /// Определить текущее состояние проверки: наличие ошибок или предупреждений
+    /// РћРїСЂРµРґРµР»РёС‚СЊ С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РїСЂРѕРІРµСЂРєРё: РЅР°Р»РёС‡РёРµ РѕС€РёР±РѕРє РёР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёР№
     /// </summary>
     public UIValidateState ValidateState { get { return _ValidableObject.ValidateState; } }
 
     /// <summary>
-    /// Вспомогательный метод, вызывающий SetError() или SetWarning()
+    /// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РјРµС‚РѕРґ, РІС‹Р·С‹РІР°СЋС‰РёР№ SetError() РёР»Рё SetWarning()
     /// </summary>
-    /// <param name="state">Состояние</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="state">РЎРѕСЃС‚РѕСЏРЅРёРµ</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public void SetState(UIValidateState state, string message)
     {
       if (ValidateState == UIValidateState.Error)
@@ -212,7 +212,7 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Делегат события проверки
+  /// Р”РµР»РµРіР°С‚ СЃРѕР±С‹С‚РёСЏ РїСЂРѕРІРµСЂРєРё
   /// </summary>
   /// <param name="sender"></param>
   /// <param name="args"></param>
@@ -221,44 +221,44 @@ namespace FreeLibSet.UICore
   #endregion
 
   /// <summary>
-  /// Структура для хранения результата вычисления проверочного выражения и сообщения об ошибке
+  /// РЎС‚СЂСѓРєС‚СѓСЂР° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЂРµР·СѓР»СЊС‚Р°С‚Р° РІС‹С‡РёСЃР»РµРЅРёСЏ РїСЂРѕРІРµСЂРѕС‡РЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ Рё СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ
   /// </summary>
   [Serializable]
   public struct UIValidateResult : IEquatable<UIValidateResult>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация структуры
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃС‚СЂСѓРєС‚СѓСЂС‹
     /// </summary>
-    /// <param name="isValid">true - правильное значение, false - ошибка</param>
-    /// <param name="message">Сообщение об ошибке. При <paramref name="isValid"/>=true игнорируется</param>
+    /// <param name="isValid">true - РїСЂР°РІРёР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ, false - РѕС€РёР±РєР°</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ. РџСЂРё <paramref name="isValid"/>=true РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
     public UIValidateResult(bool isValid, string message)
     {
       if (isValid)
         _Message = null;
       else if (String.IsNullOrEmpty(message))
-        _Message = "Текст сообщения об ошибке не задан";
+        _Message = "РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РЅРµ Р·Р°РґР°РЅ";
       else
         _Message = message;
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Сообщение об ошибке или null.
+    /// РЎРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ РёР»Рё null.
     /// </summary>
     private string _Message;
 
     /// <summary>
-    /// Результат проверки. True - правильное значение. False - есть ошибка
+    /// Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРѕРІРµСЂРєРё. True - РїСЂР°РІРёР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ. False - РµСЃС‚СЊ РѕС€РёР±РєР°
     /// </summary>
     public bool IsValid { get { return Object.ReferenceEquals(_Message, null); } }
 
     /// <summary>
-    /// Текст сообщения об ошибке при IsValid=false.
+    /// РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєРµ РїСЂРё IsValid=false.
     /// </summary>
     public string Message
     {
@@ -272,7 +272,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Текстовое представление
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -285,45 +285,45 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Сравнение двух объектов
+    #region РЎСЂР°РІРЅРµРЅРёРµ РґРІСѓС… РѕР±СЉРµРєС‚РѕРІ
 
     /// <summary>
-    /// Сравнение двух объектов.
+    /// РЎСЂР°РІРЅРµРЅРёРµ РґРІСѓС… РѕР±СЉРµРєС‚РѕРІ.
     /// </summary>
-    /// <param name="a">Первый сравниваемый объект</param>
-    /// <param name="b">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="a">РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="b">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public static bool operator ==(UIValidateResult a, UIValidateResult b)
     {
       return String.Equals(a._Message, b._Message, StringComparison.Ordinal);
     }
 
     /// <summary>
-    /// Сравнение двух объектов.
+    /// РЎСЂР°РІРЅРµРЅРёРµ РґРІСѓС… РѕР±СЉРµРєС‚РѕРІ.
     /// </summary>
-    /// <param name="a">Первый сравниваемый объект</param>
-    /// <param name="b">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="a">РџРµСЂРІС‹Р№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="b">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public static bool operator !=(UIValidateResult a, UIValidateResult b)
     {
       return !(a == b);
     }
 
     /// <summary>
-    /// Сравнение с другим объектом.
+    /// РЎСЂР°РІРЅРµРЅРёРµ СЃ РґСЂСѓРіРёРј РѕР±СЉРµРєС‚РѕРј.
     /// </summary>
-    /// <param name="other">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="other">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public bool Equals(UIValidateResult other)
     {
       return String.Equals(this._Message, other._Message, StringComparison.Ordinal);
     }
 
     /// <summary>
-    /// Сравнение с другим объектом.
+    /// РЎСЂР°РІРЅРµРЅРёРµ СЃ РґСЂСѓРіРёРј РѕР±СЉРµРєС‚РѕРј.
     /// </summary>
-    /// <param name="other">Второй сравниваемый объект</param>
-    /// <returns>Результат сравнения</returns>
+    /// <param name="other">Р’С‚РѕСЂРѕР№ СЃСЂР°РІРЅРёРІР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ СЃСЂР°РІРЅРµРЅРёСЏ</returns>
     public override bool Equals(object other)
     {
       if (other is UIValidateResult)
@@ -333,7 +333,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Хэш код. Требуется для подавления предупреждения компилятора.
+    /// РҐСЌС€ РєРѕРґ. РўСЂРµР±СѓРµС‚СЃСЏ РґР»СЏ РїРѕРґР°РІР»РµРЅРёСЏ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЏ РєРѕРјРїРёР»СЏС‚РѕСЂР°.
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()
@@ -348,33 +348,33 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Описание для одного объекта валидации, присоединенного к управляющему элементу.
-  /// Валидаторы могут добавляться к списку Control.Validators.
+  /// РћРїРёСЃР°РЅРёРµ РґР»СЏ РѕРґРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІР°Р»РёРґР°С†РёРё, РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅРѕРіРѕ Рє СѓРїСЂР°РІР»СЏСЋС‰РµРјСѓ СЌР»РµРјРµРЅС‚Сѓ.
+  /// Р’Р°Р»РёРґР°С‚РѕСЂС‹ РјРѕРіСѓС‚ РґРѕР±Р°РІР»СЏС‚СЊСЃСЏ Рє СЃРїРёСЃРєСѓ Control.Validators.
   /// 
-  /// Класс однократной записи.
+  /// РљР»Р°СЃСЃ РѕРґРЅРѕРєСЂР°С‚РЅРѕР№ Р·Р°РїРёСЃРё.
   /// </summary>
   [Serializable]
   public sealed class UIValidator
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚
     /// </summary>
-    /// <param name="resultEx">Выражение валидации</param>
-    /// <param name="isError">true-ошибка, false-предупреждение</param>
-    /// <param name="preconditionEx">Выражение, определяющее необходимость выполнения проверки. Может быть null, если проверка выполняется всегда</param>
+    /// <param name="resultEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
+    /// <param name="isError">true-РѕС€РёР±РєР°, false-РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ</param>
+    /// <param name="preconditionEx">Р’С‹СЂР°Р¶РµРЅРёРµ, РѕРїСЂРµРґРµР»СЏСЋС‰РµРµ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕРІРµСЂРєРё. РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІСЃРµРіРґР°</param>
     public UIValidator(DepValue<UIValidateResult> resultEx, bool isError, DepValue<bool> preconditionEx)
     {
       if (resultEx == null)
         throw new ArgumentNullException("resultEx");
 
       _ResultEx = resultEx;
-      resultEx.ValueChanged += DummyValueChanged; // Чтобы IsConnected возвращало true
+      resultEx.ValueChanged += DummyValueChanged; // Р§С‚РѕР±С‹ IsConnected РІРѕР·РІСЂР°С‰Р°Р»Рѕ true
       _IsError = isError;
       _PreconditionEx = preconditionEx;
       if (preconditionEx != null)
-        preconditionEx.ValueChanged += DummyValueChanged; // Чтобы IsConnected возвращало true
+        preconditionEx.ValueChanged += DummyValueChanged; // Р§С‚РѕР±С‹ IsConnected РІРѕР·РІСЂР°С‰Р°Р»Рѕ true
     }
 
     static void DummyValueChanged(object sender, EventArgs args)
@@ -383,37 +383,37 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Вычисляемое выражение для выполнения проверки.
-    /// Если в вычисленном значении IsValid равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
-    /// в зависимости от свойства IsError.
-    /// Не может быть null.
+    /// Р’С‹С‡РёСЃР»СЏРµРјРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕРІРµСЂРєРё.
+    /// Р•СЃР»Рё РІ РІС‹С‡РёСЃР»РµРЅРЅРѕРј Р·РЅР°С‡РµРЅРёРё IsValid СЂР°РІРЅРѕ false, С‚Рѕ РґР»СЏ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° Р±СѓРґРµС‚ РІС‹РґР°РЅРѕ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ РёР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ,
+    /// РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРІРѕР№СЃС‚РІР° IsError.
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null.
     /// </summary>
     public DepValue<UIValidateResult> ResultEx { get { return _ResultEx; } }
     private readonly DepValue<UIValidateResult> _ResultEx;
 
     /// <summary>
-    /// True, если нарушение условия является ошибкой, false-если предупреждением.
-    /// Если хотя бы один из объектов с IsError=true не проходит валидацию, нельзя закрыть блок диалога нажатием кнопки "ОК".
-    /// Предупреждения не препятствуют закрытию диалога.
+    /// True, РµСЃР»Рё РЅР°СЂСѓС€РµРЅРёРµ СѓСЃР»РѕРІРёСЏ СЏРІР»СЏРµС‚СЃСЏ РѕС€РёР±РєРѕР№, false-РµСЃР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµРј.
+    /// Р•СЃР»Рё С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ РёР· РѕР±СЉРµРєС‚РѕРІ СЃ IsError=true РЅРµ РїСЂРѕС…РѕРґРёС‚ РІР°Р»РёРґР°С†РёСЋ, РЅРµР»СЊР·СЏ Р·Р°РєСЂС‹С‚СЊ Р±Р»РѕРє РґРёР°Р»РѕРіР° РЅР°Р¶Р°С‚РёРµРј РєРЅРѕРїРєРё "РћРљ".
+    /// РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЏ РЅРµ РїСЂРµРїСЏС‚СЃС‚РІСѓСЋС‚ Р·Р°РєСЂС‹С‚РёСЋ РґРёР°Р»РѕРіР°.
     /// </summary>
     public bool IsError { get { return _IsError; } }
     private readonly bool _IsError;
 
     /// <summary>
-    /// Необязательное предусловие для выполнения проверки. Если выражение возвращает true, то проверка выполняется,
-    /// если false - то отключается.
-    /// Если свойство не установлено (обычно), то проверка выполняется.
+    /// РќРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕРµ РїСЂРµРґСѓСЃР»РѕРІРёРµ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕРІРµСЂРєРё. Р•СЃР»Рё РІС‹СЂР°Р¶РµРЅРёРµ РІРѕР·РІСЂР°С‰Р°РµС‚ true, С‚Рѕ РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ,
+    /// РµСЃР»Рё false - С‚Рѕ РѕС‚РєР»СЋС‡Р°РµС‚СЃСЏ.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ (РѕР±С‹С‡РЅРѕ), С‚Рѕ РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
     public DepValue<bool> PreconditionEx { get { return _PreconditionEx; } }
     private readonly DepValue<bool> _PreconditionEx;
 
     /// <summary>
-    /// Возвращает свойство UIValidateResult.Message или "Ok" (для отладки)
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІРѕ UIValidateResult.Message РёР»Рё "Ok" (РґР»СЏ РѕС‚Р»Р°РґРєРё)
     /// </summary>
-    /// <returns>Текстовое представление</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ</returns>
     public override string ToString()
     {
       return _ResultEx.Value.ToString();
@@ -423,15 +423,15 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Реализация свойства RIItem.Validators
+  /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° RIItem.Validators
   /// </summary>
   [Serializable]
   public class UIValidatorList : ListWithReadOnly<UIValidator>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой список
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє
     /// </summary>
     public UIValidatorList()
     {
@@ -439,15 +439,15 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Методы создания валидаторов
+    #region РњРµС‚РѕРґС‹ СЃРѕР·РґР°РЅРёСЏ РІР°Р»РёРґР°С‚РѕСЂРѕРІ
 
     #region AddError()
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=true Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="resultEx">Выражение валидации</param>
-    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    /// <param name="resultEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
+    /// <param name="preconditionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РїСЂРµРґСѓСЃР»РѕРІРёСЏ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІСЃРµРіРґР°</param>
     public UIValidator AddError(DepValue<UIValidateResult> resultEx, DepValue<bool> preconditionEx)
     {
       UIValidator item = new UIValidator(resultEx, true, preconditionEx);
@@ -456,9 +456,9 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=true Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="resultEx">Выражение валидации</param>
+    /// <param name="resultEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
     public UIValidator AddError(DepValue<UIValidateResult> resultEx)
     {
       UIValidator item = new UIValidator(resultEx, true, null);
@@ -467,10 +467,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=true Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expressionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public UIValidator AddError(DepValue<bool> expressionEx, string message)
     {
       UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), true, null);
@@ -479,11 +479,11 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=true Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    /// <param name="expressionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
+    /// <param name="preconditionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РїСЂРµРґСѓСЃР»РѕРІРёСЏ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІСЃРµРіРґР°</param>
     public UIValidator AddError(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
     {
       UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), true, preconditionEx);
@@ -496,10 +496,10 @@ namespace FreeLibSet.UICore
     #region AddWarning()
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=false Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="resultEx">Выражение валидации</param>
-    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    /// <param name="resultEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
+    /// <param name="preconditionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РїСЂРµРґСѓСЃР»РѕРІРёСЏ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІСЃРµРіРґР°</param>
     public UIValidator AddWarning(DepValue<UIValidateResult> resultEx, DepValue<bool> preconditionEx)
     {
       UIValidator item = new UIValidator(resultEx, false, preconditionEx);
@@ -508,9 +508,9 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=false Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="resultEx">Выражение валидации</param>
+    /// <param name="resultEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
     public UIValidator AddWarning(DepValue<UIValidateResult> resultEx)
     {
       UIValidator item = new UIValidator(resultEx, false, null);
@@ -519,10 +519,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=false Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expressionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public UIValidator AddWarning(DepValue<bool> expressionEx, string message)
     {
       UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), false, null);
@@ -531,11 +531,11 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ Validator СЃ IsError=false Рё РґРѕР±Р°РІР»СЏРµС‚ РµРіРѕ РІ СЃРїРёСЃРѕРє
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
+    /// <param name="expressionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РІР°Р»РёРґР°С†РёРё</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
+    /// <param name="preconditionEx">Р’С‹СЂР°Р¶РµРЅРёРµ РїСЂРµРґСѓСЃР»РѕРІРёСЏ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null, РµСЃР»Рё РїСЂРѕРІРµСЂРєР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІСЃРµРіРґР°</param>
     public UIValidator AddWarning(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
     {
       UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), false, preconditionEx);
@@ -547,15 +547,15 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Проверка
+    #region РџСЂРѕРІРµСЂРєР°
 
     /// <summary>
-    /// Выполнить проверку валидаторов в списке и поместить сообщение об ошибке или предупреждении в <paramref name="validableObject"/>.
-    /// Валидаторы, для которых PreconditionEx возвращает false, пропускается.
-    /// Проверка заканчивается, если очережной валидатор установил сообщение об ошибке.
-    /// Этот метод не используется в прикладном коде.
+    /// Р’С‹РїРѕР»РЅРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РІР°Р»РёРґР°С‚РѕСЂРѕРІ РІ СЃРїРёСЃРєРµ Рё РїРѕРјРµСЃС‚РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ РёР»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРё РІ <paramref name="validableObject"/>.
+    /// Р’Р°Р»РёРґР°С‚РѕСЂС‹, РґР»СЏ РєРѕС‚РѕСЂС‹С… PreconditionEx РІРѕР·РІСЂР°С‰Р°РµС‚ false, РїСЂРѕРїСѓСЃРєР°РµС‚СЃСЏ.
+    /// РџСЂРѕРІРµСЂРєР° Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ, РµСЃР»Рё РѕС‡РµСЂРµР¶РЅРѕР№ РІР°Р»РёРґР°С‚РѕСЂ СѓСЃС‚Р°РЅРѕРІРёР» СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ.
     /// </summary>
-    /// <param name="validableObject">Реализация интерфейса для добавления сообщений.</param>
+    /// <param name="validableObject">Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕРѕР±С‰РµРЅРёР№.</param>
     public void Validate(IUIValidableObject validableObject)
     {
 #if DEBUG
@@ -588,11 +588,11 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Прочие методы
+    #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Переводит список в режим "Только чтение".
-    /// Метод не должен использоваться в прикладном коде
+    /// РџРµСЂРµРІРѕРґРёС‚ СЃРїРёСЃРѕРє РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// РњРµС‚РѕРґ РЅРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
     /// </summary>
     public new void SetReadOnly()
     {
@@ -601,11 +601,11 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region Статический список
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ СЃРїРёСЃРѕРє
 
     /// <summary>
-    /// Пустой список валидаторов.
-    /// Свойство списка IsReadOnly=true.
+    /// РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє РІР°Р»РёРґР°С‚РѕСЂРѕРІ.
+    /// РЎРІРѕР№СЃС‚РІРѕ СЃРїРёСЃРєР° IsReadOnly=true.
     /// </summary>
     public static readonly UIValidatorList Empty = CreateEmpty();
 
@@ -620,8 +620,8 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Список валидаторов, предназначенных для проверки одного значения из списка.
-  /// Расширяет список UIValidatorList свойством ValueEx.
+  /// РЎРїРёСЃРѕРє РІР°Р»РёРґР°С‚РѕСЂРѕРІ, РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРЅС‹С… РґР»СЏ РїСЂРѕРІРµСЂРєРё РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РёР· СЃРїРёСЃРєР°.
+  /// Р Р°СЃС€РёСЂСЏРµС‚ СЃРїРёСЃРѕРє UIValidatorList СЃРІРѕР№СЃС‚РІРѕРј ValueEx.
   /// </summary>
   [Serializable]
   public class UIValueValidatorList<T> : UIValidatorList
@@ -629,7 +629,7 @@ namespace FreeLibSet.UICore
     #region ValueEx
 
     /// <summary>
-    /// Управляемое свойство, возвращающее текущее проверяемое значение.
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРµ С‚РµРєСѓС‰РµРµ РїСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ.
     /// </summary>
     public DepValue<T> ValueEx
     {
@@ -642,8 +642,8 @@ namespace FreeLibSet.UICore
     private DepInput<T> _ValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРІРѕР№СЃС‚РІР° ValueEx РїСЂРёСЃРѕРµРґРёРЅРµРЅ Рє РґСЂСѓРіРёРј РѕР±СЉРµРєС‚Р°Рј РІ РєР°С‡РµСЃС‚РІРµ РІС…РѕРґР°.
+    /// Р­С‚Рѕ СЃРІРѕР№СЃС‚РІРѕ РЅРµ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРѕ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
     /// </summary>
     public bool InternalValueExConnected
     {
@@ -666,7 +666,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Этот метод не предназначен для использования в пользовательском коде
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
     /// </summary>
     /// <param name="value"></param>
     public void InternalSetValueEx(DepValue<T> value)
@@ -676,7 +676,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Этот метод не предназначен для использования в пользовательском коде
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РЅРµ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
     /// </summary>
     /// <param name="value"></param>
     public void InternalSetValue(T value)
@@ -688,64 +688,64 @@ namespace FreeLibSet.UICore
     #endregion
   }
 
-  #region Интерфейсы управляющих элементов
+  #region РРЅС‚РµСЂС„РµР№СЃС‹ СѓРїСЂР°РІР»СЏСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ
 
 #if XXX
   /// <summary>
-  /// Интерфейс управляющего элемента
+  /// РРЅС‚РµСЂС„РµР№СЃ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
   /// </summary>
   public interface IUIControl
   {
     /// <summary>
-    /// Доступность элемента
+    /// Р”РѕСЃС‚СѓРїРЅРѕСЃС‚СЊ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
     bool Enabled { get; set;}
 
     /// <summary>
-    /// Управляемое свойство для Enabled
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ Enabled
     /// </summary>
     DepValue<bool> EnabledEx { get;set;}
 
     /// <summary>
-    /// Не предназначено для использования в прикладном коде
+    /// РќРµ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРѕ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
     /// </summary>
     bool EnabledExConnected { get;}
 
     /// <summary>
-    /// Проверяющие объекты
+    /// РџСЂРѕРІРµСЂСЏСЋС‰РёРµ РѕР±СЉРµРєС‚С‹
     /// </summary>
     UIValidatorList Validators { get;}
   }
 
   /// <summary>
-  /// Управляющий элемент, поддерживающий проверку наличия значения
+  /// РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚, РїРѕРґРґРµСЂР¶РёРІР°СЋС‰РёР№ РїСЂРѕРІРµСЂРєСѓ РЅР°Р»РёС‡РёСЏ Р·РЅР°С‡РµРЅРёСЏ
   /// </summary>
   public interface IUIControlCanBeEmpty : IUIControl
   {
     /// <summary>
-    /// True, если элемент может содержать пустое значение.
-    /// По умолчанию - false.
+    /// True, РµСЃР»Рё СЌР»РµРјРµРЅС‚ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РїСѓСЃС‚РѕРµ Р·РЅР°С‡РµРЅРёРµ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false.
     /// </summary>
     bool CanBeEmpty { get;set;}
 
     /// <summary>
-    /// Расширение для свойства CanBeEmpty, поддерживающее выдачу предупреждений
+    /// Р Р°СЃС€РёСЂРµРЅРёРµ РґР»СЏ СЃРІРѕР№СЃС‚РІР° CanBeEmpty, РїРѕРґРґРµСЂР¶РёРІР°СЋС‰РµРµ РІС‹РґР°С‡Сѓ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёР№
     /// </summary>
     UIValidateState CanBeEmptyMode { get;set;}
   }
 
   /// <summary>
-  /// Управляющий элемент, поддерживающий просмотр значений (свойство ReadOnly)
+  /// РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚, РїРѕРґРґРµСЂР¶РёРІР°СЋС‰РёР№ РїСЂРѕСЃРјРѕС‚СЂ Р·РЅР°С‡РµРЅРёР№ (СЃРІРѕР№СЃС‚РІРѕ ReadOnly)
   /// </summary>
   public interface IUIControlWithReadOnly : IUIControl
   {
     /// <summary>
-    /// True, если элемент предназначен только для просмотра значений
+    /// True, РµСЃР»Рё СЌР»РµРјРµРЅС‚ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° Р·РЅР°С‡РµРЅРёР№
     /// </summary>
     bool ReadOnly { get;set;}
 
     /// <summary>
-    /// Управляемое свойство для ReadOnly
+    /// РЈРїСЂР°РІР»СЏРµРјРѕРµ СЃРІРѕР№СЃС‚РІРѕ РґР»СЏ ReadOnly
     /// </summary>
     DepValue<bool> ReadOnlyEx { get;set;}
   }

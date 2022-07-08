@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,27 +11,27 @@ using FreeLibSet.Data;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Расширение провайдера табличного просмотра для использования класса продюсера EFPGridProducer, вместо интефрейса IEFPGridProducer.
-  /// Позволяет использовать повторитель таблиц EFPGridProducerDataTableRepeater.
+  /// Р Р°СЃС€РёСЂРµРЅРёРµ РїСЂРѕРІР°Р№РґРµСЂР° С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РєР»Р°СЃСЃР° РїСЂРѕРґСЋСЃРµСЂР° EFPGridProducer, РІРјРµСЃС‚Рѕ РёРЅС‚РµС„СЂРµР№СЃР° IEFPGridProducer.
+  /// РџРѕР·РІРѕР»СЏРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїРѕРІС‚РѕСЂРёС‚РµР»СЊ С‚Р°Р±Р»РёС† EFPGridProducerDataTableRepeater.
   /// </summary>
   public class EFPStdConfigurableDataGridView : EFPConfigurableDataGridView
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создание провайдера
+    /// РЎРѕР·РґР°РЅРёРµ РїСЂРѕРІР°Р№РґРµСЂР°
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚</param>
     public EFPStdConfigurableDataGridView(EFPBaseProvider baseProvider, DataGridView control)
       : base(baseProvider, control)
     {
     }
 
     /// <summary>
-    /// Создание провайдера
+    /// РЎРѕР·РґР°РЅРёРµ РїСЂРѕРІР°Р№РґРµСЂР°
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
+    /// <param name="controlWithToolBar">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
     public EFPStdConfigurableDataGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar)
       : base(controlWithToolBar)
     {
@@ -42,15 +42,15 @@ namespace FreeLibSet.Forms
     #region GridProducer
 
     /// <summary>
-    /// Генератор столбцов таблицы. Если задан, то в локальном меню доступны
-    /// команды настройки столбцов таблицы.
-    /// Установка свойства также устанавливает свойство AutoSort=true.
-    /// При необходимости использования события CurrentOrderChanged, установите AutoSort=false обратно.
+    /// Р“РµРЅРµСЂР°С‚РѕСЂ СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС†С‹. Р•СЃР»Рё Р·Р°РґР°РЅ, С‚Рѕ РІ Р»РѕРєР°Р»СЊРЅРѕРј РјРµРЅСЋ РґРѕСЃС‚СѓРїРЅС‹
+    /// РєРѕРјР°РЅРґС‹ РЅР°СЃС‚СЂРѕР№РєРё СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС†С‹.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° С‚Р°РєР¶Рµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРІРѕР№СЃС‚РІРѕ AutoSort=true.
+    /// РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СЃРѕР±С‹С‚РёСЏ CurrentOrderChanged, СѓСЃС‚Р°РЅРѕРІРёС‚Рµ AutoSort=false РѕР±СЂР°С‚РЅРѕ.
     /// </summary>
     public new EFPGridProducer GridProducer
     {
-      // Тип EFPGridProducer нужен, т.к. он содержит метод InitGridView() с расширенным списком аргументов.
-      // Используется в DocTypeUI.PerformInitGrid()
+      // РўРёРї EFPGridProducer РЅСѓР¶РµРЅ, С‚.Рє. РѕРЅ СЃРѕРґРµСЂР¶РёС‚ РјРµС‚РѕРґ InitGridView() СЃ СЂР°СЃС€РёСЂРµРЅРЅС‹Рј СЃРїРёСЃРєРѕРј Р°СЂРіСѓРјРµРЅС‚РѕРІ.
+      // РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ DocTypeUI.PerformInitGrid()
 
       get { return (EFPGridProducer)(base.GridProducer); }
       set 
@@ -62,19 +62,19 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает InitTableRepeaterForGridProducer(), если хотя бы раз выполнялась установка свойств MasterDataTable или MasterDataView
+    /// Р’С‹Р·С‹РІР°РµС‚ InitTableRepeaterForGridProducer(), РµСЃР»Рё С…РѕС‚СЏ Р±С‹ СЂР°Р· РІС‹РїРѕР»РЅСЏР»Р°СЃСЊ СѓСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІ MasterDataTable РёР»Рё MasterDataView
     /// </summary>
     protected override void OnGridProducerPostInit()
     {
-      if (_MasterDataTableHasBeenSet) // была ли установка свойства MasterDataTable или MasterDataView?
+      if (_MasterDataTableHasBeenSet) // Р±С‹Р»Р° Р»Рё СѓСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° MasterDataTable РёР»Рё MasterDataView?
       {
         if (TableRepeater == null)
-          InitTableRepeaterForGridProducer(SourceAsDataTable); // вдруг теперь понадобится повторитель
+          InitTableRepeaterForGridProducer(SourceAsDataTable); // РІРґСЂСѓРі С‚РµРїРµСЂСЊ РїРѕРЅР°РґРѕР±РёС‚СЃСЏ РїРѕРІС‚РѕСЂРёС‚РµР»СЊ
         else
-          InitTableRepeaterForGridProducer(TableRepeater.MasterTable); // создаем новый повторитель
+          InitTableRepeaterForGridProducer(TableRepeater.MasterTable); // СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№ РїРѕРІС‚РѕСЂРёС‚РµР»СЊ
       }
 
-      base.OnGridProducerPostInit(); // вызов пользовательского обработчика
+      base.OnGridProducerPostInit(); // РІС‹Р·РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РѕР±СЂР°Р±РѕС‚С‡РёРєР°
     }
 
     #endregion
@@ -82,8 +82,8 @@ namespace FreeLibSet.Forms
     #region MasterDataTable
 
     /// <summary>
-    /// Базовый источник для автоматического использования таблицы-повторителя.
-    /// Должен использоваться вместо непосредственной установки DataGridView.DataSource или EFPDataGridView.SourceAsDataTable
+    /// Р‘Р°Р·РѕРІС‹Р№ РёСЃС‚РѕС‡РЅРёРє РґР»СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹-РїРѕРІС‚РѕСЂРёС‚РµР»СЏ.
+    /// Р”РѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІРјРµСЃС‚Рѕ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕР№ СѓСЃС‚Р°РЅРѕРІРєРё DataGridView.DataSource РёР»Рё EFPDataGridView.SourceAsDataTable
     /// </summary>
     public new DataTable MasterDataTable
     {
@@ -100,15 +100,15 @@ namespace FreeLibSet.Forms
         if (CurrentConfig != null && GridProducer!=null)
           InitTableRepeaterForGridProducer(value);
         else
-          SourceAsDataTable = value; // вызов до загрузки конфигурации
+          SourceAsDataTable = value; // РІС‹Р·РѕРІ РґРѕ Р·Р°РіСЂСѓР·РєРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
       }
     }
     private bool _MasterDataTableHasBeenSet;
 
     /// <summary>
-    /// Альтеранативная установка свойства MasterDataTable.
-    /// Проверяет, есть ли у присоединяемого DataView фильтр по строкам данных.
-    /// Если есть, то создает еще одну промежуточную таблицу.
+    /// РђР»СЊС‚РµСЂР°РЅР°С‚РёРІРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° MasterDataTable.
+    /// РџСЂРѕРІРµСЂСЏРµС‚, РµСЃС‚СЊ Р»Рё Сѓ РїСЂРёСЃРѕРµРґРёРЅСЏРµРјРѕРіРѕ DataView С„РёР»СЊС‚СЂ РїРѕ СЃС‚СЂРѕРєР°Рј РґР°РЅРЅС‹С….
+    /// Р•СЃР»Рё РµСЃС‚СЊ, С‚Рѕ СЃРѕР·РґР°РµС‚ РµС‰Рµ РѕРґРЅСѓ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ.
     /// </summary>
     public new DataView MasterDataView
     {
@@ -129,9 +129,9 @@ namespace FreeLibSet.Forms
           else if (String.IsNullOrEmpty(value.RowFilter))
             MasterDataTable = value.Table;
           else if (TableRepeaterRequired(value.Table))
-            MasterDataTable = value.ToTable(); // создается еще одна копия таблицы
+            MasterDataTable = value.ToTable(); // СЃРѕР·РґР°РµС‚СЃСЏ РµС‰Рµ РѕРґРЅР° РєРѕРїРёСЏ С‚Р°Р±Р»РёС†С‹
           else
-            MasterDataTable = value.Table; // можно обойтись без копии
+            MasterDataTable = value.Table; // РјРѕР¶РЅРѕ РѕР±РѕР№С‚РёСЃСЊ Р±РµР· РєРѕРїРёРё
         }
         else
           SourceAsDataView = value;
@@ -143,23 +143,23 @@ namespace FreeLibSet.Forms
     #region InitTableRepeaterForGridProducer
 
     /// <summary>
-    /// Проверяет столбцы просмотра на наличие полей в таблице данных <paramref name="masterTable"/>.
-    /// Если есть вычисляемые столбцы, то создается таблица-повторитель EFPGridProducerDataTableRepeater.
-    /// После этого устанавливаются свойства DataGridViewColumn.DataPropertyName, чтобы значения столбцов
-    /// не вычислялись, а брались из таблицы-повторителя. Это позволяет использовать для этих столбцов произвольную сортировку.
+    /// РџСЂРѕРІРµСЂСЏРµС‚ СЃС‚РѕР»Р±С†С‹ РїСЂРѕСЃРјРѕС‚СЂР° РЅР° РЅР°Р»РёС‡РёРµ РїРѕР»РµР№ РІ С‚Р°Р±Р»РёС†Рµ РґР°РЅРЅС‹С… <paramref name="masterTable"/>.
+    /// Р•СЃР»Рё РµСЃС‚СЊ РІС‹С‡РёСЃР»СЏРµРјС‹Рµ СЃС‚РѕР»Р±С†С‹, С‚Рѕ СЃРѕР·РґР°РµС‚СЃСЏ С‚Р°Р±Р»РёС†Р°-РїРѕРІС‚РѕСЂРёС‚РµР»СЊ EFPGridProducerDataTableRepeater.
+    /// РџРѕСЃР»Рµ СЌС‚РѕРіРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°СЋС‚СЃСЏ СЃРІРѕР№СЃС‚РІР° DataGridViewColumn.DataPropertyName, С‡С‚РѕР±С‹ Р·РЅР°С‡РµРЅРёСЏ СЃС‚РѕР»Р±С†РѕРІ
+    /// РЅРµ РІС‹С‡РёСЃР»СЏР»РёСЃСЊ, Р° Р±СЂР°Р»РёСЃСЊ РёР· С‚Р°Р±Р»РёС†С‹-РїРѕРІС‚РѕСЂРёС‚РµР»СЏ. Р­С‚Рѕ РїРѕР·РІРѕР»СЏРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ СЌС‚РёС… СЃС‚РѕР»Р±С†РѕРІ РїСЂРѕРёР·РІРѕР»СЊРЅСѓСЋ СЃРѕСЂС‚РёСЂРѕРІРєСѓ.
     /// 
-    /// Если в просмотре нет подходящих вычисляемых столбцов, свойство SourceAsDataTable устанавливается напрямую на <paramref name="masterTable"/>.
-    /// Если раньше использовалась таблица-повторитель, она удаляется.
+    /// Р•СЃР»Рё РІ РїСЂРѕСЃРјРѕС‚СЂРµ РЅРµС‚ РїРѕРґС…РѕРґСЏС‰РёС… РІС‹С‡РёСЃР»СЏРµРјС‹С… СЃС‚РѕР»Р±С†РѕРІ, СЃРІРѕР№СЃС‚РІРѕ SourceAsDataTable СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РЅР°РїСЂСЏРјСѓСЋ РЅР° <paramref name="masterTable"/>.
+    /// Р•СЃР»Рё СЂР°РЅСЊС€Рµ РёСЃРїРѕР»СЊР·РѕРІР°Р»Р°СЃСЊ С‚Р°Р±Р»РёС†Р°-РїРѕРІС‚РѕСЂРёС‚РµР»СЊ, РѕРЅР° СѓРґР°Р»СЏРµС‚СЃСЏ.
     /// 
-    /// Свойство GridProducer должно быть установлено.
+    /// РЎРІРѕР№СЃС‚РІРѕ GridProducer РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
     /// 
-    /// В прикладном коде предпочтительнее использовать свойства MasterDataTable или MasterDataView.
+    /// Р’ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ РїСЂРµРґРїРѕС‡С‚РёС‚РµР»СЊРЅРµРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃРІРѕР№СЃС‚РІР° MasterDataTable РёР»Рё MasterDataView.
     /// </summary>
-    /// <param name="masterTable">Исходная таблица данных</param>
+    /// <param name="masterTable">РСЃС…РѕРґРЅР°СЏ С‚Р°Р±Р»РёС†Р° РґР°РЅРЅС‹С…</param>
     public void InitTableRepeaterForGridProducer(DataTable masterTable)
     {
       if (GridProducer == null)
-        throw new NullReferenceException("Свойство GridProducer не установлено");
+        throw new NullReferenceException("РЎРІРѕР№СЃС‚РІРѕ GridProducer РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ");
 
       if (masterTable == null)
       {
@@ -198,14 +198,14 @@ namespace FreeLibSet.Forms
             {
               col1.CustomOrderColumnName = col2.Name;
               //if (CustomOrderActive)
-              //  initColumnSortModeRequired = true; // для этого столбца нужно будет установить SortMode, иначе возникет ошибка при попытке нарисовать треугольник после щелчка мыши
+              //  initColumnSortModeRequired = true; // РґР»СЏ СЌС‚РѕРіРѕ СЃС‚РѕР»Р±С†Р° РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ SortMode, РёРЅР°С‡Рµ РІРѕР·РЅРёРєРµС‚ РѕС€РёР±РєР° РїСЂРё РїРѕРїС‹С‚РєРµ РЅР°СЂРёСЃРѕРІР°С‚СЊ С‚СЂРµСѓРіРѕР»СЊРЅРёРє РїРѕСЃР»Рµ С‰РµР»С‡РєР° РјС‹С€Рё
             }
           }
           if (col1.CustomOrderColumnName == col2.Name)
-            col1.GridColumn.DataPropertyName = col2.Name; // столбец больше не является вычисляемым, а берет значение из базы данных
+            col1.GridColumn.DataPropertyName = col2.Name; // СЃС‚РѕР»Р±РµС† Р±РѕР»СЊС€Рµ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РІС‹С‡РёСЃР»СЏРµРјС‹Рј, Р° Р±РµСЂРµС‚ Р·РЅР°С‡РµРЅРёРµ РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С…
         }
         
-        // Не нужно. DataTable.Clone() копирует и первичный ключ
+        // РќРµ РЅСѓР¶РЅРѕ. DataTable.Clone() РєРѕРїРёСЂСѓРµС‚ Рё РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
         //DataTools.SetPrimaryKey(rep.SlaveTable, DataTools.GetPrimaryKey(masterTable));
 
         rep.SlaveTable.TableName = "Repeater";
@@ -214,7 +214,7 @@ namespace FreeLibSet.Forms
         TableRepeater = rep;
 
         //if (initColumnSortModeRequired)
-        //  InitColumnSortMode(); // обновляем SortMode
+        //  InitColumnSortMode(); // РѕР±РЅРѕРІР»СЏРµРј SortMode
       }
       else
       {
@@ -244,17 +244,17 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Повторитель таблицы, вычисляющий поля с помощью EFPGridProducerColumn.GetValue()
+  /// РџРѕРІС‚РѕСЂРёС‚РµР»СЊ С‚Р°Р±Р»РёС†С‹, РІС‹С‡РёСЃР»СЏСЋС‰РёР№ РїРѕР»СЏ СЃ РїРѕРјРѕС‰СЊСЋ EFPGridProducerColumn.GetValue()
   /// </summary>
   public class EFPGridProducerDataTableRepeater : DataTableRepeater
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает повторитель
+    /// РЎРѕР·РґР°РµС‚ РїРѕРІС‚РѕСЂРёС‚РµР»СЊ
     /// </summary>
-    /// <param name="gridProducer">Генератор табличного просмотра. Должен быть задан</param>
-    /// <param name="controlProvider">Ссылка на провайдер табличного просмотра. Передается методу EFPGridProducerColumn.GetValue()</param>
+    /// <param name="gridProducer">Р“РµРЅРµСЂР°С‚РѕСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°. Р”РѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ</param>
+    /// <param name="controlProvider">РЎСЃС‹Р»РєР° РЅР° РїСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°. РџРµСЂРµРґР°РµС‚СЃСЏ РјРµС‚РѕРґСѓ EFPGridProducerColumn.GetValue()</param>
     public EFPGridProducerDataTableRepeater(EFPGridProducer gridProducer, IEFPDataView controlProvider)
     {
       if (gridProducer == null)
@@ -266,35 +266,35 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Генератор табличного просмотра.
-    /// Задается в конструкторе.
+    /// Р“РµРЅРµСЂР°С‚РѕСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ.
     /// </summary>
     public EFPGridProducer GridProducer { get { return _GridProducer; } }
     EFPGridProducer _GridProducer;
 
     /// <summary>
-    /// Провадйер управляющего элемента
+    /// РџСЂРѕРІР°РґР№РµСЂ СѓРїСЂР°РІР»СЏСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р°
     /// </summary>
     public IEFPDataView ControlProvider { get { return _ControlProvider; } }
     private IEFPDataView _ControlProvider;
 
     #endregion
 
-    #region Словарь
+    #region РЎР»РѕРІР°СЂСЊ
 
     /// <summary>
-    /// Ключ - имя столбца вычисляемого поля
-    /// Значение - столбец в EFPGridProducer
+    /// РљР»СЋС‡ - РёРјСЏ СЃС‚РѕР»Р±С†Р° РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ РїРѕР»СЏ
+    /// Р—РЅР°С‡РµРЅРёРµ - СЃС‚РѕР»Р±РµС† РІ EFPGridProducer
     /// </summary>
     private Dictionary<string, EFPGridProducerColumn> _ColumnDict;
 
     private DataTableValueArray _VA;
 
     /// <summary>
-    /// Создает внутренний словарь вычисляемых полей
+    /// РЎРѕР·РґР°РµС‚ РІРЅСѓС‚СЂРµРЅРЅРёР№ СЃР»РѕРІР°СЂСЊ РІС‹С‡РёСЃР»СЏРµРјС‹С… РїРѕР»РµР№
     /// </summary>
     protected override void OnMasterTableChanged()
     {
@@ -313,10 +313,10 @@ namespace FreeLibSet.Forms
           if (col2 == null)
             continue;
           if (col2.SourceColumnNames == null)
-            continue; // невычисляемый столбец
+            continue; // РЅРµРІС‹С‡РёСЃР»СЏРµРјС‹Р№ СЃС‚РѕР»Р±РµС†
           if (col2.SourceColumnNames.Length == 0)
-            continue; // столбец типа №п/п
-          // Проверяем, что есть все исходные столбцы
+            continue; // СЃС‚РѕР»Р±РµС† С‚РёРїР° в„–Рї/Рї
+          // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РµСЃС‚СЊ РІСЃРµ РёСЃС…РѕРґРЅС‹Рµ СЃС‚РѕР»Р±С†С‹
           bool allPresents = true;
           for (int j = 0; j < col2.SourceColumnNames.Length; j++)
           {
@@ -339,9 +339,9 @@ namespace FreeLibSet.Forms
     #region OnValueNeeded()
 
     /// <summary>
-    /// Получает значение для вычисляемого поля
+    /// РџРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РІС‹С‡РёСЃР»СЏРµРјРѕРіРѕ РїРѕР»СЏ
     /// </summary>
-    /// <param name="args">Аргументы события</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ</param>
     protected override void OnValueNeeded(DataTableRepeaterValueNeededEventArgs args)
     {
       EFPGridProducerColumn col;

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -26,9 +26,9 @@ namespace ExtDB_tests.Data
       DBxTableColumnList sut = new DBxTableColumnList();
 
       sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F1", "F2" }));
-      sut.Tables["Tab2"].Add("F8,F9"); // другая таблица
+      sut.Tables["Tab2"].Add("F8,F9"); // РґСЂСѓРіР°СЏ С‚Р°Р±Р»РёС†Р°
       sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F3" }));
-      sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F2" })); // повторное добавление
+      sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F2" })); // РїРѕРІС‚РѕСЂРЅРѕРµ РґРѕР±Р°РІР»РµРЅРёРµ
 
       DBxTableColumnName[] wanted = new DBxTableColumnName[]{
         new DBxTableColumnName("Tab1", "F1"),
@@ -69,7 +69,7 @@ namespace ExtDB_tests.Data
     {
       DBxTableColumnList sut = new DBxTableColumnList();
       sut.Tables["Tab1"].Add("F1,F2");
-      sut.Tables["Tab2"].Add("F3,F4"); // другая таблица
+      sut.Tables["Tab2"].Add("F3,F4"); // РґСЂСѓРіР°СЏ С‚Р°Р±Р»РёС†Р°
 
       sut.Tables.Remove("Tab1");
 
@@ -244,10 +244,10 @@ namespace ExtDB_tests.Data
       Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Clear(); });
 
       Assert.Throws<ObjectReadOnlyException>(delegate() { sut[new DBxTableColumnName("Tab1", "F1")] = true; });
-      Assert.Throws<ObjectReadOnlyException>(delegate() { sut[new DBxTableColumnName("Tab1", "F1")] = false; }); // действия для true и false могут выполняться по разному
+      Assert.Throws<ObjectReadOnlyException>(delegate() { sut[new DBxTableColumnName("Tab1", "F1")] = false; }); // РґРµР№СЃС‚РІРёСЏ РґР»СЏ true Рё false РјРѕРіСѓС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РїРѕ СЂР°Р·РЅРѕРјСѓ
 
       Assert.Throws<ObjectReadOnlyException>(delegate() { sut["Tab1", "F1"] = true; });
-      Assert.Throws<ObjectReadOnlyException>(delegate() { sut["Tab1", "F1"] = false; }); // действия для true и false могут выполняться по разному
+      Assert.Throws<ObjectReadOnlyException>(delegate() { sut["Tab1", "F1"] = false; }); // РґРµР№СЃС‚РІРёСЏ РґР»СЏ true Рё false РјРѕРіСѓС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РїРѕ СЂР°Р·РЅРѕРјСѓ
     }
 
     [Test]
@@ -351,7 +351,7 @@ namespace ExtDB_tests.Data
       DBxTableColumnName[] a = new DBxTableColumnName[sut.Count];
       sut.CopyTo(a, 0);
 
-      // Порядок элементов является предопределенным
+      // РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ СЏРІР»СЏРµС‚СЃСЏ РїСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅС‹Рј
       Assert.AreEqual("Tab1.F1,Tab1.F2,Tab2.F3", GetTestedArrayString(a));
     }
 
@@ -364,7 +364,7 @@ namespace ExtDB_tests.Data
 
       DBxTableColumnName[] a = sut.ToArray();
 
-      // Порядок элементов является предопределенным
+      // РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ СЏРІР»СЏРµС‚СЃСЏ РїСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅС‹Рј
       Assert.AreEqual("Tab1.F1,Tab1.F2,Tab2.F3", GetTestedArrayString(a));
     }
 
@@ -380,7 +380,7 @@ namespace ExtDB_tests.Data
       foreach (DBxTableColumnName item in sut)
         lst.Add(item);
 
-      // Порядок элементов является предопределенным
+      // РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ СЏРІР»СЏРµС‚СЃСЏ РїСЂРµРґРѕРїСЂРµРґРµР»РµРЅРЅС‹Рј
       Assert.AreEqual("Tab1.F1,Tab1.F2,Tab2.F3", GetTestedArrayString(lst.ToArray()));
     }
 

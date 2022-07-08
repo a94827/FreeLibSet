@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -13,86 +13,86 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Возможные значения свойства OrderMode в EFPDocSelGridView и EFPDocSelTextGridView
+  /// Р’РѕР·РјРѕР¶РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІР° OrderMode РІ EFPDocSelGridView Рё EFPDocSelTextGridView
   /// </summary>
   public enum EFPDocSelGridViewOrderMode
   {
     /// <summary>
-    /// Значение по умолчанию.
-    /// Порядок строк не может меняться пользователем, а определяется порядком идентификаторов
+    /// Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// РџРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РЅРµ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊСЃСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј, Р° РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РїРѕСЂСЏРґРєРѕРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ
     /// </summary>
     Fixed,
 
     /// <summary>
-    /// Порядок строк имеет значение.
-    /// Пользователь может менять порядок строк (ручная сортировка)
+    /// РџРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ.
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊ РїРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє (СЂСѓС‡РЅР°СЏ СЃРѕСЂС‚РёСЂРѕРІРєР°)
     /// </summary>
     Manual,
 
     /// <summary>
-    /// Порядок строк определяется текущей выбранной сортировкой. 
-    /// Пользователь может выбирать порядок сортировки (только для EFPDocSelGridView).
-    /// Для EFPDocSelTextGridView используется сортировка по текстовому представлению
+    /// РџРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ С‚РµРєСѓС‰РµР№ РІС‹Р±СЂР°РЅРЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРѕР№. 
+    /// РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РІС‹Р±РёСЂР°С‚СЊ РїРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё (С‚РѕР»СЊРєРѕ РґР»СЏ EFPDocSelGridView).
+    /// Р”Р»СЏ EFPDocSelTextGridView РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ С‚РµРєСЃС‚РѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ
     /// </summary>
     Natural,
   }
 
   /// <summary>
-  /// Интерфейс просмотра выборки документов.
-  /// Дополняет просмотр командами добавления элементов.
-  /// Пока что интерфейс реализуется только EFPDocSelTextGridView.
+  /// РРЅС‚РµСЂС„РµР№СЃ РїСЂРѕСЃРјРѕС‚СЂР° РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚РѕРІ.
+  /// Р”РѕРїРѕР»РЅСЏРµС‚ РїСЂРѕСЃРјРѕС‚СЂ РєРѕРјР°РЅРґР°РјРё РґРѕР±Р°РІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ.
+  /// РџРѕРєР° С‡С‚Рѕ РёРЅС‚РµСЂС„РµР№СЃ СЂРµР°Р»РёР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ EFPDocSelTextGridView.
   /// </summary>
   public interface IEFPDocSelView : IEFPDBxView
   {
     /// <summary>
-    /// Интерфейс вида документов, отображаемых в выборке
+    /// РРЅС‚РµСЂС„РµР№СЃ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ, РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹С… РІ РІС‹Р±РѕСЂРєРµ
     /// </summary>
     DocTypeUI DocTypeUI { get; }
 
     /// <summary>
-    /// Идентификаторы документов, существующих в таблице
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РІ С‚Р°Р±Р»РёС†Рµ
     /// </summary>
     Int32[] Ids { get; set;}
 
     /// <summary>
-    /// Добавляет одну строку в таблицу.
-    /// Если уже есть строка с таким идентификатором, никаких действий не выполняется.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РѕРґРЅСѓ СЃС‚СЂРѕРєСѓ РІ С‚Р°Р±Р»РёС†Сѓ.
+    /// Р•СЃР»Рё СѓР¶Рµ РµСЃС‚СЊ СЃС‚СЂРѕРєР° СЃ С‚Р°РєРёРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="id">Идентификатор добавляемого документа</param>
-    /// <returns>true, если строка была добавлена</returns>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕР±Р°РІР»СЏРµРјРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>true, РµСЃР»Рё СЃС‚СЂРѕРєР° Р±С‹Р»Р° РґРѕР±Р°РІР»РµРЅР°</returns>
     bool AddId(Int32 id);
 
     /// <summary>
-    /// Добавляет несколько строк в таблицу.
-    /// Для идентификаторов, которые уже есть в выборке, никаких действий не выполняется.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Сѓ.
+    /// Р”Р»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ РµСЃС‚СЊ РІ РІС‹Р±РѕСЂРєРµ, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="ids">Идентификаторы добавляемых документов</param>
-    /// <returns>Количество учреждений, которые добавлены</returns>
+    /// <param name="ids">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕР±Р°РІР»СЏРµРјС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>РљРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡СЂРµР¶РґРµРЅРёР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР±Р°РІР»РµРЅС‹</returns>
     int AddIds(Int32[] ids);
 
     /// <summary>
-    /// Может ли в в списке не быть ни одного документа?
+    /// РњРѕР¶РµС‚ Р»Рё РІ РІ СЃРїРёСЃРєРµ РЅРµ Р±С‹С‚СЊ РЅРё РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°?
     /// </summary>
     bool CanBeEmpty { get;set;}
   }
 
   /// <summary>
-  /// Провайдер табличного просмотра выборки документа.
-  /// Отображаются документы только одного вида.
-  /// Для документа отображается только значок и текстовое представление.
-  /// Свойство Ids используется для получения и установки списка строк.
-  /// Порядок строк может иметь или не иметь значение, в зависимости от свойства OrderMode.
+  /// РџСЂРѕРІР°Р№РґРµСЂ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РІС‹Р±РѕСЂРєРё РґРѕРєСѓРјРµРЅС‚Р°.
+  /// РћС‚РѕР±СЂР°Р¶Р°СЋС‚СЃСЏ РґРѕРєСѓРјРµРЅС‚С‹ С‚РѕР»СЊРєРѕ РѕРґРЅРѕРіРѕ РІРёРґР°.
+  /// Р”Р»СЏ РґРѕРєСѓРјРµРЅС‚Р° РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РѕРє Рё С‚РµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ.
+  /// РЎРІРѕР№СЃС‚РІРѕ Ids РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Рё СѓСЃС‚Р°РЅРѕРІРєРё СЃРїРёСЃРєР° СЃС‚СЂРѕРє.
+  /// РџРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РјРѕР¶РµС‚ РёРјРµС‚СЊ РёР»Рё РЅРµ РёРјРµС‚СЊ Р·РЅР°С‡РµРЅРёРµ, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРІРѕР№СЃС‚РІР° OrderMode.
   /// </summary>
   public class EFPDocSelTextGridView : EFPDBxGridView, IEFPDocSelView
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент табличного просмотра</param>
-    /// <param name="docTypeUI">Интерфейс вида документов</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="docTypeUI">РРЅС‚РµСЂС„РµР№СЃ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     public EFPDocSelTextGridView(EFPBaseProvider baseProvider, DataGridView control, DocTypeUI docTypeUI)
       : base(baseProvider, control, docTypeUI.UI)
     {
@@ -100,10 +100,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="docTypeUI">Интерфейс вида документов</param>
+    /// <param name="controlWithToolBar">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="docTypeUI">РРЅС‚РµСЂС„РµР№СЃ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
     public EFPDocSelTextGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DocTypeUI docTypeUI)
       : base(controlWithToolBar, docTypeUI.UI)
     {
@@ -111,12 +111,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент табличного просмотра</param>
-    /// <param name="ui">Интерфейс для доступа к документам</param>
-    /// <param name="docTypeName">Имя вида документов в просмотре</param>
+    /// <param name="baseProvider">Р‘Р°Р·РѕРІС‹Р№ РїСЂРѕРІР°Р№РґРµСЂ</param>
+    /// <param name="control">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</param>
+    /// <param name="ui">РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј</param>
+    /// <param name="docTypeName">РРјСЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ РІ РїСЂРѕСЃРјРѕС‚СЂРµ</param>
     public EFPDocSelTextGridView(EFPBaseProvider baseProvider, DataGridView control, DBUI ui, string docTypeName)
       : base(baseProvider, control, ui)
     {
@@ -124,11 +124,11 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает провайдер
+    /// РЎРѕР·РґР°РµС‚ РїСЂРѕРІР°Р№РґРµСЂ
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
-    /// <param name="ui">Интерфейс для доступа к документам</param>
-    /// <param name="DocTypeName">Имя вида документов в просмотре</param>
+    /// <param name="controlWithToolBar">РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ Рё РїР°РЅРµР»СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ</param>
+    /// <param name="ui">РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РґРѕСЃС‚СѓРїР° Рє РґРѕРєСѓРјРµРЅС‚Р°Рј</param>
+    /// <param name="DocTypeName">РРјСЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚РѕРІ РІ РїСЂРѕСЃРјРѕС‚СЂРµ</param>
     public EFPDocSelTextGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DBUI ui, string DocTypeName)
       : base(controlWithToolBar, ui)
     {
@@ -146,7 +146,7 @@ namespace FreeLibSet.Forms.Docs
       _Table = new DataTable();
       _Table.Columns.Add("Id", typeof(Int32));
       _Table.Columns.Add("Text", typeof(string));
-      _Table.Columns.Add("Order", typeof(int)); // используется в режиме сортировки Manual и Fixed
+      _Table.Columns.Add("Order", typeof(int)); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ СЂРµР¶РёРјРµ СЃРѕСЂС‚РёСЂРѕРІРєРё Manual Рё Fixed
       DataTools.SetPrimaryKey(_Table, "Id");
 
       Control.AutoGenerateColumns = false;
@@ -184,15 +184,15 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство Ids
+    #region РЎРІРѕР№СЃС‚РІРѕ Ids
 
     /// <summary>
-    /// Таблица, содержащая поля "Id", "Text" и "Order"
+    /// РўР°Р±Р»РёС†Р°, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ РїРѕР»СЏ "Id", "Text" Рё "Order"
     /// </summary>
     private DataTable _Table;
 
     /// <summary>
-    /// Идентификаторы документов, существующих в таблице
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕРєСѓРјРµРЅС‚РѕРІ, СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РІ С‚Р°Р±Р»РёС†Рµ
     /// </summary>
     public Int32[] Ids
     {
@@ -224,17 +224,17 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет одну строку в таблицу.
-    /// Если уже есть строка с таким идентификатором, никаких действий не выполняется.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РѕРґРЅСѓ СЃС‚СЂРѕРєСѓ РІ С‚Р°Р±Р»РёС†Сѓ.
+    /// Р•СЃР»Рё СѓР¶Рµ РµСЃС‚СЊ СЃС‚СЂРѕРєР° СЃ С‚Р°РєРёРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="id">Идентификатор добавляемого документа</param>
-    /// <returns>true, если строка была добавлена</returns>
+    /// <param name="id">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕР±Р°РІР»СЏРµРјРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°</param>
+    /// <returns>true, РµСЃР»Рё СЃС‚СЂРѕРєР° Р±С‹Р»Р° РґРѕР±Р°РІР»РµРЅР°</returns>
     public bool AddId(Int32 id)
     {
       if (id == 0)
         return false;
       if (_Table.Rows.Find(id) != null)
-        return false; // уже есть
+        return false; // СѓР¶Рµ РµСЃС‚СЊ
       DataRow NewRow = _Table.NewRow();
       NewRow["Id"] = id;
       NewRow["Text"] = DocTypeUI.GetTextValue(id);
@@ -245,11 +245,11 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет несколько строк в таблицу.
-    /// Для идентификаторов, которые уже есть в выборке, никаких действий не выполняется.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РЅРµСЃРєРѕР»СЊРєРѕ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Сѓ.
+    /// Р”Р»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ РµСЃС‚СЊ РІ РІС‹Р±РѕСЂРєРµ, РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
     /// </summary>
-    /// <param name="ids">Идентификаторы добавляемых документов</param>
-    /// <returns>Количество учреждений, которые добавлены</returns>
+    /// <param name="ids">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ РґРѕР±Р°РІР»СЏРµРјС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ</param>
+    /// <returns>РљРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡СЂРµР¶РґРµРЅРёР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР±Р°РІР»РµРЅС‹</returns>
     public int AddIds(Int32[] ids)
     {
       int cnt = 0;
@@ -263,11 +263,11 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Свойство CanBeEmpty
+    #region РЎРІРѕР№СЃС‚РІРѕ CanBeEmpty
 
     /// <summary>
-    /// Может ли в в списке не быть ни одного документа?
-    /// По умолчанию - true.
+    /// РњРѕР¶РµС‚ Р»Рё РІ РІ СЃРїРёСЃРєРµ РЅРµ Р±С‹С‚СЊ РЅРё РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -284,28 +284,28 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Прочие свойства
+    #region РџСЂРѕС‡РёРµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Интерфейс для работы с документами заданного вида
+    /// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґРѕРєСѓРјРµРЅС‚Р°РјРё Р·Р°РґР°РЅРЅРѕРіРѕ РІРёРґР°
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
     private DocTypeUI _DocTypeUI;
 
     /// <summary>
-    /// Имя вида документа
+    /// РРјСЏ РІРёРґР° РґРѕРєСѓРјРµРЅС‚Р°
     /// </summary>
     public string DocTypeName { get { return _DocTypeUI.DocType.Name; } }
 
     /// <summary>
-    /// Описание документа в базе данных
+    /// РћРїРёСЃР°РЅРёРµ РґРѕРєСѓРјРµРЅС‚Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     /// </summary>
     public DBxDocType DocType { get { return _DocTypeUI.DocType; } }
 
     /// <summary>
-    /// Порядок сортировки строки.
-    /// По умолчанию используется режим Fixed.
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// РџРѕСЂСЏРґРѕРє СЃРѕСЂС‚РёСЂРѕРІРєРё СЃС‚СЂРѕРєРё.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЂРµР¶РёРј Fixed.
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РґРѕ РІС‹РІРѕРґР° РїСЂРѕСЃРјРѕС‚СЂР° РЅР° СЌРєСЂР°РЅ
     /// </summary>
     public EFPDocSelGridViewOrderMode OrderMode
     {
@@ -328,10 +328,10 @@ namespace FreeLibSet.Forms.Docs
     private EFPDocSelGridViewOrderMode _OrderMode;
 
     /// <summary>
-    /// Фильтры не влияют непосредственно на строки, существующие в просмотре.
-    /// Фильтры используются при добавлении новых строк.
-    /// Также выполняется проверка прохождения строк просмотра в методе OnValidate() при закрытии просмотра.
-    /// При установке свойства обычно следует запретить редактирование фильтров пользователем, установив свойство CommandItems.CanEditFilters=false
+    /// Р¤РёР»СЊС‚СЂС‹ РЅРµ РІР»РёСЏСЋС‚ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РЅР° СЃС‚СЂРѕРєРё, СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РІ РїСЂРѕСЃРјРѕС‚СЂРµ.
+    /// Р¤РёР»СЊС‚СЂС‹ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІС‹С… СЃС‚СЂРѕРє.
+    /// РўР°РєР¶Рµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРѕРІРµСЂРєР° РїСЂРѕС…РѕР¶РґРµРЅРёСЏ СЃС‚СЂРѕРє РїСЂРѕСЃРјРѕС‚СЂР° РІ РјРµС‚РѕРґРµ OnValidate() РїСЂРё Р·Р°РєСЂС‹С‚РёРё РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РџСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° РѕР±С‹С‡РЅРѕ СЃР»РµРґСѓРµС‚ Р·Р°РїСЂРµС‚РёС‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ С„РёР»СЊС‚СЂРѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј, СѓСЃС‚Р°РЅРѕРІРёРІ СЃРІРѕР№СЃС‚РІРѕ CommandItems.CanEditFilters=false
     /// </summary>
     public new GridFilters Filters
     {
@@ -345,10 +345,10 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region OnShown и OnHidden
+    #region OnShown Рё OnHidden
 
     /// <summary>
-    /// Вызывается при первом показе формы на экране
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРµСЂРІРѕРј РїРѕРєР°Р·Рµ С„РѕСЂРјС‹ РЅР° СЌРєСЂР°РЅРµ
     /// </summary>
     protected override void OnCreated()
     {
@@ -375,8 +375,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается при показе таблицы.
-    /// Создает объект DocumentViewhandler
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРѕРєР°Р·Рµ С‚Р°Р±Р»РёС†С‹.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ DocumentViewhandler
     /// </summary>
     protected override void OnAttached()
     {
@@ -388,13 +388,13 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается, когда форма с управляющим элементом закрывается.
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° С„РѕСЂРјР° СЃ СѓРїСЂР°РІР»СЏСЋС‰РёРј СЌР»РµРјРµРЅС‚РѕРј Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ.
     /// </summary>
     protected override void OnDetached()
     {
       if (_ViewHandler != null)
       {
-        _ViewHandler.Owner = null; // разрыв ссылки, чтобы текущий просмотр мог быть удален
+        _ViewHandler.Owner = null; // СЂР°Р·СЂС‹РІ СЃСЃС‹Р»РєРё, С‡С‚РѕР±С‹ С‚РµРєСѓС‰РёР№ РїСЂРѕСЃРјРѕС‚СЂ РјРѕРі Р±С‹С‚СЊ СѓРґР°Р»РµРЅ
         DocTypeUI.Browsers.Remove(_ViewHandler);
         _ViewHandler = null;
       }
@@ -403,7 +403,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Оформление просмотра
+    #region РћС„РѕСЂРјР»РµРЅРёРµ РїСЂРѕСЃРјРѕС‚СЂР°
 
     void GridHandler_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
@@ -417,13 +417,13 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Редактирование
+    #region Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
 
     /// <summary>
-    /// Выполняет редактирование.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ.
     /// </summary>
-    /// <param name="args">Игнорируется</param>
-    /// <returns>Всегда true, т.к. редактирование по месту выполняться не должно</returns>
+    /// <param name="args">РРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ</param>
+    /// <returns>Р’СЃРµРіРґР° true, С‚.Рє. СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РїРѕ РјРµСЃС‚Сѓ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РЅРµ РґРѕР»Р¶РЅРѕ</returns>
     protected override bool OnEditData(EventArgs args)
     {
       //base.OnEditData(Args);
@@ -432,7 +432,7 @@ namespace FreeLibSet.Forms.Docs
       switch (State)
       {
         case EFPDataGridViewState.Insert:
-          Int32[] selIds = DocTypeUI.SelectDocs("Добавление документов \"" + DocType.PluralTitle + "\" в просмотр", this.Filters);
+          Int32[] selIds = DocTypeUI.SelectDocs("Р”РѕР±Р°РІР»РµРЅРёРµ РґРѕРєСѓРјРµРЅС‚РѕРІ \"" + DocType.PluralTitle + "\" РІ РїСЂРѕСЃРјРѕС‚СЂ", this.Filters);
           if (selIds.Length == 0)
             return true;
           for (int i = 0; i < selIds.Length; i++)
@@ -450,7 +450,7 @@ namespace FreeLibSet.Forms.Docs
           break;
         case EFPDataGridViewState.Edit:
           id = CurrentId;
-          if (DocTypeUI.SelectDoc(ref id, "Изменение ссылки на документ", false, this.Filters))
+          if (DocTypeUI.SelectDoc(ref id, "РР·РјРµРЅРµРЅРёРµ СЃСЃС‹Р»РєРё РЅР° РґРѕРєСѓРјРµРЅС‚", false, this.Filters))
           {
             CurrentDataRow.Delete();
             AddId(id);
@@ -459,18 +459,18 @@ namespace FreeLibSet.Forms.Docs
           }
           break;
         default:
-          EFPApp.ShowTempMessage("Неизвестный режим редактирования");
+          EFPApp.ShowTempMessage("РќРµРёР·РІРµСЃС‚РЅС‹Р№ СЂРµР¶РёРј СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ");
           break;
       }
       return true;
     }
 
     /// <summary>
-    /// Внешний инициализатор для новых документов
-    /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове ClientDocType.PerformEdit()) 
-    /// будет использован этот инициализатор вместо текущих фильтров (DocGridHandler.DocFilters)
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// Р’РЅРµС€РЅРёР№ РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂ РґР»СЏ РЅРѕРІС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‚Рѕ РїСЂРё СЃРѕР·РґР°РЅРёРё РЅРѕРІРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РІ РєР°С‡РµСЃС‚РІРµ
+    /// РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂР° Р·РЅР°С‡РµРЅРёР№ РїРѕР»РµР№ (Р°СЂРіСѓРјРµРЅС‚ Caller РїСЂРё РІС‹Р·РѕРІРµ ClientDocType.PerformEdit()) 
+    /// Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅ СЌС‚РѕС‚ РёРЅРёС†РёР°Р»РёР·Р°С‚РѕСЂ РІРјРµСЃС‚Рѕ С‚РµРєСѓС‰РёС… С„РёР»СЊС‚СЂРѕРІ (DocGridHandler.DocFilters)
+    /// РЎРІРѕР№СЃС‚РІРѕ РјРѕР¶РµС‚ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РґРѕ РІС‹РІРѕРґР° РїСЂРѕСЃРјРѕС‚СЂР° РЅР° СЌРєСЂР°РЅ
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
     {
@@ -485,29 +485,29 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Выборка документов
+    #region Р’С‹Р±РѕСЂРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ
 
     /// <summary>
-    /// Возвращает true
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true
     /// </summary>
     public override bool HasGetDocSelHandler { get { return true; } }
 
     /// <summary>
-    /// Вызывает DocTypeUI.PerformgetDocSel() для идентификаторов документов в просмотре.
-    /// Затем вызывает обработчик события GetDocSel, если он установлен.
+    /// Р’С‹Р·С‹РІР°РµС‚ DocTypeUI.PerformgetDocSel() РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґРѕРєСѓРјРµРЅС‚РѕРІ РІ РїСЂРѕСЃРјРѕС‚СЂРµ.
+    /// Р—Р°С‚РµРј РІС‹Р·С‹РІР°РµС‚ РѕР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ GetDocSel, РµСЃР»Рё РѕРЅ СѓСЃС‚Р°РЅРѕРІР»РµРЅ.
     /// </summary>
-    /// <param name="args">Аргументы события GetDocSel</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ GetDocSel</param>
     protected override void OnGetDocSel(EFPDBxGridViewDocSelEventArgs args)
     {
       Int32[] ids = DataTools.GetIds(args.DataRows);
       DocTypeUI.PerformGetDocSel(args.DocSel, ids, args.Reason);
 
-      base.OnGetDocSel(args); // если есть пользовательский обработчик
+      base.OnGetDocSel(args); // РµСЃР»Рё РµСЃС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РѕР±СЂР°Р±РѕС‚С‡РёРє
     }
 
     #endregion
 
-    #region Буфер обмена
+    #region Р‘СѓС„РµСЂ РѕР±РјРµРЅР°
 
     void GridHandler_Cut(object sender, EventArgs args)
     {
@@ -532,16 +532,16 @@ namespace FreeLibSet.Forms.Docs
           cnt++;
       }
       if (cnt == 0)
-        EFPApp.ShowTempMessage("Все документы \"" + DocType.PluralTitle + "\" в буфере обмена (" + ids.Length.ToString() + " шт.) уже есть в списке");
+        EFPApp.ShowTempMessage("Р’СЃРµ РґРѕРєСѓРјРµРЅС‚С‹ \"" + DocType.PluralTitle + "\" РІ Р±СѓС„РµСЂРµ РѕР±РјРµРЅР° (" + ids.Length.ToString() + " С€С‚.) СѓР¶Рµ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ");
     }
 
     #endregion
 
-    #region Реализация DocumentViewHandler
+    #region Р РµР°Р»РёР·Р°С†РёСЏ DocumentViewHandler
 
     private class IntDocumentViewHandler : DocumentViewHandler
     {
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public EFPDocSelTextGridView Owner;
 
@@ -549,7 +549,7 @@ namespace FreeLibSet.Forms.Docs
 
       #endregion
 
-      #region Переопределенные методы и свойства
+      #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹ Рё СЃРІРѕР№СЃС‚РІР°
 
       public override DocTypeUI DocTypeUI
       {
@@ -573,10 +573,10 @@ namespace FreeLibSet.Forms.Docs
         }
       }
 
-#pragma warning disable 0219 // TODO: Убрать лишние переменные
+#pragma warning disable 0219 // TODO: РЈР±СЂР°С‚СЊ Р»РёС€РЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 
       /// <summary>
-      /// Обновление табличного просмотра
+      /// РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°
       /// </summary>
       /// <param name="dataSet"></param>
       /// <param name="isCaller"></param>
@@ -586,7 +586,7 @@ namespace FreeLibSet.Forms.Docs
           return;
 
         if (!dataSet.Tables.Contains(Owner.DocType.Name))
-          return; // Нет таблицы
+          return; // РќРµС‚ С‚Р°Р±Р»РёС†С‹
 
         DataTable srcTable = dataSet.Tables[Owner.DocType.Name];
         DataRow resRow;
@@ -603,7 +603,7 @@ namespace FreeLibSet.Forms.Docs
               resRow = Owner._Table.Rows.Find(docId);
               if (resRow == null)
                 continue;
-              Owner.InvalidateDataRow(resRow); // не Update
+              Owner.InvalidateDataRow(resRow); // РЅРµ Update
               changed = true;
               break;
           }
@@ -653,13 +653,13 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Возвращает Owner.ToString(), если объект присоединен к просмотру
+      /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Owner.ToString(), РµСЃР»Рё РѕР±СЉРµРєС‚ РїСЂРёСЃРѕРµРґРёРЅРµРЅ Рє РїСЂРѕСЃРјРѕС‚СЂСѓ
       /// </summary>
-      /// <returns>Текстовое представление для табличного просмотра</returns>
+      /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°</returns>
       public override string ToString()
       {
         if (Owner == null)
-          return "[ Отключен от просмотра ]";
+          return "[ РћС‚РєР»СЋС‡РµРЅ РѕС‚ РїСЂРѕСЃРјРѕС‚СЂР° ]";
         else
           return Owner.ToString();
       }
@@ -668,15 +668,15 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Обработчик просмотра документов, связанный с текущим просмотром.
-    /// Свойство имеет значение не null, когда просмотр выведен на экран
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РїСЂРѕСЃРјРѕС‚СЂР° РґРѕРєСѓРјРµРЅС‚РѕРІ, СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ С‚РµРєСѓС‰РёРј РїСЂРѕСЃРјРѕС‚СЂРѕРј.
+    /// РЎРІРѕР№СЃС‚РІРѕ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ РЅРµ null, РєРѕРіРґР° РїСЂРѕСЃРјРѕС‚СЂ РІС‹РІРµРґРµРЅ РЅР° СЌРєСЂР°РЅ
     /// </summary>
     public DocumentViewHandler ViewHandler { get { return _ViewHandler; } }
     private IntDocumentViewHandler _ViewHandler;
 
     /// <summary>
-    /// Идентификатор просмотра.
-    /// Используется DocumentViewHandler
+    /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРѕСЃРјРѕС‚СЂР°.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ DocumentViewHandler
     /// </summary>
     public Guid BrowserGuid
     {
@@ -687,20 +687,20 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Проверка
+    #region РџСЂРѕРІРµСЂРєР°
 
     /// <summary>
-    /// Проверяет корректность данных.
-    /// Если выполняется закрытие формы, свойство CanBeEmpty=false и нет ни одного документа в просмотре, устанавливается признак ошибки
+    /// РџСЂРѕРІРµСЂСЏРµС‚ РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ РґР°РЅРЅС‹С….
+    /// Р•СЃР»Рё РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р·Р°РєСЂС‹С‚РёРµ С„РѕСЂРјС‹, СЃРІРѕР№СЃС‚РІРѕ CanBeEmpty=false Рё РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° РІ РїСЂРѕСЃРјРѕС‚СЂРµ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РїСЂРёР·РЅР°Рє РѕС€РёР±РєРё
     /// </summary>
     protected override void OnValidate()
     {
       base.OnValidate();
       //if (BaseProvider.FormProvider.ValidateReason == EFPFormValidateReason.Closing)
       //{
-      // 09.07.2019 - Проверяем всегда
+      // 09.07.2019 - РџСЂРѕРІРµСЂСЏРµРј РІСЃРµРіРґР°
       if ((!CanBeEmpty) && _Table.DefaultView.Count == 0)
-        base.SetError("Не выбрано ни одного документа");
+        base.SetError("РќРµ РІС‹Р±СЂР°РЅРѕ РЅРё РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°");
       //}
       if (BaseProvider.FormProvider.ValidateReason == EFPFormValidateReason.Closing)
         ValidateFilters();
@@ -714,18 +714,18 @@ namespace FreeLibSet.Forms.Docs
         return;
 
       IdList badIds;
-      EFPApp.BeginWait("Проверка выбранных документов", "Filter");
+      EFPApp.BeginWait("РџСЂРѕРІРµСЂРєР° РІС‹Р±СЂР°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ", "Filter");
       try
       {
-        // Список полей для фильтра
+        // РЎРїРёСЃРѕРє РїРѕР»РµР№ РґР»СЏ С„РёР»СЊС‚СЂР°
         DBxColumnList colList = new DBxColumnList();
-        colList.Add("Id"); // нужен нам для поиска
+        colList.Add("Id"); // РЅСѓР¶РµРЅ РЅР°Рј РґР»СЏ РїРѕРёСЃРєР°
         Filters.GetColumnNames(colList);
-        // Загружаем значения
+        // Р—Р°РіСЂСѓР¶Р°РµРј Р·РЅР°С‡РµРЅРёСЏ
         DataTable table2 = DocTypeUI.TableCache.CreateTable(this.Ids, new DBxColumns(colList));
         DataTableValueArray va = new DataTableValueArray(table2);
 
-        // Проверяем попадание
+        // РџСЂРѕРІРµСЂСЏРµРј РїРѕРїР°РґР°РЅРёРµ
         badIds = new IdList();
         foreach (DataRow row in table2.Rows)
         {
@@ -743,7 +743,7 @@ namespace FreeLibSet.Forms.Docs
       if (badIds.Count > 0)
       {
         this.SelectedIds = badIds.ToArray();
-        SetError("Выбранные документы (" + badIds.Count.ToString() + " из " + Control.RowCount.ToString() + ") не проходят условие фильтра");
+        SetError("Р’С‹Р±СЂР°РЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ (" + badIds.Count.ToString() + " РёР· " + Control.RowCount.ToString() + ") РЅРµ РїСЂРѕС…РѕРґСЏС‚ СѓСЃР»РѕРІРёРµ С„РёР»СЊС‚СЂР°");
       }
     }
 

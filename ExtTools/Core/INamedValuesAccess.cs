@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,57 +11,57 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Core
 {
   /// <summary>
-  /// Интерфейс доступа только для чтения к именованным значениям.
-  /// Порядок элементов в коллекции считается неопределенным.
+  /// РРЅС‚РµСЂС„РµР№СЃ РґРѕСЃС‚СѓРїР° С‚РѕР»СЊРєРѕ РґР»СЏ С‡С‚РµРЅРёСЏ Рє РёРјРµРЅРѕРІР°РЅРЅС‹Рј Р·РЅР°С‡РµРЅРёСЏРј.
+  /// РџРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ РІ РєРѕР»Р»РµРєС†РёРё СЃС‡РёС‚Р°РµС‚СЃСЏ РЅРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рј.
   /// </summary>
   public interface INamedValuesAccess
   {
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Получить значение с заданным именем
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј
     /// </summary>
-    /// <param name="name">Имя. Не может быть пустой строкой</param>
-    /// <returns>Значение. Что происходит, если запрошено несуществующее имя, зависит от реализации</returns>
+    /// <param name="name">РРјСЏ. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРѕР№</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ. Р§С‚Рѕ РїСЂРѕРёСЃС…РѕРґРёС‚, РµСЃР»Рё Р·Р°РїСЂРѕС€РµРЅРѕ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРµ РёРјСЏ, Р·Р°РІРёСЃРёС‚ РѕС‚ СЂРµР°Р»РёР·Р°С†РёРё</returns>
     object GetValue(string name);
 
     /// <summary>
-    /// Определить наличие заданного имени в коллекции.
+    /// РћРїСЂРµРґРµР»РёС‚СЊ РЅР°Р»РёС‡РёРµ Р·Р°РґР°РЅРЅРѕРіРѕ РёРјРµРЅРё РІ РєРѕР»Р»РµРєС†РёРё.
     /// </summary>
-    /// <param name="name">Проверяемое имя</param>
-    /// <returns>True, если в коллекции есть значение с таким именем</returns>
+    /// <param name="name">РџСЂРѕРІРµСЂСЏРµРјРѕРµ РёРјСЏ</param>
+    /// <returns>True, РµСЃР»Рё РІ РєРѕР»Р»РµРєС†РёРё РµСЃС‚СЊ Р·РЅР°С‡РµРЅРёРµ СЃ С‚Р°РєРёРј РёРјРµРЅРµРј</returns>
     bool Contains(string name);
 
     /// <summary>
-    /// Получить список всех имен, которые есть в коллекции
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РІСЃРµС… РёРјРµРЅ, РєРѕС‚РѕСЂС‹Рµ РµСЃС‚СЊ РІ РєРѕР»Р»РµРєС†РёРё
     /// </summary>
-    /// <returns>Массив имен</returns>
+    /// <returns>РњР°СЃСЃРёРІ РёРјРµРЅ</returns>
     string[] GetNames();
 
     #endregion
   }
 
   /// <summary>
-  /// Пустая реализация интерфейса INamedValuesAccess
+  /// РџСѓСЃС‚Р°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° INamedValuesAccess
   /// </summary>
   public sealed class DummyNamedValues:INamedValuesAccess
   {
     #region INamedValuesAccess Members
 
     /// <summary>
-    /// Выбрасывает исключение
+    /// Р’С‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ
     /// </summary>
-    /// <param name="name">Не используется</param>
-    /// <returns>Не возвращается</returns>
+    /// <param name="name">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
+    /// <returns>РќРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ</returns>
     public object GetValue(string name)
     {
       throw new NotImplementedException();
     }
 
     /// <summary>
-    /// Возвращает false
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ false
     /// </summary>
-    /// <param name="name">Не используется</param>
+    /// <param name="name">РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ</param>
     /// <returns>false</returns>
     public bool Contains(string name)
     {
@@ -69,7 +69,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// ВОзвращает пустой массив
+    /// Р’РћР·РІСЂР°С‰Р°РµС‚ РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ
     /// </summary>
     /// <returns></returns>
     public string[] GetNames()
@@ -84,33 +84,33 @@ namespace FreeLibSet.Core
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Расширение интерфейса INamedValuesAccess для доступа к значениям строки DataRow.
-  /// Реализуется классами DataTableValueArray и
+  /// Р Р°СЃС€РёСЂРµРЅРёРµ РёРЅС‚РµСЂС„РµР№СЃР° INamedValuesAccess РґР»СЏ РґРѕСЃС‚СѓРїР° Рє Р·РЅР°С‡РµРЅРёСЏРј СЃС‚СЂРѕРєРё DataRow.
+  /// Р РµР°Р»РёР·СѓРµС‚СЃСЏ РєР»Р°СЃСЃР°РјРё DataTableValueArray Рё
   /// </summary>
   public interface IDataRowNamedValuesAccess : INamedValuesAccess
   {
     /// <summary>
-    /// Текущая строка.
-    /// Свойство должно быть установлено перед доступом к значениям.
+    /// РўРµРєСѓС‰Р°СЏ СЃС‚СЂРѕРєР°.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РїРµСЂРµРґ РґРѕСЃС‚СѓРїРѕРј Рє Р·РЅР°С‡РµРЅРёСЏРј.
     /// </summary>
     DataRow CurrentRow { get; set;}
   }
 
   /// <summary>
-  /// Реализация интерфейса INamedValuesAccess для строк в таблице DataTable.
-  /// После создания объектов должно устанавливаться свойство CurrentRow, после чего можно получать доступ к значениям полей.
-  /// Класс не является потокобезопасным.
-  /// Если нет уверенности, что строки относятся к одной таблице, используйте класс DataRowValueArray
+  /// Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° INamedValuesAccess РґР»СЏ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ DataTable.
+  /// РџРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ РґРѕР»Р¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ СЃРІРѕР№СЃС‚РІРѕ CurrentRow, РїРѕСЃР»Рµ С‡РµРіРѕ РјРѕР¶РЅРѕ РїРѕР»СѓС‡Р°С‚СЊ РґРѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј РїРѕР»РµР№.
+  /// РљР»Р°СЃСЃ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
+  /// Р•СЃР»Рё РЅРµС‚ СѓРІРµСЂРµРЅРЅРѕСЃС‚Рё, С‡С‚Рѕ СЃС‚СЂРѕРєРё РѕС‚РЅРѕСЃСЏС‚СЃСЏ Рє РѕРґРЅРѕР№ С‚Р°Р±Р»РёС†Рµ, РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РєР»Р°СЃСЃ DataRowValueArray
   /// </summary>
   public class DataTableValueArray : IDataRowNamedValuesAccess
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект.
-    /// После создания объекта нельзя добавлять столбцы в таблицу.
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚.
+    /// РџРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р° РЅРµР»СЊР·СЏ РґРѕР±Р°РІР»СЏС‚СЊ СЃС‚РѕР»Р±С†С‹ РІ С‚Р°Р±Р»РёС†Сѓ.
     /// </summary>
-    /// <param name="table">Таблица данных</param>
+    /// <param name="table">РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С…</param>
     public DataTableValueArray(DataTable table)
     {
       if (table == null)
@@ -120,18 +120,18 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Таблица данных, заданная в конструкторе
+    /// РўР°Р±Р»РёС†Р° РґР°РЅРЅС‹С…, Р·Р°РґР°РЅРЅР°СЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
     /// </summary>
     public DataTable Table { get { return _Table; } }
     private DataTable _Table;
 
     /// <summary>
-    /// Текущая строка.
-    /// Свойство должно быть установлено перед доступом к значениям.
-    /// Разрешается присваивать ссылки только на строки, относящиеся к таблице Table.
+    /// РўРµРєСѓС‰Р°СЏ СЃС‚СЂРѕРєР°.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РїРµСЂРµРґ РґРѕСЃС‚СѓРїРѕРј Рє Р·РЅР°С‡РµРЅРёСЏРј.
+    /// Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РїСЂРёСЃРІР°РёРІР°С‚СЊ СЃСЃС‹Р»РєРё С‚РѕР»СЊРєРѕ РЅР° СЃС‚СЂРѕРєРё, РѕС‚РЅРѕСЃСЏС‰РёРµСЃСЏ Рє С‚Р°Р±Р»РёС†Рµ Table.
     /// </summary>
     public DataRow CurrentRow
     {
@@ -141,7 +141,7 @@ namespace FreeLibSet.Data
         if (value != null)
         {
           if (!Object.ReferenceEquals(value.Table, _Table))
-            throw new ArgumentException("Строка относится к другой таблице");
+            throw new ArgumentException("РЎС‚СЂРѕРєР° РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РґСЂСѓРіРѕР№ С‚Р°Р±Р»РёС†Рµ");
         }
         _CurrentRow = value;
       }
@@ -149,7 +149,7 @@ namespace FreeLibSet.Data
     private DataRow _CurrentRow;
 
     /// <summary>
-    /// Индексатор имен столбцов стаблицы
+    /// РРЅРґРµРєСЃР°С‚РѕСЂ РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ СЃС‚Р°Р±Р»РёС†С‹
     /// </summary>
     protected StringArrayIndexer ColumnNameIndexer
     {
@@ -164,9 +164,9 @@ namespace FreeLibSet.Data
     private StringArrayIndexer _ColumnNameIndexer;
 
     /// <summary>
-    /// Возвращает имя таблицы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <returns>Текстовое представление для отладки</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РѕС‚Р»Р°РґРєРё</returns>
     public override string ToString()
     {
       return Table.ToString();
@@ -177,11 +177,11 @@ namespace FreeLibSet.Data
     #region INamedValuesAccess Members
 
     /// <summary>
-    /// Получить значение поля из текущей строки.
-    /// Свойство CurrentRow должно быть предварительно установлено.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РёР· С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕРєРё.
+    /// РЎРІРѕР№СЃС‚РІРѕ CurrentRow РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
     /// </summary>
-    /// <param name="name">Имя поля. Чувствительно к регистру</param>
-    /// <returns>Значение поля</returns>
+    /// <param name="name">РРјСЏ РїРѕР»СЏ. Р§СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕ Рє СЂРµРіРёСЃС‚СЂСѓ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</returns>
     public object GetValue(string name)
     {
       int p = ColumnNameIndexer.IndexOf(name);
@@ -190,25 +190,25 @@ namespace FreeLibSet.Data
         if (String.IsNullOrEmpty(name))
           throw new ArgumentNullException("name");
         else
-          throw new ArgumentException("Таблица " + _Table.TableName + " не содержит столбца \"" + name + "\"", "name");
+          throw new ArgumentException("РўР°Р±Р»РёС†Р° " + _Table.TableName + " РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±С†Р° \"" + name + "\"", "name");
       }
       if (_CurrentRow == null)
-        throw new NullReferenceException("Свойство CurrentRow не установлено");
+        throw new NullReferenceException("РЎРІРѕР№СЃС‚РІРѕ CurrentRow РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ");
       return _CurrentRow[p];
     }
 
     /// <summary>
-    /// Возвращает true, если таблица содержит столбец с заданным именем
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚Р°Р±Р»РёС†Р° СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±РµС† СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј
     /// </summary>
-    /// <param name="name">Имя поля</param>
-    /// <returns>Наличие поля</returns>
+    /// <param name="name">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>РќР°Р»РёС‡РёРµ РїРѕР»СЏ</returns>
     public bool Contains(string name)
     {
       return ColumnNameIndexer.Contains(name);
     }
 
     /// <summary>
-    /// Возвращает список имен всех столбцов
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РёРјРµРЅ РІСЃРµС… СЃС‚РѕР»Р±С†РѕРІ
     /// </summary>
     /// <returns></returns>
     public string[] GetNames()
@@ -223,18 +223,18 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Реализация интерфейса INamedValuesAccess для строк в таблице DataTable.
-  /// После создания объектов должно устанавливаться свойство CurrentRow, после чего можно получать доступ к значениям полей.
-  /// Если строка не установлена, считается, что массив значений пустой
-  /// Класс не является потокобезопасным.
+  /// Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° INamedValuesAccess РґР»СЏ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ DataTable.
+  /// РџРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ РґРѕР»Р¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ СЃРІРѕР№СЃС‚РІРѕ CurrentRow, РїРѕСЃР»Рµ С‡РµРіРѕ РјРѕР¶РЅРѕ РїРѕР»СѓС‡Р°С‚СЊ РґРѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЏРј РїРѕР»РµР№.
+  /// Р•СЃР»Рё СЃС‚СЂРѕРєР° РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅР°, СЃС‡РёС‚Р°РµС‚СЃСЏ, С‡С‚Рѕ РјР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№ РїСѓСЃС‚РѕР№
+  /// РљР»Р°СЃСЃ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј.
   /// </summary>
   public class DataRowValueArray : IDataRowNamedValuesAccess
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект.
-    /// Пока строка не установлена, считается, что массив значений пустой
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚.
+    /// РџРѕРєР° СЃС‚СЂРѕРєР° РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅР°, СЃС‡РёС‚Р°РµС‚СЃСЏ, С‡С‚Рѕ РјР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёР№ РїСѓСЃС‚РѕР№
     /// </summary>
     public DataRowValueArray()
     {
@@ -242,14 +242,14 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     private DataTable _Table;
 
     /// <summary>
-    /// Текущая строка.
-    /// Свойство должно быть установлено перед доступом к значениям.
-    /// Разрешается присваивать ссылки на строки, относящиеся к разным таблицам
+    /// РўРµРєСѓС‰Р°СЏ СЃС‚СЂРѕРєР°.
+    /// РЎРІРѕР№СЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РїРµСЂРµРґ РґРѕСЃС‚СѓРїРѕРј Рє Р·РЅР°С‡РµРЅРёСЏРј.
+    /// Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РїСЂРёСЃРІР°РёРІР°С‚СЊ СЃСЃС‹Р»РєРё РЅР° СЃС‚СЂРѕРєРё, РѕС‚РЅРѕСЃСЏС‰РёРµСЃСЏ Рє СЂР°Р·РЅС‹Рј С‚Р°Р±Р»РёС†Р°Рј
     /// </summary>
     public DataRow CurrentRow
     {
@@ -270,8 +270,8 @@ namespace FreeLibSet.Data
     private DataRow _CurrentRow;
 
     /// <summary>
-    /// Индексатор имен столбцов в таблице.
-    /// Может меняться при установке свойства CurrentRow
+    /// РРЅРґРµРєСЃР°С‚РѕСЂ РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ РІ С‚Р°Р±Р»РёС†Рµ.
+    /// РњРѕР¶РµС‚ РјРµРЅСЏС‚СЊСЃСЏ РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° CurrentRow
     /// </summary>
     protected StringArrayIndexer ColumnNameIndexer
     {
@@ -286,9 +286,9 @@ namespace FreeLibSet.Data
     private StringArrayIndexer _ColumnNameIndexer;
 
     /// <summary>
-    /// Возвращает имя таблицы
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <returns>Текстовое представление для отладки</returns>
+    /// <returns>РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РґР»СЏ РѕС‚Р»Р°РґРєРё</returns>
     public override string ToString()
     {
       if (_Table == null)
@@ -302,15 +302,15 @@ namespace FreeLibSet.Data
     #region INamedValuesAccess Members
 
     /// <summary>
-    /// Получить значение поля из текущей строки.
-    /// Свойство CurrentRow должно быть предварительно установлено.
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РёР· С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕРєРё.
+    /// РЎРІРѕР№СЃС‚РІРѕ CurrentRow РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
     /// </summary>
-    /// <param name="name">Имя поля. Чувствительно к регистру</param>
-    /// <returns>Значение поля</returns>
+    /// <param name="name">РРјСЏ РїРѕР»СЏ. Р§СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕ Рє СЂРµРіРёСЃС‚СЂСѓ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</returns>
     public object GetValue(string name)
     {
       if (_CurrentRow == null)
-        throw new NullReferenceException("Свойство CurrentRow не установлено");
+        throw new NullReferenceException("РЎРІРѕР№СЃС‚РІРѕ CurrentRow РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ");
 
       int p = ColumnNameIndexer.IndexOf(name);
       if (p < 0)
@@ -318,16 +318,16 @@ namespace FreeLibSet.Data
         if (String.IsNullOrEmpty(name))
           throw new ArgumentNullException("name");
         else
-          throw new ArgumentException("Таблица " + _Table.TableName + " не содержит столбца \"" + name + "\"", "name");
+          throw new ArgumentException("РўР°Р±Р»РёС†Р° " + _Table.TableName + " РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±С†Р° \"" + name + "\"", "name");
       }
       return _CurrentRow[p];
     }
 
     /// <summary>
-    /// Возвращает true, если таблица содержит столбец с заданным именем
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё С‚Р°Р±Р»РёС†Р° СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±РµС† СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј
     /// </summary>
-    /// <param name="name">Имя поля</param>
-    /// <returns>Наличие поля</returns>
+    /// <param name="name">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>РќР°Р»РёС‡РёРµ РїРѕР»СЏ</returns>
     public bool Contains(string name)
     {
       if (_CurrentRow == null)
@@ -337,7 +337,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает список имен всех столбцов
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РёРјРµРЅ РІСЃРµС… СЃС‚РѕР»Р±С†РѕРІ
     /// </summary>
     /// <returns></returns>
     public string[] GetNames()

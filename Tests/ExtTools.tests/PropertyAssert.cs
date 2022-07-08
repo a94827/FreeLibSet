@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -18,44 +18,44 @@ namespace ExtTools_tests
     #region ProperiesEqual()
 
     /// <summary>
-    /// Проверяет, что объекты имеют одинаковый тип или тип актуального объекта выводится из типа ожидаемого объекта.
-    /// Далее проверяются значения всех public-свойств.
-    /// Рекурсивная проверка не выполняется.
-    /// Перечислитель не учитывается.
+    /// РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РѕР±СЉРµРєС‚С‹ РёРјРµСЋС‚ РѕРґРёРЅР°РєРѕРІС‹Р№ С‚РёРї РёР»Рё С‚РёРї Р°РєС‚СѓР°Р»СЊРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІС‹РІРѕРґРёС‚СЃСЏ РёР· С‚РёРїР° РѕР¶РёРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р”Р°Р»РµРµ РїСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РІСЃРµС… public-СЃРІРѕР№СЃС‚РІ.
+    /// Р РµРєСѓСЂСЃРёРІРЅР°СЏ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="expected">Ожидаемый объект</param>
-    /// <param name="actual">Актуальный объект</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="args">Аргументы для форматирования сообщения</param>
+    /// <param name="expected">РћР¶РёРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="actual">РђРєС‚СѓР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public static void ProperiesEqual(object expected, object actual)
     {
       ProperiesEqual(expected, actual, String.Empty, DataTools.EmptyObjects);
     }
 
     /// <summary>
-    /// Проверяет, что объекты имеют одинаковый тип или тип актуального объекта выводится из типа ожидаемого объекта.
-    /// Далее проверяются значения всех public-свойств.
-    /// Рекурсивная проверка не выполняется.
-    /// Перечислитель не учитывается.
+    /// РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РѕР±СЉРµРєС‚С‹ РёРјРµСЋС‚ РѕРґРёРЅР°РєРѕРІС‹Р№ С‚РёРї РёР»Рё С‚РёРї Р°РєС‚СѓР°Р»СЊРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІС‹РІРѕРґРёС‚СЃСЏ РёР· С‚РёРїР° РѕР¶РёРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р”Р°Р»РµРµ РїСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РІСЃРµС… public-СЃРІРѕР№СЃС‚РІ.
+    /// Р РµРєСѓСЂСЃРёРІРЅР°СЏ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="expected">Ожидаемый объект</param>
-    /// <param name="actual">Актуальный объект</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expected">РћР¶РёРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="actual">РђРєС‚СѓР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public static void ProperiesEqual(object expected, object actual, string message)
     {
       ProperiesEqual(expected, actual, message, DataTools.EmptyObjects);
     }
 
     /// <summary>
-    /// Проверяет, что объекты имеют одинаковый тип или тип актуального объекта выводится из типа ожидаемого объекта.
-    /// Далее проверяются значения всех public-свойств.
-    /// Рекурсивная проверка не выполняется.
-    /// Перечислитель не учитывается.
+    /// РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РѕР±СЉРµРєС‚С‹ РёРјРµСЋС‚ РѕРґРёРЅР°РєРѕРІС‹Р№ С‚РёРї РёР»Рё С‚РёРї Р°РєС‚СѓР°Р»СЊРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІС‹РІРѕРґРёС‚СЃСЏ РёР· С‚РёРїР° РѕР¶РёРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р”Р°Р»РµРµ РїСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РІСЃРµС… public-СЃРІРѕР№СЃС‚РІ.
+    /// Р РµРєСѓСЂСЃРёРІРЅР°СЏ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="expected">Ожидаемый объект</param>
-    /// <param name="actual">Актуальный объект</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="args">Аргументы для форматирования сообщения</param>
+    /// <param name="expected">РћР¶РёРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="actual">РђРєС‚СѓР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public static void ProperiesEqual(object expected, object actual, string message, params object[] args)
     {
       ProperiesEqualExcept(expected, actual, DataTools.EmptyStrings, message, args);
@@ -66,53 +66,53 @@ namespace ExtTools_tests
     #region ProperiesEqualExcept()
 
     /// <summary>
-    /// Проверяет, что объекты имеют одинаковый тип или тип актуального объекта выводится из типа ожидаемого объекта.
-    /// Далее проверяются значения всех public-свойств, за исключением пропускаемых.
-    /// Рекурсивная проверка не выполняется.
-    /// Перечислитель не учитывается.
+    /// РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РѕР±СЉРµРєС‚С‹ РёРјРµСЋС‚ РѕРґРёРЅР°РєРѕРІС‹Р№ С‚РёРї РёР»Рё С‚РёРї Р°РєС‚СѓР°Р»СЊРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІС‹РІРѕРґРёС‚СЃСЏ РёР· С‚РёРїР° РѕР¶РёРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р”Р°Р»РµРµ РїСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РІСЃРµС… public-СЃРІРѕР№СЃС‚РІ, Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј РїСЂРѕРїСѓСЃРєР°РµРјС‹С….
+    /// Р РµРєСѓСЂСЃРёРІРЅР°СЏ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="expected">Ожидаемый объект</param>
-    /// <param name="actual">Актуальный объект</param>
-    /// <param name="exceptedProperties">Имена свойств, которые не надо сравнивать. Может быть null</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="args">Аргументы для форматирования сообщения</param>
+    /// <param name="expected">РћР¶РёРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="actual">РђРєС‚СѓР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="exceptedProperties">РРјРµРЅР° СЃРІРѕР№СЃС‚РІ, РєРѕС‚РѕСЂС‹Рµ РЅРµ РЅР°РґРѕ СЃСЂР°РІРЅРёРІР°С‚СЊ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public static void ProperiesEqualExcept(object expected, object actual, string[] exceptedProperties)
     {
       ProperiesEqualExcept(expected, actual, exceptedProperties, String.Empty, DataTools.EmptyObjects);
     }
 
     /// <summary>
-    /// Проверяет, что объекты имеют одинаковый тип или тип актуального объекта выводится из типа ожидаемого объекта.
-    /// Далее проверяются значения всех public-свойств, за исключением пропускаемых.
-    /// Рекурсивная проверка не выполняется.
-    /// Перечислитель не учитывается.
+    /// РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РѕР±СЉРµРєС‚С‹ РёРјРµСЋС‚ РѕРґРёРЅР°РєРѕРІС‹Р№ С‚РёРї РёР»Рё С‚РёРї Р°РєС‚СѓР°Р»СЊРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІС‹РІРѕРґРёС‚СЃСЏ РёР· С‚РёРїР° РѕР¶РёРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р”Р°Р»РµРµ РїСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РІСЃРµС… public-СЃРІРѕР№СЃС‚РІ, Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј РїСЂРѕРїСѓСЃРєР°РµРјС‹С….
+    /// Р РµРєСѓСЂСЃРёРІРЅР°СЏ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="expected">Ожидаемый объект</param>
-    /// <param name="actual">Актуальный объект</param>
-    /// <param name="exceptedProperties">Имена свойств, которые не надо сравнивать. Может быть null</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expected">РћР¶РёРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="actual">РђРєС‚СѓР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="exceptedProperties">РРјРµРЅР° СЃРІРѕР№СЃС‚РІ, РєРѕС‚РѕСЂС‹Рµ РЅРµ РЅР°РґРѕ СЃСЂР°РІРЅРёРІР°С‚СЊ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
     public static void ProperiesEqualExcept(object expected, object actual, string[] exceptedProperties, string message)
     {
       ProperiesEqualExcept(expected, actual, exceptedProperties, message, DataTools.EmptyObjects);
     }
 
     /// <summary>
-    /// Проверяет, что объекты имеют одинаковый тип или тип актуального объекта выводится из типа ожидаемого объекта.
-    /// Далее проверяются значения всех public-свойств, за исключением пропускаемых.
-    /// Рекурсивная проверка не выполняется.
-    /// Перечислитель не учитывается.
+    /// РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РѕР±СЉРµРєС‚С‹ РёРјРµСЋС‚ РѕРґРёРЅР°РєРѕРІС‹Р№ С‚РёРї РёР»Рё С‚РёРї Р°РєС‚СѓР°Р»СЊРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІС‹РІРѕРґРёС‚СЃСЏ РёР· С‚РёРїР° РѕР¶РёРґР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+    /// Р”Р°Р»РµРµ РїСЂРѕРІРµСЂСЏСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РІСЃРµС… public-СЃРІРѕР№СЃС‚РІ, Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј РїСЂРѕРїСѓСЃРєР°РµРјС‹С….
+    /// Р РµРєСѓСЂСЃРёРІРЅР°СЏ РїСЂРѕРІРµСЂРєР° РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РџРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РЅРµ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ.
     /// </summary>
-    /// <param name="expected">Ожидаемый объект</param>
-    /// <param name="actual">Актуальный объект</param>
-    /// <param name="exceptedProperties">Имена свойств, которые не надо сравнивать. Может быть null</param>
-    /// <param name="message">Сообщение</param>
-    /// <param name="args">Аргументы для форматирования сообщения</param>
+    /// <param name="expected">РћР¶РёРґР°РµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="actual">РђРєС‚СѓР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚</param>
+    /// <param name="exceptedProperties">РРјРµРЅР° СЃРІРѕР№СЃС‚РІ, РєРѕС‚РѕСЂС‹Рµ РЅРµ РЅР°РґРѕ СЃСЂР°РІРЅРёРІР°С‚СЊ. РњРѕР¶РµС‚ Р±С‹С‚СЊ null</param>
+    /// <param name="message">РЎРѕРѕР±С‰РµРЅРёРµ</param>
+    /// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
     public static void ProperiesEqualExcept(object expected, object actual, string[] exceptedProperties, string message, params object[] args)
     {
       if (Object.ReferenceEquals(expected, actual))
         return;
       if (expected == null || actual == null)
-        Assert.AreEqual(expected, actual, message, args); // здесь проверка закончится
+        Assert.AreEqual(expected, actual, message, args); // Р·РґРµСЃСЊ РїСЂРѕРІРµСЂРєР° Р·Р°РєРѕРЅС‡РёС‚СЃСЏ
 
       Type t1 = expected.GetType();
       Type t2 = actual.GetType();
@@ -199,7 +199,7 @@ namespace ExtTools_tests
         return;
 
       if (testedObjects.Contains(expected))
-        return; // уже проверяли
+        return; // СѓР¶Рµ РїСЂРѕРІРµСЂСЏР»Рё
       testedObjects.Add(expected);
 
       Type t1 = expected.GetType();
@@ -212,7 +212,7 @@ namespace ExtTools_tests
         return;
       }
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       PropertyInfo[] aProps = t1.GetProperties(BindingFlags.Instance | BindingFlags.Public);
       for (int i = 0; i < aProps.Length; i++)
@@ -230,7 +230,7 @@ namespace ExtTools_tests
 
       #endregion
 
-      #region Перечислимые объекты
+      #region РџРµСЂРµС‡РёСЃР»РёРјС‹Рµ РѕР±СЉРµРєС‚С‹
 
       IEnumerable en1 = expected as IEnumerable;
       if (en1 != null)
@@ -246,7 +246,7 @@ namespace ExtTools_tests
 
         Assert.AreEqual(lst1.Count, lst2.Count, message + ". Enumeration result length");
         for (int i = 0; i < lst1.Count; i++)
-          DoAreEqual(testedObjects, lst1[i], lst2[i], message + "[" + i.ToString() + "]"); // рекурсивный вызов
+          DoAreEqual(testedObjects, lst1[i], lst2[i], message + "[" + i.ToString() + "]"); // СЂРµРєСѓСЂСЃРёРІРЅС‹Р№ РІС‹Р·РѕРІ
       }
 
       #endregion

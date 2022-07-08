@@ -605,12 +605,12 @@ namespace FreeLibSet.Forms.Docs
       {
         if (!dt.GridProducer.Columns.Contains("Id"))
         {
-          EFPGridProducerColumn IdCol = dt.GridProducer.Columns.AddInt("Id", "Id", 6);
-          IdCol.DisplayName = "Идентификатор документа";
-          IdCol.CanIncSearch = true;
+          EFPGridProducerColumn idCol = dt.GridProducer.Columns.AddInt("Id", "Id", 6);
+          idCol.DisplayName = "Идентификатор документа";
+          idCol.CanIncSearch = true;
           // Делаем первым в списке
           dt.GridProducer.Columns.RemoveAt(dt.GridProducer.Columns.Count - 1);
-          dt.GridProducer.Columns.Insert(0, IdCol);
+          dt.GridProducer.Columns.Insert(0, idCol);
         }
 
         bool historyAllowed = DocTypeViewHistoryPermission.GetAllowed(this.DocProvider.UserPermissions, dt.DocType.Name);

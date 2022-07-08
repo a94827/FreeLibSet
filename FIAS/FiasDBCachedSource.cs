@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,7 +12,7 @@ namespace FreeLibSet.FIAS
 {
 
   /// <summary>
-  /// Значения параметра "Action" при вызове IFiasSource.StartDistributedCall()
+  /// Р—РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂР° "Action" РїСЂРё РІС‹Р·РѕРІРµ IFiasSource.StartDistributedCall()
   /// </summary>
   internal enum FiasExecProcAction
   {
@@ -28,11 +28,11 @@ namespace FreeLibSet.FIAS
   }
 
   /// <summary>
-  /// Реализация свойства FiasDB.Source
+  /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° FiasDB.Source
   /// </summary>
   internal sealed class FiasDBCachedSource : FiasCachedSource
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     internal FiasDBCachedSource(FiasSourceProxy proxy, FiasDB fiasDB)
       : base(proxy)
@@ -44,14 +44,14 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region "Разделенное" выполнение
+    #region "Р Р°Р·РґРµР»РµРЅРЅРѕРµ" РІС‹РїРѕР»РЅРµРЅРёРµ
 
     /// <summary>
-    /// Процедура, выполняемая асинхронно
+    /// РџСЂРѕС†РµРґСѓСЂР°, РІС‹РїРѕР»РЅСЏРµРјР°СЏ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ
     /// </summary>
     private class FiasExecProc : ExecProc
     {
-      #region Конструктор и Dispose()
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose()
 
       internal FiasExecProc(FiasDBCachedSource owner, object userData)
       {
@@ -69,18 +69,18 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       private FiasDBCachedSource _Owner;
 
       /// <summary>
-      /// Чтобы не создавать каждый раз новый объект
+      /// Р§С‚РѕР±С‹ РЅРµ СЃРѕР·РґР°РІР°С‚СЊ РєР°Р¶РґС‹Р№ СЂР°Р· РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚
       /// </summary>
       private FiasExecProcEventArgs _EventArgs;
 
       #endregion
 
-      #region Выполнение
+      #region Р’С‹РїРѕР»РЅРµРЅРёРµ
 
       protected override void OnBeforeExecute(NamedValues args)
       {
@@ -142,7 +142,7 @@ namespace FreeLibSet.FIAS
             break;
 
           default:
-            throw new BugException("Неизвестное действие: " + action.ToString());
+            throw new BugException("РќРµРёР·РІРµСЃС‚РЅРѕРµ РґРµР№СЃС‚РІРёРµ: " + action.ToString());
         }
 
         if (FiasTools.TraceSwitch.Enabled)

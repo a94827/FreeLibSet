@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -12,14 +12,14 @@ namespace ExtTools_tests.UICore
   [TestFixture]
   public class DataTableTreeReorderHelperTests
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     [Test]
     public void Constructor()
     {
       DataTableTreeReorderHelper sut = CreateTestObject();
 
-      Assert.AreEqual("Order", sut.OrderColumnName, "OrderColumnName"); // а не "Text"
+      Assert.AreEqual("Order", sut.OrderColumnName, "OrderColumnName"); // Р° РЅРµ "Text"
     }
 
     [Test]
@@ -52,11 +52,11 @@ namespace ExtTools_tests.UICore
     [TestCase("EEE,HHH", false, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")]
     [TestCase("GGG,HHH", false, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")]
     [TestCase("", false, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")]
-    // Не проверяем возможность сдвига для разноуровневых узлов, т.к. может в будущей версии будет разрешено
+    // РќРµ РїСЂРѕРІРµСЂСЏРµРј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРґРІРёРіР° РґР»СЏ СЂР°Р·РЅРѕСѓСЂРѕРІРЅРµРІС‹С… СѓР·Р»РѕРІ, С‚.Рє. РјРѕР¶РµС‚ РІ Р±СѓРґСѓС‰РµР№ РІРµСЂСЃРёРё Р±СѓРґРµС‚ СЂР°Р·СЂРµС€РµРЅРѕ
     //[TestCase("BBB,EEE", false, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")]
     public void MoveDown(string sRowValues, bool wantedRes, string sWantedValues)
     {
-      // Перемещение для нескольких строк должно работать независимо от порядка задания выбранных строк
+      // РџРµСЂРµРјРµС‰РµРЅРёРµ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚СЂРѕРє РґРѕР»Р¶РЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РїРѕСЂСЏРґРєР° Р·Р°РґР°РЅРёСЏ РІС‹Р±СЂР°РЅРЅС‹С… СЃС‚СЂРѕРє
       for (int i = 1; i <= 2; i++)
       {
         DataTableTreeReorderHelper sut = CreateTestObject();
@@ -90,7 +90,7 @@ namespace ExtTools_tests.UICore
     [TestCase("", false, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")]
     public void MoveUp(string sRowValues, bool wantedRes, string sWantedValues)
     {
-      // Перемещение для нескольких строк должно работать независимо от порядка задания выбранных строк
+      // РџРµСЂРµРјРµС‰РµРЅРёРµ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚СЂРѕРє РґРѕР»Р¶РЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ РїРѕСЂСЏРґРєР° Р·Р°РґР°РЅРёСЏ РІС‹Р±СЂР°РЅРЅС‹С… СЃС‚СЂРѕРє
       for (int i = 1; i <= 2; i++)
       {
         DataTableTreeReorderHelper sut = CreateTestObject();
@@ -114,7 +114,7 @@ namespace ExtTools_tests.UICore
 
     [TestCase("AAA", "AAA", true, "DDD,EEE,FFF,GGG,HHH,AAA,BBB,CCC")]
     [TestCase("AAA", "", false, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")]
-    [TestCase("DDD", "DDD", true, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")] // хотя порядок и не поменялся
+    [TestCase("DDD", "DDD", true, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")] // С…РѕС‚СЏ РїРѕСЂСЏРґРѕРє Рё РЅРµ РїРѕРјРµРЅСЏР»СЃСЏ
     [TestCase("AAA,DDD", "AAA,DDD", true, "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")]
     [TestCase("DDD,AAA", "AAA,DDD", true, "DDD,EEE,FFF,GGG,HHH,AAA,BBB,CCC")]
     [TestCase("AAA,EEE", "AAA,EEE", true, "DDD,GGG,HHH,EEE,FFF,AAA,BBB,CCC")]
@@ -124,7 +124,7 @@ namespace ExtTools_tests.UICore
       DataTableTreeReorderHelper sut = CreateTestObject();
       DataRow[] rows = GetTableRows(sut.Model.Table, sRowValues);
 
-      // Обнуляем некоторые строки
+      // РћР±РЅСѓР»СЏРµРј РЅРµРєРѕС‚РѕСЂС‹Рµ СЃС‚СЂРѕРєРё
       DataRow[] zeroRows = GetTableRows(sut.Model.Table, sZeroRowValues);
       for (int i = 0; i < zeroRows.Length; i++)
         zeroRows[i]["Order"] = DBNull.Value;
@@ -134,7 +134,7 @@ namespace ExtTools_tests.UICore
       Assert.AreEqual(wantedRes, res, "Result");
       Assert.AreEqual(sWantedValues, GetOrderedText(sut.Model.Table), "Rows");
 
-      // Не проверяем otherRowChanged, т.к. непредсказуемо
+      // РќРµ РїСЂРѕРІРµСЂСЏРµРј otherRowChanged, С‚.Рє. РЅРµРїСЂРµРґСЃРєР°Р·СѓРµРјРѕ
       // Assert.IsFalse(otherRowChanged, "otherRowChanged");
     }
 
@@ -150,17 +150,17 @@ namespace ExtTools_tests.UICore
 
       bool res1 = sut.Reorder();
       Assert.IsTrue(res1, "Result #1");
-      Assert.AreEqual("AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH", GetOrderedText(sut.Model.Table), "Rows #1"); // ничего не поменялось
+      Assert.AreEqual("AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH", GetOrderedText(sut.Model.Table), "Rows #1"); // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
 
       bool res2 = sut.Reorder();
       Assert.IsFalse(res2, "Result #2");
-      Assert.AreEqual("AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH", GetOrderedText(sut.Model.Table), "Rows #2"); // ничего не поменялось
+      Assert.AreEqual("AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH", GetOrderedText(sut.Model.Table), "Rows #2"); // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
     }
 
-    [TestCase("AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH", "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")] // не меняем
-    [TestCase("FFF,BBB,AAA,DDD,CCC,EEE,GGG,HHH", "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")] // относительно групп порядок сохранился
-    [TestCase("DDD,BBB,CCC,AAA,EEE,FFF,GGG,HHH", "DDD,EEE,FFF,GGG,HHH,AAA,BBB,CCC")] // перестановка "AAA"-"DDD"
-    [TestCase("HHH,GGG,FFF,EEE,DDD,CCC,BBB,AAA", "DDD,HHH,GGG,EEE,FFF,AAA,CCC,BBB")] // обратный порядок
+    [TestCase("AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH", "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")] // РЅРµ РјРµРЅСЏРµРј
+    [TestCase("FFF,BBB,AAA,DDD,CCC,EEE,GGG,HHH", "AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH")] // РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РіСЂСѓРїРї РїРѕСЂСЏРґРѕРє СЃРѕС…СЂР°РЅРёР»СЃСЏ
+    [TestCase("DDD,BBB,CCC,AAA,EEE,FFF,GGG,HHH", "DDD,EEE,FFF,GGG,HHH,AAA,BBB,CCC")] // РїРµСЂРµСЃС‚Р°РЅРѕРІРєР° "AAA"-"DDD"
+    [TestCase("HHH,GGG,FFF,EEE,DDD,CCC,BBB,AAA", "DDD,HHH,GGG,EEE,FFF,AAA,CCC,BBB")] // РѕР±СЂР°С‚РЅС‹Р№ РїРѕСЂСЏРґРѕРє
     public void Reorder_ByRows(string sRowValues, string sWantedValues)
     {
       DataTableTreeReorderHelper sut = CreateTestObject();
@@ -171,18 +171,18 @@ namespace ExtTools_tests.UICore
       Assert.AreEqual(sWantedValues, GetOrderedText(sut.Model.Table), "Rows #1");
 
       bool res2 = sut.Reorder(rows);
-      // В текущей реализации и при повторном вызове может вернуть true.
+      // Р’ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё Рё РїСЂРё РїРѕРІС‚РѕСЂРЅРѕРј РІС‹Р·РѕРІРµ РјРѕР¶РµС‚ РІРµСЂРЅСѓС‚СЊ true.
       //Assert.IsFalse(res2, "Result #2");
-      Assert.AreEqual(sWantedValues, GetOrderedText(sut.Model.Table), "Rows #2"); // ничего не поменялось
+      Assert.AreEqual(sWantedValues, GetOrderedText(sut.Model.Table), "Rows #2"); // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
     }
 
     #endregion
 
-    #region Тестовая таблица
+    #region РўРµСЃС‚РѕРІР°СЏ С‚Р°Р±Р»РёС†Р°
 
     private static DataTable CreateTestTable()
     {
-      // Дерево:
+      // Р”РµСЂРµРІРѕ:
       // AAA
       //   BBB
       //   CCC
@@ -192,8 +192,8 @@ namespace ExtTools_tests.UICore
       //   GGG
       //   HHH
 
-      // Нельзя использовать значения не по порядку для поля "Order"
-      // Модель работать будет, но тестовый метод GetOrderedText() будет возвращать неправильные результаты
+      // РќРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р·РЅР°С‡РµРЅРёСЏ РЅРµ РїРѕ РїРѕСЂСЏРґРєСѓ РґР»СЏ РїРѕР»СЏ "Order"
+      // РњРѕРґРµР»СЊ СЂР°Р±РѕС‚Р°С‚СЊ Р±СѓРґРµС‚, РЅРѕ С‚РµСЃС‚РѕРІС‹Р№ РјРµС‚РѕРґ GetOrderedText() Р±СѓРґРµС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊ РЅРµРїСЂР°РІРёР»СЊРЅС‹Рµ СЂРµР·СѓР»СЊС‚Р°С‚С‹
 
       DataTable tbl = new DataTable("TestTable");
       tbl.Columns.Add("Text", typeof(string));
@@ -218,7 +218,7 @@ namespace ExtTools_tests.UICore
       DataTable tbl = CreateTestTable();
       DataTableTreeModel model = new DataTableTreeModel(tbl, "Id", "ParentId");
       
-      // проверяем корректность модели
+      // РїСЂРѕРІРµСЂСЏРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ РјРѕРґРµР»Рё
       Assert.AreEqual("Order", model.Sort, "DataTableTreeModel.Sort");
       List<string> lst = new List<string>();
       foreach (TreePath path in new TreePathEnumerable(model))
@@ -247,7 +247,7 @@ namespace ExtTools_tests.UICore
       {
         int p = Array.IndexOf<string>(orgRowValues, aValues[i]);
         if (p < 0)
-          throw new BugException("Значения \"" + aValues[i] + "\" нет в таблице");
+          throw new BugException("Р—РЅР°С‡РµРЅРёСЏ \"" + aValues[i] + "\" РЅРµС‚ РІ С‚Р°Р±Р»РёС†Рµ");
         rows[i] = tbl.Rows[p];
       }
       return rows;

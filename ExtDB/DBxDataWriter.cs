@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,25 +11,25 @@ using FreeLibSet.Collections;
 
 namespace FreeLibSet.Data
 {
-  #region Перечисление DBxDataWriterMode
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ DBxDataWriterMode
 
   /// <summary>
-  /// Режим работы DBxDataWriter
+  /// Р РµР¶РёРј СЂР°Р±РѕС‚С‹ DBxDataWriter
   /// </summary>
   public enum DBxDataWriterMode
   {
     /// <summary>
-    /// Добавление строк
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ СЃС‚СЂРѕРє
     /// </summary>
     Insert,
 
     /// <summary>
-    /// Модификация существующих строк
+    /// РњРѕРґРёС„РёРєР°С†РёСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… СЃС‚СЂРѕРє
     /// </summary>
     Update,
 
     /// <summary>
-    /// Добавление недостающих строк и обновление существующих
+    /// Р”РѕР±Р°РІР»РµРЅРёРµ РЅРµРґРѕСЃС‚Р°СЋС‰РёС… СЃС‚СЂРѕРє Рё РѕР±РЅРѕРІР»РµРЅРёРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС…
     /// </summary>
     InsertOrUpdate
   }
@@ -37,16 +37,16 @@ namespace FreeLibSet.Data
   #endregion
 
   /// <summary>
-  /// Набор параметров для работы с DBxDataWriter.
-  /// Объект создается и заполняется в пользовательском коде. Затем вызывается метод DBxConBase.CreateWriter()
+  /// РќР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ DBxDataWriter.
+  /// РћР±СЉРµРєС‚ СЃРѕР·РґР°РµС‚СЃСЏ Рё Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ. Р—Р°С‚РµРј РІС‹Р·С‹РІР°РµС‚СЃСЏ РјРµС‚РѕРґ DBxConBase.CreateWriter()
   /// </summary>
   [Serializable]
   public sealed class DBxDataWriterInfo : IReadOnlyObject, ICloneable
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает неинициализированный набор параметров
+    /// РЎРѕР·РґР°РµС‚ РЅРµРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Р№ РЅР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ
     /// </summary>
     public DBxDataWriterInfo()
     {
@@ -55,11 +55,11 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Основные свойства
+    #region РћСЃРЅРѕРІРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Имя таблицы в базе данных.
-    /// Свойство обязательно должно быть установлено.
+    /// РРјСЏ С‚Р°Р±Р»РёС†С‹ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С….
+    /// РЎРІРѕР№СЃС‚РІРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
     /// </summary>
     public string TableName
     {
@@ -73,10 +73,10 @@ namespace FreeLibSet.Data
     private string _TableName;
 
     /// <summary>
-    /// Список столбцов, которые будут обрабатываться в запросе.
-    /// Свойство обязательно должно быть установлено.
-    /// Сюда должны входить все столбцы первичного ключа, если режим отличается от Insert.
-    /// В режимах Update и InsertOrUpdate() должен быть задан хотя бы один столбец, не входящий в первичный ключ или в список SearchColumns, если он задан.
+    /// РЎРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊСЃСЏ РІ Р·Р°РїСЂРѕСЃРµ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ.
+    /// РЎСЋРґР° РґРѕР»Р¶РЅС‹ РІС…РѕРґРёС‚СЊ РІСЃРµ СЃС‚РѕР»Р±С†С‹ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°, РµСЃР»Рё СЂРµР¶РёРј РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ Insert.
+    /// Р’ СЂРµР¶РёРјР°С… Update Рё InsertOrUpdate() РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СЃС‚РѕР»Р±РµС†, РЅРµ РІС…РѕРґСЏС‰РёР№ РІ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡ РёР»Рё РІ СЃРїРёСЃРѕРє SearchColumns, РµСЃР»Рё РѕРЅ Р·Р°РґР°РЅ.
     /// </summary>
     public DBxColumns Columns
     {
@@ -91,8 +91,8 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Список столбцов, по которым будет выполняться поиск.
-    /// Если свойство не установлено в явном виде, будут использованы столбцы из свойства DBxTableStruct.PrimaryKey.
+    /// РЎРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ, РїРѕ РєРѕС‚РѕСЂС‹Рј Р±СѓРґРµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РїРѕРёСЃРє.
+    /// Р•СЃР»Рё СЃРІРѕР№СЃС‚РІРѕ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, Р±СѓРґСѓС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅС‹ СЃС‚РѕР»Р±С†С‹ РёР· СЃРІРѕР№СЃС‚РІР° DBxTableStruct.PrimaryKey.
     /// </summary>
     public DBxColumns SearchColumns
     {
@@ -106,8 +106,8 @@ namespace FreeLibSet.Data
     private DBxColumns _SearchColumns;
 
     /// <summary>
-    /// Режим работы.
-    /// По умолчанию - Insert
+    /// Р РµР¶РёРј СЂР°Р±РѕС‚С‹.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - Insert
     /// </summary>
     public DBxDataWriterMode Mode
     {
@@ -122,16 +122,16 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Дополнительные свойства
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Ожидаемое количество строк, которые предстоит обработать.
-    /// По умолчанию - 0 - неизвестно.
-    /// Свойство носит рекомендательный характер. Реальное количество строк, которые будут обработаны, может отличаться
+    /// РћР¶РёРґР°РµРјРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє, РєРѕС‚РѕСЂС‹Рµ РїСЂРµРґСЃС‚РѕРёС‚ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - 0 - РЅРµРёР·РІРµСЃС‚РЅРѕ.
+    /// РЎРІРѕР№СЃС‚РІРѕ РЅРѕСЃРёС‚ СЂРµРєРѕРјРµРЅРґР°С‚РµР»СЊРЅС‹Р№ С…Р°СЂР°РєС‚РµСЂ. Р РµР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РѕР±СЂР°Р±РѕС‚Р°РЅС‹, РјРѕР¶РµС‚ РѕС‚Р»РёС‡Р°С‚СЊСЃСЏ
     /// 
-    /// Установка свойства может привести к изменению стратегии работы.
-    /// Например, если ожидается добавление очень большого количества строк, может быть выгодно создать временную базу данных.
-    /// В большинстве случаев этот параметр игнорируется.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° РјРѕР¶РµС‚ РїСЂРёРІРµСЃС‚Рё Рє РёР·РјРµРЅРµРЅРёСЋ СЃС‚СЂР°С‚РµРіРёРё СЂР°Р±РѕС‚С‹.
+    /// РќР°РїСЂРёРјРµСЂ, РµСЃР»Рё РѕР¶РёРґР°РµС‚СЃСЏ РґРѕР±Р°РІР»РµРЅРёРµ РѕС‡РµРЅСЊ Р±РѕР»СЊС€РѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° СЃС‚СЂРѕРє, РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹РіРѕРґРЅРѕ СЃРѕР·РґР°С‚СЊ РІСЂРµРјРµРЅРЅСѓСЋ Р±Р°Р·Сѓ РґР°РЅРЅС‹С….
+    /// Р’ Р±РѕР»СЊС€РёРЅСЃС‚РІРµ СЃР»СѓС‡Р°РµРІ СЌС‚РѕС‚ РїР°СЂР°РјРµС‚СЂ РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ.
     /// </summary>
     public long ExpectedRowCount
     {
@@ -147,15 +147,15 @@ namespace FreeLibSet.Data
     private long _ExpectedRowCount;
 
     /// <summary>
-    /// Если задано положительное значение, то через указанное количество операций будет выполняться COMMINT TRANSACION,
-    /// а затем начинаться новая транзакция.
-    /// По умолчанию - 0 - промежуточное подтверждение транзакций не выполняется.
-    /// Свойство работает, только если конструктор DBxDataWriter начинает транзакцию. Если на момент вызова DBxConBase.CreateWrite().
+    /// Р•СЃР»Рё Р·Р°РґР°РЅРѕ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ, С‚Рѕ С‡РµСЂРµР· СѓРєР°Р·Р°РЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РѕРїРµСЂР°С†РёР№ Р±СѓРґРµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ COMMINT TRANSACION,
+    /// Р° Р·Р°С‚РµРј РЅР°С‡РёРЅР°С‚СЊСЃСЏ РЅРѕРІР°СЏ С‚СЂР°РЅР·Р°РєС†РёСЏ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - 0 - РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ С‚СЂР°РЅР·Р°РєС†РёР№ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ.
+    /// РЎРІРѕР№СЃС‚РІРѕ СЂР°Р±РѕС‚Р°РµС‚, С‚РѕР»СЊРєРѕ РµСЃР»Рё РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ DBxDataWriter РЅР°С‡РёРЅР°РµС‚ С‚СЂР°РЅР·Р°РєС†РёСЋ. Р•СЃР»Рё РЅР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° DBxConBase.CreateWrite().
     /// 
-    /// Для SQLite есть предельный размер данных, который можно обработать. Если предел превышен, то возникает ошибка,
-    /// приводящая к перезагрузке Windows. Это происходит только при очень большом количестве записей.
-    /// Рекомендуется задать достаточно большое значение, например, 100000, если проблема возникает.
-    /// Установка маленького значения (меньше 1000) снижает скорость работы.
+    /// Р”Р»СЏ SQLite РµСЃС‚СЊ РїСЂРµРґРµР»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РЅРѕ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ. Р•СЃР»Рё РїСЂРµРґРµР» РїСЂРµРІС‹С€РµРЅ, С‚Рѕ РІРѕР·РЅРёРєР°РµС‚ РѕС€РёР±РєР°,
+    /// РїСЂРёРІРѕРґСЏС‰Р°СЏ Рє РїРµСЂРµР·Р°РіСЂСѓР·РєРµ Windows. Р­С‚Рѕ РїСЂРѕРёСЃС…РѕРґРёС‚ С‚РѕР»СЊРєРѕ РїСЂРё РѕС‡РµРЅСЊ Р±РѕР»СЊС€РѕРј РєРѕР»РёС‡РµСЃС‚РІРµ Р·Р°РїРёСЃРµР№.
+    /// Р РµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ Р·Р°РґР°С‚СЊ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ Р±РѕР»СЊС€РѕРµ Р·РЅР°С‡РµРЅРёРµ, РЅР°РїСЂРёРјРµСЂ, 100000, РµСЃР»Рё РїСЂРѕР±Р»РµРјР° РІРѕР·РЅРёРєР°РµС‚.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° РјР°Р»РµРЅСЊРєРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ (РјРµРЅСЊС€Рµ 1000) СЃРЅРёР¶Р°РµС‚ СЃРєРѕСЂРѕСЃС‚СЊ СЂР°Р±РѕС‚С‹.
     /// </summary>
     public int TransactionPulseRowCount
     {
@@ -175,13 +175,13 @@ namespace FreeLibSet.Data
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если набор параметров переведен в режим "Только чтение"
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РЅР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ РїРµСЂРµРІРµРґРµРЅ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ"
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Проверка IsReadOnly=false
+    /// РџСЂРѕРІРµСЂРєР° IsReadOnly=false
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -190,7 +190,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Переводит набор параметров в режим "Только чтение"
+    /// РџРµСЂРµРІРѕРґРёС‚ РЅР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ РІ СЂРµР¶РёРј "РўРѕР»СЊРєРѕ С‡С‚РµРЅРёРµ"
     /// </summary>
     public void SetReadOnly()
     {
@@ -202,7 +202,7 @@ namespace FreeLibSet.Data
     #region ICloneable Members
 
     /// <summary>
-    /// Создает копию набора параметров, которую можно редактировать
+    /// РЎРѕР·РґР°РµС‚ РєРѕРїРёСЋ РЅР°Р±РѕСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ, РєРѕС‚РѕСЂСѓСЋ РјРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ
     /// </summary>
     public DBxDataWriterInfo Clone()
     {
@@ -222,38 +222,38 @@ namespace FreeLibSet.Data
     #endregion
   }
 
-  #region Перечисление DBxDataWriterState
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ DBxDataWriterState
 
   /// <summary>
-  /// Текущее состояние объекта DBxDataWriter
+  /// РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РѕР±СЉРµРєС‚Р° DBxDataWriter
   /// </summary>
   [Serializable]
   public enum DBxDataWriterState
   {
     /// <summary>
-    /// Объект создан и готов к добавлению строк.
-    /// Методы Write() и LoadFrom() еще не вызывались
+    /// РћР±СЉРµРєС‚ СЃРѕР·РґР°РЅ Рё РіРѕС‚РѕРІ Рє РґРѕР±Р°РІР»РµРЅРёСЋ СЃС‚СЂРѕРє.
+    /// РњРµС‚РѕРґС‹ Write() Рё LoadFrom() РµС‰Рµ РЅРµ РІС‹Р·С‹РІР°Р»РёСЃСЊ
     /// </summary>
     Created,
 
     /// <summary>
-    /// Были вызовы Write() или LoadFrom(), метод Finish() еще не вызывался
+    /// Р‘С‹Р»Рё РІС‹Р·РѕРІС‹ Write() РёР»Рё LoadFrom(), РјРµС‚РѕРґ Finish() РµС‰Рµ РЅРµ РІС‹Р·С‹РІР°Р»СЃСЏ
     /// </summary>
     Writing,
 
     /// <summary>
-    /// Был вызов метода Finish()
+    /// Р‘С‹Р» РІС‹Р·РѕРІ РјРµС‚РѕРґР° Finish()
     /// </summary>
     Finished,
 
     /// <summary>
-    /// При вызове Write() или Finish() произошла ошибка.
-    /// Вызов других методов, кроме Dispose(), запрещен
+    /// РџСЂРё РІС‹Р·РѕРІРµ Write() РёР»Рё Finish() РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°.
+    /// Р’С‹Р·РѕРІ РґСЂСѓРіРёС… РјРµС‚РѕРґРѕРІ, РєСЂРѕРјРµ Dispose(), Р·Р°РїСЂРµС‰РµРЅ
     /// </summary>
     Error,
 
     /// <summary>
-    /// Был вызов метода Dispose()
+    /// Р‘С‹Р» РІС‹Р·РѕРІ РјРµС‚РѕРґР° Dispose()
     /// </summary>
     Disposed
   }
@@ -261,27 +261,27 @@ namespace FreeLibSet.Data
   #endregion
 
   /// <summary>
-  /// Объект для добавления и/или изменения строк в таблице.
-  /// Создается вызовом DBxConBase.CreateWriter().
-  /// Вызывающий код должен заполнять буфер строки и вызывать метод Write() для каждой строки.
-  /// Также можно использовать метод LoadFrom() для группового добавления.
-  /// По окончании записи должны быть вызваны методы Finish() и Dispose().
-  /// Если вызовы методов Write() и Finish() не вызвали исключения, значит запись выполнена успешно.
+  /// РћР±СЉРµРєС‚ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ Рё/РёР»Рё РёР·РјРµРЅРµРЅРёСЏ СЃС‚СЂРѕРє РІ С‚Р°Р±Р»РёС†Рµ.
+  /// РЎРѕР·РґР°РµС‚СЃСЏ РІС‹Р·РѕРІРѕРј DBxConBase.CreateWriter().
+  /// Р’С‹Р·С‹РІР°СЋС‰РёР№ РєРѕРґ РґРѕР»Р¶РµРЅ Р·Р°РїРѕР»РЅСЏС‚СЊ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё Рё РІС‹Р·С‹РІР°С‚СЊ РјРµС‚РѕРґ Write() РґР»СЏ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё.
+  /// РўР°РєР¶Рµ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РјРµС‚РѕРґ LoadFrom() РґР»СЏ РіСЂСѓРїРїРѕРІРѕРіРѕ РґРѕР±Р°РІР»РµРЅРёСЏ.
+  /// РџРѕ РѕРєРѕРЅС‡Р°РЅРёРё Р·Р°РїРёСЃРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІС‹Р·РІР°РЅС‹ РјРµС‚РѕРґС‹ Finish() Рё Dispose().
+  /// Р•СЃР»Рё РІС‹Р·РѕРІС‹ РјРµС‚РѕРґРѕРІ Write() Рё Finish() РЅРµ РІС‹Р·РІР°Р»Рё РёСЃРєР»СЋС‡РµРЅРёСЏ, Р·РЅР°С‡РёС‚ Р·Р°РїРёСЃСЊ РІС‹РїРѕР»РЅРµРЅР° СѓСЃРїРµС€РЅРѕ.
   /// </summary>
   public abstract class DBxDataWriter : MarshalByRefDisposableObject
   {
-    #region Конструктор и Dispose
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё Dispose
 
     /// <summary>
-    /// Инициализация объекта в состоянии Created.
-    /// Если нет текущей транзации (DBxConBase.CurrentTransaction=null), то начинает транзацию вызовом DBxConBase.TransactionBegin().
-    /// Если у соединения уже начата транзакция, то DBxDataWriter не будет обрабатывать транзакции.
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° РІ СЃРѕСЃС‚РѕСЏРЅРёРё Created.
+    /// Р•СЃР»Рё РЅРµС‚ С‚РµРєСѓС‰РµР№ С‚СЂР°РЅР·Р°С†РёРё (DBxConBase.CurrentTransaction=null), С‚Рѕ РЅР°С‡РёРЅР°РµС‚ С‚СЂР°РЅР·Р°С†РёСЋ РІС‹Р·РѕРІРѕРј DBxConBase.TransactionBegin().
+    /// Р•СЃР»Рё Сѓ СЃРѕРµРґРёРЅРµРЅРёСЏ СѓР¶Рµ РЅР°С‡Р°С‚Р° С‚СЂР°РЅР·Р°РєС†РёСЏ, С‚Рѕ DBxDataWriter РЅРµ Р±СѓРґРµС‚ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ С‚СЂР°РЅР·Р°РєС†РёРё.
     /// </summary>
     /// <param name="con"></param>
     /// <param name="writerInfo"></param>
     public DBxDataWriter(DBxConBase con, DBxDataWriterInfo writerInfo)
     {
-      // Проверка аргументов находится в DBxConBase.CreateWriter()
+      // РџСЂРѕРІРµСЂРєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ РЅР°С…РѕРґРёС‚СЃСЏ РІ DBxConBase.CreateWriter()
 
       _Con = con;
       _WriterInfo = writerInfo;
@@ -292,7 +292,7 @@ namespace FreeLibSet.Data
       _TableStruct = con.DB.Struct.Tables[writerInfo.TableName];
 #if DEBUG
       if (_TableStruct == null)
-        throw new ArgumentException("Не найдена структура таблицы \"" + writerInfo.TableName + "\"");
+        throw new ArgumentException("РќРµ РЅР°Р№РґРµРЅР° СЃС‚СЂСѓРєС‚СѓСЂР° С‚Р°Р±Р»РёС†С‹ \"" + writerInfo.TableName + "\"");
 #endif
 
       _ColumnDefs = new DBxColumnStruct[writerInfo.Columns.Count];
@@ -300,7 +300,7 @@ namespace FreeLibSet.Data
       {
         _ColumnDefs[i] = _TableStruct.Columns[writerInfo.Columns[i]];
         if (_ColumnDefs[i] == null)
-          throw new ArgumentException("Не найден столбец \"" + writerInfo.Columns[i] + "\" в таблице \"" + writerInfo.TableName + "\"");
+          throw new ArgumentException("РќРµ РЅР°Р№РґРµРЅ СЃС‚РѕР»Р±РµС† \"" + writerInfo.Columns[i] + "\" РІ С‚Р°Р±Р»РёС†Рµ \"" + writerInfo.TableName + "\"");
       }
 
 
@@ -318,7 +318,7 @@ namespace FreeLibSet.Data
       {
         if (writerInfo.Columns.ContainsAny(_SearchColumns) &&
           (!writerInfo.Columns.Contains(_SearchColumns)))
-          throw new ArgumentException("Список всех столбцов не может содержать только часть столбцов составного ключа для поиска (" + _SearchColumns.ToString() + ") в таблице \"" + _TableStruct.TableName + "\"", "writerInfo");
+          throw new ArgumentException("РЎРїРёСЃРѕРє РІСЃРµС… СЃС‚РѕР»Р±С†РѕРІ РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ С‡Р°СЃС‚СЊ СЃС‚РѕР»Р±С†РѕРІ СЃРѕСЃС‚Р°РІРЅРѕРіРѕ РєР»СЋС‡Р° РґР»СЏ РїРѕРёСЃРєР° (" + _SearchColumns.ToString() + ") РІ С‚Р°Р±Р»РёС†Рµ \"" + _TableStruct.TableName + "\"", "writerInfo");
       }
       else // SearchColumns.IsEmpty
       {
@@ -326,7 +326,7 @@ namespace FreeLibSet.Data
         {
           case DBxDataWriterMode.Update:
           case DBxDataWriterMode.InsertOrUpdate:
-            throw new ArgumentException("Таблица \"" + writerInfo.TableName + "\" не содержит первичного ключа. Первичный ключ требуется для режима " + writerInfo.Mode.ToString(), "writerInfo");
+            throw new ArgumentException("РўР°Р±Р»РёС†Р° \"" + writerInfo.TableName + "\" РЅРµ СЃРѕРґРµСЂР¶РёС‚ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°. РџРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡ С‚СЂРµР±СѓРµС‚СЃСЏ РґР»СЏ СЂРµР¶РёРјР° " + writerInfo.Mode.ToString(), "writerInfo");
         }
       }
 
@@ -346,9 +346,9 @@ namespace FreeLibSet.Data
         case DBxDataWriterMode.Update:
         case DBxDataWriterMode.InsertOrUpdate:
           if (_SearchColumns.Count == 0)
-            throw new ArgumentException("В режиме " + writerInfo.Mode.ToString() + " должен быть задан список столбцов для поиска", "writerInfo");
+            throw new ArgumentException("Р’ СЂРµР¶РёРјРµ " + writerInfo.Mode.ToString() + " РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ СЃРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ РґР»СЏ РїРѕРёСЃРєР°", "writerInfo");
           if (_OtherColumns.Count == 0)
-            throw new ArgumentException("В режиме " + writerInfo.Mode.ToString() + " список столбцов должен включать в себя хотя бы один столбец, не являющийся столбцом для поиска в таблице \"" + _TableStruct.TableName + "\"", "writerInfo");
+            throw new ArgumentException("Р’ СЂРµР¶РёРјРµ " + writerInfo.Mode.ToString() + " СЃРїРёСЃРѕРє СЃС‚РѕР»Р±С†РѕРІ РґРѕР»Р¶РµРЅ РІРєР»СЋС‡Р°С‚СЊ РІ СЃРµР±СЏ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ СЃС‚РѕР»Р±РµС†, РЅРµ СЏРІР»СЏСЋС‰РёР№СЃСЏ СЃС‚РѕР»Р±С†РѕРј РґР»СЏ РїРѕРёСЃРєР° РІ С‚Р°Р±Р»РёС†Рµ \"" + _TableStruct.TableName + "\"", "writerInfo");
           break;
       }
 
@@ -361,12 +361,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Переводит объект в состояние State=Disposed.
-    /// При нормальной работе, перед вызовом метода Dispose() должен вызываться метод Finish().
-    /// Если метод Finish() не вызывался, или ему не удалось завершить транзакцию, вызывается DBxConBase.TransactionRollback(),
-    /// если транзакция была начата в конструкторе объекта
+    /// РџРµСЂРµРІРѕРґРёС‚ РѕР±СЉРµРєС‚ РІ СЃРѕСЃС‚РѕСЏРЅРёРµ State=Disposed.
+    /// РџСЂРё РЅРѕСЂРјР°Р»СЊРЅРѕР№ СЂР°Р±РѕС‚Рµ, РїРµСЂРµРґ РІС‹Р·РѕРІРѕРј РјРµС‚РѕРґР° Dispose() РґРѕР»Р¶РµРЅ РІС‹Р·С‹РІР°С‚СЊСЃСЏ РјРµС‚РѕРґ Finish().
+    /// Р•СЃР»Рё РјРµС‚РѕРґ Finish() РЅРµ РІС‹Р·С‹РІР°Р»СЃСЏ, РёР»Рё РµРјСѓ РЅРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РІРµСЂС€РёС‚СЊ С‚СЂР°РЅР·Р°РєС†РёСЋ, РІС‹Р·С‹РІР°РµС‚СЃСЏ DBxConBase.TransactionRollback(),
+    /// РµСЃР»Рё С‚СЂР°РЅР·Р°РєС†РёСЏ Р±С‹Р»Р° РЅР°С‡Р°С‚Р° РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РѕР±СЉРµРєС‚Р°
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор объекта</param>
+    /// <param name="disposing">true, РµСЃР»Рё Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ Dispose(), Р° РЅРµ РґРµСЃС‚СЂСѓРєС‚РѕСЂ РѕР±СЉРµРєС‚Р°</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -386,24 +386,24 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Основные свойства
+    #region РћСЃРЅРѕРІРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Соединение с базой данной, для которого был вызван метод CreateCon().
-    /// Свойство объявлено защищенным, чтобы при вызове по сети не было незаконного доступа к объекту.
+    /// РЎРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅРѕР№, РґР»СЏ РєРѕС‚РѕСЂРѕРіРѕ Р±С‹Р» РІС‹Р·РІР°РЅ РјРµС‚РѕРґ CreateCon().
+    /// РЎРІРѕР№СЃС‚РІРѕ РѕР±СЉСЏРІР»РµРЅРѕ Р·Р°С‰РёС‰РµРЅРЅС‹Рј, С‡С‚РѕР±С‹ РїСЂРё РІС‹Р·РѕРІРµ РїРѕ СЃРµС‚Рё РЅРµ Р±С‹Р»Рѕ РЅРµР·Р°РєРѕРЅРЅРѕРіРѕ РґРѕСЃС‚СѓРїР° Рє РѕР±СЉРµРєС‚Сѓ.
     /// </summary>
     protected DBxConBase Con { get { return _Con; } }
     private readonly DBxConBase _Con;
 
     /// <summary>
-    /// Управляющие параметры.
-    /// Свойства этого объекта нельзя менять.
+    /// РЈРїСЂР°РІР»СЏСЋС‰РёРµ РїР°СЂР°РјРµС‚СЂС‹.
+    /// РЎРІРѕР№СЃС‚РІР° СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р° РЅРµР»СЊР·СЏ РјРµРЅСЏС‚СЊ.
     /// </summary>
     public DBxDataWriterInfo WriterInfo { get { return _WriterInfo; } }
     private readonly DBxDataWriterInfo _WriterInfo;
 
     /// <summary>
-    /// Текущее состояние объекта
+    /// РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РѕР±СЉРµРєС‚Р°
     /// </summary>
     public DBxDataWriterState State { get { return _State; } }
     private DBxDataWriterState _State;
@@ -412,12 +412,12 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Буфер заполняемой строки
+    #region Р‘СѓС„РµСЂ Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё
 
     /// <summary>
-    /// Буфер строки.
-    /// Длина массива соответствует полям в DBxDataWriterInfo.Columns.
-    /// Обычно используется индексированное свойство объекта DBxDataWriter для записи значений по одному
+    /// Р‘СѓС„РµСЂ СЃС‚СЂРѕРєРё.
+    /// Р”Р»РёРЅР° РјР°СЃСЃРёРІР° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ РїРѕР»СЏРј РІ DBxDataWriterInfo.Columns.
+    /// РћР±С‹С‡РЅРѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РёРЅРґРµРєСЃРёСЂРѕРІР°РЅРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ РѕР±СЉРµРєС‚Р° DBxDataWriter РґР»СЏ Р·Р°РїРёСЃРё Р·РЅР°С‡РµРЅРёР№ РїРѕ РѕРґРЅРѕРјСѓ
     /// </summary>
     public object[] Values
     {
@@ -428,17 +428,17 @@ namespace FreeLibSet.Data
         if (value == null)
           throw new ArgumentNullException();
         if (value.Length != _Values.Length)
-          throw new ArgumentException("Неправильная длина массива");
+          throw new ArgumentException("РќРµРїСЂР°РІРёР»СЊРЅР°СЏ РґР»РёРЅР° РјР°СЃСЃРёРІР°");
         _Values = value;
       }
     }
     private object[] _Values;
 
     /// <summary>
-    /// Доступ к полю буфера строки по индексу поля в списке DBxDataWriterInfo.Columns.
+    /// Р”РѕСЃС‚СѓРї Рє РїРѕР»СЋ Р±СѓС„РµСЂР° СЃС‚СЂРѕРєРё РїРѕ РёРЅРґРµРєСЃСѓ РїРѕР»СЏ РІ СЃРїРёСЃРєРµ DBxDataWriterInfo.Columns.
     /// </summary>
-    /// <param name="columnIndex">Индекс столбца в списке</param>
-    /// <returns>Значение поля</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ СЃС‚РѕР»Р±С†Р° РІ СЃРїРёСЃРєРµ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</returns>
     public object this[int columnIndex]
     {
       get { return _Values[columnIndex]; }
@@ -446,10 +446,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Доступ к буферу строки по имени поля в списке DBxDataWriterInfo.Columns.
+    /// Р”РѕСЃС‚СѓРї Рє Р±СѓС„РµСЂСѓ СЃС‚СЂРѕРєРё РїРѕ РёРјРµРЅРё РїРѕР»СЏ РІ СЃРїРёСЃРєРµ DBxDataWriterInfo.Columns.
     /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение поля</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ</returns>
     public object this[string columnName]
     {
       get { return _Values[GetColumnIndex(columnName)]; }
@@ -467,42 +467,42 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
       else
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅРѕРµ РёРјСЏ СЃС‚РѕР»Р±С†Р° \"" + columnName + "\"", "columnName");
     }
 
     #endregion
 
-    #region Форматированный доступ
+    #region Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅС‹Р№ РґРѕСЃС‚СѓРї
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public string GetString(string columnName) { return DataTools.GetString(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public string GetString(int columnIndex) { return DataTools.GetString(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetString(string columnName, string value)
     {
       SetString(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetString(int columnIndex, string value)
     {
       if (value == null)
@@ -537,34 +537,34 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public int GetInt(string columnName) { return DataTools.GetInt(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public int GetInt(int columnIndex) { return DataTools.GetInt(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetInt(string columnName, int value)
     {
       SetInt(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetInt(int columnIndex, int value)
     {
       if (value == 0 && _ColumnDefs[columnIndex].Nullable)
@@ -589,34 +589,34 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public long GetInt64(string columnName) { return DataTools.GetInt64(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public long GetInt64(int columnIndex) { return DataTools.GetInt64(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetInt64(string columnName, long value)
     {
       SetInt64(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetInt64(int columnIndex, long value)
     {
       if (value == 0L && _ColumnDefs[columnIndex].Nullable)
@@ -641,34 +641,34 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public float GetSingle(string columnName) { return DataTools.GetSingle(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public float GetSingle(int columnIndex) { return DataTools.GetSingle(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetSingle(string columnName, float value)
     {
       SetSingle(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetSingle(int columnIndex, float value)
     {
       if (value == 0f && _ColumnDefs[columnIndex].Nullable)
@@ -693,34 +693,34 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public double GetDouble(string columnName) { return DataTools.GetDouble(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public double GetDouble(int columnIndex) { return DataTools.GetDouble(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetDouble(string columnName, double value)
     {
       SetDouble(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetDouble(int columnIndex, double value)
     {
       if (value == 0.0 && _ColumnDefs[columnIndex].Nullable)
@@ -745,34 +745,34 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public decimal GetDecimal(string columnName) { return DataTools.GetDecimal(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public decimal GetDecimal(int columnIndex) { return DataTools.GetDecimal(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetDecimal(string columnName, decimal value)
     {
       SetDecimal(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetDecimal(int columnIndex, decimal value)
     {
       if (value == 0 && _ColumnDefs[columnIndex].Nullable)
@@ -796,34 +796,34 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public bool GetBool(string columnName) { return DataTools.GetBool(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public bool GetBool(int columnIndex) { return DataTools.GetBool(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetBool(string columnName, bool value)
     {
       SetBool(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetBool(int columnIndex, bool value)
     {
       if (value == false && _ColumnDefs[columnIndex].Nullable)
@@ -842,34 +842,34 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public DateTime GetDateTime(string columnName) { return DataTools.GetDateTime(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public DateTime GetDateTime(int columnIndex) { return DataTools.GetDateTime(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetDateTime(string columnName, DateTime value)
     {
       SetDateTime(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetDateTime(int columnIndex, DateTime value)
     {
       switch (_ColumnDefs[columnIndex].ColumnType)
@@ -884,39 +884,39 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public DateTime? GetNullableDateTime(string columnName) { return DataTools.GetNullableDateTime(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public DateTime? GetNullableDateTime(int columnIndex) { return DataTools.GetNullableDateTime(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetNullableDateTime(string columnName, DateTime? value)
     {
       SetNullableDateTime(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetNullableDateTime(int columnIndex, DateTime? value)
     {
       if ((!value.HasValue) && (!_ColumnDefs[columnIndex].Nullable))
-        throw new InvalidOperationException("Столбец \"" + _ColumnDefs[columnIndex] + "\" таблицы \"" + _TableStruct.TableName + "\" не разрешает значения null");
-      // Если даже для столбца определено значение DEFAULT, то его нельзя указывать в списке VALUES()
+        throw new InvalidOperationException("РЎС‚РѕР»Р±РµС† \"" + _ColumnDefs[columnIndex] + "\" С‚Р°Р±Р»РёС†С‹ \"" + _TableStruct.TableName + "\" РЅРµ СЂР°Р·СЂРµС€Р°РµС‚ Р·РЅР°С‡РµРЅРёСЏ null");
+      // Р•СЃР»Рё РґР°Р¶Рµ РґР»СЏ СЃС‚РѕР»Р±С†Р° РѕРїСЂРµРґРµР»РµРЅРѕ Р·РЅР°С‡РµРЅРёРµ DEFAULT, С‚Рѕ РµРіРѕ РЅРµР»СЊР·СЏ СѓРєР°Р·С‹РІР°С‚СЊ РІ СЃРїРёСЃРєРµ VALUES()
 
       switch (_ColumnDefs[columnIndex].ColumnType)
       {
@@ -930,34 +930,34 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public Guid GetGuid(string columnName) { return DataTools.GetGuid(this[columnName]); }
 
     /// <summary>
-    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// РџРѕР»СѓС‡РёС‚СЊ СЂР°РЅРµРµ Р·Р°РїРёСЃР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РёР· Р±СѓС„РµСЂР° Р·Р°РїРѕР»РЅСЏРµРјРѕР№ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <returns>Значение в буфере</returns>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂРµ</returns>
     public Guid GetGuid(int columnIndex) { return DataTools.GetGuid(this[columnIndex]); }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnName">РРјСЏ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetGuid(string columnName, Guid value)
     {
       SetGuid(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
-    /// Записать значение в буфер строки.
+    /// Р—Р°РїРёСЃР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
-    /// <param name="value">Устанавливаемое значение</param>
+    /// <param name="columnIndex">РРЅРґРµРєСЃ РїРѕР»СЏ РёР· СЃРїРёСЃРєР° DBxDataWriterInfo.Columns</param>
+    /// <param name="value">РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
     public void SetGuid(int columnIndex, Guid value)
     {
       if (value == Guid.Empty && _ColumnDefs[columnIndex].Nullable)
@@ -983,63 +983,63 @@ namespace FreeLibSet.Data
 
     private Exception CreateColumnTypeException(int columnIndex, Type type)
     {
-      return new Exception("Столбец \"" + _ColumnDefs[columnIndex] + "\" таблицы \"" + _TableStruct.TableName + "\" имеет тип " +
-        _ColumnDefs[columnIndex].ColumnType.ToString() + " и не может принимать значения типа " + type.ToString());
+      return new Exception("РЎС‚РѕР»Р±РµС† \"" + _ColumnDefs[columnIndex] + "\" С‚Р°Р±Р»РёС†С‹ \"" + _TableStruct.TableName + "\" РёРјРµРµС‚ С‚РёРї " +
+        _ColumnDefs[columnIndex].ColumnType.ToString() + " Рё РЅРµ РјРѕР¶РµС‚ РїСЂРёРЅРёРјР°С‚СЊ Р·РЅР°С‡РµРЅРёСЏ С‚РёРїР° " + type.ToString());
     }
 
     #endregion
 
-    #region Позиции столбцов для поиска и прочих столбцов
+    #region РџРѕР·РёС†РёРё СЃС‚РѕР»Р±С†РѕРІ РґР»СЏ РїРѕРёСЃРєР° Рё РїСЂРѕС‡РёС… СЃС‚РѕР»Р±С†РѕРІ
 
     /// <summary>
-    /// Описание структуры таблицы
+    /// РћРїРёСЃР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ С‚Р°Р±Р»РёС†С‹
     /// </summary>
     public DBxTableStruct TableStruct { get { return _TableStruct; } }
     private readonly DBxTableStruct _TableStruct;
 
 
     /// <summary>
-    /// Описания столбцов таблицы, соответствующие DBxDataWriterInfo.Columns
+    /// РћРїРёСЃР°РЅРёСЏ СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС†С‹, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ DBxDataWriterInfo.Columns
     /// </summary>
     public DBxColumnStruct[] ColumnDefs { get { return _ColumnDefs; } }
     private readonly DBxColumnStruct[] _ColumnDefs;
 
     /// <summary>
-    /// Имена столбцов первичного ключа или заданных в свойстве DBxDataWriterInfo.SearchColumns
+    /// РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р° РёР»Рё Р·Р°РґР°РЅРЅС‹С… РІ СЃРІРѕР№СЃС‚РІРµ DBxDataWriterInfo.SearchColumns
     /// </summary>
     public DBxColumns SearchColumns { get { return _SearchColumns; } }
     private readonly DBxColumns _SearchColumns;
 
     /// <summary>
-    /// Позиции столбцов первичного ключа в массиве Values
+    /// РџРѕР·РёС†РёРё СЃС‚РѕР»Р±С†РѕРІ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р° РІ РјР°СЃСЃРёРІРµ Values
     /// </summary>
     public int[] SearchColumnPositions { get { return _SearchColumnPositions; } }
     private readonly int[] _SearchColumnPositions;
 
     /// <summary>
-    /// Имена столбцов, не входящих в первичный ключ
+    /// РРјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ, РЅРµ РІС…РѕРґСЏС‰РёС… РІ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
     /// </summary>
     public DBxColumns OtherColumns { get { return _OtherColumns; } }
     private readonly DBxColumns _OtherColumns;
 
     /// <summary>
-    /// Позиции прочих столбцов в массиве Values
+    /// РџРѕР·РёС†РёРё РїСЂРѕС‡РёС… СЃС‚РѕР»Р±С†РѕРІ РІ РјР°СЃСЃРёРІРµ Values
     /// </summary>
     public int[] OtherColumnPositions { get { return _OtherColumnPositions; } }
     private readonly int[] _OtherColumnPositions;
 
     #endregion
 
-    #region Основные методы, вызываемые из прикладного кода
+    #region РћСЃРЅРѕРІРЅС‹Рµ РјРµС‚РѕРґС‹, РІС‹Р·С‹РІР°РµРјС‹Рµ РёР· РїСЂРёРєР»Р°РґРЅРѕРіРѕ РєРѕРґР°
 
     /// <summary>
-    /// Счетчик для вызова PulseTransaction()
+    /// РЎС‡РµС‚С‡РёРє РґР»СЏ РІС‹Р·РѕРІР° PulseTransaction()
     /// </summary>
     private int _PulseCounter;
 
     /// <summary>
-    /// Обработка одной строки.
-    /// На момент вызова должен быть заполнен буфер строки
+    /// РћР±СЂР°Р±РѕС‚РєР° РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё.
+    /// РќР° РјРѕРјРµРЅС‚ РІС‹Р·РѕРІР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё
     /// </summary>
     public void Write()
     {
@@ -1068,10 +1068,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Завершение работы.
-    /// Если используется какая-либо отложенная запись, она будет выполнена.
-    /// Затем будет завершена транзакция
-    /// В случае успеха, метод переводит объект в состояние Finished.
+    /// Р—Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹.
+    /// Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР°РєР°СЏ-Р»РёР±Рѕ РѕС‚Р»РѕР¶РµРЅРЅР°СЏ Р·Р°РїРёСЃСЊ, РѕРЅР° Р±СѓРґРµС‚ РІС‹РїРѕР»РЅРµРЅР°.
+    /// Р—Р°С‚РµРј Р±СѓРґРµС‚ Р·Р°РІРµСЂС€РµРЅР° С‚СЂР°РЅР·Р°РєС†РёСЏ
+    /// Р’ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р°, РјРµС‚РѕРґ РїРµСЂРµРІРѕРґРёС‚ РѕР±СЉРµРєС‚ РІ СЃРѕСЃС‚РѕСЏРЅРёРµ Finished.
     /// </summary>
     public void Finish()
     {
@@ -1098,7 +1098,7 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Защишенные методы
+    #region Р—Р°С‰РёС€РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     private void CheckStateWriteable()
     {
@@ -1108,27 +1108,27 @@ namespace FreeLibSet.Data
         case DBxDataWriterState.Writing:
           break;
         default:
-          throw new InvalidOperationException("DBxDataWriter находится в состоянии " + _State.ToString());
+          throw new InvalidOperationException("DBxDataWriter РЅР°С…РѕРґРёС‚СЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРё " + _State.ToString());
       }
     }
 
     /// <summary>
-    /// Должен выполнять добавление строки из буфера
+    /// Р”РѕР»Р¶РµРЅ РІС‹РїРѕР»РЅСЏС‚СЊ РґРѕР±Р°РІР»РµРЅРёРµ СЃС‚СЂРѕРєРё РёР· Р±СѓС„РµСЂР°
     /// </summary>
     protected abstract void OnWrite();
 
     /// <summary>
-    /// Должен записать отложенные буферизованные данные, если такие есть.
-    /// Этот метод также вызывается из PulseTransaction()
+    /// Р”РѕР»Р¶РµРЅ Р·Р°РїРёСЃР°С‚СЊ РѕС‚Р»РѕР¶РµРЅРЅС‹Рµ Р±СѓС„РµСЂРёР·РѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ, РµСЃР»Рё С‚Р°РєРёРµ РµСЃС‚СЊ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ С‚Р°РєР¶Рµ РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· PulseTransaction()
     /// </summary>
     protected virtual void OnFinish()
     {
     }
 
     /// <summary>
-    /// Создает пустую таблицу данных, содержащую столбцы ColumnDefs
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚СѓСЋ С‚Р°Р±Р»РёС†Сѓ РґР°РЅРЅС‹С…, СЃРѕРґРµСЂР¶Р°С‰СѓСЋ СЃС‚РѕР»Р±С†С‹ ColumnDefs
     /// </summary>
-    /// <returns>Новая таблица DataTable</returns>
+    /// <returns>РќРѕРІР°СЏ С‚Р°Р±Р»РёС†Р° DataTable</returns>
     protected DataTable CreateDataTable()
     {
       DataTable table = new DataTable(WriterInfo.TableName);
@@ -1140,12 +1140,12 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Дополнительные методы
+    #region Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Загрузка данных из таблицы
+    /// Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёР· С‚Р°Р±Р»РёС†С‹
     /// </summary>
-    /// <param name="table">Таблица, откуда будут взяты строки</param>
+    /// <param name="table">РўР°Р±Р»РёС†Р°, РѕС‚РєСѓРґР° Р±СѓРґСѓС‚ РІР·СЏС‚С‹ СЃС‚СЂРѕРєРё</param>
     public virtual void LoadFrom(DataTable table)
     {
       if (table == null)
@@ -1154,13 +1154,13 @@ namespace FreeLibSet.Data
       if (table.Rows.Count == 0)
         return;
 
-      // Построение индексов полей в таблице
+      // РџРѕСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ РїРѕР»РµР№ РІ С‚Р°Р±Р»РёС†Рµ
       int[] columnIndices = new int[_Values.Length];
       for (int i = 0; i < columnIndices.Length; i++)
       {
         columnIndices[i] = table.Columns.IndexOf(_WriterInfo.Columns[i]);
         if (columnIndices[i] < 0)
-          throw new ArgumentException("Таблица \"" + table.TableName + "\" не содержит столбца \"" + _WriterInfo.Columns[i] + "\"", "table");
+          throw new ArgumentException("РўР°Р±Р»РёС†Р° \"" + table.TableName + "\" РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±С†Р° \"" + _WriterInfo.Columns[i] + "\"", "table");
       }
 
       foreach (DataRow row in table.Rows)
@@ -1172,21 +1172,21 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Загрузка данных из DbDataReader
+    /// Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёР· DbDataReader
     /// </summary>
-    /// <param name="reader">Источник, откуда будут взяты строки</param>
+    /// <param name="reader">РСЃС‚РѕС‡РЅРёРє, РѕС‚РєСѓРґР° Р±СѓРґСѓС‚ РІР·СЏС‚С‹ СЃС‚СЂРѕРєРё</param>
     public virtual void LoadFrom(DbDataReader reader)
     {
       if (reader == null)
         throw new ArgumentNullException("reader");
 
-      // Построение индексов полей в таблице
+      // РџРѕСЃС‚СЂРѕРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ РїРѕР»РµР№ РІ С‚Р°Р±Р»РёС†Рµ
       int[] columnIndices = new int[_Values.Length];
       for (int i = 0; i < columnIndices.Length; i++)
       {
         columnIndices[i] = reader.GetOrdinal(_WriterInfo.Columns[i]);
         if (columnIndices[i] < 0)
-          throw new ArgumentException("Источник данных не содержит столбца \"" + _WriterInfo.Columns[i] + "\"", "reader");
+          throw new ArgumentException("РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… РЅРµ СЃРѕРґРµСЂР¶РёС‚ СЃС‚РѕР»Р±С†Р° \"" + _WriterInfo.Columns[i] + "\"", "reader");
       }
 
       while (reader.Read())
@@ -1198,15 +1198,15 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Завершает текущую транзакцию, вызывая COMMIT_TRANSACTION, и начинает новую транзакцию.
-    /// Этот метод может вызываться автоматически из Write(), если было установлено свойство
+    /// Р—Р°РІРµСЂС€Р°РµС‚ С‚РµРєСѓС‰СѓСЋ С‚СЂР°РЅР·Р°РєС†РёСЋ, РІС‹Р·С‹РІР°СЏ COMMIT_TRANSACTION, Рё РЅР°С‡РёРЅР°РµС‚ РЅРѕРІСѓСЋ С‚СЂР°РЅР·Р°РєС†РёСЋ.
+    /// Р­С‚РѕС‚ РјРµС‚РѕРґ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РёР· Write(), РµСЃР»Рё Р±С‹Р»Рѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ
     /// DBxDataWriterInfo.TransactionPulseRowCount
     /// </summary>
     /// <returns></returns>
     public bool PulseTransaction()
     {
-      // обнуляем счетчик здесь, на случай, если метод вызван из прикладного кода, а свойство TransactionPulseRowCount
-      // также установлено
+      // РѕР±РЅСѓР»СЏРµРј СЃС‡РµС‚С‡РёРє Р·РґРµСЃСЊ, РЅР° СЃР»СѓС‡Р°Р№, РµСЃР»Рё РјРµС‚РѕРґ РІС‹Р·РІР°РЅ РёР· РїСЂРёРєР»Р°РґРЅРѕРіРѕ РєРѕРґР°, Р° СЃРІРѕР№СЃС‚РІРѕ TransactionPulseRowCount
+      // С‚Р°РєР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ
       _PulseCounter = _WriterInfo.TransactionPulseRowCount;
 
       if (!_TransactionStarted)
@@ -1220,13 +1220,13 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Вызывается из PulseTransaction().
-    /// Выполняет DBxCon.TransactionCommit() и DBxCon.TransactionBegin()
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· PulseTransaction().
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ DBxCon.TransactionCommit() Рё DBxCon.TransactionBegin()
     /// </summary>
     protected virtual void OnPulseTransaction()
     {
       _Con.TransactionCommit();
-      _TransactionStarted = false; // на случай ошибки начала новой транзакции
+      _TransactionStarted = false; // РЅР° СЃР»СѓС‡Р°Р№ РѕС€РёР±РєРё РЅР°С‡Р°Р»Р° РЅРѕРІРѕР№ С‚СЂР°РЅР·Р°РєС†РёРё
 
       _Con.TransactionBegin();
       _TransactionStarted = true;
@@ -1238,14 +1238,14 @@ namespace FreeLibSet.Data
 
 #if XXX
   /// <summary>
-  /// Класс-заглушка, который просто теряет все строки
+  /// РљР»Р°СЃСЃ-Р·Р°РіР»СѓС€РєР°, РєРѕС‚РѕСЂС‹Р№ РїСЂРѕСЃС‚Рѕ С‚РµСЂСЏРµС‚ РІСЃРµ СЃС‚СЂРѕРєРё
   /// </summary>
   internal class DBxDummyDataWriter : DBxDataWriter
   {
-  #region Конструктор
+  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация объекта в состоянии Created
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° РІ СЃРѕСЃС‚РѕСЏРЅРёРё Created
     /// </summary>
     /// <param name="con"></param>
     /// <param name="writerInfo"></param>
@@ -1256,10 +1256,10 @@ namespace FreeLibSet.Data
 
   #endregion
 
-  #region Заглушки
+  #region Р—Р°РіР»СѓС€РєРё
 
     /// <summary>
-    /// Ничего не делает
+    /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
     /// </summary>
     protected override void OnWrite()
     {
@@ -1270,16 +1270,16 @@ namespace FreeLibSet.Data
 #endif
 
   /// <summary>
-  /// Реализация DBxDataWriter по умолчанию.
-  /// Он вызывает методы класса DBxConBase для обработки каждой строки.
-  /// Вероятно, этот класс никогда не будет использоваться
+  /// Р РµР°Р»РёР·Р°С†РёСЏ DBxDataWriter РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+  /// РћРЅ РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґС‹ РєР»Р°СЃСЃР° DBxConBase РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё.
+  /// Р’РµСЂРѕСЏС‚РЅРѕ, СЌС‚РѕС‚ РєР»Р°СЃСЃ РЅРёРєРѕРіРґР° РЅРµ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ
   /// </summary>
   public class DBxDefaultDataWriter : DBxDataWriter
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Инициализация объекта в состоянии Created
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° РІ СЃРѕСЃС‚РѕСЏРЅРёРё Created
     /// </summary>
     /// <param name="con"></param>
     /// <param name="writerInfo"></param>
@@ -1290,10 +1290,10 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Переопределенные методы
+    #region РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Рµ РјРµС‚РѕРґС‹
 
     /// <summary>
-    /// Обработка строки
+    /// РћР±СЂР°Р±РѕС‚РєР° СЃС‚СЂРѕРєРё
     /// </summary>
     protected override void OnWrite()
     {
@@ -1319,7 +1319,7 @@ namespace FreeLibSet.Data
             }
           }
 
-          // Обновление
+          // РћР±РЅРѕРІР»РµРЅРёРµ
           object[] v2 = new object[OtherColumns.Count];
           for (int i = 0; i < v2.Length; i++)
             v2[i] = this[OtherColumnPositions[i]];
@@ -1336,24 +1336,24 @@ namespace FreeLibSet.Data
 
 #if XXX
   /// <summary>
-  /// Объект для записи, использующий команду DBxCommand с параметрами "P1", "P2", ...
-  /// Этот класс не работает в режиме Insert-or-update
+  /// РћР±СЉРµРєС‚ РґР»СЏ Р·Р°РїРёСЃРё, РёСЃРїРѕР»СЊР·СѓСЋС‰РёР№ РєРѕРјР°РЅРґСѓ DBxCommand СЃ РїР°СЂР°РјРµС‚СЂР°РјРё "P1", "P2", ...
+  /// Р­С‚РѕС‚ РєР»Р°СЃСЃ РЅРµ СЂР°Р±РѕС‚Р°РµС‚ РІ СЂРµР¶РёРјРµ Insert-or-update
   /// </summary>
-  internal class DBxParametriсDataWriter : DBxDataWriter
+  internal class DBxParametriСЃDataWriter : DBxDataWriter
   {
-  #region Конструктор
+  #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
-    public DBxParametriсDataWriter(DBxConBase con, DBxDataWriterInfo writerInfo)
+    public DBxParametriСЃDataWriter(DBxConBase con, DBxDataWriterInfo writerInfo)
       : base(con, writerInfo)
     {
     }
 
   #endregion
 
-  #region Подготовленная команда
+  #region РџРѕРґРіРѕС‚РѕРІР»РµРЅРЅР°СЏ РєРѕРјР°РЅРґР°
 
     /// <summary>
-    /// Команда, выполняющая запрос для каждой строки
+    /// РљРѕРјР°РЅРґР°, РІС‹РїРѕР»РЅСЏСЋС‰Р°СЏ Р·Р°РїСЂРѕСЃ РґР»СЏ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё
     /// </summary>
     protected DbCommand Command { get { return _Command; } }
     private DbCommand _Command;
@@ -1372,10 +1372,10 @@ namespace FreeLibSet.Data
           break;
 
         case DBxDataWriterMode.InsertOrUpdate:
-          throw new NotImplementedException("Не реализовано для режима InsertOrUpdate");
+          throw new NotImplementedException("РќРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РґР»СЏ СЂРµР¶РёРјР° InsertOrUpdate");
 
         default:
-          throw new BugException("Неизвестный Mode=" + WriterInfo.Mode.ToString());
+          throw new BugException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ Mode=" + WriterInfo.Mode.ToString());
       }
 
       _Command = Con.DB.ProviderFactory.CreateCommand();
@@ -1386,8 +1386,8 @@ namespace FreeLibSet.Data
         p.ParameterName="P" + (i + 1).ToString();
         _Command.Parameters.Add(p);
       }
-      _Command.Connection = Con.сonnection;
-      _Command.Prepare(); // подготовка команды. Для SQLite ничего не делает, а для других провайдеров - кто знает
+      _Command.Connection = Con.СЃonnection;
+      _Command.Prepare(); // РїРѕРґРіРѕС‚РѕРІРєР° РєРѕРјР°РЅРґС‹. Р”Р»СЏ SQLite РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚, Р° РґР»СЏ РґСЂСѓРіРёС… РїСЂРѕРІР°Р№РґРµСЂРѕРІ - РєС‚Рѕ Р·РЅР°РµС‚
     }
 
     private void FormatInsertSQL(DBxSqlBuffer Buffer)

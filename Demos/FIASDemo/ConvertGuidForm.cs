@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +13,7 @@ namespace FIASDemo
 {
   public partial class ConvertGuidForm : Form
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public ConvertGuidForm()
     {
@@ -38,7 +38,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Поля
+    #region РџРѕР»СЏ
 
     EFPRadioButtons efpMode;
 
@@ -46,7 +46,7 @@ namespace FIASDemo
 
     #endregion
 
-    #region Преобразование
+    #region РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ
 
     void AnythingChanged(object sender, EventArgs args)
     {

@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -11,19 +11,19 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Статические методы для работы с базами данных.
-  /// Не предназначены для использования в прикладном коде
+  /// РЎС‚Р°С‚РёС‡РµСЃРєРёРµ РјРµС‚РѕРґС‹ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Р±Р°Р·Р°РјРё РґР°РЅРЅС‹С….
+  /// РќРµ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅС‹ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РїСЂРёРєР»Р°РґРЅРѕРј РєРѕРґРµ
   /// </summary>
   public static class DBxTools
   {
-    #region Типы данных
+    #region РўРёРїС‹ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Преобразует тип данных Net Framework в тип столбца
-    /// Если имеется значение, а не только тип Type, следует использовать метод ValueToColumnType().
+    /// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ С‚РёРї РґР°РЅРЅС‹С… Net Framework РІ С‚РёРї СЃС‚РѕР»Р±С†Р°
+    /// Р•СЃР»Рё РёРјРµРµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµ, Р° РЅРµ С‚РѕР»СЊРєРѕ С‚РёРї Type, СЃР»РµРґСѓРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РјРµС‚РѕРґ ValueToColumnType().
     /// </summary>
-    /// <param name="t">Тип данных</param>
-    /// <returns>Тип столбца</returns>
+    /// <param name="t">РўРёРї РґР°РЅРЅС‹С…</param>
+    /// <returns>РўРёРї СЃС‚РѕР»Р±С†Р°</returns>
     public static DBxColumnType DataTypeToColumnType(Type t)
     {
       if (t == null)
@@ -47,15 +47,15 @@ namespace FreeLibSet.Data
       if (t == typeof(Byte[]))
         return DBxColumnType.Binary;
 
-      throw new ArgumentException("Неизвестный тип данных: " + t.ToString(), "t");
+      throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї РґР°РЅРЅС‹С…: " + t.ToString(), "t");
     }
 
     /// <summary>
-    /// Возвращает тип данных Net Framework для типа данных столбца.
-    /// Так как передается только тип столбца, но не диапазон значений, возвращаемое значение может быть неточным.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РёРї РґР°РЅРЅС‹С… Net Framework РґР»СЏ С‚РёРїР° РґР°РЅРЅС‹С… СЃС‚РѕР»Р±С†Р°.
+    /// РўР°Рє РєР°Рє РїРµСЂРµРґР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ С‚РёРї СЃС‚РѕР»Р±С†Р°, РЅРѕ РЅРµ РґРёР°РїР°Р·РѕРЅ Р·РЅР°С‡РµРЅРёР№, РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµС‚РѕС‡РЅС‹Рј.
     /// </summary>
-    /// <param name="columnType">Тип столбца</param>
-    /// <returns>Тип данных</returns>
+    /// <param name="columnType">РўРёРї СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>РўРёРї РґР°РЅРЅС‹С…</returns>
     public static Type ColumnTypeToDataType(DBxColumnType columnType)
     {
       switch (columnType)
@@ -74,16 +74,16 @@ namespace FreeLibSet.Data
         case DBxColumnType.Xml: return typeof(string);
         case DBxColumnType.Binary: return typeof(byte[]);
         default:
-          throw new ArgumentException("Неизвестный тип данных: " + columnType.ToString(), "columnType");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї РґР°РЅРЅС‹С…: " + columnType.ToString(), "columnType");
       }
     }
 
     /// <summary>
-    /// Получить тип данных для столбца, исходя из значения.
-    /// В отличие от DataTypeToColumnType(), отличает Date и DateTime
+    /// РџРѕР»СѓС‡РёС‚СЊ С‚РёРї РґР°РЅРЅС‹С… РґР»СЏ СЃС‚РѕР»Р±С†Р°, РёСЃС…РѕРґСЏ РёР· Р·РЅР°С‡РµРЅРёСЏ.
+    /// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ DataTypeToColumnType(), РѕС‚Р»РёС‡Р°РµС‚ Date Рё DateTime
     /// </summary>
-    /// <param name="value">Проверяемое значение</param>
-    /// <returns>Тип столбца</returns>
+    /// <param name="value">РџСЂРѕРІРµСЂСЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ</param>
+    /// <returns>РўРёРї СЃС‚РѕР»Р±С†Р°</returns>
     public static DBxColumnType ValueToColumnType(object value)
     {
       if (value == null)
@@ -109,10 +109,10 @@ namespace FreeLibSet.Data
     private static readonly byte[] _EmptyBytes = new byte[0];
 
     /// <summary>
-    /// Получить значение по умолчанию для типа столбца
+    /// РџРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ С‚РёРїР° СЃС‚РѕР»Р±С†Р°
     /// </summary>
-    /// <param name="columnType">Тип столбца</param>
-    /// <returns>Значение по умолчанию</returns>
+    /// <param name="columnType">РўРёРї СЃС‚РѕР»Р±С†Р°</param>
+    /// <returns>Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</returns>
     public static object GetDefaultValue(DBxColumnType columnType)
     {
       switch (columnType)
@@ -131,15 +131,15 @@ namespace FreeLibSet.Data
         case DBxColumnType.Xml: return String.Empty;
         case DBxColumnType.Binary: return _EmptyBytes;
         default:
-          throw new ArgumentException("Неизвестный тип данных: " + columnType.ToString(), "columnType");
+          throw new ArgumentException("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї РґР°РЅРЅС‹С…: " + columnType.ToString(), "columnType");
       }
     }
 
     /// <summary>
-    /// Создает массив объектов DBxColumn для списка имен полей
+    /// РЎРѕР·РґР°РµС‚ РјР°СЃСЃРёРІ РѕР±СЉРµРєС‚РѕРІ DBxColumn РґР»СЏ СЃРїРёСЃРєР° РёРјРµРЅ РїРѕР»РµР№
     /// </summary>
-    /// <param name="columnNames">Массив имен полей</param>
-    /// <returns>Массив выражений</returns>
+    /// <param name="columnNames">РњР°СЃСЃРёРІ РёРјРµРЅ РїРѕР»РµР№</param>
+    /// <returns>РњР°СЃСЃРёРІ РІС‹СЂР°Р¶РµРЅРёР№</returns>
     public static DBxExpression[] GetColumnNameExpressions(string[] columnNames)
     {
       DBxExpression[] a = new DBxExpression[columnNames.Length];
@@ -150,20 +150,20 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    #region Вывод отладочной информации
+    #region Р’С‹РІРѕРґ РѕС‚Р»Р°РґРѕС‡РЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё
 
     /// <summary>
-    /// Инициализация улучшенной отладки объектов из ExtDB.
-    /// Для сервера вызывается автоматически при создании объекта DBx.
-    /// При использовании библиотеки ExtDBDocs вызывается автоматически при создании DBxDocProvider.
-    /// Повторные вызовы отбрасываются
+    /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СѓР»СѓС‡С€РµРЅРЅРѕР№ РѕС‚Р»Р°РґРєРё РѕР±СЉРµРєС‚РѕРІ РёР· ExtDB.
+    /// Р”Р»СЏ СЃРµСЂРІРµСЂР° РІС‹Р·С‹РІР°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСЂРё СЃРѕР·РґР°РЅРёРё РѕР±СЉРµРєС‚Р° DBx.
+    /// РџСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё Р±РёР±Р»РёРѕС‚РµРєРё ExtDBDocs РІС‹Р·С‹РІР°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСЂРё СЃРѕР·РґР°РЅРёРё DBxDocProvider.
+    /// РџРѕРІС‚РѕСЂРЅС‹Рµ РІС‹Р·РѕРІС‹ РѕС‚Р±СЂР°СЃС‹РІР°СЋС‚СЃСЏ
     /// </summary>
     public static void InitLogout()
     {
       if (_InitLogoutCalled)
         return;
       _InitLogoutCalled = true;
-      LogoutTools.LogoutInfoNeeded += new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded); // 19.08.2020 перенесено сюда
+      LogoutTools.LogoutInfoNeeded += new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded); // 19.08.2020 РїРµСЂРµРЅРµСЃРµРЅРѕ СЃСЋРґР°
       LogoutTools.LogoutProp += new LogoutPropEventHandler(LogoutTools_LogoutProp);
     }
 
@@ -187,8 +187,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Предотвращаем вывод строк подключения, т.к. они могут содержать секретную информацию о пароле.
-    /// Также не выводим информацию о структуре БД, т.к. она может быть очень большой
+    /// РџСЂРµРґРѕС‚РІСЂР°С‰Р°РµРј РІС‹РІРѕРґ СЃС‚СЂРѕРє РїРѕРґРєР»СЋС‡РµРЅРёСЏ, С‚.Рє. РѕРЅРё РјРѕРіСѓС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ СЃРµРєСЂРµС‚РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїР°СЂРѕР»Рµ.
+    /// РўР°РєР¶Рµ РЅРµ РІС‹РІРѕРґРёРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃС‚СЂСѓРєС‚СѓСЂРµ Р‘Р”, С‚.Рє. РѕРЅР° РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‡РµРЅСЊ Р±РѕР»СЊС€РѕР№
     /// </summary>
     private static void LogoutTools_LogoutProp(object sender, LogoutPropEventArgs args)
     {

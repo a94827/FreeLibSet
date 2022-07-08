@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,33 +19,33 @@ namespace EFPCommandItemsDemo
       Program.LastFormNumber++;
       _FormNumber = Program.LastFormNumber;
 
-      Text = "Форма №" + _FormNumber.ToString();
+      Text = "Р¤РѕСЂРјР° в„–" + _FormNumber.ToString();
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       EFPCommandItem ci;
       ci = new EFPCommandItem("Test", "Item1");
-      ci.MenuText = "Команда на уровне формы";
+      ci.MenuText = "РљРѕРјР°РЅРґР° РЅР° СѓСЂРѕРІРЅРµ С„РѕСЂРјС‹";
       ci.ImageKey = "CircleBlack";
       ci.ShortCut = Keys.F11;
-      ci.StatusBarText = "Ф.№" + _FormNumber.ToString();
+      ci.StatusBarText = "Р¤.в„–" + _FormNumber.ToString();
       ci.Click += new EventHandler(MenuItem_Click);
       efpForm.CommandItems.Add(ci);
 
       EFPTabControl efpTabControl = new EFPTabControl(efpForm, TheTabControl);
 
       ci = new EFPCommandItem("Test", "Item21");
-      ci.MenuText = "Команда для вкладки 1";
+      ci.MenuText = "РљРѕРјР°РЅРґР° РґР»СЏ РІРєР»Р°РґРєРё 1";
       ci.ImageKey = "CircleBlue";
       ci.ShortCut = Keys.F12;
-      ci.StatusBarText = "Вкладка 1";
+      ci.StatusBarText = "Р’РєР»Р°РґРєР° 1";
       ci.Click += new EventHandler(MenuItem_Click);
       efpTabControl.TabPages[0].CommandItems.Add(ci);
 
       ci = new EFPCommandItem("Test", "Item22");
-      ci.MenuText = "Команда для вкладки 2";
+      ci.MenuText = "РљРѕРјР°РЅРґР° РґР»СЏ РІРєР»Р°РґРєРё 2";
       ci.ImageKey = "CircleGreen";
       ci.ShortCut = Keys.F12;
-      ci.StatusBarText = "Вкладка 2";
+      ci.StatusBarText = "Р’РєР»Р°РґРєР° 2";
       ci.Click += new EventHandler(MenuItem_Click);
       efpTabControl.TabPages[1].CommandItems.Add(ci);
 
@@ -58,11 +58,11 @@ namespace EFPCommandItemsDemo
       efpGr1.Data = data1;
 
       ci = new EFPCommandItem("Test", "Item31");
-      ci.MenuText = "Команда для табличного просмотра";
+      ci.MenuText = "РљРѕРјР°РЅРґР° РґР»СЏ С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР°";
       ci.Click += new EventHandler(MenuItem_Click);
       ci.ImageKey = "CircleRed";
       ci.ShortCut = Keys.F8;
-      ci.StatusBarText = "Таблица";
+      ci.StatusBarText = "РўР°Р±Р»РёС†Р°";
       efpGr1.CommandItems.Add(ci);
 
       EFPTextBox efpText2 = new EFPTextBox(efpTabControl.TabPages[1].BaseProvider, tb2);
@@ -70,11 +70,11 @@ namespace EFPCommandItemsDemo
 
 
       ci = new EFPCommandItem("Test", "Item32");
-      ci.MenuText = "Команда для редактора";
+      ci.MenuText = "РљРѕРјР°РЅРґР° РґР»СЏ СЂРµРґР°РєС‚РѕСЂР°";
       ci.Click += new EventHandler(MenuItem_Click);
       ci.ImageKey = "CircleYellow";
       ci.ShortCut = Keys.F8;
-      ci.StatusBarText = "Редактор";
+      ci.StatusBarText = "Р РµРґР°РєС‚РѕСЂ";
       efpText2.CommandItems.Add(ci);
     }
 
@@ -83,7 +83,7 @@ namespace EFPCommandItemsDemo
     void MenuItem_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
-      EFPApp.MessageBox("Выполнена команда: " + ci.MenuText, this.Text);
+      EFPApp.MessageBox("Р’С‹РїРѕР»РЅРµРЅР° РєРѕРјР°РЅРґР°: " + ci.MenuText, this.Text);
     }
   }
 }

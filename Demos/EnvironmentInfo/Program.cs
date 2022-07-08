@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Text;
@@ -44,7 +44,7 @@ namespace EnvironmentInfo
       }
       catch (Exception e)
       {
-        MessageBox.Show(e.Message, "Œ¯Ë·Í‡", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(e.Message, "–û—à–∏–±–∫–∞", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
   }

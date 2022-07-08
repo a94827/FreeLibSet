@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtDBDocs_tests.Data_Docs
   [TestFixture]
   public class DBxBinDataHandlerTests : DBxBinDataTestsBase
   {
-    #region Проверка структуры таблиц
+    #region РџСЂРѕРІРµСЂРєР° СЃС‚СЂСѓРєС‚СѓСЂС‹ С‚Р°Р±Р»РёС†
 
     [Test]
     public void Structure_without_fragmentation()

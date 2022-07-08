@@ -1,4 +1,4 @@
-// Part of FreeLibSet.
+п»ї// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
 using System;
@@ -12,16 +12,16 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.FIAS
 {
   /// <summary>
-  /// Однократные настройки для исключения ненужных данных классификатора.
-  /// Свойства объекта можно устанавливать до присоединения к FiasDB. После этого объект становится потокобезопасным
+  /// РћРґРЅРѕРєСЂР°С‚РЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё РґР»СЏ РёСЃРєР»СЋС‡РµРЅРёСЏ РЅРµРЅСѓР¶РЅС‹С… РґР°РЅРЅС‹С… РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+  /// РЎРІРѕР№СЃС‚РІР° РѕР±СЉРµРєС‚Р° РјРѕР¶РЅРѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ РґРѕ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёСЏ Рє FiasDB. РџРѕСЃР»Рµ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚ СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Рј
   /// </summary>
   [Serializable]
   public sealed class FiasDBSettings : IReadOnlyObject
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает объект, в котором можно задать настройки
+    /// РЎРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚, РІ РєРѕС‚РѕСЂРѕРј РјРѕР¶РЅРѕ Р·Р°РґР°С‚СЊ РЅР°СЃС‚СЂРѕР№РєРё
     /// </summary>
     public FiasDBSettings()
     {
@@ -42,11 +42,11 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Будут ли включены в классификатор номера домов?
-    /// По умолчанию - true.
+    /// Р‘СѓРґСѓС‚ Р»Рё РІРєР»СЋС‡РµРЅС‹ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ РЅРѕРјРµСЂР° РґРѕРјРѕРІ?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true.
     /// </summary>
     public bool UseHouse
     {
@@ -60,8 +60,8 @@ namespace FreeLibSet.FIAS
     private bool _UseHouse;
 
     /// <summary>
-    /// Будут ли включены в классификатор номера помещений (квартир)?
-    /// По умолчанию - true.
+    /// Р‘СѓРґСѓС‚ Р»Рё РІРєР»СЋС‡РµРЅС‹ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ РЅРѕРјРµСЂР° РїРѕРјРµС‰РµРЅРёР№ (РєРІР°СЂС‚РёСЂ)?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true.
     /// </summary>
     public bool UseRoom
     {
@@ -84,15 +84,15 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Список включаемых кодов региона.
-    /// По умолчанию список пустой, что означает включение в классификатор всех регионов.
+    /// РЎРїРёСЃРѕРє РІРєР»СЋС‡Р°РµРјС‹С… РєРѕРґРѕРІ СЂРµРіРёРѕРЅР°.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЃРїРёСЃРѕРє РїСѓСЃС‚РѕР№, С‡С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ РІРєР»СЋС‡РµРЅРёРµ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ РІСЃРµС… СЂРµРіРёРѕРЅРѕРІ.
     /// </summary>
     public ICollection<string> RegionCodes { get { return _RegionCodes; } }
     private RegionCodeList _RegionCodes;
 
     /// <summary>
-    /// Будут ли включены в классификатор поля с кодами ОКАТО?
-    /// По умолчанию - true.
+    /// Р‘СѓРґСѓС‚ Р»Рё РІРєР»СЋС‡РµРЅС‹ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ РїРѕР»СЏ СЃ РєРѕРґР°РјРё РћРљРђРўРћ?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true.
     /// </summary>
     public bool UseOKATO
     {
@@ -106,8 +106,8 @@ namespace FreeLibSet.FIAS
     private bool _UseOKATO;
 
     /// <summary>
-    /// Будут ли включены в классификатор поля с кодами ОКТМО?
-    /// По умолчанию - true.
+    /// Р‘СѓРґСѓС‚ Р»Рё РІРєР»СЋС‡РµРЅС‹ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ РїРѕР»СЏ СЃ РєРѕРґР°РјРё РћРљРўРњРћ?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true.
     /// </summary>
     public bool UseOKTMO
     {
@@ -121,8 +121,8 @@ namespace FreeLibSet.FIAS
     private bool _UseOKTMO;
 
     /// <summary>
-    /// Будут ли включены в классификатор поля с кодами ИФНС?
-    /// По умолчанию - true.
+    /// Р‘СѓРґСѓС‚ Р»Рё РІРєР»СЋС‡РµРЅС‹ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ РїРѕР»СЏ СЃ РєРѕРґР°РјРё РР¤РќРЎ?
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - true.
     /// </summary>
     public bool UseIFNS
     {
@@ -136,8 +136,8 @@ namespace FreeLibSet.FIAS
     private bool _UseIFNS;
 
     /// <summary>
-    /// Будут ли включены в классификатор исторические сведения (true) или только актуальные (false).
-    /// По умолчанию - false - только актуальные сведения
+    /// Р‘СѓРґСѓС‚ Р»Рё РІРєР»СЋС‡РµРЅС‹ РІ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ РёСЃС‚РѕСЂРёС‡РµСЃРєРёРµ СЃРІРµРґРµРЅРёСЏ (true) РёР»Рё С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ (false).
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false - С‚РѕР»СЊРєРѕ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ СЃРІРµРґРµРЅРёСЏ
     /// </summary>
     public bool UseHistory
     {
@@ -153,9 +153,9 @@ namespace FreeLibSet.FIAS
     private bool _UseHistory;
 
     /// <summary>
-    /// Наличие полей даты начала и окончания действия записей.
-    /// По умолчанию - false.
-    /// Установка свойства UseHistory=true вызывает принудительную установку и этого свойства
+    /// РќР°Р»РёС‡РёРµ РїРѕР»РµР№ РґР°С‚С‹ РЅР°С‡Р°Р»Р° Рё РѕРєРѕРЅС‡Р°РЅРёСЏ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРµР№.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - false.
+    /// РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІР° UseHistory=true РІС‹Р·С‹РІР°РµС‚ РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅСѓСЋ СѓСЃС‚Р°РЅРѕРІРєСѓ Рё СЌС‚РѕРіРѕ СЃРІРѕР№СЃС‚РІР°
     /// </summary>
     public bool UseDates
     {
@@ -170,42 +170,42 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Методы проверки
+    #region РњРµС‚РѕРґС‹ РїСЂРѕРІРµСЂРєРё
 
     internal void CheckUseHouse()
     {
       if (!_UseHouse)
-        throw new FiasDBSettingsException("В настройках базы данных ФИАС отключено использование справочника зданий (FiasDBSettings.UseHouse=false)");
+        throw new FiasDBSettingsException("Р’ РЅР°СЃС‚СЂРѕР№РєР°С… Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ РѕС‚РєР»СЋС‡РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р·РґР°РЅРёР№ (FiasDBSettings.UseHouse=false)");
     }
 
     internal void CheckUseRoom()
     {
       if (!_UseRoom)
-        throw new FiasDBSettingsException("В настройках базы данных ФИАС отключено использование справочника помещений (FiasDBSettings.UseRoom=false)");
+        throw new FiasDBSettingsException("Р’ РЅР°СЃС‚СЂРѕР№РєР°С… Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ РѕС‚РєР»СЋС‡РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° РїРѕРјРµС‰РµРЅРёР№ (FiasDBSettings.UseRoom=false)");
     }
 
     internal void CheckUseHistory()
     {
       if (!_UseHistory)
-        throw new FiasDBSettingsException("В настройках базы данных ФИАС отключено использование исторических данных (FiasDBSettings.UseHistory=false)");
+        throw new FiasDBSettingsException("Р’ РЅР°СЃС‚СЂРѕР№РєР°С… Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ РѕС‚РєР»СЋС‡РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РёСЃС‚РѕСЂРёС‡РµСЃРєРёС… РґР°РЅРЅС‹С… (FiasDBSettings.UseHistory=false)");
     }
 
     internal void CheckUseIFNS()
     {
       if (!_UseIFNS)
-        throw new FiasDBSettingsException("В настройках базы данных ФИАС отключено использование полей ИФНС (FiasDBSettings.UseIFNS=false)");
+        throw new FiasDBSettingsException("Р’ РЅР°СЃС‚СЂРѕР№РєР°С… Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ РѕС‚РєР»СЋС‡РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РїРѕР»РµР№ РР¤РќРЎ (FiasDBSettings.UseIFNS=false)");
     }
 
     internal void CheckUseOKATO()
     {
       if (!_UseOKATO)
-        throw new FiasDBSettingsException("В настройках базы данных ФИАС отключено использование полей кодов ОКАТО (FiasDBSettings.UseOKATO=false)");
+        throw new FiasDBSettingsException("Р’ РЅР°СЃС‚СЂРѕР№РєР°С… Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ РѕС‚РєР»СЋС‡РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РїРѕР»РµР№ РєРѕРґРѕРІ РћРљРђРўРћ (FiasDBSettings.UseOKATO=false)");
     }
 
     internal void CheckUseOKTMO()
     {
       if (!_UseOKTMO)
-        throw new FiasDBSettingsException("В настройках базы данных ФИАС отключено использование полей ОКТМО (FiasDBSettings.UseOKTMO=false)");
+        throw new FiasDBSettingsException("Р’ РЅР°СЃС‚СЂРѕР№РєР°С… Р±Р°Р·С‹ РґР°РЅРЅС‹С… Р¤РРђРЎ РѕС‚РєР»СЋС‡РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РїРѕР»РµР№ РћРљРўРњРћ (FiasDBSettings.UseOKTMO=false)");
     }
 
     #endregion
@@ -213,7 +213,7 @@ namespace FreeLibSet.FIAS
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true после вызова конструктора FiasDB.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true РїРѕСЃР»Рµ РІС‹Р·РѕРІР° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° FiasDB.
     /// </summary>
     public bool IsReadOnly
     {
@@ -221,7 +221,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Р“РµРЅРµСЂРёСЂСѓРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё IsReadOnly=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -229,8 +229,8 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Переводит набор настроек в режим "только чтение".
-    /// Вызывается конструктором FiasDB.
+    /// РџРµСЂРµРІРѕРґРёС‚ РЅР°Р±РѕСЂ РЅР°СЃС‚СЂРѕРµРє РІ СЂРµР¶РёРј "С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёРµ".
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРј FiasDB.
     /// </summary>
     public void SetReadOnly()
     {
@@ -238,22 +238,22 @@ namespace FreeLibSet.FIAS
         return;
 
       if (_UseRoom && (!_UseHouse))
-        throw new InvalidOperationException("Неправильные настройки. Не может быть UseFlats=true при UseHouses=false");
+        throw new InvalidOperationException("РќРµРїСЂР°РІРёР»СЊРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ UseFlats=true РїСЂРё UseHouses=false");
 
       if (_UseHistory && (!_UseDates))
-        throw new InvalidOperationException("Неправильные настройки. Не может быть UseHistory=true при UseDates=false");
+        throw new InvalidOperationException("РќРµРїСЂР°РІРёР»СЊРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё. РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ UseHistory=true РїСЂРё UseDates=false");
 
       _RegionCodes.SetReadOnly();
     }
 
     #endregion
 
-    #region Преобразование в XML и секцию конфигурации
+    #region РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ XML Рё СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
 
     /// <summary>
-    /// Записывает настройки в секцию конфигурации
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РЅР°СЃС‚СЂРѕР№РєРё РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Заполняемая секция</param>
+    /// <param name="cfg">Р—Р°РїРѕР»РЅСЏРµРјР°СЏ СЃРµРєС†РёСЏ</param>
     public void WriteConfig(CfgPart cfg)
     {
       cfg.SetBool("UseHouse", UseHouse);
@@ -274,10 +274,10 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Чтение настроек из секции конфигурации.
-    /// Настройки, которых нет в секции, сохраняются неизмененными.
+    /// Р§С‚РµРЅРёРµ РЅР°СЃС‚СЂРѕРµРє РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+    /// РќР°СЃС‚СЂРѕР№РєРё, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РІ СЃРµРєС†РёРё, СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ РЅРµРёР·РјРµРЅРµРЅРЅС‹РјРё.
     /// </summary>
-    /// <param name="cfg">Считываемая секция конфигурации</param>
+    /// <param name="cfg">РЎС‡РёС‚С‹РІР°РµРјР°СЏ СЃРµРєС†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
     public void ReadConfig(CfgPart cfg)
     {
       CheckNotReadOnly();
@@ -307,7 +307,7 @@ namespace FreeLibSet.FIAS
     }
 
     /// <summary>
-    /// Настройки в виде текста XML
+    /// РќР°СЃС‚СЂРѕР№РєРё РІ РІРёРґРµ С‚РµРєСЃС‚Р° XML
     /// </summary>
     public string AsXmlText
     {
@@ -327,25 +327,25 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Текстовое представление
+    #region РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 
     /// <summary>
-    /// Текстовое представление (для отладки)
+    /// РўРµРєСЃС‚РѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ (РґР»СЏ РѕС‚Р»Р°РґРєРё)
     /// </summary>
     /// <returns></returns>
     public override string ToString()
     {
       StringBuilder sb = new StringBuilder();
-      sb.Append("Дома: ");
-      sb.Append(_UseHouse ? "есть" : "нет");
+      sb.Append("Р”РѕРјР°: ");
+      sb.Append(_UseHouse ? "РµСЃС‚СЊ" : "РЅРµС‚");
       if (_UseHouse)
       {
-        sb.Append(", квартиры: ");
-        sb.Append(_UseRoom ? "есть" : "нет");
+        sb.Append(", РєРІР°СЂС‚РёСЂС‹: ");
+        sb.Append(_UseRoom ? "РµСЃС‚СЊ" : "РЅРµС‚");
       }
-      sb.Append(", регионы: ");
+      sb.Append(", СЂРµРіРёРѕРЅС‹: ");
       if (_RegionCodes.Count == 0)
-        sb.Append("все");
+        sb.Append("РІСЃРµ");
       else
       {
         for (int i = 0; i < _RegionCodes.Count; i++)
@@ -356,22 +356,22 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      sb.Append(", коды ОКАТО: ");
-      sb.Append(UseOKATO ? "есть" : "нет");
+      sb.Append(", РєРѕРґС‹ РћРљРђРўРћ: ");
+      sb.Append(UseOKATO ? "РµСЃС‚СЊ" : "РЅРµС‚");
 
-      sb.Append(", коды ОКТМО: ");
-      sb.Append(UseOKTMO ? "есть" : "нет");
+      sb.Append(", РєРѕРґС‹ РћРљРўРњРћ: ");
+      sb.Append(UseOKTMO ? "РµСЃС‚СЊ" : "РЅРµС‚");
 
-      sb.Append(", коды ИФНС: ");
-      sb.Append(UseIFNS ? "есть" : "нет");
+      sb.Append(", РєРѕРґС‹ РР¤РќРЎ: ");
+      sb.Append(UseIFNS ? "РµСЃС‚СЊ" : "РЅРµС‚");
 
-      sb.Append(", исторические сведения: ");
-      sb.Append(UseHistory ? "есть" : "нет");
+      sb.Append(", РёСЃС‚РѕСЂРёС‡РµСЃРєРёРµ СЃРІРµРґРµРЅРёСЏ: ");
+      sb.Append(UseHistory ? "РµСЃС‚СЊ" : "РЅРµС‚");
 
       if (!UseHistory)
       {
-        sb.Append(", даты действия записей: ");
-        sb.Append(UseDates ? "есть" : "нет");
+        sb.Append(", РґР°С‚С‹ РґРµР№СЃС‚РІРёСЏ Р·Р°РїРёСЃРµР№: ");
+        sb.Append(UseDates ? "РµСЃС‚СЊ" : "РЅРµС‚");
       }
 
       return sb.ToString();
@@ -379,11 +379,11 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    #region Статический экземпляр
+    #region РЎС‚Р°С‚РёС‡РµСЃРєРёР№ СЌРєР·РµРјРїР»СЏСЂ
 
     /// <summary>
-    /// Настройки по умолчанию.
-    /// У этого объекта нельзя менять свойства
+    /// РќР°СЃС‚СЂРѕР№РєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// РЈ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р° РЅРµР»СЊР·СЏ РјРµРЅСЏС‚СЊ СЃРІРѕР№СЃС‚РІР°
     /// </summary>
     public static readonly FiasDBSettings DefaultSettings = new FiasDBSettings();
 
@@ -394,16 +394,16 @@ namespace FreeLibSet.FIAS
   internal enum FiasFTSMode { None, FTS3 }
 
   /// <summary>
-  /// Внутренние параметры классификатора.
-  /// Не используется в пользовательском коде
+  /// Р’РЅСѓС‚СЂРµРЅРЅРёРµ РїР°СЂР°РјРµС‚СЂС‹ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°.
+  /// РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ
   /// </summary>
   [Serializable]
   public sealed class FiasInternalSettings
   {
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Имя провайдера базы данных - константа из класса DBxProviderNames
+    /// РРјСЏ РїСЂРѕРІР°Р№РґРµСЂР° Р±Р°Р·С‹ РґР°РЅРЅС‹С… - РєРѕРЅСЃС‚Р°РЅС‚Р° РёР· РєР»Р°СЃСЃР° DBxProviderNames
     /// </summary>
     public string ProviderName
     {
@@ -413,14 +413,14 @@ namespace FreeLibSet.FIAS
     private string _ProviderName;
 
     /// <summary>
-    /// Использование отдельных таблиц идентификаторов для уменьшения размера
+    /// РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РѕС‚РґРµР»СЊРЅС‹С… С‚Р°Р±Р»РёС† РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ РґР»СЏ СѓРјРµРЅСЊС€РµРЅРёСЏ СЂР°Р·РјРµСЂР°
     /// </summary>
     internal bool UseIdTables;
 
     /// <summary>
-    /// Возвращает true для базы данных SQLite.
-    /// При этом вместо полей "STARTDATE" и "ENDDATE" типа DATE используются поля "dStartDate" и "dEndDate" типа INT.
-    /// Для преобразования даты в число используется функция DateTime.ToOADate(), дате 01.01.1900 соответствует значение 1.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true РґР»СЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С… SQLite.
+    /// РџСЂРё СЌС‚РѕРј РІРјРµСЃС‚Рѕ РїРѕР»РµР№ "STARTDATE" Рё "ENDDATE" С‚РёРїР° DATE РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РїРѕР»СЏ "dStartDate" Рё "dEndDate" С‚РёРїР° INT.
+    /// Р”Р»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РґР°С‚С‹ РІ С‡РёСЃР»Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С„СѓРЅРєС†РёСЏ DateTime.ToOADate(), РґР°С‚Рµ 01.01.1900 СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ Р·РЅР°С‡РµРЅРёРµ 1.
     /// </summary>
     public bool UseOADates
     {
@@ -430,7 +430,7 @@ namespace FreeLibSet.FIAS
     private bool _UseOADates;
 
     /// <summary>
-    /// Использование полнотекстного поиска
+    /// РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РїРѕР»РЅРѕС‚РµРєСЃС‚РЅРѕРіРѕ РїРѕРёСЃРєР°
     /// </summary>
     internal FiasFTSMode FTSMode;
 
