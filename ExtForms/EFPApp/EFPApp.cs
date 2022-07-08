@@ -162,9 +162,6 @@ namespace FreeLibSet.Forms
 #endif
       _MainThread = Thread.CurrentThread;
 
-      // Загружаем общий список изображений
-      InitImages();
-
       _AppStartTime = DateTime.Now;
       _AppStartStopwatchTimestamp = Stopwatch.GetTimestamp(); // 17.02.2021
       Timers.InitTimer();
@@ -2296,58 +2293,26 @@ namespace FreeLibSet.Forms
 
     #region Свойство MainImages
 
-    private static void InitImages()
-    {
-      // 04.09.2012
-      // Нельзя использовать список frm.MainImageList в качестве статического списка.
-      // Возникают глюки - некоторые изображения черные
-
-      _MainImages = new ImageList();
-      _MainImages.ImageSize = new Size(16, 16);
-      _MainImages.ColorDepth = ColorDepth.Depth4Bit;
-
-      DummyForm frm = new DummyForm();
-      AddMainImages(frm.MainImageList); // Стандартные изображения
-    }
-
     /// <summary>
     /// Основной список изображений для значков.
     /// Значки используются в командах меню, кнопках, списках и других элементах интерфейса.
     /// Список заполнен стандартными изображениями и может быть дополнен изображениями при инициализации программы
-    /// с помощью AddMainImages().
-    /// Изображения имеют размер 16x16 пикселей, 16 цветов. Цвет Magenta используется в качестве прозрачного.
+    /// с помощью вызовов EFPApp.MainImages.Images.Add() или поштучным присвоением изображений.
+    /// Изображения имеют размер 16x16 пикселей.
     /// </summary>
-    public static ImageList MainImages
+    public static EFPAppMainImages MainImages
     {
       get
       {
 #if DEBUG
         CheckMainThread();
 #endif
-
+        if (_MainImages == null)
+          _MainImages = new EFPAppMainImages();
         return _MainImages;
       }
     }
-    private static ImageList _MainImages;
-
-    /// <summary>
-    /// Добавляет в список MainImages изображения, специфичные для приложения.
-    /// Используется только при инициализации программы.
-    /// Если в списке MainImages уже есть изображение с совпадающим ключом, то оно будет заменено на новое
-    /// </summary>
-    /// <param name="srcImages">Пользовательский список изображений</param>
-    public static void AddMainImages(ImageList srcImages)
-    {
-#if DEBUG
-      CheckMainThread();
-#endif
-
-      WinFormsTools.CopyImages(srcImages, MainImages, true /* 10.01.2019 */);
-    }
-
-    #endregion
-
-    #region MainImageIcon()
+    private static EFPAppMainImages _MainImages;
 
     /// <summary>
     /// Получение значка для формы, соответствующего изображению в списке MainImages.
@@ -2355,6 +2320,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="imageKey">Имя изображения в списке MainImages</param>
     /// <returns>Соответствующая изображению иконка для формы</returns>
+    [Obsolete("Заменить на доступ к EFPApp.MainImages.Icons[imageKey]", false)]
     public static Icon MainImageIcon(string imageKey)
     {
       if (MainThread == null)
@@ -2363,25 +2329,8 @@ namespace FreeLibSet.Forms
 #if DEBUG
       CheckMainThread();
 #endif
-
-      if (String.IsNullOrEmpty(imageKey))
-        return null;
-      Icon res;
-      if (!_MainImageIcons.TryGetValue(imageKey, out res))
-      {
-        Bitmap bmp = MainImages.Images[imageKey] as Bitmap;
-        if (bmp == null)
-          return null;
-        res = Icon.FromHandle(bmp.GetHicon());
-        _MainImageIcons.Add(imageKey, res);
-      }
-      return res;
+      return MainImages.Icons[imageKey];
     }
-
-    /// <summary>
-    /// Буферизация значков для форм
-    /// </summary>
-    private static readonly Dictionary<string, Icon> _MainImageIcons = new Dictionary<string, Icon>();
 
 #if XXX
     /// <summary>
@@ -2408,6 +2357,7 @@ namespace FreeLibSet.Forms
     /// <param name="form">Инициализируемая форма</param>
     /// <param name="imageKey">Имя изображения из списка EFPApp.MainImages</param>
     /// <param name="modal">True, если форма будет показана в модальном режиме, false - если в немодальном</param>
+    [Obsolete("Тоже переместить в EFPApp.MainImages.Icons", false)]
     public static void InitMainImageIcon(Form form, string imageKey, bool modal)
     {
 #if DEBUG
@@ -2479,8 +2429,7 @@ namespace FreeLibSet.Forms
           case DialogResult.No: imageKey = "No"; break;
           default: return;
         }
-        ((Button)control).ImageList = MainImages;
-        ((Button)control).ImageKey = imageKey;
+        ((Button)control).Image = MainImages.Images[imageKey];
         ((Button)control).ImageAlign = ContentAlignment.MiddleLeft;
       }
       else
@@ -2586,7 +2535,7 @@ namespace FreeLibSet.Forms
       Form form = CreateForm(isOKCancelForm, out formProvider, out mainPanel);
       theTabControl = new TabControl();
       theTabControl.Dock = DockStyle.Fill;
-      theTabControl.ImageList = EFPApp.MainImages;
+      theTabControl.ImageList = EFPApp.MainImages.ImageList;
       mainPanel.Controls.Add(theTabControl);
       return form;
     }
@@ -4948,11 +4897,7 @@ namespace FreeLibSet.Forms
       if (!EFPApp.IsMainThread) // 16.05.2016, 14.02.2020
         return;
 
-      int imageIndex = -1;
-      if (!String.IsNullOrEmpty(imageKey))
-        imageIndex = MainImages.Images.IndexOfKey(imageKey);
-
-      TempWaitForm.BeginWait(message, imageIndex, updateImmediately);
+      TempWaitForm.BeginWait(message, imageKey, updateImmediately);
     }
 
     /// <summary>

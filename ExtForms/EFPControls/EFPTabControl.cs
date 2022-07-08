@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms
 
       if (control.ImageList == null)
       {
-        control.ImageList = EFPApp.MainImages;
+        control.ImageList = EFPApp.MainImages.ImageList;
         for (int i = 0; i < control.TabCount; i++)
           UpdatePageImageKey(control.TabPages[i]);
       }

@@ -39,7 +39,7 @@ namespace FreeLibSet.Forms.Diagnostics
       _TheTV.Dock = DockStyle.Fill;
       _TheTV.ShowNodeToolTips = true;
       _TheTV.BeforeExpand += new TreeViewCancelEventHandler(TheTV_BeforeExpand);
-      _TheTV.ImageList = EFPApp.MainImages;
+      _TheTV.ImageList = EFPApp.MainImages.ImageList;
       parent.Controls.Add(_TheTV);
 
       RefreshGrid();

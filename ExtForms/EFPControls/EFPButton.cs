@@ -413,8 +413,6 @@ namespace FreeLibSet.Forms
     protected override void OnCreated()
     {
       base.OnCreated();
-      if (_AutoImageKey)
-        Control.ImageList = EFPApp.MainImages;
       OnInitState();
     }
 
@@ -430,7 +428,7 @@ namespace FreeLibSet.Forms
       if (_AutoText)
         Text = EFPApp.GetErrorTitleText(_ErrorMessages);
       if (_AutoImageKey)
-        Control.ImageKey = EFPApp.GetErrorImageKey(_ErrorMessages);
+        Control.Image = EFPApp.MainImages.Images[EFPApp.GetErrorImageKey(_ErrorMessages)];
       if (_AutoToolTipText)
         ValueToolTipText = EFPApp.GetErrorToolTipText(_ErrorMessages);
     }

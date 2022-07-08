@@ -26,7 +26,7 @@ namespace FreeLibSet.Forms.Diagnostics
       Icon = EFPApp.MainImageIcon("Debug");
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
-      TheTabControl.ImageList = EFPApp.MainImages;
+      TheTabControl.ImageList = EFPApp.MainImages.ImageList;
 
       efpText = new EFPRichTextBox(efpForm, edText);
 
@@ -64,7 +64,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
       efpExpr = new EFPTreeView(efpForm, tvExpr);
       tvExpr.LabelEdit = false;
-      tvExpr.ImageList = EFPApp.MainImages;
+      tvExpr.ImageList = EFPApp.MainImages.ImageList;
       tvExpr.HideSelection = false;
       tvExpr.DoubleClick += new EventHandler(tvExpr_DoubleClick);
       _TokenIndexExprNodes = new Dictionary<Token, TreeNode>();

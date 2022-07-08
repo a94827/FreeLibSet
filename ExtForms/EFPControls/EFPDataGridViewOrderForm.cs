@@ -29,8 +29,8 @@ namespace FreeLibSet.Forms
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpForm.ConfigSectionName = "EFPDataGridViewOrderForm"; // для сохранения размеров диалога
 
-      ThetabControl.ImageList = EFPApp.MainImages;
-      EFPTabControl efpTabControl = new EFPTabControl(efpForm, ThetabControl);
+      TheTabControl.ImageList = EFPApp.MainImages.ImageList;
+      EFPTabControl efpTabControl = new EFPTabControl(efpForm, TheTabControl);
 
       #region Предопределенные порядки
 
@@ -54,7 +54,7 @@ namespace FreeLibSet.Forms
         grFixed.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
       }
       else
-        ThetabControl.TabPages.Remove(tpFixed);
+        TheTabControl.TabPages.Remove(tpFixed);
 
       #endregion
 
@@ -140,7 +140,7 @@ namespace FreeLibSet.Forms
           efpTabControl.TabPages[tpCustom].SelectedEx);
       }
       else
-        ThetabControl.TabPages.Remove(tpCustom);
+        TheTabControl.TabPages.Remove(tpCustom);
 
       #endregion
     }
@@ -261,18 +261,18 @@ namespace FreeLibSet.Forms
       {
         if (controlProvider.CustomOrderActive)
         {
-          frm.ThetabControl.SelectedTab = frm.tpCustom;
+          frm.TheTabControl.SelectedTab = frm.tpCustom;
         }
         else
         {
-          frm.ThetabControl.SelectedTab = frm.tpFixed;
+          frm.TheTabControl.SelectedTab = frm.tpFixed;
           if (controlProvider.CurrentOrderIndex >= 0)
             frm.efpFixed.CurrentRowIndex = controlProvider.CurrentOrderIndex;
         }
 
         if (EFPApp.ShowDialog(frm, false) == DialogResult.OK)
         {
-          if (frm.ThetabControl.SelectedTab == frm.tpFixed)
+          if (frm.TheTabControl.SelectedTab == frm.tpFixed)
           {
             controlProvider.CurrentOrderIndex = frm.efpFixed.CurrentRowIndex;
           }

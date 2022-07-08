@@ -1040,7 +1040,7 @@ namespace FreeLibSet.Forms.Diagnostics
       TreeView tv = new TreeView();
       tv.Dock = DockStyle.Fill;
       frm.Controls.Add(tv);
-      tv.ImageList = EFPApp.MainImages;
+      tv.ImageList = EFPApp.MainImages.ImageList;
       AddDebugChangeInfo(tv.Nodes, changeInfo, 0);
       tv.ExpandAll();
       EFPApp.ShowDialog(frm, true);
@@ -1144,7 +1144,7 @@ namespace FreeLibSet.Forms.Diagnostics
       TreeView tv = new TreeView();
       tv.Dock = DockStyle.Fill;
       frm.Controls.Add(tv);
-      tv.ImageList = EFPApp.MainImages;
+      tv.ImageList = EFPApp.MainImages.ImageList;
       AddDebugBaseProvider(tv.Nodes, baseProvider, 0);
       tv.ExpandAll();
       EFPApp.ShowDialog(frm, true);

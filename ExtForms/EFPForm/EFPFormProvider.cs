@@ -2534,7 +2534,7 @@ namespace FreeLibSet.Forms
       _StatusStripControl = new StatusStrip();
       _StatusStripControl.Dock = DockStyle.Bottom;
       if (EFPApp.AppWasInit) // 24.11.2016
-        _StatusStripControl.ImageList = EFPApp.MainImages;
+        _StatusStripControl.ImageList = EFPApp.MainImages.ImageList;
       //FStatusStripControl.ShowItemToolTips = true;
       EFPApp.SetStatusStripHeight(_StatusStripControl, Form);
       Form.Controls.Add(_StatusStripControl);

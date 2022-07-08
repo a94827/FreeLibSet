@@ -912,7 +912,7 @@ namespace FreeLibSet.Forms
       if ((String.IsNullOrEmpty(ImageKey) && ImageKeys==null) || (!EFPApp.ShowListImages))
         form.TheLV.SmallImageList = null;
       else
-        form.TheLV.SmallImageList = EFPApp.MainImages;
+        form.TheLV.SmallImageList = EFPApp.MainImages.ImageList;
 
       for (int i = 0; i < Items.Length; i++)
       {
@@ -1283,7 +1283,7 @@ namespace FreeLibSet.Forms
       if ((String.IsNullOrEmpty(ImageKey) && ImageKeys==null) || (!EFPApp.ShowListImages))
         form.TheLV.SmallImageList = null;
       else
-        form.TheLV.SmallImageList = EFPApp.MainImages;
+        form.TheLV.SmallImageList = EFPApp.MainImages.ImageList;
 
       int i;
       for (i = 0; i < Codes.Length; i++)

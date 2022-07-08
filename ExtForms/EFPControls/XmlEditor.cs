@@ -34,7 +34,7 @@ namespace FreeLibSet.Forms
     {
       _TheTabControl = new TabControl();
       _TheTabControl.Dock = DockStyle.Fill;
-      _TheTabControl.ImageList = EFPApp.MainImages;
+      _TheTabControl.ImageList = EFPApp.MainImages.ImageList;
       parentControl.Controls.Add(_TheTabControl);
 
       TabPage tpView = new TabPage();

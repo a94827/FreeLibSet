@@ -594,11 +594,10 @@ namespace FreeLibSet.Forms
 
         if (Item.Image == null)
         {
-          int idx = EFPApp.MainImages.Images.IndexOfKey(Item.ImageKey);
-          if (idx < 0)
+          if (String.IsNullOrEmpty(Item.ImageKey))
             _MenuItem.Image = null;
           else
-            _MenuItem.Image = EFPApp.MainImages.Images[idx];
+            _MenuItem.Image = EFPApp.MainImages.Images[Item.ImageKey];
         }
         else
           _MenuItem.Image = Item.Image;

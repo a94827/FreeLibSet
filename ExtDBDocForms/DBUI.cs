@@ -117,6 +117,7 @@ namespace FreeLibSet.Forms.Docs
     static DBUI()
     {
       EFPApp.ExceptionShowing += new EFPAppExceptionEventHandler(EFPApp_ExceptionShowing);
+      EFPApp.MainImages.Images.Add(MainImagesResource.ResourceManager, Color.Magenta);
     }
 
     /// <summary>
@@ -1018,29 +1019,6 @@ namespace FreeLibSet.Forms.Docs
       }
       return docSel;
     }
-
-    #endregion
-
-    #region Инициализация изображений
-
-    // TODO: Надо сделать, чтобы InitImages() вызывался автоматически
-
-    /// <summary>
-    /// Добавление изображений библиотеки ExtDBDocForms
-    /// </summary>
-    public static void InitImages()
-    {
-      if (!EFPApp.IsMainThread)
-        throw new InvalidOperationException("Не было вызова EFPApp.InitApp() или вызов не из основного потока приложения");
-
-      if (_ImagesWasInit)
-        return;
-
-      DummyForm frm = new DummyForm();
-      EFPApp.AddMainImages(frm.MainImageList);
-    }
-
-    private static bool _ImagesWasInit = false;
 
     #endregion
 

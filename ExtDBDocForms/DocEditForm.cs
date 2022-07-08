@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms.Docs
 
       _FormProvider = new EFPFormProvider(this);
 
-      MainTabControl.ImageList = EFPApp.MainImages;
+      MainTabControl.ImageList = EFPApp.MainImages.ImageList;
       MainTabControl.ShowToolTips = EFPApp.ShowToolTips;
       _TabControlProvider = new EFPTabControl(_FormProvider, MainTabControl);
 
@@ -35,11 +35,11 @@ namespace FreeLibSet.Forms.Docs
 
       _CancelButtonProvider = new EFPButton(_FormProvider, btnCancel);
 
-      btnApply.ImageList = EFPApp.MainImages;
+      btnApply.ImageList = EFPApp.MainImages.ImageList;
       btnApply.ImageKey = "Apply";
       _ApplyButtonProvider = new EFPButton(_FormProvider, btnApply);
 
-      btnMore.ImageList = EFPApp.MainImages;
+      btnMore.ImageList = EFPApp.MainImages.ImageList;
       btnMore.ImageKey = "MenuButton";
       _MoreButtonProvider = new EFPButtonWithMenu(_FormProvider, btnMore);
 

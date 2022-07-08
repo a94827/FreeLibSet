@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms
       this._TheControlProvider = controlProvider;
 
       //efpForm.AddFormCheck(new EFPValidatingEventHandler(ValidateForm));
-      TheTabControl.ImageList = EFPApp.MainImages;
+      TheTabControl.ImageList = EFPApp.MainImages.ImageList;
       tpColumns.ImageKey = "TableColumns";
       tpToolTips.ImageKey = "ToolTip";
 

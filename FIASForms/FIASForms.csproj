@@ -76,6 +76,11 @@
     <Compile Include="FiasSearchForm.Designer.cs">
       <DependentUpon>FiasSearchForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainImagesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainImagesResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +118,20 @@
       <SubType>Designer</SubType>
       <DependentUpon>FiasSearchForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainImagesResource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainImagesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\FIAS.PostalCode.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\FIAS.Address.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\FIAS.Details.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

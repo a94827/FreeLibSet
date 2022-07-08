@@ -65,6 +65,11 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
+    <Compile Include="Controls\ComboBoxImagesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ComboBoxImagesResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="EFPApp\ApplicationExceptionHandler.cs" />
     <Compile Include="EFPApp\BackgroundPrinting.cs" />
     <Compile Include="Controls\BandPanel.cs">
@@ -78,6 +83,7 @@
     <Compile Include="EFPApp\EFPAppInterfaceMDI.cs">
     </Compile>
     <Compile Include="EFPApp\EFPAppInterfaceSDI.cs" />
+    <Compile Include="EFPApp\EFPAppMainImages.cs" />
     <Compile Include="EFPApp\EFPAppMainWindowLayout.cs" />
     <Compile Include="EFPApp\EFPAppRemoteExitHandler.cs">
       <SubType>Form</SubType>
@@ -86,6 +92,11 @@
       <DependentUpon>EFPAppRemoteExitHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPApp\EFPAppTrayIcon.cs" />
+    <Compile Include="EFPApp\MainImagesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainImagesResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="EFPControls\EFPButton.cs" />
     <Compile Include="EFPControls\EFPConfigHandler.cs" />
     <Compile Include="EFPControls\EFPConfigParamSetComboBox.cs" />
@@ -184,12 +195,6 @@
     </Compile>
     <Compile Include="Diagnosics\DebugFormDispose.cs" />
     <Compile Include="Diagnosics\DebugTools.cs" />
-    <Compile Include="EFPApp\DummyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EFPApp\DummyForm.Designer.cs">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="EFPApp\EFPApp.cs">
     </Compile>
     <Compile Include="EFPForm\EFPBaseProvider.cs" />
@@ -535,10 +540,6 @@
       <DependentUpon>DateRangeBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="EFPApp\DummyForm.resx">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FileBrowseForm.resx">
       <DependentUpon>FileBrowseForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -733,6 +734,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\ComboBoxImagesResource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ComboBoxImagesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPApp\MainImagesResource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainImagesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="EFPControls\EFPDataGridViewOrderForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EFPDataGridViewOrderForm.cs</DependentUpon>
@@ -742,6 +753,699 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\UserSingleGridCellComboBox.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Up.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDownArrowUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDownThenLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDownThenRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftArrowRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftThenDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftThenUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRightArrowLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRightThenDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRightThenUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpAndDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpArrowDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpThenLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpThenRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Down.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\FirstLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\FirstUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\LastDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\LastRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Left.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\LeftLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Right.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\RightRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Apply.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Cancel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\MenuButton.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\No.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Ok.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Pause.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Play.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Yes.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleBlack.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleBlue.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreen.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreenRed.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreenYellow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreenYellowRed.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleRed.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleWhite.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleYellow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleYellowRed.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRClass.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRConst.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRDelegate.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLREnum.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLREvent.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRField.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRInterface.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRMethod.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRProperty.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRStatic.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRStruct.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\About.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignAuto.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignCenter.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignWidth.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Anchor.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ArrangeIcons.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Bold.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Calculator.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Calendar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Cascade.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListAll.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListChecked.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListInvert.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListNone.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListUnchecked.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Clear.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Clipboard.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Close.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CloseAll.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CloseAllButThis.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CloseWindow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Color.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Computer.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Copy.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Cut.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Database.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Date.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DateRange.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DateRangeBoxLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DateRangeBoxRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Debug.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Delete.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Detalization.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DropDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Edit.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\EditGridConfig.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\eMail.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\EmptyImage.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ErrorRowNavigation.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Execute.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Exit.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ExpandAll.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Filter.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FilterEmpty.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Find.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FindNext.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Font.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FontSize.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FourPages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FromDatabase.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FullScreen.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Function.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Goto.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Help.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HelpContents.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HelpIndex.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HideTopPanel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HourGlass.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Hyperlink.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\IncSearch.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Insert.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\InsertCopy.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\InsertNewLine.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Internet.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\InternetExplorer.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Italic.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Item.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\LetterClosed.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\LetterOpen.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\MicrosoftExcel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\MicrosoftWord.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\MyComputer.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NavigateBack.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NavigateForvard.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NavigateParent.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Network.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\New.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NewMainWindow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NextErrorRow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoDelete.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoEdit.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoFilter.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoInsert.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoInsertCopy.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Notepad.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoView.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OnePage.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Open.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OpenOfficeCalc.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OpenOfficeWriter.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OrderAZ.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OrderCustom.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OrderZA.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PageSetup.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PaperMargins.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PaperSize.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Password.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Paste.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PDF.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Percent.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Phone.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PrevErrorRow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Preview.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Print.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Props.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Redo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Refresh.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\RefreshByTime.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Replace.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\RestoreDefaultOrder.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Save.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\SaveAll.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\SavedCompositions.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale50.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale100.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale200.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale500.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scan.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Settings.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ShowGrid.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ShowTopPanel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Strikeout.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Sum.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Symbol.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Table.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableColumns.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEdit.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEditProcess.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEditReadOnlyCell.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEditReadOnlyTable.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableRows.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Tables.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TileHorizontal.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TileVertical.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Time.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ToDatabase.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ToolTip.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TwoPages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Underline.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Undo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\User.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Users.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\VAlignBottom.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\VAlignCenter.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\VAlignTop.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\View.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\WindowList.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\WindowsExplorer.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\XML.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ZoomIn.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ZoomOut.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignAdd.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignDivide.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignEqual.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignMultiply.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignNotEqual.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignPlusMinus.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignSubstract.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\Error.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\FatalError.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\Information.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\OkState.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\UnknownState.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\Warning.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\TreeView\TreeView.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\TreeView\TreeViewClosedFolder.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\TreeView\TreeViewOpenFolder.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\View.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\Clear.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\DropDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\Edit.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.panel1 = new System.Windows.Forms.Panel();
-      this.ThetabControl = new System.Windows.Forms.TabControl();
+      this.TheTabControl = new System.Windows.Forms.TabControl();
       this.tpFixed = new System.Windows.Forms.TabPage();
       this.tpCustom = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -46,7 +46,7 @@
       this.btnAdd = new System.Windows.Forms.Button();
       this.btnRemove = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
-      this.ThetabControl.SuspendLayout();
+      this.TheTabControl.SuspendLayout();
       this.tpFixed.SuspendLayout();
       this.tpCustom.SuspendLayout();
       this.groupBox1.SuspendLayout();
@@ -71,14 +71,14 @@
       // 
       // ThetabControl
       // 
-      this.ThetabControl.Controls.Add(this.tpFixed);
-      this.ThetabControl.Controls.Add(this.tpCustom);
-      this.ThetabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.ThetabControl.Location = new System.Drawing.Point(0, 0);
-      this.ThetabControl.Name = "ThetabControl";
-      this.ThetabControl.SelectedIndex = 0;
-      this.ThetabControl.Size = new System.Drawing.Size(632, 412);
-      this.ThetabControl.TabIndex = 0;
+      this.TheTabControl.Controls.Add(this.tpFixed);
+      this.TheTabControl.Controls.Add(this.tpCustom);
+      this.TheTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TheTabControl.Location = new System.Drawing.Point(0, 0);
+      this.TheTabControl.Name = "ThetabControl";
+      this.TheTabControl.SelectedIndex = 0;
+      this.TheTabControl.Size = new System.Drawing.Size(632, 412);
+      this.TheTabControl.TabIndex = 0;
       // 
       // tpFixed
       // 
@@ -245,14 +245,14 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(632, 452);
-      this.Controls.Add(this.ThetabControl);
+      this.Controls.Add(this.TheTabControl);
       this.Controls.Add(this.panel1);
       this.Name = "EFPDataGridViewOrderForm";
       this.Text = "Порядок строк";
       this.AcceptButton = btnOk;
       this.CancelButton = btnCancel;
       this.panel1.ResumeLayout(false);
-      this.ThetabControl.ResumeLayout(false);
+      this.TheTabControl.ResumeLayout(false);
       this.tpFixed.ResumeLayout(false);
       this.tpCustom.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
@@ -270,7 +270,7 @@
     #endregion
 
     private System.Windows.Forms.Panel panel1;
-    private System.Windows.Forms.TabControl ThetabControl;
+    private System.Windows.Forms.TabControl TheTabControl;
     private System.Windows.Forms.TabPage tpFixed;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.TabPage tpCustom;

@@ -33,7 +33,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private static TempWaitForm _TheForm = null;
 
-    public static void BeginWait(string message, int imageIndex, bool updateImmediately)
+    public static void BeginWait(string message, string imageKey, bool updateImmediately)
     {
       #region Значения по умолчанию
 
@@ -44,22 +44,23 @@ namespace FreeLibSet.Forms
         WaitInfo prevObj = _WaitInfoStack.Peek();
         if (String.IsNullOrEmpty(message))
           message = prevObj.Message;
-        if (imageIndex < 0)
-          imageIndex = prevObj.ImageIndex;
+        if (String.IsNullOrEmpty(imageKey))
+          imageKey = prevObj.ImageKey;
       }
       else
       {
         if (String.IsNullOrEmpty(message))
           message = "Ждите";
-        if (imageIndex < 0)
-          imageIndex = EFPApp.MainImages.Images.IndexOfKey("HourGlass");
       }
 
       #endregion
 
       WaitInfo waitObj = new WaitInfo();
       waitObj.Message = message;
-      waitObj.ImageIndex = imageIndex;
+      if (String.IsNullOrEmpty(imageKey))
+        waitObj.ImageKey = "HourGlass";
+      else
+        waitObj.ImageKey = imageKey;
 
       _WaitInfoStack.Push(waitObj);
 
@@ -71,7 +72,7 @@ namespace FreeLibSet.Forms
           _TheForm = new TempWaitForm();
 
         _TheForm.TheLabel.Text = message;
-        _TheForm.TheImg.Image = EFPApp.MainImages.Images[imageIndex];
+        _TheForm.TheImg.Image = EFPApp.MainImages.Images[imageKey];
         _TheForm.Visible = true;
         if (updateImmediately)
           _TheForm.Update(); // 11.12.2018 
@@ -99,7 +100,7 @@ namespace FreeLibSet.Forms
         {
           WaitInfo waitObj = _WaitInfoStack.Peek();
           _TheForm.TheLabel.Text = waitObj.Message;
-          _TheForm.TheImg.Image = EFPApp.MainImages.Images[waitObj.ImageIndex];
+          _TheForm.TheImg.Image = EFPApp.MainImages.Images[waitObj.ImageKey];
         }
       }
       catch (Exception e) // 06.06.2017
@@ -138,7 +139,7 @@ namespace FreeLibSet.Forms
       #region Поля
 
       public string Message;
-      public int ImageIndex;
+      public string ImageKey;
 
       #endregion
     }

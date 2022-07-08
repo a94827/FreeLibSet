@@ -46,7 +46,7 @@ namespace FreeLibSet.Forms.Docs
 
       _TheTabControl = new TabControl();
       _TheTabControl.Dock = DockStyle.Fill;
-      _TheTabControl.ImageList = EFPApp.MainImages;
+      _TheTabControl.ImageList = EFPApp.MainImages.ImageList;
       parentControl.Controls.Add(_TheTabControl);
       _TableHandlers = new Dictionary<string, EFPPageGridView>();
     }

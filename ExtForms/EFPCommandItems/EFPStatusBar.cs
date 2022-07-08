@@ -230,11 +230,10 @@ namespace FreeLibSet.Forms
     {
       if (Item.Image == null)
       {
-        int idx = EFPApp.MainImages.Images.IndexOfKey(Item.ImageKey);
-        if (idx < 0)
+        if (String.IsNullOrEmpty(Item.ImageKey))
           _StatusLabel.Image = null;
         else
-          _StatusLabel.Image = EFPApp.MainImages.Images[idx];
+          _StatusLabel.Image = EFPApp.MainImages.Images[Item.ImageKey];
       }
       else
         _StatusLabel.Image = Item.Image;

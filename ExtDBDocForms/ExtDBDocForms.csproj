@@ -57,6 +57,11 @@
       <DependentUpon>GroupGridFilterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DocSelectDialog.cs" />
+    <Compile Include="MainImagesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainImagesResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="SubDocTableViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,12 +135,6 @@
     <Compile Include="DocValueControl.cs" />
     <Compile Include="DocValueControl2.cs" />
     <Compile Include="DocValueNumEdit.cs" />
-    <Compile Include="DummyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DummyForm.Designer.cs">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="EFPDBxGridView.cs" />
     <Compile Include="EFPDocComboBox.cs" />
     <Compile Include="EFPDocGridView.cs" />
@@ -200,6 +199,11 @@
       <SubType>Designer</SubType>
       <DependentUpon>GroupGridFilterForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainImagesResource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainImagesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="SubDocTableViewForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SubDocTableViewForm.cs</DependentUpon>
@@ -228,10 +232,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>DocInfoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DummyForm.resx">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="DateRangeInclusionGridFilterForm.resx">
       <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -248,6 +248,102 @@
       <DependentUpon>UserActionsReportParamsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\XMLDataSet.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\DBxDocSelection.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\DifferentDatabase.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\DocRefs.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\DocRefSchema.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\DocSelfRef.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\FindUserPermission.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\GroupDocTreeCB.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\GroupDocTreePanel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\MergeDocs.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\OnlyOneGroupDoc.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\RecalcColumns.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\ShowHiddenDocs.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\ShowIds.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\UserActions.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu\UserPermission.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DBxDocSelection.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DifferentDatabase.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DocRefs.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DocRefSchema.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DocSelfRef.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\FindUserPermission.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\GroupDocTreeCB.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\GroupDocTreePanel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\MergeDocs.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\OnlyOneGroupDoc.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\RecalcColumns.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\ShowHiddenDocs.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\ShowIds.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\UserActions.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\UserPermission.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\XMLDataSet.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

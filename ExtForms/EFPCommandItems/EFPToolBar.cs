@@ -24,7 +24,7 @@ namespace FreeLibSet.Forms
     protected EFPToolBarBase()
     {
       _Bar = new ToolStrip();
-      _Bar.ImageList = EFPApp.MainImages;
+      _Bar.ImageList = EFPApp.MainImages.ImageList;
 #if DEBUG
       _Bar.Disposed += new EventHandler(Bar_Disposed);
       DisposableObject.RegisterDisposableObject(_Bar);

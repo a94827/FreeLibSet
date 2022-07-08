@@ -34,7 +34,7 @@ namespace FreeLibSet.Forms
 
       if (EFPApp.AppWasInit)
       {
-        TheTabControl.ImageList = EFPApp.MainImages;
+        TheTabControl.ImageList = EFPApp.MainImages.ImageList;
         MainTabPage.ImageKey = "Properties";
         FiltersTabPage.ImageKey = "Filter";
 

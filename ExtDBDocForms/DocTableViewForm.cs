@@ -449,7 +449,7 @@ namespace FreeLibSet.Forms.Docs
 
         _TheTabControl = new TabControl();
         _TheTabControl.Dock = DockStyle.Fill;
-        _TheTabControl.ImageList = EFPApp.MainImages;
+        _TheTabControl.ImageList = EFPApp.MainImages.ImageList;
         form.MainPanel.Controls.Add(_TheTabControl);
 
         TabPage tpTree = new TabPage("Дерево");

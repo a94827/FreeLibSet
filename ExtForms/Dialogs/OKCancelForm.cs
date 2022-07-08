@@ -545,7 +545,7 @@ namespace FreeLibSet.Forms
       _TheListView.View = View.Details;
       _TheListView.HeaderStyle = ColumnHeaderStyle.None;
       _TheListView.Columns.Add(String.Empty);
-      _TheListView.SmallImageList = EFPApp.MainImages;
+      _TheListView.SmallImageList = EFPApp.MainImages.ImageList;
       _TheGroupBox.Controls.Add(_TheListView);
       this.Resize += new EventHandler(Form_Resize);
       Form_Resize(null, null);

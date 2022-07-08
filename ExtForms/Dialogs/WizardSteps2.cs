@@ -268,7 +268,7 @@ namespace FreeLibSet.Forms
       control.HeaderStyle = ColumnHeaderStyle.None;
       control.Columns.Add("Item");
       control.Columns[0].Width = -1;
-      control.SmallImageList = EFPApp.MainImages;
+      control.SmallImageList = EFPApp.MainImages.ImageList;
       control.LabelEdit = false;
       control.FullRowSelect = true;
       control.HideSelection = false;

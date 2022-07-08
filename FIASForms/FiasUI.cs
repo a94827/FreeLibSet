@@ -26,6 +26,11 @@ namespace FreeLibSet.Forms.FIAS
   {
     #region Конструктор
 
+    static FiasUI()
+    {
+      EFPApp.MainImages.Images.Add(MainImagesResource.ResourceManager);
+    }
+
     /// <summary>
     /// Создает экземпляр объекта.
     /// На момент вызова должен быть вызван метод EFPApp.InitApp() (в том же потоке)
@@ -33,8 +38,6 @@ namespace FreeLibSet.Forms.FIAS
     /// <param name="source"></param>
     public FiasUI(IFiasSource source)
     {
-      InitImages();
-
       if (source == null)
         throw new ArgumentNullException("source");
       _Source = source;
@@ -105,24 +108,6 @@ namespace FreeLibSet.Forms.FIAS
     private bool _ShowGuids;
 
     internal bool ShowDates;
-
-    #endregion
-
-    #region Инициализация изображений
-
-    /// <summary>
-    /// Добавление изображений библиотеки ExtDBDocForms
-    /// </summary>
-    private static void InitImages()
-    {
-      if (_ImagesWasInit)
-        return;
-
-      DummyForm frm = new DummyForm();
-      EFPApp.AddMainImages(frm.MainImageList);
-    }
-
-    private static bool _ImagesWasInit = false;
 
     #endregion
 

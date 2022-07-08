@@ -934,7 +934,7 @@ namespace FreeLibSet.Forms
     {
       _TheTabControl = new TabControl();
       _TheTabControl.Dock = DockStyle.Fill;
-      _TheTabControl.ImageList = EFPApp.MainImages;
+      _TheTabControl.ImageList = EFPApp.MainImages.ImageList;
       _TheTabControl.ShowToolTips = true;
       _TheTabControl.SelectedIndexChanged += new EventHandler(TheTabControl_SelectedIndexChanged);
     }
@@ -2060,7 +2060,7 @@ namespace FreeLibSet.Forms
           return;
         _ImageKey = value;
         if (_TabPage != null)
-          _TabPage.ImageIndex = EFPApp.MainImages.Images.IndexOfKey(value);
+          _TabPage.ImageKey = value;
         if (ParentPage != null)
           ParentPage.OnChildImageKeyChanged();
       }
@@ -2134,7 +2134,7 @@ namespace FreeLibSet.Forms
         {
           _TabPage.Text = Title;
           _TabPage.ToolTipText = ToolTipText;
-          _TabPage.ImageIndex = EFPApp.MainImages.Images.IndexOfKey(_ImageKey);
+          _TabPage.ImageKey = _ImageKey;
         }
       }
     }
@@ -2957,7 +2957,7 @@ namespace FreeLibSet.Forms
       parent.Controls.Add(_TheTabControl);
       _TheTabControl.Alignment = _Alignment;
       _TheTabControl.ShowToolTips = true;
-      _TheTabControl.ImageList = EFPApp.MainImages;
+      _TheTabControl.ImageList = EFPApp.MainImages.ImageList;
 
       // Инициализируем существующие страницы
       for (int i = 0; i < Pages.Count; i++)

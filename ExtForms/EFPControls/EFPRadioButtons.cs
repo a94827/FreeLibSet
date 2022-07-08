@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms
       _Controls = control.Buttons;
       Init();
       if (control.ImageList == null)
-        control.ImageList = EFPApp.MainImages;
+        control.ImageList = EFPApp.MainImages.ImageList;
     }
 
 

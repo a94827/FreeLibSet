@@ -78,6 +78,25 @@ namespace FreeLibSet.Controls
     View
   }
 
+  internal static class ComboBoxImages
+  {
+    static ComboBoxImages()
+    {
+      Clear = ComboBoxImagesResource.Clear;
+      Clear.MakeTransparent(Color.Magenta);
+
+      Edit = ComboBoxImagesResource.Edit;
+      Edit.MakeTransparent(Color.Magenta);
+
+      View = ComboBoxImagesResource.View;
+      View.MakeTransparent(Color.Magenta);
+    }
+
+    public static readonly Bitmap Clear;
+    public static readonly Bitmap Edit;
+    public static readonly Bitmap View;
+  }
+
   /// <summary>
   /// Базовый класс для комбоблоков с произвольной реакцией на нажатие кнопки
   /// выпадающего списка. Не определяет тип основного поля. Добавляет необязательный
@@ -103,22 +122,6 @@ namespace FreeLibSet.Controls
       // Реализовано на уровне EFPControl
       //MainControl.BackColor = SystemColors.Window; 
       //MainControl.ForeColor = SystemColors.WindowText;
-
-      #region Статический список изображений
-
-      if (_TheImageList == null)
-      {
-        _TheImageList = new System.Windows.Forms.ImageList();
-        _TheImageList.ImageSize = new System.Drawing.Size(12, 12);
-        _TheImageList.TransparentColor = Color.Magenta;
-
-        FreeLibSet.Forms.DummyForm frm = new FreeLibSet.Forms.DummyForm();
-        for (int i = 0; i < frm.UserComboBoxImageList.Images.Count; i++)
-          _TheImageList.Images.Add(frm.UserComboBoxImageList.Images.Keys[i], frm.UserComboBoxImageList.Images[i]);
-        frm.Dispose();
-      }
-
-      #endregion
 
       #region Создание элементов
 
@@ -181,8 +184,7 @@ namespace FreeLibSet.Controls
       #region Кнопка очистки
 
       _TheClearButton.Dock = System.Windows.Forms.DockStyle.Right;
-      _TheClearButton.ImageList = _TheImageList;
-      _TheClearButton.ImageKey = "Clear";
+      _TheClearButton.Image = ComboBoxImages.Clear;
       _TheClearButton.TabIndex = 3;
       _TheClearButton.Click += new EventHandler(TheClearButton_Click);
       Controls.Add(_TheClearButton);
@@ -194,8 +196,7 @@ namespace FreeLibSet.Controls
       #region Кнопка редактирования
 
       _TheEditButton.Dock = System.Windows.Forms.DockStyle.Right;
-      _TheEditButton.ImageList = _TheImageList;
-      _TheEditButton.ImageKey = "Edit";
+      _TheEditButton.Image = ComboBoxImages.Edit;
       _TheEditButton.TabIndex = 4;
       _TheEditButton.Click += new EventHandler(TheEditButton_Click);
       Controls.Add(_TheEditButton);
@@ -205,12 +206,6 @@ namespace FreeLibSet.Controls
 
       #endregion
     }
-
-    #endregion
-
-    #region Статический ImageList
-
-    private static ImageList _TheImageList = null;
 
     #endregion
 
