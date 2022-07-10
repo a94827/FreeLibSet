@@ -30,15 +30,13 @@ namespace FreeLibSet.Controls
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DateRangeBox));
       this.TheLP = new System.Windows.Forms.TableLayoutPanel();
-      this.TheRightButton = new FreeLibSet.Controls.ControlRightButton();
-      this.TheImageList = new System.Windows.Forms.ImageList(this.components);
       this.lblPeriod = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.First = new FreeLibSet.Controls.DateTimeBox();
       this.label2 = new System.Windows.Forms.Label();
+      this.TheRightButton = new FreeLibSet.Controls.ControlRightButton();
+      this.First = new FreeLibSet.Controls.DateTimeBox();
       this.TheMenuButton = new FreeLibSet.Controls.ControlRightButton();
       this.Last = new FreeLibSet.Controls.DateTimeBox();
       this.TheLeftButton = new FreeLibSet.Controls.ControlRightButton();
@@ -73,26 +71,6 @@ namespace FreeLibSet.Controls
       this.TheLP.Size = new System.Drawing.Size(350, 37);
       this.TheLP.TabIndex = 0;
       // 
-      // TheRightButton
-      // 
-      this.TheRightButton.Dock = System.Windows.Forms.DockStyle.Right;
-      this.TheRightButton.ImageIndex = 2;
-      this.TheRightButton.ImageList = this.TheImageList;
-      this.TheRightButton.Location = new System.Drawing.Point(331, 0);
-      this.TheRightButton.Margin = new System.Windows.Forms.Padding(0);
-      this.TheRightButton.Name = "TheRightButton";
-      this.TheRightButton.Size = new System.Drawing.Size(19, 20);
-      this.TheRightButton.TabIndex = 8;
-      this.TheRightButton.Click += new System.EventHandler(this.TheRightButton_Click);
-      // 
-      // TheImageList
-      // 
-      this.TheImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TheImageList.ImageStream")));
-      this.TheImageList.TransparentColor = System.Drawing.Color.Magenta;
-      this.TheImageList.Images.SetKeyName(0, "Menu");
-      this.TheImageList.Images.SetKeyName(1, "Left");
-      this.TheImageList.Images.SetKeyName(2, "Right");
-      // 
       // lblPeriod
       // 
       this.lblPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -120,6 +98,30 @@ namespace FreeLibSet.Controls
       this.label1.Text = "c";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
+      // label2
+      // 
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                  | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.label2.Location = new System.Drawing.Point(145, 0);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(19, 20);
+      this.label2.TabIndex = 2;
+      this.label2.Text = "по";
+      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // TheRightButton
+      // 
+      this.TheRightButton.BackColor = System.Drawing.SystemColors.Control;
+      this.TheRightButton.Dock = System.Windows.Forms.DockStyle.Right;
+      this.TheRightButton.Image = ((System.Drawing.Image)(resources.GetObject("TheRightButton.Image")));
+      this.TheRightButton.Location = new System.Drawing.Point(330, 0);
+      this.TheRightButton.Margin = new System.Windows.Forms.Padding(0);
+      this.TheRightButton.Name = "TheRightButton";
+      this.TheRightButton.Size = new System.Drawing.Size(20, 20);
+      this.TheRightButton.TabIndex = 8;
+      this.TheRightButton.Click += new System.EventHandler(this.TheRightButton_Click);
+      // 
       // First
       // 
       this.First.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -128,33 +130,21 @@ namespace FreeLibSet.Controls
       this.First.Location = new System.Drawing.Point(25, 0);
       this.First.Margin = new System.Windows.Forms.Padding(0);
       this.First.Name = "First";
-      this.First.Size = new System.Drawing.Size(118, 20);
+      this.First.Size = new System.Drawing.Size(117, 20);
       this.First.TabIndex = 1;
       this.First.VisibleChanged += new System.EventHandler(this.DateValueChanged);
       this.First.EnabledChanged += new System.EventHandler(this.DateValueChanged);
       this.First.ValueChanged += new System.EventHandler(this.DateValueChanged);
       // 
-      // label2
-      // 
-      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.label2.Location = new System.Drawing.Point(146, 0);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(19, 20);
-      this.label2.TabIndex = 2;
-      this.label2.Text = "по";
-      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
       // TheMenuButton
       // 
+      this.TheMenuButton.BackColor = System.Drawing.SystemColors.Control;
       this.TheMenuButton.Dock = System.Windows.Forms.DockStyle.Right;
-      this.TheMenuButton.ImageIndex = 0;
-      this.TheMenuButton.ImageList = this.TheImageList;
-      this.TheMenuButton.Location = new System.Drawing.Point(292, 0);
+      this.TheMenuButton.Image = ((System.Drawing.Image)(resources.GetObject("TheMenuButton.Image")));
+      this.TheMenuButton.Location = new System.Drawing.Point(290, 0);
       this.TheMenuButton.Margin = new System.Windows.Forms.Padding(0);
       this.TheMenuButton.Name = "TheMenuButton";
-      this.TheMenuButton.Size = new System.Drawing.Size(19, 20);
+      this.TheMenuButton.Size = new System.Drawing.Size(20, 20);
       this.TheMenuButton.TabIndex = 6;
       this.TheMenuButton.Visible = false;
       this.TheMenuButton.Click += new System.EventHandler(this.TheMenuButton_Click);
@@ -164,10 +154,10 @@ namespace FreeLibSet.Controls
       this.Last.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.Last.ClearButton = true;
-      this.Last.Location = new System.Drawing.Point(168, 0);
+      this.Last.Location = new System.Drawing.Point(167, 0);
       this.Last.Margin = new System.Windows.Forms.Padding(0);
       this.Last.Name = "Last";
-      this.Last.Size = new System.Drawing.Size(118, 20);
+      this.Last.Size = new System.Drawing.Size(117, 20);
       this.Last.TabIndex = 3;
       this.Last.VisibleChanged += new System.EventHandler(this.DateValueChanged);
       this.Last.EnabledChanged += new System.EventHandler(this.DateValueChanged);
@@ -175,20 +165,20 @@ namespace FreeLibSet.Controls
       // 
       // TheLeftButton
       // 
+      this.TheLeftButton.BackColor = System.Drawing.SystemColors.Control;
       this.TheLeftButton.Dock = System.Windows.Forms.DockStyle.Right;
-      this.TheLeftButton.ImageIndex = 1;
-      this.TheLeftButton.ImageList = this.TheImageList;
-      this.TheLeftButton.Location = new System.Drawing.Point(311, 0);
+      this.TheLeftButton.Image = ((System.Drawing.Image)(resources.GetObject("TheLeftButton.Image")));
+      this.TheLeftButton.Location = new System.Drawing.Point(310, 0);
       this.TheLeftButton.Margin = new System.Windows.Forms.Padding(0);
       this.TheLeftButton.Name = "TheLeftButton";
-      this.TheLeftButton.Size = new System.Drawing.Size(19, 20);
+      this.TheLeftButton.Size = new System.Drawing.Size(20, 20);
       this.TheLeftButton.TabIndex = 7;
       this.TheLeftButton.Click += new System.EventHandler(this.TheLeftButton_Click);
       // 
       // DateRangeBox
       // 
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.TheLP);
       this.Name = "DateRangeBox";
       this.Size = new System.Drawing.Size(350, 37);
@@ -206,7 +196,6 @@ namespace FreeLibSet.Controls
     private System.Windows.Forms.Label lblPeriod;
     public FreeLibSet.Controls.DateTimeBox First;
     public FreeLibSet.Controls.DateTimeBox Last;
-    private System.Windows.Forms.ImageList TheImageList;
     private ControlRightButton TheMenuButton;
     internal ControlRightButton TheLeftButton;
     internal ControlRightButton TheRightButton;

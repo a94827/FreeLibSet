@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using FreeLibSet.Forms;
 using FreeLibSet.Config;
 using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 namespace Bmp2Png
 {
@@ -62,14 +63,17 @@ namespace Bmp2Png
 
       #endregion
 
-      int cnt=0;
+      int cnt = 0;
       int InvalidFFCount = 0;
       using (Splash spl = new Splash(new string[] { "Поиск файлов", "Преобразование" }))
       {
-        AbsPath SrcDir=new AbsPath(frm.efpSrcDir.Text);
+        AbsPath SrcDir = new AbsPath(frm.efpSrcDir.Text);
         AbsPath ResDir = new AbsPath(frm.efpResDir.Text);
-        string[] aFiles = System.IO.Directory.GetFiles(SrcDir.Path, "*.bmp",
+        string[] aFiles1 = System.IO.Directory.GetFiles(SrcDir.Path, "*.bmp",
           frm.efpSubDirs.Checked ? System.IO.SearchOption.AllDirectories : System.IO.SearchOption.AllDirectories);
+        string[] aFiles2 = System.IO.Directory.GetFiles(SrcDir.Path, "*.ico",
+          frm.efpSubDirs.Checked ? System.IO.SearchOption.AllDirectories : System.IO.SearchOption.AllDirectories);
+        string[] aFiles = DataTools.MergeArrays<string>(aFiles1, aFiles2);
         spl.Complete();
         spl.PercentMax = aFiles.Length;
         spl.AllowCancel = true;
@@ -86,7 +90,7 @@ namespace Bmp2Png
         }
       }
 
-      EFPApp.MessageBox("Преобразовано файлов: " + cnt.ToString()+". Имеют неподходящий формат: "+InvalidFFCount.ToString());
+      EFPApp.MessageBox("Преобразовано файлов: " + cnt.ToString() + ". Имеют неподходящий формат: " + InvalidFFCount.ToString());
     }
 
     #endregion
@@ -99,7 +103,8 @@ namespace Bmp2Png
       //if (bmp.PixelFormat != System.Drawing.Imaging.PixelFormat.Format4bppIndexed)
       //  return false;
 
-      bmp.MakeTransparent(Color.Magenta);
+      if (String.Equals(SrcFile.Extension, ".bmp", StringComparison.OrdinalIgnoreCase))
+        bmp.MakeTransparent(Color.Magenta);
       FileTools.ForceDirs(ResFile.ParentDir);
       bmp.Save(ResFile.Path);
       return true;

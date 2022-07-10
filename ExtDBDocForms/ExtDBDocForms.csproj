@@ -345,6 +345,54 @@
   <ItemGroup>
     <None Include="Images\Main\XMLDataSet.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DBxDocSelection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DifferentDatabase.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DocRefs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DocRefSchema.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\DocSelfRef.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\FindUserPermission.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\GroupDocTreeCB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\GroupDocTreePanel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\MergeDocs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\OnlyOneGroupDoc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\RecalcColumns.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\ShowHiddenDocs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\ShowIds.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\UserActions.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\UserPermission.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\XMLDataSet.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

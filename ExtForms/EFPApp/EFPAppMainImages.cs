@@ -45,7 +45,7 @@ namespace FreeLibSet.Forms
         _Owner = owner;
         _Items = new Dictionary<string, Bitmap>();
 
-        Add(MainImagesResource.ResourceManager, Color.Magenta);
+        Add(MainImagesResource.ResourceManager);
         _Empty = _Items["EmptyImage"];
         _UnknownState = _Items["UnknownState"];
         _HourGlass = _Items["HourGlass"];

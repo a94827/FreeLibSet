@@ -92,7 +92,7 @@
       <DependentUpon>EFPAppRemoteExitHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPApp\EFPAppTrayIcon.cs" />
-    <Compile Include="EFPApp\MainImagesResource.Designer.cs">
+    <Compile Include="MainImagesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MainImagesResource.resx</DependentUpon>
@@ -313,6 +313,16 @@
     </Compile>
     <Compile Include="Dialogs\OKCancelForm.Designer.cs">
       <DependentUpon>OKCancelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SplashImagesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SplashImagesResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Win32\OLEExcel.cs" />
     <Compile Include="Win32\OLEWord.cs" />
@@ -739,7 +749,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ComboBoxImagesResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="EFPApp\MainImagesResource.resx">
+    <EmbeddedResource Include="MainImagesResource.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MainImagesResource.Designer.cs</LastGenOutput>
@@ -753,6 +763,16 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\UserSingleGridCellComboBox.bmp" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashImagesResource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SplashImagesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Main\Arrows\Up.bmp" />
@@ -1458,6 +1478,711 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\ComboBox\View.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\DateRangeBox\Right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\DateRangeBox\Left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\DateRangeBox\Menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDownArrowUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDownThenLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowDownThenRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftArrowRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftThenDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowLeftThenUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRightArrowLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRightThenDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowRightThenUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpAndDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpArrowDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpThenLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\ArrowUpThenRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\FirstLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\FirstUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\LastDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\LastRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\LeftLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\RightRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Arrows\Up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Apply.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\MenuButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\No.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Ok.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Buttons\Yes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleBlue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreenRed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreenYellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleGreenYellowRed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleRed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleWhite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleYellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Circles\CircleYellowRed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRClass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRConst.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRDelegate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLREnum.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLREvent.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRField.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRInterface.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRMethod.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRProperty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRStatic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\CLR\CLRStruct.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\About.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignAuto.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignCenter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\AlignWidth.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Anchor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ArrangeIcons.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Bold.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Calculator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Calendar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Cascade.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListAll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListChecked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListInvert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListNone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CheckListUnchecked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Clipboard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CloseAll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CloseAllButThis.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CloseWindow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Color.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Computer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Date.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DateRange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DateRangeBoxLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DateRangeBoxRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Debug.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Detalization.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\DropDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\EditGridConfig.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\eMail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\EmptyImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ErrorRowNavigation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Execute.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ExpandAll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Filter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FilterEmpty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Find.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FindNext.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Font.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FontSize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FourPages.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FromDatabase.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\FullScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Function.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Goto.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HelpContents.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HelpIndex.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HideTopPanel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\HourGlass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Hyperlink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\IncSearch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Insert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\InsertCopy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\InsertNewLine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Internet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\InternetExplorer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Italic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Item.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\LetterClosed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\LetterOpen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\MicrosoftExcel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\MicrosoftWord.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\MyComputer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NavigateBack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NavigateForvard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NavigateParent.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\New.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NewMainWindow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NextErrorRow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoDelete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoEdit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoFilter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoInsert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoInsertCopy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Notepad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\NoView.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OnePage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OpenOfficeCalc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OpenOfficeWriter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OrderAZ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OrderCustom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\OrderZA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PageSetup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PaperMargins.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PaperSize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Password.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Paste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PDF.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Percent.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Phone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\PrevErrorRow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Print.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Props.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\RefreshByTime.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Replace.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\RestoreDefaultOrder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\SaveAll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\SavedCompositions.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale50.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale200.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale500.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scale.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Scan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ShowGrid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ShowTopPanel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Strikeout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Sum.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Symbol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableColumns.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEdit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEditProcess.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEditReadOnlyCell.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableInlineEditReadOnlyTable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TableRows.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Tables.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TileHorizontal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TileVertical.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Time.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ToDatabase.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ToolTip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\TwoPages.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Underline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\User.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Users.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\VAlignBottom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\VAlignCenter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\VAlignTop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\View.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\WindowList.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\WindowsExplorer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\XML.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ZoomIn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\ZoomOut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignAdd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignDivide.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignEqual.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignMultiply.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignNotEqual.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignPlusMinus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Signs\SignSubstract.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\FatalError.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\Information.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\OkState.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\UnknownState.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\State\Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\TreeView\TreeView.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\TreeView\TreeViewClosedFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\TreeView\TreeViewOpenFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Splash\Current.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Splash\Item.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Splash\Ok.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Splash\Skip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Splash\Stop.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

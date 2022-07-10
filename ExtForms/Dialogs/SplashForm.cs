@@ -14,7 +14,6 @@ namespace FreeLibSet.Forms
   /// </summary>
   internal class SplashForm : System.Windows.Forms.Form
   {
-    private System.Windows.Forms.ImageList BigImageList;
     public ListView PhasesListView;
     private ColumnHeader columnHeader1;
     private ColumnHeader columnHeader2;
@@ -28,7 +27,6 @@ namespace FreeLibSet.Forms
     private TableLayoutPanel tableLayoutPanel1;
     public Panel MainPanel;
     public Button btnCopyText;
-    private ImageList StdImageList;
     private System.ComponentModel.IContainer components;
 
     public SplashForm()
@@ -37,16 +35,18 @@ namespace FreeLibSet.Forms
       InitializeComponent();
 
       if (EFPApp.MainWindowVisible && EFPApp.IsMainThread)
-        Icon = EFPApp.MainImageIcon("HourGlass");
+        Icon = EFPApp.MainImages.Icons["HourGlass"];
       else
         WinFormsTools.InitAppIcon(this);
 
       // 14.07.2015
       // Используем собственный список изображений на случай, если 
       // вызов выполняется из чужого потока
-      btnCancel.Image = StdImageList.Images["Cancel"];
+      PhasesListView.LargeImageList = _ListImageList;
 
-      btnCopyText.Image = StdImageList.Images["Copy"];
+      btnCancel.Image = MainImagesResource.Cancel;
+
+      btnCopyText.Image = MainImagesResource.Copy;
       btnCopyText.ImageAlign = ContentAlignment.MiddleCenter;
       btnCopyText.Click += new EventHandler(btnCopyText_Click);
 
@@ -90,21 +90,18 @@ namespace FreeLibSet.Forms
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashForm));
-      System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+      System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Один. . Описание может быть очень очень очень, ну очень длинным",
             "Выполнено"}, 0);
-      System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
+      System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "Два",
             "Идет выполнение"}, 1);
-      System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Три", 0);
-      System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Четыре");
-      System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("Пять");
-      System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("Шесть");
-      System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("Семь");
-      System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("Восемь");
-      this.BigImageList = new System.Windows.Forms.ImageList(this.components);
+      System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Три", 0);
+      System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Четыре");
+      System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Пять");
+      System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Шесть");
+      System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Семь");
+      System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Восемь");
       this.PhasesListView = new System.Windows.Forms.ListView();
       this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
       this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -118,22 +115,11 @@ namespace FreeLibSet.Forms
       this.lblCurrent = new System.Windows.Forms.Label();
       this.pb1 = new System.Windows.Forms.ProgressBar();
       this.MainPanel = new System.Windows.Forms.Panel();
-      this.StdImageList = new System.Windows.Forms.ImageList(this.components);
       this.SecondPanel.SuspendLayout();
       this.tableLayoutPanel1.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.MainPanel.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // BigImageList
-      // 
-      this.BigImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("BigImageList.ImageStream")));
-      this.BigImageList.TransparentColor = System.Drawing.Color.Magenta;
-      this.BigImageList.Images.SetKeyName(0, "Iten");
-      this.BigImageList.Images.SetKeyName(1, "Current");
-      this.BigImageList.Images.SetKeyName(2, "Ok");
-      this.BigImageList.Images.SetKeyName(3, "Cancel");
-      this.BigImageList.Images.SetKeyName(4, "No");
       // 
       // PhasesListView
       // 
@@ -150,21 +136,19 @@ namespace FreeLibSet.Forms
       this.PhasesListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
       this.PhasesListView.HideSelection = false;
       this.PhasesListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12,
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16});
-      this.PhasesListView.LargeImageList = this.BigImageList;
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8});
       this.PhasesListView.Location = new System.Drawing.Point(0, 0);
       this.PhasesListView.MultiSelect = false;
       this.PhasesListView.Name = "PhasesListView";
       this.PhasesListView.ShowItemToolTips = true;
       this.PhasesListView.Size = new System.Drawing.Size(430, 164);
-      this.PhasesListView.SmallImageList = this.BigImageList;
       this.PhasesListView.TabIndex = 1;
       this.PhasesListView.TabStop = false;
       this.PhasesListView.UseCompatibleStateImageBehavior = false;
@@ -296,13 +280,6 @@ namespace FreeLibSet.Forms
       this.MainPanel.Size = new System.Drawing.Size(430, 298);
       this.MainPanel.TabIndex = 2;
       // 
-      // StdImageList
-      // 
-      this.StdImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("StdImageList.ImageStream")));
-      this.StdImageList.TransparentColor = System.Drawing.Color.Magenta;
-      this.StdImageList.Images.SetKeyName(0, "Cancel");
-      this.StdImageList.Images.SetKeyName(1, "Copy");
-      // 
       // SplashForm
       // 
       this.AcceptButton = this.btnCancel;
@@ -363,6 +340,24 @@ namespace FreeLibSet.Forms
       base.OnClosing(args);
       // пользователь не может сам закрыть форму
       args.Cancel = true;
+    }
+
+    #endregion
+
+    #region Статический список изображений
+
+    private static readonly ImageList _ListImageList=CreateListImageList();
+
+    private static ImageList CreateListImageList()
+    {
+      ImageList il = new ImageList();
+      il.ImageSize = new Size(32, 32);
+      il.Images.Add("Item", SplashImagesResource.Item); // 0
+      il.Images.Add("Current", SplashImagesResource.Current); // 1
+      il.Images.Add("Ok", SplashImagesResource.Ok); // 2
+      il.Images.Add("Skip", SplashImagesResource.Skip); // 3
+      il.Images.Add("Stop", SplashImagesResource.Stop); // 4 не используется
+      return il;
     }
 
     #endregion

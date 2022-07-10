@@ -117,7 +117,7 @@ namespace FreeLibSet.Forms.Docs
     static DBUI()
     {
       EFPApp.ExceptionShowing += new EFPAppExceptionEventHandler(EFPApp_ExceptionShowing);
-      EFPApp.MainImages.Images.Add(MainImagesResource.ResourceManager, Color.Magenta);
+      EFPApp.MainImages.Images.Add(MainImagesResource.ResourceManager);
     }
 
     /// <summary>
