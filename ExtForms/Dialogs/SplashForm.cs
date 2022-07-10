@@ -42,7 +42,7 @@ namespace FreeLibSet.Forms
       // 14.07.2015
       // Используем собственный список изображений на случай, если 
       // вызов выполняется из чужого потока
-      PhasesListView.LargeImageList = _ListImageList;
+      PhasesListView.SmallImageList = _ListImageList;
 
       btnCancel.Image = MainImagesResource.Cancel;
 
@@ -352,6 +352,7 @@ namespace FreeLibSet.Forms
     {
       ImageList il = new ImageList();
       il.ImageSize = new Size(32, 32);
+      il.ColorDepth = ColorDepth.Depth32Bit; // с прозрачностью
       il.Images.Add("Item", SplashImagesResource.Item); // 0
       il.Images.Add("Current", SplashImagesResource.Current); // 1
       il.Images.Add("Ok", SplashImagesResource.Ok); // 2
