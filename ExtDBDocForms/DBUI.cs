@@ -117,7 +117,7 @@ namespace FreeLibSet.Forms.Docs
     static DBUI()
     {
       EFPApp.ExceptionShowing += new EFPAppExceptionEventHandler(EFPApp_ExceptionShowing);
-      EFPApp.MainImages.Images.Add(MainImagesResource.ResourceManager);
+      EFPApp.MainImages.Add(MainImagesResource.ResourceManager);
     }
 
     /// <summary>
@@ -982,7 +982,7 @@ namespace FreeLibSet.Forms.Docs
 
       Form frm = new Form();
       frm.Text = title;
-      frm.Icon = EFPApp.MainImageIcon("DBxDocSelection");
+      frm.Icon = EFPApp.MainImages.Icons["DBxDocSelection"];
       frm.StartPosition = FormStartPosition.WindowsDefaultBounds;
       EFPFormProvider efpForm = new EFPFormProvider(frm);
       efpForm.ConfigSectionName = "DBxDocSelection"; // 11.06.2021

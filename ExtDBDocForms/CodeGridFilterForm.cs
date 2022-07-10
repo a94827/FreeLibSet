@@ -31,7 +31,7 @@ namespace FreeLibSet.Forms.Docs
       InitializeComponent();
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
-      Icon = EFPApp.MainImageIcon("Filter");
+      Icon = EFPApp.MainImages.Icons["Filter"];
 
       efpMode = new EFPRadioButtons(efpForm, rbNoFilter);
 

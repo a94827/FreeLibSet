@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms
     public SelectCompositionForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("SavedCompositions");
+      Icon = EFPApp.MainImages.Icons["SavedCompositions"];
 
       efpForm = new EFPFormProvider(this);
 

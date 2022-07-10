@@ -2297,22 +2297,12 @@ namespace FreeLibSet.Forms
     /// Основной список изображений для значков.
     /// Значки используются в командах меню, кнопках, списках и других элементах интерфейса.
     /// Список заполнен стандартными изображениями и может быть дополнен изображениями при инициализации программы
-    /// с помощью вызовов EFPApp.MainImages.Images.Add() или поштучным присвоением изображений.
+    /// с помощью вызовов EFPApp.MainImages.Images.Add().
     /// Изображения имеют размер 16x16 пикселей.
+    /// Доступ к изображениям является потокобезопасным.
     /// </summary>
-    public static EFPAppMainImages MainImages
-    {
-      get
-      {
-#if DEBUG
-        CheckMainThread();
-#endif
-        if (_MainImages == null)
-          _MainImages = new EFPAppMainImages();
-        return _MainImages;
-      }
-    }
-    private static EFPAppMainImages _MainImages;
+    public static EFPAppMainImages MainImages { get { return _MainImages; } }
+    private static EFPAppMainImages _MainImages = new EFPAppMainImages();
 
     /// <summary>
     /// Получение значка для формы, соответствующего изображению в списке MainImages.
@@ -2360,27 +2350,7 @@ namespace FreeLibSet.Forms
     [Obsolete("Тоже переместить в EFPApp.MainImages.Icons", false)]
     public static void InitMainImageIcon(Form form, string imageKey, bool modal)
     {
-#if DEBUG
-      if (form == null)
-        throw new ArgumentNullException("form");
-#endif
-
-      if (!String.IsNullOrEmpty(imageKey))
-      {
-        form.ShowIcon = true;
-        form.Icon = EFPApp.MainImageIcon(imageKey);
-        return;
-      }
-
-      if (modal && DialogOwnerWindow != null)
-      {
-        // 01.03.2021
-        form.ShowIcon = false;
-        return;
-      }
-
-      WinFormsTools.InitAppIcon(form);
-      form.ShowIcon = !EFPApp.MainWindowVisible;
+      MainImages.Icons.InitForm(form, imageKey, modal);
     }
 
     #endregion
@@ -2706,7 +2676,7 @@ namespace FreeLibSet.Forms
     }
 #endif
 
-    #if XXX
+#if XXX
 /// <summary>
     /// Найти и активировать форму заданного класса.
     /// Возвращает true в случае успеха
@@ -2769,7 +2739,7 @@ namespace FreeLibSet.Forms
         if (_DialogStack.Count > 0)
         {
           Form frm = _DialogStack.Peek();
-          if ((!frm.IsDisposed) && (frm.Visible) && 
+          if ((!frm.IsDisposed) && (frm.Visible) &&
             EFPFormProvider.FindFormProviderRequired(frm).VisibleCompleted) // 07.03.2022
             return _DialogStack.Peek();
 
@@ -3023,7 +2993,7 @@ namespace FreeLibSet.Forms
         // 20.09.2021 - ActiveDialog не вернет текущий диалог, т.к. он уже закрыт
         if (_DialogStack.Count > 0) // 21.10.2021 - Может быть, что стек уже пуст
         {
-          if (Object.ReferenceEquals(_DialogStack.Peek(), form)) 
+          if (Object.ReferenceEquals(_DialogStack.Peek(), form))
             _DialogStack.Pop();
         }
 #endif
@@ -3655,7 +3625,7 @@ namespace FreeLibSet.Forms
         //SetFormSize(Form, 50, 50);
         form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         form.Text = "Выбрать окно";
-        form.Icon = EFPApp.MainImageIcon("WindowList");
+        form.Icon = EFPApp.MainImages.Icons["WindowList"];
         form.FormProvider.OwnStatusBar = true;
         form.FormProvider.ConfigSectionName = "ChildFormListDialog";
 
@@ -4418,7 +4388,7 @@ namespace FreeLibSet.Forms
       {
         frm.Text = title;
         if (EFPApp.IsMainThread)
-          frm.Icon = EFPApp.MainImageIcon("Notepad");
+          frm.Icon = EFPApp.MainImages.Icons["Notepad"];
         // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         if (isModal) // 31.08.2016 
           frm.WindowState = FormWindowState.Maximized;
@@ -4492,7 +4462,7 @@ namespace FreeLibSet.Forms
       try
       {
         frm.Text = title;
-        frm.Icon = EFPApp.MainImageIcon("XML");
+        frm.Icon = EFPApp.MainImages.Icons["XML"];
         // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         if (isModal) // 31.08.2016 
           frm.WindowState = FormWindowState.Maximized;
@@ -4551,7 +4521,7 @@ namespace FreeLibSet.Forms
       try
       {
         frm.Text = title;
-        frm.Icon = EFPApp.MainImageIcon("XML");
+        frm.Icon = EFPApp.MainImages.Icons["XML"];
         // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         if (isModal) // 31.08.2016 
           frm.WindowState = FormWindowState.Maximized;
@@ -4620,7 +4590,7 @@ namespace FreeLibSet.Forms
       {
         WinFormsTools.OkCancelFormToOkOnly(frm);
         frm.Text = title;
-        frm.Icon = EFPApp.MainImageIcon(EFPApp.GetErrorImageKey(errorMessages.NullableSeverity));
+        frm.Icon = EFPApp.MainImages.Icons[EFPApp.GetErrorImageKey(errorMessages.NullableSeverity)];
         EFPApp.SetFormSize(frm, 80, 50);
 
         EFPErrorDataGridView TheHandler = new EFPErrorDataGridView(frm);

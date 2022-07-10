@@ -298,7 +298,7 @@ namespace FreeLibSet.Forms
       if (Items == null)
         throw new NullReferenceException("Свойство Items не было установлено");
 
-      #region Нужны ли картинки у кнопок ?
+      #region Нужны ли картинки у кнопок?
 
       string[] imageKeys2 = null;
       if (_ImageKeys != null && EFPApp.ShowListImages /* 20.05.2021 */)
@@ -324,7 +324,7 @@ namespace FreeLibSet.Forms
       }
 
       RadioSelectForm frm = new RadioSelectForm(Title, GroupTitle, Items, imageKeys2);
-      EFPApp.InitMainImageIcon(frm, ImageKey, true);
+      EFPApp.MainImages.Icons.InitForm(frm, ImageKey, true);
 
       if (_EnabledItemFlags != null)
       {

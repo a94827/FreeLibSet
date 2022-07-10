@@ -2002,7 +2002,7 @@ namespace FreeLibSet.Forms
     {
       EFPDataGridViewExpExcelForm form = new EFPDataGridViewExpExcelForm();
       form.Text = "Отправить в " + ciSendToMicrosoftExcel.MenuTextWithoutMnemonic;
-      form.Icon = EFPApp.MainImageIcon(ciSendToMicrosoftExcel.ImageKey);
+      form.Icon = EFPApp.MainImages.Icons[ciSendToMicrosoftExcel.ImageKey];
       form.LoadValues(SendToSettings);
       form.InitVisibility(ControlProvider);
       if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
@@ -2025,7 +2025,7 @@ namespace FreeLibSet.Forms
     {
       EFPDataGridViewExpExcelForm form = new EFPDataGridViewExpExcelForm();
       form.Text = "Отправить в " + ciSendToOpenOfficeCalc.MenuTextWithoutMnemonic;
-      form.Icon = EFPApp.MainImageIcon(ciSendToOpenOfficeCalc.ImageKey);
+      form.Icon = EFPApp.MainImages.Icons[ciSendToOpenOfficeCalc.ImageKey];
       form.LoadValues(SendToSettings);
       form.InitVisibility(ControlProvider);
       if (EFPApp.ShowDialog(form, true) != DialogResult.OK)

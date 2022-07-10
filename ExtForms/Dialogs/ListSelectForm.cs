@@ -936,7 +936,7 @@ namespace FreeLibSet.Forms
       }
 
       // Значок формы
-      EFPApp.InitMainImageIcon(form, ImageKey, true);
+      EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
 
       #region Активация элемента списка
 
@@ -1309,7 +1309,7 @@ namespace FreeLibSet.Forms
       }
 
       // Значок формы
-      EFPApp.InitMainImageIcon(form, ImageKey, true);
+      EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
 
       // Все очень мерзко работает, пока не создан дескрипор HWND списка
       // Чтение свойства Control.Handler создает дескриптор. А метод CreateControl()

@@ -1741,7 +1741,7 @@ namespace FreeLibSet.Forms.Docs
         case EFPDataGridViewState.Delete: imageKey = "Delete"; break;
         default: imageKey = "View"; break;
       }
-      return EFPApp.MainImageIcon(imageKey);
+      return EFPApp.MainImages.Icons[imageKey];
     }
 
 

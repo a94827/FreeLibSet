@@ -21,7 +21,7 @@ namespace FreeLibSet.Forms
     public EFPAppRemoteExitForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Exit");
+      Icon = EFPApp.MainImages.Icons["Exit"];
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpForm.HelpContext = EFPApp.RemoteExitHandler.HelpContext;

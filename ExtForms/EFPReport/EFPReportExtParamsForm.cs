@@ -546,7 +546,7 @@ namespace FreeLibSet.Forms
 
       try
       {
-        _Form.Icon = EFPApp.MainImageIcon(_Owner.MainImageKey);
+        _Form.Icon = EFPApp.MainImages.Icons[_Owner.MainImageKey];
 
         _Form.SetComboBox.ItemSelected += new ParamSetComboBoxItemEventHandler(SetComboBox_ItemSelected);
         _Form.SetComboBox.SaveClick += new ParamSetComboBoxSaveEventHandler(SetComboBox_SaveClick);

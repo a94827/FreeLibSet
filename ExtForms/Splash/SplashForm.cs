@@ -27,7 +27,6 @@ namespace FreeLibSet.Forms
     private TableLayoutPanel tableLayoutPanel1;
     public Panel MainPanel;
     public Button btnCopyText;
-    private System.ComponentModel.IContainer components;
 
     public SplashForm()
     {
@@ -42,6 +41,8 @@ namespace FreeLibSet.Forms
       // 14.07.2015
       // Используем собственный список изображений на случай, если 
       // вызов выполняется из чужого потока
+      if (_ListImageList == null)
+        _ListImageList = CreateListImageList(); // для текущего потока
       PhasesListView.SmallImageList = _ListImageList;
 
       btnCancel.Image = MainImagesResource.Cancel;
@@ -66,21 +67,6 @@ namespace FreeLibSet.Forms
       catch
       {
       }
-    }
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        if (components != null)
-        {
-          components.Dispose();
-        }
-      }
-      base.Dispose(disposing);
     }
 
     #region Windows TheForm Designer generated code
@@ -346,7 +332,8 @@ namespace FreeLibSet.Forms
 
     #region Статический список изображений
 
-    private static readonly ImageList _ListImageList=CreateListImageList();
+    [ThreadStatic]
+    private static ImageList _ListImageList;
 
     private static ImageList CreateListImageList()
     {

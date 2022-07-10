@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-07-08T21:51:53.949000000"/>
+	<meta name="changed" content="2022-07-10T20:54:06.486000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -258,29 +258,31 @@
 			<p lang="en-US" align="center">322</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">08.07.2022</p>
+			<p lang="en-US" align="center">08.07.2022-10.07.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US"><span lang="ru-RU">Изменена работа с изображениями
 			пользовательского интерфейса для совместимости с </span>Mono.
 			<span lang="ru-RU">Изображения теперь хранятся в виде ресурсов, а
-			не в виде потока </span>ImageList. 
-			</p>
+			не в виде потока </span>ImageList. <span lang="ru-RU">Изображения
+			доступны из любого потока, а не только из главного.</span></p>
 			<p lang="en-US"><a name="v322p1"></a>1. <span lang="ru-RU">Свойство
 			</span>EFPApp.MainImages <span lang="ru-RU">имеет новый тип
-			</span>EFPAppMainImages.<span lang="ru-RU"> Убран метод
+			</span>EFPAppMainImages. <span lang="ru-RU">Убран метод
 			</span>EFPApp.AddMainImages(), <span lang="ru-RU">принимавший
-			ссылку на </span>ImageList.</p>
+			ссылку на </span>ImageList. 
+			</p>
 			<p>2. Изменена инициализация <span lang="en-US">EFPUIItemObj.SetImage()
 			</span>(в производных классах)</p>
-			<p lang="en-US"><span lang="ru-RU">3</span>. UserComboBoxBase
-			<span lang="ru-RU">использует ресурсы, а не </span>ImageList</p>
+			<p lang="en-US"><span lang="ru-RU">3</span>. UserComboBoxBase<span lang="ru-RU">,</span>
+			DateRangeBox <span lang="ru-RU">и  </span>SplashForn, <span lang="ru-RU">использует
+			ресурсы, а не </span>ImageList</p>
 			<p lang="en-US"><span lang="ru-RU">4</span>. <span lang="ru-RU">Изменена
 			реализация </span>TempWaitForm, <span lang="ru-RU">так как доступ
 			к изображениям по индексу больше не поддерживается.</span></p>
-			<p lang="en-US"><br/>
-
-			</p>
+			<p><span lang="en-US">6</span>. Изображения хранятся в формате
+			<span lang="en-US">*</span><span lang="ru-RU">.</span><span lang="en-US">png,
+			</span><span lang="ru-RU">а не 16-цветных </span><span lang="en-US">*.bmp.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

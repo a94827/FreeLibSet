@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public SimpleGridForm()
     {
-      Icon = EFPApp.MainImageIcon("Table");
+      Icon = EFPApp.MainImages.Icons["Table"];
       EFPApp.SetFormSize(this, 50, 50);
 
       _FilterGrid = new DataGridView();
@@ -75,7 +75,7 @@ namespace FreeLibSet.Forms
     public OKCancelGridForm(bool useGroupBox)
       :base(useGroupBox)
     {
-      Icon = EFPApp.MainImageIcon("Table");
+      Icon = EFPApp.MainImages.Icons["Table"];
       EFPApp.SetFormSize(this, 50, 50);
 
       _FilterGrid = new DataGridView();

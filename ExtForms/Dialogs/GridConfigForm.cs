@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms
     public GridConfigForm(IEFPControl callerControlProvider, string configCategory, string historyCategory)
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("EditGridConfig");
+      Icon = EFPApp.MainImages.Icons["EditGridConfig"];
 
 #if DEBUG
       if (callerControlProvider == null)

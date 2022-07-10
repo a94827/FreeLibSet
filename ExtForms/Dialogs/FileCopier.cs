@@ -543,7 +543,7 @@ namespace FreeLibSet.Forms
       _Form = new FileCopierForm();
       if (_Wizard == null)
       {
-        _Form.Icon = EFPApp.MainImageIcon("Computer");
+        _Form.Icon = EFPApp.MainImages.Icons["Computer"];
         EFPApp.ShowFormInternal(_Form);
       }
       else

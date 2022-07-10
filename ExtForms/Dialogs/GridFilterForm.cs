@@ -26,7 +26,7 @@ namespace FreeLibSet.Forms
 
 
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Filter");
+      Icon = EFPApp.MainImages.Icons["Filter"];
       _FormProvider = new EFPFormProvider(this);
       _FormProvider.ConfigSectionName = "GridFilterForm";
 

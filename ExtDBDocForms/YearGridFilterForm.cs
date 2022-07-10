@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms.Docs
     public YearGridFilterForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Filter");
+      Icon = EFPApp.MainImages.Icons["Filter"];
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpMode = new EFPRadioButtons(efpForm, rbNoFilter);

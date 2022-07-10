@@ -241,7 +241,7 @@ namespace FreeLibSet.Forms
     public XmlEdiitorForm()
       :base(false)
     {
-      Icon = EFPApp.MainImageIcon("XML");
+      Icon = EFPApp.MainImages.Icons["XML"];
       base.Text = "Документ XML";
       _Editor = new XmlEditor(FormProvider, MainPanel);
     }

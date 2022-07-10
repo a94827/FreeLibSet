@@ -141,7 +141,7 @@ namespace FreeLibSet.Forms
       {
         _MainImageKey = value;
         if (_TheForm != null)
-          _TheForm.Icon = EFPApp.MainImageIcon(value);
+          _TheForm.Icon = EFPApp.MainImages.Icons[value];
       }
     }
     private string _MainImageKey;
@@ -1353,9 +1353,9 @@ namespace FreeLibSet.Forms
         _Report = report;
 
         if (String.IsNullOrEmpty(report.MainImageKey))
-          Icon = EFPApp.MainImageIcon("Table");
+          Icon = EFPApp.MainImages.Icons["Table"];
         else
-          Icon = EFPApp.MainImageIcon(report.MainImageKey);
+          Icon = EFPApp.MainImages.Icons[report.MainImageKey];
         Size = new System.Drawing.Size(Screen.PrimaryScreen.Bounds.Width * 3 / 4,
           Screen.PrimaryScreen.Bounds.Height * 3 / 4);
 

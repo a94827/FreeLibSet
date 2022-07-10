@@ -1033,7 +1033,7 @@ namespace FreeLibSet.Forms.Diagnostics
         frm.Text = "Просмотр изменений";
       else
         frm.Text = title;
-      frm.Icon = EFPApp.MainImageIcon("Debug");
+      frm.Icon = EFPApp.MainImages.Icons["Debug"];
       EFPFormProvider efpForm = new EFPFormProvider(frm);
       EFPApp.SetFormSize(frm, 50, 75);
 
@@ -1137,7 +1137,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
       Form frm = new Form();
       frm.Text = title;
-      frm.Icon = EFPApp.MainImageIcon("Debug");
+      frm.Icon = EFPApp.MainImages.Icons["Debug"];
       EFPFormProvider efpForm = new EFPFormProvider(frm);
       EFPApp.SetFormSize(frm, 50, 75);
 

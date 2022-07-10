@@ -186,7 +186,7 @@ namespace FreeLibSet.Forms.FIAS
 
       OKCancelForm frm = new OKCancelForm(true);
       frm.Text = "Просмотр настроек базы данных ФИАС";
-      frm.Icon = EFPApp.MainImageIcon("FIAS.Address");
+      frm.Icon = EFPApp.MainImages.Icons["FIAS.Address"];
 
       FiasDBSettingsPanel panel = new FiasDBSettingsPanel();
       panel.Enabled = false;

@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms.Diagnostics
     public DebugParsingForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Debug");
+      Icon = EFPApp.MainImages.Icons["Debug"];
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       TheTabControl.ImageList = EFPApp.MainImages.ImageList;

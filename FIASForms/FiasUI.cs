@@ -28,7 +28,7 @@ namespace FreeLibSet.Forms.FIAS
 
     static FiasUI()
     {
-      EFPApp.MainImages.Images.Add(MainImagesResource.ResourceManager);
+      EFPApp.MainImages.Add(MainImagesResource.ResourceManager);
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ namespace FreeLibSet.Forms.FIAS
       form.Text = "Подробности";
       FiasHandler handler = new FiasHandler(_Source);
       form.AddInfoLabel(DockStyle.Top).Text = handler.GetTextWithoutPostalCode(address);
-      form.Icon = EFPApp.MainImageIcon("Fias.Details");
+      form.Icon = EFPApp.MainImages.Icons["Fias.Details"];
       EFPFiasAddressDetailGridView efp = new EFPFiasAddressDetailGridView(form.ControlWithToolBar, this);
       efp.Address = address;
       EFPApp.ShowDialog(form, true);
@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms.FIAS
 
       SimpleGridForm form = new SimpleGridForm();
       form.Text = "История изменений: " + FiasEnumNames.ToString(tableType, false) + " GUID=" + guid.ToString();
-      form.Icon = EFPApp.MainImageIcon("View");
+      form.Icon = EFPApp.MainImages.Icons["View"];
 
       EFPFiasListDataGridView ghHist = new EFPFiasListDataGridView(form.ControlWithToolBar, this, tableType, true);
       ghHist.Control.DataSource = table.DefaultView;
@@ -347,7 +347,7 @@ namespace FreeLibSet.Forms.FIAS
 
       SimpleGridForm frm = new SimpleGridForm();
       frm.Text = "Обновления классификатора";
-      frm.Icon = EFPApp.MainImageIcon("Information");
+      frm.Icon = EFPApp.MainImages.Icons["Information"];
 
       EFPDataGridView gh = new EFPDataGridView(frm.ControlWithToolBar);
       gh.Control.AutoGenerateColumns = false;

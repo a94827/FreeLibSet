@@ -56,7 +56,7 @@ namespace FreeLibSet.Forms.Docs
       {
         dlg.Text = title;
         if (!String.IsNullOrEmpty(imageKey))
-          dlg.Icon = EFPApp.MainImageIcon(imageKey);
+          dlg.Icon = EFPApp.MainImages.Icons[imageKey];
         dlg.efpGroup.CurrentId = groupId;
         dlg.efpIncludeNestedGroups.Checked = includeNestedGroups;
 

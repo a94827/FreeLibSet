@@ -407,7 +407,7 @@ namespace FreeLibSet.Forms
 
       Form frm = new Form();
       frm.Text = "Просмотр изображения (" + MainImage.Width.ToString() + "x" + MainImage.Height.ToString() + ")";
-      frm.Icon = EFPApp.MainImageIcon("View");
+      frm.Icon = EFPApp.MainImages.Icons["View"];
       frm.WindowState = FormWindowState.Maximized;
       frm.FormBorderStyle = FormBorderStyle.FixedDialog;
       frm.MaximizeBox = false;

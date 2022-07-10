@@ -216,7 +216,7 @@ namespace FreeLibSet.Forms.FIAS
       form.FormBorderStyle = FormBorderStyle.Sizable;
       form.MaximizeBox = true;
       form.Text = Title;
-      form.Icon = EFPApp.MainImageIcon("FIAS.Address");
+      form.Icon = EFPApp.MainImages.Icons["FIAS.Address"];
       form.FormProvider.OwnStatusBar = true;
       form.Width = 640;
 

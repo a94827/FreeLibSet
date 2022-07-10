@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms
       try
       {
         _TheForm.Text = Title;
-        _TheForm.Icon = EFPApp.MainImageIcon(ImageKey);
+        _TheForm.Icon = EFPApp.MainImages.Icons[ImageKey];
         _TheForm.grpMain.Text = "Каталог";
         _TheForm.TextLabel.Text = "Путь";
         _TheForm.lblDescription.Text = Description;
@@ -438,7 +438,7 @@ namespace FreeLibSet.Forms
       try
       {
         _TheForm.Text = Title;
-        _TheForm.Icon = EFPApp.MainImageIcon(ImageKey);
+        _TheForm.Icon = EFPApp.MainImages.Icons[ImageKey];
         _TheForm.grpMain.Text = "Файл";
         _TheForm.TextLabel.Text = "Путь к файлу";
         _TheForm.lblDescription.Text = Description;

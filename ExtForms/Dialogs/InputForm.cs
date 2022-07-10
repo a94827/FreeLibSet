@@ -230,7 +230,7 @@ namespace FreeLibSet.Forms
     protected void InitFormTitle(Form form)
     {
       form.Text = Title;
-      EFPApp.InitMainImageIcon(form, ImageKey, true);
+      EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
     }
 
     /// <summary>

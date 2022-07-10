@@ -125,15 +125,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\Main\FIAS.PostalCode.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Images\Main\FIAS.Address.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Images\Main\FIAS.Details.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Images\Main\FIAS.Address.png" />
   </ItemGroup>
   <ItemGroup>

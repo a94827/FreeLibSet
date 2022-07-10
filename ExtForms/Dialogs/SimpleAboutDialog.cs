@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms
     {
       InitializeComponent();
 
-      Icon = EFPApp.MainImageIcon("About");
+      Icon = EFPApp.MainImages.Icons["About"];
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
@@ -61,7 +61,7 @@ namespace FreeLibSet.Forms
         try
         {
           frm.Text = "Загруженные программные модули";
-          frm.Icon = EFPApp.MainImageIcon("About");
+          frm.Icon = EFPApp.MainImages.Icons["About"];
           EFPApp.SetFormSize(frm, 50, 50);
           frm.StartPosition = FormStartPosition.CenterScreen;
           frm.WindowState = FormWindowState.Maximized;

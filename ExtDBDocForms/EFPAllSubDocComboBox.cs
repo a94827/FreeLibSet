@@ -188,7 +188,7 @@ namespace FreeLibSet.Forms.Docs
     {
       OKCancelGridForm form = new OKCancelGridForm();
       form.Text = this.DisplayName;
-      form.Icon = EFPApp.MainImageIcon(this.SubDocTypeUI.TableImageKey);
+      form.Icon = EFPApp.MainImages.Icons[this.SubDocTypeUI.TableImageKey];
       WinFormsTools.OkCancelFormToOkOnly(form);
       EFPSubDocGridView efpGrid;
       if (MainEditor == null)

@@ -685,7 +685,7 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        TheForm.Icon = EFPApp.MainImageIcon(ImageKey);
+        TheForm.Icon = EFPApp.MainImages.Icons[ImageKey];
         TheForm.ShowIcon = true;
       }
       if (Sizeable)

@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms
     {
       _ControlProvider = controlProvider;
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("OrderAZ");
+      Icon = EFPApp.MainImages.Icons["OrderAZ"];
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpForm.ConfigSectionName = "EFPDataGridViewOrderForm"; // для сохранения размеров диалога
 

@@ -100,7 +100,7 @@ namespace FreeLibSet.Forms.Docs
       InitializeComponent();
 
       base.Text = docTypeUI.DocType.PluralTitle;
-      base.Icon = EFPApp.MainImageIcon(docTypeUI.TableImageKey);
+      base.Icon = EFPApp.MainImages.Icons[docTypeUI.TableImageKey];
 
       _FormProvider = new EFPFormProvider(this);
 

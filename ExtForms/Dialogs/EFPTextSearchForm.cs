@@ -46,7 +46,7 @@ namespace FreeLibSet.Forms
       InitializeComponent();
 
       if (!base.DesignMode)
-        Icon = EFPApp.MainImageIcon("Find");
+        Icon = EFPApp.MainImages.Icons["Find"];
 
       efpText = new EFPTextComboBox(FormProvider, cbText);
       efpText.CanBeEmpty = false;

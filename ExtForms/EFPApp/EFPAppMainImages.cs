@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Resources;
+using System.Threading;
 
 namespace FreeLibSet.Forms
 {
@@ -16,6 +17,7 @@ namespace FreeLibSet.Forms
   /// Свойство ImageList можно использовать в управляющих элементах TabControl, ListView и TreeView.
   /// Свойство Icons используется для получения значков для форм. 
   /// Коллекции ImageList и Icons являются вторичными и заполняются автоматическими.
+  /// Класс является потокобезопасным.
   /// </summary>
   public sealed class EFPAppMainImages
   {
@@ -23,15 +25,68 @@ namespace FreeLibSet.Forms
 
     internal EFPAppMainImages()
     {
-      _Images = new ImageCollection(this);
+      DoAdd(MainImagesResource.ResourceManager, Color.Transparent, null);
       _Icons = new IconCollection(this);
+    }
+
+    #endregion
+
+    #region Методы добавления изображений
+
+    /// <summary>
+    /// Добавляет изображения из ресурсов.
+    /// </summary>
+    /// <param name="resourceManager">Менеджер ресурсов</param>
+    public void Add(ResourceManager resourceManager)
+    {
+      Add(resourceManager, Color.Transparent);
+    }
+
+    /// <summary>
+    /// Добавляет изображения из ресурсов.
+    /// </summary>
+    /// <param name="resourceManager">Менеджер ресурсов</param>
+    /// <param name="transparentColor">Если задано значение, отличное от Color.Transparent, будет вызван метод Bitmap.</param>
+    public void Add(ResourceManager resourceManager, Color transparentColor)
+    {
+      DoAdd(resourceManager, transparentColor, Images.Items);
+    }
+
+    private void DoAdd(ResourceManager resourceManager, Color transparentColor, Dictionary<string, Bitmap> oldDict)
+    {
+#if DEBUG
+      if (resourceManager == null)
+        throw new ArgumentNullException("resourceManager");
+#endif
+
+      Dictionary<string, Bitmap> newDict;
+      if (oldDict == null)
+        newDict = new Dictionary<string, Bitmap>();
+      else
+        newDict = new Dictionary<string, Bitmap>(oldDict);
+
+      ResourceSet rs = resourceManager.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, true);
+      foreach (System.Collections.DictionaryEntry de in rs)
+      {
+        Bitmap bmp = de.Value as Bitmap;
+        if (bmp != null)
+        {
+          if (transparentColor != Color.Transparent)
+            bmp.MakeTransparent(transparentColor);
+
+          newDict[(String)de.Key] = bmp;
+        }
+      }
+
+      // Замена ссылки является безопасной атомартной операцией
+      _Images = new ImageCollection(newDict);
     }
 
     #endregion
 
     #region Основной список изображений
 
-    /// <summary>
+    /// <summary>                                                    +
     /// Реализация свойства Images.
     /// Предусмотрена возможность добавления пользовательских изображений.
     /// Удаление элементов не предусмотрено.
@@ -40,18 +95,17 @@ namespace FreeLibSet.Forms
     {
       #region Защищенный конструктор
 
-      internal ImageCollection(EFPAppMainImages owner)
+      internal ImageCollection(Dictionary<string, Bitmap> dict)
       {
-        _Owner = owner;
-        _Items = new Dictionary<string, Bitmap>();
+        _Items = dict;
 
-        Add(MainImagesResource.ResourceManager);
         _Empty = _Items["EmptyImage"];
         _UnknownState = _Items["UnknownState"];
         _HourGlass = _Items["HourGlass"];
-      }
 
-      private EFPAppMainImages _Owner;
+        _ThreadImageListDict = new Dictionary<int, System.Windows.Forms.ImageList>();
+        _Icons = new Dictionary<string, Icon>();
+      }
 
       #endregion
 
@@ -65,7 +119,7 @@ namespace FreeLibSet.Forms
       /// Если <paramref name="imageKey"/> - пустая строка или null, возвращается пустое изображение EmptyImage.
       /// Если передан ключ, для которого нет изображения в словаре, возвращается изображение "?".
       ///
-      /// Установка свойства выполняет добавление или изменение существующего изображение, при этом <paramref name="imageKey"/> должен быть непустой строкой.
+      /// Установка свойства запрещена. Для добавления значков используйте метод Add() основного класса EFPAppMainImages, который создаст новый экземпляр коллекции
       /// </summary>
       /// <param name="imageKey">Ключ для доступа к изображению</param>
       /// <returns>Изображение</returns>
@@ -83,67 +137,12 @@ namespace FreeLibSet.Forms
         }
         set
         {
-          if (String.IsNullOrEmpty(imageKey))
-            throw new ArgumentNullException("imageKey");
-          if (value == null)
-            throw new ArgumentNullException("value");
-
-          _Items[imageKey] = value;
-
-          if (_Owner._ImageList != null)
-          {
-            int p = _Owner._ImageList.Images.IndexOfKey(imageKey);
-            if (p >= 0)
-              _Owner._ImageList.Images[p] = value;
-            else
-              _Owner._ImageList.Images.Add(imageKey, value);
-          }
-
-          if (_Owner.Icons != null) // может быть не инициализирован
-            _Owner._Icons.Remove(imageKey);
+          throw new NotImplementedException();
         }
       }
 
+      internal Dictionary<string, Bitmap> Items { get { return _Items; } }
       private readonly Dictionary<string, Bitmap> _Items;
-
-      #endregion
-
-      #region Методы добавления изображений
-
-
-      /// <summary>
-      /// Добавляет изображения из ресурсов.
-      /// </summary>
-      /// <param name="resourceManager">Менеджер ресурсов</param>
-      public void Add(ResourceManager resourceManager)
-      {
-        Add(resourceManager, Color.Transparent);
-      }
-
-      /// <summary>
-      /// Добавляет изображения из ресурсов.
-      /// </summary>
-      /// <param name="resourceManager">Менеджер ресурсов</param>
-      /// <param name="transparentColor">Если задано значение, отличное от Color.Transparent, будет вызван метод Bitmap.</param>
-      public void Add(ResourceManager resourceManager, Color transparentColor)
-      {
-#if DEBUG
-        if (resourceManager == null)
-          throw new ArgumentNullException("resourceManager");
-#endif
-        ResourceSet rs = resourceManager.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, true);
-        foreach (System.Collections.DictionaryEntry de in rs)
-        {
-          Bitmap bmp = de.Value as Bitmap;
-          if (bmp != null)
-          {
-            if (transparentColor != Color.Transparent)
-              bmp.MakeTransparent(transparentColor);
-
-            this[(String)de.Key] = bmp;
-          }
-        }
-      }
 
       #endregion
 
@@ -173,7 +172,7 @@ namespace FreeLibSet.Forms
 
       void IDictionary<string, Bitmap>.Add(string key, Bitmap value)
       {
-        this[key] = value;
+        throw new NotImplementedException();
       }
 
       /// <summary>
@@ -224,7 +223,7 @@ namespace FreeLibSet.Forms
 
       void ICollection<KeyValuePair<string, Bitmap>>.Add(KeyValuePair<string, Bitmap> item)
       {
-        this[item.Key] = item.Value;
+        throw new NotImplementedException();
       }
 
       void ICollection<KeyValuePair<string, Bitmap>>.Clear()
@@ -252,7 +251,7 @@ namespace FreeLibSet.Forms
       /// </summary>
       public int Count { get { return _Items.Count; } }
 
-      bool ICollection<KeyValuePair<string, Bitmap>>.IsReadOnly { get { return false; } }
+      bool ICollection<KeyValuePair<string, Bitmap>>.IsReadOnly { get { return true; } }
 
       bool ICollection<KeyValuePair<string, Bitmap>>.Remove(KeyValuePair<string, Bitmap> item)
       {
@@ -283,14 +282,78 @@ namespace FreeLibSet.Forms
       }
 
       #endregion
+
+      #region Списки ImageList
+
+      /// <summary>
+      /// Списки ImageList для потоков.
+      /// Ключ - идентификатор потока.
+      /// Значение - созданный и заполненный список изображений.
+      /// При доступе к словарю объект словаря блокируется.
+      /// </summary>
+      private Dictionary<int, System.Windows.Forms.ImageList> _ThreadImageListDict;
+
+      internal System.Windows.Forms.ImageList GetImageList()
+      {
+        System.Windows.Forms.ImageList res;
+        lock (_ThreadImageListDict)
+        {
+          if (!_ThreadImageListDict.TryGetValue(Thread.CurrentThread.ManagedThreadId, out res))
+          {
+            res = new System.Windows.Forms.ImageList();
+            res.ColorDepth = System.Windows.Forms.ColorDepth.Depth4Bit; // поменьше пусть будет
+            res.ImageSize = new Size(16, 16);
+            foreach (KeyValuePair<string, Bitmap> pair in this)
+              res.Images.Add(pair.Key, pair.Value);
+
+            _ThreadImageListDict.Add(Thread.CurrentThread.ManagedThreadId, res);
+          }
+        }
+        return res;
+      }
+
+      internal bool GetIsImageListCreated()
+      {
+        lock (_ThreadImageListDict)
+        {
+          return _ThreadImageListDict.Count > 0;
+        }
+      }
+
+      #endregion
+
+      #region Значки Icon
+
+      /// <summary>
+      /// Эта коллекция пополняется из разных потоков, поэтому должна выполняться блокировка.
+      /// </summary>
+      private readonly Dictionary<string, Icon> _Icons;
+
+      internal Icon GetIcon(string imageKey)
+      {
+        Icon res;
+        lock (_Icons)
+        {
+          if (!_Icons.TryGetValue(imageKey, out res))
+          {
+            Bitmap bmp = this[imageKey];
+            res = Icon.FromHandle(bmp.GetHicon());
+            _Icons.Add(imageKey, res);
+          }
+          return res;
+        }
+      }
+
+      #endregion
     }
 
     /// <summary>
     /// Доступ к изображениям в формате Bitmap.
     /// Изображения в словаре являются собственностью этой коллекции и не должны удаляться в прикладном коде.
+    /// При добавлении ресурсов изображений методом Add() это свойство заменяется на новое.
     /// </summary>
     public ImageCollection Images { get { return _Images; } }
-    private readonly ImageCollection _Images;
+    private ImageCollection _Images;
 
     #endregion
 
@@ -299,28 +362,18 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает объект ImageList, который можно использовать с управляющими элементами TabControl, ListView и TreeView.
     /// Прикладной код не должен модифицировать этот список, так как он автоматически синхронизируется с основной коллекцией Images.
+    /// При доступе из разных потоков возвращаются разные экземпляры объектов ImageList, так как этот класс не является потокобезопасным.
+    /// При добавлении изображений методом Add() возвращется новый ImageList.
     /// </summary>
     public System.Windows.Forms.ImageList ImageList
     {
       get
       {
-        if (_ImageList == null)
-        {
-          //EFPApp.BeginWait("");
-          System.Windows.Forms.ImageList tmp = new System.Windows.Forms.ImageList();
-          tmp.ColorDepth = System.Windows.Forms.ColorDepth.Depth4Bit; // поменьше пусть будет
-          tmp.ImageSize = new Size(16, 16);
-          foreach (KeyValuePair<string, Bitmap> pair in Images)
-            tmp.Images.Add(pair.Key, pair.Value);
-
-          _ImageList = tmp;
-        }
-        return _ImageList;
+        return _Images.GetImageList();
       }
     }
-    private System.Windows.Forms.ImageList _ImageList;
 
-    internal bool ImageListCreated { get { return _ImageList != null; } }
+    internal bool IsImageListCreated { get { return _Images.GetIsImageListCreated(); } }
 
     #endregion
 
@@ -336,7 +389,6 @@ namespace FreeLibSet.Forms
       internal IconCollection(EFPAppMainImages owner)
       {
         _Owner = owner;
-        _Items = new Dictionary<string, Icon>();
       }
 
       private EFPAppMainImages _Owner;
@@ -357,30 +409,48 @@ namespace FreeLibSet.Forms
       {
         get
         {
-          if (EFPApp.MainThread == null)
-            return null; // Не было вызова InitApp()
-
-#if DEBUG
-          EFPApp.CheckMainThread();
-#endif
-
           if (String.IsNullOrEmpty(imageKey))
             return null;
-          Icon res;
-          if (!_Items.TryGetValue(imageKey, out res))
-          {
-            Bitmap bmp = _Owner.Images[imageKey] as Bitmap;
-            res = Icon.FromHandle(bmp.GetHicon());
-            _Items.Add(imageKey, res);
-          }
-          return res;
+          return _Owner.Images.GetIcon(imageKey);
         }
       }
-      private readonly Dictionary<string, Icon> _Items;
 
-      internal void Remove(string imageKey)
+      #endregion
+
+      #region Иницализация формы
+
+      /// <summary>
+      /// Установка значка формы (свойства Form.Icon и Form.ShowIcon)
+      /// Если задано имя изображения, то форма будет иметь значок.
+      /// Иначе свойство ShowIcon сбрасывается в false, но форме присваивается иконка приложения, чтобы форма
+      /// правильно отображалась в панели задач.
+      /// </summary>
+      /// <param name="form">Инициализируемая форма</param>
+      /// <param name="imageKey">Имя изображения из списка EFPApp.MainImages</param>
+      /// <param name="isModal">True, если форма будет показана в модальном режиме, false - если в немодальном</param>
+      public void InitForm(System.Windows.Forms.Form form, string imageKey, bool isModal)
       {
-        _Items.Remove(imageKey); // не вызываем Dispose(), так как значок может быть присоединен к форме.
+#if DEBUG
+        if (form == null)
+          throw new ArgumentNullException("form");
+#endif
+
+        if (!String.IsNullOrEmpty(imageKey))
+        {
+          form.ShowIcon = true;
+          form.Icon = this[imageKey];
+          return;
+        }
+
+        if (isModal && EFPApp.DialogOwnerWindow != null)
+        {
+          // 01.03.2021
+          form.ShowIcon = false;
+          return;
+        }
+
+        WinFormsTools.InitAppIcon(form);
+        form.ShowIcon = !EFPApp.MainWindowVisible;
       }
 
       #endregion

@@ -199,7 +199,7 @@ namespace FreeLibSet.Forms.Docs
       OKCancelForm form = new OKCancelForm(false);
       WinFormsTools.OkCancelFormToOkOnly(form);
       form.Text = this.DisplayName;
-      form.Icon = EFPApp.MainImageIcon(this.ImageKey);
+      form.Icon = EFPApp.MainImages.Icons[this.ImageKey];
 
       UserPermissionEditor editor = new UserPermissionEditor(this, true, form.FormProvider);
       CreateEditor(editor);

@@ -385,7 +385,7 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       Form frm = new Form();
       EFPApp.SetFormSize(frm, 70, 100);
-      frm.Icon = EFPApp.MainImageIcon("Debug");
+      frm.Icon = EFPApp.MainImages.Icons["Debug"];
 
       frm.Text = title;
       ObjectDebugControl ctrl = new ObjectDebugControl(frm);
@@ -448,7 +448,7 @@ namespace FreeLibSet.Forms.Diagnostics
     public Form CreateForm()
     {
       Form frm = new Form();
-      frm.Icon = EFPApp.MainImageIcon("Debug");
+      frm.Icon = EFPApp.MainImages.Icons["Debug"];
 
       TabControl TheTabControl = new TabControl();
       TheTabControl.Dock = DockStyle.Fill;

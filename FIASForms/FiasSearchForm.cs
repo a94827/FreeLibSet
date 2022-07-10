@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms.FIAS
 
     public FiasSearchForm()
     {
-      Icon = EFPApp.MainImageIcon("Find");
+      Icon = EFPApp.MainImages.Icons["Find"];
       InitializeComponent();
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
@@ -73,7 +73,7 @@ namespace FreeLibSet.Forms.FIAS
       _Addresses = addresses;
 
       base.Text = "Результаты поиска (" + addresses.Length.ToString() + ")";
-      base.Icon = EFPApp.MainImageIcon("Find");
+      base.Icon = EFPApp.MainImages.Icons["Find"];
 
       gh = new EFPDataGridView(ControlWithToolBar);
       gh.Columns.AddTextFill("AddressText", false, "Адрес", 100, 10);

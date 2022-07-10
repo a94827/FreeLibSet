@@ -29,7 +29,7 @@ namespace FreeLibSet.Forms.Docs
     {
       InitializeComponent();
 
-      Icon = EFPApp.MainImageIcon("UserActions");
+      Icon = EFPApp.MainImages.Icons["UserActions"];
 
       efpForm = new EFPFormProvider(this);
 

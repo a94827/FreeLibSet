@@ -157,7 +157,7 @@ namespace FreeLibSet.Forms.Docs
       try
       {
         dlg2.Text = title;
-        dlg2.Icon = EFPApp.MainImageIcon("Filter");
+        dlg2.Icon = EFPApp.MainImages.Icons["Filter"];
         if ((int)mode >= 0 && (int)mode < dlg2.cbMode.Items.Count)
           dlg2.efpMode.SelectedIndex = (int)(mode);
         dlg2.efpDocSel.Ids = ids;
