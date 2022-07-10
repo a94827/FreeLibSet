@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
+using FreeLibSet.Forms.Diagnostics;
 
 namespace Bmp2Png
 {

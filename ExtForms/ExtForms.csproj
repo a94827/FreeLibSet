@@ -1447,6 +1447,18 @@
   <ItemGroup>
     <None Include="Images\ComboBox\Edit.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\Clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\DropDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\Edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ComboBox\View.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

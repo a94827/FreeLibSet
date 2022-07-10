@@ -28,7 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.infoLabel1 = new AgeyevAV.ExtForms.InfoLabel();
+      this.infoLabel1 = new FreeLibSet.Controls.InfoLabel();
       this.panel1 = new System.Windows.Forms.Panel();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnOk = new System.Windows.Forms.Button();
@@ -191,7 +191,7 @@
 
     #endregion
 
-    private AgeyevAV.ExtForms.InfoLabel infoLabel1;
+    private FreeLibSet.Controls.InfoLabel infoLabel1;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.Button btnCancel;

@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
         frm.StartPosition = FormStartPosition.WindowsDefaultLocation;
         TabControl TheTabControl = new TabControl();
         if (EFPApp.IsMainThread)
-          TheTabControl.ImageList = EFPApp.MainImages;
+          TheTabControl.ImageList = EFPApp.MainImages.ImageList;
         TheTabControl.Dock = DockStyle.Fill;
         frm.Controls.Add(TheTabControl);
 

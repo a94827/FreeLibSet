@@ -5,9 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Config;
-using AgeyevAV.IO;
+using FreeLibSet.Forms;
+using FreeLibSet.Config;
+using FreeLibSet.IO;
 
 namespace Bmp2Png
 {
