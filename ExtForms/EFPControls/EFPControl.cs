@@ -1717,12 +1717,6 @@ namespace FreeLibSet.Forms
           ccm.DefaultCommandItem = CommandItems.DefaultCommandItem;
 
           ccm.Attach(Control);
-
-          if (Control is UserControl)
-          {
-            foreach (Control childControl in Control.Controls)
-              childControl.ContextMenuStrip = Control.ContextMenuStrip;
-          }
         }
       }
       catch (Exception e)

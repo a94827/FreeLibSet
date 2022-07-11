@@ -872,7 +872,7 @@ namespace FreeLibSet.Forms
     #region Методы
 
     /// <summary>
-    /// Присвоединяет меню к управляющему элементу
+    /// Присоединяет меню к управляющему элементу
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
     public void Attach(Control control)
@@ -885,9 +885,26 @@ namespace FreeLibSet.Forms
       _Control = control;
 #endif
 
-      control.ContextMenuStrip = Menu;
-      control.Disposed += new EventHandler(ControlDisposed);
       InitSeparatorVisiblity();
+
+      control.Disposed += new EventHandler(ControlDisposed); // обработчик Dispose только для верхнего элемента
+      DoAttach(control); 
+    }
+
+    /// <summary>
+    /// Рекурсивное присоединение меню
+    /// </summary>
+    /// <param name="currControl"></param>
+    private void DoAttach(Control currControl)
+    {
+      currControl.ContextMenu = null; // 11.07.2022. В Mono для TextBox назначается свое меню, которое "перевешивает" наше меню в ContextMenuStrip
+      currControl.ContextMenuStrip = Menu;
+
+      if (currControl is UserControl)
+      {
+        foreach (Control childControl in currControl.Controls)
+          DoAttach(childControl); // рекурсия
+      }
     }
 
     #endregion
