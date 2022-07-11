@@ -189,7 +189,7 @@
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(150, 21);
       this.label1.TabIndex = 0;
-      this.label1.Text = "Лоигические значения";
+      this.label1.Text = "Логические значения";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // EFPDataGridViewExpExcelForm

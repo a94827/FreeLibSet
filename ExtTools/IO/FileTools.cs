@@ -689,6 +689,8 @@ namespace FreeLibSet.IO
         case TestPathMode.RootExists:
           try
           {
+            if (Environment.OSVersion.Platform == PlatformID.Unix && String.Equals(dirName, "/", StringComparison.Ordinal))
+              return true; // 10.07.2022. В Mono функция Directory.Exists не возвращает факт наличия корневого каталога
             if (Directory.Exists(new AbsPath(dirName).RootDir.Path))
               return true;
             else

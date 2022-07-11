@@ -175,13 +175,16 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает читаемое название версии .NET Framework/Mono с указанием разрядности.
-    /// Для моно возвращается версия mono/версия имитируемой Net framework через дробь.
+    /// Для моно возвращается версия mono и версия Common Language Runtime.
     /// </summary>
     public static string NetVersionText
     {
       get
       {
-        return (IsMono ? ("Mono " + MonoVersion.ToString() + "/") : ".NET Framework ") + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+        if (IsMono)
+          return "Mono " + MonoVersion.ToString() + ", CLR " + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+        else
+          return ".NET Framework " + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
       }
     }
 

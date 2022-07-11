@@ -42,25 +42,8 @@ namespace FreeLibSet.Controls
 
     #region Дизайнер
 
-    private ImageList _TheImageList;
-    private IContainer _components;
-
     private void InitializeComponent()
     {
-      this._components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageBoxIconBox));
-      this._TheImageList = new System.Windows.Forms.ImageList(this._components);
-      this.SuspendLayout();
-      // 
-      // TheImageList
-      // 
-      this._TheImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TheImageList.ImageStream")));
-      this._TheImageList.TransparentColor = System.Drawing.Color.Magenta;
-      this._TheImageList.Images.SetKeyName(0, "Error");
-      this._TheImageList.Images.SetKeyName(1, "Information");
-      this._TheImageList.Images.SetKeyName(2, "UnknownState");
-      this._TheImageList.Images.SetKeyName(3, "Warning");
-      this.ResumeLayout(false);
     }
 
     #endregion
@@ -163,10 +146,10 @@ namespace FreeLibSet.Controls
         Image img;
         switch (_Icon)
         {
-          case MessageBoxIcon.Information: img = _TheImageList.Images["Information"]; break;
-          case MessageBoxIcon.Error: img = _TheImageList.Images["Error"]; break;
-          case MessageBoxIcon.Warning: img = _TheImageList.Images["Warning"]; break;
-          case MessageBoxIcon.Question: img = _TheImageList.Images["UnknownState"]; break;
+          case MessageBoxIcon.Information: img = MainImagesResource.Information; break;
+          case MessageBoxIcon.Error: img = MainImagesResource.Error; break;
+          case MessageBoxIcon.Warning: img = MainImagesResource.Warning; break;
+          case MessageBoxIcon.Question: img = MainImagesResource.UnknownState; break;
           default:
             return; // Нечего рисовать
         }

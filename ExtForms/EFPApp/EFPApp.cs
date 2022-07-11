@@ -2304,54 +2304,6 @@ namespace FreeLibSet.Forms
     public static EFPAppMainImages MainImages { get { return _MainImages; } }
     private static EFPAppMainImages _MainImages = new EFPAppMainImages();
 
-    /// <summary>
-    /// Получение значка для формы, соответствующего изображению в списке MainImages.
-    /// Если задано несуществующее имя изображения, то возвращается null
-    /// </summary>
-    /// <param name="imageKey">Имя изображения в списке MainImages</param>
-    /// <returns>Соответствующая изображению иконка для формы</returns>
-    [Obsolete("Заменить на доступ к EFPApp.MainImages.Icons[imageKey]", false)]
-    public static Icon MainImageIcon(string imageKey)
-    {
-      if (MainThread == null)
-        return null; // Не было вызова InitApp()
-
-#if DEBUG
-      CheckMainThread();
-#endif
-      return MainImages.Icons[imageKey];
-    }
-
-#if XXX
-    /// <summary>
-    /// Установка значка формы (свойства Form.Icon и Form.ShowIcon)
-    /// Если задано имя изображения, то форма будет иметь значок.
-    /// Иначе свойство ShowIcon сбрасывается в false, но форме присваивается иконка приложения, чтобы форма
-    /// правильно отображалась в панели задач
-    /// </summary>
-    /// <param name="form">Инициализируемая форма</param>
-    /// <param name="imageKey">Имя изображения из списка EFPApp.MainImages</param>
-    [Obsolete("Используйте перегрузку метода с 3 аргументами", false)]
-    public static void InitMainImageIcon(Form form, string imageKey)
-    {
-      InitMainImageIcon(form, imageKey, false);
-    }
-#endif
-
-    /// <summary>
-    /// Установка значка формы (свойства Form.Icon и Form.ShowIcon)
-    /// Если задано имя изображения, то форма будет иметь значок.
-    /// Иначе свойство ShowIcon сбрасывается в false, но форме присваивается иконка приложения, чтобы форма
-    /// правильно отображалась в панели задач.
-    /// </summary>
-    /// <param name="form">Инициализируемая форма</param>
-    /// <param name="imageKey">Имя изображения из списка EFPApp.MainImages</param>
-    /// <param name="modal">True, если форма будет показана в модальном режиме, false - если в немодальном</param>
-    [Obsolete("Тоже переместить в EFPApp.MainImages.Icons", false)]
-    public static void InitMainImageIcon(Form form, string imageKey, bool modal)
-    {
-      MainImages.Icons.InitForm(form, imageKey, modal);
-    }
 
     #endregion
 

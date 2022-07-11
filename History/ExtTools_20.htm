@@ -5,7 +5,10 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-07-08T15:57:06.873000000"/>
+	<meta name="changed" content="2022-07-11T11:33:46.998000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -554,7 +557,7 @@
 			<p lang="en-US" align="center">322</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">07.07.2022-08.07.2022</p>
+			<p lang="en-US" align="center">07.07.2022-11.07.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Методы
@@ -564,14 +567,30 @@
 			Двоичная сериализация не работает, если сервер работает под </span><span lang="en-US">Net
 			Framework, </span><span lang="ru-RU">а клиент - под </span><span lang="en-US">Mono.</span></p>
 			<p><span lang="en-US">2. </span><span lang="ru-RU">Свойство
-			</span><span lang="en-US">EnvironmentTools.MonoVersion</span><span lang="ru-RU">
-			(</span><a href="ExtTools_11.htm#v030p4"><span lang="en-US">v.30
+			</span><span lang="en-US">EnvironmentTools.MonoVersion</span>
+			<span lang="ru-RU">(</span><a href="ExtTools_11.htm#v030p4"><span lang="en-US">v.30
 			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span><span lang="en-US">.
-			</span><span lang="ru-RU">Свойство </span><span lang="en-US">Net</span><span lang="en-US">Version</span><span lang="en-US">Text
+			</span><span lang="ru-RU">Свойство </span><span lang="en-US">NetVersionText
 			(<a href="ExtTools_11.htm#v034p2">v.34 </a></span><a href="ExtTools_11.htm#v034p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
-			</span><span lang="ru-RU">возвращает через дробь версию </span><span lang="en-US">Mono
-			</span><span lang="ru-RU">и версию имитируемой </span><span lang="en-US">Net
-			Framework</span></p>
+			</span><span lang="ru-RU">возвращает версию </span><span lang="en-US">Mono
+			</span><span lang="ru-RU">и версию </span><span lang="en-US">CLR.</span></p>
+			<p><span lang="en-US">3. FileTools.TestDirSlashedPath() (<a href="ExtTools_11.htm#v224p2">v.224
+			</a></span><a href="ExtTools_11.htm#v224p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">в </span><span lang="en-US">Linux
+			</span><span lang="ru-RU">возвращает </span><span lang="en-US">true
+			</span><span lang="ru-RU">для корневого каталога &quot;/&quot; при
+			TestPathMode=</span><span lang="en-US">RootExists.</span></p>
+			<p><span lang="en-US">4. OpenOfficeTools </span><span lang="ru-RU">не
+			определял версию нового </span><span lang="en-US">LibreOffice </span><span lang="ru-RU">в
+			</span><span lang="en-US">Linux. </span><span lang="ru-RU">В файле
+			&quot;</span><span lang="en-US">versionrc</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+			</span><span lang="ru-RU">больше нет строки &quot;BuildVersion=&quot;
+			(</span><a href="ExtTools_11.htm#v076p3"><span lang="en-US">v.76
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Теперь версия извлекается из файла
+			&quot;</span><span lang="en-US">main.xcd</span><span lang="ru-RU">&quot;</span><span lang="en-US">.
+			</span><span lang="ru-RU">Старый способ используется, если новый
+			закончился неудачей.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

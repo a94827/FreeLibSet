@@ -59,7 +59,7 @@ namespace FreeLibSet.Forms
       {
         Form frm = new Form();
         frm.Text = title;
-        frm.Icon = EFPApp.MainImageIcon("Debug");
+        frm.Icon = EFPApp.MainImages.Icons["Debug"];
         Size sz = Screen.PrimaryScreen.Bounds.Size;
         frm.Size = new Size(sz.Width, sz.Height);
         frm.StartPosition = FormStartPosition.WindowsDefaultLocation;

@@ -194,14 +194,88 @@ namespace FreeLibSet.Shell
       /// Определение версии OpenOffice/LibreOffice в Linux.
       /// Понятия не имею, как это сделать правильно.
       /// Ни один файл не имеет версии, заданной в ресурсах, как в Windows.
-      /// Анализируем текстовый файл.
       /// </summary>
       /// <returns></returns>
       private void InitVersionUnix()
       {
+        try
+        {
+          if (InitVersionUnix_main_xcd())
+            return;
+        }
+        catch(Exception e)
+        {
+          Trace.WriteLine("Error in InitVersionUnix_main_xcd(): "+e.Message);
+        }
+        try
+        {
+          if (InitVersionUnix_versionrc())
+            return;
+        }
+        catch (Exception e)
+        {
+          Trace.WriteLine("Error in InitVersionUnix_versionrc(): " + e.Message);
+        }
+        Trace.WriteLine("Unable to detect the version of " + this.KindName+ " from path "+this.ProgramDir.Path); 
+      }
+
+      /// <summary>
+      /// 11.07.2022.
+      /// Новый вариант определения версии - из скрытого xml-файла main.xcd
+      /// </summary>
+      /// <returns><c>true</c>, if version unix main xcd was inited, <c>false</c> otherwise.</returns>
+      private bool InitVersionUnix_main_xcd()
+      {
+        AbsPath xmlFile = new AbsPath(ProgramDir.ParentDir, "share", ".registry", "main.xcd");
+        if (!File.Exists(xmlFile.Path))
+          return false;
+
+        XmlDocument xml = new XmlDocument();
+        xml.Load(xmlFile.Path);
+        XmlNamespaceManager nsm = new XmlNamespaceManager(xml.NameTable);
+        nsm.AddNamespace("oor", "http://openoffice.org/2001/registry");
+        XmlNodeList nl = xml.SelectNodes("oor:data/oor:component-data[@oor:name='Setup' and @oor:package=\'org.openoffice\']/node/prop", nsm);
+
+        Version ver1 = null;
+
+        foreach (XmlNode node in nl)
+        {
+          XmlAttribute attrName = node.Attributes["oor:name"];
+          if (attrName == null)
+            continue;
+          if (attrName.Value == "ooSetupVersionAboutBox") // полный номер версии "7.3.4.2"
+          {
+            XmlNode nodeValue = node.SelectSingleNode("value");
+            if (nodeValue == null)
+              continue;
+            _Version = new Version(nodeValue.InnerText);
+            return true;
+          }
+          if (attrName.Value == "ooSetupVersion") // неполный номер версии "7.3"
+          {
+            XmlNode nodeValue = node.SelectSingleNode("value");
+            if (nodeValue == null)
+              continue;
+            ver1 = new Version(nodeValue.InnerText);
+          }
+        } // цикл перебора узлов
+
+        if (ver1 == null)
+          return false;
+
+        _Version = ver1;
+        return true;
+      }
+
+      /// <summary>
+      /// Старый вариант определения версии - в текстовом файле version.rc
+      /// </summary>
+      /// <returns>True, если удалось определить версию Office</returns>
+      private bool InitVersionUnix_versionrc()
+      {
         AbsPath textFile = new AbsPath(ProgramDir, "versionrc");
         if (!File.Exists(textFile.Path))
-          return;
+          return false;
 
         string[] aLines = System.IO.File.ReadAllLines(textFile.Path); // ?? кодировка
         for (int i = 0; i < aLines.Length; i++)
@@ -214,15 +288,17 @@ namespace FreeLibSet.Shell
             string s = aLines[i].Substring(13); // после знака равенства
             int p = s.IndexOf(':');
             if (p < 0)
-              return;
+              return false;
             s = s.Substring(p + 1);
             p = s.IndexOf('-');
             if (p >= 0)
               s = s.Substring(0, p);
             _Version = FileTools.GetVersionFromStr(s);
+            return true;
           }
         }
         // не нашли строки
+        return false;
       }
 
       private bool IsCompExists(string appName)
