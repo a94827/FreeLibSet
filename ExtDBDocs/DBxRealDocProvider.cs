@@ -182,7 +182,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Таблица документов</returns>
     protected override DataTable DoLoadDocData(string docTypeName, Int32[] docIds)
     {
-      return LoadDocData(docTypeName, new IdsFilter(docIds));
+      return DoLoadDocData(docTypeName, new IdsFilter(docIds));
     }
 
     /// <summary>
@@ -753,7 +753,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      base.ClearCache();
+      base.DoClearCache(); // испр. 12.07.2022
       _Source.ClearCache();
     }
 
@@ -1857,7 +1857,6 @@ namespace FreeLibSet.Data.Docs
       }
 #endif
 
-
       // Формируем поля для основной записи
       Hashtable fieldPairs = new Hashtable();
 
@@ -2240,7 +2239,7 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region Проверка всех идентификаторов
+      #region 2. Проверка всех идентификаторов
 
       // Эти ссылки проверять не надо
       if (Source.GlobalData.BinDataHandler != null)
@@ -3831,7 +3830,26 @@ namespace FreeLibSet.Data.Docs
       // Права на запись для отдельных документов не проверяем
       // Вызываем обработчик BeforeWrite
       foreach (DBxSingleDoc doc in docSet[0])
-        docType.PerformBeforeWrite(doc, false, true);
+      {
+        if (doc.Deleted)
+          continue; // 12.07.2022
+
+        try
+        {
+          docType.PerformBeforeWrite(doc, false, true);
+        }
+        catch (Exception e)
+        {
+          AddExceptionInfo(e);
+
+          e.Data["DocType"] = doc.DocType.Name;
+          e.Data["DocId"] = doc.DocId;
+          try { e.Data["DocText"] = GetTextValue(doc.DocType.Name, doc.DocId); }
+          catch { }
+
+          throw;
+        }
+      }
 
       using (DBxCon mainCon = new DBxCon(Source.MainDBEntry))
       {
@@ -3842,36 +3860,53 @@ namespace FreeLibSet.Data.Docs
         {
           foreach (DBxSingleDoc doc in docSet[0])
           {
-            // Записываем основной документ
-            Hashtable fieldPairs = new Hashtable();
-            DBxColumns usedColumnNames1 = null;
-            bool hasPairs = AddUserFieldPairs(fieldPairs, doc.Row, false, DBPermissions, mainCon, ref usedColumnNames1, doc.DocType.Struct);
-            if (hasPairs)
-              mainCon.SetValues(docType.Name, doc.DocId, fieldPairs);
+            if (doc.Deleted)
+              continue; // 12.07.2022
 
-            // Записываем поддокументы
-            for (int i = 0; i < doc.DocType.SubDocs.Count; i++)
+            try
             {
-              string subDocTypeName = doc.DocType.SubDocs[i].Name;
-              if (!doc.MultiDocs.SubDocs.ContainsModified(subDocTypeName))
-                continue;
-              DBxSingleSubDocs sds = doc.SubDocs[subDocTypeName];
-              if (sds.SubDocCount == 0)
-                continue;
+              // Записываем основной документ
+              Hashtable fieldPairs = new Hashtable();
+              DBxColumns usedColumnNames1 = null;
+              bool hasPairs = AddUserFieldPairs(fieldPairs, doc.Row, false, DBPermissions, mainCon, ref usedColumnNames1, doc.DocType.Struct);
+              if (hasPairs)
+                mainCon.SetValues(docType.Name, doc.DocId, fieldPairs);
 
-              DBxTableStruct ts = sds.SubDocs.SubDocType.Struct;
-
-              DBxColumns usedColumnNames2 = null;
-
-              foreach (DBxSubDoc subDoc in sds)
+              // Записываем поддокументы
+              for (int i = 0; i < doc.DocType.SubDocs.Count; i++)
               {
-                if (!subDoc.IsDataModified)
-                  continue; // ничего не поменялось
-                fieldPairs = new Hashtable();
-                hasPairs = AddUserFieldPairs(fieldPairs, subDoc.Row, false, DBPermissions, mainCon, ref usedColumnNames2, subDoc.SubDocType.Struct);
-                if (hasPairs)
-                  mainCon.SetValues(sds.SubDocs.SubDocType.Name, subDoc.SubDocId, fieldPairs);
+                string subDocTypeName = doc.DocType.SubDocs[i].Name;
+                if (!doc.MultiDocs.SubDocs.ContainsModified(subDocTypeName))
+                  continue;
+                DBxSingleSubDocs sds = doc.SubDocs[subDocTypeName];
+                if (sds.SubDocCount == 0)
+                  continue;
+
+                DBxTableStruct ts = sds.SubDocs.SubDocType.Struct;
+
+                DBxColumns usedColumnNames2 = null;
+
+                foreach (DBxSubDoc subDoc in sds)
+                {
+                  if (!subDoc.IsDataModified)
+                    continue; // ничего не поменялось
+                  fieldPairs = new Hashtable();
+                  hasPairs = AddUserFieldPairs(fieldPairs, subDoc.Row, false, DBPermissions, mainCon, ref usedColumnNames2, subDoc.SubDocType.Struct);
+                  if (hasPairs)
+                    mainCon.SetValues(sds.SubDocs.SubDocType.Name, subDoc.SubDocId, fieldPairs);
+                }
               }
+            }
+            catch (Exception e)
+            {
+              AddExceptionInfo(e);
+
+              e.Data["DocType"] = doc.DocType.Name;
+              e.Data["DocId"] = doc.DocId;
+              try { e.Data["DocText"] = GetTextValue(doc.DocType.Name, doc.DocId); }
+              catch { }
+
+              throw;
             }
           }
         }

@@ -1275,7 +1275,7 @@ namespace FreeLibSet.Data.Docs
     {
       CheckThread();
 
-      base.ClearCache();
+      base.DoClearCache(); // испр. 12.07.2022
       _Source.ClearCache();
       if (_DBCache != null)
         _DBCache.Clear(); // очистка кэша клиента
@@ -1460,7 +1460,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="e">Исключение</param>
     protected override void DoAddExceptionInfo(Exception e)
     {
-      base.AddExceptionInfo(e);
+      base.DoAddExceptionInfo(e); // испр. 12.07.2022
       e.Data["DBxChainDocProvider.SourceIsRemote"] = SourceIsRemote;
     }
 

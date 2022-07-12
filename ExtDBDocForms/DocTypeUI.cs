@@ -3262,6 +3262,7 @@ namespace FreeLibSet.Forms.Docs
       DistributedCallData startData = UI.DocProvider.StartServerExecProc(dispArgs);
 
       DistributedProcCallItem callItem = new DistributedProcCallItem(startData);
+      callItem.DisplayName = "Пересчет вычисляемых полей документов \"" + DocType.PluralTitle + "\"";
       callItem.UserData["AfterRecalc"] = afterRecalc;
       callItem.UserData["AfterRecalcParams"] = afterRecalcParams;
       callItem.Finished += new DistributedProcCallEventHandler(RecalcColumnsCallItem_Finished);
