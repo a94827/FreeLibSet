@@ -670,8 +670,8 @@ namespace FreeLibSet.Forms
     private static void DateRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
     {
       EFPGridProducerItemBase item = (EFPGridProducerItemBase)sender;
-      DateTime? firstDate = args.GetNullableDateTime(item.SourceColumnNames[0]);
-      DateTime? lastDate = args.GetNullableDateTime(item.SourceColumnNames[1]);
+      DateTime? firstDate = args.GetNullableDateTime(0);
+      DateTime? lastDate = args.GetNullableDateTime(1);
       if (firstDate.HasValue || lastDate.HasValue)
         args.Value = DateRangeFormatter.Default.ToString(firstDate, lastDate, longFormat);
     }

@@ -186,48 +186,78 @@ namespace FreeLibSet.Data
 
         OnMasterTableChanged();
 
-        _SlaveTable.BeginLoadData();
-        try
+        // 13.07.2022
+        // Изучение исходных текстов класса DataTable показало:
+        // 1. Лучше использовать метод LoadDataRow(), в совокупности с Begin/EndLoadData()
+        // 2. Существующие строки должны быть удалены до вызова BeginLoadData(), чтобы это считалось "начальной загрузкой".
+        // 3. Первичный ключ надо отключать на время обновления, до BeginLoadData(), тогда не будет поиска по индексу.
+
+        _SlaveTable.Rows.Clear();
+
+        if (_MasterTable != null)
         {
-          _SlaveTable.Rows.Clear();
-
-          if (_MasterTable != null)
+          for (int i = 0; i < _SlaveTable.Columns.Count; i++)
           {
-            for (int i = 0; i < _SlaveTable.Columns.Count; i++)
-            {
-              int p = _MasterTable.Columns.IndexOf(_SlaveTable.Columns[i].ColumnName);
-              if (p >= 0)
-              {
-                _SourceColumnMaps.Add(new KeyValuePair<int, int>(p, i));
-              }
-              else
-              {
-                _CalculatedColumns.Add(i);
-                _SlaveTable.Columns[i].ReadOnly = true;
-              }
-            }
+            int p = _MasterTable.Columns.IndexOf(_SlaveTable.Columns[i].ColumnName);
+            if (p >= 0)
+              _SourceColumnMaps.Add(new KeyValuePair<int, int>(p, i));
+            else
+              _CalculatedColumns.Add(i);
 
-            InitRowMapMode();
+            _SlaveTable.Columns[i].ReadOnly = false; // наверное, можно обойтись и без этого
+          }
+
+          InitRowMapMode();
+
+          DataColumn[] oldPK = _SlaveTable.PrimaryKey;
+          _SlaveTable.PrimaryKey = new DataColumn[0];
+          _SlaveTable.BeginLoadData();
+          try
+          {
+            object[] buffer = new object[_SlaveTable.Columns.Count]; // буфер для заполнения значений
 
             foreach (DataRow srcRow in _MasterTable.Rows)
             {
               if (srcRow.RowState == DataRowState.Deleted)
-                continue; // 16.06.2021 ? 
-              DataRow resRow = _SlaveTable.NewRow();
-              ProcessRow(srcRow, resRow);
-              _SlaveTable.Rows.Add(resRow);
+                continue; // 16.06.2021 
+
+              #region Копирование
+
+              // очищаем предыдущие значения
+              Array.Clear(buffer, 0, buffer.Length);
+
+              for (int i = 0; i < _SourceColumnMaps.Count; i++)
+                buffer[_SourceColumnMaps[i].Value] = srcRow[_SourceColumnMaps[i].Key];
+
+              #endregion
+
+              #region Расчет
+
+              for (int i = 0; i < _CalculatedColumns.Count; i++)
+              {
+                _ValueNeededArgs.Init(srcRow, _SlaveTable.Columns[_CalculatedColumns[i]].ColumnName);
+                OnValueNeeded(_ValueNeededArgs);
+
+                if (_ValueNeededArgs.Value != null)
+                  buffer[_CalculatedColumns[i]] = _ValueNeededArgs.Value;
+              }
+
+              #endregion
+
+              DataRow resRow = _SlaveTable.LoadDataRow(buffer, false);
               if (_RowDict != null)
                 _RowDict.Add(srcRow, resRow);
             }
           }
-        }
-        finally
-        {
-          _SlaveTable.EndLoadData();
-        }
+          finally
+          {
+            _SlaveTable.EndLoadData();
+            _SlaveTable.PrimaryKey = oldPK;
+          }
 
-        if (_MasterTable != null)
-        {
+          for (int i = 0; i < _CalculatedColumns.Count; i++)
+            _SlaveTable.Columns[i].ReadOnly = true;
+          _SlaveTable.AcceptChanges(); // сразу все
 
           _MasterTable.RowChanged += new DataRowChangeEventHandler(DataSource_RowChanged);
           _MasterTable.RowDeleting += new DataRowChangeEventHandler(DataSource_RowDeleting);
