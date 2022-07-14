@@ -43,9 +43,9 @@ namespace ExtDBDocs_tests.Data_Docs
 
       public bool ThrowException;
 
-      protected override System.Data.DataSet OnApplyChanges(System.Data.DataSet dataSet, bool reloadData)
+      protected override System.Data.DataSet DoApplyChanges(System.Data.DataSet dataSet, bool reloadData)
       {
-        System.Data.DataSet res = base.OnApplyChanges(dataSet, reloadData);
+        System.Data.DataSet res = base.DoApplyChanges(dataSet, reloadData);
         if (ThrowException)
           throw new TimeoutException();
         else

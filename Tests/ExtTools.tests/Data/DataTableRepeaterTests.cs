@@ -39,6 +39,7 @@ namespace ExtTools_tests.Data
       sut.MasterTable = masterTable;
 
       Assert.AreSame(masterTable, sut.MasterTable, "MasterTable");
+      Assert.AreEqual("", DataTools.GetPrimaryKey(sut.SlaveTable), "SlaveTable.PrimaryKey");
       Assert.AreEqual(new int[] { 2, 4, 6 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F4"), "F4");
     }
 
@@ -55,6 +56,7 @@ namespace ExtTools_tests.Data
       sut.MasterTable = masterTable;
 
       Assert.AreSame(masterTable, sut.MasterTable, "MasterTable");
+      Assert.AreEqual("F1", DataTools.GetPrimaryKey(sut.SlaveTable), "SlaveTable.PrimaryKey");
       Assert.AreEqual(new int[] { 2, 4, 6 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F4"), "F4");
     }
 
@@ -271,6 +273,46 @@ namespace ExtTools_tests.Data
       DataRow[] slaveRows = new DataRow[] { sut.SlaveTable.Rows[0], sut.SlaveTable.Rows[2] };
       DataRow[] masterRows = sut.GetMasterRows(slaveRows);
       Assert.AreEqual(new object[] { 1, 3 }, DataTools.GetValuesFromColumn<int>(masterRows, "F3"));
+    }
+
+    #endregion
+
+    #region Прочие тесты
+
+    [Test]
+    public void SlaveTable_DataColumn_ReadOnly()
+    { 
+      // Столбцы SlaveTable, которые копируются из MasterTable, должны оставаться в ReadOnly=false
+      // Вычисляемые столбцы SlaveTable должны оставаться ReadOnly. 
+      // Но зависит от реализации, будет ли устанавливаться свойство DataColumn.ReadOnly=true при присоединении MasterTable.
+      // Главное, чтобы правильные признаки не портились
+
+      DataTableRepeater sut = new DataTableRepeater();
+      InitTestSlaveTable(sut.SlaveTable);
+      sut.SlaveTable.Columns["F4"].ReadOnly = true; // делаем правильно
+      TestColumnsReadOnly(sut.SlaveTable, "#1. Before MasterTable assigned");
+
+      sut.MasterTable = CreateTestMasterTable();
+      TestColumnsReadOnly(sut.SlaveTable, "#2. After MasterTable  assigned");
+
+      sut.MasterTable.Rows.Add(4, "DDD", 4);
+      TestColumnsReadOnly(sut.SlaveTable, "#3. Row added");
+
+      sut.MasterTable.Rows[1]["F2"] = "XXX";
+      TestColumnsReadOnly(sut.SlaveTable, "#4. Row changed");
+
+      sut.MasterTable.Rows[0].Delete();
+      TestColumnsReadOnly(sut.SlaveTable, "#5. Row deleted");
+
+      sut.MasterTable.Rows.Clear();
+      TestColumnsReadOnly(sut.SlaveTable, "#6. Rows cleared");
+    }
+
+    private void TestColumnsReadOnly(DataTable slaveTable, string msgPrefix)
+    {
+      Assert.IsFalse(slaveTable.Columns["F1"].ReadOnly, msgPrefix + " - F1");
+      Assert.IsFalse(slaveTable.Columns["F2"].ReadOnly, msgPrefix + " - F2");
+      Assert.IsTrue(slaveTable.Columns["F4"].ReadOnly, msgPrefix + " - F4");
     }
 
     #endregion

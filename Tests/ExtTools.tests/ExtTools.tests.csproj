@@ -62,6 +62,7 @@
     <Compile Include="Data\DataViewRowPairEnumarableTests.cs" />
     <Compile Include="Data\DataRowExtractorTests.cs" />
     <Compile Include="Data\DataViewSortBuilderTests.cs" />
+    <Compile Include="Data\IdListTests.cs" />
     <Compile Include="DependedValues\DepEvalExprTests.cs" />
     <Compile Include="DependedValues\DepFromArrayTests.cs" />
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />

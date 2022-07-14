@@ -256,8 +256,10 @@ namespace FreeLibSet.Data
           }
 
           for (int i = 0; i < _CalculatedColumns.Count; i++)
-            _SlaveTable.Columns[i].ReadOnly = true;
-          _SlaveTable.AcceptChanges(); // сразу все
+            _SlaveTable.Columns[_CalculatedColumns[i]].ReadOnly = true;
+
+          // Не надо вызывать AccepChanges(). Иначе после удаления строки в мастер-таблице, она она останется в slave-таблице и может вызывать проблемы доступа к удаленной строке
+          // _SlaveTable.AcceptChanges(); // сразу все
 
           _MasterTable.RowChanged += new DataRowChangeEventHandler(DataSource_RowChanged);
           _MasterTable.RowDeleting += new DataRowChangeEventHandler(DataSource_RowDeleting);

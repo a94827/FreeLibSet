@@ -2446,14 +2446,14 @@ namespace FreeLibSet.Remoting
     /// Для RemoteExecProc есть своя копия свойства, значение которого может быть переопределено
     /// </summary>
     internal bool AutoDispose { get { return _AutoDispose; } }
-    private bool _AutoDispose;
+    private readonly bool _AutoDispose;
 
     /// <summary>
-    /// Исходное значение свойства ExecProc.AutoDispose.
+    /// Исходное значение свойства ExecProc.SyncTime.
     /// Для RemoteExecProc есть своя копия свойства, значение которого может быть переопределено
     /// </summary>
     internal int SyncTime { get { return _SyncTime; } }
-    private int _SyncTime;
+    private readonly int _SyncTime;
 
     #endregion
 
@@ -2882,7 +2882,7 @@ namespace FreeLibSet.Remoting
     }
 #endif
 
-      private Guid _Guid;
+      private readonly Guid _Guid;
 
       /// <summary>
       /// Извлекает информацию о процедуре, если она еще не была удалена.
@@ -2891,7 +2891,8 @@ namespace FreeLibSet.Remoting
       /// <returns></returns>
       public override ExecProcInfo GetInfo()
       {
-        if (ExecProc == null)
+        ExecProc ep = ExecProc; // 14.07.2022
+        if (ep == null)
         {
           ExecProcInfo info = new ExecProcInfo();
           info.Guid = _Guid;
@@ -2899,7 +2900,7 @@ namespace FreeLibSet.Remoting
           return info;
         }
         else
-          return ExecProc.GetInfo();
+          return ep.GetInfo();
       }
 
       /// <summary>
@@ -2909,8 +2910,9 @@ namespace FreeLibSet.Remoting
       /// </summary>
       public override void Dispose()
       {
-        if (ExecProc != null)
-          ExecProc.Dispose();
+        ExecProc ep = ExecProc; // 14.07.2022
+        if (ep != null)
+          ep.Dispose();
       }
 
       /// <summary>
@@ -2928,7 +2930,10 @@ namespace FreeLibSet.Remoting
       /// <returns></returns>
       public override IServerSplashWatcher CreateSplashWatcher()
       {
-        return ExecProc.CreateSplashWatcher();
+        ExecProc ep = ExecProc;
+        if (ep == null)
+          throw new ObjectDisposedException("ExecProc", "Процедура уже была удалена"); // 14.07.2022
+        return ep.CreateSplashWatcher();
       }
 
       #endregion
@@ -3014,10 +3019,12 @@ namespace FreeLibSet.Remoting
       {
         get
         {
-          if (_Source == null)
+          ExecProcProxy.InternalHandler src = _Source; // 14.07.2022
+
+          if (src == null)
             return ExecProcState.Disposed;
 
-          ExecProcState st = _Source.State;
+          ExecProcState st = src.State;
           if (st == ExecProcState.Disposed)
             _Source = null;
           return st;
@@ -3068,13 +3075,15 @@ namespace FreeLibSet.Remoting
       /// </summary>
       public override NamedValues InternalTryEndExecute(bool splashInfoNeeded, out SplashInfoPack splashInfoPack)
       {
-        if (_Source == null)
+        ExecProcProxy.InternalHandler src = _Source;
+
+        if (src == null)
           throw new NullReferenceException("Source==null");
         else
         {
           try
           {
-            NamedValues results = _Source.InternalTryEndExecute(splashInfoNeeded, out splashInfoPack);
+            NamedValues results = src.InternalTryEndExecute(splashInfoNeeded, out splashInfoPack);
             if (results == null)
               return null;
 
@@ -3109,6 +3118,7 @@ namespace FreeLibSet.Remoting
       /// <returns>Ссылка на новый объект ServerSplashWatcher</returns>
       public override IServerSplashWatcher CreateSplashWatcher()
       {
+        CheckNotDisposed();
         return _Source.CreateSplashWatcher();
       }
 
@@ -3131,7 +3141,8 @@ namespace FreeLibSet.Remoting
       /// <returns></returns>
       public override ExecProcInfo GetInfo()
       {
-        if (_Source == null)
+        ExecProcProxy.InternalHandler src = _Source; // 14.07.2022
+        if (src == null)
         {
           ExecProcInfo info = new ExecProcInfo();
           info.Guid = _Guid;
@@ -3139,7 +3150,7 @@ namespace FreeLibSet.Remoting
           return info;
         }
         else
-          return _Source.GetInfo();
+          return src.GetInfo();
       }
 
       /// <summary>
@@ -3172,7 +3183,9 @@ namespace FreeLibSet.Remoting
       /// <returns></returns>
       public override void Cancel()
       {
-        _Source.Cancel();
+        ExecProcProxy.InternalHandler src = _Source; // 14.07.2022
+        if (src != null)
+          src.Cancel();
       }
 
       /// <summary>
@@ -3181,7 +3194,9 @@ namespace FreeLibSet.Remoting
       /// <returns></returns>
       public override void ResetSplashInfo()
       {
-        _Source.ResetSplashInfo();
+        ExecProcProxy.InternalHandler src = _Source; // 14.07.2022
+        if (src != null)
+          src.ResetSplashInfo();
       }
 
       #endregion
