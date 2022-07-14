@@ -197,7 +197,7 @@ namespace ExtTools_tests.Data
     }
 
     [Test]
-    public void MasterDeleteRow([Values(PKMode.None, PKMode.Simple, PKMode.Complex)]PKMode pkMode)
+    public void MasterDeleteRow_original_row([Values(PKMode.None, PKMode.Simple, PKMode.Complex)]PKMode pkMode)
     {
       DataTableRepeater sut = CreateTestObject(pkMode);
 
@@ -206,6 +206,39 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(new int[] { 1, 3 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F1"), "F1");
       Assert.AreEqual(new string[] { "AAA", "CCC" }, DataTools.GetValuesFromColumn<string>(sut.SlaveTable, "F2"), "F2");
       Assert.AreEqual(new int[] { 2, 6 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F4"), "F4");
+    }
+
+    [Test]
+    public void MasterDeleteRow_added_row([Values(PKMode.None, PKMode.Simple, PKMode.Complex)]PKMode pkMode)
+    {
+      // Могут быть нюансы при удалении новой строки, по сравнению с удалением строки, которая изначально была в MasterTable
+
+      DataTableRepeater sut = CreateTestObject(pkMode);
+
+      sut.MasterTable.Rows.Add(4, "DDD", 4);
+      sut.MasterTable.Rows.Add(5, "EEE", 5);
+
+      sut.MasterTable.Rows[3].Delete();
+
+      Assert.AreEqual(new int[] { 1, 2, 3, 5 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F1"), "F1");
+      Assert.AreEqual(new string[] { "AAA", "BBB", "CCC", "EEE" }, DataTools.GetValuesFromColumn<string>(sut.SlaveTable, "F2"), "F2");
+      Assert.AreEqual(new int[] { 2, 4, 6, 10 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F4"), "F4");
+    }
+
+    [Test]
+    public void MasterDeleteRow_modified_row([Values(PKMode.None, PKMode.Simple, PKMode.Complex)]PKMode pkMode)
+    {
+      // Могут быть нюансы при удалении измененной строки, по сравнению с удалением строки, которая изначально была в MasterTable
+
+      DataTableRepeater sut = CreateTestObject(pkMode);
+      sut.MasterTable.Rows[1]["F3"] = 4;
+      sut.MasterTable.Rows[2]["F3"] = 5;
+
+      sut.MasterTable.Rows[1].Delete();
+
+      Assert.AreEqual(new int[] { 1, 3 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F1"), "F1");
+      Assert.AreEqual(new string[] { "AAA", "CCC" }, DataTools.GetValuesFromColumn<string>(sut.SlaveTable, "F2"), "F2");
+      Assert.AreEqual(new int[] { 2, 10 }, DataTools.GetValuesFromColumn<int>(sut.SlaveTable, "F4"), "F4");
     }
 
     [Test]
@@ -281,7 +314,7 @@ namespace ExtTools_tests.Data
 
     [Test]
     public void SlaveTable_DataColumn_ReadOnly()
-    { 
+    {
       // Столбцы SlaveTable, которые копируются из MasterTable, должны оставаться в ReadOnly=false
       // Вычисляемые столбцы SlaveTable должны оставаться ReadOnly. 
       // Но зависит от реализации, будет ли устанавливаться свойство DataColumn.ReadOnly=true при присоединении MasterTable.

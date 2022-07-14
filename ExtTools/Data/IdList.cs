@@ -1414,6 +1414,16 @@ namespace FreeLibSet.Data
       }
     }
 
+    /// <summary>
+    /// Очищает коллекцию
+    /// </summary>
+    public void Clear()
+    {
+      CheckNotReadOnly();
+
+      _Tables.Clear();
+    }
+
     #endregion
 
     #region Операторы
