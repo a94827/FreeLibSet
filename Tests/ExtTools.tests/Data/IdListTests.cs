@@ -33,10 +33,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(3, sut.Count, "Count");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
       Assert.AreEqual(0, sut.SingleId, "SingleId");
-
-      Int32[] a = sut.ToArray(); // порядок элементов не гарантирован
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(new Int32[] { 1, 3, 5 }, a, "ToArray()");
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, sut.ToArray(), "ToArray()"); // порядок элементов не гарантирован
     }
 
     [Test]
@@ -48,10 +45,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(3, sut.Count, "Count");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
       Assert.AreEqual(0, sut.SingleId, "SingleId");
-
-      Int32[] a = sut.ToArray(); // порядок элементов не гарантирован
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(new Int32[] { 1, 2, 3 }, a, "ToArray()");
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 2, 3 }, sut.ToArray(), "ToArray()");
     }
 
     #endregion
@@ -148,27 +142,20 @@ namespace ExtTools_tests.Data
       Int32[] a = new Int32[sut.Count];
       sut.CopyTo(a, 0);
 
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(new Int32[] { 1, 3, 5 }, a);
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, a);
     }
 
     [Test]
     public void ToArray()
     {
       IdList sut = new IdList(new Int32[] { 5, 1, 3 });
-      Int32[] a1 = sut.ToArray();
-      Array.Sort<Int32>(a1);
-      Assert.AreEqual(new Int32[] { 1, 3, 5 }, a1, "#1");
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, sut.ToArray(), "#1");
 
       sut.Remove(3);
-      Int32[] a2 = sut.ToArray();
-      Array.Sort<Int32>(a2);
-      Assert.AreEqual(new Int32[] { 1, 5 }, a2, "#2");
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 5 }, sut.ToArray(), "#2");
 
       sut.Clear();
-      Int32[] a3 = sut.ToArray();
-      Array.Sort<Int32>(a3);
-      Assert.AreEqual(new Int32[] { }, a3, "#3");
+      CollectionAssert.AreEquivalent(new Int32[] { }, sut.ToArray(), "#3");
     }
 
     #endregion
@@ -185,9 +172,7 @@ namespace ExtTools_tests.Data
       IdList sut = new IdList(new Int32[] { 1, 3, 5 });
       sut.Add(id);
 
-      Int32[] res = sut.ToArray();
-      Array.Sort<Int32>(res);
-      Assert.AreEqual(wantedRes, res);
+      CollectionAssert.AreEquivalent(wantedRes, sut.ToArray());
     }
 
     [Test]
@@ -197,9 +182,7 @@ namespace ExtTools_tests.Data
       IdList src = new IdList(new Int32[] { 3, 4, 5, 2 });
       sut.Add(src);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 1, 2, 3, 4, 5 });
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 2, 3, 4, 5 }, sut.ToArray());
     }
 
     [Test]
@@ -209,9 +192,7 @@ namespace ExtTools_tests.Data
       IdList src = new IdList();
       sut.Add(src);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 1, 3, 5 });
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, sut.ToArray());
     }
 
     [Test]
@@ -221,9 +202,7 @@ namespace ExtTools_tests.Data
       IdList src = new IdList(new Int32[] { 1, 3, 5 });
       sut.Add(src);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 1, 3, 5 });
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, sut.ToArray());
     }
 
     [Test]
@@ -233,9 +212,7 @@ namespace ExtTools_tests.Data
       IEnumerable<Int32> src = new ArrayEnumerable<Int32>(new Int32[] { 1, 2, 3, 1, 2, 3, 0, 0 });
       sut.Add(src);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 1, 2, 3, 5 });
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 2, 3, 5 }, sut.ToArray());
     }
 
 
@@ -249,9 +226,7 @@ namespace ExtTools_tests.Data
       IdList sut = new IdList(new Int32[] { 1, 3, 5 });
       sut.Remove(id);
 
-      Int32[] res = sut.ToArray();
-      Array.Sort<Int32>(res);
-      Assert.AreEqual(wantedRes, res);
+      CollectionAssert.AreEquivalent(wantedRes, sut.ToArray());
     }
 
     [Test]
@@ -261,9 +236,7 @@ namespace ExtTools_tests.Data
       IdList arg = new IdList(new Int32[] { 3, 4, 5 });
       sut.Remove(arg);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 1 });
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut.ToArray());
     }
 
     [Test]
@@ -273,9 +246,7 @@ namespace ExtTools_tests.Data
       IdList arg = new IdList();
       sut.Remove(arg);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 1, 3, 5 });
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, sut.ToArray());
     }
 
     [Test]
@@ -285,9 +256,7 @@ namespace ExtTools_tests.Data
       IEnumerable<Int32> arg = new ArrayEnumerable<Int32>(new Int32[] { 1, 2, 3, 1, 2, 3, 0, 0 });
       sut.Remove(arg);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 5 });
+      CollectionAssert.AreEquivalent(new Int32[] { 5 }, sut.ToArray());
     }
 
     [Test]
@@ -297,9 +266,7 @@ namespace ExtTools_tests.Data
       IdList arg = new IdList(new Int32[] { 3, 4, 5 });
       sut.RemoveOthers(arg);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 3, 5 });
+      CollectionAssert.AreEquivalent(new Int32[] { 3, 5 }, sut.ToArray());
     }
 
     [Test]
@@ -309,9 +276,7 @@ namespace ExtTools_tests.Data
       IdList arg = new IdList();
       sut.RemoveOthers(arg);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { });
+      CollectionAssert.AreEquivalent(new Int32[] { }, sut.ToArray());
     }
 
     [Test]
@@ -321,9 +286,7 @@ namespace ExtTools_tests.Data
       IEnumerable<Int32> arg = new ArrayEnumerable<Int32>(new Int32[] { 1, 2, 3, 1, 2, 3, 0, 0 });
       sut.RemoveOthers(arg);
 
-      Int32[] a = sut.ToArray();
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(a, new Int32[] { 1, 3 });
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3 }, sut.ToArray());
     }
 
 
@@ -348,8 +311,7 @@ namespace ExtTools_tests.Data
       foreach (Int32 id in sut)
         lst.Add(id);
 
-      lst.Sort();
-      Assert.AreEqual(new Int32[] { 1, 3, 5 }, lst.ToArray());
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, lst.ToArray());
     }
 
 
@@ -381,9 +343,7 @@ namespace ExtTools_tests.Data
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.CheckNotReadOnly(); }, "CheckNotReadOnly() #2");
 
       Assert.AreEqual(2, sut.Count, "Count #1");
-      Int32[] a = sut.ToArray(); // порядок элементов не гарантирован
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(new Int32[] { 1, 2 }, a, "ToArray()");
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 2 }, sut.ToArray(), "ToArray()");
 
       Assert.Catch(delegate() { sut.Add(3); }, "Add(id)");
       Assert.Catch(delegate() { sut.Add(new IdList()); }, "Add(IdList)");
@@ -729,7 +689,7 @@ namespace ExtTools_tests.Data
     [Test]
     public void FromArray_Jagged()
     {
-      Int32[][] a = new Int32[][] {new Int32[] { 1, 3, 0 }, null, new Int32[]{ 3, 5, 1 } };
+      Int32[][] a = new Int32[][] { new Int32[] { 1, 3, 0 }, null, new Int32[] { 3, 5, 1 } };
       IdList sut = IdList.FromArray(a);
       Assert.AreEqual(new IdList(new Int32[] { 1, 3, 5 }), sut);
     }
@@ -775,9 +735,7 @@ namespace ExtTools_tests.Data
       byte[] b = SerializationTools.SerializeBinary(sut);
 
       IdList res = (IdList)(SerializationTools.DeserializeBinary(b));
-      Int32[] a = res.ToArray(); // порядок элементов не гарантирован
-      Array.Sort<Int32>(a);
-      Assert.AreEqual(new Int32[] { 1, 3, 5 }, a, "ToArray()");
+      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, res.ToArray(), "ToArray()");
     }
 
     #endregion

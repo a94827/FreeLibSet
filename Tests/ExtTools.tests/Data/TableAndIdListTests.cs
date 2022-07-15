@@ -72,6 +72,82 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(2, sut.Count);
     }
 
+    [Test]
+    public void Item_IdList_set_replace_ids()
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(2);
+      sut["BBB"].Add(3);
+
+      sut["BBB"] = new IdList(new Int32[] { 3, 4 });
+
+      Assert.AreEqual(3, sut.Count, "Count");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "AAA");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "BBB");
+    }
+
+    [Test]
+    public void Item_IdList_set_add_table()
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+
+      sut["BBB"] = new IdList(new Int32[] { 3, 4 });
+
+      Assert.AreEqual(3, sut.Count, "Count");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "AAA");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "BBB");
+    }
+
+    [Test]
+    public void Item_IdList_set_clear_ids()
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(2);
+      sut["BBB"].Add(3);
+
+      sut["BBB"] = IdList.Empty;
+
+      Assert.AreEqual(1, sut.Count, "Count");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "AAA");
+    }
+
+    [Test]
+    public void Item_IdList_set_empty_no_action()
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+
+      sut["BBB"] = IdList.Empty;
+
+      Assert.AreEqual(1, sut.Count, "Count");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "AAA");
+    }
+
+    [Test]
+    public void Item_IdList_set_not_readonly()
+    {
+      // Проверяем, что присоединение списка не переводит в режим ReadOnly
+
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(2);
+      sut["BBB"].Add(3);
+
+      IdList arg1 = new IdList(new Int32[] { 3, 4 });
+      arg1.SetReadOnly();
+      sut["BBB"] = arg1;
+      Assert.IsFalse(sut["BBB"].IsReadOnly, "#1");
+
+      sut["BBB"] = IdList.Empty;
+      Assert.IsFalse(sut["BBB"].IsReadOnly, "#2");
+
+      sut["CCC"] = IdList.Empty;
+      Assert.IsFalse(sut["CCC"].IsReadOnly, "#2");
+    }
+
 
     [Test]
     public void Item_Table_Id_get_caseSensitive()
@@ -156,6 +232,55 @@ namespace ExtTools_tests.Data
 
     #endregion
 
+    #region Contains()
+
+    [TestCase("AAA", true)]
+    [TestCase("BBB", false)]
+    [TestCase("CCC", false)]
+    [TestCase("DDD", false)]
+    [TestCase("", false)]
+    public void Contains(string tableName, bool wantedRes)
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(1);
+      sut["BBB"].Remove(1); // пустой
+      sut["CCC"].Clear(); // пустой
+
+      bool res = sut.Contains(tableName);
+
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
+    #region TryGetValue()
+
+    [TestCase("AAA", true)]
+    [TestCase("BBB", false)]
+    [TestCase("CCC", false)]
+    [TestCase("DDD", false)]
+    [TestCase("", false)]
+    public void TryGetvalue(string tableName, bool wantedRes)
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(2);
+      sut["BBB"].Remove(2);
+      sut["CCC"] = IdList.Empty;
+
+      IdList value;
+      bool res = sut.TryGetValue(tableName, out value);
+      Assert.AreEqual(wantedRes, res, "Result");
+
+      if (wantedRes)
+        Assert.AreSame(sut[tableName], value, "Value");
+      else
+        Assert.IsNull(value, "Value");
+    }
+
+    #endregion
+
     #region GetTableNames()
 
     [Test]
@@ -236,8 +361,46 @@ namespace ExtTools_tests.Data
       CollectionAssert.AreEquivalent(new Int32[] { 4 }, sut["CCC"].ToArray(), "CCC");
     }
 
+
     [Test]
-    public void Remove()
+    public void Remove_TableName_true()
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(2);
+      sut["BBB"].Add(3);
+      sut["CCC"].Add(4);
+
+      bool res = sut.Remove("BBB");
+      Assert.IsTrue(res, "Result");
+
+      Assert.AreEqual(2, sut.Count, "Count");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "AAA");
+      CollectionAssert.AreEquivalent(new Int32[] { 4 }, sut["CCC"].ToArray(), "CCC");
+    }
+
+
+    [TestCase("BBB")]
+    [TestCase("CCC")]
+    [TestCase("DDD")]
+    [TestCase("")]
+    public void Remove_TableName_false(string tableName)
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(2);
+      sut["BBB"].Remove(2); // пустой
+      sut["CCC"] = IdList.Empty;
+
+      bool res = sut.Remove("BBB");
+      Assert.IsFalse(res, "Result");
+
+      Assert.AreEqual(1, sut.Count, "Count");
+      CollectionAssert.AreEquivalent(new Int32[] { 1 }, sut["AAA"].ToArray(), "AAA");
+    }
+
+    [Test]
+    public void Remove_TableAndIdList()
     {
       TableAndIdList sut = new TableAndIdList();
       sut["AAA"].Add(1);
@@ -261,7 +424,7 @@ namespace ExtTools_tests.Data
     }
 
     [Test]
-    public void Remove_Empty()
+    public void Remove_TableAndIdList_Empty()
     {
       TableAndIdList sut = new TableAndIdList();
       sut["AAA"].Add(1);
@@ -307,7 +470,7 @@ namespace ExtTools_tests.Data
       sut1.SetReadOnly();
 
       TableAndIdList sut2 = new TableAndIdList();
-      switch(sMode2)
+      switch (sMode2)
       {
         case "EQ":
           sut2["BBB"].Add(2);
@@ -433,6 +596,32 @@ namespace ExtTools_tests.Data
 
     #endregion
 
+    #region Перечисление
+
+    [Test]
+    public void GetEnumerator()
+    {
+      TableAndIdList sut = new TableAndIdList();
+      sut["AAA"].Add(1);
+      sut["BBB"].Add(1);
+      sut["BBB"].Remove(1); // пустой
+      sut["CCC"].Clear(); // пустой
+      sut["DDD"] = new IdList(new Int32[] { 1, 2, 3 });
+
+      Dictionary<string, IdList> dict = new Dictionary<string, IdList>();
+      foreach (KeyValuePair<string, IdList> pair in sut)
+        dict.Add(pair.Key, pair.Value);
+
+      Assert.AreEqual(2, dict.Count, "TableCount");
+      Assert.IsTrue(dict.ContainsKey("AAA"), "Contains(AAA)");
+      Assert.IsTrue(dict.ContainsKey("DDD"), "Contains(DDD)");
+
+      Assert.AreSame(sut["AAA"], dict["AAA"], "AAA");
+      Assert.AreSame(sut["DDD"], dict["DDD"], "AAA");
+    }
+
+    #endregion
+
     #region SetReadOnly()
 
     [Test]
@@ -455,9 +644,11 @@ namespace ExtTools_tests.Data
 
       Assert.Catch(delegate() { sut["AAA", 1] = false; }, "Item set [AAA, 1]");
       Assert.Catch(delegate() { sut["BBB", 1] = false; }, "Item set [BBB, 1]");
+      Assert.Catch(delegate() { sut["CCC"] = IdList.Empty; }, "Item set [CCC]");
 
       Assert.Catch(delegate() { sut.Add(TableAndIdList.Empty); }, "Add()");
-      Assert.Catch(delegate() { sut.Remove(TableAndIdList.Empty); }, "Remove()");
+      Assert.Catch(delegate() { sut.Remove("AAA"); }, "Remove(tableName)");
+      Assert.Catch(delegate() { sut.Remove(TableAndIdList.Empty); }, "Remove(TableAndIdList)");
       Assert.Catch(delegate() { sut.Clear(); }, "Clear()");
 
       Assert.AreEqual(2, sut.Count, "Count"); // ничего не испортилось

@@ -46,7 +46,7 @@ namespace ExtTools_tests.Collections
       sut.Add(obj2);
       sut.Add(obj3);
 
-      GC.Collect();
+      DoGCCollect();
 
       Assert.AreEqual(3, sut.Count, "Count");
       Assert.AreEqual(3, sut.ToArray().Length, "ToArray.Length");
@@ -97,7 +97,7 @@ namespace ExtTools_tests.Collections
           _SUT.Add(obj);
 
         if (_UseGCCollect)
-          GC.Collect();
+          DoGCCollect();
       }
 
       #endregion
@@ -197,7 +197,7 @@ namespace ExtTools_tests.Collections
       {
         sum2 += obj.Value;
         if (obj.Value == 4)
-          GC.Collect();
+          DoGCCollect();
       }
 
       Assert.AreEqual(sum2, sum1);
@@ -220,11 +220,23 @@ namespace ExtTools_tests.Collections
       TestObject obj = DoAddRefs(sut, checkedItem); // Отдельный метод, чтобы можно было очистить список
 
       // Чистим ненужное
-      GC.Collect();
+      DoGCCollect();
 
       TestObject[] a = sut.ToArray();
       Assert.AreEqual(1, a.Length, "ToArray().Length");
       Assert.AreSame(obj, a[0], "Item");
+    }
+
+    /// <summary>
+    /// Вызов GC.Collect
+    /// </summary>
+    private static void DoGCCollect()
+    {
+      GC.Collect();
+
+      // В Mono этого недостаточно.
+      GC.WaitForPendingFinalizers();
+      GC.Collect();
     }
 
     private TestObject DoAddRefs(WeakReferenceCollection<TestObject> sut, int checkedItem)

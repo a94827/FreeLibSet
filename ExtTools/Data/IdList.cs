@@ -1117,7 +1117,7 @@ namespace FreeLibSet.Data
   /// Можно управлять чувствительностью к регистру для имен таблиц.
   /// </summary>
   [Serializable]
-  public sealed class TableAndIdList : ICloneable, IReadOnlyObject
+  public sealed class TableAndIdList : IDictionary<string, IdList>, ICloneable, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -1176,7 +1176,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Доступ к списку идентификаторов для таблицы с заданным именем.
     /// Если таблицы еще не было в списке, то, если свойство IsReadOnly=false (список в режиме заполнения), создается
-    /// новый пустой объект IdList, в который можно добавлять идентификаторы. Если IsReadOnly=true, то возвращается ссылка на IdList.Empty
+    /// новый пустой объект IdList, в который можно добавлять идентификаторы. Если IsReadOnly=true, то возвращается ссылка на IdList.Empty.
+    /// Установка свойства очищает существующий список идентификаторов для таблицы и заменяет его новым
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Список идентификаторов</returns>
@@ -1200,6 +1201,66 @@ namespace FreeLibSet.Data
         }
         return list;
       }
+      set
+      {
+        CheckNotReadOnly();
+        if (String.IsNullOrEmpty(tableName))
+          throw new ArgumentNullException("tableName");
+
+        if (value.Count == 0)
+        {
+          if (!_Tables.ContainsKey(tableName))
+            return;
+        }
+
+        IdList lst = this[tableName];
+        lst.Clear();
+        lst.Add(value);
+      }
+    }
+
+    /// <summary>
+    /// Возвращает true, если есть идентификаторы для указанной таблицы.
+    /// Эквивалентно проверке this[tableName].Count больше 0.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Наличие идентификаторов</returns>
+    public bool Contains(string tableName)
+    {
+      if (String.IsNullOrEmpty(tableName))
+        return false;
+
+      IdList lst;
+      if (!_Tables.TryGetValue(tableName, out lst))
+        return false;
+
+      return lst.Count > 0;
+    }
+
+    bool IDictionary<string, IdList>.ContainsKey(string key)
+    {
+      return Contains(key);
+    }
+
+
+    /// <summary>
+    /// Возвращает список идентификаторов для заданной таблицы, если он есть и содержит идентификаторы
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="value">Сюда помещается список идентификаторов или null</param>
+    /// <returns>Наличие идентификаторов. Эквивалентно Contains(<paramref name="tableName"/>).</returns>
+    public bool TryGetValue(string tableName, out IdList value)
+    {
+      if (!_Tables.TryGetValue(tableName, out value))
+        return false;
+
+      if (value.Count == 0)
+      {
+        value = null;
+        return false;
+      }
+
+      return true;
     }
 
     #endregion
@@ -1390,6 +1451,24 @@ namespace FreeLibSet.Data
 
       foreach (string tableName in source.GetTableNames())
         this[tableName].Add(source[tableName]);
+    }
+
+
+    /// <summary>
+    /// Удаляет все идентификаторы для заданной таблицы.
+    /// Эквивалентно this[<paramref name="tableName"/>].Clear().
+    /// </summary>
+    /// <param name="tableName">Имя очищаемой таблицы</param>
+    /// <returns></returns>
+    public bool Remove(string tableName)
+    {
+      CheckNotReadOnly();
+      IdList lst;
+      if (!_Tables.TryGetValue(tableName, out lst))
+        return false;
+      lst.CheckNotReadOnly(); // на всякий случай
+      _Tables.Remove(tableName);
+      return lst.Count > 0; // а не true
     }
 
     /// <summary>
@@ -1598,6 +1677,162 @@ namespace FreeLibSet.Data
     public override string ToString()
     {
       return "Count=" + Count.ToString() + (IsReadOnly ? " (ReadOnly)" : String.Empty);
+    }
+
+    #endregion
+
+    #region IEnumerable<KeyValuePair<string,IdList>> Members
+
+    /// <summary>
+    /// Перечислитель по именам таблиц и их идентификаторам
+    /// </summary>
+    public struct Enumerator : IEnumerator<KeyValuePair<string, IdList>>
+    {
+      #region Защищенный конструктор
+
+      internal Enumerator(TableAndIdList owner)
+      {
+        _Owner = owner;
+        _BaseEnumerator = owner._Tables.GetEnumerator();
+      }
+
+      #endregion
+
+      #region Поля
+
+      private TableAndIdList _Owner;
+
+      private IEnumerator<KeyValuePair<string, IdList>> _BaseEnumerator;
+
+      #endregion
+
+      #region IEnumerator<KeyValuePair<string,IdList>> Members
+
+      /// <summary>
+      /// Возвращает текущую пару
+      /// </summary>
+      public KeyValuePair<string, IdList> Current { get { return _BaseEnumerator.Current; } }
+
+      /// <summary>
+      /// Завершает перечисление
+      /// </summary>
+      public void Dispose()
+      {
+        _BaseEnumerator.Dispose();
+      }
+
+      object IEnumerator.Current { get { return _BaseEnumerator.Current; } }
+
+      /// <summary>
+      /// Переходит к следующей таблице, у которой есть идентификаторы
+      /// </summary>
+      /// <returns></returns>
+      public bool MoveNext()
+      {
+        do
+        {
+          if (!_BaseEnumerator.MoveNext())
+            return false;
+        } while (_BaseEnumerator.Current.Value.Count == 0);
+
+        return true;
+      }
+
+      void IEnumerator.Reset()
+      {
+        _BaseEnumerator.Dispose();
+        _BaseEnumerator = _Owner._Tables.GetEnumerator();
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Возвращает перечислитель по парам "Имя таблицы - список идентификаторов".
+    /// Порядок перечисления таблиц не гарантируется.
+    /// Перечисляются только таблицы, по которым есть идентификаторы.
+    /// </summary>
+    /// <returns></returns>
+    public Enumerator GetEnumerator()
+    {
+      return new Enumerator(this);
+    }
+
+    IEnumerator<KeyValuePair<string, IdList>> IEnumerable<KeyValuePair<string, IdList>>.GetEnumerator()
+    {
+      return new Enumerator(this);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return new Enumerator(this);
+    }
+
+    #endregion
+
+    #region IDictionary<string,IdList> Members
+
+    void IDictionary<string, IdList>.Add(string key, IdList value)
+    {
+      this[key].Add(value);
+    }
+
+    ICollection<string> IDictionary<string, IdList>.Keys
+    {
+      get { throw new NotImplementedException(); }
+    }
+
+    ICollection<IdList> IDictionary<string, IdList>.Values
+    {
+      get { throw new NotImplementedException(); }
+    }
+
+    #endregion
+
+    #region ICollection<KeyValuePair<string,IdList>> Members
+
+    int ICollection<KeyValuePair<string, IdList>>.Count
+    {
+      get
+      {
+        int cnt = 0;
+        foreach (KeyValuePair<string, IdList> pair in this)
+          cnt++;
+        return cnt;
+      }
+    }
+
+    void ICollection<KeyValuePair<string, IdList>>.Add(KeyValuePair<string, IdList> item)
+    {
+      this[item.Key].Add(item.Value);
+    }
+
+    bool ICollection<KeyValuePair<string, IdList>>.Contains(KeyValuePair<string, IdList> item)
+    {
+      return this[item.Key].Contains(item.Value);
+    }
+
+    void ICollection<KeyValuePair<string, IdList>>.CopyTo(KeyValuePair<string, IdList>[] array, int arrayIndex)
+    {
+      List<KeyValuePair<string, IdList>> lst = new List<KeyValuePair<string, IdList>>();
+      foreach (KeyValuePair<string, IdList> pair in this)
+        lst.Add(pair);
+      lst.CopyTo(array, arrayIndex);
+    }
+
+    bool ICollection<KeyValuePair<string, IdList>>.Remove(KeyValuePair<string, IdList> item)
+    {
+      IdList lst;
+      if (!TryGetValue(item.Key, out lst))
+        return false;
+
+      bool res=false;
+      foreach (Int32 id in item.Value)
+      {
+        if (lst.Remove(id))
+          res = true;
+      }
+      return res;
     }
 
     #endregion
