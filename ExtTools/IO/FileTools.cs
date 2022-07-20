@@ -1455,9 +1455,9 @@ namespace FreeLibSet.IO
     /// <param name="xmlDoc">Записываемый документ</param>
     public static void WriteXmlDocument(Stream outStream, XmlDocument xmlDoc)
     {
-      if (outStream==null)
+      if (outStream == null)
         throw new ArgumentNullException("outStream");
-      if (xmlDoc== null)
+      if (xmlDoc == null)
         throw new ArgumentNullException("xmlDoc");
 
       Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
@@ -1529,18 +1529,18 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-8
     /// </summary>
-    private static readonly byte[] _XmlStartUtf8Bytes = new byte[] { 0xEF, 0xBB, 0xBF, 0x3c, 0x3f , 0x78 , 0x6d , 0x6c , 0x20 };
+    private static readonly byte[] _XmlStartUtf8Bytes = new byte[] { 0xEF, 0xBB, 0xBF, 0x3c, 0x3f, 0x78, 0x6d, 0x6c, 0x20 };
 
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-16
     /// </summary>
-    private static readonly byte[] _XmlStartUtf16Bytes = new byte[] { 0xFF, 0xFE , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00 , 0x6d, 0x00, 0x6c, 0x00, 0x20, 0x00 };
+    private static readonly byte[] _XmlStartUtf16Bytes = new byte[] { 0xFF, 0xFE, 0x3c, 0x00, 0x3f, 0x00, 0x78, 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20, 0x00 };
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-16BE
     /// </summary>
-    private static readonly byte[] _XmlStartUtf16BEBytes = new byte[] { 0xFE, 0xFF , 0x00 , 0x3c , 0x00 , 0x3f , 0x00 , 0x78 , 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20 };
+    private static readonly byte[] _XmlStartUtf16BEBytes = new byte[] { 0xFE, 0xFF, 0x00, 0x3c, 0x00, 0x3f, 0x00, 0x78, 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20 };
 
     /// <summary>
     /// Начало любого XML-файла в кодировке utf-32
@@ -1744,6 +1744,8 @@ namespace FreeLibSet.IO
     /// В отличие от просто конструктора объекта Version, сначала убираются
     /// плохие символы из строки. 
     /// Если попытка преобразования заканчивается неудачно, возвращается null
+    /// (если <paramref name="versionStr"/> - null или пустая строка, или начинается с нечисловых символов,
+    /// или первое число превышает Int32.MaxValue)
     /// </summary>
     /// <param name="versionStr">Версия в виде строки текста</param>
     /// <returns>Оьъект версии или null</returns>
@@ -1752,30 +1754,59 @@ namespace FreeLibSet.IO
       if (String.IsNullOrEmpty(versionStr))
         return null;
 
-      const string ValidChars = "0123456789.";
-      for (int i = 0; i < versionStr.Length; i++)
+      string[] a = versionStr.Split('.');
+      int n = Math.Min(a.Length, 4);
+      int[] nums = new int[4]; // компоненты версии
+
+      int lastNotEmptyPart = 0;
+      for (int i = 0; i < n; i++)
       {
-        if (ValidChars.IndexOf(versionStr[i]) < 0)
+        // Оставляем только числовые символы
+        string s = a[i];
+        int p = 0;
+        for (int j = 0; j < s.Length; j++)
         {
-          versionStr = versionStr.Substring(0, i);
-          break;
+          if (s[j] >= '0' && s[j] <= '9')
+            p++;
+          else
+            break;
         }
+        s = s.Substring(0, p);
+        if (p > 0)
+          lastNotEmptyPart = i;
+
+        int number;
+        if (!Int32.TryParse(s, out number))
+        {
+          if (i == 0)
+            return null; // если не удалось получить число для старшего номера версии, то все плохо.
+        }
+        nums[i] = number;
       }
 
-      Version ver = null;
+      // Конструкторы с разным числом аргументов чем то отличаются 
+
       try
       {
-        ver = new Version(versionStr);
+        switch (lastNotEmptyPart)
+        {
+          case 3:
+            return new Version(nums[0], nums[1], nums[2], nums[3]);
+          case 2:
+            return new Version(nums[0], nums[1], nums[2]);
+          default:
+            return new Version(nums[0], nums[1]);
+        }
       }
       catch
       {
+        return null;
       }
-      return ver;
     }
 
     #endregion
 
-    #region Инофрмация из PE-файла
+    #region Информация из PE-файла
 
     /// <summary>
     /// Извлечение информации из заголовка PE-файла (EXE или DLL)

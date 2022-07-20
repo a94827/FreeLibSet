@@ -31,6 +31,7 @@ namespace FreeLibSet.IO
     /// <param name="zipFilePath">Путь к создаваемому архиву</param>
     public ZipFileCreator(string zipFilePath)
     {
+      // TODO: 20.07.2022. ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = Encoding.ASCII.CodePage;
       _ZipFilePath = zipFilePath;
       _File = ICSharpCode.SharpZipLib.Zip.ZipFile.Create(zipFilePath);
       _File.BeginUpdate();

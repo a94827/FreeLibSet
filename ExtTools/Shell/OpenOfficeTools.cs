@@ -226,15 +226,21 @@ namespace FreeLibSet.Shell
       /// <returns><c>true</c>, if version unix main xcd was inited, <c>false</c> otherwise.</returns>
       private bool InitVersionUnix_main_xcd()
       {
-        AbsPath xmlFile = new AbsPath(ProgramDir.ParentDir, "share", ".registry", "main.xcd");
+        AbsPath xmlFile = new AbsPath(ProgramDir.ParentDir, "share", "registry", "main.xcd");
         if (!File.Exists(xmlFile.Path))
-          return false;
+        {
+          xmlFile = new AbsPath(ProgramDir.ParentDir, "share", ".registry", "main.xcd"); // скрытая папка
+          if (!File.Exists(xmlFile.Path))
+            return false;
+        }
 
         XmlDocument xml = new XmlDocument();
         xml.Load(xmlFile.Path);
         XmlNamespaceManager nsm = new XmlNamespaceManager(xml.NameTable);
         nsm.AddNamespace("oor", "http://openoffice.org/2001/registry");
         XmlNodeList nl = xml.SelectNodes("oor:data/oor:component-data[@oor:name='Setup' and @oor:package=\'org.openoffice\']/node/prop", nsm);
+        if (nl.Count==0)
+          nl = xml.SelectNodes("oor:data/oor:component-data[@oor:name='Product' and @oor:package=\'org.openoffice\']/node/prop", nsm); // 20.07.2022
 
         Version ver1 = null;
 
@@ -248,7 +254,9 @@ namespace FreeLibSet.Shell
             XmlNode nodeValue = node.SelectSingleNode("value");
             if (nodeValue == null)
               continue;
-            _Version = new Version(nodeValue.InnerText);
+
+            // _Version = new Version(nodeValue.InnerText);
+            _Version = FileTools.GetVersionFromStr(nodeValue.InnerText); // 20.07.2022. Может быть плохая версия
             return true;
           }
           if (attrName.Value == "ooSetupVersion") // неполный номер версии "7.3"
@@ -256,7 +264,8 @@ namespace FreeLibSet.Shell
             XmlNode nodeValue = node.SelectSingleNode("value");
             if (nodeValue == null)
               continue;
-            ver1 = new Version(nodeValue.InnerText);
+            //ver1 = new Version(nodeValue.InnerText);
+            ver1 = FileTools.GetVersionFromStr(nodeValue.InnerText); // 20.07.2022
           }
         } // цикл перебора узлов
 
@@ -822,10 +831,16 @@ namespace FreeLibSet.Shell
 
     private static void FindFromPredefined(List<OfficeInfo> lst)
     {
-      AbsPath dir = new AbsPath("/usr/lib/libreoffice/program");
+      FindFromPredefined_lib(lst, "lib", OpenOfficePlatform.Unknown);
+      FindFromPredefined_lib(lst, "lib32", OpenOfficePlatform.x86); // 20.07.2022
+      FindFromPredefined_lib(lst, "lib64", OpenOfficePlatform.x64); // 20.07.2022
+    }
+    private static void FindFromPredefined_lib(List<OfficeInfo> lst, string lib, OpenOfficePlatform platform)
+    {
+      AbsPath dir = new AbsPath("/usr/"+lib+"/libreoffice/program");
       if (File.Exists(new AbsPath(dir, "soffice").Path))
         FindOrAddItem(lst, dir, OpenOfficeKind.LibreOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
-      dir = new AbsPath("/usr/lib/openoffice/program"); // !! проверить имя папки
+      dir = new AbsPath("/usr/"+lib+"/openoffice/program"); // !! проверить имя папки
       if (File.Exists(new AbsPath(dir, "soffice").Path))
         FindOrAddItem(lst, dir, OpenOfficeKind.OpenOffice, InfoSource.PredefinedPath, String.Empty, OpenOfficePlatform.Unknown);
     }

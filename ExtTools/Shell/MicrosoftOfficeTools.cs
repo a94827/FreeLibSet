@@ -244,7 +244,7 @@ namespace FreeLibSet.Shell
     /// <param name="columnNumber">Номер столбца, начиная с 1</param>
     /// <returns>Буквенное обозначение столбца</returns>
     /// <remarks>    
-    /// Для совместного преобразования номера строки и столбца используйте структуру ExcelRCNumber
+    /// Для совместного преобразования номера строки и столбца используйте структуру ExcelCell
     /// </remarks>
     public static string GetExcelColumnName(int columnNumber)
     {
@@ -272,7 +272,7 @@ namespace FreeLibSet.Shell
     /// <param name="columnName">Буквенное обозначение столбца</param>
     /// <returns>Номер столбца, начиная с 1</returns>
     /// <remarks>    
-    /// Для совместного преобразования номера строки и столбца используйте структуру ExcelRCNumber
+    /// Для совместного преобразования номера строки и столбца используйте структуру ExcelCell
     /// </remarks>
     public static int GetExcelColumnNumber(string columnName)
     {
@@ -304,7 +304,7 @@ namespace FreeLibSet.Shell
     /// <param name="columnNumber">Результат преобразования (номер столбца) или 0 в случае ошибки</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
     /// <remarks>    
-    /// Для совместного преобразования номера строки и столбца используйте структуру ExcelRCNumber
+    /// Для совместного преобразования номера строки и столбца используйте структуру ExcelCell
     /// </remarks>
     public static bool TryGetExcelColumnNumber(string columnName, out int columnNumber)
     {
@@ -1484,24 +1484,24 @@ namespace FreeLibSet.Shell
   /// Проверка верхней границы (65535 строк, 255 столбцов) не выполняется
   /// </summary>
   [Serializable]
-  public struct ExcelRCNumber : IEquatable<ExcelRCNumber>
+  public struct ExcelCell : IEquatable<ExcelCell>
   {
     #region Конструктор
 
     /// <summary>
     /// Создает заполненный адрес.
     /// </summary>
-    /// <param name="rowNumber">Номер строки. Нумерация начинается с 1</param>
-    /// <param name="columnNumber">Номер столбца. Нумерация начинается с 1</param>
-    public ExcelRCNumber(int rowNumber, int columnNumber)
+    /// <param name="row">Номер строки. Нумерация начинается с 1</param>
+    /// <param name="column">Номер столбца. Нумерация начинается с 1</param>
+    public ExcelCell(int row, int column)
     {
-      if (rowNumber < 1)
-        throw new ArgumentOutOfRangeException("rowNumber", rowNumber, "Номер строки должен быть больше 0");
-      if (columnNumber < 1)
-        throw new ArgumentOutOfRangeException("columnNumber", columnNumber, "Номер столбца должен быть больше 0");
+      if (row < 1)
+        throw new ArgumentOutOfRangeException("row", row, "Номер строки должен быть больше 0");
+      if (column < 1)
+        throw new ArgumentOutOfRangeException("column", column, "Номер столбца должен быть больше 0");
 
-      _RowNumber = rowNumber;
-      _ColumnNumber = columnNumber;
+      _Row = row;
+      _Column = column;
     }
 
     #endregion
@@ -1511,19 +1511,24 @@ namespace FreeLibSet.Shell
     /// <summary>
     /// Номер строки. Нумерация начинается с 1
     /// </summary>
-    public int RowNumber { get { return _RowNumber; } }
-    private int _RowNumber;
+    public int Row { get { return _Row; } }
+    private readonly int _Row;
 
     /// <summary>
     /// Номер столбца. Нумерация начинается с 1
     /// </summary>
-    public int ColumnNumber { get { return _ColumnNumber; } }
-    private int _ColumnNumber;
+    public int Column { get { return _Column; } }
+    private readonly int _Column;
 
     /// <summary>
     /// Возвращает true, если структура не была инициализирована
     /// </summary>
-    public bool IsEmpty { get { return _RowNumber == 0; } }
+    public bool IsEmpty { get { return _Row == 0; } }
+
+    /// <summary>
+    /// Неинициализированная структура
+    /// </summary>
+    public static readonly ExcelCell Empty = new ExcelCell();
 
     #endregion
 
@@ -1535,9 +1540,9 @@ namespace FreeLibSet.Shell
     /// <param name="a">Первый сравниваемый адрес</param>
     /// <param name="b">Второй сравниваемый адрес</param>
     /// <returns>Результат сравнения</returns>
-    public static bool operator ==(ExcelRCNumber a, ExcelRCNumber b)
+    public static bool operator ==(ExcelCell a, ExcelCell b)
     {
-      return a.RowNumber == b.RowNumber && a.ColumnNumber == b.ColumnNumber;
+      return a.Row == b.Row && a.Column == b.Column;
     }
 
     /// <summary>
@@ -1546,9 +1551,9 @@ namespace FreeLibSet.Shell
     /// <param name="a">Первый сравниваемый адрес</param>
     /// <param name="b">Второй сравниваемый адрес</param>
     /// <returns>Результат сравнения</returns>
-    public static bool operator !=(ExcelRCNumber a, ExcelRCNumber b)
+    public static bool operator !=(ExcelCell a, ExcelCell b)
     {
-      return a.RowNumber != b.RowNumber || a.ColumnNumber != b.ColumnNumber;
+      return a.Row != b.Row || a.Column != b.Column;
     }
 
     /// <summary>
@@ -1556,7 +1561,7 @@ namespace FreeLibSet.Shell
     /// </summary>
     /// <param name="other">Второй сравниваемый адрес</param>
     /// <returns>Результат сравнения</returns>
-    public bool Equals(ExcelRCNumber other)
+    public bool Equals(ExcelCell other)
     {
       return this == other;
     }
@@ -1568,8 +1573,8 @@ namespace FreeLibSet.Shell
     /// <returns>Результат сравнения</returns>
     public override bool Equals(object other)
     {
-      if (other is ExcelRCNumber)
-        return this == (ExcelRCNumber)other;
+      if (other is ExcelCell)
+        return this == (ExcelCell)other;
       else
         return false;
     }
@@ -1580,7 +1585,7 @@ namespace FreeLibSet.Shell
     /// <returns>Числовой код</returns>
     public override int GetHashCode()
     {
-      return ((RowNumber & 0xFFFF) << 8) | (ColumnNumber & 0xFFFF);
+      return ((Row & 0xFFFF) << 8) | (Column & 0xFFFF);
     }
 
     #endregion
@@ -1588,27 +1593,26 @@ namespace FreeLibSet.Shell
     #region Преобразование в строку / из строки
 
     /// <summary>
-    /// Возвращает текстовое представление в формате "A1"
+    /// Возвращает текстовое представление в формате "A1".
+    /// При IsEmpty=true возвращает пустую строку.
     /// </summary>
     /// <returns>Тестовое представление</returns>
     public override string ToString()
     {
-      if (_RowNumber == 0)
-        return "Empty";
-      return MicrosoftOfficeTools.GetExcelColumnName(ColumnNumber) + RowNumber.ToString();
+      if (_Row == 0)
+        return String.Empty;
+      return MicrosoftOfficeTools.GetExcelColumnName(Column) + Row.ToString();
     }
 
     /// <summary>
-    /// Преобразование строки в формате "A1"
+    /// Преобразование строки в формате "A1".
+    /// Пустая строка преобразуется в неинициализированную структуру без выдачи ошибки.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <returns>Структура</returns>
-    public static ExcelRCNumber Parse(string s)
+    public static ExcelCell Parse(string s)
     {
-      if (String.IsNullOrEmpty(s))
-        throw new ArgumentNullException(s);
-
-      ExcelRCNumber res;
+      ExcelCell res;
       if (TryParse(s, out res))
         return res;
       else
@@ -1616,17 +1620,18 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Попытка преобразования строки в формате "A1" в адрес ячейки
+    /// Попытка преобразования строки в формате "A1" в адрес ячейки.
+    /// Пустая строка преобразуется в неинициализированную структуру без выдачи ошибки.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="res">Результат преобразования или неинициализированная структура, в случае ошибки</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out ExcelRCNumber res)
+    public static bool TryParse(string s, out ExcelCell res)
     {
       if (String.IsNullOrEmpty(s))
       {
-        res = new ExcelRCNumber();
-        return false;
+        res = Empty;
+        return true; // 18.07.2022
       }
 
       s = s.ToUpperInvariant();
@@ -1642,14 +1647,14 @@ namespace FreeLibSet.Shell
 
       if (nChars < 1 || nChars == s.Length)
       {
-        res = new ExcelRCNumber();
+        res = Empty;
         return false;
       }
 
       int columnNumber;
       if (!MicrosoftOfficeTools.TryGetExcelColumnNumber(s.Substring(0, nChars), out columnNumber))
       {
-        res = new ExcelRCNumber();
+        res = Empty;
         return false;
       }
 
@@ -1658,7 +1663,7 @@ namespace FreeLibSet.Shell
 
       if (s[nChars] < '1' || s[nChars] > '9')
       {
-        res = new ExcelRCNumber();
+        res = Empty;
         return false;
       }
 
@@ -1667,12 +1672,332 @@ namespace FreeLibSet.Shell
       if (!int.TryParse(s.Substring(nChars), System.Globalization.NumberStyles.None,
         CultureInfo.InvariantCulture, out rowNumber))
       {
-        res = new ExcelRCNumber();
+        res = Empty;
         return false;
       }
 
-      res = new ExcelRCNumber(rowNumber, columnNumber);
+      res = new ExcelCell(rowNumber, columnNumber);
       return true;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Прямоугольный диапазон ячеек Excel
+  /// </summary>
+  [Serializable]
+  public struct ExcelRectangle : IEquatable<ExcelRectangle>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает диапазон из первой и последней ячейки.
+    /// Если ячейка <paramref name="cell2"/> находится выше или левее <paramref name="cell1"/>, то
+    /// все равно создается правильный диапазон.
+    /// </summary>
+    /// <param name="cell1">Первая ячейка</param>
+    /// <param name="cell2">Вторая ячейка</param>
+    public ExcelRectangle(ExcelCell cell1, ExcelCell cell2)
+    {
+      if (cell1.IsEmpty || cell2.IsEmpty)
+        throw new ArgumentException("cells are empty");
+
+      int firstRow = Math.Min(cell1.Row, cell2.Row);
+      int lastRow = Math.Max(cell1.Row, cell2.Row);
+      int firstColumn = Math.Min(cell1.Column, cell2.Column);
+      int lastColumn = Math.Max(cell1.Column, cell2.Column);
+
+      _FirstCell = new ExcelCell(firstRow, firstColumn);
+      _LastCell = new ExcelCell(lastRow, lastColumn);
+    }
+
+    /// <summary>
+    /// Создает указанный диапазон.
+    /// Если строки или столбцы заданы в неправильном порядке, то они переставляются местами
+    /// </summary>
+    /// <param name="firstRow">Первая строка</param>
+    /// <param name="firstColumn">Первый столбец</param>
+    /// <param name="lastRow">Последняя строка</param>
+    /// <param name="lastColumn">Последний столбец</param>
+    public ExcelRectangle(int firstRow, int firstColumn, int lastRow, int lastColumn)
+      : this(new ExcelCell(firstRow, firstColumn), new ExcelCell(lastRow, lastColumn))
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Верхняя левая ячейка диапазона
+    /// </summary>
+    public ExcelCell FirstCell { get { return _FirstCell; } }
+    private readonly ExcelCell _FirstCell;
+
+    /// <summary>
+    /// Правая нижняя ячейка диапазона
+    /// </summary>
+    public ExcelCell LastCell { get { return _LastCell; } }
+    private readonly ExcelCell _LastCell;
+
+    /// <summary>
+    /// Возвращает количество строк в дипазоне
+    /// </summary>
+    public int RowCount 
+    { 
+      get 
+      {
+        if (IsEmpty)
+          return 0;
+        else
+          return _LastCell.Row - _FirstCell.Row + 1;
+      } 
+    }
+
+    /// <summary>
+    /// Возвращает количество столбцов в диапазоне
+    /// </summary>
+    public int ColumnCount
+    {
+      get
+      {
+        if (IsEmpty)
+          return 0;
+        else
+          return _LastCell.Column - _FirstCell.Column + 1;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает количество ячеек в диапазоне
+    /// </summary>
+    public int CellCount
+    {
+      get { return RowCount * ColumnCount; }
+    }
+
+    /// <summary>
+    /// Возвращает true, если структура не была инициализирована
+    /// </summary>
+    public bool IsEmpty { get { return _FirstCell.IsEmpty; } }
+
+    /// <summary>
+    /// Неинициализированная структура
+    /// </summary>
+    public static readonly ExcelRectangle Empty = new ExcelRectangle();
+
+    #endregion
+
+    #region Сравнение
+
+    /// <summary>
+    /// Сравнение двух диапазонов
+    /// </summary>
+    /// <param name="a">Первый сравниваемый диапазон</param>
+    /// <param name="b">Второй сравниваемый диапазон</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator ==(ExcelRectangle a, ExcelRectangle b)
+    {
+      return a.FirstCell == b.FirstCell && a.LastCell == b.LastCell;
+    }
+
+    /// <summary>
+    /// Сравнение двух диапазонов
+    /// </summary>
+    /// <param name="a">Первый сравниваемый диапазон</param>
+    /// <param name="b">Второй сравниваемый диапазон</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator !=(ExcelRectangle a, ExcelRectangle b)
+    {
+      return a.FirstCell != b.FirstCell || a.LastCell != b.LastCell;
+    }
+
+    /// <summary>
+    /// Сравнение с другим диапазоном
+    /// </summary>
+    /// <param name="other">Второй сравниваемый диапазон</param>
+    /// <returns>Результат сравнения</returns>
+    public bool Equals(ExcelRectangle other)
+    {
+      return this == other;
+    }
+
+    /// <summary>
+    /// Сравнение с другим диапазоном
+    /// </summary>
+    /// <param name="obj">Второй сравниваемый диапазон</param>
+    /// <returns>Результат сравнения</returns>
+    public override bool Equals(object obj)
+    {
+      if (obj is ExcelRectangle)
+        return this == (ExcelRectangle)obj;
+      else
+        return false;
+    }
+
+    /// <summary>
+    /// Получение хэш-кода для коллекций
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+      return FirstCell.GetHashCode();
+    }
+
+    #endregion
+
+    #region Преобразование из текста / в текст
+
+    /// <summary>
+    /// Возвращает диаазон в виде "A1:B2".
+    /// Если диапазон содержит одну ячейку, то разделитель не используется, возвращается "A1".
+    /// Если IsEmpty=true, возвращается пустая строка.
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      if (IsEmpty)
+        return String.Empty;
+
+      if (FirstCell == LastCell)
+        return FirstCell.ToString();
+      else
+        return FirstCell.ToString() + ":" + LastCell.ToString();
+    }
+
+    /// <summary>
+    /// Выполняет преобразование строки вида "A1:B10" или "A1" в диапазон.
+    /// Для пустой строки возвращается неинициализированная структура без выброса исключения.
+    /// Если строка имеет неподходящий формат, выбрасывается исключение FormatException.
+    /// В частности, не допускаются пробелы.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <returns>Результат преобразования</returns>
+    public static ExcelRectangle Parse(string s)
+    {
+      ExcelRectangle value;
+      if (TryParse(s, out value))
+        return value;
+      else
+        throw new FormatException();
+    }
+
+    /// <summary>
+    /// Выполняет попытку преобразования строки вида "A1:B10" или "A1" в диапазон.
+    /// Если строка имеет неподходящий формат, то возвращается false.
+    /// В частности, не допускаются пустые строки и пробелы.
+    /// Для пустой строки возвращается неинициализированная структура без выдачи ошибки.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <param name="value">Сюда записывается результат преобразования</param>
+    /// <returns>True, если преобразование выполнено</returns>
+    public static bool TryParse(string s, out ExcelRectangle value)
+    {
+      if (String.IsNullOrEmpty(s))
+      {
+        value = new ExcelRectangle();
+        return true;
+      }
+      int p = s.IndexOf(':');
+      if (p >= 0)
+      {
+        string s1 = s.Substring(0, p);
+        string s2 = s.Substring(p + 1);
+
+        ExcelCell c1, c2;
+        if (ExcelCell.TryParse(s1, out c1) && ExcelCell.TryParse(s2, out c2))
+        {
+          value = new ExcelRectangle(c1, c2);
+          return true;
+        }
+      }
+      else
+      {
+        ExcelCell c;
+        if (ExcelCell.TryParse(s, out c))
+        {
+          value = new ExcelRectangle(c, c);
+          return true;
+        }
+      }
+      value = new ExcelRectangle();
+      return false;
+    }
+
+    #endregion
+
+    #region Попадание
+
+    /// <summary>
+    /// Возвращает true, если текущий диапазон содержит указанную ячейку
+    /// </summary>
+    /// <param name="cell">Проверяемая ячейка</param>
+    /// <returns>Попадание ячейки в диапазон</returns>
+    public bool Contains(ExcelCell cell)
+    {
+      if (IsEmpty || cell.IsEmpty)
+        return false;
+
+      return
+        cell.Row >= FirstCell.Row &&
+        cell.Row <= LastCell.Row &&
+        cell.Column >= FirstCell.Column &&
+        cell.Column <= LastCell.Column;
+    }
+
+    /// <summary>
+    /// Возвращает true, если текущий диапазон полностью включает в себя другой диапазон
+    /// </summary>
+    /// <param name="range"></param>
+    /// <returns></returns>
+    public bool Contains(ExcelRectangle range)
+    {
+      if (IsEmpty || range.IsEmpty)
+        return false;
+
+      return
+        range.FirstCell.Row >= this.FirstCell.Row &&
+        range.LastCell.Row <= this.LastCell.Row &&
+        range.FirstCell.Column >= this.FirstCell.Column &&
+        range.LastCell.Column <= this.LastCell.Column;
+    }
+
+    /// <summary>
+    /// Возвращает true, если два диапазона пересекаются
+    /// </summary>
+    /// <param name="a">Первый проверяемый диапазон</param>
+    /// <param name="b">Второй проверяемый диапазон</param>
+    /// <returns>Наличие общих ячеек</returns>
+    public static bool IsCrossed(ExcelRectangle a, ExcelRectangle b)
+    {
+      if (a.IsEmpty || b.IsEmpty)
+        return false;
+
+      return
+        a.FirstCell.Row <= b.LastCell.Row &&
+        a.LastCell.Row >= b.FirstCell.Row &&
+        a.FirstCell.Column <= b.LastCell.Column &&
+        a.LastCell.Column >= b.FirstCell.Column;
+    }
+
+    /// <summary>
+    /// Возвращает пересечение двух диапазонов.
+    /// Если диапазоны не пересекаются, возвращается пустой диапазон
+    /// </summary>
+    /// <param name="a">Первый проверяемый диапазон</param>
+    /// <param name="b">Второй проверяемый диапазон</param>
+    /// <returns>Пересечение</returns>
+    public static ExcelRectangle GetCross(ExcelRectangle a, ExcelRectangle b)
+    {
+      if (IsCrossed(a, b))
+        return new ExcelRectangle(
+          Math.Max(a.FirstCell.Row, b.FirstCell.Row),
+          Math.Max(a.FirstCell.Column, b.FirstCell.Column),
+          Math.Min(a.LastCell.Row, b.LastCell.Row),
+          Math.Min(a.LastCell.Column, b.LastCell.Column));
+      else
+        return ExcelRectangle.Empty;
     }
 
     #endregion

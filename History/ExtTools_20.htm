@@ -5,7 +5,12 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-07-15T11:03:56.660000000"/>
+	<meta name="changed" content="2022-07-20T16:28:48.566000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -558,10 +563,60 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">325</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">15.07.2022-20.07.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. TableAndIdList </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v210p1"><span lang="en-US">v.210
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			реализует интерфейс </span><span lang="en-US">IDictionary&lt;string,
+			IdList&gt;, </span><span lang="ru-RU">включая перебор пар
+			&quot;ИмяТаблицы - Идентификаторы&quot; для непустых таблиц</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Структура</span>
+			<span lang="en-US">ExcelRCNumber (<a href="ExtTools_11.htm#v114p1">v.114
+			</a></span><a href="ExtTools_11.htm#v114p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">переименована в </span><span lang="en-US">ExcelCell.
+			</span><span lang="ru-RU">Свойства </span><span lang="en-US">RowNumber
+			</span><span lang="ru-RU">и </span><span lang="en-US">ColumnNumber
+			</span><span lang="ru-RU">переименованы в </span><span lang="en-US">Row
+			</span><span lang="ru-RU">и </span><span lang="en-US">Column.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">Parse()
+			</span><span lang="ru-RU">и </span><span lang="en-US">TryParse()
+			</span><span lang="ru-RU">для пустой строки возвращают значение
+			</span><span lang="en-US">Empty, </span><span lang="ru-RU">а не
+			ошибку</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Структура</span>
+			<span lang="en-US">ExcelRectangle</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">При поиске
+			</span><span lang="en-US">OpenOffice </span><span lang="ru-RU">и
+			</span><span lang="en-US">LibreOffice </span><span lang="ru-RU">под
+			</span><span lang="en-US">linux </span><span lang="ru-RU">по
+			предопределенным путям</span> <span lang="ru-RU">(</span><a href="ExtTools_11.htm#v076p3"><span lang="en-US">v.76
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">),
+			кроме каталога </span><span lang="en-US">usr/lib, </span><span lang="ru-RU">просматриваются
+			</span><span lang="en-US">usr/lib32 </span><span lang="ru-RU">и
+			</span><span lang="en-US">usr/lib64. </span><span lang="ru-RU">Расширено
+			определение версии из файла &quot;</span><span lang="en-US">main.xcd</span><span lang="ru-RU">&quot;
+			(</span><a href="#v322p4"><span lang="en-US">v.322 </span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">).
+			Также, для получения объекта </span><span lang="en-US">Version
+			</span><span lang="ru-RU">используется
+			</span><span lang="en-US">FileTools.GetVersionFromStr(), </span><span lang="ru-RU">так
+			как строка может иметь некорректный формат, например, &quot;7.2.5.2.0&quot;</span></p>
+			<p><span lang="ru-RU">5. Полностью изменена реализация метода
+			</span><span lang="en-US">FileTools.GetVersionFromStr()</span><span lang="en-US">
+			(<a href="ExtTools_11.htm#v001p2">v.1 </a></span><a href="ExtTools_11.htm#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Выполняется попытка преобразовать
+			&quot;неправильные&quot; версии с лишними символами.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">324</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">13.07.2022-15.07.2022</p>
+			<p lang="en-US" align="center">13.07.2022-14.07.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Оптимизация
@@ -575,11 +630,6 @@
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) в
 			части доступа к </span><span lang="en-US">volatile-</span><span lang="ru-RU">полям
 			источника</span></p>
-			<p lang="en-US">3. TableAndIdList <span lang="ru-RU">(</span><a href="ExtTools_11.htm#v210p1">v.210
-			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">) реализует
-			интерфейс </span>IDictionary&lt;string, IdList&gt;, <span lang="ru-RU">включая
-			перебор пар &quot;ИмяТаблицы - Идентификаторы&quot; для непустых
-			таблиц</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -610,7 +660,7 @@
 			</span><span lang="ru-RU">возвращает </span><span lang="en-US">true
 			</span><span lang="ru-RU">для корневого каталога &quot;/&quot; при
 			TestPathMode=</span><span lang="en-US">RootExists.</span></p>
-			<p><span lang="en-US">4. OpenOfficeTools </span><span lang="ru-RU">не
+			<p><a name="v322p4"></a><span lang="en-US">4. OpenOfficeTools </span><span lang="ru-RU">не
 			определял версию нового </span><span lang="en-US">LibreOffice </span><span lang="ru-RU">в
 			</span><span lang="en-US">Linux. </span><span lang="ru-RU">В файле
 			&quot;</span><span lang="en-US">versionrc</span><span lang="ru-RU">&quot;</span>

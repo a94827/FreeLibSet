@@ -68,11 +68,14 @@
     <Compile Include="DependedValues\DepFromArrayTests.cs" />
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />
     <Compile Include="Collections\HashtableTests.cs" />
+    <Compile Include="IO\FileToolsTests.cs" />
     <Compile Include="Models\DataTableTreeModelTests.cs" />
     <Compile Include="Models\DataTableTreeModelWithIdsTests.cs" />
     <Compile Include="Models\TreePathEnumerableTests.cs" />
     <Compile Include="Models\TreePathTests.cs" />
     <Compile Include="Remoting\SerializationToolsTests.cs" />
+    <Compile Include="Shell\ExcelRectangleTests.cs" />
+    <Compile Include="Shell\ExcelCellTests.cs" />
     <Compile Include="Text\CsvTextConvertTests.cs" />
     <Compile Include="DependedValues\DepConstTests.cs" />
     <Compile Include="DependedValues\DepDelayedValueTests.cs" />

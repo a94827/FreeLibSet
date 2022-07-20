@@ -5,7 +5,7 @@
 	<title>Что предстоит сделать</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:09:37.104000000"/>
-	<meta name="changed" content="2022-06-20T15:25:38.724000000"/>
+	<meta name="changed" content="2022-07-20T16:17:20.963000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -63,6 +63,22 @@
 			</span>FileTemplateList <span lang="ru-RU">не используют аргумент
 			</span>ISplash</p>
 			<p lang="en-US">(28.12.2020)</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" style="margin-bottom: 0.5cm">ZipFileCreator <span lang="ru-RU">должен
+			как-то устанавливать кодовую страницу. Свойство
+			ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage
+			инициализируется значением
+			Thread.CurrentThread.CurrentCulture.TextInfo.OEMCodePage</span>.
+			<span lang="ru-RU">Не работает под  сборками </span>linux <span lang="ru-RU">без
+			кодовой страницы 866. Надо инициализировать значением
+			</span>Encoding.ASCII.CodePage <span lang="ru-RU">при  создании
+			файлов </span>XLSX <span lang="ru-RU">и </span>ODS. <span lang="ru-RU">Но
+			это - статическое поле, надо возвращать обратно. Или найти не
+			</span>default-<span lang="ru-RU">поле</span>.</p>
+			<p lang="en-US">(20.07.2022)</p>
 		</td>
 	</tr>
 </table>
@@ -214,8 +230,8 @@
 			</span><span lang="ru-RU">посылается форме дважды при закрытии
 			крестиком главного окна программы:</span></p>
 			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- Интерфейс </span><span lang="en-US">MDI</span></p>
-			<p style="margin-bottom: 0.5cm"><span lang="en-US">-</span><span lang="ru-RU">
-			Открыт редактор документа в измененном состоянии</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="en-US">-</span> <span lang="ru-RU">Открыт
+			редактор документа в измененном состоянии</span></p>
 			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- Сначала
 			вызывается </span><span lang="en-US">FormClosing </span><span lang="ru-RU">для
 			окна редактора как дочернего окна. Пользователь в диалоге
@@ -225,7 +241,7 @@
 			</span><span lang="en-US">EFPApp.Exit(). </span><span lang="ru-RU">При
 			этом снова вызывается </span><span lang="en-US">FormClosing </span><span lang="ru-RU">и
 			сообщения появляется еще раз</span></p>
-			<p><span lang="ru-RU">(20.06.2022)</span></p>
+			<p>(20.06.2022)</p>
 		</td>
 	</tr>
 </table>

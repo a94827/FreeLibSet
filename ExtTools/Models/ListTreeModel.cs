@@ -18,7 +18,7 @@ namespace FreeLibSet.Models.Tree
   /// </summary>
   public class ListTreeModel : TreeModelBase
   {
-    #region Конструторы
+    #region Конструкторы
 
     /// <summary>
     /// Создает модель, первоначально не содержащую ни одного узла

@@ -491,7 +491,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Источник для получения значений полей.
-    /// Задается в конструторе
+    /// Задается в конструкторе
     /// </summary>
     public DBxCache DBCache
     {

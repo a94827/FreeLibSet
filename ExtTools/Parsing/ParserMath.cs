@@ -145,7 +145,7 @@ namespace FreeLibSet.Parsing
 
     /// <summary>
     /// Метод вычисления операции.
-    /// Задается в конструторе.
+    /// Задается в конструкторе.
     /// </summary>
     public UnaryOpDelegate CalcMethod { get { return _CalcMethod; } }
     private UnaryOpDelegate _CalcMethod;

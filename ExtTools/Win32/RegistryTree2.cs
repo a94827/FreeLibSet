@@ -226,7 +226,7 @@ namespace FreeLibSet.Win32
 
     /// <summary>
     /// Режим виртуализации для Windows 64.
-    /// Задается в конструторе
+    /// Задается в конструкторе
     /// </summary>
     public RegistryView2 View { get { return _View; } }
     private readonly RegistryView2 _View;

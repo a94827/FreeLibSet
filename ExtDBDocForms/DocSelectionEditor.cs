@@ -259,7 +259,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     private class EFPPageGridView : EFPDocGridView
     {
-      #region Конструтор
+      #region Конструктор
 
       public EFPPageGridView(EFPBaseProvider baseProvider, TabPage page, DocSelectionEditor editor, string docTypeName)
         : base(baseProvider, CreateDataGridView(page), editor.UI, docTypeName)
