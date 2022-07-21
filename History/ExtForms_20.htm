@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2022-07-11T15:47:24.719000000"/>
+	<meta name="changed" content="2022-07-21T18:04:22.690000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -255,6 +255,20 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">325</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">21.07.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">В </span>Splash, <span lang="ru-RU">при
+			инициализации таймера (</span><a href="ExtForms_11.htm#v262p3">v.262
+			<span lang="ru-RU">п.3</span></a><span lang="ru-RU">), сразу
+			вызывается обновление окна, без ожидания 0,5 секунды.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">322</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -266,24 +280,25 @@
 			<span lang="ru-RU">Изображения теперь хранятся в виде ресурсов, а
 			не в виде потока </span>ImageList. <span lang="ru-RU">Изображения
 			доступны из любого потока, а не только из главного.</span></p>
-			<p lang="en-US"><a name="v322p1"></a>1. <span lang="ru-RU">Свойство
-			</span>EFPApp.MainImages <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p3">v.17
-			<span lang="ru-RU">п.3</span></a><span lang="ru-RU">) </span><span lang="ru-RU">имеет
-			новый тип </span>EFPAppMainImages. <span lang="ru-RU">Убран метод
-			</span>EFPApp.AddMainImages(), <span lang="ru-RU">принимавший
-			ссылку на </span>ImageList. 
+			<p><a name="v322p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">EFPApp.MainImages </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v017p3"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">) имеет
+			новый тип </span><span lang="en-US">EFPAppMainImages. </span><span lang="ru-RU">Убран
+			метод </span><span lang="en-US">EFPApp.AddMainImages(),
+			</span><span lang="ru-RU">принимавший ссылку на </span><span lang="en-US">ImageList.
+			</span>
 			</p>
 			<p>2. Изменена инициализация <span lang="en-US">EFPUIItemObj.SetImage()
-			</span><span lang="en-US">(<a href="ExtForms_11.htm#v017p6">v.17
-			</a></span><a href="ExtForms_11.htm#v017p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">)
+			(<a href="ExtForms_11.htm#v017p6">v.17 </a></span><a href="ExtForms_11.htm#v017p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">)
 			</span>(в производных классах)</p>
 			<p lang="en-US"><span lang="ru-RU">3</span>. UserComboBoxBase<span lang="ru-RU">,</span>
 			DateRangeBox, MessageBoxIconBox <span lang="ru-RU">и </span>SplashForn,
 			<span lang="ru-RU">использует ресурсы, а не </span>ImageList</p>
-			<p lang="en-US"><span lang="ru-RU">4</span>. <span lang="ru-RU">Изменена
-			реализация </span>TempWaitForm<span lang="ru-RU"> (</span><a href="ExtForms_11.htm#v199p2">v.199
-			<span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span>, <span lang="ru-RU">так
-			как доступ к изображениям по индексу больше не поддерживается.</span></p>
+			<p><span lang="ru-RU">4</span><span lang="en-US">. </span><span lang="ru-RU">Изменена
+			реализация </span><span lang="en-US">TempWaitForm </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v199p2"><span lang="en-US">v.199
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">,
+			</span><span lang="ru-RU">так как доступ к изображениям по индексу
+			больше не поддерживается.</span></p>
 			<p><span lang="en-US">6</span>. Изображения хранятся в формате
 			<span lang="en-US">*</span><span lang="ru-RU">.</span><span lang="en-US">png,
 			</span><span lang="ru-RU">а не 16-цветных </span><span lang="en-US">*.bmp.</span></p>

@@ -200,6 +200,8 @@ namespace FreeLibSet.Forms
       _TheTimer.Tick += TheTimer_Tick;
       _TheTimer.Interval = 500;
       _TheTimer.Enabled = true;
+
+      TheTimer_Tick(null, null); // 21.07.2022. Не дожидаясь появления события
     }
 
     void TheTimer_Tick(object sender, EventArgs args)
@@ -207,6 +209,12 @@ namespace FreeLibSet.Forms
       if (_Form == null)
         return;
       _Form.lblCurrent.Text = _PhaseText;
+
+  /*    if (_Form.lblCurrent.BackColor == Color.Yellow)
+        _Form.lblCurrent.BackColor = Color.Green;
+      else
+        _Form.lblCurrent.BackColor = Color.Yellow;*/
+
 
       if (_PercentMax == 0)
         _Form.pb1.Visible = false;
