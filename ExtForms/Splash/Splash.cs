@@ -200,8 +200,6 @@ namespace FreeLibSet.Forms
       _TheTimer.Tick += TheTimer_Tick;
       _TheTimer.Interval = 500;
       _TheTimer.Enabled = true;
-
-      TheTimer_Tick(null, null); // 21.07.2022. Не дожидаясь появления события
     }
 
     void TheTimer_Tick(object sender, EventArgs args)
@@ -210,7 +208,7 @@ namespace FreeLibSet.Forms
         return;
       _Form.lblCurrent.Text = _PhaseText;
 
-  /*    if (_Form.lblCurrent.BackColor == Color.Yellow)
+      /*if (_Form.lblCurrent.BackColor == Color.Yellow)
         _Form.lblCurrent.BackColor = Color.Green;
       else
         _Form.lblCurrent.BackColor = Color.Yellow;*/
@@ -257,6 +255,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Устанавливается в true при первой установке свойства PhaseText в текущей фазе.
+    /// При этом выполняется немедленное обновление текста фазы, в отличие от последующих установок,
+    /// которые отображаются только по таймеру
+    /// </summary>
+    private bool _PhaseTextHasBeenSetInPhase;
+
+    /// <summary>
     /// Текст в рамке формы для текущей фазы
     /// </summary>
     public string PhaseText
@@ -278,6 +283,12 @@ namespace FreeLibSet.Forms
         }
         else
           _PhaseText = value;
+
+        if (!_PhaseTextHasBeenSetInPhase)
+        {
+          _PhaseTextHasBeenSetInPhase = true;
+          TheTimer_Tick(null, null); // 21.07.2022. Не дожидаясь появления события
+        }
 
         Application.DoEvents();
       }
@@ -343,6 +354,7 @@ namespace FreeLibSet.Forms
           DoSetItem();
         }
       }
+      _PhaseTextHasBeenSetInPhase = false;
     }
 
     /// <summary>
