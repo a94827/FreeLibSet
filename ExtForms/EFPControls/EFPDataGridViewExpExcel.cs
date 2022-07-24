@@ -9,9 +9,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using FreeLibSet.Config;
-using System.Globalization;
 using FreeLibSet.Core;
+using FreeLibSet.Models.SpreadsheetBase;
 using FreeLibSet.Shell;
+
 
 namespace FreeLibSet.Forms
 {
@@ -1495,7 +1496,7 @@ namespace FreeLibSet.Forms
 
             XmlElement elC = xmlDoc.CreateElement("c", nmspcSpreadsheet);
 
-            string cellAddr1 = MicrosoftOfficeTools.GetExcelColumnName(j + 1) + rowCount.ToString();
+            string cellAddr1 = SpreadsheetTools.GetColumnName(j + 1) + rowCount.ToString();
             SetAttr(elC, "r", cellAddr1, String.Empty);
             SetAttr(elC, "s", headerStyleIdx.ToString(), String.Empty);
             elRow.AppendChild(elC);
@@ -1504,7 +1505,7 @@ namespace FreeLibSet.Forms
 
             if (headerArray.RowSpan[i, j] > 1 || headerArray.ColumnSpan[i, j] > 1)
             {
-              string cellAddr2 = MicrosoftOfficeTools.GetExcelColumnName(j + headerArray.ColumnSpan[i, j]) + (rowCount + headerArray.RowSpan[i, j] - 1).ToString();
+              string cellAddr2 = SpreadsheetTools.GetColumnName(j + headerArray.ColumnSpan[i, j]) + (rowCount + headerArray.RowSpan[i, j] - 1).ToString();
               XmlElement elMergeCell = xmlDoc.CreateElement("mergeCell", nmspcSpreadsheet);
               SetAttr(elMergeCell, "ref", cellAddr1 + ":" + cellAddr2, String.Empty);
               elMergeCells.AppendChild(elMergeCell);
@@ -1537,7 +1538,7 @@ namespace FreeLibSet.Forms
           EFPDataGridViewExcelCellAttributes excelAttr = EFPDataGridView.GetExcelCellAttr(cellArgs);
 
           XmlElement elC = xmlDoc.CreateElement("c", nmspcSpreadsheet);
-          SetAttr(elC, "r", MicrosoftOfficeTools.GetExcelColumnName(j + 1) + rowCount.ToString(), String.Empty);
+          SetAttr(elC, "r", SpreadsheetTools.GetColumnName(j + 1) + rowCount.ToString(), String.Empty);
           int styleIdx = styles.GetStyle(excelAttr.Bold, excelAttr.Italic, excelAttr.Underline,
             excelAttr.BackColor, excelAttr.ForeColor,
             cellArgs.LeftBorder, cellArgs.TopBorder, cellArgs.RightBorder, cellArgs.BottomBorder,

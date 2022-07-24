@@ -10,6 +10,7 @@ using FreeLibSet.IO;
 using System.Diagnostics;
 using FreeLibSet.Core;
 using FreeLibSet.Shell;
+using FreeLibSet.Models.SpreadsheetBase;
 
 /*
  * Excel-подобная модель для работы с  OpenOffice / LibreOffice Calc
@@ -1540,9 +1541,9 @@ namespace FreeLibSet.OpenOffice.Calc
           return FirstCell.ToString();
         else
           return Sheet.ToString() + "." + // Разделитель - точка
-            "$" + MicrosoftOfficeTools.GetExcelColumnName(FirstColumnIndex + 1) +
+            "$" + SpreadsheetTools.GetColumnName(FirstColumnIndex + 1) +
             "$" + (FirstRowIndex + 1).ToString() + ":" +
-            "$" + MicrosoftOfficeTools.GetExcelColumnName(LastColumnIndex + 1) +
+            "$" + SpreadsheetTools.GetColumnName(LastColumnIndex + 1) +
             "$" + (LastRowIndex + 1).ToString();
       }
       else
@@ -1738,10 +1739,31 @@ namespace FreeLibSet.OpenOffice.Calc
       XMergeable.merge(false);
     }
 
+    /// <summary>
+    /// Возвращает true, если диапазон содержит объединенные ячейки.
+    /// Это свойство не показывает, что сам текущий диапазон является частью объединения.
+    /// </summary>
     public bool IsMerged
     {
       get { return XMergeable.getIsMerged(); }
     }
+
+
+    /// <summary>
+    /// Возвращает диапазон, с учетом расширения до объединенных ячеек.
+    /// Если диапазоне не входит в состав объединения, возвращается текущий диапазон
+    /// </summary>
+    public Range MergedRange
+    {
+      get
+      {
+        unoidl.com.sun.star.sheet.XSheetCellCursor xCursor = XSheetCellRange.getSpreadsheet().createCursorByRange(XSheetCellRange);
+        xCursor.collapseToMergedArea();
+        return new Range(xCursor, _XSpreadsheetDocument);
+      }
+    }
+
+
 
     #endregion
 
@@ -1989,7 +2011,7 @@ namespace FreeLibSet.OpenOffice.Calc
     {
       if (Exists)
         return Sheet.ToString() + "." + // Разделитель - точка, а не восклицательный знак
-            "$" + MicrosoftOfficeTools.GetExcelColumnName(ColumnIndex + 1) +
+            "$" + SpreadsheetTools.GetColumnName(ColumnIndex + 1) +
             "$" + (RowIndex + 1).ToString();
       else
         return "[ Empty ]";

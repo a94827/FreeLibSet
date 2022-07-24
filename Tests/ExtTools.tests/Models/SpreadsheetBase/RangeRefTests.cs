@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using FreeLibSet.Shell;
+using FreeLibSet.Models.SpreadsheetBase;
 
-namespace ExtTools_tests.Shell
+namespace ExtTools_tests.Models.SpreadsheetBase
 {
   [TestFixture]
-  public class ExcelRectangleTests
+  public class RangeRefTests
   {
     #region Конструктор
 
@@ -18,12 +18,12 @@ namespace ExtTools_tests.Shell
     [TestCase("B3", "A1", "A1:B3")]
     [TestCase("A3", "B1", "A1:B3")]
     [TestCase("B1", "A3", "A1:B3")]
-    public void Constructor_ExcelCell(string s1, string s2, string wantedText)
+    public void Constructor_CellRef(string s1, string s2, string wantedText)
     {
-      ExcelCell cell1 = ExcelCell.Parse(s1);
-      ExcelCell cell2 = ExcelCell.Parse(s2);
+      CellRef cell1 = CellRef.Parse(s1);
+      CellRef cell2 = CellRef.Parse(s2);
 
-      ExcelRectangle sut = new ExcelRectangle(cell1, cell2);
+      RangeRef sut = new RangeRef(cell1, cell2);
       Assert.AreEqual(wantedText, sut.ToString(), "ToString()");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
       Assert.IsTrue(sut.FirstCell.Row <= sut.LastCell.Row, "Row");
@@ -31,17 +31,17 @@ namespace ExtTools_tests.Shell
     }
 
     [Test]
-    public void Constructor_ExcelCell_exception()
+    public void Constructor_CellRef_exception()
     {
-      ExcelRectangle dummy;
+      RangeRef dummy;
       Assert.Catch<ArgumentException>(delegate()
       {
-        dummy = new ExcelRectangle(new ExcelCell(), new ExcelCell(1,1));
+        dummy = new RangeRef(new CellRef(), new CellRef(1,1));
       }, "#1");
 
       Assert.Catch<ArgumentException>(delegate()
       {
-        dummy = new ExcelRectangle(new ExcelCell(1, 1), new ExcelCell());
+        dummy = new RangeRef(new CellRef(1, 1), new CellRef());
       }, "#2");
     }
 
@@ -53,7 +53,7 @@ namespace ExtTools_tests.Shell
     [TestCase(3, 1, 1, 2, "A1:B3")]
     public void Constructor_int(int r1, int c1, int r2, int c2, string wantedText)
     {
-      ExcelRectangle sut = new ExcelRectangle(r1, c1, r2, c2);
+      RangeRef sut = new RangeRef(r1, c1, r2, c2);
       Assert.AreEqual(wantedText, sut.ToString(), "ToString()");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
       Assert.IsTrue(sut.FirstCell.Row <= sut.LastCell.Row, "RowNumber");
@@ -66,8 +66,8 @@ namespace ExtTools_tests.Shell
     [TestCase(1, 1, 1, 0)]
     public void Constructor_int_exception(int r1, int c1, int r2, int c2)
     {
-      ExcelRectangle dummy;
-      Assert.Catch<ArgumentException>(delegate() { dummy = new ExcelRectangle(r1,c1,r2,c2); });
+      RangeRef dummy;
+      Assert.Catch<ArgumentException>(delegate() { dummy = new RangeRef(r1,c1,r2,c2); });
     }
 
     #endregion
@@ -81,20 +81,20 @@ namespace ExtTools_tests.Shell
     [TestCase("", true, "")]
     public void Parse_TryParse(string s, bool wantedRes, string wantedValue)
     {
-      ExcelRectangle value1;
-      bool res = ExcelRectangle.TryParse(s, out value1);
+      RangeRef value1;
+      bool res = RangeRef.TryParse(s, out value1);
       Assert.AreEqual(wantedRes, res, "TryParse() result");
       Assert.AreEqual(wantedValue, value1.ToString(), "TryParse() value");
 
       if (res)
       {
-        ExcelRectangle value2 = ExcelRectangle.Parse(s);
+        RangeRef value2 = RangeRef.Parse(s);
         Assert.AreEqual(wantedValue, value2.ToString(), "Parse() result");
       }
       else
       {
-        ExcelRectangle value2;
-        Assert.Catch<FormatException>(delegate() { value2 = ExcelRectangle.Parse(s); }, "Parse throws");
+        RangeRef value2;
+        Assert.Catch<FormatException>(delegate() { value2 = RangeRef.Parse(s); }, "Parse throws");
       }
     }
 
@@ -114,8 +114,8 @@ namespace ExtTools_tests.Shell
     [TestCase("", "", true)]
     public void Equals(string s1, string s2, bool wantedEq)
     {
-      ExcelRectangle sut1 = ExcelRectangle.Parse(s1);
-      ExcelRectangle sut2 = ExcelRectangle.Parse(s2);
+      RangeRef sut1 = RangeRef.Parse(s1);
+      RangeRef sut2 = RangeRef.Parse(s2);
 
       bool res1 = (sut1 == sut2);
       Assert.AreEqual(wantedEq, res1, "operator ==");
@@ -147,10 +147,10 @@ namespace ExtTools_tests.Shell
     [TestCase("B2:D4", "", false)]
     [TestCase("", "B2", false)]
     [TestCase("", "", false)]
-    public void Contains_ExcelCell(string sRect, string sCell, bool wantedRes)
+    public void Contains_CellRef(string sRect, string sCell, bool wantedRes)
     {
-      ExcelRectangle sut = ExcelRectangle.Parse(sRect);
-      ExcelCell cell = ExcelCell.Parse(sCell);
+      RangeRef sut = RangeRef.Parse(sRect);
+      CellRef cell = CellRef.Parse(sCell);
 
       bool res = sut.Contains(cell);
 
@@ -169,8 +169,8 @@ namespace ExtTools_tests.Shell
     [TestCase("", "", false)]
     public void Contains_ExcelRectange(string sRect, string sArg, bool wantedRes)
     {
-      ExcelRectangle sut = ExcelRectangle.Parse(sRect);
-      ExcelRectangle arg = ExcelRectangle.Parse(sArg);
+      RangeRef sut = RangeRef.Parse(sRect);
+      RangeRef arg = RangeRef.Parse(sArg);
 
       bool res = sut.Contains(arg);
 
@@ -217,20 +217,20 @@ namespace ExtTools_tests.Shell
     [TestCase("", "", "")]
     public void GetCross_IsCrossed(string s1, string s2, string sWanted)
     {
-      ExcelRectangle r1 = ExcelRectangle.Parse(s1);
-      ExcelRectangle r2 = ExcelRectangle.Parse(s2);
-      ExcelRectangle wantedRes = ExcelRectangle.Parse(sWanted);
+      RangeRef r1 = RangeRef.Parse(s1);
+      RangeRef r2 = RangeRef.Parse(s2);
+      RangeRef wantedRes = RangeRef.Parse(sWanted);
 
-      ExcelRectangle res1 = ExcelRectangle.GetCross(r1, r2);
+      RangeRef res1 = RangeRef.GetCross(r1, r2);
       Assert.AreEqual(wantedRes, res1, "GetCross()");
 
-      bool res2 = ExcelRectangle.IsCrossed(r1, r2);
+      bool res2 = RangeRef.IsCrossed(r1, r2);
       Assert.AreEqual(sWanted.Length > 0, res2, "IsCrossed()");
 
-      ExcelRectangle res3 = ExcelRectangle.GetCross(r2, r1);
+      RangeRef res3 = RangeRef.GetCross(r2, r1);
       Assert.AreEqual(wantedRes, res3, "GetCross() inverted");
 
-      bool res4 = ExcelRectangle.IsCrossed(r2, r1);
+      bool res4 = RangeRef.IsCrossed(r2, r1);
       Assert.AreEqual(sWanted.Length > 0, res4, "IsCrossed() inverted");
     }
 
@@ -241,7 +241,7 @@ namespace ExtTools_tests.Shell
     [Test]
     public void IsEmpty()
     {
-      ExcelRectangle sut = new ExcelRectangle();
+      RangeRef sut = new RangeRef();
       Assert.IsTrue(sut.IsEmpty);
     }
 
@@ -249,10 +249,10 @@ namespace ExtTools_tests.Shell
     [Test]
     public void Empty()
     {
-      Assert.IsTrue(ExcelRectangle.Empty.IsEmpty);
-      Assert.AreEqual("", ExcelRectangle.Empty.ToString(), "ToString()");
-      Assert.AreEqual(0, ExcelRectangle.Empty.RowCount, "RowCount");
-      Assert.AreEqual(0, ExcelRectangle.Empty.ColumnCount, "ColumnCount");
+      Assert.IsTrue(RangeRef.Empty.IsEmpty);
+      Assert.AreEqual("", RangeRef.Empty.ToString(), "ToString()");
+      Assert.AreEqual(0, RangeRef.Empty.RowCount, "RowCount");
+      Assert.AreEqual(0, RangeRef.Empty.ColumnCount, "ColumnCount");
     }
 
     [TestCase("B2:F4", 3)]
@@ -260,7 +260,7 @@ namespace ExtTools_tests.Shell
     [TestCase("", 0)]
     public void RowCount(string sSUT, int wantedRes)
     {
-      ExcelRectangle sut = ExcelRectangle.Parse(sSUT);
+      RangeRef sut = RangeRef.Parse(sSUT);
       Assert.AreEqual(wantedRes, sut.RowCount);
     }
 
@@ -269,7 +269,7 @@ namespace ExtTools_tests.Shell
     [TestCase("", 0)]
     public void ColumnCount(string sSUT, int wantedRes)
     {
-      ExcelRectangle sut = ExcelRectangle.Parse(sSUT);
+      RangeRef sut = RangeRef.Parse(sSUT);
       Assert.AreEqual(wantedRes, sut.ColumnCount);
     }
 
@@ -279,7 +279,7 @@ namespace ExtTools_tests.Shell
     [TestCase("", 0)]
     public void CellCount(string sSUT, int wantedRes)
     {
-      ExcelRectangle sut = ExcelRectangle.Parse(sSUT);
+      RangeRef sut = RangeRef.Parse(sSUT);
       Assert.AreEqual(wantedRes, sut.CellCount);
     }
 

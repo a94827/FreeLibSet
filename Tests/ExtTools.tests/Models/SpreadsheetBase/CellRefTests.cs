@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using FreeLibSet.Shell;
+using FreeLibSet.Models.SpreadsheetBase;
 
-namespace ExtTools_tests.Shell
+namespace ExtTools_tests.Models.SpreadsheetBase
 {
   [TestFixture]
-  public class ExcelCellTests
+  public class CellRefTests
   {
     #region Конструктор
 
@@ -17,7 +17,7 @@ namespace ExtTools_tests.Shell
     [TestCase(1048576, 16384, "XFD1048576")] // предел для Excel-2007+
     public void Constructor(int row, int column, string wantedText)
     {
-      ExcelCell sut = new ExcelCell(row, column);
+      CellRef sut = new CellRef(row, column);
 
       Assert.AreEqual(row, sut.Row, "RowNumber");
       Assert.AreEqual(column, sut.Column, "ColumnNumber");
@@ -31,8 +31,8 @@ namespace ExtTools_tests.Shell
     [TestCase(1, -1)]
     public void Constructor_exception(int row, int column)
     {
-      ExcelCell dummy;
-      Assert.Catch<ArgumentException>(delegate() { dummy = new ExcelCell(row, column); });
+      CellRef dummy;
+      Assert.Catch<ArgumentException>(delegate() { dummy = new CellRef(row, column); });
     }
 
     #endregion
@@ -49,20 +49,20 @@ namespace ExtTools_tests.Shell
     [TestCase("", true)]
     public void Parse_TryParse(string s, bool wantedRes)
     {
-      ExcelCell value1;
-      bool res = ExcelCell.TryParse(s, out value1);
+      CellRef value1;
+      bool res = CellRef.TryParse(s, out value1);
       Assert.AreEqual(wantedRes, res, "TryParse() result");
       if (res)
       {
         Assert.AreEqual(s, value1.ToString(), "TryParse() value");
 
-        ExcelCell value2 = ExcelCell.Parse(s);
+        CellRef value2 = CellRef.Parse(s);
         Assert.AreEqual(s, value2.ToString(), "Parse() result");
       }
       else
       {
-        ExcelCell value2;
-        Assert.Catch<FormatException>(delegate() { value2 = ExcelCell.Parse(s); }, "Parse throws");
+        CellRef value2;
+        Assert.Catch<FormatException>(delegate() { value2 = CellRef.Parse(s); }, "Parse throws");
       }
     }
 
@@ -78,8 +78,8 @@ namespace ExtTools_tests.Shell
     [TestCase("", "", true)]
     public void Equals(string s1, string s2, bool wantedEq)
     {
-      ExcelCell sut1 = ExcelCell.Parse(s1);
-      ExcelCell sut2 = ExcelCell.Parse(s2);
+      CellRef sut1 = CellRef.Parse(s1);
+      CellRef sut2 = CellRef.Parse(s2);
 
       bool res1 = (sut1 == sut2);
       Assert.AreEqual(wantedEq, res1, "operator ==");
@@ -88,7 +88,7 @@ namespace ExtTools_tests.Shell
       Assert.AreEqual(!wantedEq, res2, "operator !=");
 
       bool res3 = (sut1.Equals(sut2));
-      Assert.AreEqual(wantedEq, res3, "Equals(ExcelCell)");
+      Assert.AreEqual(wantedEq, res3, "Equals(CellRef)");
 
       bool res4 = Object.Equals(sut1, sut2);
       Assert.AreEqual(wantedEq, res4, "Equals(Object)");
@@ -101,15 +101,15 @@ namespace ExtTools_tests.Shell
     [Test]
     public void IsEmpty()
     {
-      ExcelCell sut = new ExcelCell();
+      CellRef sut = new CellRef();
       Assert.IsTrue(sut.IsEmpty);
     }
 
     [Test]
     public void Empty()
     {
-      Assert.IsTrue(ExcelCell.Empty.IsEmpty);
-      Assert.AreEqual("", ExcelCell.Empty.ToString(), "ToString()");
+      Assert.IsTrue(CellRef.Empty.IsEmpty);
+      Assert.AreEqual("", CellRef.Empty.ToString(), "ToString()");
     }
 
     #endregion
