@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-07-24T10:45:26.158000000"/>
+	<meta name="changed" content="2022-07-26T18:50:42.068000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -567,7 +568,7 @@
 			<p lang="en-US" align="center">325</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">15.07.2022-24.07.2022</p>
+			<p lang="en-US" align="center">15.07.2022-26.07.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. TableAndIdList </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v210p1"><span lang="en-US">v.210
@@ -578,9 +579,9 @@
 			<p><span lang="en-US">2. </span><span lang="ru-RU">Структура</span>
 			<span lang="en-US">ExcelRCNumber (<a href="ExtTools_11.htm#v114p1">v.114
 			</a></span><a href="ExtTools_11.htm#v114p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
-			</span><span lang="ru-RU">переименована в </span><span lang="en-US">Cell</span><span lang="en-US">Ref
+			</span><span lang="ru-RU">переименована в </span><span lang="en-US">CellRef
 			</span><span lang="ru-RU">и перенесена в новое пространство имен
-			</span><span lang="en-US">FreeLibSet.Models.SpreadsheetBase</span><span lang="en-US">.
+			</span><span lang="en-US">FreeLibSet.Models.SpreadsheetBase.
 			</span><span lang="ru-RU">Свойства </span><span lang="en-US">RowNumber
 			</span><span lang="ru-RU">и </span><span lang="en-US">ColumnNumber
 			</span><span lang="ru-RU">переименованы в </span><span lang="en-US">Row
@@ -602,7 +603,7 @@
 			GetColumnNumber() </span><span lang="ru-RU">и </span><span lang="en-US">TryGetColumnNumber()
 			</span><span lang="ru-RU">соответственно.</span></p>
 			<p><span lang="ru-RU">4</span><span lang="en-US">. </span><span lang="ru-RU">Структура</span>
-			<span lang="en-US">R</span><span lang="en-US">angeRef </span><span lang="ru-RU">для
+			<span lang="en-US">RangeRef </span><span lang="ru-RU">для
 			прямоугольного диапазона ячеек.</span></p>
 			<p><span lang="ru-RU">5</span><span lang="en-US">. </span><span lang="ru-RU">При
 			поиске </span><span lang="en-US">OpenOffice </span><span lang="ru-RU">и
@@ -619,11 +620,17 @@
 			</span><span lang="ru-RU">используется
 			</span><span lang="en-US">FileTools.GetVersionFromStr(), </span><span lang="ru-RU">так
 			как строка может иметь некорректный формат, например, &quot;7.2.5.2.0&quot;</span></p>
-			<p><span lang="ru-RU">6</span><span lang="ru-RU">. Полностью
-			изменена реализация метода </span><span lang="en-US">FileTools.GetVersionFromStr()</span>
+			<p><span lang="ru-RU">6. Полностью изменена реализация метода
+			</span><span lang="en-US">FileTools.GetVersionFromStr()</span>
 			<span lang="en-US">(<a href="ExtTools_11.htm#v001p2">v.1 </a></span><a href="ExtTools_11.htm#v001p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).
 			</span><span lang="ru-RU">Выполняется попытка преобразовать
 			&quot;неправильные&quot; версии с лишними символами.</span></p>
+			<p lang="en-US">7. <span lang="ru-RU">Конструктор </span>ZipFileCreator
+			(<a href="ExtTools_11.htm#v017p1">v.17 <span lang="ru-RU">п.1</span></a>)
+			<span lang="ru-RU">проверяет, что
+			ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage указывает
+			на поддерживаемую кодовую страницу. При необходимости выбирается
+			</span>Encoding.ASCII.</p>
 		</td>
 	</tr>
 	<tr valign="top">

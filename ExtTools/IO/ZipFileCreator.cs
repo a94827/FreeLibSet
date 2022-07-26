@@ -16,10 +16,9 @@ using FreeLibSet.Core;
 namespace FreeLibSet.IO
 {
   /// <summary>
-  /// Создание Zip-файлов для составных документов Open Office, MS Ofiice-2007 и других
-  /// Для использования данного класса необходимо наличие загруженной сборки
-  /// ICSharpCode.SharpZipLib.dll
-  /// Используйте свойство ZipFileTools.ZipLibAvailable для предварительной проверки наличия библиотеки
+  /// Создание Zip-файлов для составных документов Open Office, MS Ofiice-2007 и других.
+  /// Для использования данного класса необходимо наличие загруженной сборки ICSharpCode.SharpZipLib.dll.
+  /// Используйте свойство ZipFileTools.ZipLibAvailable для предварительной проверки наличия библиотеки.
   /// </summary>
   public class ZipFileCreator
   {
@@ -31,10 +30,35 @@ namespace FreeLibSet.IO
     /// <param name="zipFilePath">Путь к создаваемому архиву</param>
     public ZipFileCreator(string zipFilePath)
     {
-      // TODO: 20.07.2022. ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = Encoding.ASCII.CodePage;
       _ZipFilePath = zipFilePath;
+
+      ValidateDefaultCodePage();
       _File = ICSharpCode.SharpZipLib.Zip.ZipFile.Create(zipFilePath);
       _File.BeginUpdate();
+    }
+
+    [DebuggerStepThrough]
+    private static void ValidateDefaultCodePage()
+    {
+      // 26.07.2022
+      // в Linux'е может по умолчанию использоваться русский язык, но не установлена поддержка для кодовой страницы 866.
+      // ZipConstants.DefaultCodePage по умолчанию инициализируется равным Thread.CurrentThread.CurrentCulture.TextInfo.OEMCodePage,
+      // при этом наличие поддержки для этой страницы не проверяется.
+      // При попытке создания архива возникнет исключение NotSupportedException.
+      // Заменяем на кодовую страницу ASCII, которой достаточно для создания файлов docx, ods и других форматов, т.к.
+      // внутри архива используются только латинские буквы.
+
+      bool defCodePagePresents;
+      try
+      {
+        defCodePagePresents = Encoding.GetEncoding(ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage) != null;
+      }
+      catch
+      {
+        defCodePagePresents = false;
+      }
+      if (!defCodePagePresents)
+        ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = Encoding.ASCII.CodePage;
     }
 
     /// <summary>
