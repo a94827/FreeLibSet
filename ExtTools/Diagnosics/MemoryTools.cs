@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Runtime;
 using System.Runtime.InteropServices;
 using FreeLibSet.Logging;
+using FreeLibSet.IO;
 
 namespace FreeLibSet.Diagnostics
 {
@@ -71,7 +72,8 @@ namespace FreeLibSet.Diagnostics
         if (!_CheckSufficientMemoryExceptionLogged)
         {
           _CheckSufficientMemoryExceptionLogged = true;
-          LogoutTools.LogoutException(e, "MemoryTools.CheckSufficientMemory");
+          // Надоело исключение!
+          // LogoutTools.LogoutException(e, "MemoryTools.CheckSufficientMemory");
         }
 
         return true;
@@ -237,14 +239,23 @@ namespace FreeLibSet.Diagnostics
     {
       get
       {
-        switch (Environment.OSVersion.Platform)
+        try
         {
-          case PlatformID.Win32NT:
-            return GetMemoryLoadNT();
-          case PlatformID.Win32Windows:
-            return GetMemoryLoadWin();
-          default:
-            return UnknownMemoryLoad;
+          switch (Environment.OSVersion.Platform)
+          {
+            case PlatformID.Win32NT:
+              return GetMemoryLoadNT();
+            case PlatformID.Win32Windows:
+              return GetMemoryLoadWin();
+            case PlatformID.Unix:
+              return GetMemoryLoadUnix();
+            default:
+              return UnknownMemoryLoad;
+          }
+        }
+        catch
+        {
+          return UnknownMemoryLoad;
         }
       }
     }
@@ -267,6 +278,44 @@ namespace FreeLibSet.Diagnostics
         return UnknownMemoryLoad;
     }
 
+    private static int GetMemoryLoadUnix()
+    {
+      try
+      {
+        if (System.IO.File.Exists("/proc/meminfo"))
+          return GetMemoryLoadFromFile_meminfo();
+      }
+      catch { }
+      return UnknownMemoryLoad;
+    }
+
+    private static int GetMemoryLoadFromFile_meminfo()
+    {
+      // Используем отношение MemAvailable к MemTotal как процент свободной памяти.
+      // Вообще не уверен, что это правильно.
+
+      string[] a = System.IO.File.ReadAllLines("/proc/meminfo");
+      long vTotal = -1L;
+      long vAvail = -1L;
+      for (int i = 0; i < a.Length; i++)
+      {
+        if (a[i].StartsWith("MemTotal:"))
+          vTotal = GetMemoryBytesFromUnixFileString(a[i]);
+        else if (a[i].StartsWith("MemAvailable:"))
+          vAvail = GetMemoryBytesFromUnixFileString(a[i]);
+        if (vTotal>=0 && vAvail>=0)
+          break; // строки идут в начале файла
+      }
+
+      if (vTotal <= 0L || vAvail < 0L) // может быть 0
+        return UnknownMemoryLoad;
+
+      if (vAvail>vTotal) // ерунда какая-то
+        return UnknownMemoryLoad;
+
+      return 100 - (int)(vAvail * 100L / vTotal);
+    }
+
     /// <summary>
     /// Это значение возвращается свойством MemoryLoad, когда нельзя получить процент использования памяти
     /// </summary>
@@ -284,14 +333,23 @@ namespace FreeLibSet.Diagnostics
     {
       get
       {
-        switch (Environment.OSVersion.Platform)
+        try
         {
-          case PlatformID.Win32NT:
-            return GetTotalPhysicalMemoryNT();
-          case PlatformID.Win32Windows:
-            return GetTotalPhysicalMemoryWin();
-          default:
-            return UnknownMemorySize;
+          switch (Environment.OSVersion.Platform)
+          {
+            case PlatformID.Win32NT:
+              return GetTotalPhysicalMemoryNT();
+            case PlatformID.Win32Windows:
+              return GetTotalPhysicalMemoryWin();
+            case PlatformID.Unix:
+              return GetTotalPhysicalMemoryUnix();
+            default:
+              return UnknownMemorySize;
+          }
+        }
+        catch
+        {
+          return UnknownMemorySize;
         }
       }
     }
@@ -311,7 +369,58 @@ namespace FreeLibSet.Diagnostics
       if (GlobalMemoryStatus(ms))
         return (long)(ms.dwTotalPhys);
       else
-        return UnknownMemoryLoad;
+        return UnknownMemorySize;
+    }
+
+    private static long GetTotalPhysicalMemoryUnix()
+    {
+      try
+      {
+        if (System.IO.File.Exists("/proc/meminfo"))
+          return GetTotalPhysicalMemoryFromFile_meminfo();
+      }
+      catch { }
+
+      return UnknownMemorySize;
+    }
+
+    /// <summary>
+    /// Извлечение из файла proc/meminfo строки "MemTotal:    1234567 kB"
+    /// </summary>
+    /// <returns></returns>
+    private static long GetTotalPhysicalMemoryFromFile_meminfo()
+    {
+      string[] a = System.IO.File.ReadAllLines("/proc/meminfo");
+      for (int i = 0; i < a.Length; i++)
+      {
+        if (a[i].StartsWith("MemTotal:"))
+          return GetMemoryBytesFromUnixFileString(a[i]);
+      }
+
+      throw new InvalidOperationException("Не найдена строка MemTotal");
+    }
+
+    private static long GetMemoryBytesFromUnixFileString(string s)
+    {
+      int p = s.IndexOf(':');
+      if (p < 0)
+        throw new ArgumentException("Нет символа \":\"");
+      s = s.Substring(p + 1).Trim();
+
+      p = s.IndexOf(' ');
+      if (p < 0)
+        throw new InvalidOperationException("Нет единицы измерения");
+      string s1 = s.Substring(0, p); // число
+      string s2 = s.Substring(p + 1); // единица измерения
+
+      long v = long.Parse(s1);
+      switch (s2)
+      {
+        case "kB": v = v * FileTools.KByte; break;
+        default: throw new InvalidOperationException("Неизвестная единица измерения: \"" + s2 + "\"");
+      }
+
+      return v;
     }
 
     /// <summary>

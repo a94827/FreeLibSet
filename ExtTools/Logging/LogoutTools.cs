@@ -2605,19 +2605,21 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Возвращает true, если разрешено обращаться к свойству Assembly.EntryPoint
-    /// В mono для версии 4.5 пол linux'ом возникает фатальная ошибка, и приложение завершается
+    /// В mono под linux'ом возникает фатальная ошибка, и приложение завершается.
     /// </summary>
     public static bool IsAssemblyEntryPointAvailable
     {
       get
       {
         // Эта проблема неизвестно, когда точно существует
+        // 26.07.2022
+        // В Mono 6.12 точно уже починили
 
         if (Environment.OSVersion.Platform != PlatformID.Unix)
           return true;
         if (!EnvironmentTools.IsMono)
           return true;
-        if (Environment.Version.Major == 4)
+        if (EnvironmentTools.MonoVersion < new Version(6,12))
           return false;
         return true;
       }
