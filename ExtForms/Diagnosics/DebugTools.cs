@@ -1367,7 +1367,13 @@ namespace FreeLibSet.Forms.Diagnostics
             sb.Append(", Name=\"");
             sb.Append(ctrl.Name);
             sb.Append("\", Text=\"");
-            sb.Append(ctrl.Text);
+            string s = ctrl.Text;
+            int p = DataTools.IndexOfAny(s, "\r\n\t");
+            if (p >= 0)
+              s = s.Substring(0, p) + " ...";
+            if (s.Length > 40)
+              s = s.Substring(0, 40) + " ...";
+            sb.Append(s);
             sb.Append('\"');
             IContainerControl ctrl2 = ctrl as IContainerControl;
             if (ctrl2 != null)
