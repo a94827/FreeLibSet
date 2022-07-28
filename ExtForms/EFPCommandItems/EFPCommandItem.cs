@@ -2800,7 +2800,7 @@ namespace FreeLibSet.Forms
     /// Реализация обработчика нажатия клавиши, которая проверяет ShortCut'ы
     /// для всех наборов элементов, входящих в фокус.
     /// </summary>
-    /// <param name="sender">Источник соыбтия. Игнорируется</param>
+    /// <param name="sender">Источник события. Игнорируется</param>
     /// <param name="args">Аргументы события. Если нажатие клавиши обработано, устанавливается свойство Handled</param>
     public static void PerformKeyDown(object sender, KeyEventArgs args)
     {
