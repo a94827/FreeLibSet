@@ -2607,7 +2607,7 @@ namespace FreeLibSet.Logging
     /// Возвращает true, если разрешено обращаться к свойству Assembly.EntryPoint
     /// В mono под linux'ом возникает фатальная ошибка, и приложение завершается.
     /// </summary>
-    public static bool IsAssemblyEntryPointAvailable
+    private static bool IsAssemblyEntryPointAvailable
     {
       get
       {

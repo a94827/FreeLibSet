@@ -1816,7 +1816,6 @@ namespace FreeLibSet.Forms
       _GetCellAttributesArgs = new EFPDataGridViewCellAttributesEventArgs(this);
       Control_Leave(null, null);
       // так не помогает. Control.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft; // 27.07.2022. Исправление для Mono.
-
       _State = EFPDataGridViewState.View;
       _ReadOnly = false;
       _CanInsert = true;
