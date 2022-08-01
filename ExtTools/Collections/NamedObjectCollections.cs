@@ -2406,7 +2406,7 @@ namespace FreeLibSet.Collections
   /// Список не может содержать значения null.
   /// В отличие от NamedList, при добавлении и удалении элементов списка вызываются виртуальные методы и события,
   /// поэтому этот список работает медленнее.
-  /// В отличие от NamedList, этот класс не является потокобезопасным.
+  /// Этот класс не является потокобезопасным.
   /// </summary>
   /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс IObjectWithCode</typeparam>
   [Serializable]
@@ -2530,7 +2530,7 @@ namespace FreeLibSet.Collections
     /// Доступ по индексу
     /// </summary>
     /// <param name="index">Индекс элемента в массиве. Должен быть в диапазоне от 0 до Count-1</param>
-    /// <returns></returns>
+    /// <returns>Элемент</returns>
     public T this[int index]
     {
       get { return _List[index]; }
@@ -2577,10 +2577,10 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по коду.
-    /// Если запрошен несуществуюший код, возвращается пустой элемент
+    /// Если запрошен несуществуюший код, возвращается null.
     /// </summary>
     /// <param name="code">Код объекта</param>
-    /// <returns>Объект или пустое значение, если в списке нет объекта с таким кодом</returns>
+    /// <returns>Объект или null, если в списке нет объекта с таким кодом</returns>
     public T this[string code]
     {
       get
@@ -2595,7 +2595,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает элемент с заданным кодом.
-    /// В отличие от индексированного доступа по коду, если не найден объект с заданным кодом, генерируется исключение
+    /// В отличие от индексированного доступа по коду, если не найден объект с заданным кодом, генерируется исключение.
     /// </summary>
     /// <param name="code">Код объекта</param>
     /// <returns>Объект</returns>
@@ -2619,7 +2619,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Текстовое представление "Count=XXX"
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return "Count=" + Count.ToString();
@@ -2706,7 +2706,7 @@ namespace FreeLibSet.Collections
     /// Также рекомендуется использовать перегрузку метода IndexOf(), принимающую код, чтобы избежать лишнего сравнения объектов, которое обычно не нужно.
     /// </summary>
     /// <param name="item">Объект для поиска</param>
-    /// <returns>Индекс объекта.</returns>
+    /// <returns>Индекс объекта</returns>
     public int IndexOf(T item)
     {
       if (Object.Equals(item, default(T)))
@@ -2727,7 +2727,7 @@ namespace FreeLibSet.Collections
     /// Если в списке уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение
     /// </summary>
     /// <param name="index">Позиция для добавления</param>
-    /// <param name="item">Добавляемый объект</param>
+    /// <param name="item">Добавляемый объект. Не может быть null</param>
     public void Insert(int index, T item)
     {
       CheckNotReadOnly();
@@ -2767,6 +2767,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Удаляет элемент из указанной позиции списка.
+    /// <paramref name="index"/> должен быть в диапазоне от 0 до (Count-1).
     /// </summary>
     /// <param name="index">Индекс элемента</param>
     public void RemoveAt(int index)
@@ -2800,7 +2801,7 @@ namespace FreeLibSet.Collections
     /// Добавляет элемент в конец списка.
     /// Если в списке уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение
     /// </summary>
-    /// <param name="item">Добавляемый элемент</param>
+    /// <param name="item">Добавляемый элемент. Не может быть null</param>
     public void Add(T item)
     {
       CheckNotReadOnly();
@@ -2912,7 +2913,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Удаляет заданный элемент из списка
+    /// Удаляет заданный элемент из списка, если он есть.
     /// </summary>
     /// <param name="item">удаляемый элемент</param>
     /// <returns>true, если элемент был найден и удален</returns>
@@ -2935,7 +2936,7 @@ namespace FreeLibSet.Collections
     #region Дополнительные методы
 
     /// <summary>
-    /// Медленный поиск по коду (с учетом IgnoreCase).
+    /// Поиск по коду (с учетом IgnoreCase).
     /// Возвращает индекс найденного элемента или (-1).
     /// Если требуется только определить существование элемента с заданным кодом, используйте
     /// Contains(), принимающий строковый аргумент.
@@ -3156,7 +3157,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается перед добавлением элемента.
     /// Если обработчик события выбросит исключение, список останется в неизменном и согласованном состоянии.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate()
+    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
     /// </summary>
     public event NamedListItemEventHandler<T> BeforeAdd;
 
@@ -3176,7 +3177,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается после добавления элемента.
     /// Если обработчик события выбросит исключение, список окажется в несогласованном состоянии и не может использоваться дальше.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate()
+    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
     /// </summary>
     public event NamedListItemEventHandler<T> AfterAdd;
 
@@ -3196,7 +3197,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается перед удалением элемента.
     /// Если обработчик события выбросит исключение, список останется в неизменном и согласованном состоянии.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate()
+    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
     /// </summary>
     public event NamedListItemEventHandler<T> BeforeRemove;
 
@@ -3216,7 +3217,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается после удаления элемента.
     /// Если обработчик события выбросит исключение, список окажется в несогласованном состоянии и не может использоваться дальше.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate()
+    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
     /// </summary>
     public event NamedListItemEventHandler<T> AfterRemove;
 
@@ -3239,7 +3240,7 @@ namespace FreeLibSet.Collections
     public event ListChangedEventHandler ListChanged;
 
     /// <summary>
-    /// Вызывает событие ListChanged, если нет непарного вызова BeginUpdate()
+    /// Вызывает событие ListChanged, если нет непарного вызова BeginUpdate().
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected void OnListChanged(ListChangedEventArgs args)
@@ -3249,26 +3250,26 @@ namespace FreeLibSet.Collections
         throw new ArgumentNullException("args");
 #endif
 
-      if (InsideOnListChanged)
+      if (_InsideOnListChanged)
         throw new ReenteranceException("Вложенный вызов ListChanged");
 
       if (_UpdateCount > 0)
-        DelayedListChanged = true; // запомнили на будущее
+        _DelayedListChanged = true; // запомнили на будущее
       else if (ListChanged != null)
       {
-        InsideOnListChanged = true;
+        _InsideOnListChanged = true;
         try
         {
           ListChanged(this, args);
         }
         finally
         {
-          InsideOnListChanged = false;
+          _InsideOnListChanged = false;
         }
       }
     }
 
-    private bool InsideOnListChanged;
+    private bool _InsideOnListChanged;
 
     private void CallListChanged(ListChangedType listChangedType, int newIndex)
     {
@@ -3299,7 +3300,7 @@ namespace FreeLibSet.Collections
     public virtual void BeginUpdate()
     {
       if (_UpdateCount == 0)
-        DelayedListChanged = false; // по идее, никогда не должно срабатывать
+        _DelayedListChanged = false; // по идее, никогда не должно срабатывать
       _UpdateCount++;
     }
 
@@ -3313,10 +3314,10 @@ namespace FreeLibSet.Collections
         throw new InvalidOperationException("Непарный вызов EndUpdate()");
 
       _UpdateCount--;
-      if (_UpdateCount == 0 && DelayedListChanged)
+      if (_UpdateCount == 0 && _DelayedListChanged)
       {
         CallListChanged(ListChangedType.Reset, -1);
-        DelayedListChanged = false;
+        _DelayedListChanged = false;
       }
     }
 
@@ -3330,7 +3331,7 @@ namespace FreeLibSet.Collections
     /// Устанавливается в true при любых изменениях в списке, если был непарный вызов BeginUpdate().
     /// В этом случае, метод EndUpdate() отправляет сигнал о полном обновлении списка
     /// </summary>
-    private bool DelayedListChanged;
+    private bool _DelayedListChanged;
 
     #endregion
 

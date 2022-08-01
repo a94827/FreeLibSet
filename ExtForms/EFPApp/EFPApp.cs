@@ -184,7 +184,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если инициализация приложения (InitApp()) была выполнена
     /// </summary>
-    public static bool AppWasInit { get { return _MainImages != null; } }
+    public static bool AppWasInit { get { return /*_MainImages*/ _MainThread != null; /*31.07.2022 */ } }
 
     /// <summary>
     /// Проверяет, что текущий поток является тем, в котором был вызван метод EFPApp.InitApp().

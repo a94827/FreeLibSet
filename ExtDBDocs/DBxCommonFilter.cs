@@ -713,6 +713,45 @@ namespace FreeLibSet.Data.Docs
     #region Прочие методы
 
     /// <summary>
+    /// Возвращает true, если среди запрашиваемых фильтров хотя бы один установлен.
+    /// Если в списке <paramref name="codes"/> присутствуют несуществующие коды фильтров, то они пропускаются,
+    /// как будто для них IsEmpty=true, без выдачи сообщения об ошибке.
+    /// Чтобы проверить наличие установки любого фильтра, используйте свойство IsEmpty.
+    /// </summary>
+    /// <param name="codes">Список кодов проверяемых </param>
+    /// <returns>Наличие установленных фильтров</returns>
+    public bool IsAnyNotEmpty(string codes)
+    {
+      if (string.IsNullOrEmpty(codes))
+        return false;
+
+      if (codes.IndexOf(',') >= 0)
+      {
+        string[] a = codes.Split(',');
+        for (int i = 0; i < a.Length; i++)
+        {
+          DBxCommonFilter filter = this[a[i]];
+          if (filter != null)
+          {
+            if (!filter.IsEmpty)
+              return true;
+          }
+        }
+        return false;
+      }
+      else
+      {
+        DBxCommonFilter filter = this[codes];
+        if (filter != null)
+        {
+          if (!filter.IsEmpty)
+            return true;
+        }
+        return false;
+      }
+    }
+
+    /// <summary>
     /// Поиск фильтра по пользовательскому имени фильтра (свойству GridFilter.DisplayName)
     /// </summary>
     /// <param name="displayName">Имя фильтра для поиска</param>
@@ -864,6 +903,38 @@ namespace FreeLibSet.Data.Docs
       return AndFilter.FromList(filters);
     }
 
+    /// <summary>
+    /// Выполняет очистку фильтра, если он существует.
+    /// Если нет фильтра с кодом <paramref name="code"/>, никаких действий не выполняется.
+    /// Удобно использовать в обработчике OnChanged() для реализации взаимных блокировок фильтров, когда список фильтров не является постоянным.
+    /// </summary>
+    /// <param name="code">Код фильтра</param>
+    public void ClearFilter(string code)
+    {
+      DBxCommonFilter filter = this[code];
+      if (filter != null)
+        filter.Clear();
+    }
+
+    /// <summary>
+    /// Выполняет очистку фильтров с заданными кодами.
+    /// Если в списке <paramref name="codes"/> указаны фильтра с несуществующими кодами, то они пропускаются.
+    /// Удобно использовать в обработчике OnChanged() для реализации взаимных блокировок фильтров, когда список фильтров не является постоянным.
+    /// </summary>
+    /// <param name="codes">Список кодов фильтров, разделенных запятыми</param>
+    public void ClearFilters(string codes)
+    {
+      if (String.IsNullOrEmpty(codes))
+        return;
+      if (codes.IndexOf(',') >= 0)
+      {
+        string[] a = codes.Split(',');
+        for (int i = 0; i < a.Length; i++)
+          ClearFilter(a[i]);
+      }
+      else
+        ClearFilter(codes);
+    }
 
     /// <summary>
     /// Очистка всех фильтров. Вызывает DBxCommonFilters.Clear() для каждого фильтра.
@@ -914,7 +985,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если нет ни одного активного фильтра
+    /// Возвращает true, если нет ни одного активного фильтра.
+    /// Чтобы определить наличие установленного фильра среди определенного подмножества, используйте метод IsAnuNotEmpty()
     /// </summary>
     public bool IsEmpty
     {

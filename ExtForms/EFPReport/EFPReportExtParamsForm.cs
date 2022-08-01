@@ -99,38 +99,39 @@ namespace FreeLibSet.Forms
     {
       InitializeComponent();
 
-      if (!DesignMode)
-      {
-        _FormProvider = new EFPFormProvider(this);
-      }
       _InsideWriteFormValues = false;
       _InsideReadFormValues = false;
 
-      EFPButton efpOkButton = new EFPButton(FormProvider, btnOk);
-      efpOkButton.ToolTipText = "Построить отчет с введенными параметрами";
+      if (/*!DesignMode*/ EFPApp.AppWasInit /* 31.07.2022 */)
+      {
+        _FormProvider = new EFPFormProvider(this);
 
-      EFPButton efpCancelButton = new EFPButton(FormProvider, btnCancel);
-      efpCancelButton.ToolTipText = "Отказаться от построения отчета";
+        EFPButton efpOkButton = new EFPButton(FormProvider, btnOk);
+        efpOkButton.ToolTipText = "Построить отчет с введенными параметрами";
 
-      // Не знаю, как использовать EFPConfigParamSetComboBox. 
-      // Интерфейс IEFPConfigParamSetHandler поддерживает только одну секцию конфигурации, а не несколько.
+        EFPButton efpCancelButton = new EFPButton(FormProvider, btnCancel);
+        efpCancelButton.ToolTipText = "Отказаться от построения отчета";
 
-      SetComboBox.ShowImages = EFPApp.ShowListImages;
-      EFPTextComboBox efpSelCB = new EFPTextComboBox(FormProvider, SetComboBox.TheCB);
-      efpSelCB.CanBeEmpty = true;
-      efpSelCB.DisplayName = "Готовые наборы";
-      efpSelCB.ToolTipText = "Выбор готового набора параметров отчета из выпадающего списка." + Environment.NewLine +
-        "В список входят пользовательские наборы, которые вы сохранили, а также до 9 последних наборов параметров построения отчета (история)" + Environment.NewLine + Environment.NewLine +
-        "Поле для ввода названия для нового набора";
+        // Не знаю, как использовать EFPConfigParamSetComboBox. 
+        // Интерфейс IEFPConfigParamSetHandler поддерживает только одну секцию конфигурации, а не несколько.
 
-      EFPButton efpSaveButton = new EFPButton(FormProvider, SetComboBox.SaveButton);
-      efpSaveButton.DisplayName = "Сохранить набор";
-      efpSaveButton.ToolTipText = "Сохранить введенные параметры отчета как новый пользовательский набор." + Environment.NewLine +
-        "Перед нажатием кнопки в поле слева должно быть введено имя набора";
+        SetComboBox.ShowImages = EFPApp.ShowListImages;
+        EFPTextComboBox efpSelCB = new EFPTextComboBox(FormProvider, SetComboBox.TheCB);
+        efpSelCB.CanBeEmpty = true;
+        efpSelCB.DisplayName = "Готовые наборы";
+        efpSelCB.ToolTipText = "Выбор готового набора параметров отчета из выпадающего списка." + Environment.NewLine +
+          "В список входят пользовательские наборы, которые вы сохранили, а также до 9 последних наборов параметров построения отчета (история)" + Environment.NewLine + Environment.NewLine +
+          "Поле для ввода названия для нового набора";
 
-      EFPButton efpDelButton = new EFPButton(FormProvider, SetComboBox.DeleteButton);
-      efpDelButton.DisplayName = "Удалить набор";
-      efpDelButton.ToolTipText = "Удалить пользовательский набор параметров, имя которого задано в списке слева";
+        EFPButton efpSaveButton = new EFPButton(FormProvider, SetComboBox.SaveButton);
+        efpSaveButton.DisplayName = "Сохранить набор";
+        efpSaveButton.ToolTipText = "Сохранить введенные параметры отчета как новый пользовательский набор." + Environment.NewLine +
+          "Перед нажатием кнопки в поле слева должно быть введено имя набора";
+
+        EFPButton efpDelButton = new EFPButton(FormProvider, SetComboBox.DeleteButton);
+        efpDelButton.DisplayName = "Удалить набор";
+        efpDelButton.ToolTipText = "Удалить пользовательский набор параметров, имя которого задано в списке слева";
+      }
     }
 
     #endregion
@@ -710,7 +711,7 @@ namespace FreeLibSet.Forms
                 cfgOne.GetString("MD5"), _TableHist.Rows.Count + 1);
 
               if (_UseAuxText)
-                preloadInfos.Add(new EFPConfigSectionInfo(_Owner.ConfigSectionName,  EFPConfigCategories.ReportParams, names[i]));
+                preloadInfos.Add(new EFPConfigSectionInfo(_Owner.ConfigSectionName, EFPConfigCategories.ReportParams, names[i]));
             }
             if (names[i].StartsWith("User"))
             {
@@ -1145,7 +1146,7 @@ namespace FreeLibSet.Forms
       {
         return ReportParams.GetAuxText();
       }
-      catch(Exception e)
+      catch (Exception e)
       {
         if (!_SafeGetAuxTextErrorLogged)
         {
@@ -1224,7 +1225,7 @@ namespace FreeLibSet.Forms
     /// <param name="filters">Заполненный список фильтров. Не может быть null.</param>
     public EFPReportFilterExtParams(IEFPGridFilters filters)
     {
-      if (filters==null)
+      if (filters == null)
         throw new ArgumentNullException("filters");
       filters.SetReadOnly();
       _Filters = filters;
@@ -1236,7 +1237,7 @@ namespace FreeLibSet.Forms
     /// <param name="filters">Заполненный список фильтров. Не может быть null.</param>
     /// <param name="title">Заголовок для отчета и диалога параметров отчета</param>
     public EFPReportFilterExtParams(IEFPGridFilters filters, string title)
-      :this(filters)
+      : this(filters)
     {
       this.Title = title;
     }
