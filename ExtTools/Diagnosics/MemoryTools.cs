@@ -64,7 +64,7 @@ namespace FreeLibSet.Diagnostics
       {
         return false;
       }
-      catch (Exception e)
+      catch /*(Exception e)*/
       {
         // 20.06.2017
         // В mono MemoryFailPoint не работает и выбрасывает NotImplementedException
