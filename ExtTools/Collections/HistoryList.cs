@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
+using System.Collections;
 
 namespace FreeLibSet.Collections
 {
@@ -14,11 +15,11 @@ namespace FreeLibSet.Collections
   /// приводит к созданию нового объекта, а не к изменению существующего.
   /// </summary>
   /// <remarks>
-  /// Объект не реализует интерфейс ICollection, т.к. изменение списка приводит к созданию нового объекта.
-  /// Интерфейс ICloneable также не реализуется, т.к. всегда можно использовать один и тот же объект
+  /// Объект реализует интерфейсы IList и ICollection в режиме "только чтение", чтобы можно было использовать его в качестве источника для DataGridView
+  /// Интерфейс ICloneable не реализуется, т.к. всегда можно использовать один и тот же объект
   /// </remarks>
   [Serializable]
-  public struct HistoryList : IEnumerable<string>
+  public struct HistoryList : IList<string>, IList
   {
     #region Константа
 
@@ -350,6 +351,52 @@ namespace FreeLibSet.Collections
 
     #endregion
 
+    #region IList<string> Members
+
+    void IList<string>.Insert(int index, string item)
+    {
+      throw new NotImplementedException();
+    }
+
+    void IList<string>.RemoveAt(int index)
+    {
+      throw new NotImplementedException();
+    }
+
+    string IList<string>.this[int index]
+    {
+      get { return this[index]; }
+      set
+      {
+        throw new NotImplementedException();
+      }
+    }
+
+    #endregion
+
+    #region ICollection<string> Members
+
+    void ICollection<string>.Add(string item)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICollection<string>.Clear()
+    {
+      throw new NotImplementedException();
+    }
+    bool ICollection<string>.IsReadOnly
+    {
+      get { return true; }
+    }
+
+    bool ICollection<string>.Remove(string item)
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+
     #region IEnumerable<string> Members
 
     /// <summary>
@@ -376,6 +423,87 @@ namespace FreeLibSet.Collections
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
       return GetEnumerator();
+    }
+
+    #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      throw new NotImplementedException();
+    }
+
+    void IList.Clear()
+    {
+      throw new NotImplementedException();
+    }
+
+    bool IList.Contains(object value)
+    {
+      return Contains(value as string);
+    }
+
+    int IList.IndexOf(object value)
+    {
+      return IndexOf(value as string);
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      throw new NotImplementedException();
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return true; }
+    }
+
+    bool IList.IsReadOnly
+    {
+      get { return true; }
+    }
+
+    void IList.Remove(object value)
+    {
+      throw new NotImplementedException();
+    }
+
+    void IList.RemoveAt(int index)
+    {
+      throw new NotImplementedException();
+    }
+
+    object IList.this[int index]
+    {
+      get
+      {
+        return this[index];
+      }
+      set
+      {
+        throw new NotImplementedException();
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      if (!IsEmpty)
+        ((ICollection)_Items).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return this; }
     }
 
     #endregion

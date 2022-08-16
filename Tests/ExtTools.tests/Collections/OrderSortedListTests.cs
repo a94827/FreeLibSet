@@ -5,6 +5,7 @@ using NUnit.Framework;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.Remoting;
+using System.Collections;
 
 namespace ExtTools_tests.Collections
 {
@@ -381,6 +382,29 @@ namespace ExtTools_tests.Collections
       {
         lst1.Add(pair.Key);
         lst2.Add(pair.Value);
+      }
+
+      Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa" }, lst1.ToArray(), "Keys");
+      Assert.AreEqual(new int[] { 333, 222, 111 }, lst2.ToArray(), "Values");
+    }
+
+    [Test]
+    public void IDictionary_GetEnumerator([Values(false, true)]bool useComparer)
+    {
+      List<string> lst1 = new List<string>();
+      List<int> lst2 = new List<int>();
+
+      OrderSortedList<string, int> sut = CreateTestObject(useComparer);
+      foreach (object x in (IDictionary)sut)
+      {
+        Assert.IsInstanceOf<DictionaryEntry>(x, "DictionaryEntry type");
+        DictionaryEntry de = (DictionaryEntry)x;
+
+        Assert.IsInstanceOf<string>(de.Key, "Key type");
+        Assert.IsInstanceOf<int>(de.Value, "Value type");
+
+        lst1.Add((string)(de.Key));
+        lst2.Add((int)(de.Value));
       }
 
       Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa" }, lst1.ToArray(), "Keys");

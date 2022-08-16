@@ -140,9 +140,9 @@ namespace ExtTools_tests.Collections
     public void CopyTo_2arg()
     {
       HistoryList sut = new HistoryList(new string[] { "AAA", "BBB", "CCC" });
-      string[] a = new string[sut.Count];
-      sut.CopyTo(a, 0);
-      Assert.AreEqual(new string[] { "AAA", "BBB", "CCC" }, a);
+      string[] a = new string[sut.Count+3];
+      sut.CopyTo(a, 2);
+      Assert.AreEqual(new string[] { null, null, "AAA", "BBB", "CCC", null }, a);
     }
 
     [Test]

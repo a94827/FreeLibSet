@@ -417,6 +417,7 @@ namespace FreeLibSet.Parsing
       if (args.Length >= 2)
         digits = DataTools.GetInt(args[1]);
 
+      /*
       switch (name)
       {
         case "FLOOR":
@@ -430,29 +431,33 @@ namespace FreeLibSet.Parsing
             throw new NotImplementedException("Для функции ROUND аргумент \"Число знаков\", должен быть больше или равен 0. Отрицательное число знаков не реализовано. Задано: " + digits.ToString());
           break;
       }
+      */
+
 
       if (value is decimal)
       {
         decimal v = (decimal)value;
+        decimal m = (decimal)(Math.Pow(10, digits));
         switch (name)
         {
-          case "FLOOR": return Math.Floor(v);
-          case "CEILING": return Math.Ceiling(v);
-          case "ROUND": return Math.Round(v, digits, MidpointRounding.AwayFromZero);
-          case "TRUNC": return Math.Truncate(v);
+          case "FLOOR": return Math.Floor(v * m) / m;
+          case "CEILING": return Math.Ceiling(v * m) / m;
+          case "ROUND": return Math.Round(v * m, 0, MidpointRounding.AwayFromZero) / m;
+          case "TRUNC": return Math.Truncate(v * m) / m;
           default: throw new BugException();
         }
       }
       else
       {
         double v = Convert.ToDouble(value);
+        double m = Math.Pow(10, digits);
         double res;
         switch (name)
         {
-          case "FLOOR": res = Math.Floor(v); break;
-          case "CEILING": res = Math.Ceiling(v); break;
-          case "ROUND": res = Math.Round(v, digits, MidpointRounding.AwayFromZero); break;
-          case "TRUNC": res = Math.Truncate(v); break;
+          case "FLOOR": res = Math.Floor(v * m) / m; break;
+          case "CEILING": res = Math.Ceiling(v * m) / m; break;
+          case "ROUND": res = Math.Round(v * m, 0, MidpointRounding.AwayFromZero) / m; break;
+          case "TRUNC": res = Math.Truncate(v * m) / m; break;
           default: throw new BugException();
         }
 

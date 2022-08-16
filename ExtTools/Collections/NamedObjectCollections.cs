@@ -7,6 +7,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.ComponentModel;
 using FreeLibSet.Core;
+using System.Collections;
 
 
 // Типизированные коллекции, использующие интерфейс IObjectWithCode
@@ -97,7 +98,7 @@ namespace FreeLibSet.Collections
   /// Используйте статические экземпляры объектов Ordinal или OrdinalIgnoreCase.
   /// </summary>
   public sealed class ObjectWithCodeComparer<T> : IComparer<T>
-    where T:IObjectWithCode
+    where T : IObjectWithCode
   {
     #region Защищенный конструктор
 
@@ -773,7 +774,7 @@ namespace FreeLibSet.Collections
   /// Элементы в списке хранятся в порядке добавления. При необходимости, используйте метод Sort().
   /// </remarks>
   [Serializable]
-  public class NamedList<T> : IEnumerable<T>, IList<T>, IReadOnlyObject, INamedValuesAccess
+  public class NamedList<T> : IEnumerable<T>, IList<T>, IList, IReadOnlyObject, INamedValuesAccess
     where T : class, IObjectWithCode
   {
     #region Конструкторы
@@ -824,16 +825,18 @@ namespace FreeLibSet.Collections
     }
 
 
+#if XXX // 08.08.2022. По-моему, не нужен. Можно использовать IDictionary.Values
     /// <summary>
     /// Создает список, заполняя его значениями из коллекции.
     /// Регистр кода учитывается.
     /// </summary>
     /// <param name="srcDictionary">Словарь ключей и значений</param>
     public NamedList(IDictionary<string, T> srcDictionary)
-      :this(srcDictionary.Count)
+      : this(srcDictionary.Count)
     {
       AddRange(srcDictionary.Values);
     }
+#endif
 
     /// <summary>
     /// Создает список, заполняя его значениями из коллекции.
@@ -986,7 +989,7 @@ namespace FreeLibSet.Collections
       {
         CheckNotReadOnly();
 #if DEBUG
-        if (Object.Equals(value, default(T)))
+        if (Object.ReferenceEquals(value, null))
           throw new ArgumentNullException();
 #endif
         string newCode = value.Code;
@@ -995,19 +998,19 @@ namespace FreeLibSet.Collections
         if (_IgnoreCase)
           newCode = newCode.ToUpperInvariant();
 
+        string oldCode = _List[index].Code;
+        if (_IgnoreCase)
+          oldCode = oldCode.ToUpperInvariant(); // 08.08.2022
 
-        T oldItem = _List[index];
-        _Dict.Remove(oldItem.Code);
+        ValidateDict(); // 08.08.2022
+        _Dict.Remove(oldCode);
         try
         {
           _Dict.Add(newCode, index);
         }
         catch
         {
-          string oldItemCode = oldItem.Code;
-          if (_IgnoreCase)
-            oldItemCode = oldItemCode.ToUpperInvariant();
-          _Dict.Add(oldItemCode, index);
+          // Упрощение 08.08.2022
           _DictIsValid = false;
           throw;
         }
@@ -1020,7 +1023,7 @@ namespace FreeLibSet.Collections
     /// Если запрошен несуществуюший код, возвращается пустой элемент
     /// </summary>
     /// <param name="code">Код объекта</param>
-    /// <returns>Объект или пустое значение, если в списке нет объекта с таким кодом</returns>
+    /// <returns>Объект или null, если в списке нет объекта с таким кодом</returns>
     public T this[string code]
     {
       get
@@ -1029,7 +1032,7 @@ namespace FreeLibSet.Collections
         if (index >= 0)
           return _List[index];
         else
-          return default(T);
+          return null;
       }
     }
 
@@ -1149,7 +1152,7 @@ namespace FreeLibSet.Collections
     /// <returns>Индекс объекта.</returns>
     public int IndexOf(T item)
     {
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         return -1;
 
       int p = IndexOf(item.Code);
@@ -1172,7 +1175,7 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 #if DEBUG
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         throw new ArgumentNullException("item");
 #endif
       if (index > _List.Count)
@@ -1234,7 +1237,7 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 #if DEBUG
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         throw new ArgumentNullException("item");
 #endif
 
@@ -1279,7 +1282,7 @@ namespace FreeLibSet.Collections
     /// <returns>true, если элемент найден</returns>
     public bool Contains(T item)
     {
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         return false;
 
       string itemCode = item.Code;
@@ -1424,7 +1427,9 @@ namespace FreeLibSet.Collections
     /// Возвращает true, если в списке есть элемент с заданным кодом.
     /// При этом сразу возвращается и элемент.
     /// Если в списке нет элемента с таким кодом, возвращается false, 
-    /// а Value получает пустое значение
+    /// а Value получает пустое значение.
+    /// 
+    /// Метод не имеет ценности, так как свойство Item[<paramref name="code"/>] также возвращает null, если код не найден.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <param name="value">Сюда помещается найденное значение</param>
@@ -1433,7 +1438,7 @@ namespace FreeLibSet.Collections
     {
       if (String.IsNullOrEmpty(code))
       {
-        value = default(T);
+        value = null;
         return false;
       }
 
@@ -1449,7 +1454,7 @@ namespace FreeLibSet.Collections
       }
       else
       {
-        value = default(T);
+        value = null;
         return false;
       }
     }
@@ -1472,7 +1477,7 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 #if DEBUG
-      if (collection==null)
+      if (collection == null)
         throw new ArgumentException("collection");
 #endif
       if (Object.ReferenceEquals(collection, this))
@@ -1547,6 +1552,71 @@ namespace FreeLibSet.Collections
       _DictIsValid = false;
 
       _List.Reverse();
+    }
+
+    #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      Add((T)value);
+      return _List.Count - 1;
+    }
+
+    bool IList.Contains(object value)
+    {
+      return Contains(value as T);
+    }
+
+    int IList.IndexOf(object value)
+    {
+      return IndexOf(value as T);
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      Insert(index, (T)value);
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    bool IList.IsReadOnly
+    {
+      get { return IsReadOnly; }
+    }
+
+    void IList.Remove(object value)
+    {
+      Remove(value as T);
+    }
+
+    object IList.this[int index]
+    {
+      get { return this[index]; }
+      set { this[index] = (T)value; }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)_List).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _List; }
     }
 
     #endregion
@@ -1640,7 +1710,7 @@ namespace FreeLibSet.Collections
   public class NamedListWithNotifications<T> : IEnumerable<T>, IList<T>, IReadOnlyObject, INamedValuesAccess
     where T : IObjectWithCode
   {
-    #region Конструкторы
+  #region Конструкторы
 
     // В отличие от NamedList, у этого класса нет конструкторов, принимающих источники данных.
     // Предполагается наличие какой-либо обработки в производном классе или присоединении обработчиков событий.
@@ -1687,9 +1757,9 @@ namespace FreeLibSet.Collections
       FIgnoreCase = IgnoreCase;
     }
 
-    #endregion
+  #endregion
 
-    #region Доступ к элементам
+  #region Доступ к элементам
 
     /// <summary>
     /// Линейный список, определяющий порядок элементов
@@ -1804,9 +1874,9 @@ namespace FreeLibSet.Collections
       return "Count=" + Count.ToString();
     }
 
-    #endregion
+  #endregion
 
-    #region IgnoreCase
+  #region IgnoreCase
 
     /// <summary>
     /// Если установлено в true, то при поиске элементов будет игнорироваться регистр.
@@ -1816,9 +1886,9 @@ namespace FreeLibSet.Collections
     public bool IgnoreCase { get { return FIgnoreCase; } }
     private bool FIgnoreCase;
 
-    #endregion
+  #endregion
 
-    #region Доступ Только для чтения
+  #region Доступ Только для чтения
 
     /// <summary>
     /// Возвращает true, если список был переведен в режим "только чтение"
@@ -1843,9 +1913,9 @@ namespace FreeLibSet.Collections
         throw new ObjectReadOnlyException();
     }
 
-    #endregion
+  #endregion
 
-    #region IEnumerable<T> Members
+  #region IEnumerable<T> Members
 
     /// <summary>
     /// Возвращает перечислитель объектов в списке
@@ -1861,9 +1931,9 @@ namespace FreeLibSet.Collections
       return FList.GetEnumerator();
     }
 
-    #endregion
+  #endregion
 
-    #region IList<T> Members
+  #region IList<T> Members
 
     /// <summary>
     /// Возвращает индекс объекта в списке или (-1), если объект не найден.
@@ -1933,9 +2003,9 @@ namespace FreeLibSet.Collections
       ListChangedEventArgs Args = new ListChangedEventArgs(ListChangedType.ItemDeleted, index);
     }
 
-    #endregion
+  #endregion
 
-    #region ICollection<T> Members
+  #region ICollection<T> Members
 
     /// <summary>
     /// Добавляет элемент в конец списка.
@@ -2039,9 +2109,9 @@ namespace FreeLibSet.Collections
       return true;
     }
 
-    #endregion
+  #endregion
 
-    #region Дополнительные методы
+  #region Дополнительные методы
 
     /// <summary>
     /// Медленный поиск по коду (с учетом IgnoreCase).
@@ -2181,7 +2251,7 @@ namespace FreeLibSet.Collections
       return a;
     }
 
-    #endregion
+  #endregion
 
   #region Извещения при изменениях в списке
 
@@ -2320,7 +2390,7 @@ namespace FreeLibSet.Collections
       CallListChanged(ListChangedType.ItemChanged, Index);
     }
 
-    #endregion
+  #endregion
 
   #region Приостановка отправки извещений
 
@@ -2364,7 +2434,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     private bool DelayedListChanged;
 
-    #endregion
+  #endregion
 
   #region Десериализация
 
@@ -2382,7 +2452,7 @@ namespace FreeLibSet.Collections
       }
     }
 
-    #endregion
+  #endregion
 
   #region INamedValuesAccess Members
 
@@ -2396,7 +2466,7 @@ namespace FreeLibSet.Collections
       return GetCodes();
     }
 
-    #endregion
+  #endregion
   }
 #else
 
@@ -2410,7 +2480,7 @@ namespace FreeLibSet.Collections
   /// </summary>
   /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс IObjectWithCode</typeparam>
   [Serializable]
-  public class NamedListWithNotifications<T> : IEnumerable<T>, IList<T>, IReadOnlyObject, INamedValuesAccess
+  public class NamedListWithNotifications<T> : IEnumerable<T>, IList<T>, IList, IReadOnlyObject, INamedValuesAccess
     where T : class, IObjectWithCode
   {
     #region Конструкторы
@@ -2538,7 +2608,7 @@ namespace FreeLibSet.Collections
       {
         CheckNotReadOnly();
 #if DEBUG
-        if (Object.Equals(value, default(T)))
+        if (Object.ReferenceEquals(value, null))
           throw new ArgumentNullException();
 #endif
         string newCode = value.Code;
@@ -2547,22 +2617,24 @@ namespace FreeLibSet.Collections
         if (_IgnoreCase)
           newCode = newCode.ToUpperInvariant();
 
+
         T oldItem = _List[index];
+        string oldCode = oldItem.Code;
+        if (_IgnoreCase)
+          oldCode = oldCode.ToUpperInvariant(); // 08.08.2022
 
         OnBeforeAdd(value);
         OnBeforeRemove(oldItem);
 
-        _Dict.Remove(oldItem.Code);
+        ValidateDict(); // 08.08.2022
+        _Dict.Remove(oldCode);
         try
         {
           _Dict.Add(newCode, index);
         }
         catch
         {
-          string oldItemCode = oldItem.Code;
-          if (_IgnoreCase)
-            oldItemCode = oldItemCode.ToUpperInvariant();
-          _Dict.Add(oldItemCode, index);
+          // Упрощение 08.08.2022
           _DictIsValid = false;
           throw;
         }
@@ -2589,7 +2661,7 @@ namespace FreeLibSet.Collections
         if (index >= 0)
           return _List[index];
         else
-          return default(T);
+          return null;
       }
     }
 
@@ -2709,7 +2781,7 @@ namespace FreeLibSet.Collections
     /// <returns>Индекс объекта</returns>
     public int IndexOf(T item)
     {
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         return -1;
 
       int p = IndexOf(item.Code);
@@ -2732,7 +2804,7 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 #if DEBUG
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         throw new ArgumentNullException("item");
 #endif
       if (index > _List.Count)
@@ -2806,7 +2878,7 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
 #if DEBUG
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         throw new ArgumentNullException("item");
 #endif
 
@@ -2868,7 +2940,7 @@ namespace FreeLibSet.Collections
     /// <returns>true, если элемент найден</returns>
     public bool Contains(T item)
     {
-      if (Object.Equals(item, default(T)))
+      if (Object.ReferenceEquals(item, null))
         return false;
 
       string itemCode = item.Code;
@@ -3021,7 +3093,7 @@ namespace FreeLibSet.Collections
     {
       if (String.IsNullOrEmpty(code))
       {
-        value = default(T);
+        value = null;
         return false;
       }
 
@@ -3037,7 +3109,7 @@ namespace FreeLibSet.Collections
       }
       else
       {
-        value = default(T);
+        value = null;
         return false;
       }
     }
@@ -3335,6 +3407,71 @@ namespace FreeLibSet.Collections
 
     #endregion
 
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      Add((T)value);
+      return _List.Count - 1;
+    }
+
+    bool IList.Contains(object value)
+    {
+      return Contains(value as T);
+    }
+
+    int IList.IndexOf(object value)
+    {
+      return IndexOf(value as T);
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      Insert(index, (T)value);
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    bool IList.IsReadOnly
+    {
+      get { return IsReadOnly; }
+    }
+
+    void IList.Remove(object value)
+    {
+      Remove(value as T);
+    }
+
+    object IList.this[int index]
+    {
+      get { return this[index]; }
+      set { this[index] = (T)value; }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)_List).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _List; }
+    }
+
+    #endregion
+
     #region Десериализация
 
     [OnDeserialized]
@@ -3380,7 +3517,7 @@ namespace FreeLibSet.Collections
   /// </summary>
   /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс IObjectWithCode</typeparam>
   [Serializable]
-  public class NamedCollection<T> : IEnumerable<T>, ICollection<T>, IReadOnlyObject, INamedValuesAccess
+  public class NamedCollection<T> : IEnumerable<T>, ICollection<T>, ICollection, IReadOnlyObject, INamedValuesAccess
     where T : class, IObjectWithCode
   {
     #region Конструкторы
@@ -3425,6 +3562,7 @@ namespace FreeLibSet.Collections
       _IgnoreCase = ignoreCase;
     }
 
+#if XXX // Не нужен. Убрано 09.08.2022
 
     /// <summary>
     /// Создает коллекцию и заполняет ее значениями из другой коллекции.
@@ -3436,13 +3574,15 @@ namespace FreeLibSet.Collections
       _Dict = new Dictionary<string, T>(srcDictionary);
     }
 
+#endif
+
     /// <summary>
     /// Создает коллекцию и заполняет ее значениями из списка.
     /// Регистр ключа учитывается
     /// </summary>
     /// <param name="srcCollection">Исходная коллекция</param>
     public NamedCollection(ICollection<T> srcCollection)
-      : this(srcCollection, false)
+      : this(srcCollection, false, false)
     {
     }
 
@@ -3452,10 +3592,23 @@ namespace FreeLibSet.Collections
     /// <param name="srcCollection">Исходная коллекция</param>
     /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
     public NamedCollection(ICollection<T> srcCollection, bool ignoreCase)
+      : this(srcCollection, ignoreCase, false)
+    {
+    }
+
+    /// <summary>
+    /// Создает коллекцию и заполняет ее значениями из списка.
+    /// </summary>
+    /// <param name="srcCollection">Исходная коллекция</param>
+    /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
+    /// <param name="isReadOnly">Если true, то коллекция сразу переводится в режим "Только чтение"</param>
+    public NamedCollection(ICollection<T> srcCollection, bool ignoreCase, bool isReadOnly)
       : this(srcCollection.Count, ignoreCase)
     {
       foreach (T item in srcCollection)
         Add(item);
+
+      _IsReadOnly = isReadOnly;
     }
 
 
@@ -3475,10 +3628,23 @@ namespace FreeLibSet.Collections
     /// <param name="srcCollection">Исходная коллекция</param>
     /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
     public NamedCollection(IEnumerable<T> srcCollection, bool ignoreCase)
+      : this(srcCollection, ignoreCase, false)
+    {
+    }
+
+    /// <summary>
+    /// Создает коллекцию и заполняет ее значениями из списка
+    /// </summary>
+    /// <param name="srcCollection">Исходная коллекция</param>
+    /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
+    /// <param name="isReadOnly">Если true, то коллекция сразу переводится в режим "Только чтение"</param>
+    public NamedCollection(IEnumerable<T> srcCollection, bool ignoreCase, bool isReadOnly)
       : this(ignoreCase)
     {
       foreach (T item in srcCollection)
         Add(item);
+
+      _IsReadOnly = isReadOnly;
     }
 
     #endregion
@@ -3503,7 +3669,7 @@ namespace FreeLibSet.Collections
       {
         T res;
         if (string.IsNullOrEmpty(code))
-          return default(T);
+          return null;
 
         if (IgnoreCase)
           code = code.ToUpperInvariant();
@@ -3511,7 +3677,7 @@ namespace FreeLibSet.Collections
         if (_Dict.TryGetValue(code, out res))
           return res;
         else
-          return default(T);
+          return null;
       }
     }
 
@@ -3629,12 +3795,18 @@ namespace FreeLibSet.Collections
     public void Add(T item)
     {
       CheckNotReadOnly();
+#if DEBUG
+      if (Object.ReferenceEquals(item, null))
+        throw new ArgumentNullException("item");
+#endif
 
-      string ItemCode = item.Code;
+      string itemCode = item.Code;
+      if (String.IsNullOrEmpty(itemCode))
+        throw new ArgumentException("Пустой Item.Code", "item"); // 09.08.2022
       if (IgnoreCase)
-        ItemCode = ItemCode.ToUpperInvariant();
+        itemCode = itemCode.ToUpperInvariant();
 
-      _Dict.Add(ItemCode, item);
+      _Dict.Add(itemCode, item);
     }
 
     /// <summary>
@@ -3655,6 +3827,9 @@ namespace FreeLibSet.Collections
     /// <returns></returns>
     public bool Contains(T item)
     {
+      if (Object.ReferenceEquals(item, null))
+        return false; // 09.08.2022
+
       string itemCode = item.Code;
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
@@ -3695,12 +3870,25 @@ namespace FreeLibSet.Collections
     public bool Remove(T item)
     {
       CheckNotReadOnly();
+      if (Object.ReferenceEquals(item, null))
+        return false; 
 
       string itemCode = item.Code;
+      if (String.IsNullOrEmpty(itemCode))
+        return false; 
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
 
-      return _Dict.Remove(itemCode);
+      T dictItem;
+      if (_Dict.TryGetValue(itemCode, out dictItem))
+      {
+        if (dictItem.Equals(item))
+        { 
+          _Dict.Remove(itemCode);
+          return true;
+        }
+      }
+      return false;
     }
 
     #endregion
@@ -3737,7 +3925,7 @@ namespace FreeLibSet.Collections
     {
       if (String.IsNullOrEmpty(code))
       {
-        value = default(T);
+        value = null;
         return false;
       }
 
@@ -3810,6 +3998,25 @@ namespace FreeLibSet.Collections
       }
 
       return a;
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      DataTools.CopyToArray(_Dict.Values, array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _Dict; }
     }
 
     #endregion
@@ -3890,6 +4097,7 @@ namespace FreeLibSet.Collections
     {
     }
 
+#if XXX // Убрано 09.08.2022
     /// <summary>
     /// Создает коллекцию и заполняет ее элементами из другой коллекции.
     /// Регистр символов кода учитывается.
@@ -3900,7 +4108,7 @@ namespace FreeLibSet.Collections
       : this(new NamedCollection<T>(srcDictionary))
     {
     }
-
+#endif
 
     /// <summary>
     /// Создает коллекцию и заполняет ее элементами из другого списка.

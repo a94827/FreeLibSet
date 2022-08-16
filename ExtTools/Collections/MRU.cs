@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
+using System.Collections;
 
 // Списки с автоматическим удалением последних элементов
 // (Most-Recently-Used)
@@ -29,9 +30,9 @@ namespace FreeLibSet.Collections
   /// 
   /// Используйте класс DictionaryWithMRU, если хранимые значения <typeparamref name="TValue"/> являются простыми.
   /// </summary>
-  /// <typeparam name="TKey">Тип ключа для доступа к элементам. Обычно, String</typeparam>
+  /// <typeparam name="TKey">Тип ключа для доступа к элементам. Чаще всего, String</typeparam>
   /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
-  public abstract class MRUObjectDictionary<TKey, TValue> : SimpleDisposableObject, IDictionary<TKey, TValue>
+  public abstract class MRUObjectDictionary<TKey, TValue> : SimpleDisposableObject, IDictionary<TKey, TValue>, IDictionary
   {
     #region Статический конструктор
 
@@ -301,7 +302,7 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        // Придется создавать собстенную коллекцию
+        // Придется создавать собственную коллекцию
         // Использовать следует список значений коллекции, а не MRUList,
         // чтобы порядок совпадал с массивом Keys
         LinkedListNode<KeyValuePair<TKey, TValue>>[] nodes = new LinkedListNode<KeyValuePair<TKey, TValue>>[_Dict.Count];
@@ -396,6 +397,130 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IDictionary Members
+
+    void IDictionary.Add(object key, object value)
+    {
+      throw new InvalidOperationException("Коллекция не поддерживает добавление элементов");
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    /// <summary>
+    /// Перечислитель-переходник
+    /// </summary>
+    private class DictionaryEnumerator : IDictionaryEnumerator
+    {
+      #region Конструктор
+
+      internal DictionaryEnumerator(LinkedList<KeyValuePair<TKey, TValue>>.Enumerator baseEnumerator)
+      {
+        _BaseEnumerator = baseEnumerator;
+      }
+
+      private readonly LinkedList<KeyValuePair<TKey, TValue>>.Enumerator _BaseEnumerator;
+
+      #endregion
+
+      #region IDictionaryEnumerator Members
+
+      public DictionaryEntry Entry
+      {
+        get { return new DictionaryEntry(_BaseEnumerator.Current.Key, _BaseEnumerator.Current.Value); }
+      }
+
+      public object Key
+      {
+        get { return _BaseEnumerator.Current.Key; }
+      }
+
+      public object Value
+      {
+        get { return _BaseEnumerator.Current.Value; }
+      }
+
+      #endregion
+
+      #region IEnumerator Members
+
+      object IEnumerator.Current
+      {
+        get { return Entry; }
+      }
+
+      public bool MoveNext()
+      {
+        return _BaseEnumerator.MoveNext();
+      }
+
+      void IEnumerator.Reset()
+      {
+        ((IEnumerator)_BaseEnumerator).Reset();
+      }
+
+      #endregion
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      return new DictionaryEnumerator(_MRU.GetEnumerator());
+    }
+
+    bool IDictionary.IsFixedSize
+    {
+      get { return false; }
+    }
+
+    bool IDictionary.IsReadOnly
+    {
+      get { return false; }
+    }
+
+    ICollection IDictionary.Keys
+    {
+      get { return _Dict.Keys; }
+    }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    ICollection IDictionary.Values
+    {
+      get { return (ICollection)Values; }
+    }
+
+    object IDictionary.this[object key]
+    {
+      get { return this[(TKey)key]; }
+      set { this[(TKey)key] = (TValue)value; }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)_MRU).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _MRU; }
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -408,7 +533,7 @@ namespace FreeLibSet.Collections
   /// Класс не является потокобезопасным.
   /// </summary>
   /// <typeparam name="T">Тип данных, хранимых в списке</typeparam>
-  public class ListWithMRU<T> : IList<T>
+  public class ListWithMRU<T> : IList<T>, IList
   {
     #region Конструкторы
 
@@ -684,7 +809,7 @@ namespace FreeLibSet.Collections
     #region Прочие методы основного списка
 
     /// <summary>
-    /// Возвращает массив элементов в порядке, соответствующем основному списке
+    /// Возвращает массив элементов в порядке, соответствующем основному в списке
     /// </summary>
     /// <returns>Массив элементов</returns>
     public T[] ToArray()
@@ -845,6 +970,91 @@ namespace FreeLibSet.Collections
     {
       if (_List.Count != _LinkedList.Count)
         throw new BugException("Длина внутренних списков различается");
+    }
+
+    #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      Add((T)value);
+      return _List.Count - 1;
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение <paramref name="value"/> можно приводить к типу <typeparamref name="T"/>.
+    /// Взято из List.cs в .Net Framework.
+    /// </summary>
+    /// <param name="value">Значение, переданное в метод нетипизированного интерфейса IList.</param>
+    /// <returns>true - возможность преобразования</returns>
+    private static bool IsCompatibleObject(object value)
+    {
+      // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+      // Note that default(T) is not equal to null for value types except when T is Nullable<U>. 
+      return ((value is T) || (value == null && default(T) == null));
+    }
+
+    bool IList.Contains(object value)
+    {
+      if (IsCompatibleObject(value))
+        return Contains((T)value);
+      else
+        return false;
+    }
+
+    int IList.IndexOf(object value)
+    {
+      if (IsCompatibleObject(value))
+        return IndexOf((T)value);
+      else
+        return -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      Insert(index, (T)value);
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return false; }
+    }
+
+    bool IList.IsReadOnly
+    {
+      get { return false; }
+    }
+
+    void IList.Remove(object value)
+    {
+      if (IsCompatibleObject(value))
+        Remove((T)value);
+    }
+
+    object IList.this[int index]
+    {
+      get { return this[index]; }
+      set { this[index] = (T)value; }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)_List).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _List; }
     }
 
     #endregion
@@ -1262,7 +1472,7 @@ namespace FreeLibSet.Collections
   /// "Старые" пары не удаляются из списка автоматически, если свойство MaxCapacity не установлено в явном виде.
   /// Класс не является потокобезопасным.
   /// </summary>
-  public class DictionaryWithMRU<TKey, TValue> : IDictionary<TKey, TValue>
+  public class DictionaryWithMRU<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary
   {
     #region Конструкторы
 
@@ -1603,7 +1813,7 @@ namespace FreeLibSet.Collections
     /// Коллекция ключей словаря. Коллекция доступна в режиме только для чтения.
     /// Порядок элементов коллекции при перечислении соответствует MRU-списку.
     /// </summary>
-    public struct KeyCollection : ICollection<TKey>
+    public struct KeyCollection : ICollection<TKey>, ICollection
     {
       #region Конструктор
 
@@ -1711,6 +1921,29 @@ namespace FreeLibSet.Collections
       }
 
       #endregion
+
+      #region ICollection Members
+
+      void ICollection.CopyTo(Array array, int index)
+      {
+        foreach (TKey key in _Owner._LinkedList)
+        {
+          array.SetValue(key, index);
+          index++;
+        }
+      }
+
+      bool ICollection.IsSynchronized
+      {
+        get { return false; }
+      }
+
+      object ICollection.SyncRoot
+      {
+        get { return _Owner._Dict; }
+      }
+
+      #endregion
     }
 
     /// <summary>
@@ -1780,7 +2013,7 @@ namespace FreeLibSet.Collections
     /// Коллекция значений словаря. Коллекция доступна в режиме только для чтения.
     /// Порядок элементов коллекции при перечислении соответствует MRU-списку.
     /// </summary>
-    public struct ValueCollection : ICollection<TValue>
+    public struct ValueCollection : ICollection<TValue>, ICollection
     {
       #region Конструктор
 
@@ -1836,7 +2069,7 @@ namespace FreeLibSet.Collections
         int cnt = 0;
         foreach (TKey key in _Owner._LinkedList)
         {
-          array[cnt] = _Owner._Dict[key].Value;
+          array[cnt + arrayIndex] = _Owner._Dict[key].Value; // испр. 05.08.2022
           cnt++;
         }
       }
@@ -1891,6 +2124,29 @@ namespace FreeLibSet.Collections
         TValue[] a = new TValue[_Owner.Count];
         CopyTo(a, 0);
         return a;
+      }
+
+      #endregion
+
+      #region ICollection Members
+
+      void ICollection.CopyTo(Array array, int index)
+      {
+        foreach (TKey key in _Owner._LinkedList)
+        {
+          array.SetValue(_Owner._Dict[key].Value, index);
+          index++;
+        }
+      }
+
+      bool ICollection.IsSynchronized
+      {
+        get { return false; }
+      }
+
+      object ICollection.SyncRoot
+      {
+        get { return _Owner._Dict; }
       }
 
       #endregion
@@ -1981,7 +2237,7 @@ namespace FreeLibSet.Collections
     /// Перечислимым элементом является пара "Код-Значение", а не один только код
     /// </summary>
     [Serializable]
-    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
+    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
     {
       #region Конструктор
 
@@ -2049,6 +2305,116 @@ namespace FreeLibSet.Collections
         // Так как вложенный перечислитель - структура,
         // нельзя вызывать метод интерфейса Reset(), т.к. из-за boxing'а метод будет вызван фактически для другого экземпляра объекта
         _En = _Owner._LinkedList.GetEnumerator();
+      }
+
+      #endregion
+
+      #region IDictionaryEnumerator Members
+
+      DictionaryEntry IDictionaryEnumerator.Entry
+      {
+        get 
+        {
+          TKey key = _En.Current;
+          TValue value = _Owner._Dict[key].Value;
+          return new DictionaryEntry(key, value);
+        }
+      }
+
+      object IDictionaryEnumerator.Key
+      {
+        get { return _En.Current; }
+      }
+
+      object IDictionaryEnumerator.Value
+      {
+        get { return _Owner._Dict[_En.Current].Value; }
+      }
+
+      #endregion
+    }
+
+
+    /// <summary>
+    /// Перечислитель, расширяющий LinkedList.GetEnumerator().
+    /// Перечислимым элементом является пара "Код-Значение", а не один только код
+    /// </summary>
+    [Serializable]
+    private class DictionaryEnumerator : IDictionaryEnumerator
+    {
+      #region Конструктор
+
+      internal DictionaryEnumerator(DictionaryWithMRU<TKey, TValue> owner)
+      {
+#if DEBUG
+        owner.DebugCheckCount();
+#endif
+        _Owner = owner;
+        _En = _Owner._LinkedList.GetEnumerator();
+      }
+
+      #endregion
+
+      #region Поля
+
+      private DictionaryWithMRU<TKey, TValue> _Owner;
+
+      private LinkedList<TKey>.Enumerator _En;
+
+      #endregion
+
+      #region IEnumerator<KeyValuePair<TKey,TValue>> Members
+
+      object System.Collections.IEnumerator.Current
+      {
+        get { return Entry; }
+      }
+
+      /// <summary>
+      /// Переход к следующему элементу
+      /// </summary>
+      /// <returns></returns>
+      public bool MoveNext()
+      {
+        return _En.MoveNext();
+      }
+
+      /// <summary>
+      /// Сброс перечислителя
+      /// </summary>
+      void System.Collections.IEnumerator.Reset()
+      {
+        // Так как вложенный перечислитель - структура,
+        // нельзя вызывать метод интерфейса Reset(), т.к. из-за boxing'а метод будет вызван фактически для другого экземпляра объекта
+        _En = _Owner._LinkedList.GetEnumerator();
+      }
+
+      #endregion
+
+      #region IDictionaryEnumerator Members
+
+      public DictionaryEntry Entry
+      {
+        get 
+        {
+          TKey key = _En.Current;
+          TValue value = _Owner._Dict[key].Value;
+          return new DictionaryEntry(key, value); 
+        }
+      }
+
+      public object Key
+      {
+        get { return _En.Current; }
+      }
+
+      public object Value
+      {
+        get 
+        {
+          TKey key = _En.Current;
+          return _Owner._Dict[key].Value;
+        }
       }
 
       #endregion
@@ -2150,6 +2516,73 @@ namespace FreeLibSet.Collections
         else
           return node.Value;
       }
+    }
+
+    #endregion
+
+    #region IDictionary Members
+
+    void IDictionary.Add(object key, object value)
+    {
+      Add((TKey)key, (TValue)value);
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      return new DictionaryEnumerator(this);
+    }
+
+    bool IDictionary.IsFixedSize
+    {
+      get { return false; }
+    }
+
+    bool IDictionary.IsReadOnly
+    {
+      get { return false; }
+    }
+
+    ICollection IDictionary.Keys { get { return Keys; } }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    ICollection IDictionary.Values { get { return Values; } }
+
+    object IDictionary.this[object key]
+    {
+      get { return this[(TKey)key]; }
+      set { this[(TKey)key] = (TValue)value; }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      foreach (KeyValuePair<TKey, TValue> pair in this)
+      {
+        array.SetValue(new DictionaryEntry(pair.Key, pair.Value), index);
+        index++;
+      }
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _Dict; }
     }
 
     #endregion

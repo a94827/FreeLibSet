@@ -1245,9 +1245,6 @@
     <None Include="Images\Main\Menu\Print.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\Main\Menu\Props.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Images\Main\Menu\Redo.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1474,6 +1471,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Controls\TreeViewAdvRes\Resources\uncheck.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Properties.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

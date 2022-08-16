@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Collections;
+using FreeLibSet.Core;
+using System.Collections;
 
 namespace ExtTools_tests.Collections
 {
   [TestFixture]
   public class DictionaryWithMRUTests
   {
+    #region Конструкторы
+
     [Test]
     public void Constructor_Empty()
     {
@@ -42,6 +46,10 @@ namespace ExtTools_tests.Collections
       Assert.IsNotNull(sut.MRULastKey, "MRULastKey");
     }
 
+    #endregion
+
+    #region MaxCapacity
+
     [Test]
     public void MaxCapacity()
     {
@@ -72,6 +80,10 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(2, sut.MaxCapacity, "MaxCapacity-5");
       Assert.AreEqual(2, sut.Count, "Count-5");
     }
+
+    #endregion
+
+    #region Add()
 
     [Test]
     public void Add_One()
@@ -178,6 +190,10 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual("AAA", sut.MRULastKey, "MRULastKey");
     }
 
+    #endregion
+
+    #region ContainsKey()
+
     [Test]
     public void ContainsKey()
     {
@@ -189,6 +205,10 @@ namespace ExtTools_tests.Collections
       Assert.IsTrue(sut.ContainsKey("BBB"), "BBB");
       Assert.IsFalse(sut.ContainsKey("CCC"), "CCC");
     }
+
+    #endregion
+
+    #region Remove()
 
     [Test]
     public void Remove_True()
@@ -219,6 +239,10 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual("BBB", sut.MRUFirstKey, "MRUFirstKey");
       Assert.AreEqual("AAA", sut.MRULastKey, "MRULastKey");
     }
+
+    #endregion
+
+    #region Доступ к элементам
 
     [Test]
     public void TryGetValue_True()
@@ -286,65 +310,153 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(3, sut["CCC"], "CCC");
     }
 
-    [Test]
-    public void Keys()
+    #endregion
+
+    #region Keys & Values
+
+    /// <summary>
+    /// Создает тестовый элемент с ключами "AAA", "CCC", "DDD" и значениями 1,3,4 соотвественно.
+    /// Причем к ключу "DDD" прикосновение было последнимм
+    /// </summary>
+    /// <returns></returns>
+    private static DictionaryWithMRU<string, int> CreateTestObject()
     {
       DictionaryWithMRU<string, int> sut = new DictionaryWithMRU<string, int>();
       sut.Add("AAA", 1);
       sut.Add("BBB", 2);
       sut.Add("CCC", 3);
+      sut.Add("DDD", 4);
       sut.Remove("BBB");
+      return sut;
+    }
 
-      Assert.AreEqual(2, sut.Keys.Count, "Keys.Count");
-      Assert.IsTrue(sut.Keys.Contains("AAA"), "Contains(AAA)");
-      Assert.IsFalse(sut.Keys.Contains("BBB"), "Contains(BBB)");
-      Assert.IsTrue(sut.Keys.Contains("CCC"), "Contains(CCC)");
+    [Test]
+    public void Keys_Count()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      Assert.AreEqual(3, sut.Keys.Count);
+    }
 
-      string[] wantedKeys = new string[] { "CCC", "AAA" };
+    [TestCase("AAA", true)]
+    [TestCase("BBB", false)]
+    [TestCase("CCC", true)]
+    [TestCase("DDD", true)]
+    public void Keys_Contains(string key, bool wantedRes)
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      Assert.AreEqual(wantedRes, sut.Keys.Contains(key));
+    }
 
-      string[] res1 = new string[2];
-      sut.Keys.CopyTo(res1, 0);
-      CollectionAssert.AreEqual(wantedKeys, res1, "CopyTo()");
+    [Test]
+    public void Keys_ToArray()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      string[] wanted = new string[] { "DDD", "CCC", "AAA" };
+      Assert.AreEqual(wanted, sut.Keys.ToArray());
+    }
 
-      string[] res2 = sut.Keys.ToArray();
-      CollectionAssert.AreEqual(wantedKeys, res2, "ToArray()");
+    [Test]
+    public void Keys_GetEnumerable()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
 
-      List<string> res3 = new List<string>();
+      List<string> lst = new List<string>();
       foreach (string x in sut.Keys)
-        res3.Add(x);
+        lst.Add(x);
 
-      CollectionAssert.AreEqual(wantedKeys, res3, "GetEnumerator()");
+      string[] wanted = new string[] { "DDD", "CCC", "AAA" };
+      CollectionAssert.AreEqual(wanted, lst.ToArray());
     }
 
     [Test]
-    public void Values()
+    public void Keys_CopyTo()
     {
-      DictionaryWithMRU<string, int> sut = new DictionaryWithMRU<string, int>();
-      sut.Add("AAA", 1);
-      sut.Add("BBB", 2);
-      sut.Add("CCC", 3);
-      sut.Remove("BBB");
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      string[] res = new string[5];
+      DataTools.FillArray<string>(res, "XXX");
+      sut.Keys.CopyTo(res, 1);
 
-      Assert.AreEqual(2, sut.Values.Count, "Values.Count");
-      Assert.IsTrue(sut.Values.Contains(1), "Contains(1)");
-      Assert.IsFalse(sut.Values.Contains(2), "Contains(2)");
-      Assert.IsTrue(sut.Values.Contains(3), "Contains(3)");
-
-      int[] wantedValues = new int[] { 3, 1 };
-
-      int[] res1 = new int[2];
-      sut.Values.CopyTo(res1, 0);
-      CollectionAssert.AreEqual(wantedValues, res1, "CopyTo()");
-
-      int[] res2 = sut.Values.ToArray();
-      CollectionAssert.AreEqual(wantedValues, res2, "ToArray()");
-
-      List<int> res3 = new List<int>();
-      foreach (int x in sut.Values)
-        res3.Add(x);
-
-      CollectionAssert.AreEqual(wantedValues, res3, "GetEnumerator()");
+      string[] wanted = new string[] { "XXX", "DDD", "CCC", "AAA", "XXX" };
+      CollectionAssert.AreEqual(wanted, res);
     }
+
+    [Test]
+    public void Keys_ICollection_CopyTo()
+    {
+      DictionaryWithMRU<int, int> sut = new DictionaryWithMRU<int, int>();
+      sut.Add(10, 1);
+      sut.Add(20, 2);
+      double[] res = new double[5];
+      ((ICollection)(sut.Keys)).CopyTo(res, 1);
+
+      double[] wanted = new double[] { 0.0, 20.0, 10.0, 0.0, 0.0 };
+      CollectionAssert.AreEqual(wanted, res);
+    }
+
+    [Test]
+    public void Values_Count()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      Assert.AreEqual(3, sut.Values.Count);
+    }
+
+    [TestCase(1, true)]
+    [TestCase(2, false)]
+    [TestCase(3, true)]
+    [TestCase(4, true)]
+    public void Values_Contains(int value, bool wantedRes)
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      Assert.AreEqual(wantedRes, sut.Values.Contains(value));
+    }
+
+    [Test]
+    public void Values_ToArray()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      int[] wanted = new int[] { 4, 3, 1 };
+      Assert.AreEqual(wanted, sut.Values.ToArray());
+    }
+
+    [Test]
+    public void Values_GetEnumerable()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+
+      List<int> lst = new List<int>();
+      foreach (int x in sut.Values)
+        lst.Add(x);
+
+      int[] wanted = new int[] { 4, 3, 1 };
+      CollectionAssert.AreEqual(wanted, lst.ToArray());
+    }
+
+    [Test]
+    public void Values_CopyTo()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      int[] res = new int[5];
+      DataTools.FillArray<int>(res, 666);
+      sut.Values.CopyTo(res, 1);
+
+      int[] wanted = new int[] { 666, 4, 3, 1, 666 };
+      CollectionAssert.AreEqual(wanted, res);
+    }
+
+    [Test]
+    public void Values_ICollection_CopyTo()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      float[] res = new float[6];
+      ((ICollection)(sut.Values)).CopyTo(res, 2); // метод должен уметь преобразовывать значения
+
+      float[] wanted = new float[] { 0f, 0f, 4f, 3f, 1f, 0f };
+      CollectionAssert.AreEqual(wanted, res);
+    }
+
+    #endregion
+
+    #region Clear()
 
     [Test]
     public void Clear()
@@ -365,17 +477,16 @@ namespace ExtTools_tests.Collections
       Assert.IsFalse(sut.ContainsKey("AAA"), "ContainsKey()");
     }
 
+    #endregion
+
+    #region Перечислитель
+
     [Test]
     public void GetEnumerator()
     {
-      DictionaryWithMRU<string, int> sut = new DictionaryWithMRU<string, int>();
-      sut.Add("AAA", 1);
-      sut.Add("BBB", 2);
-      sut.Add("CCC", 3);
-      sut.Remove("BBB");
-
-      string[] wantedKeys = new string[] { "CCC", "AAA" };
-      int[] wantedValues = new int[] { 3, 1 };
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      string[] wantedKeys = new string[] { "DDD", "CCC", "AAA" };
+      int[] wantedValues = new int[] { 4, 3, 1 };
 
       List<string> realKeys = new List<string>();
       List<int> realValues = new List<int>();
@@ -388,6 +499,72 @@ namespace ExtTools_tests.Collections
       CollectionAssert.AreEqual(wantedKeys, realKeys, "Keys");
       CollectionAssert.AreEqual(wantedValues, realValues, "Values");
     }
+
+    [Test]
+    public void IDictionary_GetEnumerator()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      string[] wantedKeys = new string[] { "DDD", "CCC", "AAA" };
+      int[] wantedValues = new int[] { 4, 3, 1 };
+
+      List<string> realKeys = new List<string>();
+      List<int> realValues = new List<int>();
+      foreach (object x in (IDictionary)sut)
+      {
+        Assert.IsInstanceOf<DictionaryEntry>(x, "DictionaryEntry type");
+        DictionaryEntry de = (DictionaryEntry)x; 
+        Assert.IsInstanceOf<string>(de.Key, "DictionaryEntry.Key type");
+        Assert.IsInstanceOf<int>(de.Value, "DictionaryEntry.Value type");
+
+        realKeys.Add((string)(de.Key));
+        realValues.Add((int)(de.Value));
+      }
+
+      CollectionAssert.AreEqual(wantedKeys, realKeys, "Keys");
+      CollectionAssert.AreEqual(wantedValues, realValues, "Values");
+    }
+
+    #endregion
+
+    #region CopyTo()
+
+    [Test]
+    public void CopyTo()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      KeyValuePair<string, int>[] a = new KeyValuePair<string, int>[6];
+      ((IDictionary<string, int>)sut).CopyTo(a, 2);
+
+      string[] wantedKeys = new string[6] { null, null, "DDD", "CCC", "AAA", null };
+      int[] wantedValues = new int[6] { 0, 0, 4, 3, 1, 0 };
+
+      for (int i = 0; i < a.Length; i++)
+      {
+        Assert.AreEqual(wantedKeys[i], a[i].Key, "Key[" + i.ToString() + "]");
+        Assert.AreEqual(wantedValues[i], a[i].Value, "Value[" + i.ToString() + "]");
+      }
+    }
+
+    [Test]
+    public void ICollection_CopyTo()
+    {
+      DictionaryWithMRU<string, int> sut = CreateTestObject();
+      DictionaryEntry[] a = new DictionaryEntry[6];
+      ((IDictionary)sut).CopyTo(a, 2);
+
+      string[] wantedKeys = new string[6] { null, null, "DDD", "CCC", "AAA", null };
+      int?[] wantedValues = new int?[6] { null, null, 4, 3, 1, null };
+
+      for (int i = 0; i < a.Length; i++)
+      {
+        Assert.AreEqual(wantedKeys[i], a[i].Key, "Key[" + i.ToString() + "]");
+        Assert.AreEqual(wantedValues[i], a[i].Value, "Value[" + i.ToString() + "]");
+      }
+    }
+
+    #endregion
+
+    #region Touch()
 
     [Test]
     public void Touch_True()
@@ -422,5 +599,7 @@ namespace ExtTools_tests.Collections
       CollectionAssert.AreEqual(wantedKeys, sut.Keys.ToArray(), "Keys");
       CollectionAssert.AreEqual(wantedValues, sut.Values.ToArray(), "Values");
     }
+
+    #endregion
   }
 }

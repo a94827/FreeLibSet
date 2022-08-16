@@ -42,6 +42,8 @@
     <Compile Include="Collections\DictionaryWithReadOnlyTests.cs" />
     <Compile Include="Collections\DummyListTests.cs" />
     <Compile Include="Collections\HistoryListTests.cs" />
+    <Compile Include="Collections\NamedCollectionTests.cs" />
+    <Compile Include="Collections\NamedListTests.cs" />
     <Compile Include="Collections\ObjectWithCodeComparerTests.cs" />
     <Compile Include="Collections\OrderSortedListTests.cs" />
     <Compile Include="Collections\SelectionFlagListTests.cs" />

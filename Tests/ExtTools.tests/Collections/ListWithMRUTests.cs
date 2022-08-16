@@ -3,12 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Collections;
+using System.Collections;
 
 namespace ExtTools_tests.Collections
 {
   [TestFixture]
   public class ListWithMRUTests
   {
+    #region Конструктор
+
     [Test]
     public void Constructor_IEnumerable()
     {
@@ -17,10 +20,14 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(GetFiveItems(), a);
     }
 
-    private string[] GetFiveItems()
+    private static string[] GetFiveItems()
     {
       return new string[] { "One", "Two", "Three", "Four", "Five" };
     }
+
+    #endregion
+
+    #region MaxCapacity
 
     [Test]
     public void MaxCapacity()
@@ -30,12 +37,17 @@ namespace ExtTools_tests.Collections
 
       Assert.AreEqual(new string[] { "One", "Two", "Three" }, sut.ToArray());
     }
+
     [Test]
     public void MaxCapacity_invalid()
     {
       ListWithMRU<string> sut = new ListWithMRU<string>();
       Assert.Throws(typeof(ArgumentOutOfRangeException), delegate() { sut.MaxCapacity = 0; });
     }
+
+    #endregion
+
+    #region IndexOf()
 
     [TestCase("One", Result = 0)]
     [TestCase("Five", Result = 4)]
@@ -45,6 +57,10 @@ namespace ExtTools_tests.Collections
       ListWithMRU<string> sut = new ListWithMRU<string>(GetFiveItems());
       return sut.IndexOf(item);
     }
+
+    #endregion
+
+    #region Insert()
 
     [Test]
     public void Insert_unlimited()
@@ -62,6 +78,10 @@ namespace ExtTools_tests.Collections
       sut.Insert(2, "Zero");
       Assert.AreEqual(5, sut.Count);
     }
+
+    #endregion
+
+    #region Remove(), RemoveAt()
 
     [Test]
     public void RemoveAt()
@@ -83,6 +103,10 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(false, res3);
     }
 
+    #endregion
+
+    #region Item
+
     [Test]
     public void Item_get()
     {
@@ -98,12 +122,16 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(new string[] { "One", "Two", "Zero", "Four", "Five" }, sut.ToArray());
     }
 
+    #endregion
+
+    #region Add()
+
     [Test]
     public void Add_unlimited()
     {
       ListWithMRU<string> sut = new ListWithMRU<string>(GetFiveItems());
       sut.Add("Zero");
-      Assert.AreEqual(new string[] { "One", "Two", "Three", "Four", "Five", "Zero"}, sut.ToArray());
+      Assert.AreEqual(new string[] { "One", "Two", "Three", "Four", "Five", "Zero" }, sut.ToArray());
     }
 
     public void Add_limited()
@@ -119,6 +147,10 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual("Three", sut.MRU.Last);
     }
 
+    #endregion
+
+    #region Clear()
+
     [Test]
     public void Clear()
     {
@@ -127,6 +159,10 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(0, sut.Count);
     }
 
+    #endregion
+
+    #region Contains()
+
     [TestCase("One", Result = true)]
     [TestCase("Zero", Result = false)]
     public bool Contains(string item)
@@ -134,6 +170,10 @@ namespace ExtTools_tests.Collections
       ListWithMRU<string> sut = new ListWithMRU<string>(GetFiveItems());
       return sut.Contains(item);
     }
+
+    #endregion
+
+    #region Touch()
 
     [Test]
     public void Touch()
@@ -145,6 +185,11 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual("Two", res2);
     }
 
+    #endregion
+
+    #region GetEnumerator()
+
+    [Test]
     public void MRUGetEnumerator()
     {
       string[] a = GetFiveItems();
@@ -159,5 +204,56 @@ namespace ExtTools_tests.Collections
 
       Assert.AreEqual(new string[] { "Five", "Four", "Three" }, lst.ToArray());
     }
+
+    #endregion
+
+    #region CopyTo()
+
+    [Test]
+    public void CopyTo()
+    {
+      ListWithMRU<int> sut = new ListWithMRU<int>();
+      sut.Add(1);
+      sut.Add(2);
+      sut.Add(3);
+
+      int[] a = new int[6];
+      sut.CopyTo(a, 2);
+
+      Assert.AreEqual(new int[] { 0, 0, 1, 2, 3, 0 }, a);
+    }
+
+    [Test]
+    public void ICollection_CopyTo()
+    {
+      ListWithMRU<int> sut = new ListWithMRU<int>();
+      sut.Add(1);
+      sut.Add(2);
+      sut.Add(3);
+
+      float[] a = new float[6];
+      ((ICollection)sut).CopyTo(a, 2); // должен выполнять преобразование
+
+      Assert.AreEqual(new float[] { 0f, 0f, 1f, 2f, 3f, 0f }, a);
+    }
+
+    #endregion
+
+    #region ToArray()
+
+    [Test]
+    public void ToArray()
+    {
+      string[] a = GetFiveItems();
+      ListWithMRU<string> sut = new ListWithMRU<string>();
+      sut.MaxCapacity = 3;
+      for (int i = 0; i < 5; i++)
+        sut.Add(a[i]);
+
+      string[] res = sut.ToArray();
+      Assert.AreEqual(new string[] { "Three", "Four", "Five" }, res);
+    }
+
+    #endregion
   }
 }

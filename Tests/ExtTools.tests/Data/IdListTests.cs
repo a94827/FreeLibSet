@@ -139,10 +139,10 @@ namespace ExtTools_tests.Data
     public void CopyTo()
     {
       IdList sut = new IdList(new Int32[] { 5, 1, 3 });
-      Int32[] a = new Int32[sut.Count];
-      sut.CopyTo(a, 0);
+      Int32[] a = new Int32[sut.Count+3];
+      sut.CopyTo(a, 2);
 
-      CollectionAssert.AreEquivalent(new Int32[] { 1, 3, 5 }, a);
+      CollectionAssert.AreEquivalent(new Int32[] { 0, 0, 1, 3, 5, 0 }, a);
     }
 
     [Test]

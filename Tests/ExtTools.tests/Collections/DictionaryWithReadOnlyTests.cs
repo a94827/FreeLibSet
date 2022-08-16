@@ -5,6 +5,7 @@ using NUnit.Framework;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.Remoting;
+using System.Collections;
 
 namespace ExtTools_tests.Collections
 {
@@ -136,6 +137,25 @@ namespace ExtTools_tests.Collections
     }
 
     [Test]
+    public void ICollection_CopyTo()
+    {
+      DictionaryWithReadOnly_RO sut = new DictionaryWithReadOnly_RO();
+      sut.SetReadOnly();
+      KeyValuePair<string, int>[] a = new KeyValuePair<string, int>[4];
+      ((ICollection)sut).CopyTo(a, 1);
+
+      // Порядок элементов в массиве не определен
+      Assert.IsNull(a[0].Key, "[0].Key");
+      Assert.AreEqual(0, a[0].Value, "[0].Value");
+
+      for (int i = 1; i < a.Length; i++)
+      {
+        int res = sut[a[i].Key];
+        Assert.AreEqual(res, a[i].Value, "[" + i.ToString() + "]");
+      }
+    }
+
+    [Test]
     public void Keys()
     {
       DictionaryWithReadOnly_RO sut = new DictionaryWithReadOnly_RO();
@@ -181,6 +201,33 @@ namespace ExtTools_tests.Collections
       {
         keys.Add(pair.Key);
         values.Add(pair.Value);
+      }
+
+      Assert.AreEqual(3, keys.Count, "Count");
+      for (int i = 0; i < keys.Count; i++)
+      {
+        Assert.AreEqual(values[i], sut[keys[i]], "[" + i.ToString() + "]");
+      }
+    }
+
+    [Test]
+    public void IDictionary_GetEnumerator()
+    {
+      DictionaryWithReadOnly_RO sut = new DictionaryWithReadOnly_RO();
+      sut.SetReadOnly();
+
+      List<string> keys = new List<string>();
+      List<int> values = new List<int>();
+
+      foreach (object x in (IDictionary)sut)
+      {
+        Assert.IsInstanceOf<DictionaryEntry>(x, "DictionaryEntry type");
+        DictionaryEntry de = (DictionaryEntry)x;
+
+        Assert.IsInstanceOf<string>(de.Key, "Key type");
+        Assert.IsInstanceOf<int>(de.Value, "Value type");
+        keys.Add((string)(de.Key));
+        values.Add((int)(de.Value));
       }
 
       Assert.AreEqual(3, keys.Count, "Count");

@@ -44,6 +44,72 @@ namespace FreeLibSet.Core
 
 namespace FreeLibSet.Collections
 {
+  /*
+   * Классы-списки.
+   * Классы должны реализовывать не только типизированный интерфейс IList<T>, но и "старый" IList. 
+   * Без него нельзя будет использовать список в качестве источника данных в DataGridView.DataSource.
+   * -  Некоторые свойства и методы не требуют отдельной реализации: Count, RemoveAt(), Clear(), IsReadOnly (обычно).
+   * - "Добавляющие" методы (IAdd(), Insert(), Item set) могут просто выполнять преобразование аргумента из object в T.
+   * - "Поисковые" методы (Contains(), IndexOf()) должны проверить, является ли тип преобразуемым в T. Если да, то 
+   *   выполнить обычный поиск, иначе вернуть отрицательный результат (false или (-1)).
+   *   Проверка преобразуемости зависит от ограничений типа T. В общем случае нужно использовать метод, как в стандартном классе List<T>:
+   *     private static bool IsCompatibleObject(object value) 
+   *     {
+   *       // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+   *       // Note that default(T) is not equal to null for value types except when T is Nullable<U>. 
+   *       return ((value is T) || (value == null && default(T) == null));
+   *     }
+   *   Если есть ограничение "where T:class", то проверка сводиться к "value is T".
+   *   Метод Remove() реализуется аналогично, как поисковые методы.
+   * - Свойства IsFixedSize и IsReadOnly возвращают основное свойство IsReadOnly. Теоретически может быть IsFixedSize=true и IsReadOnly=false,
+   *   тогда коллекция фактически является массивом.
+   * 
+   * 
+   * Также реализуется и интерфейс ICollection. 
+   * В нем некоторую сложность представляет метод 
+   * void ICollection.CopyTo(Array array, int index).
+   * Для него нельзя вызвать основной метод CopyTo(), преобразовав array к типу T[].
+   * Заполняемый массив может иметь произвольный тип данных (но быть одномерным и начинаться с 0). 
+   * При копировании выполняется преобразование значений
+   * Обычно следует вызывать метод ((ICollection)List).CopyTo(), если список используется в качестве основного хранилища.
+   * Если же есть в качестве источника есть только IList<T> (или любой IEnumerable), то можно использовать вспомогательный метод
+   * DataTools.CopyToArray()
+   */
+
+  /*
+   * Перечислители в словарях.
+   * Словари - это классы, реализующие интерфейсы IDictionary<TKey, TValue> и IDictionary
+   * 
+   * Классы-словари должны реализовывать перечислители, как это делает "образцовый"
+   * класс System.Collections.Generic.Dictionary<TKey, TValue>.
+   * 1. По возможности, реализовывать внутреннюю структуру Enumerator или использовать Dictionary.Enumerator. 
+   * Эта структура возвращается основным методом GetEnumerator(). Структура реализует интерфейс IEnumerator<KeyValuePair<TKey, TValue>>.
+   * Соответственно, должны реализовываться интерфейсы IEnumerator и IDisposable.
+   * Дополнительно, структура должна реализовывать интерфейс IDictionaryEnumerator.
+   * 
+   * 2. Реализуется метод
+   * IEnumerator<TKey, TValue> IEnumerable<TKey, TValue>.GetEnumerator().
+   * Он возвращает ту же структуру, что и п.1. 
+   * Если использование структуры невозможно, то используется явный метод:
+   * IEnumerator<TKey, TValue> GetEnumerator().
+   * 
+   * 3. Реализуется метод
+   * IEnumerator IEnumerable.GetEnumerator().
+   * Он возвращает ту же структуру, что и п.1. и п.2. Если словарь приведен к типу ICollection, то также используется этот перечислитель. 
+   * 
+   * 4. Реализуется метод
+   * IDictionaryEnumerator IDictionary.GetEnumerator().
+   * Он всегда возвращает другой перечислитель, который перебирает экземпляры DictionaryEntry.
+   * Нельзя использовать структуру п.1, несмотря на то, что она реализует IDictionaryEnumerator.
+   * Перебирается другой тип данных.
+   * Если нельзя "украсть" готовый перечислитель из словаря Dictionary, реализуется собственный
+   * private class DictionaryEnumerator:IDictionaryEnumerator {}.
+   * Нет необходимости реализовывать интерфейс IDisposable(), т.к. перечислитель (в том числе и базовый, полученный от стандартной коллекции)
+   * вряд ли хранит ресурсы, которые нужно освобождать.
+   * Метод void IEnumerator.Reset(), однако, следует реализовывать.
+   */
+
+
   /// <summary>
   /// Список пар "Код"-"Значение", отсортированный не по ключу, как SortedList, а по порядку добавления элементов
   /// Порядок пар, возвращаемых GetEnumerator(), также соответствует порядку добавления
@@ -51,7 +117,7 @@ namespace FreeLibSet.Collections
   /// <typeparam name="TKey">Тип ключа</typeparam>
   /// <typeparam name="TValue">Тип значения</typeparam>
   [Serializable]
-  public class OrderSortedList<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyObject
+  public class OrderSortedList<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -138,7 +204,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Реализация свойства Keys
     /// </summary>
-    public sealed class KeyCollection : IList<TKey>
+    public sealed class KeyCollection : IList<TKey>, ICollection
     {
       #region Защишенный конструктор
 
@@ -162,7 +228,7 @@ namespace FreeLibSet.Collections
       /// <returns></returns>
       public int IndexOf(TKey item)
       {
-        if (_Owner.Count>20)
+        if (_Owner.Count > 20)
         {
           if (!_Owner._Dict.ContainsKey(item))
             return -1;
@@ -335,6 +401,25 @@ namespace FreeLibSet.Collections
       }
 
       #endregion
+
+      #region ICollection Members
+
+      void ICollection.CopyTo(Array array, int index)
+      {
+        ((ICollection)(_Owner._List)).CopyTo(array, index);
+      }
+
+      bool ICollection.IsSynchronized
+      {
+        get { return false; }
+      }
+
+      object ICollection.SyncRoot
+      {
+        get { return _Owner._List; }
+      }
+
+      #endregion
     }
 
     #endregion
@@ -344,7 +429,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Реализация свойства Values
     /// </summary>
-    public sealed class ValueCollection : IList<TValue>
+    public sealed class ValueCollection : IList<TValue>, ICollection
     {
       #region Защишенный конструктор
 
@@ -596,6 +681,25 @@ namespace FreeLibSet.Collections
       }
 
       #endregion
+
+      #region ICollection Members
+
+      void ICollection.CopyTo(Array array, int index)
+      {
+        DataTools.CopyToArray(this, array, index);
+      }
+
+      bool ICollection.IsSynchronized
+      {
+        get { return false; }
+      }
+
+      object ICollection.SyncRoot
+      {
+        get { return _Owner._List; }
+      }
+
+      #endregion
     }
 
     #endregion
@@ -632,15 +736,15 @@ namespace FreeLibSet.Collections
     /// Компратор для сравнения ключей.
     /// Если не был задан в явном виде в конструкторе объекта, возвращается EqualityComparer.Default
     /// </summary>
-    public IEqualityComparer<TKey> Comparer 
-    { 
-      get 
+    public IEqualityComparer<TKey> Comparer
+    {
+      get
       {
         if (_Comparer == null)
           return EqualityComparer<TKey>.Default;
         else
-          return _Comparer; 
-      } 
+          return _Comparer;
+      }
     }
     private IEqualityComparer<TKey> _Comparer;
 
@@ -673,7 +777,7 @@ namespace FreeLibSet.Collections
           _Dict[key] = value;
         }
         else
-        { 
+        {
           // режим добавления
           Add(key, value);
         }
@@ -767,7 +871,7 @@ namespace FreeLibSet.Collections
       // 22.04.2022 Реализация изменена
 
       int p = Keys.IndexOf(key);
-      if (p>=0)
+      if (p >= 0)
       {
         _Dict.Remove(key);
         _List.RemoveAt(p);
@@ -874,7 +978,7 @@ namespace FreeLibSet.Collections
     /// Реализация перечислителя по парам "Ключ-Значение"
     /// </summary>
     [Serializable]
-    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
+    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
     {
       #region Конструктор
 
@@ -914,6 +1018,91 @@ namespace FreeLibSet.Collections
       object IEnumerator.Current
       {
         get { return Current; }
+      }
+
+      /// <summary>
+      /// Переход к следующей паре
+      /// </summary>
+      /// <returns></returns>
+      public bool MoveNext()
+      {
+        _CurrIndex++;
+        return _CurrIndex < _Owner._List.Count;
+      }
+
+      void IEnumerator.Reset()
+      {
+        _CurrIndex = -1;
+      }
+
+      #endregion
+
+      #region IDictionaryEnumerator Members
+
+      DictionaryEntry IDictionaryEnumerator.Entry
+      {
+        get { return new DictionaryEntry(_Owner._List[_CurrIndex], _Owner._Dict[_Owner._List[_CurrIndex]]); }
+      }
+
+      object IDictionaryEnumerator.Key
+      {
+        get { return _Owner._List[_CurrIndex]; }
+      }
+
+      object IDictionaryEnumerator.Value
+      {
+        get { return _Owner._Dict[_Owner._List[_CurrIndex]]; }
+      }
+
+      #endregion
+    }
+
+
+    /// <summary>
+    /// Реализация перечислителя по парам "Ключ-Значение"
+    /// </summary>
+    [Serializable]
+    private class DictionaryEnumerator : IDictionaryEnumerator
+    {
+      #region Конструктор
+
+      internal DictionaryEnumerator(OrderSortedList<TKey, TValue> owner)
+      {
+        _Owner = owner;
+        _CurrIndex = -1;
+      }
+
+      #endregion
+
+      #region Поля
+
+      private OrderSortedList<TKey, TValue> _Owner;
+
+      private int _CurrIndex;
+
+      #endregion
+
+      #region IDictionaryEnumerator Members
+
+      /// <summary>
+      /// Текущая пара
+      /// </summary>
+      public DictionaryEntry Entry
+      {
+        get { return new DictionaryEntry(_Owner._List[_CurrIndex], _Owner._Dict[_Owner._List[_CurrIndex]]); }
+      }
+
+      public object Key { get { return _Owner._List[_CurrIndex]; } }
+
+      public object Value { get { return _Owner._Dict[_Owner._List[_CurrIndex]]; } }
+
+      #endregion
+
+      #region IEnumerator Members
+
+      object IEnumerator.Current
+      {
+        get { return Entry; }
       }
 
       /// <summary>
@@ -1000,6 +1189,77 @@ namespace FreeLibSet.Collections
 
       _Keys = new KeyCollection(this);
       _Values = new ValueCollection(this);
+    }
+
+    #endregion
+
+    #region IDictionary Members
+
+    void IDictionary.Add(object key, object value)
+    {
+      Add((TKey)key, (TValue)value);
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      return new DictionaryEnumerator(this);
+    }
+
+    bool IDictionary.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    ICollection IDictionary.Keys
+    {
+      get { return Keys; }
+    }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    ICollection IDictionary.Values
+    {
+      get { return Values; }
+    }
+
+    object IDictionary.this[object key]
+    {
+      get
+      {
+        return this[(TKey)key];
+      }
+      set
+      {
+        this[(TKey)key] = (TValue)value;
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      for (int i = 0; i < _List.Count; i++)
+        array.SetValue(new KeyValuePair<TKey, TValue>(_List[i], _Dict[_List[i]]), index + i);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _List; }
     }
 
     #endregion
@@ -1218,7 +1478,9 @@ namespace FreeLibSet.Collections
     {
       lock (SyncRoot)
       {
-        ((ICollection)_Source).CopyTo(array, index);
+        // ((ICollection)_Source).CopyTo(array, index);
+        // Источник может и не реализовывать интерфейс ICollection
+        DataTools.CopyToArray(_Source, array, index);
       }
     }
 
@@ -1324,7 +1586,7 @@ namespace FreeLibSet.Collections
   /// </summary>
   /// <typeparam name="TKey">Тип ключа</typeparam>
   /// <typeparam name="TValue">Тип значения</typeparam>
-  public class SyncDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+  public class SyncDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary
   {
     #region Конструкторы
 
@@ -1708,6 +1970,94 @@ namespace FreeLibSet.Collections
       {
         return GetCopyDictionary().GetEnumerator();
       }
+    }
+
+    #endregion
+
+    #region IDictionary Members
+
+    void IDictionary.Add(object key, object value)
+    {
+      Add((TKey)key, (TValue)value);
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      lock (SyncRoot)
+      {
+        return ((IDictionary)GetCopyDictionary()).GetEnumerator();
+      }
+    }
+
+    bool IDictionary.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    ICollection IDictionary.Keys
+    {
+      get
+      {
+        lock (SyncRoot)
+        {
+          return GetCopyDictionary().Keys;
+        }
+      }
+    }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    ICollection IDictionary.Values
+    {
+      get
+      {
+        lock (SyncRoot)
+        {
+          return GetCopyDictionary().Values;
+        }
+      }
+    }
+
+    object IDictionary.this[object key]
+    {
+      get
+      {
+        return this[(TKey)key];
+      }
+      set
+      {
+        this[(TKey)key] = (TValue)value;
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      lock (SyncRoot)
+      {
+        ((ICollection)_Source).CopyTo(array, index);
+      }
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return true; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return SyncRoot; }
     }
 
     #endregion
@@ -2284,7 +2634,7 @@ namespace FreeLibSet.Collections
   /// Этот класс не является сериализуемым.
   /// </summary>
   /// <typeparam name="T">Тип значений в коллекции</typeparam>
-  public class ReadOnlyCollectionWrapper<T> : ICollection<T>
+  public class ReadOnlyCollectionWrapper<T> : ICollection<T>, ICollection
   {
     #region Конструктор
 
@@ -2390,8 +2740,42 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
-  }
 
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      // ((ICollection)_Source).CopyTo(array, index);
+      // Источник может и не реализовывать ICollection
+      DataTools.CopyToArray(_Source, array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get
+      {
+        ICollection src2 = _Source as ICollection;
+        if (src2 == null)
+          return false;
+        else
+          return src2.IsSynchronized;
+      }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get
+      {
+        ICollection src2 = _Source as ICollection;
+        if (src2 == null)
+          return _Source;
+        else
+          return src2.SyncRoot;
+      }
+    }
+
+    #endregion
+  }
 
   // Реализация синхронизированного интерфейса IList не имеет смысла
 #if XXXX
@@ -2658,7 +3042,7 @@ namespace FreeLibSet.Collections
   /// </summary>
   /// <typeparam name="T">Тип объектов, хранящихся в списке</typeparam>
   [Serializable]
-  public class ListWithReadOnly<T> : IList<T>, IReadOnlyObject
+  public class ListWithReadOnly<T> : IList<T>, IList, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -2988,6 +3372,108 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      CheckNotReadOnly();
+      return ((IList)_Source).Add(value);
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение <paramref name="value"/> можно приводить к типу <typeparamref name="T"/>.
+    /// Взято из List.cs в .Net Framework.
+    /// </summary>
+    /// <param name="value">Значение, переданное в метод нетипизированного интерфейса IList.</param>
+    /// <returns>true - возможность преобразования</returns>
+    private static bool IsCompatibleObject(object value)
+    {
+      // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+      // Note that default(T) is not equal to null for value types except when T is Nullable<U>. 
+      return ((value is T) || (value == null && default(T) == null));
+    }
+
+    bool IList.Contains(object value)
+    {
+      if (IsCompatibleObject(value))
+        return Contains((T)value);
+      else
+        return false;
+    }
+
+    int IList.IndexOf(object value)
+    {
+      if (IsCompatibleObject(value))
+        return IndexOf((T)value);
+      else
+        return -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      Insert(index, (T)value);
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    void IList.Remove(object value)
+    {
+      if (IsCompatibleObject(value))
+        Remove((T)value);
+    }
+
+    object IList.this[int index]
+    {
+      get
+      {
+        return this[index];
+      }
+      set
+      {
+        this[index] = (T)value;
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      //((IList)_Source).CopyTo(array, index); 
+      //_Source может и не реализовывать IList
+      DataTools.CopyToArray(_Source, array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get
+      {
+        ICollection src2 = _Source as ICollection;
+        if (src2 == null)
+          return false;
+        else
+          return src2.IsSynchronized;
+      }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get
+      {
+        ICollection src2 = _Source as ICollection;
+        if (src2 == null)
+          return _Source;
+        else
+          return src2.SyncRoot;
+      }
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -2998,7 +3484,7 @@ namespace FreeLibSet.Collections
   /// <typeparam name="TKey">Тип ключей</typeparam>
   /// <typeparam name="TValue">Тип значений</typeparam>
   [Serializable]
-  public class DictionaryWithReadOnly<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyObject
+  public class DictionaryWithReadOnly<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -3292,6 +3778,91 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IDictionary Members
+
+    void IDictionary.Add(object key, object value)
+    {
+      Add((TKey)key, (TValue)value);
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      return ((IDictionary)_Source).GetEnumerator();
+    }
+
+    bool IDictionary.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    ICollection IDictionary.Keys
+    {
+      get { return (ICollection)(_Source.Keys); }
+    }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    ICollection IDictionary.Values
+    {
+      get { return (ICollection)(_Source.Values); }
+    }
+
+    object IDictionary.this[object key]
+    {
+      get
+      {
+        return this[(TKey)key];
+      }
+      set
+      {
+        this[(TKey)key] = (TValue)value;
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      //((ICollection)_Source).CopyTo(array, index);
+      DataTools.CopyToArray(_Source, array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get
+      {
+        ICollection src2 = _Source as ICollection;
+        if (src2 == null)
+          return false;
+        else
+          return src2.IsSynchronized;
+      }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get
+      {
+        ICollection src2 = _Source as ICollection;
+        if (src2 == null)
+          return _Source;
+        else
+          return src2.SyncRoot;
+      }
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -3300,7 +3871,7 @@ namespace FreeLibSet.Collections
   /// После установки свойства ReadOnly=true, список становится потокобезопасным
   /// </summary>
   [Serializable]
-  public class SingleScopeList<T> : IList<T>, IReadOnlyObject
+  public class SingleScopeList<T> : IList<T>, IList, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -3821,6 +4392,98 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      T value2 = (T)value;
+
+      if (_Dict.ContainsKey(value2))
+        return IndexOf(value2);
+
+      Add(value2);
+      return _List.Count - 1;
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение <paramref name="value"/> можно приводить к типу <typeparamref name="T"/>.
+    /// Взято из List.cs в .Net Framework.
+    /// </summary>
+    /// <param name="value">Значение, переданное в метод нетипизированного интерфейса IList.</param>
+    /// <returns>true - возможность преобразования</returns>
+    private static bool IsCompatibleObject(object value)
+    {
+      // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+      // Note that default(T) is not equal to null for value types except when T is Nullable<U>. 
+      return ((value is T) || (value == null && default(T) == null));
+    }
+
+    bool IList.Contains(object value)
+    {
+      if (IsCompatibleObject(value))
+        return Contains((T)value);
+      else
+        return false;
+    }
+
+    int IList.IndexOf(object value)
+    {
+      if (IsCompatibleObject(value))
+        return IndexOf((T)value);
+      else
+        return -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      this.Insert(index, (T)value);
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    void IList.Remove(object value)
+    {
+      if (IsCompatibleObject(value))
+        Remove((T)value);
+    }
+
+    object IList.this[int index]
+    {
+      get
+      {
+        return this[index];
+      }
+      set
+      {
+        this[index] = (T)value;
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      //((ICollection)_List).CopyTo(array, index);
+      DataTools.CopyToArray(_List, array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _List; }
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -3830,7 +4493,7 @@ namespace FreeLibSet.Collections
   /// Является надстройкой над SortedList, используя только ключи.
   /// </summary>
   [Serializable]
-  public class SingleScopeSortedList<T> : IList<T>, IReadOnlyObject
+  public class SingleScopeSortedList<T> : IList<T>, IList, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -4238,6 +4901,93 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      Add((T)value);
+      return _List.IndexOfKey((T)value);
+    }
+
+    /// <summary>
+    /// Возвращает true, если значение <paramref name="value"/> можно приводить к типу <typeparamref name="T"/>.
+    /// Взято из List.cs в .Net Framework.
+    /// </summary>
+    /// <param name="value">Значение, переданное в метод нетипизированного интерфейса IList.</param>
+    /// <returns>true - возможность преобразования</returns>
+    private static bool IsCompatibleObject(object value)
+    {
+      // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+      // Note that default(T) is not equal to null for value types except when T is Nullable<U>. 
+      return ((value is T) || (value == null && default(T) == null));
+    }
+
+    bool IList.Contains(object value)
+    {
+      if (IsCompatibleObject(value))
+        return Contains((T)value);
+      else
+        return false;
+    }
+
+    int IList.IndexOf(object value)
+    {
+      if (IsCompatibleObject(value))
+        return _List.IndexOfKey((T)value);
+      else
+        return -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      throw new Exception("The method or operation is not implemented.");
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    void IList.Remove(object value)
+    {
+      if (IsCompatibleObject(value))
+        Remove((T)value);
+    }
+
+    object IList.this[int index]
+    {
+      get
+      {
+        return this[index];
+      }
+      set
+      {
+        throw new Exception("The method or operation is not implemented.");
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      //((ICollection)(_List.Keys)).CopyTo(array, index);
+      DataTools.CopyToArray(_List.Keys, array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _List; }
+    }
+
+    #endregion
   }
 
 #if XXX // Убрано 24.04.2022
@@ -4251,7 +5001,7 @@ namespace FreeLibSet.Collections
   [Serializable]
   public class Hashtable<TKey, TValue> : Dictionary<TKey, TValue>
   {
-    #region Конструкторы
+  #region Конструкторы
 
     /// <summary>
     /// Создает пустую таблицу
@@ -4319,7 +5069,7 @@ namespace FreeLibSet.Collections
 
     #endregion
 
-    #region Доступ к элементам
+  #region Доступ к элементам
 
     /// <summary>
     /// Доступ к значению
@@ -4361,7 +5111,7 @@ namespace FreeLibSet.Collections
   /// <typeparam name="TKey">Ключ</typeparam>
   /// <typeparam name="TValue">Значение</typeparam>
   [Serializable]
-  public class Hashtable<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyObject
+  public class Hashtable<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -4681,6 +5431,76 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IDictionary Members
+
+    void IDictionary.Add(object key, object value)
+    {
+      Add((TKey)key, (TValue)value);
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      return ((IDictionary)_Items).GetEnumerator();
+    }
+
+    bool IDictionary.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    ICollection IDictionary.Keys
+    {
+      get { return _Items.Keys; }
+    }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    ICollection IDictionary.Values
+    {
+      get { return _Items.Values; }
+    }
+
+    object IDictionary.this[object key]
+    {
+      get
+      {
+        return this[(TKey)key];
+      }
+      set
+      {
+        this[(TKey)key] = (TValue)value;
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)_Items).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _Items; }
+    }
+
+    #endregion
   }
 
 
@@ -4692,7 +5512,7 @@ namespace FreeLibSet.Collections
   /// <typeparam name="TKey">Тип ключа</typeparam>
   /// <typeparam name="TValue">Тип значения</typeparam>
   [Serializable]
-  public class BidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyObject
+  public class BidirectionalDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyObject
   {
     #region Конструкторы
 
@@ -5105,6 +5925,76 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IDictionary Members
+
+    void IDictionary.Add(object key, object value)
+    {
+      Add((TKey)key, (TValue)value);
+    }
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      return ((IDictionary)_MainDict).GetEnumerator();
+    }
+
+    bool IDictionary.IsFixedSize
+    {
+      get { return IsReadOnly; }
+    }
+
+    ICollection IDictionary.Keys
+    {
+      get { return _MainDict.Keys; }
+    }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    ICollection IDictionary.Values
+    {
+      get { return _MainDict.Values; }
+    }
+
+    object IDictionary.this[object key]
+    {
+      get
+      {
+        return this[(TKey)key];
+      }
+      set
+      {
+        this[(TKey)key] = (TValue)value;
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)_MainDict).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _MainDict; }
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -5116,7 +6006,7 @@ namespace FreeLibSet.Collections
   /// <typeparam name="T">Тип хранимых значений</typeparam>
   [Serializable]
   public class RingBuffer<T> : List<T>,
-    IList<T> // интерфейс должен быть объявлен заново, чтобы учесть новые методы
+    IList<T>, IList // интерфейс должен быть объявлен заново, чтобы учесть новые методы
   {
     #region Конструктор
 
@@ -5201,6 +6091,18 @@ namespace FreeLibSet.Collections
     }
 
     #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      Add((T)value);
+      return Count - 1;
+    }
+
+    // за остальное пусть отвечает базовый класс
+
+    #endregion
   }
 
   /// <summary>
@@ -5213,7 +6115,7 @@ namespace FreeLibSet.Collections
   /// Коллекция не может содержать ссылки null.
   /// </summary>
   /// <typeparam name="T">Тип объектов, на которые хранятся ссылки</typeparam>
-  public class WeakReferenceCollection<T> : ICollection<T>
+  public class WeakReferenceCollection<T> : ICollection<T>, ICollection
     where T : class
   {
     #region Конструктор
@@ -5467,6 +6369,26 @@ namespace FreeLibSet.Collections
       } // lock
 
       return lst.ToArray();
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      T[] a = ToArray();
+      ((ICollection)a).CopyTo(array, index);
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return true; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return _Refs; }
     }
 
     #endregion
@@ -5733,7 +6655,7 @@ namespace FreeLibSet.Collections
   /// При попытке добавления элементов генерируется исключение
   /// </summary>
   /// <typeparam name="T">Произвольный тип элементов списка</typeparam>
-  public class DummyList<T> : IList<T>, IReadOnlyObject
+  public class DummyList<T> : IList<T>, IList, IReadOnlyObject
   {
     #region IList<T> Members
 
@@ -5869,6 +6791,76 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       throw new ObjectReadOnlyException();
+    }
+
+    #endregion
+
+    #region IList Members
+
+    int IList.Add(object value)
+    {
+      throw new NotSupportedException();
+    }
+
+    bool IList.Contains(object value)
+    {
+      return false;
+    }
+
+    int IList.IndexOf(object value)
+    {
+      return -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      throw new NotSupportedException();
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return true; }
+    }
+
+    void IList.Remove(object value)
+    {
+      // ничего не делает
+    }
+
+    void IList.RemoveAt(int index)
+    {
+      throw new NotSupportedException();
+    }
+
+    object IList.this[int index]
+    {
+      get
+      {
+        throw new NotSupportedException();
+      }
+      set
+      {
+        throw new NotSupportedException();
+      }
+    }
+
+    #endregion
+
+    #region ICollection Members
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      // ничего не делает
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return this; }
     }
 
     #endregion

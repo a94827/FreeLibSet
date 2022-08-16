@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Collections;
+using System.Collections;
 
 namespace ExtTools_tests.Collections
 {
@@ -44,6 +45,15 @@ namespace ExtTools_tests.Collections
     }
 
     [Test]
+    public void ICollection_CopyTo()
+    {
+      IList<int> sut = new DummyList<int>();
+      float[] a = new float[0];
+      ((ICollection)sut).CopyTo(a, 0);
+      Assert.Pass();
+    }
+
+    [Test]
     public void Contains()
     {
       IList<int> sut = new DummyList<int>();
@@ -64,6 +74,18 @@ namespace ExtTools_tests.Collections
 
       List<int> lst = new List<int>();
       foreach (int item in sut)
+        lst.Add(item);
+
+      Assert.AreEqual(0, lst.Count);
+    }
+
+    [Test]
+    public void ICollection_GetEnumerator()
+    {
+      IList<int> sut = new DummyList<int>();
+
+      List<object> lst = new List<object>();
+      foreach (object item in (ICollection)sut)
         lst.Add(item);
 
       Assert.AreEqual(0, lst.Count);

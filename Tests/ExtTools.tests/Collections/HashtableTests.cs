@@ -5,6 +5,7 @@ using NUnit.Framework;
 using FreeLibSet.Collections;
 using FreeLibSet.Remoting;
 using FreeLibSet.Core;
+using System.Collections;
 
 namespace ExtTools_tests.Collections
 {
@@ -166,7 +167,7 @@ namespace ExtTools_tests.Collections
     {
       Hashtable<string, int> sut = CreateTestObject(useComparer);
       Assert.AreEqual(2, sut.Keys.Count, "Keys.Count");
-      Assert.AreEqual(2, sut.Values.Count, "Keys.Count");
+      Assert.AreEqual(2, sut.Values.Count, "Values.Count");
 
       List<string> keys = new List<string>();
       List<int> values = new List<int>();
@@ -177,8 +178,13 @@ namespace ExtTools_tests.Collections
       foreach (int value in sut.Values)
         values.Add(value);
 
+      ValidateTestKeysAndValues(keys, values);
+    }
+
+    private static void ValidateTestKeysAndValues(List<string> keys, List<int> values)
+    {
       Assert.AreEqual(2, keys.Count, "Enum Keys count");
-      Assert.AreEqual(2, values.Count, "Enum Keys count");
+      Assert.AreEqual(2, values.Count, "Enum Values count");
 
       int p1 = keys.IndexOf("Aaa");
       Assert.IsTrue(p1 >= 0, "Key #1 found");
@@ -188,6 +194,76 @@ namespace ExtTools_tests.Collections
       Assert.IsTrue(p2 >= 0, "Key #2 found");
       Assert.AreEqual(2, values[p2], "Value #2");
     }
+
+    [Test]
+    public void Keys_CopyTo([Values(true, false)]bool useComparer)
+    {
+      Hashtable<string, int> sut = CreateTestObject(useComparer);
+      List<string> keys = new List<string>();
+      foreach (string key in sut.Keys)
+        keys.Add(key);
+
+      string[] res = new string[5];
+      sut.Keys.CopyTo(res, 2);
+
+      string[] wanted = new string[] { null, null, keys[0], keys[1], null };
+      Assert.AreEqual(wanted, res);
+    }
+
+#if XXX // Свойства Keys и Values реализованы через класс Dictionary<TKey, TValue> и не поддерживают преобразование значений
+    
+    [Test]
+    public void Keys_ICollection_CopyTo()
+    {
+      Hashtable<int, int> sut = new Hashtable<int, int>();
+      sut.Add(1, 10);
+      sut.Add(2, 20);
+      List<int> keys = new List<int>();
+      foreach (int key in sut.Keys)
+        keys.Add(key);
+
+      float[] res = new float[5];
+      ((ICollection)(sut.Keys)).CopyTo(res, 2); // должен выполнять преобразование
+
+      float[] wanted = new float[] { 0f, 0f, (float)(keys[0]), (float)(keys[1]), 0f };
+      Assert.AreEqual(wanted, res);
+    }
+
+#endif
+
+    [Test]
+    public void Values_CopyTo([Values(true, false)]bool useComparer)
+    {
+      Hashtable<string, int> sut = CreateTestObject(useComparer);
+      List<int> values = new List<int>();
+      foreach (int value in sut.Values)
+        values.Add(value);
+
+      int[] res = new int[5];
+      sut.Values.CopyTo(res, 2);
+
+      int[] wanted = new int[] { 0, 0, values[0], values[1], 0};
+      Assert.AreEqual(wanted, res);
+    }
+
+#if XXX // Свойства Keys и Values реализованы через класс Dictionary<TKey, TValue> и не поддерживают преобразование значений
+   
+    [Test]
+    public void Values_ICollection_CopyTo()
+    {
+      Hashtable<string, int> sut = CreateTestObject(false);
+      List<int> values = new List<int>();
+      foreach (int value in sut.Values)
+        values.Add(value);
+
+      float[] res = new float[5];
+      ((ICollection)(sut.Values)).CopyTo(res, 2); // должен выполнять преобразование
+
+      float[] wanted = new float[] { 0f, 0f, (float)(values[0]), (float)(values[1]), 0f };
+      Assert.AreEqual(wanted, res);
+    }
+    
+#endif
 
     #endregion
 
@@ -227,6 +303,26 @@ namespace ExtTools_tests.Collections
       }
     }
 
+    [Test]
+    public void IDictionary_CopyTo([Values(true, false)]bool useComparer)
+    {
+      Hashtable<string, int> sut = CreateTestObject(useComparer);
+      DictionaryEntry[] a = new DictionaryEntry[3];
+      ((IDictionary)sut).CopyTo(a, 1);
+      Assert.IsNull(a[0].Key, "[0].Key");
+      Assert.IsNull(a[0].Value, "a[0].Value");
+
+      // Порядок скопированных элементов не гарантирован
+      for (int i = 1; i < a.Length; i++)
+      {
+        Assert.IsInstanceOf<string>(a[i].Key, "Key type");
+        Assert.IsInstanceOf<int>(a[i].Value, "Value type");
+
+        string key = (string)(a[i].Key);
+        Assert.AreEqual(sut[key], a[i].Value, "#" + i.ToString());
+      }
+    }
+
     [TestCase(false, "Aaa", true, 1)]
     [TestCase(false, "AAA", false, 0)]
     [TestCase(true, "AAA", true, 1)]
@@ -254,9 +350,28 @@ namespace ExtTools_tests.Collections
         keys.Add(pair.Key);
         values.Add(pair.Value);
       }
-      Assert.AreEqual(2, keys.Count, "Count");
-      Assert.IsTrue(keys.IndexOf("Aaa") >= 0, "#1");
-      Assert.IsTrue(keys.IndexOf("Bbb") >= 0, "#2");
+
+      ValidateTestKeysAndValues(keys, values);
+    }
+
+    [Test]
+    public void IDictionary_GetEnumerator([Values(true, false)]bool useComparer)
+    {
+      Hashtable<string, int> sut = CreateTestObject(useComparer);
+      List<string> keys = new List<string>();
+      List<int> values = new List<int>();
+      foreach (object x in (IDictionary)sut)
+      {
+        Assert.IsInstanceOf<DictionaryEntry>(x, "DictionaryEntry type");
+        DictionaryEntry de = (DictionaryEntry)x;
+
+        Assert.IsInstanceOf<string>(de.Key, "Key type");
+        Assert.IsInstanceOf<int>(de.Value, "Value type");
+        keys.Add((string)(de.Key));
+        values.Add((int)(de.Value));
+      }
+
+      ValidateTestKeysAndValues(keys, values);
     }
 
     #endregion
@@ -293,7 +408,7 @@ namespace ExtTools_tests.Collections
     #region Сериализация
 
     [Test]
-    public void Serialization( [Values(false, true)] bool useReadOnly)
+    public void Serialization([Values(false, true)] bool useReadOnly)
     {
       Hashtable_RO<int, string> sut1 = new Hashtable_RO<int, string>();
       sut1.Add(1, "AAA");

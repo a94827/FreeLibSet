@@ -986,6 +986,31 @@ namespace FreeLibSet.Core
       return cnt;
     }
 
+    /// <summary>
+    /// Копирование произвольной коллекции в одномерный массив.
+    /// Для записи значения вызывается метод Array.SetValue(), который может выполнять преобразование значений к нужному типу.
+    /// Этот метод, в основном, предназначен для реализации метода ICollection.CopyTo() в коллекциях.
+    /// Все значения <paramref name="source"/> должны поместиться в массиве <paramref name="array"/>.
+    /// См. справку для метода System.Collections.ICollection.CopyTo(Array, Int32).
+    /// В случае, если источник не помещается в массив, то после выброса исключения, массив <paramref name="array"/> может оказаться заполненным частично
+    /// </summary>
+    /// <param name="source">Перечислимый источник данных. Не может быть null</param>
+    /// <param name="array">Заполняемый массив. Должен быть одномерным и начинаться с 0.</param>
+    /// <param name="arrayIndex">Индекс первой заполняемой позиции в массиве <paramref name="array"/>.
+    /// Должен быть в диапазоне от 0 до <paramref name="array"/>.Length - 1</param>
+    public static void CopyToArray(IEnumerable source, Array array, int arrayIndex)
+    {
+      if (source == null)
+        throw new ArgumentNullException("source");
+      if (array==null)
+        throw new ArgumentNullException("array");
+      foreach (object item in source)
+      {
+        array.SetValue(item, arrayIndex);
+        arrayIndex++;
+      }
+    }
+
 #if XXX // Есть CreateArray()
     /// <summary>
     /// Создает массив из объекта ICollection, используя CopyTo().

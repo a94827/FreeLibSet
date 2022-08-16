@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Core;
+using System.Collections;
 
 namespace ExtTools_tests.Core
 {
@@ -709,6 +710,56 @@ namespace ExtTools_tests.Core
       string[][] a = new string[][] { new string[] { "AAA", null }, new string[] { null, "BBB" }, new string[] { "CCC", "DDD" } };
       Assert.AreEqual(4, DataTools.GetArrayNotNullCount(a, true), "GetArrayNotNullCount()");
       Assert.AreEqual(2, DataTools.GetArrayNullCount(a, true), "GetArrayNotNullCount()");
+    }
+
+    #endregion
+
+    #region CopyToArray()
+
+    [Test]
+    public void CopyToArray_ok()
+    {
+      List<int> lst=new List<int>();
+      lst.Add(1);
+      lst.Add(2);
+      lst.Add(3);
+      IEnumerable source=lst;
+
+      float[] array = new float[6];
+
+      DataTools.CopyToArray(source, array, 2);
+
+      Assert.AreEqual(new float[] { 0f, 0f, 1f, 2f, 3f, 0 }, array);
+    }
+
+    [Test]
+    public void CopyToArray_zero_length()
+    {
+      List<int> lst = new List<int>();
+      IEnumerable source = lst;
+
+      float[] array = new float[0];
+
+      DataTools.CopyToArray(source, array, 0);
+
+      Assert.Pass();
+    }
+
+    [Test]
+    public void CopyToArray_exceptions()
+    {
+      List<int> lst = new List<int>();
+      lst.Add(1);
+      lst.Add(2);
+      lst.Add(3);
+      IEnumerable source = lst;
+
+      int[] array = new int[6];
+
+      Assert.Catch(delegate() { DataTools.CopyToArray(null, array, 0); }, "source is null");
+      Assert.Catch(delegate() { DataTools.CopyToArray(source, null, 0); }, "array is null");
+      Assert.Catch(delegate() { DataTools.CopyToArray(source, array, -1); }, "arrayIndex < 0");
+      Assert.Catch(delegate() { DataTools.CopyToArray(source, array, 4); }, "arrayIndex is too big");
     }
 
     #endregion
