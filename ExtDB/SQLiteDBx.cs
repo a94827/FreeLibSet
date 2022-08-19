@@ -73,7 +73,7 @@ namespace FreeLibSet.Data.SQLite
 
       if (firstCall && UseInvariantStringFunctions)
         InitInvariantStringFunctions();
-    }                                                                                   
+    }
 
     /// <summary>
     /// Создание подключение к базе данных.
@@ -354,6 +354,11 @@ namespace FreeLibSet.Data.SQLite
       get { return SQLiteFactory.Instance; }
     }
 
+    /// <summary>
+    /// Обрезка текстовых полей не требуется для SQLite
+    /// </summary>
+    public override bool UseTrimEnd { get { return false; } }
+
     #endregion
 
     #region Загрузка библиотек доступа к SQLite
@@ -374,7 +379,7 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
-    #region Инициализация функций          
+    #region Инициализация функций
 
     /// <summary>
     /// Если true (по умолчанию), то будут заменены функции UPPER(s) и LOWER().
@@ -385,14 +390,14 @@ namespace FreeLibSet.Data.SQLite
     {
       get { return _UseInvariantStringFunctions; }
       set
-      {                                                         
+      {
         if (_FirstFlagValue != 0)
           throw new InvalidOperationException("Уже был вызов конструктора");
         _UseInvariantStringFunctions = value;
       }
-    }                                                       
+    }
     private static bool _UseInvariantStringFunctions = true;
-                                                                                                     
+
     /// <summary>
     /// Инициализация функций UPPER() и LOWER().
     /// Вызывается в конце работы конструктора при создании первой базы данных

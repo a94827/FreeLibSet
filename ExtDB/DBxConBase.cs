@@ -917,6 +917,8 @@ namespace FreeLibSet.Data
         // Заменяем DBNull на null
         if (res[i] is DBNull)
           res[i] = null;
+        else
+          res[i] = PrepareReturnedValue(res[i]); // 18.08.2022 
       }
       return res;
     }
@@ -1031,8 +1033,7 @@ namespace FreeLibSet.Data
       info.OrderBy = new DBxOrder(maxColumnName, ListSortDirection.Descending); // по убыванию
       info.MaxRecordCount = 1; // одна строка
 
-      DbDataReader rdr = ReaderSelect(info);
-      try
+      using (DbDataReader rdr = ReaderSelect(info))
       {
         object[] res = DoGetValuesFromReader(rdr);
         if (res == null)
@@ -1040,11 +1041,6 @@ namespace FreeLibSet.Data
         else
           return res;
       }
-      finally
-      {
-        rdr.Close();
-      }
-
     }
 
     /// <summary>
@@ -1115,18 +1111,13 @@ namespace FreeLibSet.Data
       info.OrderBy = new DBxOrder(minColumnName, ListSortDirection.Ascending); // 27.11.2019 - по возрастанию
       info.MaxRecordCount = 1; // одна строка
 
-      DbDataReader rdr = ReaderSelect(info); // одна строка
-      try
+      using (DbDataReader rdr = ReaderSelect(info)) // одна строка
       {
         object[] res = DoGetValuesFromReader(rdr);
         if (res == null)
           return new object[columnNames.Count];
         else
           return res;
-      }
-      finally
-      {
-        rdr.Close();
       }
     }
 
@@ -1477,7 +1468,7 @@ namespace FreeLibSet.Data
         {
           if (rdr.IsDBNull(0))
             continue;
-          lst.Add(rdr.GetDateTime(0));
+          lst.Add(DateTime.SpecifyKind(rdr.GetDateTime(0), DateTimeKind.Unspecified));
         }
       }
       return lst.ToArray();
@@ -1639,7 +1630,7 @@ namespace FreeLibSet.Data
       DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
       SetValues(tableName, id, new DBxColumns(columnNames), values);
     }
-    
+
     /// <summary>
     /// Записать значения полей. Выполняет SQL-запрос "UPDATE".
     /// Ссылочные поля (с точками) не поддерживаются.
@@ -3363,7 +3354,27 @@ namespace FreeLibSet.Data
 
       TraceSqlEnd(ti, null);
 
+      // 18.08.2022
+      res = PrepareReturnedValue(res);
+
       return res;
+    }
+
+    /// <summary>
+    /// Подготовка одиночного возвращаемого значения: удаление концевых пробелов и замена формата DateTime
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    protected object PrepareReturnedValue(object value)
+    {
+      if (value is String)
+      {
+        if (DB.UseTrimEnd)
+          value = ((String)value).TrimEnd();
+      }
+      else if (value is DateTime)
+        value = DateTime.SpecifyKind((DateTime)value, DateTimeKind.Unspecified);
+      return value;
     }
 
     /// <summary>
@@ -3462,8 +3473,11 @@ namespace FreeLibSet.Data
 
       TraceSqlEnd(ti, null);
 
+      if (DB.UseTrimEnd)
+        DataTools.TrimEnd(table); // 18.08.2022
       // При передаче клиенту предотвращаем преобразование времени из-за разных часовых поясов
       SerializationTools.SetUnspecifiedDateTimeMode(table);
+      table.AcceptChanges(); // 18.08.2022
       return table;
     }
 

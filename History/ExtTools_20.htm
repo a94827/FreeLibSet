@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-08-09T18:07:14.646000000"/>
+	<meta name="changed" content="2022-08-19T15:53:25.622000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -538,12 +539,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -579,7 +580,7 @@
 			<p lang="en-US" align="center">325</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">15.07.2022-09.08.2022</p>
+			<p lang="en-US" align="center">15.07.2022-19.08.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. TableAndIdList </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v210p1"><span lang="en-US">v.210
@@ -696,20 +697,17 @@
 			возникать ошибочное состояние объекта.</span> <span lang="ru-RU">Убран
 			конструктор</span> <span lang="en-US">NamedList&lt;T&gt;</span><span lang="ru-RU">,
 			принимающий </span><span lang="en-US">IDictionary&lt;string, T&gt;.</span></p>
-			<p><span lang="en-US">14. </span><span lang="ru-RU">Изменения в</span><span lang="ru-RU">
-			</span><span lang="en-US">NamedCollection&lt;T&gt; </span><span lang="ru-RU">и
+			<p><span lang="en-US">14. </span><span lang="ru-RU">Изменения в</span>
+			<span lang="en-US">NamedCollection&lt;T&gt; </span><span lang="ru-RU">и
 			</span><span lang="en-US">SyncNamedCollection&lt;T&gt; (<a href="ExtTools_11.htm#v118p1">v.118
 			</a></span><a href="ExtTools_11.htm#v118p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">:</span></p>
-			<p><span lang="ru-RU">- У</span><span lang="ru-RU">браны
-			конструкторы, принимающие </span><span lang="en-US">IDictionary&lt;string,
-			T&gt;. </span>
+			<p><span lang="ru-RU">- Убраны конструкторы, принимающие
+			</span><span lang="en-US">IDictionary&lt;string, T&gt;. </span>
 			</p>
-			<p><span lang="ru-RU">- Новые к</span><span lang="ru-RU">онструкторы
-			</span><span lang="en-US">NamedCollection&lt;T&gt; </span><span lang="ru-RU">с
-			аргументом </span><span lang="en-US">isReadOnly, </span><span lang="ru-RU">как
-			в </span><span lang="en-US">NamedList&lt;T&gt;.</span><span lang="en-US">
-			</span>
-			</p>
+			<p><span lang="ru-RU">- Новые конструкторы </span><span lang="en-US">NamedCollection&lt;T&gt;
+			</span><span lang="ru-RU">с аргументом </span><span lang="en-US">isReadOnly,
+			</span><span lang="ru-RU">как в </span><span lang="en-US">NamedList&lt;T&gt;.</span>
+						</p>
 			<p><span lang="ru-RU">- Метод </span><span lang="en-US">NamedCollection&lt;T&gt;.Add()
 			</span><span lang="ru-RU">проверяет, что код элемента - не пустая
 			строка.</span></p>
@@ -718,6 +716,15 @@
 			если </span><span lang="en-US">item=null</span></p>
 			<p><span lang="en-US">- </span><span lang="ru-RU">Изменена
 			реализация метода </span><span lang="en-US">Remove(&lt;T&gt;).</span></p>
+			<p><span lang="en-US">15. </span><span lang="ru-RU">Исправлена
+			реализация </span><span lang="en-US">MathOpParser.CreateExpression()</span><span lang="ru-RU">
+			(</span><a href="ExtTools_11.htm#v072p13"><span lang="en-US">v.</span><span lang="ru-RU">7</span><span lang="en-US">2
+			</span><span lang="ru-RU">п.13</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Терминальные лексемы для разбора
+			выражения справа от знака бинарной операции учитывают приоритеты
+			операций. Теперь выражение &quot;5+3</span><span lang="en-US">&gt;0</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+			</span><span lang="ru-RU">возвращает </span><span lang="en-US">true,
+			</span><span lang="ru-RU">а не 6.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

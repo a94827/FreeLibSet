@@ -5,7 +5,9 @@
 	<title>Изменения в модуле ExtDB.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-04-19T10:14:41.480000000"/>
+	<meta name="changed" content="2022-08-18T14:21:18.279000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -148,6 +150,24 @@
 		</td>
 	</tr>
 	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="325" sdnum="1049;">
+			<p lang="en-US" align="center">325</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">18.08.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Свойство </span>DBx.UseTrimEnd
+			(<span lang="ru-RU">возвращает </span>true <span lang="ru-RU">для
+			всех баз данных, кроме </span>SQLiteDBx<span lang="ru-RU">).</span>
+			<span lang="ru-RU">Метод </span> DBxConBase.SQLExecuteDataTable()
+			<span lang="ru-RU">вызывает </span>DataTools.TrimEnd() <span lang="ru-RU">для
+			удаления лишних пробелов в строковых полях.</span> <span lang="ru-RU">Выделен
+			защищенный метод </span>DBxConBase.PrepareReturnedValue() <span lang="ru-RU">для
+			обработки одиночных значений</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="315" sdnum="1049;">
 			<p align="center">315</p>
 		</td>
@@ -156,8 +176,8 @@
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
-			</span><span lang="en-US">DBxTableStructList</span><span lang="en-US">.GetRequired()
-			(<a href="ExtTools_11.htm#v181p2">v.181 </a></span><a href="ExtTools_11.htm#v181p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
+			</span><span lang="en-US">DBxTableStructList.GetRequired() (<a href="ExtTools_11.htm#v181p2">v.181
+			</a></span><a href="ExtTools_11.htm#v181p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">выбрасывают исключение
 			</span><span lang="en-US">KeyNotFoundExeption, </span><span lang="ru-RU">а
 			не </span><span lang="en-US">ArgumentException.</span></p>

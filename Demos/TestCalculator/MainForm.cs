@@ -6,9 +6,12 @@ using System.Drawing;
 using System.Text;
 using System.Diagnostics;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Parsing;
-using AgeyevAV;
+using FreeLibSet.Forms;
+using FreeLibSet.Parsing;
+using FreeLibSet.Core;
+using FreeLibSet.Forms.Diagnostics;
+
+#pragma warning disable 0618 // "Obsolete" warning for VsaEngine
 
 namespace TestCalculator
 {
@@ -37,56 +40,56 @@ namespace TestCalculator
 
     #region Объект для вычисления
 
-    ParserList TheParser;
+    private ParserList _TheParser;
 
-    ParsingData TheParsingData;
+    private ParsingData _TheParsingData;
 
-    IExpression TheExpression;
+    private IExpression _TheExpression;
 
     private void InitParser()
     {
-      TheParser = new ParserList();
+      _TheParser = new ParserList();
 
       FunctionParser fp = new FunctionParser();
       ExcelFunctions.AddFunctions(fp);
-      TheParser.Add(fp);
+      _TheParser.Add(fp);
 
-      TheParser.Add(new MathOpParser());
-      TheParser.Add(new SpaceParser());
+      _TheParser.Add(new MathOpParser());
+      _TheParser.Add(new SpaceParser());
       NumConstParser ncp = new NumConstParser();
       ncp.AllowSingle = false;
       ncp.AllowDecimal = false;
-      TheParser.Add(ncp);
-      TheParser.Add(new StrConstParser());
+      _TheParser.Add(ncp);
+      _TheParser.Add(new StrConstParser());
 
-      TestEng = Microsoft.JScript.Vsa.VsaEngine.CreateEngine();
+      _TestEng = Microsoft.JScript.Vsa.VsaEngine.CreateEngine();
     }
 
     #endregion
 
     #region Вычисление
 
-    void edExpr_TextChanged(object Sender, EventArgs Args)
+    void edExpr_TextChanged(object sender, EventArgs args)
     {
       try
       {
-        string Expr = edExpr.Text;
+        string expr = edExpr.Text;
 
         edResType.Text = String.Empty;
         lblCheckRes.Text = String.Empty;
 
-        TheExpression = null; // очищаем
-        TheParsingData = new ParsingData(Expr);
-        TheParser.Parse(TheParsingData);
-        if (TheParsingData.FirstErrorToken != null)
+        _TheExpression = null; // очищаем
+        _TheParsingData = new ParsingData(expr);
+        _TheParser.Parse(_TheParsingData);
+        if (_TheParsingData.FirstErrorToken != null)
         {
-          edRes.Text = TheParsingData.FirstErrorToken.ErrorMessage.Value.Text;
+          edRes.Text = _TheParsingData.FirstErrorToken.ErrorMessage.Value.Text;
           return;
         }
 
         try
         {
-          TheExpression = TheParser.CreateExpression(TheParsingData);
+          _TheExpression = _TheParser.CreateExpression(_TheParsingData);
         }
         catch (Exception e2)
         {
@@ -94,13 +97,13 @@ namespace TestCalculator
           return;
         }
 
-        if (TheParsingData.FirstErrorToken != null)
+        if (_TheParsingData.FirstErrorToken != null)
         {
-          edRes.Text = TheParsingData.FirstErrorToken.ErrorMessage.Value.Text;
+          edRes.Text = _TheParsingData.FirstErrorToken.ErrorMessage.Value.Text;
           return;
         }
 
-        if (TheExpression == null)
+        if (_TheExpression == null)
         {
           edRes.Text = "Нельзя вычислить";
           return;
@@ -109,17 +112,17 @@ namespace TestCalculator
         object res;
         try
         {
-          res = TheExpression.Calc();
+          res = _TheExpression.Calc();
         }
         catch (Exception e2)
         {
-          edRes.Text = "Ошибка вычисления. "+e2.Message;
+          edRes.Text = "Ошибка вычисления. " + e2.Message;
           return;
         }
 
-        if (TheParsingData.FirstErrorToken != null)
+        if (_TheParsingData.FirstErrorToken != null)
         {
-          edRes.Text = TheParsingData.FirstErrorToken.ErrorMessage.Value.Text;
+          edRes.Text = _TheParsingData.FirstErrorToken.ErrorMessage.Value.Text;
           return;
         }
 
@@ -133,7 +136,7 @@ namespace TestCalculator
 
         #region Проверка
 
-        CheckResult(Expr, res);
+        CheckResult(expr, res);
 
         #endregion
       }
@@ -143,29 +146,31 @@ namespace TestCalculator
       }
     }
 
-    void efpDebug_Click(object Sender, EventArgs Args)
+    void efpDebug_Click(object sender, EventArgs args)
     {
-      DebugTools.DebugParsingData(TheParsingData, "Парсинг", TheExpression);
+      DebugTools.DebugParsingData(_TheParsingData, "Парсинг", _TheExpression);
     }
 
     #endregion
 
     #region Для проверки
 
-    Microsoft.JScript.Vsa.VsaEngine TestEng;
+    Microsoft.JScript.Vsa.VsaEngine _TestEng;
 
     [DebuggerStepThrough]
-    private void CheckResult(string Expr, object res)
+    private void CheckResult(string expr, object res)
     {
       if (res == null)
         return;
       try
       {
+        if (res is Boolean)
+          res = (bool)res ? 1 : 0;
         if (res is Int32 || DataTools.IsFloatType(res.GetType()))
         {
-          string Expr2 = Expr.Replace(',', '.').Replace(" ", "."); // вычислитель использует точку, а не запятую
-          Expr2 = Expr2.Replace(';', ','); // разделитель аргументов
-          object res2 = Microsoft.JScript.Eval.JScriptEvaluate(Expr2, TestEng);
+          string expr2 = expr.Replace(',', '.').Replace(" ", "."); // вычислитель использует точку, а не запятую
+          expr2 = expr2.Replace(';', ','); // разделитель аргументов
+          object res2 = Microsoft.JScript.Eval.JScriptEvaluate(expr2, _TestEng);
           if (DataTools.GetDouble(res2) != DataTools.GetDouble(res)) // double более "широкий" тип, чем decimal
           {
             lblCheckRes.Text = "Должно быть " + DataTools.GetString(res2);
@@ -188,3 +193,4 @@ namespace TestCalculator
     #endregion
   }
 }
+#pragma warning restore 0618

@@ -1191,6 +1191,13 @@ namespace FreeLibSet.Parsing
     /// <param name="data">Данные парсинга</param>
     public void Parse(ParsingData data)
     {
+      if (!_BinaryOps.IsReadOnly)
+      {
+        InitEndTokens();
+        _BinaryOps.SetReadOnly();
+        _UnaryOps.SetReadOnly();
+      }
+
       if (data.GetChar(data.CurrPos) == '(')
       {
         data.Tokens.Add(new Token(data, this, "(", data.CurrPos, 1));
@@ -1248,36 +1255,21 @@ namespace FreeLibSet.Parsing
         return null;
       }
 
-      // TODO: 01.03.2017 использовать приоритеты для разграничения EndTokens
-
       // 07.09.2015 Лексемы, которые могут завершать правую часть выражение.
       // Например, для выражения "a+b*c" правым выражением будет "b*c"?
       // а для "a+b-c" будет "b", а "-с" вычисляется отдельно
-      string[] endTokens;
-      switch (opToken.TokenType)
+
+      string[] endTokens = data.EndTokens;
+
+      if (leftExpression != null)
       {
-        case "+":
-        case "-":
-          endTokens = new string[] { "+", "-" };
-          break;
-        case "*":
-        case "/":
-          endTokens = new string[] { "*", "/", "+", "-" };
-          break;
-        case "=":
-        case "<>":
-        case "<":
-        case ">":
-        case "<=":
-        case ">=":
-          endTokens = new string[] { "=", "<>", "<", ">", "<=", ">=" }; // 22.03.2016 ???
-          break;
-        default:
-          throw new BugException("Неизвестный знак операции \"" + opToken.TokenType + "\"");
+        int thisPriority = BinaryOps[opToken.TokenType].Priority;
+        if (endTokens == null)
+          endTokens = _EndTokensDict[thisPriority];
+        else
+          endTokens = DataTools.MergeArrays<string>(_EndTokensDict[thisPriority], endTokens);
       }
 
-      if (data.EndTokens != null)
-        endTokens = DataTools.MergeArrays<string>(endTokens, data.EndTokens);
       IExpression rightExpession = data.Parsers.CreateSubExpression(data, endTokens); // получение правого выражения
       if (rightExpession == null)
       {
@@ -1326,6 +1318,37 @@ namespace FreeLibSet.Parsing
       // Обычный порядок операции
       return new BinaryExpression(opToken, leftExpression, rightExpession, BinaryOps[opToken.TokenType].CalcMethod);
     }
+
+    #region EndTokens()
+
+    /// <summary>
+    /// Завершающие лексемы.
+    /// Ключ - приоритет текущей операции
+    /// Значение - массив лексем с таким же или меньшим приоритетом
+    /// </summary>
+    private Dictionary<int, string[]> _EndTokensDict;
+
+    private void InitEndTokens()
+    {
+      _EndTokensDict = new Dictionary<int, string[]>();
+
+      for (int i = 0; i < _BinaryOps.Count; i++)
+      {
+        int priority = _BinaryOps[i].Priority;
+        if (!_EndTokensDict.ContainsKey(priority))
+        {
+          List<string> ops = new List<string>();
+          for (int j = 0; j < _BinaryOps.Count; j++)
+          {
+            if (_BinaryOps[j].Priority <= priority)
+              ops.Add(_BinaryOps[j].Op);
+          }
+          _EndTokensDict.Add(priority, ops.ToArray());
+        }
+      }
+    }
+
+    #endregion
 
     /// <summary>
     /// Получить приоритет для операции
@@ -1976,7 +1999,7 @@ namespace FreeLibSet.Parsing
   /// </summary>
   /// <param name="sender"></param>
   /// <param name="args"></param>
-  public delegate void FunctionArgExpressionsCreatedEventHandler (object sender, FunctionArgExpressionsCreatedEventArgs args);
+  public delegate void FunctionArgExpressionsCreatedEventHandler(object sender, FunctionArgExpressionsCreatedEventArgs args);
 
   #endregion
 

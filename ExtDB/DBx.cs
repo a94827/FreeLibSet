@@ -1034,6 +1034,12 @@ namespace FreeLibSet.Data
     public virtual long DBSizeLimit { get { return DBSizeUnlimited; } }
 
     /// <summary>
+    /// Если true, то при извлечении строковых значений необходимо выполнять обрезание конечных пробелов.
+    /// </summary>
+    public virtual bool UseTrimEnd { get { return true; } }
+
+
+    /// <summary>
     /// Возвращает объект DBxManager для данного типа базы данных.
     /// Если менеджера нет, свойство возвращает null.
     /// </summary>
