@@ -1754,7 +1754,7 @@ namespace FreeLibSet.Data.Docs
       }
 
       // if (SubSet.FMainObj != this)
-      //   throw new ArgumentException("Заменяющий дочерений набор не был создан из текущего набора поддокументов");
+      //   throw new ArgumentException("Заменяющий дочерний набор не был создан из текущего набора поддокументов");
 
       GetTableReady();
 
