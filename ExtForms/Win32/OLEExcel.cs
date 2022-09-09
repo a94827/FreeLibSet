@@ -254,6 +254,7 @@ namespace FreeLibSet.OLE.Excel
         0x008080, // 13
         0xC0C0C0, // 14
         0x808080, // 15
+
         0x9999FF, // 16
         0x993366, // 17
         0xFFFFCC, // 18
@@ -271,7 +272,7 @@ namespace FreeLibSet.OLE.Excel
         0x008080, // 30
         0x0000FF, // 31
         0x00CCFF, // 32
-        0xCCFFFF, // 33
+        0xCCFFFF, // 33  // Чем отличается от [19]?
         0xCCFFCC, // 34
         0xFFFF99, // 35
         0x99CCFF, // 36

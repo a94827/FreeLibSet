@@ -1126,6 +1126,16 @@ namespace FreeLibSet.DBF
           hasMemoFile = true;
           _Format = DbfFileFormat.dBase4;
           break;
+        case 0x30: // 08.09.2022 Visual FoxPro без мемо. 
+          _Format = DbfFileFormat.dBase4;
+          hasMemoFile = false;
+          // В текущей реализации можно только читать, но не записывать файлы
+          break;
+
+          // не знаю, как обрабатывать
+        //case 0x31: // Visual FoxPro с автоинкрементом 
+        //case 0x32: // Visual FoxPro с полями типов Varchar и/или Varbinary
+
         default:
           throw new DbfFileFormatException("Не DBF-файл");
       }
@@ -1840,7 +1850,7 @@ namespace FreeLibSet.DBF
       }
     }
 
-    #endregion              
+    #endregion
 
     #region Поля для поиска записи
 
