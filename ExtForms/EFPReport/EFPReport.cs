@@ -363,11 +363,11 @@ namespace FreeLibSet.Forms
       {
         if (page == null)
           throw new ArgumentNullException("page");
-        int PageIndex = _Items.IndexOf(page);
-        if (PageIndex < 0)
+        int pageIndex = _Items.IndexOf(page);
+        if (pageIndex < 0)
           return false;
 
-        RemoveAt(PageIndex);
+        RemoveAt(pageIndex);
 
         return true;
       }
@@ -453,7 +453,6 @@ namespace FreeLibSet.Forms
       #endregion
 
       #region Дополнительные страницы
-
 
       /// <summary>
       /// Поиск дополнительной страницы без активации.
@@ -942,7 +941,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Выбрана закладка табличного просмотра
     /// </summary>
-    void TheTabControl_SelectedIndexChanged(object Sender, EventArgs Args)
+    void TheTabControl_SelectedIndexChanged(object sender, EventArgs args)
     {
       if (_TheTabControl.SelectedIndex < 0 || _TheTabControl.SelectedIndex >= Pages.Count)
         return;
@@ -1172,8 +1171,8 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     private bool PerformQueryExtParams()
     {
-      EFPReportExtParamsHelper Helper = new EFPReportExtParamsHelper(this);
-      return Helper.PerformQueryParams();
+      EFPReportExtParamsHelper paramsHelper = new EFPReportExtParamsHelper(this);
+      return paramsHelper.PerformQueryParams();
     }
 
     private void SafeReadConfig(CfgPart cfg)
@@ -1221,7 +1220,7 @@ namespace FreeLibSet.Forms
     /// В отличие от IsExecuting, После построения отчета, когда форма выведена на экран, свойство возвращает false
     /// </summary>
     public bool InsideBuildReport { get { return _InsideBuildReport; } }
-    private bool _InsideBuildReport = false;
+    private bool _InsideBuildReport;
 
     private void DoBuildReport()
     {
@@ -2060,13 +2059,18 @@ namespace FreeLibSet.Forms
           return;
         _ImageKey = value;
         if (_TabPage != null)
-          _TabPage.ImageKey = value;
+        {
+          //_TabPage.ImageKey = value;
+          if (String.IsNullOrEmpty(value))
+            _TabPage.ImageIndex = -1;
+          else
+            _TabPage.ImageIndex = EFPApp.MainImages.ImageList.Images.IndexOfKey(value); // 27.09.2022
+        }
         if (ParentPage != null)
           ParentPage.OnChildImageKeyChanged();
       }
     }
     private string _ImageKey;
-
 
     /// <summary>
     /// Установка свойства ImageKey
@@ -2134,7 +2138,14 @@ namespace FreeLibSet.Forms
         {
           _TabPage.Text = Title;
           _TabPage.ToolTipText = ToolTipText;
-          _TabPage.ImageKey = _ImageKey;
+
+          //_TabPage.ImageKey = _ImageKey;
+          // 27.09.2022. Почему-то установка свойства TabPage.ImageKey перестала работать, если страница еще не присоединена к просмотру
+          // Когда испортилось - непонятно
+          if (String.IsNullOrEmpty(_ImageKey))
+            _TabPage.ImageIndex = -1;
+          else
+            _TabPage.ImageIndex = EFPApp.MainImages.ImageList.Images.IndexOfKey(_ImageKey); 
         }
       }
     }
@@ -2420,8 +2431,8 @@ namespace FreeLibSet.Forms
       }
 
       // Создаем локальную таблицу фильтров
-      DataGridView ghFilt=new DataGridView();
-      ghFilt.Dock=DockStyle.Top;
+      DataGridView ghFilt = new DataGridView();
+      ghFilt.Dock = DockStyle.Top;
       ghFilt.TabIndex = 0;
       _ParentControl.Controls.Add(ghFilt);
       _TheFilterGridProvider = new EFPReportFilterGridView(_BaseProvider, ghFilt);
@@ -2635,15 +2646,15 @@ namespace FreeLibSet.Forms
     /// <param name="index">Индекс страницы в пределах набора страниц отчета верхнего уровня
     /// или дочерних страниц в EFPReportTabControlPage</param>
     /// <returns></returns>
-    EFPReportPage this[int index] { get;}
+    EFPReportPage this[int index] { get; }
 
     /// <summary>
     /// Поиск страницы в группе.
     /// Рекурсивный поиск не выполняется
     /// </summary>
-    /// <param name="Page">Искомая страница</param>
+    /// <param name="page">Искомая страница</param>
     /// <returns>Индекс страницы или (-1)</returns>
-    int IndexOf(EFPReportPage Page);
+    int IndexOf(EFPReportPage page);
 
     /// <summary>
     /// Получить список страниц в виде массива
@@ -2696,9 +2707,9 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Доступ к странице по индексу
       /// </summary>
-      /// <param name="Index">Индекс страницы в диапазоне от 0 до Count-1</param>
+      /// <param name="index">Индекс страницы в диапазоне от 0 до Count-1</param>
       /// <returns>Дочерняя страница</returns>
-      public EFPReportPage this[int Index] { get { return _Items[Index]; } }
+      public EFPReportPage this[int index] { get { return _Items[index]; } }
       private List<EFPReportPage> _Items;
 
       /// <summary>
@@ -2983,7 +2994,6 @@ namespace FreeLibSet.Forms
       _TheTabControl.TabPages.Add(newPage);
       page.AssignParentControl(newPage);
     }
-
 
     void TheTabControl_SelectedIndexChanged(object sender, EventArgs args)
     {

@@ -1019,12 +1019,13 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Очищает каталог от файлов и вложенных каталогов, насколько это возможно
-    /// В отличие от ClearDirAsPossible(), сам каталог <paramref name="dirPath"/> также удаляется
-    /// В отличие от методов рекурсивного удаления Directory.Delete(), невозможность удаления одного из файлов не прекращает процесс
-    /// Предупреждение. Неверное применение метода может привести к разрушительным последствиям
+    /// Очищает каталог от файлов и вложенных каталогов, насколько это возможно.
+    /// В отличие от ClearDirAsPossible(), сам каталог <paramref name="dirPath"/> также удаляется.
+    /// В отличие от методов рекурсивного удаления Directory.Delete(), невозможность удаления одного из файлов не прекращает процесс.
+    /// Предупреждение. Неверное применение метода может привести к разрушительным последствиям.
+    /// Если каталог <paramref name="dirPath"/> не существует, возвращается true.
     /// </summary>
-    /// <param name="dirPath">Удаляемый каталог</param>
+    /// <param name="dirPath">Очищаемый каталог</param>
     /// <returns>true, если очистка успешно выполнена</returns>
     public static bool DeleteDirAsPossible(AbsPath dirPath)
     {
@@ -1033,7 +1034,8 @@ namespace FreeLibSet.IO
 
       try
       {
-        Directory.Delete(dirPath.Path);
+        if (Directory.Exists(dirPath.Path)) // 27.09.2022, чтобы не выбрасывалось лишнее исключение
+          Directory.Delete(dirPath.Path);
         return true;
       }
       catch

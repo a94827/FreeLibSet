@@ -696,6 +696,8 @@ namespace FreeLibSet.OpenOffice.Calc
     /// </summary>
     public void Close()
     {
+      if (XCloseable == null)
+        return;
       XCloseable.close(true);
     }
 
