@@ -89,13 +89,13 @@ namespace FreeLibSet.Forms
           return _ClickableColumnNames;
       }
     }
-    private string[] _ClickableColumnNames;
+    private readonly string[] _ClickableColumnNames;
 
     /// <summary>
     /// false - сортировка по возрастанию (обычная), true - по убыванию
     /// </summary>
     public ListSortDirection Direction { get { return _Direction; } }
-    private ListSortDirection _Direction;
+    private readonly ListSortDirection _Direction;
 
     /// <summary>
     /// Возвращает true, если структура не инициализирована
@@ -188,7 +188,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе
     /// </summary>
     public string Name { get { return _Name; } }
-    private string _Name;
+    private readonly string _Name;
 
     string IObjectWithCode.Code { get { return _Name; } }
 
@@ -198,7 +198,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе
     /// </summary>
     public string Sort { get { return _Sort; } }
-    private string _Sort;
+    private readonly string _Sort;
 
     /// <summary>
     /// Название для позиции меню.

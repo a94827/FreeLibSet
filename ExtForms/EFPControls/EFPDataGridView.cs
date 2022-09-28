@@ -5675,11 +5675,31 @@ namespace FreeLibSet.Forms
           return false;
         }
       }
-      int orderIndex = Orders.IndexOfItemForGridColumn(clickedColumnName);
-      if (orderIndex >= 0)
+
+
+      //int orderIndex = Orders.IndexOfItemForGridColumn(clickedColumnName);
+      //if (orderIndex >= 0)
+      //{
+      //  CurrentOrderIndex = orderIndex;
+      //  return true;
+      //}
+
+      // 28.09.2022.
+      // Неправильно работает при наличии нескольких ClickableColumnNames для сортировки.
+      // Пусть есть 2 порядка сортировки:
+      // Order1, заданы кликабельные столбцы "C1" и "C2".
+      // Order2, задан кликабельный столбец "C2".
+      // Пусть в просмотре есть оба столбца. Предполагается, что щелчок на "C1" установит Order1, а на "C2" - Order2.
+      // Если пользователь щелкает столбец "C2", то IndexOfItemForGridColumn() вернет Order1, т.к. столбец "C2" тоже подходит.
+      // При этом повторный щелчок по "C2" тоже не будет переключать на Order2.
+      // Нужно использовать GetUsedColumnName().
+      for (int i = 0; i < Orders.Count; i++)
       {
-        CurrentOrderIndex = orderIndex;
-        return true;
+        if (GetUsedColumnName(Orders[i]) == clickedColumnName)
+        {
+          CurrentOrderIndex = i;
+          return true;
+        }
       }
 
       EFPApp.ShowTempMessage("Для этого столбца нет сортировки. Выберите порядок строк из меню");
