@@ -44,7 +44,9 @@ namespace FreeLibSet.Controls
       TheCB.DropDownHeight = 2 * TheCB.ItemHeight * 20;
 
       SaveButton.Click += new EventHandler(SaveButton_Click);
+      SaveButton.Image = MainImagesResource.Insert;
       DeleteButton.Click += new EventHandler(DeleteButton_Click);
+      DeleteButton.Image = MainImagesResource.Delete;
 
       _InsideSetSelectedItem = false;
 

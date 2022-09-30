@@ -30,25 +30,16 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParamSetComboBox));
-      this.TheImgList = new System.Windows.Forms.ImageList(this.components);
       this.DeleteButton = new System.Windows.Forms.Button();
       this.SaveButton = new System.Windows.Forms.Button();
       this.TheCB = new System.Windows.Forms.ComboBox();
       this.SuspendLayout();
-      // 
-      // TheImgList
-      // 
-      this.TheImgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TheImgList.ImageStream")));
-      this.TheImgList.TransparentColor = System.Drawing.Color.Magenta;
-      this.TheImgList.Images.SetKeyName(0, "Insert");
-      this.TheImgList.Images.SetKeyName(1, "Delete");
       // 
       // DeleteButton
       // 
       this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.DeleteButton.ImageIndex = 1;
-      this.DeleteButton.ImageList = this.TheImgList;
       this.DeleteButton.Location = new System.Drawing.Point(226, 0);
       this.DeleteButton.Name = "DeleteButton";
       this.DeleteButton.Size = new System.Drawing.Size(24, 24);
@@ -60,7 +51,6 @@
       this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.SaveButton.ImageIndex = 0;
-      this.SaveButton.ImageList = this.TheImgList;
       this.SaveButton.Location = new System.Drawing.Point(202, 0);
       this.SaveButton.Name = "SaveButton";
       this.SaveButton.Size = new System.Drawing.Size(24, 24);
@@ -93,8 +83,6 @@
     }
 
     #endregion
-
-    private System.Windows.Forms.ImageList TheImgList;
 
     /// <summary>
     /// Кнопка [-]

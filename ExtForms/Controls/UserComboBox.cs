@@ -78,25 +78,6 @@ namespace FreeLibSet.Controls
     View
   }
 
-  internal static class ComboBoxImages
-  {
-    static ComboBoxImages()
-    {
-      Clear = ComboBoxImagesResource.Clear;
-      Clear.MakeTransparent(Color.Magenta);
-
-      Edit = ComboBoxImagesResource.Edit;
-      Edit.MakeTransparent(Color.Magenta);
-
-      View = ComboBoxImagesResource.View;
-      View.MakeTransparent(Color.Magenta);
-    }
-
-    public static readonly Bitmap Clear;
-    public static readonly Bitmap Edit;
-    public static readonly Bitmap View;
-  }
-
   /// <summary>
   /// Базовый класс для комбоблоков с произвольной реакцией на нажатие кнопки
   /// выпадающего списка. Не определяет тип основного поля. Добавляет необязательный
@@ -184,7 +165,7 @@ namespace FreeLibSet.Controls
       #region Кнопка очистки
 
       _TheClearButton.Dock = System.Windows.Forms.DockStyle.Right;
-      _TheClearButton.Image = ComboBoxImages.Clear;
+      _TheClearButton.Image = ComboBoxImagesResource.Clear;
       _TheClearButton.TabIndex = 3;
       _TheClearButton.Click += new EventHandler(TheClearButton_Click);
       Controls.Add(_TheClearButton);
@@ -196,7 +177,7 @@ namespace FreeLibSet.Controls
       #region Кнопка редактирования
 
       _TheEditButton.Dock = System.Windows.Forms.DockStyle.Right;
-      _TheEditButton.Image = ComboBoxImages.Edit;
+      _TheEditButton.Image = ComboBoxImagesResource.Edit;
       _TheEditButton.TabIndex = 4;
       _TheEditButton.Click += new EventHandler(TheEditButton_Click);
       Controls.Add(_TheEditButton);
@@ -815,10 +796,12 @@ namespace FreeLibSet.Controls
         switch (value)
         {
           case UserComboBoxEditButtonKind.Edit:
-            _TheEditButton.ImageKey = "Edit";
+            //_TheEditButton.ImageKey = "Edit";
+            _TheEditButton.Image = ComboBoxImagesResource.Edit; // 30.09.2022
             break;
           case UserComboBoxEditButtonKind.View:
-            _TheEditButton.ImageKey = "View";
+            //_TheEditButton.ImageKey = "View";
+            _TheEditButton.Image = ComboBoxImagesResource.View; // 30.09.2022
             break;
           default:
             throw new InvalidEnumArgumentException();

@@ -115,7 +115,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
         ToolStripMenuItem copyMenuItem = new ToolStripMenuItem();
         copyMenuItem.Text = "Копировать";
-        copyMenuItem.Image = TheImageList.Images["Copy"];
+        copyMenuItem.Image = MainImagesResource.Copy;
         copyMenuItem.Click += new EventHandler(CopyMenuItem_Click);
         OpenWithMenu.Items.Add(copyMenuItem);
 

@@ -34,7 +34,6 @@
       this.edMessage = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.cbInner = new System.Windows.Forms.Button();
-      this.TheImageList = new System.Windows.Forms.ImageList(this.components);
       this.edType = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.panel2 = new System.Windows.Forms.Panel();
@@ -109,8 +108,7 @@
       // cbInner
       // 
       this.cbInner.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.cbInner.ImageKey = "View";
-      this.cbInner.ImageList = this.TheImageList;
+      this.cbInner.Image =MainImagesResource.View;
       this.cbInner.Location = new System.Drawing.Point(8, 81);
       this.cbInner.Name = "cbInner";
       this.cbInner.Size = new System.Drawing.Size(112, 47);
@@ -118,17 +116,6 @@
       this.cbInner.Text = "Вложенная ошибка";
       this.cbInner.UseVisualStyleBackColor = true;
       this.cbInner.Click += new System.EventHandler(this.cbInner_Click);
-      // 
-      // TheImageList
-      // 
-      this.TheImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TheImageList.ImageStream")));
-      this.TheImageList.TransparentColor = System.Drawing.Color.Magenta;
-      this.TheImageList.Images.SetKeyName(0, "Cancel");
-      this.TheImageList.Images.SetKeyName(1, "View");
-      this.TheImageList.Images.SetKeyName(2, "Notepad");
-      this.TheImageList.Images.SetKeyName(3, "WindowsExplorer");
-      this.TheImageList.Images.SetKeyName(4, "MenuButton");
-      this.TheImageList.Images.SetKeyName(5, "Copy");
       // 
       // edType
       // 
@@ -207,8 +194,7 @@
       // 
       this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnClose.ImageKey = "Cancel";
-      this.btnClose.ImageList = this.TheImageList;
+      this.btnClose.Image = MainImagesResource.Cancel;
       this.btnClose.Location = new System.Drawing.Point(8, 13);
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(112, 24);
@@ -231,8 +217,7 @@
       // btnOpenWith
       // 
       this.btnOpenWith.ContextMenuStrip = this.OpenWithMenu;
-      this.btnOpenWith.ImageKey = "MenuButton";
-      this.btnOpenWith.ImageList = this.TheImageList;
+      this.btnOpenWith.Image = MainImagesResource.MenuButton;
       this.btnOpenWith.Location = new System.Drawing.Point(116, 4);
       this.btnOpenWith.Name = "btnOpenWith";
       this.btnOpenWith.Size = new System.Drawing.Size(32, 24);
@@ -247,8 +232,7 @@
       // btnDirExplorer
       // 
       this.btnDirExplorer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnDirExplorer.ImageKey = "WindowsExplorer";
-      this.btnDirExplorer.ImageList = this.TheImageList;
+      this.btnDirExplorer.Image = MainImagesResource.WindowsExplorer;
       this.btnDirExplorer.Location = new System.Drawing.Point(593, 4);
       this.btnDirExplorer.Name = "btnDirExplorer";
       this.btnDirExplorer.Size = new System.Drawing.Size(32, 24);
@@ -259,8 +243,7 @@
       // btnEdit
       // 
       this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnEdit.ImageKey = "Notepad";
-      this.btnEdit.ImageList = this.TheImageList;
+      this.btnEdit.Image = MainImagesResource.Notepad;
       this.btnEdit.Location = new System.Drawing.Point(8, 4);
       this.btnEdit.Name = "btnEdit";
       this.btnEdit.Size = new System.Drawing.Size(112, 24);
@@ -454,7 +437,6 @@
     private System.Windows.Forms.CheckBox cbStopShow;
     private System.Windows.Forms.Panel panel3;
     private System.Windows.Forms.Button btnClose;
-    private System.Windows.Forms.ImageList TheImageList;
     private System.Windows.Forms.Panel panLog;
     private System.Windows.Forms.TextBox edLogPath;
     private System.Windows.Forms.TabControl TheTabControl;
