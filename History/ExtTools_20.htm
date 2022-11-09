@@ -5,7 +5,18 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-09-27T12:49:03.721000000"/>
+	<meta name="changed" content="2022-11-09T15:58:10.380000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -579,16 +590,84 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">329</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">27.10.2022-09.11.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">DataTools.Round(), Floor(). Ceiling() </span><span lang="ru-RU">и
+			</span><span lang="en-US">Truncate(). </span><span lang="ru-RU">Через
+			них реализованы функции округления в классе </span><span lang="en-US">ExcelFunctions
+			(<a href="#v325p12">v.325 </a></span><a href="#v325p12"><span lang="ru-RU">п.12</span></a><span lang="en-US">).</span></p>
+			<p><span lang="en-US">2. FunctionParser</span> <span lang="en-US">(<a href="ExtTools_11.htm#v052p3">v.52
+			</a></span><a href="ExtTools_11.htm#v052p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">неправильно определял закрывающую скобку
+			для функции, если внутри есть аргумент, содержащий выражение в
+			скобках</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">При
+			инициализации парсера </span><span lang="en-US">FunctionParser </span><span lang="ru-RU">для
+			</span><span lang="en-US">DepEvalExpr&lt;T&gt; </span><span lang="ru-RU">(</span><a href="#v305p3"><span lang="en-US">v.305
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
+			используется разделитель аргументов функции &quot;,&quot;, а не
+			заданный для текущей культуры</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">При
+			</span><span lang="en-US">NumConstParser.UseSingle=false,
+			UseDouble=false </span><span lang="ru-RU">и </span><span lang="en-US">UseDecimal=false
+			(<a href="ExtTools_11.htm#v052p3">v.52 </a></span><a href="ExtTools_11.htm#v052p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">),
+			</span><span lang="ru-RU">символ десятичной точки не включается в
+			состав распознаваемых</span></p>
+			<p><span lang="en-US">5. MathOpParser.CreateExpression() (<a href="ExtTools_11.htm#v052p3">v.52
+			</a></span><a href="ExtTools_11.htm#v052p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">распознает унарную операцию, идущую в
+			начале выражения, например, &quot;-2+3&quot;. Пока не распознается
+			унарная операция справа: &quot;2+ -3&quot;, если нет скобок:
+			&quot;2+(-3)&quot;.</span></p>
+			<p><span lang="en-US">6. </span><span lang="ru-RU">Изменения</span>
+			<span lang="ru-RU">в функциях </span><span lang="en-US">ExcelFunctions:</span></p>
+			<p><span lang="en-US">-</span> <span lang="en-US">ATAN2 </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v118p4"><span lang="en-US">v.118
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span><span lang="en-US">:
+			</span><span lang="ru-RU">в</span> <span lang="ru-RU">методе
+			</span><span lang="en-US">Math.Atan2() аргументы идут в обратном
+			порядке по отношению к Excel</span><span lang="ru-RU">.</span></p>
+			<p><span lang="en-US">- CHOOSE() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v158p10"><span lang="en-US">v.158
+			</span><span lang="ru-RU">п.10</span></a><span lang="ru-RU">):</span>
+			<span lang="ru-RU">аргументы были сдвинуты</span></p>
+			<p><span lang="ru-RU">- Новая функция </span><span lang="en-US">TIME()</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Изменена
+			реализация </span><span lang="en-US">DATEDIF() (<a href="ExtTools_11.htm#v125p5">v.125
+			</a></span><a href="ExtTools_11.htm#v125p5"><span lang="ru-RU">п.5</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">для соответствия </span><span lang="en-US">Excel
+			</span><span lang="ru-RU">в режимах &quot;</span><span lang="en-US">y</span><span lang="ru-RU">&quot;</span>
+			<span lang="ru-RU">и &quot;</span><span lang="en-US">m</span><span lang="ru-RU">&quot;</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Функция </span><span lang="en-US">DAYS()
+			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v158p10"><span lang="en-US">v.158
+			</span><span lang="ru-RU">п.10</span></a><span lang="ru-RU">)
+			возвращает </span><span lang="en-US">Int32 </span><span lang="ru-RU">или
+			</span><span lang="en-US">Double, </span><span lang="ru-RU">а не
+			</span><span lang="en-US">TimeSpan. </span><span lang="ru-RU">Компоненты
+			времени не отрезаются</span></p>
+			<p lang="en-US">- <span lang="ru-RU">При работе с </span>DateTime
+			<span lang="ru-RU">устанавливается </span>DateTimeKind=Unspecified</p>
+			<p><span lang="en-US">7. </span><span lang="ru-RU">Свойства
+			</span><span lang="en-US">DateRange.SimpleMonths </span><span lang="ru-RU">и
+			</span><span lang="en-US">SimpleYears (<a href="ExtTools_11.htm#v125p4">v.125
+			</a></span><a href="ExtTools_11.htm#v125p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">327</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">27.09.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. FileTools.DeleteDirAsPossible() <span lang="ru-RU">(</span><a href="ExtTools_11.htm#v117p3">v.117
-			<span lang="ru-RU">п.3</span></a><span lang="ru-RU">) проверяет
-			существование каталог, чтобы не генерировалось и перехватывалось
-			лишнее исключение.</span></p>
+			<p><span lang="en-US">1. FileTools.DeleteDirAsPossible() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v117p3"><span lang="en-US">v.117
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
+			проверяет существование каталог, чтобы не генерировалось и
+			перехватывалось лишнее исключение.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -712,7 +791,7 @@
 			</span><span lang="ru-RU">не учитывался.</span></p>
 			<p lang="en-US">11. <span lang="ru-RU">Метод
 			</span>DataTools.CopyToArray()</p>
-			<p><span lang="en-US">12. </span><span lang="ru-RU">Функции
+			<p><a name="v325p12"></a><span lang="en-US">12. </span><span lang="ru-RU">Функции
 			округления </span><span lang="en-US">FLOOR, CEILING </span><span lang="ru-RU">и
 			</span><span lang="en-US">TRUNC (<a href="ExtTools_11.htm#v084p1">v.84
 			</a></span><a href="ExtTools_11.htm#v084p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
@@ -1350,8 +1429,8 @@
 			суффикса -</span><span lang="en-US">Ex </span><span lang="ru-RU">объявлены
 			</span><span lang="en-US">private.</span></p>
 			<p>2. Интерфейс <span lang="en-US">IDepExpr</span></p>
-			<p><span lang="en-US">3. </span>Вычисляемые выражения на основе
-			аргументов <span lang="en-US">DepEvalExpr&lt;T&gt;</span></p>
+			<p><a name="v305p3"></a><span lang="en-US">3. </span>Вычисляемые
+			выражения на основе аргументов <span lang="en-US">DepEvalExpr&lt;T&gt;</span></p>
 			<p><span lang="en-US">4. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepFromArray&lt;T&gt;. </span><span lang="ru-RU">В
 			классе </span><span lang="en-US">DepByIndex&lt;T&gt; (<a href="ExtTools_11.htm#v244p2">v.244

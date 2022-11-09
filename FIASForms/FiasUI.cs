@@ -12,6 +12,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Controls;
 using FreeLibSet.UICore;
 using FreeLibSet.Controls.FIAS;
+using System.ComponentModel;
 
 namespace FreeLibSet.Forms.FIAS
 {
@@ -70,6 +71,7 @@ namespace FreeLibSet.Forms.FIAS
     /// Внутренние установки классификатора.
     /// Не используется в прикладном коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public FiasInternalSettings InternalSettings { get { return _Source.InternalSettings; } }
 
     #endregion
@@ -386,9 +388,9 @@ namespace FreeLibSet.Forms.FIAS
 
     void ghClassifUpdate_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
-      EFPDataGridView gh =(EFPDataGridView )sender;
+      EFPDataGridView gh = (EFPDataGridView)sender;
       switch (args.ColumnName)
-      { 
+      {
         case "Image":
           int errorCount = DataTools.GetInt(args.DataRow, "ErrorCount");
           if (errorCount > 0)
@@ -420,8 +422,8 @@ namespace FreeLibSet.Forms.FIAS
           DateTime? dt1 = DataTools.GetNullableDateTime(args.DataRow, "StartTime");
           DateTime? dt2 = DataTools.GetNullableDateTime(args.DataRow, "FinishTime");
           if (dt1.HasValue && dt2.HasValue)
-          { 
-            TimeSpan ts=dt2.Value-dt1.Value;
+          {
+            TimeSpan ts = dt2.Value - dt1.Value;
             string s = ts.ToString();
             // убираем дробную часть
             int p = s.LastIndexOf('.');
@@ -525,7 +527,7 @@ namespace FreeLibSet.Forms.FIAS
       #endregion
     }
 
-    private class FiasAddressDialogItem: FreeLibSet.Forms.RI.IEFPAppRIStandardDialogItem
+    private class FiasAddressDialogItem : FreeLibSet.Forms.RI.IEFPAppRIStandardDialogItem
     {
       #region Конструктор
 

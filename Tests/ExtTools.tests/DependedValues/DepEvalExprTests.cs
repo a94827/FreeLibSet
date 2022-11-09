@@ -30,6 +30,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase(1.0, 2, "-@2", -2.0)]
     [TestCase(-10.0, 0, "ABS(@1)", 10.0)]
     [TestCase(0, -5, "ABS(@2)", 5.0)]
+    [TestCase(1.45, 1, "ROUND(@1,@2)", 1.5)]
     public void MathOps(double arg1, int arg2, string expr, double wanted)
     {
       IDepValue[] args = new IDepValue[2] { new DepConst<double>(arg1), new DepConst<int>(arg2) };

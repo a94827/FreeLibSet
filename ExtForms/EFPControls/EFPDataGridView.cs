@@ -277,6 +277,11 @@ namespace FreeLibSet.Forms
     private int _RowIndex;
 
     /// <summary>
+    /// Возвращает объект, привязанный к строке данных (например, DataRowView), или null.
+    /// </summary>
+    public object DataBoundItem { get { return ControlProvider.GetDataBoundItem(_RowIndex); } }
+
+    /// <summary>
     /// Доступ к строке таблицы данных, если источником данных для табличного
     /// просмотра является DataView. Иначе - null
     /// </summary>
@@ -3408,7 +3413,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает массив индексов выделенных столбов просмотра.
+    /// Возвращает массив индексов выделенных столбцов просмотра.
     /// </summary>
     public int[] SelectedColumnIndices
     {
@@ -5883,7 +5888,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Прорисовка трегольников сортировки в заголовках столбов в соответствии с 
+    /// Прорисовка трегольников сортировки в заголовках столбцов в соответствии с 
     /// текущим порядком сортировки CurrentOrder
     /// </summary>
     private void InitColumnHeaderTriangles()
@@ -7679,6 +7684,23 @@ namespace FreeLibSet.Forms
       return true;
     }
 
+    /// <summary>
+    /// Возвращает объект, привязанный к строке данных.
+    /// Аналогично обращению к DataGridView.Rows[rowIndex].DataBoundItem, но при этом строка не становится Unshared.
+    /// Если просмотр не привязян к набору данных, возвращается null.
+    /// </summary>
+    /// <param name="rowIndex">Индекс строки</param>
+    /// <returns>Объект, привязанный к строке или null</returns>
+    public object GetDataBoundItem(int rowIndex)
+    {
+      System.Collections.IList list = ListBindingHelper.GetList(Control.DataSource, Control.DataMember) as System.Collections.IList;
+      if (list == null)
+        return null;
+      if (rowIndex < 0 || rowIndex >= list.Count || rowIndex == Control.NewRowIndex)
+        return null;
+      return list[rowIndex];
+    }
+
     #endregion
 
     #region Обработка события DataError
@@ -8114,6 +8136,9 @@ namespace FreeLibSet.Forms
         return;
       try
       {
+        if (!_InsideRowPaint)
+          DoGetRowAttributes(args.RowIndex, EFPDataGridViewAttributesReason.View); // 25.10.2022
+
         // Если таблица получена из базы данных, то у строковых полей часто идут пробелы для заполнения по ширине поля.
         // Если их не убрать, то значение "не влезет" в ячейку и будут символы "..." в правой части столбца
         // 22.04.2021

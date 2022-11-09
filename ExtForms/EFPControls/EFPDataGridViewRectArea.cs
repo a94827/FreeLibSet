@@ -440,7 +440,7 @@ namespace FreeLibSet.Forms
       private EFPDataGridViewRectArea _Owner;
 
       /// <summary>
-      /// Возвращает количество столбов в выборке
+      /// Возвращает количество столбцов в выборке
       /// </summary>
       public int Count { get { return _Owner.ColumnIndices.Length; } }
 

@@ -197,7 +197,7 @@ namespace FreeLibSet.Forms
 
       CfgPart cfgHist;
       EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigSectionName,
-        this._ConfigCategory, String.Empty);
+        this._HistoryCategory /* испр. 26.10.2022 */, String.Empty);
       using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgHist))
       {
         try
@@ -421,7 +421,7 @@ namespace FreeLibSet.Forms
         return;
       }
       CfgPart cfgData;
-      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
+      EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigSectionName,
         this._ConfigCategory, userSetName);
       using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgData))
       {
@@ -623,7 +623,7 @@ namespace FreeLibSet.Forms
           else
             resRow["NPop"] = 1;
 
-          EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigHandler.ConfigSectionName,
+          EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(_CallerControlProvider.ConfigSectionName,
             this._ConfigCategory, userSetName);
           CfgPart cfgData;
           using (_CallerControlProvider.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfgData))

@@ -75,6 +75,9 @@
     <Compile Include="Models\Tree\DataTableTreeModelWithIdsTests.cs" />
     <Compile Include="Models\Tree\TreePathEnumerableTests.cs" />
     <Compile Include="Models\Tree\TreePathTests.cs" />
+    <Compile Include="Parsing\ExcelFunctionsTests.cs" />
+    <Compile Include="Parsing\MathOpParserTests.cs" />
+    <Compile Include="Parsing\ParserListTests.cs" />
     <Compile Include="Remoting\SerializationToolsTests.cs" />
     <Compile Include="Models\SpreadsheetBase\RangeRefTests.cs" />
     <Compile Include="Models\SpreadsheetBase\CellRefTests.cs" />

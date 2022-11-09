@@ -57,6 +57,201 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    #region Округление чисел с плавающей точкой
+
+    #region Double
+
+    private static readonly double[] _Pow10Doubles = new double[] {
+      0.00001, 0.0001, 0.001, 0.01, 0.1,
+      1.0,
+      10.0, 100.0, 1000.0, 10000.0, 100000.0
+    };
+
+    private static double GetPow10Double(int decimals)
+    {
+      if (decimals >= -5 && decimals <= 5)
+        return _Pow10Doubles[decimals + 5];
+      else
+        return Math.Pow(10, decimals);
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до ближайшего числа с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// В отличие от Math.Round(), допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static double Round(double value, int decimals)
+    {
+      if (decimals >= 0 && decimals <= 15) // см. описание Math.Round(Double, Int32), аргумент decimals
+        return Math.Round(value, decimals, MidpointRounding.AwayFromZero);
+
+      double m = GetPow10Double(decimals);
+      return Math.Round(value * m, 0, MidpointRounding.AwayFromZero) / m;
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до меньшего числа с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// Допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static double Floor(double value, int decimals)
+    {
+      if (decimals == 0)
+        return Math.Floor(value);
+
+      double m = GetPow10Double(decimals);
+      return Math.Floor(value * m) / m;
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до большего числа с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// Допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static double Ceiling(double value, int decimals)
+    {
+      if (decimals == 0)
+        return Math.Ceiling(value);
+
+      double m = GetPow10Double(decimals);
+      return Math.Ceiling(value * m) / m;
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до числа с отбрасыванием дробной части с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// Допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static double Truncate(double value, int decimals)
+    {
+      if (decimals == 0)
+        return Math.Truncate(value);
+
+      double m = GetPow10Double(decimals);
+      return Math.Truncate(value * m) / m;
+    }
+
+    #endregion
+
+    #region Decimal
+
+    private static readonly decimal[] _Pow10Decimals = new decimal[] {
+      0.00001m, 0.0001m, 0.001m, 0.01m, 0.1m,
+      1m,
+      10m, 100m, 1000m, 10000m, 100000m
+    };
+
+    private static decimal GetPow10Decimal(int decimals)
+    {
+      if (decimals >= -5 && decimals <= 5)
+        return _Pow10Decimals[decimals + 5];
+      else
+      {
+        // Нет перегрузки Math.Pow() для Decimal, а преобразовывать будет неточно
+
+        int n = Math.Abs(decimals);
+        decimal res = 100000m; // 1e5
+        for (int i = 6; i <= n; i++)
+          res *= 10m;
+        if (decimals > 0)
+          return res;
+        else
+          return 1m / res;
+      }
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до ближайшего числа с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// В отличие от Math.Round(), допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static decimal Round(decimal value, int decimals)
+    {
+      if (decimals >= 0 && decimals <= 28) // см. документацию по Math.Round(Decimal, Int32), аргумент decimals
+        return Math.Round(value, decimals, MidpointRounding.AwayFromZero);
+
+      decimal m = GetPow10Decimal(decimals);
+      return Math.Round(value * m, 0, MidpointRounding.AwayFromZero) / m;
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до меньшего числа с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// Допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static decimal Floor(decimal value, int decimals)
+    {
+      if (decimals == 0)
+        return Math.Floor(value);
+
+      decimal m = GetPow10Decimal(decimals);
+      return Math.Floor(value * m) / m;
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до большего числа с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// Допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static decimal Ceiling(decimal value, int decimals)
+    {
+      if (decimals == 0)
+        return Math.Ceiling(value);
+
+      decimal m = GetPow10Decimal(decimals);
+      return Math.Ceiling(value * m) / m;
+    }
+
+    /// <summary>
+    /// Округление <paramref name="value"/> до числа с отбрасыванием дробной части с указанным числом знаков <paramref name="decimals"/> после запятой.
+    /// Допускаются отрицательные значения <paramref name="decimals"/> для округления до десятков, сотен, ...
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="decimals">Положительное значение - количество знаков после запятой.
+    /// 0 - округление до целого числа. 
+    /// Отрицательное значение - округление до десятков (-1), сотен (-2), и т.д.</param>
+    /// <returns>Округленное значение</returns>
+    public static decimal Truncate(decimal value, int decimals)
+    {
+      if (decimals == 0)
+        return Math.Truncate(value);
+
+      decimal m = GetPow10Decimal(decimals);
+      return Math.Truncate(value * m) / m;
+    }
+
+    #endregion
+
+    #endregion
+
     #region Деление чисел с округлением
 
     /// <summary>
@@ -345,10 +540,10 @@ namespace FreeLibSet.Core
       {
 
         switch (st2)
-        { 
+        {
           case SumType.Int:
           case SumType.Int64:
-            return new TimeSpan( ((TimeSpan)a).Ticks / (long)ConvertValue(b, SumType.Int64));
+            return new TimeSpan(((TimeSpan)a).Ticks / (long)ConvertValue(b, SumType.Int64));
           case SumType.Single:
           case SumType.Double:
           case SumType.Decimal:

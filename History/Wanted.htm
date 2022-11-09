@@ -5,7 +5,7 @@
 	<title>„то предстоит сделать</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:09:37.104000000"/>
-	<meta name="changed" content="2022-07-20T16:17:20.963000000"/>
+	<meta name="changed" content="2022-11-08T16:54:52.307000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -72,13 +72,32 @@
 			ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage
 			инициализируетс€ значением
 			Thread.CurrentThread.CurrentCulture.TextInfo.OEMCodePage</span>.
-			<span lang="ru-RU">Ќе работает под  сборками </span>linux <span lang="ru-RU">без
+			<span lang="ru-RU">Ќе работает под сборками </span>linux <span lang="ru-RU">без
 			кодовой страницы 866. Ќадо инициализировать значением
-			</span>Encoding.ASCII.CodePage <span lang="ru-RU">при  создании
+			</span>Encoding.ASCII.CodePage <span lang="ru-RU">при создании
 			файлов </span>XLSX <span lang="ru-RU">и </span>ODS. <span lang="ru-RU">Ќо
 			это - статическое поле, надо возвращать обратно. »ли найти не
 			</span>default-<span lang="ru-RU">поле</span>.</p>
 			<p lang="en-US">(20.07.2022)</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" style="margin-bottom: 0.5cm">MathOpParser <span lang="ru-RU">не
+			умеет определ€ть унарную операцию в правой части унарной в
+			выражении вида &quot;2* -3&quot;. —м. например,
+			</span>Demos\TestCalculator<span lang="ru-RU">.</span></p>
+			<p style="margin-bottom: 0.5cm">ќбъ€снение. <span lang="en-US">MathOpParser
+			</span>при первом вызове дл€ операции &quot;*&quot; вызывает
+			<span lang="en-US">CreateSubExpression() </span>дл€ вычислени€
+			выражени€ правой части, передава€ ей в списке <span lang="en-US">endTokens
+			</span>&quot;запрещенные&quot; лексемы, среди которых есть и &quot;-&quot;.
+			—оответственно, дл€ правой части не находитс€ ни одной лексемы
+			(т.к. следующа€, как раз и есть &quot;-&quot;). ¬озвращаетс€
+			ошибка &quot;Ќе найден правый операнд дл€ операции *&quot;. Ќельз€
+			убрать его из <span lang="en-US">endTokens, </span>т.к. он нужен
+			дл€ операций вида &quot;2*3-1&quot;.</p>
+			<p>(08.11.2022)</p>
 		</td>
 	</tr>
 </table>
@@ -310,6 +329,19 @@
 			сервер успевает очистить внутренний кэш.  огда клиент перечитывает
 			строку дл€ измененного документа, обновление может быть получено
 			или нет (06.07.2021)</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p>‘орма, открываема€ <span lang="en-US">DocTypeUI.ShowOrOpen() </span><span lang="ru-RU">с
+			аргументом </span><span lang="en-US">externalFilters </span><span lang="ru-RU">не
+			может быть восстановлена с композицией рабочего стола. ¬нешние
+			фильтры создаютс€ в пользовательском коде и не могут быть
+			воссозданы. “ребуетс€, чтобы внешние фильтры создавались в
+			конструкторе класса-наследника </span><span lang="en-US">DBUI</span><span lang="ru-RU">.
+			ћетод </span><span lang="en-US">ShowOrOpen() </span><span lang="ru-RU">должен
+			быть изменен в части аргумента </span><span lang="en-US">externalFilters</span>
+			<span lang="ru-RU">(24.10.2022).</span></p>
 		</td>
 	</tr>
 </table>

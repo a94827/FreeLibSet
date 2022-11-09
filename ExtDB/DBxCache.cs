@@ -15,6 +15,7 @@ using FreeLibSet.Remoting;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
 using FreeLibSet.Data;
+using System.ComponentModel;
 
 namespace FreeLibSet.Data
 {
@@ -2480,6 +2481,7 @@ Exception rethrown at [0]:
       public Int32 FirstId { get { return _FirstId; } }
       private Int32 _FirstId;
 
+      [EditorBrowsable(EditorBrowsableState.Never)]
       public string InternalKey { get { return _TableName + "|" + _ColumnNames.AsString + "|" + _FirstId.ToString(); } }
 
       #endregion

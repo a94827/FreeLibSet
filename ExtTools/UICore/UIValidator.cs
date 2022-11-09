@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Collections;
+using System.ComponentModel;
 
 // Общие объявления пользовательского интерфейса.
 // Используется классами FreeLibSet.RI.Control (удаленный пользовательский интерфейс)
@@ -645,6 +646,7 @@ namespace FreeLibSet.UICore
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalValueExConnected
     {
       get
@@ -669,6 +671,7 @@ namespace FreeLibSet.UICore
     /// Этот метод не предназначен для использования в пользовательском коде
     /// </summary>
     /// <param name="value"></param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void InternalSetValueEx(DepValue<T> value)
     {
       InitValueEx();
@@ -679,6 +682,7 @@ namespace FreeLibSet.UICore
     /// Этот метод не предназначен для использования в пользовательском коде
     /// </summary>
     /// <param name="value"></param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void InternalSetValue(T value)
     {
       InitValueEx();

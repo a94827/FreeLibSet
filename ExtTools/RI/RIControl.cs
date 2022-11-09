@@ -12,6 +12,7 @@ using FreeLibSet.Calendar;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Formatting;
+using System.ComponentModel;
 
 namespace FreeLibSet.RI
 {
@@ -283,6 +284,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalTextExConnected
     {
       get
@@ -382,6 +384,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get
@@ -614,6 +617,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalTextExConnected
     {
       get
@@ -717,6 +721,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get
@@ -948,6 +953,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalTextExConnected
     {
       get
@@ -1184,6 +1190,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNValueExConnected
     {
       get
@@ -1246,6 +1253,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalValueExConnected
     {
       get
@@ -1335,6 +1343,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get
@@ -1947,6 +1956,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства CheckStateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNCheckedExConnected
     {
       get
@@ -2010,6 +2020,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства CheckedEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalCheckedExConnected
     {
       get
@@ -2262,6 +2273,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedIndexEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalSelectedIndexExConnected
     {
       get
@@ -2366,6 +2378,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedCodeEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalSelectedCodeExConnected
     {
       get
@@ -2577,6 +2590,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNValueExConnected
     {
       get
@@ -2639,6 +2653,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalValueExConnected
     {
       get
@@ -2733,6 +2748,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNTimeExConnected
     {
       get
@@ -2801,6 +2817,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalTimeExConnected
     {
       get
@@ -2869,6 +2886,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get
@@ -3153,6 +3171,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NFirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNFirstDateExConnected
     {
       get
@@ -3213,6 +3232,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalFirstDateExConnected
     {
       get
@@ -3287,6 +3307,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NLastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNLastDateExConnected
     {
       get
@@ -3347,6 +3368,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalLastDateExConnected
     {
       get
@@ -3794,6 +3816,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalFirstDateExConnected
     {
       get
@@ -3868,6 +3891,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalLastDateExConnected
     {
       get
@@ -3956,6 +3980,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NFirstDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNFirstDateExConnected
     {
       get
@@ -4030,6 +4055,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства NLastDateEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalNLastDateExConnected
     {
       get
@@ -4335,6 +4361,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalYearExConnected
     {
       get
@@ -4407,6 +4434,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства MonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalMonthExConnected
     {
       get
@@ -4475,6 +4503,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства YMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalYMExConnected
     {
       get
@@ -4727,6 +4756,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства YearEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalYearExConnected
     {
       get
@@ -4799,6 +4829,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstMonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalFirstMonthExConnected
     {
       get
@@ -4857,6 +4888,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastMonthEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalLastMonthExConnected
     {
       get
@@ -4925,6 +4957,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства FirstYMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalFirstYMExConnected
     {
       get
@@ -4992,6 +5025,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства LastYMEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalLastYMExConnected
     {
       get
@@ -5287,6 +5321,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedIndexEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalSelectedIndexExConnected
     {
       get
@@ -5386,6 +5421,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedCodeEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalSelectedCodeExConnected
     {
       get
@@ -5598,6 +5634,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства TextEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalTextExConnected
     {
       get
@@ -5884,6 +5921,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedCodesEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalSelectedCodesExConnected
     {
       get
@@ -5986,6 +6024,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get
@@ -6291,6 +6330,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства SelectedCodesEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalSelectedCodesExConnected
     {
       get
@@ -6393,6 +6433,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get
@@ -6748,6 +6789,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства PathEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalPathExConnected
     {
       get
@@ -6884,6 +6926,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get
@@ -7110,6 +7153,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства PathEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalPathExConnected
     {
       get
@@ -7246,6 +7290,7 @@ namespace FreeLibSet.RI
     /// Возвращает true, если обработчик свойства ReadOnlyEx присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalReadOnlyExConnected
     {
       get

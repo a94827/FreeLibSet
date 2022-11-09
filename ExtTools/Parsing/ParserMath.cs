@@ -88,7 +88,7 @@ namespace FreeLibSet.Parsing
     /// Задается в конструкторе
     /// </summary>
     public BinaryOpDelegate CalcMethod { get { return _CalcMethod; } }
-    private BinaryOpDelegate _CalcMethod;
+    private readonly BinaryOpDelegate _CalcMethod;
 
     /// <summary>
     /// Приоритеты операций.
@@ -98,7 +98,7 @@ namespace FreeLibSet.Parsing
     /// Для стандартных операций используются константы PriorityXXX
     /// </summary>
     public int Priority { get { return _Priority; } }
-    private int _Priority;
+    private readonly int _Priority;
 
     #endregion
   }
@@ -148,7 +148,7 @@ namespace FreeLibSet.Parsing
     /// Задается в конструкторе.
     /// </summary>
     public UnaryOpDelegate CalcMethod { get { return _CalcMethod; } }
-    private UnaryOpDelegate _CalcMethod;
+    private readonly UnaryOpDelegate _CalcMethod;
 
     #endregion
   }
@@ -516,6 +516,9 @@ namespace FreeLibSet.Parsing
     /// <returns>Результат операции</returns>
     public static object CalcDateTime(string op, DateTime arg1, DateTime arg2)
     {
+      arg1 = DateTime.SpecifyKind(arg1, DateTimeKind.Unspecified);
+      arg2 = DateTime.SpecifyKind(arg2, DateTimeKind.Unspecified);
+
       switch (op)
       {
         case "-": return arg1 - arg2;
@@ -533,6 +536,7 @@ namespace FreeLibSet.Parsing
 
     private static object CalcDateTimeAndDouble(string op, DateTime arg1, double arg2)
     {
+      arg1 = DateTime.SpecifyKind(arg1, DateTimeKind.Unspecified);
       switch (op)
       {
         case "+": return arg1 + TimeSpan.FromDays(arg2);
@@ -546,6 +550,9 @@ namespace FreeLibSet.Parsing
     private static object CalcDoubleAndDateTime(string op, double arg1, DateTime arg2)
     {
       DateTime dt1 = DateTime.FromOADate(arg1);
+      dt1 = DateTime.SpecifyKind(dt1, DateTimeKind.Unspecified);
+      arg2 = DateTime.SpecifyKind(arg2, DateTimeKind.Unspecified);
+
       switch (op)
       {
         case "=": return dt1 == arg2;
@@ -579,11 +586,18 @@ namespace FreeLibSet.Parsing
 
     private static object CalcTimeSpanAndDateTime(string op, TimeSpan arg1, DateTime arg2)
     {
-      throw new InvalidOperationException("Операции с аргументами TimeSpan и DateTime невозможны");
+      arg2 = DateTime.SpecifyKind(arg2, DateTimeKind.Unspecified);
+      switch (op)
+      {
+        case "+": return arg2 + arg1; // 09.11.2022
+        default:
+          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для аргументов TimeSpan и DateTime");
+      }
     }
 
     private static object CalcDateTimeAndTimeSpan(string op, DateTime arg1, TimeSpan arg2)
     {
+      arg1 = DateTime.SpecifyKind(arg1, DateTimeKind.Unspecified);
       switch (op)
       {
         case "+": return arg1 + arg2;
@@ -1255,8 +1269,19 @@ namespace FreeLibSet.Parsing
         return null;
       }
 
+      // 08.11.2022
+      if (leftExpression == null &&
+        UnaryOps.Contains(opToken.TokenType) &&
+        data.CurrTokenType == "Const")
+      {
+        Token constToken = data.CurrToken;
+        IExpression constExpr = constToken.Parser.CreateExpression(data, null);
+        return new UnaryExpression(opToken, constExpr, UnaryOps[opToken.TokenType].CalcMethod);
+      }
+
+
       // 07.09.2015 Лексемы, которые могут завершать правую часть выражение.
-      // Например, для выражения "a+b*c" правым выражением будет "b*c"?
+      // Например, для выражения "a+b*c" правым выражением будет "b*c",
       // а для "a+b-c" будет "b", а "-с" вычисляется отдельно
 
       string[] endTokens = data.EndTokens;
@@ -1273,7 +1298,8 @@ namespace FreeLibSet.Parsing
       IExpression rightExpession = data.Parsers.CreateSubExpression(data, endTokens); // получение правого выражения
       if (rightExpession == null)
       {
-        opToken.SetError("Не найден правый операнд для операции \"" + opToken.TokenType + "\"");
+        if (data.FirstErrorToken == null)
+          opToken.SetError("Не найден правый операнд для операции \"" + opToken.TokenType + "\"");
         return null;
       }
 
@@ -1379,7 +1405,8 @@ namespace FreeLibSet.Parsing
       IExpression expr = data.Parsers.CreateSubExpression(data, new string[] { ")" });
       if (expr == null)
       {
-        openToken.SetError("Выражение в скобках не задано");
+        if(data.FirstErrorToken==null)
+          openToken.SetError("Выражение в скобках не задано");
         return null;
       }
 
@@ -1479,11 +1506,13 @@ namespace FreeLibSet.Parsing
 
     #region Список допустимых символов
 
-    private string _ValidChars;
+    private volatile string _ValidChars;
 
     private string GetValidChars()
     {
       // Парсинг может выполняться асинхронно, поэтому необходима блокировка
+      if (_ValidChars != null)
+        return _ValidChars; // быстрый возврат результата
 
       lock (_ReplaceChars)
       {
@@ -1511,8 +1540,8 @@ namespace FreeLibSet.Parsing
 
           _ValidChars = new string(chars.ToArray());
         }
-        return _ValidChars;
       }
+      return _ValidChars;
     }
 
     #endregion
@@ -1553,7 +1582,9 @@ namespace FreeLibSet.Parsing
 
       #region Пытаемся выполнить преобразование
 
-      NumberStyles ns = NumberStyles.AllowLeadingSign /*| Нельзя ! NumberStyles.AllowTrailingSign */| NumberStyles.AllowDecimalPoint;
+      NumberStyles ns = NumberStyles.AllowLeadingSign /*| Нельзя ! NumberStyles.AllowTrailingSign */;
+      if (AllowDecimal || AllowDouble || AllowSingle) // 07.11.2022
+        ns |= NumberStyles.AllowDecimalPoint;
       Token newToken;
 
       for (int len2 = len; len2 > 0; len2--)
@@ -1719,7 +1750,10 @@ namespace FreeLibSet.Parsing
       /// <returns>Текстовое представление</returns>
       public override string ToString()
       {
-        return _Value.ToString();
+        if (_Value == null)
+          return "null";
+        else
+          return _Value.ToString();
       }
 
       #endregion
@@ -2370,9 +2404,6 @@ namespace FreeLibSet.Parsing
         {
           switch (data.Tokens[j].TokenType)
           {
-            case TokenClose:
-              counter++;
-              break;
             case TokenOpen:
               counter--;
               if (counter == 0)
@@ -2385,6 +2416,13 @@ namespace FreeLibSet.Parsing
                 }
                 return;
               }
+              break;
+            case "(": // 07.11.2022
+              counter--;
+              break;
+            case ")": // 07.11.2022
+            case TokenClose:
+              counter++;
               break;
           }
         }
@@ -2695,7 +2733,11 @@ namespace FreeLibSet.Parsing
             // ? можно продолжить
           }
 
-          FunctionDef fd = GetFunction(currToken.AuxData.ToString());
+          string functionName = currToken.AuxData.ToString();
+          if (String.IsNullOrEmpty(functionName))
+            throw new BugException("Не определено имя функции для лексемы");
+          FunctionDef fd = GetFunction(functionName);
+
           // Ищем лексему открывающей функции
           Token openToken = null;
           while ((data.CurrTokenIndex < data.Tokens.Count) && (openToken == null))
@@ -2727,6 +2769,7 @@ namespace FreeLibSet.Parsing
           List<IExpression> argExprs = new List<IExpression>();
           Token closeToken = null;
           List<Token> argSepTokens = new List<Token>();
+          bool lastIsArgSep = false;
           while (true)
           {
             IExpression argExpr = data.Parsers.CreateSubExpression(data, new string[] { TokenArgSep, TokenClose });
@@ -2734,7 +2777,7 @@ namespace FreeLibSet.Parsing
             {
               if (data.CurrToken == null)
               {
-                currToken.SetError("Не найдена закрывающая скобка для функции");
+                currToken.SetError("Не найдена закрывающая скобка для функции " + functionName);
                 return null;
               }
 
@@ -2742,6 +2785,11 @@ namespace FreeLibSet.Parsing
               {
                 closeToken = data.CurrToken;
                 data.SkipToken();
+                if (lastIsArgSep)
+                {
+                  closeToken.SetError("Ожидался еще аргумент");
+                  return null; // 08.11.2022
+                }
                 break;
               }
 
@@ -2752,18 +2800,25 @@ namespace FreeLibSet.Parsing
                 errorToken = openToken;
 
               errorToken.SetError("Ожидался аргумент");
+              return null; // 08.11.2022
             }
 
             argExprs.Add(argExpr);
+            lastIsArgSep = false;
             if (data.CurrToken == null)
             {
-              currToken.SetError("Не найдена закрывающая скобка для функции");
+              currToken.SetError("Не найдена закрывающая скобка для функции " + functionName);
               return null;
             }
             if (data.CurrTokenType == TokenClose)
             {
               closeToken = data.CurrToken; // 03.12.2015
               data.SkipToken();
+              if (lastIsArgSep)
+              {
+                closeToken.SetError("Ожидался еще аргумент");
+                return null; // 08.11.2022
+              }
               break;
             }
             if (data.CurrTokenType != TokenArgSep)
@@ -2780,6 +2835,7 @@ namespace FreeLibSet.Parsing
             }
 
             argSepTokens.Add(data.CurrToken);
+            lastIsArgSep = true;
             data.SkipToken();
           }
 

@@ -70,6 +70,151 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region Округление чисел с плавающей точкой
+
+    [TestCase(0.0, 0, 0.0)]
+    [TestCase(1.5, 0, 2.0)]
+    [TestCase(2.5, 0, 3.0)]
+    [TestCase(-1.5, 0, -2.0)]
+    [TestCase(-2.5, 0, -3.0)]
+    [TestCase(1234.56, 1, 1234.6)]
+    // Нельзя использовать 1.5 в качестве базового значения.
+    // Для типа Double есть проблемы с окрулением:
+    // Math.Round(0.00015, 4, AlwaysFromZero)=0.0001, а не 0.0002, как ожидалось
+    [TestCase(1.7, 0, 2)]
+    [TestCase(1.7e-1, 1, 2e-1)]
+    [TestCase(1.7e-2, 2, 2e-2)]
+    [TestCase(1.7e-3, 3, 2e-3)]
+    [TestCase(1.7e-4, 4, 2e-4)]
+    [TestCase(1.7e-5, 5, 2e-5)]
+    [TestCase(1.7e-6, 6, 2e-6)]
+    [TestCase(1.7e-7, 7, 2e-7)]
+    [TestCase(1.7e+1, -1, 2e+1)]
+    [TestCase(1.7e+2, -2, 2e+2)]
+    [TestCase(1.7e+3, -3, 2e+3)]
+    [TestCase(1.7e+4, -4, 2e+4)]
+    [TestCase(1.7e+5, -5, 2e+5)]
+    [TestCase(1.7e+6, -6, 2e+6)]
+    [TestCase(1.7e+7, -7, 2e+7)]
+    // Граничные значения для аргумента decimals в методе Math.Round():
+    [TestCase(1.7e-15, 15, 2e-15)]
+    [TestCase(1.7e-16, 16, 2e-16)]
+    [TestCase(1.7e-28, 28, 2e-28)]
+    //непредставимо для типа Decimal [TestCase(1.7e-29, 29, 2e-29)]
+    public void Round(double value, int decimals, double wantedRes)
+    {
+      double res1 = DataTools.Round(value, decimals);
+      double delta = Math.Abs(wantedRes) / 1000.0;
+      Assert.AreEqual(wantedRes, res1, delta, "Double");
+
+      decimal res2 = DataTools.Round((decimal)value, decimals);
+      Assert.AreEqual((decimal)wantedRes, res2, "Decimal");
+    }
+
+    [TestCase(1.4, 0, 1)]
+    [TestCase(1.6, 0, 1)]
+    [TestCase(-1.4, 0, -2)]
+    [TestCase(-1.6, 0, -2)]
+    [TestCase(1.24, 1, 1.2)]
+    [TestCase(-1.24, 1, -1.3)]
+    [TestCase(12.34, -1, 10.0)]
+    [TestCase(-12.34, -1, -20.0)]
+    [TestCase(-12345600.0, -6, -13000000.0)]
+    [TestCase(2.7, 0, 2)]
+    [TestCase(2.7e-1, 1, 2e-1)]
+    [TestCase(2.7e-2, 2, 2e-2)]
+    [TestCase(2.7e-3, 3, 2e-3)]
+    [TestCase(2.7e-4, 4, 2e-4)]
+    [TestCase(2.7e-5, 5, 2e-5)]
+    [TestCase(2.7e-6, 6, 2e-6)]
+    [TestCase(2.7e-7, 7, 2e-7)]
+    [TestCase(2.7e+1, -1, 2e+1)]
+    [TestCase(2.7e+2, -2, 2e+2)]
+    [TestCase(2.7e+3, -3, 2e+3)]
+    [TestCase(2.7e+4, -4, 2e+4)]
+    [TestCase(2.7e+5, -5, 2e+5)]
+    [TestCase(2.7e+6, -6, 2e+6)]
+    [TestCase(2.7e+7, -7, 2e+7)]
+    public void Floor(double value, int decimals, double wantedRes)
+    {
+      double res1 = DataTools.Floor(value, decimals);
+      double delta = Math.Abs(wantedRes) / 1000.0;
+      Assert.AreEqual(wantedRes, res1, delta, "Double");
+
+      decimal res2 = DataTools.Floor((decimal)value, decimals);
+      Assert.AreEqual((decimal)wantedRes, res2, "Decimal");
+    }
+
+    [TestCase(1.4, 0, 2)]
+    [TestCase(1.6, 0, 2)]
+    [TestCase(-1.4, 0, -1)]
+    [TestCase(-1.6, 0, -1)]
+    [TestCase(1.24, 1, 1.3)]
+    [TestCase(-1.24, 1, -1.2)]
+    [TestCase(12.34, -1, 20.0)]
+    [TestCase(-12.34, -1, -10.0)]
+    [TestCase(-12345600.0, -6, -12000000.0)]
+    [TestCase(2.7, 0, 3)]
+    [TestCase(2.7e-1, 1, 3e-1)]
+    [TestCase(2.7e-2, 2, 3e-2)]
+    [TestCase(2.7e-3, 3, 3e-3)]
+    [TestCase(2.7e-4, 4, 3e-4)]
+    [TestCase(2.7e-5, 5, 3e-5)]
+    [TestCase(2.7e-6, 6, 3e-6)]
+    [TestCase(2.7e-7, 7, 3e-7)]
+    [TestCase(2.7e+1, -1, 3e+1)]
+    [TestCase(2.7e+2, -2, 3e+2)]
+    [TestCase(2.7e+3, -3, 3e+3)]
+    [TestCase(2.7e+4, -4, 3e+4)]
+    [TestCase(2.7e+5, -5, 3e+5)]
+    [TestCase(2.7e+6, -6, 3e+6)]
+    [TestCase(2.7e+7, -7, 3e+7)]
+    public void Ceiling(double value, int decimals, double wantedRes)
+    {
+      double res1 = DataTools.Ceiling(value, decimals);
+      double delta = Math.Abs(wantedRes) / 1000.0;
+      Assert.AreEqual(wantedRes, res1, delta, "Double");
+
+      decimal res2 = DataTools.Ceiling((decimal)value, decimals);
+      Assert.AreEqual((decimal)wantedRes, res2, "Decimal");
+    }
+
+    [TestCase(1.4, 0, 1)]
+    [TestCase(1.6, 0, 1)]
+    [TestCase(-1.4, 0, -1)]
+    [TestCase(-1.6, 0, -1)]
+    [TestCase(1.24, 1, 1.2)]
+    [TestCase(-1.24, 1, -1.2)]
+    [TestCase(12.34, -1, 10.0)]
+    [TestCase(-12.34, -1, -10.0)]
+    [TestCase(-12345600.0, -6, -12000000.0)]
+    [TestCase(2.7, 0, 2)]
+    [TestCase(2.7e-1, 1, 2e-1)]
+    [TestCase(2.7e-2, 2, 2e-2)]
+    [TestCase(2.7e-3, 3, 2e-3)]
+    [TestCase(2.7e-4, 4, 2e-4)]
+    [TestCase(2.7e-5, 5, 2e-5)]
+    [TestCase(2.7e-6, 6, 2e-6)]
+    [TestCase(2.7e-7, 7, 2e-7)]
+    [TestCase(2.7e+1, -1, 2e+1)]
+    [TestCase(2.7e+2, -2, 2e+2)]
+    [TestCase(2.7e+3, -3, 2e+3)]
+    [TestCase(2.7e+4, -4, 2e+4)]
+    [TestCase(2.7e+5, -5, 2e+5)]
+    [TestCase(2.7e+6, -6, 2e+6)]
+    [TestCase(2.7e+7, -7, 2e+7)]
+    public void Truncate(double value, int decimals, double wantedRes)
+    {
+      double res1 = DataTools.Truncate(value, decimals);
+      double delta = Math.Abs(wantedRes) / 1000.0;
+      Assert.AreEqual(wantedRes, res1, delta, "Double");
+
+      decimal res2 = DataTools.Truncate((decimal)value, decimals);
+      Assert.AreEqual((decimal)wantedRes, res2, "Decimal");
+    }
+
+    #endregion
+
     #region DivideWithRounding
 
     [TestCase(3, 2, Result = 2)]

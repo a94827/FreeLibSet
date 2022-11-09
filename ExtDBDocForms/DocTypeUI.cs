@@ -2541,13 +2541,13 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Объект формы</returns>
     public DocTableViewForm ShowOrOpen(GridFilters externalFilters, Int32 currentDocId, string formSearchKey)
     {
-      bool HasExternalFilters = false;
+      bool hasExternalFilters = false;
       if (externalFilters != null)
-        HasExternalFilters = externalFilters.Count > 0;
+        hasExternalFilters = externalFilters.Count > 0;
 
       if (formSearchKey == null)
       {
-        if (HasExternalFilters)
+        if (hasExternalFilters)
         {
           TempCfg Cfg = new TempCfg();
           externalFilters.WriteConfig(Cfg);
@@ -2567,7 +2567,7 @@ namespace FreeLibSet.Forms.Docs
         form.FormSearchKey = formSearchKey;
 
         form.ExternalFilters = externalFilters;
-        if (HasExternalFilters)
+        if (hasExternalFilters)
           form.FormProvider.ConfigClassName = String.Empty; // 02.11.2018
 
 

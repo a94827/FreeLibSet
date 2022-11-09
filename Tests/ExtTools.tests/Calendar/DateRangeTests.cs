@@ -78,6 +78,8 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(0, DateRange.Empty.Days, "Days");
       Assert.AreEqual(0, DateRange.Empty.Months, "Months");
       Assert.AreEqual(0, DateRange.Empty.Years, "Years");
+      Assert.AreEqual(0, DateRange.Empty.SimpleMonths, "SimpleMonths");
+      Assert.AreEqual(0, DateRange.Empty.SimpleYears, "SimpleYears");
       Assert.IsNull(DateRange.Empty.Tag, "Tag");
 
       Assert.IsTrue(DateRange.Empty.YMRange.IsEmpty, "YMRange.IsEmpty");
@@ -117,18 +119,41 @@ namespace ExtTools_tests.Calendar
     [TestCase("20200201", "20200228", Result = 0)]
     [TestCase("20200201", "20200229", Result = 1)]
     [TestCase("20210201", "20210228", Result = 1)]
+    [TestCase("20220101", "20220228", Result = 2)]
     public int Months(string sDate1, string sDate2)
     {
       DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
       return sut.Months;
     }
 
-    [Test]
-    public void Years()
+    [TestCase("20220101", "20221231",Result =1)]
+    [TestCase("20220102", "20221231", Result = 0)]
+    public int Years(string sDate1, string sDate2)
     {
-      DateRange sut = new DateRange(2021);
-      Assert.AreEqual(1, sut.Years);
+      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      return sut.Years;
     }
+
+    [TestCase("20220101", "20220228", Result = 2)]
+    [TestCase("20220101", "20220101", Result = 0, Description="Minimum possible 1-day range")]
+    [TestCase("20220115", "20220213", Result = 0)]
+    [TestCase("20220115", "20220214", Result = 1)]
+    public int SimpleMonths(string sDate1, string sDate2)
+    {
+      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      return sut.SimpleMonths;
+    }
+
+    [TestCase("20220101", "20221231", Result = 1)]
+    [TestCase("20220101", "20221230", Result = 0)]
+    [TestCase("20220115", "20230114", Result = 1)]
+    [TestCase("20220115", "20230113", Result = 0)]
+    public int SimpleYears(string sDate1, string sDate2)
+    {
+      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      return sut.SimpleYears;
+    }
+
 
     [TestCase("20190101", "20210228", Result = true)]
     [TestCase("20190101", "20200228", Result = false)]

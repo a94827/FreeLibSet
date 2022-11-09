@@ -256,6 +256,39 @@ namespace FreeLibSet.Calendar
       }
     }
 
+    /// <summary>
+    /// Число целых месяцев в интервале. Вычисление по правилам для функции Excel DATEDIF() при mode="m" (с учетом того, что в Excel надо добавлять 1 день).
+    /// В отличие от свойства Months, не учитывается наличие полных месяцев.
+    /// Например, для интервала 28.02.2022-28.02.2022, свойство Months=2, а SimpleMonths=1
+    /// </summary>
+    public int SimpleMonths
+    {
+      get
+      {
+        if (IsEmpty)
+          return 0; 
+        else
+        {
+          DateTime dt2 = LastDate.AddDays(1);
+          // Число месяцев, в предположении полных месяцев
+          int m = (dt2.Year - FirstDate.Year) * 12 + (dt2.Month - FirstDate.Month);
+          if (FirstDate.Day > dt2.Day)
+            m--;
+          return m;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Число целых лет в интервале. Вычисление по правилам для функции Excel DATEDIF() при mode="y" (с учетом того, что в Excel надо добавлять 1 день).
+    /// </summary>
+    public int SimpleYears
+    {
+      get
+      {
+        return SimpleMonths / 12;
+      }
+    }
 
     /// <summary>
     /// Диапазон месяцев

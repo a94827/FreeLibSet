@@ -66,7 +66,7 @@ namespace FreeLibSet.Data
     /// Создает список на основании массива строк.
     /// Имена столбцов не меогут содержать запятые
     /// </summary>
-    /// <param name="сolumnNames">Список столбов</param>
+    /// <param name="сolumnNames">Список полей</param>
     public DBxColumns(string[] сolumnNames)
       : this(сolumnNames, true)
     {
@@ -93,7 +93,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает список на основании списка столбов
+    /// Создает список на основании списка полей
     /// </summary>
     /// <param name="list">Имена столбцов</param>
     public DBxColumns(List<string> list)
@@ -150,7 +150,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает список на основании массива имен столбов
+    /// Создает список на основании массива имен полей
     /// </summary>
     /// <param name="columnNames">Имена столбцов</param>
     /// <param name="copyArray">Если true, то будет создана копия массива.
@@ -167,7 +167,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает список на основании массива имен столбов
+    /// Создает список на основании массива имен полей
     /// </summary>
     /// <param name="columnNames">Имена столбцов</param>
     /// <returns>Объект DBxColumns или null</returns>

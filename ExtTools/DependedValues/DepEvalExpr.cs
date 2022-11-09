@@ -198,6 +198,8 @@ namespace FreeLibSet.DependedValues
       ParserList pl = new ParserList();
 
       FunctionParser fp = new FunctionParser(); // перед MathOpParser
+      fp.ArgSeparators.Clear();
+      fp.ArgSeparators.Add(","); // 07.11.2022
       ExcelFunctions.AddFunctions(fp);
       pl.Add(fp);
 

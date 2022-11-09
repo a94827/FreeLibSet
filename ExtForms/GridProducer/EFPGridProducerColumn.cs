@@ -1046,7 +1046,7 @@ namespace FreeLibSet.Forms
     /// Если столбец извлекает данные не из источника данных, то следует задать пустой массив <paramref name="sourceColumnNames"/>=DataTools.EmptyStrings.
     /// </summary>
     /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Имена столбов, на основании которых производится вычисления.
+    /// <param name="sourceColumnNames">Имена столбцов, на основании которых производится вычисления.
     /// Если null, то столбец является обычным, а невычисляемым.
     /// Для создания вычисляемого столбца, не использующего данные других столбцов (например для нумерации строк),
     /// задайте пустой массив DataTools.EmptyStrings</param>
@@ -1652,7 +1652,7 @@ namespace FreeLibSet.Forms
     /// Создает вычисляемый столбец
     /// </summary>
     /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Имена столбов, на основании которых производится вычисления.
+    /// <param name="sourceColumnNames">Имена столбцов, на основании которых производится вычисления.
     /// Если null, то столбец является обычным, а не вычисляемым.</param>
     public EFPGridProducerCheckBoxColumn(string name, string[] sourceColumnNames)
       : base(name, sourceColumnNames)
@@ -2318,10 +2318,10 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// Создание столбца, содержащего сумму других столбов
+    /// Создание столбца, содержащего сумму других столбцов
     /// </summary>
     /// <param name="name">Условное имя этого столбца</param>
-    /// <param name="sourceColumnNames">Имена суммируемых столбов</param>
+    /// <param name="sourceColumnNames">Имена суммируемых столбцов</param>
     public EFPGridProducerSumColumn(string name, string[] sourceColumnNames)
       : base(name, sourceColumnNames)
     {

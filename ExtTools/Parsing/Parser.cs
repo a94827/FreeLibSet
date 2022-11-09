@@ -252,12 +252,12 @@ namespace FreeLibSet.Parsing
         {
           if (data.Tokens[i].Start < 0)
           {
-            data.Tokens[i].SetError("Начальная позиция лексемы \"" + data.Tokens[i].TokenType+ "\" не может быть отрицательной");
+            data.Tokens[i].SetError("Начальная позиция лексемы \"" + data.Tokens[i].TokenType + "\" не может быть отрицательной");
             break;
           }
           if (data.Tokens[i].Start < lastPos)
           {
-            data.Tokens[i].SetError("Лексема \"" + data.Tokens[i].TokenType + "\" перекрывается с предыдущей \"" + data.Tokens[i-1].TokenType + "\"");
+            data.Tokens[i].SetError("Лексема \"" + data.Tokens[i].TokenType + "\" перекрывается с предыдущей \"" + data.Tokens[i - 1].TokenType + "\"");
             break;
           }
           if ((data.Tokens[i].Start + data.Tokens[i].Length) > data.Text.Text.Length)
@@ -792,10 +792,7 @@ namespace FreeLibSet.Parsing
     /// <summary>
     /// Стадия парсинга, на которой обнаружена ошибка
     /// </summary>
-    public ParsingState ErrorState
-    {
-      get { return _ErrorState; }
-    }
+    public ParsingState ErrorState { get { return _ErrorState; } }
     private ParsingState _ErrorState;
 
     /// <summary>
@@ -1477,7 +1474,7 @@ namespace FreeLibSet.Parsing
     /// <returns>Список сообщений</returns>
     public ErrorMessageList GetErrorMessages(bool addTokenNumberAndState)
     {
-      ErrorMessageList list = new ErrorMessageList();
+      ErrorMessageList msgs = new ErrorMessageList();
       for (int i = 0; i < Tokens.Count; i++)
       {
         if (Tokens[i].ErrorMessage.HasValue)
@@ -1488,10 +1485,10 @@ namespace FreeLibSet.Parsing
           string text = src.Text;
           if (addTokenNumberAndState)
             text = "№" + (i + 1).ToString() + " [" + Tokens[i].ErrorState.ToString() + "]. " + text;
-          list.Add(new ErrorMessageItem(src.Kind, text, src.Code, data));
+          msgs.Add(new ErrorMessageItem(src.Kind, text, src.Code, data));
         }
       }
-      return list;
+      return msgs;
     }
 
     /// <summary>
@@ -1504,7 +1501,7 @@ namespace FreeLibSet.Parsing
     /// <returns>Список ошибок</returns>
     public static ErrorMessageList GetErrorMessages(IExpression expression)
     {
-      ErrorMessageList List = new ErrorMessageList();
+      ErrorMessageList msgs = new ErrorMessageList();
       List<Token> tokens = new List<Token>();
       GetTokens(expression, tokens);
       for (int i = 0; i < tokens.Count; i++)
@@ -1513,11 +1510,11 @@ namespace FreeLibSet.Parsing
         {
           ParsingErrorItemData data = new ParsingErrorItemData(i,
             tokens[i].TokenType, tokens[i].Start, tokens[i].Length);
-          ErrorMessageItem Src = tokens[i].ErrorMessage.Value;
-          List.Add(new ErrorMessageItem(Src.Kind, Src.Text, Src.Code, data));
+          ErrorMessageItem src = tokens[i].ErrorMessage.Value;
+          msgs.Add(new ErrorMessageItem(src.Kind, src.Text, src.Code, data));
         }
       }
-      return List;
+      return msgs;
     }
 
     /// <summary>

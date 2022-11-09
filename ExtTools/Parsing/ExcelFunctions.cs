@@ -90,6 +90,7 @@ namespace FreeLibSet.Parsing
       #region Дата и время
 
       "DATE",
+      "TIME",
       "NOW",
       "TODAY",
       "YEAR",
@@ -243,6 +244,8 @@ namespace FreeLibSet.Parsing
         #region Дата и время
 
         case "DATE":
+          return new FunctionDef(name, _FDDateTime, 3);
+        case "TIME":
           return new FunctionDef(name, _FDDateTime, 3);
         case "NOW":
           fd = new FunctionDef(name, _FDDateTime, 0);
@@ -413,9 +416,9 @@ namespace FreeLibSet.Parsing
     private static object CalcRound(string name, object[] args, NamedValues userData)
     {
       object value = args[0];
-      int digits = 0;
+      int decimals = 0;
       if (args.Length >= 2)
-        digits = DataTools.GetInt(args[1]);
+        decimals = DataTools.GetInt(args[1]);
 
       /*
       switch (name)
@@ -437,27 +440,26 @@ namespace FreeLibSet.Parsing
       if (value is decimal)
       {
         decimal v = (decimal)value;
-        decimal m = (decimal)(Math.Pow(10, digits));
         switch (name)
         {
-          case "FLOOR": return Math.Floor(v * m) / m;
-          case "CEILING": return Math.Ceiling(v * m) / m;
-          case "ROUND": return Math.Round(v * m, 0, MidpointRounding.AwayFromZero) / m;
-          case "TRUNC": return Math.Truncate(v * m) / m;
+          case "FLOOR": return DataTools.Floor(v, decimals);
+          case "CEILING": return DataTools.Ceiling(v, decimals);
+          case "ROUND": return DataTools.Round(v, decimals);
+          case "TRUNC": return DataTools.Truncate(v, decimals);
           default: throw new BugException();
         }
       }
       else
       {
         double v = Convert.ToDouble(value);
-        double m = Math.Pow(10, digits);
+        double m = Math.Pow(10, decimals);
         double res;
         switch (name)
         {
-          case "FLOOR": res = Math.Floor(v * m) / m; break;
-          case "CEILING": res = Math.Ceiling(v * m) / m; break;
-          case "ROUND": res = Math.Round(v * m, 0, MidpointRounding.AwayFromZero) / m; break;
-          case "TRUNC": res = Math.Truncate(v * m) / m; break;
+          case "FLOOR": res = DataTools.Floor(v, decimals); break;
+          case "CEILING": res = DataTools.Ceiling(v, decimals); break;
+          case "ROUND": res = DataTools.Round(v, decimals); break;
+          case "TRUNC": res = DataTools.Truncate(v, decimals); break;
           default: throw new BugException();
         }
 
@@ -542,7 +544,7 @@ namespace FreeLibSet.Parsing
       {
         if (b is DateTime)
         {
-          return ((DateTime)a).CompareTo((DateTime)b);
+          return (DateTime.SpecifyKind((DateTime)a, DateTimeKind.Unspecified)).CompareTo(DateTime.SpecifyKind((DateTime)b, DateTimeKind.Unspecified));
         }
 
         a = ((DateTime)a).ToOADate();
@@ -731,8 +733,6 @@ namespace FreeLibSet.Parsing
       // Десятичный логарифм   LOG10(x), LOG(x)   Log10(x)
       // По произвольной базе  LOG(x, b)          Log(x, b)
 
-      // Версяи функции Excel Log(x) в смысле десятичного логарифма пока не
-
 
       // Формулы для функций AxxH() взяты из https://ru.wikipedia.org/wiki/%D0%9E%D0%B1%D1%80%D0%B0%D1%82%D0%BD%D1%8B%D0%B5_%D0%B3%D0%B8%D0%BF%D0%B5%D1%80%D0%B1%D0%BE%D0%BB%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8
 
@@ -771,7 +771,9 @@ namespace FreeLibSet.Parsing
       {
         // С двумя аргументами
         case "POWER": return Math.Pow(a1, a2);
-        case "ATAN2": return Math.Atan2(a1, a2);
+        case "ATAN2": 
+          //return Math.Atan2(a1, a2);
+          return Math.Atan2(a2, a1); // 08.11.2022. В Net Framework аргументы идут в обратном порядке по отношению к Excel
         default:
           throw new BugException();
       }
@@ -921,7 +923,7 @@ namespace FreeLibSet.Parsing
 
     #region Функции даты и времени
 
-    #region DATE, NOW, TODAY
+    #region DATE, TIME, NOW, TODAY
 
     private static FunctionDelegate _FDDateTime = new FunctionDelegate(CalcDateTime);
 
@@ -931,15 +933,19 @@ namespace FreeLibSet.Parsing
       {
         case "DATE":
           CheckArgCount(args, 3);
-          return new DateTime(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]));
+          return new DateTime(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]),0,0,0,0, DateTimeKind.Unspecified);
+        
+        case "TIME":
+          CheckArgCount(args, 3);
+          return new TimeSpan(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]));
 
         case "NOW":
           CheckArgCount(args, 0);
-          return DateTime.Now;
+          return DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
 
         case "TODAY":
           CheckArgCount(args, 0);
-          return DateTime.Today;
+          return DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Unspecified);
 
         default:
           throw new ArgumentException("Неизвестное имя функции \"" + name + "\"", "name");
@@ -958,8 +964,7 @@ namespace FreeLibSet.Parsing
       if (args[0] == null)
         return 0; // В Excel функция DAY() возвращает 0, а остальные - непонятные значения
       // Пока буду возвращать 0
-      DateTime dt;
-      dt = GetDate(args[0]);
+      DateTime dt = GetDateTime(args[0]);
       switch (name)
       {
         case "YEAR": return dt.Year;
@@ -974,17 +979,25 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static DateTime GetDate(object arg)
+    private static DateTime GetDateTime(object arg)
     {
       if (arg == null)
-        return DateTime.FromOADate(0);
+        return DateTime.SpecifyKind(DateTime.FromOADate(0), DateTimeKind.Unspecified);
 
       if (arg is DateTime)
-        return (DateTime)arg;
+        return DateTime.SpecifyKind((DateTime)arg, DateTimeKind.Unspecified);
       else if (DataTools.IsIntegerType(arg.GetType()) || DataTools.IsFloatType(arg.GetType()))
       {
         double v = DataTools.GetDouble(arg);
-        return DateTime.FromOADate(v);
+        return DateTime.SpecifyKind(DateTime.FromOADate(v), DateTimeKind.Unspecified);
+      }
+      else if (arg is TimeSpan)
+      {
+        TimeSpan ts = (TimeSpan)arg;
+        if (ts.Ticks >= 0L)
+          return new DateTime(ts.Ticks, DateTimeKind.Unspecified);
+        else
+          return DateTime.SpecifyKind(DateTime.MaxValue.Date.AddTicks(ts.Ticks), DateTimeKind.Unspecified);
       }
 
       throw new InvalidCastException("Аргумент типа " + arg.GetType().ToString() + " нельзя преобразовать в DateTime");
@@ -997,21 +1010,23 @@ namespace FreeLibSet.Parsing
     private static object CalcDateDif(string name, object[] args, NamedValues userData)
     {
       CheckArgCount(args, 3);
-      DateTime dt1 = GetDate(args[0]).Date; // начальная дата
-      DateTime dt2 = GetDate(args[1]).Date; // конечная дата
+      DateTime dt1 = GetDateTime(args[0]).Date; // начальная дата
+      DateTime dt2 = GetDateTime(args[1]).Date; // конечная дата
       if (dt2 < dt1)
         return null; // неправильный интервал дат. Excel возвращает #Число!
       if (dt2 == dt1)
         return 0;
 
-      DateRange dtr = new DateRange(dt1, dt2);
+      DateRange dtr = new DateRange(dt1, dt2.AddDays(-1)); 
 
       string mode = DataTools.GetString(args[2]);
       switch (mode.ToLowerInvariant())
       {
-        case "d": return dtr.Days - 1;
-        case "m": return dtr.Months;
-        case "y": return dtr.Years;
+        case "d": return dtr.Days;
+        case "m":
+          return dtr.SimpleMonths; 
+        case "y": 
+          return dtr.SimpleYears;
         case "ym":
         case "md":
         case "yd":
@@ -1024,10 +1039,13 @@ namespace FreeLibSet.Parsing
     private static object CalcDays(string name, object[] args, NamedValues userData)
     {
       CheckArgCount(args, 2);
-      DateTime dt1 = GetDate(args[0]).Date; // начальная дата
-      DateTime dt2 = GetDate(args[1]).Date; // конечная дата
-
-      return dt1 - dt2;
+      DateTime dt1 = GetDateTime(args[0]); // начальная дата
+      DateTime dt2 = GetDateTime(args[1]); // конечная дата
+      TimeSpan ts = dt1 - dt2; // 09.11.2022 - не отрезаем компоненты времени
+      if ((ts.Ticks % TimeSpan.TicksPerDay) == 0L)
+        return (int)(ts.Ticks / TimeSpan.TicksPerDay);
+      else
+        return ts.TotalDays;
     }
 
     #endregion
@@ -1097,7 +1115,8 @@ namespace FreeLibSet.Parsing
       int index = DataTools.GetInt(args[0]);
       if (index < 1 || index >= args.Length)
         throw new ArgumentOutOfRangeException("args", index, "Индекс должен быть в диапазоне от 1 до " + (args.Length - 1).ToString());
-      return args[index - 1];
+      //return args[index - 1];
+      return args[index]; // испр.08.11.2022
     }
 
     #endregion

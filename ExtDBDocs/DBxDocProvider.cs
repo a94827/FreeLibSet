@@ -21,6 +21,7 @@ using FreeLibSet.Caching;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
+using System.ComponentModel;
 
 namespace FreeLibSet.Data.Docs
 {
@@ -2544,6 +2545,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="preloadIds">Идентификаторы документов, поддокументов и двочных данных,
     /// которые желательно загрузить</param>
     /// <returns>Словарь загруженных данных. Ключ - идентификатор двоичных данных. Значение - загруженные данные</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Dictionary<Int32, byte[]> InternalGetBinData2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds)
     {
       return DoInternalGetBinData2(tableName, columnName, wantedId, docVersion, preloadIds);
@@ -2674,6 +2676,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="binDataId">Сюда помещается идентификатор двоичных данных,
     /// возвращаемый методом InternalFindBinData()</param>
     /// <returns>Идентификатор записи файла в базе данных</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Int32 InternalFindDBFile(StoredFileInfo fileInfo, string md5, out Int32 binDataId)
     {
       return DoInternalFindDBFile(fileInfo, md5, out binDataId);
@@ -2810,6 +2813,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="preloadIds">Идентификаторы документов, поддокументов и файлов,
     /// которые желательно загрузить</param>
     /// <returns>Словарь загруженных данных. Ключ - идентификатор файла. Значение - контейнер с файлом</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Dictionary<Int32, FileContainer> InternalGetDBFile2(string tableName, string columnName, DocSubDocDataId wantedId, int docVersion, List<DocSubDocDataId> preloadIds)
     {
       return DoInternalGetDBFile2(tableName, columnName, wantedId, docVersion, preloadIds);
@@ -3003,6 +3007,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор документа или поддокумента</param>
     /// <param name="primaryDS">Первичный набор данных</param>
     /// <returns>Текст для документа или поддокумента</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public /*internal protected */ string InternalGetTextValue(string tableName, Int32 id, DataSet primaryDS)
     {
       return DoInternalGetTextValue(tableName, id, primaryDS);

@@ -1497,6 +1497,15 @@ namespace FreeLibSet.Forms.Docs
           cfg.SetBool("HideNestedGroups", false);
         }
       }
+
+      // Записать можно, а прочитать - нет
+      //if (ExternalFilters != null)
+      //{
+      //  CfgPart cfgExtFilters = cfg.GetChild("ExternalFilters", true);
+      //  ExternalFilters.WriteConfig(cfgExtFilters);
+      //}
+      //else
+      //  cfg.Remove("ExternalFilters");
     }
 
     /// <summary>
@@ -1531,6 +1540,18 @@ namespace FreeLibSet.Forms.Docs
         GroupTreeVisible = false;
         GroupCBVisible = false;
       }
+
+      // Нет способа создать внешние фильтры.
+      // Они создаются в прикладном коде и затем передаются в DocTypeUI.ShowOrOpen().
+
+      //CfgPart cfgExtFilters = cfg.GetChild("ExternalFilters", false);
+      //if (cfgExtFilters != null)
+      //{ 
+      //  GridFilters filters=new GridFilters();
+      //  // Как-то добавить фиоьтры
+      //  filters.ReadConfig(cfgExtFilters);
+      //  ExternalFilters = filters;
+      //}
     }
 
     #endregion

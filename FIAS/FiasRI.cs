@@ -9,6 +9,7 @@ using FreeLibSet.Config;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.DependedValues;
+using System.ComponentModel;
 
 // Удаленный пользовательский интерфейс
 
@@ -49,6 +50,7 @@ namespace FreeLibSet.FIAS.RI
     /// Этот метод не должен использоваться в прикладном коде.
     /// </summary>
     /// <param name="source">Источник адресов после десериализации на стороне клиента</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void InternalSetSource(IFiasSource source)
     {
       _Source = source;
@@ -316,6 +318,7 @@ namespace FreeLibSet.FIAS.RI
     /// Этот метод не должен использоваться в прикладном коде.
     /// </summary>
     /// <param name="source">Источник адресов после десериализации на стороне клиента</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void InternalSetSource(IFiasSource source)
     {
       _Source = source;
@@ -601,6 +604,7 @@ namespace FreeLibSet.FIAS.RI
     /// Этот метод не должен использоваться в прикладном коде.
     /// </summary>
     /// <param name="source">Источник адресов после десериализации на стороне клиента</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void InternalSetSource(IFiasSource source)
     {
       _Source = source;

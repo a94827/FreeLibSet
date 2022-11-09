@@ -168,7 +168,8 @@ namespace TestCalculator
           res = (bool)res ? 1 : 0;
         if (res is Int32 || DataTools.IsFloatType(res.GetType()))
         {
-          string expr2 = expr.Replace(',', '.').Replace(" ", "."); // вычислитель использует точку, а не запятую
+          string expr2 = expr.Replace(',', '.'); // вычислитель использует точку, а не запятую
+          expr2 = expr2.Replace(" ", ""); // пробелы недопустимы
           expr2 = expr2.Replace(';', ','); // разделитель аргументов
           object res2 = Microsoft.JScript.Eval.JScriptEvaluate(expr2, _TestEng);
           if (DataTools.GetDouble(res2) != DataTools.GetDouble(res)) // double более "широкий" тип, чем decimal
