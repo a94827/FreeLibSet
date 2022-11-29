@@ -97,6 +97,14 @@ namespace FreeLibSet.FIAS
             flags_b[j] = true;
             break;
           }
+          // 29.11.2022. Считаем одинаковыми лексемами, если они отличаются только последними буквами "а" и "о",
+          // например, "Криводаново" и "Криводанова"
+          if (i == (a._Tokens.Length - 1) && j == (b._Tokens.Length - 1) && CompareLastDiffAO(a._Tokens[i], b._Tokens[j]))
+          {
+            flags_a[i] = true;
+            flags_b[j] = true;
+            break;
+          }
         }
       }
 
@@ -229,6 +237,27 @@ namespace FreeLibSet.FIAS
 
       }
 
+      return true;
+    }
+
+    private static bool CompareLastDiffAO(string s1, string s2)
+    {
+      if (s1.Length != s2.Length)
+        return false;
+      if (s1.Length < 3)
+        return false;
+      if (String.Compare(s1, 0, s2, 0, s1.Length - 1, StringComparison.Ordinal) != 0)
+        return false;
+
+      if ("ао".IndexOf(s1[s1.Length - 1]) < 0 || "ао".IndexOf(s2[s2.Length - 1]) < 0)
+        return false;
+
+      // Могут отличаться только названия:
+      // - на "во" и "ва": "Криводаново" и "Криводанова"
+      // - на "но" и "на": "Баландино" и "Баландина"
+
+      if ("вн".IndexOf(s1[s1.Length - 2]) < 0)
+        return false;
       return true;
     }
 

@@ -367,6 +367,9 @@ namespace FreeLibSet.FIAS
             case "р.п.":
               fullAOType = "Рабочий поселок";
               return true;
+            case "пос.": // 25.11.2022
+              fullAOType = "Поселок";
+              return true;
           }
           break;
         case FiasLevel.PlanningStructure:
@@ -535,6 +538,7 @@ namespace FreeLibSet.FIAS
         AddToAOTypeLevelDict(dict, "рп", FiasLevelSet.FromLevel(FiasLevel.Village));
         AddToAOTypeLevelDict(dict, "р/п", FiasLevelSet.FromLevel(FiasLevel.Village));
         AddToAOTypeLevelDict(dict, "р.п.", FiasLevelSet.FromLevel(FiasLevel.Village));
+        AddToAOTypeLevelDict(dict, "пос.", FiasLevelSet.FromLevel(FiasLevel.Village)); // 25.11.2022
       }
 
       #endregion

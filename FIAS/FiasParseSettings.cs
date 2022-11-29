@@ -162,6 +162,7 @@ namespace FreeLibSet.FIAS
         throw new ArgumentNullException("source");
       _Handler = new FiasHandler(source);
       _BaseAddress = new FiasAddress();
+      _ExtSearch = true;
     }
 
     #endregion
@@ -200,6 +201,13 @@ namespace FreeLibSet.FIAS
       set { _CellLevels = value; }
     }
     private FiasLevelSet[] _CellLevels;
+
+    /// <summary>
+    /// Нужно ли использовать расширенный поиск для адресных объектов, например, "ул. К.Маркса" вместо "ул. Карла Маркса".
+    /// По умолчанию - true
+    /// </summary>
+    public bool ExtSearch { get { return _ExtSearch; } set { _ExtSearch = value; } }
+    private bool _ExtSearch;
 
     #endregion
 

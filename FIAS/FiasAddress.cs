@@ -482,7 +482,7 @@ namespace FreeLibSet.FIAS
     /// <param name="dest">Заполняемый адресный объект</param>
     /// <param name="levels">Копируемые уровни. 
     /// Если в текущем адресе для уровня из набора нет значения, то уровень очищается.
-    /// В заполнямом адресе уровни, не перечисленные в наборе, не заменяются</param>
+    /// В заполняемом адресе уровни, не перечисленные в наборе, не заменяются</param>
     public void CopyNamesTo(FiasAddress dest, FiasLevelSet levels)
     {
 #if DEBUG

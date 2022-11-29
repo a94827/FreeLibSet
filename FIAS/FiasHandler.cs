@@ -71,10 +71,23 @@ namespace FreeLibSet.FIAS
     /// <param name="address">Адрес</param>
     public void FillAddress(FiasAddress address)
     {
+      FillAddress(address, false);
+    }
+
+    /// <summary>
+    /// Дозаполнение полей адреса.
+    /// Также выполнется проверка ошибок и заново заполняется список FiasAddress.Messages.
+    /// Если требуется заполнить множество адресов, используйте метод FillAddresses(), 
+    /// т.к. он может быстрее загрузить нужные части классификатора из базы данных в кэш.
+    /// </summary>
+    /// <param name="address">Адрес</param>
+    /// <param name="extSearch">Если true, то будет использоваться расширенный поиск</param>
+    internal void FillAddress(FiasAddress address, bool extSearch)
+    {
       if (address == null)
         throw new ArgumentNullException("address");
 
-      FillAddresses(new FiasAddress[1] { address });
+      FillAddresses(new FiasAddress[1] { address }, extSearch);
     }
 
     /// <summary>
@@ -83,6 +96,17 @@ namespace FreeLibSet.FIAS
     /// </summary>
     /// <param name="addresses">Адреса</param>
     public void FillAddresses(FiasAddress[] addresses)
+    {
+      FillAddresses(addresses, false);
+    }
+
+    /// <summary>
+    /// Дозаполнение полей нескольких адресов.
+    /// Также выполнется проверка ошибок и заново заполняется список FiasAddress.Messages.
+    /// </summary>
+    /// <param name="addresses">Адреса</param>
+    /// <param name="extSearch">Если true, то будет использоваться расширенный поиск</param>
+    internal void FillAddresses(FiasAddress[] addresses, bool extSearch)
     {
       if (addresses == null)
         throw new ArgumentNullException("addresses");
@@ -130,7 +154,7 @@ namespace FreeLibSet.FIAS
         spl.AllowCancel = true;
         for (int i = 0; i < addresses.Length; i++)
         {
-          DoFillAddress(addresses[i], loader);
+          DoFillAddress(addresses[i], loader, extSearch);
           spl.IncPercent();
         }
         spl.Complete();
@@ -282,7 +306,7 @@ namespace FreeLibSet.FIAS
      * - Иначе используется EndDate.
      */
 
-    private void DoFillAddress(FiasAddress address, PageLoader loader)
+    private void DoFillAddress(FiasAddress address, PageLoader loader, bool extSearch)
     {
       address.ClearAuxInfo();
       address.ClearMessages();
@@ -306,7 +330,7 @@ namespace FreeLibSet.FIAS
 
       #endregion
 
-      DoFillAddressByNames(address, loader);
+      DoFillAddressByNames(address, loader, extSearch);
 
       #region Проверка именной части
 
@@ -887,7 +911,7 @@ namespace FreeLibSet.FIAS
 
     #region По наименованиям и сокращениям
 
-    private void DoFillAddressByNames(FiasAddress address, PageLoader loader)
+    private void DoFillAddressByNames(FiasAddress address, PageLoader loader, bool extSearch)
     {
       bool hasErrors = false;
       FiasLevel bottomLevel = address.GuidBottomLevel;
@@ -920,7 +944,7 @@ namespace FreeLibSet.FIAS
 
           FiasCachedPageAddrOb page = loader.GetAOPage(pageAOGuid, FiasTools.AOLevels[j]);
           Int32 aoTypeId = AOTypes.FindAOTypeId(FiasTools.AOLevels[j], aoType);
-          searchRes = page.FindRow(name, aoTypeId);
+          searchRes = page.FindRow(name, aoTypeId, extSearch);
           if (searchRes.Count == FiasSearchRowCount.Ok)
           {
             // очищаем уровни до "передвижения"
@@ -952,7 +976,7 @@ namespace FreeLibSet.FIAS
               bottomLevel = _AddrObExtractor.Level;
               break;
             case FiasSearchRowCount.NotFound:
-              address.AddMessage(ErrorMessageKind.Warning, "Не найден адресный объект для уровня [" + FiasEnumNames.ToString(thisLevel, false) + "]: \"" + name + " " + aoType + "\"", FiasTools.AOLevels[i]);
+              address.AddMessage(ErrorMessageKind.Warning, "Не найден адресный объект для уровня [" + FiasEnumNames.ToString(thisLevel, false) + "], название \"" + name + "\", тип \"" + aoType + "\"", FiasTools.AOLevels[i]);
               hasErrors = true;
               break;
             case FiasSearchRowCount.Multi:

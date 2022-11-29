@@ -159,13 +159,6 @@ namespace FreeLibSet.FIAS
     private readonly DataSet _DS;
 
     /// <summary>
-    /// Объект для поиска строк по имени
-    /// </summary>
-    [NonSerialized]
-    private DataView _dvOffName;
-
-
-    /// <summary>
     /// Возвращает true, если на странице нет ни одной записи
     /// </summary>
     public bool IsEmpty { get { return _DS.Tables[0].Rows.Count == 0; } }
@@ -177,6 +170,56 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
+    #region Объект для поиска строк по имени
+
+    /// <summary>
+    /// Дополнительная таблица для поиска строк по имени.
+    /// Содержит поле "OFFNAME" с заменой буквы "Ё" на "Е".
+    /// Также содержит поле "RowIndex" для ссылки на основную таблицу
+    /// </summary>
+    [NonSerialized]
+    private volatile DataTable _TblOffName;
+
+    private void InitTblOffName()
+    {
+      if (_TblOffName != null)
+        return;
+
+      lock (_DS)
+      {
+        if (_TblOffName == null)
+          _TblOffName = CreateTblOffName();
+      }
+    }
+
+    private DataTable CreateTblOffName()
+    {
+      TopFlagAndDatesRowFilter filter = new TopFlagAndDatesRowFilter(_DS.Tables[0]);
+
+      DataTable tbl = new DataTable();
+      tbl.Columns.Add("OFFNAME", typeof(string));
+      tbl.Columns.Add("RowIndex", typeof(int));
+
+      int pOffName = _DS.Tables[0].Columns.IndexOf("OFFNAME");
+      for (int i = 0; i < _DS.Tables[0].Rows.Count; i++)
+      {
+        DataRow srcRow = _DS.Tables[0].Rows[i];
+        if (filter.TestRow(srcRow))
+        {
+          string offName = srcRow[pOffName].ToString();
+          offName = offName.ToUpperInvariant().Replace('Ё', 'Е');
+          tbl.Rows.Add(offName, i);
+        }
+      }
+
+      tbl.DefaultView.Sort = "OFFNAME";
+
+      return tbl;
+    }
+
+
+    #endregion
+
     #region Сериализация
 
     [System.Runtime.Serialization.OnDeserialized]
@@ -185,10 +228,6 @@ namespace FreeLibSet.FIAS
       DataTools.SetPrimaryKey(_DS.Tables[0], "AOID");
       _DS.Tables[0].DefaultView.Sort = "AOGUID";
       _DS.Tables[0].DefaultView.RowFilter = "TopFlag=TRUE";
-
-      _dvOffName = new DataView(_DS.Tables[0]);
-      FiasTools.InitTopFlagAndDatesRowFilter(_dvOffName);
-      _dvOffName.Sort = "OFFNAME";
     }
 
     #endregion
@@ -271,10 +310,13 @@ namespace FreeLibSet.FIAS
         {
           if (_Names == null)
           {
+            TopFlagAndDatesRowFilter filter = new TopFlagAndDatesRowFilter(_DS.Tables[0]);
+
             SingleScopeSortedList<string> lst = new SingleScopeSortedList<string>();
-            foreach (DataRowView drv in _dvOffName)
+            foreach (DataRow row in _DS.Tables[0].Rows)
             {
-              lst.Add(DataTools.GetString(drv.Row, "OFFNAME"));
+              if (filter.TestRow(row))
+                lst.Add(DataTools.GetString(row, "OFFNAME"));
             }
             _Names = lst.ToArray();
           }
@@ -312,7 +354,7 @@ namespace FreeLibSet.FIAS
     {
       DataView dv = new DataView(_DS.Tables[0]);
       if (actualOnly)
-        FiasTools.InitTopFlagAndDatesRowFilter(dv);
+        TopFlagAndDatesRowFilter.InitRowFilter(dv);
       dv.Sort = "OFFNAME";
       return dv;
     }
@@ -358,20 +400,31 @@ namespace FreeLibSet.FIAS
     /// </summary>
     private FiasSearchRowResult DoFindRowNorm(string name, Int32 aoTypeId)
     {
-      DataRowView[] drvs = _dvOffName.FindRows(name);
-      if (drvs.Length == 1)
-        return new FiasSearchRowResult(FiasSearchRowCount.Ok, drvs[0].Row);
+      name = name.ToLowerInvariant().Replace("ё", "е");
+      InitTblOffName();
+#if DEBUG
+      if (_TblOffName == null)
+        throw new NullReferenceException("_TblOffName=null");
+#endif
+      DataRowView[] drvs2 = _TblOffName.DefaultView.FindRows(name);
+      if (drvs2.Length == 1)
+      {
+        int rowIndex = (int)(drvs2[0].Row["RowIndex"]);
+        return new FiasSearchRowResult(FiasSearchRowCount.Ok, _DS.Tables[0].Rows[rowIndex]);
+      }
 
       if (aoTypeId == 0)
         return FiasSearchRowResult.NotFound;
 
       DataRow row = null;
-      for (int i = 0; i < drvs.Length; i++)
+      for (int i = 0; i < drvs2.Length; i++)
       {
-        if (DataTools.GetInt(drvs[i].Row, "AOTypeId") == aoTypeId)
+        int rowIndex = (int)(drvs2[i].Row["RowIndex"]);
+        DataRow mainRow = _DS.Tables[0].Rows[rowIndex];
+        if (DataTools.GetInt(mainRow, "AOTypeId") == aoTypeId)
         {
           if (row == null)
-            row = drvs[i].Row;
+            row = mainRow;
           else
             return FiasSearchRowResult.Multi; // больше одной строки
         }
@@ -388,30 +441,35 @@ namespace FreeLibSet.FIAS
     /// </summary>
     private FiasSearchRowResult DoFindRowExt(string name, Int32 aoTypeId)
     {
+      TopFlagAndDatesRowFilter filter = new TopFlagAndDatesRowFilter(_DS.Tables[0]);
+
       FiasAddrObName xname = new FiasAddrObName(name);
       DataRow row1 = null; // строка с совпадением сокращения
       DataRow row2 = null; // строка с любым сокращением
       int count2 = 0; // количество строк без совпадения сокращения
-      foreach (DataRowView drv in _dvOffName)
+      foreach (DataRow row in _DS.Tables[0].Rows)
       {
-        FiasAddrObName xname2 = new FiasAddrObName(DataTools.GetString(drv.Row, "OFFNAME"));
+        if (!filter.TestRow(row))
+          continue;
+
+        FiasAddrObName xname2 = new FiasAddrObName(DataTools.GetString(row, "OFFNAME"));
         if (xname2 == xname)
         {
           // Есть совпадение по лексемам
           if (aoTypeId != 0)
           {
-            Int32 aoTypeId2 = DataTools.GetInt(drv.Row, "AOTypeId");
+            Int32 aoTypeId2 = DataTools.GetInt(row, "AOTypeId");
             if (aoTypeId2 == aoTypeId)
             {
               if (row1 != null)
                 return FiasSearchRowResult.Multi; // две строки с совпадающшим сокращением
               else
-                row1 = drv.Row;
+                row1 = row;
             }
           }
 
           count2++;
-          row2 = drv.Row;
+          row2 = row;
           // Здесь не прерываем поиск, если нашли несколько строк
           // Может быть, будет найдена ровно одна строка с совпадением сокращения.
         }
@@ -561,7 +619,7 @@ namespace FreeLibSet.FIAS
       _DS.Tables[0].DefaultView.RowFilter = "TopFlag=TRUE";
 
       _dvHouseNum = new DataView(_DS.Tables[0]);
-      FiasTools.InitTopFlagAndDatesRowFilter(_dvHouseNum);
+      TopFlagAndDatesRowFilter.InitRowFilter(_dvHouseNum);
       _dvHouseNum.Sort = "HOUSENUM";
     }
 
@@ -721,7 +779,7 @@ namespace FreeLibSet.FIAS
     {
       DataView dv = new DataView(_DS.Tables[0]);
       if (actualOnly)
-        FiasTools.InitTopFlagAndDatesRowFilter(dv);
+        TopFlagAndDatesRowFilter.InitRowFilter(dv);
       dv.Sort = "nHouseNum,HOUSENUM,nBuildNum,BUILDNUM,STRSTATUS,nStrucNum,STRUCNUM";
       return dv;
     }
@@ -956,7 +1014,7 @@ namespace FreeLibSet.FIAS
       _DS.Tables[0].DefaultView.RowFilter = "TopFlag=TRUE";
 
       _dvFlatNumber = new DataView(_DS.Tables[0]);
-      FiasTools.InitTopFlagAndDatesRowFilter(_dvFlatNumber);
+      TopFlagAndDatesRowFilter.InitRowFilter(_dvFlatNumber);
       _dvFlatNumber.Sort = "FLATNUMBER";
     }
 
@@ -1086,7 +1144,7 @@ namespace FreeLibSet.FIAS
     {
       DataView dv = new DataView(_DS.Tables[0]);
       if (actualOnly)
-        FiasTools.InitTopFlagAndDatesRowFilter(dv);
+        TopFlagAndDatesRowFilter.InitRowFilter(dv);
       dv.Sort = "FLATTYPE,nFlatNumber,FLATNUMBER,ROOMTYPE,nRoomNumber,ROOMNUMBER"; // квартиры до помещений, затем по номерам квартир
       return dv;
     }

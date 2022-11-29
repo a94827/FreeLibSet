@@ -701,25 +701,6 @@ namespace FreeLibSet.FIAS
 
     #endregion
 
-    internal static void InitTopFlagAndDatesRowFilter(DataView dv)
-    {
-      string s = "TopFlag=TRUE";
-      if (dv.Table.Columns.IndexOf("Actual") >= 0)
-        s += " AND Actual=TRUE";
-      if (dv.Table.Columns.IndexOf("Live") >= 0)
-        s += " AND Live=TRUE";
-      if (dv.Table.Columns.IndexOf("dStartDate") >= 0)
-      {
-        int dToday = (int)(DateTime.Today.ToOADate());
-        s += " AND dStartDate<=" + dToday.ToString() + " AND dEndDate>=" + dToday.ToString();
-      }
-      else if (dv.Table.Columns.IndexOf("STARTDATE") >= 0)
-      {
-        s += " AND " + new DateRangeInclusionFilter("STARTDATE", "ENDDATE", DateTime.Today).ToString();
-      }
-      dv.RowFilter = s;
-    }
-
     #region Именная часть
 
     private static readonly CharArrayIndexer _ValidAONameChars;
@@ -937,6 +918,93 @@ namespace FreeLibSet.FIAS
     #endregion
   }
 
+  /// <summary>
+  /// Фильтрация актуальных строк в таблице кэшированной страницы.
+  /// Содержит статический метод для инициализации DataView.RowFilter и нестатический метод для ручного отбора строк
+  /// </summary>
+  internal class TopFlagAndDatesRowFilter
+  {
+    #region Ручной перебор
+
+    public TopFlagAndDatesRowFilter(DataTable table)
+    {
+      _posTopFlag = table.Columns.IndexOf("TopFlag");
+      _posActual = table.Columns.IndexOf("Actual");
+      _posLive = table.Columns.IndexOf("Live");
+      _posDStartDate = table.Columns.IndexOf("dStartDate");
+      _posDEndDate = table.Columns.IndexOf("dEndDate");
+      _posStartDate = table.Columns.IndexOf("STARTDATE");
+      _posEndDate = table.Columns.IndexOf("ENDDATE");
+      _Today = DateTime.Today;
+
+#if DEBUG
+      if (_posTopFlag < 0)
+        throw new BugException("TopFlag");
+      if ((_posDStartDate>=0) != (_posDEndDate>=0))
+        throw new BugException("dStartDate & dEndDate");
+      if ((_posStartDate >= 0) != (_posEndDate >= 0))
+        throw new BugException("StartDate & EndDate");
+      if (_posDStartDate>=0 && _posStartDate>=0)
+        throw new BugException("DStartDate & StartDate");
+#endif
+    }
+
+    private int _posTopFlag, _posActual, _posLive, _posDStartDate, _posDEndDate, _posStartDate, _posEndDate;
+    private DateTime _Today;
+
+    public bool TestRow(DataRow row)
+    {
+      if (!DataTools.GetBool(row[_posTopFlag]))
+        return false;
+      if (_posActual >= 0)
+      {
+        if (!DataTools.GetBool(row[_posActual]))
+          return false;
+      }
+      if (_posLive >= 0)
+      {
+        if (!DataTools.GetBool(row[_posLive]))
+          return false;
+      }
+      if (_posDStartDate >= 0)
+      {
+        int dToday = (int)(_Today.ToOADate());
+        if (DataTools.GetInt(row[_posDStartDate]) > dToday || DataTools.GetInt(row[_posDEndDate]) < dToday)
+          return false;
+      }
+      else if (_posStartDate >= 0)
+      {
+        if (((DateTime)(row[_posStartDate])) > _Today || ((DateTime)(row[_posEndDate])) < _Today)
+          return false;
+      }
+      return true;
+    }
+
+    #endregion
+
+    #region Статический метод
+
+    internal static void InitRowFilter(DataView dv)
+    {
+      string s = "TopFlag=TRUE";
+      if (dv.Table.Columns.IndexOf("Actual") >= 0)
+        s += " AND Actual=TRUE";
+      if (dv.Table.Columns.IndexOf("Live") >= 0)
+        s += " AND Live=TRUE";
+      if (dv.Table.Columns.IndexOf("dStartDate") >= 0)
+      {
+        int dToday = (int)(DateTime.Today.ToOADate());
+        s += " AND dStartDate<=" + StdConvert.ToString(dToday) + " AND dEndDate>=" + StdConvert.ToString(dToday);
+      }
+      else if (dv.Table.Columns.IndexOf("STARTDATE") >= 0)
+      {
+        s += " AND " + new DateRangeInclusionFilter("STARTDATE", "ENDDATE", DateTime.Today).ToString();
+      }
+      dv.RowFilter = s;
+    }
+
+    #endregion
+  }
 
   /// <summary>
   /// Компактная структура для хранения списка уровней FiasLevel из массива FiasTools.AllLevels.

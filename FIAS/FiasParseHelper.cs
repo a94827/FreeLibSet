@@ -75,7 +75,7 @@ namespace FreeLibSet.FIAS
 
     /// <summary>
     /// Сравнение адреса-претендента с лучшим существующим адресом.
-    /// Если претендент "лучше", чем старый адрес, возвращается true, и старый адрес щаменяется на новый
+    /// Если претендент "лучше", чем старый адрес, возвращается true, и старый адрес заменяется на новый
     /// </summary>
     /// <param name="currentCellIndex"></param>
     /// <param name="s"></param>
@@ -101,16 +101,16 @@ namespace FreeLibSet.FIAS
         }
       }
 
-      Handler.FillAddress(address);
-
+      // 29.11.2022. Расширенный поиск
+      Handler.FillAddress(address, ParseSettings.ExtSearch);
       if (DoCompareWithTheBest(s, address))
       {
         _BestAddress = address.Clone();
         _BestTail = s;
         return true;
       }
-      else
-        return false;
+
+      return false;
     }
 
     private bool DoCompareWithTheBest(string s, FiasAddress address)
@@ -225,7 +225,7 @@ namespace FreeLibSet.FIAS
       bool res = false;
       bool aoTypeFound = false;
 
-      // Может ли тип адресного объекта быть до или после именной части
+      // Может ли тип адресного объекта быть до или после именной части?
       bool aoTypeBeforeName, aoTypeAfterName;
       FiasTools.GetAOTypePlace(level, out aoTypeBeforeName, out aoTypeAfterName);
 
@@ -295,6 +295,25 @@ namespace FreeLibSet.FIAS
             if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
               res = true;
           }
+        }
+      }
+
+      if (aoTypeBeforeName && (!aoTypeAfterName) && pSpaces.Length > 0)
+      {
+        // 29.11.2022
+        // Проверяем неправильный порядок, например, "Тюмень г"
+        // Не используем maxAOTypeParts, так как предполагаем, что в конце идет сокращение, а не полный тип адресного объекта
+
+        string nm = s2.Substring(0, pSpaces[pSpaces.Length - 1]);
+        string aoType = s2.Substring(pSpaces[pSpaces.Length - 1] + 1);
+        string fullAOType;
+        if (IsValidAOType(level, aoType, out fullAOType))
+        {
+          // Сокращение подходит для уровня
+          aoTypeFound = true;
+          RemoveNumChar(ref nm, level);
+          if (AddPartialSubsts(currentCellIndex, fullAOType, nm, sOthers, levels, address, level))
+            res = true;
         }
       }
 

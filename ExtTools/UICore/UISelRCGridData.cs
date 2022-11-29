@@ -10,14 +10,15 @@ namespace FreeLibSet.UICore
   #region Делегат EFPSelRCValidatingEventHandler
 
   /// <summary>
-  /// Аргументы события EFPSelRCColumn.Validating
+  /// Аргументы события UISelRCColumn.Validating
   /// </summary>
   public class UISelRCValidatingEventArgs : EventArgs, IUIValidableObject
   {
     #region Защищенный конструктор
 
-    internal UISelRCValidatingEventArgs()
+    internal UISelRCValidatingEventArgs(UISelRCGridData data)
     {
+      _Data = data;
     }
 
     #endregion
@@ -30,11 +31,11 @@ namespace FreeLibSet.UICore
     /// UISelRCValidatingEventArgs каждый раз. Вместо этого объект создается однократно, а затем вызывается
     /// метод InitSource() для каждого значения, после чего вызывается событие Validating.
     /// </summary>
-    /// <param name="sourceText"></param>
-    internal void InitSource(string sourceText)
+    internal void InitSource(int rowIndex, int columnIndex)
     {
-      _SourceText = sourceText;
-      _ResultValue = sourceText;
+      _RowIndex = rowIndex;
+      _ColumnIndex = columnIndex;
+      _ResultValue = _Data.SourceData[rowIndex, columnIndex];
       _ValidateState = UIValidateState.Ok;
       _ErrorText = null;
     }
@@ -44,11 +45,28 @@ namespace FreeLibSet.UICore
     #region Основные свойства
 
     /// <summary>
+    /// Набор данных, для которых выполняется проверка.
+    /// </summary>
+    public UISelRCGridData Data { get { return _Data; } }
+    private UISelRCGridData _Data;
+
+    /// <summary>
+    /// Строка матрицы UISelRCGridData.SourceData, для которой выполняется проверка
+    /// </summary>
+    public int RowIndex { get { return _RowIndex; } }
+    private int _RowIndex;
+
+    /// <summary>
+    /// Столбец матрицы UISelRCGridData.SourceData, для которого выполняется проверка
+    /// </summary>
+    public int ColumnIndex { get { return _ColumnIndex; } }
+    private int _ColumnIndex;
+
+    /// <summary>
     /// Исходные данные из буфера обмена (строка), которые нужно проверить и преобразовать в значение.
     /// Может быть пустая строка
     /// </summary>
-    public string SourceText { get { return _SourceText; } }
-    private string _SourceText;
+    public string SourceText { get { return _Data.SourceData[_RowIndex, _ColumnIndex]; } }
 
     /// <summary>
     /// Результат преобразования. По умолчанию, значение совпадает со строкой SourceData
@@ -910,7 +928,7 @@ namespace FreeLibSet.UICore
     #region Конструктор
 
     /// <summary>
-    /// Инициализипрует набор данных.
+    /// Инициализирует набор данных.
     /// </summary>
     /// <param name="sourceData">Матрица текстовых строк (обычно вставляемая из буфера обмена). Не может быть null.</param>
     /// <param name="availableColumns">Список описателей столбцов, доступных для выбора пользователем. Не может быть null или содержать элементы null.
@@ -927,7 +945,7 @@ namespace FreeLibSet.UICore
 
       _SelRows = new SelRowCollection(this);
       _SelColumns = new SelColumnCollection(this);
-      _ValidatingArgs = new UISelRCValidatingEventArgs();
+      _ValidatingArgs = new UISelRCValidatingEventArgs(this);
     }
 
     #endregion
@@ -1614,7 +1632,7 @@ namespace FreeLibSet.UICore
                 if (!_Data.SelRows[k])
                   continue; // 17.06.2022. Пустые строки не учитываются для распределения столбцов
 
-                _Data._ValidatingArgs.InitSource(_Data._SourceData[k, i]);
+                _Data._ValidatingArgs.InitSource(k, i);
                 cols2[j].PerformValidating(_Data._ValidatingArgs);
                 if (_Data._ValidatingArgs.ValidateState != UIValidateState.Ok)
                 {
@@ -1881,7 +1899,7 @@ namespace FreeLibSet.UICore
 
       try
       {
-        _ValidatingArgs.InitSource(SourceData[rowIndex, columnIndex]);
+        _ValidatingArgs.InitSource(rowIndex, columnIndex);
         SelColumns[columnIndex].PerformValidating(_ValidatingArgs);
         errorText = _ValidatingArgs.ErrorText;
         return _ValidatingArgs.ValidateState;
@@ -1917,7 +1935,7 @@ namespace FreeLibSet.UICore
 
         try
         {
-          _ValidatingArgs.InitSource(SourceData[rowIndex, columnIndex]);
+          _ValidatingArgs.InitSource(rowIndex, columnIndex);
           SelColumns[columnIndex].PerformValidating(_ValidatingArgs);
           return _ValidatingArgs.ResultValue;
         }

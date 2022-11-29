@@ -5067,7 +5067,7 @@ namespace FreeLibSet.Collections
     {
     }
 
-    #endregion
+  #endregion
 
   #region Доступ к элементам
 
@@ -5098,7 +5098,7 @@ namespace FreeLibSet.Collections
       }
     }
 
-    #endregion
+  #endregion
   }
 
 #endif
@@ -5996,6 +5996,321 @@ namespace FreeLibSet.Collections
 
     #endregion
   }
+
+#if XXX
+  /// <summary>
+  /// Словарь, в котором может храниться несколько значений для одного ключа.
+  /// При доступе по ключу и основном переборе элементов для ключа сразу возвращается массив значений
+  /// Порядок перебора элементов не соответствует порядку добавления.
+  /// Класс является потокобезопасным в режиме просмотра и перебора данных, но не в режиме добавления.
+  /// </summary>
+  /// <typeparam name="TKey">Тип ключа</typeparam>
+  /// <typeparam name="TValue">Тип значения</typeparam>
+  [Serializable]
+  public class RepeatableDictionary<TKey, TValue> : IDictionary<TKey, TValue[]>, IDictionary, IReadOnlyObject
+  {
+    #region Вложенные типы данных
+
+    /// <summary>
+    /// Элементы внутренней коллекции.
+    /// Содержит первое из значений для заданного ключа и ссылку на второй элемент, если есть несколько значений для заданного ключа.
+    /// Выгодно объявить структурой, а не классом, для уменьшение расхода памяти.
+    /// </summary>
+    /// <typeparam name="TValue">Тип значения</typeparam>
+    [Serializable]
+    private struct DictValue<TValue>
+    {
+      #region Конструктор
+
+      internal DictValue(TValue value, ValueNode<TValue> chain)
+      {
+        _Value = value;
+        _Chain = chain;
+      }
+
+      #endregion
+
+      #region Свойства
+
+      /// <summary>
+      /// Первое значение для данного ключа
+      /// </summary>
+      internal TValue Value { get { return _Value; } }
+      private readonly TValue _Value;
+
+      /// <summary>
+      /// Ссылка на второй элемент для заданного ключа или null, если для данного ключа есть только одно значение
+      /// </summary>
+      internal ValueNode<TValue> Chain { get { return _Chain; } }
+      private readonly ValueNode<TValue> _Chain;
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Элементы цепочки для одинаковых ключей.
+    /// Содержит второе, третье и т.д. значение для ключа и ссылку на следующий элемент.
+    /// Не может быть структурой.
+    /// </summary>
+    /// <typeparam name="TValue">Тип значения</typeparam>
+    [Serializable]
+    private class ValueNode<TValue>
+    {
+      #region Конструктор
+
+      internal ValueNode(TValue value, ValueNode<TValue> next)
+      {
+        _Value = value;
+        _Next = next;
+      }
+
+      #endregion
+
+      #region Свойства
+
+      /// <summary>
+      /// Очередное значение для ключа
+      /// </summary>
+      internal TValue Value { get { return _Value; } }
+      private readonly TValue _Value;
+
+      /// <summary>
+      /// Ссылка на следующий элемент цепочки. Null для последнего элемента
+      /// </summary>
+      internal ValueNode<TValue> Next { get { return _Next; } }
+      private readonly ValueNode<TValue> _Next;
+
+      #endregion
+    }
+
+    #endregion
+
+    #region Конструкторы
+
+    public RepeatableDictionary()
+    {
+      _Dict = new Dictionary<TKey, DictValue<TValue>>();
+    }
+
+    public RepeatableDictionary(IDictionary<TKey, TValue> dictionary)
+    {
+#if DEBUG
+      if (dictionary == null)
+        throw new ArgumentNullException("dictionary");
+#endif
+
+      _Dict = new Dictionary<TKey, DictValue<TValue>>();
+      foreach (KeyValuePair<TKey, TValue> pair in dictionary)
+        _Dict.Add(pair.Key, new DictValue<TValue>(pair.Value, null));
+    }
+
+    public RepeatableDictionary(IEqualityComparer<TKey> comparer)
+    {
+      _Dict = new Dictionary<TKey, DictValue<TValue>>(comparer);
+    }
+
+    public RepeatableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
+    {
+#if DEBUG
+      if (dictionary == null)
+        throw new ArgumentNullException("dictionary");
+#endif
+
+      _Dict = new Dictionary<TKey, DictValue<TValue>>(comparer);
+      foreach (KeyValuePair<TKey, TValue> pair in dictionary)
+        _Dict.Add(pair.Key, new DictValue<TValue>(pair.Value, null));
+    }
+
+    #endregion
+
+    #region Основная коллекция данных
+
+    private Dictionary<TKey, DictValue<TValue>> _Dict;
+
+    #endregion
+
+    #region IDictionary<TKey,TValue[]> Members
+
+    /// <summary>
+    /// Добавляет значение в словарь.
+    /// В отличие от обычного Dictionary, в коллекции уже может быть значение с таким ключом
+    /// </summary>
+    /// <param name="key">Ключ. Не может быть пустым</param>
+    /// <param name="value">Значение.</param>
+    public void Add(TKey key, TValue value)
+    {
+      DictValue<TValue> dictValue;
+      if (_Dict.TryGetValue(key, out dictValue))
+      {
+        ValueNode<TValue> nv2 = new ValueNode<TValue>(dictValue.Value, dictValue.Chain);
+        DictValue<TValue> dv1 = new DictValue<TValue>(value, nv2);
+        _Dict[key] = dv1;
+      }
+      else
+        _Dict.Add(key, new DictValue<TValue>(value, null));
+    }
+
+    /// <summary>
+    /// Добавляет в словарь сразу несколько значений для ключа
+    /// </summary>
+    /// <param name="key">Ключ</param>
+    /// <param name="values">Значения</param>
+    public void IDictionary<TKey, TValue[]>.Add(TKey key, TValue[] values)
+    {
+      DoAdd(key, values);
+    }
+
+    private void DoAdd(TKey key, TValue[] values)
+    {
+#if DEBUG
+      if (values == null)
+        throw new ArgumentNullException("value");
+#endif
+      if (values.Length == 0)
+        return;
+
+      ValueNode<TValue> nv2 = null;
+      for (int i = 0; i < values.Length - 1; i++) // последний элемент отдельно
+        nv2 = new ValueNode<TValue>(values[i], nv2);
+
+      DictValue<TValue> dictValue;
+      if (_Dict.TryGetValue(key, out dictValue))
+      {
+        DictValue<TValue> dv1 = new DictValue<TValue>(values[values.Length - 1], nv2);
+        _Dict[key] = dv1;
+      }
+      else
+        _Dict.Add(key, new DictValue<TValue>(values[values.Length - 1], null));
+    }
+
+    public bool ContainsKey(TKey key)
+    {
+      return _Dict.ContainsKey(key);
+    }
+
+    ICollection<TKey> IDictionary<TKey, TValue[]>.Keys
+    {
+      get { return _Dict.Keys; }
+    }
+
+    public bool Remove(TKey key)
+    {
+      return _Dict.Remove(key);
+    }
+
+    public bool TryGetValue(TKey key, out TValue[] values)
+    {
+      DictValue<TValue> dictValue;
+      if (!_Dict.TryGetValue(key, out dictValue))
+      {
+        values = null;
+        return false;
+      }
+
+      int cnt = 1;
+      ValueNode<TValue> node=dictValue.Chain;
+      while (node != null)
+      {
+        cnt++;
+        node = node.Next;
+      }
+
+      values = new TValue[cnt];
+
+      values[0] = dictValue.Value;
+      cnt = 1;
+      node = dictValue.Chain;
+      while (node != null)
+      {
+        values[cnt] = node.Value;
+        cnt++;
+        node = node.Next;
+      }
+      return true;
+    }
+
+    ICollection<TValue[]> IDictionary<TKey, TValue[]>.Values
+    {
+      get { throw new NotImplementedException(); }
+    }
+
+    public TValue[] this[TKey key]
+    {
+      get
+      {
+        TValue[] res;
+        if (TryGetValue(key, out res))
+          return res;
+        else
+          throw new KeyNotFoundException();
+      }
+      set
+      {
+        this.Remove(key);
+        DoAdd(key, value);
+      }
+    }
+
+    #endregion
+
+    #region ICollection<KeyValuePair<TKey,TValue[]>> Members
+
+    void ICollection<KeyValuePair<TKey, TValue[]>>.Add(KeyValuePair<TKey, TValue[]> item)
+    {
+      DoAdd(item.Key, item.Value);
+    }
+
+    public void Clear()
+    {
+      _Dict.Clear();
+    }
+
+    bool ICollection<KeyValuePair<TKey, TValue[]>>.Contains(KeyValuePair<TKey, TValue[]> item)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICollection<KeyValuePair<TKey, TValue[]>>.CopyTo(KeyValuePair<TKey, TValue[]>[] array, int arrayIndex)
+    {
+      throw new NotImplementedException();
+    }
+
+    int ICollection<KeyValuePair<TKey, TValue[]>>.Count
+    {
+      get { return _Dict.Count; }
+    }
+
+    bool ICollection<KeyValuePair<TKey, TValue[]>>.IsReadOnly
+    {
+      get { throw new NotImplementedException(); }
+    }
+
+    bool ICollection<KeyValuePair<TKey, TValue[]>>.Remove(KeyValuePair<TKey, TValue[]> item)
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region IEnumerable<KeyValuePair<TKey,TValue[]>> Members
+
+    IEnumerator<KeyValuePair<TKey, TValue[]>> IEnumerable<KeyValuePair<TKey, TValue[]>>.GetEnumerator()
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region IEnumerable Members
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+  }
+#endif
 
   /// <summary>
   /// Кольцевой буфер.
