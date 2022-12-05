@@ -150,6 +150,7 @@ namespace FreeLibSet.Forms.Docs
       // EFPApp.FormCreators.Add(this);
 
       _ShowWaitMessages = true;
+      _DefaultEmptyEditMode = MultiSelectEmptyEditMode.Select;
     }
 
     private void InitStdUserPermissionsUI()
@@ -260,6 +261,18 @@ namespace FreeLibSet.Forms.Docs
     #endregion
 
     #region Прочие свойства
+
+    #region Статические свойства
+
+    /// <summary>
+    /// Начальное значение свойств <see cref="EFPMultiDocComboBox"/>.EmptyEditMode и <see cref="RefDocGridFilter"/>.EmptyEditMode.
+    /// Позволяет не задавать значение для каждого комбоблока и фильтра отдельно
+    /// По умолчанию - Select.
+    /// </summary>
+    public  MultiSelectEmptyEditMode DefaultEmptyEditMode { get { return _DefaultEmptyEditMode; } set { _DefaultEmptyEditMode = value; } }
+    private MultiSelectEmptyEditMode _DefaultEmptyEditMode;
+
+    #endregion
 
     /// <summary>
     /// Надо ли показывать в таблицах поле "Id" и другую отладочную информацию

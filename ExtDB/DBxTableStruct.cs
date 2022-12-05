@@ -247,8 +247,10 @@ namespace FreeLibSet.Data
     #region Методы
 
     /// <summary>
-    /// Создает пустую таблицу DataTable со всеми полями, описанными в структуре таблицы.
-    /// Ограничения DataColumn.MaxLength не устанавливается
+    /// Создает пустую таблицу <see cref="System.Data.DataTable"/> со всеми полями, описанными в структуре таблицы.
+    /// Для каждого описания столбца вызывается метод <see cref="FreeLibSet.Data.DBxColumnStruct.CreateDataColumn()"/>.
+    /// Ограничения <see cref="System.Data.DataColumn.MaxLength"/> не устанавливается.
+    /// Индексы <see cref="FreeLibSet.Data.DBxIndexStruct"/> не учитываются.
     /// </summary>
     /// <returns>Пустой DataTable</returns>
     public DataTable CreateDataTable()

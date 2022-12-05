@@ -53,8 +53,8 @@ namespace FreeLibSet.Forms
       // Используется в DocTypeUI.PerformInitGrid()
 
       get { return (EFPGridProducer)(base.GridProducer); }
-      set 
-      { 
+      set
+      {
         base.GridProducer = value;
         if (value != null)
           base.AutoSort = true; // 16.07.2021
@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms
       set
       {
         _MasterDataTableHasBeenSet = true;
-        if (CurrentConfig != null && GridProducer!=null)
+        if (CurrentConfig != null && GridProducer != null)
           InitTableRepeaterForGridProducer(value);
         else
           SourceAsDataTable = value; // вызов до загрузки конфигурации
@@ -204,7 +204,7 @@ namespace FreeLibSet.Forms
           if (col1.CustomOrderColumnName == col2.Name)
             col1.GridColumn.DataPropertyName = col2.Name; // столбец больше не является вычисляемым, а берет значение из базы данных
         }
-        
+
         // Не нужно. DataTable.Clone() копирует и первичный ключ
         //DataTools.SetPrimaryKey(rep.SlaveTable, DataTools.GetPrimaryKey(masterTable));
 

@@ -465,7 +465,11 @@ namespace FreeLibSet.Forms
     /// Имя столбца, используемого для произвольной сортировки
     /// Когда столбец добавляется методом AddXXX(), свойство устанавливается равным DataPropertyName
     /// </summary>
-    public string CustomOrderColumnName { get { return _CustomOrderColumnName; } set { _CustomOrderColumnName = value; } }
+    public string CustomOrderColumnName
+    {
+      get { return _CustomOrderColumnName; }
+      set { _CustomOrderColumnName = value; }
+    }
     private string _CustomOrderColumnName;
 
     /// <summary>
@@ -473,16 +477,16 @@ namespace FreeLibSet.Forms
     /// Когда столбец добавляется методом AddXXX(), свойство устанавливается в true, если аргумент isDataColumn=true.
     /// Это свойство дублирует CustomOrderColumnName
     /// </summary>
-    public bool CustomOrderAllowed 
-    { 
-      get { return !String.IsNullOrEmpty(CustomOrderColumnName); } 
-      set 
+    public bool CustomOrderAllowed
+    {
+      get { return !String.IsNullOrEmpty(CustomOrderColumnName); }
+      set
       {
         if (value)
           CustomOrderColumnName = Name;
         else
           CustomOrderColumnName = String.Empty;
-      } 
+      }
     }
 
     #endregion

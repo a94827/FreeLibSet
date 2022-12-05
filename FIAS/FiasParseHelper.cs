@@ -379,6 +379,9 @@ namespace FreeLibSet.FIAS
     /// <param name="level"></param>
     private static void RemoveNumChar(ref string s, FiasLevel level)
     {
+      if (s.Length < 1)
+        return; // 30.11.2022
+
       if (s[0] == '№' || s[0] == 'N')
       {
         switch (level)

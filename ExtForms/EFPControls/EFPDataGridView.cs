@@ -4288,9 +4288,17 @@ namespace FreeLibSet.Forms
         _TableRepeater = value;
         if (_TableRepeater != null)
           Control.DataSource = _TableRepeater.SlaveTable.DefaultView;
+        OnTableRepeaterChanged();
       }
     }
     private DataTableRepeater _TableRepeater;
+
+    /// <summary>
+    /// Вызывается после установки свойства TableRepeater
+    /// </summary>
+    protected virtual void OnTableRepeaterChanged()
+    {
+    }
 
     /// <summary>
     /// Возвращает строку в таблице-повторителе DataTableRepeater.SlaveTable, которая соответствует строке в исходной таблице DataTableRepeater.MasterTable.

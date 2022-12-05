@@ -5243,7 +5243,7 @@ namespace FreeLibSet.RI
   /// <summary>
   /// Комбоблок выбора значения из выпадающего списка.
   /// Текущее значение определяется свойством SelectedIndex.
-  /// Список для выбора является фиксированным и задается в конструкторе.
+  /// Список для выбора является фиксированным и задается в конструкторе. Список не может быть пустым.
   /// Вариант "отсутствие выбора" не поддерживается.
   /// </summary>
   [Serializable]
@@ -5254,11 +5254,13 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Создает комбоблок
     /// </summary>
-    /// <param name="items">Список элементов, из которых можно выбирать</param>
+    /// <param name="items">Список элементов, из которых можно выбирать. Должен содержать, как минимум, одну строку</param>
     public ListComboBox(string[] items)
     {
       if (items == null)
         throw new ArgumentNullException("items");
+      if (items.Length == 0)
+        throw new ArgumentException("Список элементов не может быть пустым", "items");
       _Items = items;
     }
 

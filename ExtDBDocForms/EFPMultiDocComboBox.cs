@@ -854,6 +854,7 @@ namespace FreeLibSet.Forms.Docs
         control.ClearButtonToolTipText = "Очистить поле выбора";
       }
       _SelectionMode = DocSelectionMode.MultiList;
+      _EmptyEditMode = UI.DefaultEmptyEditMode;
     }
 
     /// <summary>
@@ -1283,7 +1284,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Режим выбора документов в выпадающем списке.
     /// Допустимые значения: MultiSelect, MultiList и MultiCheckBoxes.
-    /// По умолчанию - MultiSelect
+    /// По умолчанию - MultiList
     /// </summary>
     public DocSelectionMode SelectionMode
     {
@@ -1305,6 +1306,15 @@ namespace FreeLibSet.Forms.Docs
     private DocSelectionMode _SelectionMode;
 
     /// <summary>
+    /// Режим открытия диалога, когда список идентификаторов пустой (DocIds.Length=0).
+    /// Инициализируется в конструкторе значением <see cref="DBUI.DefaultEmptyEditMode"/> (обычно это значение Select).
+    /// Используется только в режиме <see cref="SelectionMode"/>=<see cref="DocSelectionMode.MultiList"/>.
+    /// Если на момент нажатия кнопки выбора фильтр непустой, то свойство игнорируется.
+    /// </summary>
+    public MultiSelectEmptyEditMode EmptyEditMode { get { return _EmptyEditMode; } set { _EmptyEditMode = value; } }
+    private MultiSelectEmptyEditMode _EmptyEditMode;
+
+    /// <summary>
     /// Показывает блок диалога для выбора нескольких документов.
     /// Используется метод DocTypeUI.SelectDocs().
     /// Затем устанавливается свойство DocIds.
@@ -1317,19 +1327,38 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      DocSelectDialog dlg = new DocSelectDialog(DocTypeUI);
-      dlg.SelectionMode = SelectionMode;
+      if (DocIds.Length == 0 && SelectionMode == DocSelectionMode.MultiList && EmptyEditMode != MultiSelectEmptyEditMode.EmptyList)
+      {
+        // 05.12.2022
+
+        DocSelectDialog dlg1 = new DocSelectDialog(DocTypeUI);
+        dlg1.Title = DisplayName;
+        dlg1.SelectionMode = DocSelectionMode.MultiSelect;
+        dlg1.CanBeEmpty = false;
+        dlg1.DialogPosition.PopupOwnerControl = Control;
+        if (Filters.Count > 0)
+          dlg1.Filters = Filters;
+        if (dlg1.ShowDialog() == DialogResult.OK)
+        {
+          DocIds = dlg1.DocIds;
+          if (EmptyEditMode == MultiSelectEmptyEditMode.Select)
+            return;
+        }
+      }
+
+      DocSelectDialog dlg2 = new DocSelectDialog(DocTypeUI);
+      dlg2.SelectionMode = SelectionMode;
       if (!String.IsNullOrEmpty(DisplayName))
-        dlg.Title = DisplayName;
-      dlg.CanBeEmpty = CanBeEmpty;
+        dlg2.Title = DisplayName;
+      dlg2.CanBeEmpty = CanBeEmpty;
       if (Filters.Count > 0)
-        dlg.Filters = Filters; // Иначе будут отключены стандартные фильтры
-      dlg.DocIds = DocIds;
-      dlg.EditorCaller = EditorCaller;
-      dlg.DialogPosition.PopupOwnerControl = Control;
-      if (dlg.ShowDialog() != DialogResult.OK)
+        dlg2.Filters = Filters; // Иначе будут отключены стандартные фильтры
+      dlg2.DocIds = DocIds;
+      dlg2.EditorCaller = EditorCaller;
+      dlg2.DialogPosition.PopupOwnerControl = Control;
+      if (dlg2.ShowDialog() != DialogResult.OK)
         return;
-      DocIds = dlg.DocIds;
+      DocIds = dlg2.DocIds;
     }
 
     ///// <summary>
@@ -1552,8 +1581,8 @@ namespace FreeLibSet.Forms.Docs
 
 
   /// <summary>
-  /// Обработчик для комбоблока, предназначенного для выбора нескольких поддокументов из одного документа
-  /// Поддокументы должны быть сохранены в базе данных, а не относиться к текущему редактируемому документу
+  /// Обработчик для комбоблока, предназначенного для выбора нескольких поддокументов из одного документа.
+  /// Поддокументы должны быть сохранены в базе данных, а не относиться к текущему редактируемому документу.
   /// </summary>
   public class EFPMultiSubDocComboBox : EFPMultiDocComboBoxBase
   {

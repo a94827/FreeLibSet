@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms.Docs
     //  return PerformEdit(title, docTypeUI, nullable, ref mode, ref ids, null, null);
     //}
 
-    public static bool PerformEdit(string title, DocTypeUI docTypeUI, bool nullable, ref RefDocFilterMode mode, ref Int32[] ids, GridFilters docFilters, EFPDialogPosition dialogPosition, RefDocGridFilterEmptyEditMode emptyEditMode)
+    public static bool PerformEdit(string title, DocTypeUI docTypeUI, bool nullable, ref RefDocFilterMode mode, ref Int32[] ids, GridFilters docFilters, EFPDialogPosition dialogPosition, MultiSelectEmptyEditMode emptyEditMode)
     {
 #if DEBUG
       if (docTypeUI == null)
@@ -130,7 +130,7 @@ namespace FreeLibSet.Forms.Docs
 
       #region Для пустого фильтра - сразу выбор документов
 
-      if (mode == RefDocFilterMode.NoFilter && emptyEditMode != RefDocGridFilterEmptyEditMode.ShowFilterDialog)
+      if (mode == RefDocFilterMode.NoFilter && emptyEditMode != MultiSelectEmptyEditMode.EmptyList)
       {
         DocSelectDialog dlg1 = new DocSelectDialog(docTypeUI);
         //dlg.Title = "Добавление документов \"" + docTypeUI.DocType.PluralTitle + "\" в фильтр \""+title+"\"";
@@ -143,7 +143,7 @@ namespace FreeLibSet.Forms.Docs
         {
           mode = RefDocFilterMode.Include;
           ids = dlg1.DocIds;
-          if (emptyEditMode == RefDocGridFilterEmptyEditMode.SelectIncudedDocs)
+          if (emptyEditMode == MultiSelectEmptyEditMode.Select)
             return true;
         }
       }
@@ -195,24 +195,24 @@ namespace FreeLibSet.Forms.Docs
   /// Режим редактирования ссылочного фильтра, когда он пустой.
   /// Свойство RefDocGridFilter.EmptyEditMode
   /// </summary>
-  public enum RefDocGridFilterEmptyEditMode
+  public enum MultiSelectEmptyEditMode
   {
     /// <summary>
     /// Показывается диалог выбора документов. Если пользователь нажимает "ОК", то фильтр устанавливается в режим Mode=RefDocFilterMode.Include. 
     /// Если пользователь нажимает "Отмена", то показывается обычный диалог с возможностью выбора режима.
     /// </summary>
-    SelectIncudedDocs,
+    Select,
 
     /// <summary>
-    /// Показывается обычный диалог фильтра для выбора режима и с таблицей выбранных документов
+    /// Показывается обычный диалог выбора с пустым списком выбранных документов
     /// </summary>
-    ShowFilterDialog,
+    EmptyList,
 
     /// <summary>
     /// Комбинированный режим. Сначала показывается диалог выбора документов. Затем показывается обычный диалог выбора фильтра.
     /// Если в первом диалоге была нажата кнопка "ОК", то устанавливается режим "Выбранные документы", иначе "Нет фильтра".
     /// </summary>
-    SelectDocsThenShowFilterDialog,
+    SelectThenShowList,
   }
 
   /// <summary>
@@ -235,6 +235,7 @@ namespace FreeLibSet.Forms.Docs
       _UI = docTypeUI.UI;
       _DocFilters = new GridFilters();
       _Nullable = false;
+      _EmptyEditMode = _UI.DefaultEmptyEditMode;
     }
 
     /// <summary>
@@ -280,17 +281,13 @@ namespace FreeLibSet.Forms.Docs
     public bool Nullable { get { return _Nullable; } set { _Nullable = value; } }
     private bool _Nullable;
 
-    #endregion
-
-    #region Статические свойства
-
     /// <summary>
     /// Режим редактирования фильтра, когда Mode=NoFilter.
-    /// По умолчанию - SelectIncludedDocs.
+    /// Инициализируется в конструкторе значением <see cref="DBUI.DefaultEmptyEditMode"/> (обычно это значение Select).
     /// Если на момент вызова ShowFilterDialog() фильтр непустой, то свойство игнорируется.
     /// </summary>
-    public static RefDocGridFilterEmptyEditMode EmptyEditMode { get { return _EmptyEditMode; } set { _EmptyEditMode = value; } }
-    private static RefDocGridFilterEmptyEditMode _EmptyEditMode = RefDocGridFilterEmptyEditMode.SelectIncudedDocs;
+    public MultiSelectEmptyEditMode EmptyEditMode { get { return _EmptyEditMode; } set { _EmptyEditMode = value; } }
+    private MultiSelectEmptyEditMode _EmptyEditMode;
 
     #endregion
 

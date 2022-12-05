@@ -353,7 +353,9 @@ namespace FreeLibSet.Data
     #region Другие методы
 
     /// <summary>
-    /// Создает объект DataSet, содержащий пустые DataTable для всех таблицы
+    /// Создает объект DataSet, содержащий пустые DataTable для всех таблиц в DBxStruct.
+    /// См. описание метода <see cref="FreeLibSet.Data.DBxTableStruct.CreateDataTable()"/>.
+    /// Объекты <see cref="System.Data.DataRelation"/> не создаются.
     /// </summary>
     /// <returns>DataSet с таблицами, но без строк</returns>
     public DataSet CreateDataSet()
