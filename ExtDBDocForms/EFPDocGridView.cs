@@ -523,6 +523,11 @@ namespace FreeLibSet.Forms.Docs
           return;
         if (args.RowIndex < 0 || args.RowIndex >= SourceAsDataView.Count || args.ColumnIndex < 0)
           return;
+
+        // Бесполезная проверка, т.к. наш обработчик - первый в списке
+        //if (!Object.ReferenceEquals(args.Value, null))
+        //  return; 
+
         string propName = Control.Columns[args.ColumnIndex].DataPropertyName;
         if (string.IsNullOrEmpty(propName))
           return;
@@ -530,12 +535,15 @@ namespace FreeLibSet.Forms.Docs
         if (!Char.IsLetterOrDigit(propName, 0))
           return; // 30.03.2021
 
+        if (this.Columns[args.ColumnIndex].ColumnProducer != null)
+          return; // 09.12.2022
+
         DataRow row = GetDataRow(args.RowIndex);
         if (row.Table.Columns.Contains(propName))
           return;
 
-        Int32 Id = DataTools.GetInt(row, "Id");
-        args.Value = DocTypeUI.TableCache.GetValue(Id, propName, row.Table.DataSet);
+        Int32 docId = DataTools.GetInt(row, "Id");
+        args.Value = DocTypeUI.TableCache.GetValue(docId, propName, row.Table.DataSet);
       }
       catch (Exception e)
       {

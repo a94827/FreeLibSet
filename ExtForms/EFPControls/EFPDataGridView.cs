@@ -2119,7 +2119,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        _SourceAsDataView = GetSourceAsDataView(Control.DataSource, Control.DataMember); // 04.07.2021
+        _SourceAsDataView = WinFormsTools.GetSourceAsDataView(Control.DataSource, Control.DataMember); // 04.07.2021
         OnDataBindingChanged();
       }
       catch (Exception e)
@@ -3788,123 +3788,16 @@ namespace FreeLibSet.Forms
     }
     private DataView _SourceAsDataView;
 
-    private static DataView GetSourceAsDataView(object dataSource, string dataMember)
-    {
-      object x = ListBindingHelper.GetList(dataSource, dataMember);
-      DataView dv = x as DataView;
-      if (dv != null)
-        return dv;
-      if (x == null)
-        return null;
-
-      BindingSource bs = x as BindingSource;
-      if (bs != null)
-        return GetSourceAsDataView(bs.DataSource, bs.DataMember); // рекурсивный вызов
-
-      // Можно было бы проверить у объекта x атрибут [ComplexBindingProperties], но нет гарантии, что это будет DataView с нужным порядком сортировки
-      return null;
-    }
-
     /// <summary>
-    /// Получить строку DataRow таблицы, связанную с заданным объектом строки
-    /// Строка <paramref name="gridRow"/> должна быть Unshared
-    /// </summary>
-    /// <param name="gridRow">Объект строки табличного просмотра</param>
-    /// <returns>Строка в таблице DataTable</returns>
-    public static DataRow GetDataRow(DataGridViewRow gridRow)
-    {
-      if (gridRow == null)
-        return null;
-
-      // 24.05.2021
-      // DataBoundItem не может быть ссылкой на DataRow. Всегда только DataRowView
-
-      // Может вылазить исключение при попытке обращения к Row.DataBoundItem, если
-      // оно было связано с DataViewRow для последней строки, когда произошло ее 
-      // удаление 
-      object boundItem;
-      try
-      {
-        boundItem = gridRow.DataBoundItem;
-        DataRowView drv = boundItem as DataRowView;
-        if (drv != null)
-          return drv.Row;
-      }
-      catch { }
-
-#if DEBUG
-      if (gridRow.Index < 0)
-        throw new ArgumentException("Строка DataGridViewRow является Shared", "gridRow");
-#endif
-
-      return null;
-    }
-
-    /// <summary>
-    /// Более предпочтительный способ получения строки DataRow по номеру строки в
-    /// табличном просмотре. Не делает строку Unshared, т.к. не обращается к
-    /// объекту DataGridViewRow
-    /// Статический вариант метода
-    /// </summary>
-    /// <param name="control">Табличный просмотр, не обязательно имеющий DocGridHandler</param>
-    /// <param name="rowIndex">Номер строки</param>
-    /// <returns>Объект DataRow или null при любой ошибке</returns>
-    public static DataRow GetDataRow(DataGridView control, int rowIndex)
-    {
-      /*
-      if (control.DataSource is DataView)
-      {
-        if (rowIndex < 0 || rowIndex >= ((DataView)(control.DataSource)).Count)
-          return null;
-        return ((DataView)(control.DataSource))[rowIndex].Row;
-      }
-      if (control.DataSource is DataTable)
-      {
-        if (rowIndex < 0 || rowIndex >= ((DataTable)(control.DataSource)).Rows.Count)
-          return null;
-        return ((DataTable)(control.DataSource)).DefaultView[rowIndex].Row;
-      }
-
-      return null;
-       */
-
-
-      // 24.05.2021
-      if (rowIndex < 0 || rowIndex >= control.RowCount)
-        return null;
-
-      // Если строка уже является unshared, то есть быстрый доступ добраться до DataRow.
-      DataGridViewRow gridRow = control.Rows.SharedRow(rowIndex);
-      if (gridRow.Index >= 0)
-        return GetDataRow(gridRow);
-
-      DataView dv = GetSourceAsDataView(control.DataSource, control.DataMember);
-      if (dv == null)
-      {
-        // Делаем строку Unshared
-        gridRow = control.Rows[rowIndex];
-        return GetDataRow(gridRow);
-      }
-      else
-      {
-        if (rowIndex >= dv.Count)
-          return null;
-        else
-          return dv[rowIndex].Row;
-      }
-    }
-
-    /// <summary>
-    /// Более предпочтительный способ получения строки DataRow по номеру строки в
-    /// табличном просмотре. Не делает строку Unshared, т.к. не обращается к
-    /// объекту DataGridViewRow
-    /// Нестатический вариант
+    /// Получение строки <see cref="DataRow"/> по номеру строки в табличном просмотре. 
+    /// Не делает строку Unshared, т.к. не обращается к объекту DataGridViewRow.
+    /// Если используется таблица-повторитель, то возвращается строка таблицы-повторителя.
     /// </summary>
     /// <param name="rowIndex">Номер строки</param>
-    /// <returns>Объект DataRow или null при любой ошибке</returns>
+    /// <returns>Объект <see cref="DataRow"/> или null при любой ошибке</returns>
     public DataRow GetDataRow(int rowIndex)
     {
-      return EFPDataGridView.GetDataRow(Control, rowIndex);
+      return WinFormsTools.GetDataRow(Control, rowIndex);
 
       // 29.09.2017
       // Через SharedRow не работает
@@ -3919,6 +3812,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить массив строк DataRow по индексам строк.
     /// Если какой-либо индекс не относится к DataRow, элемент массива содержит null.
+    /// Если используется таблица-повторитель, то возвращаются строки таблицы-повторителя.
     /// </summary>
     /// <param name="rowIndices">Номера строк в просмотре DataGridView</param>
     /// <returns>Массив объектов DataRow</returns>
@@ -3935,7 +3829,7 @@ namespace FreeLibSet.Forms
           // Обычно, этот вариант и будет работать, так как, скорее всего, опрашиваются выбранные строки
           DataGridViewRow gridRow = Control.Rows.SharedRow(rowIndices[i]);
           if (gridRow.Index >= 0)
-            rows[i] = GetDataRow(gridRow);
+            rows[i] = WinFormsTools.GetDataRow(gridRow);
           else
           {
             if (!dvDefined)
@@ -3987,7 +3881,7 @@ namespace FreeLibSet.Forms
           DataGridViewRow[] gridRows = SelectedGridRows;
           res = new DataRow[gridRows.Length];
           for (int i = 0; i < res.Length; i++)
-            res[i] = GetDataRow(gridRows[i]);
+            res[i] = WinFormsTools.GetDataRow(gridRows[i]);
         }
         return res;
       }
@@ -4072,7 +3966,7 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        return GetDataRow(Control.CurrentRow); // 24.05.2021
+        return WinFormsTools.GetDataRow(Control.CurrentRow); // 24.05.2021
       }
       set
       {
@@ -4084,7 +3978,7 @@ namespace FreeLibSet.Forms
 
         // 04.07.2021
         // Оптимизация
-        if (Object.ReferenceEquals(value, GetDataRow(Control.CurrentRow)))
+        if (Object.ReferenceEquals(value, WinFormsTools.GetDataRow(Control.CurrentRow)))
           return;
 
         int p = DataTools.FindDataRowViewIndex(dv, value);

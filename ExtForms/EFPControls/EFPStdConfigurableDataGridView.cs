@@ -175,35 +175,7 @@ namespace FreeLibSet.Forms
 
         EFPGridProducerDataTableRepeater rep = new EFPGridProducerDataTableRepeater(GridProducer, this);
         rep.SlaveTable = masterTable.Clone();
-        foreach (EFPDataGridViewColumn col1 in Columns)
-        {
-          EFPGridProducerColumn col2 = col1.ColumnProducer as EFPGridProducerColumn;
-          if (col2 == null)
-            continue;
-          if (col2.SourceColumnNames == null)
-            continue;
-          if (col2.SourceColumnNames.Length == 0)
-            continue;
-          if (!rep.SlaveTable.Columns.Contains(col2.Name))
-          {
-
-            Type typ = col2.DataType;
-            if (typ == null)
-              typ = typeof(string);
-            rep.SlaveTable.Columns.Add(col2.Name, typ);
-          }
-          if (String.IsNullOrEmpty(col1.CustomOrderColumnName))
-          {
-            if (!(col1.GridColumn is DataGridViewImageColumn))
-            {
-              col1.CustomOrderColumnName = col2.Name;
-              //if (CustomOrderActive)
-              //  initColumnSortModeRequired = true; // для этого столбца нужно будет установить SortMode, иначе возникет ошибка при попытке нарисовать треугольник после щелчка мыши
-            }
-          }
-          if (col1.CustomOrderColumnName == col2.Name)
-            col1.GridColumn.DataPropertyName = col2.Name; // столбец больше не является вычисляемым, а берет значение из базы данных
-        }
+        AddGridColumnsToRepeaterTable(rep);
 
         // Не нужно. DataTable.Clone() копирует и первичный ключ
         //DataTools.SetPrimaryKey(rep.SlaveTable, DataTools.GetPrimaryKey(masterTable));
@@ -222,6 +194,44 @@ namespace FreeLibSet.Forms
         SourceAsDataTable = masterTable;
       }
       //Selection = oldSel;
+    }
+
+    /// <summary>
+    /// Добавляет в <paramref name="rep"/>.SlaveTable столбцы <see cref="DataColumn"/> для всех
+    /// столбцов табличного просмотра, кроме <see cref="DataGridViewImageColumn"/>, чтобы их можно было использовать для произвольной сортировки.
+    /// </summary>
+    /// <param name="rep">Созданная таблица-повторитель</param>
+    private void AddGridColumnsToRepeaterTable(DataTableRepeater rep)
+    {
+      foreach (EFPDataGridViewColumn col1 in this.Columns)
+      {
+        EFPGridProducerColumn col2 = col1.ColumnProducer as EFPGridProducerColumn;
+        if (col2 == null)
+          continue; // столбец создан вручную, а не с помощью GridProducer
+        if (col2.SourceColumnNames == null)
+          continue; // данные столбца извлекаются из источника (таблицы), а не вычисляются
+        if (col2.SourceColumnNames.Length == 0)
+          continue; // вычисляемый столбец не нуждается в данных
+        if (!rep.SlaveTable.Columns.Contains(col2.Name))
+        {
+
+          Type typ = col2.DataType;
+          if (typ == null)
+            typ = typeof(string);
+          rep.SlaveTable.Columns.Add(col2.Name, typ);
+        }
+        if (String.IsNullOrEmpty(col1.CustomOrderColumnName))
+        {
+          if (!(col1.GridColumn is DataGridViewImageColumn))
+          {
+            col1.CustomOrderColumnName = col2.Name;
+            //if (CustomOrderActive)
+            //  initColumnSortModeRequired = true; // для этого столбца нужно будет установить SortMode, иначе возникет ошибка при попытке нарисовать треугольник после щелчка мыши
+          }
+        }
+        if (col1.CustomOrderColumnName == col2.Name)
+          col1.GridColumn.DataPropertyName = col2.Name; // столбец больше не является вычисляемым, а берет значение из базы данных
+      }
     }
 
     private bool TableRepeaterRequired(DataTable masterTable)

@@ -1056,6 +1056,119 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Возвращает источник данных табличного просмотра или другого управляющего элемента, если он является объектом <see cref="System.Data.DataView"/>.
+    /// Если источником является промежуточный объект <see cref="System.Windows.Forms.BindingSource"/>, то выполняется рекурсивный поиск его источника.
+    /// </summary>
+    /// <param name="dataSource">Свойство DataSource</param>
+    /// <param name="dataMember">Свойство DataMember</param>
+    /// <returns>Найденный источник табличных данных или null</returns>
+    public static DataView GetSourceAsDataView(object dataSource, string dataMember)
+    {
+      object x = ListBindingHelper.GetList(dataSource, dataMember);
+      DataView dv = x as DataView;
+      if (dv != null)
+        return dv;
+      if (x == null)
+        return null;
+
+      BindingSource bs = x as BindingSource;
+      if (bs != null)
+        return GetSourceAsDataView(bs.DataSource, bs.DataMember); // рекурсивный вызов
+
+      // Можно было бы проверить у объекта x атрибут [ComplexBindingProperties], но нет гарантии, что это будет DataView с нужным порядком сортировки
+      return null;
+    }
+
+    /// <summary>
+    /// Получить строку DataRow таблицы, связанную с заданным объектом строки.
+    /// Строка <paramref name="gridRow"/> должна быть Unshared
+    /// </summary>
+    /// <param name="gridRow">Объект строки табличного просмотра</param>
+    /// <returns>Строка в таблице DataTable</returns>
+    public static DataRow GetDataRow(DataGridViewRow gridRow)
+    {
+      if (gridRow == null)
+        return null;
+
+      // 24.05.2021
+      // DataBoundItem не может быть ссылкой на DataRow. Всегда только DataRowView
+
+      // Может вылазить исключение при попытке обращения к Row.DataBoundItem, если
+      // оно было связано с DataViewRow для последней строки, когда произошло ее удаление 
+      object boundItem;
+      try
+      {
+        boundItem = gridRow.DataBoundItem;
+        DataRowView drv = boundItem as DataRowView;
+        if (drv != null)
+          return drv.Row;
+      }
+      catch { }
+
+#if DEBUG
+      if (gridRow.Index < 0)
+        throw new ArgumentException("Строка DataGridViewRow является Shared", "gridRow");
+#endif
+
+      return null;
+    }
+
+    /// <summary>
+    /// Более предпочтительный способ получения строки DataRow по номеру строки в
+    /// табличном просмотре. Не делает строку Unshared, т.к. не обращается к
+    /// объекту DataGridViewRow
+    /// Статический вариант метода
+    /// </summary>
+    /// <param name="control">Табличный просмотр, не обязательно имеющий DocGridHandler</param>
+    /// <param name="rowIndex">Номер строки</param>
+    /// <returns>Объект DataRow или null при любой ошибке</returns>
+    public static DataRow GetDataRow(DataGridView control, int rowIndex)
+    {
+      /*
+      if (control.DataSource is DataView)
+      {
+        if (rowIndex < 0 || rowIndex >= ((DataView)(control.DataSource)).Count)
+          return null;
+        return ((DataView)(control.DataSource))[rowIndex].Row;
+      }
+      if (control.DataSource is DataTable)
+      {
+        if (rowIndex < 0 || rowIndex >= ((DataTable)(control.DataSource)).Rows.Count)
+          return null;
+        return ((DataTable)(control.DataSource)).DefaultView[rowIndex].Row;
+      }
+
+      return null;
+       */
+
+
+      // 24.05.2021
+      if (rowIndex < 0 || rowIndex >= control.RowCount)
+        return null;
+
+      // Если строка уже является unshared, то есть быстрый доступ добраться до DataRow.
+      DataGridViewRow gridRow = control.Rows.SharedRow(rowIndex);
+      if (gridRow.Index >= 0)
+        return GetDataRow(gridRow);
+
+      DataView dv = GetSourceAsDataView(control.DataSource, control.DataMember);
+      if (dv == null)
+      {
+        // Делаем строку Unshared
+        gridRow = control.Rows[rowIndex];
+        return GetDataRow(gridRow);
+      }
+      else
+      {
+        if (rowIndex >= dv.Count)
+          return null;
+        else
+          return dv[rowIndex].Row;
+      }
+    }
+
+
+    /// <summary>
     /// Получить горизонтальное выравнивание текста ячейки 
     /// (преобразование из DataGridViewContentAlignment в HorizontalAlignment )
     /// </summary>
@@ -1273,7 +1386,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Преобразует массив столбцов DataGridViewColumn в массив индексов столбцоы
+    /// Преобразует массив столбцов DataGridViewColumn в массив индексов столбцов
     /// </summary>
     /// <param name="columns">Массив столбцов</param>
     /// <returns>Массив индексов</returns>

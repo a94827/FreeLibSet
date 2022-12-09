@@ -558,13 +558,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить идентификатор строки "Id" для строки таблицы.
-    /// Соответственно, строка делается Unshared
+    /// Строка должна быть Unshared.
     /// </summary>
     /// <param name="row">Объект строки</param>
     /// <returns>Значение поля "Id"</returns>
-    public Int32 GetRowId(DataGridViewRow row)
+    private static Int32 GetRowId(DataGridViewRow row)
     {
-      DataRow row2 = GetDataRow(row);
+      DataRow row2 = WinFormsTools.GetDataRow(row);
       if (row2 == null)
         return 0;
       int p = row2.Table.Columns.IndexOf("Id");
