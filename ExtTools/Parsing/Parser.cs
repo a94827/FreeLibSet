@@ -90,6 +90,13 @@ namespace FreeLibSet.Parsing
   public interface IExpression
   {
     /// <summary>
+    /// Вызывается однократно после создания дерева выражений в ParserList.CreateExpression().
+    /// Метод вызывается рекурсивно, сначала для корневого объекта, а затем для вложенных в него.
+    /// </summary>
+    /// <param name="data">Данные парсинга</param>
+    void Init(ParsingData data);
+
+    /// <summary>
     /// Основной метод, выполняющий вычисления.
     /// Метод не получает никакого контекста для вычисления. Если для вычисления требуются данные, например,
     /// для извлечения ячейки электронной таблицы, то контекст должен быть сохранен в полях объекта при его
@@ -471,6 +478,13 @@ namespace FreeLibSet.Parsing
         data.InternalTokenIndex = -1;
         data.EndTokens = null;
         data.State = ParsingState.ExpressionCreated;
+      }
+
+      if (resExpr != null && data.FirstErrorToken == null)
+      {
+        IExpression[] exprs = ParsingData.GetExpressions(resExpr);
+        for (int i = 0; i < exprs.Length; i++)
+          exprs[i].Init(data);
       }
 
       return resExpr;
@@ -1624,9 +1638,9 @@ namespace FreeLibSet.Parsing
     /// Выполняется рекурсивный вызов IExpression.GetTokens()
     /// </summary>
     /// <param name="expression">Объект, в котором выполняется поиск</param>
-    /// <param name="Tokens">Список для добавления найденных лексем</param>
+    /// <param name="tokens">Список для добавления найденных лексем</param>
     /// <param name="tokenType">Тип лексем (свойство Token.TokenType), которые требуется найти</param>
-    public static void GetTokens(IExpression expression, List<Token> Tokens, string tokenType)
+    public static void GetTokens(IExpression expression, List<Token> tokens, string tokenType)
     {
       if (expression == null)
         return;
@@ -1639,12 +1653,12 @@ namespace FreeLibSet.Parsing
       for (int i = 0; i < tokens2.Count; i++)
       {
         if (tokens2[i].TokenType == tokenType)
-          Tokens.Add(tokens2[i]);
+          tokens.Add(tokens2[i]);
       }
       List<IExpression> children = new List<IExpression>();
       expression.GetChildExpressions(children);
       for (int i = 0; i < children.Count; i++)
-        GetTokens(children[i], Tokens, tokenType);
+        GetTokens(children[i], tokens, tokenType);
     }
 
     /// <summary>

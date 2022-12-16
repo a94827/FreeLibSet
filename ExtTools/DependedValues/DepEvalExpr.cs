@@ -161,6 +161,8 @@ namespace FreeLibSet.DependedValues
 
       #region IExpression Members
 
+      void IExpression.Init(ParsingData data) { }
+
       public object Calc()
       {
         return _Arg.Value;

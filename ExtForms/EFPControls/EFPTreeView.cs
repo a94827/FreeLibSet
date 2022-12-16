@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms
     bool CheckBoxes { get;}
 
     /// <summary>
-    /// Выполяет установку или снятие всех флажков
+    /// Выполняет установку или снятие всех флажков
     /// </summary>
     /// <param name="isChecked"></param>
     void CheckAll(bool isChecked);

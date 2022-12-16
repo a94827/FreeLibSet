@@ -116,7 +116,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Установка этого поля в true приводит к отказу от работы редактора 
-    /// Запись результатов выполяться не будет
+    /// Запись результатов выполняться не будет
     /// </summary>
     public bool Cancel { get { return _Cancel; } set { _Cancel = value; } }
     private bool _Cancel;

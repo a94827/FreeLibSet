@@ -783,6 +783,8 @@ namespace FreeLibSet.Parsing
 
       #region IExpression Members
 
+      void IExpression.Init(ParsingData data) { }
+
       /// <summary>
       /// Выполнить вычисление выражения.
       /// Вычисляюся левое и правое выражение, затем вычисляется CalcMethod для операции
@@ -989,6 +991,8 @@ namespace FreeLibSet.Parsing
 
       #region IExpression Members
 
+      void IExpression.Init(ParsingData data) { }
+
       /// <summary>
       /// Вычисляет выражение справа, затем - унарную операцию
       /// </summary>
@@ -1123,6 +1127,8 @@ namespace FreeLibSet.Parsing
       #endregion
 
       #region IExpression Members
+
+      void IExpression.Init(ParsingData data) { }
 
       /// <summary>
       /// Вычисляет выражение в скобках
@@ -1692,6 +1698,8 @@ namespace FreeLibSet.Parsing
 
       #region IExpression Members
 
+      void IExpression.Init(ParsingData data) { }
+
       /// <summary>
       /// Возвращает Value
       /// </summary>
@@ -1914,6 +1922,8 @@ namespace FreeLibSet.Parsing
 
       #region IExpression Members
 
+      void IExpression.Init(ParsingData data) { }
+
       /// <summary>
       /// Возвращает Value
       /// </summary>
@@ -2015,25 +2025,41 @@ namespace FreeLibSet.Parsing
   /// <summary>
   /// Аргументы события FunctionDef.ArgExpressionsCreated
   /// </summary>
-  public class FunctionArgExpressionsCreatedEventArgs : EventArgs
+  public class FunctionExpressionInitEventArgs : EventArgs
   {
+    #region Конструктор
+
+    internal FunctionExpressionInitEventArgs(FunctionParser.FunctionExpression expression, ParsingData data)
+    {
+      _Expression = expression;
+      _Data = data;
+    }
+
+    #endregion
+
     #region Свойства
 
     /// <summary>
-    /// Выражения для аргументов функции
+    /// Вычисляемый объект функции
     /// </summary>
-    public IExpression[] ArgExpressions { get { return _ArgExpressions; } set { _ArgExpressions = value; } }
-    private IExpression[] _ArgExpressions;
+    public FunctionParser.FunctionExpression Expression { get { return _Expression; } }
+    private FunctionParser.FunctionExpression _Expression;
+
+    /// <summary>
+    /// Данные парсинга
+    /// </summary>
+    public ParsingData Data { get { return _Data; } }
+    private ParsingData _Data;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события FunctionDef.ArgExpressionsCreated
+  /// Делегат события FunctionDef.ExpressionInit
   /// </summary>
   /// <param name="sender"></param>
   /// <param name="args"></param>
-  public delegate void FunctionArgExpressionsCreatedEventHandler(object sender, FunctionArgExpressionsCreatedEventArgs args);
+  public delegate void FunctionExpressionInitEventHandler(object sender, FunctionExpressionInitEventArgs args);
 
   #endregion
 
@@ -2147,16 +2173,14 @@ namespace FreeLibSet.Parsing
     /// Событие вызывается на второй стадии парсинга, когда построены выражения для всех аргументов функции,
     /// но еще не построено само выражение FunctionParser.FunctionExpression
     /// </summary>
-    public event FunctionArgExpressionsCreatedEventHandler ArgExpressionsCreated;
+    public event FunctionExpressionInitEventHandler ExpressionInit;
 
-    internal void OnArgExpressionsCreated(ref IExpression[] argExpressions)
+    internal void OnExpressionInit(FunctionParser.FunctionExpression expression, ParsingData data)
     {
-      if (ArgExpressionsCreated != null)
+      if (ExpressionInit != null)
       {
-        FunctionArgExpressionsCreatedEventArgs args = new FunctionArgExpressionsCreatedEventArgs();
-        args.ArgExpressions = argExpressions;
-        ArgExpressionsCreated(this, args);
-        argExpressions = args.ArgExpressions;
+        FunctionExpressionInitEventArgs args = new FunctionExpressionInitEventArgs(expression, data);
+        ExpressionInit(this, args);
       }
     }
 
@@ -2606,6 +2630,15 @@ namespace FreeLibSet.Parsing
       #region IExpression Members
 
       /// <summary>
+      /// Вызывает событие FunctionDef.ExpressionInit
+      /// </summary>
+      /// <param name="data">Данные парсинга</param>
+      public void Init(ParsingData data)
+      {
+        _Function.OnExpressionInit(this, data);
+      }
+
+      /// <summary>
       /// Вычисляет функцию.
       /// </summary>
       /// <returns>Результат вычислений</returns>
@@ -2847,7 +2880,6 @@ namespace FreeLibSet.Parsing
           }
 
           IExpression[] argExprs2 = argExprs.ToArray();
-          fd.OnArgExpressionsCreated(ref argExprs2);
 
           if (argExprs2.Length < fd.MinArgCount || argExprs2.Length > fd.MaxArgCount)
           {

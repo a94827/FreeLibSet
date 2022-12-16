@@ -689,7 +689,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод только запоминает родительский элемент для размещения просмотра.
-    /// Отложенное создание страницы выполяется в InitData().
+    /// Отложенное создание страницы выполняется в InitData().
     /// </summary>
     /// <param name="parent"></param>
     protected override void CreatePage(Panel parent)
