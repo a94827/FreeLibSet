@@ -876,12 +876,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вставка выборки документов из буфера обмена
-    /// Если буфер обмена не содержит выборки, возвращается null
+    /// Вставка выборки документов из буфера обмена.
+    /// Если буфер обмена не содержит выборки, возвращается null, при этом выводится всплывающее сообщение.
     /// Выборка не нормализуется.
     /// Проверяется, что выборка в буфере относится к той же базе данных, что и DocProvider
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Выборка документов</returns>
     public DBxDocSelection PasteDocSel()
     {
       DBxDocSelection docSel = null;
@@ -906,7 +906,7 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает 0, если в буфере обмена нет таких документов. В этом случае выдаются соответствуюие сообщения пользователю.
     /// </summary>
     /// <param name="docTypeName">Имя таблицы документа, для которого ожидается идентификатор в буфере обмена</param>
-    /// <returns></returns>
+    /// <returns>Идентификатор документа или 0</returns>
     public Int32 PasteDocSelSingleId(string docTypeName)
     {
 #if DEBUG

@@ -40,6 +40,7 @@ namespace FreeLibSet.Forms.Docs
       _IncludeNested = true;
 
       new ListControlImagePainter(control, new ListControlImageEventHandler(ControlPainter));
+      control.DropDownStyle = ComboBoxStyle.DropDownList; // 20.12.2022
       control.DropDown += new EventHandler(Control_DropDown);
       //Control.DropDownClosed += new EventHandler(Control_DropDownClosed);
       control.SelectedValueChanged += new EventHandler(Control_SelectedValueChanged);
