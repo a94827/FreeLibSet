@@ -2769,14 +2769,15 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private static List<EFPCommandItems> _FocusedObjects = new List<EFPCommandItems>();
+    private static List<EFPCommandItems> _FocusedObjects = new List<EFPCommandItems>(); // Нельзя использовать Stack<EFPCommandItems>, т.к. у него нет метода Remove()
 
     /// <summary>
     /// Используется свойством EFPControlCommandItems.Active.
     /// </summary>
     protected void AddFocus()
     {
-      _FocusedObjects.Add(this);
+      //_FocusedObjects.Add(this);
+      _FocusedObjects.Insert(0, this); // 26.12.2022
     }
 
     /// <summary>
@@ -2789,6 +2790,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить массив всех наборов команд, которые сейчас действуют (находятся в фокусе)
+    /// Первым элементов в массиве является элемент, содержащий фокус ввода (если он содержит меню)
     /// </summary>
     /// <returns></returns>
     public static EFPCommandItems[] GetFocusedObjects()

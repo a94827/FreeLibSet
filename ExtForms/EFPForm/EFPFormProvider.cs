@@ -1238,8 +1238,6 @@ namespace FreeLibSet.Forms
     /// <param name="value">Контекст справки</param>
     public void SetHelpContext(Control control, string value)
     {
-      if (_Form == null)
-        throw new InvalidOperationException("Форма должна быть присоединена до задания контекстов справок");
       if (control == null)
         throw new ArgumentNullException("control");
       if (_HelpContextItems == null)
