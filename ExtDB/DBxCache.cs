@@ -2486,7 +2486,7 @@ Exception rethrown at [0]:
 
       #endregion
 
-      #region Текстовое предсталение
+      #region Текстовое представление
 
       public override string ToString()
       {
@@ -2575,7 +2575,7 @@ Exception rethrown at [0]:
 
       #endregion
 
-      #region Текстовое предсталение
+      #region Текстовое представление
 
       public override string ToString()
       {

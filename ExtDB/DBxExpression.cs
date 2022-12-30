@@ -610,7 +610,7 @@ namespace FreeLibSet.Data
     #region Переопределенные методы
 
     /// <summary>
-    /// Текстовое предсталение для отладки
+    /// Текстовое представление для отладки
     /// </summary>
     /// <returns></returns>
     public override string ToString()

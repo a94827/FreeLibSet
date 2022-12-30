@@ -237,7 +237,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Выводит "Increment=XXX" (для отладки)
     /// </summary>
-    /// <returns>Текстовое предсталение</returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return "Increment=" + Increment.ToString();
