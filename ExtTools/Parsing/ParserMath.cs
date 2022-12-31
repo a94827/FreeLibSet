@@ -740,7 +740,8 @@ namespace FreeLibSet.Parsing
         if (calcMethod == null)
           throw new ArgumentNullException("calcMethod");
 
-        _OpToken = opToken;
+        _Op = opToken.TokenType;
+        _OpTokenIndex = opToken.GetTokenIndexWithCheck();
         _LeftExpression = leftExpression;
         _RightExpression = rightExpression;
         _CalcMethod = calcMethod;
@@ -753,20 +754,21 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Лексема
       /// </summary>
-      public Token OpToken { get { return _OpToken; } }
-      private Token _OpToken;
+      //public Token OpToken { get { return _OpToken; } }
+      internal int OpTokenIndex { get { return _OpTokenIndex; } }
+      private readonly int _OpTokenIndex;
 
       /// <summary>
       /// Выражение слева от операции
       /// </summary>
       public IExpression LeftExpression { get { return _LeftExpression; } }
-      private IExpression _LeftExpression;
+      private readonly IExpression _LeftExpression;
 
       /// <summary>
       /// Выражение справа от операции
       /// </summary>
       public IExpression RightExpression { get { return _RightExpression; } }
-      private IExpression _RightExpression;
+      private readonly IExpression _RightExpression;
 
       /// <summary>
       /// Вычисляющий метод
@@ -777,7 +779,8 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Знак операции "+", "-", "*" или "/"
       /// </summary>
-      public string Op { get { return OpToken.TokenType; } }
+      public string Op { get { return _Op; } }
+      private readonly string _Op;
 
       #endregion
 
@@ -794,7 +797,7 @@ namespace FreeLibSet.Parsing
       {
         object v1 = _LeftExpression.Calc();
         object v2 = _RightExpression.Calc();
-        return _CalcMethod(_OpToken.TokenType, v1, v2);
+        return _CalcMethod(Op, v1, v2);
       }
 
       /// <summary>
@@ -811,10 +814,11 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Добавляет в список OpToken
       /// </summary>
+      /// <param name="data">Данные парсинга</param>
       /// <param name="tokens">Список для заполнения</param>
-      public void GetTokens(IList<Token> tokens)
+      public void GetTokens(ParsingData data, IList<Token> tokens)
       {
-        tokens.Add(_OpToken);
+        tokens.Add(data.Tokens[_OpTokenIndex]);
       }
 
       /// <summary>
@@ -955,7 +959,8 @@ namespace FreeLibSet.Parsing
         if (calcMethod == null)
           throw new ArgumentNullException("calcMethod");
 
-        _OpToken = opToken;
+        _Op = opToken.TokenType;
+        _OpTokenIndex = opToken.GetTokenIndexWithCheck();
         _RightExpression = rightExpression;
         _CalcMethod = calcMethod;
       }
@@ -967,25 +972,26 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Лексема унарной операции
       /// </summary>
-      public Token OpToken { get { return _OpToken; } }
-      private Token _OpToken;
+      //public Token OpToken { get { return _OpToken; } }
+      private readonly int _OpTokenIndex;
 
       /// <summary>
       /// Выражение справа от знака операции
       /// </summary>
       public IExpression RightExpression { get { return _RightExpression; } }
-      private IExpression _RightExpression;
+      private readonly IExpression _RightExpression;
 
       /// <summary>
       /// Вычисляющий метод
       /// </summary>
       public UnaryOpDelegate CalcMethod { get { return _CalcMethod; } }
-      private UnaryOpDelegate _CalcMethod;
+      private readonly UnaryOpDelegate _CalcMethod;
 
       /// <summary>
       /// Знак операции "+", "-"
       /// </summary>
-      public string Op { get { return OpToken.TokenType; } }
+      public string Op { get { return _Op; } }
+      private readonly string _Op;
 
       #endregion
 
@@ -1000,7 +1006,7 @@ namespace FreeLibSet.Parsing
       public object Calc()
       {
         object v2 = _RightExpression.Calc();
-        return _CalcMethod(_OpToken.TokenType, v2);
+        return _CalcMethod(Op, v2);
       }
 
       /// <summary>
@@ -1017,10 +1023,11 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Добавляет лексему в список
       /// </summary>
+      /// <param name="data">Данные парсинга</param>
       /// <param name="tokens">Список для заполнения</param>
-      public void GetTokens(IList<Token> tokens)
+      public void GetTokens(ParsingData data, IList<Token> tokens)
       {
-        tokens.Add(_OpToken);
+        tokens.Add(data.Tokens[_OpTokenIndex]);
       }
 
       /// <summary>
@@ -1090,8 +1097,8 @@ namespace FreeLibSet.Parsing
         if (expression == null)
           throw new ArgumentNullException("expression");
 
-        _OpenToken = openToken;
-        _CloseToken = closeToken;
+        _OpenTokenIndex = openToken.GetTokenIndexWithCheck();
+        _CloseTokenIndex = closeToken.GetTokenIndexWithCheck();
         _Expression = expression;
       }
 
@@ -1102,14 +1109,14 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Лексема открывающей скобки
       /// </summary>
-      public Token OpenToken { get { return _OpenToken; } }
-      private Token _OpenToken;
+      //public Token OpenToken { get { return _OpenToken; } }
+      private readonly int _OpenTokenIndex;
 
       /// <summary>
       /// Лексема закрывающей скобки
       /// </summary>
-      public Token CloseToken { get { return _CloseToken; } }
-      private Token _CloseToken;
+      //public Token CloseToken { get { return _CloseToken; } }
+      private int _CloseTokenIndex;
 
       /// <summary>
       /// Выражение в скобках
@@ -1153,11 +1160,12 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Добавляет в список лексемы "(" и ")"
       /// </summary>
+      /// <param name="data">Данные парсинга</param>
       /// <param name="tokens">Список для заполнения</param>
-      public void GetTokens(IList<Token> tokens)
+      public void GetTokens(ParsingData data, IList<Token> tokens)
       {
-        tokens.Add(_OpenToken);
-        tokens.Add(_CloseToken);
+        tokens.Add(data.Tokens[_OpenTokenIndex]);
+        tokens.Add(data.Tokens[_CloseTokenIndex]);
       }
 
       /// <summary>
@@ -1343,7 +1351,7 @@ namespace FreeLibSet.Parsing
           // Текущая операция
           BinaryExpression expr2 = new BinaryExpression(opToken, leftExpression2.RightExpression, rightExpession, BinaryOps[opToken.TokenType].CalcMethod);
 
-          return new BinaryExpression(leftExpression2.OpToken, leftExpression2.LeftExpression, expr2, leftExpression2.CalcMethod);
+          return new BinaryExpression(data.Tokens[leftExpression2.OpTokenIndex], leftExpression2.LeftExpression, expr2, leftExpression2.CalcMethod);
         }
       }
 
@@ -1411,7 +1419,7 @@ namespace FreeLibSet.Parsing
       IExpression expr = data.Parsers.CreateSubExpression(data, new string[] { ")" });
       if (expr == null)
       {
-        if(data.FirstErrorToken==null)
+        if (data.FirstErrorToken == null)
           openToken.SetError("Выражение в скобках не задано");
         return null;
       }
@@ -1663,7 +1671,10 @@ namespace FreeLibSet.Parsing
         //  throw new ArgumentNullException("Token");
 
         _Value = value;
-        _Token = token;
+        if (token == null)
+          _TokenIndex = -1;
+        else
+          _TokenIndex = token.GetTokenIndexWithCheck();
       }
 
       /// <summary>
@@ -1675,7 +1686,7 @@ namespace FreeLibSet.Parsing
       public ConstExpression(object value)
       {
         _Value = value;
-        _Token = null;
+        _TokenIndex = -1;
       }
 
       #endregion
@@ -1686,13 +1697,13 @@ namespace FreeLibSet.Parsing
       /// Константа
       /// </summary>
       public object Value { get { return _Value; } }
-      private object _Value;
+      private readonly object _Value;
 
       /// <summary>
       /// Лексема, откуда взята константа. Может быть null
       /// </summary>
-      public Token Token { get { return _Token; } }
-      private Token _Token;
+      //public Token Token { get { return _Token; } }
+      private readonly int _TokenIndex;
 
       #endregion
 
@@ -1723,11 +1734,12 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Добавляет лексему в список, если она задана
       /// </summary>
+      /// <param name="data">Данные парсинга</param>
       /// <param name="tokens">Список для заполнения</param>
-      public void GetTokens(IList<Token> tokens)
+      public void GetTokens(ParsingData data, IList<Token> tokens)
       {
-        if (_Token != null)
-          tokens.Add(_Token);
+        if (_TokenIndex >= 0)
+          tokens.Add(data.Tokens[_TokenIndex]);
       }
 
       /// <summary>
@@ -1892,7 +1904,7 @@ namespace FreeLibSet.Parsing
           throw new ArgumentNullException("token");
 
         _Value = value;
-        _Token = token;
+        _TokenIndex = token.GetTokenIndexWithCheck();
         _Separator = separator;
       }
 
@@ -1904,19 +1916,19 @@ namespace FreeLibSet.Parsing
       /// Строковая константа (без кавычек)
       /// </summary>
       public string Value { get { return _Value; } }
-      private string _Value;
+      private readonly string _Value;
 
-      /// <summary>
-      /// Лексема
-      /// </summary>
-      public Token Token { get { return _Token; } }
-      private Token _Token;
+      //// <summary>
+      //// Лексема
+      //// </summary>
+      //public Token Token { get { return _Token; } }
+      private readonly int _TokenIndex;
 
       /// <summary>
       /// Не нужен
       /// </summary>
       public char Separator { get { return _Separator; } }
-      private char _Separator;
+      private readonly char _Separator;
 
       #endregion
 
@@ -1947,10 +1959,11 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Добавляет лексему в список
       /// </summary>
+      /// <param name="data">Данные парсинга</param>
       /// <param name="tokens">Заполняемый список</param>
-      public void GetTokens(IList<Token> tokens)
+      public void GetTokens(ParsingData data, IList<Token> tokens)
       {
-        tokens.Add(_Token);
+        tokens.Add(data.Tokens[_TokenIndex]);
       }
 
       /// <summary>
@@ -2571,10 +2584,12 @@ namespace FreeLibSet.Parsing
 
         _Function = function;
         _Args = args;
-        _NameToken = nameToken;
-        _OpenToken = openToken;
-        _CloseToken = closeToken;
-        _ArgSepTokens = argSepTokens;
+        _NameTokenIndex = nameToken.GetTokenIndexWithCheck();
+        _OpenTokenIndex = openToken.GetTokenIndexWithCheck();
+        _CloseTokenIndex = closeToken.GetTokenIndexWithCheck();
+        _ArgSepTokenIndexs = new int[argSepTokens.Length];
+        for (int i = 0; i < argSepTokens.Length; i++)
+          _ArgSepTokenIndexs[i] = argSepTokens[i].GetTokenIndexWithCheck();
         _UserData = userData;
       }
 
@@ -2586,41 +2601,41 @@ namespace FreeLibSet.Parsing
       /// Определение функции
       /// </summary>
       public FunctionDef Function { get { return _Function; } }
-      private FunctionDef _Function;
+      private readonly FunctionDef _Function;
 
 
       /// <summary>
       /// Вычисляемые аргументы
       /// </summary>
       public IExpression[] Args { get { return _Args; } }
-      private IExpression[] _Args;
+      private readonly IExpression[] _Args;
 
       /// <summary>
       /// Лексема с именем функции
       /// </summary>
-      public Token NameToken { get { return _NameToken; } }
-      private Token _NameToken;
+      //public Token NameToken { get { return _NameToken; } }
+      private readonly int _NameTokenIndex;
 
       /// <summary>
       /// Лексема "("
       /// </summary>
-      public Token OpenToken { get { return _OpenToken; } }
-      private Token _OpenToken;
+      //public Token OpenToken { get { return _OpenToken; } }
+      private readonly int _OpenTokenIndex;
 
       /// <summary>
       /// Лексема ")"
       /// </summary>
-      public Token CloseToken { get { return _CloseToken; } }
-      private Token _CloseToken;
+      //public Token CloseToken { get { return _CloseToken; } }
+      private readonly int _CloseTokenIndex;
 
       /// <summary>
       /// Лексемы ","
       /// </summary>
-      public Token[] ArgSepTokens { get { return _ArgSepTokens; } }
-      private Token[] _ArgSepTokens;
+      //public Token[] ArgSepTokens { get { return _ArgSepTokens; } }
+      private readonly int[] _ArgSepTokenIndexs;
 
       /// <summary>
-      /// Пользовательские данные, переданные в CreateExpression
+      /// Пользовательские данные, переданные в CreateExpression()
       /// </summary>
       public NamedValues UserData { get { return _UserData; } }
       private NamedValues _UserData;
@@ -2677,14 +2692,15 @@ namespace FreeLibSet.Parsing
       /// <summary>
       /// Добавляет в список все лексемы
       /// </summary>
+      /// <param name="data">Данные парсинга</param>
       /// <param name="tokens">Список для заполнения</param>
-      public void GetTokens(IList<Token> tokens)
+      public void GetTokens(ParsingData data, IList<Token> tokens)
       {
-        tokens.Add(NameToken);
-        tokens.Add(OpenToken);
-        for (int i = 0; i < ArgSepTokens.Length; i++)
-          tokens.Add(ArgSepTokens[i]);
-        tokens.Add(CloseToken);
+        tokens.Add(data.Tokens[_NameTokenIndex]);
+        tokens.Add(data.Tokens[_OpenTokenIndex]);
+        for (int i = 0; i < _ArgSepTokenIndexs.Length; i++)
+          tokens.Add(data.Tokens[_ArgSepTokenIndexs[i]]);
+        tokens.Add(data.Tokens[_CloseTokenIndex]);
       }
 
       /// <summary>

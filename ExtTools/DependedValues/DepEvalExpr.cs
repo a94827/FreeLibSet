@@ -150,12 +150,14 @@ namespace FreeLibSet.DependedValues
       public ArgExpression(IDepValue arg, Token token)
       {
         _Arg = arg;
-        _Token = token;
+        _TokenIndex = token.GetTokenIndexWithCheck();
+        _TokenText = token.Text;
       }
 
-      private IDepValue _Arg;
+      private readonly IDepValue _Arg;
 
-      private Token _Token;
+      private readonly int _TokenIndex;
+      private readonly string _TokenText;
 
       #endregion
 
@@ -165,7 +167,7 @@ namespace FreeLibSet.DependedValues
 
       public object Calc()
       {
-        return _Arg.Value;
+        return _Arg.Value;                           
       }
 
       public bool IsConst
@@ -173,9 +175,9 @@ namespace FreeLibSet.DependedValues
         get { return _Arg.IsConst; }
       }
 
-      public void GetTokens(IList<Token> tokens)
+      public void GetTokens(ParsingData data, IList<Token> tokens)
       {
-        tokens.Add(_Token);
+        tokens.Add(data.Tokens[_TokenIndex]);
       }
 
       public void GetChildExpressions(IList<IExpression> expressions)
@@ -184,7 +186,7 @@ namespace FreeLibSet.DependedValues
 
       public void Synthesize(SynthesisData data)
       {
-        data.Tokens.Add(new SynthesisToken(data, this, _Token.Text));
+        data.Tokens.Add(new SynthesisToken(data, this, _TokenText));
       }
 
       #endregion

@@ -1,6 +1,8 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+// #define DEBUG_PARSINGDATA_DESTRUCTOR
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -119,8 +121,9 @@ namespace FreeLibSet.Parsing
     /// Если требуется получить все лексемы, включая относящиеся к дочерним выражениям, следует использовать
     /// статический метод ParsingData.GetTokens()
     /// </summary>
+    /// <param name="data">Данные парсинга</param>
     /// <param name="tokens">Список, куда следует добавить ссылку</param>
-    void GetTokens(IList<Token> tokens);
+    void GetTokens(ParsingData data, IList<Token> tokens);
 
     /// <summary>
     /// Получить зависимые выражения
@@ -669,6 +672,34 @@ namespace FreeLibSet.Parsing
     private readonly ParsingData _Data;
 
     /// <summary>
+    /// Индекс лексемы в <see cref="ParsingData.Tokens"/>.
+    /// Если лексема еще не была добавлена в список, возвращается (-1)
+    /// </summary>
+    public int TokenIndex
+    {
+      // Необходимость хранения значения свойства в поле после добавления лексемы отсутствует.
+      // В типичных сценариях свойство нужно только один раз в момент создания класса реализации IExpression.
+      // Количество лексем в ParsingData.Tokens также обычно невелико.
+      get
+      {
+        return _Data.Tokens.IndexOf(this);
+      }
+    }
+
+    /// <summary>
+    /// Возвращает свойство TokenIndex, проверяя, что лексема была присоединена к <see cref="ParsingData.Tokens"/>.
+    /// </summary>
+    /// <returns></returns>
+    internal int GetTokenIndexWithCheck()
+    {
+      int res = this.TokenIndex;
+      if (res < 0)
+        throw new InvalidOperationException("Лексема не была присоединена к ParsingData");
+      return res;
+    }
+
+
+    /// <summary>
     /// Парсер, добавившего данную лексему
     /// </summary>
     public IParser Parser { get { return _Parser; } }
@@ -918,6 +949,15 @@ namespace FreeLibSet.Parsing
       _UserData = new NamedValues();
       _State = ParsingState.Init;
     }
+
+#if DEBUG_PARSINGDATA_DESTRUCTOR
+
+    ~ParsingData()
+    {
+#warning DEBUG_PARSINGDATA_DESTRUCTOR is defined!
+    }
+
+#endif
 
     #endregion
 
@@ -1513,7 +1553,7 @@ namespace FreeLibSet.Parsing
     /// </summary>
     /// <param name="expression">Выражение</param>
     /// <returns>Список ошибок</returns>
-    public static ErrorMessageList GetErrorMessages(IExpression expression)
+    public ErrorMessageList GetErrorMessages(IExpression expression)
     {
       ErrorMessageList msgs = new ErrorMessageList();
       List<Token> tokens = new List<Token>();
@@ -1609,7 +1649,7 @@ namespace FreeLibSet.Parsing
     /// </summary>
     /// <param name="expression">Объект, в котором выполняется поиск</param>
     /// <param name="tokens">Список для добавления найденных лексем</param>
-    public static void GetTokens(IExpression expression, List<Token> tokens)
+    public void GetTokens(IExpression expression, List<Token> tokens)
     {
 #if DEBUG
       if (tokens == null)
@@ -1620,7 +1660,7 @@ namespace FreeLibSet.Parsing
         return;
 
       int count = tokens.Count;
-      expression.GetTokens(tokens);
+      expression.GetTokens(this, tokens);
       for (int i = count; i < tokens.Count; i++)
       {
         if (tokens[i] == null)
@@ -1640,7 +1680,7 @@ namespace FreeLibSet.Parsing
     /// <param name="expression">Объект, в котором выполняется поиск</param>
     /// <param name="tokens">Список для добавления найденных лексем</param>
     /// <param name="tokenType">Тип лексем (свойство Token.TokenType), которые требуется найти</param>
-    public static void GetTokens(IExpression expression, List<Token> tokens, string tokenType)
+    public void GetTokens(IExpression expression, List<Token> tokens, string tokenType)
     {
       if (expression == null)
         return;
@@ -1649,7 +1689,7 @@ namespace FreeLibSet.Parsing
         throw new ArgumentNullException("tokenType");
 
       List<Token> tokens2 = new List<Token>();
-      expression.GetTokens(tokens2);
+      expression.GetTokens(this, tokens2);
       for (int i = 0; i < tokens2.Count; i++)
       {
         if (tokens2[i].TokenType == tokenType)
@@ -1668,7 +1708,7 @@ namespace FreeLibSet.Parsing
     /// <param name="expression">Объект, в котором выполняется поиск</param>
     /// <param name="tokenType">Тип лексемы (свойство Token.TokenType), которую требуется найти</param>
     /// <returns>Найденная лексема</returns>
-    public static Token GetFirstToken(IExpression expression, string tokenType)
+    public Token GetFirstToken(IExpression expression, string tokenType)
     {
       if (expression == null)
         return null;
@@ -1680,10 +1720,10 @@ namespace FreeLibSet.Parsing
       return DoGetFirstToken(dummyTokens, expression, tokenType);
     }
 
-    private static Token DoGetFirstToken(List<Token> dummyTokens, IExpression expression, string tokenType)
+    private Token DoGetFirstToken(List<Token> dummyTokens, IExpression expression, string tokenType)
     {
       dummyTokens.Clear();
-      expression.GetTokens(dummyTokens);
+      expression.GetTokens(this, dummyTokens);
       for (int i = 0; i < dummyTokens.Count; i++)
       {
         if (dummyTokens[i].TokenType == tokenType)
@@ -1706,13 +1746,13 @@ namespace FreeLibSet.Parsing
     /// </summary>
     /// <param name="expression">Объект, в котором выполняется поиск</param>
     /// <returns>Найденная лексема</returns>
-    public static Token GetFirstToken(IExpression expression)
+    public Token GetFirstToken(IExpression expression)
     {
       if (expression == null)
         return null;
 
       List<Token> tokens2 = new List<Token>();
-      expression.GetTokens(tokens2);
+      expression.GetTokens(this, tokens2);
       if (tokens2.Count > 0)
         return tokens2[0];
 
@@ -1873,6 +1913,15 @@ namespace FreeLibSet.Parsing
       List<T> expressions = new List<T>();
       GetExpressions<T>(expression, expressions);
       return expressions.ToArray();
+    }
+
+    /// <summary>
+    /// Для отладки
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return "Text=" + Text.ToString() + ", State=" + State.ToString() + ", Tokens.Count=" + Tokens.Count.ToString();
     }
 
     #endregion

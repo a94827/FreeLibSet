@@ -287,7 +287,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
 
       List<Token> tokens = new List<Token>();
-      expression.GetTokens(tokens);
+      expression.GetTokens(this.ParsingData, tokens);
       for (int i = 0; i < tokens.Count; i++)
       {
         if (!_TokenIndexExprNodes.ContainsKey(tokens[i]))
