@@ -215,6 +215,60 @@ namespace FreeLibSet.Remoting
       return DataTools.GetEnum<T>(this[name]);
     }
 
+    /// <summary>
+    /// Если в коллекции нет объекта с заданным именем <paramref name="name"/>, то он создается. Иначе возвращается существующий объект.
+    /// </summary>
+    /// <typeparam name="T">Тип данных. Должен быть классом, поддерживающим конструктор без параметров</typeparam>
+    /// <param name="name">Имя</param>
+    /// <returns>Созданный или существующий объект</returns>
+    public T GetOrCreate<T>(string name)
+      where T:class, new()
+    {
+      CheckNotReadOnly();
+      object res;
+      if (_Items.TryGetValue(name, out res))
+        return (T)res;
+
+      if (String.IsNullOrEmpty(name))
+        throw new ArgumentNullException("name");
+
+      res = new T();
+      _Items.Add(name, res);
+      return (T)res;
+    }
+
+    /// <summary>
+    /// Если в коллекции нет объекта с заданным именем <paramref name="name"/>, то он создается. Иначе возвращается существующий объект.
+    /// </summary>
+    /// <param name="objType">Тип создаваемого объекта. Должен быть классом, поддерживающим конструктор без параметров</param>
+    /// <param name="name">Имя</param>
+    /// <returns>Созданный или существующий объект</returns>
+    public object GetOrCreate(Type objType, string name)
+    {
+      CheckNotReadOnly();
+      object res;
+      if (_Items.TryGetValue(name, out res))
+        return res;
+
+      if (String.IsNullOrEmpty(name))
+        throw new ArgumentNullException("name");
+
+#if DEBUG
+      if (objType == null)
+        throw new ArgumentNullException("objType");
+#endif
+      if (!objType.IsClass)
+        throw new ArgumentException("Тип данных должен быть классом", "objType");
+
+      System.Reflection.ConstructorInfo ci = objType.GetConstructor(Type.EmptyTypes);
+      if (ci == null)
+        throw new ArgumentException("Тип " + objType.ToString() + " не имеет конструктора без параметров");
+
+      res = ci.Invoke(DataTools.EmptyObjects);
+      _Items.Add(name, res);
+      return res;
+    }
+
     #endregion
 
     #region Инкремент значений
@@ -386,6 +440,24 @@ namespace FreeLibSet.Remoting
         s += " (Read only)";
 
       return s;
+    }
+
+    /// <summary>
+    /// Копирует элементы из текущего набора в другой набор.
+    /// </summary>
+    /// <param name="dest">Заполняемый набор</param>
+    /// <param name="names">Список имен для копирования, разделенный запятыми. Если строка пустая, никаких действий не выполняется.</param>
+    public void CopyTo(NamedValues dest, string names)
+    {
+      if (dest == null)
+        throw new ArgumentNullException("dest");
+      dest.CheckNotReadOnly();
+      if (String.IsNullOrEmpty(names))
+        return;
+
+      string[] aNames = names.Split(',');
+      for (int i = 0; i < aNames.Length; i++)
+        dest[aNames[i]] = this[aNames[i]];
     }
 
     #endregion

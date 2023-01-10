@@ -1,7 +1,7 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
-// #define DEBUG_PARSINGDATA_DESTRUCTOR
+//#define DEBUG_PARSINGDATA_DESTRUCTOR
 
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using FreeLibSet.Remoting;
 using System.Globalization;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using System.IO;
 
 /*
  * Синтаксический разбор текста
@@ -112,18 +113,6 @@ namespace FreeLibSet.Parsing
     /// Используется для оптимизации
     /// </summary>
     bool IsConst { get; }
-
-    /// <summary>
-    /// Получить лексемы, относящиеся к выражению. 
-    /// Обычно добавляется единственная лексема, например, для BinaryOpExpression возвращается лексема знака 
-    /// операции. Однако, для функции возвращается три лексемы: имя функции, открывающая скобка и закрывающая скобка
-    /// Возвращаются лексемы, относящиеся непосредсственно к этому вычислителю.
-    /// Если требуется получить все лексемы, включая относящиеся к дочерним выражениям, следует использовать
-    /// статический метод ParsingData.GetTokens()
-    /// </summary>
-    /// <param name="data">Данные парсинга</param>
-    /// <param name="tokens">Список, куда следует добавить ссылку</param>
-    void GetTokens(ParsingData data, IList<Token> tokens);
 
     /// <summary>
     /// Получить зависимые выражения
@@ -452,7 +441,7 @@ namespace FreeLibSet.Parsing
     /// В случае ошибки возвращается null.
     /// </summary>
     /// <param name="data">Данные парсинга</param>
-    /// <returns>Выражение, которое может быть вычислено. Если есть ошибочные лексемы, вовзращается null</returns>
+    /// <returns>Выражение, которое может быть вычислено. Если есть ошибочные лексемы, возвращается null</returns>
     public IExpression CreateExpression(ParsingData data)
     {
       if (data == null)
@@ -468,26 +457,34 @@ namespace FreeLibSet.Parsing
       if (data.FirstErrorToken != null)
         return null; // были ошибки на первой фазе парсинга
 
-      data.State = ParsingState.ExpressionCreating;
       IExpression resExpr;
-      data.InternalTokenIndex = 0;
-      data.EndTokens = DataTools.EmptyStrings;
+      ParsingShareTools.BeginBuffering();
       try
       {
-        resExpr = CreateSubExpression(data, null);
+        data.State = ParsingState.ExpressionCreating;
+        data.InternalTokenIndex = 0;
+        data.EndTokens = DataTools.EmptyStrings;
+        try
+        {
+          resExpr = CreateSubExpression(data, null);
+        }
+        finally
+        {
+          data.InternalTokenIndex = -1;
+          data.EndTokens = null;
+          data.State = ParsingState.ExpressionCreated;
+        }
+
+        if (resExpr != null && data.FirstErrorToken == null)
+        {
+          IExpression[] exprs = ParsingData.GetExpressions(resExpr);
+          for (int i = 0; i < exprs.Length; i++)
+            exprs[i].Init(data);
+        }
       }
       finally
       {
-        data.InternalTokenIndex = -1;
-        data.EndTokens = null;
-        data.State = ParsingState.ExpressionCreated;
-      }
-
-      if (resExpr != null && data.FirstErrorToken == null)
-      {
-        IExpression[] exprs = ParsingData.GetExpressions(resExpr);
-        for (int i = 0; i < exprs.Length; i++)
-          exprs[i].Init(data);
+        ParsingShareTools.EndBuffering();
       }
 
       return resExpr;
@@ -671,32 +668,32 @@ namespace FreeLibSet.Parsing
     public ParsingData Data { get { return _Data; } }
     private readonly ParsingData _Data;
 
-    /// <summary>
-    /// Индекс лексемы в <see cref="ParsingData.Tokens"/>.
-    /// Если лексема еще не была добавлена в список, возвращается (-1)
-    /// </summary>
-    public int TokenIndex
-    {
-      // Необходимость хранения значения свойства в поле после добавления лексемы отсутствует.
-      // В типичных сценариях свойство нужно только один раз в момент создания класса реализации IExpression.
-      // Количество лексем в ParsingData.Tokens также обычно невелико.
-      get
-      {
-        return _Data.Tokens.IndexOf(this);
-      }
-    }
+    ///// <summary>
+    ///// Индекс лексемы в <see cref="ParsingData.Tokens"/>.
+    ///// Если лексема еще не была добавлена в список, возвращается (-1)
+    ///// </summary>
+    //public int TokenIndex
+    //{
+    //  // Необходимость хранения значения свойства в поле после добавления лексемы отсутствует.
+    //  // В типичных сценариях свойство нужно только один раз в момент создания класса реализации IExpression.
+    //  // Количество лексем в ParsingData.Tokens также обычно невелико.
+    //  get
+    //  {
+    //    return _Data.Tokens.IndexOf(this);
+    //  }
+    //}
 
-    /// <summary>
-    /// Возвращает свойство TokenIndex, проверяя, что лексема была присоединена к <see cref="ParsingData.Tokens"/>.
-    /// </summary>
-    /// <returns></returns>
-    internal int GetTokenIndexWithCheck()
-    {
-      int res = this.TokenIndex;
-      if (res < 0)
-        throw new InvalidOperationException("Лексема не была присоединена к ParsingData");
-      return res;
-    }
+    ///// <summary>
+    ///// Возвращает свойство TokenIndex, проверяя, что лексема была присоединена к <see cref="ParsingData.Tokens"/>.
+    ///// </summary>
+    ///// <returns></returns>
+    //internal int GetTokenIndexWithCheck()
+    //{
+    //  int res = this.TokenIndex;
+    //  if (res < 0)
+    //    throw new InvalidOperationException("Лексема не была присоединена к ParsingData");
+    //  return res;
+    //}
 
 
     /// <summary>
@@ -912,6 +909,318 @@ namespace FreeLibSet.Parsing
     public override int GetHashCode()
     {
       return Start;
+    }
+
+    #endregion
+  }
+
+
+  /// <summary>
+  /// Соответствие между лексемой и вычисляемым выражением.
+  /// Этот тип не используется в прикладном коде.
+  /// </summary>
+  public struct TokenExpressionPair
+  {
+    #region Конструктор
+
+    internal TokenExpressionPair(Token token, IExpression expression)
+    {
+      if (token == null)
+        throw new ArgumentNullException("token");
+      if (expression == null)
+        throw new ArgumentNullException("expression");
+      _Token = token;
+      _Expression = expression;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Лексема
+    /// </summary>
+    public Token Token { get { return _Token; } }
+    private readonly Token _Token;
+
+    /// <summary>
+    /// Вычисляемое выражение
+    /// </summary>
+    public IExpression Expression { get { return _Expression; } }
+    private readonly IExpression _Expression;
+
+    /// <summary>
+    /// Для отладки
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      if (_Token == null)
+        return "Empty";
+      return "{" + _Token.ToString() + ":" + _Expression.ToString() + "}";
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Реализация свойства <see cref="ParsingData.TokenMap"/>.
+  /// </summary>
+  public sealed class TokenExpressionList : List<TokenExpressionPair>
+  {
+    #region Защищенный конструктор
+
+    internal TokenExpressionList()
+    {
+    }
+
+    #endregion
+
+    #region Добавление соответствия
+
+    /// <summary>
+    /// Добавление соответствия
+    /// </summary>
+    /// <param name="token">Лексема. Не может быть null.</param>
+    /// <param name="expression">Вычисляемое выражение. Не может быть null.</param>
+    public void Add(Token token, IExpression expression)
+    {
+      Add(new TokenExpressionPair(token, expression));
+    }
+
+    #endregion
+
+    #region Нерекурсивный поиск лексем
+
+    /// <summary>
+    /// Возвращает все лексемы, относящиеся к данному выражению.
+    /// </summary>
+    /// <param name="expression">Вычисляемое выражение</param>
+    /// <returns>Массив лексем</returns>
+    public Token[] GetTokens(IExpression expression)
+    {
+      if (expression == null)
+        return Token.EmptyArray;
+      List<Token> list = new List<Token>();
+      for (int i = 0; i < Count; i++)
+      {
+        if (Object.ReferenceEquals(this[i].Expression, expression))
+          list.Add(this[i].Token);
+      }
+      return list.ToArray();
+    }
+
+    /// <summary>
+    /// Возвращает первую лексему, относящуюся к выражению.
+    /// Если для выражения не задано соответствие ни с одной лексемой, возвращается null.
+    /// </summary>
+    /// <param name="expression">Вычисляемое выражение</param>
+    /// <returns>Ссылка на лексему или null</returns>
+    public Token GetFirstToken(IExpression expression)
+    {
+      if (expression == null)
+        return null;
+      for (int i = 0; i < Count; i++)
+      {
+        if (Object.ReferenceEquals(this[i].Expression, expression))
+          return this[i].Token;
+      }
+      return null;
+    }
+
+    /// <summary>
+    /// Возвращает последнюю лексему, относящуюся к выражению.
+    /// Если для выражения не задано соответствие ни с одной лексемой, возвращается null.
+    /// </summary>
+    /// <param name="expression">Вычисляемое выражение</param>
+    /// <returns>Ссылка на лексему или null</returns>
+    public Token GetLastToken(IExpression expression)
+    {
+      if (expression == null)
+        return null;
+      for (int i = Count - 1; i >= 0; i--)
+      {
+        if (Object.ReferenceEquals(this[i].Expression, expression))
+          return this[i].Token;
+      }
+      return null;
+    }
+
+    /// <summary>
+    /// Возвращает массив выражений, соответствующих заданной лексеме.
+    /// Обычно возвращается массив из одного элемента.
+    /// Если из лексемы не сформировано вычисляемого выражения (например, это пробельный символ),
+    /// возвращается пустой массив.
+    /// </summary>
+    /// <param name="token">Лексема</param>
+    /// <returns>Массив вычисляемых выражений</returns>
+    public IExpression[] GetExpressions(Token token)
+    {
+      if (token == null)
+        return new IExpression[0];
+      List<IExpression> list = new List<IExpression>();
+      for (int i = 0; i < Count; i++)
+      {
+        if (Object.ReferenceEquals(this[i].Token, token))
+          list.Add(this[i].Expression);
+      }
+      return list.ToArray();
+    }
+
+    //public IExpression GetExpression(Token token)
+    //{
+    //  if (token == null)
+    //    return null;
+    //  for (int i = 0; i < Count; i++)
+    //  {
+    //    if (Object.ReferenceEquals(this[i].Token, token))
+    //      return this[i].Expression;
+    //  }
+    //  return null;
+    //}
+
+    #endregion
+
+    #region Рекурсивный поиск лексем
+
+    /// <summary>
+    /// Получает список всех лексем, входящих в выражение
+    /// Выполняется рекурсивный вызов IExpression.GetTokens().
+    /// Найденные лексемы добавляются в список <paramref name="tokens"/>
+    /// </summary>
+    /// <param name="expression">Объект, в котором выполняется поиск</param>
+    /// <param name="tokens">Список для добавления найденных лексем</param>
+    public void GetInheritedTokens(IExpression expression, List<Token> tokens)
+    {
+#if DEBUG
+      if (tokens == null)
+        throw new ArgumentNullException("tokens");
+#endif
+
+      if (expression == null)
+        return;
+
+      int count = tokens.Count;
+      Token[] a1 = GetTokens(expression);
+      for (int i = 0; i < a1.Length; i++)
+        tokens.Add(a1[i]);
+
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
+        GetInheritedTokens(children[i], tokens); // рекурсивный вызов
+    }
+
+    /// <summary>
+    /// Получает список всех лексем заданного типа, входящих в выражение
+    /// Выполняется рекурсивный вызов IExpression.GetTokens()
+    /// </summary>
+    /// <param name="expression">Объект, в котором выполняется поиск</param>
+    /// <param name="tokens">Список для добавления найденных лексем</param>
+    /// <param name="tokenType">Тип лексем (свойство Token.TokenType), которые требуется найти</param>
+    public void GetInheritedTokens(IExpression expression, List<Token> tokens, string tokenType)
+    {
+      if (expression == null)
+        return;
+
+      if (String.IsNullOrEmpty(tokenType))
+        throw new ArgumentNullException("tokenType");
+
+      Token[] tokens2 = GetTokens(expression);
+      for (int i = 0; i < tokens2.Length; i++)
+      {
+        if (tokens2[i].TokenType == tokenType)
+          tokens.Add(tokens2[i]);
+      }
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
+        GetInheritedTokens(children[i], tokens, tokenType); // рекурсивный вызов
+    }
+
+    /// <summary>
+    /// Возвращает первую лексему заданного типа
+    /// Выполняется рекурсивный вызов IExpression.GetTokens()
+    /// </summary>
+    /// <param name="expression">Объект, в котором выполняется поиск</param>
+    /// <param name="tokenType">Тип лексемы (свойство Token.TokenType), которую требуется найти</param>
+    /// <returns>Найденная лексема</returns>
+    public Token GetFirstInheritedToken(IExpression expression, string tokenType)
+    {
+      if (expression == null)
+        return null;
+
+      if (String.IsNullOrEmpty(tokenType))
+        throw new ArgumentNullException("tokenType");
+
+      Token[] tokens = GetTokens(expression);
+      for (int i = 0; i < tokens.Length; i++)
+      {
+        if (tokens[i].TokenType == tokenType)
+          return tokens[i];
+      }
+
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
+      {
+        Token tk = GetFirstInheritedToken(children[i], tokenType); // рекусивный вызов
+        if (tk != null)
+          return tk;
+      }
+      return null;
+    }
+
+    /// <summary>
+    /// Возвращает первую лексему любого типа.
+    /// По необходимости, выполняется рекурсивный вызов IExpression.GetTokens().
+    /// </summary>
+    /// <param name="expression">Объект, в котором выполняется поиск</param>
+    /// <returns>Найденная лексема</returns>
+    public Token GetFirstInheritedToken(IExpression expression)
+    {
+      if (expression == null)
+        return null;
+
+      Token tk = GetFirstToken(expression);
+      if (tk != null)
+        return tk;
+
+      List<IExpression> children = new List<IExpression>();
+      expression.GetChildExpressions(children);
+      for (int i = 0; i < children.Count; i++)
+      {
+        Token tk2 = GetFirstInheritedToken(children[i]);
+        if (tk2 != null)
+          return tk2;
+      }
+
+      return null;
+    }
+
+    /// <summary>
+    /// Получить список ошибок, обнаруженных при разборе данного выражения.
+    /// Если выражение не задано, возвращается пустой список ошибок
+    /// Обычно, при возникновении ошибок, выражения не возвращается, поэтому
+    /// этот метод малополезен
+    /// </summary>
+    /// <param name="expression">Выражение</param>
+    /// <returns>Список ошибок</returns>
+    public ErrorMessageList GetErrorMessages(IExpression expression)
+    {
+      ErrorMessageList msgs = new ErrorMessageList();
+      Token[] tokens = GetTokens(expression);
+      for (int i = 0; i < tokens.Length; i++)
+      {
+        if (tokens[i].ErrorMessage.HasValue)
+        {
+          ParsingErrorItemData data = new ParsingErrorItemData(i,
+            tokens[i].TokenType, tokens[i].Start, tokens[i].Length);
+          ErrorMessageItem src = tokens[i].ErrorMessage.Value;
+          msgs.Add(new ErrorMessageItem(src.Kind, src.Text, src.Code, data));
+        }
+      }
+      return msgs;
     }
 
     #endregion
@@ -1546,32 +1855,6 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Получить список ошибок, обнаруженных при разборе данного выражения.
-    /// Если выражение не задано, возвращается пустой список ошибок
-    /// Обычно, при возникновении ошибок, выражения не возвращается, поэтому
-    /// этот метод малополезен
-    /// </summary>
-    /// <param name="expression">Выражение</param>
-    /// <returns>Список ошибок</returns>
-    public ErrorMessageList GetErrorMessages(IExpression expression)
-    {
-      ErrorMessageList msgs = new ErrorMessageList();
-      List<Token> tokens = new List<Token>();
-      GetTokens(expression, tokens);
-      for (int i = 0; i < tokens.Count; i++)
-      {
-        if (tokens[i].ErrorMessage.HasValue)
-        {
-          ParsingErrorItemData data = new ParsingErrorItemData(i,
-            tokens[i].TokenType, tokens[i].Start, tokens[i].Length);
-          ErrorMessageItem src = tokens[i].ErrorMessage.Value;
-          msgs.Add(new ErrorMessageItem(src.Kind, src.Text, src.Code, data));
-        }
-      }
-      return msgs;
-    }
-
-    /// <summary>
     /// Максимальный уровень серьезности сообщений.
     /// Если нет ни одного присоединенного сообщения, то возвращается уровень "Info"
     /// </summary>
@@ -1640,133 +1923,18 @@ namespace FreeLibSet.Parsing
 
     #endregion
 
-    #region Поиск лексем
+    #region Соответствие лексем и вычисляемых выражений
 
     /// <summary>
-    /// Получает список всех лексем, входящих в выражение
-    /// Выполняется рекурсивный вызов IExpression.GetTokens().
-    /// Найденные лексемы добавляются в список <paramref name="tokens"/>
+    /// Соответствия между лексемами и вычисляемыми выражениями.
+    /// Свойство доступно при вызове метода <see cref="ParserList.CreateExpression(ParsingData)"/> и после него.
+    /// Список заполняется при создании объектов IExpression. 
+    /// Если прикладному коду требуется вызывать метод <see cref="ParserList.CreateExpression(ParsingData)"/> несколько раз и сохранять
+    /// список соответствий для нескольких вызовов, то следует скопировать ссылку на <see cref="TokenExpressionList"/> в прикладном коде.
+    /// При каждом вызове метода <see cref="ParserList.CreateExpression(ParsingData)"/> создается новый экземпляр списка.
     /// </summary>
-    /// <param name="expression">Объект, в котором выполняется поиск</param>
-    /// <param name="tokens">Список для добавления найденных лексем</param>
-    public void GetTokens(IExpression expression, List<Token> tokens)
-    {
-#if DEBUG
-      if (tokens == null)
-        throw new ArgumentNullException("tokens");
-#endif
-
-      if (expression == null)
-        return;
-
-      int count = tokens.Count;
-      expression.GetTokens(this, tokens);
-      for (int i = count; i < tokens.Count; i++)
-      {
-        if (tokens[i] == null)
-          throw new NullReferenceException("Для выражения " + expression.ToString() + " метод GetTokens() добавил в список значение null");
-      }
-
-      List<IExpression> children = new List<IExpression>();
-      expression.GetChildExpressions(children);
-      for (int i = 0; i < children.Count; i++)
-        GetTokens(children[i], tokens);
-    }
-
-    /// <summary>
-    /// Получает список всех лексем заданного типа, входящих в выражение
-    /// Выполняется рекурсивный вызов IExpression.GetTokens()
-    /// </summary>
-    /// <param name="expression">Объект, в котором выполняется поиск</param>
-    /// <param name="tokens">Список для добавления найденных лексем</param>
-    /// <param name="tokenType">Тип лексем (свойство Token.TokenType), которые требуется найти</param>
-    public void GetTokens(IExpression expression, List<Token> tokens, string tokenType)
-    {
-      if (expression == null)
-        return;
-
-      if (String.IsNullOrEmpty(tokenType))
-        throw new ArgumentNullException("tokenType");
-
-      List<Token> tokens2 = new List<Token>();
-      expression.GetTokens(this, tokens2);
-      for (int i = 0; i < tokens2.Count; i++)
-      {
-        if (tokens2[i].TokenType == tokenType)
-          tokens.Add(tokens2[i]);
-      }
-      List<IExpression> children = new List<IExpression>();
-      expression.GetChildExpressions(children);
-      for (int i = 0; i < children.Count; i++)
-        GetTokens(children[i], tokens, tokenType);
-    }
-
-    /// <summary>
-    /// Возвращает первую лексему заданного типа
-    /// Выполняется рекурсивный вызов IExpression.GetTokens()
-    /// </summary>
-    /// <param name="expression">Объект, в котором выполняется поиск</param>
-    /// <param name="tokenType">Тип лексемы (свойство Token.TokenType), которую требуется найти</param>
-    /// <returns>Найденная лексема</returns>
-    public Token GetFirstToken(IExpression expression, string tokenType)
-    {
-      if (expression == null)
-        return null;
-
-      if (String.IsNullOrEmpty(tokenType))
-        throw new ArgumentNullException("tokenType");
-
-      List<Token> dummyTokens = new List<Token>();
-      return DoGetFirstToken(dummyTokens, expression, tokenType);
-    }
-
-    private Token DoGetFirstToken(List<Token> dummyTokens, IExpression expression, string tokenType)
-    {
-      dummyTokens.Clear();
-      expression.GetTokens(this, dummyTokens);
-      for (int i = 0; i < dummyTokens.Count; i++)
-      {
-        if (dummyTokens[i].TokenType == tokenType)
-          return dummyTokens[i];
-      }
-      List<IExpression> children = new List<IExpression>();
-      expression.GetChildExpressions(children);
-      for (int i = 0; i < children.Count; i++)
-      {
-        Token tk = DoGetFirstToken(dummyTokens, children[i], tokenType);
-        if (tk != null)
-          return tk;
-      }
-      return null;
-    }
-
-    /// <summary>
-    /// Возвращает первую лексему любого типа.
-    /// По необходимости, выполняется рекурсивный вызов IExpression.GetTokens().
-    /// </summary>
-    /// <param name="expression">Объект, в котором выполняется поиск</param>
-    /// <returns>Найденная лексема</returns>
-    public Token GetFirstToken(IExpression expression)
-    {
-      if (expression == null)
-        return null;
-
-      List<Token> tokens2 = new List<Token>();
-      expression.GetTokens(this, tokens2);
-      if (tokens2.Count > 0)
-        return tokens2[0];
-
-      List<IExpression> children = new List<IExpression>();
-      expression.GetChildExpressions(children);
-      for (int i = 0; i < children.Count; i++)
-      {
-        Token tk = GetFirstToken(children[i]);
-        if (tk != null)
-          return tk;
-      }
-
-      return null;
-    }
+    public TokenExpressionList TokenMap { get { return _TokenMap; } }
+    private TokenExpressionList _TokenMap;
 
     #endregion
 
@@ -1795,7 +1963,12 @@ namespace FreeLibSet.Parsing
     public ParsingState State
     {
       get { return _State; }
-      internal set { _State = value; }
+      internal set
+      {
+        _State = value;
+        if (value == ParsingState.ExpressionCreating)
+          _TokenMap = new TokenExpressionList();
+      }
     }
     private ParsingState _State;
 
@@ -1803,7 +1976,6 @@ namespace FreeLibSet.Parsing
     /// Используется при рекурсивном вызове ParserList.CreateSubExpression()
     /// </summary>
     internal string[] EndTokens;
-
 
     /// <summary>
     /// Поиск всех выражений, входящих в заданное выражение.

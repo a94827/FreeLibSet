@@ -5,7 +5,15 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-12-30T20:57:00.555000000"/>
+	<meta name="changed" content="2023-01-10T14:04:04.254000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -595,32 +603,74 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">334</p>
+			<p lang="en-US" align="center">335</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">30.12.2022</p>
+			<p lang="en-US" align="center">30.12.2022-10.01.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US"><a name="v334p1"></a>1. <span lang="ru-RU">Изменения
-			в системе парсинга </span>(<a href="ExtTools_11.htm#v052p3">v.52
-			<span lang="ru-RU">п.3</span></a>) <span lang="ru-RU">для
-			отключения связи между классами, реализующими </span>IExpression,
-			<span lang="ru-RU">и </span>ParsingData<span lang="ru-RU">:</span></p>
-			<p lang="en-US"><span lang="ru-RU">- Свойство </span>Token.TokenIndex</p>
+			<p><a name="v335p1"></a><a name="v334p1"></a><span lang="en-US">1.
+			</span><span lang="ru-RU">Изменения в системе парсинга </span><span lang="en-US">(<a href="ExtTools_11.htm#v052p3">v.52
+			</a></span><a href="ExtTools_11.htm#v052p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">для отключения связи между классами,
+			реализующими </span><span lang="en-US">IExpression, </span><span lang="ru-RU">и
+			</span><span lang="en-US">ParsingData</span><span lang="ru-RU">:</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Структура
+			</span>TokenExpressionPair, <span lang="ru-RU">предназначенная для
+			внутреннего использования.</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Класс </span>TokenExpressionList
+			<span lang="ru-RU">для хранения связей между лексемами и
+			выражениями. В него перенесены методы поиска лексем из
+			</span>ParsingData<span lang="ru-RU">, часть из которых раньше
+			была статическими.</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство
+			</span>ParsingData.ParsingMap, <span lang="ru-RU">которое должно
+			заполняться при получении выражений</span></p>
 			<p lang="en-US">- <span lang="ru-RU">Метод </span>IExpression.GetTokens()
-			<span lang="ru-RU">принимает аргумент-ссылку на </span>ParsingData.</p>
-			<p>- Методы <span lang="en-US">ParsingData.GetTokens(),</span>
-			<span lang="en-US">GetFirstToken()</span>, GetErrorMessages()
-			больше не являются статическими</p>
-			<p lang="en-US">- <span lang="ru-RU">Классы, реализующие
-			</span>IExpression, <span lang="ru-RU">вместо ссылок на объекты
-			</span>Token, <span lang="ru-RU">хранят индексы лексем. Убраны
-			свойства, возвращающие </span>Token.<span lang="ru-RU"> Это
-			позволяет сборщику мусора в большинстве сценариев сразу
-			освобождать</span> <span lang="ru-RU">объекты </span>ParsingData<span lang="ru-RU">
-			и </span>Token. <span lang="ru-RU">Реализации </span>IExpression,
-			<span lang="ru-RU">напротив, могут существовать длительное время
-			для выполнения вычислений.</span></p>
+			<span lang="ru-RU">убран</span>.</p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Классы,
+			реализующие </span><span lang="en-US">IExpression, </span><span lang="ru-RU">больше
+			не хранят ссылки на </span><span lang="en-US">объекты Token</span><span lang="ru-RU">.
+			Это позволяет сборщику мусора в большинстве сценариев сразу
+			освобождать</span> <span lang="ru-RU">объекты </span><span lang="en-US">ParsingData
+			</span><span lang="ru-RU">и </span><span lang="en-US">Token.
+			</span><span lang="ru-RU">Реализации </span><span lang="en-US">IExpression,
+			</span><span lang="ru-RU">напротив, могут существовать длительное
+			время для выполнения вычислений.</span> <span lang="ru-RU">Классы
+			сделаны сериализуемыми.</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Вместо классов
+			</span>StrConstParser.StrConstExpression <span lang="ru-RU">и
+			</span>NumConstParser.ConstExpression <span lang="ru-RU">используется
+			единственный невложенный класс </span>ConstExpression. <span lang="ru-RU">Парсер
+			</span>StrConstParser <span lang="ru-RU">возвращает лексему
+			&quot;</span>Const<span lang="ru-RU">&quot;, а не &quot;</span>String<span lang="ru-RU">&quot;</span>.</p>
+			<p>- Вложенные классы <span lang="en-US">FunctionExpression,
+			BinaryOpExpression, UnaryOpExpressio, ParenthesExpression </span><span lang="ru-RU">также
+			</span>сделаны классами верхнего уровня.</p>
+			<p lang="en-US">- <span lang="ru-RU">Изменена сигнатура
+			</span>FunctionDelegate. <span lang="ru-RU">Вместо аргументов </span>name
+			<span lang="ru-RU">и </span>userData <span lang="ru-RU">передается
+			ссылка на </span>FunctionExpression.</p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">FunctionExpression.UserData </span><span lang="ru-RU">заменено
+			на </span><span lang="en-US">FixedData. </span><span lang="ru-RU">Оно
+			</span><span lang="ru-RU">больше не дублирует свойство
+			</span><span lang="en-US">ParsingData.UserData. </span><span lang="ru-RU">Вместо
+			этого свойство должно заполняться в обработчике события
+			</span><span lang="en-US">FunctionDef.ExpressionInit (<a href="#v333p1">v.333
+			</a></span><a href="#v333p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">.
+			Метод FunctionExpressionInitEventArgs.</span><span lang="en-US">Copy</span><span lang="en-US">Fixed</span><span lang="en-US">Data().</span></p>
+			<p><span lang="ru-RU">- Буферизация одинаковых объектов при
+			массовом создании выражений. Статический класс </span><span lang="en-US">ParserShareTools.</span><span lang="en-US">
+			</span><span lang="ru-RU">Поддерживает коллекции значений (методы
+			</span><span lang="en-US">ShareValue</span><span lang="ru-RU">() и
+			</span><span lang="en-US">ShareString()</span><span lang="ru-RU">)
+			и константных выражений (</span><span lang="en-US">ShareConstExpression()</span><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
+			<p><span lang="ru-RU">2</span><span lang="en-US">. </span><span lang="ru-RU">Методы</span>
+			<span lang="en-US">NamedValues.CopyTo()</span><span lang="en-US">,</span><span lang="en-US">
+			GetOrCreate</span><span lang="en-US">() </span><span lang="ru-RU">и
+			</span><span lang="en-US">GetOrCreate&lt;T&gt;(<a href="ExtTools_11.htm#v008p1">v.8
+			</a></span><a href="ExtTools_11.htm#v008p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

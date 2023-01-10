@@ -137,26 +137,25 @@ namespace FreeLibSet.DependedValues
         IDepValue[] args = (IDepValue[])(data.UserData["Args"]);
         int argNum = (int)(currToken.AuxData);
 
-        return new ArgExpression(args[argNum - 1], currToken);
+        return new ArgExpression(args[argNum - 1], currToken.Text);
       }
 
       #endregion
     }
 
+    [Serializable]
     private class ArgExpression : IExpression
     {
       #region Конструктор
 
-      public ArgExpression(IDepValue arg, Token token)
+      public ArgExpression(IDepValue arg, string tokenText)
       {
         _Arg = arg;
-        _TokenIndex = token.GetTokenIndexWithCheck();
-        _TokenText = token.Text;
+        _TokenText = tokenText;
       }
 
       private readonly IDepValue _Arg;
 
-      private readonly int _TokenIndex;
       private readonly string _TokenText;
 
       #endregion
@@ -173,11 +172,6 @@ namespace FreeLibSet.DependedValues
       public bool IsConst
       {
         get { return _Arg.IsConst; }
-      }
-
-      public void GetTokens(ParsingData data, IList<Token> tokens)
-      {
-        tokens.Add(data.Tokens[_TokenIndex]);
       }
 
       public void GetChildExpressions(IList<IExpression> expressions)

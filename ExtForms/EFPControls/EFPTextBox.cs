@@ -136,7 +136,7 @@ namespace FreeLibSet.Forms
     bool AcceptsReturn { get; }
 
     /// <summary>
-    /// Для EFPTextBox вовзращает признак ввода звездочек.
+    /// Для EFPTextBox возвращает признак ввода звездочек.
     /// Для остальных элементов возвращает false
     /// </summary>
     bool IsPasswordInput { get; }

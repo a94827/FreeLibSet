@@ -7461,7 +7461,7 @@ namespace FreeLibSet.Core
     public static string MD5Sum(byte[] bytes)
     {
       if (bytes == null)
-        bytes = new byte[0];
+        bytes = DataTools.EmptyBytes;
       MD5 md5Hasher = MD5.Create();
       byte[] HashRes = md5Hasher.ComputeHash(bytes);
       return DataTools.BytesToHex(HashRes, false);

@@ -895,7 +895,7 @@ namespace FreeLibSet.FIAS
               throw new InvalidCastException("Не было ключа перед знаком \"=\"");
             HasEq = true;
             break;
-          case "String":
+          case "Const":
             if (!HasEq)
               throw new InvalidCastException("Не было знака \"=\"");
             lst.Add(new KeyValuePair<string, string>(CurrName, pd.Tokens[i].AuxData.ToString()));

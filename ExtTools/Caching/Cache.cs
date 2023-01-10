@@ -2453,7 +2453,8 @@ namespace FreeLibSet.Caching
     /// Рекомендуется вызывать нетипизированную версию метода Clear() с аргументом objType.
     /// </summary>
     /// <typeparam name="T">Тип очищаемых данных</typeparam>
-    /// <param name="keys">Ключи могут задавать либо точный объект, либо подмножество, подлежащее удалению</param>
+    /// <param name="keys">Ключи могут задавать либо точный объект, либо подмножество, подлежащее удалению.
+    /// Null или пустой массив строк - удалить все данные этого типа.</param>
     public static void Clear<T>(string[] keys)
       where T : class
     {
@@ -2466,7 +2467,8 @@ namespace FreeLibSet.Caching
     /// Если для данного типа данных еще не было вызова GetItem(), никаких действий не выполняется
     /// </summary>
     /// <param name="objType">Тип очищаемых данных</param>
-    /// <param name="keys">Ключи могут задавать либо точный объект, либо подмножество, подлежащее удалению</param>
+    /// <param name="keys">Ключи могут задавать либо точный объект, либо подмножество, подлежащее удалению.
+    /// Null или пустой массив строк - удалить все данные этого типа.</param>
     public static void Clear(Type objType, string[] keys)
     {
       if (objType == null)

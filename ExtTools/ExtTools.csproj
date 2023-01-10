@@ -86,6 +86,7 @@
     <Compile Include="Models\Tree\DataTableTreeModel.cs" />
     <Compile Include="Parsing\ExcelFunctions.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Parsing\ParsingShareTools.cs" />
     <Compile Include="Remoting\ExecProc.cs" />
     <Compile Include="Remoting\ExecProcCallList.cs" />
     <Compile Include="Remoting\ExecProcLock.cs" />

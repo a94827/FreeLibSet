@@ -332,7 +332,7 @@ namespace FreeLibSet.Parsing
 
     #region Математические функции
 
-    private static object CalcSum(string name, object[] args, NamedValues userData)
+    private static object CalcSum(FunctionExpression expression, object[] args)
     {
       return CalcSum(args);
     }
@@ -389,7 +389,7 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static object CalcSign(string name, object[] args, NamedValues userData)
+    private static object CalcSign(FunctionExpression expression, object[] args)
     {
       if (args[0] is decimal)
         return Math.Sign((decimal)args[0]);
@@ -402,7 +402,7 @@ namespace FreeLibSet.Parsing
       return Math.Sign(DataTools.GetInt(args[0]));
     }
 
-    private static object CalcAbs(string name, object[] args, NamedValues userData)
+    private static object CalcAbs(FunctionExpression expression, object[] args)
     {
       if (args[0] is decimal)
         return Math.Abs((decimal)args[0]);
@@ -413,7 +413,7 @@ namespace FreeLibSet.Parsing
       return Math.Abs(DataTools.GetInt(args[0]));
     }
 
-    private static object CalcRound(string name, object[] args, NamedValues userData)
+    private static object CalcRound(FunctionExpression expression, object[] args)
     {
       object value = args[0];
       int decimals = 0;
@@ -440,7 +440,7 @@ namespace FreeLibSet.Parsing
       if (value is decimal)
       {
         decimal v = (decimal)value;
-        switch (name)
+        switch (expression.Function.Name)
         {
           case "FLOOR": return DataTools.Floor(v, decimals);
           case "CEILING": return DataTools.Ceiling(v, decimals);
@@ -454,7 +454,7 @@ namespace FreeLibSet.Parsing
         double v = Convert.ToDouble(value);
         double m = Math.Pow(10, decimals);
         double res;
-        switch (name)
+        switch (expression.Function.Name)
         {
           case "FLOOR": res = DataTools.Floor(v, decimals); break;
           case "CEILING": res = DataTools.Ceiling(v, decimals); break;
@@ -476,9 +476,9 @@ namespace FreeLibSet.Parsing
 
     #region Статистические функции
 
-    private static object CalcMinMax(string name, object[] args, NamedValues userData)
+    private static object CalcMinMax(FunctionExpression expression, object[] args)
     {
-      bool isMax = (name == "MAX");
+      bool isMax = (expression.Function.Name == "MAX");
 
       object resValue = null;
 
@@ -523,7 +523,6 @@ namespace FreeLibSet.Parsing
         }
       }
     }
-
 
     /// <summary>
     /// Функция сравнения чисел в смысле Excel
@@ -711,9 +710,9 @@ namespace FreeLibSet.Parsing
 
     #region Математические функции типа Double
 
-    private static object CalcMath0Arg(string name, object[] args, NamedValues userData)
+    private static object CalcMath0Arg(FunctionExpression expression, object[] args)
     {
-      switch (name)
+      switch (expression.Function.Name)
       {
         // Без аргументов
         case "PI":
@@ -723,7 +722,7 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static object CalcMath1Arg(string name, object[] args, NamedValues userData)
+    private static object CalcMath1Arg(FunctionExpression expression, object[] args)
     {
       double a1 = DataTools.GetDouble(args[0]);
 
@@ -736,7 +735,7 @@ namespace FreeLibSet.Parsing
 
       // Формулы для функций AxxH() взяты из https://ru.wikipedia.org/wiki/%D0%9E%D0%B1%D1%80%D0%B0%D1%82%D0%BD%D1%8B%D0%B5_%D0%B3%D0%B8%D0%BF%D0%B5%D1%80%D0%B1%D0%BE%D0%BB%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8
 
-      switch (name)
+      switch (expression.Function.Name)
       {
         // С одним аргументом
         case "DEGREES": return a1 / Math.PI * 180.0;
@@ -762,12 +761,12 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static object CalcMath2Arg(string name, object[] args, NamedValues userData)
+    private static object CalcMath2Arg(FunctionExpression expression, object[] args)
     {
       double a1 = DataTools.GetDouble(args[0]);
       double a2 = DataTools.GetDouble(args[1]);
 
-      switch (name)
+      switch (expression.Function.Name)
       {
         // С двумя аргументами
         case "POWER": return Math.Pow(a1, a2);
@@ -779,10 +778,10 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static object CalcMath21Arg(string name, object[] args, NamedValues userData)
+    private static object CalcMath21Arg(FunctionExpression expression, object[] args)
     {
       double a1 = DataTools.GetDouble(args[0]);
-      switch (name)
+      switch (expression.Function.Name)
       {
         case "LOG":
           if (args.Length == 0)
@@ -814,13 +813,13 @@ namespace FreeLibSet.Parsing
       return v.ToString();
     }
 
-    private static object CalcLen(string name, object[] args, NamedValues userData)
+    private static object CalcLen(FunctionExpression expression, object[] args)
     {
       CheckArgCount(args, 1);
       return GetStr(args[0]).Length;
     }
 
-    private static object CalcLeftRight(string name, object[] args, NamedValues userData)
+    private static object CalcLeftRight(FunctionExpression expression, object[] args)
     {
       CheckArgCount(args, 1, 2);
       int len = 1;
@@ -829,13 +828,13 @@ namespace FreeLibSet.Parsing
       if (len < 0)
         throw new ArgumentException("Число знаков должно быть больше или равно 0");
 
-      if (name == "LEFT")
+      if (expression.Function.Name == "LEFT")
         return DataTools.StrLeft(GetStr(args[0]), len);
       else
         return DataTools.StrRight(GetStr(args[0]), len);
     }
 
-    private static object CalcMid(string name, object[] args, NamedValues userData)
+    private static object CalcMid(FunctionExpression expression, object[] args)
     {
       CheckArgCount(args, 3);
       int start = DataTools.GetInt(args[1]); // Помним, что нумерация символов с 1, а не с 0 
@@ -856,16 +855,16 @@ namespace FreeLibSet.Parsing
         return s.Substring(start - 1, len);
     }
 
-    private static object CalcUpperLower(string name, object[] args, NamedValues userData)
+    private static object CalcUpperLower(FunctionExpression expression, object[] args)
     {
       CheckArgCount(args, 1);
-      if (name == "UPPER")
+      if (expression.Function.Name == "UPPER")
         return (GetStr(args[0])).ToUpper();
       else
         return (GetStr(args[0])).ToLower();
     }
 
-    private static object CalcConcatenate(string name, object[] args, NamedValues userData)
+    private static object CalcConcatenate(FunctionExpression expression, object[] args)
     {
       if (args.Length == 0)
         return String.Empty;
@@ -877,7 +876,7 @@ namespace FreeLibSet.Parsing
     }
 
 
-    private static object CalcReplace(string name, object[] args, NamedValues userData)
+    private static object CalcReplace(FunctionExpression expression, object[] args)
     {
       string s1 = DataTools.GetString(args[0]);
       int start = DataTools.GetInt(args[1]); // нумерация начинается с 1
@@ -893,7 +892,7 @@ namespace FreeLibSet.Parsing
       return sb.ToString();
     }
 
-    private static object CalcSubstitute(string name, object[] args, NamedValues userData)
+    private static object CalcSubstitute(FunctionExpression expression, object[] args)
     {
       string s1 = DataTools.GetString(args[0]);
       string s2 = DataTools.GetString(args[1]);
@@ -927,9 +926,9 @@ namespace FreeLibSet.Parsing
 
     private static FunctionDelegate _FDDateTime = new FunctionDelegate(CalcDateTime);
 
-    private static object CalcDateTime(string name, object[] args, NamedValues userData)
+    private static object CalcDateTime(FunctionExpression expression, object[] args)
     {
-      switch (name)
+      switch (expression.Function.Name)
       {
         case "DATE":
           CheckArgCount(args, 3);
@@ -948,7 +947,7 @@ namespace FreeLibSet.Parsing
           return DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Unspecified);
 
         default:
-          throw new ArgumentException("Неизвестное имя функции \"" + name + "\"", "name");
+          throw new ArgumentException("Неизвестное имя функции \"" + expression.Function.Name + "\"", "name");
       }
     }
 
@@ -958,14 +957,14 @@ namespace FreeLibSet.Parsing
 
     private static FunctionDelegate _FDDateTimePart = new FunctionDelegate(CalcDateTimePart);
 
-    private static object CalcDateTimePart(string name, object[] args, NamedValues userData)
+    private static object CalcDateTimePart(FunctionExpression expression, object[] args)
     {
       CheckArgCount(args, 1);
       if (args[0] == null)
         return 0; // В Excel функция DAY() возвращает 0, а остальные - непонятные значения
       // Пока буду возвращать 0
       DateTime dt = GetDateTime(args[0]);
-      switch (name)
+      switch (expression.Function.Name)
       {
         case "YEAR": return dt.Year;
         case "MONTH": return dt.Month;
@@ -975,7 +974,7 @@ namespace FreeLibSet.Parsing
         case "SECOND": return dt.Second;
         case "WEEKDAY": return ((int)dt.DayOfWeek) + 1;
         default:
-          throw new ArgumentException("Неизвестное имя функции \"" + name + "\"", "name");
+          throw new ArgumentException("Неизвестное имя функции \"" + expression.Function.Name + "\"", "name");
       }
     }
 
@@ -1007,7 +1006,7 @@ namespace FreeLibSet.Parsing
 
     #region DATEDIF и Days
 
-    private static object CalcDateDif(string name, object[] args, NamedValues userData)
+    private static object CalcDateDif(FunctionExpression expression, object[] args)
     {
       CheckArgCount(args, 3);
       DateTime dt1 = GetDateTime(args[0]).Date; // начальная дата
@@ -1036,7 +1035,7 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static object CalcDays(string name, object[] args, NamedValues userData)
+    private static object CalcDays(FunctionExpression expression, object[] args)
     {
       CheckArgCount(args, 2);
       DateTime dt1 = GetDateTime(args[0]); // начальная дата
@@ -1054,7 +1053,7 @@ namespace FreeLibSet.Parsing
 
     #region Логические функции
 
-    private static object CalcIf(string name, object[] args, NamedValues userData)
+    private static object CalcIf(FunctionExpression expression, object[] args)
     {
       if (GetBool(args[0]))
         return args[1];
@@ -1062,7 +1061,7 @@ namespace FreeLibSet.Parsing
         return args[2];
     }
 
-    private static object CalcAnd(string name, object[] args, NamedValues userData)
+    private static object CalcAnd(FunctionExpression expression, object[] args)
     {
       for (int i = 0; i < args.Length; i++)
       {
@@ -1072,7 +1071,7 @@ namespace FreeLibSet.Parsing
       return true;
     }
 
-    private static object CalcOr(string name, object[] args, NamedValues userData)
+    private static object CalcOr(FunctionExpression expression, object[] args)
     {
       for (int i = 0; i < args.Length; i++)
       {
@@ -1082,14 +1081,14 @@ namespace FreeLibSet.Parsing
       return false;
     }
 
-    private static object CalcNot(string name, object[] args, NamedValues userData)
+    private static object CalcNot(FunctionExpression expression, object[] args)
     {
       return !GetBool(args[0]);
     }
 
-    private static object CalcTrueFalse(string name, object[] args, NamedValues userData)
+    private static object CalcTrueFalse(FunctionExpression expression, object[] args)
     {
-      switch (name)
+      switch (expression.Function.Name)
       {
         case "TRUE": return true;
         case "FALSE": return false;
@@ -1110,7 +1109,7 @@ namespace FreeLibSet.Parsing
 
     #region Выбор
 
-    private static object CalcChoose(string name, object[] args, NamedValues userData)
+    private static object CalcChoose(FunctionExpression expression, object[] args)
     {
       int index = DataTools.GetInt(args[0]);
       if (index < 1 || index >= args.Length)

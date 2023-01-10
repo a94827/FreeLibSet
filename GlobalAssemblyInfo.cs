@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Агеев Александр Владимирович")]
 [assembly: AssemblyProduct("Freeware Library Set")]
-[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2006-2022 г. Свободное программное обеспечение (Free Software)")]
+[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2006-2023 г. Свободное программное обеспечение (Free Software)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

@@ -4591,7 +4591,7 @@ namespace FreeLibSet.Data.Docs
     public override bool IsEmpty { get { return false; } }
 
     /// <summary>
-    /// Вовзращает список полей из фильтра
+    /// Возвращает список полей из фильтра
     /// </summary>
     /// <param name="list">Игнорируется</param>
     public override void GetColumnNames(DBxColumnList list)

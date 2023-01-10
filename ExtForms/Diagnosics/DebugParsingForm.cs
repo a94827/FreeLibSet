@@ -261,7 +261,7 @@ namespace FreeLibSet.Forms.Diagnostics
         AddExprNode(node.Nodes, children[i]);
 
 
-      ErrorMessageList errors = ParsingData.GetErrorMessages(expression);
+      ErrorMessageList errors = ParsingData.TokenMap.GetErrorMessages(expression);
       switch (errors.Severity)
       {
         case ErrorMessageKind.Error:
@@ -286,9 +286,8 @@ namespace FreeLibSet.Forms.Diagnostics
           break;
       }
 
-      List<Token> tokens = new List<Token>();
-      expression.GetTokens(this.ParsingData, tokens);
-      for (int i = 0; i < tokens.Count; i++)
+      Token[] tokens = this.ParsingData.TokenMap.GetTokens(expression);
+      for (int i = 0; i < tokens.Length; i++)
       {
         if (!_TokenIndexExprNodes.ContainsKey(tokens[i]))
           _TokenIndexExprNodes.Add(tokens[i], node);
