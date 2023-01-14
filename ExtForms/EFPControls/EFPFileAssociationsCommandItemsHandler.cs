@@ -260,6 +260,16 @@ namespace FreeLibSet.Forms
         "Открыть с помощью");
     }
 
+    /// <summary>
+    /// Возвращает ссылку на основную команду меню "Открыть"
+    /// </summary>
+    public EFPCommandItem OpenCommandItem { get { return _AllCommands[0]; } }
+
+    /// <summary>
+    /// Возвращает ссылку на подменю "Открыть с помощью"
+    /// </summary>
+    public EFPCommandItem OpenWithSubMenu { get { return _AllCommands[1]; } }
+
     #endregion
 
     #region Свойство Visible
@@ -273,7 +283,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (_AllCommands.Count == 0)
-          return false;
+          return false; // Не может быть никогда
         else
           return _AllCommands[0].Visible;
       }

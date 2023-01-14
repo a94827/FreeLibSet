@@ -1165,7 +1165,7 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        if (Servant == null || Servant.ImageKey == null)
+        if (Servant == null || (!Servant.HasImage))
           return _ImageKey;
         return Servant.ImageKey;
       }
@@ -1174,6 +1174,7 @@ namespace FreeLibSet.Forms
         if (value == _ImageKey)
           return;
         _ImageKey = value;
+        _Image = null; // 14.01.2023
         SetImage();
         if (MasterActive)
           Master.SetImage();
@@ -1184,7 +1185,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Значок кнопки панели инструментов, около команды меню и в панели статусной строки.
     /// Это позволяет задавать произвольное изображение, не обязательно из списка EFPApp.MainImages. 
-    /// Для локальтного меню, установка непустого значения свойства приводит к появлению кнопки в 
+    /// Для локального меню, установка непустого значения свойства приводит к появлению кнопки в 
     /// панели инструментов. Чтобы недопустить появления кнопки, а использовать
     /// изображение только для меню и/или панели статусной строки, следует использовать свойство Usage.
     /// Обычно рекомендуется использовать свойство ImageKey
@@ -1193,7 +1194,7 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        if (Servant == null || Servant.ImageKey == null)
+        if (Servant == null || (!Servant.HasImage))
           return _Image;
         return Servant.Image;
       }
@@ -1202,6 +1203,7 @@ namespace FreeLibSet.Forms
         if (value == _Image)
           return;
         _Image = value;
+        _ImageKey = null; // 14.01.2023
         SetImage();
         if (MasterActive)
           Master.SetImage();
