@@ -4112,12 +4112,29 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     /// <summary>
     /// Свойство возвращает true, если в данный момент работает метод EFPApp.ShowException()
     /// </summary>
     public static bool InsideShowException { get { return _InsideShowExceptionCount > 0; } }
     private static int _InsideShowExceptionCount = 0; // могут быть вложенные вызовы ShowException()
+
+    /// <summary>
+    /// Вывести сообщение об ошибке при обработке события Idle.
+    /// Используйте этот метод вместо ShowException() если текущая обработка должна быть выполнена как можно скорее,
+    /// или текущий поток принадлежит другому приложению и не может быть использован для вывода окон.
+    /// Ставит в очередь задание на показ окна и немедленно возвращает управление.
+    /// Метод должен использоваться внутри блока catch.
+    /// Этот метод может вызываться из любого потока.
+    /// </summary>
+    /// <param name="exception">Перехваченное исключение</param>
+    /// <param name="title">Заголовок для выдачи сообщения</param>
+    public static void ShowExceptionDelayed(Exception exception, string title)
+    {
+      ShowExceptionDelayedInfo info=new ShowExceptionDelayedInfo();
+      info.Exception=exception;
+      info.Title=title;
+      IdleHandlers.AddSingleAction(info.ShowException);
+    }
 
     /// <summary>
     /// Альтернативный способ вывода сообщения об исключении.
@@ -4182,6 +4199,85 @@ namespace FreeLibSet.Forms
     public static void ExceptionMessageBox(string message, Exception exception, string title)
     {
       ExceptionMessageBox(message, exception, title, false);
+    }
+
+    /// <summary>
+    /// Вывести сообщение об ошибке при обработке события Idle.
+    /// Используйте этот метод вместо ExceptionMessageBox() если текущая обработка должна быть выполнена как можно скорее,
+    /// или текущий поток принадлежит другому приложению и не может быть использован для вывода окон.
+    /// Ставит в очередь задание на показ окна и немедленно возвращает управление.
+    /// Этот метод может вызываться из любого потока.
+    /// </summary>
+    /// <param name="message">Текст сообщения, выводимый в MessageBox</param>
+    /// <param name="exception">Объект исключения</param>
+    /// <param name="title">Заголовок сообщения</param>
+    /// <param name="alwaysLogout">Если true, то log-файл будет создан, даже если пользователь не нажмет кнопку "Подробности"</param>
+    public static void ExceptionMessageBoxDelayed(string message, Exception exception, string title, bool alwaysLogout)
+    {
+      ShowExceptionDelayedInfo info = new ShowExceptionDelayedInfo();
+      info.Message = message;
+      info.Exception = exception;
+      info.Title = title;
+      info.AlwaysLogout = alwaysLogout;
+
+      IdleHandlers.AddSingleAction(info.ExceptionMessageBox);
+    }
+
+    /// <summary>
+    /// Вывести сообщение об ошибке при обработке события Idle.
+    /// Используйте этот метод вместо ExceptionMessageBox() если текущая обработка должна быть выполнена как можно скорее,
+    /// или текущий поток принадлежит другому приложению и не может быть использован для вывода окон.
+    /// Ставит в очередь задание на показ окна и немедленно возвращает управление.
+    /// Этот метод может вызываться из любого потока.
+    /// Log-файл создается, только если пользователь нажмет кнопку "Подробности".
+    /// </summary>
+    /// <param name="exception">Объект исключения</param>
+    /// <param name="title">Заголовок сообщения</param>
+    public static void ExceptionMessageBoxDelayed(Exception exception, string title)
+    {
+      ExceptionMessageBoxDelayed(exception.Message, exception, title, false);
+    }
+
+    /// <summary>
+    /// Вывести сообщение об ошибке при обработке события Idle.
+    /// Используйте этот метод вместо ExceptionMessageBox() если текущая обработка должна быть выполнена как можно скорее,
+    /// или текущий поток принадлежит другому приложению и не может быть использован для вывода окон.
+    /// Ставит в очередь задание на показ окна и немедленно возвращает управление.
+    /// Этот метод может вызываться из любого потока.
+    /// Log-файл создается, только если пользователь нажмет кнопку "Подробности".
+    /// </summary>
+    /// <param name="message">Текст сообщения, выводимый в MessageBox</param>
+    /// <param name="exception">Объект исключения</param>
+    /// <param name="title">Заголовок сообщения</param>
+    public static void ExceptionMessageBoxDelayed(string message, Exception exception, string title)
+    {
+      ExceptionMessageBoxDelayed(message, exception, title, false);
+    }
+
+    private class ShowExceptionDelayedInfo
+    {
+      #region Поля
+
+      public string Message;
+      public Exception Exception;
+      public string Title;
+      public bool AlwaysLogout;
+
+      #endregion
+
+      #region Метод
+
+      public void ShowException(object sender, EventArgs args)
+      {
+        EFPApp.ShowException(Exception, Title);
+      }
+
+      public void ExceptionMessageBox(object sender, EventArgs args)
+      {
+        EFPApp.ExceptionMessageBox(Message, Exception, Title, AlwaysLogout);
+      }
+
+      #endregion
     }
 
     #endregion

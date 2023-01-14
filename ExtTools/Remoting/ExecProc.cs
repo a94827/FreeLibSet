@@ -381,6 +381,29 @@ namespace FreeLibSet.Remoting
     }
     private string _ActionName;
 
+
+    /// <summary>
+    /// Возвращает или устанавливает описание выполняемого действия для процедуры в текущем потоке.
+    /// В отличие от свойства <see cref="ActionName"/>, это свойство можно устанавливать из произвольного кода, а не только из класса процедуры.
+    /// При чтении свойства из потока, не относящегося к выполнению процедуры, возвращается пустая строка. При попытке записи выбрасывается исключение
+    /// </summary>
+    public static string CurrentActionName
+    {
+      get
+      {
+        if (CurrentProc == null)
+          return String.Empty;
+        else
+          return CurrentProc.ActionName;
+      }
+      set
+      {
+        if (CurrentProc == null)
+          throw new InvalidOperationException("В текущем потоке нет выполняющейся процедуры");
+        CurrentProc.ActionName = value;
+      }
+    }
+
     /// <summary>
     /// Текстовое представление в виде "DisplayName (State)" или "GUID (State)"
     /// </summary>
@@ -1161,7 +1184,6 @@ namespace FreeLibSet.Remoting
     public static ExecProc CurrentProc { get { return _CurrentProc; } }
     [ThreadStatic]
     private static ExecProc _CurrentProc;
-
 
     /// <summary>
     /// Поток, в котором происходит выполнение процедура.
@@ -5400,13 +5422,7 @@ namespace FreeLibSet.Remoting
     /// <param name="disposing">trum, если вызван Dispose(), false, если вызван деструктор</param>
     protected override void Dispose(bool disposing)
     {
-      ExecProcProxy[] a1 = _Proxies.ToArray();
-      for (int i = 0; i < a1.Length; i++)
-        a1[i].Handler.Dispose();
-
-      IExecProc[] a2 = _Procs.ToArray();
-      for (int i = 0; i < a2.Length; i++)
-        a2[i].Dispose();
+      Clear();
 
       base.Dispose(disposing);
     }
@@ -5438,6 +5454,38 @@ namespace FreeLibSet.Remoting
         _Proxies.Add(proxy);
     }
 
+    /// <summary>
+    /// Возвращает список процедур, которые были добавлены методом Add() и еще не были разрушены методом Dispose()
+    /// </summary>
+    /// <returns>Процедуры</returns>
+    public IExecProc[] GetProcs()
+    {
+      return _Procs.ToArray();
+    }
+
+    /// <summary>
+    /// Возвращает список прокси, которые были добавлены методом Add() и еще не были разрушены методом Dispose()
+    /// </summary>
+    /// <returns>Прокси</returns>
+    public ExecProcProxy[] GetProxies()
+    {
+      return _Proxies.ToArray();
+    }
+
+    /// <summary>
+    /// Вызывает Dispose() для всех процедур и прокси
+    /// </summary>
+    public void Clear()
+    {
+      ExecProcProxy[] a1 = _Proxies.ToArray();
+      for (int i = 0; i < a1.Length; i++)
+        a1[i].Handler.Dispose();
+
+      IExecProc[] a2 = _Procs.ToArray();
+      for (int i = 0; i < a2.Length; i++)
+        a2[i].Dispose();
+    }
+
     #endregion
 
     #region Извлечение информации для отладки
@@ -5450,9 +5498,9 @@ namespace FreeLibSet.Remoting
     private static readonly ExecProcInfo[] _EmptyArray = new ExecProcInfo[0];
 
     /// <summary>
-    /// Возвращает информацию для всех процедур в списке
+    /// Возвращает информацию для всех процедур и прокси в списке
     /// </summary>
-    /// <returns>Информация о процедуре</returns>
+    /// <returns>Информация о процедурах</returns>
     public ExecProcInfo[] GetInfo()
     {
       ExecProcProxy[] a1 = _Proxies.ToArray();

@@ -729,7 +729,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     protected override UserPermissions DoGetUserPermissions()
     {
-      return _Source.UserPermissions; 
+      return _Source.UserPermissions;
     }
 
     #endregion
@@ -1055,10 +1055,20 @@ namespace FreeLibSet.Data.Docs
       {
         NamedValues dispRes = new NamedValues();
         string action = args.GetString("Action");
+        base.ActionName = action; // 11.01.2023
+
+        string tableName, columnName;
+        DocSubDocDataId wantedId;
+        int docVersion;
+        List<DocSubDocDataId> preloadIds;
+
+
         switch (action)
         {
           case "FillSelect": // 19.08.2020
-            dispRes["Table"] = _DocProvider.FillSelect((DBxSelectInfo)(args["SelectInfo"]));
+            DBxSelectInfo selInfo = (DBxSelectInfo)(args["SelectInfo"]);
+            base.ActionName += " (" + selInfo.TableName + ")";
+            dispRes["Table"] = _DocProvider.FillSelect(selInfo);
             break;
 
           case "ApplyChanges":
@@ -1070,18 +1080,24 @@ namespace FreeLibSet.Data.Docs
             break;
 
           case "InternalGetBinData2": // 14.10.2020
-            dispRes["Data"] = _DocProvider.InternalGetBinData2(args.GetString("TableName"),
-              args.GetString("ColumnName"),
-              (DocSubDocDataId)(args["WantedId"]),
-              args.GetInt("DocVersion"),
-              (List<DocSubDocDataId>)(args["PreloadIds"]));
+            tableName = args.GetString("TableName");
+            columnName = args.GetString("ColumnName");
+            wantedId = (DocSubDocDataId)(args["WantedId"]);
+            docVersion = args.GetInt("DocVersion");
+            preloadIds = (List<DocSubDocDataId>)(args["PreloadIds"]);
+            base.ActionName += " (" + tableName + "." + columnName + " " + wantedId.ToString() + ", preloadIds:" + preloadIds.Count + ")";
+            dispRes["Data"] = _DocProvider.InternalGetBinData2(tableName,
+              columnName, wantedId, docVersion, preloadIds);
             break;
           case "InternalGetDBFile2": // 14.10.2020
-            dispRes["Data"] = _DocProvider.InternalGetDBFile2(args.GetString("TableName"),
-              args.GetString("ColumnName"),
-              (DocSubDocDataId)(args["WantedId"]),
-              args.GetInt("DocVersion"),
-              (List<DocSubDocDataId>)(args["PreloadIds"]));
+            tableName = args.GetString("TableName");
+            columnName = args.GetString("ColumnName");
+            wantedId = (DocSubDocDataId)(args["WantedId"]);
+            docVersion = args.GetInt("DocVersion");
+            preloadIds = (List<DocSubDocDataId>)(args["PreloadIds"]);
+            base.ActionName += " (" + tableName + "." + columnName + " " + wantedId.ToString() + ", preloadIds:" + preloadIds.Count + ")";
+            dispRes["Data"] = _DocProvider.InternalGetDBFile2(tableName,
+              columnName, wantedId, docVersion, preloadIds);
             break;
 
           default:

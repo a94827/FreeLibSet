@@ -5,7 +5,9 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2023-01-10T14:04:04.254000000"/>
+	<meta name="changed" content="2023-01-11T20:22:47.039000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -603,6 +605,23 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">336</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">11.01.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Статическое
+			свойство </span><span lang="en-US">ExecProc.CurrentActionName
+			(<a href="ExtTools_11.htm#v059p6">v.59 </a></span><a href="ExtTools_11.htm#v059p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">ExecProcWatchList.GetProcs(),
+			GetProxies() </span><span lang="ru-RU">и </span><span lang="en-US">Clear()
+			(<a href="ExtTools_11.htm#v209p4">v.209 </a></span><a href="ExtTools_11.htm#v209p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">335</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -654,22 +673,20 @@
 			<p><span lang="en-US">- </span><span lang="ru-RU">Свойство
 			</span><span lang="en-US">FunctionExpression.UserData </span><span lang="ru-RU">заменено
 			на </span><span lang="en-US">FixedData. </span><span lang="ru-RU">Оно
-			</span><span lang="ru-RU">больше не дублирует свойство
-			</span><span lang="en-US">ParsingData.UserData. </span><span lang="ru-RU">Вместо
-			этого свойство должно заполняться в обработчике события
-			</span><span lang="en-US">FunctionDef.ExpressionInit (<a href="#v333p1">v.333
-			</a></span><a href="#v333p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">.
-			Метод FunctionExpressionInitEventArgs.</span><span lang="en-US">Copy</span><span lang="en-US">Fixed</span><span lang="en-US">Data().</span></p>
+			больше не дублирует свойство </span><span lang="en-US">ParsingData.UserData.
+			</span><span lang="ru-RU">Вместо этого свойство должно заполняться
+			в обработчике события </span><span lang="en-US">FunctionDef.ExpressionInit
+			(<a href="#v333p1">v.333 </a></span><a href="#v333p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">.
+			Метод FunctionExpressionInitEventArgs.</span><span lang="en-US">CopyFixedData().</span></p>
 			<p><span lang="ru-RU">- Буферизация одинаковых объектов при
-			массовом создании выражений. Статический класс </span><span lang="en-US">ParserShareTools.</span><span lang="en-US">
-			</span><span lang="ru-RU">Поддерживает коллекции значений (методы
+			массовом создании выражений. Статический класс </span><span lang="en-US">ParserShareTools.</span>
+			<span lang="ru-RU">Поддерживает коллекции значений (методы
 			</span><span lang="en-US">ShareValue</span><span lang="ru-RU">() и
 			</span><span lang="en-US">ShareString()</span><span lang="ru-RU">)
 			и константных выражений (</span><span lang="en-US">ShareConstExpression()</span><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
 			<p><span lang="ru-RU">2</span><span lang="en-US">. </span><span lang="ru-RU">Методы</span>
-			<span lang="en-US">NamedValues.CopyTo()</span><span lang="en-US">,</span><span lang="en-US">
-			GetOrCreate</span><span lang="en-US">() </span><span lang="ru-RU">и
-			</span><span lang="en-US">GetOrCreate&lt;T&gt;(<a href="ExtTools_11.htm#v008p1">v.8
+			<span lang="en-US">NamedValues.CopyTo(),</span> <span lang="en-US">GetOrCreate()
+			</span><span lang="ru-RU">и </span><span lang="en-US">GetOrCreate&lt;T&gt;(<a href="ExtTools_11.htm#v008p1">v.8
 			</a></span><a href="ExtTools_11.htm#v008p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
 		</td>
 	</tr>
