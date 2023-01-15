@@ -817,13 +817,17 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает текст команды меню (свойство MenuText) без символа "амперсанд" для 
-    /// подчеркивания буквы
+    /// подчеркивания буквы.
+    /// Также удаляются "..." в конце текста
     /// </summary>
     public string MenuTextWithoutMnemonic
     {
       get
       {
-        return WinFormsTools.RemoveMnemonic(MenuText);
+        string s=WinFormsTools.RemoveMnemonic(MenuText);
+        if (s.EndsWith("..."))
+          s = s.Substring(0, s.Length - 3).Trim(); // 14.01.2023
+        return s;
       }
     }
 

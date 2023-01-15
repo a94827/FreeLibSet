@@ -11,6 +11,7 @@ using System.Diagnostics;
 using FreeLibSet.Core;
 using FreeLibSet.Shell;
 using FreeLibSet.Models.SpreadsheetBase;
+using unoidl.com.sun.star.table;
 
 /*
  * Excel-подобная модель для работы с  OpenOffice / LibreOffice Calc
@@ -1386,6 +1387,28 @@ namespace FreeLibSet.OpenOffice.Calc
         xUsedCursor.gotoEndOfUsedArea(true);
         Range R2 = new Range(xCursor as unoidl.com.sun.star.sheet.XSheetCellRange, _XSpreadsheetDocument);
         return new Range(Cell1, R2.LastCell);
+      }
+    }
+
+    #endregion
+
+    #region Область печати
+
+    /// <summary>
+    /// Возвращает область печати, если она установлена.
+    /// Если область печати не установлена, PrintRange.Exists=false.
+    /// Calc, в отличие от Excel, поддерживает несвязанные области печати.
+    /// В текущей реализации это свойство возвращает значение, только если задана единственная область
+    /// </summary>
+    public Range PringRange
+    {
+      get
+      {
+        CellRangeAddress[] a = XPrintAreas.getPrintAreas();
+        if (a.Length != 1)
+          return new Range();
+
+        return GetRange(a[0].StartRow, a[0].StartColumn, a[0].EndRow, a[0].EndColumn);
       }
     }
 
