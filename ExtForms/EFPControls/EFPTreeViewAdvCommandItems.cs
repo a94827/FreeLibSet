@@ -162,13 +162,13 @@ namespace FreeLibSet.Forms
     /// True, если есть команды "Редактировать", "Создать", "Удалить", "Просмотр"
     /// По умолчанию: для EFPTreeViewAdv - false, для EFPDatTreeView - true
     /// </summary>
-    public bool UseEditView 
-    { 
-      get { return _UseEditView; } 
-      set 
+    public bool UseEditView
+    {
+      get { return _UseEditView; }
+      set
       {
         CheckNotReadOnly();
-        _UseEditView = value; 
+        _UseEditView = value;
       }
     }
     private bool _UseEditView;
@@ -177,28 +177,28 @@ namespace FreeLibSet.Forms
     /// True, если есть команда "Обновить" (F5)
     /// По умолчанию - true
     /// </summary>
-    public bool UseRefresh 
-    { 
-      get { return _UseRefresh; } 
-      set 
+    public bool UseRefresh
+    {
+      get { return _UseRefresh; }
+      set
       {
         CheckNotReadOnly();
-        _UseRefresh = value; 
-      } 
+        _UseRefresh = value;
+      }
     }
     private bool _UseRefresh;
 
     /// <summary>
     /// True, если есть команда "Выбрать все строки" (Ctrl-A)
     /// </summary>
-    public bool UseSelectAll 
-    { 
-      get { return _UseSelectAll; } 
-      set 
+    public bool UseSelectAll
+    {
+      get { return _UseSelectAll; }
+      set
       {
         CheckNotReadOnly();
-        _UseSelectAll = value; 
-      } 
+        _UseSelectAll = value;
+      }
     }
     private bool _UseSelectAll;
 
@@ -334,10 +334,16 @@ namespace FreeLibSet.Forms
             ciView.MenuText = "Просмотреть запись";
         }
 
-        // TODO: if (ciCut.Usage != EFPCommandItemUsage.None)
-        // TODO:   ciCut.Enabled = !(Owner.ReadOnly && Owner.Control.ReadOnly);
-        // TODO: if (!PasteHandler.AlwaysEnabled) // 27.11.2017
-        // TODO:   PasteHandler.Enabled = !(Owner.ReadOnly && Owner.Control.ReadOnly);
+        // 16.01.2023
+        if (this[EFPAppStdCommandItems.Cut].Usage != EFPCommandItemUsage.None)
+          this[EFPAppStdCommandItems.Cut].Enabled = !(ControlProvider.ReadOnly /*&& ControlProvider.Control.ReadOnly*/);
+        if (!PasteHandler.AlwaysEnabled) // 27.11.2017
+        {
+          //if (HasTextPasteFormats)
+          //  PasteHandler.Enabled = !ControlProvider.Control.ReadOnly; // 24.04.2019
+          //else
+          PasteHandler.Enabled = !(ControlProvider.ReadOnly /*&& ControlProvider.Control.ReadOnly*/);
+        }
       }
 
       if (ciInlineEditStatus != null)
@@ -365,8 +371,8 @@ namespace FreeLibSet.Forms
           //}
           //else
           //{
-            ciInlineEditStatus.ImageKey = "TableInlineEdit";
-            ciInlineEditStatus.ToolTipText = "Можно начать редактирование ячейки";
+          ciInlineEditStatus.ImageKey = "TableInlineEdit";
+          ciInlineEditStatus.ToolTipText = "Можно начать редактирование ячейки";
           //}
         }
       }
@@ -590,5 +596,6 @@ namespace FreeLibSet.Forms
     //public void InitCurrentCfgModified()
     //{
     //}
+
   }
 }

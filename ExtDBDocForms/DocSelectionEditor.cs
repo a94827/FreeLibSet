@@ -543,7 +543,8 @@ namespace FreeLibSet.Forms.Docs
         else
         {
           for (int i = 0; i < rows.Length; i++)
-            rows[i].Delete();
+            //rows[i].Delete();
+            GetMasterRow(rows[i]).Delete(); // 16.01.2023
 
           if (Editor._ChangeInfo != null)
             Editor._ChangeInfo.Changed = true;

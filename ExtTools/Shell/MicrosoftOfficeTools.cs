@@ -234,6 +234,44 @@ namespace FreeLibSet.Shell
       }
     }
 
+    /// <summary>
+    /// Возвращает пусть к каталогу C:\ProgramFiles\CommonFiles\microsoft shared\OFFICE??\
+    /// </summary>
+    public static AbsPath OfficeSharedProgramDir
+    {
+      get
+      {
+        if (!WordPath.IsEmpty)
+          return GetOfficeSharedProgramDir(WordPath, WordVersion);
+        if (!ExcelPath.IsEmpty)
+          return GetOfficeSharedProgramDir(ExcelPath, ExcelVersion);
+        return AbsPath.Empty;
+      }
+    }
+
+    private static AbsPath GetOfficeSharedProgramDir(AbsPath exePath, Version version)
+    {
+      string commonDir;
+      if (EnvironmentTools.Is64BitOperatingSystem)
+      {
+        bool? is64bit = FileTools.Is64bitPE(exePath);
+        if (!is64bit.HasValue)
+          return AbsPath.Empty;
+        commonDir = Environment.GetEnvironmentVariable(is64bit.Value ? "CommonProgramW6432" : "CommonProgramFiles(x86)");
+      }
+      else
+        commonDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles);
+
+      AbsPath dir = new AbsPath(commonDir);
+      if (dir.IsEmpty)
+        return dir;
+      dir = new AbsPath(dir, "microsoft shared", "OFFICE" + version.Major.ToString("00", CultureInfo.InvariantCulture));
+      if (System.IO.Directory.Exists(dir.Path))
+        return dir;
+      else
+        return AbsPath.Empty;
+    }
+
     #endregion
 
     #region Запуск приложений

@@ -3974,7 +3974,15 @@ namespace FreeLibSet.Forms
           return;
         DataView dv = SourceAsDataView;
         if (dv == null)
-          throw new InvalidDataSourceException("Свойство DataGridView.DataSource не является DataView или DataTable");
+        {
+          Exception e;
+          if (Control.DataSource == null)
+            e = new NullReferenceException("Свойство DataGridView.DataSource = null");
+          else
+            e = new InvalidDataSourceException("Свойство DataGridView.DataSource не является DataView или DataTable");
+          AddExceptionInfo(e);
+          throw e;
+        }
 
         // 04.07.2021
         // Оптимизация
