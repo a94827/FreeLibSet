@@ -460,6 +460,23 @@ namespace FreeLibSet.Remoting
         dest[aNames[i]] = this[aNames[i]];
     }
 
+    /// <summary>
+    /// Добавляет все элементы из коллекции <paramref name="source"/>.
+    /// Если в текущем объекте есть элементы с совпадающими именами, то значения заменяются на переданные.
+    /// </summary>
+    /// <param name="source">Исходный набор. Не может быть null</param>
+    public void Add(IDictionary<string, object> source)
+    {
+#if DEBUG
+      if (source == null)
+        throw new ArgumentNullException("source");
+#endif
+
+      CheckNotReadOnly();
+      foreach (KeyValuePair<string, object> pair in source)
+        this[pair.Key] = pair.Value;
+    }
+
     #endregion
 
     #region ICloneable Members
@@ -472,8 +489,8 @@ namespace FreeLibSet.Remoting
     public NamedValues Clone()
     {
       NamedValues newObj = new NamedValues(_Items.Count, false);
-      foreach (KeyValuePair<string, object> Pair in _Items)
-        newObj._Items.Add(Pair.Key, Pair.Value);
+      foreach (KeyValuePair<string, object> pair in _Items)
+        newObj._Items.Add(pair.Key, pair.Value);
       return newObj;
     }
 

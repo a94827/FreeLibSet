@@ -112,8 +112,15 @@ namespace FreeLibSet.FIAS
         throw new BugException("Неправильная первая дата в списке обновлений: " + firstDate.ToString("d"));
 
       if (firstDate > _FiasDB.ActualDate)
-        throw new BugException("Первая дата в списке обновлений : " + firstDate.ToString("d") + " больше актуальной даты классификатора " +
-          _FiasDB.ActualDate.ToString("d"));
+      {
+        //throw new BugException("Первая дата в списке обновлений : " + firstDate.ToString("d") + " больше актуальной даты классификатора " +
+        //  _FiasDB.ActualDate.ToString("d"));
+
+        // 01.02.2023
+        Trace.WriteLine(DateTime.Now.ToString("G") + " FiasDBWebUpdater. First date in the update list (" + firstDate.ToString("d") + ") is greater than the actual date (" +
+          _FiasDB.ActualDate.ToString("d")+"). Some updates were removed from the list. Updating is not possible. You must install full FIAS database.");
+        return;
+      }
 
       if (lastDate <= _FiasDB.ActualDate)
       {

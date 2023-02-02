@@ -1030,7 +1030,8 @@ namespace FreeLibSet.Data.Docs
     #region Конструкторы и Dispose
 
     /// <summary>
-    /// Установка блокировки для выборки документов
+    /// Установка блокировки для выборки документов.
+    /// Если блокировку установить невозможно, выбрасывается исключение <see cref="DBxDocsLockException"/>.
     /// </summary>
     /// <param name="docProvider">Объект для доступа к документам</param>
     /// <param name="docSel">Выборка документов</param>
@@ -1043,6 +1044,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Установка блокировки для набора документов.
     /// Блокируются только документы в режимах Edit и Delete, а также Insert, если документы уже получили идентификаторы.
+    /// Если блокировку установить невозможно, выбрасывается исключение <see cref="DBxDocsLockException"/>.
     /// </summary>
     /// <param name="docSet">Набор документов</param>
     public DBxLongDocsLockHandler(DBxDocSet docSet)

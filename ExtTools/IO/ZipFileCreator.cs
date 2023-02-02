@@ -410,6 +410,7 @@ namespace FreeLibSet.IO
     {
       _ArchiveType = FileComressorArchiveType.Auto;
       _FileTemplates = new FileTemplateList();
+      _UseSplashPercent = true;
     }
 
     #endregion
@@ -463,12 +464,21 @@ namespace FreeLibSet.IO
     private string _Password;
 
     /// <summary>
-    /// Внешняя заставка. Если свойство установлено, то выводится процентный индикатор
+    /// Внешняя заставка. Если свойство установлено, то выводится процентный индикатор.
     /// Рекомендуется обязательное использование заставки, когда размер архива может быть большим или заранее неизвестен.
-    /// Без заставки действие нельзя прервать
+    /// Без заставки действие нельзя прервать.
+    /// Если процентный индикатор должен управляться внешним кодом, а не FileCompressor, установите свойство <see cref="UseSplashPercent"/>=false.
     /// </summary>
     public ISplash Splash { get { return _Splash; } set { _Splash = value; } }
     private ISplash _Splash;
+
+    /// <summary>
+    /// Если true (по умолчанию), то в заставке <see cref="Splash"/> будет устанавливаться процентный индикатор для отображения прогресса.
+    /// Если процентный индикатор должен управляться вызывающим кодом или не использоваться, установите свойство в false.
+    /// Свойство действует только при установленном свойстве <see cref="Splash"/>.
+    /// </summary>
+    public bool UseSplashPercent { get { return _UseSplashPercent; } set { _UseSplashPercent = value; } }
+    private bool _UseSplashPercent;
 
     #endregion
 
@@ -608,7 +618,10 @@ namespace FreeLibSet.IO
               IntPhaseText = "Построение списка файлов";
             }
 
-            string[] aFiles = Owner.FileTemplates.GetAbsFileNames(Owner.FileDirectory, Owner.Splash);
+            ISplash spl = null;
+            if (Owner.UseSplashPercent)
+              spl = Owner.Splash;
+            string[] aFiles = Owner.FileTemplates.GetAbsFileNames(Owner.FileDirectory, spl);
             cmp.CompressFilesEncrypted(Owner.ArchiveFileName.Path, Owner.FileDirectory.SlashedPath.Length, Owner.Password, aFiles);
           }
 
@@ -665,7 +678,8 @@ namespace FreeLibSet.IO
         oldAllowCancel = Splash.AllowCancel;
         oldPhaseText = Splash.PhaseText;
 
-        Splash.PercentMax = 100;
+        if(UseSplashPercent)
+          Splash.PercentMax = 100;
         Splash.AllowCancel = true;
       }
 
@@ -692,7 +706,8 @@ namespace FreeLibSet.IO
                 Splash.PhaseText = asyncBase.IntPhaseText + ". Прерывание будет выполнено при обработке следующего файла";
               else
                 Splash.PhaseText = asyncBase.IntPhaseText;
-              Splash.Percent = asyncBase.IntPercent;
+              if (UseSplashPercent)
+                Splash.Percent = asyncBase.IntPercent;
               Splash.CheckCancelled();
             }
             catch
@@ -701,7 +716,8 @@ namespace FreeLibSet.IO
               try
               {
                 Splash.AllowCancel = false; // сразу отменяем
-                Splash.Percent = asyncBase.IntPercent;
+                if (UseSplashPercent)
+                  Splash.Percent = asyncBase.IntPercent;
               }
               catch
               {
@@ -722,7 +738,8 @@ namespace FreeLibSet.IO
         if (asyncBase.IntCancelled)
           throw new UserCancelException();
 
-        Splash.PercentMax = 0;
+        if (UseSplashPercent)
+          Splash.PercentMax = 0;
         Splash.AllowCancel = oldAllowCancel;
         Splash.PhaseText = oldPhaseText;
       }

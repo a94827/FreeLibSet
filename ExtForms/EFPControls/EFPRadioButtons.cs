@@ -326,6 +326,30 @@ namespace FreeLibSet.Forms
     }
     private bool _Enabled;
 
+    /// <summary>
+    /// Получение и установка свойств <see cref="EFPSingleRadioButton.Enabled"/> с помощью массива логических значений.
+    /// Массив должен иметь длину, совпадающую с количеством кнопок
+    /// </summary>
+    public bool[] EnabledFlags
+    {
+      get
+      {
+        bool[] a = new bool[Count];
+        for (int i = 0; i < a.Length; i++)
+          a[i] = this[i].Enabled;
+        return a;
+      }
+      set
+      {
+        if (value == null)
+          throw new ArgumentNullException();
+        if (value.Length != Count)
+          throw new ArgumentException("Неправильная длина массива");
+        for (int i = 0; i < value.Length; i++)
+          this[i].Enabled = value[i];
+      }
+    }
+
     #endregion
 
     #region Свойство SelectedIndex

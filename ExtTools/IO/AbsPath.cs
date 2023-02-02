@@ -12,13 +12,13 @@ namespace FreeLibSet.IO
    * AbsPath.cs может использоваться не только в библиотеке ExtTools.cs, 
    * но и самостоятельно, например, в загрузчиках программ.
    * Поэтому класс AbsPath не может зависеть от других классов, например, FileTools.
-   * Также он не может ссылаться на класс RelPath (наоборот можно)
+   * Также он не может ссылаться на класс RelPath (наоборот можно).
    */
 
   /// <summary>
-  /// Абсолютный путь к файлу или каталогу
-  /// Реализует методы для манипуляции с путями, заявленные в System.IO.Path
-  /// Не выполняет никаких действий с реальными файлами и каталогами
+  /// Абсолютный путь к файлу или каталогу.
+  /// Реализует методы для манипуляции с путями, заявленные в System.IO.Path.
+  /// Не выполняет никаких действий с реальными файлами и каталогами.
   /// </summary>
   [Serializable]
   public struct AbsPath: IEquatable<AbsPath>
@@ -26,8 +26,8 @@ namespace FreeLibSet.IO
     #region Конструкторы
 
     /// <summary>
-    /// Создает объект, содержащий абсолютный путь к файлу или каталогу
-    /// Если аргумент заканчивается на слэш, то он удаляется
+    /// Создает объект, содержащий абсолютный путь к файлу или каталогу.
+    /// Если аргумент заканчивается на слэш, то он удаляется.
     /// Допускается задание пути в Uri-формате "file:///"
     /// </summary>
     /// <param name="s">Путь, который нужно преобразовать</param>
@@ -141,10 +141,10 @@ namespace FreeLibSet.IO
 
 
     /// <summary>
-    /// Создает путь на основе базового, с произвольным числом подкаталогов
+    /// Создает путь на основе базового, с произвольным числом подкаталогов.
     /// </summary>
     /// <param name="basePath">Базовый каталог</param>
-    /// <param name="subNames">Дочерние подкаталоги</param>
+    /// <param name="subNames">Дочерние подкаталоги. Могут быть пустые строки, которые пропускаются без выброса исключения.</param>
     public AbsPath(AbsPath basePath, params string[] subNames)
     {
       AbsPath p1 = basePath;
@@ -187,9 +187,8 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Создает объект AbsPath. 
-    /// Если задана пустая строка или возникает ошибка преобразования,
-    /// возвращается AbsPath.Empty.
-    /// См. описание соответствующего конструктора AbsPath
+    /// Если задана пустая строка или возникает ошибка преобразования, возвращается AbsPath.Empty.
+    /// См. описание соответствующего конструктора AbsPath.
     /// </summary>
     /// <param name="s">Путь, который нужно преобразовать</param>
     /// <returns>Объект AbsPath</returns>
@@ -213,7 +212,7 @@ namespace FreeLibSet.IO
     /// Создает объект AbsPath. 
     /// Если <paramref name="basePath"/>.IsEmpty=true или возникает ошибка преобразования,
     /// возвращается AbsPath.Empty.
-    /// См. описание соответствующего конструктора AbsPath
+    /// См. описание соответствующего конструктора AbsPath.
     /// </summary>
     /// <param name="basePath">Базовый каталог</param>
     /// <param name="subNames">Дочерние подкаталоги</param>
@@ -238,21 +237,22 @@ namespace FreeLibSet.IO
     #region Свойства
 
     /// <summary>
-    /// Полный путь к каталогу или файлу
+    /// Полный путь к каталогу или файлу.
     /// Путь (обычно) не заканчивается обратным слэшем и хранится в форме, пригодной
-    /// для использования методами классов в System.IO
-    /// Задается в конструкторе
+    /// для использования методами классов в System.IO.
+    /// Задается в конструкторе.
     /// </summary>
     public string Path { get { return _Path; } }
     private readonly string _Path;
 
     /// <summary>
-    /// Возвращает true, если структура не была инициализирована
+    /// Возвращает true, если структура не была инициализирована.
     /// </summary>
     public bool IsEmpty { get { return String.IsNullOrEmpty(_Path); } }
 
     /// <summary>
-    /// Возвращает Path
+    /// Возвращает Path.
+    /// Если <see cref="IsEmpty"/>=true, то возаращается пустая строка.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -264,9 +264,9 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает путь, заканчивающийся обратным слэшем
+    /// Возвращает путь, заканчивающийся обратным слэшем.
     /// Используется, когда объект хранит каталог и нужно получить строку с именем
-    /// находящегося в каталоге файла
+    /// находящегося в каталоге файла.
     /// </summary>
     public string SlashedPath
     {
@@ -282,7 +282,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает идентификатор ресурса "file://"
+    /// Возвращает идентификатор ресурса "file://".
     /// </summary>
     public Uri Uri
     {
@@ -294,7 +294,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает путь, заключенный в кавычки (для передачи в качестве аргумента внешним программам)
+    /// Возвращает путь, заключенный в кавычки (для передачи в качестве аргумента командной строки внешним программам).
     /// </summary>
     public string QuotedPath
     {
@@ -314,10 +314,10 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Добавление относительного пути.
-    /// Использует функцию System.IO.Path.Combine()
+    /// Использует функцию System.IO.Path.Combine().
     /// </summary>
-    /// <param name="basePath">Исходный путь</param>
-    /// <param name="subDir">Подкаталог</param>
+    /// <param name="basePath">Исходный путь. Не может быть пустым</param>
+    /// <param name="subDir">Подкаталог. Если задана пустая строка, возвращается <paramref name="basePath"/>.</param>
     /// <returns>Новый путь</returns>
     public static AbsPath operator +(AbsPath basePath, string subDir)
     {
@@ -352,7 +352,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Родительский каталог ("..").
-    /// Использует метод System.IO.Path.GetDirectoryName()
+    /// Использует метод System.IO.Path.GetDirectoryName().
     /// </summary>
     public AbsPath ParentDir
     {
@@ -391,7 +391,8 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Возвращает корневой каталог.
-    /// Использует метод System.IO.Path.GetPathRoot()
+    /// Использует метод System.IO.Path.GetPathRoot().
+    /// Если <see cref="IsEmpty"/>=true, то возвращается пустой путь без выброса исключения.
     /// </summary>
     public AbsPath RootDir
     {
@@ -410,7 +411,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Получить имя файла или каталога самого вложенного уровня (последнюю часть пути после разделителя)
-    /// (вызов System.IO.Path.GetFileName())
+    /// (вызов System.IO.Path.GetFileName()).
     /// </summary>
     public string FileName
     {
@@ -448,6 +449,7 @@ namespace FreeLibSet.IO
     /// Изменить расширение.
     /// (вызов System.IO.Path.ChangeExtension())
     /// Создает новый экземпляр AbsPath.
+    /// Если <see cref="IsEmpty"/>=true, выбрасывается исключение.
     /// </summary>
     /// <param name="newExtension">Новое расширение, включающее ведущую точку</param>
     /// <returns>Путь к файлу с новым расширением</returns>
@@ -537,7 +539,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Поддержка коллекций.
-    /// Возвращает длину строки пути.
+    /// Возвращает хэш-код для пути.
     /// </summary>
     /// <returns>Хэш-код</returns>
     public override int GetHashCode()
@@ -581,8 +583,7 @@ namespace FreeLibSet.IO
     /// <remarks>
     /// Например, в Windows, если текущий путь равен
     /// C:\Windows\System32\XPSViewer
-    /// и вызвать EndsWith("system32", "XPSViewer")
-    /// будет возвращено true
+    /// и вызвать EndsWith("system32", "XPSViewer"), то будет возвращено true
     /// </remarks>
     public bool EndsWith(params string[] relParts)
     {
@@ -603,13 +604,13 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает true, если каталог заканчивается заданными частями пути
-    /// Регистр не учитывается, независимо от платформы
+    /// Возвращает true, если каталог заканчивается заданными частями пути.
+    /// Регистр не учитывается, независимо от платформы.
     /// </summary>
     /// <param name="relParts">Конечные части путей</param>
     /// <returns>true, если конечная часть пути совпадает</returns>
     /// <remarks>
-    /// Для Windows метод совпадает с IgnoreCase
+    /// Для Windows метод совпадает с методом EndsWith().
     /// </remarks>
     public bool EndsWithIgnoreCase(params string[] relParts)
     {
