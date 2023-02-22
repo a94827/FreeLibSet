@@ -13,7 +13,7 @@ namespace FreeLibSet.Forms
   /// Команды локального меню для TreeView и TreeViewAdv.
   /// Базовый класс для EFPTreeViewCommandItems и EFPTreeViewAdvCommandItemsBase
   /// </summary>
-  public class EFPTreeViewCommandItemsBase : EFPControlCommandItems, IEFPClipboardCommandItems
+  public abstract class EFPTreeViewCommandItemsBase : EFPControlCommandItems, IEFPClipboardCommandItems
   {
     #region Конструктор
 
@@ -158,11 +158,7 @@ namespace FreeLibSet.Forms
         ciFindNext.Usage = EFPCommandItemUsage.None;
       }
 
-      ciCheckAll.Visible = _Owner.CheckBoxes;
-      ciUncheckAll.Visible = _Owner.CheckBoxes;
-
-
-      RefreshSearchItems();
+      PerformRefreshItems();
     }
 
     #endregion
@@ -219,6 +215,54 @@ namespace FreeLibSet.Forms
       PerformCopy();
     }
 
+
+    /// <summary>
+    /// Стандартные форматы копирования в буфер обмена
+    /// По умолчанию: Text, CSV и HTML для TreeViewAdv и Text для TreeView.
+    /// Можно отключить стандартные форматы копирования, если необходимо копировать данные в нестандартном формате.
+    /// Тогда эти форматы можно добавить в обработчике AddCopyFormats
+    /// </summary>
+    public EFPDataViewCopyFormats CopyFormats
+    {
+      get { return _CopyFormats; }
+      set
+      {
+        CheckNotReadOnly();
+        _CopyFormats = value;
+      }
+    }
+    private EFPDataViewCopyFormats _CopyFormats;
+
+
+    /// <summary>
+    /// Добавляет в буфер обмена текстовый формат для выбранных узлов
+    /// </summary>
+    /// <param name="args">Ссылка на DataObject</param>
+    protected abstract void OnAddDefaultCopyFormats(DataObjectEventArgs args);
+
+    /// <summary>
+    /// Добавление форматов Text и CSV.
+    /// Используется в реализации методов OnAddDefaultCopyFormats()
+    /// </summary>
+    /// <param name="dobj"></param>
+    /// <param name="a"></param>
+    /// <param name="copyFormats"></param>
+    protected static void AddDefaultCopyFormats(IDataObject dobj, string[,] a, EFPDataViewCopyFormats copyFormats)
+    {
+      if ((copyFormats & EFPDataViewCopyFormats.Text) == EFPDataViewCopyFormats.Text)
+      {
+        string txt = new FreeLibSet.Text.TabTextConvert().ToString(a);
+        dobj.SetData(DataFormats.Text, true, txt);
+      }
+
+      if ((copyFormats & EFPDataViewCopyFormats.CSV) == EFPDataViewCopyFormats.CSV)
+      {
+        string txt = new FreeLibSet.Text.CsvTextConvert().ToString(a);
+        dobj.SetData(DataFormats.CommaSeparatedValue, txt);
+      }
+    }
+
+
     /// <summary>
     /// Обработчик может добавить при копировании в буфер обмена дополнительные форматы
     /// </summary>
@@ -249,6 +293,8 @@ namespace FreeLibSet.Forms
         {
           DataObject dobj2 = new DataObject();
           DataObjectEventArgs args = new DataObjectEventArgs(dobj2);
+
+          OnAddDefaultCopyFormats(args);
           OnAddCopyFormats(args);
 
           EFPApp.Clipboard.SetDataObject(dobj2, true);
@@ -419,6 +465,12 @@ namespace FreeLibSet.Forms
       _Owner.CheckAll(false);
     }
 
+    private void RefreshCheckItems()
+    {
+      ciCheckAll.Visible = _Owner.CheckBoxes;
+      ciUncheckAll.Visible = _Owner.CheckBoxes;
+    }
+
     #endregion
 
     #region Обновление состояния команд
@@ -451,6 +503,7 @@ namespace FreeLibSet.Forms
     protected virtual void DoRefreshItems()
     {
       RefreshSearchItems();
+      RefreshCheckItems();
     }
 
     #endregion
@@ -470,6 +523,7 @@ namespace FreeLibSet.Forms
     public EFPTreeViewCommandItems(EFPTreeView owner)
       : base(owner)
     {
+      base.CopyFormats = EFPDataViewCopyFormats.Text;
       AddCommands();
     }
 
@@ -488,15 +542,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет в буфер обмена текстое представление для текущего узла.
-    /// Затем вызывается событие AddCopyFormats.
     /// </summary>
     /// <param name="args">Аргументы события</param>
-    protected override void OnAddCopyFormats(DataObjectEventArgs args)
+    protected override void OnAddDefaultCopyFormats(DataObjectEventArgs args)
     {
       if (Owner.Control.SelectedNode != null)
-        args.DataObject.SetData(Owner.Control.SelectedNode.Text);
-
-      base.OnAddCopyFormats(args);
+      {
+        string[,] a = new string[1, 1];
+        a[0, 0] = Owner.Control.SelectedNode.Text;
+        AddDefaultCopyFormats(args.DataObject, a, CopyFormats);
+      }
     }
 
     #endregion

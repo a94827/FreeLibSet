@@ -1704,7 +1704,7 @@ namespace FreeLibSet.Forms
     /// Создает описатель столбца
     /// </summary>
     /// <param name="columnName">Имя вычисляемого столбца изображения</param>
-    /// <param name="sourceColumnNames">Имена исходных стобцов. Имена разделяются запятыми</param>
+    /// <param name="sourceColumnNames">Имена исходных столбцов. Имена разделяются запятыми</param>
     public EFPGridProducerImageColumn(string columnName, string[] sourceColumnNames)
       : base(columnName, sourceColumnNames)
     {

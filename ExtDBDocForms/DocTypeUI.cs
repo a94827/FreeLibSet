@@ -848,7 +848,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить раскраску строки докаумента или поддокумента с заданным идентификатором
+    /// Получить раскраску строки документа или поддокумента с заданным идентификатором
     /// </summary>
     /// <param name="id">Идентификатор документа или поддокумента</param>
     /// <param name="colorType">Сюда помещается цвет строки в справочнике</param>
@@ -856,6 +856,33 @@ namespace FreeLibSet.Forms.Docs
     public void GetRowColor(Int32 id, out EFPDataGridViewColorType colorType, out bool grayed)
     {
       _UI.ImageHandlers.GetRowColor(_DocTypeBase.Name, id, out colorType, out grayed);
+    }
+
+    /// <summary>
+    /// Получить раскраску строки документа или поддокумента с заданным идентификатором 
+    /// и применить ее при обработке события <see cref="EFPDataGridView.GetRowAttributes"/>.
+    /// </summary>
+    /// <param name="id">Идентификатор документа или поддокумента</param>
+    /// <param name="args">Аргументы события, в которых заполняются поля</param>
+    public void GetRowColor(Int32 id, EFPDataGridViewRowAttributesEventArgs args)
+    {
+      EFPDataGridViewColorType colorType;
+      bool grayed;
+      GetRowColor(id, out colorType, out grayed);
+      args.ColorType = colorType;
+      args.Grayed = grayed;
+    }
+
+    /// <summary>
+    /// Получить раскраску строки документа или поддокумента и применить ее при обработке события <see cref="EFPDataGridView.GetRowAttributes"/>.
+    /// Идентификатор документа или поддокумента извлекается из <paramref name="args"/>.DataRow из поля "Id".
+    /// </summary>
+    /// <param name="args">Аргументы события, в которых заполняются поля</param>
+    public void GetRowColor(EFPDataGridViewRowAttributesEventArgs args)
+    {
+      if (args.DataRow == null)
+        return;
+      GetRowColor(DataTools.GetInt(args.DataRow, "Id"), args);
     }
 
     /// <summary>

@@ -1813,8 +1813,8 @@ namespace FreeLibSet.Forms
       //  return false;
 
       OnBeforePrepareCommandItems(); // 28.09.2018
-
       CommandItems.SetReadOnly();
+      OnAfterPrepareCommandItems(); // 21.02.2023
 
       if (ToolBar != null)
       {
@@ -1824,7 +1824,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Событие вызывается из PrepareCommandItems(), перед тем, как он выполнит инициализацию локального меню,
+    /// Событие вызывается из метода PrepareCommandItems(), перед тем, как он выполнит инициализацию локального меню,
     /// панелей инструментов и статусной строки.
     /// Пользовательский обработчик может, например, выполнить окончательную настройку команд.
     /// </summary>
@@ -1837,6 +1837,16 @@ namespace FreeLibSet.Forms
     {
       if (BeforePrepareCommandItems != null)
         BeforePrepareCommandItems(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Вызывается из метода <see cref="PrepareCommandItems"/>() после того, как команды меню будут инициализированы.
+    /// На момент вызова свойство <see cref="EFPContextCommandItems"/>.IsReadOnly уже установлено в true и изменения в списке команд меню не допускаются.
+    /// Переопределяется в табличном просмотре EFPDataGridView для добавления обработчиков.
+    /// </summary>
+    protected virtual void OnAfterPrepareCommandItems()
+    {
+      // События AfterPrepareCommandItems пока нет
     }
 
     EFPStatusBarHandler IEFPStatusBarControl.StatusBarHandler

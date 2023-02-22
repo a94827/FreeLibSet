@@ -357,7 +357,12 @@ namespace FreeLibSet.Forms
     public bool CheckBoxes
     {
       get { return Control.CheckBoxes; }
-      set { Control.CheckBoxes = value; }
+      set 
+      { 
+        Control.CheckBoxes = value;
+        if (HasBeenCreated)
+          CommandItems.PerformRefreshItems();
+      }
     }
 
     #endregion

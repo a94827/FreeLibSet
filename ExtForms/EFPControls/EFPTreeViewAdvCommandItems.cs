@@ -24,6 +24,9 @@ namespace FreeLibSet.Forms
     public EFPTreeViewAdvCommandItems(EFPTreeViewAdv owner)
       : base(owner)
     {
+      base.CopyFormats = EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV;
+      // TODO: base.CopyFormats = EFPDataViewCopyFormats.All;
+
       #region Начальные значения свойств
 
       _EnterAsOk = false;
@@ -383,6 +386,26 @@ namespace FreeLibSet.Forms
           ControlProvider.Control.SelectionMode == TreeViewAdvSelectionMode.Multi;
       }
 
+    }
+
+    #endregion
+
+    #region Буфер обмена
+
+    /// <summary>
+    /// Добавляет в буфер обмена текстовый формат для выбранных ячеек просмотра
+    /// </summary>
+    /// <param name="args">Ссылка на DataObject</param>
+    protected override void OnAddDefaultCopyFormats(DataObjectEventArgs args)
+    {
+      EFPDataViewCopyFormats copyFormats2 = CopyFormats & (EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV);
+      if (copyFormats2 != EFPDataViewCopyFormats.None)
+      {
+        string[,] a = ControlProvider.GetSelectedNodesTextMatrix();
+        AddDefaultCopyFormats(args.DataObject, a, copyFormats2);
+      }
+
+      // TODO: Поддержка для HTML
     }
 
     #endregion

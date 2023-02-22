@@ -5,7 +5,8 @@
 	<title>Изменения в модуле ExtDB.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2022-08-18T14:21:18.279000000"/>
+	<meta name="changed" content="2023-02-07T10:48:47.037000000"/>
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -150,6 +151,20 @@
 		</td>
 	</tr>
 	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="339" sdnum="1049;">
+			<p lang="en-US" align="center">339</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">07.02.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. DBxCache.DoLoadCachePage() <span lang="ru-RU">выпускает
+			наружу исключение </span>UserCancelException, <span lang="ru-RU">вместо
+			того, чтобы выполнять оставшиеся попытки (</span><a href="ExtDB_11.htm#v014p1">v.14
+			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">).</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm" sdval="325" sdnum="1049;">
 			<p lang="en-US" align="center">325</p>
 		</td>
@@ -160,7 +175,7 @@
 			<p lang="en-US">1. <span lang="ru-RU">Свойство </span>DBx.UseTrimEnd
 			(<span lang="ru-RU">возвращает </span>true <span lang="ru-RU">для
 			всех баз данных, кроме </span>SQLiteDBx<span lang="ru-RU">).</span>
-			<span lang="ru-RU">Метод </span> DBxConBase.SQLExecuteDataTable()
+			<span lang="ru-RU">Метод </span>DBxConBase.SQLExecuteDataTable()
 			<span lang="ru-RU">вызывает </span>DataTools.TrimEnd() <span lang="ru-RU">для
 			удаления лишних пробелов в строковых полях.</span> <span lang="ru-RU">Выделен
 			защищенный метод </span>DBxConBase.PrepareReturnedValue() <span lang="ru-RU">для

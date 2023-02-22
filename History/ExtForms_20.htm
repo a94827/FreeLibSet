@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2023-01-30T15:16:07.062000000"/>
+	<meta name="changed" content="2023-02-22T16:51:59.416000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -255,15 +255,66 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">340</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">08.02.2023-<span lang="ru-RU">22</span>.02.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Если в
+			иерархическом просмотре</span> <span lang="ru-RU">(</span><a href="ExtForms_11.htm#v092p3"><span lang="en-US">v.92
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">) не
+			добавлены столбцы или </span><span lang="en-US">NodeControl, </span><span lang="ru-RU">то
+			</span><span lang="en-US">EFPTreeViewAdv.OnAttached() </span><span lang="ru-RU">добавляет
+			значок и </span><span lang="en-US">NodeTextBox, </span><span lang="ru-RU">чтобы
+			дерево имело нормальный вид при отсутствии явной инициализации,
+			когда установлено только свойство </span><span lang="en-US">Model</span><span lang="ru-RU">.</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Поддержка
+			копирования текста в буфер обмена для </span><span lang="en-US">EFPTreeViewAdv</span><span lang="ru-RU">.
+			Свойство EFPTreeViewCommandItemsBase.</span><span lang="en-US">CopyFormats,
+			</span><span lang="ru-RU">как в </span><span lang="en-US">EFPDataGridViewCommandItems
+			(<a href="ExtForms_11.htm#v079p2">v.79 </a></span><a href="ExtForms_11.htm#v079p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span><span lang="ru-RU">.
+			Перечисление EFPDataGridViewCopyFormats переименовано в
+			EFPDataViewCopyFormats. Формат </span><span lang="en-US">HTML </span><span lang="ru-RU">пока
+			не реализован.</span></p>
+			<p lang="en-US"><a name="v340p3"></a>3. <span lang="ru-RU">Изменения
+			в отметках выборов узлов в </span>EFPTreeViewAdv:</p>
+			<p lang="en-US">- <span lang="ru-RU">Свойства
+			</span>EFPTreeViewAdv<span lang="ru-RU">.</span>CheckBoxes <span lang="ru-RU">и
+			</span>CheckBoxControl<span lang="ru-RU">. Их можно устанавливать
+			и когда элемент выведен на экран.</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Класс
+			TreeViewAdvCheckBoxStorage переименован в
+			</span>EFP<span lang="ru-RU">TreeViewAdvCheckBoxStorage</span>.
+			<span lang="ru-RU">Метод </span>InitControl<span lang="ru-RU">()
+			убран. Вместо него - свойство </span>EFPTreeViewAdv.CheckBoxStorage</p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">Улучшена
+			прорисовка для флажков иерархического просмотра в </span><span lang="en-US">NodeCheckBox
+			(<a href="ExtForms_11.htm#v092p2">v.92 </a></span><a href="ExtForms_11.htm#v092p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span><span lang="ru-RU">,
+			когда разрешение экрана отличается от </span><span lang="en-US">96dpi.</span></p>
+			<p>5. Виртуальный метод
+			<span lang="en-US">EFPControlBase.OnAfterPrepareCommandItems()
+			(<a href="ExtForms_11.htm#v202p2">v.202 </a></span><a href="ExtForms_11.htm#v202p2">п.2</a><span lang="en-US">).
+			</span>Убран метод <span lang="en-US">EFPDataGridView.AfterControlAssigned()</span></p>
+			<p><span lang="en-US">6. EFPGridProducer.InitGridView() (<a href="ExtForms_11.htm#v276p9">v.276
+			</a></span><a href="ExtForms_11.htm#v276p9"><span lang="ru-RU">п.9</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">вызывал исключение
+			ArgumentOutOfRangeException, если в выбранной настройке просмотра
+			нет части столбцов, но задано количество замороженных столбцов,
+			большее или равное общему числу столбцов просмотра</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">338</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">30.01.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Вспомогательное свойство
-			</span>EFPRadioButton.EnabledFlags (<a href="ExtForms_11.htm#v017p2">v.17
-			<span lang="ru-RU">п.2</span></a>)</p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Вспомогательное
+			свойство </span><span lang="en-US">EFPRadioButton.EnabledFlags
+			(<a href="ExtForms_11.htm#v017p2">v.17 </a></span><a href="ExtForms_11.htm#v017p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

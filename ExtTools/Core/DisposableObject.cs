@@ -25,7 +25,7 @@ namespace FreeLibSet.Core
     /// Проверить, что объект не был разрушен. Иначе выкинуть исключение
     /// </summary>
     void CheckNotDisposed();
-}
+  }
 
   /// <summary>
   /// Реализация интерфейса IDisposable. Используйте этот класс в качестве
@@ -456,12 +456,6 @@ namespace FreeLibSet.Core
 
       #region ToString()
 
-      public override string ToString()
-      {
-        return DocType.PadRight(54) + ": " + Count.ToString().PadLeft(5) + " " +
-          Disposed.ToString().PadLeft(8) + " " + Finalized.ToString().PadLeft(9);
-      }
-
       #endregion
 
       #region IComparable<DebugItem> Members
@@ -482,6 +476,10 @@ namespace FreeLibSet.Core
       long[] disposed;
       long[] finalized;
       GetRegisteredObjectCounts(out objTypes, out counts, out disposed, out finalized);
+
+      int maxObjTypeLen = 30;
+      for (int i = 0; i < objTypes.Length; i++)
+        maxObjTypeLen = Math.Max(objTypes[i].Length, maxObjTypeLen);
 
       List<DebugItem> lst1 = new List<DebugItem>(); // Существующие объекты
       List<DebugItem> lst2 = new List<DebugItem>(); // Удаленные объекты
@@ -504,16 +502,16 @@ namespace FreeLibSet.Core
 
       args.WriteLine("Type".PadRight(54) + ": Count Disposed Finalized");
       args.WriteLine();
-      DoLogoutList(args, lst1);
+      DoLogoutList(args, lst1, maxObjTypeLen);
       if (lst2.Count > 0)
       {
         args.WriteLine();
         args.WriteLine("Finalised:");
-        DoLogoutList(args, lst2);
+        DoLogoutList(args, lst2, maxObjTypeLen);
       }
     }
 
-    private static void DoLogoutList(FreeLibSet.Logging.LogoutInfoNeededEventArgs args, List<DebugItem> lst)
+    private static void DoLogoutList(FreeLibSet.Logging.LogoutInfoNeededEventArgs args, List<DebugItem> lst, int maxObjTypeLen)
     {
       for (int i = 0; i < lst.Count; i++)
       {
@@ -522,7 +520,10 @@ namespace FreeLibSet.Core
         //  continue;
 
         //Args.WritePair(DocTypes[i], Counts[i].ToString());
-        args.WriteLine(lst[i].ToString());
+        args.WriteLine(lst[i].DocType.PadRight(maxObjTypeLen) + ": " +
+          lst[i].Count.ToString().PadLeft(5) + " " +
+          lst[i].Disposed.ToString().PadLeft(8) + " " +
+          lst[i].Finalized.ToString().PadLeft(9));
 
         bool isLogType;
         lock (_LogoutTypes)
@@ -671,7 +672,7 @@ namespace FreeLibSet.Core
     }
 
     #endregion
-                                       
+
     #region Основной объект
 
     /// <summary>

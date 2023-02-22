@@ -1370,7 +1370,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
             string s = ctrl.Text;
             // 27.07.2022. Если элемент - многострочный TextBox, то надо выводить только первую строку, да и ту не целиком
-            int p = DataTools.IndexOfAny(s, "\r\n\t"); 
+            int p = DataTools.IndexOfAny(s, "\r\n\t");
             if (p >= 0)
               s = s.Substring(0, p) + " ...";
             if (s.Length > 40)
@@ -1560,8 +1560,13 @@ namespace FreeLibSet.Forms.Diagnostics
       //Args.WritePair("CommonAppDataPath", Application.CommonAppDataPath);
       //Args.WritePair("CommonAppDataRegistry", Application.CommonAppDataRegistry);
       args.WritePair("CurrentCulture", Application.CurrentCulture.ToString());
-      if (Application.CurrentInputLanguage != null)
-        args.WritePair("CurrentInputLanguage", Application.CurrentInputLanguage.LayoutName);
+
+      try
+      {
+        if (Application.CurrentInputLanguage != null)
+          args.WritePair("CurrentInputLanguage", Application.CurrentInputLanguage.LayoutName);
+      }
+      catch { } // 06.02.2023. Может быть ошибка в Wine
 
       args.WritePair("MessageLoop", Application.MessageLoop.ToString()); // 02.06.2017
 
@@ -1695,6 +1700,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
 
       args.WritePair("MainWindowVisible", EFPApp.MainWindowVisible.ToString());
+      args.WritePair("MainWindowTitle", EFPApp.MainWindowTitle);
       if (EFPApp.IsMainThread && EFPApp.MainWindow != null)
       {
         args.WriteLine("MainWindow");

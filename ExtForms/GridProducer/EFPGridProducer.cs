@@ -407,7 +407,9 @@ namespace FreeLibSet.Forms
         maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
 
-      if (config.FrozenColumns > 0 && config.FrozenColumns < config.Columns.Count)
+      if (config.FrozenColumns > 0 &&
+        config.FrozenColumns < config.Columns.Count &&
+        config.FrozenColumns < controlProvider.Columns.Count) // 22.02.2023
         controlProvider.Control.Columns[config.FrozenColumns - 1].Frozen = true;
 
       controlProvider.TextRowHeight = maxTextRowHeight;
@@ -693,7 +695,7 @@ namespace FreeLibSet.Forms
         maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
 
-      //if (Config.FrozenColumns > 0 && Config.FrozenColumns < Config.Columns.Count)
+      //if (Config.FrozenColumns > 0 && Config.FrozenColumns < Config.Columns.Count && Config.FrozenColumns<controlProvider.Columns.Count)
       //  ControlProvider.Control.Columns[Config.FrozenColumns - 1].Frozen = true;
 
       //ControlProvider.TextRowHeight = MaxTextRowHeight;

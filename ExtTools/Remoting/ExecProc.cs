@@ -2886,7 +2886,11 @@ namespace FreeLibSet.Remoting
       private void CheckNotDisposed()
       {
         if (ExecProc == null)
-          throw new ObjectDisposedException("ExecProc");
+        {
+          Exception e = new ObjectDisposedException("ExecProc");
+          e.Data["Guid"] = _Guid;
+          throw e;
+        }
       }
 
 #if XXX
@@ -3151,7 +3155,11 @@ namespace FreeLibSet.Remoting
       private void CheckNotDisposed()
       {
         if (_Source == null)
-          throw new ObjectDisposedException("Proxy");
+        {
+          Exception e = new ObjectDisposedException("Proxy");
+          e.Data["Guid"] = _Guid;
+          throw e;
+        }
       }
 
       private Guid _Guid;
@@ -3627,6 +3635,21 @@ namespace FreeLibSet.Remoting
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
     private readonly string _DisplayName;
+
+    /// <summary>
+    /// Вызывает ChannelServices.GetChannelSinkProperties() для прокси.
+    /// используется для отладочных целей
+    /// </summary>
+    public IDictionary ChannelSinkProperties
+    {
+      get
+      {
+        if (_Proxy == null)
+          return null;
+        else
+          return LogoutTools.HidePasssword(System.Runtime.Remoting.Channels.ChannelServices.GetChannelSinkProperties(_Proxy.Handler));
+      }
+    }
 
     #endregion
 

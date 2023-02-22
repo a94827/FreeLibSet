@@ -1858,6 +1858,7 @@ namespace FreeLibSet.Logging
       try
       {
         IDictionary dict = System.Runtime.Remoting.Channels.ChannelServices.GetChannelSinkProperties(obj);
+        dict = HidePasssword(dict);
         LogoutObject(args, dict);
       }
       catch (Exception e)
@@ -1938,6 +1939,33 @@ namespace FreeLibSet.Logging
       //DoLogoutObject(Args, Object.GetLifetimeService(), 0);
 
       args.IndentLevel--;
+    }
+
+    /// <summary>
+    /// Прячет пароль, если в коллекции задан ключ "password"
+    /// </summary>
+    /// <param name="dict"></param>
+    /// <returns></returns>
+    internal static IDictionary HidePasssword(IDictionary dict)
+    {
+      if (dict == null)
+        return null;
+      if (!dict.Contains("password"))
+        return dict;
+
+      string value=DataTools.GetString(dict["password"]);
+      if (value.Length == 0)
+        return dict;
+
+      Dictionary<object, object> dict2 = new Dictionary<object, object>(dict.Count);
+      foreach (DictionaryEntry de in dict)
+      {
+        if (Object.Equals(de.Key, "password"))
+          dict2.Add(de.Key, "*** Password is hidden for log ***");
+        else
+          dict2.Add(de.Key, de.Value);
+      }
+      return dict2;
     }
 
     #endregion

@@ -1991,10 +1991,10 @@ namespace FreeLibSet.Forms
     #region Обработчики событий
 
     /// <summary>
-    /// Этот метод вызывается после установки свойства CommandItems.Control
-    /// Добавляем обработчики, которые должны быть в конце цепочки
+    /// Этот метод вызывается после инициализации команд локального меню.
+    /// Добавляем обработчики, которые должны быть в конце цепочки.
     /// </summary>
-    internal protected virtual void AfterControlAssigned()
+    protected override void OnAfterPrepareCommandItems()
     {
       // Мы должны присоединить обработчик CellBeginEdit после пользовательского, т.к.
       // нам нужно проверить свойство Cancel

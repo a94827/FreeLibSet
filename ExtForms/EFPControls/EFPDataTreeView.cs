@@ -989,17 +989,17 @@ namespace FreeLibSet.Forms
 
     #region Обработчики событий
 
-    /// <summary>
-    /// Этот метод вызывается после установки свойства CommandItems.Control
-    /// Добавляем обработчики, которые должны быть в конце цепочки
-    /// </summary>
-    public virtual void AfterControlAssigned()
-    {
-      // Мы должны присоединить обработчик CellBeginEdit после пользовательского, т.к.
-      // нам нужно проверить свойство Cancel
-      //Control.CellBeginEdit += new DataGridViewCellCancelEventHandler(Control_CellBeginEdit2);
-      //Control.CellEndEdit += new DataGridViewCellEventHandler(Control_CellEndEdit2);
-    }
+    ///// <summary>
+    ///// Этот метод вызывается после инициализации команд локального меню.
+    ///// Добавляем обработчики, которые должны быть в конце цепочки.
+    ///// </summary>
+    //protected override void OnAfterPrepareCommandItems()
+    //{
+    //  // Мы должны присоединить обработчик CellBeginEdit после пользовательского, т.к.
+    //  // нам нужно проверить свойство Cancel
+    //  //Control.CellBeginEdit += new DataGridViewCellCancelEventHandler(Control_CellBeginEdit2);
+    //  //Control.CellEndEdit += new DataGridViewCellEventHandler(Control_CellEndEdit2);
+    //}
 
     #region CurrentCellChanged
 
@@ -3385,6 +3385,5 @@ return true;                          */
     }
 
     #endregion
-
   }
 }

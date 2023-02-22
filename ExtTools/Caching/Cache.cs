@@ -22,6 +22,7 @@ using FreeLibSet.Diagnostics;
 using FreeLibSet.Logging;
 using FreeLibSet.Remoting;
 using FreeLibSet.Core;
+using System.Runtime.CompilerServices;
 
 /*
  * Система позволяет кэшировать данные:
@@ -1470,6 +1471,7 @@ namespace FreeLibSet.Caching
       /// <param name="item">Элемент</param>
       /// <param name="clearPersist">Если true, то нужно удалить постоянный файл</param>
       /// <param name="keys">Ключи</param>
+      [MethodImpl(MethodImplOptions.NoInlining)] // для упрощения отладки
       private void DoClearItemInternal(InternalCacheItem item, bool clearPersist, string[] keys)
       {
         item.MemValue = null; // освобождаем память
@@ -1918,6 +1920,12 @@ namespace FreeLibSet.Caching
 
         internal DelayedClearInfo(InternalCacheItem item, bool clearPersist, string[] keys)
         {
+#if DEBUG
+          if (item == null)
+            throw new ArgumentNullException("item");
+          if (keys == null)
+            throw new ArgumentNullException("keys");
+#endif
           _Item = item;
           _ClearPersist = clearPersist;
           _Keys = keys;
@@ -1943,7 +1951,7 @@ namespace FreeLibSet.Caching
       /// Список объектов для асинхронного удаления.
       /// На момент обращения используется блокировка этого объекта, поэтому нет необходимости использовать SyncCollection 
       /// </summary>
-      private List<DelayedClearInfo> _DelayedClearList;
+      private readonly List<DelayedClearInfo> _DelayedClearList;
 
       /// <summary>
       /// Односекундный таймер для удаления объектов.
@@ -1986,7 +1994,8 @@ namespace FreeLibSet.Caching
                   }
                 }
 
-                if (_DelayedClearList.Count == 0)
+                if (_DelayedClearList.Count == 0 && 
+                  _DelayedClearTimer != null /* 07.02.2023 */)
                 {
                   _DelayedClearTimer.Dispose();
                   _DelayedClearTimer = null;
@@ -2015,6 +2024,7 @@ namespace FreeLibSet.Caching
       /// </summary>
       private Dictionary<Type, CacheStat> _TypeStats;
 
+      [MethodImpl(MethodImplOptions.NoInlining)] // для удобства отладки
       internal void IncStat(Type objType, CacheStatParam statParam)
       {
         lock (_TypeStats)
@@ -2164,6 +2174,12 @@ namespace FreeLibSet.Caching
 
       public InternalCacheItem(KeyDict parent, string parentKey)
       {
+#if DEBUG
+        if (parent == null)
+          throw new ArgumentNullException("parent");
+        if (String.IsNullOrEmpty(parentKey))
+          throw new ArgumentNullException("parentKey");
+#endif
         _Parent = parent;
         _ParentKey = parentKey;
       }
@@ -2176,7 +2192,7 @@ namespace FreeLibSet.Caching
       private readonly KeyDict _Parent;
 
       /// <summary>
-      /// Ключ последнего уровня, который используется в FDict для данного объекта
+      /// Ключ последнего уровня, который используется в <see cref="Parent"/> для данного объекта
       /// </summary>
       public string ParentKey { get { return _ParentKey; } }
       private readonly string _ParentKey;
@@ -2274,6 +2290,12 @@ namespace FreeLibSet.Caching
 
       public KeyDict(InternalCache cache, Type objType, KeyDict parent, string parentKey)
       {
+#if DEBUG
+        if (cache == null)
+          throw new ArgumentNullException("cache");
+        if (objType == null)
+          throw new ArgumentNullException("objType");
+#endif
         _Cache = cache;
         _ObjType = objType;
         _Parent = parent;

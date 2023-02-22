@@ -841,6 +841,12 @@ namespace FreeLibSet.Data
         {
           return _Source.LoadCachePages(request);
         }
+        catch (UserCancelException)
+        {
+          // 07.02.2023.
+          // Если пользователь прервал процесс, не надо пытаться ждать еще.
+          throw; 
+        }
         catch (Exception e)
         {
           // Сообщение об ошибке выдаем независимо от флага трассировки

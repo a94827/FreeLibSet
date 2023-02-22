@@ -172,6 +172,68 @@ namespace FreeLibSet.Forms
       CommandItems.PerformRefreshItems();
     }
 
+    /// <summary>
+    /// Если для управляющего элемента не было установлено свойство <see cref="TreeViewAdv.UseColumns"/> и
+    /// не было добавлено ни одного <see cref="NodeControl"/>, то для дерева добавляется значок свернутого/развернутого элемента и
+    /// текстовый узел, который выводит текстовое представление текущего узла.
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      if ((!Control.UseColumns))
+        InitDefaultNodeControls(); // 08.02.2023
+
+      if (_CheckBoxStorage != null && _CheckBoxControl != null)
+        _CheckBoxStorage.Attach(_CheckBoxControl);
+    }
+
+    /// <summary>
+    /// При отключении элемента отменяет регистрацию событий
+    /// </summary>
+    protected override void OnDetached()
+    {
+      if (_CheckBoxStorage != null && _CheckBoxControl != null)
+        _CheckBoxStorage.Detach(_CheckBoxControl);
+      base.OnDetached();
+    }
+
+    private void InitDefaultNodeControls()
+    {
+      bool hasNodeStateIcon = false;
+      bool hasNodeText = false;
+      foreach (NodeControl nc in Control.NodeControls)
+      {
+        if (nc is NodeStateIcon)
+          hasNodeStateIcon = true;
+        if (nc is BaseTextControl)
+          hasNodeText = true;
+      }
+
+      if (!hasNodeStateIcon)
+      {
+        NodeStateIcon ni = new NodeStateIcon();
+        Control.NodeControls.Add(ni);
+      }
+
+      if (!hasNodeText)
+      {
+        NodeTextBox tb = new NodeTextBox();
+        tb.VirtualMode = true;
+        tb.ValueNeeded += new EventHandler<NodeControlValueEventArgs>(DefaultTextBox_ValueNeeded);
+        tb.EditEnabled = false;
+        Control.NodeControls.Add(tb);
+      }
+    }
+
+    private void DefaultTextBox_ValueNeeded(object sender, NodeControlValueEventArgs args)
+    {
+      if (args.Node.Tag == null)
+        args.Value = "null";
+      else
+        args.Value = args.Node.Tag.ToString();
+    }
+
     #endregion
 
     #region Редактирование
@@ -225,7 +287,7 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<bool>(ReadOnly,ReadOnlyEx_ValueChanged);
+        _ReadOnlyEx = new DepInput<bool>(ReadOnly, ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
       }
     }
@@ -281,7 +343,7 @@ namespace FreeLibSet.Forms
     {
       if (_CanInsertEx == null)
       {
-        _CanInsertEx = new DepInput<bool>(CanInsert,CanInsertEx_ValueChanged);
+        _CanInsertEx = new DepInput<bool>(CanInsert, CanInsertEx_ValueChanged);
         _CanInsertEx.OwnerInfo = new DepOwnerInfo(this, "CanInsertEx");
       }
     }
@@ -338,7 +400,7 @@ namespace FreeLibSet.Forms
     {
       if (_CanInsertCopyEx == null)
       {
-        _CanInsertCopyEx = new DepInput<bool>(CanInsertCopy,CanInsertCopyEx_ValueChanged);
+        _CanInsertCopyEx = new DepInput<bool>(CanInsertCopy, CanInsertCopyEx_ValueChanged);
         _CanInsertCopyEx.OwnerInfo = new DepOwnerInfo(this, "CanInsertCopyEx");
       }
     }
@@ -394,7 +456,7 @@ namespace FreeLibSet.Forms
     {
       if (_CanDeleteEx == null)
       {
-        _CanDeleteEx = new DepInput<bool>(CanDelete,CanDeleteEx_ValueChanged);
+        _CanDeleteEx = new DepInput<bool>(CanDelete, CanDeleteEx_ValueChanged);
         _CanDeleteEx.OwnerInfo = new DepOwnerInfo(this, "CanDeleteEx");
       }
     }
@@ -681,16 +743,16 @@ namespace FreeLibSet.Forms
     /// Генератор столбцов таблицы. Если задан, то в локальном меню доступны
     /// команды настройки столбцов таблицы
     /// </summary>
-    public IEFPGridProducer GridProducer 
-    { 
-      get { return _GridProducer; } 
-      set 
+    public IEFPGridProducer GridProducer
+    {
+      get { return _GridProducer; }
+      set
       {
         if (value != null)
           value.SetReadOnly();
 
-        _GridProducer = value; 
-      } 
+        _GridProducer = value;
+      }
     }
     private IEFPGridProducer _GridProducer;
 
@@ -803,17 +865,96 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region IEFPTreeView Members
+    #region CheckBoxes
 
-    bool IEFPTreeView.CheckBoxes
+    /// <summary>
+    /// Включение или выключение флажков для отметки узлов.
+    /// Дублирует свойство <see cref="CheckBoxControl"/>.
+    /// При установке в true создает новый элемент <see cref="NodeCheckBox"/> для отображения флажков и добавляет его в коллекцию NodeControls.
+    /// При установке в false удаляет элемент <see cref="CheckBoxControl"/> из списка.
+    /// </summary>
+    public bool CheckBoxes
     {
-      get { return false; }
+      get { return CheckBoxControl != null; }
+      set
+      {
+        if (value == (CheckBoxControl != null))
+          return;
+        if (value)
+        {
+          NodeCheckBox cb = new NodeCheckBox();
+          cb.EditEnabled = true;
+          Control.NodeControls.Insert(0, cb);
+          CheckBoxControl = cb;
+          if (Control.UseColumns && Control.Columns.Count > 0)
+            cb.ParentColumn = Control.Columns[0];
+        }
+        else
+        {
+          Control.NodeControls.Remove(_CheckBoxControl);
+          _CheckBoxControl = null;
+        }
+
+        if (HasBeenCreated)
+          CommandItems.PerformRefreshItems();
+      }
     }
 
-    void IEFPTreeView.CheckAll(bool isChecked)
+    /// <summary>
+    /// Узел, который используется для установки отметок выбора узлов.
+    /// </summary>
+    public NodeCheckBox CheckBoxControl
     {
-      throw new NotImplementedException();
+      get { return _CheckBoxControl; }
+      set
+      {
+        if (object.ReferenceEquals(value, _CheckBoxControl))
+          return;
+
+        if (ProviderState == EFPControlProviderState.Attached && _CheckBoxStorage != null && _CheckBoxControl != null)
+          _CheckBoxStorage.Detach(_CheckBoxControl);
+
+        _CheckBoxControl = value;
+
+        if (ProviderState == EFPControlProviderState.Attached && _CheckBoxStorage != null && _CheckBoxControl != null)
+          _CheckBoxStorage.Attach(_CheckBoxControl);
+      }
     }
+    private NodeCheckBox _CheckBoxControl;
+
+    /// <summary>
+    /// Установка или снятие отметок со всех узлов.
+    /// Должно быть установлено свойство <see cref="CheckBoxes"/>=true.
+    /// </summary>
+    /// <param name="isChecked"></param>
+    public void CheckAll(bool isChecked)
+    {
+      if (_CheckBoxControl == null)
+        throw new InvalidOperationException("Свойство CheckBoxes не установлено");
+
+      foreach (TreeNodeAdv node in Control.AllNodes)
+      {
+        _CheckBoxControl.SetValue(node, isChecked);
+      }
+      Control.Invalidate();
+    }
+
+    /// <summary>
+    /// Хранилище для значений флажков выбора узлов.
+    /// Это свойство должно устанавливаться до показа элемента на экране.
+    /// Чтобы включить флажки, установите также свойство <see cref="CheckBoxes"/>.
+    /// </summary>
+    public EFPTreeViewAdvCheckBoxStorage CheckBoxStorage
+    {
+      get { return _CheckBoxStorage; }
+      set
+      {
+        if (ProviderState == EFPControlProviderState.Attached)
+          throw new InvalidOperationException("Нельзя устанавливать свойство, если управляющий элемент выведен на экран");
+        _CheckBoxStorage = value;
+      }
+    }
+    private EFPTreeViewAdvCheckBoxStorage _CheckBoxStorage;
 
     #endregion
 
@@ -1069,7 +1210,7 @@ namespace FreeLibSet.Forms
     /// <param name="mode">Режим доступа к дочерним узлам</param>
     /// <returns>Список тегов узлов</returns>
     public object[] GetSelectedNodeTags(EFPGetTreeNodesMode mode)
-    { 
+    {
       CorrectGetTreeNodesMode(ref mode);
       SingleScopeList<object> lst = new SingleScopeList<object>();
       foreach (TreeNodeAdv node in Control.SelectedNodes)
@@ -1081,7 +1222,7 @@ namespace FreeLibSet.Forms
         lst.Add(node.Tag);
         switch (mode)
         {
-          case EFPGetTreeNodesMode.NoChildren: 
+          case EFPGetTreeNodesMode.NoChildren:
             break;
           case EFPGetTreeNodesMode.AllInherited:
             AddAllInheritedTags(lst, Control.GetPath(node));
@@ -1258,18 +1399,21 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Хранилище значений флажков для TreeViewAdv NodeCheckBox.
-  /// Хранит перечислимые значения System.Windows.Forms.CheckState.
-  /// Хранилище присоединяется к столбцу и делает его виртуальным
+  /// Хранилище значений флажков для <see cref="EFPTreeViewAdv"/>.
+  /// Хранит перечислимые значения System.Windows.Forms.CheckState. Значения хранятся в привязке к свойству <see cref="TreeNodeAdv.Tag"/>,
+  /// тип которого зависит от используемой модели.
+  /// Чтобы использовать хранилище, создайте объект и установите свойства <see cref="EFPTreeViewAdv.CheckBoxes"/>=true
+  /// и <see cref="EFPTreeViewAdv.CheckBoxStorage"/>.
+  /// Хранилище можно использовать для нескольких элементов <see cref="EFPTreeViewAdv"/>.
   /// </summary>
-  public class TreeViewAdvCheckBoxStorage
+  public class EFPTreeViewAdvCheckBoxStorage
   {
     #region Конструктор
 
     /// <summary>
     /// Создает пустое хранилище
     /// </summary>
-    public TreeViewAdvCheckBoxStorage()
+    public EFPTreeViewAdvCheckBoxStorage()
     {
       _Dict = new Dictionary<object, CheckState>();
     }
@@ -1310,12 +1454,23 @@ namespace FreeLibSet.Forms
     /// Присоединяет хранилище к столбцу древовидного просмотра
     /// </summary>
     /// <param name="control">Столбец с флажками</param>
-    public void InitControl(NodeCheckBox control)
+    internal void Attach(NodeCheckBox control)
     {
       control.VirtualMode = true;
-      control.ValueNeeded += new EventHandler<NodeControlValueEventArgs>(Control_ValueNeeded);
-      control.ValuePushed += new EventHandler<NodeControlValueEventArgs>(Control_ValuePushed);
+      control.ValueNeeded += Control_ValueNeeded;
+      control.ValuePushed += Control_ValuePushed;
     }
+
+    /// <summary>
+    /// Отсоединяет хранилище от столбца древовидного просмотра
+    /// </summary>
+    /// <param name="control">Столбец с флажками</param>
+    internal void Detach(NodeCheckBox control)
+    {
+      control.ValueNeeded -= Control_ValueNeeded;
+      control.ValuePushed -= Control_ValuePushed;
+    }
+
 
     void Control_ValueNeeded(object sender, NodeControlValueEventArgs args)
     {
@@ -1324,7 +1479,10 @@ namespace FreeLibSet.Forms
 
     void Control_ValuePushed(object sender, NodeControlValueEventArgs args)
     {
-      this[args.Node.Tag] = (CheckState)(args.Value);
+      if (args.Value is CheckState)
+        this[args.Node.Tag] = (CheckState)(args.Value);
+      else
+        this[args.Node.Tag] = DataTools.GetBool(args.Value) ? CheckState.Checked : CheckState.Unchecked; // 09.02.2023
     }
 
     #endregion

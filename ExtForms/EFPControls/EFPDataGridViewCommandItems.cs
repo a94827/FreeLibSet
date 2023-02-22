@@ -62,7 +62,7 @@ namespace FreeLibSet.Forms
   /// Стандартные форматы копирования табличного просмотра в буфер обмена
   /// </summary>
   [Flags]
-  public enum EFPDataGridViewCopyFormats
+  public enum EFPDataViewCopyFormats
   {
     /// <summary>
     /// Текстовый формат.
@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// CSV-формат.
-    /// Стобцы отделяются друг от друга знаком ";". Значения заключаются в кавычки по необходимости
+    /// Столбцы отделяются друг от друга знаком ";". Значения заключаются в кавычки по необходимости
     /// </summary>
     CSV = 0x02,
 
@@ -145,7 +145,7 @@ namespace FreeLibSet.Forms
       _UseSelectAll = true;
       _UseRowErrors = true;
       _UseRowErrorsListView = true;
-      _CopyFormats = EFPDataGridViewCopyFormats.All;
+      _CopyFormats = EFPDataViewCopyFormats.All;
 
       #endregion
 
@@ -708,10 +708,6 @@ namespace FreeLibSet.Forms
       ciSendToOpenOfficeCalc.Visible = EFPDataGridView.CanSendToOpenOfficeCalc;
 
       PerformRefreshItems();
-
-
-      // 14.08.2012 Добавляем обработчики
-      ControlProvider.AfterControlAssigned();
     }
 
     #endregion
@@ -1279,7 +1275,7 @@ namespace FreeLibSet.Forms
     /// Можно отключить стандартные форматы копирования, если необходимо копировать данные в нестандартном формате.
     /// Тогда эти форматы можно добавить в обработчике AddCopyFormats
     /// </summary>
-    public EFPDataGridViewCopyFormats CopyFormats
+    public EFPDataViewCopyFormats CopyFormats
     {
       get { return _CopyFormats; }
       set
@@ -1288,7 +1284,7 @@ namespace FreeLibSet.Forms
         _CopyFormats = value;
       }
     }
-    private EFPDataGridViewCopyFormats _CopyFormats;
+    private EFPDataViewCopyFormats _CopyFormats;
 
     /// <summary>
     /// Обработчик может добавить при копировании в буфер обмена дополнительные форматы
@@ -1344,18 +1340,18 @@ namespace FreeLibSet.Forms
           DataObject dobj2 = new DataObject();
           //dobj2.SetText(txt, TextDataFormat.UnicodeText);
 
-          if ((CopyFormats & (EFPDataGridViewCopyFormats.Text | EFPDataGridViewCopyFormats.CSV)) != 0)
+          if ((CopyFormats & (EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV)) != 0)
           {
             EFPDataGridViewRectArea area = ControlProvider.GetRectArea(EFPDataGridViewExpRange.Selected);
             string[,] a = ControlProvider.GetCellTextValues(area);
 
-            if ((CopyFormats & EFPDataGridViewCopyFormats.Text) == EFPDataGridViewCopyFormats.Text)
+            if ((CopyFormats & EFPDataViewCopyFormats.Text) == EFPDataViewCopyFormats.Text)
             {
               txt = new TabTextConvert().ToString(a);
               dobj2.SetData(DataFormats.Text, true, txt);
             }
 
-            if ((CopyFormats & EFPDataGridViewCopyFormats.CSV) == EFPDataGridViewCopyFormats.CSV)
+            if ((CopyFormats & EFPDataViewCopyFormats.CSV) == EFPDataViewCopyFormats.CSV)
             {
               txt = new CsvTextConvert().ToString(a);
               if (!String.IsNullOrEmpty(txt))
@@ -1363,7 +1359,7 @@ namespace FreeLibSet.Forms
             }
           }
 
-          if ((CopyFormats & EFPDataGridViewCopyFormats.HTML) == EFPDataGridViewCopyFormats.HTML)
+          if ((CopyFormats & EFPDataViewCopyFormats.HTML) == EFPDataViewCopyFormats.HTML)
           {
             // HTML-формат собираем сами
             EFPDataGridViewExpHtmlSettings settings = new EFPDataGridViewExpHtmlSettings();

@@ -232,9 +232,6 @@ namespace FreeLibSet.Forms
       ciSendToOpenOfficeCalc.Visible = false;
 
       PerformRefreshItems();
-
-      // 14.08.2012 Добавляем обработчики
-      ControlProvider.AfterControlAssigned();
     }
 
     #endregion

@@ -256,7 +256,7 @@ namespace FreeLibSet.Forms
       wrt.Flush();
       strm.Flush();
       strm.Seek(0, SeekOrigin.End);
-      int PosOff = (int)(strm.Position);
+      int posOff = (int)(strm.Position);
 
       if (useFragment)
       {
@@ -368,10 +368,10 @@ namespace FreeLibSet.Forms
       strm.Flush();
       if (useFragment)
       {
-        WriteHtmlOff(strm, PosWrStartHtml + PosOff, offStartHtml - PosOff);
-        WriteHtmlOff(strm, PosWrEndHtml + PosOff, OffEndHtml - PosOff);
-        WriteHtmlOff(strm, PosWrStartFragment + PosOff, OffStartFragment - PosOff);
-        WriteHtmlOff(strm, PosWrEndFragment + PosOff, offEndFragment - PosOff);
+        WriteHtmlOff(strm, PosWrStartHtml + posOff, offStartHtml - posOff);
+        WriteHtmlOff(strm, PosWrEndHtml + posOff, OffEndHtml - posOff);
+        WriteHtmlOff(strm, PosWrStartFragment + posOff, OffStartFragment - posOff);
+        WriteHtmlOff(strm, PosWrEndFragment + posOff, offEndFragment - posOff);
       }
     }
 
