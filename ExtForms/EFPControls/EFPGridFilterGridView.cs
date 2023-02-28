@@ -28,6 +28,8 @@ namespace FreeLibSet.Forms
     {
       base.DisplayName = "FilterGrid";
       InitFilterGrid();
+
+      _CellDoubleClick_FilterIndex = -1;
     }
 
     /// <summary>
@@ -76,7 +78,7 @@ namespace FreeLibSet.Forms
         col1.Visible = false; // 14.09.2016
 
       Control.Click += new EventHandler(Control_Click);
-      Control.CellDoubleClick += new DataGridViewCellEventHandler(FFilterGrid_CellDoubleClick);
+      Control.CellDoubleClick += new DataGridViewCellEventHandler(Control_CellDoubleClick);
 
       RowCount = 0;
       Control.Visible = true; // сами управляем
@@ -100,14 +102,33 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Запоминаем индекс фильтра между обработчиком двойного щелчка и обработчиком события Idle
+    /// </summary>
+    private int _CellDoubleClick_FilterIndex;
+
+    /// <summary>
     /// Двойной щелчок в таблице установленных фильров выводит окно установки фильтров
     /// </summary>
-    void FFilterGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs args)
+    void Control_CellDoubleClick(object sender, DataGridViewCellEventArgs args)
+    {
+      if (_CellDoubleClick_FilterIndex >= 0)
+        return; // Много щелчков мыши
+
+      _CellDoubleClick_FilterIndex = args.RowIndex;
+      EFPApp.IdleHandlers.AddSingleAction(DoCellDoubleClick);
+    }
+
+    private void DoCellDoubleClick(object sender, EventArgs args)
     {
       try
       {
+        int filterIndex = _CellDoubleClick_FilterIndex;
+        _CellDoubleClick_FilterIndex = -1;
+        if (filterIndex < 0 || filterIndex >= RowCount)
+          return;
+
         SelectMainControl();
-        OnDoubleClick(args.RowIndex);
+        OnDoubleClick(filterIndex);
       }
       catch (Exception e)
       {
@@ -137,7 +158,7 @@ namespace FreeLibSet.Forms
       {
         Control.RowCount = value;
         if (HasBeenCreated) // условие добавлено 09.07.2019
-          if (ProviderState==EFPControlProviderState.Attached) // 19.08.2021
+          if (ProviderState == EFPControlProviderState.Attached) // 19.08.2021
             Control.Visible = value > 0;
         if (value > 0)
           Control.Height = 4 + value * Control.RowTemplate.Height;
@@ -378,11 +399,11 @@ namespace FreeLibSet.Forms
     {
       get { return _Filters; }
       set
-      { 
-        if (value==null)
-          value =_EmptyFilters;
+      {
+        if (value == null)
+          value = _EmptyFilters;
 
-        _Filters=value;
+        _Filters = value;
         RowCount = value.Length;
         for (int i = 0; i < value.Length; i++)
           SetRow(i, value[i].DisplayName, value[i].Value, value[i].ImageKey);

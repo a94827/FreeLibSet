@@ -13,6 +13,7 @@ using FreeLibSet.Controls;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Logging;
 
 namespace FreeLibSet.Forms
 {
@@ -184,8 +185,6 @@ namespace FreeLibSet.Forms
       if ((!Control.UseColumns))
         InitDefaultNodeControls(); // 08.02.2023
 
-      if (_CheckBoxStorage != null && _CheckBoxControl != null)
-        _CheckBoxStorage.Attach(_CheckBoxControl);
     }
 
     /// <summary>
@@ -193,8 +192,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnDetached()
     {
-      if (_CheckBoxStorage != null && _CheckBoxControl != null)
-        _CheckBoxStorage.Detach(_CheckBoxControl);
       base.OnDetached();
     }
 
@@ -911,12 +908,18 @@ namespace FreeLibSet.Forms
         if (object.ReferenceEquals(value, _CheckBoxControl))
           return;
 
-        if (ProviderState == EFPControlProviderState.Attached && _CheckBoxStorage != null && _CheckBoxControl != null)
+        if (_CheckBoxStorage != null && _CheckBoxControl != null)
           _CheckBoxStorage.Detach(_CheckBoxControl);
+
+        if (_CheckBoxControl!=null)
+          _CheckBoxControl.CheckStateChanged -= CheckBoxControl_CheckStateChanged;
 
         _CheckBoxControl = value;
 
-        if (ProviderState == EFPControlProviderState.Attached && _CheckBoxStorage != null && _CheckBoxControl != null)
+        if (_CheckBoxControl != null)
+          _CheckBoxControl.CheckStateChanged += CheckBoxControl_CheckStateChanged;
+
+        if (_CheckBoxStorage != null && _CheckBoxControl != null)
           _CheckBoxStorage.Attach(_CheckBoxControl);
       }
     }
@@ -934,7 +937,7 @@ namespace FreeLibSet.Forms
 
       foreach (TreeNodeAdv node in Control.AllNodes)
       {
-        _CheckBoxControl.SetValue(node, isChecked);
+        _CheckBoxControl.SetChecked(node, isChecked);
       }
       Control.Invalidate();
     }
@@ -951,10 +954,190 @@ namespace FreeLibSet.Forms
       {
         if (ProviderState == EFPControlProviderState.Attached)
           throw new InvalidOperationException("Нельзя устанавливать свойство, если управляющий элемент выведен на экран");
+
+        if (Object.ReferenceEquals(_CheckBoxStorage, value))
+          return;
+
+        if (_CheckBoxStorage != null && _CheckBoxControl != null)
+          _CheckBoxStorage.Detach(_CheckBoxControl);
+
         _CheckBoxStorage = value;
+
+        if (_CheckBoxStorage != null && _CheckBoxControl != null)
+          _CheckBoxStorage.Attach(_CheckBoxControl);
       }
     }
     private EFPTreeViewAdvCheckBoxStorage _CheckBoxStorage;
+
+
+    /// <summary>
+    /// Режим взаимосвязанной установки флажков, когда свойство CheckBoxes=true.
+    /// По умолчанию - None - флажки не влияют друг на друга
+    /// </summary>
+    public EFPTreeViewAutoCheckMode AutoCheckMode
+    {
+      get { return _AutoCheckMode; }
+      set
+      {
+        CheckHasNotBeenCreated();
+        switch (value)
+        {
+          case EFPTreeViewAutoCheckMode.None:
+          case EFPTreeViewAutoCheckMode.ParentsAndChildren:
+            break;
+          default:
+            throw new ArgumentException();
+        }
+
+        _AutoCheckMode = value;
+      }
+    }
+    private EFPTreeViewAutoCheckMode _AutoCheckMode;
+
+
+    private bool _InsideAfterCheck = false;
+    private bool _CheckBoxControl_CheckStateChanged_ExceptionShown = false;
+
+    private void CheckBoxControl_CheckStateChanged(object sender, TreePathEventArgs args)
+    {
+      if (_AutoCheckMode == EFPTreeViewAutoCheckMode.ParentsAndChildren)
+      {
+        if (_InsideAfterCheck)
+          return;
+        _InsideAfterCheck = true;
+        try
+        {
+          try
+          {
+            TreeNodeAdv node = Control.FindNode(args.Path, true);
+            if (node == null)
+              throw new BugException();
+            DoAfterCheck(node, true);
+          }
+          catch (Exception e)
+          {
+            if (!_CheckBoxControl_CheckStateChanged_ExceptionShown)
+            {
+              _CheckBoxControl_CheckStateChanged_ExceptionShown = true;
+              LogoutTools.LogoutException(e, "CheckBoxControl_CheckStateChanged");
+            }
+            EFPApp.ShowTempMessage(e.Message);
+          }
+        }
+        finally
+        {
+          _InsideAfterCheck = false;
+        }
+      }
+    }
+
+    private void DoAfterCheck(TreeNodeAdv node, bool isRequrse)
+    {
+      switch (AutoCheckMode)
+      {
+        case EFPTreeViewAutoCheckMode.ParentsAndChildren:
+          if (CheckBoxControl.GetChecked(node))
+          {
+            for (int i = 0; i < node.Nodes.Count; i++)
+              DoSetCheckedChildren(node.Nodes[i], true, true);
+            if (node.Parent != null)
+            {
+              if (AreAllChildNodesChecked(node.Parent))
+                DoSetCheckedChildren(node.Parent, true, true);
+            }
+          }
+          else
+          {
+            if (isRequrse)
+            {
+              for (int i = 0; i < node.Nodes.Count; i++)
+                DoSetCheckedChildren(node.Nodes[i], false, true);
+            }
+            if (node.Parent != null)
+              DoSetCheckedChildren(node.Parent, false, false);
+          }
+          break;
+        case EFPTreeViewAutoCheckMode.None:
+          break;
+        default:
+          throw new BugException("Неизвестный режим");
+      }
+    }
+
+    private void DoSetCheckedChildren(TreeNodeAdv node, bool isChecked, bool isRequrse)
+    {
+      if (node.Parent == null) // скрытый корневой узел
+        return; // 28.02.2023
+      if (CheckBoxControl.GetChecked(node) == isChecked)
+        return;
+      CheckBoxControl.SetChecked(node, isChecked);
+      DoAfterCheck(node, isRequrse);
+    }
+
+    /// <summary>
+    /// Возвращает true, если у всех дочерних узлов данного узла установлены отметки.
+    /// Наличие отметки у самого узла <paramref name="node"/> не проверяется.
+    /// Метод НЕ является рекусивным.
+    /// </summary>
+    /// <param name="node">Родительский узел для проверяемых узлов</param>
+    /// <returns>truem </returns>
+    public bool AreAllChildNodesChecked(TreeNodeAdv node)
+    {
+      if (CheckBoxControl == null)
+        return false;
+      for (int i = 0; i < node.Nodes.Count; i++)
+      {
+        if (!CheckBoxControl.GetChecked(node.Nodes[i]))
+          return false;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Перебирает все узлы дерева. Если узел отмечен, то проверяется, что все его родительские узлы развернуты.
+    /// Сам отмеченный узел не разворачивается.
+    /// Свойство <see cref="CheckBoxes"/> должно быть установлено.
+    /// Модель дерева должна быть присоединена.
+    /// </summary>
+    public void ExpandToCheckedNodes()
+    {
+      if (CheckBoxControl == null)
+        throw new InvalidOperationException("Свойство CheckBoxControl не установлено");
+
+      foreach (TreeNodeAdv node in Control.AllNodes)
+      {
+        if (CheckBoxControl.GetChecked(node))
+        {
+          TreeNodeAdv node2 = node.Parent;
+          while (node2 != null)
+          {
+            node2.IsExpanded = true;
+            node2 = node2.Parent;
+          }
+        }
+      }
+    }
+
+    /// <summary>
+    /// Выбирает первый отмеченный узел.
+    /// Свойство <see cref="CheckBoxes"/> должно быть установлено.
+    /// Модель дерева должна быть присоединена.
+    /// </summary>
+    public void SelectFirstCheckedNode()
+    { 
+      if (CheckBoxControl == null)
+        throw new InvalidOperationException("Свойство CheckBoxControl не установлено");
+
+      foreach (TreeNodeAdv node in Control.AllNodes)
+      {
+        if (CheckBoxControl.GetChecked(node))
+        {
+          Control.EnsureVisible(node);
+          node.IsSelected = true;
+          return;
+        }
+      }
+    }
 
     #endregion
 
@@ -1434,6 +1617,8 @@ namespace FreeLibSet.Forms
     {
       get
       {
+        if (tag == null)
+          return CheckState.Unchecked; // 27.02.2023
         CheckState res;
         if (_Dict.TryGetValue(tag, out res))
           return res;
@@ -1442,6 +1627,8 @@ namespace FreeLibSet.Forms
       }
       set
       {
+        if (tag == null)
+          throw new ArgumentNullException("tag");
         _Dict[tag] = value;
       }
     }

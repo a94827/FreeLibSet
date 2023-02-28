@@ -189,7 +189,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим взаимосвязанной установки флажков, когда свойство CheckBoxes=true.
-    /// По умолчанию - none - флажки не влияют друг на друга
+    /// По умолчанию - None - флажки не влияют друг на друга
     /// </summary>
     public EFPTreeViewAutoCheckMode AutoCheckMode
     {
@@ -245,10 +245,9 @@ namespace FreeLibSet.Forms
       switch (AutoCheckMode)
       {
         case EFPTreeViewAutoCheckMode.ParentsAndChildren:
-          int i;
           if (node.Checked)
           {
-            for (i = 0; i < node.Nodes.Count; i++)
+            for (int i = 0; i < node.Nodes.Count; i++)
               DoSetCheckedChildren(node.Nodes[i], true, true);
             if (node.Parent != null)
             {
@@ -260,7 +259,7 @@ namespace FreeLibSet.Forms
           {
             if (isRequrse)
             {
-              for (i = 0; i < node.Nodes.Count; i++)
+              for (int i = 0; i < node.Nodes.Count; i++)
                 DoSetCheckedChildren(node.Nodes[i], false, true);
             }
             if (node.Parent != null)

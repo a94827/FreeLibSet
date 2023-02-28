@@ -5,7 +5,7 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2023-02-22T16:51:59.416000000"/>
+	<meta name="changed" content="2023-02-28T14:01:37.364000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -251,6 +251,44 @@
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">341</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">27.02.2023-28.02.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">TreeViewAdv.GetCheckState() </span><span lang="ru-RU">и
+			</span><span lang="en-US">SetCheckState() </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v092p2"><span lang="en-US">v.92
+			п.2</span></a><span lang="ru-RU">) сделаны </span><span lang="en-US">public.
+			М</span><span lang="ru-RU">етоды </span><span lang="en-US">GetChecked()
+			</span><span lang="ru-RU">и </span><span lang="en-US">SetChecked()</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">EFPTreeViewAdv.AutoCheckMode </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v092p3"><span lang="en-US">v.92
+			</span><span lang="ru-RU">п.3</span></a><span lang="en-US">, <a href="ExtForms_11.htm#v132p3">v.132
+			</a></span><span lang="ru-RU"><a href="ExtForms_11.htm#v132p3">п.3</a>)
+			</span>
+			</p>
+			<p><span lang="ru-RU">3. Методы
+			</span><span lang="en-US">EFPTreeViewAdv.ExpandToCheckedNodes(),
+			SelectFirstCheckedNode(). </span><span lang="ru-RU">Изменено
+			присоединение обработчиков получения/установки отметок для столбца
+			</span><span lang="en-US">CheckBoxControl (<a href="#v340p3">v.340
+			</a></span><a href="#v340p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">),
+			</span><span lang="ru-RU">чтобы методы работы с отметками работали
+			до и после показа формы, а не только при
+			</span><span lang="en-US">EFPTreeViewAdv.ControlState=Attached.</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">Обработка
+			двойного щелчка мыши по табличке фильтров вызывает
+			</span><span lang="en-US">EFPBaseFilterGridView.OnDoubleClick()
+			</span><span lang="ru-RU">через событие </span><span lang="en-US">Idle,
+			</span><span lang="ru-RU">а не немедленно. Переопределенный метод
+			может менять количество строк в табличке, что иногда приводит к
+			возникновению исключения.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

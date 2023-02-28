@@ -122,7 +122,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     /// </summary>
     /// <param name="node">Узел</param>
     /// <returns>Состояние флажка</returns>
-    protected virtual CheckState GetCheckState(TreeNodeAdv node)
+    public virtual CheckState GetCheckState(TreeNodeAdv node)
     {
       object obj = GetValue(node);
       if (obj is CheckState)
@@ -138,7 +138,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     /// </summary>
     /// <param name="node">Узел</param>
     /// <param name="value">Состояние флажка</param>
-    protected virtual void SetCheckState(TreeNodeAdv node, CheckState value)
+    public virtual void SetCheckState(TreeNodeAdv node, CheckState value)
     {
       if (VirtualMode)
       {
@@ -159,6 +159,26 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
           OnCheckStateChanged(node);
         }
       }
+    }
+
+    /// <summary>
+    /// Возвращает состояние флажка для узла с помощью вызова GetValue().
+    /// </summary>
+    /// <param name="node">Узел</param>
+    /// <returns>Состояние флажка</returns>
+    public bool GetChecked(TreeNodeAdv node)
+    {
+      return GetCheckState(node) != CheckState.Unchecked;
+    }
+
+    /// <summary>
+    /// Устанавливает состояние флажка для узла с помощью вызова SetValue().
+    /// </summary>
+    /// <param name="node">Узел</param>
+    /// <param name="value">Состояние флажка</param>
+    public void SetChecked(TreeNodeAdv node, bool value)
+    {
+      SetCheckState(node, value ? CheckState.Checked : CheckState.Unchecked);
     }
 
     /// <summary>
