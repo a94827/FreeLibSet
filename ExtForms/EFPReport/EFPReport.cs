@@ -887,7 +887,12 @@ namespace FreeLibSet.Forms
             _TheMainPanel.Controls.Add(_TheMainPanel2);
             Pages[0].AssignParentControl(_TheMainPanel2);
             if (_TheForm != null)
-              _TheForm.FormProvider.HelpContext = Pages[0].HelpContext;
+            {
+              if (!String.IsNullOrEmpty(Pages[0].HelpContext))
+                _TheForm.FormProvider.HelpContext = Pages[0].HelpContext;
+              else
+                _TheForm.FormProvider.HelpContext = this.HelpContext; // 01.03.2023
+            }
             // Страница становится активной
             Pages[0].OnPageSelected();
           }
