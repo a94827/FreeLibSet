@@ -5,9 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
 using System.Diagnostics;
-using AgeyevAV;
+using FreeLibSet.Core;
+using FreeLibSet.Forms;
 
 namespace FIASDemo
 {

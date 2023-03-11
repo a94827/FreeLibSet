@@ -22,12 +22,12 @@ namespace ExtTools_tests.Parsing
     [TestCase("-2", -2)]
     [TestCase("-2+3", 1)]
     [TestCase("-2-3", -5)]
-    [TestCase("2--3", 5, Ignore = true, IgnoreReason = "Unary op at the right side io binary op is not implemented yet")]
-    [TestCase("2-+3", -1, Ignore = true, IgnoreReason = "Unary op at the right side io binary op is not implemented yet")]
+    [TestCase("2--3", 5)]
+    [TestCase("2-+3", -1)]
     [TestCase("+(5-3)", 2)]
     [TestCase("-(5-3)", -2)]
-    [TestCase("3*+2", 6, Ignore = true, IgnoreReason = "Unary op at the right side io binary op is not implemented yet")]
-    [TestCase("3*-2", -6, Ignore = true, IgnoreReason = "Unary op at the right side io binary op is not implemented yet")]
+    [TestCase("3*+2", 6)]
+    [TestCase("3*-2", -6)]
     [TestCase("3*(+2)", 6)]
     [TestCase("3*(-2)", -6)]
     [TestCase("(+2)*3", 6)]
@@ -54,6 +54,21 @@ namespace ExtTools_tests.Parsing
     [TestCase("(MAX(1,3)+3)*MIN(2,3)", 12)]
     [TestCase("MAX((2+MIN(1,2))*2,1)", 6)]
     public void MathExpressions(string expr, object wantedRes)
+    {
+      DoEvaluateAllTypes(expr, wantedRes);
+    }
+
+    [TestCase(" 8-2", 6)]
+    [TestCase("8-2 ", 6)]
+    [TestCase("8 - 2", 6)]
+    [TestCase("8  -  2", 6)]
+    [TestCase("8- 2", 6)]
+    [TestCase("8 -2", 6)]
+    [TestCase("2- -3", 5)]
+    [TestCase("2 --3", 5)]
+    [TestCase("+ (5-3)", 2)]
+    [TestCase("- (5-3)", -2)]
+    public void MathExpressions_withSpaces(string expr, object wantedRes)
     {
       DoEvaluateAllTypes(expr, wantedRes);
     }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Config;
 using System.Data;
-using AgeyevAV.FIAS;
-using AgeyevAV;
-using AgeyevAV.ExtForms.FIAS;
+using FreeLibSet.Forms;
+using FreeLibSet.Config;
+using FreeLibSet.FIAS;
+using FreeLibSet.Core;
+using FreeLibSet.Forms.FIAS;
+using FreeLibSet.UICore;
+using FreeLibSet.Controls;
 
 namespace FIASDemo
 {
@@ -33,7 +35,7 @@ namespace FIASDemo
       lbl.Icon = System.Windows.Forms.MessageBoxIcon.Information;
       lbl.IconSize = MessageBoxIconSize.Large;
 
-      FormProvider.AddFormCheck(new EFPValidatingEventHandler(CheckForm));
+      FormProvider.AddFormCheck(new UIValidatingEventHandler(CheckForm));
     }
 
     public EFPDataGridView efpGrid;
@@ -94,7 +96,7 @@ namespace FIASDemo
       TableChanged = false;
     }
 
-    private void CheckForm(object sender, EFPValidatingEventArgs args)
+    private void CheckForm(object sender, UIValidatingEventArgs args)
     {
       if (efpGrid.CurrentDataRow == null)
         args.SetError("База данных должна быть выбрана");

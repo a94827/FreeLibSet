@@ -5,8 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.FIAS;
+using FreeLibSet.Forms;
+using FreeLibSet.FIAS;
+using FreeLibSet.Forms.Diagnostics;
 
 namespace FIASDemo
 {
@@ -18,7 +19,7 @@ namespace FIASDemo
     {
       InitializeComponent();
 
-      Icon = EFPApp.MainImageIcon("Font");
+      Icon = EFPApp.MainImages.Icons["Font"];
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
       cbFormat.Items.AddRange(FiasFormatStringParser.ComponentTypes);
@@ -51,7 +52,7 @@ namespace FIASDemo
 
     #region Обработчик
 
-    private AgeyevAV.Parsing.ParsingData pd;
+    private FreeLibSet.Parsing.ParsingData pd;
 
     private void efpFormat_TextChanged(object sender, EventArgs args)
     {

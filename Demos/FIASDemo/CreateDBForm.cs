@@ -5,12 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.ExtDB;
-using AgeyevAV.ExtForms.FIAS;
 using System.Data.Common;
-using AgeyevAV.IO;
-using AgeyevAV;
+using FreeLibSet.Forms;
+using FreeLibSet.Forms.FIAS;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
+using FreeLibSet.Data;
 
 namespace FIASDemo
 {
@@ -21,10 +21,10 @@ namespace FIASDemo
     public CreateDBForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Insert");
+      Icon = EFPApp.MainImages.Icons["Insert"];
 
-      EFPFormProvider efpForm=new EFPFormProvider(this);
-      TheTabControl.ImageList = EFPApp.MainImages;
+      EFPFormProvider efpForm = new EFPFormProvider(this);
+      TheTabControl.ImageList = EFPApp.MainImages.ImageList;
 
       #region База данных
 
@@ -33,7 +33,7 @@ namespace FIASDemo
       efpName = new EFPTextBox(efpForm, edName);
       efpName.CanBeEmpty = false;
 
-      cbProvider.Items.AddRange(new string[]{DBxProviderNames.SQLite, DBxProviderNames.Npgsql, DBxProviderNames.Sql});
+      cbProvider.Items.AddRange(new string[] { DBxProviderNames.SQLite, DBxProviderNames.Npgsql, DBxProviderNames.Sql });
       efpProvider = new EFPListComboBox(efpForm, cbProvider);
       efpProvider.CanBeEmpty = false;
 
@@ -67,7 +67,7 @@ namespace FIASDemo
     void efpBuildConnection_Click(object sender, EventArgs args)
     {
       switch (efpProvider.SelectedItemString)
-      { 
+      {
         case "":
           EFPApp.ShowTempMessage("Провайдер не выбран");
           break;
@@ -95,7 +95,7 @@ namespace FIASDemo
       dlg.Title = "База данных SQLite";
       object x;
       csb.TryGetValue("Data Source", out x);
-      string s=DataTools.GetString(x);
+      string s = DataTools.GetString(x);
       if (s.Length > 0)
         dlg.FileName = s;
       else

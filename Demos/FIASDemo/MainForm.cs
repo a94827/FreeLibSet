@@ -5,15 +5,16 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.FIAS;
-using AgeyevAV.IO;
-using AgeyevAV.DBF;
-using AgeyevAV.ExtForms.FIAS;
-using AgeyevAV;
-using AgeyevAV.Config;
-using AgeyevAV.ExtDB;
 using System.Data.Common;
+using FreeLibSet.Forms;
+using FreeLibSet.FIAS;
+using FreeLibSet.IO;
+using FreeLibSet.DBF;
+using FreeLibSet.Forms.FIAS;
+using FreeLibSet.Core;
+using FreeLibSet.Config;
+using FreeLibSet.Data;
+using FreeLibSet.UICore;
 
 namespace FIASDemo
 {
@@ -48,7 +49,7 @@ namespace FIASDemo
       efpReadOnly = new EFPCheckBox(efpForm, cbReadOnly);
       efpReadOnly.Checked = cfg.GetBool("AddressReadOnly");
 
-      efpEmptyMode = new EFPListComboBox(efpForm, cbEmpyMode);
+      efpEmptyMode = new EFPListComboBox(efpForm, cbEmptyMode);
       efpEmptyMode.SelectedIndex = cfg.GetInt("EmptyMode");
 
       efpPartialMode = new EFPListComboBox(efpForm, cbPartialMode);
@@ -134,7 +135,7 @@ namespace FIASDemo
 
       #region Вкладка "Классификатор"
 
-      efpActualDate = new EFPDateBox(efpForm, edActualDate);
+      efpActualDate = new EFPDateTimeBox(efpForm, edActualDate);
       efpActualDate.ReadOnly = true;
 
       efpAddrObCount = new EFPLabel(efpForm, lblAddrObCount);
@@ -165,6 +166,9 @@ namespace FIASDemo
 
       InitDBStat();
 
+
+      EFPButton efpTest = new EFPButton(efpForm, btnTest);
+      efpTest.Click += new EventHandler(efpTest_Click);
 
       #endregion
 
@@ -336,13 +340,15 @@ namespace FIASDemo
       dlg.PostalCodeEditable = efpManualPostalCode.Checked;
       switch (efpEmptyMode.SelectedIndex)
       {
-        case 0: dlg.CanBeEmpty = true; break;
-        case 2: dlg.CanBeEmpty = true; dlg.WarningIfEmpty = true; break;
+        case 0: dlg.CanBeEmptyMode = UIValidateState.Ok; break;
+        case 1: dlg.CanBeEmptyMode = UIValidateState.Error; break;
+        case 2: dlg.CanBeEmptyMode = UIValidateState.Warning; break;
       }
       switch (efpPartialMode.SelectedIndex)
       {
-        case 0: dlg.CanBePartial = true; break;
-        case 2: dlg.CanBePartial = true; dlg.WarningIfPartial = true; break;
+        case 0: dlg.CanBePartialMode = UIValidateState.Ok; break;
+        case 1: dlg.CanBePartialMode = UIValidateState.Error; break;
+        case 2: dlg.CanBePartialMode = UIValidateState.Warning; break;
       }
       dlg.ReadOnly = efpReadOnly.Checked;
       dlg.Address = CurrAddress;
@@ -376,7 +382,7 @@ namespace FIASDemo
     /// </summary>
     private FiasUI UI;
 
-    EFPDateBox efpActualDate;
+    EFPDateTimeBox efpActualDate;
 
     EFPLabel efpAddrObCount, efpHouseCount, efpRoomCount;
 
@@ -425,7 +431,7 @@ namespace FIASDemo
       if (EFPApp.ShowDialog(dlg) != DialogResult.OK)
         return;
 
-      DateInputDialog dlg2 = new DateInputDialog();
+      DateTimeInputDialog dlg2 = new DateTimeInputDialog();
       dlg2.Title = "Загрузка файлов";
       dlg2.Prompt = "Дата актуальности обновления";
       dlg2.CanBeEmpty = false;
@@ -441,7 +447,7 @@ namespace FIASDemo
         using (FiasDBUpdater up = new FiasDBUpdater(fiasDB))
         {
           up.Splash = spl;
-          cntFiles = up.LoadDir(new AbsPath(dlg.SelectedPath), dlg2.Value.Value);
+          cntFiles = up.LoadDir(new AbsPath(dlg.SelectedPath), dlg2.Value);
         }
 
         TimeSpan time = DateTime.Now - startTime;
@@ -504,7 +510,7 @@ namespace FIASDemo
           spl.PhaseText = fp.FileName;
           if (fp.FileNameWithoutExtension.StartsWith("addrob", StringComparison.OrdinalIgnoreCase))
           {
-            using (DbfFile dbf = new DbfFile(aFiles[i]))
+            using (DbfFile dbf = new DbfFile(new AbsPath(aFiles[i])))
             {
               while (dbf.Read())
               {
@@ -741,7 +747,7 @@ namespace FIASDemo
         _Convert.GuidMode = guidMode;
 
         Text = "Результаты поиска адресов (" + lines.Length.ToString() + ")";
-        Icon = EFPApp.MainImageIcon("Find");
+        Icon = EFPApp.MainImages.Icons["Find"];
 
         gh = new EFPDataGridView(base.ControlWithToolBar);
         gh.Columns.AddText("Line", false, "Строка поиска", 30, 25);
@@ -877,38 +883,21 @@ namespace FIASDemo
     #endregion
 
 
-    private void btnTest_Click(object sender, EventArgs args)
+    private void efpTest_Click(object sender, EventArgs args)
     {
       FiasHandler handler = new FiasHandler(UI.Source);
       FiasParseSettings ps = new FiasParseSettings(UI.Source);
       //ps.BaseAddress.AOGuid = handler.GetRegionAOGuid("72");
-      ps.BaseAddress.AOGuid = new Guid("4af5a970-b80c-422e-bc42-406cbf579c85");
-
+      ps.BaseAddress.AOGuid = new Guid("04e7dde6-8500-4c9f-8e4b-e770fbbed01a"); // Тюменский район
       handler.FillAddress(ps.BaseAddress);
 
-      ps.CellLevels = new FiasLevelSet[6];
-      ps.CellLevels[0] = FiasLevelSet.FromLevel(FiasLevel.City);
-      ps.CellLevels[1] = FiasLevelSet.FromLevel(FiasLevel.Village);
-      ps.CellLevels[2] = FiasLevelSet.FromLevel(FiasLevel.PlanningStructure) | FiasLevelSet.FromLevel(FiasLevel.Street);
-      ps.CellLevels[3] = FiasLevelSet.FromLevel(FiasLevel.House);
-      ps.CellLevels[4] = FiasLevelSet.FromLevel(FiasLevel.Building);
-      ps.CellLevels[5] = FiasLevelSet.FromLevel(FiasLevel.Structure);
-
-      // рп Голышманово, ул Карла Маркса, Дом 1
-
-      string[] cells = new string[6];
-      cells[0] = "";
-      cells[1] = "рп Голышманово";
-      cells[2] = "ул. Карла Маркса";
-      cells[3] = "Дом 1";
-      cells[4] = "";
-      cells[5] = "";
-
-      FiasAddress a = handler.ParseAddress(cells, ps);
+      ps.CellLevels = new FiasLevelSet[1] { FiasLevelSet.FromLevel(FiasLevel.Village) | FiasLevelSet.FromLevel(FiasLevel.PlanningStructure) };
+      FiasAddress a = handler.ParseAddress(new string[] { "СТ \"Тополя-1\"" }, ps);
       FiasAddressDialog dlg = new FiasAddressDialog(UI);
       dlg.ReadOnly = true;
       dlg.Address = a;
+      dlg.CanBePartial = true;
       dlg.ShowDialog();
-  }
+    }
   }
 }

@@ -51,13 +51,22 @@ namespace FreeLibSet.FIAS
 
       //_Handler.FillAddress(_BaseAddress);
       _BestAddress = null;
-      //_BestTail = String.Join(",", CellStrings); // надо бы пропускать пустые строки
       _BestTail = String.Empty;
+      _BestTail = DataTools.JoinNotEmptyStrings(",", CellStrings); // 09.03.2023
 
       AddPart(0, CellStrings[0], ParseSettings.CellLevels[0], ParseSettings.BaseAddress.Clone());
 
       if (!String.IsNullOrEmpty(_BestTail))
-        _BestAddress.AddMessage(ErrorMessageKind.Error, "Некуда добавить фрагмент текста \"" + _BestTail + "\", так как все уровни адреса заполнены");
+      {
+        if (_BestAddress == null)
+        {
+          // 09.03.2023
+          _BestAddress = ParseSettings.BaseAddress.Clone(); 
+          _BestAddress.AddMessage(ErrorMessageKind.Error, "Не удалось распознать текст \"" + _BestTail + "\"");
+        }
+        else
+          _BestAddress.AddMessage(ErrorMessageKind.Error, "Некуда добавить фрагмент текста \"" + _BestTail + "\", так как все уровни адреса заполнены");
+      }
 
       if (_BestAddress == null)
         return ParseSettings.BaseAddress; // ничего не нашли
@@ -444,18 +453,6 @@ namespace FreeLibSet.FIAS
         return false;
 
       bool res = false;
-
-      // Проверяем строку целиком
-      if (FiasTools.IsValidName(s, level))
-      {
-        address.ClearStartingWith(level);
-        address.SetName(level, s);
-        address.SetAOType(level, fullAOType);
-        address.ClearGuidsStartingWith(level);
-        address.ClearRecIdsStartingWith(level);
-        if (AddPart(currentCellIndex, sOthers.TrimStart(',', ' '), levels, address)) // рекурсивный вызов
-          res = true;
-      }
 
       // Проверяем строку целиком
       if (FiasTools.IsValidName(s, level))

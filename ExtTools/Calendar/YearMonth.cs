@@ -91,28 +91,28 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Первый день месяца
     /// </summary>
-    public DateTime BottomOfMonth 
-    { 
-      get 
+    public DateTime BottomOfMonth
+    {
+      get
       {
         if (_Value == 0)
           return DateRange.Whole.FirstDate;
         else
-          return new DateTime(Year, Month, 1); 
+          return new DateTime(Year, Month, 1);
       }
     }
 
     /// <summary>
     /// Последний день месяца
     /// </summary>
-    public DateTime EndOfMonth 
-    { 
-      get 
+    public DateTime EndOfMonth
+    {
+      get
       {
         if (_Value == 0)
           return DateRange.Whole.LastDate; // 14.10.2021
         else
-          return new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month)); 
+          return new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month));
       }
     }
 
@@ -279,6 +279,8 @@ namespace FreeLibSet.Calendar
       return value1._Value - value2._Value;
     }
 
+#if XXX // Убрано 09.03.2023. Не должно быть таких операторов, т.к. YearMonth является неизменяемой структурой
+
     /// <summary>
     /// Прибавляет к объекту YearMonth один месяц
     /// </summary>
@@ -304,6 +306,8 @@ namespace FreeLibSet.Calendar
 #endif
       return new YearMonth(value._Value - 1);
     }
+
+#endif
 
     /// <summary>
     /// Проверяет два объекта YearMonth на равенство
@@ -414,27 +418,29 @@ namespace FreeLibSet.Calendar
     #region Конструкторы
 
     /// <summary>
-    /// Создает новый диапазон
+    /// Создает новый диапазон.
+    /// Начало и конец диапазона должны быть заданы (<see cref="YearMonth.IsEmpty"/>==false).
+    /// Конец диапазоне не может быть меньше, чем начало.
     /// </summary>
     /// <param name="firstYM">Начало диапазона</param>
     /// <param name="lastYM">Конец диапазона</param>
     public YearMonthRange(YearMonth firstYM, YearMonth lastYM)
     {
-#if DEBUG
       if (firstYM.IsEmpty)
         throw new ArgumentException("Не задан начальный месяц/год", "firstYM");
       if (lastYM.IsEmpty)
         throw new ArgumentException("Не задан последний месяц/год", "lastYM");
       if (firstYM > lastYM)
         throw new ArgumentException("Первый месяц больше чем последний", "lastYM");
-#endif
+
       _FirstYM = firstYM;
       _LastYM = lastYM;
     }
 
     /// <summary>
-    /// Создает диапазон, извлекая год и месяц из DateTime.
-    /// Значение поля "День" игнорируется
+    /// Создает диапазон, извлекая год и месяц из <see cref="DateTime"/>.
+    /// Значение поля "День" игнорируется.
+    /// Год <see cref="DateTime.Year"/> у обеих дат должен быть в допустимом диапазоне <see cref="YearMonth"/>.MinYear - MaxYear.
     /// </summary>
     /// <param name="firstDate">Начало диапазона</param>
     /// <param name="lastDate">Конец диапазона</param>
@@ -469,8 +475,8 @@ namespace FreeLibSet.Calendar
     /// <param name="firstMonth">Первый месяц (1-12)</param>
     /// <param name="lastMonth">Последний месяц (1-12)</param>
     public YearMonthRange(int year, int firstMonth, int lastMonth)
-      :this(new YearMonth(year, firstMonth), new YearMonth(year, lastMonth))
-    { 
+      : this(new YearMonth(year, firstMonth), new YearMonth(year, lastMonth))
+    {
     }
 
     /// <summary>
@@ -499,7 +505,7 @@ namespace FreeLibSet.Calendar
     private readonly YearMonth _LastYM;
 
     /// <summary>
-    /// Вохвращает true, если структура не была инициализирована
+    /// Возвращает true, если структура не была инициализирована
     /// </summary>
     public bool IsEmpty { get { return _FirstYM.IsEmpty; } }
 
@@ -564,11 +570,15 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Создает массив структур YearMonth.
     /// Длина массива совпадает с числом месяцев в диапазоне.
+    /// Если <see cref="IsEmpty"/>=true, возвращает пустой массив.
     /// Обычно не следует использовать этот метод. Используйте перечислитель.
     /// </summary>
     /// <returns>Новый массив</returns>
     public YearMonth[] ToArray()
     {
+      if (IsEmpty)
+        return new YearMonth[0]; // 09.03.2023
+
       int n = _LastYM - _FirstYM + 1;
       YearMonth[] a = new YearMonth[n];
       for (int i = 0; i < n; i++)
@@ -590,6 +600,11 @@ namespace FreeLibSet.Calendar
     /// <returns>Результирующий интервал</returns>
     public static YearMonthRange operator |(YearMonthRange r1, YearMonthRange r2)
     {
+      if (r1.IsEmpty)
+        return r2; 
+      if (r2.IsEmpty)
+        return r1; // 09.03.2023
+
       YearMonth ym1 = r1.FirstYM < r2.FirstYM ? r1.FirstYM : r2.FirstYM;
       YearMonth ym2 = r1.LastYM > r2.LastYM ? r1.LastYM : r2.LastYM;
       return new YearMonthRange(ym1, ym2);
@@ -597,14 +612,17 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает интервал, в который входит пересечение интервалов  r1 и r2
-    /// Если интервалы не пересекаются, вызывается исключение InvalidOperationException
-    /// Интервалы r1 и r2 равноправны
+    /// Если интервалы не пересекаются, или один из интервалов пустой, вызывается исключение InvalidOperationException.
+    /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. 
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
     /// <returns>Результирующий интервал</returns>
     public static YearMonthRange operator &(YearMonthRange r1, YearMonthRange r2)
     {
+      if (r1.IsEmpty ||r2.IsEmpty)
+        throw new InvalidOperationException("Один из интервалов пустой"); // 09.03.2023
+
       YearMonth ym1 = r1.FirstYM > r2.FirstYM ? r1.FirstYM : r2.FirstYM;
       YearMonth ym2 = r1.LastYM < r2.LastYM ? r1.LastYM : r2.LastYM;
       if (ym1 > ym2)
@@ -616,14 +634,18 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Возвращает true, если два интервала пересекаются (имеют хотя бы один общий месяц)
     /// Такая проверка может понадобиться, например, перед вычислением пересечения
-    /// интервалов оператором "and"
-    /// Интервалы r1 и r2 равноправны. 
+    /// интервалов оператором "and".
+    /// Если один или оба интервала пустые, возвращается false.
+    /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. 
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
     /// <returns>True, если интервалы пересекаются</returns>
     public static bool IsCrossed(YearMonthRange r1, YearMonthRange r2)
     {
+      if (r1.IsEmpty || r2.IsEmpty)
+        return false;
+
       YearMonth ym1 = r1.FirstYM > r2.FirstYM ? r1.FirstYM : r2.FirstYM;
       YearMonth ym2 = r1.LastYM < r2.LastYM ? r1.LastYM : r2.LastYM;
       return ym1 <= ym2;
@@ -636,22 +658,22 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Добавляет к интервалу заданное число месяцев.
     /// Например, если <paramref name="months"/> равно 12, то будет возвращен интервал следующего года.
-    /// Если исходный интервал пустой, возвращается пустой интервал.
+    /// Если исходный интервал пустой, выбрасывается исключение.
     /// </summary>
     /// <param name="range">Исходный диапазон</param>
     /// <param name="months">Количество добавляемых месяцев. Допускаются любые значения</param>
     /// <returns>Сдвинутый интервал</returns>
     public static YearMonthRange operator +(YearMonthRange range, int months)
-    { 
+    {
       if (range.IsEmpty)
-        return range;
+        throw new ArgumentException("Пустой интервал", "range"); // 09.03.2023
       return new YearMonthRange(range.FirstYM + months, range.LastYM + months);
     }
 
     /// <summary>
     /// Вычитает из интервала заданное число месяцев.
-    /// Например, если <paramref name="months"/> равно 12, то будет возвращен интервал предыдущего года
-    /// Если исходный интервал пустой, возвращается пустой интервал.
+    /// Например, если <paramref name="months"/> равно 12, то будет возвращен интервал предыдущего года.
+    /// Если исходный интервал пустой, выбрасывается исключение.
     /// </summary>
     /// <param name="range">Исходный диапазон</param>
     /// <param name="months">Количество вычитаемых месяцев. Допускаются любые значения</param>
@@ -659,11 +681,11 @@ namespace FreeLibSet.Calendar
     public static YearMonthRange operator -(YearMonthRange range, int months)
     {
       if (range.IsEmpty)
-        return range;
+        throw new ArgumentException("Пустой интервал", "range"); // 09.03.2023
       return new YearMonthRange(range.FirstYM - months, range.LastYM - months);
     }
 
-    // Операторы ++ и -- не определям
+    // Операторы ++ и -- не определяем
 
     #endregion
 
@@ -724,7 +746,7 @@ namespace FreeLibSet.Calendar
       {
         if (_Range.IsEmpty)
           return false; // 16.04.2020
-        _Current++;
+        _Current = _Current + 1;
         return _Current <= _Range.LastYM;
       }
 

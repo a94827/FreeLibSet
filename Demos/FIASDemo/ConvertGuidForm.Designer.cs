@@ -36,7 +36,7 @@
       this.edGuid = new System.Windows.Forms.MaskedTextBox();
       this.edBin = new System.Windows.Forms.MaskedTextBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.infoLabel1 = new AgeyevAV.ExtForms.InfoLabel();
+      this.infoLabel1 = new FreeLibSet.Controls.InfoLabel();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -146,6 +146,6 @@
     private System.Windows.Forms.MaskedTextBox edGuid;
     private System.Windows.Forms.MaskedTextBox edBin;
     private System.Windows.Forms.Label label2;
-    private AgeyevAV.ExtForms.InfoLabel infoLabel1;
+    private FreeLibSet.Controls.InfoLabel infoLabel1;
   }
 }

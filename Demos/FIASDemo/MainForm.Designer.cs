@@ -54,7 +54,7 @@
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.cbPartialMode = new System.Windows.Forms.ComboBox();
       this.label9 = new System.Windows.Forms.Label();
-      this.cbEmpyMode = new System.Windows.Forms.ComboBox();
+      this.cbEmptyMode = new System.Windows.Forms.ComboBox();
       this.label7 = new System.Windows.Forms.Label();
       this.cbManualPostalCode = new System.Windows.Forms.CheckBox();
       this.cbReadOnly = new System.Windows.Forms.CheckBox();
@@ -76,7 +76,7 @@
       this.lblAddrObCount = new System.Windows.Forms.Label();
       this.lblAddrObjCount2 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
-      this.edActualDate = new AgeyevAV.ExtForms.DateBox();
+      this.edActualDate = new FreeLibSet.Controls.DateTimeBox();
       this.btnTest = new System.Windows.Forms.Button();
       this.tpSearch = new System.Windows.Forms.TabPage();
       this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -87,7 +87,7 @@
       this.btnBaseAddress = new System.Windows.Forms.Button();
       this.edParseSettingsText = new System.Windows.Forms.TextBox();
       this.panel2 = new System.Windows.Forms.Panel();
-      this.infoLabel1 = new AgeyevAV.ExtForms.InfoLabel();
+      this.infoLabel1 = new FreeLibSet.Controls.InfoLabel();
       this.panel4 = new System.Windows.Forms.Panel();
       this.btnSearch = new System.Windows.Forms.Button();
       this.TheTabControl.SuspendLayout();
@@ -367,7 +367,7 @@
       // 
       this.groupBox3.Controls.Add(this.cbPartialMode);
       this.groupBox3.Controls.Add(this.label9);
-      this.groupBox3.Controls.Add(this.cbEmpyMode);
+      this.groupBox3.Controls.Add(this.cbEmptyMode);
       this.groupBox3.Controls.Add(this.label7);
       this.groupBox3.Controls.Add(this.cbManualPostalCode);
       this.groupBox3.Controls.Add(this.cbReadOnly);
@@ -406,18 +406,18 @@
       this.label9.Text = "Неполный адрес";
       this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // cbEmpyMode
+      // cbEmptyMode
       // 
-      this.cbEmpyMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.cbEmpyMode.FormattingEnabled = true;
-      this.cbEmpyMode.Items.AddRange(new object[] {
+      this.cbEmptyMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cbEmptyMode.FormattingEnabled = true;
+      this.cbEmptyMode.Items.AddRange(new object[] {
             "Разрешен",
             "Ошибка",
             "Предупреждение"});
-      this.cbEmpyMode.Location = new System.Drawing.Point(322, 42);
-      this.cbEmpyMode.Name = "cbEmpyMode";
-      this.cbEmpyMode.Size = new System.Drawing.Size(148, 21);
-      this.cbEmpyMode.TabIndex = 5;
+      this.cbEmptyMode.Location = new System.Drawing.Point(322, 42);
+      this.cbEmptyMode.Name = "cbEmptyMode";
+      this.cbEmptyMode.Size = new System.Drawing.Size(148, 21);
+      this.cbEmptyMode.TabIndex = 5;
       // 
       // label7
       // 
@@ -663,7 +663,6 @@
       this.btnTest.TabIndex = 3;
       this.btnTest.Text = "Тест";
       this.btnTest.UseVisualStyleBackColor = true;
-      this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
       // 
       // tpSearch
       // 
@@ -846,7 +845,7 @@
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.TextBox edParseSettingsText;
     private System.Windows.Forms.Button btnBaseAddress;
-    private AgeyevAV.ExtForms.InfoLabel infoLabel1;
+    private FreeLibSet.Controls.InfoLabel infoLabel1;
     private System.Windows.Forms.Panel panel4;
     private System.Windows.Forms.Button btnSearch;
     private System.Windows.Forms.GroupBox groupBox5;
@@ -865,7 +864,7 @@
     private System.Windows.Forms.GroupBox groupBox4;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.ComboBox cbSearchLevel;
-    private AgeyevAV.ExtForms.DateBox edActualDate;
+    private FreeLibSet.Controls.DateTimeBox edActualDate;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.DataGridView grMessages;
     private System.Windows.Forms.Panel panel1;
@@ -885,7 +884,7 @@
     private System.Windows.Forms.CheckBox cbManualPostalCode;
     private System.Windows.Forms.ComboBox cbPartialMode;
     private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.ComboBox cbEmpyMode;
+    private System.Windows.Forms.ComboBox cbEmptyMode;
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.Button btnLoadWeb;
     private System.Windows.Forms.Button btnConvertGuid;

@@ -34,7 +34,7 @@
       this.edDir = new System.Windows.Forms.TextBox();
       this.btnBrowse = new System.Windows.Forms.Button();
       this.label2 = new System.Windows.Forms.Label();
-      this.edActualDate = new AgeyevAV.ExtForms.DateBox();
+      this.edActualDate = new FreeLibSet.Controls.DateTimeBox();
       this.label3 = new System.Windows.Forms.Label();
       this.cbFormat = new System.Windows.Forms.ComboBox();
       this.btnOk = new System.Windows.Forms.Button();
@@ -172,7 +172,7 @@
 
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.GroupBox groupBox1;
-    private AgeyevAV.ExtForms.DateBox edActualDate;
+    private FreeLibSet.Controls.DateTimeBox edActualDate;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnBrowse;
     private System.Windows.Forms.TextBox edDir;

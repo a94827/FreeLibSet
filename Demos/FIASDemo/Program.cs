@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-//using AgeyevAV.ExtDB.SQLite;
-//using System.Data.SQLite;
-using AgeyevAV.IO;
-using AgeyevAV;
-using AgeyevAV.FIAS;
-using AgeyevAV.Caching;
-using AgeyevAV.Config;
 using System.Data;
-using AgeyevAV.ExtDB;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using AgeyevAV.ExtDB.SQLite;
+using FreeLibSet.Forms;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
+using FreeLibSet.FIAS;
+using FreeLibSet.Caching;
+using FreeLibSet.Config;
+using FreeLibSet.Data.SQLite;
+using FreeLibSet.Data;
 
 namespace FIASDemo
 {

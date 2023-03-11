@@ -123,6 +123,27 @@ namespace ExtTools_tests
       }
     }
 
+    /// <summary>
+    /// Создает объект YearMonthRange из строки вида "YYYYMM-YYYYMM".
+    /// Если строка пустая, то возвращает пустой диапазон
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static YearMonthRange CreateYearMonthRange(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return new YearMonthRange();
+      else
+      {
+        if (s.Length != 13)
+          throw new ArgumentException();
+        YearMonth ym1 = CreateYearMonth(s.Substring(0, 6));
+        YearMonth ym2 = CreateYearMonth(s.Substring(7, 6));
+        return new YearMonthRange(ym1, ym2);
+      }
+    }
+
+
     #endregion
 
     #region MonthDay

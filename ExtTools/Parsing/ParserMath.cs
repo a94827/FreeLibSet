@@ -224,6 +224,9 @@ namespace FreeLibSet.Parsing
           for (int j = 0; j < _NumberFormat.NegativeSign.Length; j++)
             chars.Add(_NumberFormat.NegativeSign[j]);
 
+          for (int j = 0; j < _NumberFormat.PositiveSign.Length; j++)
+            chars.Add(_NumberFormat.PositiveSign[j]); // 07.03.2023
+
           for (int j = 0; j < _NumberFormat.NumberDecimalSeparator.Length; j++)
             chars.Add(_NumberFormat.NumberDecimalSeparator[j]);
 
@@ -2190,6 +2193,15 @@ namespace FreeLibSet.Parsing
         return;
       }
 
+      // 07.03.2023
+      // Для выражений вида "1+-2" "+" будет бинарной операцией, а "-" - знаком, относящимся к константе.
+      // Соответственно, MathOpParser должен оставить знак "-" без попытки парсинга
+      if ((data.GetChar(data.CurrPos) == '+' || data.GetChar(data.CurrPos) == '-') &&
+        data.GetChar(data.CurrPos + 1) >= '0' &&
+        data.GetChar(data.CurrPos + 1) <= '9' &&
+        LastTokenIsMine(data))
+        return;
+
       // На первом этапе разбора не важно, будет операция бинарной или унарной
 
       // Бинарные операции 
@@ -2211,6 +2223,17 @@ namespace FreeLibSet.Parsing
           return;
         }
       }
+    }
+
+    private bool LastTokenIsMine(ParsingData data)
+    {
+      for (int i = data.Tokens.Count - 1; i >= 0; i--)
+      {
+        if (data.Tokens[i].TokenType == "Space" || data.Tokens[i].TokenType == "Comment")
+          continue;
+        return Object.ReferenceEquals(data.Tokens[i].Parser, this);
+      }
+      return false;
     }
 
     #endregion

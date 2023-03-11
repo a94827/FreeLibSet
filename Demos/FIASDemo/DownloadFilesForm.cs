@@ -5,10 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.FIAS;
-using AgeyevAV.IO;
-using AgeyevAV;
+using FreeLibSet.Forms;
+using FreeLibSet.FIAS;
+using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 namespace FIASDemo
 {
@@ -30,7 +30,7 @@ namespace FIASDemo
       EFPFolderBrowserButton efpBrowse = new EFPFolderBrowserButton(efpDir, btnBrowse);
       efpBrowse.ShowNewFolderButton = true;
 
-      efpActualDate = new EFPDateBox(efpForm, edActualDate);
+      efpActualDate = new EFPDateTimeBox(efpForm, edActualDate);
       efpActualDate.CanBeEmpty = false;
 
       efpFormat = new EFPListComboBox(efpForm, cbFormat);
@@ -42,7 +42,7 @@ namespace FIASDemo
 
     EFPTextBox efpDir;
 
-    EFPDateBox efpActualDate;
+    EFPDateTimeBox efpActualDate;
 
     EFPListComboBox efpFormat;
 
@@ -60,7 +60,7 @@ namespace FIASDemo
       if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
         return;
 
-      FiasWebLoader loader = new FiasWebLoader(new AbsPath(form.efpDir.Text), form.efpActualDate.Value.Value);
+      FiasWebLoader loader = new FiasWebLoader(new AbsPath(form.efpDir.Text), form.efpActualDate.Value);
 
       switch (form.efpFormat.SelectedIndex)
       {

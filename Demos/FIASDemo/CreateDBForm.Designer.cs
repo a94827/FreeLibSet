@@ -41,7 +41,7 @@
       this.cbProvider = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.tpSettings = new System.Windows.Forms.TabPage();
-      this.DBSettingsPanel = new AgeyevAV.ExtForms.FIAS.FiasDBSettingsPanel();
+      this.DBSettingsPanel = new FreeLibSet.Controls.FIAS.FiasDBSettingsPanel();
       this.panel1.SuspendLayout();
       this.TheTabControl.SuspendLayout();
       this.tpDatabase.SuspendLayout();
@@ -223,6 +223,6 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.TextBox edName;
     private System.Windows.Forms.Button btnBuildConnection;
-    private AgeyevAV.ExtForms.FIAS.FiasDBSettingsPanel DBSettingsPanel;
+    private FreeLibSet.Controls.FIAS.FiasDBSettingsPanel DBSettingsPanel;
   }
 }
