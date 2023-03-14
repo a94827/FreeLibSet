@@ -1158,9 +1158,9 @@ namespace FreeLibSet.Forms.RI
         {
           if (riItem.NCheckedEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            this.NCheckedEx = riItem.NCheckedEx;
+            base.NCheckedEx = riItem.NCheckedEx;
           else
-            riItem.NCheckedEx = this.NCheckedEx;
+            riItem.NCheckedEx = base.NCheckedEx;
         }
         if (riItem.InternalCheckedExConnected)
         {
@@ -1215,7 +1215,8 @@ namespace FreeLibSet.Forms.RI
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
             base.SelectedIndexEx = riItem.SelectedIndexEx;
           else
-            base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
+            //base.SelectedIndex = riItem.SelectedIndex; // обязательное присвоение, иначе свойство обнулится
+            riItem.SelectedIndexEx = base.SelectedIndexEx; // испр. 14.03.2023
         }
 
         if (riItem.InternalSelectedCodeExConnected)
@@ -2054,27 +2055,27 @@ namespace FreeLibSet.Forms.RI
             riItem.ReadOnlyEx = base.TheTextBox.ReadOnlyEx;
         }
 
-        TheButton = new EFPFolderBrowserButton(TheTextBox, Control.TheButton);
-        TheButton.Description = riItem.Description;
-        TheButton.ShowNewFolderButton = riItem.ShowNewFolderButton;
-        TheButton.PathValidateMode = riItem.PathValidateMode;
-        TheButton.Path = riItem.Path;
+        _TheButton = new EFPFolderBrowserButton(TheTextBox, Control.TheButton);
+        _TheButton.Description = riItem.Description;
+        _TheButton.ShowNewFolderButton = riItem.ShowNewFolderButton;
+        _TheButton.PathValidateMode = riItem.PathValidateMode;
+        _TheButton.Path = riItem.Path;
         if (riItem.InternalPathExConnected)
         {
           if (riItem.PathEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            TheButton.PathEx = riItem.PathEx;
+            _TheButton.PathEx = riItem.PathEx;
           else
-            riItem.PathEx = TheButton.PathEx;
+            riItem.PathEx = _TheButton.PathEx;
         }
 
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
 
-        TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
+        _TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
       }
 
-      EFPFolderBrowserButton TheButton;
+      EFPFolderBrowserButton _TheButton;
 
       FreeLibSet.RI.FolderBrowserTextBox _RIItem;
 
@@ -2105,18 +2106,18 @@ namespace FreeLibSet.Forms.RI
       {
         base.TheTextBox.CanBeEmptyMode = riItem.CanBeEmptyMode;
 
-        TheButton = new EFPFileDialogButton(TheTextBox, Control.TheButton);
-        TheButton.Mode = mode;
-        TheButton.Filter = riItem.Filter;
-        TheButton.PathValidateMode = riItem.PathValidateMode;
-        TheButton.Path = riItem.Path;
+        _TheButton = new EFPFileDialogButton(TheTextBox, Control.TheButton);
+        _TheButton.Mode = mode;
+        _TheButton.Filter = riItem.Filter;
+        _TheButton.PathValidateMode = riItem.PathValidateMode;
+        _TheButton.Path = riItem.Path;
         if (riItem.InternalPathExConnected)
         {
           if (riItem.PathEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            TheButton.PathEx = riItem.PathEx;
+            _TheButton.PathEx = riItem.PathEx;
           else
-            riItem.PathEx = TheButton.PathEx;
+            riItem.PathEx = _TheButton.PathEx;
         }
 
         base.TheTextBox.ReadOnly = riItem.ReadOnly;
@@ -2132,10 +2133,10 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         EFPAppRITools.InitControlItem(this, riItem);
 
-        TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
+        _TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
       }
 
-      EFPFileDialogButton TheButton;
+      EFPFileDialogButton _TheButton;
 
       FreeLibSet.RI.FileTextBox _RIItem;
 

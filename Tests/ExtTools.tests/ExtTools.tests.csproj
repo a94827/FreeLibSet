@@ -68,6 +68,8 @@
     <Compile Include="Data\DataViewSortBuilderTests.cs" />
     <Compile Include="Data\IdListTests.cs" />
     <Compile Include="Data\TableAndIdListTests.cs" />
+    <Compile Include="DBF\DbfFieldInfoTests.cs" />
+    <Compile Include="DBF\DbfStructTests.cs" />
     <Compile Include="DependedValues\DepEvalExprTests.cs" />
     <Compile Include="DependedValues\DepFromArrayTests.cs" />
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />

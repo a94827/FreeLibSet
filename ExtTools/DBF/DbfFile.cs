@@ -112,11 +112,11 @@ namespace FreeLibSet.DBF
     /// Создает описание логического поля "L".
     /// В DBF-файле поле занимает 1 символ и хранит значения "T" или "F".
     /// </summary>
-    /// <param name="Name">Имя поля</param>
+    /// <param name="name">Имя поля</param>
     /// <returns>Описание поля</returns>
-    public static DbfFieldInfo CreateBool(string Name)
+    public static DbfFieldInfo CreateBool(string name)
     {
-      return new DbfFieldInfo(Name, 'L', 1, 0);
+      return new DbfFieldInfo(name, 'L', 1, 0);
     }
 
     /// <summary>
@@ -139,25 +139,25 @@ namespace FreeLibSet.DBF
     /// Возвращает имя поля
     /// </summary>
     public string Name { get { return _Name; } }
-    private string _Name;
+    private readonly string _Name;
 
     /// <summary>
     /// Возвращает букву типа поля
     /// </summary>
     public char Type { get { return _Type; } }
-    private char _Type;
+    private readonly char _Type;
 
     /// <summary>
     /// Возвращает размер поля в байтах
     /// </summary>
     public int Length { get { return _Length; } }
-    private int _Length;
+    private readonly int _Length;
 
     /// <summary>
     /// Возвращает число знаков после запятой для числового поля
     /// </summary>
     public int Precision { get { return _Precision; } }
-    private int _Precision;
+    private readonly int _Precision;
 
     #endregion
 
@@ -651,7 +651,7 @@ namespace FreeLibSet.DBF
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new InvalidOperationException("Список полей находится в режиме ReadOnly");
+        throw new ObjectReadOnlyException("Список полей находится в режиме ReadOnly");
     }
 
     #endregion
