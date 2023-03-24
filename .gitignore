@@ -349,7 +349,6 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-
 #Ageyev A.V.
 *.db
 *.7z
