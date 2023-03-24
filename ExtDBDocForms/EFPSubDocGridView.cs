@@ -395,9 +395,20 @@ namespace FreeLibSet.Forms.Docs
 
       if (SourceAsDataTable == null)
       {
-        Int32 oldId = CurrentId;
-        PerformRefresh(); // обязательно после вызова OnCreated(), иначе UsedColumnNames будет равен null
-        CurrentId = oldId; // 23.11.2017
+        try
+        {
+          Int32 oldId = CurrentId;
+          PerformRefresh(); // обязательно после вызова OnCreated(), иначе UsedColumnNames будет равен null
+          CurrentId = oldId; // 23.11.2017
+        }
+        catch (Exception e)
+        {
+          // 24.03.2023
+          // Если выпустить исключение, то оно может привести к повторному вызову OnCreated().
+          // При этом список команд меню попытается инициализироваться еще раз, а он уже IsReadOnly=true.
+          AddExceptionInfo(e);
+          EFPApp.ShowException(e, DisplayName + " - ошибка загрузки данных");
+        }
       }
     }
 

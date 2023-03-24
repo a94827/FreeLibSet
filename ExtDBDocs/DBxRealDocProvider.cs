@@ -3566,8 +3566,14 @@ namespace FreeLibSet.Data.Docs
               row["Deleted"] = false;
               continue;
             }
-
-            throw new DBxConsistencyException("В базе данных Undo в таблице \"" + subDocTypeName + "\" не найдена запись для SubDocId = " + subDocId.ToString() + " и Version2 <= " + version2.ToString());
+            else
+            {
+              // 24.03.2023
+              // Если нет записи, то поддокумент считается существующим "с начала времен".
+              // Не уверен, что это правильно. Поддокумент мог быть удаленным
+              continue; 
+            }
+            //throw new DBxConsistencyException("В базе данных Undo в таблице \"" + subDocTypeName + "\" не найдена запись для SubDocId = " + subDocId.ToString() + " и Version2 <= " + version2.ToString());
           }
 
           DataTable table1 = undoCon.FillSelect(subDocTypeName, columns2, new IdsFilter(lastCopyId));

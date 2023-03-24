@@ -5,7 +5,17 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2023-03-14T12:31:49.434000000"/>
+	<meta name="changed" content="2023-03-24T10:19:22.838000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -615,16 +625,78 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">344</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">20.03.2023<span lang="ru-RU">-2</span><span lang="ru-RU">4</span><span lang="ru-RU">.03.2023</span></p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Исправления в
+			</span><span lang="en-US">DbfFile</span> и связанных классах <span lang="en-US">(<a href="ExtTools_11.htm#v025p1">v.25
+			</a></span><a href="ExtTools_11.htm#v025p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">DbfFile</span><span lang="ru-RU">.</span><span lang="en-US">SkipDeleted</span>
+			<span lang="ru-RU">не работало. Конструкторы </span><span lang="en-US">DbfFile
+			, </span><span lang="ru-RU">создающие новый файл, не устанавливали
+			свойство</span> <span lang="ru-RU">в </span><span lang="en-US">true.
+			</span>
+			</p>
+			<p>- Метод <span lang="en-US">DbfFile</span><span lang="ru-RU">.</span><span lang="en-US">Flush()
+			</span>вызывает внутренний метод <span lang="en-US">FlushRecord()</span></p>
+			<p><span lang="en-US">- </span>Свойства <span lang="en-US">DbfFile</span><span lang="ru-RU">.</span><span lang="en-US">TableModified
+			</span>и <span lang="en-US">RecordModified </span>объявлены
+			<span lang="en-US">internal</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Недостающие
+			методы </span><span lang="en-US">DbfFile</span><span lang="ru-RU">.</span><span lang="en-US">SetInt64()</span></p>
+			<p><span lang="ru-RU">- Вспомогательный метод DbfStruct.</span><span lang="en-US">GetNames()</span></p>
+			<p><span lang="ru-RU">- Конструкторы Dbf</span><span lang="en-US">FieldInfo</span><span lang="ru-RU">,
+			используемые в прикладном коде проверяют корректность аргументов.
+			Внутренний конструктор, используемый при открытии </span><span lang="en-US">DBF
+			</span><span lang="ru-RU">файла, не проверяет аргументы</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Dbf</span>FieldInfo
+			TestFormat() <span lang="ru-RU">для </span>dBase2 <span lang="ru-RU">возвращает
+			</span>false, <span lang="ru-RU">если длина поля превышает 255
+			символов</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Исправлено чтение и запись
+			данных в формате </span>dBase2 <span lang="ru-RU">и </span>dBase4</p>
+			<p lang="en-US">- <span lang="ru-RU">Для типа поля </span>'F'
+			<span lang="ru-RU">используется </span>System.Double<span lang="ru-RU">,
+			а не </span>System.Decimal</p>
+			<p lang="en-US">- DbfFile.GetInt() <span lang="ru-RU">отбрасывает
+			дробную часть числа при наличии точки, а не генерирует исключение.</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство </span>DbfFile.MemoFormat.
+			<span lang="ru-RU">Формат DbfMemoFormat.dBase4 пока не реализован.</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство
+			</span>DbfFile.IsAppendRecord <span lang="ru-RU">переименовано в
+			</span>IsNewRecord</p>
+			<p lang="en-US">- <span lang="ru-RU">Перегрузки метода
+			</span>DbfFile.SetString() <span lang="ru-RU">с аргументом </span>trim.</p>
+			<p lang="en-US">- <span lang="ru-RU">Методы </span>DbfFile.SetInt(),
+			SetInt64(), SetSingle(), SetDouble <span lang="ru-RU">и
+			</span>SetDecimal() <span lang="ru-RU">выбрасывают
+			</span>ArgumentOutOfRangeException, <span lang="ru-RU">если
+			текстовое представление числа не помещается в поле</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Конструкторы </span>DbfFile,
+			<span lang="ru-RU">принимающие путь к существующему файлу, также
+			допускают отсутствие </span>DBT-<span lang="ru-RU">файла, как и
+			конструкторы для потока </span>Stream. <span lang="ru-RU">Из
+			класса исключения DbfFileFormatException выделен
+			DbfMemoFileMissingException. Свойство MemoFileMissing.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">343</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">14.03.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Исправление в
-			</span>RIControlCreator.ListComboBoxItem <span lang="ru-RU">при
-			инициализации свойства </span>SelectedIndexEx<span lang="ru-RU">
-			(</span><a href="#v301p12">v.301 <span lang="ru-RU">п.12</span></a><span lang="ru-RU">)</span>.</p>
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Исправление в
+			</span><span lang="en-US">RIControlCreator.ListComboBoxItem </span><span lang="ru-RU">при
+			инициализации свойства </span><span lang="en-US">SelectedIndexEx
+			</span><span lang="ru-RU">(</span><a href="#v301p12"><span lang="en-US">v.301
+			</span><span lang="ru-RU">п.12</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

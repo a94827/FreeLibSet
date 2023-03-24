@@ -23,6 +23,31 @@ namespace ExtTools_tests.DBF
     }
 
     [Test]
+    public void Constructor_main_exception()
+    {
+      DbfFieldInfo dummy;
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("", 'N', 10, 2); }, "Empty name");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("A.B", 'N', 10, 2); }, "Invalid char in name");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("12A", 'N', 10, 2); }, "Name starts with a digit");
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("ABCDEFGHIJ", 'N', 10, 2); }, "Name max length");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("ABCDEFGHIJK", 'N', 10, 2); }, "Name too long");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'X', 10, 2); }, "Invalid type");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'C', 0, 0); }, "Zero length");
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("F1", 'C', 65535, 0); }, "Max length");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'C', 65536, 0); }, "Big length");
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("F1", 'N', 255, 0); }, "Normal number");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'N', 256, 0); }, "Big length");
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("F1", 'N', 4, 2); }, "Normal number");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'N', 4, 3); }, "Precision too long");
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("F1", 'L', 1, 0); }, "Normal bool");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'L', 2, 0); }, "bool length");
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("F1", 'D', 8, 0); }, "Normal date");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'D', 7, 0); }, "date length");
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("F1", 'M', 10, 0); }, "Normal memo");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F1", 'M', 11, 0); }, "memo length");
+    }
+
+    [Test]
     public void Constructor_copy()
     {
       DbfFieldInfo field1 = new DbfFieldInfo("F1", 'N', 10, 2);
@@ -32,6 +57,20 @@ namespace ExtTools_tests.DBF
       Assert.AreEqual(10, sut.Length, "Length");
       Assert.AreEqual(2, sut.Precision, "Precision");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
+    }
+
+    [Test]
+    public void Constructor_copy_exception()
+    {
+      DbfFieldInfo field1 = new DbfFieldInfo("F1", 'N', 10, 2);
+      DbfFieldInfo dummy;
+      Assert.DoesNotThrow(delegate() { dummy = new DbfFieldInfo("F2", field1); }, "Ok");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("", field1); }, "Empty name");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("A.B", field1); }, "Invalid char in name");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("12A", field1); }, "Name starts with a digit");
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("ABCDEFGHIJK", field1); }, "Name too long");
+
+      Assert.Catch(delegate() { dummy = new DbfFieldInfo("F2", new DbfFieldInfo()); }, "Empty source");
     }
 
     [Test]
@@ -131,12 +170,16 @@ namespace ExtTools_tests.DBF
     #region DataType
 
     [TestCase('C', 10, 0, typeof(String))]
-    [TestCase('N', 10, 0, typeof(Int64))]
-    [TestCase('N', 9, 0, typeof(Int32))]
     [TestCase('N', 1, 0, typeof(Int32))]
+    [TestCase('N', 9, 0, typeof(Int32))]
+    [TestCase('N', 10, 0, typeof(Int64))]
+    [TestCase('N', 9, 1, typeof(Decimal))]
     [TestCase('L', 1, 0, typeof(Boolean))]
     [TestCase('D', 8, 0, typeof(DateTime))]
     [TestCase('M', 10, 0, typeof(String))]
+    [TestCase('F', 1, 0, typeof(Double))]
+    [TestCase('F', 10, 0, typeof(Double))]
+    [TestCase('F', 12, 2, typeof(Double))]
     public void DataType(char type, int length, int precision, Type wantedRes)
     {
       DbfFieldInfo sut = new DbfFieldInfo("F1", type, length, precision);
@@ -147,20 +190,21 @@ namespace ExtTools_tests.DBF
 
     #region TestFormat()
 
-    [TestCase('C', 10, 0, true, true, true)]
+    [TestCase('C', 255, 0, true, true, true)]
+    [TestCase('C', 256, 0, false, true, true)]
     [TestCase('N', 10, 0, true, true, true)]
     [TestCase('L', 1, 0, true, true, true)]
     [TestCase('D', 8, 0,  false, true, true)]
     [TestCase('M', 10, 0, false, true, true)]
-    // Тип 'F' пока не проверяю
-    public void TestFormat(char type, int length, int precision, bool wanted2, bool wanted3, bool wanted4)
+    [TestCase('F', 10, 0, false, false, true)]
+    public void TestFormat(char type, int length, int precision, bool wantedDBase2, bool wantedDBase3, bool wantedDBase4)
     {
       DbfFieldInfo sut = new DbfFieldInfo("F1", type, length, precision);
 
       string errorText;
-      Assert.AreEqual(wanted2, sut.TestFormat(DbfFileFormat.dBase2, out errorText), "dBase2");
-      Assert.AreEqual(wanted3, sut.TestFormat(DbfFileFormat.dBase3, out errorText), "dBase3");
-      Assert.AreEqual(wanted4, sut.TestFormat(DbfFileFormat.dBase4, out errorText), "dBase4");
+      Assert.AreEqual(wantedDBase2, sut.TestFormat(DbfFileFormat.dBase2, out errorText), "dBase2");
+      Assert.AreEqual(wantedDBase3, sut.TestFormat(DbfFileFormat.dBase3, out errorText), "dBase3");
+      Assert.AreEqual(wantedDBase4, sut.TestFormat(DbfFileFormat.dBase4, out errorText), "dBase4");
     }
 
     #endregion

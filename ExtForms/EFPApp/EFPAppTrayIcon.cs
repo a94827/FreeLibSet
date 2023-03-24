@@ -337,7 +337,7 @@ namespace FreeLibSet.Forms
     {
       CheckNotDisposed();
 
-      _CommandItems.IsReadOnly = true;
+      _CommandItems.SetReadOnly();
       if (UseHiddenForm && _TheHiddenForm == null)
       {
         _TheHiddenForm = new HiddenForm();

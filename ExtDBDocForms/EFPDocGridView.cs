@@ -1271,6 +1271,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
+          AddExceptionInfo(e);
           EFPApp.ShowException(e, DisplayName + " - ошибка загрузки данных");
         }
       }

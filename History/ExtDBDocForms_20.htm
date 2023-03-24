@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
-	<meta name="changed" content="2023-02-21T10:52:59.874000000"/>
+	<meta name="changed" content="2023-03-24T14:37:14.626000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -122,6 +122,24 @@ Forms</span>)</h1>
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">344</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">24.03.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. EFPSubDocGridView.OnCreated() <span lang="ru-RU">перехватывает
+			исключения при вызове </span>PerformRefresh()<span lang="ru-RU">.
+			Выброс исключения мог приводить к повторному вызову </span>OnCreated(),
+			<span lang="ru-RU">что вызывало наведенное исключение
+			</span>ObjectReadOnlyException <span lang="ru-RU">для объекта
+			</span>EFPCommandItems <span lang="ru-RU">для уже
+			инициализированного контекстного меню</span>. <span lang="ru-RU">Аналогично
+			реализации в </span>EFPDocGridView.</p>
 		</td>
 	</tr>
 	<tr valign="top">

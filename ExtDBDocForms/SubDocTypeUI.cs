@@ -531,17 +531,34 @@ namespace FreeLibSet.Forms.Docs
       if (UI.DocProvider.DocTypes.UseDeleted) // 16.05.2018
         columns.Add("Deleted");
 
-      if (UI.DebugShowIds &&
-        (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
+      if (UI.DebugShowIds)
       {
-        controlProvider.Columns.AddInt("Id");
-        controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-        controlProvider.Columns.LastAdded.CanIncSearch = true;
+        if (!controlProvider.CurrentConfig.Columns.Contains("Id")) // 16.09.2021
+        {
+          controlProvider.Columns.AddInt("Id");
+          controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+          controlProvider.Columns.LastAdded.CanIncSearch = true;
+        }
         if (!showDocId)
         {
           controlProvider.Columns.AddInt("DocId");
           controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+          controlProvider.Columns.LastAdded.CanIncSearch = true;
         }
+
+        // Почему-то не работает, столбцы остаются пустыми
+        //if (UI.DocProvider.DocTypes.UseVersions && 
+        //  DocTypeViewHistoryPermission.GetAllowed(UI.DocProvider.UserPermissions, DocTypeUI.DocType.Name))
+        //{
+        //  columns.Add("StartVersion");
+        //  columns.Add("Version2");
+
+        //  controlProvider.Columns.AddInt("StartVersion");
+        //  controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+        //  controlProvider.Columns.AddInt("Version2");
+        //  controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+        //}
       }
 
 

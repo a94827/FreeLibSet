@@ -221,6 +221,22 @@ namespace ExtTools_tests.DBF
       Assert.IsTrue(sut.TestFormat(DbfFileFormat.dBase4), "dBase4 #2");
     }
 
+    [Test]
+    public void GetNames()
+    {
+      DbfStruct sut = CreateTestObject();
+      string[] res = sut.GetNames();
+      Assert.AreEqual(new string[] { "F1", "F2", "F3" }, res);
+    }
+
+    [Test]
+    public void GetNames_empty()
+    {
+      DbfStruct sut = new DbfStruct();
+      string[] res = sut.GetNames();
+      Assert.AreEqual(new string[] { }, res);
+    }
+
     #endregion
 
     #region SetReadOnly()

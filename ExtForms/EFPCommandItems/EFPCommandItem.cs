@@ -824,7 +824,7 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        string s=WinFormsTools.RemoveMnemonic(MenuText);
+        string s = WinFormsTools.RemoveMnemonic(MenuText);
         if (s.EndsWith("..."))
           s = s.Substring(0, s.Length - 3).Trim(); // 14.01.2023
         return s;
@@ -1017,7 +1017,7 @@ namespace FreeLibSet.Forms
     {
       if (_VisibleEx == null)
       {
-        _VisibleEx = new DepInput<bool>(Visible,VisibleEx_ValueChanged);
+        _VisibleEx = new DepInput<bool>(Visible, VisibleEx_ValueChanged);
         _VisibleEx.OwnerInfo = new DepOwnerInfo(this, "VisibleEx");
       }
     }
@@ -1082,7 +1082,7 @@ namespace FreeLibSet.Forms
     {
       if (_EnabledEx == null)
       {
-        _EnabledEx = new DepInput<bool>(Enabled,EnabledEx_ValueChanged);
+        _EnabledEx = new DepInput<bool>(Enabled, EnabledEx_ValueChanged);
         _EnabledEx.OwnerInfo = new DepOwnerInfo(this, "EnabledEx");
       }
     }
@@ -1143,7 +1143,7 @@ namespace FreeLibSet.Forms
     {
       if (_CheckedEx == null)
       {
-        _CheckedEx = new DepInput<bool>(Checked,CheckedEx_ValueChanged);
+        _CheckedEx = new DepInput<bool>(Checked, CheckedEx_ValueChanged);
         _CheckedEx.OwnerInfo = new DepOwnerInfo(this, "CheckedEx");
       }
     }
@@ -2532,15 +2532,13 @@ namespace FreeLibSet.Forms
     /// Если свойство возвращает true, то добавлять команды запрещено
     /// (свойства самих команд устанавливать можно)
     /// </summary>
-    public bool IsReadOnly
-    {
-      get { return _IsReadOnly; }
-      internal protected set
-      {
-        _IsReadOnly = value;
-      }
-    }
+    public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
+
+    internal /*protected */void SetReadOnly()
+    {
+      _IsReadOnly = true;
+    }
 
     /// <summary>
     /// Генерирует исключение, если IsReadOnly=true

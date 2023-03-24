@@ -96,14 +96,14 @@ namespace FreeLibSet.Forms
 
     #region Подготовка
 
-    internal void SetReadOnly()
+    internal new void SetReadOnly()
     {
       if (IsReadOnly)
         return; // повторный вызов
 
       OnPrepare();
 
-      base.IsReadOnly = true;
+      base.SetReadOnly();
 
       bool sbFlag = false;
       foreach (EFPCommandItem item in this)

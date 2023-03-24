@@ -3746,7 +3746,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region GetStringsFromColumn
+    #region GetStringsFromColumn()
 
     /// <summary>
     /// Получение списка строковых значений поля. 
@@ -3886,13 +3886,18 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region GetValuesFromColumn
+    #region GetValuesFromColumn()
 
     /// <summary>
     /// Получить значения поля для всех строк таблицы в виде массива
     /// Повторы и пустые значения не отбрасываются. Количество и порядок элементов в массиве соответствуют строкам в таблице
-    /// Хранящиеся в таблице значения DBNull заменяются на default
+    /// Хранящиеся в таблице значения DBNull заменяются на default.
     /// Если тип массива T не совпадает с типом данных в столбце таблицы, используется метод Convert.ChangeType(). Методы типа GetInt() не применяются
+    /// 
+    /// Замечания для строковых полей:
+    /// - Не выполняется обрезка концевых пробелов, как для DataTools.GetString().
+    /// - Для значения DBNull возвращается null, а не пустая строка.
+    /// - Может быть удобнее использовать метод GetStringsFromColumn(), но он убирает повторы и пустые строки.
     /// </summary>
     /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов DataColumn.DataType)</typeparam>
     /// <param name="table">Таблица исходных данных</param>

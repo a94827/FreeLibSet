@@ -69,6 +69,13 @@
     <Compile Include="Data\IdListTests.cs" />
     <Compile Include="Data\TableAndIdListTests.cs" />
     <Compile Include="DBF\DbfFieldInfoTests.cs" />
+    <Compile Include="DBF\DbfFileCopierTests.cs" />
+    <Compile Include="DBF\DbfFileTests.cs" />
+    <Compile Include="DBF\DbfResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DbfResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="DBF\DbfStructTests.cs" />
     <Compile Include="DependedValues\DepEvalExprTests.cs" />
     <Compile Include="DependedValues\DepFromArrayTests.cs" />
@@ -131,6 +138,22 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DBF\DbfResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DbfResource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DBF\Samples\dbase2.dbf" />
+    <None Include="DBF\Samples\dbase3.dbf" />
+    <None Include="DBF\Samples\dbase3m.dbf" />
+    <None Include="DBF\Samples\dbase3m.dbt" />
+    <None Include="DBF\Samples\dbase4.dbf" />
+    <None Include="DBF\Samples\dbase4m.dbf" />
+    <None Include="DBF\Samples\dbase4m.dbt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

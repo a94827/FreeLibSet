@@ -902,6 +902,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e) // 04.02.2022
         {
+          AddExceptionInfo(e);
           EFPApp.ShowException(e, DisplayName + " - ошибка загрузки данных");
         }
       }
