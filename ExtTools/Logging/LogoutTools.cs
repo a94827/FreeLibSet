@@ -3377,7 +3377,7 @@ namespace FreeLibSet.Logging
         if (String.IsNullOrEmpty(s) || s[0] == '-' || s[0] == '*')
           continue;
 
-        if (s.StartsWith("ExceptionClass"))
+        if (s.StartsWith("ExceptionClass", StringComparison.Ordinal))
         {
           int p = s.IndexOf('=');
           if (p < 0)
@@ -3386,7 +3386,7 @@ namespace FreeLibSet.Logging
           continue;
         }
 
-        if (s.StartsWith("Message"))
+        if (s.StartsWith("Message", StringComparison.Ordinal))
         {
           int p = s.IndexOf('=');
           if (p < 0)

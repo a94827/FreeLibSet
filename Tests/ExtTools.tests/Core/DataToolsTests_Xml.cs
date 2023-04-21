@@ -105,7 +105,7 @@ namespace ExtTools_tests.Core
       xmlDoc.Load(rdr2);
 
       string res = DataTools.XmlDocumentToString(xmlDoc);
-      Assert.IsTrue(res.StartsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>"), "First line");
+      Assert.IsTrue(res.StartsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>", StringComparison.Ordinal), "First line");
     }
 
 

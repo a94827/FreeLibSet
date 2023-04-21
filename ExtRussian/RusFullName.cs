@@ -650,7 +650,9 @@ namespace FreeLibSet.Russian
       else
       {
         string surname1 = Surname.ToUpperInvariant();
-        if (surname1.EndsWith("О") || surname1.EndsWith("ИХ") || surname1.EndsWith("ЫХ"))
+        if (surname1.EndsWith("О", StringComparison.Ordinal) || 
+          surname1.EndsWith("ИХ", StringComparison.Ordinal) || 
+          surname1.EndsWith("ЫХ", StringComparison.Ordinal))
           // Фамилии на "О" не склоняются
           noCasesSurname = true;
 

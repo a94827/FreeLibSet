@@ -716,7 +716,7 @@ namespace FreeLibSet.Drawing
       {
         id += (char)Read();
       }
-      if (!id.StartsWith("GIF"))
+      if (!id.StartsWith("GIF", StringComparison.Ordinal))
       {
         status = StatusFormatError;
         return;

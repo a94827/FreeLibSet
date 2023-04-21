@@ -1730,7 +1730,7 @@ namespace FreeLibSet.Forms
 
         if (value)
           _Form.Text = "(*) " + _Form.Text;
-        else if (_Form.Text.StartsWith("(*) "))
+        else if (_Form.Text.StartsWith("(*) ", StringComparison.Ordinal))
           _Form.Text = _Form.Text.Substring(4);
       }
     }

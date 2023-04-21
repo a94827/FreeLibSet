@@ -7618,6 +7618,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Класс исключения для отладки перехваченной ошибки в событии DataGridView.DataError
     /// </summary>
+    [Serializable]
     private class DataGridViewDataErrorException : ApplicationException
     {
       #region Конструктор

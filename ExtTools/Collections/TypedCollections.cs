@@ -3366,10 +3366,10 @@ namespace FreeLibSet.Collections
       return s;
     }
 
-    internal void RemoveRange(int value, int v)
-    {
-      throw new NotImplementedException();
-    }
+    //internal void RemoveRange(int value, int v)
+    //{
+    //  throw new NotImplementedException();
+    //}
 
     #endregion
 

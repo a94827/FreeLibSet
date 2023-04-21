@@ -454,7 +454,7 @@ namespace FreeLibSet.Text
           NewLine = Environment.NewLine;
       }
 
-      if (s.EndsWith(NewLine))
+      if (s.EndsWith(NewLine, StringComparison.Ordinal))
         s = s.Substring(0, s.Length - NewLine.Length);
 
       string[] a1 = s.Split(new string[] { NewLine }, StringSplitOptions.None);

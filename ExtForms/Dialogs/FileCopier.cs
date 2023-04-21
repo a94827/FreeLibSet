@@ -122,9 +122,9 @@ namespace FreeLibSet.Forms
     {
       Inc(1L);
     }
-    public void Inc(long Delta)
+    public void Inc(long delta)
     {
-      Value += Delta;
+      Value += delta;
     }
 
     private void CheckCancel()
@@ -154,7 +154,7 @@ namespace FreeLibSet.Forms
     /// Создать копировщик, использующий отдельное окно
     /// </summary>
     public FileCopier()
-      :this(null)
+      : this(null)
     {
     }
 
@@ -200,7 +200,7 @@ namespace FreeLibSet.Forms
     {
       if (String.IsNullOrEmpty(template))
         throw new ArgumentNullException("template");
-      if (template[0]==Path.DirectorySeparatorChar || template[template.Length-1]==Path.DirectorySeparatorChar)
+      if (template[0] == Path.DirectorySeparatorChar || template[template.Length - 1] == Path.DirectorySeparatorChar)
         throw new ArgumentException("Шаблон не может начинаться или заканчиваться символом \"" + Path.DirectorySeparatorChar + "\"");
       _Templates.Add((recurse ? ">" : "") + template);
     }
@@ -221,7 +221,7 @@ namespace FreeLibSet.Forms
     /// Для задания свойства используется специальная версия конструктора
     /// </summary>
     public Wizard Wizard { get { return _Wizard; } }
-    private Wizard _Wizard;
+    private readonly Wizard _Wizard;
 
     #endregion
 
@@ -240,8 +240,8 @@ namespace FreeLibSet.Forms
       if (_Templates.Count == 0)
         throw new InvalidOperationException("Не задано ни одного шаблона файлов");
 
-//      SrcDir = FileTools.GetFullDirName(SrcDir);
-//      DstDir = FileTools.GetFullDirName(DstDir);
+      //      SrcDir = FileTools.GetFullDirName(SrcDir);
+      //      DstDir = FileTools.GetFullDirName(DstDir);
 
       BeginForm();
       _Form.Text = "Копирование файлов";
@@ -285,21 +285,21 @@ namespace FreeLibSet.Forms
       _Form.ExtPBTotal.MaxValue = 2 * _Templates.Count;
       for (int i = 0; i < _Templates.Count; i++)
       {
-        bool Recurse = false;
-        string Template = _Templates[i];
-        if (Template.StartsWith(">"))
+        bool recurse = false;
+        string template = _Templates[i];
+        if (template.StartsWith(">", StringComparison.Ordinal))
         {
-          Recurse = true;
-          Template = Template.Substring(1);
+          recurse = true;
+          template = template.Substring(1);
         }
         string subDir = String.Empty;
-        int p = Template.LastIndexOf(Path.DirectorySeparatorChar);
+        int p = template.LastIndexOf(Path.DirectorySeparatorChar);
         if (p >= 0)
         {
-          subDir = Template.Substring(0, p + 1);
-          Template = Template.Substring(p + 1);
+          subDir = template.Substring(0, p + 1);
+          template = template.Substring(p + 1);
         }
-        DoAddFiles(SrcDir + subDir, Template, Recurse);
+        DoAddFiles(SrcDir + subDir, template, recurse);
       }
     }
 
@@ -361,7 +361,7 @@ namespace FreeLibSet.Forms
         if (!fi.Exists)
           throw new FileNotFoundException("Не найден исходный файл", thisPath.Path);
 
-        if (DstDir.Path.StartsWith("A:\\"))
+        if (DstDir.Path.StartsWith("A:\\", StringComparison.OrdinalIgnoreCase))
         {
           long freeSpace = GetFreeSpace(DstDir.Path);
           if (freeSpace < fi.Length)

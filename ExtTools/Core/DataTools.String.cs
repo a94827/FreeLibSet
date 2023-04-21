@@ -1212,7 +1212,7 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(str))
         return String.Empty;
 
-      int p = str.IndexOf(new string(searchChar, 2));
+      int p = str.IndexOf(new string(searchChar, 2), StringComparison.Ordinal);
       if (p < 0)
         return str;
 

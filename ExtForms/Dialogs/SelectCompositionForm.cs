@@ -224,7 +224,7 @@ namespace FreeLibSet.Forms
     {
       if (SelectedItem == null)
         efpSaveButton.Enabled = true;
-      else if (String.IsNullOrEmpty(efpSelCB.Text) || efpSelCB.Text.StartsWith("["))
+      else if (String.IsNullOrEmpty(efpSelCB.Text) || efpSelCB.Text.StartsWith("[", StringComparison.Ordinal))
         efpSaveButton.Enabled = false;
       else
         efpSaveButton.Enabled = true;
@@ -234,7 +234,7 @@ namespace FreeLibSet.Forms
     void cbParamSet_SaveClick(object sender, ParamSetComboBoxSaveEventArgs args)
     {
       string Name = efpSelCB.Text;
-      if (Name.StartsWith("["))
+      if (Name.StartsWith("[", StringComparison.Ordinal))
         Name = String.Empty;
 
       string UserSetName;

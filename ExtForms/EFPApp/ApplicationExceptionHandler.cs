@@ -304,6 +304,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Отдельный класс исключения, чтобы его было видно в log-файле
     /// </summary>
+    [Serializable]
     public class AppDomainUnhandledException : Exception
     {
       #region Конструктор

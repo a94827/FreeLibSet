@@ -336,7 +336,7 @@ namespace ExtTools_tests.DBF
       {
         _Dir = new TempDirectory();
         _PathDbf = new AbsPath(_Dir.Dir, format + ".dbf");
-        bool hasMemo = format.EndsWith("m");
+        bool hasMemo = format.EndsWith("m", StringComparison.Ordinal);
         if (hasMemo)
           _PathDbt = new AbsPath(_Dir.Dir, format + ".dbt");
         else

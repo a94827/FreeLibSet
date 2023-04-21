@@ -205,24 +205,26 @@ namespace FreeLibSet.FIAS
         DoLoadDbfSocrBase(con, filePath);
         return true;
       }
-      if (name.StartsWith("ADDROB") && CheckDbfFileNameRegion(name.Substring(6)))
+      if (name.StartsWith("ADDROB", StringComparison.Ordinal) && CheckDbfFileNameRegion(name.Substring(6)))
       {
         DoLoadDbfAddrOb(con, filePath);
         return true;
       }
-      if (name.StartsWith("HOUSE") && CheckDbfFileNameRegion(name.Substring(5)) && _FiasDB.DBSettings.UseHouse)
+      if (name.StartsWith("HOUSE", StringComparison.Ordinal) && CheckDbfFileNameRegion(name.Substring(5)) && _FiasDB.DBSettings.UseHouse)
       {
         DoLoadDbfFileHouse(con, filePath);
         return true;
       }
-      if (name.StartsWith("ROOM") && CheckDbfFileNameRegion(name.Substring(4)) && _FiasDB.DBSettings.UseRoom)
+      if (name.StartsWith("ROOM", StringComparison.Ordinal) && CheckDbfFileNameRegion(name.Substring(4)) && _FiasDB.DBSettings.UseRoom)
       {
         DoLoadDbfFileRoom(con, filePath);
         return true;
       }
 
       // 25.02.2021
-      if (name.StartsWith("DAD") || name.StartsWith("DHOUSE") || name.StartsWith("DROOM"))
+      if (name.StartsWith("DAD", StringComparison.Ordinal) || 
+        name.StartsWith("DHOUSE", StringComparison.Ordinal) || 
+        name.StartsWith("DROOM", StringComparison.Ordinal))
       {
         throw new NotImplementedException("Не реализована обработка удаления записей ФИАС. Файл " + filePath.Path);
       }

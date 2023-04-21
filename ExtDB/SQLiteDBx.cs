@@ -48,7 +48,7 @@ namespace FreeLibSet.Data.SQLite
 
       _SyncRoot = new object();
 
-      _InMemory = connectionStringBuilder.DataSource.EndsWith(MemoryFileName);
+      _InMemory = connectionStringBuilder.DataSource.EndsWith(MemoryFileName, StringComparison.Ordinal);
       if (!InMemory)
       {
         _FileName = new AbsPath(connectionStringBuilder.DataSource);
@@ -2032,7 +2032,7 @@ namespace FreeLibSet.Data.SQLite
     {
       SQLiteConnectionStringBuilder csb = new SQLiteConnectionStringBuilder(connectionString);
 
-      if (csb.DataSource.EndsWith(SQLiteDBx.MemoryFileName))
+      if (csb.DataSource.EndsWith(SQLiteDBx.MemoryFileName, StringComparison.Ordinal))
         return csb.ConnectionString; // 21.07.2021 У баз данных в памяти одно и тоже имя
 
       //csb.DataSource = ReplaceDBItem(csb.DataSource, OldDBName, NewDBName);

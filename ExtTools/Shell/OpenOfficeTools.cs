@@ -292,7 +292,7 @@ namespace FreeLibSet.Shell
           // Искомая строка выглядит так:
           // BuildVersion=1:5.0.3-rc2-0ubuntu1-trusty2
 
-          if (aLines[i].StartsWith("BuildVersion="))
+          if (aLines[i].StartsWith("BuildVersion=", StringComparison.Ordinal))
           {
             string s = aLines[i].Substring(13); // после знака равенства
             int p = s.IndexOf(':');

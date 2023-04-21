@@ -444,7 +444,7 @@ namespace FreeLibSet.FIAS
               default:
                 bool isAOType = false;
                 string key = pair.Key;
-                if (key.EndsWith(".TYPE"))
+                if (key.EndsWith(".TYPE", StringComparison.Ordinal))
                 {
                   key = key.Substring(0, key.Length - 5); // без ".TYPE"
                   isAOType = true;

@@ -379,7 +379,7 @@ namespace FreeLibSet.IO
     {
       if (String.IsNullOrEmpty(dirName))
         return String.Empty;
-      if (!dirName.EndsWith("\\"))
+      if (!dirName.EndsWith("\\", StringComparison.Ordinal))
         dirName += "\\";
       return dirName;
     }

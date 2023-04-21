@@ -96,20 +96,20 @@ namespace FreeLibSet.Shell
     /// Идентификатор ProgId
     /// </summary>
     public string ProgId { get { return _ProgId; } }
-    private string _ProgId;
+    private readonly string _ProgId;
 
     /// <summary>
     /// Путь к выполняемому файлу приложения
     /// </summary>
     public AbsPath ProgramPath { get { return _ProgramPath; } }
-    private AbsPath _ProgramPath;
+    private readonly AbsPath _ProgramPath;
 
     /// <summary>
     /// Аргументы командной строки для запуска приложения.
     /// Аргумент "%1" заменяется на путь к файлу
     /// </summary>
     public string Arguments { get { return _Arguments; } }
-    private string _Arguments;
+    private readonly string _Arguments;
 
     //public string CommandLine { get { return FCommandLine; } set { FCommandLine = value; } }
 
@@ -117,26 +117,26 @@ namespace FreeLibSet.Shell
     /// Отображаемое имя программы для команд "Открыть с помощью"
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
-    private string _DisplayName;
+    private readonly string _DisplayName;
 
     /// <summary>
     /// Путь к файлу в котором содержится значок.
     /// Может быть не задан
     /// </summary>
     public AbsPath IconPath { get { return _IconPath; } }
-    private AbsPath _IconPath;
+    private readonly AbsPath _IconPath;
 
     /// <summary>
     /// Индекс значка в файле.
     /// См. описание функции Windows ExtractIcon()
     /// </summary>
     public int IconIndex { get { return _IconIndex; } }
-    private int _IconIndex;
+    private readonly int _IconIndex;
     /// <summary>
     /// Если true, то при подстановке имени файла в командную строку будет использоваться форма "file:///"
     /// </summary>
-    public bool UserURL { get { return true; } }
-    private bool _UseURL;
+    public bool UseURL { get { return _UseURL; } }
+    private readonly bool _UseURL;
 
 #if DEBUG
     /// <summary>
@@ -144,7 +144,7 @@ namespace FreeLibSet.Shell
     /// Это свойство существует только в отладочном режиме
     /// </summary>
     public string InfoSourceString { get { return _InfoSourceString; } }
-    private string _InfoSourceString;
+    private readonly string _InfoSourceString;
 #endif
 
     /// <summary>
@@ -296,7 +296,7 @@ namespace FreeLibSet.Shell
     /// Команды "Открыть с помощью"
     /// </summary>
     public IList<FileAssociationItem> OpenWithItems { get { return _OpenWithItems; } }
-    private OpenWithItemList _OpenWithItems;
+    private readonly OpenWithItemList _OpenWithItems;
 
     private bool OpenWithContains(FileAssociationItem item)
     {
@@ -965,7 +965,7 @@ namespace FreeLibSet.Shell
                 foreach (System.Xml.XmlNode globnode in mtnode.SelectNodes("Def:glob", nmSpcMan))
                 {
                   string pattern = GetAttrStr(globnode, "pattern");
-                  if (!pattern.StartsWith("*."))
+                  if (!pattern.StartsWith("*.", StringComparison.Ordinal))
                     continue;
 
                   _FileExtMimeDict[pattern.Substring(1).ToUpperInvariant()] = mimetype;
@@ -1072,7 +1072,7 @@ namespace FreeLibSet.Shell
       {
         if (String.IsNullOrEmpty(desktopFileName))
           return null;
-        if (!desktopFileName.EndsWith(".desktop"))
+        if (!desktopFileName.EndsWith(".desktop", StringComparison.Ordinal))
           desktopFileName += ".desktop";
         AbsPath DesktopFilePath = new AbsPath("/usr/share/applications/" + desktopFileName);
         if (!System.IO.File.Exists(DesktopFilePath.Path))

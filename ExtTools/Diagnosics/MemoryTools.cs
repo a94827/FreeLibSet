@@ -299,9 +299,9 @@ namespace FreeLibSet.Diagnostics
       long vAvail = -1L;
       for (int i = 0; i < a.Length; i++)
       {
-        if (a[i].StartsWith("MemTotal:"))
+        if (a[i].StartsWith("MemTotal:", StringComparison.Ordinal))
           vTotal = GetMemoryBytesFromUnixFileString(a[i]);
-        else if (a[i].StartsWith("MemAvailable:"))
+        else if (a[i].StartsWith("MemAvailable:", StringComparison.Ordinal))
           vAvail = GetMemoryBytesFromUnixFileString(a[i]);
         if (vTotal>=0 && vAvail>=0)
           break; // строки идут в начале файла
@@ -393,7 +393,7 @@ namespace FreeLibSet.Diagnostics
       string[] a = System.IO.File.ReadAllLines("/proc/meminfo");
       for (int i = 0; i < a.Length; i++)
       {
-        if (a[i].StartsWith("MemTotal:"))
+        if (a[i].StartsWith("MemTotal:", StringComparison.Ordinal))
           return GetMemoryBytesFromUnixFileString(a[i]);
       }
 

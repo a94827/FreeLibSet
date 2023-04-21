@@ -205,7 +205,7 @@ namespace FreeLibSet.Forms.Docs
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
       object v = rowValues.GetValue(ColumnName);
-      return DataTools.GetString(v).StartsWith(Value);
+      return DataTools.GetString(v).StartsWith(Value, StringComparison.Ordinal);
     }
 
     /// <summary>

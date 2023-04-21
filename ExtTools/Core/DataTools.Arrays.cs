@@ -18,7 +18,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Пустой масив объектов
     /// </summary>
-    public static object[] EmptyObjects = new object[0];
+    public static readonly object[] EmptyObjects = new object[0];
 
     /// <summary>
     /// Массив идентификаторов нулевой длины (Int32[0])

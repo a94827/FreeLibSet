@@ -397,7 +397,7 @@ namespace FreeLibSet.Win32
     }
 
     [DebuggerStepThrough]
-    private void ThrowWin32Error()
+    private static void ThrowWin32Error()
     {
       int res = Marshal.GetLastWin32Error();
       throw new System.ComponentModel.Win32Exception(res);

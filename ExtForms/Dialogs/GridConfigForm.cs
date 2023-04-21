@@ -205,13 +205,13 @@ namespace FreeLibSet.Forms
           string[] names = cfgHist.GetChildNames();
           for (int i = 0; i < names.Length; i++)
           {
-            if (names[i].StartsWith("Hist"))
+            if (names[i].StartsWith("Hist", StringComparison.Ordinal))
             {
               CfgPart cfgOne = cfgHist.GetChild(names[i], false);
               _TableHist.Rows.Add(names[i], cfgOne.GetNullableDateTime("Time"),
                 cfgOne.GetString("MD5"), _TableHist.Rows.Count + 1);
             }
-            if (names[i].StartsWith("User"))
+            if (names[i].StartsWith("User", StringComparison.Ordinal))
             {
               CfgPart cfgOne = cfgHist.GetChild(names[i], false);
               _TableUser.Rows.Add(names[i], cfgOne.GetString("Name"), cfgOne.GetNullableDateTime("Time"),
@@ -378,7 +378,7 @@ namespace FreeLibSet.Forms
       ParamSetComboBoxItem oldItem = SetComboBox.Items.FindDisplayName(args.DisplayName);
       if (oldItem != null)
       {
-        if (!oldItem.Code.StartsWith("User"))
+        if (!oldItem.Code.StartsWith("User", StringComparison.Ordinal))
         {
           EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы");
           return;
@@ -389,7 +389,7 @@ namespace FreeLibSet.Forms
           return;
       }
 
-      if (args.DisplayName.StartsWith("("))
+      if (args.DisplayName.StartsWith("(", StringComparison.Ordinal))
       {
         EFPApp.ShowTempMessage("Имя набора не может начинаться со скобки");
         return;
@@ -442,9 +442,9 @@ namespace FreeLibSet.Forms
     void SetComboBox_DeleteClick(object sender, ParamSetComboBoxItemEventArgs args)
     {
       DataTable table;
-      if (args.Item.Code.StartsWith("User"))
+      if (args.Item.Code.StartsWith("User", StringComparison.Ordinal))
         table = _TableUser;
-      else if (args.Item.Code.StartsWith("Hist"))
+      else if (args.Item.Code.StartsWith("Hist", StringComparison.Ordinal))
         table = _TableHist;
       else
       {
@@ -472,7 +472,7 @@ namespace FreeLibSet.Forms
 
     void SetComboBox_CanDeleteItem(object sender, ParamSetComboBoxItemCancelEventArgs args)
     {
-      if (args.Item.Code.StartsWith("Hist") || args.Item.Code.StartsWith("User"))
+      if (args.Item.Code.StartsWith("Hist", StringComparison.Ordinal) || args.Item.Code.StartsWith("User", StringComparison.Ordinal))
         args.Cancel = false;
       else
         args.Cancel = true;

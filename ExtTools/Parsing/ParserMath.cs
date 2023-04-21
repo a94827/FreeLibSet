@@ -2390,7 +2390,7 @@ namespace FreeLibSet.Parsing
     }
 
 
-    private IExpression CreateParenthesExpression(ParsingData data, IExpression leftExpression)
+    private static IExpression CreateParenthesExpression(ParsingData data, IExpression leftExpression)
     {
       Token openToken = data.Tokens[data.CurrTokenIndex - 1];
       //Data.SkipToken(); было пропущено в вызывающем методе

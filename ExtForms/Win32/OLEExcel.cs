@@ -1216,7 +1216,7 @@ namespace FreeLibSet.OLE.Excel
         return String.Empty;
       if (x is String)
       {
-        if (((string)x).StartsWith("'"))
+        if (((string)x).StartsWith("'", StringComparison.Ordinal))
           return ((string)x).Substring(1);
       }
       return x.ToString();

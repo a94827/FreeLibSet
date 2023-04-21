@@ -2373,7 +2373,7 @@ namespace FreeLibSet.FIAS
       switch (abbr)
       {
         case "линия":
-          p = name.IndexOf("-я ");
+          p = name.IndexOf("-я ", StringComparison.Ordinal);
           if (p >= 0)
           {
             // Город Санкт-Петербург, линия "14-я В.О." -> 14-я линия В.О.
@@ -2383,7 +2383,7 @@ namespace FreeLibSet.FIAS
             _InternalSB.Append(name.Substring(p + 2)); // начиная с пробела
             return true;
           }
-          if (name.EndsWith("-я"))
+          if (name.EndsWith("-я", StringComparison.Ordinal))
           {
             // Город Санкт-Петербург, линия "сдт Ленмашзавод 1-я" -> сдт Ленмашзавод 1-я линия
             _InternalSB.Append(name);
@@ -2391,7 +2391,7 @@ namespace FreeLibSet.FIAS
             return true;
           }
           // Город Санкт-Петербург, линия "Фруктовая (Апраксин двор)" -> Фруктовая линия (Апраксин двор)
-          p = name.IndexOf("я (");
+          p = name.IndexOf("я (", StringComparison.Ordinal);
           if (p >= 0)
           {
             _InternalSB.Append(name.Substring(0, p + 1)); // без пробела

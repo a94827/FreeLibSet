@@ -142,7 +142,7 @@ namespace FreeLibSet.Forms
 
         for (int i = 0; i < names.Length; i++)
         {
-          if (names[i].StartsWith("Hist"))
+          if (names[i].StartsWith("Hist", StringComparison.Ordinal))
           {
             CfgPart cfgOne = cfgHist.GetChild(names[i], false);
             /*DataRow Row = */ table.Rows.Add(names[i], cfgOne.GetDateTime("Time"),
@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms
 
         for (int i = 0; i < names.Length; i++)
         {
-          if (names[i].StartsWith("User"))
+          if (names[i].StartsWith("User", StringComparison.Ordinal))
           {
             CfgPart cfgOne = cfgHist.GetChild(names[i], false);
             /*DataRow Row = */table.Rows.Add(names[i], cfgOne.GetString("Name"),
@@ -275,7 +275,7 @@ namespace FreeLibSet.Forms
 
         for (int i = 0; i < names.Length; i++)
         {
-          if (names[i].StartsWith("User"))
+          if (names[i].StartsWith("User", StringComparison.Ordinal))
           {
             CfgPart cfgOne = cfgHist.GetChild(names[i], false);
             string UserName = cfgOne.GetString("Name");
@@ -383,7 +383,7 @@ namespace FreeLibSet.Forms
 
         for (int i = 0; i < names.Length; i++)
         {
-          if (names[i].StartsWith("Hist"))
+          if (names[i].StartsWith("Hist", StringComparison.Ordinal))
           {
             CfgPart cfgOne = cfgHist.GetChild(names[i], false);
             DataRow row = table.Rows.Add(names[i], cfgOne.GetDateTime("Time"),
@@ -525,7 +525,7 @@ namespace FreeLibSet.Forms
 
         for (int i = 0; i < names.Length; i++)
         {
-          if (names[i].StartsWith("User"))
+          if (names[i].StartsWith("User", StringComparison.Ordinal))
           {
             CfgPart cfgOne = cfgHist.GetChild(names[i], false);
             DataRow row = table.Rows.Add(names[i],

@@ -4001,14 +4001,14 @@ namespace FreeLibSet.Config
     {
       string[] allNames = File.GetSectionNames();
       List<string> subNames = null;
-      string Name2 = SectionName + "\\";
+      string name2 = SectionName + "\\";
       for (int i = 0; i < allNames.Length; i++)
       {
-        if (allNames[i].StartsWith(Name2))
+        if (allNames[i].StartsWith(name2, StringComparison.Ordinal))
         {
           if (subNames == null)
             subNames = new List<string>();
-          subNames.Add(allNames[i].Substring(Name2.Length));
+          subNames.Add(allNames[i].Substring(name2.Length));
         }
       }
 

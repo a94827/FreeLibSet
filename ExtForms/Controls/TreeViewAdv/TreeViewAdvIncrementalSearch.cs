@@ -78,7 +78,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
       if (node != null)
         foreach (string label in IterateNodeLabels(node))
         {
-          if (label.StartsWith(_searchString))
+          if (label.StartsWith(_searchString, StringComparison.Ordinal))
           {
             _tree.SelectedNode = _currentNode;
             return;
@@ -136,7 +136,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
 
         foreach (string label in IterateNodeLabels(node))
         {
-          if (label.StartsWith(_searchString))
+          if (label.StartsWith(_searchString, StringComparison.Ordinal))
           {
             found = true;
             _tree.SelectedNode = _currentNode;

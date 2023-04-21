@@ -1273,7 +1273,7 @@ namespace FreeLibSet.RI
     /// <param name="dispArgs"></param>
     /// <param name="ui"></param>
     /// <returns></returns>
-    private NamedValues ExecuteInterfaceCall(NamedValues dispArgs, IRemoteInterface ui)
+    private static NamedValues ExecuteInterfaceCall(NamedValues dispArgs, IRemoteInterface ui)
     {
       NamedValues dispRes;
       DialogResult dlgRes;

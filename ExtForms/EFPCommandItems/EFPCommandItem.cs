@@ -825,7 +825,7 @@ namespace FreeLibSet.Forms
       get
       {
         string s = WinFormsTools.RemoveMnemonic(MenuText);
-        if (s.EndsWith("..."))
+        if (s.EndsWith("...", StringComparison.Ordinal))
           s = s.Substring(0, s.Length - 3).Trim(); // 14.01.2023
         return s;
       }

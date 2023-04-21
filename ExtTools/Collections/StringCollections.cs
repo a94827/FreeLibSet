@@ -122,7 +122,7 @@ namespace FreeLibSet.Collections
     /// Возвращает true, если список не является чувствительным к регистру
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
-    private bool _IgnoreCase;
+    private readonly bool _IgnoreCase;
 
     #endregion
   }
@@ -213,7 +213,7 @@ namespace FreeLibSet.Collections
     /// Возвращает true, если коллекция не является чувствительной к регистру
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
-    private bool _IgnoreCase;
+    private readonly bool _IgnoreCase;
 
     #endregion
 
@@ -326,7 +326,7 @@ namespace FreeLibSet.Collections
     /// Свойство задается в конструкторе
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
-    private bool _IgnoreCase;
+    private readonly bool _IgnoreCase;
 
     #endregion
 

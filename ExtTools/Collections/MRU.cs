@@ -2236,7 +2236,6 @@ namespace FreeLibSet.Collections
     /// Перечислитель, расширяющий LinkedList.GetEnumerator().
     /// Перечислимым элементом является пара "Код-Значение", а не один только код
     /// </summary>
-    [Serializable]
     public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
     {
       #region Конструктор

@@ -1855,7 +1855,7 @@ namespace FreeLibSet.Data.SqlClient
           found = true;
         else
         {
-          if (indexName.StartsWith("Index"))
+          if (indexName.StartsWith("Index", StringComparison.Ordinal))
             continue; // составной пользовательский индекс, в который входит поле "Id"
           SQLExecuteNonQuery("ALTER TABLE [" + table.TableName + "] DROP CONSTRAINT [" + indexName + "]");
           errors.AddInfo("Удалено неправильное ограничение первичного ключа \"" + indexName + "\" в таблице \"" + table.TableName + "\"");
@@ -1940,7 +1940,7 @@ namespace FreeLibSet.Data.SqlClient
         string indexName = DataTools.GetString(indexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")
         //          continue;
-        if (indexName.StartsWith("FK_") || indexName.StartsWith("PK_"))
+        if (indexName.StartsWith("FK_", StringComparison.Ordinal) || indexName.StartsWith("PK_", StringComparison.Ordinal))
           continue;
 
         if (!table.Indexes.Contains(indexName))
@@ -2084,7 +2084,7 @@ namespace FreeLibSet.Data.SqlClient
         string indexName = DataTools.GetString(indexRow, "INDEX_NAME");
         //        if (IndexName == "PrimaryKey")
         //          continue;
-        if (indexName.StartsWith("FK_") || indexName.StartsWith("PK_"))
+        if (indexName.StartsWith("FK_", StringComparison.Ordinal) || indexName.StartsWith("PK_", StringComparison.Ordinal))
           continue;
 
         // Добавляем индекс в список на удаление

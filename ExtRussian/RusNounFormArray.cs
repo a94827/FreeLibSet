@@ -425,7 +425,7 @@ namespace FreeLibSet.Russian
         #region Первое склонение
 
         case RusDeclension.First:
-          if (upperForm.EndsWith("ЬЯ")) // свинья
+          if (upperForm.EndsWith("ЬЯ", StringComparison.Ordinal)) // свинья
           {
             // в отличие от слов на "я" без мягкого знака, в родительном
             // и дательном падежах множественного числа мягкий знак отбрасывается
@@ -436,7 +436,7 @@ namespace FreeLibSet.Russian
                                    "ьи","ей" ,"ьям", "ей", "ьями" ,"ьях"};
             return;
           }
-          if (upperForm.EndsWith("АЯ"))
+          if (upperForm.EndsWith("АЯ", StringComparison.Ordinal))
           {
             // прилагательное (красная)
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ая"
@@ -445,7 +445,7 @@ namespace FreeLibSet.Russian
             return;
           }
 
-          if (upperForm.EndsWith("ИЯ")) // имена ("Юлия")
+          if (upperForm.EndsWith("ИЯ", StringComparison.Ordinal)) // имена ("Юлия")
           {
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ия"
             aEnds = new string[12]{"ия","ии" ,"ии" ,"ию","ией" ,"ии",
@@ -453,14 +453,14 @@ namespace FreeLibSet.Russian
             return;
           }
 
-          if (upperForm.EndsWith("ЯЯ")) // прилагательное (синяя)
+          if (upperForm.EndsWith("ЯЯ", StringComparison.Ordinal)) // прилагательное (синяя)
           {
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "яя"
             aEnds = new string[12]{"яя","ей" ,"ей" ,"юю","ей" ,"ей",
                                    "ие","их","им","их","ими","их"};
             return;
           }
-          if (upperForm.EndsWith("Я"))
+          if (upperForm.EndsWith("Я", StringComparison.Ordinal))
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "я"
             aEnds = new string[12]{"я","и" ,"е" ,"ю","ей" ,"е",
@@ -468,8 +468,10 @@ namespace FreeLibSet.Russian
             return;
 
           }
-          if ((upperForm.EndsWith("ОВА") || upperForm.EndsWith("ЕВА") ||
-            upperForm.EndsWith("ИНА") || upperForm.EndsWith("ЫНА")) &&
+          if ((upperForm.EndsWith("ОВА", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ЕВА", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ИНА", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ЫНА", StringComparison.Ordinal)) &&
             ((options & RusFormArrayGetCasesOptions.Which) == RusFormArrayGetCasesOptions.Which))
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "а"
@@ -477,7 +479,7 @@ namespace FreeLibSet.Russian
                                    "ы","ых","ым","ых","ыми","ых"};
             return;
           }
-          if (upperForm.EndsWith("ЙКА"))  // гайка, чайка
+          if (upperForm.EndsWith("ЙКА", StringComparison.Ordinal))  // гайка, чайка
           {
             // В родительном и винительном падежах множественного числа
             // исчезает "Й"
@@ -486,7 +488,7 @@ namespace FreeLibSet.Russian
                                    "йки","ек","йкам","ек","йками","йках"};
             return;
           }
-          if (upperForm.EndsWith("ЧКА"))  // тачка, булочка
+          if (upperForm.EndsWith("ЧКА", StringComparison.Ordinal))  // тачка, булочка
           {
             // В родительном и винительном падежах множественного числа
             // появоятся буква "е"
@@ -496,7 +498,7 @@ namespace FreeLibSet.Russian
                     "чки","чек","чкам","чек","чками","чках"};
             return;
           }
-          if (baseForm.EndsWith("ВКА"))  // морковка
+          if (baseForm.EndsWith("ВКА", StringComparison.Ordinal))  // морковка
           {
             // В родительном и винительном падежах множественного числа
             // добавляется буква "о": морковка->морковок, а не морковк
@@ -506,7 +508,7 @@ namespace FreeLibSet.Russian
                                    "вки","вок","вкам","вки","вками","вках"};
             return;
           }
-          if (upperForm.EndsWith("А"))
+          if (upperForm.EndsWith("А", StringComparison.Ordinal))
           {
             if (upperForm.Length > 3 && upperForm[upperForm.Length - 3] == 'Ь' &&
                  "БВГДЖЗКЛМНПРСТФХЦЧШЩ".IndexOf(upperForm[upperForm.Length - 2]) >= 0)
@@ -534,7 +536,7 @@ namespace FreeLibSet.Russian
             }
             return;
           }
-          if (upperForm.EndsWith("Ы")) // "ножницы"
+          if (upperForm.EndsWith("Ы", StringComparison.Ordinal)) // "ножницы"
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "ы"
             aEnds = new string[12]{"ы", "", "ам", "ы", "амм"  ,"ах",
@@ -547,27 +549,27 @@ namespace FreeLibSet.Russian
         #region Второе склонение
 
         case RusDeclension.Second:
-          if (upperForm.EndsWith("Ь")) // конь, пень
+          if (upperForm.EndsWith("Ь", StringComparison.Ordinal)) // конь, пень
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "ь"
             aEnds = new string[12]{"ь","я" ,"ю" ,"я","ем" ,"е",
                                    "и","ей","ям","ей","ями","ях"};
             return;
           }
-          if (upperForm.EndsWith("ЫЙ"))  // прилагательные ("главный")
+          if (upperForm.EndsWith("ЫЙ", StringComparison.Ordinal))  // прилагательные ("главный")
           {
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ый"
-            aEnds = new string[12]{"ый","ого" ,"ому" ,"ого","ым" ,"ом",           
+            aEnds = new string[12]{"ый","ого" ,"ому" ,"ого","ым" ,"ом",
                                    "ые","ых","ым","ых","ыми","ых"};
             return;
           }
 
-          if (upperForm.EndsWith("ИЙ"))
+          if (upperForm.EndsWith("ИЙ", StringComparison.Ordinal))
           {
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ий"
             if ((options & RusFormArrayGetCasesOptions.Name) == RusFormArrayGetCasesOptions.Name)
               // Имена "Василий", "Дмитрий"
-              aEnds = new string[12]{"ий","ия" ,"ию" ,"ия","ием" ,"ие",           
+              aEnds = new string[12]{"ий","ия" ,"ию" ,"ия","ием" ,"ие",
                                      "ии","иев","иям","иев","иями","иях"};
             else
             // прилагательные ("ближний"-"ближнего")
@@ -577,15 +579,15 @@ namespace FreeLibSet.Russian
               if (upperForm.Length > 2)
                 c3 = upperForm[upperForm.Length - 3];
               if ("БВГКМПРСТФХ".IndexOf(c3) >= 0) // 30.10.2009 ??? Где бы найти правило
-                aEnds = new string[12]{"ий","ого" ,"ому" ,"ого","им" ,"ом",           
+                aEnds = new string[12]{"ий","ого" ,"ому" ,"ого","им" ,"ом",
                                      "ие","их","им","их","ими","их"};
               else
-                aEnds = new string[12]{"ий","его" ,"ему" ,"его","им" ,"ем",           
+                aEnds = new string[12]{"ий","его" ,"ему" ,"его","им" ,"ем",
                                      "ие","их","им","их","ими","их"};
             }
             return;
           }
-          if (upperForm.EndsWith("ЕЙ"))
+          if (upperForm.EndsWith("ЕЙ", StringComparison.Ordinal))
           {
             // Отличается винительным падежом множественного числа
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ей"
@@ -593,28 +595,28 @@ namespace FreeLibSet.Russian
                                    "еи","еев","еям","еев","еями","еях"};
             return;
           }
-          if (upperForm.EndsWith("ОЙ"))
+          if (upperForm.EndsWith("ОЙ", StringComparison.Ordinal))
           {
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ой"
             aEnds = new string[12]{"ой","ого" ,"ому" ,"ого","ым" ,"ом",
                                    "ые","ых","ым","ых","ыми","ых"};
             return;
           }
-          if (upperForm.EndsWith("АЙ"))
+          if (upperForm.EndsWith("АЙ", StringComparison.Ordinal))
           {
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ай"
             aEnds = new string[12]{"ай","ая" ,"аю" ,"ая","аем" ,"ае",
                                    "аи","аев","аями","аев","аями","аях"};
             return;
           }
-          if (upperForm.EndsWith("Й")) // буй
+          if (upperForm.EndsWith("Й", StringComparison.Ordinal)) // буй
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "й"
             aEnds = new string[12]{"й","я" ,"ю" ,"й","ем" ,"е",
                                    "и","ев","ям","и","ями","ях"};
             return;
           }
-          if (upperForm.EndsWith("Е")) // солнце
+          if (upperForm.EndsWith("Е", StringComparison.Ordinal)) // солнце
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "е"
             // В зависимости от предпоследней буквы, в родительном (и др.)
@@ -631,14 +633,14 @@ namespace FreeLibSet.Russian
                                      "а","","ам","а","ами","ах"};
             return;
           }
-          if (upperForm.EndsWith("О")) // окно
+          if (upperForm.EndsWith("О", StringComparison.Ordinal)) // окно
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "о"
             aEnds = new string[12]{"о","а" ,"у" ,"о","ом" ,"е",
                                    "а","","ам","а","ами","ах"};
             return;
           }
-          if (upperForm.EndsWith("НЕЦ"))
+          if (upperForm.EndsWith("НЕЦ", StringComparison.Ordinal))
           {
             // В таких словах ("конец") исчезает буква "е"
             cBase = baseForm.Substring(0, baseForm.Length - 3);// Отбросили "нец"
@@ -646,28 +648,31 @@ namespace FreeLibSet.Russian
                                    "нцы","нцов","нцам","нцы","нцами","нцах"};
             return;
           }
-          if (upperForm.EndsWith("ОВ") || upperForm.EndsWith("ЕВ"))
+          if (upperForm.EndsWith("ОВ", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ЕВ", StringComparison.Ordinal))
           {
             cBase = baseForm; // ничего не отбрасываем
             aEnds = new string[12]{""  ,"а" ,"у" ,"а" ,"ым" ,"е",
                                    "ы","ых","ым","ых","ыми","ых"};
             return;
           }
-          if (upperForm.EndsWith("ИН") || upperForm.EndsWith("ЫН"))
+          if (upperForm.EndsWith("ИН", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ЫН", StringComparison.Ordinal))
           {
             cBase = baseForm; // ничего не отбрасываем
             aEnds = new string[12]{""  ,"а" ,"у" ,"а" ,"ым" ,"е",
                                    "ы","ых","ым","ых","ами","ых"};
             return;
           }
-          if (upperForm.EndsWith("ИЧ") || upperForm.EndsWith("ЫЧ"))
+          if (upperForm.EndsWith("ИЧ", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ЫЧ", StringComparison.Ordinal))
           {
             cBase = baseForm; // ничего не отбрасываем
             aEnds = new string[12]{""  ,"а" ,"у" ,"а" ,"ем" ,"е",
                                    "и","ей","ам","ей","ами","ах"};
             return;
           }
-          if (upperForm.EndsWith("ОК")) // горшок, совок, пучок
+          if (upperForm.EndsWith("ОК", StringComparison.Ordinal)) // горшок, совок, пучок
           {
             cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ок"
             aEnds = new string[12]{"ок", "ка" ,"ку" ,"ок","ком" ,"ке",
@@ -685,7 +690,7 @@ namespace FreeLibSet.Russian
                               "ьки", "ьков","ькам","ьки","ьками","ьках"}
           ***************/
 
-          if (upperForm.EndsWith("Ы")) // "щипцы"
+          if (upperForm.EndsWith("Ы", StringComparison.Ordinal)) // "щипцы"
           {
             // ("ножницы" относятся к 1-му склонению, а "щипцы" - ко второму):
             // ножницы - ножниц
@@ -713,8 +718,10 @@ namespace FreeLibSet.Russian
           // ночь -> ночам
           // мышь -> мышам
           // тень -> теням
-          if (upperForm.EndsWith("ЧЬ") || upperForm.EndsWith("ШЬ") ||
-            upperForm.EndsWith("ЩЬ") || upperForm.EndsWith("ЖЬ"))
+          if (upperForm.EndsWith("ЧЬ", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ШЬ", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ЩЬ", StringComparison.Ordinal) ||
+            upperForm.EndsWith("ЖЬ", StringComparison.Ordinal))
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "ь"
             aEnds = new string[12]{"ь","и" ,"и" ,"ь","ью" ,"и",
@@ -726,7 +733,7 @@ namespace FreeLibSet.Russian
                                  "и","ей","ям","и","ями","ях"};
           return;
 
-        #endregion
+          #endregion
       }
     }
 

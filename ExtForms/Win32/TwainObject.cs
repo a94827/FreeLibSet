@@ -42,6 +42,7 @@ namespace FreeLibSet.Win32.Twain
 
   #endregion
 
+  [Serializable]
   public class TwainException : Exception
   {
     #region Конструктор

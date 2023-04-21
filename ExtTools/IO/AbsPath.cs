@@ -645,11 +645,11 @@ namespace FreeLibSet.IO
           return false;
         if (System.IO.Path.DirectorySeparatorChar == '\\')
         {
-          return _Path.StartsWith("\\\\");
+          return _Path.StartsWith("\\\\", StringComparison.Ordinal);
         }
         else
         {
-          if (_Path.StartsWith("smb://"))
+          if (_Path.StartsWith("smb://", StringComparison.Ordinal))
             return true;
           // !!! Для Unix - не знаю других вариантов, кроме Самбы
         }

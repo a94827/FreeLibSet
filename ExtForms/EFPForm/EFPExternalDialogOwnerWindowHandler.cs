@@ -90,7 +90,7 @@ namespace FreeLibSet.Forms
     /// The GetForegroundWindow function returns a handle to the foreground window.
     /// </summary>
     [DllImport("user32.dll")]
-    public static extern IntPtr GetForegroundWindow();
+    private static extern IntPtr GetForegroundWindow();
 
     #endregion
   }

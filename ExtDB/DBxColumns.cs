@@ -198,7 +198,7 @@ namespace FreeLibSet.Data
     /// Получить список имен полей таблицы с заданным префиксом
     /// </summary>
     /// <param name="columns">Коллекция столбцов DataTable.Columns</param>
-    /// <param name="prefix">Префикс имен столбцов</param>
+    /// <param name="prefix">Префикс имен столбцов. Регистр символов учитывается</param>
     /// <param name="stripPrefix">Удалить префикс из списка имен</param>
     /// <returns>Объект DBxColumns или null</returns>
     public static DBxColumns FromColumns(DataColumnCollection columns, string prefix, bool stripPrefix)
@@ -211,7 +211,7 @@ namespace FreeLibSet.Data
       List<String> names = new List<string>();
       foreach (DataColumn column in columns)
       {
-        if (column.ColumnName.StartsWith(prefix))
+        if (column.ColumnName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) // 21.04.2023
         {
           if (stripPrefix)
             names.Add(column.ColumnName.Substring(prefix.Length));
@@ -246,15 +246,18 @@ namespace FreeLibSet.Data
       for (int i = 0; i < a.Length; i++)
       {
         string s = a[i].Trim();
-        string s1 = s.ToUpper();
-        if (s1.EndsWith(" DESC"))
+        string s1 = s.ToUpperInvariant();
+        if (s1.EndsWith(" DESC", StringComparison.Ordinal))
           s = s.Substring(0, s.Length - 5);
         else
         {
-          if (s1.EndsWith(" ASC"))
+          if (s1.EndsWith(" ASC", StringComparison.Ordinal))
             s = s.Substring(0, s.Length - 4);
         }
-        if (s.StartsWith("[") && s.EndsWith("]"))
+        if (s.Length == 0)
+          throw new ArgumentException("Неправильное формат порядка сортировки", "sort");
+
+        if (s[0] == '[' && s[s.Length - 1] == ']') // 21.04.2023
           s = s.Substring(1, s.Length - 2);
         a[i] = s;
       }
@@ -574,7 +577,7 @@ namespace FreeLibSet.Data
     /// Возвращает true, если имеется хотя бы одно поле, имя которого начинается с <paramref name="columnNamePrefix"/>.
     /// Если <paramref name="columnNamePrefix"/> - пустая строка, то возвращается true, если в текущем массиве есть хотя бы одно поле
     /// </summary>
-    /// <param name="columnNamePrefix">Префикс имени поля для поиска</param>
+    /// <param name="columnNamePrefix">Префикс имени поля для поиска. Регистр символов учитывается</param>
     /// <returns>true, если есть поле с подходящим именем</returns>
     public bool ContainsStartedWith(string columnNamePrefix)
     {
@@ -583,7 +586,7 @@ namespace FreeLibSet.Data
 
       for (int i = 0; i < _Items.Length; i++)
       {
-        if (_Items[i].StartsWith(columnNamePrefix))
+        if (_Items[i].StartsWith(columnNamePrefix, StringComparison.Ordinal)) // 21.04.2023
           return true;
       }
       return false;
@@ -1472,7 +1475,7 @@ namespace FreeLibSet.Data
     /// Если <paramref name="columnNamePrefix"/> - пустая строка, то возвращается true, если текущий массив непустой.
     /// Если выполняется поиск для ссылочных полей, точка вероятно, должна быть добавлена в аргумент <paramref name="columnNamePrefix"/>.
     /// </summary>
-    /// <param name="columnNamePrefix">Префикс имени поля для поиска</param>
+    /// <param name="columnNamePrefix">Префикс имени поля для поиска. Регистр символов учитывается</param>
     /// <returns>true, если есть поле с подходящим именем</returns>
     public bool ContainsStartedWith(string columnNamePrefix)
     {
@@ -1481,7 +1484,7 @@ namespace FreeLibSet.Data
 
       for (int i = 0; i < Count; i++)
       {
-        if (this[i].StartsWith(columnNamePrefix))
+        if (this[i].StartsWith(columnNamePrefix, StringComparison.Ordinal))
           return true;
       }
       return false;

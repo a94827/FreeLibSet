@@ -78,7 +78,7 @@ namespace FreeLibSet.Data
 
     private static readonly CharArrayIndexer _BadChars = new CharArrayIndexer(" ,[]");
 
-    private void ValidateName(string name)
+    private static void ValidateName(string name)
     {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentNullException("name");
@@ -90,7 +90,7 @@ namespace FreeLibSet.Data
       if (name[0] == '.' || name[name.Length - 1] == '.')
         throw new ArgumentException("Имя не может начинаться или заканчиваться точкой", "name");
 
-      if (name.IndexOf("..") >= 0)
+      if (name.IndexOf("..", StringComparison.Ordinal) >= 0)
         throw new ArgumentException("Имя не может содержать 2 точки подряд", "name");
     }
 

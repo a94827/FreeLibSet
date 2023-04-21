@@ -530,14 +530,14 @@ namespace FreeLibSet.IO
         case PlatformID.Win32Windows:
         case PlatformID.Win32S:
         case PlatformID.WinCE:
-          if (fileName.EndsWith(":"))
+          if (fileName.EndsWith(":", StringComparison.Ordinal))
           {
             errorText = "Имя файла не должно заканчиваться символом \":\"";
             return false;
           }
 
           // 31.12.2020
-          if (fileName.StartsWith("\\\\"))
+          if (fileName.StartsWith("\\\\", StringComparison.Ordinal))
           {
             if (DataTools.GetCharCount(fileName, '\\') < 4)
             {
@@ -1135,7 +1135,7 @@ namespace FreeLibSet.IO
       if (!WindowsNative.IsWindowsPlatform)
         return shortPath;
 
-      if (shortPath.Path.Length == 3 && shortPath.Path.EndsWith(":\\"))
+      if (shortPath.Path.Length == 3 && shortPath.Path.EndsWith(":\\", StringComparison.Ordinal))
         return shortPath; // только имя диска, например, "C:\"
       StringBuilder sbLongPath = new StringBuilder(255);
       int res = WindowsNative.GetLongPathName(shortPath.Path, sbLongPath, sbLongPath.Capacity);
@@ -1158,7 +1158,7 @@ namespace FreeLibSet.IO
       if (!WindowsNative.IsWindowsPlatform)
         return longPath;
 
-      if (longPath.Path.Length == 3 && longPath.Path.EndsWith(":\\"))
+      if (longPath.Path.Length == 3 && longPath.Path.EndsWith(":\\", StringComparison.Ordinal))
         return longPath; // только имя диска, например, "C:\"
 
       StringBuilder sbShortPath = new StringBuilder(255);
@@ -1880,7 +1880,7 @@ namespace FreeLibSet.IO
       if (path.IsEmpty)
         return false;
 
-      if (path.Path.StartsWith("\\\\"))
+      if (path.Path.StartsWith("\\\\", StringComparison.Ordinal))
       {
         return false; // !!!
       }
@@ -2138,15 +2138,15 @@ namespace FreeLibSet.IO
 
         AbsPath dir1 = _ApplicationPath.ParentDir;
         AbsPath dir2 = dir1;
-        string last = dir2.FileName.ToUpper();
+        string last = dir2.FileName.ToUpperInvariant();
         if (last == "DEBUG" || last == "RELEASE")
         {
           dir2 = dir2.ParentDir;
-          last = dir2.FileName.ToUpper();
+          last = dir2.FileName.ToUpperInvariant();
           if (last == "X86" || last == "X64" || last == "IA64")
           {
             dir2 = dir2.ParentDir;
-            last = dir2.FileName.ToUpper();
+            last = dir2.FileName.ToUpperInvariant();
           }
           if (last == "BIN")
             return dir2.ParentDir;

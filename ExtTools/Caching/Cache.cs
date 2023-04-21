@@ -937,7 +937,7 @@ namespace FreeLibSet.Caching
         return res;
       }
 
-      private void ThrowLockTimeoutException(Type objType, string[] keys)
+      private static void ThrowLockTimeoutException(Type objType, string[] keys)
       {
         // Нельзя выводить в log-файл исключение, так как при этом снова возникнет блокировка
 
@@ -1626,9 +1626,10 @@ namespace FreeLibSet.Caching
               {
                 string sKeys1 = String.Join("|", keys);
                 string sKeys2 = sKeys1 + "|";
+                // TODO: 21.04.2023 Неотимальное сравнение
                 foreach (KeyValuePair<string, string> pair in ti.VesrionDict)
                 {
-                  if (pair.Key == sKeys1 || pair.Key.StartsWith(sKeys2))
+                  if (pair.Key == sKeys1 || pair.Key.StartsWith(sKeys2, StringComparison.Ordinal))
                   {
                     string[] ThisKeys = pair.Key.Split('|');
                     WriteVersionTxt(objType, ThisKeys, pair.Value);

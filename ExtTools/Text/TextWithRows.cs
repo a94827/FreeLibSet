@@ -311,7 +311,6 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Перечислитель по строкам
     /// </summary>
-    [Serializable]
     public struct Enumerator : IEnumerator<string>
     {
       #region Конструктор

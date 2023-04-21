@@ -182,7 +182,7 @@ namespace FreeLibSet.Text
           NewLine = Environment.NewLine;
       }
 
-      if (s.EndsWith(NewLine))
+      if (s.EndsWith(NewLine, StringComparison.Ordinal))
         s = s.Substring(0, s.Length - NewLine.Length); // 24.06.2019 было потеряно 04.06.2019
 
       string[] a1 = s.Split(new string[] { NewLine }, StringSplitOptions.None);

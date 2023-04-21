@@ -44,7 +44,7 @@ namespace FreeLibSet.Formatting
   /// <summary>
   /// Статические функции для работы со строками форматирования
   /// </summary>
-  public sealed class FormatStringTools
+  public static class FormatStringTools
   {
     #region Числовые форматы
 
@@ -259,9 +259,9 @@ namespace FreeLibSet.Formatting
       else if (formatString.Length == 1) // стандартный формат, например, "d"
         formatString = Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern;
 
-      int pD = formatString.IndexOf("d");
-      int pM = formatString.IndexOf("M");
-      int pY = formatString.IndexOf("y");
+      int pD = formatString.IndexOf('d');
+      int pM = formatString.IndexOf('M');
+      int pY = formatString.IndexOf('y');
 
       if (pY < 0)
         pY = -3;
@@ -420,14 +420,14 @@ namespace FreeLibSet.Formatting
       {
         case EditableDateTimeFormatterKind.ShortTime:
         case EditableDateTimeFormatterKind.ShortDateTime:
-          useAMPM = _FormatInfo.ShortTimePattern.IndexOf("tt") >= 0;
+          useAMPM = _FormatInfo.ShortTimePattern.IndexOf("tt", StringComparison.Ordinal) >= 0;
           timeFormat = useAMPM ? "hh:mm tt" : "HH:mm";
           timeMask = useAMPM ? ("00:00 " + GetAMPMMask(_FormatInfo, out ampmTextWidth)) : "00:00";
           timeWidth = 6;
           break;
         case EditableDateTimeFormatterKind.Time:
         case EditableDateTimeFormatterKind.DateTime:
-          useAMPM = _FormatInfo.LongTimePattern.IndexOf("tt") >= 0;
+          useAMPM = _FormatInfo.LongTimePattern.IndexOf("tt", StringComparison.Ordinal) >= 0;
           timeFormat = useAMPM ? "hh:mm:ss tt" : "HH:mm:ss";
           timeMask = useAMPM ? ("00:00:00 " + GetAMPMMask(_FormatInfo, out ampmTextWidth)) : "00:00:00";
           timeWidth = 8;
@@ -449,7 +449,7 @@ namespace FreeLibSet.Formatting
       _TextWidth = dateFormat.Length;
 
       switch (kind)
-      { 
+      {
         case EditableDateTimeFormatterKind.ShortDateTime:
         case EditableDateTimeFormatterKind.DateTime:
           // Добавляем разделитель между датой и временем
@@ -463,7 +463,7 @@ namespace FreeLibSet.Formatting
       {
         _Format += timeFormat;
         _EditMask += timeMask;
-        _TextWidth += timeWidth+ (useAMPM ? (1 + ampmTextWidth) : 0);
+        _TextWidth += timeWidth + (useAMPM ? (1 + ampmTextWidth) : 0);
       }
 
       _MaskProvider = new StdMaskProvider(_EditMask, cultureInfo);
@@ -560,12 +560,12 @@ namespace FreeLibSet.Formatting
     /// Возвращает true, если в формате присутствует компонент даты.
     /// Как минимум, одно из свойств ContainsDate и ContainsTime должно возвращать true.
     /// </summary>
-    public bool ContainsDate 
+    public bool ContainsDate
     {
       get
       {
         switch (Kind)
-        { 
+        {
           case EditableDateTimeFormatterKind.Date:
           case EditableDateTimeFormatterKind.DateTime:
           case EditableDateTimeFormatterKind.ShortDateTime:

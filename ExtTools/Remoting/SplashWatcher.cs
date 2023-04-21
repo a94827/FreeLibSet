@@ -447,7 +447,7 @@ namespace FreeLibSet.Remoting
       #endregion
     }
 
-    private void InitCurrentPhase(ISplash src, SplashInfoPackCurrentPhase res)
+    private static void InitCurrentPhase(ISplash src, SplashInfoPackCurrentPhase res)
     {
       res.PercentMax = src.PercentMax;
       res.Percent = src.Percent;
@@ -754,7 +754,7 @@ namespace FreeLibSet.Remoting
     /// </summary>
     /// <param name="src">Информация о номере текущей фазы заставки</param>
     /// <param name="dst">Интерфейс заставки, которую требуется синхронизировать</param>
-    private void InitSplashCurrentPhase(SplashInfoPackCurrentPhase src, ISplash dst)
+    private static void InitSplashCurrentPhase(SplashInfoPackCurrentPhase src, ISplash dst)
     {
       if (dst.Phase >= dst.PhaseCount)
         return; // когда последняя фаза выполнена, уже нечего настраивать нельзя

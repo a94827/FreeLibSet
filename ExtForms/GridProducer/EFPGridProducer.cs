@@ -1175,7 +1175,7 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      if (columnName.IndexOf("..") >= 0)
+      if (columnName.IndexOf("..", StringComparison.Ordinal) >= 0)
       {
         errorText = "Имя не может содержать 2 точки подряд";
         return false;

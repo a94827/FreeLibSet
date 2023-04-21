@@ -123,12 +123,13 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return 0;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return 0;
         else
-          return StdConvert.ToInt32((String)value);
+          return StdConvert.ToInt32(s);
       }
 
       if (value is Boolean)
@@ -183,12 +184,13 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return null;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return null;
         else
-          return StdConvert.ToInt32((String)value);
+          return StdConvert.ToInt32(s);
       }
 
       if (value is Boolean)
@@ -245,12 +247,13 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return 0L;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return 0L;
         else
-          return StdConvert.ToInt64((String)value);
+          return StdConvert.ToInt64(s);
       }
 
       if (value is Boolean)
@@ -305,12 +308,13 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return null;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return null;
         else
-          return StdConvert.ToInt64((String)value);
+          return StdConvert.ToInt64(s);
       }
 
       if (value is Boolean)
@@ -373,9 +377,9 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return 0m;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        string s = (String)value;
         if (s.Length == 0)
           return 0m;
         else
@@ -399,12 +403,13 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return null;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return null;
         else
-          return StdConvert.ToDecimal((String)value);
+          return StdConvert.ToDecimal(s);
       }
 
       if (value is Boolean)
@@ -468,9 +473,9 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return 0.0;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        string s = (String)value;
         if (s.Length == 0)
           return 0.0;
         else
@@ -494,12 +499,13 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return null;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return null;
         else
-          return StdConvert.ToDouble((String)value);
+          return StdConvert.ToDouble(s);
       }
 
       if (value is Boolean)
@@ -563,9 +569,9 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return 0f;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        string s = (String)value;
         if (s.Length == 0)
           return 0f;
         else
@@ -589,12 +595,13 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return null;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return null;
         else
-          return StdConvert.ToSingle((String)value);
+          return StdConvert.ToSingle(s);
       }
 
       if (value is Boolean)
@@ -651,9 +658,9 @@ namespace FreeLibSet.Core
       if (value is DBNull)
         return false;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        string s = (String)value;
         if (s.Length == 0)
           return false;
         switch (s)
@@ -715,8 +722,11 @@ namespace FreeLibSet.Core
         return String.Empty;
       if (value is DBNull)
         return String.Empty;
-      if (value is String)
-        return ((string)value).Trim();
+
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
+        return s.Trim();
+
       return value.ToString();
     }
 
@@ -738,9 +748,9 @@ namespace FreeLibSet.Core
         return new DateTime();
       if (value is DBNull)
         return new DateTime();
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        string s = (string)value;
         if (s.Length == 0)
           return new DateTime();
         else
@@ -792,9 +802,9 @@ namespace FreeLibSet.Core
         return null;
       if (value is DBNull)
         return null;
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        string s = (string)value;
         if (s.Length == 0)
           return null;
         else
@@ -852,12 +862,13 @@ namespace FreeLibSet.Core
         return TimeSpan.Zero;
       if (value is TimeSpan)
         return (TimeSpan)value;
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((string)value).Length == 0)
+        if (s.Length == 0)
           return TimeSpan.Zero;
         else
-          return StdConvert.ToTimeSpan((string)value);
+          return StdConvert.ToTimeSpan(s);
       }
       throw new InvalidCastException("Тип " + value.GetType().FullName + " нельзя преобразовать в TimeSpan");
     }
@@ -941,12 +952,13 @@ namespace FreeLibSet.Core
       if (value is Guid)
         return (Guid)value;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return Guid.Empty;
         else
-          return StdConvert.ToGuid((String)value);
+          return StdConvert.ToGuid(s);
       }
 
       if (value is byte[])
@@ -1033,12 +1045,13 @@ namespace FreeLibSet.Core
       if (value is T)
         return (T)value;
 
-      if (value is String)
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
       {
-        if (((String)value).Length == 0)
+        if (s.Length == 0)
           return default(T);
         else
-          return StdConvert.ToEnum<T>((String)value);
+          return StdConvert.ToEnum<T>(s);
       }
 
       int v2 = GetInt(value);
@@ -3683,8 +3696,9 @@ namespace FreeLibSet.Core
       // if (Source is DataTable)
       //   return ((DataTable)Source).Rows;
 
-      if (source is IEnumerable<DataRow>)
-        return (IEnumerable<DataRow>)source;
+      IEnumerable<DataRow> source2 = source as IEnumerable<DataRow>;
+      if (source2 != null)
+        return source2;
 
       // Реализуем перечислитель через "машину состояний" (оператор yield return)
       // Обязательно требуется отдельный метод
@@ -6420,8 +6434,8 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="srcRow">Исходная строка</param>
     /// <param name="dstRow">Конечная строка</param>
-    /// <param name="srcColumnPrefix">Префикс имени поля в исходной строке</param>
-    /// <param name="dstColumnPrefix">Префикс имени поля в конечной строке</param>
+    /// <param name="srcColumnPrefix">Префикс имени поля в исходной строке. Регистр символов учитывается</param>
+    /// <param name="dstColumnPrefix">Префикс имени поля в конечной строке. Регистр символов учитывается</param>
     public static void CopyRowValuesForPrefix(DataRow srcRow, DataRow dstRow, string srcColumnPrefix, string dstColumnPrefix)
     {
 #if DEBUG
@@ -6444,7 +6458,7 @@ namespace FreeLibSet.Core
         string columnName = srcRow.Table.Columns[i].ColumnName;
         if (!String.IsNullOrEmpty(srcColumnPrefix))
         {
-          if (columnName.StartsWith(srcColumnPrefix))
+          if (columnName.StartsWith(srcColumnPrefix, StringComparison.Ordinal))
             columnName = columnName.Substring(srcColumnPrefix.Length);
           else
             continue;
@@ -7002,7 +7016,9 @@ namespace FreeLibSet.Core
           if (s.EndsWith(" ASC", StringComparison.OrdinalIgnoreCase))
             s = s.Substring(0, s.Length - 4);
         }
-        if (s.StartsWith("[") && s.EndsWith("]"))
+        if (s.Length == 0)
+          throw new ArgumentException("Неправильный формат порядка сортировки", "sort");
+        if (s[0] == '[' && s[s.Length - 1] == ']') // 21.04.2023
           s = s.Substring(1, s.Length - 2);
         columnNames[i] = s;
       }
@@ -7065,7 +7081,9 @@ namespace FreeLibSet.Core
         if (columnName.EndsWith(" ASC", StringComparison.OrdinalIgnoreCase))
           columnName = columnName.Substring(0, columnName.Length - 4);
       }
-      if (columnName.StartsWith("[") && columnName.EndsWith("]"))
+      if (columnName.Length == 0)
+        throw new ArgumentException("Неправильный формат порядка сортировки", "sort");
+      if (columnName[0] == '[' && columnName[columnName.Length - 1] == ']')
         columnName = columnName.Substring(1, columnName.Length - 2);
     }
 
