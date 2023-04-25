@@ -113,6 +113,7 @@ namespace FreeLibSet.Data.Docs
     public DBxColumnStruct DocIdColumn { get { return _DocIdColumn; } }
     private DBxColumnStruct _DocIdColumn;
 
+    [Serializable]
     private class MasterTableNameList : SingleScopeList<string>
     {
       internal new void SetReadOnly()

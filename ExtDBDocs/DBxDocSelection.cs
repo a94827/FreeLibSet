@@ -796,7 +796,7 @@ namespace FreeLibSet.Data.Docs
     #region Сериализация
 
     [OnSerializing()]
-    internal void OnSerializingMethod(StreamingContext context)
+    private void OnSerializingMethod(StreamingContext context)
     {
       // Перед сериализацией сохраняем все изменения
       //_Data.AcceptChanges();

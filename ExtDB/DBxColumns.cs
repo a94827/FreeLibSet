@@ -1844,6 +1844,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Реализация свойства Tables
     /// </summary>
+    [Serializable]
     public sealed class TableCollection : IDictionary<string, DBxColumnList>
     {
       // Не может быть структурой, т.к. возникает ошибка Compiler Error CS1612 "Cannot modify the return value of 'expression' because it is not a variable".

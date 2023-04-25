@@ -32,6 +32,7 @@ namespace FreeLibSet.Collections
   /// </summary>
   /// <typeparam name="TKey">Тип ключа для доступа к элементам. Чаще всего, String</typeparam>
   /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
+  [Serializable]
   public abstract class MRUObjectDictionary<TKey, TValue> : SimpleDisposableObject, IDictionary<TKey, TValue>, IDictionary
   {
     #region Статический конструктор
@@ -533,6 +534,7 @@ namespace FreeLibSet.Collections
   /// Класс не является потокобезопасным.
   /// </summary>
   /// <typeparam name="T">Тип данных, хранимых в списке</typeparam>
+  [Serializable]
   public class ListWithMRU<T> : IList<T>, IList
   {
     #region Конструкторы
@@ -1472,6 +1474,7 @@ namespace FreeLibSet.Collections
   /// "Старые" пары не удаляются из списка автоматически, если свойство MaxCapacity не установлено в явном виде.
   /// Класс не является потокобезопасным.
   /// </summary>
+  [Serializable]
   public class DictionaryWithMRU<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary
   {
     #region Конструкторы
