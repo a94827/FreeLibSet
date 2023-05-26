@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.Remoting;
 
 namespace ExtDB_tests.Data
 {
@@ -72,7 +73,7 @@ namespace ExtDB_tests.Data
 
     [TestCase("F1,F2", "F3", "F1,F2,F3")]
     [TestCase("F1,F2", "F1", "F1,F2")]
-    [TestCase("F1,F2", "F3,F3", "F1,F2,F3")]
+    [TestCase("F1,F2", "F2,F3", "F1,F2,F3")]
     [TestCase("F1,F2", "F3,F1", "F1,F2,F3")]
     [TestCase("", "F1,F2", "F1,F2")]
     [TestCase("F1,F2", "", "F1,F2")]
@@ -100,7 +101,7 @@ namespace ExtDB_tests.Data
     [TestCase("F1,F2", "F3,F1", "F2")]
     [TestCase("F1,F2", "F3,F1,F2",  "")]
     [TestCase("", "F1", "")]
-    [TestCase("", "F1,F1", "")]
+    [TestCase("", "F1,F2", "")]
     [TestCase("F1,F2", "", "F1,F2")]
     [TestCase("", "", "")]
     public void Remove(string original, string removed, string expected)
@@ -577,6 +578,19 @@ namespace ExtDB_tests.Data
     {
       Assert.AreEqual(0, DBxColumnList.Empty.Count, "Count=0");
       Assert.IsTrue(DBxColumnList.Empty.IsReadOnly, "IsReadOnly=true");
+    }
+
+    #endregion
+
+    #region "Сериализация"
+
+    [Test]
+    public void Serialization()
+    {
+      DBxColumnList sut = new DBxColumnList("F1,F2,F3");
+      byte[] b = SerializationTools.SerializeBinary(sut);
+      DBxColumnList res = (DBxColumnList)(SerializationTools.DeserializeBinary(b));
+      Assert.AreEqual(sut.AsString, res.AsString, "AsString");
     }
 
     #endregion

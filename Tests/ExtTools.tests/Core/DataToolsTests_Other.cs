@@ -12,6 +12,520 @@ namespace ExtTools_tests.Core
   [TestFixture]
   class DataToolsTests_Other
   {
+    #region GetXXX() (не связанные с DataTable)
+
+    #region GetString()
+
+    public class DummyToStringTestObject
+    {
+      public override string ToString()
+      {
+        return "XXX";
+      }
+    }
+
+    public static readonly TestPair[] GetStringTests = new TestPair[] {
+      new TestPair(null, String.Empty),
+      new TestPair(DBNull.Value, String.Empty),
+      new TestPair(String.Empty, String.Empty),
+      new TestPair("Abc ", "Abc"), // с удалением пробелов
+      new TestPair(false, Boolean.FalseString),
+      new TestPair(true, Boolean.TrueString),
+      new TestPair(123, "123"),
+      new TestPair(-123456789L, "-123456789"),
+      new TestPair(-1.2f, "-1.2"),
+      new TestPair(-1.2, "-1.2"),
+      new TestPair(-1.2m, "-1.2"),
+      new TestPair(new DateTime(2023, 5, 17, 12, 34, 56), "2023-05-17T12:34:56"),
+      new TestPair(new TimeSpan(12,34,56), "12:34:56"),
+      new TestPair(Guid.Empty, Guid.Empty.ToString()),
+      new TestPair(new DummyToStringTestObject(), "XXX")};
+
+    [TestCaseSource("GetStringTests")]
+    public void GetString(TestPair info)
+    {
+      string res = DataTools.GetString(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    #endregion
+
+    #region GetInt(), GetNullableInt()
+
+    public static readonly TestPair[] GetIntTests = new TestPair[] {
+      new TestPair(null, 0),
+      new TestPair("", 0),
+      new TestPair("-123", -123),
+      new TestPair(123, 123),
+      new TestPair(123L, 123),
+      new TestPair(123f, 123),
+      new TestPair(123.0, 123),
+      new TestPair(123m, 123),
+      new TestPair(false, 0),
+      new TestPair(true, 1) };
+    [TestCaseSource("GetIntTests")]
+    public void GetInt(TestPair info)
+    {
+      int res = DataTools.GetInt(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetIntExceptionTests = new object[] {
+      new DateTime(2023, 5, 17),
+      TimeSpan.Zero,
+      "ABC",
+      999999999999L,
+      999999999999.0,
+      999999999999m,
+      Guid.Empty,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetIntExceptionTests")]
+    public void GetInt_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetInt(source); });
+    }
+
+
+    public static readonly TestPair[] GetNullableIntTests = new TestPair[] {
+      new TestPair(null, null),
+      new TestPair("", null),
+      new TestPair("-123", -123),
+      new TestPair(123, 123),
+      new TestPair(123L, 123),
+      new TestPair(123f, 123),
+      new TestPair(123.0, 123),
+      new TestPair(123m, 123),
+      new TestPair(false, 0),
+      new TestPair(true, 1) };
+    [TestCaseSource("GetNullableIntTests")]
+    public void GetNullableInt(TestPair info)
+    {
+      int? res = DataTools.GetNullableInt(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    [TestCaseSource("GetIntExceptionTests")]
+    public void GetNullableInt_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetNullableInt(source); });
+    }
+
+    #endregion
+
+    #region GetInt64(), GetNullableInt64()
+
+    public static readonly TestPair[] GetInt64Tests = new TestPair[] {
+      new TestPair(null, 0L),
+      new TestPair("", 0L),
+      new TestPair("-123", -123L),
+      new TestPair(123, 123L),
+      new TestPair(123L, 123L),
+      new TestPair(123f, 123L),
+      new TestPair(123.0, 123L),
+      new TestPair(123m, 123L),
+      new TestPair(false, 0L),
+      new TestPair(true, 1L) };
+    [TestCaseSource("GetInt64Tests")]
+    public void GetInt64(TestPair info)
+    {
+      long res = DataTools.GetInt64(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetInt64ExceptionTests = new object[] {
+      new DateTime(2023, 5, 17),
+      TimeSpan.Zero,
+      "ABC",
+      Guid.Empty,
+      Double.MaxValue,
+      Decimal.MaxValue,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetInt64ExceptionTests")]
+    public void GetInt64_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetInt64(source); });
+    }
+
+    public static readonly TestPair[] GetNullableInt64Tests = new TestPair[] {
+      new TestPair(null, null),
+      new TestPair("", null),
+      new TestPair("-123", -123L),
+      new TestPair(123, 123L),
+      new TestPair(123L, 123L),
+      new TestPair(123f, 123L),
+      new TestPair(123.0, 123L),
+      new TestPair(123m, 123L),
+      new TestPair(false, 0L),
+      new TestPair(true, 1L) };
+    [TestCaseSource("GetNullableInt64Tests")]
+    public void GetNullableInt64(TestPair info)
+    {
+      long? res = DataTools.GetNullableInt64(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    [TestCaseSource("GetInt64ExceptionTests")]
+    public void GetNullableInt64_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetNullableInt64(source); });
+    }
+
+    #endregion
+
+    #region GetSingle(), GetNullableSingle()
+
+    public static readonly TestPair[] GetSingleTests = new TestPair[] {
+      new TestPair(null, 0f),
+      new TestPair("", 0f),
+      new TestPair("-123", -123f),
+      new TestPair(123, 123f),
+      new TestPair(123L, 123f),
+      new TestPair(123f, 123f),
+      new TestPair(123.0, 123f),
+      new TestPair(123m, 123f),
+      new TestPair(false, 0f),
+      new TestPair(true, 1f) };
+    [TestCaseSource("GetSingleTests")]
+    public void GetSingle(TestPair info)
+    {
+      float res = DataTools.GetSingle(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetSingleExceptionTests = new object[] {
+      new DateTime(2023, 5, 17),
+      TimeSpan.Zero,
+      "ABC",
+      //Double.MaxValue, Не возникает исключения. Возвращается Single.Infinity
+      Guid.Empty,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetSingleExceptionTests")]
+    public void GetSingle_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetSingle(source); });
+    }
+
+    public static readonly TestPair[] GetNullableSingleTests = new TestPair[] {
+      new TestPair(null, null),
+      new TestPair("", null),
+      new TestPair("-123", -123f),
+      new TestPair(123, 123f),
+      new TestPair(123L, 123f),
+      new TestPair(123f, 123f),
+      new TestPair(123.0, 123f),
+      new TestPair(123m, 123f),
+      new TestPair(false, 0f),
+      new TestPair(true, 1f) };
+    [TestCaseSource("GetNullableSingleTests")]
+    public void GetNullableSingle(TestPair info)
+    {
+      float? res = DataTools.GetNullableSingle(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    [TestCaseSource("GetSingleExceptionTests")]
+    public void GetNullableSingle_exceptions(object source)
+    {
+      float? dummy;
+      Assert.Catch<SystemException>(delegate () { dummy=DataTools.GetNullableSingle(source); });
+    }
+
+    #endregion
+
+    #region GetDouble() / GetNullableDouble()
+
+    public static readonly TestPair[] GetDoubleTests = new TestPair[] {
+      new TestPair(null, 0.0),
+      new TestPair("", 0.0),
+      new TestPair("-123", -123.0),
+      new TestPair(123, 123.0),
+      new TestPair(123L, 123.0),
+      new TestPair(123f, 123.0),
+      new TestPair(123.0, 123.0),
+      new TestPair(123m, 123.0),
+      new TestPair(false, 0.0),
+      new TestPair(true, 1.0) };
+    [TestCaseSource("GetDoubleTests")]
+    public void GetDouble(TestPair info)
+    {
+      double res = DataTools.GetDouble(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetDoubleExceptionTests = new object[] {
+      new DateTime(2023, 5, 17),
+      TimeSpan.Zero,
+      "ABC",
+      Guid.Empty,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetDoubleExceptionTests")]
+    public void GetDouble_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetDouble(source); });
+    }
+
+    public static readonly TestPair[] GetNullableDoubleTests = new TestPair[] {
+      new TestPair(null, null),
+      new TestPair("", null),
+      new TestPair("-123", -123.0),
+      new TestPair(123, 123.0),
+      new TestPair(123L, 123.0),
+      new TestPair(123f, 123.0),
+      new TestPair(123.0, 123.0),
+      new TestPair(123m, 123.0),
+      new TestPair(false, 0.0),
+      new TestPair(true, 1.0) };
+    [TestCaseSource("GetNullableDoubleTests")]
+    public void GetNullableDouble(TestPair info)
+    {
+      double? res = DataTools.GetNullableDouble(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    [TestCaseSource("GetDoubleExceptionTests")]
+    public void GetNullableDouble_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetNullableDouble(source); });
+    }
+
+    #endregion
+
+    #region GetDecimal(), GetNullableDecimal()
+
+    public static readonly TestPair[] GetDecimalTests = new TestPair[] {
+      new TestPair(null, 0m),
+      new TestPair("", 0m),
+      new TestPair("-123", -123m),
+      new TestPair(123, 123m),
+      new TestPair(123L, 123m),
+      new TestPair(123f, 123m),
+      new TestPair(123.0, 123m),
+      new TestPair(123m, 123m),
+      new TestPair(false, 0m),
+      new TestPair(true, 1m) };
+    [TestCaseSource("GetDecimalTests")]
+    public void GetDecimal(TestPair info)
+    {
+      decimal res = DataTools.GetDecimal(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetDecimalExceptionTests = new object[] {
+      new DateTime(2023, 5, 17),
+      TimeSpan.Zero,
+      "ABC",
+      Guid.Empty,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetDecimalExceptionTests")]
+    public void GetDecimal_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetDecimal(source); });
+    }
+
+    public static readonly TestPair[] GetNullableDecimalTests = new TestPair[] {
+      new TestPair(null, null),
+      new TestPair("", null),
+      new TestPair("-123", -123m),
+      new TestPair(123, 123m),
+      new TestPair(123L, 123m),
+      new TestPair(123f, 123m),
+      new TestPair(123.0, 123m),
+      new TestPair(123m, 123m),
+      new TestPair(false, 0m),
+      new TestPair(true, 1m) };
+    [TestCaseSource("GetNullableDecimalTests")]
+    public void GetNullableDecimal(TestPair info)
+    {
+      decimal? res = DataTools.GetNullableDecimal(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    [TestCaseSource("GetDecimalExceptionTests")]
+    public void GetNullableDecimal_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetNullableDecimal(source); });
+    }
+
+    #endregion
+
+    #region GetBool()
+
+    public static readonly TestPair[] GetBoolTests = new TestPair[] {
+      new TestPair(null, false),
+      new TestPair("", false),
+      new TestPair("false", false),
+      new TestPair("true", true),
+      new TestPair("0", false),
+      new TestPair("1", true),
+      new TestPair(0, false),
+      new TestPair(1, true),
+      new TestPair(123, true),
+      new TestPair(-123, true),
+      new TestPair(0L, false),
+      new TestPair(123L, true),
+      new TestPair(-123L, true),
+      new TestPair(123f, true),
+      new TestPair(123.0, true),
+      new TestPair(123m, true),
+      new TestPair(false, false),
+      new TestPair(true, true) };
+    [TestCaseSource("GetBoolTests")]
+    public void GetBool(TestPair info)
+    {
+      bool res = DataTools.GetBool(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetBoolExceptionTests = new object[] {
+      new DateTime(2023, 5, 17),
+      TimeSpan.Zero,
+      "ABC",
+      Guid.Empty,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetBoolExceptionTests")]
+    public void GetBool_exceptions(object source)
+    {
+      // Может быть InvalidCastException или FormatException
+      Assert.Catch<SystemException>(delegate () { DataTools.GetBool(source); });
+    }
+
+    #endregion
+
+    #region GetDateTime(), GetNullableDateTime()
+
+    public static readonly TestPair[] GetDateTimeTests = new TestPair[] {
+      new TestPair(null, DateTime.MinValue),
+      new TestPair("", DateTime.MinValue),
+      new TestPair("2023-05-19", new DateTime(2023, 5, 19)),
+      new TestPair("2023-05-19T12:34:56", new DateTime(2023, 5, 19, 12, 34, 56)),
+      new TestPair(new DateTime(2023, 5, 19), new DateTime(2023, 5, 19)),
+      new TestPair(TimeSpan.Zero, DateTime.MinValue),
+      new TestPair(new TimeSpan(12, 34, 56), DateTime.MinValue + new TimeSpan(12, 34, 56)),
+      new TestPair(new TimeSpan(-1, -2, -3), DateTime.MinValue + new TimeSpan(22, 57, 57))};
+    [TestCaseSource("GetDateTimeTests")]
+    public void GetDateTime(TestPair info)
+    {
+      DateTime res = DataTools.GetDateTime(info.Source);
+      Assert.AreEqual(info.Result, res, "object");
+
+      if (info.Source is TimeSpan)
+      {
+        DateTime res2 = DataTools.GetDateTime((TimeSpan)(info.Source));
+        Assert.AreEqual(info.Result, res2, "TimeSpan");
+      }
+    }
+
+    public static readonly object[] GetDateTimeExceptionTests = new object[] {
+      0,
+      1000,
+      "ABC",
+      Guid.Empty,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetDateTimeExceptionTests")]
+    public void GetDateTime_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetDateTime(source); });
+    }
+
+    public static readonly TestPair[] GetNullableDateTimeTests = new TestPair[] {
+      new TestPair(null, null),
+      new TestPair("", null),
+      new TestPair("2023-05-19", new DateTime(2023, 5, 19)),
+      new TestPair("2023-05-19T12:34:56", new DateTime(2023, 5, 19, 12, 34, 56)),
+      new TestPair(new DateTime(2023, 5, 19), new DateTime(2023, 5, 19)),
+      new TestPair(TimeSpan.Zero, DateTime.MinValue),
+      new TestPair(new TimeSpan(12, 34, 56), DateTime.MinValue + new TimeSpan(12, 34, 56)) };
+    [TestCaseSource("GetNullableDateTimeTests")]
+    public void GetNullableDateTime(TestPair info)
+    {
+      DateTime? res = DataTools.GetNullableDateTime(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    [TestCaseSource("GetDateTimeExceptionTests")] // исключения такие же
+    public void GetNullableDateTime_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetNullableDateTime(source); });
+    }
+
+    #endregion
+
+    #region GetTimeSpan()
+
+    public static readonly TestPair[] GetTimeSpanTests = new TestPair[] {
+      new TestPair(null, TimeSpan.Zero),
+      new TestPair("", TimeSpan.Zero),
+      new TestPair("12:34:56", new TimeSpan(12, 34, 56)),
+      new TestPair("-1:2:3", new TimeSpan(-1, -2, -3)), // отрицательные значения не сворачиваются
+      new TestPair("3.4:5:6", new TimeSpan(3, 4, 5, 6)), // переход на следующий день не сворачивается
+      new TestPair(new TimeSpan(-1,-2,-3,-4), new TimeSpan(-1,-2,-3,-4)),
+      new TestPair(new DateTime(2023,5,19,12,34,56), new TimeSpan(12,34,56)) };
+    [TestCaseSource("GetTimeSpanTests")]
+    public void GetTimeSpan(TestPair info)
+    {
+      TimeSpan res = DataTools.GetTimeSpan(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetTimeSpanExceptionTests = new object[] {
+      0,
+      false,
+      "ABC",
+      Guid.Empty,
+      DataTools.EmptyBytes };
+
+    [TestCaseSource("GetTimeSpanExceptionTests")]
+    public void GetTimeSpan_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetTimeSpan(source); });
+    }
+
+    #endregion
+
+    #region GetGuid()
+
+    private static readonly Guid TestGuid = new Guid("83e4ea91-6f0b-4ab6-9d58-c981418c26b7");
+
+    public static readonly TestPair[] GetGuidTests = new TestPair[] {
+      new TestPair(null, Guid.Empty),
+      new TestPair("", Guid.Empty),
+      new TestPair(Guid.Empty.ToString(), Guid.Empty),
+      new TestPair(TestGuid.ToString("N"), TestGuid),
+      new TestPair(TestGuid.ToString("D"), TestGuid),
+      new TestPair(TestGuid.ToString("B"), TestGuid),
+      new TestPair(TestGuid.ToString("P"), TestGuid),
+      new TestPair(TestGuid.ToByteArray(), TestGuid) 
+    };
+    [TestCaseSource("GetGuidTests")]
+    public void GetGuid(TestPair info)
+    {
+      Guid res = DataTools.GetGuid(info.Source);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    public static readonly object[] GetGuidExceptionTests = new object[] {
+      0,
+      false,
+      "ABC",
+      new DateTime(2023, 05, 19)};
+
+    [TestCaseSource("GetGuidExceptionTests")]
+    public void GetGuid_exceptions(object source)
+    {
+      Assert.Catch<SystemException>(delegate () { DataTools.GetGuid(source); });
+    }
+
+    #endregion
+
+    #endregion
+
     #region CloneDataColumn
 
     [Test]

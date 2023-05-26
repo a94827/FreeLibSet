@@ -87,7 +87,7 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Переходник между DBxStruct и DBx для извлечения описаний таблиц
+  /// Переходник между <see cref="DBxStruct"/> и <see cref="DBx"/> для извлечения описаний таблиц
   /// </summary>
   public sealed class DBxRealStructSource : MarshalByRefObject, IDBxStructSource
   {
@@ -96,7 +96,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Созает переходник
     /// </summary>
-    /// <param name="entry">Точка подключения</param>
+    /// <param name="entry">Точка подключения. Не может быть null</param>
     public DBxRealStructSource(DBxEntry entry)
     {
       if (entry == null)
@@ -158,8 +158,8 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Переходник для передачи описаний структуры таблиц от сервера к клиенту
-  /// Экземпляр объекта, присоедиенный к объекту, возвращаемому DBx.Struct, передается по ссылке
-  /// клиенту. На стороне клиента создается собственный DBxStruct, присоединенный к этому объекту
+  /// Экземпляр объекта, присоедиенный к объекту, возвращаемому <see cref="DBx.Struct"/>, передается по ссылке
+  /// клиенту. На стороне клиента создается собственный объект <see cref="DBxStruct"/>, присоединенный к этому объекту.
   /// </summary>
   public sealed class DBxRemoteStructSource : MarshalByRefObject, IDBxStructSource
   {
@@ -168,7 +168,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает переходник
     /// </summary>
-    /// <param name="source">Структура базы данных.
+    /// <param name="source">Структура базы данных. Не может быть null.
     /// Ссылка сохраняется в private-поле, чтобы к ней нельзя было получить неавторизованный доступ</param>
     public DBxRemoteStructSource(DBxStruct source)
     {
@@ -214,9 +214,9 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Описание реальной структуры базы данных
-  /// Все обращения к присоединенной к базе данных структуре, являются потокобезопасными. 
-  /// В процессе ручного заполнения, обращения не являются потокобезопасными
+  /// Описание реальной структуры базы данных.
+  /// Все обращения к присоединенной к базе данных структуре являются потокобезопасными. 
+  /// В процессе ручного заполнения обращения не являются потокобезопасными.
   /// </summary>
   public sealed class DBxStruct : IReadOnlyObject, ICloneable
   {
@@ -224,8 +224,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Конструктор создает описание структуры для ручного заполнения
-    /// После заполнения структуры должно быть установлено свойство DBx.Struct.
-    /// Чтобы создать или обновить реальную структуру БД, также должен быть вызван метод DBx.UpdateStruct()
+    /// После заполнения структуры должно быть установлено свойство <see cref="DBx.Struct"/>.
+    /// Чтобы создать или обновить реальную структуру БД, также должен быть вызван метод <see cref="DBx.UpdateStruct()"/>.
     /// </summary>
     public DBxStruct()
       : this((IDBxStructSource)null)
@@ -246,7 +246,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Этот конструктор должен вызываться на стороне клиента
+    /// Этот конструктор должен вызываться на стороне клиента.
     /// Структура будет находиться в режиме "только для чтения".
     /// </summary>
     /// <param name="con">Полученное клиентское соединение с базой данных. Не может быть null</param>
@@ -299,7 +299,7 @@ namespace FreeLibSet.Data
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -309,7 +309,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Переводит описание структуры в режим просмотра.
-    /// Повторные вызовы метода игнорируются
+    /// Повторные вызовы метода игнорируются.
     /// </summary>
     public void SetReadOnly()
     {
@@ -321,7 +321,7 @@ namespace FreeLibSet.Data
     #region ICloneable Members
 
     /// <summary> 
-    /// Возвращает копию объекта, доступную для редактирования (IsReadOnly=false). 
+    /// Возвращает копию объекта, доступную для редактирования (<see cref="IsReadOnly"/>=false). 
     /// Копия не ссылается на источник описаний таблиц Source. 
     /// В процессе копирования реальной структуры данных извлекаются описания для всех таблиц.
     /// </summary>
@@ -337,7 +337,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию структуры базы данных, если текущий объект предназначен только для чтения.
-    /// Если свойство IsReadOnly=false, возвращается ссылка на текущий объект
+    /// Если свойство <see cref="IsReadOnly"/>=false, возвращается ссылка на текущий объект.
     /// </summary>
     /// <returns></returns>
     public DBxStruct CloneIfReadOnly()
@@ -353,11 +353,11 @@ namespace FreeLibSet.Data
     #region Другие методы
 
     /// <summary>
-    /// Создает объект DataSet, содержащий пустые DataTable для всех таблиц в DBxStruct.
+    /// Создает объект <see cref="DataSet"/>, содержащий пустые <see cref="DataTable"/> для всех таблиц в текущем объекте <see cref="DBxStruct"/>.
     /// См. описание метода <see cref="FreeLibSet.Data.DBxTableStruct.CreateDataTable()"/>.
     /// Объекты <see cref="System.Data.DataRelation"/> не создаются.
     /// </summary>
-    /// <returns>DataSet с таблицами, но без строк</returns>
+    /// <returns><see cref="DataSet"/> с таблицами, но без строк</returns>
     public DataSet CreateDataSet()
     {
       DataSet ds = new DataSet();
@@ -375,8 +375,8 @@ namespace FreeLibSet.Data
     /// Можно использовать ссылочные столбцы, содержащие "."
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNames">Список столбцов. Если null, то возвращаются все столбцы таблицы (DBxTableStruct.CreateDataTable)</param>
-    /// <returns></returns>
+    /// <param name="columnNames">Список столбцов. Если null, то возвращаются все столбцы таблицы (<see cref="DBxTableStruct.CreateDataTable()"/>)</param>
+    /// <returns>Пустая таблица данных</returns>
     public DataTable CreateDataTable(string tableName, DBxColumns columnNames)
     {
       if (String.IsNullOrEmpty(tableName))
@@ -470,8 +470,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка структуры базы данных.
-    /// Вызываются методы DBxTableStruct.CheckStruct() и проверяет корректность ссылочных полей.
-    /// Эта версия не проверяет корректность имен обычных полей
+    /// Вызываются методы <see cref="DBxTableStruct.CheckStruct()"/> и проверяет корректность ссылочных полей.
+    /// Эта версия не проверяет корректность имен обычных полей.
     /// </summary>
     public void CheckStruct()
     {
@@ -480,7 +480,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка структуры базы данных.
-    /// Вызываются методы DBxTableStruct.CheckStruct() и проверяет корректность ссылочных полей.
+    /// Вызываются методы <see cref="DBxTableStruct.CheckStruct()"/> и проверяет корректность ссылочных полей.
     /// Эта версия проверяет корректность имен обычных полей, если параметр <paramref name="db"/> задан.
     /// </summary>
     /// <param name="db">База данных для проверки корректности имен полей или null</param>
@@ -518,7 +518,7 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Список описаний структуры таблиц для реализации свойства DBxStruct.Tables
+  /// Список описаний структуры таблиц для реализации свойства <see cref="DBxStruct.Tables"/>
   /// </summary>
   public sealed class DBxTableStructList : IList<DBxTableStruct>
   {
@@ -585,14 +585,14 @@ namespace FreeLibSet.Data
 
     #region Поиск таблицы по имени
 
-    // При обращениях, для синхронизации используется блокировка объекта FList 
+    // При обращениях, для синхронизации используется блокировка объекта _List.
     // Блокировка требуется только для "читающих" методов,
     // т.к. "записывающие" методы могут вызываться только в процессе ручного создания (всегда синхронного),
-    // а затем - блокируются IsReadOInly
+    // а затем - блокируются IsReadOInly.
 
     /// <summary>
     /// Возвращает структуру таблицы по имени.
-    /// Если нет такой таблицы, возвращается null
+    /// Если нет такой таблицы, возвращается null.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Структура таблицы</returns>
@@ -640,7 +640,6 @@ namespace FreeLibSet.Data
       return tstr;
     }
 
-
     #endregion
 
     #region IList<DBxRealTableStruct> Members
@@ -649,7 +648,7 @@ namespace FreeLibSet.Data
     /// Реализация интерфейса IList
     /// </summary>
     /// <param name="item"></param>
-    /// <returns></returns>
+    /// <returns>Индекс описания таблицы</returns>
     public int IndexOf(DBxTableStruct item)
     {
       lock (_List)
@@ -907,7 +906,7 @@ namespace FreeLibSet.Data
       /// <summary>
       /// Переход к следующей таблице
       /// </summary>
-      /// <returns></returns>
+      /// <returns>true, если есть еще таблица для перебора</returns>
       public bool MoveNext()
       {
         _CurrIndex++;
@@ -925,7 +924,7 @@ namespace FreeLibSet.Data
     #endregion
 
     /// <summary>
-    /// Возвращает перечислитель по описаниям структур DBxTableStruct для всех таблиц (свойство AllTableNames)
+    /// Возвращает перечислитель по описаниям структур <see cref="DBxTableStruct"/> для всех таблиц (свойство <see cref="AllTableNames"/>)
     /// </summary>
     /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()

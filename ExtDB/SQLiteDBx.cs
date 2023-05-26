@@ -251,6 +251,11 @@ namespace FreeLibSet.Data.SQLite
     }
     private string _TimeFormat;
 
+    /// <summary>
+    /// Минимальная дата, которую можно хранить в базе данных
+    /// </summary>
+    internal static readonly DateTime MinDate = DateTime.SpecifyKind(new DateTime(1000, 1, 1), DateTimeKind.Unspecified);
+
     #endregion
 
     #region Обновление структуры

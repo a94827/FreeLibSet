@@ -9,7 +9,7 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Этот класс используется в качестве базового класса для специфических форматизаторов баз данных и для DataViewDBxSqlFormatter
+  /// Этот класс используется в качестве базового класса для специфических форматизаторов баз данных и для <see cref="DataViewDBxSqlFormatter"/>.
   /// </summary>                                         
   public abstract class BaseDBxSqlFormatter : DBxSqlFormatter
   {
@@ -223,7 +223,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование части выражения, возвращающего значение столбца.
-    /// Если столбец поддерживает значения NULL и установлено свойство DBxFormatExpressionInfo.NullAsDefaultValue,
+    /// Если столбец поддерживает значения NULL и установлено свойство <see cref="DBxFormatExpressionInfo.NullAsDefaultValue"/>,
     /// то выполняется форматирование функции COALESCE().
     /// Иначе в запрос добавляется имя поля с помощью OnFormatColumnName(). Перед этим выполняется поиск альяса таблицы в списке DBxSqlBuffer.ColumnTableAliases.
     /// При необходимости, перед именем столбца выводится альяс таблицы.
@@ -265,7 +265,7 @@ namespace FreeLibSet.Data
         if (wantedType == DBxColumnType.Unknown)
           throw new InvalidOperationException("Для столбца \"" + column.ColumnName + "\" требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных");
 
-        DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(DBxTools.GetDefaultValue(wantedType), wantedType));
+        DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(GetDefaultValue(wantedType), wantedType));
         OnFormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // рекурсивный вызов форматировщика, но уже без флага 
       }
       else
@@ -477,7 +477,7 @@ namespace FreeLibSet.Data
     {
       // Можно было бы вернуть Kind.ToString().ToUpperInvariant(), но это небезопасно с точки зрения иньекции кода
       switch (kind)
-      { 
+      {
         case DBxAgregateFunctionKind.Sum:
         case DBxAgregateFunctionKind.Count:
         case DBxAgregateFunctionKind.Min:
@@ -499,7 +499,7 @@ namespace FreeLibSet.Data
     /// возможно, заключенное в апострофы.
     /// Также отвечает за экранирование символов строкового значения, например, удвоение апострофов.
     /// Метод не выполняет форматирование самостоятельно, а вызывает один из методов OnFormatXxxValue() для значения соответствующего типа.
-    /// Идентичные действия выполняются методом DataTools.FormatDataValue() в ExtTools.dll.
+    /// Идентичные действия выполняются методом <see cref="DataTools.FormatDataValue(object)"/> в ExtTools.dll.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="value">Записываемое значение</param>
@@ -577,38 +577,38 @@ namespace FreeLibSet.Data
 
       if (value is DateTime)
       {
-        DateTime TimeValue = (DateTime)value;
-        TimeValue = DateTime.SpecifyKind(TimeValue, DateTimeKind.Unspecified);
+        DateTime timeValue = (DateTime)value;
+        timeValue = DateTime.SpecifyKind(timeValue, DateTimeKind.Unspecified);
 
-        bool UseDate, UseTime;
+        bool useDate, useTime;
         switch (columnType)
         {
           case DBxColumnType.Date:
-            UseDate = true;
-            UseTime = false;
+            useDate = true;
+            useTime = false;
             break;
           case DBxColumnType.DateTime:
-            UseDate = true;
-            UseTime = true;
+            useDate = true;
+            useTime = true;
             break;
           case DBxColumnType.Time:
-            UseDate = false;
-            UseTime = true;
+            useDate = false;
+            useTime = true;
             break;
           default:
-            UseDate = true;
-            UseTime = (int)(TimeValue.TimeOfDay.TotalSeconds) != 0;
+            useDate = true;
+            useTime = (int)(timeValue.TimeOfDay.TotalSeconds) != 0;
             break;
         }
 
-        OnFormatDateTimeValue(buffer, TimeValue, UseDate, UseTime);
+        OnFormatDateTimeValue(buffer, timeValue, useDate, useTime);
         return;
       }
 
       if (value is TimeSpan)
       {
-        DateTime TimeValue = new DateTime(((TimeSpan)value).Ticks, DateTimeKind.Unspecified);
-        OnFormatDateTimeValue(buffer, TimeValue, false, true);
+        DateTime timeValue = new DateTime(((TimeSpan)value).Ticks, DateTimeKind.Unspecified);
+        OnFormatDateTimeValue(buffer, timeValue, false, true);
         return;
       }
 
@@ -771,7 +771,7 @@ namespace FreeLibSet.Data
     #region Фильтры
 
     /// <summary>
-    /// Получить знак для условия ValueFilterKind 
+    /// Получить знак для условия <see cref="CompareKind"/>
     /// </summary>
     /// <param name="kind">Тип сравнения</param>
     /// <returns>Знак операции сравнения</returns>
@@ -833,41 +833,18 @@ namespace FreeLibSet.Data
     protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
     {
       // Есть ли в списке значений значение по умолчанию
-      bool hasDefaultValue = false;
-      foreach (object v in filter.Values)
-      {
-        if (DataTools.IsEmptyValue(v))
-        {
-          hasDefaultValue = true;
-          break;
-        }
-      }
-
       if (filter.Values.Length == 1)
       {
         // Как обычный ValueFilter
-        CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.Values.GetValue(0)), CompareKind.Equal, hasDefaultValue, filter.ColumnType);
+        CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.Values.GetValue(0)), CompareKind.Equal, filter.NullAsDefaultValue, filter.ColumnTypeInternal);
         FormatFilter(buffer, filter2);
         return;
       }
 
       // Сложный фильтр использует IN
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
-      formatInfo.NullAsDefaultValue = hasDefaultValue;
-      if (filter.ColumnType == DBxColumnType.Unknown)
-      {
-        foreach (object v in filter.Values)
-        {
-          if (v == null)
-            continue;
-
-          formatInfo.WantedColumnType = DBxTools.ValueToColumnType(v);
-          if (formatInfo.WantedColumnType != DBxColumnType.Unknown)
-            break;
-        }
-      }
-      else
-        formatInfo.WantedColumnType = filter.ColumnType;
+      formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
+      formatInfo.WantedColumnType = filter.ColumnTypeInternal;
       OnFormatExpression(buffer, filter.Expression, formatInfo);
 
       buffer.SB.Append(" IN (");
@@ -880,7 +857,6 @@ namespace FreeLibSet.Data
       buffer.SB.Append(')');
     }
 
-   
     /// <summary>
     /// Форматирование фильтра.
     /// </summary>
@@ -908,7 +884,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование фильтра.
-    /// Непереопределенная реализация заменяет StringValueFilter на CompareFilter с вызовом функции UPPER()
+    /// Непереопределенная реализация заменяет <see cref="StringValueFilter"/> на <see cref="CompareFilter"/> с вызовом функции UPPER()
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
@@ -996,7 +972,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование фильтра.
-    /// Непереопределенная реализация заменяет StringValueFilter на CompareFilter с вызовом функций UPPER() и SUBSTRING()
+    /// Непереопределенная реализация заменяет <see cref="SubstringFilter"/> на <see cref="CompareFilter"/> с вызовом функций UPPER() и SUBSTRING()
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
@@ -1155,7 +1131,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование фильтра.
-    /// Непереопределенная реализация заменяет фильтр на два CompareFilter, объединенных AndFilter и функкии COALESCE для учета значения NULL
+    /// Непереопределенная реализация заменяет фильтр на два <see cref="CompareFilter"/>, объединенных <see cref="AndFilter"/> и функции COALESCE для учета значения NULL
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
@@ -1174,7 +1150,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование фильтра.
-    /// Непереопределенная реализация использует один или два CompareFilter
+    /// Непереопределенная реализация использует один или два <see cref="CompareFilter"/>.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
@@ -1305,8 +1281,6 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatCompareFilter(DBxSqlBuffer buffer, CompareFilter filter)
     {
-      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
-      formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
       DBxConst cnst2 = filter.Expression2.GetConst();
       if (cnst2 != null)
       {
@@ -1323,7 +1297,6 @@ namespace FreeLibSet.Data
           }
         }
 
-        formatInfo.WantedColumnType = cnst2.ColumnType;
       }
       else
       {
@@ -1343,10 +1316,12 @@ namespace FreeLibSet.Data
             }
           }
 
-          formatInfo.WantedColumnType = cnst1.ColumnType;
         }
       }
 
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
+      formatInfo.WantedColumnType = filter.ColumnTypeInternal; // 24.05.2023
 
       buffer.FormatExpression(filter.Expression1, formatInfo);
       buffer.SB.Append(GetSignStr(filter.Kind));
@@ -1354,7 +1329,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Запись фильтра CompareFilter в режиме сравнения значения с NULL.
+    /// Запись фильтра <see cref="CompareFilter"/> в режиме сравнения значения с NULL.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="expression">Выражение, которое надо сравнить с NULL (левая часть условия)</param>

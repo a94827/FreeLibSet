@@ -88,7 +88,7 @@ namespace FreeLibSet.Data
 
       #region Свойства
 
-      private DBxTableCacheInfo _Owner;
+      private readonly DBxTableCacheInfo _Owner;
 
       /// <summary>
       /// Свойство имеет значение true, если значения поля должно буферизоваться в индивидуальном порядке,
@@ -146,7 +146,7 @@ namespace FreeLibSet.Data
       /// а не при загрузке блока строк таблицы.
       /// Если свойство не установлено в явном виде, то возвращается true для полей типа Memo, Xml и Binary
       /// </summary>
-      /// <param name="columnName">Имя столбца в списке DBxTableStruct.Columns</param>
+      /// <param name="columnName">Имя столбца в списке <see cref="DBxTableStruct.Columns"/></param>
       /// <returns>true, если используется индивидуальная буферизация</returns>
       public bool this[string columnName]
       {
@@ -195,7 +195,7 @@ namespace FreeLibSet.Data
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -308,10 +308,10 @@ namespace FreeLibSet.Data
   /// Объект является потокобезопасным, при условии что источник данных является потокобезопасным или
   /// принадлежит исключительно данному объекту. При загрузке данных из источника Source, а также, 
   /// структуры таблицы, выполняется блокировка, чтобы исключить параллельные обращения.
-  /// В качестве источника может выступать "личный" DBxCon
+  /// В качестве источника может выступать "личный" <see cref="DBxCon"/>.
   /// Может применяться как на стороне сервера, так и на стороне клиента.
   /// Если есть несколько пользователей с разными правами доступа, у каждого пользователя должен быть свой
-  /// объект DBxCache, ссылающийся на IDBxCacheSource, который возвращает только таблицы и поля, доступные пользователю
+  /// объект <see cref="DBxCache"/>, ссылающийся на <see cref="IDBxCacheSource"/>, который возвращает только таблицы и поля, доступные пользователю
   /// </summary>
   public class DBxCache : IDBxCacheSource
   {
@@ -385,7 +385,7 @@ namespace FreeLibSet.Data
     private Thread _SingleThread;
 
     /// <summary>
-    /// Генеририрует DifferentThreadException, если меторд вызван не из подходящего потока
+    /// Генеририрует <see cref="DifferentThreadException"/>, если метод вызван не из подходящего потока
     /// </summary>
     public void CheckThread()
     {
@@ -418,8 +418,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Идентификатор базы данных (первый ключ кэширования)
-    /// Нельзя использовать в качестве ключа DBIdentity, т.к. она может содержать недопустимые символы или
-    /// иметь большую длину. Используем контрольную сумму MD5
+    /// Нельзя использовать в качестве ключа <see cref="DBIdentity"/>, т.к. она может содержать недопустимые символы или
+    /// иметь большую длину. Используем контрольную сумму MD5.
     /// </summary>
     public string DBIdentityMD5 { get { return _DBIdentityMD5; } }
     private string _DBIdentityMD5;
@@ -449,7 +449,7 @@ namespace FreeLibSet.Data
     private int _RepeatCount;
 
     /// <summary>
-    /// Интервал времени в миллисекундах между отправками запроса, когда RepeatCount больше 1.
+    /// Интервал времени в миллисекундах между отправками запроса, когда <see cref="RepeatCount"/> больше 1.
     /// По умолчанию - 200мс
     /// </summary>
     public int RepeatDelay
@@ -481,7 +481,7 @@ namespace FreeLibSet.Data
     /// Доступ к данным для отдельной таблицы
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Объект DBxTableCache</returns>
+    /// <returns>Объект <see cref="DBxTableCache"/></returns>
     public DBxTableCache this[string tableName]
     {
       get
@@ -566,7 +566,7 @@ namespace FreeLibSet.Data
     #region Очистка буферов
 
     /// <summary>
-    /// Очищает все буферы для всех объектов DBxCache для базы данных, задаваемой DBIdenity
+    /// Очищает все буферы для всех объектов <see cref="DBxCache"/> и <see cref="DBxCacheIndividualValue"/> для базы данных, задаваемой <see cref="DBIdentityMD5"/>.
     /// </summary>
     public void Clear()
     {
@@ -575,7 +575,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Очищает буферы для всех объектов DBxCache для базы данных, задаваемой DBIdenity и таблицы <paramref name="tableName"/>
+    /// Очищает буферы для всех объектов <see cref="DBxTableCache"/> для базы данных, задаваемой <see cref="DBIdentityMD5"/> и таблицы <paramref name="tableName"/>
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     public void Clear(string tableName)
@@ -589,8 +589,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Очищает буферы для всех объектов DBxCache для базы данных, задаваемой DBIdenity, таблицы <paramref name="tableName"/>
-    /// и массива идентификаторов
+    /// Очищает буферы для всех объектов <see cref="DBxTableCache"/> для базы данных, задаваемой <see cref="DBIdentityMD5"/>, таблицы <paramref name="tableName"/>
+    /// и массива идентификаторов <paramref name="ids"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="ids">Массив идентификаторов</param>
@@ -610,8 +610,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Очищает буферы для всех объектов DBxCache для базы данных, задаваемой DBIdenity, таблицы <paramref name="tableName"/>
-    /// и заданного идентификатора
+    /// Очищает буферы для всех объектов <see cref="DBxTableCache"/> для базы данных, задаваемой <see cref="DBIdentityMD5"/>, таблицы <paramref name="tableName"/>
+    /// и заданного идентификатора <paramref name="id"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор</param>
@@ -623,8 +623,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Очищает буферы для всех объектов DBxCache для базы данных, задаваемой DBIdenity, таблицы <paramref name="tableName"/>
-    /// и массива идентификаторов
+    /// Очищает буферы для всех объектов <see cref="DBxTableCache"/> для базы данных, задаваемой <see cref="DBIdentityMD5"/>, таблицы <paramref name="tableName"/>
+    /// и массива идентификаторов <paramref name="ids"/>
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="ids">Массив идентификаторов</param>
@@ -637,7 +637,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Сброс буферизации на стороне клиента на основании данных, полученных от сервера.
-    /// Клиент, время от времени, должен запрашивать у сервера объект DBxClearCacheData, и выполнять очистку
+    /// Клиент, время от времени, должен запрашивать у сервера объект <see cref="DBxClearCacheData"/>, и выполнять очистку
     /// </summary>
     /// <param name="clearCacheData">Данные, полученные от сервера. Может быть null</param>
     public void Clear(DBxClearCacheData clearCacheData)
@@ -664,7 +664,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Сброс буферизации на стороне клиента на основании данных, полученных от сервера.
-    /// Клиент, время от времени, должен запрашивать у сервера объект DBxClearCacheData, и выполнять очистку
+    /// Клиент, время от времени, должен запрашивать у сервера объект <see cref="DBxClearCacheData"/>, и выполнять очистку
     /// </summary>
     /// <param name="clearCacheData">Данные, полученные от сервера. Может быть null</param>
     public void Clear(DBxClearCacheData[] clearCacheData)
@@ -709,10 +709,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Пытается извлечь из Cache существующие страницы.
+    /// Пытается извлечь из <see cref="Cache"/> существующие страницы.
     /// Если чего-то не хватает, выполняет обращение к источнику страниц.
     /// При этом попутно догружаются страницы, для которых был вызыван DBxTableCache.AddPreloadId()
     /// </summary>
+    /// <param name="request">Список требуемых страниц</param>
+    /// <returns>Загруженные страницы</returns>
     public DBxCacheLoadResponse LoadCachePages(DBxCacheLoadRequest request)
     {
       if (request == null)
@@ -911,10 +913,10 @@ namespace FreeLibSet.Data
     /// Получить страницы кэша для заданных идентификаторов документов.
     /// Этот метод может использоваться в архитектуре клиент-сервер для упреждающей загрузки кэша для документов,
     /// которые скоро понадобятся.
-    /// Клиент определяет, какие документы будут нужны и передает TableAndIdList на сервер в составе какого-либо запроса,
+    /// Клиент определяет, какие документы будут нужны и передает <see cref="TableAndIdList"/> на сервер в составе какого-либо запроса,
     /// который все равно требуется выполнить. 
-    /// Сервер вызывает метод LoadCachePages для списка идентификаторов и возвращает полученный DBxCacheLoadResponse клиенту.
-    /// Клиент вызывает DBxCacheLoadResponse.ToCache().
+    /// Сервер вызывает метод LoadCachePages для списка идентификаторов и возвращает полученный <see cref="DBxCacheLoadResponse"/> клиенту.
+    /// Клиент вызывает <see cref="DBxCacheLoadResponse.ToCache()"/>.
     /// </summary>
     /// <param name="ids">Идентификаторы документов с таблицами</param>
     /// <returns>Кэшированные страницы</returns>
@@ -1165,7 +1167,7 @@ namespace FreeLibSet.Data
     /// Получить значение для ссылочного поля 
     /// (например, значение поля "Человек.ФИО" для таблицы "Сотрудники")
     /// </summary>
-    /// <param name="refColumnName">Имя поля в виде ИмяСсылочногоПоля.ИмяТребуемогоПоля (например, "Человек.ФИО")</param>
+    /// <param name="refColumnName">Имя поля в виде "ИмяСсылочногоПоля.ИмяТребуемогоПоля" (например, "Человек.ФИО")</param>
     /// <param name="refId">Значение ссылочного поля (то есть поля "Человек" в таблице "Сотрудники")</param>
     /// <param name="primaryDS">Необязательный первичный набор данных</param>
     /// <returns>Значение требуемого поля</returns>
@@ -1195,8 +1197,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольных полей строки таблицы
-    /// Поля могут быть ссылочными, то есть содержать точки
+    /// Получить значение произвольных полей строки таблицы.
+    /// Поля могут быть ссылочными, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnNames">Имена полей, которые требуется извлечь</param>
@@ -1349,8 +1351,8 @@ namespace FreeLibSet.Data
     #region Форматное извлечение полей
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1361,8 +1363,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1373,8 +1375,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1385,8 +1387,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1397,8 +1399,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1409,8 +1411,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1421,8 +1423,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1433,8 +1435,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1445,8 +1447,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1457,8 +1459,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1469,8 +1471,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
@@ -1481,8 +1483,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольного поля таблицы
-    /// Поле может быть ссылочным, то есть содержать точки
+    /// Получить значение произвольного поля таблицы.
+    /// Поле может быть ссылочным, то есть содержать точки.
     /// </summary>
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="id">Значение идентификатора Id</param>
@@ -1499,9 +1501,9 @@ namespace FreeLibSet.Data
     #region Получение таблицы данных
 
     /// <summary>
-    /// Создает таблицу данных DataTable с заданными именами полей и строками для заданных идентификаторов.
+    /// Создает таблицу данных <see cref="DataTable"/> с заданными именами полей и строками для заданных идентификаторов.
     /// Полученная таблица может использоваться произвольным образом, т.к. она не связана с системой буферизации.
-    /// При повторных обращениях создается новая таблица
+    /// При повторных обращениях создается новая таблица.
     /// </summary>
     /// <param name="ids">Идентификаторы записей в таблице, для которых создаются строки. 
     /// Может быть пустой массив, тогда возвращается заготовка таблицы</param>
@@ -1558,9 +1560,9 @@ namespace FreeLibSet.Data
     /// Если задано несуществующее имя столбца, возвращает null.
     /// Для простых имен столбца без точек возвращает TableStruct.Columns[ColumnName].
     /// 
-    /// Предупреждение. Имя возвращаемого столбца DBxColumnStruct.ColumnName может не совпадать с <paramref name="columnName"/>,
-    /// если столбец является ссылочным. Если далее вызывается DBxColumnStruct.CreateDataColumn(), то обычно следует также
-    /// установить свойство DataColumn.ColumnName.
+    /// Предупреждение. Имя возвращаемого столбца <see cref="DBxColumnStruct.ColumnName"/> может не совпадать с <paramref name="columnName"/>,
+    /// если столбец является ссылочным. Если далее вызывается <see cref="DBxColumnStruct.CreateDataColumn()"/>, то обычно следует также
+    /// установить свойство <see cref="DataColumn.ColumnName"/>.
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
     /// <returns>Описатель структуры столбца. Может относиться к другой таблице, если поле является ссылочным</returns>
@@ -2364,7 +2366,7 @@ Exception rethrown at [0]:
 
   /// <summary>
   /// Хранилище индивидуального значения поля.
-  /// Отдельный класс требуется для использования в системе Cache. Ключами кэша являются:
+  /// Отдельный класс требуется для использования в системе <see cref="Cache"/>. Ключами кэша являются:
   /// [0] - DBIdentityMD5
   /// [1] - TableName
   /// [2] - Id
@@ -2437,7 +2439,7 @@ Exception rethrown at [0]:
 
   /// <summary>
   /// Запрос на загрузку страниц кэша.
-  /// Этот объект создается в DBxCache
+  /// Этот объект создается в <see cref="DBxCache"/>
   /// </summary>
   [Serializable]
   public sealed class DBxCacheLoadRequest
@@ -2775,7 +2777,7 @@ Exception rethrown at [0]:
   /// <summary>
   /// Загруженные по запросу страницы кэша.
   /// Доступ к индивидуальным страницам невозможен из пользовательского кода.
-  /// Метод ToCache() помещает страницы из этого объекта в локуальный кэш
+  /// Метод ToCache() помещает страницы из этого объекта в локальный кэш
   /// </summary>
   [Serializable]
   public sealed class DBxCacheLoadResponse
@@ -2985,7 +2987,7 @@ Exception rethrown at [0]:
   }
 
   /// <summary>
-  /// Расширяет класс DataRowValueArray.
+  /// Расширяет класс <see cref="DataRowValueArray"/>.
   /// Если таблица не содержит запрашиваемого ссылочного поля с точкой, то извлекается значение из кэша
   /// </summary>
   public class DBxDataRowValueArrayWithCache : DataRowValueArray, IDataRowNamedValuesAccess
@@ -3087,7 +3089,7 @@ Exception rethrown at [0]:
   }
 
   /// <summary>
-  /// Повторитель таблицы, который получает значения вычисляемых полей из кэша таблицы DBxTableCache.
+  /// Повторитель таблицы, который получает значения вычисляемых полей из кэша таблицы <see cref="DBxTableCache"/>.
   /// Прикладной код должен заполнить структуру таблицы SlaveTable, используя имена обычных и ссылочных полей.
   /// Предполагается, что MasterTable будет необходимые основные поля.
   /// </summary>
@@ -3114,7 +3116,7 @@ Exception rethrown at [0]:
     /// Доступ к кэшированным данным. Задается в конструкторе
     /// </summary>
     public DBxTableCache TableCache { get { return _TableCache; } }
-    private DBxTableCache _TableCache;
+    private readonly DBxTableCache _TableCache;
 
     #endregion
 

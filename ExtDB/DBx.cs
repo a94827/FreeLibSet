@@ -63,7 +63,7 @@ namespace FreeLibSet.Data
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события DBx.CreateSqlException
+  /// Аргументы события <see cref="DBx.CreateSqlException"/>
   /// </summary>
   public class DBxCreateSqlExceptionEventArgs : EventArgs
   {
@@ -91,19 +91,19 @@ namespace FreeLibSet.Data
     /// Соединение, для которого выполнялся SQL-запрос
     /// </summary>
     public DBxConBase Con { get { return _Con; } }
-    private DBxConBase _Con;
+    private readonly DBxConBase _Con;
 
     /// <summary>
     /// Текст SQL-запроса, вызвавшего исключение
     /// </summary>
     public string CmdText { get { return _CmdText; } }
-    private string _CmdText;
+    private readonly string _CmdText;
 
     /// <summary>
     /// Перехваченное исключение от ADO.NET
     /// </summary>
     public Exception InnerException { get { return _InnerException; } }
-    private Exception _InnerException;
+    private readonly Exception _InnerException;
 
     /// <summary>
     /// Сюда должен быть помещен объект исключения
@@ -115,14 +115,14 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Делегат события DBx.CreateSqlException
+  /// Делегат события <see cref="DBx.CreateSqlException"/>
   /// </summary>
   /// <param name="sender">Объект DBx</param>
   /// <param name="args">Аргументы события</param>
   public delegate void DBxCreateSqlExceptionEventHandler(object sender, DBxCreateSqlExceptionEventArgs args);
 
   /// <summary>
-  /// Аргументы события DBx.SqlQueryStarted
+  /// Аргументы события <see cref="DBx.SqlQueryStarted"/>
   /// </summary>
   public class DBxSqlQueryStartedEventArgs : EventArgs
   {
@@ -131,7 +131,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает аргументы события
     /// </summary>
-    /// <param name="cmdText"></param>
+    /// <param name="cmdText">Текст команды</param>
     public DBxSqlQueryStartedEventArgs(string cmdText)
     {
       _CmdText = cmdText;
@@ -145,21 +145,21 @@ namespace FreeLibSet.Data
     /// Выполняемый запрос
     /// </summary>
     public string CmdText { get { return _CmdText; } }
-    private string _CmdText;
+    private readonly string _CmdText;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат для события DBx.SqlQueryStarted
+  /// Делегат для события <see cref="DBx.SqlQueryStarted"/>.
   /// </summary>
-  /// <param name="sender">Объект DBx</param>
+  /// <param name="sender">Объект <see cref="DBx"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void DBxSqlQueryStartedEventHandler(object sender, DBxSqlQueryStartedEventArgs args);
 
 
   /// <summary>
-  /// Аргументы события DBx.SqlQueryFinished
+  /// Аргументы события <see cref="DBx.SqlQueryFinished"/>
   /// </summary>
   public class DBxSqlQueryFinishedEventArgs : EventArgs
   {
@@ -186,33 +186,33 @@ namespace FreeLibSet.Data
     /// Выполненный запрос
     /// </summary>
     public string CmdText { get { return _CmdText; } }
-    private string _CmdText;
+    private readonly string _CmdText;
 
     /// <summary>
     /// Время выполнения запроса (для отладки)
     /// </summary>
     public TimeSpan ExecutingTime { get { return _ExecutingTime; } }
-    private TimeSpan _ExecutingTime;
+    private readonly TimeSpan _ExecutingTime;
 
     /// <summary>
     /// Объект исключения, если при выполнении запроса возникла ошибка.
     /// Возвращает null, если запрос успешно выполнен
     /// </summary>
     public Exception Exception { get { return _Exception; } }
-    private Exception _Exception;
+    private readonly Exception _Exception;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат для события DBx.SqlQueryFinished
+  /// Делегат для события <see cref="DBx.SqlQueryFinished"/>
   /// </summary>
-  /// <param name="sender">Объект DBx</param>
+  /// <param name="sender">Объект <see cref="DBx"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void DBxSqlQueryFinishedEventHandler(object sender, DBxSqlQueryFinishedEventArgs args);
 
   /// <summary>
-  /// Аргумент события DBx.LogoutException
+  /// Аргумент события <see cref="DBx.LogoutException"/>
   /// </summary>
   public class DBxLogoutExceptionEventArgs : EventArgs
   {
@@ -239,25 +239,25 @@ namespace FreeLibSet.Data
     /// Соединение с базой данной, для которого произошло исключение
     /// </summary>
     public DBxConBase Con { get { return _Con; } }
-    private DBxConBase _Con;
+    private readonly DBxConBase _Con;
 
     /// <summary>
     /// Объект ошибки
     /// </summary>
     public Exception Exception { get { return _Exception; } }
-    private Exception _Exception;
+    private readonly Exception _Exception;
 
     /// <summary>
     /// Описание места возникновения ошибки
     /// </summary>
     public string Title { get { return _Title; } }
-    private string _Title;
+    private readonly string _Title;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события DBx.LogoutException
+  /// Делегат события <see cref="DBx.LogoutException"/>
   /// </summary>
   /// <param name="sender"></param>
   /// <param name="args"></param>
@@ -269,7 +269,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Ограничения на блокировку.
-  /// Значение возвращается свойством DBx.LockMode
+  /// Значение возвращается свойством <see cref="DBx.LockMode"/>
   /// </summary>
   public enum DBxLockMode
   {
@@ -296,7 +296,7 @@ namespace FreeLibSet.Data
     #region Конструктор
 
     /// <summary>
-    /// Инициализация набора параметров знвчениями по умолчанию
+    /// Инициализация набора параметров значениями по умолчанию
     /// </summary>
     public DBxUpdateStructOptions()
     {
@@ -312,14 +312,14 @@ namespace FreeLibSet.Data
     /// Нужно ли создавать внешние ключи для ссылочных полей.
     /// По умолчанию - true - ключи создаются.
     /// Свойство может быть сброшено в false на время импорта данных, чтобы избежать проблем ссылочной 
-    /// целостности. После импорта объект DBx должен быть удален и создан заново с обновлением структуры, 
-    /// уже с включенным режимом
+    /// целостности. После импорта объект <see cref="DBx"/> должен быть удален и создан заново с обновлением структуры, 
+    /// уже с включенным режимом.
     /// </summary>
     public bool ForeignKeys { get { return _ForeignKeys; } set { _ForeignKeys = value; } }
     private bool _ForeignKeys;
 
     /// <summary>
-    /// Нужно ли удалять индексы, описаний которых нет в требуемой DBxStruct.
+    /// Нужно ли удалять индексы, описаний которых нет в требуемой <see cref="DBxStruct"/>.
     /// По умолчанию - true - лишние индексы удаляются.
     /// Свойство должно быть сброшено в false, если предполагается возможность использования индексов,
     /// создаваемых вне приложения.
@@ -339,7 +339,7 @@ namespace FreeLibSet.Data
     #region Конструктор и Dispose
 
     /// <summary>
-    /// Создает базу данных и добавляет ее в список AllDBList.
+    /// Создает базу данных и добавляет ее в список <see cref="AllDBList"/>.
     /// </summary>
     public DBx()
     {
@@ -360,9 +360,9 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Удаляет базу данных из списка AllDBList, если <paramref name="disposing"/>=true.
+    /// Удаляет базу данных из списка <see cref="AllDBList"/>, если <paramref name="disposing"/>=true.
     /// </summary>
-    /// <param name="disposing">True, если был вызван Dispose() для базы данных.
+    /// <param name="disposing">True, если был вызван <see cref="System.IDisposable.Dispose()"/> для базы данных.
     /// False, если был вызван деструктор</param>
     protected override void Dispose(bool disposing)
     {
@@ -400,7 +400,7 @@ namespace FreeLibSet.Data
     private string _DisplayName;
 
     /// <summary>
-    /// Возвращает свойство DisplayName и признак "(disposed)"
+    /// Возвращает свойство <see cref="DisplayName"/> и признак "(disposed)"
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -419,7 +419,7 @@ namespace FreeLibSet.Data
     /// Список всех открытых соединений
     /// </summary>
     public ICollection<DBxConBase> Cons { get { return _Cons; } }
-    internal SyncCollection<DBxConBase> _Cons;
+    internal readonly SyncCollection<DBxConBase> _Cons;
 
     /// <summary>
     /// Свойство возвращает true, если для базы данных, хотя бы однажды, было создано соединение
@@ -473,7 +473,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает строку подключения, не содержащую пароль.
-    /// Если свойство MainEntry=null, возвращает пустую строку.
+    /// Если свойство <see cref="MainEntry"/>=null, возвращает пустую строку.
     /// Если строки подключения не поддерживается базой данных, возвращает пустую строку.
     /// </summary>
     public string UnpasswordedConnectionString
@@ -495,8 +495,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Структура базы данных (описания таблиц).
     /// Если свойство не установлено в явном виде, возвращает реальную структуру таблиц.
-    /// Для обновления структуры базы данных следует установить это свойство и вызвать DBxEntry.UpdateStruct().
-    /// Установка свойства устанавливает DBxStruct.IsReadOnly=true
+    /// Для обновления структуры базы данных следует установить это свойство и вызвать <see cref="UpdateStruct()"/>().
+    /// Установка свойства устанавливает <see cref="DBxStruct.IsReadOnly"/>=true.
     /// </summary>
     public DBxStruct Struct
     {
@@ -528,14 +528,14 @@ namespace FreeLibSet.Data
     private DBxStruct _Struct;
 
     /// <summary>
-    /// Возвращает true, если свойство Struct было установлено.
-    /// Если false, то Struct возвращает реальную структуру базы данных
+    /// Возвращает true, если свойство <see cref="Struct"/> было установлено.
+    /// Если false, то <see cref="Struct"/> возвращает реальную структуру базы данных
     /// </summary>
     public bool StructHasBeenSet { get { return _StructHasBeenSet; } }
     private bool _StructHasBeenSet;
 
     /// <summary>
-    /// Восстанавливает свойство Struct в значение по умолчанию, то есть отображающее реальную структуру таблиц в базе данных.
+    /// Восстанавливает свойство <see cref="Struct"/> в значение по умолчанию, то есть отображающее реальную структуру таблиц в базе данных.
     /// Может быть полезным, если таблицы создаются/удаляются/модифицируются вручную
     /// </summary>
     public void ResetStruct()
@@ -549,7 +549,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает новый объект DBxStruct, соответствующий реальной структуре базы данных
+    /// Возвращает новый объект <see cref="DBxStruct"/>, соответствующий реальной структуре базы данных
     /// </summary>
     /// <returns></returns>
     public DBxStruct GetRealStruct()
@@ -575,19 +575,19 @@ namespace FreeLibSet.Data
     public abstract void CreateIfRequired();
 
     /// <summary>
-    /// Возвращает true, если был успешный вызов метода UpdateStruct().
-    /// Вызов ResetDBStruct() сбрасывает флаг в false.
+    /// Возвращает true, если был успешный вызов метода <see cref="UpdateStruct()"/>.
+    /// Вызов <see cref="ResetStruct()"/> сбрасывает флаг в false.
     /// </summary>
     public bool StructHasBeenUpdated { get { return _StructHasBeenUpdated; } }
     private bool _StructHasBeenUpdated;
 
     /// <summary>                               
     /// Метод должен выполнить обновление структуры существующей базы
-    /// данных на основании созданного описание в свойстве DBx.Struct.
+    /// данных на основании созданного описание в свойстве <see cref="Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// Эта версия позволяет настроить параметры обновления.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
@@ -603,11 +603,11 @@ namespace FreeLibSet.Data
 
     /// <summary>                               
     /// Метод должен выполнить обновление структуры существующей базы
-    /// данных на основании созданного описание в свойстве DBx.Struct.
+    /// данных на основании созданного описание в свойстве <see cref="Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// Эта версия позволяет настроить параметры обновления.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
@@ -617,11 +617,11 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Метод должен выполнить обновление структуры существующей базы
-    /// данных на основании созданного описание в свойстве DBx.Struct.
+    /// данных на основании созданного описание в свойстве <see cref="Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// Эта перегрузка использует параметры обновления по умолчанию, которые применимы в большинстве случаев
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится не вносится, сообщения не добавляются</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
@@ -631,7 +631,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Обновление структуры существующей базы данных на основании созданного описание в свойстве DBx.Struct.
+    /// Обновление структуры существующей базы данных на основании созданного описание в свойстве <see cref="Struct"/>..
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// Эта перегрузка редко используется, так как не позволяет получить список ошибок.
     /// </summary>
@@ -652,9 +652,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Удаляет таблицу данных, если она существует.
-    /// Этот метод должен вызываться до установки свойства DBx.Struct и вызова UpdateStruct().
+    /// Этот метод должен вызываться до установки свойства <see cref="Struct"/> и вызова <see cref="UpdateStruct()"/>.
     /// Если обновление структуры не предполагается, после последовательности вызовов этого метода,
-    /// должна быть выполнена установка DB.Struct=null, чтобы обновить список таблиц
+    /// должна быть выполнена установка <see cref="Struct"/>=null, чтобы обновить список таблиц.
     /// </summary>
     /// <param name="tableName">Имя удаляемой таблицы</param>
     public virtual void DropTableIfExists(string tableName)
@@ -688,7 +688,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Проверка корректности имени таблицы.
     /// Возвращает true, если имя правильное. 
-    /// Наличие реальной таблицы с таким именем не проверяется
+    /// Наличие реальной таблицы с таким именем не проверяется.
     /// </summary>
     /// <param name="tableName">Проверяемое имя таблицы</param>
     /// <param name="errorText">Сообщение об ошибке</param>
@@ -711,7 +711,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Проверяемое имя поля</param>
     /// <param name="allowDots">True, если имя может содержать точки</param>
     /// <param name="errorText"></param>
-    /// <returns></returns>
+    /// <returns>Наличие поля</returns>
     public bool IsValidColumnName(string columnName, bool allowDots, out string errorText)
     {
       if (String.IsNullOrEmpty(columnName))
@@ -775,10 +775,16 @@ namespace FreeLibSet.Data
     //  return true;
     //}
 
-    // 16.10.2019
-    // Ужесточили проверку
-    private static bool CheckInvalidChars(string name, out string errorText)
+    /// <summary>
+    /// Проверка имени таблицы или поля на наличие недопустимых символов.
+    /// </summary>
+    /// <param name="name">Имя</param>
+    /// <param name="errorText">Сюда помещается сообщение об ошибке</param>
+    /// <returns>true, если имя корректное</returns>
+    protected static bool CheckInvalidChars(string name, out string errorText)
     {
+      // 16.10.2019
+      // Ужесточили проверку
       for (int i = 0; i < name.Length; i++)
       {
         if (!Char.IsLetterOrDigit(name, i))
@@ -808,7 +814,7 @@ namespace FreeLibSet.Data
     /// Объект для форматирования SQL-запросов
     /// Задается в конструкторе базы данных
     /// Используется единственный экземпляр для всех соединений.
-    /// У каждого соединения есть свой экземпляр DBxSqlBuffer
+    /// У каждого соединения есть свой экземпляр <see cref="DBxSqlBuffer"/>.
     /// </summary>
     public DBxSqlFormatter Formatter { get { return _Formatter; } }
     private DBxSqlFormatter _Formatter;
@@ -873,7 +879,7 @@ namespace FreeLibSet.Data
     private int _ExceptionCount;
 
     /// <summary>
-    /// Вызывает обработчик события CreateSqlException, если он установлен.
+    /// Вызывает обработчик события <see cref="CreateSqlException"/>, если он установлен.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     public void OnCreateSqlException(DBxCreateSqlExceptionEventArgs args)
@@ -897,20 +903,20 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Обработчик для регистрации внутренних ошибок.
     /// Событие может вызываться асинхронно
-    /// Если обработчик события не установлен приложением, вызывается метод LogoutTools.LogoutException()
+    /// Если обработчик события не установлен приложением, вызывается метод <see cref="LogoutTools.LogoutException(Exception, string)"/>.
     /// </summary>
     public event DBxLogoutExceptionEventHandler LogoutException;
 
     /// <summary>
     /// Возвращает количество обрабатываемых в данный момент ошибок.
-    /// Возвращаемое значение увеличивается на 1 при вызове OnLogoutException() и уменьшается на 1 при выходе из метода.
+    /// Возвращаемое значение увеличивается на 1 при вызове <see cref="OnLogoutException(DBxLogoutExceptionEventArgs)"/> и уменьшается на 1 при выходе из метода.
     /// </summary>
     public int CurrentLogoutExceptionCount { get { return _CurrentLogoutExceptionCount; } }
     private int _CurrentLogoutExceptionCount;
 
     /// <summary>
-    /// Вызов обработчика события LogoutException, если он установлен.
-    /// Иначе вызывается метод LogoutTools.LogoutException для регистрации исключения.
+    /// Вызов обработчика события <see cref="LogoutException"/>, если он установлен.
+    /// Иначе вызывается метод <see cref="LogoutTools.LogoutException(Exception, string)"/> для регистрации исключения.
     /// Вложенные ошибки при вызове обработчика события "проглатываются".
     /// </summary>
     /// <param name="args">Аргументы события</param>
@@ -980,17 +986,17 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Время выполнения команд в секундах по умолчанию. 
-    /// Начальное значение для свойства CommandTimeOut.
-    /// Равно 30 секугдам
+    /// Начальное значение для свойства <see cref="CommandTimeout"/>.
+    /// Равно 30 секундам (в соответствии с принятым стандартным значением в IDbCommand)
     /// </summary>
     public const int DefaultCommandTimeout = 30;
 
     /// <summary>
     /// Время выполнения команд в секундах. 0-бесконечное время ожидания.
-    /// По умолчанию свойство имеет значение 30 (в соответствии с принятым стандартным значением в IDbCommand).
+    /// По умолчанию свойство имеет значение 30 (<see cref="DefaultCommandTimeout"/>).
     /// Установка этого свойства влияет на все вновь создаваемые соединения и позволяет устанавливать
     /// тайм-аут на уровне всей базы данных.
-    /// Свойство может задаваться индивидуально для каждого соединения DBxConBase.
+    /// Свойство может задаваться индивидуально для каждого соединения <see cref="DBxConBase"/>.
     /// </summary>
     public int CommandTimeout
     {
@@ -1021,7 +1027,7 @@ namespace FreeLibSet.Data
     public abstract long GetDBSize();
 
     /// <summary>
-    /// Значение свойство DBSizeLimit, когда размер не ограничен
+    /// Значение свойства <see cref="DBSizeLimit"/>, когда размер не ограничен
     /// </summary>
     public const long DBSizeUnlimited = 0x7FFFFFFFFFFFFFFFL;
 
@@ -1040,13 +1046,13 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Возвращает объект DBxManager для данного типа базы данных.
+    /// Возвращает объект <see cref="DBxManager"/> для данного типа базы данных.
     /// Если менеджера нет, свойство возвращает null.
     /// </summary>
     public virtual DBxManager Manager { get { return null; } }
 
     /// <summary>
-    /// Возвращает объект DbProviderFactory, специфический для провайдера ADO.NET
+    /// Возвращает объект <see cref="DbProviderFactory"/>, специфический для провайдера ADO.NET
     /// </summary>
     public abstract DbProviderFactory ProviderFactory { get; }
 
@@ -1055,7 +1061,7 @@ namespace FreeLibSet.Data
     #region Статический список
 
     /// <summary>
-    /// Полный список всех объявленных баз данных
+    /// Полный список всех объявленных баз данных (созданных объектов <see cref="DBx"/>, для которых еще не был вызван метод <see cref="IDisposable.Dispose()"/>)
     /// </summary>
     public static readonly SyncCollection<DBx> AllDBList = new SyncCollection<DBx>();
 
@@ -1082,8 +1088,8 @@ namespace FreeLibSet.Data
     /// Обработчик события может использоваться, например, для нестандартной трассировки запросов.
     /// Обработчик должен выполняться быстро, чтобы не замедлять выполнение запросов.
     /// Событие может вызываться асинхронно. 
-    /// Порядок вызова событий SqlQueryFinished не обязан совпадать с SqlQueryStarted, так как запросы могут выполняться параллельно с разной скоростью.
-    /// Если запрос завершился с ошибкой, то сначала происходит событие SqlQueryFinished, а затем - LogoutException.
+    /// Порядок вызова событий <see cref="SqlQueryFinished"/> не обязан совпадать с <see cref="SqlQueryStarted"/>, так как запросы могут выполняться параллельно с разной скоростью.
+    /// Если запрос завершился с ошибкой, то сначала происходит событие <see cref="SqlQueryFinished"/>, а затем - <see cref="LogoutException"/>.
     /// </summary>
     public event DBxSqlQueryFinishedEventHandler SqlQueryFinished;
 
@@ -1095,8 +1101,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Управляет трассировкой SQL-запросов на глобальном уровне.
-    /// Трассировкой запросов можно также управлять на уровне базы данных с помощью нестатического свойства DBx.TraceEnabled
-    /// и на уровне соединения с помощью свойства DBxConBase.TraceEnabled.
+    /// Трассировкой запросов можно также управлять на уровне базы данных с помощью нестатического свойства <see cref="DBx.TraceEnabled"/>ю.
+    /// и на уровне соединения с помощью свойства <see cref="DBxConBase.TraceEnabled"/>.
     /// 
     /// По умолчанию, глобальная трассировка отключена.
     /// </summary>
@@ -1104,8 +1110,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Управление трассировкой SQL-запросов на уровне базы.
-    /// Если свойство не установлено в явном виде для базы данных, то оно возвращет текущее значение в соответствии с глобальным переключателем TraceSwitch.
-    /// Управление трассировкой возможно также на уровне отдельных соединений с помощью свойства DBxCon/DBxConBase.TraceEnabled
+    /// Если свойство не установлено в явном виде для базы данных, то оно возвращет текущее значение в соответствии с глобальным переключателем <see cref="TraceSwitch"/>.
+    /// Управление трассировкой возможно также на уровне отдельных соединений с помощью свойства <see cref="DBxCon.TraceEnabled"/> и <see cref="DBxConBase.TraceEnabled"/>.
     /// </summary>
     public bool TraceEnabled { get { return _TraceEnabled ?? TraceSwitch.Enabled; } set { _TraceEnabled = value; } }
     private bool? _TraceEnabled;

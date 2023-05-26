@@ -552,6 +552,7 @@ namespace FreeLibSet.Parsing
       if (b is DateTime)
         b = ((DateTime)b).ToOADate();
 
+#if XXX
       //return System.Collections.Comparer.Default.Compare(a, b);
 
       // 01.03.2017
@@ -565,6 +566,8 @@ namespace FreeLibSet.Parsing
         return System.Collections.Comparer.Default.Compare(DataTools.GetSingle(a), DataTools.GetSingle(b));
       else
         return System.Collections.Comparer.Default.Compare(DataTools.GetInt(a), DataTools.GetInt(b));
+#endif
+      return DataTools.CompareNumbers(a, b); // 23.05.2023
     }
 
 #if XXX
@@ -706,9 +709,9 @@ namespace FreeLibSet.Parsing
     }
 #endif
 
-    #endregion
+#endregion
 
-    #region Математические функции типа Double
+#region Математические функции типа Double
 
     private static object CalcMath0Arg(FunctionExpression expression, object[] args)
     {
@@ -795,9 +798,9 @@ namespace FreeLibSet.Parsing
           throw new BugException();
       }
     }
-    #endregion
+#endregion
 
-    #region Строковые функции
+#region Строковые функции
 
     /// <summary>
     /// Возвращает строку в понятиях Excel
@@ -918,11 +921,11 @@ namespace FreeLibSet.Parsing
       throw new BugException("Ошибка выполнения цикла");
     }
 
-    #endregion
+#endregion
 
-    #region Функции даты и времени
+#region Функции даты и времени
 
-    #region DATE, TIME, NOW, TODAY
+#region DATE, TIME, NOW, TODAY
 
     private static FunctionDelegate _FDDateTime = new FunctionDelegate(CalcDateTime);
 
@@ -951,9 +954,9 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    #endregion
+#endregion
 
-    #region Компоненты даты (YEAR .. SECOND), WEEKDAY
+#region Компоненты даты (YEAR .. SECOND), WEEKDAY
 
     private static FunctionDelegate _FDDateTimePart = new FunctionDelegate(CalcDateTimePart);
 
@@ -1002,9 +1005,9 @@ namespace FreeLibSet.Parsing
       throw new InvalidCastException("Аргумент типа " + arg.GetType().ToString() + " нельзя преобразовать в DateTime");
     }
 
-    #endregion
+#endregion
 
-    #region DATEDIF и Days
+#region DATEDIF и Days
 
     private static object CalcDateDif(FunctionExpression expression, object[] args)
     {
@@ -1047,11 +1050,11 @@ namespace FreeLibSet.Parsing
         return ts.TotalDays;
     }
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
-    #region Логические функции
+#region Логические функции
 
     private static object CalcIf(FunctionExpression expression, object[] args)
     {
@@ -1105,9 +1108,9 @@ namespace FreeLibSet.Parsing
         return DataTools.GetBool(value);
     }
 
-    #endregion
+#endregion
 
-    #region Выбор
+#region Выбор
 
     private static object CalcChoose(FunctionExpression expression, object[] args)
     {
@@ -1118,9 +1121,9 @@ namespace FreeLibSet.Parsing
       return args[index]; // испр.08.11.2022
     }
 
-    #endregion
+#endregion
 
-    #region Вспомогательные методы
+#region Вспомогательные методы
 
     private static void CheckArgCount(object[] args, int count)
     {
@@ -1134,6 +1137,6 @@ namespace FreeLibSet.Parsing
         throw new ArgumentException("Неправильное число аргументов (" + args.Length.ToString() + "). Должно быть аргументов от " + minCount.ToString() + " до " + maxCount.ToString(), "args");
     }
 
-    #endregion
+#endregion
   }
 }

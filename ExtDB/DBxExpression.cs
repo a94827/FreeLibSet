@@ -27,9 +27,8 @@ namespace FreeLibSet.Data
     /// Получить значение выражения из произвольного источника данных
     /// </summary>
     /// <param name="rowValues">Источник данных</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
     /// <returns>Значение</returns>
-    public abstract object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue);
+    public abstract object GetValue(INamedValuesAccess rowValues);
 
     /// <summary>
     /// Сравнение двух выражений на равенство.
@@ -171,9 +170,8 @@ namespace FreeLibSet.Data
     /// Извлекает значение ColumnName из <paramref name="rowValues"/>.
     /// </summary>
     /// <param name="rowValues">Источник данных</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
     /// <returns>Значение</returns>
-    public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
+    public override object GetValue(INamedValuesAccess rowValues)
     {
       object v = rowValues.GetValue(ColumnName);
       if (v is DBNull)
@@ -219,7 +217,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="value">Значение</param>
     public DBxConst(object value)
-    : this(value, DBxColumnType.Unknown)
+      : this(value, DBxColumnType.Unknown)
     {
     }
 
@@ -327,7 +325,7 @@ namespace FreeLibSet.Data
       if (obj2 == null)
         return false;
       else
-        return Object.Equals(this._Value, obj2._Value);
+        return Object.Equals(this._Value, obj2._Value) && this._ColumnType == obj2._ColumnType;
     }
 
     /// <summary>
@@ -352,18 +350,13 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение выражения из произвольного источника данных.
-    /// Возвращает значение константы или пустое значение при Value=null и <paramref name="nullAsDefaultValue"/>=true.
+    /// Возвращает Value
     /// </summary>
     /// <param name="rowValues">Игнорируется</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
     /// <returns>Значение</returns>
-    public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
+    public override object GetValue(INamedValuesAccess rowValues)
     {
-      if (Value == null && nullAsDefaultValue)
-        return DBxTools.GetDefaultValue(ColumnType);
-      else
-        return Value;
+      return Value;
     }
 
     /// <summary>
@@ -442,32 +435,25 @@ namespace FreeLibSet.Data
     Length,
 
     /// <summary>
-    /// Перевод строки в нижний регистр
-    /// </summary>
-    Lower,
-
-    /// <summary>
-    /// Перевод строки в верхний регистр
+    /// Перевод строки в верхний регистр.
+    /// Не реализовано для <see cref="System.Data.DataView"/>.
     /// </summary>
     Upper,
 
     /// <summary>
-    /// Возвращает подстроку
-    /// Первый аргумент - исходное строковое выражение
+    /// Перевод строки в нижний регистр.
+    /// Не реализовано для <see cref="System.Data.DataView"/>.
+    /// </summary>
+    Lower,
+
+    /// <summary>
+    /// Возвращает подстроку.
+    /// Первый аргумент - исходное строковое выражение.
     /// Второй аргумент - начальная позиция подстроки. Нумерация с единицы, а не с нуля!
-    /// Третий аргумент - длина строки в символах
+    /// Третий аргумент - длина строки в символах.
+    /// В отличие от метода <see cref="System.String.Substring(int, int)"/>, поддерживается выход аргументов за длину строки.
     /// </summary>
     Substring,
-
-    /// <summary>
-    /// Минимальное значение из списка аргументов
-    /// </summary>
-    Min,
-
-    /// <summary>
-    /// Максимальное значение из списка аргументов
-    /// </summary>
-    Max,
 
     #endregion
   }
@@ -571,19 +557,6 @@ namespace FreeLibSet.Data
 
         #endregion
 
-        #region Агрегатные функции
-
-        case DBxFunctionKind.Min:
-        case DBxFunctionKind.Max:
-          //        case DBxFunctionKind.Avg:
-          //        case DBxFunctionKind.Sum:
-          minArgCount = 1;
-          maxArgCount = int.MaxValue;
-          break;
-
-
-        #endregion
-
         default:
           throw new ArgumentException("Неизвестная функция " + function.ToString());
       }
@@ -675,13 +648,26 @@ namespace FreeLibSet.Data
     /// Выполняет рекурсивный вызов метода для всех аргументов. Затем выполняется вычисление функции.
     /// </summary>
     /// <param name="rowValues">Источник данных</param>
-    /// <param name="nullAsDefaultValue">Если true, то значение null должно быть заменено на значение по умолчанию</param>
     /// <returns>Значение</returns>
-    public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
+    public override object GetValue(INamedValuesAccess rowValues)
     {
       object[] a = new object[_Arguments.Length];
       for (int i = 0; i < a.Length; i++)
-        a[i] = _Arguments[i].GetValue(rowValues, nullAsDefaultValue);
+        a[i] = _Arguments[i].GetValue(rowValues);
+
+      return DoGetValue(a);
+    }
+
+    private object DoGetValue(object[] a)
+    {
+      if (_Function != DBxFunctionKind.Coalesce)
+      {
+        for (int i = 0; i < a.Length; i++)
+        {
+          if (a[i] == null)
+            return null;
+        }
+      }
 
       switch (_Function)
       {
@@ -710,31 +696,38 @@ namespace FreeLibSet.Data
           return DataTools.GetString(a[0]).ToLowerInvariant();
         case DBxFunctionKind.Upper:
           return DataTools.GetString(a[0]).ToUpperInvariant();
-        case DBxFunctionKind.Min:
-          return DataTools.MinValue(a);
-        case DBxFunctionKind.Max:
-          return DataTools.MaxValue(a);
-        //case DBxFunctionKind.Avg:
-        //  return DataTools.AverageValue(a);
-        //case DBxFunctionKind.Count:
-        //  throw new NotSupportedException();
-        //case DBxFunctionKind.Sum:
-        //  return DataTools.SumValue(a);
+        case DBxFunctionKind.Substring:
+          //return DataTools.GetString(a[0]).Substring(DataTools.GetInt(a[1]) - 1, DataTools.GetInt(a[2]));
+          return DataTools.Substring(DataTools.GetString(a[0]), DataTools.GetInt(a[1]) - 1, DataTools.GetInt(a[2])); // 12.05.2023
         default:
           throw new BugException("Неизвестная функция " + _Function.ToString());
       }
     }
 
     /// <summary>
-    /// В текущей реализации возвращает null.
-    /// Вычисление составных констант не реализовано
+    /// Если все аргументы функции являются константами, возвращает вычисленное константное выражение.
+    /// Иначе возвращается null.
     /// </summary>
-    /// <returns>null</returns>
+    /// <returns>Константное выражение или, обычно, null</returns>
     public override DBxConst GetConst()
     {
-      // TODO:
-      // Если все аргументы - константы, то можно вычислить и создать новый DBxConst
-      return null;
+      object[] a = new object[_Arguments.Length];
+      DBxColumnType columnType = DBxColumnType.Unknown;
+      for (int i = 0; i < a.Length; i++)
+      {
+        DBxConst constArg = _Arguments[i].GetConst();
+        if (constArg == null)
+          return null;
+        a[i] = constArg.Value;
+        if (i == 0)
+          columnType = constArg.ColumnType;
+      }
+
+      object resValue = DoGetValue(a);
+      if (resValue != null)
+        columnType = DBxColumnType.Unknown;
+
+      return new DBxConst(resValue, columnType);
     }
 
     /// <summary>
@@ -807,7 +800,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public sealed class DBxAgregateFunction : DBxExpression
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
     /// Создает объект функции, принимающей один аргумент DBxExpression или null (только для COUNT(*) )
@@ -913,9 +906,8 @@ namespace FreeLibSet.Data
     /// Выбрасывает исключение
     /// </summary>
     /// <param name="rowValues">Игнорируется</param>
-    /// <param name="nullAsDefaultValue">Игнорируется</param>
     /// <returns>Значение</returns>
-    public override object GetValue(INamedValuesAccess rowValues, bool nullAsDefaultValue)
+    public override object GetValue(INamedValuesAccess rowValues)
     {
       throw new NotSupportedException("Для агрегатных функций вычисление на основании строки данных невозможно");
     }

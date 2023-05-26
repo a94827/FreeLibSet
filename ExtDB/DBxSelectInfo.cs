@@ -33,10 +33,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создать выражение для поля.
+    /// Создать выражение для поля <see cref="DBxColumn"/>.
+    /// Для выражений других типов (<see cref="DBxFunction"/>) используйте конструктор задающий альяс в явном виде.
     /// Альяс устанавливается равным имени поля.
     /// </summary>
-    /// <param name="expression">Выражение DBxColumn. Если передано другое выражение, выбрасывается исключение. Не может быть null.</param>
+    /// <param name="expression">Выражение <see cref="DBxColumn"/>. Если передано другое выражение, выбрасывается исключение. Не может быть null.</param>
     public DBxNamedExpression(DBxExpression expression)
     {
       if (expression == null)
@@ -58,14 +59,14 @@ namespace FreeLibSet.Data
     /// Не может быть null
     /// </summary>
     public DBxExpression Expression { get { return _Expression; } }
-    private DBxExpression _Expression;
+    private readonly DBxExpression _Expression;
 
     /// <summary>
     /// Альяс (в SQL-запросе используется в инструкции "AS")
     /// Не может быть пустой строкой
     /// </summary>
     public string Alias { get { return _Alias; } }
-    private string _Alias;
+    private readonly string _Alias;
 
     /// <summary>
     /// Возвращает true, если альяс таблицы требуется обязательно
@@ -116,9 +117,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавить выражение без указания альяса
+    /// Добавить выражение <see cref="DBxColumn"/> без указания альяса
     /// </summary>
-    /// <param name="expression">Объект DBxColumn. Если передано другое выражение, будет выброшено исключение. Не может быть null.</param>
+    /// <param name="expression">Объект <see cref="DBxColumn"/>. Если передано другое выражение, будет выброшено исключение. Не может быть null.</param>
     public void Add(DBxExpression expression)
     {
       base.Add(new DBxNamedExpression(expression));
@@ -135,10 +136,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает объект выражения DBxColumn и добавляет его в список.
+    /// Создает объект выражения <see cref="DBxColumn"/> и добавляет его в список.
     /// Если имя <paramref name="columnNames"/> содержит запятые, создается несколько столбцов.
     /// </summary>
-    /// <param name="columnNames">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Может содержать запятые для задания нескольких полей</param>
+    /// <param name="columnNames">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. 
+    /// Может содержать запятые для задания нескольких полей</param>
     public void Add(string columnNames)
     {
       if (String.IsNullOrEmpty(columnNames))
@@ -155,10 +157,11 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Создает объект выражения DBxColumn и добавляет его в список с указанием альяса.
+    /// Создает объект выражения <see cref="DBxColumn"/> и добавляет его в список с указанием альяса.
     /// Можно задать только одно имя поля.
     /// </summary>
-    /// <param name="columnName">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. Не может содержать запятые</param>
+    /// <param name="columnName">Имя поля. Может содержать точки для получения ссылочных полей. Должно быть задано. 
+    /// Не может содержать запятые</param>
     /// <param name="alias">Альяс</param>
     public void Add(string columnName, string alias)
     {
@@ -166,7 +169,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает несколько выражений DBxColumn и добавляет их в список.
+    /// Создает несколько выражений <see cref="DBxColumn"/> и добавляет их в список.
     /// </summary>
     /// <param name="columnNames">Список имен полей. Если null, то никаких действий не выполняется</param>
     public void Add(DBxColumns columnNames)
@@ -178,7 +181,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Вызывает DBxExpression.GetColumnNames() для всех выражений, входящих в список.
+    /// Вызывает <see cref="DBxExpression.GetColumnNames(DBxColumnList)"/> для всех выражений, входящих в список.
     /// </summary>
     /// <param name="list">Заполняемый список. Не может быть null</param>
     public void GetColumnNames(DBxColumnList list)
@@ -195,7 +198,7 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Данные для запросов SELECT (методы IDBxCon.FillSelect() и IDBxCon.ReaderSelect()
+  /// Данные для запросов SELECT (методы <see cref="IDBxConReadOnlyBase.FillSelect(DBxSelectInfo)"/> и <see cref="IDBxCon.ReaderSelect(DBxSelectInfo)"/>.
   /// </summary>
   [Serializable]
   public sealed class DBxSelectInfo
@@ -204,7 +207,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает пустой объект.
-    /// Для использования объекта, как минимум, должно быть установлено свойство TableName.
+    /// Для использования объекта, как минимум, должно быть установлено свойство <see cref="TableName"/>.
     /// </summary>
     public DBxSelectInfo()
     {
@@ -234,7 +237,7 @@ namespace FreeLibSet.Data
     /// Если ограничений на доступ к полям нет, то список будет эквивалентен "SELECT * FROM"
     /// </summary>
     public DBxNamedExpressionList Expressions { get { return _Expressions; } }
-    private DBxNamedExpressionList _Expressions;
+    private readonly DBxNamedExpressionList _Expressions;
 
     /// <summary>
     /// Фильтр для условия WHERE. Если не задан, то будут выбираться все строки таблицы
@@ -273,8 +276,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Заполняет список GroupBy выражениями из списка выраженийExpressions.
-    /// Предполагается, что список Expressions заполнен и содержит как агрегатные функции, так и обычные выражения
+    /// Заполняет список <see cref="GroupBy"/> выражениями из списка выражений <see cref="Expressions"/>.
+    /// Предполагается, что список <see cref="Expressions"/> заполнен и содержит как агрегатные функции, так и обычные выражения
     /// </summary>
     public void InitGroupBy()
     {
@@ -366,7 +369,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить список имен полей, используемых в выражениях, фильтрах, порядке сортировки.
-    /// Предполагается, что список Expressions заполнен, иначе выбрасывается исключение.
+    /// Предполагается, что список <see cref="Expressions"/> заполнен, иначе выбрасывается исключение.
     /// </summary>
     /// <param name="list">Заполняемый список. Не может быть null</param>
     public void GetColumnNames(DBxColumnList list)

@@ -70,6 +70,467 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region CompareNumbers()
+
+    public struct CompareNumbersTestInfo
+    {
+      #region Конструктор
+
+      public CompareNumbersTestInfo(object a, object b, int wantedRes)
+      {
+        _A = a;
+        _B = b;
+        _WantedRes = wantedRes;
+      }
+
+      #endregion
+
+      #region Свойства
+
+      public object A { get { return _A; } }
+      private readonly object _A;
+
+      public object B { get { return _B; } }
+      private readonly object _B;
+
+      public int WantedRes { get { return _WantedRes; } }
+      private readonly int _WantedRes;
+
+      public override string ToString()
+      {
+        StringBuilder sb = new StringBuilder();
+        if (_A == null)
+          sb.Append("null");
+        else
+        {
+          sb.Append(_A);
+          sb.Append(" (");
+          sb.Append(_A.GetType().Name);
+          sb.Append(")");
+        }
+
+        sb.Append(" and ");
+
+        if (_B == null)
+          sb.Append("null");
+        else
+        {
+          sb.Append(_B);
+          sb.Append(" (");
+          sb.Append(_B.GetType().Name);
+          sb.Append(")");
+        }
+
+        sb.Append(" = ");
+        sb.Append(_WantedRes.ToString("+0"));
+        return sb.ToString();
+      }
+
+      #endregion
+    }
+
+    public CompareNumbersTestInfo[] CompareNumberTests
+    {
+      get
+      {
+        return new CompareNumbersTestInfo[] {
+
+      #region Byte
+
+      new CompareNumbersTestInfo((byte)0, (byte)0, 0),
+      new CompareNumbersTestInfo((byte)0, (byte)255, -1),
+
+      new CompareNumbersTestInfo((byte)0, (sbyte)0, 0),
+      new CompareNumbersTestInfo((byte)127, (sbyte)0, 1),
+      new CompareNumbersTestInfo((byte)0, (sbyte)127, -1),
+      new CompareNumbersTestInfo((byte)255, (sbyte)127, 1),
+      new CompareNumbersTestInfo((byte)128, (sbyte)-127, 1),
+
+      new CompareNumbersTestInfo((byte)0, (short)0, 0),
+      new CompareNumbersTestInfo((byte)127, (short)0, 1),
+      new CompareNumbersTestInfo((byte)0, (short)32000, -1),
+      new CompareNumbersTestInfo((byte)255, (short)32000, -1),
+      new CompareNumbersTestInfo((byte)0, (short)-32000, 1),
+
+      new CompareNumbersTestInfo((byte)0, (ushort)0, 0),
+      new CompareNumbersTestInfo((byte)255, (ushort)255, 0),
+      new CompareNumbersTestInfo((byte)255, (ushort)65535, -1),
+      new CompareNumbersTestInfo((byte)255, (ushort)0, 1),
+
+      new CompareNumbersTestInfo((byte)0, 0, 0),
+      new CompareNumbersTestInfo((byte)127, 0, 1),
+      new CompareNumbersTestInfo((byte)0, 1000000000, -1),
+      new CompareNumbersTestInfo((byte)255, 1000000000, -1),
+      new CompareNumbersTestInfo((byte)128, -1000000000, 1),
+
+      new CompareNumbersTestInfo((byte)0, (uint)0, 0),
+      new CompareNumbersTestInfo((byte)255, (uint)255, 0),
+      new CompareNumbersTestInfo((byte)255, (uint)3000000000, -1),
+      new CompareNumbersTestInfo((byte)255, (uint)0, 1),
+
+      new CompareNumbersTestInfo((byte)0, 0L, 0),
+      new CompareNumbersTestInfo((byte)127, 0L, 1),
+      new CompareNumbersTestInfo((byte)0, 1000000000000L, -1),
+      new CompareNumbersTestInfo((byte)255, 1000000000000L, -1),
+      new CompareNumbersTestInfo((byte)128, -1000000000000L, 1),
+
+      new CompareNumbersTestInfo((byte)0, (ulong)0, 0),
+      new CompareNumbersTestInfo((byte)255, (ulong)255, 0),
+      new CompareNumbersTestInfo((byte)255, (ulong)1000000000000, -1),
+      new CompareNumbersTestInfo((byte)255, (ulong)0, 1),
+
+      new CompareNumbersTestInfo((byte)0, 0f, 0),
+      new CompareNumbersTestInfo((byte)127, 0f, 1),
+      new CompareNumbersTestInfo((byte)127, 127.1f, -1),
+      new CompareNumbersTestInfo((byte)0, -0.1f, 1),
+
+      new CompareNumbersTestInfo((byte)0, 0.0, 0),
+      new CompareNumbersTestInfo((byte)127, 0.0, 1),
+      new CompareNumbersTestInfo((byte)127, 127.1, -1),
+      new CompareNumbersTestInfo((byte)0, -0.1, 1),
+
+      new CompareNumbersTestInfo((byte)0, 0m, 0),
+      new CompareNumbersTestInfo((byte)127, 0m, 1),
+      new CompareNumbersTestInfo((byte)127, 127.1m, -1),
+      new CompareNumbersTestInfo((byte)0, -0.1m, 1),
+
+      #endregion
+
+      #region SByte
+
+      new CompareNumbersTestInfo((sbyte)0, (sbyte)0, 0),
+      new CompareNumbersTestInfo((sbyte)-128, (sbyte)127, -1),
+
+      new CompareNumbersTestInfo((sbyte)0, (short)0, 0),
+      new CompareNumbersTestInfo((sbyte)127, (short)127, 0),
+      new CompareNumbersTestInfo((sbyte)-128, (short)(-128), 0),
+      new CompareNumbersTestInfo((sbyte)127, (short)128, -1),
+      new CompareNumbersTestInfo((sbyte)-128, (short)(-129), 1),
+
+      new CompareNumbersTestInfo((sbyte)0, (ushort)0, 0),
+      new CompareNumbersTestInfo((sbyte)127, (ushort)127, 0),
+      new CompareNumbersTestInfo((sbyte)-128, (ushort)0, -1),
+      new CompareNumbersTestInfo((sbyte)127, (ushort)128, -1),
+
+      new CompareNumbersTestInfo((sbyte)0, 0, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127, 0),
+      new CompareNumbersTestInfo((sbyte)-128, -128, 0),
+      new CompareNumbersTestInfo((sbyte)127, 128, -1),
+      new CompareNumbersTestInfo((sbyte)-128, -129, 1),
+
+      new CompareNumbersTestInfo((sbyte)0, (uint)0, 0),
+      new CompareNumbersTestInfo((sbyte)127, (uint)127, 0),
+      new CompareNumbersTestInfo((sbyte)-128, (uint)0, -1),
+      new CompareNumbersTestInfo((sbyte)127, (uint)128, -1),
+
+      new CompareNumbersTestInfo((sbyte)0, 0L, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127L, 0),
+      new CompareNumbersTestInfo((sbyte)-128, -128L, 0),
+      new CompareNumbersTestInfo((sbyte)127, 128L, -1),
+      new CompareNumbersTestInfo((sbyte)-128, -129L, 1),
+
+      new CompareNumbersTestInfo((sbyte)0, (ulong)0, 0),
+      new CompareNumbersTestInfo((sbyte)127, (ulong)127, 0),
+      new CompareNumbersTestInfo((sbyte)-128, (ulong)0, -1),
+      new CompareNumbersTestInfo((sbyte)127, (ulong)128, -1),
+
+      new CompareNumbersTestInfo((sbyte)0, 0f, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127f, 0),
+      new CompareNumbersTestInfo((sbyte)-128, -128f, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127.1f, -1),
+      new CompareNumbersTestInfo((sbyte)-128, -128.1f, 1),
+
+      new CompareNumbersTestInfo((sbyte)0, 0.0, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127.0, 0),
+      new CompareNumbersTestInfo((sbyte)-128, -128.0, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127.1, -1),
+      new CompareNumbersTestInfo((sbyte)-128, -128.1, 1),
+
+      new CompareNumbersTestInfo((sbyte)0, 0m, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127m, 0),
+      new CompareNumbersTestInfo((sbyte)-128, -128m, 0),
+      new CompareNumbersTestInfo((sbyte)127, 127.1m, -1),
+      new CompareNumbersTestInfo((sbyte)-128, -128.1m, 1),
+
+      #endregion
+
+      #region Int16
+
+      new CompareNumbersTestInfo((short)0, (short)0, 0),
+      new CompareNumbersTestInfo(Int16.MinValue, Int16.MaxValue, -1),
+
+      new CompareNumbersTestInfo((short)0, (ushort)0, 0),
+      new CompareNumbersTestInfo((short)32767, (ushort)32767, 0),
+      new CompareNumbersTestInfo((short)-32768, (ushort)0, -1),
+      new CompareNumbersTestInfo((short)32767, (ushort)32768, -1),
+
+      new CompareNumbersTestInfo((short)0, 0, 0),
+      new CompareNumbersTestInfo((short)32767, 32767, 0),
+      new CompareNumbersTestInfo((short)-32768, -32768, 0),
+      new CompareNumbersTestInfo((short)32767, 32768, -1),
+      new CompareNumbersTestInfo((short)-32768, -32769, 1),
+
+      new CompareNumbersTestInfo((short)0, (uint)0, 0),
+      new CompareNumbersTestInfo((short)32767, (uint)32767, 0),
+      new CompareNumbersTestInfo((short)-32768, (uint)0, -1),
+      new CompareNumbersTestInfo((short)32767, (uint)32768, -1),
+
+      new CompareNumbersTestInfo((short)0, 0L, 0),
+      new CompareNumbersTestInfo((short)32767, 32767L, 0),
+      new CompareNumbersTestInfo((short)-32768, -32768L, 0),
+      new CompareNumbersTestInfo((short)32767, 32768L, -1),
+      new CompareNumbersTestInfo((short)-32768, -32769L, 1),
+
+      new CompareNumbersTestInfo((short)0, (ulong)0, 0),
+      new CompareNumbersTestInfo((short)32767, (ulong)32767, 0),
+      new CompareNumbersTestInfo((short)-32768, (ulong)0, -1),
+      new CompareNumbersTestInfo((short)32767, (ulong)32768, -1),
+
+      new CompareNumbersTestInfo((short)0, 0f, 0),
+      new CompareNumbersTestInfo((short)32767, 32767f, 0),
+      new CompareNumbersTestInfo((short)-32768, -32768f, 0),
+      new CompareNumbersTestInfo((short)32767, 32768f, -1),
+      new CompareNumbersTestInfo((short)-32768, -32769f, 1),
+
+      new CompareNumbersTestInfo((short)0, 0.0, 0),
+      new CompareNumbersTestInfo((short)32767, 32767.0, 0),
+      new CompareNumbersTestInfo((short)-32768, -32768.0, 0),
+      new CompareNumbersTestInfo((short)32767, 32767.1, -1),
+      new CompareNumbersTestInfo((short)-32768, -32768.1, 1),
+
+      new CompareNumbersTestInfo((short)0, 0m, 0),
+      new CompareNumbersTestInfo((short)32767, 32767m, 0),
+      new CompareNumbersTestInfo((short)-32768, -32768m, 0),
+      new CompareNumbersTestInfo((short)32767, 32767.1m, -1),
+      new CompareNumbersTestInfo((short)-32768, -32768.1m, 1),
+
+      #endregion
+
+      #region UInt16
+
+      new CompareNumbersTestInfo((ushort)0, (ushort)0, 0),
+      new CompareNumbersTestInfo((ushort)0, (ushort)65535, -1),
+
+      new CompareNumbersTestInfo((ushort)0, 0, 0),
+      new CompareNumbersTestInfo((ushort)65535, 0, 1),
+      new CompareNumbersTestInfo((ushort)0, 1000000000, -1),
+      new CompareNumbersTestInfo((ushort)65535, 1000000000, -1),
+      new CompareNumbersTestInfo((ushort)0, -1000000000, 1),
+
+      new CompareNumbersTestInfo((ushort)0, (uint)0, 0),
+      new CompareNumbersTestInfo((ushort)65535, (uint)65535, 0),
+      new CompareNumbersTestInfo((ushort)65535, (uint)3000000000, -1),
+      new CompareNumbersTestInfo((ushort)65535, (uint)0, 1),
+
+      new CompareNumbersTestInfo((ushort)0, 0L, 0),
+      new CompareNumbersTestInfo((ushort)65535, 0L, 1),
+      new CompareNumbersTestInfo((ushort)0, 1000000000000L, -1),
+      new CompareNumbersTestInfo((ushort)65535, 1000000000000L, -1),
+      new CompareNumbersTestInfo((ushort)65535, -1000000000000L, 1),
+
+      new CompareNumbersTestInfo((ushort)0, (ulong)0, 0),
+      new CompareNumbersTestInfo((ushort)65535, (ulong)65535, 0),
+      new CompareNumbersTestInfo((ushort)65535, (ulong)1000000000000, -1),
+      new CompareNumbersTestInfo((ushort)65535, (ulong)0, 1),
+
+      new CompareNumbersTestInfo((ushort)0, 0f, 0),
+      new CompareNumbersTestInfo((ushort)65535, 0f, 1),
+      new CompareNumbersTestInfo((ushort)65535, 65536f, -1),
+      new CompareNumbersTestInfo((ushort)0, -0.1f, 1),
+
+      new CompareNumbersTestInfo((ushort)0, 0.0, 0),
+      new CompareNumbersTestInfo((ushort)65535, 0.0, 1),
+      new CompareNumbersTestInfo((ushort)65535, 65536.0, -1),
+      new CompareNumbersTestInfo((ushort)0, -0.1, 1),
+
+      new CompareNumbersTestInfo((ushort)0, 0m, 0),
+      new CompareNumbersTestInfo((ushort)65535, 0m, 1),
+      new CompareNumbersTestInfo((ushort)65335, 65535.1m, -1),
+      new CompareNumbersTestInfo((ushort)0, -0.1m, 1),
+
+      #endregion
+
+      #region Int32
+
+      new CompareNumbersTestInfo(0, 0, 0),
+      new CompareNumbersTestInfo(Int32.MinValue, Int32.MaxValue, -1),
+
+      new CompareNumbersTestInfo(0, (uint)0, 0),
+      new CompareNumbersTestInfo(2000000000, (uint)2000000000, 0),
+      new CompareNumbersTestInfo(-2000000000, (uint)0, -1),
+      new CompareNumbersTestInfo(2000000000, (uint)2000000001, -1),
+
+      new CompareNumbersTestInfo(0, 0L, 0),
+      new CompareNumbersTestInfo(1000000000, 1000000000L, 0),
+      new CompareNumbersTestInfo(-1000000000, -1000000000L, 0),
+      new CompareNumbersTestInfo(1000000000, 1000000001L, -1),
+      new CompareNumbersTestInfo(-1000000000, -1000000001L, 1),
+
+      new CompareNumbersTestInfo(0, (ulong)0, 0),
+      new CompareNumbersTestInfo(1000000000, (ulong)1000000000, 0),
+      new CompareNumbersTestInfo(-1000000000, (ulong)0, -1),
+      new CompareNumbersTestInfo(1000000000, (ulong)1000000001, -1),
+
+      new CompareNumbersTestInfo(0, 0f, 0),
+      new CompareNumbersTestInfo(10000, 10000f, 0),
+      new CompareNumbersTestInfo(-10000, -10000f, 0),
+      new CompareNumbersTestInfo(100, 100.1f, -1),
+      new CompareNumbersTestInfo(-100, -100.1f, 1),
+
+      new CompareNumbersTestInfo(0, 0.0, 0),
+      new CompareNumbersTestInfo(10000, 10000.0, 0),
+      new CompareNumbersTestInfo(-10000, -10000.0, 0),
+      new CompareNumbersTestInfo(100, 100.1, -1),
+      new CompareNumbersTestInfo(-100, -100.1, 1),
+
+      new CompareNumbersTestInfo(0, 0m, 0),
+      new CompareNumbersTestInfo(10000, 10000m, 0),
+      new CompareNumbersTestInfo(-10000, -10000m, 0),
+      new CompareNumbersTestInfo(100, 100.1m, -1),
+      new CompareNumbersTestInfo(-100, -100.1m, 1),
+
+      #endregion
+
+      #region UInt32
+
+      new CompareNumbersTestInfo((uint)0, (uint)0, 0),
+      new CompareNumbersTestInfo((uint)0, UInt32.MaxValue, -1),
+
+      new CompareNumbersTestInfo((uint)0, 0L, 0),
+      new CompareNumbersTestInfo((uint)1000, 0L, 1),
+      new CompareNumbersTestInfo((uint)0, 1000000000000L, -1),
+      new CompareNumbersTestInfo((uint)1000, 1000000000000L, -1),
+      new CompareNumbersTestInfo((uint)1000, -1000000000000L, 1),
+
+      new CompareNumbersTestInfo((uint)0, (ulong)0, 0),
+      new CompareNumbersTestInfo((uint)4000000000, (ulong)4000000000, 0),
+      new CompareNumbersTestInfo((uint)4000000000, (ulong)4000000001, -1),
+      new CompareNumbersTestInfo((uint)4000000000, (ulong)0, 1),
+
+      new CompareNumbersTestInfo((uint)0, 0f, 0),
+      new CompareNumbersTestInfo((uint)100, 0f, 1),
+      new CompareNumbersTestInfo((uint)100, 101f, -1),
+      new CompareNumbersTestInfo((uint)0, -0.1f, 1),
+
+      new CompareNumbersTestInfo((uint)0, 0.0, 0),
+      new CompareNumbersTestInfo((uint)100, 0.0, 1),
+      new CompareNumbersTestInfo((uint)100, 100.1, -1),
+      new CompareNumbersTestInfo((uint)0, -0.1, 1),
+
+      new CompareNumbersTestInfo((uint)0, 0m, 0),
+      new CompareNumbersTestInfo((uint)100, 0m, 1),
+      new CompareNumbersTestInfo((uint)100, 100.1m, -1),
+      new CompareNumbersTestInfo((uint)0, -0.1m, 1),
+
+      #endregion
+
+      #region Int32
+
+      new CompareNumbersTestInfo(0L, 0L, 0),
+      new CompareNumbersTestInfo(Int64.MinValue, Int64.MaxValue, -1),
+
+      new CompareNumbersTestInfo(0L, (ulong)0, 0),
+      new CompareNumbersTestInfo(1000000000L, (ulong)1000000000, 0),
+      new CompareNumbersTestInfo(-1000000000L, (ulong)0, -1),
+      new CompareNumbersTestInfo(1000000000L, (ulong)1000000001, -1),
+
+      new CompareNumbersTestInfo(0L, 0f, 0),
+      new CompareNumbersTestInfo(10000L, 10000f, 0),
+      new CompareNumbersTestInfo(-10000L, -10000f, 0),
+      new CompareNumbersTestInfo(100L, 100.1f, -1),
+      new CompareNumbersTestInfo(-100L, -100.1f, 1),
+
+      new CompareNumbersTestInfo(0L, 0.0, 0),
+      new CompareNumbersTestInfo(10000L, 10000.0, 0),
+      new CompareNumbersTestInfo(-10000L, -10000.0, 0),
+      new CompareNumbersTestInfo(100L, 100.1, -1),
+      new CompareNumbersTestInfo(-100L, -100.1, 1),
+
+      new CompareNumbersTestInfo(0L, 0m, 0),
+      new CompareNumbersTestInfo(10000L, 10000m, 0),
+      new CompareNumbersTestInfo(-10000L, -10000m, 0),
+      new CompareNumbersTestInfo(100L, 100.1m, -1),
+      new CompareNumbersTestInfo(-100L, -100.1m, 1),
+
+      #endregion
+
+      #region UInt64
+
+      new CompareNumbersTestInfo((ulong)0, (ulong)0, 0),
+      new CompareNumbersTestInfo((ulong)0, UInt64.MaxValue, -1),
+
+      new CompareNumbersTestInfo((ulong)0, 0f, 0),
+      new CompareNumbersTestInfo((ulong)100, 0f, 1),
+      new CompareNumbersTestInfo((ulong)100, 101f, -1),
+      new CompareNumbersTestInfo((ulong)0, -0.1f, 1),
+
+      new CompareNumbersTestInfo((ulong)0, 0.0, 0),
+      new CompareNumbersTestInfo((ulong)100, 0.0, 1),
+      new CompareNumbersTestInfo((ulong)100, 100.1, -1),
+      new CompareNumbersTestInfo((ulong)0, -0.1, 1),
+
+      new CompareNumbersTestInfo((ulong)0, 0m, 0),
+      new CompareNumbersTestInfo((ulong)100, 0m, 1),
+      new CompareNumbersTestInfo((ulong)100, 100.1m, -1),
+      new CompareNumbersTestInfo((ulong)0, -0.1m, 1),
+
+      #endregion
+
+      #region Single
+
+      new CompareNumbersTestInfo(0f, 0f, 0),
+      new CompareNumbersTestInfo(Single.MinValue, Single.MaxValue, -1),
+
+      new CompareNumbersTestInfo(0f, 0.0, 0),
+      new CompareNumbersTestInfo(10000f, 10000.0, 0),
+      new CompareNumbersTestInfo(-10000f, -10000.0, 0),
+      new CompareNumbersTestInfo(100f, 100.1, -1),
+      new CompareNumbersTestInfo(-100f, -100.1, 1),
+
+      new CompareNumbersTestInfo(0f, 0m, 0),
+      new CompareNumbersTestInfo(10000f, 10000m, 0),
+      new CompareNumbersTestInfo(-10000f, -10000m, 0),
+      new CompareNumbersTestInfo(100f, 100.1m, -1),
+      new CompareNumbersTestInfo(-100f, -100.1m, 1),
+
+      #endregion
+
+      #region Double
+
+      new CompareNumbersTestInfo(0.0, 0.0, 0),
+      new CompareNumbersTestInfo(Double.MinValue, Double.MaxValue, -1),
+
+      new CompareNumbersTestInfo(0.0, 0m, 0),
+      new CompareNumbersTestInfo(10000.0, 10000m, 0),
+      new CompareNumbersTestInfo(-10000.0, -10000m, 0),
+      new CompareNumbersTestInfo(100.0, 100.1m, -1),
+      new CompareNumbersTestInfo(-100.0, -100.1m, 1),
+
+      #endregion
+
+      #region Decimal
+
+      new CompareNumbersTestInfo(0m, 0m, 0),
+      new CompareNumbersTestInfo(Decimal.MinValue, Decimal.MaxValue, -1),
+
+      #endregion
+      // TODO: Остальные пары
+    };
+      }
+    }
+
+    [TestCaseSource("CompareNumberTests")]
+    public void CompareNumbers(CompareNumbersTestInfo info)
+    {
+      int res1 = DataTools.CompareNumbers(info.A, info.B);
+      Assert.AreEqual(info.WantedRes, Math.Sign(res1), "#1");
+
+      int res2 = DataTools.CompareNumbers(info.B, info.A);
+      Assert.AreEqual(-info.WantedRes, Math.Sign(res2), "#2");
+    }
+
+    #endregion
+
     #region Округление чисел с плавающей точкой
 
     [TestCase(0.0, 0, 0.0)]
@@ -230,7 +691,7 @@ namespace ExtTools_tests.Core
     //[ExpectedException(typeof(DivideByZeroException))]
     public void DivideWithRounding_int_divide_by_zero()
     {
-      Assert.Throws(typeof(DivideByZeroException), delegate()
+      Assert.Throws(typeof(DivideByZeroException), delegate ()
       { DataTools.DivideWithRounding(1, 0); });
     }
 
@@ -247,7 +708,7 @@ namespace ExtTools_tests.Core
     //[ExpectedException(typeof(DivideByZeroException))]
     public void DivideWithRounding_long_divide_by_zero()
     {
-      Assert.Throws(typeof(DivideByZeroException), delegate()
+      Assert.Throws(typeof(DivideByZeroException), delegate ()
       { DataTools.DivideWithRounding(1L, 0L); });
     }
 

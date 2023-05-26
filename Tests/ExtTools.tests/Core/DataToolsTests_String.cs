@@ -183,6 +183,28 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region Substring()
+
+    [TestCase("ABCDEF", 2, 3, "CDE")]
+    [TestCase("ABCDEF", 2, 4, "CDEF")]
+    [TestCase("ABCDEF", 2, 5, "CDEF")]
+    [TestCase("ABCDEF", 0, 3, "ABC")]
+    [TestCase("ABCDEF", -1, 3, "AB")]
+    [TestCase("ABCDEF", -2, 3, "A")]
+    [TestCase("ABCDEF", -3, 3, "")]
+    [TestCase("ABCDEF", 6, 1, "")]
+    [TestCase("ABCDEF", 2, 0, "")]
+    [TestCase("ABCDEF", 2, -1, "")]
+    [TestCase("", 0, 1, "")]
+    [TestCase(null, 0, 1, "")]
+    public void Substring(string s, int start, int length, string wantedRes)
+    {
+      string res = DataTools.Substring(s, start, length);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
     #region IsSubstring()
 
     [TestCase("ABCDEF", 2, "cde", StringComparison.OrdinalIgnoreCase, Result = true)]

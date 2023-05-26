@@ -40,6 +40,8 @@ namespace FreeLibSet.Data
         return DBxColumnType.Float;
       if (t == typeof(DateTime))
         return DBxColumnType.DateTime;
+      if (t == typeof(TimeSpan))
+        return DBxColumnType.Time; // 17.05.2023
       if (t == typeof(Boolean))
         return DBxColumnType.Boolean;
       if (t == typeof(Guid))
@@ -67,8 +69,8 @@ namespace FreeLibSet.Data
         case DBxColumnType.Money: return typeof(decimal);
         case DBxColumnType.Boolean: return typeof(bool);
         case DBxColumnType.Date:
-        case DBxColumnType.DateTime:
-        case DBxColumnType.Time: return typeof(DateTime);
+        case DBxColumnType.DateTime: return typeof(DateTime);
+        case DBxColumnType.Time: return typeof(TimeSpan); // 16.05.2023
         case DBxColumnType.Guid: return typeof(Guid);
         case DBxColumnType.Memo:
         case DBxColumnType.Xml: return typeof(string);
@@ -105,9 +107,6 @@ namespace FreeLibSet.Data
       return DataTypeToColumnType(value.GetType());
     }
 
-
-    private static readonly byte[] _EmptyBytes = new byte[0];
-
     /// <summary>
     /// Получить значение по умолчанию для типа столбца
     /// </summary>
@@ -124,16 +123,86 @@ namespace FreeLibSet.Data
         case DBxColumnType.Money: return 0m;
         case DBxColumnType.Boolean: return false;
         case DBxColumnType.Date:
-        case DBxColumnType.DateTime:
-        case DBxColumnType.Time: return DateTime.MinValue;
+        case DBxColumnType.DateTime: return DateTime.MinValue;
+        case DBxColumnType.Time: return TimeSpan.Zero; // 16.05.2023
         case DBxColumnType.Guid: return Guid.Empty;
         case DBxColumnType.Memo:
         case DBxColumnType.Xml: return String.Empty;
-        case DBxColumnType.Binary: return _EmptyBytes;
+        case DBxColumnType.Binary: return DataTools.EmptyBytes;
         default:
           throw new ArgumentException("Неизвестный тип данных: " + columnType.ToString(), "columnType");
       }
     }
+
+    /// <summary>
+    /// Преобразование значения к указанному типу данных.
+    /// Исходное значение <see cref="DBNull"/> заменяется на null.
+    /// Если <paramref name="columnType"/>=<see cref="DBxColumnType.Unknown"/>, то возвращается неизмененное значение.
+    /// Если <paramref name="value"/>=null и <paramref name="columnType"/> задан, то возвращается значение по умолчанию <see cref="GetDefaultValue(DBxColumnType)"/>.
+    /// Если требуется преобразование из строки или в строку, то используются преобразования как в классе <see cref="StdConvert"/>.
+    /// Если преобразование невозможно, то выбрасывается исключение. В частности, не разрешаются преобразования между числами и датами.
+    /// </summary>
+    /// <param name="value">Исходное значение, может быть null</param>
+    /// <param name="columnType">Требуемый тип данных, может быть <see cref="DBxColumnType.Unknown"/></param>
+    /// <returns>Преобразованное значение</returns>
+    public static object Convert(object value, DBxColumnType columnType)
+    {
+      if (value is DBNull)
+        value = null;
+      if (columnType == DBxColumnType.Unknown)
+        return value;
+      if (Object.ReferenceEquals(value, null))
+        return GetDefaultValue(columnType);
+
+      switch (columnType)
+      {
+        case DBxColumnType.String:
+        case DBxColumnType.Memo:
+        case DBxColumnType.Xml:
+          if (value is String)
+            return value; // без обрезки
+          else if (value is byte[])
+            return DataTools.BytesToHex((byte[])value, false);
+          else
+            return DataTools.GetString(value);
+        case DBxColumnType.Int:
+          return DataTools.GetInt64(value);
+        case DBxColumnType.Float:
+          return DataTools.GetDouble(value);
+        case DBxColumnType.Money:
+          return DataTools.GetDecimal(value);
+        case DBxColumnType.Boolean:
+          return DataTools.GetBool(value);
+        case DBxColumnType.Date:
+        case DBxColumnType.DateTime:
+          DateTime? dt = DataTools.GetNullableDateTime(value);
+          if (dt.HasValue)
+          {
+            dt = DateTime.SpecifyKind(dt.Value, DateTimeKind.Unspecified);
+            if (columnType == DBxColumnType.Date)
+              dt = dt.Value.Date;
+            return dt;
+          }
+          else
+            return DateTime.MinValue;
+        case DBxColumnType.Time:
+          return DataTools.GetTimeSpan(value);
+        case DBxColumnType.Guid:
+          return DataTools.GetGuid(value);
+        case DBxColumnType.Binary:
+          byte[] binData = value as byte[];
+          if (binData != null)
+            return binData;
+          else
+            return DataTools.HexToBytes(value.ToString());
+        default:
+          throw new NotImplementedException("columnType=" + columnType.ToString());
+      }
+    }
+
+    #endregion
+
+    #region Прочие методы
 
     /// <summary>
     /// Создает массив объектов DBxColumn для списка имен полей

@@ -11,7 +11,7 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Последовательность полей для сортировки с признаками DESC.
+  /// Последовательность полей для сортировки с признаками ASC/DESC.
   /// Класс однократной записи
   /// </summary>
   [Serializable]
@@ -59,7 +59,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает порядок сортировки на основании одного или нескольких выражений.
-    /// Каждое выражение преобразуется в DBxOrderItem с сортировкой по возрастанию
+    /// Каждое выражение преобразуется в <see cref="DBxOrderPart"/> с сортировкой по возрастанию.
     /// </summary>
     /// <param name="expressions">Коллекция выражений сортировки. Не может быть пустой</param>
     public DBxOrder(ICollection<DBxExpression> expressions)
@@ -97,16 +97,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает порядок сортировки для одного поля по возрастанию.
     /// </summary>
-    /// <param name="ColumnName">Имя поля</param>
-    public DBxOrder(string ColumnName)
-      : this(ColumnName, ListSortDirection.Ascending)
+    /// <param name="columnName">Имя поля</param>
+    public DBxOrder(string columnName)
+      : this(columnName, ListSortDirection.Ascending)
     {
     }
 
     /// <summary>
     /// Создает порядок сортировки для одного поля или другого элемента по возрастанию или убыванию.
     /// </summary>
-    /// <param name="expression">Выражение сортировки (обычно, DBxColumn) без указания ASC/DESC</param>
+    /// <param name="expression">Выражение сортировки (обычно, <see cref="DBxColumn"/>) без указания ASC/DESC</param>
     /// <param name="sortOrder">Порядок сортировки: по возрастанию или по убыванию</param>
     public DBxOrder(DBxExpression expression, ListSortDirection sortOrder)
       : this(new DBxOrderPart[] { new DBxOrderPart(expression, sortOrder) })
@@ -124,7 +124,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает порядок сортировки на основании одного или нескольких выражений.
-    /// Каждое выражение преобразуется в DBxOrderItem с сортировкой по возрастанию
+    /// Каждое выражение преобразуется в <see cref="DBxOrderPart"/> с сортировкой по возрастанию
     /// </summary>
     /// <param name="expressions">Коллекция элементов сортировки. Не может быть пустой</param>
     public DBxOrder(params DBxExpression[] expressions)
@@ -141,7 +141,7 @@ namespace FreeLibSet.Data
     /// Каждый элемент задает поле (или выражении) и признак ASC/DESC
     /// </summary>
     public DBxOrderPart[] Parts { get { return _Parts; } }
-    private DBxOrderPart[] _Parts;
+    private readonly DBxOrderPart[] _Parts;
 
     #endregion
 
@@ -149,9 +149,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить информацию, необходимую для сортировки табличного просмотра с
-    /// помощью щелчка на заговке столбца
+    /// помощью щелчка на заговке столбца.
     /// Возвращает имя первого (основного) столбца сортировки и признак сортировки
-    /// по возрастанию или по убыванию
+    /// по возрастанию или по убыванию.
     /// </summary>
     /// <param name="columnName">Имя первого столбца. В табличном просмотре этот столбец
     /// будет помечен треугольнчиком</param>
@@ -174,7 +174,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получение списка имен полей, участвующих в сортировке.
-    /// Метод вызывает DBxOrderItem.GetColumnNames() для всех элементов в списке сортировки
+    /// Метод вызывает <see cref="DBxOrderPart"/>.GetColumnNames() для всех элементов в списке сортировки
     /// </summary>
     /// <param name="list">Список для заполнения. Не может быть null</param>
     public void GetColumnNames(DBxColumnList list)
@@ -198,10 +198,10 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Задание префикса для всех имен полей, входящих в порядок сортировки.
-    /// Создает и возвращает новый объект DBxOrder, в котором содержатся новые объекты DBxOrderItem.
+    /// Создает и возвращает новый объект <see cref="DBxOrder"/>, в котором содержатся новые объекты <see cref="DBxOrderPart"/>.
     /// </summary>
     /// <param name="prefix">Префикс имени поля (обычно, имя ссылочного поля с точкой на конце)</param>
-    /// <returns>Новый заполненный объект DBxOrder</returns>
+    /// <returns>Новый заполненный объект <see cref="DBxOrder"/></returns>
     public DBxOrder SetColumnNamePrefix(string prefix)
     {
       DBxOrderPart[] parts2 = new DBxOrderPart[Parts.Length];
@@ -237,12 +237,12 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получение выражения из списка имен полей, разделенных запятыми
-    /// Именам полей может предшествовать знак "!", задающий сортировку данного поля
-    /// по убыванию
-    /// Функция возвращает null, если список полей пуст
+    /// Имена полей могут быть заключены в квадратные скобки. За именем поля может быть признак сортировки "ASC" или "DESC".
+    /// См. метод <see cref="DataTools.GetDataViewSortColumnNames(string, out string[], out ListSortDirection[])"/>, используемый для парсинга строки.
+    /// Функция возвращает null, если список полей пуст.
     /// </summary>
-    /// <param name="dataViewSort">Порядок сортировки в формате DataView.Sort</param>
-    /// <returns>Объект DBxOrder или null</returns>
+    /// <param name="dataViewSort">Порядок сортировки в формате <see cref="System.Data.DataView.Sort"/></param>
+    /// <returns>Объект <see cref="DBxOrder"/> или null</returns>
     public static DBxOrder FromDataViewSort(string dataViewSort)
     {
       return FromDataViewSort(dataViewSort, String.Empty);
@@ -250,14 +250,14 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получение выражения из списка имен полей, разделенных запятыми
-    /// После имен полей может идти "ASC" или "DESC", задающий сортировку данного поля
-    /// по убыванию
+    /// Имена полей могут быть заключены в квадратные скобки. За именем поля может быть признак сортировки "ASC" или "DESC".
+    /// См. метод <see cref="DataTools.GetDataViewSortColumnNames(string, out string[], out ListSortDirection[])"/>, используемый для парсинга строки.
     /// Функция возвращает null, если список полей пуст.
     /// Эта перегрузка предназначена для использования со ссылочным полем.
     /// </summary>
-    /// <param name="dataViewSort">Порядок сортировки в формате DataView.Sort</param>
+    /// <param name="dataViewSort">Порядок сортировки в формате <see cref="System.Data.DataView.Sort"/></param>
     /// <param name="refColumnName">Имя ссылочного поля, которое будет добавлено перед каждым столбцом в порядке сортировки</param>
-    /// <returns>Объект DBxOrder или null</returns>
+    /// <returns>Объект <see cref="DBxOrder"/> или null</returns>
     public static DBxOrder FromDataViewSort(string dataViewSort, string refColumnName)
     {
       if (String.IsNullOrEmpty(dataViewSort))
@@ -278,7 +278,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Порядок сортировки по идентификатору "Id"
+    /// Порядок сортировки по полю "Id"
     /// </summary>
     public static readonly DBxOrder ById = new DBxOrder("Id");
 
@@ -287,7 +287,7 @@ namespace FreeLibSet.Data
 
 
   /// <summary>
-  /// Хранение ссылки на поле и признака ASC/DESC для одного элемента сортировки GROUP BY
+  /// Хранение ссылки на поле и признака ASC/DESC для одного элемента сортировки ORDER BY
   /// </summary>
   [Serializable]
   public struct DBxOrderPart
@@ -297,7 +297,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает новый элемент порядка сортировки с заданным признаком ASC/DESC
     /// </summary>
-    /// <param name="expression">Элемент порядка сортировки (обычно, DBxColumn)</param>
+    /// <param name="expression">Элемент порядка сортировки (обычно, <see cref="DBxColumn"/>)</param>
     /// <param name="sortOrder">Порядок сортировки: по возрастанию или по убыванию</param>
     public DBxOrderPart(DBxExpression expression, ListSortDirection sortOrder)
     {
@@ -310,7 +310,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает новый элемент порядка сортировки по возрастанию
     /// </summary>
-    /// <param name="expression">Элемент порядка сортировки (обычно, DBxColumn)</param>
+    /// <param name="expression">Элемент порядка сортировки (обычно, <see cref="DBxColumn"/>)</param>
     public DBxOrderPart(DBxExpression expression)
       : this(expression, ListSortDirection.Ascending)
     {
@@ -319,7 +319,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает новый элемент порядка сортировки для поля с заданным признаком ASC/DESC
     /// </summary>
-    /// <param name="columnName">Имя поля для создания DBxColumn</param>
+    /// <param name="columnName">Имя поля для создания <see cref="DBxColumn"/></param>
     /// <param name="sortOrder">Порядок сортировки: по возрастанию или по убыванию</param>
     public DBxOrderPart(string columnName, ListSortDirection sortOrder)
       : this(new DBxColumn(columnName), sortOrder)
@@ -329,7 +329,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает новый элемент порядка сортировки для поля по возрастанию
     /// </summary>
-    /// <param name="columnName">Имя поля для создания DBxColumn</param>
+    /// <param name="columnName">Имя поля для создания <see cref="DBxColumn"/></param>
     public DBxOrderPart(string columnName)
       : this(new DBxColumn(columnName), ListSortDirection.Ascending)
     {
@@ -343,13 +343,13 @@ namespace FreeLibSet.Data
     /// Элемент сортировки (обычно, поле DBxOrderColumn)
     /// </summary>
     public DBxExpression Expression { get { return _Expression; } }
-    private DBxExpression _Expression;
+    private readonly DBxExpression _Expression;
 
     /// <summary>
     /// Признак обрабтной сортировки DESC
     /// </summary>
     public ListSortDirection SortOrder { get { return _SortOrder; } }
-    private ListSortDirection _SortOrder;
+    private readonly ListSortDirection _SortOrder;
 
     /// <summary>
     /// Возвращает true, если структура не была инициализирована
@@ -357,7 +357,7 @@ namespace FreeLibSet.Data
     public bool IsEmpty { get { return _Expression == null; } }
 
     /// <summary>
-    /// Возвращает SQL-представления элемента в формате свойства DataView.Sort
+    /// Возвращает SQL-представления элемента в формате свойства <see cref="System.Data.DataView.Sort"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -379,10 +379,10 @@ namespace FreeLibSet.Data
     #region Клонирование
 
     /// <summary>
-    /// Создает копию объекта DBxOrderItem с заданным префиксом (обычно, имя ссылочного поля с точкой).
+    /// Создает копию объекта <see cref="DBxOrderPart"/> с заданным префиксом (обычно, имя ссылочного поля с точкой).
     /// </summary>
     /// <param name="prefix">Префикс</param>
-    /// <returns>Копия DBxOrderItemInfo с новым DBxOrderItem</returns>
+    /// <returns>Копия <see cref="DBxOrderPart"/></returns>
     public DBxOrderPart SetColumnNamePrefix(string prefix)
     {
       if (IsEmpty)

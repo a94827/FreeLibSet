@@ -680,7 +680,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как строку.
-    /// Если поле содержит DBNull, возвращается пустая строка.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается пустая строка.
+    /// Подробности см. в описании перегрузки <see cref="GetString(Object)"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -708,11 +709,15 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Обычный вызов Object.ToString() за исключением:
+    /// Преобразование произвольного значения в строку.
     /// null преобразуется в пустую строку.
-    /// DBNull преобразуется в пустую строку.
-    /// Строковый тип обрезается вызовом String.Trim().
-    /// Обычно следует использовать методы Object.ToString() или Convert.ToString(Object).
+    /// <see cref="DBNull"/> преобразуется в пустую строку.
+    /// Строковый тип обрезается вызовом <see cref="String.Trim()"/>.
+    /// Тип <see cref="DateTime"/> преобразуется с помощью <see cref="StdConvert"/>.
+    /// Числовые значения и другие типы, реализующие интерфейс <see cref="IConvertible"/>, преобразуются с использованием <see cref="StdConvert.NumberFormat"/>.
+    /// Для прочих типов используется обычное преобразование с помощью <see cref="Object.ToString()"/>.
+    /// 
+    /// Обычно следует использовать методы <see cref="Object.ToString()"/> или <see cref="Convert.ToString(Object)"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Строкое значение</returns>
@@ -727,12 +732,38 @@ namespace FreeLibSet.Core
       if (!Object.ReferenceEquals(s, null))
         return s.Trim();
 
+      if (value is DateTime)
+      {
+        DateTime dt = (DateTime)value;
+        return StdConvert.ToString(dt, true); // 16.05.2023
+      }
+
+      IConvertible value2 = value as IConvertible;
+      if (value2 != null)
+        return value2.ToString(StdConvert.NumberFormat); // 16.05.2023
+
       return value.ToString();
     }
 
     #endregion
 
     #region GetDateTime()
+
+    /// <summary>
+    /// Получает объект <see cref="DateTime"/> в пределах суток 01.01.0001.
+    /// Если <paramref name="value"/> превышает 86400 секунд, берется значение по модулю.
+    /// Отрицательных значения заменяются, например, если <paramref name="value"/> равно минус 15 минут, то возвращается 01.01.0001 23:45
+    /// </summary>
+    /// <param name="value">Произвольный интервал времени</param>
+    /// <returns>Значение в пределах даты <see cref="DateTime.MinValue"/></returns>
+    public static DateTime GetDateTime(TimeSpan value)
+    {
+      long ticks = value.Ticks % TimeSpan.TicksPerDay;
+      // Значение может быть положительным или отрицательным
+      if (ticks < 0L)
+        ticks += TimeSpan.TicksPerDay;
+      return new DateTime(ticks);
+    }
 
     /// <summary>
     /// Преобразование значения в тип DateTime без значения null.
@@ -756,6 +787,8 @@ namespace FreeLibSet.Core
         else
           return StdConvert.ToDateTime(s, true);
       }
+      if (value is TimeSpan)
+        return GetDateTime((TimeSpan)value); // 16.05.2023
       return Convert.ToDateTime(value);
     }
 
@@ -810,6 +843,8 @@ namespace FreeLibSet.Core
         else
           return StdConvert.ToDateTime(s, true);
       }
+      if (value is TimeSpan)
+        return GetDateTime((TimeSpan)value); // 16.05.2023
       return Convert.ToDateTime(value);
     }
 
@@ -870,6 +905,8 @@ namespace FreeLibSet.Core
         else
           return StdConvert.ToTimeSpan(s);
       }
+      if (value is DateTime)
+        return ((DateTime)value).TimeOfDay; // 16.05.2023
       throw new InvalidCastException("Тип " + value.GetType().FullName + " нельзя преобразовать в TimeSpan");
     }
 

@@ -40,7 +40,7 @@ namespace FreeLibSet.Data
       _Entry = entry;
 
       _Buffer = new DBxSqlBuffer(entry.DB.Formatter);
-      _Validator = new DBxNameValidator(entry, _Buffer);
+      _Validator = new DBxNameValidator(this);
 
       //_Thread = Thread.CurrentThread;
 
@@ -99,7 +99,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Объект для сборки строк SQL-команд и форматизатор SQL-запросов
     /// </summary>
-    protected DBxSqlBuffer Buffer { get { return _Buffer; } }
+    internal protected DBxSqlBuffer Buffer { get { return _Buffer; } }
     private DBxSqlBuffer _Buffer;
 
     /// <summary>
@@ -500,7 +500,7 @@ namespace FreeLibSet.Data
 
       DBxSelectInfo info = new DBxSelectInfo();
       info.TableName = tableName;
-      info.Expressions.Add(DB.Struct.Tables[tableName].PrimaryKey);
+      info.Expressions.Add(GetTableStruct(tableName).PrimaryKey);
       info.Where = where;
       info.OrderBy = orderBy;
       info.MaxRecordCount = 1;
@@ -533,7 +533,7 @@ namespace FreeLibSet.Data
 
       DBxSelectInfo info = new DBxSelectInfo();
       info.TableName = tableName;
-      info.Expressions.Add(DB.Struct.Tables[tableName].PrimaryKey);
+      info.Expressions.Add(GetTableStruct(tableName).PrimaryKey);
       info.Where = where;
 
       if (singleOnly)
@@ -702,7 +702,7 @@ namespace FreeLibSet.Data
       Validator.CheckTablePrimaryKeyInt32(tableName);
       IdList lst = new IdList();
 
-      using (DbDataReader rdr = ReaderSelect(tableName, DB.Struct.Tables[tableName].PrimaryKey, where))
+      using (DbDataReader rdr = ReaderSelect(tableName, GetTableStruct(tableName).PrimaryKey, where))
       {
         while (rdr.Read())
           lst.Add(rdr.GetInt32(0));
@@ -846,7 +846,7 @@ namespace FreeLibSet.Data
           return false;
 
         // Находим ссылочную таблицу
-        DBxColumnStruct colDef = DB.Struct.Tables[tableName].Columns[colName1];
+        DBxColumnStruct colDef = GetTableStruct(tableName).Columns[colName1];
         if (String.IsNullOrEmpty(colDef.MasterTableName))
           throw new InvalidOperationException("Поле \"" + colName1 + "\" таблицы \"" + tableName + "\" не является ссылочным");
         // Рекурсивный вызов
@@ -858,7 +858,7 @@ namespace FreeLibSet.Data
       Buffer.SB.Append(" FROM ");
       Buffer.FormatTableName(tableName);
       Buffer.SB.Append(" WHERE ");
-      Buffer.FormatColumnName(DB.Struct.Tables[tableName].PrimaryKey[0]);
+      Buffer.FormatColumnName(GetTableStruct(tableName).PrimaryKey[0]);
       Buffer.SB.Append("=");
       Buffer.FormatValue(id, DBxColumnType.Int);
 
@@ -889,7 +889,7 @@ namespace FreeLibSet.Data
       if (id == 0)
         return new object[columnNames.Count];
 
-      DbDataReader rdr = ReaderSelect(tableName, columnNames, new IdsFilter(DB.Struct.Tables[tableName].PrimaryKey[0], id), null);
+      DbDataReader rdr = ReaderSelect(tableName, columnNames, new IdsFilter(GetTableStruct(tableName).PrimaryKey[0], id), null);
       try
       {
         object[] res = DoGetValuesFromReader(rdr);
@@ -1132,7 +1132,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Проверяемое поле</param>
     private void AddNotNullFilterIfRequired(ref DBxFilter where, string tableName, string columnName)
     {
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
       if (ts == null)
         return; // Мы не сможем добавить NullNotNullFilter, так как для него нужен тип данных, а мы его не знаем.
       // Проверрки на null нужны при NameCheckingEnabled=false
@@ -1529,7 +1529,7 @@ namespace FreeLibSet.Data
       object[] Values = new object[1];
       Values[0] = value;
 
-      SetValues(tableName, new IdsFilter(DB.Struct.Tables[tableName].PrimaryKey[0], id), new DBxColumns(columnNames), Values);
+      SetValues(tableName, new IdsFilter(GetTableStruct(tableName).PrimaryKey[0], id), new DBxColumns(columnNames), Values);
     }
 
     /// <summary>
@@ -1610,7 +1610,7 @@ namespace FreeLibSet.Data
       if (id == 0)
         throw new DBxNoIdArgumentException("Не задан идентификатор записи", "id"); // 20.12.2019
 
-      string PKColumnName = DB.Struct.Tables[tableName].CheckTablePrimaryKeyInt32();
+      string PKColumnName = GetTableStruct(tableName).CheckTablePrimaryKeyInt32();
 
       SetValues(tableName, new IdsFilter(PKColumnName, id), columnNames, values);
     }
@@ -1654,7 +1654,7 @@ namespace FreeLibSet.Data
     /// <param name="values">Значения</param>
     protected void PerformTrimValues(string tableName, DBxColumns columnNames, object[] values)
     {
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
 
       for (int i = 0; i < columnNames.Count; i++)
       {
@@ -1686,7 +1686,7 @@ namespace FreeLibSet.Data
 
       #region Определение необходимости обрезки
 
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
 
       DBxColumnStruct[] colDefs = new DBxColumnStruct[table.Columns.Count];
 
@@ -2309,7 +2309,7 @@ namespace FreeLibSet.Data
         {
           pPKs[i] = table.Columns.IndexOf(PKColumnNames[i]);
           if (pPKs[i] < 0)
-            throw new ArgumentException("Таблица DataTable не содержит поля первичного ключа \"" + PKColumnNames[i] + "\", объявленного в таблице \"" + ts.TableName + "\" базы данных \"" + validator.Entry.DB.DatabaseName + "\"");
+            throw new ArgumentException("Таблица DataTable не содержит поля первичного ключа \"" + PKColumnNames[i] + "\", объявленного в таблице \"" + ts.TableName + "\" базы данных \"" + validator.Con.Entry.DB.DatabaseName + "\"");
         }
         this.PKColumnPositions = pPKs;
 
@@ -2441,7 +2441,7 @@ namespace FreeLibSet.Data
     {
       // 19.01.2020. Возможность использования составных и нечисловых первичных ключей
 
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
       if (ts.PrimaryKey.Count == 0)
         throw new InvalidOperationException("Таблица \"" + tableName + "\" в базе данных \"" + DB.DatabaseName + "\" не имеет первичного ключа. Для нее нельзя использовать операцию обновления строк");
 
@@ -2555,7 +2555,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("table");
 #endif
 
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
       switch (ts.PrimaryKey.Count)
       {
         case 0:
@@ -2613,7 +2613,7 @@ namespace FreeLibSet.Data
         pkColType = pkColumnDef.ColumnType;
 
       DataTable exTable = FillSelect(tableName,
-        DB.Struct.Tables[tableName].PrimaryKey,
+        GetTableStruct(tableName).PrimaryKey,
         new ValuesFilter(pkColumnName, pkValues, pkColType),
         null);
       if (exTable.Rows.Count == 0)
@@ -2654,7 +2654,7 @@ namespace FreeLibSet.Data
     {
       // Возможен только поштучный перебор строк
 
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
       if (ts.PrimaryKey.Count == 0)
         throw new InvalidOperationException("Таблица \"" + tableName + "\" в базе данных \"" + DB.DatabaseName + "\" не имеет первичного ключа. Для нее нельзя использовать операцию обновления строк");
       DataTableColumnPositions colPosInfo = new DataTableColumnPositions(ts, Validator, table);
@@ -3074,7 +3074,7 @@ namespace FreeLibSet.Data
     public void Delete(string tableName, Int32 id)
     {
       Validator.CheckTablePrimaryKeyInt32(tableName);
-      Delete(tableName, new IdsFilter(DB.Struct.Tables[tableName].PrimaryKey[0], id));
+      Delete(tableName, new IdsFilter(GetTableStruct(tableName).PrimaryKey[0], id));
     }
 
     /// <summary>
@@ -3668,7 +3668,7 @@ namespace FreeLibSet.Data
     /// <returns>Наличие поля</returns>
     protected bool ContainsKeyColumn(string tableName, DBxColumns columnNames)
     {
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
       if (ts == null)
         return false;
       return columnNames.ContainsAny(ts.PrimaryKey);
@@ -3682,7 +3682,7 @@ namespace FreeLibSet.Data
     /// <returns>Наличие поля</returns>
     protected bool ContainsKeyColumn(string tableName, DataColumnCollection columns)
     {
-      DBxTableStruct ts = DB.Struct.Tables[tableName];
+      DBxTableStruct ts = GetTableStruct(tableName);
       if (ts == null)
         return false;
       for (int i = 0; i < ts.PrimaryKey.Count; i++)
@@ -3718,6 +3718,15 @@ namespace FreeLibSet.Data
       set { _Validator.NameCheckingEnabled = value; }
     }
 
+    /// <summary>
+    /// Возвращает описание структуры таблицы с заданным именем.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns></returns>
+    public virtual DBxTableStruct GetTableStruct(string tableName)
+    {
+      return DB.Struct.Tables[tableName];
+    }
 
     #endregion
 

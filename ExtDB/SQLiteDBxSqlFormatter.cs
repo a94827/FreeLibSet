@@ -92,6 +92,24 @@ namespace FreeLibSet.Data.SQLite
       buffer.SB.Append(value ? "1" : "0");
     }
 
+    /// <summary>
+    /// Возвращает значение по умолчанию для заданного типа данных.
+    /// Для типов "дата" и "дата/время" возвращает минимально возможную дату.
+    /// </summary>
+    /// <param name="columnType">Тип данных</param>
+    /// <returns>Значение</returns>
+    protected override object GetDefaultValue(DBxColumnType columnType)
+    {
+      switch (columnType)
+      {
+        case DBxColumnType.Date:
+        case DBxColumnType.DateTime:
+          return SQLiteDBx.MinDate;
+        default:
+          return base.GetDefaultValue(columnType);
+      }
+    }
+
 
     /// <summary>
     /// Преобразование значения даты и/или времени.
@@ -112,9 +130,9 @@ namespace FreeLibSet.Data.SQLite
       // Проверяем даты
       if (useDate)
       {
-        if (value.Year < 1000)
+        if (value < SQLiteDBx.MinDate)
           throw new ArgumentOutOfRangeException("value", value,
-            "В полях типа \"дата\" и \"дата-время\" нельзя задавать год меньше 1000. База данных SQLite не может потом прочитать такие значения");
+            "В полях типа \"дата\" и \"дата-время\" нельзя задавать год меньше " + SQLiteDBx.MinDate.Year.ToString() + ". База данных SQLite не может потом прочитать такие значения");
       }
 
       // 08.10.2018
@@ -407,6 +425,8 @@ namespace FreeLibSet.Data.SQLite
       {
         case DBxFunctionKind.Substring:
           return "SUBSTR";
+        case DBxFunctionKind.Length:
+          return "LENGTH";
         default:
           return base.GetFunctionName(function);
       }

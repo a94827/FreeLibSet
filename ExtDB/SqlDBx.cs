@@ -460,6 +460,38 @@ namespace FreeLibSet.Data.SqlClient
       return new SqlDBxCon(MainEntry, true);
     }
 
+
+    /// <summary>
+    /// Проверка корректности имени таблицы.
+    /// Возвращает true, если имя правильное. 
+    /// Наличие реальной таблицы с таким именем не проверяется.
+    /// 
+    /// Разрешает имена временных таблиц, начинающихся с "#" или "##"
+    /// </summary>
+    /// <param name="tableName">Проверяемое имя таблицы</param>
+    /// <param name="errorText">Сообщение об ошибке</param>
+    /// <returns>true, если имя правильное</returns>
+    public override bool IsValidTableName(string tableName, out string errorText)
+    {
+      if (String.IsNullOrEmpty(tableName))
+      {
+        errorText = "Имя таблицы не задано";
+        return false;
+      }
+
+      // 25.05.2023
+      if (tableName[0] == '#')
+      {
+        if (tableName.StartsWith("##", StringComparison.Ordinal))
+          tableName = "__" + tableName.Substring(2);
+        else
+          tableName = "_" + tableName.Substring(1);
+      }
+
+      return CheckInvalidChars(tableName, out errorText);
+    }
+
+
     #endregion
   }
 
@@ -1384,7 +1416,7 @@ namespace FreeLibSet.Data.SqlClient
           #region Требуется полное создание таблицы
 
           splash.PhaseText = "Создается таблица \"" + table.TableName + "\"";
-          CreateTable(table);
+          CreateTable(table, table.TableName, false);
           errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
           modified = true;
 
@@ -1759,11 +1791,11 @@ namespace FreeLibSet.Data.SqlClient
     }
      * */
 
-    private void CreateTable(DBxTableStruct table)
+    private void CreateTable(DBxTableStruct table, string tableName, bool isTempTable)
     {
       Buffer.Clear();
       Buffer.SB.Append("CREATE TABLE [");
-      Buffer.SB.Append(table.TableName);
+      Buffer.SB.Append(tableName);
       Buffer.SB.Append("] (");
       for (int i = 0; i < table.Columns.Count; i++)
       {
@@ -1778,9 +1810,14 @@ namespace FreeLibSet.Data.SqlClient
           case 1:
             if (table.Columns[i].ColumnName == table.PrimaryKey[0])
             {
-              Buffer.SB.Append(" IDENTITY CONSTRAINT [PK_");
-              Buffer.SB.Append(table.TableName);
-              Buffer.SB.Append("] PRIMARY KEY");
+              Buffer.SB.Append(" IDENTITY ");
+              if (!isTempTable)
+              {
+                Buffer.SB.Append("CONSTRAINT [PK_");
+                Buffer.SB.Append(tableName);
+                Buffer.SB.Append("] ");
+              }
+              Buffer.SB.Append("PRIMARY KEY");
             }
             break;
           default:
@@ -2166,6 +2203,60 @@ namespace FreeLibSet.Data.SqlClient
       return true;
     }
 #endif
+
+    #endregion
+
+    #region Временные таблицы
+
+    /// <summary>
+    /// Структуры объявленных временных таблиц.
+    /// Ключ - имя временной таблицы, Значение - структура
+    /// </summary>
+    private Dictionary<string, DBxTableStruct> _TempTableDict;
+
+    /// <summary>
+    /// Создает временную таблицу с заданной структурой.
+    /// Таблица будет существовать, пока не закрыто соединение.
+    /// Имя таблицы генерируется автоматически, а не берется из <see cref="DBxTableStruct.TableName"/>.
+    /// 
+    /// Временная реализация для тестов.
+    /// </summary>
+    /// <param name="tableStruct">Описание структуры. Должно быть заполнено</param>
+    /// <returns>Имя временной таблицы, которое следует использовать в запросах</returns>
+    public string CreateTempTableInternal(DBxTableStruct tableStruct)
+    {
+      if (_TempTableDict == null)
+        _TempTableDict = new Dictionary<string, DBxTableStruct>();
+
+      string tableName = "#Temp" + StdConvert.ToString(_TempTableDict.Count + 1);
+      DBxTableStruct tableStruct2 = tableStruct.Clone(tableName);
+
+      _TempTableDict.Add(tableName, tableStruct2);
+
+      CreateTable(tableStruct2, tableName, true);
+      return tableName;
+    }
+
+    /// <summary>
+    /// Возвращает описание структуры таблицы, в том числе, временной для этого соединения.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Структура или null</returns>
+    public override DBxTableStruct GetTableStruct(string tableName)
+    {
+      if (tableName.StartsWith("#Temp", StringComparison.Ordinal))
+      {
+        if (_TempTableDict == null)
+          _TempTableDict = new Dictionary<string, DBxTableStruct>();
+        DBxTableStruct res;
+        if (_TempTableDict.TryGetValue(tableName, out res))
+          return res;
+        else
+          throw new ArgumentException("Неизвестное имя временной таблицы \"" + tableName + "\"", "tableName");
+      }
+
+      return base.GetTableStruct(tableName);
+    }
 
     #endregion
   }

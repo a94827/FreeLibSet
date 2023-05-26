@@ -45,13 +45,57 @@ namespace FreeLibSet.Data
     /// <param name="formatInfo">Параметры форматирования</param>
     protected override void OnFormatColumn(DBxSqlBuffer buffer, DBxColumn column, DBxFormatExpressionInfo formatInfo)
     {
+      bool useCoalesce = false;
+      DBxColumnType wantedType = formatInfo.WantedColumnType;
       if (formatInfo.NullAsDefaultValue)
       {
-        DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(DBxTools.GetDefaultValue(formatInfo.WantedColumnType), formatInfo.WantedColumnType));
+        DBxColumnStruct colStr;
+        buffer.ColumnStructs.TryGetValue(column.ColumnName, out colStr);
+        if (colStr != null)
+        {
+          useCoalesce = colStr.Nullable;
+          wantedType = colStr.ColumnType;
+        }
+        else
+          useCoalesce = true;
+      }
+
+      if (useCoalesce)
+      {
+        if (wantedType == DBxColumnType.Unknown)
+          throw new InvalidOperationException("Для столбца \"" + column.ColumnName + "\" требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных");
+
+        DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(GetDefaultValue(wantedType), wantedType));
         OnFormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // рекурсивный вызов форматировщика
       }
       else
         OnFormatColumnName(buffer, column.ColumnName);
+    }
+
+    #endregion
+
+    #region Типы данных
+
+    /// <summary>
+    /// Специальное форматирование для <see cref="TimeSpan"/> с использованием функции "CONVERT()"
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="value"></param>
+    /// <param name="useDate"></param>
+    /// <param name="useTime"></param>
+    protected override void OnFormatDateTimeValue(DBxSqlBuffer buffer, DateTime value, bool useDate, bool useTime)
+    {
+      if ((!useDate) & useTime)
+      {
+        // 24.05.2023. Отдельно TimeSpan нельзя форматировать как DateTime, то есть нельзя использовать "[MyCol]=#12:34:56#" 
+        // Требуется использовать функцию CONVERT(). Она для преобразование строки в TimeSpan использует метод System.Xml.XmlConvert.ToTimeSpan().
+
+        buffer.SB.Append("CONVERT(\'");
+        buffer.SB.Append(System.Xml.XmlConvert.ToString(value.TimeOfDay));
+        buffer.SB.Append("\',System.TimeSpan)");
+        return;
+      }
+      base.OnFormatDateTimeValue(buffer, value, useDate, useTime);
     }
 
     #endregion
@@ -66,12 +110,36 @@ namespace FreeLibSet.Data
     /// <returns>Нестандартное имя функции</returns>
     protected override string GetFunctionName(DBxFunctionKind function)
     {
-      switch(function)
+      switch (function)
       {
-        case DBxFunctionKind.Coalesce: return "ISNULL"; 
+        case DBxFunctionKind.Coalesce: return "ISNULL";
         default:
           return base.GetFunctionName(function);
-      } 
+      }
+    }
+
+    /// <summary>
+    /// Специальная реализация функции ABS(), которой нет в <see cref="System.Data.DataView"/> через IIF().
+    /// </summary>
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="function">Выражение - функция</param>
+    /// <param name="formatInfo">Параметры форматирования</param>
+    protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      if (function.Function == DBxFunctionKind.Abs)
+      {
+        // 23.05.2023
+        buffer.SB.Append("IIF(");
+        this.OnFormatExpression(buffer, function.Arguments[0], formatInfo);
+        buffer.SB.Append(">=0,");
+        this.OnFormatExpression(buffer, function.Arguments[0], formatInfo);
+        buffer.SB.Append(",");
+        DBxFunction fnNeg = new DBxFunction(DBxFunctionKind.Neg, function.Arguments[0]);
+        OnFormatFunction(buffer, fnNeg, formatInfo);
+        buffer.SB.Append(")");
+        return;
+      }
+      base.OnFormatFunction(buffer, function, formatInfo);
     }
 
     /// <summary>
@@ -112,6 +180,67 @@ namespace FreeLibSet.Data
     #region Прочие фильтры
 
     /// <summary>
+    /// Специальная обработка для TimeSpan
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="filter"></param>
+    protected override void OnFormatCompareFilter(DBxSqlBuffer buffer, CompareFilter filter)
+    {
+      if (filter.ColumnTypeInternal == DBxColumnType.Time && (!filter.ComparisionToNull))
+      {
+        switch (filter.Kind)
+        {
+          case CompareKind.Equal:
+          case CompareKind.NotEqual:
+            DoFormatTimeSpanCompareFilter(buffer, filter);
+            return;
+
+            //default:
+            // Не выбрасываем исключение, т.к. этот метод используется в DBxFilter.ToString()
+            //  throw new NotSupportedException("В DataTable для TimeSpan не поддерживаются операции сравнения больше/меньше. Можно использовать только сравнение на равенство");
+        }
+      }
+      base.OnFormatCompareFilter(buffer, filter);
+    }
+
+    private void DoFormatTimeSpanCompareFilter(DBxSqlBuffer buffer, CompareFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.WantedColumnType = DBxColumnType.Time;
+      formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
+
+      DBxConst cnst1 = filter.Expression1.GetConst();
+      if (cnst1 != null)
+      {
+        TimeSpan v = (TimeSpan)DBxTools.Convert(cnst1.Value, DBxColumnType.Time);
+        string s = System.Xml.XmlConvert.ToString(v);
+        OnFormatStringValue(buffer, s);
+      }
+      else
+      {
+        buffer.SB.Append("CONVERT(");
+        this.FormatExpression(buffer, filter.Expression1, formatInfo);
+        buffer.SB.Append(",System.String)");
+      }
+
+      buffer.SB.Append(GetSignStr(filter.Kind));
+
+      DBxConst cnst2 = filter.Expression2.GetConst();
+      if (cnst2 != null)
+      {
+        TimeSpan v = (TimeSpan)DBxTools.Convert(cnst2.Value, DBxColumnType.Time);
+        string s = System.Xml.XmlConvert.ToString(v);
+        OnFormatStringValue(buffer, s);
+      }
+      else
+      {
+        buffer.SB.Append("CONVERT(");
+        this.FormatExpression(buffer, filter.Expression2, formatInfo);
+        buffer.SB.Append(",System.String");
+      }
+    }
+
+    /// <summary>
     /// Запись фильтра CompareFilter в режиме сравнения значения с NULL.
     /// Добавляет "NOT ISNULL(Выражение, Значение-по-Умолчанию)=Значение-по-Умолчанию"
     /// </summary>
@@ -130,9 +259,70 @@ namespace FreeLibSet.Data
       formatInfo.NoParentheses = true;
       buffer.FormatExpression(expression, formatInfo);
       buffer.SB.Append(", ");
-      buffer.FormatValue(DBxTools.GetDefaultValue(columnType), DBxColumnType.Unknown);
+      buffer.FormatValue(GetDefaultValue(columnType), DBxColumnType.Unknown);
       buffer.SB.Append(")=");
-      buffer.FormatValue(DBxTools.GetDefaultValue(columnType), DBxColumnType.Unknown);
+      buffer.FormatValue(GetDefaultValue(columnType), DBxColumnType.Unknown);
+    }
+
+    /// <summary>
+    /// Специальная реализация для типов <see cref="TimeSpan"/> и <see cref="Guid"/>.
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="filter"></param>
+    protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    {
+      if (filter.ColumnTypeInternal == DBxColumnType.Guid && filter.Values.Length > 1)
+      {
+        DoFormatGuidValuesFilter(buffer, filter);
+        return;
+      }
+      if (filter.ColumnTypeInternal == DBxColumnType.Time && filter.Values.Length > 1)
+      {
+        DoFormatTimeSpanValuesFilter(buffer, filter);
+        return;
+      }
+      base.OnFormatValuesFilter(buffer, filter);
+    }
+
+    private void DoFormatGuidValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
+      formatInfo.WantedColumnType = DBxColumnType.Guid;
+
+      buffer.SB.Append("CONVERT(");
+      this.FormatExpression(buffer, filter.Expression, formatInfo);
+      buffer.SB.Append(",System.String) IN (");
+      for (int i = 0; i < filter.Values.Length; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(", ");
+
+        Guid v = (Guid)DBxTools.Convert(filter.Values.GetValue(i), DBxColumnType.Guid);
+        OnFormatGuidValue(buffer, v);
+      }
+      buffer.SB.Append(')');
+    }
+
+    private void DoFormatTimeSpanValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    {
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
+      formatInfo.WantedColumnType = DBxColumnType.Time;
+
+      buffer.SB.Append("CONVERT(");
+      this.FormatExpression(buffer, filter.Expression, formatInfo);
+      buffer.SB.Append(",System.String) IN (");
+      for (int i = 0; i < filter.Values.Length; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(", ");
+
+        TimeSpan v = (TimeSpan)DBxTools.Convert(filter.Values.GetValue(i), DBxColumnType.Time);
+        string s = System.Xml.XmlConvert.ToString(v);
+        OnFormatStringValue(buffer, s);
+      }
+      buffer.SB.Append(')');
     }
 
     #endregion

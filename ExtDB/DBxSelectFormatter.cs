@@ -208,7 +208,7 @@ namespace FreeLibSet.Data
           // Buffer2.FormatColumnName("Id");
           // 01.10.2019
           // Не всегда первичным ключом является поле "Id"
-          DBxTableStruct RightTS = _Validator.Entry.DB.Struct.Tables[thisInfo.RightTableName];
+          DBxTableStruct RightTS = _Validator.Con.GetTableStruct(thisInfo.RightTableName);
           if (RightTS == null)
             throw new BugException("Не найдено описание мастер-таблицы \"" + thisInfo.RightTableName + "\"");
           if (RightTS.PrimaryKeyColumns.Length != 1)
@@ -302,9 +302,9 @@ namespace FreeLibSet.Data
       if (_Info.Expressions.Count > 0)
         return;
 
-      foreach (DBxColumnStruct colDef in _Validator.Entry.DB.Struct.Tables[_Info.TableName].Columns)
+      foreach (DBxColumnStruct colDef in _Validator.Con.GetTableStruct(_Info.TableName).Columns)
       {
-        if (_Validator.Entry.Permissions.ColumnModes[_Info.TableName, colDef.ColumnName] == DBxAccessMode.None)
+        if (_Validator.Con.Entry.Permissions.ColumnModes[_Info.TableName, colDef.ColumnName] == DBxAccessMode.None)
           continue;
         _Info.Expressions.Add(new DBxColumn(colDef.ColumnName));
       }
@@ -463,9 +463,9 @@ namespace FreeLibSet.Data
             break;
           string name1 = thisColumnName.Substring(0, p); // слева от точки
           // Ищем описание ссылочного поля в описании структуры БД
-          if (!_Validator.Entry.DB.Struct.Tables[thisTableName1].Columns.Contains(name1))
+          if (!_Validator.Con.GetTableStruct(thisTableName1).Columns.Contains(name1))
             throw new InvalidOperationException("Таблица \"" + thisTableName1 + "\" не содержит поля \"" + name1 + "\" ");
-          DBxColumnStruct colDef = _Validator.Entry.DB.Struct.Tables[thisTableName1].Columns[name1];
+          DBxColumnStruct colDef = _Validator.Con.GetTableStruct(thisTableName1).Columns[name1];
           if (String.IsNullOrEmpty(colDef.MasterTableName))
             throw new InvalidOperationException("Поле \"" + name1 + "\" таблицы \"" + thisTableName1 + "\" не является ссылочным");
 

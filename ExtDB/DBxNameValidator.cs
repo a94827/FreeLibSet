@@ -8,8 +8,10 @@ using System.Text;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Выполняет проверку имен таблиц и столбцов в DBxConBase при выполнении запросов.
-  /// При проверке корректности имен столбцов добавляет ссылки в DBxSqlBuffer.DBxColumnStruct
+  /// Выполняет проверку имен таблиц и столбцов при выполнении запросов.
+  /// Свойство <see cref="DBxConBase.Validator"/>.
+  /// При проверке корректности имен столбцов добавляет ссылки в <see cref="DBxSqlBuffer.ColumnStructs"/>.
+  /// Не используется в прикладном коде.
   /// </summary>
   public sealed class DBxNameValidator
   {
@@ -18,17 +20,13 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает объект для заданной точки подключения к базе данных
     /// </summary>
-    /// <param name="entry">Точка подключения к базе данных</param>
-    /// <param name="buffer">Буфер для создания SQL-запросов</param>
-    public DBxNameValidator(DBxEntry entry, DBxSqlBuffer buffer)
+    /// <param name="con">Обслуживаемое подключение</param>
+    internal DBxNameValidator(DBxConBase con)
     {
-      if (entry == null)
-        throw new ArgumentNullException("entry");
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
+      if (con == null)
+        throw new ArgumentNullException("con");
 
-      _Entry = entry;
-      _Buffer = buffer;
+      _Con = con;
       _NameCheckingEnabled = true;
     }
 
@@ -37,16 +35,10 @@ namespace FreeLibSet.Data
     #region Свойства
 
     /// <summary>
-    /// Точка подключения к базе данных
+    /// Обслуживаемое соединение
     /// </summary>
-    public DBxEntry Entry { get { return _Entry; } }
-    private DBxEntry _Entry;
-
-    /// <summary>
-    /// Буфер для создания SQL-запросов
-    /// </summary>
-    public DBxSqlBuffer Buffer { get { return _Buffer; } }
-    private DBxSqlBuffer _Buffer;
+    public DBxConBase Con { get { return _Con; } }
+    private DBxConBase _Con;
 
     /// <summary>
     /// Если свойство установлено (по умолчанию), то выполняется проверка существования
@@ -75,23 +67,23 @@ namespace FreeLibSet.Data
     public void CheckTableName(string tableName, DBxAccessMode mode)
     {
       string errorText;
-      if (!Entry.DB.IsValidTableName(tableName, out errorText))
+      if (!Con.Entry.DB.IsValidTableName(tableName, out errorText))
         throw new ArgumentException("Недопустимое имя таблицы \"" + tableName + "\". " + errorText);
 
       if (NameCheckingEnabled)
       {
-        if (!Entry.DB.Struct.Tables.Contains(tableName))
-          throw new ArgumentException("Определения для таблицы \"" + tableName + "\" не существует для БД \"" + Entry.DB.ToString() + "\"", "tableName");
+        if (Con.GetTableStruct(tableName)==null)
+          throw new ArgumentException("Определения для таблицы \"" + tableName + "\" не существует для БД \"" + Con.DB.ToString() + "\"", "tableName");
       }
 
       switch (mode)
       {
         case DBxAccessMode.Full:
-          if (Entry.Permissions.TableModes[tableName] != DBxAccessMode.Full)
+          if (Con.Entry.Permissions.TableModes[tableName] != DBxAccessMode.Full)
             throw new DBxAccessException("Нет разрешения на запись в таблицу \"" + tableName + "\"");
           break;
         case DBxAccessMode.ReadOnly:
-          if (Entry.Permissions.TableModes[tableName] == DBxAccessMode.None)
+          if (Con.Entry.Permissions.TableModes[tableName] == DBxAccessMode.None)
             throw new DBxAccessException("Нет разрешения на доступ к таблице \"" + tableName + "\"");
           break;
       }
@@ -111,7 +103,7 @@ namespace FreeLibSet.Data
       DBxColumnStruct cs = DoCheckTableColumnName(tableName, columnName, allowDots, mode);
       if (cs != null)
       {
-        Buffer.ColumnStructs[columnName] = cs; // не Add(), так как могут быть повторяющиеся вызовы
+        Con.Buffer.ColumnStructs[columnName] = cs; // не Add(), так как могут быть повторяющиеся вызовы
         return cs.ColumnType;
       }
       else
@@ -121,7 +113,7 @@ namespace FreeLibSet.Data
     private DBxColumnStruct DoCheckTableColumnName(string tableName, string columnName, bool allowDots, DBxAccessMode mode)
     {
       string errorText;
-      if (!Entry.DB.IsValidColumnName(columnName, allowDots, out errorText))
+      if (!Con.DB.IsValidColumnName(columnName, allowDots, out errorText))
         throw new ArgumentException("Недопустимое имя столбца \"" + columnName + "\". " + errorText, "columnName");
 
       int pDot = columnName.IndexOf('.');
@@ -129,16 +121,16 @@ namespace FreeLibSet.Data
       if (pDot >= 0)
       {
         string mainColumnName = columnName.Substring(0, pDot);
-        DBxColumnStruct colDef = Entry.DB.Struct.Tables[tableName].Columns[mainColumnName];
+        DBxColumnStruct colDef = Con.GetTableStruct(tableName).Columns[mainColumnName];
         if (colDef == null)
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Определения для столбца \"" + mainColumnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "columnName");
+            throw new ArgumentException("Определения для столбца \"" + mainColumnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Con.DB.ToString() + "\"", "columnName");
           else
             return null;
         }
         if (String.IsNullOrEmpty(colDef.MasterTableName))
-          throw new ArgumentException("Столбец \"" + mainColumnName + "\" таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\" не является ссылочным", "columnName");
+          throw new ArgumentException("Столбец \"" + mainColumnName + "\" таблицы \"" + tableName + "\" БД \"" + Con.DB.ToString() + "\" не является ссылочным", "columnName");
 
         if (NameCheckingEnabled)
           CheckTableName(colDef.MasterTableName, mode);
@@ -148,18 +140,18 @@ namespace FreeLibSet.Data
       }
       else
       {
-        DBxTableStruct ts = Entry.DB.Struct.Tables[tableName];
+        DBxTableStruct ts = Con.GetTableStruct(tableName);
         if (ts == null)
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Нет определения для таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "tableName");
+            throw new ArgumentException("Нет определения для таблицы \"" + tableName + "\" БД \"" + Con.DB.ToString() + "\"", "tableName");
           else
             return null; // 22.07.2021
         }
         if (!ts.Columns.Contains(columnName))
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Определения для столбца \"" + columnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Entry.DB.ToString() + "\"", "columnName");
+            throw new ArgumentException("Определения для столбца \"" + columnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Con.Entry.DB.ToString() + "\"", "columnName");
           else
             return null;
         }
@@ -169,7 +161,7 @@ namespace FreeLibSet.Data
           switch (mode)
           {
             case DBxAccessMode.Full:
-              switch (Entry.Permissions.ColumnModes[tableName, columnName])
+              switch (Con.Entry.Permissions.ColumnModes[tableName, columnName])
               {
                 case DBxAccessMode.ReadOnly:
                   throw new DBxAccessException("Запрещено изменение поля \"" + columnName + "\" таблицы \"" + tableName + "\". Есть право только на просмотр поля");
@@ -178,12 +170,12 @@ namespace FreeLibSet.Data
               }
               break;
             case DBxAccessMode.ReadOnly:
-              if (Entry.Permissions.ColumnModes[tableName, columnName] == DBxAccessMode.None)
+              if (Con.Entry.Permissions.ColumnModes[tableName, columnName] == DBxAccessMode.None)
                 throw new DBxAccessException("Запрещен доступ к полю \"" + columnName + "\" таблицы \"" + tableName + "\"");
               break;
           }
         }
-        return Entry.DB.Struct.Tables[tableName].Columns[columnName];
+        return Con.GetTableStruct(tableName).Columns[columnName];
       }
     }
 
@@ -238,7 +230,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Внутренний объект, используемый при проверке фильтров и порядка сортировки
     /// </summary>
-    private DBxColumnList CheckColumnList;
+    private DBxColumnList _CheckColumnList;
 
 
     /// <summary>
@@ -285,12 +277,12 @@ namespace FreeLibSet.Data
       if (filter == null)
         throw new ArgumentNullException("filter");
 
-      if (CheckColumnList == null)
-        CheckColumnList = new DBxColumnList();
-      CheckColumnList.Clear();
-      filter.GetColumnNames(CheckColumnList);
-      for (int i = 0; i < CheckColumnList.Count; i++)
-        CheckTableColumnName(tableName, CheckColumnList[i], allowDots, DBxAccessMode.ReadOnly);
+      if (_CheckColumnList == null)
+        _CheckColumnList = new DBxColumnList();
+      _CheckColumnList.Clear();
+      filter.GetColumnNames(_CheckColumnList);
+      for (int i = 0; i < _CheckColumnList.Count; i++)
+        CheckTableColumnName(tableName, _CheckColumnList[i], allowDots, DBxAccessMode.ReadOnly);
     }
 
     ///// <summary>
@@ -323,7 +315,7 @@ namespace FreeLibSet.Data
     /// <returns>Имя поля первичного ключа</returns>
     public string CheckTablePrimaryKeyInt32(string tableName)
     {
-      DBxTableStruct ts = Entry.DB.Struct.Tables[tableName];
+      DBxTableStruct ts = Con.GetTableStruct(tableName);
       return ts.CheckTablePrimaryKeyInt32();
     }
 
@@ -335,7 +327,7 @@ namespace FreeLibSet.Data
     /// <returns>Индекс столбца или (-1), если столбец не найден</returns>
     public int GetPrimaryKeyInt32ColumnIndex(string tableName, DBxColumns columnNames)
     {
-      DBxTableStruct ts = Entry.DB.Struct.Tables[tableName];
+      DBxTableStruct ts = Con.GetTableStruct(tableName);
       if (ts.PrimaryKey.Count != 1)
         return -1;
 

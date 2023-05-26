@@ -34,8 +34,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Конструктор для клонирования
     /// </summary>
-    private DBxTableStruct(DBxTableStruct source)
-      : base(source.TableName)
+    private DBxTableStruct(DBxTableStruct source, string tableName)
+      : base(tableName)
     {
       _Columns = new DBxColumnStructList(source.Columns.Count);
       for (int i = 0; i < source.Columns.Count; i++)
@@ -327,12 +327,25 @@ namespace FreeLibSet.Data
     #region ICloneable Members
 
     /// <summary>
-    /// Создает копию описания таблицы, доступную для редактирования (IsReadOnly=false)
+    /// Создает копию описания таблицы, доступную для редактирования (<see cref="IsReadOnly"/>=false)
     /// </summary>
     /// <returns>Новый объект DBxTableStruct</returns>
     public DBxTableStruct Clone()
     {
-      return new DBxTableStruct(this);
+      return Clone(this.TableName);
+    }
+
+    /// <summary>
+    /// Создает копию описания таблицы, доступную для редактирования (<see cref="IsReadOnly"/>=false).
+    /// Эта перегрузка позволяет заменить имя таблицы
+    /// </summary>
+    /// <returns>Новый объект <see cref="DBxTableStruct"/></returns>
+    /// <param name="tableName">Имя таблицы для новой структурой <see cref="DBxTableStruct.TableName"/></param>
+    public DBxTableStruct Clone(string tableName)
+    {
+      if (String.IsNullOrEmpty(tableName))
+        throw new ArgumentNullException(tableName);
+      return new DBxTableStruct(this, tableName);
     }
 
     object ICloneable.Clone()
@@ -1536,20 +1549,20 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Строковое поле. 
-    /// При определении поля должно быть установлено MaxLength
+    /// При определении поля должно быть установлено свойство <see cref="DBxColumnStruct.MaxLength"/>
     /// </summary>
     String,
 
     /// <summary>
     /// Целочисленное поле.
-    /// При определении поля могут быть заданы MinValue и MaxValue для определения наиболее подходящего типа
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
     /// поля в базе данных
     /// </summary>
     Int,
 
     /// <summary>
     /// Число с плавающей точкой
-    /// При определении поля могут быть заданы MinValue и MaxValue для определения наиболее подходящего типа
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
     /// поля в базе данных
     /// </summary>
     Float,
@@ -1575,7 +1588,7 @@ namespace FreeLibSet.Data
     DateTime,
 
     /// <summary>
-    /// Поле для хранения времени суток без даты (TimeSpan или DateTime - ?)
+    /// Поле для хранения интервала времени или времени суток без даты (TimeSpan)
     /// </summary>
     Time,
 

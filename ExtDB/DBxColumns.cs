@@ -16,6 +16,8 @@ namespace FreeLibSet.Data
   /// Массив имен полей.
   /// Поля могут быть заданы только в конструкторе и в дальнейшем не могут быть изменены.
   /// Имена не могут содержать пробелы и запятые. Остальные символы не проверяются.
+  /// Регистр символов учитывается.
+  /// Повторы не допускаются.
   /// Массив может быть пустым.
   /// </summary>
   [Serializable]
@@ -24,47 +26,30 @@ namespace FreeLibSet.Data
     #region Конструкторы
 
     /// <summary>
-    /// Создает список на основании DBxColumnList
-    /// </summary>
-    /// <param name="columnList">Список столбцов</param>
-    public DBxColumns(DBxColumnList columnList)
-    {
-#if DEBUG
-      if (columnList == null)
-        throw new ArgumentNullException();
-#endif
-      _Items = columnList.ToArray();
-#if DEBUG
-      CheckNames();
-#endif
-      CreateIndexer();
-    }
-
-    /// <summary>
     /// Создание списка полей из строки имен, разделенных запятыми
     /// </summary>
-    /// <param name="сolumnNames">Имена столбцов</param>
-    public DBxColumns(string сolumnNames)
+    /// <param name="columnNames">Имена столбцов. Может быть пустой строкой.</param>
+    public DBxColumns(string columnNames)
+      : this(CreateArrayFromString(columnNames), false)
     {
-      if (String.IsNullOrEmpty(сolumnNames))
-        _Items = DataTools.EmptyStrings;
+    }
+
+    private static string[] CreateArrayFromString(string columnNames)
+    {
+      if (String.IsNullOrEmpty(columnNames))
+        return DataTools.EmptyStrings;
       else
       {
-        if (сolumnNames.IndexOf(',') >= 0)
-          _Items = сolumnNames.Split(new char[] { ',' });
+        if (columnNames.IndexOf(',') >= 0)
+          return columnNames.Split(new char[] { ',' });
         else
-          _Items = new string[1] { сolumnNames };
+          return new string[1] { columnNames };
       }
-
-#if DEBUG
-      CheckNames();
-#endif
-      CreateIndexer();
     }
 
     /// <summary>
     /// Создает список на основании массива строк.
-    /// Имена столбцов не меогут содержать запятые
+    /// Имена столбцов не могут содержать запятые.
     /// </summary>
     /// <param name="сolumnNames">Список полей</param>
     public DBxColumns(string[] сolumnNames)
@@ -92,44 +77,22 @@ namespace FreeLibSet.Data
       CreateIndexer();
     }
 
+
     /// <summary>
-    /// Создает список на основании списка полей
+    /// Создает список на основании массива строк.
     /// </summary>
-    /// <param name="list">Имена столбцов</param>
-    public DBxColumns(List<string> list)
+    /// <param name="list">Список имен. Может быть пустым списком, но не должен содержать повторов</param>
+    public DBxColumns(ICollection<string> list)
     {
       if (list == null)
         _Items = DataTools.EmptyStrings;
       else if (list.Count == 0)
         _Items = DataTools.EmptyStrings;
       else
-        _Items = list.ToArray();
-#if DEBUG
-      CheckNames();
-#endif
-      CreateIndexer();
-    }
-
-    private DBxColumns(DBxColumns columnNames1, DBxColumns columnNames2)
-    {
-      List<String> a = new List<string>();
-      if (columnNames1 != null)
       {
-        for (int i = 0; i < columnNames1._Items.Length; i++)
-        {
-          if (!a.Contains(columnNames1._Items[i]))
-            a.Add(columnNames1._Items[i]);
-        }
+        _Items = new string[list.Count];
+        list.CopyTo(_Items, 0);
       }
-      if (columnNames2 != null)
-      {
-        for (int i = 0; i < columnNames2._Items.Length; i++)
-        {
-          if (!a.Contains(columnNames2._Items[i]))
-            a.Add(columnNames2._Items[i]);
-        }
-      }
-      _Items = a.ToArray();
 #if DEBUG
       CheckNames();
 #endif
@@ -178,12 +141,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает список на основании списка имен столбцов.
+    /// Если таблица не содержит ни одного столбца или <paramref name="columns"/>==null, возвращается null.
     /// </summary>
     /// <param name="columns">Список столбцов или null</param>
     /// <returns>Объект DBxColumns или null</returns>
     public static DBxColumns FromColumns(DataColumnCollection columns)
     {
-      if (columns == null)
+      if (columns == null || columns.Count == 0 /* 01.05.2023 */)
         return null;
 
       string[] items = new String[columns.Count];
@@ -232,36 +196,41 @@ namespace FreeLibSet.Data
     /// Извлечь имена столбцов из свойства DataView.Sort.
     /// Строка может содержать пробелы и суффиксы ASC и DESC (игнорируются).
     /// Если строка пустая, возвращается null.
-    /// В текущей реализации не поддерживается полноценный парсинг, поэтому в выражении не должно быть функций и математических выражений
+    /// Используется метод DataTools.GetDataViewSortColumnNames().
+    /// Если задан неправильный порядок сортировки, в котором одно и то же поле встречается дважды (например, "F1,F2,F1 DESC"), выбрасывается исключение
     /// </summary>
     /// <param name="sort">Свойство DataView.Sort</param>
     /// <returns></returns>
     public static DBxColumns FromDataViewSort(string sort)
     {
-      if (String.IsNullOrEmpty(sort))
-        return null;
-      if (DataTools.IndexOfAny(sort, _DataViewSortBadChars) >= 0)
-        throw new ArgumentException("Порядок сортировки \"" + sort + "\" содержит недопустимые символы", "sort");
-      string[] a = sort.Split(',');
-      for (int i = 0; i < a.Length; i++)
-      {
-        string s = a[i].Trim();
-        string s1 = s.ToUpperInvariant();
-        if (s1.EndsWith(" DESC", StringComparison.Ordinal))
-          s = s.Substring(0, s.Length - 5);
-        else
-        {
-          if (s1.EndsWith(" ASC", StringComparison.Ordinal))
-            s = s.Substring(0, s.Length - 4);
-        }
-        if (s.Length == 0)
-          throw new ArgumentException("Неправильное формат порядка сортировки", "sort");
+      //if (String.IsNullOrEmpty(sort))
+      //  return null;
+      //
+      //if (DataTools.IndexOfAny(sort, _DataViewSortBadChars) >= 0)
+      //  throw new ArgumentException("Порядок сортировки \"" + sort + "\" содержит недопустимые символы", "sort");
+      //string[] a = sort.Split(',');
+      //for (int i = 0; i < a.Length; i++)
+      //{
+      //  string s = a[i].Trim();
+      //  string s1 = s.ToUpperInvariant();
+      //  if (s1.EndsWith(" DESC", StringComparison.Ordinal))
+      //    s = s.Substring(0, s.Length - 5);
+      //  else
+      //  {
+      //    if (s1.EndsWith(" ASC", StringComparison.Ordinal))
+      //      s = s.Substring(0, s.Length - 4);
+      //  }
+      //  if (s.Length == 0)
+      //    throw new ArgumentException("Неправильный формат порядка сортировки", "sort");
 
-        if (s[0] == '[' && s[s.Length - 1] == ']') // 21.04.2023
-          s = s.Substring(1, s.Length - 2);
-        a[i] = s;
-      }
-      return new DBxColumns(a);
+      //  if (s[0] == '[' && s[s.Length - 1] == ']') // 21.04.2023
+      //    s = s.Substring(1, s.Length - 2);
+      //  a[i] = s;
+      //}
+
+      // 27.04.2023
+      string[] a = DataTools.GetDataViewSortColumnNames(sort);
+      return FromNames(a, false);
     }
 
 
@@ -318,7 +287,7 @@ namespace FreeLibSet.Data
     /// Получение имен полей в виде массива строк
     /// </summary>
     public string[] AsArray { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
     /// <summary>
     /// Индексатор для быстрого доступа к полям.
@@ -336,7 +305,19 @@ namespace FreeLibSet.Data
     private void CreateIndexer()
     {
       if (_Items.Length >= 3)
-        _Indexer = new StringArrayIndexer(_Items, false);
+        _Indexer = new StringArrayIndexer(_Items, false); // проверяет повторы
+      else
+      {
+        // 27.04.2023. Проверяем повторы
+        for (int i = 1; i < _Items.Length; i++)
+        {
+          for (int j = 0; j < i; j++)
+          {
+            if (String.Equals(_Items[i], _Items[j], StringComparison.Ordinal))
+              throw new ArgumentException("Повторное вхождение ключа \"" + _Items[i] + "\"");
+          }
+        }
+      }
     }
 
     /// <summary>
@@ -593,7 +574,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если таблицы <paramref name="table"/> содержит ВСЕ столбцы из списка <paramref name="checkedColumns"/>
+    /// Возвращает true, если таблица <paramref name="table"/> содержит ВСЕ столбцы из списка <paramref name="checkedColumns"/>.
+    /// В отличие от других методов, поиск в <see cref="System.Data.DataColumnCollection"/> игнорирует регистр символов.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="checkedColumns">Список столбцов, наличие которых проверяется</param>
@@ -614,7 +596,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если таблицы <paramref name="table"/> содержит ХОТЯ БЫ ОДИН столбец из списка <paramref name="checkedColumns"/>
+    /// Возвращает true, если таблица <paramref name="table"/> содержит ХОТЯ БЫ ОДИН столбец из списка <paramref name="checkedColumns"/>
+    /// В отличие от других методов, поиск в <see cref="System.Data.DataColumnCollection"/> игнорирует регистр символов.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="checkedColumns">Список столбцов, наличие которых проверяется</param>
@@ -656,10 +639,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если в текущем списке полей есть поля, которых нет в OtherColumns
+    /// Возвращает true, если в текущем списке полей есть поля, которых нет в <paramref name="otherColumns"/>
     /// </summary>
     /// <param name="otherColumns">Список проверяемых полей (может быть null)</param>
-    /// <returns>true, если есть поля, отсутствующие в OtherColumns</returns>
+    /// <returns>true, если есть поля, отсутствующие в <paramref name="otherColumns"/></returns>
     public bool HasMoreThan(DBxColumns otherColumns)
     {
       if (otherColumns == null)
@@ -674,12 +657,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если в списке полей ThisColumns есть поля, которых нет в OtherColumns
-    /// Статическая версия метода позволяет не проверять на null оба аргумента
+    /// Возвращает true, если в списке полей <paramref name="thisColumns"/> есть поля, которых нет в <paramref name="otherColumns"/>.
+    /// Статическая версия метода позволяет не проверять на null оба аргумента.
     /// </summary>
     /// <param name="thisColumns">Текущий список полей (может быть null)</param>
     /// <param name="otherColumns">Список проверяемых полей (может быть null)</param>
-    /// <returns>true, если есть поля, отсутствующие в OtherColumns</returns>
+    /// <returns>true, если есть поля, отсутствующие в <paramref name="otherColumns"/></returns>
     public static bool HasMoreThan(DBxColumns thisColumns, DBxColumns otherColumns)
     {
       if (thisColumns == null)
@@ -750,8 +733,8 @@ namespace FreeLibSet.Data
     #region Методы извлечения значений
 
     /// <summary>
-    /// Извлечение подмассива из Values для полей данного объекта
-    /// Если в ColumnNames нет какого-либо поля, возвращается null
+    /// Извлечение подмассива из <paramref name="values"/> для полей данного объекта.
+    /// Если в <paramref name="columnNames"/>нет какого-либо поля, возвращается единственное значение null вместо массива.
     /// </summary>
     /// <param name="columnNames">Имена большего набора полей</param>
     /// <param name="values">Значения большего набора полей</param>
@@ -795,11 +778,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавить к столбцам таблицы DataTable столбцы с указанными именами, если они
-    /// имеются в текущем списке полей
+    /// имеются в текущем списке полей.
+    /// Не проверяется наличие уже существующих столбцов в <paramref name="columns"/>.
     /// </summary>
     /// <param name="columns">Столбцы DataTable.Columns, куда выполняется добавление</param>
     /// <param name="columnNames">Список имен добавляемых столбцов, разделенных запятыми</param>
     /// <param name="dataType">Тип значений, хранящихся в добавляемых столбцах</param>
+    /// <exception cref="System.Data.DuplicateNameException">Если в таблице <paramref name="columns"/> уже есть столбец с именем добавляемого столбца</exception>
     public void AddContainedColumns(DataColumnCollection columns, string columnNames, Type dataType)
     {
       if (String.IsNullOrEmpty(columnNames))
@@ -809,11 +794,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавить к столбцам таблицы DataTable столбцы с указанными именами, если они
-    /// имеются в текущем списке полей
+    /// имеются в текущем списке полей.
+    /// Не проверяется наличие уже существующих столбцов в <paramref name="columns"/>.
     /// </summary>
     /// <param name="columns">Столбцы DataTable.Columns, куда выполняется добавление</param>
     /// <param name="columnNames">Массив имен добавляемых столбцов</param>
     /// <param name="dataType">Тип добавляемых столбцов</param>
+    /// <exception cref="System.Data.DuplicateNameException">Если в таблице <paramref name="columns"/> уже есть столбец с именем добавляемого столбца</exception>
     public void AddContainedColumns(DataColumnCollection columns, string[] columnNames, Type dataType)
     {
       if (columnNames == null)
@@ -827,12 +814,17 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавить к столбцам таблицы DataTable столбцы из текущего списка, используя типы данных из
-    /// столбцов исходной таблицы <paramref name="sourceColumns"/>. Если в структцре исходной таблицы нет
+    /// Добавить к столбцам таблицы DataTable столбцы из текущего списка, используя типы данных и другие свойства из
+    /// столбцов исходной таблицы <paramref name="sourceColumns"/>. Если в структуре исходной таблицы нет
     /// какого-либо столбца, генерируется исключение.
+    /// Для создания столбца используется метод DataTools.CloneDataColumn().
+    /// Порядок добавления столбцов соответствует текущему объекту, а не столбцов в <paramref name="sourceColumns"/>.
+    /// При поиске столбцов игнорируется регистр символов.
+    /// Не проверяется наличие уже существующих столбцов в <paramref name="columns"/>.
     /// </summary>
     /// <param name="columns">Столбцы DataTable.Columns, куда выполняется добавление</param>
     /// <param name="sourceColumns">Структура таблицы, откуда берутся типы столбцов</param>
+    /// <exception cref="System.Data.DuplicateNameException">Если в таблице <paramref name="columns"/> уже есть столбец с именем добавляемого столбца</exception>
     public void AddContainedColumns(DataColumnCollection columns, DataColumnCollection sourceColumns)
     {
       for (int i = 0; i < _Items.Length; i++)
@@ -840,8 +832,8 @@ namespace FreeLibSet.Data
         int p = sourceColumns.IndexOf(_Items[i]);
         if (p < 0)
           throw new InvalidOperationException("Таблица-шаблон не содержит поля \"" + _Items[i] + "\"");
-        DataColumn SrcColumn = sourceColumns[p];
-        columns.Add(DataTools.CloneDataColumn(SrcColumn));
+        DataColumn srcColumn = sourceColumns[p];
+        columns.Add(DataTools.CloneDataColumn(srcColumn));
       }
     }
 
@@ -889,7 +881,7 @@ namespace FreeLibSet.Data
         if (p < 0)
           throw new ArgumentException("Таблица \"" + sourceTable.TableName + "\" не содержит столбца \"" + this[i] + "\"", "sourceTable");
 
-        resTable.Columns.Add(DataTools.CloneDataColumn(sourceTable.Columns[i]));
+        resTable.Columns.Add(DataTools.CloneDataColumn(sourceTable.Columns[p])); // испр.01.05.2023
       }
 
       DataTools.CopyRowsToRows(sourceTable, resTable, true, true);
@@ -902,7 +894,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Извлечь из строки значения полей. Если строка не содержит каких-либо полей,
-    /// то они получают значение null. Длина выходного массива равна Count
+    /// то они получают значение null. Длина выходного массива равна Count.
     /// </summary>
     /// <param name="row">Строка, откуда будут браться значения</param>
     /// <returns>Массив полученных значений</returns>
@@ -913,7 +905,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Извлечь из строки значения полей. Если строка не содержит каких-либо полей,
     /// то они получают значение null, либо генерируется исключение, в зависимости 
-    /// от параметра ThrowIfNoColumn. Длина выходного массива равна Count
+    /// от параметра ThrowIfNoColumn. Длина выходного массива равна Count.
     /// </summary>
     /// <param name="row">Строка, откуда будут браться значения</param>
     /// <param name="throwIfNoColumn">Если true, то при отсутствии в строке <paramref name="row"/>
@@ -986,11 +978,16 @@ namespace FreeLibSet.Data
     public static DBxColumns operator +(DBxColumns arg1, DBxColumns arg2)
     {
       if (arg1 == null)
-        return arg2;
+        arg1 = Empty;
       if (arg2 == null)
+        arg2 = Empty;
+
+      if (arg1.Count == 0)
+        return arg2;
+      if (arg2.Count == 0)
         return arg1;
 
-      return new DBxColumns(arg1, arg2);
+      return new DBxColumns(DataTools.MergeArraysOnce<string>(arg1.AsArray, arg2.AsArray));
     }
 
     /// <summary>
@@ -1002,10 +999,10 @@ namespace FreeLibSet.Data
     /// <returns>Объединенный список</returns>
     public static DBxColumns operator +(DBxColumns arg1, string columnNames)
     {
+      if (arg1 == null)
+        arg1 = Empty;
       if (String.IsNullOrEmpty(columnNames))
         return arg1;
-      if (arg1 == null)
-        return new DBxColumns(columnNames);
       return arg1 + new DBxColumns(columnNames);
     }
 
@@ -1018,10 +1015,10 @@ namespace FreeLibSet.Data
     /// <returns>Объединенный список</returns>
     public static DBxColumns operator +(DBxColumns arg1, string[] columnNames)
     {
+      if (arg1 == null)
+        arg1 = Empty;
       if (columnNames == null || columnNames.Length == 0)
         return arg1;
-      if (arg1 == null)
-        return new DBxColumns(columnNames);
       return arg1 + new DBxColumns(columnNames);
     }
 
@@ -1039,8 +1036,8 @@ namespace FreeLibSet.Data
     public static DBxColumns operator -(DBxColumns arg1, DBxColumns arg2)
     {
       if (arg1 == null)
-        return null;
-      if (arg2 == null)
+        arg1 = Empty;
+      if (arg2 == null || arg2.Count == 0)
         return arg1;
 
       DBxColumnList list = new DBxColumnList(arg1);
@@ -1058,10 +1055,10 @@ namespace FreeLibSet.Data
     /// <returns>Разностный список</returns>
     public static DBxColumns operator -(DBxColumns arg1, string columnNames)
     {
+      if (arg1 == null)
+        arg1 = Empty;
       if (String.IsNullOrEmpty(columnNames))
         return arg1;
-      if (arg1 == null)
-        return null;
       return arg1 - new DBxColumns(columnNames);
     }
 
@@ -1074,10 +1071,10 @@ namespace FreeLibSet.Data
     /// <returns>Разностный список</returns>
     public static DBxColumns operator -(DBxColumns arg1, string[] columnNames)
     {
+      if (arg1 == null)
+        arg1 = Empty;
       if (columnNames == null || columnNames.Length == 0)
         return arg1;
-      if (arg1 == null)
-        return null;
       return arg1 - new DBxColumns(columnNames);
     }
 
@@ -1087,15 +1084,16 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает список полей, которые содержатся в обоих исходных списках.
-    /// Если один или оба списка null, возвращается null.
+    /// Если один или оба списка null, возвращается <see cref="Empty"/>.
     /// </summary>
     /// <param name="arg1">Первый список</param>
     /// <param name="arg2">Второй список</param>
     /// <returns>Результат пересечения</returns>
     public static DBxColumns operator &(DBxColumns arg1, DBxColumns arg2)
     {
-      if (arg1 == null || arg2 == null)
-        return null;
+      if (arg1 == null || arg1.Count == 0 || arg2 == null || arg2.Count == 0)
+        return Empty;
+
 
       List<string> columnNames = new List<string>();
       for (int i = 0; i < arg1.Count; i++)
@@ -1104,7 +1102,7 @@ namespace FreeLibSet.Data
           columnNames.Add(arg1[i]);
       }
       if (columnNames.Count == 0)
-        return null;
+        return Empty;
       else
         return new DBxColumns(columnNames);
     }
@@ -1118,8 +1116,8 @@ namespace FreeLibSet.Data
     /// <returns>Результат пересечения</returns>
     public static DBxColumns operator &(DBxColumns arg1, string columnNames)
     {
-      if (arg1 == null || String.IsNullOrEmpty(columnNames))
-        return null;
+      if (arg1 == null || arg1.Count == 0 || String.IsNullOrEmpty(columnNames))
+        return Empty;
       return arg1 & new DBxColumns(columnNames);
     }
 
@@ -1132,8 +1130,8 @@ namespace FreeLibSet.Data
     /// <returns>Результат пересечения</returns>
     public static DBxColumns operator &(DBxColumns arg1, string[] columnNames)
     {
-      if (arg1 == null || columnNames == null || columnNames.Length == 0)
-        return null;
+      if (arg1 == null || arg1.Count == 0 || columnNames == null || columnNames.Length == 0)
+        return Empty;
       return arg1 & new DBxColumns(columnNames);
     }
 
@@ -2452,20 +2450,20 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Хранилище для массива значений полей, связанное с заданным списком столбцов DBxColumns.
+  /// Хранилище для массива значений полей, связанное с заданным списком столбцов <see cref="DBxColumns"/>.
   /// Однократно созданному объекту можно многократно присваивать значения (свойство Values).
   /// Используется при проверке фильтров.
   /// </summary>
   [Serializable]
   public class DBxColumnValueArray : INamedValuesAccess
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
     /// Создает список с заданными значениями.
-    /// дальнейшая установка свойства Values позволит их изменить.
+    /// дальнейшая установка свойства <see cref="Values"/> позволит их изменить.
     /// </summary>
-    /// <param name="columns">Список столбцов</param>
+    /// <param name="columns">Список столбцов. Не может быть null, но может быть пустым.</param>
     /// <param name="values">Массив значений. Должен иметь ту же длину, что и список <paramref name="columns"/>.</param>
     public DBxColumnValueArray(DBxColumns columns, object[] values)
     {
@@ -2476,9 +2474,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает список, в котором все значения пустые
+    /// Создает список, в котором все значения пустые.
+    /// Далее может быть установлено свойство <see cref="Values"/>.
     /// </summary>
-    /// <param name="columns">Список столбцов</param>
+    /// <param name="columns">Список столбцов. Не может быть null, но может быть пустым.</param>
     public DBxColumnValueArray(DBxColumns columns)
     {
       if (columns == null)

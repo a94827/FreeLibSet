@@ -59,7 +59,7 @@ namespace FreeLibSet.Data
     public override string ToString()
     {
       StringBuilder sb = new StringBuilder();
-      if (WantedColumnType!=DBxColumnType.Unknown)
+      if (WantedColumnType != DBxColumnType.Unknown)
       {
         sb.Append(WantedColumnType.ToString());
         sb.Append(", ");
@@ -531,6 +531,17 @@ namespace FreeLibSet.Data
     /// <param name="columnType">Тип значения</param>
     protected abstract void OnFormatValue(DBxSqlBuffer buffer, object value, DBxColumnType columnType);
 
+    /// <summary>
+    /// Возвращает значение по умолчанию для заданного типа данных.
+    /// Вызывает <see cref="DBxTools.GetDefaultValue(DBxColumnType)"/>. Переопределяется для SQLite.
+    /// </summary>
+    /// <param name="columnType">Тип данных</param>
+    /// <returns>Значение</returns>
+    protected virtual object GetDefaultValue(DBxColumnType columnType)
+    {
+      return DBxTools.GetDefaultValue(columnType);
+    }
+
     #endregion
 
     #region Фильтры
@@ -689,7 +700,7 @@ namespace FreeLibSet.Data
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
     protected abstract void OnFormatCompareFilter(DBxSqlBuffer buffer, CompareFilter filter);
-    
+
     /// <summary>
     /// Форматирование фильтра.
     /// Записывает в <paramref name="buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
@@ -733,7 +744,7 @@ namespace FreeLibSet.Data
         if (i > 0)
           buffer.SB.Append(", ");
         buffer.FormatExpression(order.Parts[i].Expression, new DBxFormatExpressionInfo());
-        if (order.Parts[i].SortOrder==ListSortDirection.Descending)
+        if (order.Parts[i].SortOrder == ListSortDirection.Descending)
           buffer.SB.Append(" DESC");
       }
     }
@@ -773,7 +784,12 @@ namespace FreeLibSet.Data
       else if (expression is DBxFunction)
         OnFormatFunction(buffer, (DBxFunction)expression, formatInfo);
       else if (expression is DBxConst)
-        OnFormatValue(buffer, ((DBxConst)expression).Value, ((DBxConst)expression).ColumnType);
+      {
+        DBxColumnType columnType = formatInfo.WantedColumnType; 
+        if (columnType == DBxColumnType.Unknown) // 24.05.2023
+          columnType = ((DBxConst)expression).ColumnType;
+        OnFormatValue(buffer, ((DBxConst)expression).Value, columnType);
+      }
       else if (expression is DBxAgregateFunction)
         OnFormatAgregateFunction(buffer, (DBxAgregateFunction)expression, formatInfo);
       else
@@ -783,7 +799,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование выражения, возвращающего значение столбца.
     /// Для запросов к базе данных выполняется подстановка для ссылочных полей и указанием альяса таблицы, если задано.
-    /// Для DataView вызывается OnFormatColumnName.
+    /// Для <see cref="DataViewDBxSqlFormatter"/> вызывается OnFormatColumnName.
+    /// Если задано свойство <see cref="DBxFormatExpressionInfo.NullAsDefaultValue"/>, то добавляется неявный вызов функции COALESCE()
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="column">Выражение-столбец. Не может быть null</param>
@@ -851,7 +868,7 @@ namespace FreeLibSet.Data
     {
       OnFormatParamPlaceholder(buffer, paramIndex);
     }
-            
+
     /// <summary>
     /// Добавляет в <paramref name="buffer"/>.SB место для подстановки параметра, например, "@P1",
     /// "@P2",... Способы указания параметров в SQL-запросах зависят от базы данных
@@ -863,7 +880,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Подготовка значения, передаваемого в качестве параметра запроса.
-    /// Значение DBNull заменяется на null.
+    /// Значение <see cref="DBNull"/> заменяется на null.
     /// Затем вызывается виртуальный метод OnPrepareParamValue()
     /// </summary>
     /// <param name="value">Значение</param>
@@ -905,11 +922,10 @@ namespace FreeLibSet.Data
 
     #endregion
 
-
     #region Статический экземпляр класса
 
     /// <summary>
-    /// Статический экземпляр форматизатора SQL-запросов для объекта DataView
+    /// Статический экземпляр форматизатора SQL-запросов для объекта <see cref="DataView"/>.
     /// Используется для получения текстового представления
     /// </summary>
     public static readonly DBxSqlFormatter Default = new FreeLibSet.Data.DataViewDBxSqlFormatter();

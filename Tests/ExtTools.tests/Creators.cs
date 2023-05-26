@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Calendar;
 using System.Data;
+using FreeLibSet.Core;
 
 namespace ExtTools_tests
 {
@@ -403,6 +404,60 @@ namespace ExtTools_tests
       tbl.Rows.Add(row); // [2]
 
       return tbl;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Структура для тестирования функций, принимающих 1 аргумент
+  /// </summary>
+  public struct TestPair
+  {
+    // не буду использовать DictionaryEntry, вдруг она не допускает key=null
+
+    #region Конструктор
+
+    public TestPair(object source, object result)
+    {
+      _Source = source;
+      _Result = result;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    public object Source { get { return _Source; } }
+    private object _Source;
+
+    public object Result { get { return _Result; } }
+    private object _Result;
+
+    public override string ToString()
+    {
+      if (Object.ReferenceEquals(_Source, null))
+        return "null";
+      StringBuilder sb = new StringBuilder();
+      if (_Source is string)
+        sb.Append(DataTools.StrToCSharpString((string)_Source));
+      else if (_Source is byte[])
+        sb.Append(DataTools.BytesToHex((byte[])_Source, false));
+      else
+        sb.Append(_Source.ToString());
+
+      sb.Append(" (");
+      sb.Append(_Source.GetType().Name);
+      if (_Source is Array)
+      {
+        if (_Source.GetType().Name.EndsWith("[]", StringComparison.Ordinal))
+          sb.Remove(sb.Length - 2, 2);
+        sb.Append("[");
+        sb.Append(((Array)_Source).Length);
+        sb.Append("]");
+      }
+      sb.Append(")");
+      return sb.ToString();
     }
 
     #endregion

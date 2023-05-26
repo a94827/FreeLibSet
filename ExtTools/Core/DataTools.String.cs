@@ -56,8 +56,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> справа до нужной длины <paramref name="length"/> символом <paramref name="paddingChar"/>.
-    /// В-отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
-    /// чем Length. Также правильно обрабатывается <paramref name="s"/>=null.
+    /// В отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
+    /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
     /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
@@ -80,8 +80,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> справа до нужной длины <paramref name="length"/> пробелами.
-    /// В-отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
-    /// чем Length. Также правильно обрабатывается <paramref name="s"/>=null.
+    /// В отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
+    /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
     /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
@@ -95,8 +95,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> слева до нужной длины <paramref name="length"/> символом <paramref name="paddingChar"/>.
-    /// В-отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
-    /// чем Length. Также правильно обрабатывается <paramref name="s"/>=null.
+    /// В отличие от String.PadLeft(), выполняет обрезание строки, если она длиннее,
+    /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
     /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
@@ -119,8 +119,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> слева до нужной длины <paramref name="length"/> пробелами.
-    /// В-отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
-    /// чем Length. Также правильно обрабатывается <paramref name="s"/>=null.
+    /// В отличие от String.PadLeft(), выполняет обрезание строки, если она длиннее,
+    /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
     /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
@@ -1298,6 +1298,34 @@ namespace FreeLibSet.Core
     }
 
     #endregion
+
+    /// <summary>
+    /// Получение подстроки.
+    /// В отличие от стандартного метода String.Substring(), не выбрасывается исключение, если заданы неправильные аргументы.
+    /// При этом возвращаемая подстрока может оказаться короче, чем <paramref name="length"/>.
+    /// </summary>
+    /// <param name="s">Исходная строка. Если null, то возвращается пустая строка</param>
+    /// <param name="start">Начальная позиция в строке. Нумерация начинается с 0. Если больше, чем длина строки <paramref name="s"/>,
+    /// то возвращается пустая строка. Если задано отрицательное значение, то заменяется на 0 с соответствующим уменьшением аргумента <paramref name="length"/>.</param>
+    /// <param name="length">Длина подстроки. Если длина строки <paramref name="s"/> недостаточна для заданной позиции и длины подстроки, возвращается более короткое значение или пустая строка.
+    /// Если задано нулевое или отрицательное значение, возвращается пустая строка</param>
+    /// <returns>Подстрока</returns>
+    public static string Substring(string s, int start, int length)
+    {
+      if (String.IsNullOrEmpty(s))
+        return String.Empty;
+      if (start < 0)
+      {
+        length += start;
+        start = 0;
+      }
+      if (start + length > s.Length)
+        length = s.Length - start;
+      if (length <= 0)
+        return String.Empty;
+      else
+        return s.Substring(start, length);
+    }
 
     #region IsSubstring
 

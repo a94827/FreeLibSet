@@ -15,7 +15,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Вырождение фильтра.
-  /// Возвращается свойством DBxFilter.Degeneration
+  /// Возвращается свойством <see cref="DBxFilter"/>.Degeneration.
   /// </summary>
   [Serializable]
   public enum DBxFilterDegeneration
@@ -57,7 +57,7 @@ namespace FreeLibSet.Data
     public virtual DBxFilterDegeneration Degeneration { get { return DBxFilterDegeneration.None; } }
 
     /// <summary>
-    /// Получить список имен полей, требуемых для фильтра (включая вложенные фильтры)
+    /// Получить список имен полей, требуемых для фильтра (включая вложенные фильтры).
     /// Каждое поле в список входит один раз.
     /// </summary>
     /// <param name="list">Список для добавления полей. Не может быть null</param>
@@ -66,10 +66,10 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создание списка фильтров.
     /// Непереопределенный метод добавляет текущий фильтр в список.
-    /// Составные фильтры AndFilter, OrFilter и NotFilter вызывают метод рекурсивно для добавления входящих фильтров
+    /// Составные фильтры <see cref="AndFilter"/>, <see cref="OrFilter"/> и <see cref="NotFilter"/> вызывают метод рекурсивно для добавления входящих фильтров.
     /// </summary>
     /// <param name="list">Заполняемый список. Не может быть null</param>
-    public virtual void GetAllFilters(List<DBxFilter> list)
+    public virtual void GetAllFilters(IList<DBxFilter> list)
     {
       list.Add(this);
     }
@@ -77,9 +77,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Список <paramref name="rowValues"/> должен содержать все поля, которые требуются для фильтра и возвращаются GetColumnNames
+    /// Список <paramref name="rowValues"/> должен содержать все поля, которые требуются для фильтра и возвращаются GetColumnNames().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/></param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public abstract bool TestFilter(INamedValuesAccess rowValues);
 
@@ -88,10 +88,10 @@ namespace FreeLibSet.Data
     #region Методы работы с DataTable и DataView
 
     /// <summary>
-    /// Заполнить в таблице значение одного столбца для строк, проходящих фильтр
+    /// Заполнить в таблице значение одного столбца для строк, проходящих фильтр.
     /// </summary>
     /// <param name="table">Таблица, к которой будет применен фильтр</param>
-    /// <param name="columnName">Иия заполняемого столбца</param>
+    /// <param name="columnName">Имя заполняемого столбца</param>
     /// <param name="value">Значение поля</param>
     public void SetColumnValues(DataTable table, string columnName, object value)
     {
@@ -109,13 +109,13 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Присоединить указанный фильтр Filter к уже заданному в просмотре DataView.RowFilter
+    /// Присоединить текущий фильтр к уже заданному в просмотре <see cref="DataView"/>.RowFilter
     /// с помощью логической функции AND.
-    /// Если фильтр DataView.RowFilter не был установлен, то фильтр Filter устанавливается
-    /// напрямую, без использования функции AND
-    /// Если Filter "вырожден" (AlwaysTrue==true), то никаких действий не выполняется
+    /// Если фильтр <see cref="DataView"/>.RowFilter не был установлен, то фильтр устанавливается
+    /// напрямую, без использования функции "AND".
+    /// Если фильтр "вырожден" (<see cref="Degeneration"/>=AlwaysTrue, то никаких действий не выполняется
     /// </summary>
-    /// <param name="dv">Просмотр DataView, к которому присоединяется фильтр</param>
+    /// <param name="dv">Просмотр <see cref="DataView"/>, к которому присоединяется фильтр. Не может быть null.</param>
     public void AddToDataViewRowFilter(DataView dv)
     {
 #if DEBUG
@@ -127,15 +127,14 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Присоединить указанный фильтр Filter к уже заданному <paramref name="rowFilter"/>.
-    /// с помощью логической функции AND.
+    /// Присоединить текущий фильтр к уже заданной строке фильтра <paramref name="rowFilter"/>.
+    /// с помощью логической функции AND. Строка фильтра имеет формат свойства <see cref="DataView"/>.RowFilter.
     /// Если фильтр <paramref name="rowFilter"/> содержит пустую строку, то 
-    /// возвращается обычное представление фильтра ToString()
-    /// напрямую, без использования функции AND
-    /// Если Filter "вырожден" (Degeneration==AlwaysTrue), то никаких действий не выполняется.
+    /// возвращается обычное представление фильтра ToString() напрямую, без использования функции AND.
+    /// Если текущий фильтр "вырожден" (<see cref="Degeneration"/>=AlwaysTrue), то никаких действий не выполняется.
     /// </summary>
-    /// <param name="rowFilter">Текущий установленный фильтр в DataView.RowFilter</param>
-    /// <returns>Новое значение для DataView.RowFilter</returns>
+    /// <param name="rowFilter">Текущий установленный фильтр в <see cref="DataView"/>.RowFilter</param>
+    /// <returns>Новое значение для <see cref="DataView"/>.RowFilter</returns>
     public string AddToDataViewRowFilter(string rowFilter)
     {
       if (this.Degeneration == DBxFilterDegeneration.AlwaysTrue)
@@ -171,7 +170,7 @@ namespace FreeLibSet.Data
     #region Прочие методы
 
     /// <summary>
-    /// Возвращает текст фильтра в формате свойства DataView.RowFilter
+    /// Возвращает текст фильтра в формате свойства <see cref="DataView"/>.RowFilter.
     /// </summary>
     /// <returns>SQL-выражение</returns>
     public override string ToString()
@@ -208,7 +207,7 @@ namespace FreeLibSet.Data
     #region Операторы
 
     /// <summary>
-    /// Возвращает AndFilter, если оба фильтра заданы.
+    /// Возвращает <see cref="AndFilter"/>, если оба фильтра заданы.
     /// Учитывает вырожденные фильтры (свойство DBxFilter.Degeneration)
     /// </summary>
     /// <param name="filter1">Первый фильтр</param>
@@ -234,37 +233,34 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает OrFilter, если оба фильтра заданы.
-    /// Учитывает вырожденные фильтры (свойство DBxFilter.Degeneration).
+    /// Возвращает <see cref="OrFilter"/>, если оба фильтра заданы.
+    /// Если один из фильтров (или оба) равен null или вырожден (свойство <see cref="DBxFilter.Degeneration"/>=<see cref="DBxFilterDegeneration.AlwaysTrue"/>).
+    /// то возвращает null.
+    /// Если у одного из фильтров <see cref="DBxFilter.Degeneration"/>=<see cref="DBxFilterDegeneration.AlwaysFalse"/>, то возвращается второй фильтр
     /// </summary>
     /// <param name="filter1">Первый фильтр</param>
     /// <param name="filter2">Второй фильтр</param>
     /// <returns>Объединенный фильтр</returns>
     public static DBxFilter operator |(DBxFilter filter1, DBxFilter filter2)
     {
-      if (filter1 != null && filter1.Degeneration == DBxFilterDegeneration.AlwaysFalse)
-        filter1 = null;
-      if (filter2 != null && filter2.Degeneration == DBxFilterDegeneration.AlwaysFalse)
-        filter2 = null;
-
-      if (filter1 == null)
-        return filter2;
-
-      if (filter2 == null)
-        return filter1;
-
+      if (filter1 == null || filter2 == null)
+        return null;
       if (filter1.Degeneration == DBxFilterDegeneration.AlwaysTrue || filter2.Degeneration == DBxFilterDegeneration.AlwaysTrue)
-        return DummyFilter.AlwaysTrue;
+        return null;
+      if (filter1.Degeneration == DBxFilterDegeneration.AlwaysFalse)
+        return filter2;
+      if (filter2.Degeneration == DBxFilterDegeneration.AlwaysFalse)
+        return filter1;
 
       return new OrFilter(filter1, filter2);
     }
 
     /// <summary>
-    /// Возвращает NotFilter.
-    /// Если <paramref name="filter"/> сам является NotFilter, то возвращается NotFilter.BaseFilter.
+    /// Возвращает <see cref="NotFilter"/>.
+    /// Если <paramref name="filter"/> сам является <see cref="NotFilter"/>, то возвращается <see cref="NotFilter"/>.BaseFilter.
     /// </summary>
     /// <param name="filter">Исходный фильтр</param>
-    /// <returns>NotFilter</returns>
+    /// <returns>Инвертированный фильтр</returns>
     public static DBxFilter operator !(DBxFilter filter)
     {
       if (filter == null)
@@ -320,10 +316,10 @@ namespace FreeLibSet.Data
     #region Свойства
 
     /// <summary>
-    /// Обычно - имя поля
+    /// Основное выражение. Обычно - имя поля <see cref="DBxColumn"/>.
     /// </summary>
     public DBxExpression Expression { get { return _Expression; } }
-    private DBxExpression _Expression;
+    private readonly DBxExpression _Expression;
 
     //public string ColumnName
     //{
@@ -342,7 +338,7 @@ namespace FreeLibSet.Data
     #region Методы
 
     /// <summary>
-    /// Добавляет в список имена полей из выражения Expression.
+    /// Добавляет в список имена полей из выражения <see cref="Expression"/>.
     /// </summary>
     /// <param name="list">Заполняемый список. Не может быть null</param>
     public override sealed void GetColumnNames(DBxColumnList list)
@@ -352,7 +348,6 @@ namespace FreeLibSet.Data
 
     #endregion
   }
-
 
   /// <summary>
   /// Базовый класс фильтра, который использует два поля или выражения
@@ -386,21 +381,20 @@ namespace FreeLibSet.Data
     /// Первое выражение
     /// </summary>
     public DBxExpression Expression1 { get { return _Expression1; } }
-    private DBxExpression _Expression1;
+    private readonly DBxExpression _Expression1;
 
     /// <summary>
     /// Второе выражение
     /// </summary>
     public DBxExpression Expression2 { get { return _Expression2; } }
-    private DBxExpression _Expression2;
-
+    private readonly DBxExpression _Expression2;
 
     #endregion
 
     #region Методы
 
     /// <summary>
-    /// Добавляет в список имена полей из Expression1 и Expression2.
+    /// Добавляет в список имена полей из <see cref="Expression1"/> и <see cref="Expression2"/>.
     /// </summary>
     /// <param name="list">Заполняемый список. Не может быть null</param>
     public override sealed void GetColumnNames(DBxColumnList list)
@@ -458,7 +452,7 @@ namespace FreeLibSet.Data
   #region Перечисление CompareKind
 
   /// <summary>
-  /// Режимы сравнения поля с константой для фильтра ValueFilter
+  /// Режимы сравнения для фильтров <see cref="CompareFilter"/> и <see cref="ValueFilter"/>
   /// </summary>
   [Serializable]
   public enum CompareKind
@@ -498,9 +492,14 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр сравнения значений двух полей вида "Поле1=Поле2" или для
-  /// отношений "больше" и "меньше" или "не равно"
-  /// Реакция на сравнение "больше" и "меньше", если одно из полей имеет значение NULL не предсказуема,
-  /// поэтому следует проверять NULL в отдельном фильтре или использовать обязательные поля
+  /// отношений "больше" и "меньше" или "не равно".
+  /// Если одно из выражений (обычно, второе) является <see cref="DBxConst"/>, возвращающее NULL, то выполняется
+  /// сравнение с помощью SQL-выражений "IS NULL" / "IS NOT NULL".
+  /// Если не указано иное, когда одно из выражений возвращает NULL, строка считается не прошедшей фильтр, что соответствует стандарту SQL.
+  /// Свойство NullAsDefaultValue включает встроенное использование функции "COALESCE()", при этом значение NULL заменяется на нулевое значение соответствующего типа.
+  /// Это позволяет отобрать строки, содержащие как 0, так и NULL в соответствующем поле, включая все 6 операций сравнения <see cref="CompareKind"/>.
+  /// 
+  /// Если требуется сравнение с константным выражением, удобнее использовать <see cref="ValueFilter"/>.
   /// </summary>
   [Serializable]
   public class CompareFilter : DBxTwoExpressionsFilter
@@ -524,6 +523,29 @@ namespace FreeLibSet.Data
       _Kind = kind;
       _NullAsDefaultValue = nullAsDefaultValue;
       _ColumnType = columnType;
+
+      TestNullConst(expression1);
+      TestNullConst(expression2);
+    }
+
+    private void TestNullConst(DBxExpression expression)
+    {
+      DBxConst constExpr = expression.GetConst();
+      if (constExpr == null)
+        return;
+      if (constExpr.Value == null)
+      {
+        switch (_Kind)
+        {
+          case CompareKind.Equal:
+          case CompareKind.NotEqual:
+            break;
+          default:
+            throw new ArgumentException("Так как одно из выражений является константой NULL, нельзя задавать режим сравнения Kind=" + _Kind.ToString() + ". Допускается только сравнение на равенство или неравенство");
+        }
+        if (_NullAsDefaultValue)
+          throw new ArgumentException("Так как одно из выражений является константой NULL, нельзя задавать режим NullAsDefaultValue");
+      }
     }
 
     /// <summary>
@@ -612,10 +634,10 @@ namespace FreeLibSet.Data
     /// <param name="columnName1">Имя первого поля (левая часть сравнения)</param>
     /// <param name="columnName2">Второе выражение (правая часть сравнения)</param>
     public CompareFilter(string columnName1, string columnName2)
-      : this(new DBxColumn(columnName1), 
+      : this(new DBxColumn(columnName1),
           new DBxColumn(columnName2), // 25.12.2020
-          CompareKind.Equal, 
-          false, 
+          CompareKind.Equal,
+          false,
           DBxColumnType.Unknown)
     {
     }
@@ -627,24 +649,73 @@ namespace FreeLibSet.Data
     #region Свойства
 
     /// <summary>
-    /// Режим сравнения "равно", "больше" или "меньше"
+    /// Режим сравнения "равно", "не равно", "больше", "меньше", "больше или равно", "меньше или равно".
     /// </summary>
     public CompareKind Kind { get { return _Kind; } }
-    private CompareKind _Kind;
+    private readonly CompareKind _Kind;
 
     /// <summary>
-    /// Если true и поле имеет значение NULL, то оно приводится к значению по умолчанию для заданного типа
+    /// Режим для значений поля (или выражения) NULL.
+    /// Если false, то используются стандартные правила SQL: строка не проходит фильтр, если хотя бы одно из выражений возвращает NULL.
+    /// Если true и поле/выражение имеет значение NULL, то оно приводится к значению по умолчанию для заданного типа (0, false, пустая строка).
+    /// Приведенное значение сравнивается с другим значением. Правило действует и для Expression1 и для Expression2.
     /// </summary>
     public bool NullAsDefaultValue { get { return _NullAsDefaultValue; } }
-    private bool _NullAsDefaultValue;
+    private readonly bool _NullAsDefaultValue;
 
     /// <summary>
     /// Тип данных.
     /// Имеет смысл задавать только в тех случаях, когда сравниваются два столбца, а не столбец и константа, а тип данных не может быть
-    /// определен из структуры базы данных
+    /// определен из структуры базы данных.
     /// </summary>
     public DBxColumnType ColumnType { get { return _ColumnType; } }
-    private DBxColumnType _ColumnType;
+    private readonly DBxColumnType _ColumnType;
+
+    /// <summary>
+    /// Возвращает <see cref="ColumnType"/>, если свойство определено, или тип данных из второго или первого выражения, если они - константы
+    /// </summary>
+    internal DBxColumnType ColumnTypeInternal
+    {
+      get
+      {
+        if (_ColumnType != DBxColumnType.Unknown)
+          return _ColumnType;
+
+        DBxConst cnst2 = Expression2.GetConst();
+        if (cnst2 != null)
+          return cnst2.ColumnType;
+
+        DBxConst cnst1 = Expression1.GetConst();
+        if (cnst1 != null)
+          return cnst1.ColumnType;
+
+        return DBxColumnType.Unknown;
+      }
+    }
+
+    /// <summary>
+    /// Свойство возвращает true, если выполняется сравнение с константой NULL
+    /// </summary>
+    public bool ComparisionToNull
+    {
+      get
+      {
+        DBxConst cnst2 = Expression2.GetConst();
+        if (cnst2 != null)
+        {
+          if (Object.ReferenceEquals(cnst2.Value, null))
+            return true;
+        }
+
+        DBxConst cnst1 = Expression1.GetConst();
+        if (cnst1 != null)
+        {
+          if (Object.ReferenceEquals(cnst1.Value, null))
+            return true;
+        }
+        return false;
+      }
+    }
 
     #endregion
 
@@ -654,28 +725,82 @@ namespace FreeLibSet.Data
     /// Проверка условия фильтра для строки данных.
     /// Использует метод Comparer.DefaultInvariant.Compare().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/></param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      object v1 = Expression1.GetValue(rowValues, NullAsDefaultValue);
-      object v2 = Expression2.GetValue(rowValues, NullAsDefaultValue);
+      object v1 = Expression1.GetValue(rowValues);
+      object v2 = Expression2.GetValue(rowValues);
 
-      if (NullAsDefaultValue && ColumnType != DBxColumnType.Unknown)
+      DBxColumnType currColumnType = this.ColumnType;
+
+      DBxConst cnst2 = Expression2.GetConst();
+      if (cnst2 != null)
       {
-        if (v1 == null)
-          v1 = DBxTools.GetDefaultValue(ColumnType);
-        if (v2 == null)
-          v2 = DBxTools.GetDefaultValue(ColumnType);
+        if (cnst2.Value == null)
+        {
+          switch (Kind)
+          {
+            case CompareKind.Equal:
+              return v1 == null;
+            case CompareKind.NotEqual:
+              return v1 != null;
+            default:
+              throw new BugException("Kind=" + Kind.ToString());
+          }
+        }
+        if (currColumnType == DBxColumnType.Unknown)
+          currColumnType = cnst2.ColumnType;
       }
 
-      if (Object.ReferenceEquals(v1, null) && Object.ReferenceEquals(v2, null))
-        return true;
+      DBxConst cnst1 = Expression1.GetConst();
+      if (cnst1 != null)
+      {
+        if (cnst1.Value == null)
+        {
+          switch (Kind)
+          {
+            case CompareKind.Equal:
+              return v2 == null;
+            case CompareKind.NotEqual:
+              return v2 != null;
+            default:
+              throw new BugException("Kind=" + Kind.ToString());
+          }
+        }
+        if (currColumnType == DBxColumnType.Unknown)
+          currColumnType = cnst1.ColumnType;
+      }
+
+      if (NullAsDefaultValue && currColumnType != DBxColumnType.Unknown)
+      {
+        if (v1 == null)
+          v1 = DBxTools.GetDefaultValue(currColumnType);
+        if (v2 == null)
+          v2 = DBxTools.GetDefaultValue(currColumnType);
+      }
+
+      if (v1 != null)
+        v1 = DBxTools.Convert(v1, currColumnType);
+      if (v2 != null)
+        v2 = DBxTools.Convert(v2, currColumnType);
+
+      return TestFilter(v1, v2, this.Kind);
+    }
+
+    internal static bool TestFilter(object v1, object v2, CompareKind kind)
+    {
+      //if (Object.ReferenceEquals(v1, null) && Object.ReferenceEquals(v2, null))
+      //  return true;
       if (Object.ReferenceEquals(v1, null) || Object.ReferenceEquals(v2, null))
         return false;
 
-      int res = Comparer.DefaultInvariant.Compare(v1, v2);
-      switch (Kind)
+      int res;
+      if (DataTools.IsNumericType(v1.GetType()) && DataTools.IsNumericType(v2.GetType()))
+        res = DataTools.CompareNumbers(v1, v2);
+      else
+        res = Comparer.DefaultInvariant.Compare(v1, v2);
+      switch (kind)
       {
         case CompareKind.Equal: return res == 0;
         case CompareKind.NotEqual: return res != 0;
@@ -684,7 +809,7 @@ namespace FreeLibSet.Data
         case CompareKind.GreaterOrEqualThan: return res >= 0;
         case CompareKind.LessOrEqualThan: return res <= 0;
         default:
-          throw new BugException("Неизвестный Kind=" + Kind.ToString());
+          throw new ArgumentException("Неизвестный Kind=" + kind.ToString(), "kind");
       }
     }
 
@@ -693,10 +818,12 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр сравнения значения поле с константым значением.
-  /// Этот фильтр является частным случаем CompareFilter, когда первым выражением является DBxColumn, а вторым выражением является константа DBxConst.
-  /// Если требуется сравнение не с константой, а одного выражения с другим, используйте CompareFilter.
+  /// Этот фильтр является частным случаем <see cref="CompareFilter"/>, когда первым выражением является <see cref="DBxColumn"/>, а вторым выражением является константа <see cref="DBxConst"/>.
+  /// Если требуется сравнение не с константой, а одного выражения с другим, используйте <see cref="CompareFilter"/>.
   /// Класс переопределяет только конструкторы базового класса.
   /// Свойство NullAsDefaultValue устанавливается автоматически, в зависимости от значения, с которым выполняется сравнение.
+  /// 
+  /// Если требуется сравнение строкового поля без учета регистра символов, используйте <see cref="StringValueFilter"/>.
   /// </summary>
   [Serializable]
   public class ValueFilter : CompareFilter
@@ -705,35 +832,63 @@ namespace FreeLibSet.Data
 
     #region Для выражения
 
+
     /// <summary>
     /// Создает фильтр сравнения значения выражения с указанием условия.
     /// </summary>
-    /// <param name="expression">Выражение для левой части условия (обычно DBxColumn)</param>
+    /// <param name="expression">Выражение для левой части условия (обычно <see cref="DBxColumn"/>)</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="kind">Режим сравнения</param>
-    /// <param name="dataType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
-    public ValueFilter(DBxExpression expression, object constValue, CompareKind kind, Type dataType)
-      : base(expression, new DBxConst(constValue, DBxTools.DataTypeToColumnType(dataType)), kind, GetNullAsDefaultValue(constValue), DBxTools.DataTypeToColumnType(dataType))
+    /// <param name="columnType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
+    public ValueFilter(DBxExpression expression, object constValue, CompareKind kind, DBxColumnType columnType)
+      : base(expression, new DBxConst(constValue, columnType), kind, GetNullAsDefaultValue(constValue, kind, columnType), columnType)
     {
+    }
+
+    private static bool GetNullAsDefaultValue(object constValue, CompareKind kind, DBxColumnType columnType)
+    {
+      if (constValue == null)
+        return false;
+      if (constValue is DBNull)
+        return false;
+
+      // 15.05.2023. Больше не является исключением
+      //if (constValue is DateTime)
+      //  return false;
+
+      object emptyValue;
+      if (columnType == DBxColumnType.Unknown)
+        emptyValue = DataTools.GetEmptyValue(constValue.GetType());
+      else
+      {
+        // 22.05.2023
+        emptyValue = DBxTools.GetDefaultValue(columnType); // Для Int32 возвращает (int)0
+        emptyValue = DBxTools.Convert(emptyValue, columnType); // преобразуется в Int64
+        constValue = DBxTools.Convert(constValue, columnType);
+      }
+
+      //return constValue.Equals(emptyValue);
+      return CompareFilter.TestFilter(emptyValue, constValue, kind);
     }
 
     /// <summary>
     /// Создает фильтр сравнения значения выражения с указанием условия.
     /// </summary>
-    /// <param name="expression">Выражение для левой части условия (обычно DBxColumn)</param>
+    /// <param name="expression">Выражение для левой части условия (обычно <see cref="DBxColumn"/>)</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="kind">Режим сравнения</param>
-    /// <param name="columnType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
-    public ValueFilter(DBxExpression expression, object constValue, CompareKind kind, DBxColumnType columnType)
-      : base(expression, new DBxConst(constValue, columnType), kind, GetNullAsDefaultValue(constValue), columnType)
+    /// <param name="dataType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
+    public ValueFilter(DBxExpression expression, object constValue, CompareKind kind, Type dataType)
+      : this(expression, constValue, kind, DBxTools.DataTypeToColumnType(dataType))
     {
     }
+
 
     /// <summary>
     /// Создает фильтр сравнения значения выражения с указанием условия.
     /// Нельзя использовать эту версию, если константа равна null а поле может принимать значения NULL.
     /// </summary>
-    /// <param name="expression">Выражение для левой части условия (обычно DBxColumn)</param>
+    /// <param name="expression">Выражение для левой части условия (обычно <see cref="DBxColumn"/>)</param>
     /// <param name="constValue">Значение константы</param>
     /// <param name="kind">Режим срав</param>
     public ValueFilter(DBxExpression expression, object constValue, CompareKind kind)
@@ -742,32 +897,32 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает фильтр проверки выражения на равенство значению
+    /// Создает фильтр проверки выражения на равенство значению.
     /// </summary>
-    /// <param name="expression">Выражение для левой части условия (обычно DBxColumn)</param>
+    /// <param name="expression">Выражение для левой части условия (обычно <see cref="DBxColumn"/>)</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="dataType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
     public ValueFilter(DBxExpression expression, object constValue, Type dataType)
-      : base(expression, new DBxConst(constValue, DBxTools.DataTypeToColumnType(dataType)), CompareKind.Equal, GetNullAsDefaultValue(constValue), DBxTools.DataTypeToColumnType(dataType))
+      : this(expression, constValue, CompareKind.Equal, DBxTools.DataTypeToColumnType(dataType))
     {
     }
 
     /// <summary>
-    /// Создает фильтр проверки выражения на равенство значению
+    /// Создает фильтр проверки выражения на равенство значению.
     /// </summary>
-    /// <param name="expression">Выражение для левой части условия (обычно DBxColumn)</param>
+    /// <param name="expression">Выражение для левой части условия (обычно <see cref="DBxColumn"/>)</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="columnType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
     public ValueFilter(DBxExpression expression, object constValue, DBxColumnType columnType)
-      : base(expression, new DBxConst(constValue, columnType), CompareKind.Equal, GetNullAsDefaultValue(constValue), columnType)
+      : this(expression, constValue, CompareKind.Equal, columnType)
     {
     }
 
     /// <summary>
-    /// Создает фильтр проверки поля на равенство значению
+    /// Создает фильтр проверки поля на равенство значению.
     /// Нельзя использовать эту версию, если константа равна null а поле может принимать значения NULL.
     /// </summary>
-    /// <param name="expression">Выражение для левой части условия (обычно DBxColumn)</param>
+    /// <param name="expression">Выражение для левой части условия (обычно <see cref="DBxColumn"/>)</param>
     /// <param name="constValue">Значение константы</param>
     public ValueFilter(DBxExpression expression, object constValue)
       : this(expression, constValue, CompareKind.Equal, DBxColumnType.Unknown)
@@ -784,9 +939,9 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя поля</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="kind">Режим сравнения</param>
-    /// <param name="dataType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
-    public ValueFilter(string columnName, object constValue, CompareKind kind, Type dataType)
-      : base(new DBxColumn(columnName), new DBxConst(constValue, DBxTools.DataTypeToColumnType(dataType)), kind, GetNullAsDefaultValue(constValue), DBxTools.DataTypeToColumnType(dataType))
+    /// <param name="columnType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
+    public ValueFilter(string columnName, object constValue, CompareKind kind, DBxColumnType columnType)
+      : this(new DBxColumn(columnName), constValue, kind, columnType)
     {
     }
 
@@ -796,9 +951,9 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя поля</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="kind">Режим сравнения</param>
-    /// <param name="columnType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
-    public ValueFilter(string columnName, object constValue, CompareKind kind, DBxColumnType columnType)
-      : base(new DBxColumn(columnName), new DBxConst(constValue, columnType), kind, GetNullAsDefaultValue(constValue), columnType)
+    /// <param name="dataType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
+    public ValueFilter(string columnName, object constValue, CompareKind kind, Type dataType)
+      : this(new DBxColumn(columnName), constValue, kind, DBxTools.DataTypeToColumnType(dataType))
     {
     }
 
@@ -808,37 +963,37 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <param name="constValue">Значение константы</param>
-    /// <param name="kind">Режим срав</param>
+    /// <param name="kind">Режим сравнения</param>
     public ValueFilter(string columnName, object constValue, CompareKind kind)
       : this(columnName, constValue, kind, DBxColumnType.Unknown)
     {
     }
 
     /// <summary>
-    /// Создает фильтр проверки поля на равенство значению
+    /// Создает фильтр проверки поля на равенство значению.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="dataType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
     public ValueFilter(string columnName, object constValue, Type dataType)
-      : base(new DBxColumn(columnName), new DBxConst(constValue, DBxTools.DataTypeToColumnType(dataType)), CompareKind.Equal, GetNullAsDefaultValue(constValue), DBxTools.DataTypeToColumnType(dataType))
+      : this(columnName, constValue, CompareKind.Equal, DBxTools.DataTypeToColumnType(dataType))
     {
     }
 
     /// <summary>
-    /// Создает фильтр проверки поля на равенство значению
+    /// Создает фильтр проверки поля на равенство значению.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <param name="constValue">Константное значение</param>
     /// <param name="columnType">Тип данных, который может хранится в поле. Нужен для сравнения, когда <paramref name="constValue"/> равно null</param>
     public ValueFilter(string columnName, object constValue, DBxColumnType columnType)
-      : base(new DBxColumn(columnName), new DBxConst(constValue, columnType), CompareKind.Equal, GetNullAsDefaultValue(constValue), columnType)
+      : this(columnName, constValue, CompareKind.Equal, columnType)
     {
     }
 
     /// <summary>
-    /// Создает фильтр проверки поля на равенство значению
-    /// Нельзя использовать эту версию, если константа равна null а поле может принимать значения NULL.
+    /// Создает фильтр проверки поля на равенство значению.
+    /// Нельзя использовать эту версию, если константа равна null а поле может принимать значения NULL, так как требуется информация о типе поля.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <param name="constValue">Значение константы</param>
@@ -849,18 +1004,6 @@ namespace FreeLibSet.Data
 
     #endregion
 
-    private static bool GetNullAsDefaultValue(object constValue)
-    {
-      if (constValue == null)
-        return false;
-      if (constValue is DBNull)
-        return false;
-      if (constValue is DateTime)
-        return false;
-
-      return constValue.Equals(DataTools.GetEmptyValue(constValue.GetType()));
-    }
-
     #endregion
 
     #region Вспомогательные методы
@@ -868,8 +1011,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создать фильтры по значениям полей и объединить их функцией AND.
     /// Если поля не заданы, возвращается null.
-    /// Если задано только одно поле, то возвращается ValueFilter, иначе
-    /// возвращается AndFilter.
+    /// Если задано только одно поле, то возвращается <see cref="ValueFilter"/>, иначе
+    /// возвращается <see cref="AndFilter"/>.
     /// </summary>
     /// <param name="columnNames">Имена полей</param>
     /// <param name="values">Значения полей</param>
@@ -891,8 +1034,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создать фильтры по значениям полей и объединить их функцией AND.
     /// Если поля не заданы, возвращается null.
-    /// Если задано только одно поле, то возвращается ValueFilter, иначе
-    /// возвращается AndFilter.
+    /// Если задано только одно поле, то возвращается <see cref="ValueFilter"/>, иначе
+    /// возвращается <see cref="AndFilter"/>.
     /// </summary>
     /// <param name="columnNamesAndValues">Имена и значения полей</param>
     /// <returns>Объект фильтра или null</returns>
@@ -921,16 +1064,17 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Фильтр по значению поля идентификатора Id или другого поля ColumnName. Допустимое значение
-  /// идентификатора может быть одно или несколько.
+  /// Фильтр по значению поля идентификатора "Id" или другого целочисленного поля ColumnName.
+  /// Задается список из одного или нескольких идентификатов.
   /// Реализует условие вида: "Поле/Выражение IN ( Список значений )"
+  /// Нулевой идентификатор не может быть включен в список.
   /// </summary>
   [Serializable]
   public class IdsFilter : DBxSingleExpressionFilter
   {
     #region Конструкторы
 
-    #region С заданным именем поля
+    #region С DBxExpression
 
     /// <summary>
     /// Создает фильтр для выражения.
@@ -954,6 +1098,39 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
+    /// Создает фильтр для выражения.
+    /// Массив идентификаторов не может быть пустым и не может содержать значения 0.
+    /// </summary>
+    /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
+    /// <param name="ids">Массив идентификаторов</param>
+    public IdsFilter(DBxExpression expression, Int32[] ids)
+      : this(expression, new IdList(ids))
+    {
+    }
+
+    /// <summary>
+    /// Создает фильтр для выражения.
+    /// Идентификатор не может быть равен 0.
+    /// </summary>
+    /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
+    /// <param name="id">Идентификатор</param>
+    public IdsFilter(DBxExpression expression, Int32 id)
+      : this(expression, new IdList(new Int32[1] { CheckNotZero(id) }))
+    {
+    }
+
+    private static Int32 CheckNotZero(Int32 id)
+    {
+      if (id == 0)
+        throw new ArgumentException("id=0", "id");
+      return id;
+    }
+
+    #endregion
+
+    #region С заданным именем поля
+
+    /// <summary>
     /// Создает фильтр для заданного поля.
     /// Список идентификаторов не может быть пустым.
     /// Список <paramref name="ids"/> переводится в режим "Только чтение".
@@ -962,17 +1139,6 @@ namespace FreeLibSet.Data
     /// <param name="ids">Список идентификаторов. Не может быть пустым</param>
     public IdsFilter(string columnName, IdList ids)
       : this(new DBxColumn(columnName), ids)
-    {
-    }
-
-    /// <summary>
-    /// Создает фильтр для выражения.
-    /// Массив идентификаторов не может быть пустым и не может содержать значения 0.
-    /// </summary>
-    /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
-    /// <param name="ids">Массив идентификаторов</param>
-    public IdsFilter(DBxExpression expression, Int32[] ids)
-      : this(expression, new IdList(ids))
     {
     }
 
@@ -987,26 +1153,15 @@ namespace FreeLibSet.Data
     {
     }
 
-    /// <summary>
-    /// Создает фильтр для выражения.
-    /// Идентификатор не может быть равен 0.
-    /// </summary>
-    /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
-    /// <param name="id">Идентификатор</param>
-    public IdsFilter(DBxExpression expression, Int32 id)
-      : this(expression, new IdList(new Int32[1] { id }))
-    {
-    }
-
 
     /// <summary>
     /// Создает фильтр для заданного поля.
     /// Идентификатор не может быть равен 0.
     /// </summary>
-    /// <param name="ColumnName">Имя числового столбца</param>
+    /// <param name="columnName">Имя числового столбца</param>
     /// <param name="id">Идентификатор</param>
-    public IdsFilter(string ColumnName, Int32 id)
-      : this(new DBxColumn(ColumnName), new IdList(new Int32[1] { id }))
+    public IdsFilter(string columnName, Int32 id)
+      : this(new DBxColumn(columnName), new IdList(new Int32[1] { CheckNotZero(id) }))
     {
     }
 
@@ -1056,7 +1211,7 @@ namespace FreeLibSet.Data
     /// Не может быть пустым и содержать значения 0.
     /// </summary>
     public IdList Ids { get { return _Ids; } }
-    private IdList _Ids;
+    private readonly IdList _Ids;
 
     #endregion
 
@@ -1064,13 +1219,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод IdList.Contains().
+    /// Вызывает метод <see cref="IdList"/>.Contains().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      Int32 v = DataTools.GetInt(Expression.GetValue(rowValues, true));
+      Int32 v = DataTools.GetInt(Expression.GetValue(rowValues));
       return Ids.Contains(v);
     }
 
@@ -1125,18 +1280,19 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр по массиву значений произвольного типа вида "Поле/Выражение IN (Значение1, Значение2, ...)".
-  /// Для числовых полей идентификаторов используйте IdsFilter.
+  /// Для числовых полей идентификаторов используйте <see cref="IdsFilter"/>.
+  /// При сравнении считается, что значение поля NULL эквивалентно нулевому значению, если оно присутствует в списке значений.
   /// </summary>
   [Serializable]
   public class ValuesFilter : DBxSingleExpressionFilter
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
     /// Создает фильтр
     /// </summary>
     /// <param name="expression">Выражение</param>
-    /// <param name="values">Допустимые значения. Не может быть пустым массивом</param>
+    /// <param name="values">Допустимые значения. Не может быть пустым массивом. Не может содержать значения null. Значения должны быть одного типа</param>
     /// <param name="columnType">Тип данных</param>
     public ValuesFilter(DBxExpression expression, Array values, DBxColumnType columnType)
       : base(expression)
@@ -1147,6 +1303,16 @@ namespace FreeLibSet.Data
 #endif
       if (values.Length == 0)
         throw new ArgumentException("Список значений пуст", "values");
+      Type t = null;
+      foreach (object value in values)
+      {
+        if (value == null || (value is DBNull))
+          throw new ArgumentException("Массив не может содержать значения null или DBNull", "values");
+        if (t == null)
+          t = value.GetType();
+        else if (t != value.GetType())
+          throw new ArgumentNullException("Массив должен содержать однотипные значения. Первый элемент массива имеет тип " + t.ToString() + ", но есть значение типа " + value.GetType().ToString());
+      }
 
       _Values = values;
       _ColumnType = columnType;
@@ -1191,15 +1357,41 @@ namespace FreeLibSet.Data
     /// Допустимые значения
     /// </summary>
     public Array Values { get { return _Values; } }
-    private Array _Values;
+    private readonly Array _Values;
 
     /// <summary>
     /// Тип данных.
-    /// Имеет смысл задавать только в случе, когда тип данных в массиве не соответствует типу данных столбца,
+    /// Имеет смысл задавать только в случае, когда тип данных в массиве не соответствует типу данных столбца,
     /// например, для столбца типа Guid, а Values содержит строки
     /// </summary>
     public DBxColumnType ColumnType { get { return _ColumnType; } }
-    private DBxColumnType _ColumnType;
+    private readonly DBxColumnType _ColumnType;
+
+    internal DBxColumnType ColumnTypeInternal
+    {
+      get
+      {
+        if (_ColumnType != DBxColumnType.Unknown)
+          return _ColumnType;
+        return DBxTools.ValueToColumnType(_Values.GetValue(0));
+      }
+    }
+
+    /// <summary>
+    /// Возвращает true, если в списке значений <see cref="Values"/> имеется значение по умолчанию, и, следовательно, значения NULL должны проходить фильтр
+    /// </summary>
+    public bool NullAsDefaultValue
+    {
+      get
+      {
+        foreach (object v in _Values)
+        {
+          if (DataTools.IsEmptyValue(DBxTools.Convert(v, _ColumnType)))
+            return true;
+        }
+        return false;
+      }
+    }
 
     #endregion
 
@@ -1207,23 +1399,40 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Сравнивает значение поля с каждым значением в списке Values и возвращает true в случае обнаружения совпадения.
+    /// Сравнивает значение поля с каждым значением в списке <see cref="Values"/> и возвращает true в случае обнаружения совпадения.
     /// Использует метод Comparer.DefaultInvariant.Compare() для сравнения.
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      if (Values.Length == 0)
-        return false; // в текущей реализации не может быть никогда
+      //if (Values.Length == 0)
+      //  return false; // в текущей реализации не может быть никогда
 
-      object v = Expression.GetValue(rowValues, true);
-      if (v is DBNull || Object.ReferenceEquals(v, null))
-        v = DataTools.GetEmptyValue(Values.GetValue(0).GetType()); // ?? надо ли?
+      DBxColumnType colType = this.ColumnType;
+      if (colType == DBxColumnType.Unknown)
+        colType = DBxTools.DataTypeToColumnType(Values.GetValue(0).GetType());
+
+      object v = Expression.GetValue(rowValues);
+      v = DBxTools.Convert(v, colType); // в том числе, преобразует null в 0.
+#if DEBUG
+      if (Object.ReferenceEquals(v, null))
+        throw new NullReferenceException("После вызова Convert() возвращен null");
+#endif
+      bool isNumeric = DataTools.IsNumericType(v.GetType()) && DataTools.IsNumericType(Values.GetValue(0).GetType());
+      bool isTypeDiff = v.GetType() != Values.GetValue(0).GetType();
 
       for (int i = 0; i < Values.Length; i++)
       {
-        int res = Comparer.DefaultInvariant.Compare(v, Values.GetValue(i));
+        object thisV = Values.GetValue(i);
+        if (isTypeDiff)
+          thisV = DBxTools.Convert(thisV, colType); // 16.05.2023
+
+        int res;
+        if (isNumeric)
+          res = DataTools.CompareNumbers(v, thisV);
+        else
+          res = Comparer.DefaultInvariant.Compare(v, thisV);
         if (res == 0)
           return true;
       }
@@ -1236,9 +1445,10 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр по подзапросу в виде "Поле/Выражение IN (SELECT ...)".
-  /// Этот фильтр не должен использоваться в автономных просмотрах DataView, так как не поддерживает метод TestFilter()
+  /// Этот фильтр не должен использоваться в автономных просмотрах <see cref="DataView"/>, так как не поддерживает метод TestFilter()
   /// </summary>
   [Serializable]
+  [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
   public class InSelectFilter : DBxSingleExpressionFilter // TODO: Пока не работает, т.к. не знаю, как форматировать подзапросы
   {
     #region Конструктор
@@ -1249,18 +1459,18 @@ namespace FreeLibSet.Data
     /// <param name="expression">Выражение</param>
     /// <param name="selectInfo">Подзапрос</param>
     /// <param name="columnType">Тип данных</param>
-    public InSelectFilter (DBxExpression expression, DBxSelectInfo selectInfo, DBxColumnType columnType)
+    public InSelectFilter(DBxExpression expression, DBxSelectInfo selectInfo, DBxColumnType columnType)
       : base(expression)
     {
 #if DEBUG
       if (selectInfo == null)
         throw new ArgumentNullException("selectInfo");
 #endif
-      if(selectInfo.Expressions.Count!=1)
+      if (selectInfo.Expressions.Count != 1)
         throw new ArgumentException("В подзапросе должно в результат входить только одно поле/выражение", "selectInfo");
-      if (selectInfo.OrderBy!=null)
+      if (selectInfo.OrderBy != null)
         throw new ArgumentException("В подзапросе не должно быть выражения ORDER BY", "selectInfo");
-      if (selectInfo.MaxRecordCount!=0)
+      if (selectInfo.MaxRecordCount != 0)
         throw new ArgumentException("В подзапросе не должно быть ограничения на количество записей", "selectInfo");
       if (selectInfo.HasGroupBy)
         throw new ArgumentException("В подзапросе не должно быть выражения GROUP BY", "selectInfo");
@@ -1309,15 +1519,15 @@ namespace FreeLibSet.Data
     /// Подзапрос
     /// </summary>
     public DBxSelectInfo SelectInfo { get { return _SelectInfo; } }
-    private DBxSelectInfo _SelectInfo;
+    private readonly DBxSelectInfo _SelectInfo;
 
     /// <summary>
     /// Тип данных.
-    /// Имеет смысл задавать только в случе, когда тип данных в массиве не соответствует типу данных столбца,
+    /// Имеет смысл задавать только в случае, когда тип данных в массиве не соответствует типу данных столбца,
     /// например, для столбца типа Guid, а Values содержит строки
     /// </summary>
     public DBxColumnType ColumnType { get { return _ColumnType; } }
-    private DBxColumnType _ColumnType;
+    private readonly DBxColumnType _ColumnType;
 
     #endregion
 
@@ -1401,9 +1611,12 @@ namespace FreeLibSet.Data
 #if DEBUG
       if (filters == null)
         throw new ArgumentNullException("filters");
+#endif
+      if (filters.Length < 2)
+        throw new ArgumentException("Длина массива не может быть меньше 2. Используйте статический метод FromArray()");
+
       if (Array.IndexOf<DBxFilter>(filters, null) >= 0)
         throw new ArgumentException("Массив фильтров не может содержать значения null", "filters");
-#endif
       _Filters = filters;
     }
 
@@ -1415,7 +1628,7 @@ namespace FreeLibSet.Data
     /// Список фильтров
     /// </summary>
     public DBxFilter[] Filters { get { return _Filters; } }
-    private DBxFilter[] _Filters;
+    private readonly DBxFilter[] _Filters;
 
     #endregion
 
@@ -1464,7 +1677,7 @@ namespace FreeLibSet.Data
     /// Сначала добавляет себя в список фильтров, затем рекурсивно вызывает метод для всех входящий фильтров
     /// </summary>
     /// <param name="list">Заполняемый список фильтров. Не может быть null</param>
-    public override void GetAllFilters(List<DBxFilter> list)
+    public override void GetAllFilters(IList<DBxFilter> list)
     {
       base.GetAllFilters(list);
       for (int i = 0; i < _Filters.Length; i++)
@@ -1475,7 +1688,7 @@ namespace FreeLibSet.Data
     /// Проверка условия фильтра для строки данных.
     /// Вызывает метод для всех входящих в список фильтров и возвращает false, если хотя бы один фильтр вернул false.
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
@@ -1494,33 +1707,41 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создание AND-фильтра из массива фильтров по необходимости, если число
     /// фильтров в массиве больше 1. Если список содержит только один фильтр,
-    /// то он возвращается. Если список пустой, возвращается null
+    /// то он возвращается. Если список пустой, возвращается null.
     /// </summary>
-    /// <param name="filters">Массив фильтров</param>
+    /// <param name="filters">Массив фильтров. Может быть null, но не может содержать значения null</param>
     /// <returns>Фильтр или null</returns>
     public static DBxFilter FromArray(DBxFilter[] filters)
     {
       if (filters == null)
         return null;
 
-      // 18.02.2019
-      // Проверяем вырожденные фильтры
+      // 18.02.2019, 25.05.2023
+      // Проверяем вырожденность фильтров
+      bool hasAlwaysTrue = false;
       for (int i = 0; i < filters.Length; i++)
       {
         switch (filters[i].Degeneration)
         {
           case DBxFilterDegeneration.AlwaysTrue:
-            // Есть вырожденный фильтр - нужно убрать часть фильтров
-            List<DBxFilter> lst = new List<DBxFilter>(filters.Length);
-            lst.AddRange(filters);
-            return FromList(lst);
-
+            hasAlwaysTrue = true;
+            break;
           case DBxFilterDegeneration.AlwaysFalse:
             return DummyFilter.AlwaysFalse;
         }
       }
 
-      // Нет ни одного вырожденного фильтра
+      if (hasAlwaysTrue)
+      {
+        // Убираем вырожденные фильтры
+        List<DBxFilter> filters2 = new List<DBxFilter>();
+        for (int i = 0; i < filters.Length; i++)
+        {
+          if (filters[i].Degeneration == DBxFilterDegeneration.None)
+            filters2.Add(filters[i]);
+        }
+        filters = filters2.ToArray();
+      }
 
       switch (filters.Length)
       {
@@ -1536,38 +1757,40 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создание AND-фильтра из списка фильтров по необходимости, если число
     /// фильтров в массиве больше 1. Если список содержит только один фильтр,
-    /// то он возвращается. Если список пустой, возвращается null
+    /// то он возвращается. Если список пустой, возвращается null.
     /// </summary>
-    /// <param name="filters">Список фильтров</param>
+    /// <param name="filters">Список фильтров. Может быть null, но не может содержать значения null</param>
     /// <returns>Фильтр или null</returns>
     public static DBxFilter FromList(List<DBxFilter> filters)
     {
       if (filters == null)
         return null;
 
-      // 18.02.2019
+      // 18.02.2019, 25.05.2023
       // Проверяем вырожденность фильтров
+      bool hasAlwaysTrue = false;
       for (int i = 0; i < filters.Count; i++)
       {
         switch (filters[i].Degeneration)
         {
           case DBxFilterDegeneration.AlwaysTrue:
-            // Убираем вырожденные фильтры
-            List<DBxFilter> filters2 = new List<DBxFilter>(filters.Count - 1);
-            for (int j = 0; j < filters.Count; j++)
-            {
-              switch (filters[j].Degeneration)
-              {
-                case DBxFilterDegeneration.None:
-                  filters2.Add(filters[j]);
-                  break;
-                case DBxFilterDegeneration.AlwaysFalse:
-                  return DummyFilter.AlwaysFalse;
-              }
-            }
-            filters = filters2;
+            hasAlwaysTrue = true;
             break;
+          case DBxFilterDegeneration.AlwaysFalse:
+            return DummyFilter.AlwaysFalse;
         }
+      }
+
+      if (hasAlwaysTrue)
+      {
+        // Убираем вырожденные фильтры
+        List<DBxFilter> filters2 = new List<DBxFilter>();
+        for (int i = 0; i < filters.Count; i++)
+        {
+          if (filters[i].Degeneration == DBxFilterDegeneration.None)
+            filters2.Add(filters[i]);
+        }
+        filters = filters2;
       }
 
       switch (filters.Count)
@@ -1649,9 +1872,11 @@ namespace FreeLibSet.Data
 #if DEBUG
       if (filters == null)
         throw new ArgumentNullException("filters");
+#endif
+      if (filters.Length < 2)
+        throw new ArgumentException("Длина массива не может быть меньше 2. Используйте статический метод FromArray()");
       if (Array.IndexOf<DBxFilter>(filters, null) >= 0)
         throw new ArgumentException("Массив фильтров не может создержать значения null", "filters");
-#endif
       _Filters = filters;
     }
 
@@ -1663,7 +1888,7 @@ namespace FreeLibSet.Data
     /// Список фильтров, входлящих в объединение
     /// </summary>
     public DBxFilter[] Filters { get { return _Filters; } }
-    private DBxFilter[] _Filters;
+    private readonly DBxFilter[] _Filters;
 
     #endregion
 
@@ -1683,7 +1908,7 @@ namespace FreeLibSet.Data
     /// Сначала добавляет себя в список фильтров, затем рекурсивно вызывает метод для всех входящий фильтров
     /// </summary>
     /// <param name="list">Заполняемый список фильтров. Не может быть null</param>
-    public override void GetAllFilters(List<DBxFilter> list)
+    public override void GetAllFilters(IList<DBxFilter> list)
     {
       base.GetAllFilters(list);
       for (int i = 0; i < _Filters.Length; i++)
@@ -1720,12 +1945,11 @@ namespace FreeLibSet.Data
     }
 
 
-
     /// <summary>
     /// Проверка условия фильтра для строки данных.
     /// Вызывает метод для всех входящих в список фильтров и возвращает true, если хотя бы один фильтр вернул true.
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
@@ -1745,18 +1969,19 @@ namespace FreeLibSet.Data
     /// Создание OR-фильтра из массива фильтров по необходимости, если число
     /// фильтров в массиве больше 1. Если список содержит только один фильтр,
     /// то он возвращается. Если список пустой, возвращается null.
-    /// Если хотя бы один из фильтров является "вырожденным" (DBxFilter.AlwaysTrue() возвращает true),
+    /// Если хотя бы один из фильтров является "вырожденным" (<see cref="DBxFilter.Degeneration"/>=AlwaysTrue),
     /// то возвращается null.
     /// </summary>
-    /// <param name="filters">Фильтры</param>
+    /// <param name="filters">Фильтры. Может быть null, но не может содержать значения null</param>
     /// <returns>OrFilter или один из исходных фильтров</returns>
     public static DBxFilter FromArray(DBxFilter[] filters)
     {
       if (filters == null)
-        return null;
+        return DummyFilter.AlwaysFalse; // 26.05.2023
 
-      // 18.02.2019
+      // 18.02.2019, 25.05.2023
       // Учитываем вырожденные фильтры
+      bool hasAlwaysFalse = false;
       for (int i = 0; i < filters.Length; i++)
       {
         switch (filters[i].Degeneration)
@@ -1764,14 +1989,22 @@ namespace FreeLibSet.Data
           case DBxFilterDegeneration.AlwaysTrue:
             return null;
           case DBxFilterDegeneration.AlwaysFalse:
-            // Есть вырожденный фильтр - нужно убрать часть фильтров
-            List<DBxFilter> lst = new List<DBxFilter>(filters.Length);
-            lst.AddRange(filters);
-            return FromList(lst);
+            hasAlwaysFalse = true;
+            break;
         }
       }
 
-      // Нет вырожденных фильтров
+      if (hasAlwaysFalse)
+      {
+        // Убираем вырожденные фильтры
+        List<DBxFilter> filters2 = new List<DBxFilter>();
+        for (int i = 0; i < filters.Length; i++)
+        {
+          if (filters[i].Degeneration == DBxFilterDegeneration.None)
+            filters2.Add(filters[i]);
+        }
+        filters = filters2.ToArray();
+      }
 
       switch (filters.Length)
       {
@@ -1788,18 +2021,19 @@ namespace FreeLibSet.Data
     /// Создание OR-фильтра из списка фильтров по необходимости, если число
     /// фильтров в массиве больше 1. Если список содержит только один фильтр,
     /// то он возвращается. Если список пустой, возвращается null
-    /// Если хотя бы один из фильтров является "вырожденным" (DBxFilter.AlwaysTrue() возвращает true),
+    /// Если хотя бы один из фильтров является "вырожденным" (<see cref="DBxFilter.Degeneration"/>=AlwaysTrue),
     /// то возвращается null.
     /// </summary>
-    /// <param name="filters">Фильтры</param>
+    /// <param name="filters">Фильтры. Может быть null, но не может содержать значения null</param>
     /// <returns>OrFilter или один из исходных фильтров</returns>
     public static DBxFilter FromList(List<DBxFilter> filters)
     {
       if (filters == null)
         return DummyFilter.AlwaysFalse; // 24.07.2019
 
-      // 18.02.2019
+      // 18.02.2019, 25.05.2023
       // Учитываем вырожденные фильтры
+      bool hasAlwaysFalse = false;
       for (int i = 0; i < filters.Count; i++)
       {
         switch (filters[i].Degeneration)
@@ -1807,25 +2041,22 @@ namespace FreeLibSet.Data
           case DBxFilterDegeneration.AlwaysTrue:
             return null;
           case DBxFilterDegeneration.AlwaysFalse:
-            // Убираем вырожденные фильтры
-            List<DBxFilter> Filters2 = new List<DBxFilter>(filters.Count - 1);
-            for (int j = 0; j < filters.Count; j++)
-            {
-              switch (filters[j].Degeneration)
-              {
-                case DBxFilterDegeneration.None:
-                  Filters2.Add(filters[j]);
-                  break;
-                case DBxFilterDegeneration.AlwaysTrue:
-                  return DummyFilter.AlwaysTrue;
-              }
-            }
-            filters = Filters2;
+            hasAlwaysFalse = true;
             break;
         }
       }
 
-      // Вырожденных фильтров нет
+      if (hasAlwaysFalse)
+      {
+        // Убираем вырожденные фильтры
+        List<DBxFilter> filters2 = new List<DBxFilter>();
+        for (int i = 0; i < filters.Count; i++)
+        {
+          if (filters[i].Degeneration == DBxFilterDegeneration.None)
+            filters2.Add(filters[i]);
+        }
+        filters = filters2;
+      }
 
       switch (filters.Count)
       {
@@ -1855,10 +2086,9 @@ namespace FreeLibSet.Data
     /// <param name="baseFilter">Базовый фильтр. Не может быть null</param>
     public NotFilter(DBxFilter baseFilter)
     {
-#if DEBUG
       if (baseFilter == null)
         throw new ArgumentNullException("baseFilter");
-#endif
+
       _BaseFilter = baseFilter;
     }
 
@@ -1870,14 +2100,14 @@ namespace FreeLibSet.Data
     /// Основновной фильтр, результат которого инвертируется
     /// </summary>
     public DBxFilter BaseFilter { get { return _BaseFilter; } }
-    private DBxFilter _BaseFilter;
+    private readonly DBxFilter _BaseFilter;
 
     #endregion
 
     #region Переопределяемые методы и свойства
 
     /// <summary>
-    /// Добавляет в список поля из BaseFilter
+    /// Добавляет в список поля из <see cref="BaseFilter"/>
     /// </summary>
     /// <param name="list">Список для заполнения</param>
     public override void GetColumnNames(DBxColumnList list)
@@ -1889,7 +2119,7 @@ namespace FreeLibSet.Data
     /// Сначала добавляет себя в список фильтров, затем рекурсивно вызывает метод для базового фильтра
     /// </summary>
     /// <param name="list">Заполняемый список фильтров. Не может быть null</param>
-    public override void GetAllFilters(List<DBxFilter> list)
+    public override void GetAllFilters(IList<DBxFilter> list)
     {
       base.GetAllFilters(list);
       BaseFilter.GetAllFilters(list);
@@ -1929,8 +2159,11 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Фильтр числового поля по диапазону значений
-  /// Поддерживаются полуоткрытые интервалы
+  /// Фильтр числового поля по диапазону значений.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Поддерживаются поля и выражения типа <see cref="DBxColumnType.Int"/>, <see cref="DBxColumnType.Float"/> и <see cref="DBxColumnType.Money"/>.
+  /// Диапазон задается как константные выражения типа <see cref="Decimal"/>.
+  /// Если значение поля равно NULL, то оно считается равным 0.
   /// </summary>
   [Serializable]
   public class NumRangeFilter : DBxSingleExpressionFilter
@@ -2008,21 +2241,21 @@ namespace FreeLibSet.Data
     /// Минимальное значение или null
     /// </summary>
     public decimal? MinValue { get { return _MinValue; } }
-    private decimal? _MinValue;
+    private readonly decimal? _MinValue;
 
     /// <summary>
     /// Максимальное значение или null
     /// </summary>
     public decimal? MaxValue { get { return _MaxValue; } }
-    private decimal? _MaxValue;
+    private readonly decimal? _MaxValue;
 
     #endregion
 
     #region Переопределяемые методы и свойства
 
     /// <summary>
-    /// Если не задано ни MinValue ни MaxValue, то возвращает AlwaysTrue.
-    /// Если задано оба ограничения, но MinValue больше MaxValue, возвращает AlwaysFalse.
+    /// Если не задано ни <see cref="MinValue"/> ни <see cref="MaxValue"/>, то возвращает AlwaysTrue.
+    /// Если задано оба ограничения, но <see cref="MinValue"/> больше <see cref="MaxValue"/>, возвращает AlwaysFalse.
     /// </summary>
     public override DBxFilterDegeneration Degeneration
     {
@@ -2043,13 +2276,13 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Проверка условия фильтра для строки данных.
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
       if (_MinValue.HasValue || _MaxValue.HasValue)
       {
-        decimal v = DataTools.GetDecimal(Expression.GetValue(rowValues, false));
+        decimal v = DataTools.GetDecimal(Expression.GetValue(rowValues));
         if (_MinValue.HasValue)
         {
           if (v < _MinValue.Value)
@@ -2166,21 +2399,21 @@ namespace FreeLibSet.Data
     /// Минимальное значение диапазона или null
     /// </summary>
     public DateTime? MinValue { get { return _MinValue; } }
-    private DateTime? _MinValue;
+    private readonly DateTime? _MinValue;
 
     /// <summary>
     /// Максимальное значение диапазона или null
     /// </summary>
     public DateTime? MaxValue { get { return _MaxValue; } }
-    private DateTime? _MaxValue;
+    private readonly DateTime? _MaxValue;
 
     #endregion
 
     #region Переопределяемые методы
 
     /// <summary>
-    /// Если не задано ни MinValue ни MaxValue, то возвращает AlwaysTrue.
-    /// Если задано оба ограничения, но MinValue больше MaxValue, возвращает AlwaysFalse.
+    /// Если не задано ни <see cref="MinValue"/> ни <see cref="MaxValue"/>, то возвращает AlwaysTrue.
+    /// Если задано оба ограничения, но <see cref="MinValue"/> больше <see cref="MaxValue"/>, возвращает AlwaysFalse.
     /// </summary>
     public override DBxFilterDegeneration Degeneration
     {
@@ -2202,13 +2435,13 @@ namespace FreeLibSet.Data
     /// Проверка условия фильтра для строки данных.
     /// Вызывает метод DataTools.DateInRange().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
       if (_MinValue.HasValue || _MaxValue.HasValue)
       {
-        DateTime? v = DataTools.GetNullableDateTime(Expression.GetValue(rowValues, false));
+        DateTime? v = DataTools.GetNullableDateTime(Expression.GetValue(rowValues));
         if (!v.HasValue)
           return false;
 
@@ -2262,7 +2495,7 @@ namespace FreeLibSet.Data
     /// Дата, попадание которой в диапазон проверяется
     /// </summary>
     public DateTime Value { get { return _Value; } }
-    private DateTime _Value;
+    private readonly DateTime _Value;
 
     #endregion
 
@@ -2272,12 +2505,12 @@ namespace FreeLibSet.Data
     /// Проверка условия фильтра для строки данных.
     /// Вызывает метод DataTools.DateInRange().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      DateTime? v1 = DataTools.GetNullableDateTime(Expression1.GetValue(rowValues, false));
-      DateTime? v2 = DataTools.GetNullableDateTime(Expression2.GetValue(rowValues, false));
+      DateTime? v1 = DataTools.GetNullableDateTime(Expression1.GetValue(rowValues));
+      DateTime? v2 = DataTools.GetNullableDateTime(Expression2.GetValue(rowValues));
 
       return DataTools.DateInRange(Value, v1, v2);
     }
@@ -2351,13 +2584,13 @@ namespace FreeLibSet.Data
     /// Проверяемый диапазон дат - начальная дата
     /// </summary>
     public DateTime? FirstDate { get { return _FirstDate; } }
-    private DateTime? _FirstDate;
+    private readonly DateTime? _FirstDate;
 
     /// <summary>
     /// Проверяемый диапазон дат - конечная дата
     /// </summary>
     public DateTime? LastDate { get { return _LastDate; } }
-    private DateTime? _LastDate;
+    private readonly DateTime? _LastDate;
 
     #endregion
 
@@ -2367,12 +2600,12 @@ namespace FreeLibSet.Data
     /// Проверка условия фильтра для строки данных.
     /// Вызывает метод DataTools.DateRangeCrosses().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      DateTime? v1 = DataTools.GetNullableDateTime(Expression1.GetValue(rowValues, false));
-      DateTime? v2 = DataTools.GetNullableDateTime(Expression2.GetValue(rowValues, false));
+      DateTime? v1 = DataTools.GetNullableDateTime(Expression1.GetValue(rowValues));
+      DateTime? v2 = DataTools.GetNullableDateTime(Expression2.GetValue(rowValues));
 
       return DataTools.DateRangeCrossed(v1, v2, FirstDate, LastDate);
     }
@@ -2381,7 +2614,8 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Проверка поля на значение NULL
+  /// Проверка поля на значение, отличное от NULL.
+  /// Является надстройкой над <see cref="CompareFilter"/>. Определяет только конструкторы и задает режим сравнения <see cref="CompareKind.NotEqual"/>.
   /// </summary>
   [Serializable]
   public class NotNullFilter : /*ValueFilter*/ CompareFilter /* 14.11.2019 */
@@ -2392,7 +2626,7 @@ namespace FreeLibSet.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="expression">Проверяемое выражение</param>
-    /// <param name="columnType">Тип данных, которые может возвращать выражение</param>
+    /// <param name="columnType">Тип данных, которые может возвращать выражение. Не может быть <see cref="DBxColumnType.Unknown"/>.</param>
     public NotNullFilter(DBxExpression expression, DBxColumnType columnType)
       : base(expression, new DBxConst(null, columnType), CompareKind.NotEqual)
     {
@@ -2402,7 +2636,7 @@ namespace FreeLibSet.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="dataType">Тип данных, которые хранятся в поле</param>
+    /// <param name="dataType">Тип данных, которые хранятся в поле. Не может быть null.</param>
     public NotNullFilter(string columnName, Type dataType)
       : this(new DBxColumn(columnName), DBxTools.DataTypeToColumnType(dataType))
     {
@@ -2412,7 +2646,7 @@ namespace FreeLibSet.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="columnType">Тип данных, которые содержит поле</param>
+    /// <param name="columnType">Тип данных, которые содержит поле. Не может быть <see cref="DBxColumnType.Unknown"/>.</param>
     public NotNullFilter(string columnName, DBxColumnType columnType)
       : this(new DBxColumn(columnName), columnType)
     {
@@ -2471,7 +2705,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Строковый фильтр с учетом регистра или без него.
-  /// Если требуется "сравнительный" фильтр для строки, используйте ValueFilter
+  /// Если требуется "сравнительный" фильтр, отличный от сравнения на равенство, используйте <see cref="ValueFilter"/>.
   /// </summary>
   [Serializable]
   public class StringValueFilter : DBxSingleExpressionFilter
@@ -2482,7 +2716,7 @@ namespace FreeLibSet.Data
     /// Эта версия конструктора может создать фильтр с учетом регистра или без учета
     /// </summary>
     /// <param name="expression">Выражение, возвращающее строку</param>
-    /// <param name="value">Начало строки</param>
+    /// <param name="value">Строковая константа, с которой выполняется сравнение</param>
     /// <param name="ignoreCase">Если true, то регистр будет игнорироваться</param>
     public StringValueFilter(DBxExpression expression, string value, bool ignoreCase)
       : base(expression)
@@ -2507,7 +2741,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Эта версия конструктора создаст фильтр с точным сравнением с учетом регистра.
-    /// Такой фильтр полностью эквивалентен ValueFilter
+    /// Такой фильтр полностью эквивалентен <see cref="ValueFilter"/>.
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
     /// <param name="value">Начало строки</param>
@@ -2524,13 +2758,13 @@ namespace FreeLibSet.Data
     /// Сравниваемое значение
     /// </summary>
     public string Value { get { return _Value; } }
-    private string _Value;
+    private readonly string _Value;
 
     /// <summary>
     /// Нужно ли игнорировать регистр символов
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
-    private bool _IgnoreCase;
+    private readonly bool _IgnoreCase;
 
     #endregion
 
@@ -2540,17 +2774,16 @@ namespace FreeLibSet.Data
     /// Проверка условия фильтра для строки данных.
     /// Вызывает метод String.Compare().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      string v = DataTools.GetString(Expression.GetValue(rowValues, false));
+      string v = DataTools.GetString(Expression.GetValue(rowValues));
       return String.Equals(v, Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
     #endregion
   }
-
 
   /// <summary>
   /// Упрощенная реализация строкового фильтра LIKE. Тестирует значение строкового
@@ -2560,7 +2793,7 @@ namespace FreeLibSet.Data
   /// данных как шаблонные, то шаблон будет изменен так, чтобы символы трактовались
   /// буквально.
   /// Строка Value может быть пустой строкой.
-  /// Поддерживается сравнение с учетом регистра или без него
+  /// Поддерживается сравнение с учетом регистра или без него.
   /// </summary>
   [Serializable]
   public class StartsWithFilter : DBxSingleExpressionFilter
@@ -2612,13 +2845,13 @@ namespace FreeLibSet.Data
     /// Строка, с которой должно начинаться значение поля
     /// </summary>
     public string Value { get { return _Value; } }
-    private string _Value;
+    private readonly string _Value;
 
     /// <summary>
     /// Нужно ли игнорировать регистр символов
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
-    private bool _IgnoreCase;
+    private readonly bool _IgnoreCase;
 
     #endregion
 
@@ -2638,16 +2871,15 @@ namespace FreeLibSet.Data
       }
     }
 
-
     /// <summary>
     /// Проверка условия фильтра для строки данных.
     /// Вызывает метод String.StartsWith().
     /// </summary>
-    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      string v = DataTools.GetString(Expression.GetValue(rowValues, false));
+      string v = DataTools.GetString(Expression.GetValue(rowValues));
       return Value.StartsWith(v, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
@@ -2656,7 +2888,9 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр по подстроке. Извлекает из текстового поля подстроку в заданной
-  /// позиции и сравнивает ее с заданной
+  /// позиции и сравнивает ее на равенство с заданной строковой константой.
+  /// Возможно сравнение с учетом или без учета регистра символов.
+  /// Длина извлекаемой подстроки равна длине строковой константы.
   /// </summary>
   [Serializable]
   public class SubstringFilter : DBxSingleExpressionFilter
@@ -2714,19 +2948,19 @@ namespace FreeLibSet.Data
     /// Начальная позиция. Первая позиция имеет индекс 0, а не 1
     /// </summary>
     public int StartIndex { get { return _StartIndex; } }
-    private int _StartIndex;
+    private readonly int _StartIndex;
 
     /// <summary>
     /// Сравниваемое значение. Не может быть пустой строкой
     /// </summary>
     public string Value { get { return _Value; } }
-    private string _Value;
+    private readonly string _Value;
 
     /// <summary>
     /// Нужно ли игнорировать регистр символов
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
-    private bool _IgnoreCase;
+    private readonly bool _IgnoreCase;
 
     #endregion
 
@@ -2734,19 +2968,19 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод String.IndexOf().
+    /// Использует метод <see cref="DataTools.Substring(string, int, int)"/> для извлечения подстроки.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      string v = DataTools.GetString(Expression.GetValue(rowValues, false));
-      return Value.IndexOf(v, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture) >= 0;
+      string src = DataTools.GetString(Expression.GetValue(rowValues));
+      string substr = DataTools.Substring(src, StartIndex, Value.Length);
+      return String.Equals(substr, Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
     #endregion
   }
-
 
   /// <summary>
   /// Фиктивный фильтр, который всегда возвращает TRUE или FALSE
@@ -2775,7 +3009,7 @@ namespace FreeLibSet.Data
     /// Если false, условие никогда не выполняется    
     /// </summary>
     public bool IsTrue { get { return _IsTrue; } }
-    private bool _IsTrue;
+    private readonly bool _IsTrue;
 
     #endregion
 
@@ -2791,11 +3025,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает IsTrue
+    /// Возвращает свойство <see cref="IsTrue"/>.
     /// </summary>
-    /// <param name="RowValues">Игнорируется</param>
+    /// <param name="rowValues">Игнорируется</param>
     /// <returns>IsTrue</returns>
-    public override bool TestFilter(INamedValuesAccess RowValues)
+    public override bool TestFilter(INamedValuesAccess rowValues)
     {
       return IsTrue;
     }
@@ -2836,7 +3070,7 @@ namespace FreeLibSet.Data
   /// Проблема: Некоторые операции могут применяться к большому и заранее неизвестному
   /// числу записей, определяемых идентификаторами.
   /// Существует ограничение на число идентификаторов в SQL-запросе вида
-  /// SELECT .... WHERE xxx IN [Id1, Id2, Id3, ....]
+  /// SELECT .... WHERE xxx IN (Id1, Id2, Id3, ....)
   /// В тоже время, выполнять отдельный запрос для каждого идентификатора также
   /// нецелесообразно.
   /// Существует некоторое оптимальное количество идентификаторов в предложении IN.
@@ -2847,7 +3081,7 @@ namespace FreeLibSet.Data
   /// формата базы данных для определения оптимальной длины массива. Конструктор
   /// делит исходный массив идентификаторов на подмассивы и запоминает их.
   /// Затем вызывается метод CreateFilters(), которому передается имя ссылочного поля
-  /// или "Id". Метод создает один или несколько объектов IdsFilter, которые доступны
+  /// или "Id". Метод создает один или несколько объектов <see cref="IdsFilter"/>, которые доступны
   /// через индексированное свойство.
   /// </summary>
   public class IdsFilterGenerator : IEnumerable<DBxFilter>
@@ -2949,8 +3183,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращает массив идентификаторов для одной группы
     /// </summary>
-    /// <param name="index"></param>
-    /// <returns></returns>
+    /// <param name="index">Индекс очередной группы от 0 до (<see cref="Count"/>-1)</param>
+    /// <returns>Массив идентификаторов. Не может быть пустым</returns>
     public Int32[] GetIds(int index)
     {
       return _IdArrays[index];
@@ -2969,7 +3203,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращает фильтр для группы
     /// </summary>
-    /// <param name="index">Индекс группы в диапазоне от 0 до Count-1</param>
+    /// <param name="index">Индекс группы в диапазоне от 0 до (<see cref="Count"/>-1)</param>
     /// <returns>Фильтр</returns>
     public DBxFilter this[int index]
     {
@@ -2992,7 +3226,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращает перечислитель по фильтрам.
     /// 
-    /// Тип возвращаемого значения (ArrayEnumerator) может измениться в будущем, 
+    /// Тип возвращаемого значения (<see cref="ArrayEnumerable{DBxFilter}"/>) может измениться в будущем, 
     /// гарантируется только реализация интерфейса перечислителя.
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>

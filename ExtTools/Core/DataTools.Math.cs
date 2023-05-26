@@ -12,9 +12,12 @@ namespace FreeLibSet.Core
   {
     #region IsXXXType()
 
+    // При изменении исправить метод CompareNumbers()
     private static readonly ArrayIndexer<Type> _IntegerTypeArrayIndexer =
       new ArrayIndexer<Type>(new Type[] {
+          //   0              1              2                3
           typeof(byte), typeof(sbyte), typeof(Int16), typeof(UInt16),
+          //   4               5              6              7
           typeof(Int32), typeof(UInt32), typeof(Int64), typeof(UInt64) });
 
     /// <summary>
@@ -28,8 +31,10 @@ namespace FreeLibSet.Core
       return _IntegerTypeArrayIndexer.Contains(type);
     }
 
+    // При изменении исправить метод CompareNumbers()
     private static readonly ArrayIndexer<Type> _FloatTypeArrayIndexer =
       new ArrayIndexer<Type>(new Type[] {
+          //     0               1               2
           typeof(Single), typeof(Double), typeof(Decimal)});
 
     /// <summary>
@@ -53,6 +58,230 @@ namespace FreeLibSet.Core
     public static bool IsNumericType(Type type)
     {
       return IsIntegerType(type) || IsFloatType(type);
+    }
+
+    /// <summary>
+    /// Сравнение двух числовых значений произвольных типов (8 целочисленных типов и 3 с плавающей точкой).
+    /// Значение null интерпретируется как 0. В частности, два значения null считаются равными.
+    /// Если один из типов не является числовым, то выбрасывается исключение
+    /// Результат интерпретируется как у <see cref="System.Collections.IComparer.Compare(object, object)"/>:
+    /// возвращается положительное значение, если <paramref name="a"/> больше <paramref name="b"/>, отрицательное - если меньше,
+    /// и 0, если аргументы равны.
+    /// </summary>
+    /// <param name="a">Первое сравниваемое значение</param>
+    /// <param name="b">Второе сравниваемое значение</param>
+    /// <returns>Результат сравнения</returns>
+    public static int CompareNumbers(object a, object b)
+    {
+      if (Object.ReferenceEquals(a, null))
+      {
+        if (Object.ReferenceEquals(b, null))
+          return 0;
+        else
+          //a = GetEmptyValue(b.GetType());
+          a = Activator.CreateInstance(b.GetType());
+      }
+      else if (Object.ReferenceEquals(b, null))
+        //b = GetEmptyValue(a.GetType());
+        b = Activator.CreateInstance(a.GetType());
+
+      const int posInt32 = 4;
+      int posA = _IntegerTypeArrayIndexer.IndexOf(a.GetType());
+      if (posA < 0)
+      {
+        posA = _FloatTypeArrayIndexer.IndexOf(a.GetType()) + 8;
+        if (posA < 8)
+          throw new ArgumentException("Первый аргумент имеет нечисловой тип", "a");
+      }
+      int posB = _IntegerTypeArrayIndexer.IndexOf(b.GetType());
+      if (posB < 0)
+      {
+        posB = _FloatTypeArrayIndexer.IndexOf(b.GetType()) + 8;
+        if (posB < 8)
+          throw new ArgumentException("Второй аргумент имеет нечисловой тип", "b");
+      }
+#if DEBUG
+      if (posA < 0 || posA >= 11)
+        throw new BugException("posA");
+      if (posB < 0 || posB >= 11)
+        throw new BugException("posB");
+#endif
+
+      if (posA < posInt32)
+      {
+        a = Convert.ToInt32(a);
+        posA = posInt32;
+      }
+      if (posB < posInt32)
+      {
+        b = Convert.ToInt32(b);
+        posB = posInt32;
+      }
+      if (posA == posB)
+        return System.Collections.Comparer.Default.Compare(a, b);
+
+      if (posA > posB)
+        return -DoCompareNumbers(b, posB, a, posA);
+      else
+        return DoCompareNumbers(a, posA, b, posB);
+    }
+
+    /// <summary>
+    /// Упорядоченное сравнение. Число b имеет "более высокий" тип, по сравнению с а.
+    /// То есть Int32:UInt32, Int32:Single, и т.д.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="posA"></param>
+    /// <param name="b"></param>
+    /// <param name="posB"></param>
+    /// <returns></returns>
+    private static int DoCompareNumbers(object a, int posA, object b, int posB)
+    {
+#if DEBUG
+      if (posB <= posA)
+        throw new BugException("posB<=posA");
+#endif
+
+      const int posInt32 = 4;
+      const int posUInt32 = 5;
+      const int posInt64 = 6;
+      const int posUInt64 = 7;
+      const int posSingle = 8;
+      const int posDouble = 9;
+      const int posDecimal = 10;
+
+      switch (posA)
+      {
+        case posInt32:
+          switch (posB)
+          {
+            case posUInt32:
+              if ((UInt32)b > (UInt32)Int32.MaxValue)
+                return -1;
+              b = (Int32)(UInt32)b;
+              break;
+            case posInt64:
+              a = (Int64)(Int32)a;
+              break;
+            case posUInt64:
+              if ((UInt64)b > (UInt64)Int32.MaxValue)
+                return -1;
+              b = (Int32)(UInt64)b;
+              break;
+            case posSingle:
+              a = (Single)(Int32)a;
+              break;
+            case posDouble:
+              a = (Double)(Int32)a;
+              break;
+            case posDecimal:
+              a = (Decimal)(Int32)a;
+              break;
+            default:
+              throw new BugException();
+          }
+          break;
+
+        case posUInt32:
+          switch (posB)
+          {
+            case posInt64:
+              a = (Int64)(UInt32)a;
+              break;
+            case posUInt64:
+              a = (UInt64)(UInt32)a;
+              break;
+            case posSingle:
+              a = (Single)(UInt32)a;
+              break;
+            case posDouble:
+              a = (Double)(UInt32)a;
+              break;
+            case posDecimal:
+              a = (Decimal)(UInt32)a;
+              break;
+            default:
+              throw new BugException();
+          }
+          break;
+
+        case posInt64:
+          switch (posB)
+          {
+            case posUInt64:
+              if ((UInt64)b > (UInt64)Int64.MaxValue)
+                return -1;
+              b = (Int64)(UInt64)b;
+              break;
+            case posSingle:
+              a = (Single)(Int64)a;
+              break;
+            case posDouble:
+              a = (Double)(Int64)a;
+              break;
+            case posDecimal:
+              a = (Decimal)(Int64)a;
+              break;
+            default:
+              throw new BugException();
+          }
+          break;
+
+        case posUInt64:
+          switch (posB)
+          {
+            case posSingle:
+              a = (Single)(UInt64)a;
+              break;
+            case posDouble:
+              a = (Double)(UInt64)a;
+              break;
+            case posDecimal:
+              a = (Decimal)(UInt64)a;
+              break;
+            default:
+              throw new BugException();
+          }
+          break;
+
+        case posSingle:
+          switch (posB)
+          {
+            case posDouble:
+              a = (Double)(Single)a;
+              break;
+            case posDecimal:
+              if ((Single)a < (Single)Decimal.MinValue)
+                return -1;
+              else if ((Single)a > (Single)Decimal.MaxValue)
+                return +1;
+              a = (Decimal)(Single)a;
+              break;
+            default:
+              throw new BugException();
+          }
+          break;
+
+
+        case posDouble:
+          switch (posB)
+          {
+            case posDecimal:
+              if ((Double)a < (Double)Decimal.MinValue)
+                return -1;
+              else if ((Double)a > (Double)Decimal.MaxValue)
+                return +1;
+              a = (Decimal)(Double)a;
+              break;
+            default:
+              throw new BugException();
+          }
+          break;
+
+        default:
+          throw new BugException();
+      }
+      return System.Collections.Comparer.Default.Compare(a, b);
     }
 
     #endregion

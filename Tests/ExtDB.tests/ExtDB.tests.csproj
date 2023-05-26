@@ -44,13 +44,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NumRangeFilterTests.cs" />
+    <Compile Include="OrFilterTests.cs" />
+    <Compile Include="AndFilterTests.cs" />
+    <Compile Include="DBxAgregateFunctionTests.cs" />
     <Compile Include="DBxColumnListTests.cs" />
+    <Compile Include="DBxColumnsTests.cs" />
+    <Compile Include="DBxColumnTests.cs" />
+    <Compile Include="DBxColumnValueArrayTests.cs" />
+    <Compile Include="DBxConstTests.cs" />
+    <Compile Include="CompareFilterTests.cs" />
+    <Compile Include="DBxFilterTests.cs" />
+    <Compile Include="DummyFilterTests.cs" />
+    <Compile Include="DBxFunctionTests.cs" />
+    <Compile Include="DBxSqlBufferTests.cs" />
     <Compile Include="DBxTableColumnListTests.cs" />
     <Compile Include="DBxTableColumnNameTests.cs" />
     <Compile Include="DBxTestHelpers.cs" />
+    <Compile Include="DBxToolsTests.cs" />
+    <Compile Include="IdsFilterTests.cs" />
+    <Compile Include="NotFilterTests.cs" />
     <Compile Include="SQLiteDBxTests.cs" />
     <Compile Include="SQLiteDBxTests_InMemory.cs" />
     <Compile Include="SQLiteDBxTests_StringFilters.cs" />
+    <Compile Include="SqlTests.cs" />
+    <Compile Include="ValueFilterTests.cs" />
+    <Compile Include="ValuesFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtDB\ExtDB.csproj">
