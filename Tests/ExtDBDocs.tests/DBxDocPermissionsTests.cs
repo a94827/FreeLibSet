@@ -828,8 +828,8 @@ namespace ExtDBDocs_tests.Data_Docs
       //DBxSubDocType sdt;
 
       dt = new DBxDocType("TestDocs");
-      dt.Struct.Columns.AddBoolean("F1", false);
-      dt.Struct.Columns.AddInt("F2", false);
+      dt.Struct.Columns.AddBoolean("F1");
+      dt.Struct.Columns.AddInt("F2");
       dts.Add(dt);
 
       DBxDocDBConnectionHelper conHelper = new DBxDocDBConnectionHelper();

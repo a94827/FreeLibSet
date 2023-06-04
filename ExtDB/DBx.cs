@@ -589,7 +589,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
-    /// не вносится не вносится, сообщения не добавляются</param>
+    /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
     public bool UpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
@@ -603,13 +603,13 @@ namespace FreeLibSet.Data
 
     /// <summary>                               
     /// Метод должен выполнить обновление структуры существующей базы
-    /// данных на основании созданного описание в свойстве <see cref="Struct"/>.
+    /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// Эта версия позволяет настроить параметры обновления.
     /// </summary>
     /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
-    /// не вносится не вносится, сообщения не добавляются</param>
+    /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
     protected abstract bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options);
@@ -617,13 +617,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Метод должен выполнить обновление структуры существующей базы
-    /// данных на основании созданного описание в свойстве <see cref="Struct"/>.
+    /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// Эта перегрузка использует параметры обновления по умолчанию, которые применимы в большинстве случаев
     /// </summary>
     /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
-    /// не вносится не вносится, сообщения не добавляются</param>
+    /// не вносится, сообщения не добавляются</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
     public bool UpdateStruct(ISplash splash, ErrorMessageList errors)
     {

@@ -399,7 +399,7 @@ namespace ExtTools_tests.Core
 
     #region GetDateTime(), GetNullableDateTime()
 
-    public static readonly TestPair[] GetDateTimeTests = new TestPair[] {
+    public static readonly TestPair[] GetDateTime_ObjectTests = new TestPair[] {
       new TestPair(null, DateTime.MinValue),
       new TestPair("", DateTime.MinValue),
       new TestPair("2023-05-19", new DateTime(2023, 5, 19)),
@@ -408,17 +408,36 @@ namespace ExtTools_tests.Core
       new TestPair(TimeSpan.Zero, DateTime.MinValue),
       new TestPair(new TimeSpan(12, 34, 56), DateTime.MinValue + new TimeSpan(12, 34, 56)),
       new TestPair(new TimeSpan(-1, -2, -3), DateTime.MinValue + new TimeSpan(22, 57, 57))};
-    [TestCaseSource("GetDateTimeTests")]
-    public void GetDateTime(TestPair info)
+    [TestCaseSource("GetDateTime_ObjectTests")]
+    public void GetDateTime_Object(TestPair info)
     {
       DateTime res = DataTools.GetDateTime(info.Source);
-      Assert.AreEqual(info.Result, res, "object");
+      Assert.AreEqual(info.Result, res);
+    }
 
-      if (info.Source is TimeSpan)
-      {
-        DateTime res2 = DataTools.GetDateTime((TimeSpan)(info.Source));
-        Assert.AreEqual(info.Result, res2, "TimeSpan");
-      }
+    public static readonly TestPair[] GetDateTime_TimeSpanTests = new TestPair[] {
+      new TestPair(new TimeSpan(12, 34, 56), DateTime.MinValue + new TimeSpan(12, 34, 56)),
+      new TestPair(new TimeSpan(-1, -2, -3), DateTime.MinValue + new TimeSpan(22, 57, 57)),
+      new TestPair(new TimeSpan(10, 12, 34, 56), DateTime.MinValue + new TimeSpan(12, 34, 56)),
+      new TestPair(new TimeSpan(-10, -1, -2, -3), DateTime.MinValue + new TimeSpan(22, 57, 57))};
+    [TestCaseSource("GetDateTime_TimeSpanTests")]
+    public void GetDateTime_TimeSpan(TestPair info)
+    {
+      TimeSpan ts = (TimeSpan)(info.Source);
+
+      DateTime res = DataTools.GetDateTime(ts);
+      Assert.AreEqual(info.Result, res);
+    }
+
+    [TestCaseSource("GetDateTime_TimeSpanTests")]
+    public void GetDateTime_TimeSpan_Date(TestPair info)
+    {
+      TimeSpan ts = (TimeSpan)(info.Source);
+
+      DateTime res1 = DataTools.GetDateTime(ts, new DateTime(2023, 5, 31, 12, 34, 56));
+      Assert.AreEqual(new DateTime(2023, 5, 31), res1.Date, "Date");
+      TimeSpan res2 = res1 - new DateTime(2023, 5, 31);
+      Assert.AreEqual(((DateTime)(info.Result)).TimeOfDay, res2, "Time");
     }
 
     public static readonly object[] GetDateTimeExceptionTests = new object[] {

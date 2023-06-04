@@ -563,6 +563,20 @@ namespace FreeLibSet.Data
     /// <param name="filter">Фильтр</param>
     protected virtual void OnFormatFilter(DBxSqlBuffer buffer, DBxFilter filter)
     {
+      // 02.06.2023
+      // Некоторые БД (например, OleDB) для инструкции "BEETWEEN x AND y" выполняют выворачивание диапазона, когда x>y.
+      // Это приводит к включению лишних строк.
+      // Лучше централизованно исключить использование таких фильтров
+      switch (filter.Degeneration)
+      {
+        case DBxFilterDegeneration.AlwaysTrue:
+          OnFormatDummyFilter(buffer, DummyFilter.AlwaysTrue);
+          return;
+        case DBxFilterDegeneration.AlwaysFalse:
+          OnFormatDummyFilter(buffer, DummyFilter.AlwaysFalse);
+          return;
+      }
+
       if (filter is CompareFilter)
         OnFormatCompareFilter(buffer, (CompareFilter)filter);
       else if (filter is IdsFilter)
@@ -790,8 +804,8 @@ namespace FreeLibSet.Data
           columnType = ((DBxConst)expression).ColumnType;
         OnFormatValue(buffer, ((DBxConst)expression).Value, columnType);
       }
-      else if (expression is DBxAgregateFunction)
-        OnFormatAgregateFunction(buffer, (DBxAgregateFunction)expression, formatInfo);
+      else if (expression is DBxAggregateFunction)
+        OnFormatAggregateFunction(buffer, (DBxAggregateFunction)expression, formatInfo);
       else
         throw new ArgumentException("Неподдерживаемый тип поля сортировки: " + expression.GetType().ToString());
     }
@@ -821,7 +835,7 @@ namespace FreeLibSet.Data
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="function">Объект фунцкии</param>
     /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове Buffer.FormatExpression</param>
-    protected abstract void OnFormatAgregateFunction(DBxSqlBuffer buffer, DBxAgregateFunction function, DBxFormatExpressionInfo formatInfo);
+    protected abstract void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo);
 
     /// <summary>
     /// Метод должен вернуть true, если выражение может потребоваться заключить в скобки, когда оно входит в состав другого выражения
@@ -936,7 +950,7 @@ namespace FreeLibSet.Data
   /// <summary>
   /// Цепочечный форматизатор частей SQL-запроса.
   /// Можно создать производный класс, который будет переопределять форматирование какого-либо элемента.
-  /// Для непереопределенных методов вызывается основной форматизатор. Таким образом формируеется цепочка
+  /// Для непереопределенных методов вызывается основной форматизатор. Таким образом формируется цепочка.
   /// </summary>
   public class DBxSqlChainFormatter : DBxSqlFormatter
   {
@@ -1225,7 +1239,7 @@ namespace FreeLibSet.Data
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="function">Объект фунцкии</param>
     /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове Buffer.FormatExpression</param>
-    protected override void OnFormatAgregateFunction(DBxSqlBuffer buffer, DBxAgregateFunction function, DBxFormatExpressionInfo formatInfo)
+    protected override void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo)
     {
       _Source.FormatExpression(buffer, function, formatInfo);
     }

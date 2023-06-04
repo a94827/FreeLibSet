@@ -340,13 +340,13 @@ namespace FreeLibSet.Data
     #region Свойства
 
     /// <summary>
-    /// Элемент сортировки (обычно, поле DBxOrderColumn)
+    /// Элемент сортировки (обычно, поле <see cref="DBxColumn"/>)
     /// </summary>
     public DBxExpression Expression { get { return _Expression; } }
     private readonly DBxExpression _Expression;
 
     /// <summary>
-    /// Признак обрабтной сортировки DESC
+    /// Порядок сортировки ASC/DESC
     /// </summary>
     public ListSortDirection SortOrder { get { return _SortOrder; } }
     private readonly ListSortDirection _SortOrder;

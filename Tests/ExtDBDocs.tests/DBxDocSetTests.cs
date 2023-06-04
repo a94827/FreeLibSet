@@ -105,7 +105,7 @@ namespace ExtDBDocs_tests.Data_Docs
           DBxSubDocType sdt;
 
           dt = new DBxDocType("D1");
-          dt.Struct.Columns.AddBoolean("F101", false);
+          dt.Struct.Columns.AddBoolean("F101");
           dt.Struct.Columns.AddInt("F102", false);
           dt.Struct.Columns.AddInt("F103", true);
           dt.Struct.Columns.AddReference("F104", "D1", true);

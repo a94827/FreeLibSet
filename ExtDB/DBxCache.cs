@@ -71,7 +71,7 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Список для свойства DBxTableCacheInfo.IndividualColumnFlags
+    /// Список для свойства <see cref="DBxTableCacheInfo.IndividualColumnFlags"/> 
     /// </summary>
     [Serializable]
     public sealed class IndividualColumnFlagList
@@ -95,27 +95,27 @@ namespace FreeLibSet.Data
       /// а не при загрузке блока строк таблицы.
       /// Если свойство не установлено в явном виде, то возвращается true для полей типа Memo, Xml и Binary
       /// </summary>
-      /// <param name="ColumnIndex">Индекс столбца в списке DBxTableStruct.Columns</param>
+      /// <param name="columnIndex">Индекс столбца в списке <see cref="DBxTableStruct.Columns"/></param>
       /// <returns>true, если используется индивидуальная буферизация</returns>
-      public bool this[int ColumnIndex]
+      public bool this[int columnIndex]
       {
         get
         {
           if (_Flags == null)
-            return GetDefaultValue(ColumnIndex);
+            return GetDefaultValue(columnIndex);
           else
-            return _Flags[ColumnIndex];
+            return _Flags[columnIndex];
         }
         set
         {
           _Owner.CheckNotReadOnly();
           if (_Flags == null)
           {
-            if (value == GetDefaultValue(ColumnIndex))
+            if (value == GetDefaultValue(columnIndex))
               return;
             InitFlags();
           }
-          _Flags[ColumnIndex] = value;
+          _Flags[columnIndex] = value;
         }
       }
 

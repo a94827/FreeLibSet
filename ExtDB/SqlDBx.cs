@@ -295,6 +295,11 @@ namespace FreeLibSet.Data.SqlClient
       }
     }
 
+    /// <summary>
+    /// Минимальная дата, поддерживаемая SQL Server 2005
+    /// </summary>
+    public static readonly DateTime MinDateTimeSqlServer2005 = new DateTime(1753, 1, 1);
+
     #endregion
 
     #region Точки подключения
@@ -378,12 +383,12 @@ namespace FreeLibSet.Data.SqlClient
 
     /// <summary>                               
     /// Обновляет структуру существующей базы
-    /// данных на основании созданного описание в свойстве DBx.Struct.
+    /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
     /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
-    /// не вносится не вносится, сообщения не добавляются</param>
+    /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
@@ -1012,6 +1017,8 @@ namespace FreeLibSet.Data.SqlClient
     /// <param name="table">Таблица исходных данных</param>
     protected override void DoAddRecords(string tableName, DataTable table)
     {
+      if (!DB.IsSqlServer2008orNewer)
+        table = ReplaceTimeSpanColumns(table); // 04.06.2023
 
       bool hasKeyCol = base.ContainsKeyColumn(tableName, table.Columns);
 
@@ -1053,6 +1060,56 @@ namespace FreeLibSet.Data.SqlClient
         SQLExecuteNonQuery(Buffer.SB.ToString());
          * */
       //}
+    }
+
+    /// <summary>
+    /// MS SQL Server 2005 не поддерживает столбцы типа TimeSpan
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    private static DataTable ReplaceTimeSpanColumns(DataTable table)
+    {
+      bool hasTimeSpan = false;
+      foreach (DataColumn col in table.Columns)
+      {
+        if (col.DataType == typeof(TimeSpan))
+        {
+          hasTimeSpan = true;
+          break;
+        }
+      }
+
+      if (!hasTimeSpan)
+        return table;
+
+      List<int> timeSpanColIndexes = new List<int>();
+      DataTable table2 = table.Clone();
+      for (int i = 0; i < table.Columns.Count; i++)
+      {
+        if (table.Columns[i].DataType == typeof(TimeSpan))
+        {
+          table2.Columns[i].DataType = typeof(DateTime);
+          timeSpanColIndexes.Add(i);
+        }
+      }
+#if DEBUG
+      if (timeSpanColIndexes.Count < 1)
+        throw new BugException();
+#endif
+
+      foreach (DataRow srcRow in table.Rows)
+      {
+        object[] a = srcRow.ItemArray;
+        for (int i = 0; i < timeSpanColIndexes.Count; i++)
+        {
+          int colIndex = timeSpanColIndexes[i];
+          if (a[colIndex] is TimeSpan) // не DBNull
+            a[colIndex] = DataTools.GetDateTime((TimeSpan)(a[colIndex]), SqlDBx.MinDateTimeSqlServer2005);
+        }
+        table2.Rows.Add(a);
+      }
+      table2.AcceptChanges();
+      return table2;
     }
 
     #endregion

@@ -1,11 +1,12 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
-#if !MONO 
+#if !MONO
 
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Data.OleDb
 {
@@ -39,59 +40,97 @@ namespace FreeLibSet.Data.OleDb
 
     #endregion
 
-    #region FormatFilter
+    #region Выражения и функции
 
-    // TODO: ?
-
-//    /// <summary>
-//    /// Форматирование фильтра.
-//    /// Записывает в <paramref name="Buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
-//    /// </summary>
-//    /// <param name="Buffer">Буфер для записи</param>
-//    /// <param name="Filter">Фильтр</param>
-//    protected override void OnFormatValueFilter(DBxSqlBuffer Buffer, ValueFilter Filter)
-//    {
-//      // Для просто значения null используем функцию IsNull()
-//      if (Filter.Value == null || Filter.Value is DBNull)
-//      {
-//#if DEBUG
-//        if (Filter.Kind != ValueFilterKind.Equal)
-//          throw new InvalidOperationException("Значение null в фильтре сравнения допускается только для сравнения на равенство");
-//#endif
-
-//        Buffer.SB.Append("ISNULL(");
-//        Buffer.FormatColumnName(Filter.ColumnName);
-//        Buffer.SB.Append(')');
-//        return;
-//      }
-
-//      if (Filter.Kind == ValueFilterKind.Equal)
-//      {
-//        Buffer.SB.Append("ISNULL(");
-//        Buffer.FormatColumnName(Filter.ColumnName);
-//        Buffer.SB.Append(") OR (");
-//        Buffer.FormatColumnName(Filter.ColumnName);
-//        Buffer.SB.Append(GetSignStr(Filter.Kind));
-//        Buffer.FormatValue(Filter.Value, DBxColumnType.Unknown);
-//        Buffer.SB.Append(')');
-//        return;
-//      }
-
-//      base.OnFormatValueFilter(Buffer, Filter);
-//    }
+    // Не требуется, т.к. подстановка вызова функции Coalesсe выполняется базовым классом
+    //protected override void OnFormatColumn(DBxSqlBuffer buffer, DBxColumn column, DBxFormatExpressionInfo formatInfo)
+    //{
+    //  base.OnFormatColumn(buffer, column, formatInfo);
+    //}
 
     /// <summary>
-    /// Форматирование фильтра.
-    /// Записывает в <paramref name="buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
+    /// Нестандартные имена функций для OleDb
     /// </summary>
-    /// <param name="buffer">Буфер для записи</param>
-    /// <param name="filter">Фильтр</param>
-    protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    /// <param name="function"></param>
+    /// <returns></returns>
+    protected override string GetFunctionName(DBxFunctionKind function)
     {
-      // TODO: Требуется специальное форматирование при наличии значений 0 и false, т.к. могут быть NULL'ы
-      throw new NotImplementedException();
-      //base.OnFormatValuesFilter(Buffer, Filter);
+      switch (function)
+      {
+        case DBxFunctionKind.Substring:
+          return "MID";
+
+        case DBxFunctionKind.Upper:
+          return "UCASE";
+        case DBxFunctionKind.Lower:
+          return "LCASE";
+
+        // Функции "NZ" нет в OleDB, хотя она доступна из самого Access
+        //case DBxFunctionKind.Coalesce:
+        //  return "NZ"; // 01.06.2023
+
+        default:
+          return base.GetFunctionName(function);
+      }
     }
+
+    /// <summary>
+    /// Специальная реализация для <see cref="DBxFunctionKind.Coalesce"/>. Вместо функции "COALESCE(A,B)", 
+    /// которой нет в OleDB для Access, используется "IIF(ISNULL(A),B,A)".
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="function"></param>
+    /// <param name="formatInfo"></param>
+    protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      if (function.Function == DBxFunctionKind.Coalesce)
+        FormatFunctionCoalesce(buffer, function, formatInfo);
+      else
+        base.OnFormatFunction(buffer, function, formatInfo);
+    }
+
+    private void FormatFunctionCoalesce(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      int currPos = 0;
+
+      DBxFormatExpressionInfo formatInfo2 = new DBxFormatExpressionInfo();
+      formatInfo2.WantedColumnType = formatInfo.WantedColumnType;
+      formatInfo2.NullAsDefaultValue = false;
+      formatInfo2.NoParentheses = true;
+
+      DoFormatFunctionCoalesce(buffer, function, formatInfo2, currPos);
+    }
+
+    private void DoFormatFunctionCoalesce(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo, int currPos)
+    {
+      buffer.SB.Append("IIF(ISNULL(");
+      FormatExpression(buffer, function.Arguments[currPos], formatInfo);
+      buffer.SB.Append("),");
+      if (currPos == function.Arguments.Length - 2)
+        FormatExpression(buffer, function.Arguments[currPos + 1], formatInfo);
+      else
+        DoFormatFunctionCoalesce(buffer, function, formatInfo, currPos + 1); // рекурсивный вызов
+      buffer.SB.Append(",");
+      FormatExpression(buffer, function.Arguments[currPos], formatInfo);
+      buffer.SB.Append(")");
+    }
+
+    #endregion
+
+    #region FormatFilter
+
+    ///// <summary>
+    ///// Форматирование фильтра.
+    ///// Записывает в <paramref name="buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
+    ///// </summary>
+    ///// <param name="buffer">Буфер для записи</param>
+    ///// <param name="filter">Фильтр</param>
+    //protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    //{
+    //  // TODO: ??? Требуется специальное форматирование при наличии значений 0 и false, т.к. могут быть NULL'ы
+
+    //  base.OnFormatValuesFilter(buffer, filter);
+    //}
 
 
     /// <summary>
@@ -114,35 +153,94 @@ namespace FreeLibSet.Data.OleDb
       buffer.SB.Append(')');
     }
 
-    // Х.З. Не проверял
+    /// <summary>
+    /// Реализация с помощью функции STRCOMP(), когда чувствительность к регистру имеет значение
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="filter"></param>
+    protected override void OnFormatStringValueFilter(DBxSqlBuffer buffer, StringValueFilter filter)
+    {
+      // 02.06.2023
+      // Обычное сравнение строк "=" является нечувствительным к регистру
+      //bool nullAsDefaultValue = filter.Value.Length == 0;
+      bool nullAsDefaultValue = true; // Перед фильтром может быть NOT и тогда не попадут строки с NULL
 
-    ///// <summary>
-    ///// Форматирование фильтра.
-    ///// Записывает в <paramref name="Buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
-    ///// </summary>
-    ///// <param name="Buffer">Буфер для записи</param>
-    ///// <param name="Filter">Фильтр</param>
-    //protected override void OnFormatSubstringFilter(DBxSqlBuffer Buffer, SubstringFilter Filter)
-    //{
-    //  base.OnFormatSubstringFilter();
-    //  if (Filter.IgnoreCase)
-    //    Buffer.SB.Append("UPPER("); // не проверял
-    //  Buffer.SB.Append("Mid(");
-    //  Buffer.FormatColumnName(Filter.ColumnName);
-    //  Buffer.SB.Append(',');
-    //  Buffer.SB.Append(Filter.StartIndex + 1);
-    //  Buffer.SB.Append(',');
-    //  Buffer.SB.Append(Filter.Value.Length);
-    //  Buffer.SB.Append(")");
-    //  if (Filter.IgnoreCase)
-    //    Buffer.SB.Append(")");
-    //  Buffer.SB.Append(" = ");
+      if (StringIsCaseSensitive(filter.Value))
+      {
+        buffer.SB.Append("STRCOMP(");
+        DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+        formatInfo.WantedColumnType = DBxColumnType.String;
+        formatInfo.NullAsDefaultValue = nullAsDefaultValue;
+        formatInfo.NoParentheses = true;
+        OnFormatExpression(buffer, filter.Expression, formatInfo);
+        buffer.SB.Append(",");
+        OnFormatStringValue(buffer, filter.Value);
+        buffer.SB.Append(",");
+        if (filter.IgnoreCase)
+          buffer.SB.Append("1"); // vbTextCompare
+        else
+          buffer.SB.Append("0"); // vbBinaryCompare
+        buffer.SB.Append(")=0");
+      }
+      else
+      {
+        // Используем обычный фильтр "="
+        CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.Value), CompareKind.Equal, nullAsDefaultValue);
+        buffer.FormatFilter(filter2);
+      }
+    }
 
-    //  string v = Filter.Value;
-    //  if (Filter.IgnoreCase)
-    //    v = v.ToUpperInvariant();
-    //  Buffer.FormatValue(v, DBxColumnType.String);
-    //}
+    /// <summary>
+    /// Использование функций STRCOMP() и MID()
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="filter"></param>
+    protected override void OnFormatStartsWithFilter(DBxSqlBuffer buffer, StartsWithFilter filter)
+    {
+      buffer.SB.Append("STRCOMP(MID(");
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.WantedColumnType = DBxColumnType.String;
+      formatInfo.NullAsDefaultValue = true; 
+      formatInfo.NoParentheses = true;
+      OnFormatExpression(buffer, filter.Expression, formatInfo);
+      buffer.SB.Append(",1,");
+      buffer.SB.Append(StdConvert.ToString(filter.Value.Length));
+      buffer.SB.Append("),");
+      OnFormatValue(buffer, filter.Value, DBxColumnType.String);
+      buffer.SB.Append(",");
+      if (filter.IgnoreCase)
+        buffer.SB.Append("1"); // vbTextCompare
+      else
+        buffer.SB.Append("0"); // vbBinaryCompare
+      buffer.SB.Append(")=0");
+    }
+
+    /// <summary>
+    /// Использование функций STRCOMP() и MID()
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="filter"></param>
+    protected override void OnFormatSubstringFilter(DBxSqlBuffer buffer, SubstringFilter filter)
+    {
+      buffer.SB.Append("STRCOMP(MID(");
+      DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
+      formatInfo.WantedColumnType = DBxColumnType.String;
+      formatInfo.NullAsDefaultValue = true; 
+      formatInfo.NoParentheses = true;
+      OnFormatExpression(buffer, filter.Expression, formatInfo);
+      buffer.SB.Append(",");
+      buffer.SB.Append(StdConvert.ToString(filter.StartIndex + 1));
+      buffer.SB.Append(",");
+      buffer.SB.Append(StdConvert.ToString(filter.Value.Length));
+      buffer.SB.Append("),");
+      OnFormatValue(buffer, filter.Value, DBxColumnType.String);
+      buffer.SB.Append(",");
+      if (filter.IgnoreCase)
+        buffer.SB.Append("1"); // vbTextCompare
+      else
+        buffer.SB.Append("0"); // vbBinaryCompare
+      buffer.SB.Append(")=0");
+    }
 
     /// <summary>
     /// Возвращает true
@@ -151,8 +249,10 @@ namespace FreeLibSet.Data.OleDb
     /// <returns>Необходимость в скобках</returns>
     protected override bool FilterNeedsParentheses(DBxFilter filter)
     {
-      // TODO: 
-      return true;
+      if (filter is StringValueFilter || filter is StartsWithFilter || filter is SubstringFilter)
+        return true;
+      else
+        return base.FilterNeedsParentheses(filter);
     }
 
     #endregion

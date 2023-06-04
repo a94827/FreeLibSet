@@ -2301,9 +2301,9 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Фильтр по полю, содержащему дату, по диапазону дат
-  /// Поле может содержать компонент времени (DateTime)
-  /// Поддерживаются полуоткрытые интервалы
+  /// Фильтр по полю, содержащему дату, по диапазону дат.
+  /// Поле может содержать компонент времени (<see cref="DateTime"/>).
+  /// Поддерживаются полуоткрытые интервалы.
   /// </summary>
   [Serializable]
   public class DateRangeFilter : DBxSingleExpressionFilter
@@ -2321,9 +2321,17 @@ namespace FreeLibSet.Data
       : base(expression)
     {
       if (minValue.HasValue)
+      {
         _MinValue = minValue.Value.Date;
+        if (_MinValue.Value == DateTime.MinValue)
+          _MinValue = null; // 29.05.2023
+      }
       if (maxValue.HasValue)
+      {
         _MaxValue = maxValue.Value.Date;
+        if (_MaxValue.Value == DateTime.MaxValue.Date)
+          _MaxValue = null; // 29.05.2023
+      }
     }
 
     /// <summary>
@@ -2387,8 +2395,22 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя столбца</param>
     /// <param name="range">Диапазон дат</param>
     public DateRangeFilter(string columnName, DateRange range)
-      : this(columnName, range.FirstDate, range.LastDate)
+      : this(columnName, GetFirstNDate(range), GetLastNDate(range))
     {
+    }
+
+    private static DateTime? GetFirstNDate(DateRange range)
+    {
+      if (range.IsEmpty)
+        return null;
+      return range.FirstDate;
+    }
+
+    private static DateTime? GetLastNDate(DateRange range)
+    {
+      if (range.IsEmpty)
+        return null;
+      return range.LastDate;
     }
 
     #endregion
@@ -2455,10 +2477,11 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр по двум полям, содержащим диапазон дат.
-  /// В фильтр входят строки, в диапазон дат которых попадает указанная дата
-  /// Поддерживаются полуоткрытые интервалы
-  /// Компоненты времени не поддерживаются
+  /// В фильтр входят строки, в диапазон дат которых попадает указанная дата.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Компоненты времени не поддерживаются.
   /// </summary>
+  /// <seealso cref="DateRangeCrossFilter"/>
   [Serializable]
   public class DateRangeInclusionFilter : DBxTwoExpressionsFilter
   {
@@ -2520,9 +2543,9 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр по двум полям, содержащим диапазон дат.
-  /// В фильтр входят строки, в диапазон дат которых попадает любая из дат в указанном диапазоне
-  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале
-  /// Компоненты времени не поддерживаются
+  /// В фильтр входят строки, в диапазон дат которых попадает любая из дат в указанном диапазоне.
+  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
+  /// Компоненты времени не поддерживаются.
   /// </summary>
   [Serializable]
   public class DateRangeCrossFilter : DBxTwoExpressionsFilter
@@ -2540,15 +2563,24 @@ namespace FreeLibSet.Data
     public DateRangeCrossFilter(DBxExpression expression1, DBxExpression expression2, DateTime? firstDate, DateTime? lastDate)
       : base(expression1, expression2)
     {
-#if DEBUG
-      if (!(firstDate.HasValue || lastDate.HasValue))
-        throw new ArgumentNullException("firstDate", "Хотя бы одна из дат диапазона должна быть задана");
-#endif
+      // Убрано 30.05.2023
+//#if DEBUG
+//      if (!(firstDate.HasValue || lastDate.HasValue))
+//        throw new ArgumentNullException("firstDate", "Хотя бы одна из дат диапазона должна быть задана");
+//#endif
 
       if (firstDate.HasValue)
+      {
         _FirstDate = firstDate.Value.Date;
+        if (_FirstDate.Value == DateTime.MinValue)
+          _FirstDate = null; // 30.05.2023
+      }
       if (lastDate.HasValue)
+      {
         _LastDate = lastDate.Value.Date;
+        if (_LastDate.Value == DateTime.MaxValue.Date)
+          _LastDate = null; // 30.05.2023
+      }
     }
 
     /// <summary>
@@ -2572,8 +2604,22 @@ namespace FreeLibSet.Data
     /// <param name="lastColumnName">Имя второго поля</param>
     /// <param name="range">Проверяемый диапазон дат</param>
     public DateRangeCrossFilter(string firstColumnName, string lastColumnName, DateRange range)
-      : this(firstColumnName, lastColumnName, range.FirstDate, range.LastDate)
+      : this(firstColumnName, lastColumnName, GetFirstNDate(range), GetLastNDate(range))
     {
+    }
+
+    private static DateTime? GetFirstNDate(DateRange range)
+    {
+      if (range.IsEmpty)
+        return null;
+      return range.FirstDate;
+    }
+
+    private static DateTime? GetLastNDate(DateRange range)
+    {
+      if (range.IsEmpty)
+        return null;
+      return range.LastDate;
     }
 
     #endregion
@@ -2610,12 +2656,28 @@ namespace FreeLibSet.Data
       return DataTools.DateRangeCrossed(v1, v2, FirstDate, LastDate);
     }
 
+
+    /// <summary>
+    /// Возвращает <see cref="DBxFilterDegeneration.AlwaysTrue"/>, если и <see cref="FirstDate"/> и <see cref="LastDate"/>=null.
+    /// </summary>
+    public override DBxFilterDegeneration Degeneration
+    {
+      get
+      {
+        if (FirstDate.HasValue || LastDate.HasValue)
+          return DBxFilterDegeneration.None; // можно было бы проверять условие FirstDate < LastDate и возвращать AlwaysFalse, но если поля содержат NULL, то эти строки будут проходить фильтр
+        else
+          return DBxFilterDegeneration.AlwaysTrue; // 30.05.2023
+      }
+    }
+
     #endregion
   }
 
   /// <summary>
   /// Проверка поля на значение, отличное от NULL.
   /// Является надстройкой над <see cref="CompareFilter"/>. Определяет только конструкторы и задает режим сравнения <see cref="CompareKind.NotEqual"/>.
+  /// Не работает с <see cref="DataView"/>.
   /// </summary>
   [Serializable]
   public class NotNullFilter : /*ValueFilter*/ CompareFilter /* 14.11.2019 */
@@ -2706,6 +2768,7 @@ namespace FreeLibSet.Data
   /// <summary>
   /// Строковый фильтр с учетом регистра или без него.
   /// Если требуется "сравнительный" фильтр, отличный от сравнения на равенство, используйте <see cref="ValueFilter"/>.
+  /// Если поле имеет значение NULL, то оно считается равным пустой строке.
   /// </summary>
   [Serializable]
   public class StringValueFilter : DBxSingleExpressionFilter
@@ -2716,7 +2779,7 @@ namespace FreeLibSet.Data
     /// Эта версия конструктора может создать фильтр с учетом регистра или без учета
     /// </summary>
     /// <param name="expression">Выражение, возвращающее строку</param>
-    /// <param name="value">Строковая константа, с которой выполняется сравнение</param>
+    /// <param name="value">Строковая константа, с которой выполняется сравнение. Может быть пустой строкой.</param>
     /// <param name="ignoreCase">Если true, то регистр будет игнорироваться</param>
     public StringValueFilter(DBxExpression expression, string value, bool ignoreCase)
       : base(expression)
@@ -2732,7 +2795,7 @@ namespace FreeLibSet.Data
     /// Эта версия конструктора может создать фильтр с учетом регистра или без учета
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
-    /// <param name="value">Начало строки</param>
+    /// <param name="value">Строковая константа, с которой выполняется сравнение. Может быть пустой строкой.</param>
     /// <param name="ignoreCase">Если true, то регистр будет игнорироваться</param>
     public StringValueFilter(string columnName, string value, bool ignoreCase)
       : this(new DBxColumn(columnName), value, ignoreCase)
@@ -2744,7 +2807,7 @@ namespace FreeLibSet.Data
     /// Такой фильтр полностью эквивалентен <see cref="ValueFilter"/>.
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
-    /// <param name="value">Начало строки</param>
+    /// <param name="value">Строковая константа, с которой выполняется сравнение. Может быть пустой строкой.</param>
     public StringValueFilter(string columnName, string value)
       : this(columnName, value, false)
     {
@@ -2787,13 +2850,14 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Упрощенная реализация строкового фильтра LIKE. Тестирует значение строкового
-  /// поля, что оно начинается с заданных символов
+  /// поля, что оно начинается с заданных символов.
   /// Все символы в строке Value трактуются "как есть", то есть без шаблонных
   /// символов. Если строка Value содержит символы, трактуемые провайдером базы
   /// данных как шаблонные, то шаблон будет изменен так, чтобы символы трактовались
   /// буквально.
   /// Строка Value может быть пустой строкой.
   /// Поддерживается сравнение с учетом регистра или без него.
+  /// Если поле имеет значение NULL, то оно считается равным пустой строке.
   /// </summary>
   [Serializable]
   public class StartsWithFilter : DBxSingleExpressionFilter
@@ -2880,7 +2944,9 @@ namespace FreeLibSet.Data
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
       string v = DataTools.GetString(Expression.GetValue(rowValues));
-      return Value.StartsWith(v, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
+      //return Value.StartsWith(v, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
+      // Исправлено 30.05.2023
+      return v.StartsWith(Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
     #endregion
@@ -2891,6 +2957,7 @@ namespace FreeLibSet.Data
   /// позиции и сравнивает ее на равенство с заданной строковой константой.
   /// Возможно сравнение с учетом или без учета регистра символов.
   /// Длина извлекаемой подстроки равна длине строковой константы.
+  /// Если длина значения поля меньше, чем длина подстроки плюс начальная позиция, строка не проходит фильтр без выбрасывания исключений.
   /// </summary>
   [Serializable]
   public class SubstringFilter : DBxSingleExpressionFilter
@@ -3088,6 +3155,8 @@ namespace FreeLibSet.Data
   {
     #region Конструкторы
 
+    // TODO: Пока никак не определяем оптимальное число идентификаторов
+
     /// <summary>
     /// Создает генератор с количеством идентификаторов в группе, равным 100 
     /// </summary>
@@ -3118,12 +3187,19 @@ namespace FreeLibSet.Data
     /// <param name="maxCount">Количество элементов в группе (не меньше 1)</param>
     public IdsFilterGenerator(Int32[] allIds, int maxCount)
     {
-      Init(allIds, maxCount);
+      if (maxCount < 1)
+        throw new ArgumentOutOfRangeException("maxCount"); 
 
-      // TODO: Пока никак не определяем оптимальное число идентификаторов
-
-      // Заглушка
-      _Filters = new DBxFilter[0];
+      // Число групп
+      int n1 = (allIds.Length + maxCount - 1) / maxCount;
+      _IdArrays = new Int32[n1][];
+      for (int i = 0; i < n1; i++)
+      {
+        int StartIndex = i * maxCount;
+        int n2 = Math.Min(maxCount, allIds.Length - StartIndex);
+        _IdArrays[i] = new Int32[n2];
+        Array.Copy(allIds, StartIndex, _IdArrays[i], 0, n2);
+      }
     }
 
     /// <summary>
@@ -3135,20 +3211,6 @@ namespace FreeLibSet.Data
     public IdsFilterGenerator(IdList allIds, int maxCount)
       : this(allIds.ToArray(), maxCount)
     {
-    }
-
-    private void Init(Int32[] allIds, int maxCount)
-    {
-      // Число групп
-      int n1 = (allIds.Length + maxCount - 1) / maxCount;
-      _IdArrays = new Int32[n1][];
-      for (int i = 0; i < n1; i++)
-      {
-        int StartIndex = i * maxCount;
-        int n2 = Math.Min(maxCount, allIds.Length - StartIndex);
-        _IdArrays[i] = new Int32[n2];
-        Array.Copy(allIds, StartIndex, _IdArrays[i], 0, n2);
-      }
     }
 
     #endregion
@@ -3193,7 +3255,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Массивы идентификаторов, разбитые на группы подходящего размера
     /// </summary>
-    private Int32[][] _IdArrays;
+    private readonly Int32[][] _IdArrays;
 
     /// <summary>
     /// Возвращает количество групп

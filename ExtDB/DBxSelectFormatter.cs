@@ -163,7 +163,8 @@ namespace FreeLibSet.Data
           buffer.SB.Append(", ");
 
         buffer.FormatExpression(_Info.Expressions[i].Expression, new DBxFormatExpressionInfo());
-        if (_Info.Expressions[i].AliasRequired)
+        //if (_Info.Expressions[i].AliasRequired)
+        if (!String.IsNullOrEmpty(_Info.Expressions[i].Alias)) // 03.06.2023
         {
           buffer.SB.Append(" AS ");
           buffer.FormatColumnName(_Info.Expressions[i].Alias);
@@ -563,7 +564,10 @@ namespace FreeLibSet.Data
       }
 
       for (int i = 0; i < _Info.Expressions.Count; i++)
-        table.Columns[i].ColumnName = _Info.Expressions[i].Alias;
+      {
+        //table.Columns[i].ColumnName = _Info.Expressions[i].Alias;
+        table.Columns[i].ColumnName = _Info.Expressions[i].ResultColumnName; // 04.06.2023
+      }
     }
 
     #endregion

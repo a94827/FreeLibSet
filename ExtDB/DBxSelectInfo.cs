@@ -21,15 +21,23 @@ namespace FreeLibSet.Data
     /// Создать выражение с альясом
     /// </summary>
     /// <param name="expression">Выражение. Не может быть null</param>
-    /// <param name="alias">Альяс. Должен быть задан</param>
+    /// <param name="alias">Альяс. Может быть не задан, если <paramref name="expression"/> - <see cref="DBxColumn"/></param>
     public DBxNamedExpression(DBxExpression expression, string alias)
     {
       if (expression == null)
         throw new ArgumentNullException("expression");
-      if (String.IsNullOrEmpty(alias))
-        throw new ArgumentNullException("alias");
+      //if (String.IsNullOrEmpty(alias))
+      //  throw new ArgumentNullException("alias");
       _Expression = expression;
-      _Alias = alias;
+      _Alias = alias ?? String.Empty;
+
+      if (_Alias.Length == 0)
+      {
+        if (!(expression is DBxColumn))
+          //_Alias = ((DBxColumn)expression).ColumnName;
+          //else
+          throw new ArgumentException("Для использования выражения типа " + expression.GetType() + " требуется задавать альяс в явном виде");
+      }
     }
 
     /// <summary>
@@ -39,15 +47,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="expression">Выражение <see cref="DBxColumn"/>. Если передано другое выражение, выбрасывается исключение. Не может быть null.</param>
     public DBxNamedExpression(DBxExpression expression)
+      :this(expression, String.Empty)
     {
-      if (expression == null)
-        throw new ArgumentNullException("expression");
-
-      _Expression = expression;
-      if (expression is DBxColumn)
-        _Alias = ((DBxColumn)expression).ColumnName;
-      else
-        throw new ArgumentException("Для использования выражения типа " + expression.GetType() + " требуется задавать альяс в явном виде");
     }
 
     #endregion
@@ -63,26 +64,44 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Альяс (в SQL-запросе используется в инструкции "AS")
-    /// Не может быть пустой строкой
+    /// Может быть пустой строкой, если <see cref="Expression"/> ссылается на <see cref="DBxColumn"/>.
+    /// Для выражений <see cref="DBxFunction"/> и <see cref="DBxAggregateFunction"/> альяс должен быть задан обязательно.
     /// </summary>
     public string Alias { get { return _Alias; } }
     private readonly string _Alias;
 
     /// <summary>
-    /// Возвращает true, если альяс таблицы требуется обязательно
+    /// Имя результирующего столбца.
+    /// Если задано свойство <see cref="Alias"/>, то возвращается указанный альяс. Иначе возвращается <see cref="DBxColumn.ColumnName"/> из свойства <see cref="Expression"/>.
     /// </summary>
-    public bool AliasRequired
+    public string ResultColumnName
     {
       get
       {
-        DBxColumn col = Expression as DBxColumn;
-        if (col == null)
-          return true;
-        if (col.ColumnName.IndexOf('.') >= 0)
-          return true;
-        return col.ColumnName != Alias;
+        if (_Alias.Length == 0)
+          return ((DBxColumn)_Expression).ColumnName;
+        else
+          return _Alias;
       }
     }
+
+
+
+    ///// <summary>
+    ///// Возвращает true, если альяс таблицы требуется обязательно
+    ///// </summary>
+    //public bool AliasRequired
+    //{
+    //  get
+    //  {
+    //    DBxColumn col = Expression as DBxColumn;
+    //    if (col == null)
+    //      return true;
+    //    if (col.ColumnName.IndexOf('.') >= 0)
+    //      return true;
+    //    return col.ColumnName != Alias;
+    //  }
+    //}
 
     /// <summary>
     /// Возвращает свойство Alias (для отладки)
@@ -97,7 +116,44 @@ namespace FreeLibSet.Data
 
     #region IObjectWithCode members
 
-    string IObjectWithCode.Code { get { return _Alias; } }
+    string IObjectWithCode.Code 
+    { 
+      get 
+      {
+        if (_Alias.Length == 0)
+          return ((DBxColumn)_Expression).ColumnName;
+        else
+          return _Alias; 
+      }
+    }
+
+    #endregion
+
+    #region Прочее
+
+    /// <summary>
+    /// Сравнение с другим объектом
+    /// </summary>
+    /// <param name="obj">Второй сравниваемый объект</param>
+    /// <returns>true, если совпадают</returns>
+    public override bool Equals(object obj)
+    {
+      DBxNamedExpression other = obj as DBxNamedExpression;
+      if (Object.ReferenceEquals(other, null))
+        return false;
+
+      return String.Equals(this._Alias, other._Alias, StringComparison.Ordinal) &&
+        this._Expression == other._Expression;
+    }
+
+    /// <summary>
+    /// Возвращает хэш-код
+    /// </summary>
+    /// <returns>хэш-код</returns>
+    public override int GetHashCode()
+    {
+      return _Alias.GetHashCode();
+    }
 
     #endregion
   }
@@ -201,7 +257,7 @@ namespace FreeLibSet.Data
   /// Данные для запросов SELECT (методы <see cref="IDBxConReadOnlyBase.FillSelect(DBxSelectInfo)"/> и <see cref="IDBxCon.ReaderSelect(DBxSelectInfo)"/>.
   /// </summary>
   [Serializable]
-  public sealed class DBxSelectInfo
+  public sealed class DBxSelectInfo : ICloneable
   {
     #region Конструктор
 
@@ -290,33 +346,36 @@ namespace FreeLibSet.Data
       for (int i = 0; i < Expressions.Count; i++)
       {
         bool hasColumn;
-        bool hasAgregate;
-        GetExpressionInfo(Expressions[i].Expression, out hasColumn, out hasAgregate);
-        if (hasColumn && hasAgregate)
-          throw new InvalidOperationException("Выражение Expressions[" + i.ToString() + "] (" + Expressions[i].Expression.ToString() + ") содержит одновременно и агрегатную функцию и ссылку на поле таблицы");
-        else if (hasColumn)
-          GroupBy.Add(Expressions[i].Expression);
+        bool hasAggregate;
+        GetExpressionInfo(Expressions[i].Expression, out hasColumn, out hasAggregate);
+        if (hasColumn)
+        {
+          if (hasAggregate)
+            throw new InvalidOperationException("Выражение Expressions[" + i.ToString() + "] (" + Expressions[i].Expression.ToString() + ") содержит одновременно и агрегатную функцию и ссылку на поле таблицы");
+          else
+            GroupBy.Add(Expressions[i].Expression);
+        }
       }
     }
 
-    private static void GetExpressionInfo(DBxExpression expression, out bool hasColumn, out bool hasAgregate)
+    private static void GetExpressionInfo(DBxExpression expression, out bool hasColumn, out bool hasAggregate)
     {
       hasColumn = false;
-      hasAgregate = false;
-      DoGetExpressionInfo(expression, ref hasColumn, ref hasAgregate);
+      hasAggregate = false;
+      DoGetExpressionInfo(expression, ref hasColumn, ref hasAggregate);
     }
 
-    private static void DoGetExpressionInfo(DBxExpression expression, ref bool hasColumn, ref bool hasAgregate)
+    private static void DoGetExpressionInfo(DBxExpression expression, ref bool hasColumn, ref bool hasAggregate)
     {
-      if (expression is DBxAgregateFunction)
-        hasAgregate = true;
+      if (expression is DBxAggregateFunction)
+        hasAggregate = true;
       else if (expression is DBxColumn)
         hasColumn = true;
       else if (expression is DBxFunction)
       {
         DBxFunction f = (DBxFunction)expression;
         for (int i = 0; i < f.Arguments.Length; i++)
-          DoGetExpressionInfo(f.Arguments[i], ref hasColumn, ref hasAgregate);
+          DoGetExpressionInfo(f.Arguments[i], ref hasColumn, ref hasAggregate);
       }
     }
 
@@ -368,7 +427,7 @@ namespace FreeLibSet.Data
     #region Методы
 
     /// <summary>
-    /// Получить список имен полей, используемых в выражениях, фильтрах, порядке сортировки.
+    /// Получить список имен полей, используемых в выражениях (<see cref="Expressions"/>, <see cref="GroupBy"/>), фильтрах (<see cref="Where"/>, <see cref="Having"/>), порядке сортировки (<see cref="OrderBy"/>).
     /// Предполагается, что список <see cref="Expressions"/> заполнен, иначе выбрасывается исключение.
     /// </summary>
     /// <param name="list">Заполняемый список. Не может быть null</param>
@@ -413,6 +472,38 @@ namespace FreeLibSet.Data
           }
         }
       }
+    }
+
+    #endregion
+
+    #region Клонирование
+
+    /// <summary>
+    /// Создает копию объекта DBxSelectInfo
+    /// </summary>
+    /// <returns>Новый объект </returns>
+    public DBxSelectInfo Clone()
+    {
+      DBxSelectInfo res = new DBxSelectInfo();
+      res.TableName = this.TableName;
+      foreach (DBxNamedExpression expr in this.Expressions)
+        res.Expressions.Add(expr); // классы однократной записи можно просто взять по ссылке
+      res.Where = this.Where;
+      if (HasGroupBy)
+      {
+        foreach (DBxExpression expr in this.GroupBy)
+          res.GroupBy.Add(expr);
+      }
+      res.Having = this.Having;
+      res.OrderBy = this.OrderBy;
+      res.Unique = this.Unique;
+      res.MaxRecordCount = this.MaxRecordCount;
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
     }
 
     #endregion

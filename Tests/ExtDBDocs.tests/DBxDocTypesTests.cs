@@ -106,7 +106,7 @@ namespace ExtDBDocs_tests.Data_Docs
       else
         Assert.IsNull(ts1.Columns["Versions"], "D1.Version");
       if (useDeleted)
-        AssertColumn(ts1.Columns, "Deleted", DBxColumnType.Boolean, true, "D1");
+        AssertColumn(ts1.Columns, "Deleted", DBxColumnType.Boolean, null, "D1");
       else
         Assert.IsNull(ts1.Columns["Deleted"], "D1.Deleted");
       if (useTime)
@@ -140,7 +140,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxTableStruct ts11 = dbs.Tables["SD11"];
       if (useDeleted)
-        AssertColumn(ts11.Columns, "Deleted", DBxColumnType.Boolean, true, "SD11");
+        AssertColumn(ts11.Columns, "Deleted", DBxColumnType.Boolean, null, "SD11");
       else
         Assert.IsNull(ts11.Columns["Deleted"], "SD11.Deleted");
 

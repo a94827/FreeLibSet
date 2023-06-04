@@ -217,6 +217,23 @@ namespace FreeLibSet.Data
       return a;
     }
 
+    internal static bool IsComparision(DBxFunctionKind function)
+    {
+      switch (function)
+      { 
+        case DBxFunctionKind.Equal:
+        case DBxFunctionKind.LessThan:
+        case DBxFunctionKind.LessOrEqualThan:
+        case DBxFunctionKind.GreaterThan:
+        case DBxFunctionKind.GreaterOrEqualThan:
+        case DBxFunctionKind.NotEqual:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+
     #endregion
 
     #region Вывод отладочной информации

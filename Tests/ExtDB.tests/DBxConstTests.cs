@@ -139,6 +139,14 @@ namespace ExtDB_tests.Data
       Assert.AreSame(sut, res);
     }
 
+    [Test]
+    public void GetAllExpressions()
+    {
+      DBxConst sut = new DBxConst("ABC");
+      List<DBxExpression> lst = new List<DBxExpression>();
+      sut.GetAllExpressions(lst);
+      CollectionAssert.AreEqual(new DBxExpression[1] { sut }, lst);
+    }
     #endregion
 
     #region Сериализация

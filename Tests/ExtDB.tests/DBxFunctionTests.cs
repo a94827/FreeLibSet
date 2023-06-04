@@ -209,6 +209,22 @@ namespace ExtDB_tests.Data
       Assert.IsFalse(res3 == sut, "Different argument");
     }
 
+    [Test]
+    public void GetAllExpressions()
+    {
+      DBxColumn arg1 = new DBxColumn("F1");
+      DBxColumn arg2 = new DBxColumn("F2");
+      DBxFunction arg21 = new DBxFunction(DBxFunctionKind.Multiply, arg1, arg2);
+      DBxColumn arg3 = new DBxColumn("F3");
+      DBxColumn arg4 = new DBxColumn("F4");
+      DBxFunction arg34 = new DBxFunction(DBxFunctionKind.Multiply, arg3, arg4);
+
+      DBxFunction sut = new DBxFunction(DBxFunctionKind.Add, arg21, arg34);
+      List<DBxExpression> lst = new List<DBxExpression>();
+      sut.GetAllExpressions(lst);
+      CollectionAssert.AreEqual(new DBxExpression[] { sut, arg21, arg1, arg2, arg34, arg3, arg4 }, lst);
+    }
+
     #endregion
 
     #region Сериализация

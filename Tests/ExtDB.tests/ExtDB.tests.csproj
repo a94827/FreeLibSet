@@ -31,6 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Others\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\..\Others\Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Others\nunit.framework.dll</HintPath>
@@ -44,10 +51,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateRangeCrossFilterTests.cs" />
+    <Compile Include="DateRangeFilterTests.cs" />
+    <Compile Include="DateRangeInclusionFilterTests.cs" />
+    <Compile Include="DBxOrderTests.cs" />
+    <Compile Include="DBxSelectInfoTests.cs" />
+    <Compile Include="IdsFilterGeneratorTests.cs" />
+    <Compile Include="NotNullFilterTests.cs" />
     <Compile Include="NumRangeFilterTests.cs" />
     <Compile Include="OrFilterTests.cs" />
     <Compile Include="AndFilterTests.cs" />
-    <Compile Include="DBxAgregateFunctionTests.cs" />
+    <Compile Include="DBxAggregateFunctionTests.cs" />
     <Compile Include="DBxColumnListTests.cs" />
     <Compile Include="DBxColumnsTests.cs" />
     <Compile Include="DBxColumnTests.cs" />
@@ -68,6 +82,14 @@
     <Compile Include="SQLiteDBxTests_InMemory.cs" />
     <Compile Include="SQLiteDBxTests_StringFilters.cs" />
     <Compile Include="SqlTests.cs" />
+    <Compile Include="StartsWithFilterTests.cs" />
+    <Compile Include="SubstringFilterTests.cs" />
+    <Compile Include="StringValueFilterTests.cs" />
+    <Compile Include="TestTablesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestTablesResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="ValueFilterTests.cs" />
     <Compile Include="ValuesFilterTests.cs" />
   </ItemGroup>
@@ -93,6 +115,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestTablesResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TestTablesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestTables\SqlTestOleDB.mdb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

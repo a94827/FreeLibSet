@@ -104,6 +104,11 @@
     <Compile Include="DBxStruct.cs" />
     <Compile Include="NpgsqlDBx.cs" />
     <Compile Include="SQLiteDBx.cs" />
+    <Compile Include="TemplateFilesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TemplateFilesResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="UserPermissions.cs" />
     <Compile Include="DBxSelectFormatter.cs" />
     <Compile Include="OleDbDBxSqlFormatter.cs" />
@@ -116,6 +121,16 @@
       <Project>{e61b6cf2-a434-46f2-af4a-db5e4851d170}</Project>
       <Name>ExtTools</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TemplateFilesResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TemplateFilesResource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TemplateFiles\Access2000.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

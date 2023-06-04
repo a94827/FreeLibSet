@@ -18,7 +18,7 @@ namespace FreeLibSet.IO
   /// <summary>
   /// Создание Zip-файлов для составных документов Open Office, MS Ofiice-2007 и других.
   /// Для использования данного класса необходимо наличие загруженной сборки ICSharpCode.SharpZipLib.dll.
-  /// Используйте свойство ZipFileTools.ZipLibAvailable для предварительной проверки наличия библиотеки.
+  /// Используйте свойство <see cref="ZipFileTools.ZipLibAvailable"/> для предварительной проверки наличия библиотеки.
   /// </summary>
   public class ZipFileCreator
   {
@@ -358,6 +358,46 @@ namespace FreeLibSet.IO
     }
 
     #endregion
+
+    #region Распаковка Zip
+
+    /// <summary>
+    /// Распаковка ресурса, упакованного в Zip-формате, в указанный путь.
+    /// Предполагается, что архив содержит единственный файл, который требуется распаковать в каталог с указанным именем.
+    /// Каталог <paramref name="resFilePath"/>.Parent должен существовать.
+    /// Исходное имя файла в архиве игнорируется.
+    /// </summary>
+    /// <param name="zipFileBytes">Массив байтов, содержащих zip-архив</param>
+    /// <param name="resFilePath">Путь к сохраняемому файлу на диске</param>
+    public static void ExtractZipResourceFile(byte[] zipFileBytes, AbsPath resFilePath)
+    {
+      if (resFilePath.IsEmpty)
+        throw new ArgumentNullException("resFilePath");
+
+      CheckZipLibAvailable();
+
+      int cnt = 0;
+      using (MemoryStream zipFileStream = new MemoryStream(zipFileBytes))
+      {
+        ICSharpCode.SharpZipLib.Zip.ZipInputStream zis = new ICSharpCode.SharpZipLib.Zip.ZipInputStream(zipFileStream);
+        ICSharpCode.SharpZipLib.Zip.ZipEntry ze;
+        while ((ze = zis.GetNextEntry()) != null)
+        {
+          if (ze.IsFile)
+          {
+            if (cnt == 0)
+              FileTools.WriteStream(resFilePath, zis);
+            else
+              throw new ArgumentException("Архив содержит несколько файлов");
+            cnt++;
+          }
+        }
+        if (cnt == 0)
+          throw new ArgumentException("Архив не содержит файлов");
+      }
+    }
+
+    #endregion
   }
 
   #region Перечисление
@@ -678,7 +718,7 @@ namespace FreeLibSet.IO
         oldAllowCancel = Splash.AllowCancel;
         oldPhaseText = Splash.PhaseText;
 
-        if(UseSplashPercent)
+        if (UseSplashPercent)
           Splash.PercentMax = 100;
         Splash.AllowCancel = true;
       }

@@ -234,7 +234,7 @@ namespace FreeLibSet.Data
     public bool AutoCreate
     {
       get { return _AutoCreate; }
-      set 
+      set
       {
         CheckNotReadOnly();
         _AutoCreate = value;
@@ -400,7 +400,7 @@ namespace FreeLibSet.Data
         case 1:
           DBxColumnStruct colDef = Columns[PrimaryKey[0]];
           if (colDef.DataType != typeof(Int32))
-            throw new DBxPrimaryKeyException("Таблица \"" + TableName + "\" имеет первичный ключа по полю \"" + colDef.ColumnName + "\", которое имеет тип ("+colDef.ColumnType.ToString()+"), отличный от Int32");
+            throw new DBxPrimaryKeyException("Таблица \"" + TableName + "\" имеет первичный ключа по полю \"" + colDef.ColumnName + "\", которое имеет тип (" + colDef.ColumnType.ToString() + "), отличный от Int32");
           return colDef.ColumnName;
         case 0:
           throw new DBxPrimaryKeyException("Таблица \"" + TableName + "\" не имеет первичного ключа. Требуется первичный ключ по целочисленному полю");
@@ -491,7 +491,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавление целочисленного поля первичного ключа с заданным именем
+    /// Добавление целочисленного поля первичного ключа с заданным именем.
+    /// Устанавливает <see cref="DBxColumnStruct.Nullable"/>=false.
     /// </summary>
     /// <returns>Описание поля</returns>
     public DBxColumnStruct AddId(string columnName)
@@ -665,7 +666,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
-    /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию DataTools.GetEnumRange()
+    /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию <see cref="DataTools.GetEnumRange(Type)"/>  
     /// для получения диапазона.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
@@ -864,7 +865,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавить логическое поле, содержащее значения True или False.
-    /// Поле может содержать значение NULL.
+    /// Поле не может содержать значение NULL, а значением по умолчанию является false.
+    /// (<see cref="DBxColumnStruct.DefaultValue"/>=false).
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Созданный объект объявления поля</returns>
@@ -872,21 +874,7 @@ namespace FreeLibSet.Data
     {
       DBxColumnStruct item = new DBxColumnStruct(columnName);
       item.ColumnType = DBxColumnType.Boolean;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить логическое поле, содержащее значения True или False.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddBoolean(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Boolean;
-      item.Nullable = nullable;
+      item.DefaultValue = false; // 01.06.2023
       Add(item);
       return item;
     }
@@ -1037,7 +1025,7 @@ namespace FreeLibSet.Data
       for (int i = 0; i < Count; i++)
       {
         switch (this[i].ColumnType)
-        { 
+        {
           case DBxColumnType.Binary:
           case DBxColumnType.Memo:
           case DBxColumnType.Xml:
@@ -1060,7 +1048,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает описание столбца с неизвестным типом.
-    /// Свойство Nullable принимает значение True.
+    /// Свойство <see cref="Nullable"/> принимает значение True.
     /// Остальные свойства имеют нулевое значение.
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
@@ -1089,12 +1077,12 @@ namespace FreeLibSet.Data
     #region Свойства
 
     /// <summary>
-    /// Имя столбца
+    /// Имя столбца. Задается в конструкторе. Не может быть пустой строкой
     /// </summary>
     public string ColumnName { get { return base.Code; } }
 
     /// <summary>
-    /// Тип столбца
+    /// Тип столбца. По умолчанию - <see cref="DBxColumnType.Unknown"/>.
     /// </summary>
     public DBxColumnType ColumnType
     {
@@ -1104,7 +1092,7 @@ namespace FreeLibSet.Data
     private DBxColumnType _ColumnType;
 
     /// <summary>
-    /// Максимальная длина для текстового поля
+    /// Максимальная длина для текстового поля. По умолчанию - 0 - длина не указана.
     /// </summary>
     public int MaxLength
     {
@@ -1119,7 +1107,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// true, если поле может содержать значение null.
-    /// Свойства Nullable и DefaultValue являются взаимоисключающими. Может быть установлено только одно из двух свойств, 
+    /// Свойства <see cref="Nullable"/> и <see cref="DefaultValue"/> являются взаимоисключающими. Может быть установлено только одно из двух свойств, 
     /// или оба свойства не установлены.
     /// </summary>
     public bool Nullable
@@ -1157,17 +1145,17 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Значение по умолчанию для столбца. Задается выражением ADD COLUMN ... DEFAULT (DefaultValue)
-    /// Свойства Nullable и DefaultValue являются взаимоисключающими. Может быть установлено только одно из двух свойств, 
+    /// Свойства <see cref="Nullable"/> и <see cref="DefaultValue"/> являются взаимоисключающими. Может быть установлено только одно из двух свойств, 
     /// или оба свойства не установлены.
     /// </summary>
     public object DefaultValue
     {
-      get 
+      get
       {
         if (_DefaultValue is DBNull)
           return null;
         else
-          return _DefaultValue; 
+          return _DefaultValue;
       }
       set
       {
@@ -1183,7 +1171,7 @@ namespace FreeLibSet.Data
     private object _DefaultValue;
 
     /// <summary>
-    /// Устанавливает свойство DefaultValue равным константному значению соответствующего типа
+    /// Устанавливает свойство <see cref="DefaultValue"/> равным константному значению соответствующего типа
     /// </summary>
     public void SetDefaultValue()
     {
@@ -1191,7 +1179,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает DefaultValue как объект DBxConst
+    /// Возвращает <see cref="DefaultValue"/> как объект <see cref="DBxConst"/>.
+    /// Если значение по умолчанию не было установлено, возвращает null.
     /// </summary>
     public DBxConst DefaultExpression
     {
@@ -1212,11 +1201,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Для ссылочных полей - имя таблицы, на которое ссылается поле
+    /// Для ссылочных полей - имя таблицы, на которое ссылается поле. По умолчанию - пустая строка
     /// </summary>
     public string MasterTableName
     {
-      get { return _MasterTableName; }
+      get { return _MasterTableName ?? String.Empty; }
       set
       {
         CheckNotReadOnly();
@@ -1241,7 +1230,8 @@ namespace FreeLibSet.Data
       */
 
     /// <summary>
-    /// Для ссылочных полей - правила при удалении строки со ссылочным полем
+    /// Для ссылочных полей - правила при удалении строки со ссылочным полем.
+    /// По умолчанию - <see cref="DBxRefType.Disallow"/>
     /// </summary>
     public DBxRefType RefType
     {
@@ -1255,7 +1245,8 @@ namespace FreeLibSet.Data
     private DBxRefType _RefType;
 
     /// <summary>
-    /// Минимально допустимое значение для числового поля
+    /// Минимально допустимое значение для числового поля. По умолчанию - 0.
+    /// Если значения <see cref="MinValue"/> и <see cref="MaxValue"/> оба равны 0, то диапазон значений не определен.
     /// </summary>
     public double MinValue
     {
@@ -1269,7 +1260,8 @@ namespace FreeLibSet.Data
     private double _MinValue;
 
     /// <summary>
-    /// Максимально допустимое значение для числового поля
+    /// Максимально допустимое значение для числового поля. По умолчанию - 0.
+    /// Если значения <see cref="MinValue"/> и <see cref="MaxValue"/> оба равны 0, то диапазон значений не определен.
     /// </summary>
     public double MaxValue
     {
@@ -1335,11 +1327,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Комментарий к столбцу (если поддерживается базой данных)
+    /// Комментарий к столбцу (если поддерживается базой данных).
+    /// По умолчанию - пустая строка
     /// </summary>
     public string Comment
     {
-      get { return _Comment; }
+      get { return _Comment ?? String.Empty; }
       set
       {
         CheckNotReadOnly();
@@ -1378,7 +1371,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию описания столбца.
-    /// Копия не привязана к описанию таблицы и имеет IsReadOnly=false
+    /// Копия не привязана к описанию таблицы и имеет <see cref="IsReadOnly"/>=false.
     /// </summary>
     /// <returns>Копия описания столбца</returns>
     public DBxColumnStruct Clone()
@@ -1396,7 +1389,7 @@ namespace FreeLibSet.Data
     #region Создание столбца для DataTable
 
     /// <summary>
-    /// Определение типа данных для DataColumn.DataType
+    /// Определение типа данных для <see cref="DataColumn.DataType"/>.
     /// </summary>
     public Type DataType
     {
@@ -1459,7 +1452,7 @@ namespace FreeLibSet.Data
             // Нет, может. Это во встроенной справке VS 2005 для DataColumn.DataType почему-то не указан тип System.Guid.
             // Проверено на начальной, без service pack, версии Net Framework 2.0.50727.42
             // Работает сортировка DataView.Sort, DataView.Find(), Primary key и DataTable.Rows.Find().
-            return typeof(Guid); 
+            return typeof(Guid);
 
           case DBxColumnType.Memo:
           case DBxColumnType.Xml:
@@ -1475,18 +1468,18 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает объект DataColumn
+    /// Создает объект <see cref="DataColumn"/>.
     /// </summary>
-    /// <returns>Столбец для таблицы DataTable</returns>
+    /// <returns>Столбец для таблицы <see cref="DataTable"/></returns>
     public DataColumn CreateDataColumn()
     {
       return CreateDataColumn(this.ColumnName);
     }
 
     /// <summary>
-    /// Создает объект DataColumn с возможностью переопределить имя столбца
+    /// Создает объект <see cref="DataColumn"/> с возможностью переопределить имя столбца
     /// </summary>
-    /// <returns>Столбец для таблицы DataTable</returns>
+    /// <returns>Столбец для таблицы <see cref="DataTable"/></returns>
     public DataColumn CreateDataColumn(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
@@ -1698,8 +1691,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавляет описание индекса, основанного на заданном списке имен столбцов/
-    /// Имена столбцов задаются через запятую
+    /// Добавляет описание индекса, основанного на заданном списке имен столбцов.
+    /// Имена столбцов задаются через запятую. Нельзя задавать признаки "ASC" / "DESC".
     /// </summary>
     /// <param name="columns">Имена столбцов</param>
     /// <returns>Описание индекса</returns>
@@ -1718,9 +1711,8 @@ namespace FreeLibSet.Data
     #region Дополнительно
 
     /// <summary>
-    /// Возвращает описание последнего добавленного столбца.
-    /// Удобно использовать для установки свойства Comment после вызова метода Add().
-    /// </summary>
+    /// Возвращает описание последнего добавленного индекса.
+    /// </summary>                                  
     public DBxIndexStruct LastAdded
     {
       get
@@ -1747,7 +1739,7 @@ namespace FreeLibSet.Data
     /// Создает описание индекса
     /// </summary>
     /// <param name="indexName">Имя индекса. Должно быть задано</param>
-    /// <param name="columns">Список столбцо. Не может быть пустым</param>
+    /// <param name="columns">Список столбцов. Не может быть пустым</param>
     public DBxIndexStruct(string indexName, DBxColumns columns)
       : base(indexName)
     {
@@ -1786,7 +1778,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public string Comment
     {
-      get { return _Comment; }
+      get { return _Comment ?? String.Empty; }
       set
       {
         CheckNotReadOnly();
@@ -1806,7 +1798,7 @@ namespace FreeLibSet.Data
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение при IsReadOnly=true
+    /// Генерирует исключение при <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1825,7 +1817,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию описания индекса.
-    /// Созданная копия не привязана к описанию таблицы
+    /// Созданная копия не привязана к описанию таблицы и имеет значение <see cref="IsReadOnly"/>=false.
     /// </summary>
     /// <returns></returns>
     public DBxIndexStruct Clone()

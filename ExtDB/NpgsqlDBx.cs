@@ -171,12 +171,12 @@ namespace FreeLibSet.Data.Npgsql
 
     /// <summary>                               
     /// Обновляет структуру существующей базы
-    /// данных на основании созданного описание в свойстве DBx.Struct.
+    /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
     /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
-    /// не вносится не вносится, сообщения не добавляются</param>
+    /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)

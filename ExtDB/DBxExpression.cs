@@ -11,8 +11,8 @@ namespace FreeLibSet.Data
 {
   /// <summary>
   /// Базовый класс "выражения", которое может быть обычным полем, ссылочным полем (получаемым через JOIN), константой, функцией или математическим выражением.
-  /// Выражения должны сериализоваться.
-  /// Должен быть переопределен оператор Equals
+  /// Выражения должны сериализоваться и быть классами "однократной записи".
+  /// Должен быть переопределен метод <see cref="Object.Equals(object)"/>.
   /// </summary>
   [Serializable]
   public abstract class DBxExpression
@@ -85,6 +85,17 @@ namespace FreeLibSet.Data
     /// <param name="prefix">Добавляемый префикс</param>
     /// <returns>Новое выражение. Для константы возвращается текущий объект</returns>
     public abstract DBxExpression SetColumnNamePrefix(string prefix);
+
+    /// <summary>
+    /// Добавляет в список все выражения в дереве.
+    /// Для <see cref="DBxColumn"/> и <see cref="DBxConst"/> добавляет в список текущий объект.
+    /// Для <see cref="DBxFunction"/> и <see cref="DBxAggregateFunction"/> также добавляет в список аргументы
+    /// </summary>
+    /// <param name="list">Заполняемый список</param>
+    public virtual void GetAllExpressions(IList<DBxExpression> list)
+    {
+      list.Add(this);
+    }
   }
 
   /// <summary>
@@ -387,7 +398,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public enum DBxFunctionKind
   {
-    #region Псевдофункции - операции
+    #region Псевдофункции - математические операции
 
     /// <summary>
     /// Операция "+"
@@ -416,6 +427,40 @@ namespace FreeLibSet.Data
 
     #endregion
 
+    #region Псевдофункции - операции сравнения
+
+    /// <summary>
+    /// "=" - сравнение на равенство
+    /// </summary>
+    Equal,
+
+    /// <summary>
+    /// "Меньше"
+    /// </summary>
+    LessThan,
+
+    /// <summary>
+    /// "Меньше или равно"
+    /// </summary>
+    LessOrEqualThan,
+
+    /// <summary>
+    /// "Больше"
+    /// </summary>
+    GreaterThan,
+
+    /// <summary>
+    /// "Больше или равно"
+    /// </summary>
+    GreaterOrEqualThan,
+
+    /// <summary>
+    /// "Не равно"
+    /// </summary>
+    NotEqual,
+
+    #endregion
+
     #region Функции
 
     /// <summary>
@@ -428,6 +473,11 @@ namespace FreeLibSet.Data
     /// Для некоторых баз данных, в том числе MS SQL Server, используется функция ISNULL
     /// </summary>
     Coalesce,
+
+    /// <summary>
+    /// Тернарный оператор сравнения, функция IIF
+    /// </summary>
+    IIf,
 
     /// <summary>
     /// Возвращает длину строки
@@ -521,6 +571,12 @@ namespace FreeLibSet.Data
         case DBxFunctionKind.Substract:
         case DBxFunctionKind.Multiply:
         case DBxFunctionKind.Divide:
+        case DBxFunctionKind.Equal:
+        case DBxFunctionKind.LessThan:
+        case DBxFunctionKind.LessOrEqualThan:
+        case DBxFunctionKind.GreaterThan:
+        case DBxFunctionKind.GreaterOrEqualThan:
+        case DBxFunctionKind.NotEqual:
           minArgCount = 2;
           maxArgCount = 2;
           break;
@@ -542,6 +598,11 @@ namespace FreeLibSet.Data
         case DBxFunctionKind.Coalesce:
           minArgCount = 2;
           maxArgCount = int.MaxValue;
+          break;
+
+        case DBxFunctionKind.IIf:
+          minArgCount = 3;
+          maxArgCount = 3;
           break;
 
         case DBxFunctionKind.Length:
@@ -679,6 +740,19 @@ namespace FreeLibSet.Data
           return DataTools.MultiplyValues(a[0], a[1]);
         case DBxFunctionKind.Divide:
           return DataTools.DivideValues(a[0], a[1]);
+        case DBxFunctionKind.Equal:
+          return CompareFilter.TestFilter(a[0], a[1], CompareKind.Equal);
+        case DBxFunctionKind.LessThan:
+          return CompareFilter.TestFilter(a[0], a[1], CompareKind.LessThan);
+        case DBxFunctionKind.LessOrEqualThan:
+          return CompareFilter.TestFilter(a[0], a[1], CompareKind.LessOrEqualThan);
+        case DBxFunctionKind.GreaterThan:
+          return CompareFilter.TestFilter(a[0], a[1], CompareKind.GreaterThan);
+        case DBxFunctionKind.GreaterOrEqualThan:
+          return CompareFilter.TestFilter(a[0], a[1], CompareKind.GreaterOrEqualThan);
+        case DBxFunctionKind.NotEqual:
+          return CompareFilter.TestFilter(a[0], a[1], CompareKind.NotEqual);
+
         case DBxFunctionKind.Neg:
           return DataTools.NegValue(a[0]);
         case DBxFunctionKind.Abs:
@@ -690,6 +764,13 @@ namespace FreeLibSet.Data
               return a[i];
           }
           return null;
+
+        case DBxFunctionKind.IIf:
+          if (DataTools.GetBool(a[0]))
+            return a[1];
+          else
+            return a[2];
+
         case DBxFunctionKind.Length:
           return DataTools.GetString(a[0]).Length;
         case DBxFunctionKind.Lower:
@@ -754,6 +835,17 @@ namespace FreeLibSet.Data
         return this; // реально никогда не будет
     }
 
+    /// <summary>
+    /// Рекурсивно добавляет аргументы в список
+    /// </summary>
+    /// <param name="list">Заполняемый список</param>
+    public override void GetAllExpressions(IList<DBxExpression> list)
+    {
+      base.GetAllExpressions(list);
+      for (int i = 0; i < _Arguments.Length; i++)
+        _Arguments[i].GetAllExpressions(list);
+    }
+
     #endregion
   }
 
@@ -762,7 +854,7 @@ namespace FreeLibSet.Data
   /// Список функций и операторов
   /// </summary>
   [Serializable]
-  public enum DBxAgregateFunctionKind
+  public enum DBxAggregateFunctionKind
   {
     #region Агрегатные функции
 
@@ -798,7 +890,7 @@ namespace FreeLibSet.Data
   /// Агрегатная функция 
   /// </summary>
   [Serializable]
-  public sealed class DBxAgregateFunction : DBxExpression
+  public sealed class DBxAggregateFunction : DBxExpression
   {
     #region Конструкторы
 
@@ -807,15 +899,14 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="function">Функция</param>
     /// <param name="arg">Аргумент функции - другое выражение, обычно, имя поля. Может быть null для COUNT</param>
-    public DBxAgregateFunction(DBxAgregateFunctionKind function, DBxExpression arg)
+    public DBxAggregateFunction(DBxAggregateFunctionKind function, DBxExpression arg)
     {
-      if (arg == null && function != DBxAgregateFunctionKind.Count)
+      if (arg == null && function != DBxAggregateFunctionKind.Count)
         throw new ArgumentNullException("arg", "Аргумент (обычно, имя поля) должен быть задан для всех агрегатных функций, кроме COUNT(*)");
 
       _Function = function;
       _Argument = arg;
     }
-
 
     /// <summary>
     /// Создает объект функции, принимающей список аргументов - имен полей.
@@ -823,7 +914,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="function">Функция</param>
     /// <param name="columnName">Аргументы функции - имена полей, для которых создаются DBxColumn</param>
-    public DBxAgregateFunction(DBxAgregateFunctionKind function, string columnName)
+    public DBxAggregateFunction(DBxAggregateFunctionKind function, string columnName)
       : this(function, String.IsNullOrEmpty(columnName) ? (DBxExpression)null : (DBxExpression)(new DBxColumn(columnName)))
     {
     }
@@ -835,8 +926,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Вид функции
     /// </summary>
-    public DBxAgregateFunctionKind Function { get { return _Function; } }
-    private readonly DBxAgregateFunctionKind _Function;
+    public DBxAggregateFunctionKind Function { get { return _Function; } }
+    private readonly DBxAggregateFunctionKind _Function;
 
     /// <summary>
     /// Аргументы функции - список выражений
@@ -872,7 +963,7 @@ namespace FreeLibSet.Data
     /// <returns>Результат сравнения</returns>
     public override bool Equals(object obj)
     {
-      DBxAgregateFunction obj2 = obj as DBxAgregateFunction;
+      DBxAggregateFunction obj2 = obj as DBxAggregateFunction;
       if (obj2 == null)
         return false;
       if (this._Function != obj2._Function)
@@ -938,12 +1029,30 @@ namespace FreeLibSet.Data
       if (Object.ReferenceEquals(arg2, _Argument))
         return this; // реально никогда не будет
       else
-        return new DBxAgregateFunction(Function, arg2);
+        return new DBxAggregateFunction(Function, arg2);
     }
+
+    /// <summary>
+    /// Рекурсивно добавляет в список аргумент функции, если он есть
+    /// </summary>
+    /// <param name="list">Заполняемый список</param>
+    public override void GetAllExpressions(IList<DBxExpression> list)
+    {
+      base.GetAllExpressions(list);
+
+      if (_Argument != null)
+        _Argument.GetAllExpressions(list);
+    }
+
+    /// <summary>
+    /// Функция "COUNT(*)"
+    /// </summary>
+    public static readonly DBxAggregateFunction Count = new DBxAggregateFunction(DBxAggregateFunctionKind.Count, (DBxExpression)null);
 
     #endregion
   }
 
+#if XXX // Пока не используется
   /// <summary>
   /// Список выражений.
   /// Класс не используется в прикладном коде.
@@ -1149,4 +1258,6 @@ namespace FreeLibSet.Data
 
     #endregion
   }
+
+#endif
 }

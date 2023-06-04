@@ -3877,8 +3877,8 @@ namespace FreeLibSet.Data
     #region Трассировка SQL-запросов
 
     /// <summary>
-    /// Управление запроса на уровне соединения.
-    /// Если свойство не установлено в явном виде для этого соединения, возвращается значение DBx.TraceEnabled
+    /// Управление трассировкой на уровне соединения.
+    /// Если свойство не установлено в явном виде для этого соединения, возвращается значение <see cref="DBx.TraceEnabled"/>
     /// </summary>
     public bool TraceEnabled { get { return _TraceEnabled ?? DB.TraceEnabled; } set { _TraceEnabled = value; } }
     private bool? _TraceEnabled;

@@ -5,7 +5,10 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2023-05-23T21:36:28.008000000"/>
+	<meta name="changed" content="2023-06-04T13:05:38.859000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -594,12 +597,12 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -635,7 +638,7 @@
 			<p lang="en-US" align="center">345</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.04.2023-23.05.2023</p>
+			<p lang="en-US" align="center">21.04.2023-0<span lang="ru-RU">4</span>.06.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Небольшая
@@ -655,13 +658,20 @@
 			преобразования </span><span lang="en-US">DateTime </span><span lang="ru-RU">и
 			числовых значений.</span></p>
 			<p lang="en-US">5. DataTools.GetDateTime() <span lang="ru-RU">и
-			</span>GetNullableDateTime() <span lang="ru-RU">разрешают аргумент
-			</span>TimeSpan. <span lang="ru-RU">Отдельная перегрузка
-			</span>GetDateTime<span lang="ru-RU">() для </span>TimeSpan.
+			</span>GetNullableDateTime() <span lang="ru-RU">(</span><a href="ExtTools_11.htm#v001p1">v.1
+			<span lang="ru-RU">п.1</span></a><span lang="ru-RU">) разрешают
+			аргумент </span>TimeSpan. <span lang="ru-RU">Отдельная перегрузка
+			</span>GetDateTime<span lang="ru-RU">() для </span>TimeSpan <span lang="ru-RU">и
+			</span>TimeSpan<span lang="ru-RU">+</span>DateTime.
 			DataTools.GetTimeSpan() <span lang="ru-RU">разрешает аргумент
 			</span>DateTime.</p>
-			<p><a name="v345p6"></a>6. Функция <span lang="en-US">DataTools.CompareNumbers()</span><span lang="en-US">.
+			<p><a name="v345p6"></a>6. Функция <span lang="en-US">DataTools.CompareNumbers().
 			</span><span lang="ru-RU">Используется </span><span lang="en-US">ExcelFunctions.Compare()</span></p>
+			<p><span lang="en-US">7. FileTools.WriteStream() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v003p1"><span lang="en-US">v.3
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не
+			выполняет позиционирование на начало потока.</span></p>
+			<p lang="en-US">8. <span lang="ru-RU">Метод
+			</span>ZipFileTools.ExtractZipResourceFile()</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -1295,9 +1305,9 @@
 <br/>
 
 			</p>
-			<p><a name="v320p2"></a><span lang="ru-RU">2</span><span lang="en-US">.
-			</span><span lang="ru-RU">Методы </span><span lang="en-US">UITools.CorrectNumberString()
-			(<a href="#v301p10">v.301 </a></span><span lang="ru-RU"><a href="#v301p10">п.10</a>,
+			<p><span lang="ru-RU">2</span><span lang="en-US">. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">UITools.CorrectNumberString() (<a href="#v301p10">v.301
+			</a></span><span lang="ru-RU"><a href="#v301p10">п.10</a>,
 			</span><a href="ExtForms_20.htm#v320p2"><span lang="en-US">ExtForms,
 			v.320 </span><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">3. </span><span lang="ru-RU">Перегрузки
@@ -1862,17 +1872,16 @@
 			</span><span lang="ru-RU">могло присваиваться значение </span><span lang="en-US">null
 			</span><span lang="ru-RU">вместо пустой строки, что приводила к
 			ошибке валидаторов.</span></p>
-			<p lang="en-US"><a name="v304p4"></a>4. <span lang="ru-RU">Поддержка
-			динамического текста сообщения об ошибке/предупреждении в
-			валидаторах удаленного интерфейса:</span></p>
+			<p lang="en-US">4. <span lang="ru-RU">Поддержка динамического
+			текста сообщения об ошибке/предупреждении в валидаторах удаленного
+			интерфейса:</span></p>
 			<p lang="en-US"><span lang="ru-RU">- Структура </span>UIValidateResult.</p>
 			<p lang="en-US">- <span lang="ru-RU">Свойства
 			</span>UIValidator.ExpressionEx <span lang="ru-RU">и </span>Message
 			<span lang="ru-RU">заменены на одно свойство</span> ResultEx.</p>
 			<p lang="en-US">- <span lang="ru-RU">Метод
 			</span>UITools.CreateValidateResultEx().</p>
-			<p lang="en-US"><a name="v304p5"></a>5. <span lang="ru-RU">Класс
-			CsvCodesTextBox.</span></p>
+			<p lang="en-US">5. <span lang="ru-RU">Класс CsvCodesTextBox.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -1910,16 +1919,16 @@
 			атрибутом </span><span lang="en-US">[NonSerialized], </span><span lang="ru-RU">чтобы
 			не возникало исключение сериализации при наличии обработчика
 			</span><span lang="en-US">CheckValue.</span></p>
-			<p><a name="v303p5"></a><span lang="en-US">5. </span><span lang="ru-RU">Неуправляемые</span>
+			<p><span lang="en-US">5. </span><span lang="ru-RU">Неуправляемые</span>
 			<span lang="ru-RU">свойства</span> <span lang="en-US">RI.Control.Enabled
 			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v167p1"><span lang="en-US">v.167
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) и
 			</span><span lang="en-US">RI.TextBox.ReadOnly </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v229p3"><span lang="en-US">v.229
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">) не
 			работали.</span></p>
-			<p lang="en-US"><a name="v303p6"></a>6. <span lang="ru-RU">Свойства
-			</span>ReadOnly <span lang="ru-RU">и </span>ReadOnlyEx <span lang="ru-RU">у
-			следующих элементов удаленного интерфейса:</span></p>
+			<p lang="en-US">6. <span lang="ru-RU">Свойства </span>ReadOnly <span lang="ru-RU">и
+			</span>ReadOnlyEx <span lang="ru-RU">у следующих элементов
+			удаленного интерфейса:</span></p>
 			<p lang="en-US"><span lang="ru-RU">- </span>DateTimeBox</p>
 			<p lang="en-US">- BaseNumEditBox&lt;T&gt;</p>
 			<p lang="en-US">- CsvCodesComboBox</p>

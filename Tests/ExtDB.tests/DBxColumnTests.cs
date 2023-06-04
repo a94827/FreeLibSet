@@ -89,6 +89,15 @@ namespace ExtDB_tests.Data
       Assert.AreEqual("F1.F2", res.ColumnName);
     }
 
+    [Test]
+    public void GetAllExpressions()
+    {
+      DBxColumn sut = new DBxColumn("F2");
+      List<DBxExpression> lst = new List<DBxExpression>();
+      sut.GetAllExpressions(lst);
+      CollectionAssert.AreEqual(new DBxExpression[1] { sut }, lst);
+    }
+
     #endregion
 
     #region Сериализация

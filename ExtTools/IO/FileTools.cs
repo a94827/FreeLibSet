@@ -1180,7 +1180,8 @@ namespace FreeLibSet.IO
     #region Чтение и запись Stream
 
     /// <summary>
-    /// Записать двоичный поток в файл
+    /// Записать двоичный поток в файл.
+    /// Записываются данные от текущей позиции до конца потока. Позиционирование на начало потока не выполняется
     /// </summary>
     /// <param name="filePath">Имя файла</param>
     /// <param name="sourceStream">Исходный поток</param>
@@ -1191,7 +1192,7 @@ namespace FreeLibSet.IO
 
       using (FileStream fs = new FileStream(filePath.Path, FileMode.Create, FileAccess.Write))
       {
-        CopyStream(sourceStream, fs);
+        CopyStream(sourceStream, fs, false /* 01.06.2023 */);
       }
     }
 

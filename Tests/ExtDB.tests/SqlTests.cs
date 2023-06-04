@@ -8,39 +8,54 @@ using FreeLibSet.Remoting;
 using System.Data;
 using FreeLibSet.Data.SQLite;
 using FreeLibSet.Data.SqlClient;
+using FreeLibSet.Data.Npgsql;
+using Npgsql;
+using FreeLibSet.Data.OleDb;
 
 namespace ExtDB_tests.Data
 {
   public abstract class SqlTestBase
   {
+    #region Конструктор
+
     protected SqlTestBase()
     {
-      #region Тестовая таблица
+      _TestStruct = new DBxStruct();
+      DBxTableStruct ts;
+      _TestData = new DataSet();
+      DataTable tbl;
+
+      #region Тестовая таблица 1 - фильтры и функции для полей разных типов
 
       const string Guid1 = "83e4ea91-6f0b-4ab6-9d58-c981418c26b7";
       const string Guid2 = "c84cc4da-6f1d-488b-b647-8bfa5642fe23";
       const string Guid0 = "00000000-0000-0000-0000-000000000000"; // Guid.Empty
 
-      _TableStruct = new DBxTableStruct("Test");
-      _TableStruct.Columns.AddId();
-      _TableStruct.Columns.AddString("ColS", 10, true);
-      _TableStruct.Columns.AddInt("ColI", true);
-      _TableStruct.Columns.AddDouble("ColF", true);
-      _TableStruct.Columns.AddBoolean("ColL", true);
-      _TableStruct.Columns.AddDate("ColD", true);
-      _TableStruct.Columns.AddGuid("ColG", true);
-      _TableStruct.Columns.AddTime("ColT", true);
+      ts = _TestStruct.Tables.Add("Test1");
+      ts.Columns.AddId();
+      ts.Columns.AddString("ColS", 10, true);
+      ts.Columns.AddString("ColS2", 10, true);
+      ts.Columns.AddInt("ColI", true);
+      ts.Columns.AddDouble("ColF", true);
+      ts.Columns.AddBoolean("ColL");
+      ts.Columns.AddDate("ColD", true);
+      ts.Columns.AddDate("ColD2", true);
+      ts.Columns.AddDateTime("ColDT", true);
+      ts.Columns.AddTime("ColT", true);
+      ts.Columns.AddGuid("ColG", true);
 
       DBNull NULL = DBNull.Value; // для большей наглядности таблицы
 
-      _TestTable = _TableStruct.CreateDataTable();
-      //                 Id  ColS          ColI  ColF  ColL   ColD                    ColG             ColT
-      _TestTable.Rows.Add(1, "AAA"       , 10  , 5.0 , true , new DateTime(2023,1,1), new Guid(Guid1), new TimeSpan(12,34,56));
-      _TestTable.Rows.Add(2, "BcDe"      , 20  , NULL, NULL , NULL                  , Guid.Empty     , TimeSpan.Zero);
-      _TestTable.Rows.Add(3, NULL        , NULL, NULL, NULL , NULL                  , NULL           , NULL);
-      _TestTable.Rows.Add(4, ""          , 0   , 0.0 , false, new DateTime(2001,1,1), new Guid(Guid2), new TimeSpan(12,34,56));
-      _TestTable.Rows.Add(5, "abcdefghij", -10 , -5.0, true , new DateTime(2023,1,2), new Guid(Guid1), new TimeSpan(12,34,57));
-      _TestTable.AcceptChanges();
+
+      tbl = ts.CreateDataTable();
+      _TestData.Tables.Add(tbl);
+      //          Id  ColS          ColS2   ColI  ColF  ColL   ColD                      ColD2                     ColDT                                 ColT                    ColG           
+      tbl.Rows.Add(1, "AAA", "***", 10, 5.0, true, new DateTime(2023, 1, 1), new DateTime(2023, 1, 5), new DateTime(2023, 1, 1, 0, 0, 1), new TimeSpan(12, 34, 56), new Guid(Guid1));
+      tbl.Rows.Add(2, "BcDe", "###", 20, NULL, false, NULL, new DateTime(2023, 1, 5), new DateTime(2023, 1, 1, 0, 0, 0), TimeSpan.Zero, Guid.Empty);
+      tbl.Rows.Add(3, NULL, "???", NULL, NULL, false, NULL, NULL, NULL, NULL, NULL);
+      tbl.Rows.Add(4, "", "%%%", 0, 0.0, false, new DateTime(2001, 1, 1), NULL, new DateTime(2023, 1, 1, 23, 59, 59), new TimeSpan(12, 34, 56), new Guid(Guid2));
+      tbl.Rows.Add(5, "abcdefghij", "*#?%", -10, -5.0, true, new DateTime(2023, 1, 2), new DateTime(2023, 1, 2), new DateTime(2023, 1, 2, 12, 34, 56), new TimeSpan(12, 34, 57), new Guid(Guid1));
+      tbl.AcceptChanges();
 
       #endregion
 
@@ -84,9 +99,7 @@ namespace ExtDB_tests.Data
       filters.Add(new FilterTestInfo(new ValueFilter("ColF", 0.0, CompareKind.Equal), 2, 3, 4)); // DBNull считается 0
       filters.Add(new FilterTestInfo(new ValueFilter("ColF", 0.0, CompareKind.GreaterThan), 1));
 
-      filters.Add(new FilterTestInfo(new ValueFilter("ColL", false, CompareKind.Equal, DBxColumnType.Boolean), 2, 3, 4)); // DBNull считается false
       filters.Add(new FilterTestInfo(new ValueFilter("ColL", true, CompareKind.Equal, DBxColumnType.Boolean), 1, 5));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColL", false, CompareKind.NotEqual, DBxColumnType.Boolean), 1, 5));
       filters.Add(new FilterTestInfo(new ValueFilter("ColL", true, CompareKind.NotEqual, DBxColumnType.Boolean), 2, 3, 4));
 
       filters.Add(new FilterTestInfo(new ValueFilter("ColD", new DateTime(2023, 1, 1), CompareKind.Equal, DBxColumnType.Date), 1));
@@ -105,27 +118,25 @@ namespace ExtDB_tests.Data
       filters.Add(new FilterTestInfo(new ValueFilter("ColG", Guid1, CompareKind.NotEqual, DBxColumnType.Guid), 2, 3, 4));
       filters.Add(new FilterTestInfo(new ValueFilter("ColG", Guid0, CompareKind.NotEqual, DBxColumnType.Guid), 1, 4, 5));
 
-      filters.Add(new FilterTestInfo(new ValueFilter("ColT", new TimeSpan(12, 34, 56), CompareKind.Equal, DBxColumnType.Time), 1, 4));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColT", TimeSpan.Zero, CompareKind.Equal, DBxColumnType.Time), 2, 3));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColT", new TimeSpan(12, 34, 56), CompareKind.NotEqual, DBxColumnType.Time), 2, 3, 5));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColT", TimeSpan.Zero, CompareKind.NotEqual, DBxColumnType.Time), 1, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueFilter("ColT", new TimeSpan(12, 34, 56), CompareKind.Equal, DBxColumnType.Time), 1, 4));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueFilter("ColT", TimeSpan.Zero, CompareKind.Equal, DBxColumnType.Time), 2, 3));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueFilter("ColT", new TimeSpan(12, 34, 56), CompareKind.NotEqual, DBxColumnType.Time), 2, 3, 5));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueFilter("ColT", TimeSpan.Zero, CompareKind.NotEqual, DBxColumnType.Time), 1, 4, 5));
 
       // сравнение с NULL. Для DataView не работает
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColS", null, CompareKind.Equal, DBxColumnType.String), 3));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColI", null, CompareKind.Equal, DBxColumnType.Int), 3));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColF", null, CompareKind.Equal, DBxColumnType.Float), 2, 3));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColL", null, CompareKind.Equal, DBxColumnType.Boolean), 2, 3));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColD", null, CompareKind.Equal, DBxColumnType.Date), 2, 3));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColG", null, CompareKind.Equal, DBxColumnType.Guid), 3));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColT", null, CompareKind.Equal, DBxColumnType.Time), 3));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView | TestCompat.TimeSpan, new ValueFilter("ColT", null, CompareKind.Equal, DBxColumnType.Time), 3));
 
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColS", null, CompareKind.NotEqual, DBxColumnType.String), 1, 2, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColI", null, CompareKind.NotEqual, DBxColumnType.Int), 1, 2, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColF", null, CompareKind.NotEqual, DBxColumnType.Float), 1, 4, 5));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColL", null, CompareKind.NotEqual, DBxColumnType.Boolean), 1, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColD", null, CompareKind.NotEqual, DBxColumnType.Date), 1, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColG", null, CompareKind.NotEqual, DBxColumnType.Guid), 1, 2, 4, 5));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColT", null, CompareKind.NotEqual, DBxColumnType.Time), 1, 2, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView | TestCompat.TimeSpan, new ValueFilter("ColT", null, CompareKind.NotEqual, DBxColumnType.Time), 1, 2, 4, 5));
 
       #endregion
 
@@ -178,10 +189,10 @@ namespace ExtDB_tests.Data
       filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new Guid[] { Guid.Empty }, DBxColumnType.Guid), 2, 3));
       filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new string[] { Guid0 }, DBxColumnType.Guid), 2, 3));
 
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), new TimeSpan(12, 34, 57) }), 1, 4, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), TimeSpan.Zero }), 1, 2, 3, 4));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56) }), 1, 4));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColT", new TimeSpan[] { TimeSpan.Zero }), 2, 3));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), new TimeSpan(12, 34, 57) }), 1, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), TimeSpan.Zero }), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56) }), 1, 4));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { TimeSpan.Zero }), 2, 3));
 
       #endregion
 
@@ -233,6 +244,132 @@ namespace ExtDB_tests.Data
 
       #endregion
 
+      #region NumRangeFilter
+
+      filters.Add(new FilterTestInfo(new NumRangeFilter("Id", 2, 4), 2, 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeFilter("Id", 2, null), 2, 3, 4, 5));
+      filters.Add(new FilterTestInfo(new NumRangeFilter("Id", null, 4), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeFilter("Id", null, null), 1, 2, 3, 4, 5));
+      filters.Add(new FilterTestInfo(new NumRangeFilter("Id", 3, 2)));
+
+      filters.Add(new FilterTestInfo(new NumRangeFilter("ColI", -10, 0), 3, 4, 5));
+
+      filters.Add(new FilterTestInfo(new NumRangeFilter("ColF", 0.0, 5.0), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeFilter("ColF", -5.0, 0.0), 2, 3, 4, 5));
+
+      #endregion
+
+      #region DateRangeFilter
+
+      filters.Add(new FilterTestInfo(new DateRangeFilter("ColD", new DateTime(2001, 1, 1), new DateTime(2022, 12, 31)), 4));
+      filters.Add(new FilterTestInfo(new DateRangeFilter("ColD", 2023, 1), 1, 5));
+      filters.Add(new FilterTestInfo(new DateRangeFilter("ColD", new DateTime(2023, 1, 1), null), 1, 5));
+      filters.Add(new FilterTestInfo(new DateRangeFilter("ColD", null, new DateTime(2023, 1, 1)), 1, 4));
+
+      filters.Add(new FilterTestInfo(new DateRangeFilter("ColDT", 2023, 1, 1), 1, 2, 4));
+      filters.Add(new FilterTestInfo(new DateRangeFilter("ColDT", null, new DateTime(2023, 1, 1)), 1, 2, 4));
+
+
+      #endregion
+
+      #region DateRangeInclusionFilter
+
+      filters.Add(new FilterTestInfo(new DateRangeInclusionFilter("ColD", "ColD2", new DateTime(2022, 12, 31)), 2, 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeInclusionFilter("ColD", "ColD2", new DateTime(2023, 1, 1)), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeInclusionFilter("ColD", "ColD2", new DateTime(2023, 1, 2)), 1, 2, 3, 4, 5));
+      filters.Add(new FilterTestInfo(new DateRangeInclusionFilter("ColD", "ColD2", new DateTime(2023, 1, 6)), 3, 4));
+
+      #endregion
+
+      #region DateRangeCrossFilter
+
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", new DateTime(2022, 12, 31), new DateTime(2023, 1, 1)), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", new DateTime(2023, 1, 2), new DateTime(2023, 1, 5)), 1, 2, 3, 4, 5));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", new DateTime(2023, 1, 5), new DateTime(2023, 1, 5)), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", new DateTime(2023, 1, 6), new DateTime(2023, 1, 6)), 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", null, new DateTime(2022, 12, 31)), 2, 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", null, new DateTime(2023, 1, 1)), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", new DateTime(2023, 1, 5), null), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", new DateTime(2023, 1, 6), null), 3, 4));
+      filters.Add(new FilterTestInfo(new DateRangeCrossFilter("ColD", "ColD2", null, null), 1, 2, 3, 4, 5));
+
+      #endregion
+
+      #region NotNullFilter
+
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColS", DBxColumnType.String), 1, 2, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColI", DBxColumnType.Int), 1, 2, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColF", DBxColumnType.Float), 1, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColD", DBxColumnType.Date), 1, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColDT", DBxColumnType.DateTime), 1, 2, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView | TestCompat.TimeSpan, new NotNullFilter("ColT", DBxColumnType.Time), 1, 2, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColG", DBxColumnType.Guid), 1, 2, 4, 5));
+
+      #endregion
+
+      #region StringValueFilter
+
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StringValueFilter("ColS", "aaa", false)));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StringValueFilter("ColS", "aaa", true), 1));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StringValueFilter("ColS", "AA", false)));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StringValueFilter("ColS", "AAA", false), 1));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StringValueFilter("ColS", "", false), 3, 4));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StringValueFilter("ColS", "", true), 3, 4));
+
+      #endregion
+
+      #region StartsWithFilter
+
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS", "a", false), 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS", "a", true), 1, 5));
+      // Использование специальных символов
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "*", true), 1, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "**", true), 1));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "***", true), 1));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "****", false)));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "#", true), 2));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "##", true), 2));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "###", true), 2));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "####", false)));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "?", true), 3));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "??", true), 3));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new StartsWithFilter("ColS2", "???", true), 3));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "????", false)));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "%", true), 4));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "%%", true), 4));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "%%%", true), 4));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "%%%%", false)));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "*#", true), 5));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "*#?", true), 5));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "*#?%", true), 5));
+      filters.Add(new FilterTestInfo(new StartsWithFilter("ColS2", "*#?%%", true)));
+
+      #endregion
+
+      #region SubstringFilter
+
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS", 1, "cd", false)));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS", 1, "cd", true), 2));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS", 5, "fg", true), 5));
+
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 1, "**", true), 1));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 1, "##", true), 2));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 1, "??", true), 3));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 1, "%%", true), 4));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 0, "*", true), 1, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 1, "#", true), 2, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 2, "?", true), 3, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new SubstringFilter("ColS2", 3, "%", true), 5));
+
+      #endregion
+
+      #region DummyFilters
+
+      filters.Add(new FilterTestInfo(new DummyFilter(false)));
+      filters.Add(new FilterTestInfo(new DummyFilter(true), 1, 2, 3, 4, 5));
+
+      #endregion
+
       _AllTestFilters = filters.ToArray();
 
       #endregion
@@ -269,43 +406,181 @@ namespace ExtDB_tests.Data
 
       #endregion
 
+      #region Операции сравнения
+
+      #region Int-Int
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Equal,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(10)),
+        new DBxColumn("ColI")),
+        true, true, null, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterThan,
+        new DBxColumn("Id"), new DBxColumn("ColI")),
+        false, false, null, true, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterOrEqualThan,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(10)),
+        new DBxColumn("ColI")),
+        true, true, null, true, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessThan,
+        new DBxColumn("Id"), new DBxColumn("ColI")),
+        true, true, null, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessOrEqualThan,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(10)),
+        new DBxColumn("ColI")),
+        true, true, null, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.NotEqual,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(10)),
+        new DBxColumn("ColI")),
+        false, false, null, true, true));
+
+      #endregion
+
+      #region Int-Float
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Equal,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(5.0)),
+        new DBxColumn("ColF")),
+        true, null, null, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterThan,
+        new DBxColumn("Id"), new DBxColumn("ColF")),
+        false, null, null, true, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterOrEqualThan,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(5.0)),
+        new DBxColumn("ColF")),
+        true, null, null, true, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessThan,
+        new DBxColumn("Id"), new DBxColumn("ColF")),
+        true, null, null, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessOrEqualThan,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(5.0)),
+        new DBxColumn("ColF")),
+        true, null, null, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.NotEqual,
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(5.0)),
+        new DBxColumn("ColF")),
+        false, null, null, true, true));
+
+      #endregion
+
+      #region Date
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Equal,
+        new DBxColumn("ColD"), new DBxColumn("ColD2")),
+        false, null, null, null, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterThan,
+        new DBxColumn("ColD"), new DBxColumn("ColD2")),
+        false, null, null, null, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterOrEqualThan,
+        new DBxColumn("ColD"), new DBxColumn("ColD2")),
+        false, null, null, null, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessThan,
+        new DBxColumn("ColD"), new DBxColumn("ColD2")),
+        true, null, null, null, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessOrEqualThan,
+        new DBxColumn("ColD"), new DBxColumn("ColD2")),
+        true, null, null, null, true));
+
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.NotEqual,
+        new DBxColumn("ColD"), new DBxColumn("ColD2")),
+        true, null, null, null, false));
+
+      #endregion
+
+      #region Int-Length()
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Equal,
+        new DBxColumn("Id"), new DBxFunction(DBxFunctionKind.Length, new DBxColumn("ColS2"))),
+        false, false, true, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessThan,
+        new DBxColumn("Id"), new DBxFunction(DBxFunctionKind.Length, new DBxColumn("ColS2"))),
+        true, true, false, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.LessOrEqualThan,
+        new DBxColumn("Id"), new DBxFunction(DBxFunctionKind.Length, new DBxColumn("ColS2"))),
+        true, true, true, false, false));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterThan,
+        new DBxColumn("Id"), new DBxFunction(DBxFunctionKind.Length, new DBxColumn("ColS2"))),
+        false, false, false, true, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.GreaterOrEqualThan,
+        new DBxColumn("Id"), new DBxFunction(DBxFunctionKind.Length, new DBxColumn("ColS2"))),
+        false, false, true, true, true));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.NotEqual,
+        new DBxColumn("Id"), new DBxFunction(DBxFunctionKind.Length, new DBxColumn("ColS2"))),
+        true, true, false, true, true));
+
+      #endregion
+
+      #endregion
+
       #region Функции
 
       functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Abs, new DBxColumn("Id")), 1, 2, 3, 4, 5));
       functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Abs, new DBxColumn("ColI")), 10, 20, null, 0, 10));
       functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Abs, new DBxColumn("ColF")), 5.0, null, null, 0.0, 5.0));
 
-      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColS"), new DBxConst("XXX")), 
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColS"), new DBxConst("XXX")),
         "AAA", "BcDe", "XXX", "", "abcdefghij"));
       functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColI"), new DBxColumn("Id")), 10, 20, 3, 0, -10));
       functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColF"), new DBxConst(1.5)), 5.0, 1.5, 1.5, 0.0, -5.0));
       // Для нечисловых типов функция COALESCE() в SQLite возвращает строку, а не типизированное значение
-      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.SQLite), 
-        new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColD"), new DBxConst(new DateTime(2023,5,23))), 
-        new DateTime(2023,1,1), new DateTime(2023,5,23), new DateTime(2023,5,23), new DateTime(2001,1,1), new DateTime(2023,1,2)));
-      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.SQLite), 
+      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.SQLite),
+        new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColD"), new DBxConst(new DateTime(2023, 5, 23))),
+        new DateTime(2023, 1, 1), new DateTime(2023, 5, 23), new DateTime(2023, 5, 23), new DateTime(2001, 1, 1), new DateTime(2023, 1, 2)));
+      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.SQLite),
         new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColG"), new DBxConst(Guid.Empty)),
         new Guid(Guid1), Guid.Empty, Guid.Empty, new Guid(Guid2), new Guid(Guid1)));
-      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.SQLite), 
+      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.SQLite),
         new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColT"), new DBxConst(TimeSpan.Zero)),
         new TimeSpan(12, 34, 56), TimeSpan.Zero, TimeSpan.Zero, new TimeSpan(12, 34, 56), new TimeSpan(12, 34, 57)));
+
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.IIf, new DBxColumn("ColL"), new DBxColumn("ColI"), new DBxColumn("Id")),
+        10, 2, 3, 4, -10));
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.IIf,
+        new DBxFunction(DBxFunctionKind.GreaterThan, new DBxColumn("Id"), new DBxConst(3)),
+        new DBxColumn("ColI"), new DBxColumn("Id")),
+        1, 2, 3, 0, -10));
+
+      // Реализация функции с несколькими аргументами имеет свои особенности в BD Access
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("ColF"),
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("ColI"), new DBxConst(3.0)),
+        new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(7.0))),
+        5.0, 60.0, 21.0, 0.0, -5.0));
 
       functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Length, new DBxColumn("ColS")), 3, 4, null, 0, 10));
 
       // Функции UPPER() и LOWER() не работают в DataColumn.Expression
       // Для SQLite для значения функции возвращают "", а не NULL, как предполагается по стандарту
-      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.DataView| TestCompat.SQLite), 
+      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.DataView | TestCompat.SQLite),
         new DBxFunction(DBxFunctionKind.Upper, new DBxColumn("ColS")), "AAA", "BCDE", null, "", "ABCDEFGHIJ"));
-      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.DataView | TestCompat.SQLite), 
+      functions.Add(new FunctionTestInfo(TestCompat.All & ~(TestCompat.DataView | TestCompat.SQLite),
         new DBxFunction(DBxFunctionKind.Lower, new DBxColumn("ColS")), "aaa", "bcde", null, "", "abcdefghij"));
-      functions.Add(new FunctionTestInfo(TestCompat.SQLite, 
+      functions.Add(new FunctionTestInfo(TestCompat.SQLite,
         new DBxFunction(DBxFunctionKind.Upper, new DBxColumn("ColS")), "AAA", "BCDE", "", "", "ABCDEFGHIJ"));
-      functions.Add(new FunctionTestInfo(TestCompat.SQLite, 
+      functions.Add(new FunctionTestInfo(TestCompat.SQLite,
         new DBxFunction(DBxFunctionKind.Lower, new DBxColumn("ColS")), "aaa", "bcde", "", "", "abcdefghij"));
 
       // Функция Susbtring для DataView возвращает null, а не "", когда индексы выходят за пределы строки.
       // Во избежание разночтений, следует использовать в сочетании с Coalesce.
-      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Coalesce, new DBxFunction(DBxFunctionKind.Substring, new DBxColumn("ColS"), new DBxConst(3), new DBxConst(2)), new DBxConst("")), 
+      functions.Add(new FunctionTestInfo(new DBxFunction(DBxFunctionKind.Coalesce, new DBxFunction(DBxFunctionKind.Substring, new DBxColumn("ColS"), new DBxConst(3), new DBxConst(2)), new DBxConst("")),
         "A", "De", "", "", "cd"));
 
       #endregion
@@ -327,13 +602,91 @@ namespace ExtDB_tests.Data
       _AllTestFunctions = functions.ToArray();
 
       #endregion
+
+      #region Тестовая таблица 2 - запросы SELECT с фильтрами и группировками
+
+      ts = _TestStruct.Tables.Add("Test2");
+      ts.Columns.AddId();
+      ts.Columns.AddString("ColS", 10, true);
+      ts.Columns.AddInt("ColI", true);
+      ts.Columns.AddInt("ColI2", false);
+
+      tbl = ts.CreateDataTable();
+      _TestData.Tables.Add(tbl);
+      //           Id  ColS   ColI  ColI2
+      tbl.Rows.Add(1, "AAA", 1, 1);
+      tbl.Rows.Add(2, "CCC", 1, 2);
+      tbl.Rows.Add(3, "BBB", 1, 3);
+      tbl.Rows.Add(4, NULL, NULL, 1);
+      tbl.Rows.Add(5, "AAA", 3, 2);
+      tbl.Rows.Add(6, "AAA", 3, 3);
+      tbl.Rows.Add(7, "BBB", NULL, 1);
+      tbl.Rows.Add(8, "CCC", 2, 2);
+      tbl.Rows.Add(9, NULL, 2, 3);
+      tbl.Rows.Add(10, "AAA", 3, 1);
+      tbl.Rows.Add(11, "CCC", 2, 2);
+      tbl.Rows.Add(12, "CCC", 1, 3);
+      tbl.Rows.Add(13, "AAA", 1, 1);
+      tbl.Rows.Add(14, NULL, 1, 2);
+      tbl.Rows.Add(15, "BBB", 2, 3);
+
+      #endregion
+
+      #region Тестовые таблицы 3 и 4 - связи между таблицами
+
+      ts = _TestStruct.Tables.Add("Test3");
+      ts.Columns.AddId();
+      ts.Columns.AddString("Name", 10, false);
+      ts.Columns.AddReference("ColR2", "Test2", false);
+
+      tbl = ts.CreateDataTable();
+      _TestData.Tables.Add(tbl);
+
+      tbl.Rows.Add(1, "N301", 1);
+      tbl.Rows.Add(2, "N302", 5);
+      tbl.Rows.Add(3, "N303", 6);
+      tbl.Rows.Add(4, "N304", 9);
+      tbl.Rows.Add(5, "N305", 15);
+      tbl.Rows.Add(6, "N306", 1);
+      tbl.Rows.Add(7, "N307", 5);
+      tbl.Rows.Add(8, "N308", 5);
+
+      ts = _TestStruct.Tables.Add("Test4");
+      ts.Columns.AddId();
+      ts.Columns.AddString("Name", 10, false);
+      ts.Columns.AddReference("ColR3", "Test3", true);
+
+      tbl = ts.CreateDataTable();
+      _TestData.Tables.Add(tbl);
+
+      tbl.Rows.Add(1, "N401", 2);
+      tbl.Rows.Add(2, "N402", 2);
+      tbl.Rows.Add(3, "N403", 5);
+      tbl.Rows.Add(4, "N404", NULL);
+      tbl.Rows.Add(5, "N405", NULL);
+
+      #endregion
     }
 
-    protected DBxTableStruct TableStruct { get { return _TableStruct; } }
-    private DBxTableStruct _TableStruct;
+    #endregion
 
-    protected DataTable TestTable { get { return _TestTable; } }
-    private DataTable _TestTable;
+    #region Данные
+
+    /// <summary>
+    /// Структуры тестовых таблиц
+    /// </summary>
+    protected DBxStruct TestStruct { get { return _TestStruct; } }
+    private DBxStruct _TestStruct;
+
+    /// <summary>
+    /// Набор таблиц тестовых данных
+    /// </summary>
+    protected DataSet TestData { get { return _TestData; } }
+    private DataSet _TestData;
+
+    #endregion
+
+    #region Перечисление TestCompat
 
     /// <summary>
     /// Флаги совместимости с разными базами данных
@@ -356,9 +709,33 @@ namespace ExtDB_tests.Data
       /// </summary>
       MSSQL = 0x4,
 
-      All = DataView | SQLite | MSSQL,
-      AllButDataView = All & (~DataView)
+      /// <summary>
+      /// Тест совместим с PostgreSQL версии 8 и новее
+      /// </summary>
+      PostgreSQL = 0x8,
+
+      /// <summary>
+      /// Тест совместим с Access-2000
+      /// </summary>
+      OleDB = 0x10,
+
+      /// <summary>
+      /// Тест используется везде
+      /// </summary>
+      All = DataView | SQLite | MSSQL | PostgreSQL | OleDB,
+
+      /// <summary>
+      /// Тест используется везде, кроме DataView
+      /// </summary>
+      AllButDataView = All & (~DataView),
+
+      /// <summary>
+      /// Тест использует поля TimeSpan
+      /// </summary>
+      TimeSpan = 0x100,
     }
+
+    #endregion
 
     #region Список тестов фильтров
 
@@ -432,10 +809,28 @@ namespace ExtDB_tests.Data
       List<FilterTestInfo> lst = new List<FilterTestInfo>();
       foreach (FilterTestInfo ti in _AllTestFilters)
       {
-        if ((ti.Compat & compat) != 0)
+        if (IsCompat(ti.Compat, compat))
           lst.Add(ti);
       }
       return lst.ToArray();
+    }
+
+    /// <summary>
+    /// Проверка совместимости теста
+    /// </summary>
+    /// <param name="testCompat">Задано в тесте</param>
+    /// <param name="realCompat">Совместимость для текущей базы данных</param>
+    /// <returns>Тест доступен</returns>
+    protected static bool IsCompat(TestCompat testCompat, TestCompat realCompat)
+    {
+      if ((testCompat & TestCompat.All & realCompat) == 0)
+        return false;
+      if ((testCompat & TestCompat.TimeSpan) != 0)
+      {
+        if ((realCompat & TestCompat.TimeSpan) == 0)
+          return false;
+      }
+      return true;
     }
 
     #endregion
@@ -512,7 +907,7 @@ namespace ExtDB_tests.Data
       List<FunctionTestInfo> lst = new List<FunctionTestInfo>();
       foreach (FunctionTestInfo ti in _AllTestFunctions)
       {
-        if ((ti.Compat & compat) != 0)
+        if (IsCompat(ti.Compat, compat))
           lst.Add(ti);
       }
       return lst.ToArray();
@@ -524,14 +919,14 @@ namespace ExtDB_tests.Data
   [TestFixture]
   public class SqlTestDataView : SqlTestBase
   {
-    public FilterTestInfo[] TestFilters { get { return GetTestFilters(TestCompat.DataView); } }
+    public FilterTestInfo[] TestFilters { get { return GetTestFilters(TestCompat.DataView | TestCompat.TimeSpan); } }
 
     [TestCaseSource("TestFilters")]
     public void TestFilter_DataTable_Select(FilterTestInfo info)
     {
       DBxSqlBuffer buffer = new DBxSqlBuffer();
       buffer.FormatFilter(info.Filter);
-      DataRow[] rows = TestTable.Select(buffer.SB.ToString());
+      DataRow[] rows = TestData.Tables["Test1"].Select(buffer.SB.ToString());
       Int32[] res = DataTools.GetIds(rows);
       CollectionAssert.AreEquivalent(info.WantedIds, res);
     }
@@ -539,7 +934,7 @@ namespace ExtDB_tests.Data
     [TestCaseSource("TestFilters")]
     public void TestFilter_DataView_RowFilter(FilterTestInfo info)
     {
-      using (DataView dv = new DataView(TestTable))
+      using (DataView dv = new DataView(TestData.Tables["Test1"]))
       {
         dv.RowFilter = info.Filter.ToString();
         Int32[] res1 = DataTools.GetIds(dv);
@@ -560,7 +955,7 @@ namespace ExtDB_tests.Data
       }
     }
 
-    public FunctionTestInfo[] TestFunctions { get { return GetTestFunctions(TestCompat.DataView); } }
+    public FunctionTestInfo[] TestFunctions { get { return GetTestFunctions(TestCompat.DataView | TestCompat.TimeSpan); } }
 
     [TestCaseSource("TestFunctions")]
     public void TestFunction(FunctionTestInfo info)
@@ -575,17 +970,19 @@ namespace ExtDB_tests.Data
         {
           resType = info.WantedResults[i].GetType();
           break;
-        }  
+        }
       }
       if (resType == null)
         throw new BugException("Wanted result type is unknown");
 
-      Assert.AreEqual(info.WantedResults.Length, TestTable.Rows.Count, "ResultCount");
-      DataTable table2 = TestTable.Clone();
+      Assert.AreEqual(info.WantedResults.Length, TestData.Tables["Test1"].Rows.Count, "ResultCount");
+
+      DataTable table1 = TestData.Tables["Test1"];
+      DataTable table2 = table1.Clone();
       table2.Columns.Add("Res", resType, buffer.SB.ToString());
-      for (int i = 0; i < TestTable.Rows.Count; i++)
+      for (int i = 0; i < table1.Rows.Count; i++)
       {
-        DataRow row = table2.Rows.Add(TestTable.Rows[i].ItemArray);
+        DataRow row = table2.Rows.Add(table1.Rows[i].ItemArray);
         object res = row["Res"];
         if (res is DBNull)
           res = null;
@@ -595,7 +992,7 @@ namespace ExtDB_tests.Data
     }
   }
 
-  public abstract class SqlTestBaseDB: SqlTestBase
+  public abstract class SqlTestBaseDB : SqlTestBase
   {
     #region Абстрактные методы
 
@@ -604,30 +1001,75 @@ namespace ExtDB_tests.Data
     protected abstract DBxConBase Con { get; }
 
     /// <summary>
-    /// Имя тестовой таблицы в базе данных. Переопределяется для MS SQL Server
+    /// Получить имя тестовой таблицы "Test1", "Test2", ...
+    /// Переопределяется для временных таблиц MS SQL Server.
     /// </summary>
-    protected virtual string TestTableName { get { return "Test"; } }
+    /// <param name="tableName">"Test1", "Test2", ...</param>
+    /// <returns>Скорректированное имя таблицы</returns>
+    protected virtual string GetTestTableName(string tableName)
+    {
+      return tableName;
+    }
 
     #endregion
 
     #region Тестирование
+
+    #region Отладка запроса
+
+    private bool _ConPrepared;
+
+    private void PrepareCon()
+    {
+      if (!_ConPrepared)
+      {
+        _ConPrepared=true;
+        Con.DB.SqlQueryStarted += new DBxSqlQueryStartedEventHandler(DB_SqlQueryStarted);
+        Con.DB.SqlQueryFinished += new DBxSqlQueryFinishedEventHandler(DB_SqlQueryFinished);
+      }
+    }
+
+    void DB_SqlQueryStarted(object sender, DBxSqlQueryStartedEventArgs args)
+    {
+      //Console.WriteLine("SQL: " + args.CmdText);
+    }
+
+    void DB_SqlQueryFinished(object sender, DBxSqlQueryFinishedEventArgs args)
+    {
+      DBx db = (DBx)sender;
+      if (args.Exception != null)
+      {
+        Console.WriteLine("Bad SQL: " + args.CmdText);
+        Console.WriteLine("Server version: " + db.ServerVersionText);
+      }
+    }
+
+    #endregion
+
+    #region Фильтры
 
     public FilterTestInfo[] TestFilters { get { return GetTestFilters(Compat); } }
 
     [TestCaseSource("TestFilters")]
     public void TestFilter(FilterTestInfo info)
     {
-      IdList res = Con.GetIds(TestTableName, info.Filter);
+      PrepareCon();
+      IdList res = Con.GetIds(GetTestTableName("Test1"), info.Filter);
       CollectionAssert.AreEquivalent(info.WantedIds, res);
     }
+
+    #endregion
+
+    #region Функции
 
     public FunctionTestInfo[] TestFunctions { get { return GetTestFunctions(Compat); } }
 
     [TestCaseSource("TestFunctions")]
     public void TestFunction(FunctionTestInfo info)
     {
+      PrepareCon();
       DBxSelectInfo si = new DBxSelectInfo();
-      si.TableName = TestTableName;
+      si.TableName = GetTestTableName("Test1");
       si.Expressions.Add("Id");
       si.Expressions.Add(info.Function, "Res");
       si.OrderBy = new DBxOrder("Id");
@@ -635,19 +1077,410 @@ namespace ExtDB_tests.Data
       Assert.AreEqual(info.WantedResults.Length, resTable.Rows.Count, "ResultCount");
       for (int i = 0; i < info.WantedResults.Length; i++)
       {
+        object wanted = info.WantedResults[i];
         object res = resTable.Rows[i]["Res"];
         if (res is DBNull)
           res = null;
-        Assert.AreEqual(info.WantedResults[i], res, "Строка Id=" + resTable.Rows[i]["Id"].ToString());
+
+        // Некоторые провайдеры возвращают неправильные типы данных
+        if (res != null)
+        {
+          if (wanted is Guid)
+          {
+            if (res is String)
+            {
+              if (((String)res).Length > 0)
+                res = new Guid((String)res);
+            }
+          }
+          if (wanted is Boolean)
+          {
+            if (DataTools.IsIntegerType(res.GetType()))
+              res = DataTools.GetBool(res);
+          }
+          if (wanted is TimeSpan)
+          {
+            if (res is DateTime)
+              res = DataTools.GetTimeSpan(res);
+          }
+        }
+
+        Assert.AreEqual(wanted, res, "Строка Id=" + resTable.Rows[i]["Id"].ToString());
       }
     }
 
     #endregion
 
-  }
+    #region SELECT
 
+    [Test]
+    public void Select_Where()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add("Id");
+      si.Where = new ValueFilter("ColI", 2);
+      DataTable resTable = Con.FillSelect(si);
+      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      CollectionAssert.AreEquivalent(new Int32[] { 8, 9, 11, 15 }, res);
+    }
+
+    [Test]
+    public void Select_Where_OrderBy()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add("Id");
+      si.Where = new ValueFilter("ColI", 2);
+      si.OrderBy = DBxOrder.FromDataViewSort("Id DESC");
+      DataTable resTable = Con.FillSelect(si);
+
+      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      CollectionAssert.AreEqual(new Int32[] { 15, 11, 9, 8 }, res);
+    }
+
+    [Test]
+    public void Select_Where_OrderBy2()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add("Id");
+      si.Where = new ValueFilter("ColI", 2);
+      si.OrderBy = DBxOrder.FromDataViewSort("ColS,Id");
+      DataTable resTable = Con.FillSelect(si);
+
+      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      CollectionAssert.AreEqual(new Int32[] { 9, 15, 8, 11 }, res);
+    }
+
+    [Test]
+    public void Select_GroupBy_OrderBy()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "ColI"), "S1");
+      si.Expressions.Add("ColS");
+      si.GroupBy.Add(new DBxColumn("ColS"));
+      si.OrderBy = new DBxOrder("ColS");
+      DataTable resTable = Con.FillSelect(si);
+
+      string[] res2 = DataTools.GetValuesFromColumn<string>(resTable, "ColS");
+      Int32[] res1 = DataTools.GetValuesFromColumn<int>(resTable, "S1");
+      CollectionAssert.AreEqual(new string[] { null, "AAA", "BBB", "CCC" }, res2, "ColS");
+      CollectionAssert.AreEqual(new int[] { 
+        0+2+1, // NULL
+        1+3+3+3+1, // "AAA"
+        1+0+2, // "BBB"
+        1+2+2+1  // "CCC"
+        }, res1, "S1");
+    }
+
+    [Test]
+    public void Select_Where_GroupBy_OrderBy()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "ColI"), "S1");
+      si.Expressions.Add("ColS");
+      si.Where = new ValueFilter("Id", 10, CompareKind.LessOrEqualThan);
+      si.GroupBy.Add(new DBxColumn("ColS"));
+      si.OrderBy = new DBxOrder("ColS");
+      DataTable resTable = Con.FillSelect(si);
+
+      string[] res2 = DataTools.GetValuesFromColumn<string>(resTable, "ColS");
+      Int32[] res1 = DataTools.GetValuesFromColumn<int>(resTable, "S1");
+      CollectionAssert.AreEqual(new string[] { null, "AAA", "BBB", "CCC" }, res2, "ColS");
+      CollectionAssert.AreEqual(new int[] {
+        0+2, // NULL
+        1+3+3+3, // "AAA"
+        1+0, // "BBB"
+        1+2  // "CCC"
+        }, res1, "S1");
+    }
+
+    [Test]
+    public void Select_GroupBy_Having_OrderBy()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add("ColS");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "ColI"), "S1");
+      si.Where = new ValueFilter("Id", 10, CompareKind.LessOrEqualThan);
+      si.GroupBy.Add(new DBxColumn("ColS"));
+      si.Having = new ValueFilter(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "ColI"), 5, CompareKind.LessThan);
+      si.OrderBy = DBxOrder.FromDataViewSort("ColS");
+      DataTable resTable = Con.FillSelect(si);
+
+      string[] res2 = DataTools.GetValuesFromColumn<string>(resTable, "ColS");
+      Int32[] res1 = DataTools.GetValuesFromColumn<int>(resTable, "S1");
+      CollectionAssert.AreEqual(new string[] { null, "BBB", "CCC" }, res2, "ColS");
+      CollectionAssert.AreEqual(new int[] { 0+2, // NULL
+        1+0, // "BBB"
+        1+2  // "CCC"
+        }, res1, "S1");
+    }
+
+    [Test]
+    public void Select_OrderBy_MaxRecordCount()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add("Id");
+      si.OrderBy = DBxOrder.FromDataViewSort("Id DESC");
+      si.MaxRecordCount = 3;
+      DataTable resTable = Con.FillSelect(si);
+
+      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      CollectionAssert.AreEqual(new Int32[] { 15, 14, 13 }, res);
+    }
+
+    [Test]
+    public void Select_AggregateFunctions_Where()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add(DBxAggregateFunction.Count, "A1");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "ColI"), "A2");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Min, "ColI"), "A3");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Max, "ColI"), "A4");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Avg, "ColI"), "A5");
+      si.Where = new ValueFilter("Id", 10, CompareKind.LessOrEqualThan);
+      DataTable resTable = Con.FillSelect(si);
+
+      Assert.AreEqual(1, resTable.Rows.Count, "RowCount");
+      object[] res = resTable.Rows[0].ItemArray;
+      Assert.AreEqual(10, res[0], "Count");
+      Assert.AreEqual(1 + 1 + 1 + 3 + 3 + 2 + 2 + 3, res[1], "Sum");
+      Assert.AreEqual(1, res[2], "Min");
+      Assert.AreEqual(3, res[3], "Max");
+      Assert.AreEqual((double)(1 + 1 + 1 + 3 + 3 + 2 + 2 + 3) / 8.0, DataTools.GetDouble(res[4]), "Avg");
+    }
+
+    [Test]
+    public void Select_AggregateFunctions_GroupBy_OrderBy()
+    {
+      PrepareCon();
+      DBxSelectInfo si = new DBxSelectInfo();
+      si.TableName = GetTestTableName("Test2");
+      si.Expressions.Add("ColS");
+      si.Expressions.Add(DBxAggregateFunction.Count, "A1");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "ColI"), "A2");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Min, "ColI"), "A3");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Max, "ColI"), "A4");
+      si.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Avg, "ColI"), "A5");
+      si.GroupBy.Add(new DBxColumn("ColS"));
+      si.OrderBy = new DBxOrder("ColS");
+      DataTable resTable = Con.FillSelect(si);
+      string[] colS = DataTools.GetValuesFromColumn<string>(resTable, "ColS");
+      Assert.AreEqual(new string[] { null, "AAA", "BBB", "CCC" }, colS, "ColS");
+      Assert.AreEqual(new int[] { 
+        2 + 1, 
+        1 + 3 + 3 + 3 + 1, 
+        1+2,
+        1+2+2+1
+      }, DataTools.GetValuesFromColumn<int>(resTable, "A2"), "Sum");
+      Assert.AreEqual(new int[] { 1, 1, 1, 1 }, DataTools.GetValuesFromColumn<int>(resTable, "A3"), "Min");
+      Assert.AreEqual(new int[] { 2, 3, 2, 2 }, DataTools.GetValuesFromColumn<int>(resTable, "A4"), "Max");
+
+      // Для SQL Server почему-то среднее значение округляется до целого
+      //if (Compat != TestCompat.MSSQL)
+      //{
+      Assert.AreEqual(new double[] {
+        (double)(2+1)/2.0,
+        (double)(1+3+3+3+1)/5.0,
+        (double)(1+2)/2.0,
+        (double)(1+2+2+1)/4.0
+        //}, DataTools.GetValuesFromColumn<double>(resTable, "A5"), "Avg");
+        }, GetDoubleValuesFromColumn(resTable, "A5"), "Avg");
+      //}
+    }
+
+    private static double[] GetDoubleValuesFromColumn(DataTable table, string colName)
+    {
+      double[] a = new double[table.Rows.Count];
+      for (int i = 0; i < a.Length; i++)
+        a[i] = DataTools.GetDouble(table.Rows[i], colName);
+      return a;
+    }
+
+    #endregion
+
+    #region SELECT-2
+
+    public struct SelectTestInfo
+    {
+      #region Конструкторы
+
+      public SelectTestInfo(TestCompat compat, string displayName)
+      {
+        if (compat == 0)
+          throw new ArgumentException("compat=0", "compat");
+        _Compat = compat;
+        _DisplayName = displayName;
+
+        _Sel = new DBxSelectInfo();
+        _WantedColResults = new List<object>();
+      }
+
+      public SelectTestInfo(string tableName)
+        : this(TestCompat.All, tableName)
+      {
+      }
+
+      #endregion
+
+      #region Основные свойства
+
+      /// <summary>
+      /// Тестируемый запрос
+      /// </summary>
+      public DBxSelectInfo Sel { get { return _Sel; } }
+      private DBxSelectInfo _Sel;
+
+      /// <summary>
+      /// Флаги совместимости
+      /// </summary>
+      public TestCompat Compat { get { return _Compat; } }
+      private TestCompat _Compat;
+
+      /// <summary>
+      /// Результаты, которые требуется получить.
+      /// Индексы списка соответствуют столбцам в результирующей таблице.
+      /// Элементами списка являются массивы произвольного типа. Количество элементов в массиве должно быть равно ожидаемому количеству строк в выборке
+      /// </summary>
+      public List<object> WantedColResults { get { return _WantedColResults; } }
+      private List<object> _WantedColResults;
+
+      public string DisplayName { get { return _DisplayName; } }
+      private string _DisplayName;
+
+      public override string ToString()
+      {
+        return _DisplayName;
+      }
+
+      #endregion
+    }
+
+    public SelectTestInfo[] AllTestSelect { get { return _AllTestSelect; } }
+    private SelectTestInfo[] _AllTestSelect = CreateAllTestSelect();
+
+    private static SelectTestInfo[] CreateAllTestSelect()
+    {
+      List<SelectTestInfo> lst = new List<SelectTestInfo>();
+
+      SelectTestInfo obj;
+
+      obj = new SelectTestInfo("Simple Ref");
+      obj.Sel.TableName = "Test3";
+      obj.Sel.Expressions.Add("Id");
+      obj.Sel.Expressions.Add("ColR2.ColS");
+      obj.Sel.OrderBy = DBxOrder.FromDataViewSort("Id");
+      obj.WantedColResults.Add(new int[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+      obj.WantedColResults.Add(new string[] { "AAA", "AAA", "AAA", null, "BBB", "AAA", "AAA", "AAA" });
+      lst.Add(obj);
+
+      obj = new SelectTestInfo("2-Level Ref");
+      obj.Sel.TableName = "Test4";
+      obj.Sel.Expressions.Add("Id");
+      obj.Sel.Expressions.Add("ColR3");
+      obj.Sel.Expressions.Add("ColR3.Name");
+      obj.Sel.Expressions.Add("ColR3.ColR2");
+      obj.Sel.Expressions.Add("ColR3.ColR2.ColS");
+      obj.Sel.OrderBy = DBxOrder.FromDataViewSort("Id");
+      obj.WantedColResults.Add(new int[] { 1, 2, 3, 4, 5 }); // Id
+      obj.WantedColResults.Add(new int?[] { 2, 2, 5, null, null }); // ColR3
+      obj.WantedColResults.Add(new string[] { "N302", "N302", "N305", null, null }); // ColR3.Name
+      obj.WantedColResults.Add(new int?[] { 5, 5, 15, null, null }); // ColR3.ColR2
+      obj.WantedColResults.Add(new string[] { "AAA", "AAA", "BBB", null, null }); // ColR3.ColR2.ColS
+      lst.Add(obj);
+
+
+      obj = new SelectTestInfo("Ref with complex OrderBy and Where");
+      obj.Sel.TableName = "Test3";
+      obj.Sel.Expressions.Add("Id");
+      obj.Sel.Expressions.Add("ColR2.ColS");
+      obj.Sel.Where = new ValueFilter("ColR2.ColI2", 2, CompareKind.NotEqual);
+      obj.Sel.OrderBy = DBxOrder.FromDataViewSort("ColR2.ColI DESC,Id");
+      obj.WantedColResults.Add(new int[] { 3, 4, 5, 1, 6 }); // Id
+      obj.WantedColResults.Add(new string[] { "AAA", null, "BBB", "AAA", "AAA" });
+      lst.Add(obj);
+
+      obj = new SelectTestInfo("Ref with GroupBy");
+      obj.Sel.TableName = "Test3";
+      obj.Sel.Expressions.Add("ColR2.ColS");
+      obj.Sel.Expressions.Add(DBxAggregateFunction.Count, "A1");
+      obj.Sel.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "ColR2.ColI"), "A2");
+      obj.Sel.GroupBy.Add(new DBxColumn("ColR2.ColS"));
+      obj.Sel.OrderBy = DBxOrder.FromDataViewSort("ColR2.ColS");
+      obj.WantedColResults.Add(new string[] { null, "AAA", "BBB" }); // ColR2.ColS
+      obj.WantedColResults.Add(new int[] { 1, 6, 1 }); // A1
+      obj.WantedColResults.Add(new int[] { 2, 1 + 3 + 3 + 1 + 3 + 3, 2 }); // A2
+      lst.Add(obj);
+
+      return lst.ToArray();
+    }
+
+    [TestCaseSource("AllTestSelect")]
+    public void TestSelect(SelectTestInfo info)
+    {
+      PrepareCon();
+      int wantedRowCount = -1;
+      foreach (object obj in info.WantedColResults)
+      {
+        Array a = obj as Array;
+        if (a == null)
+          continue;
+        if (wantedRowCount < 0)
+          wantedRowCount = a.Length;
+        else if (a.Length != wantedRowCount)
+          throw new BugException("Invalid WantedColResults item length");
+      }
+      if (wantedRowCount < 0)
+        throw new BugException("No WantedColResults");
+
+      DBxSelectInfo sel2 = info.Sel.Clone();
+      sel2.TableName = GetTestTableName(sel2.TableName);
+
+      DataTable resTable = Con.FillSelect(sel2);
+      Assert.AreEqual(wantedRowCount, resTable.Rows.Count, "RowCount");
+      for (int i = 0; i < info.WantedColResults.Count; i++)
+      {
+        Array a = info.WantedColResults[i] as Array;
+        if (a == null)
+          continue;
+
+        for (int j = 0; j < wantedRowCount; j++)
+        {
+          object wanted = a.GetValue(j);
+          object res = resTable.Rows[j][i];
+          if (res is DBNull)
+            res = null;
+          if (res is String)
+            res = ((String)res).TrimEnd();
+          Assert.AreEqual(wanted, res, "RowIndex=" + j.ToString() + ", ColumnIndex=" + i.ToString() + " (" + resTable.Columns[i].ColumnName + ")");
+        }
+      }
+    }
+
+    #endregion
+
+    #endregion
+  }
+}
+
+namespace ExtDB_tests.Data_SQLite
+{
   [TestFixture]
-  public class SqlTestSQLite : SqlTestBaseDB
+  public class SqlTestSQLite : ExtDB_tests.Data.SqlTestBaseDB
   {
     #region База данных в памяти
 
@@ -656,12 +1489,11 @@ namespace ExtDB_tests.Data
     {
       _DB = new SQLiteDBx();
       DBxStruct dbs = new DBxStruct();
-      dbs.Tables.Add(TableStruct);
-      _DB.Struct = dbs;
+      _DB.Struct = TestStruct;
       _DB.UpdateStruct();
 
       _Con = _DB.MainEntry.CreateCon();
-      _Con.AddRecords(TestTable);
+      _Con.AddRecords(TestData);
     }
 
     [OneTimeTearDown]
@@ -681,33 +1513,52 @@ namespace ExtDB_tests.Data
 
     #region Переопределенные методы
 
-    protected override TestCompat Compat { get { return TestCompat.SQLite; } }
+    protected override TestCompat Compat { get { return TestCompat.SQLite |TestCompat.TimeSpan; } }
 
     protected override DBxConBase Con { get { return _Con; } }
 
     #endregion
   }
+}
 
-
-  [Category("MSSQL")]
-  public class SqlTestMSSQL : SqlTestBaseDB
+namespace ExtDB_tests.Data_SqlClient
+{
+  //[Category("MSSQL")]
+  public class SqlTestMSSQL : ExtDB_tests.Data.SqlTestBaseDB
   {
     #region База данных в памяти
 
     [OneTimeSetUp]
     public void SetUp()
     {
-      System.Data.SqlClient.SqlConnectionStringBuilder csb = new System.Data.SqlClient.SqlConnectionStringBuilder();
-      csb.DataSource = @".\SQLEXPRESS";
-      csb.IntegratedSecurity = true;
-      csb.InitialCatalog = "master";
-      _DB = new SqlDBx(csb);
+      _DB = CreateDB();
 
       _Con = (SqlDBxCon)(_DB.MainEntry.CreateCon());
       _Con.NameCheckingEnabled = false; // имя таблицы начинается с "#"
 
-      _TestTableName = _Con.CreateTempTableInternal(TableStruct);
-      _Con.AddRecords(_TestTableName, TestTable);
+      _TestTableNames = new Dictionary<string, string>();
+
+      foreach (DBxTableStruct ts in TestStruct.Tables)
+      {
+        DBxTableStruct ts2 = ts.Clone();
+        foreach (DBxColumnStruct col in ts2.Columns)
+        {
+          if (!String.IsNullOrEmpty(col.MasterTableName))
+            col.MasterTableName = GetTestTableName(col.MasterTableName);
+        }
+        _TestTableNames.Add(ts.TableName, _Con.CreateTempTableInternal(ts2));
+        DataTable tbl = TestData.Tables[ts.TableName];
+        _Con.AddRecords(_TestTableNames[ts.TableName], tbl);
+      }
+    }
+
+    private SqlDBx CreateDB()
+    {
+      System.Data.SqlClient.SqlConnectionStringBuilder csb = new System.Data.SqlClient.SqlConnectionStringBuilder();
+      csb.DataSource = @".\SQLEXPRESS";
+      csb.IntegratedSecurity = true;
+      csb.InitialCatalog = "master";
+      return new SqlDBx(csb);
     }
 
     [OneTimeTearDown]
@@ -727,12 +1578,147 @@ namespace ExtDB_tests.Data
 
     #region Переопределенные методы
 
-    protected override TestCompat Compat { get { return TestCompat.MSSQL; } }
+    protected override TestCompat Compat 
+    { 
+      get 
+      {
+        if (_Compat == 0)
+        {
+          using (SqlDBx db = CreateDB())
+          {
+            _Compat = TestCompat.MSSQL;
+            if (db.IsSqlServer2008orNewer)
+              _Compat |= TestCompat.TimeSpan;
+          }
+        }
+        return _Compat; 
+      }
+    }
+    private TestCompat _Compat;
 
     protected override DBxConBase Con { get { return _Con; } }
 
-    protected override string TestTableName { get { return _TestTableName; } }
-    private string _TestTableName;
+    protected override string GetTestTableName(string tableName)
+    {
+      return _TestTableNames[tableName];
+    }
+    private Dictionary<string, string> _TestTableNames;
+
+    #endregion
+  }
+}
+
+namespace ExtDB_tests.Data_Npgsql
+{
+  public class SqlTestNpgsql : ExtDB_tests.Data.SqlTestBaseDB
+  {
+    #region База данных в памяти
+
+    [OneTimeSetUp]
+    public void SetUp()
+    {
+      NpgsqlConnectionStringBuilder csb = new NpgsqlConnectionStringBuilder();
+      csb.Host = "127.0.0.1";
+      csb.Database = "test";
+      csb.UserName = "postgres";
+      csb.Password = "123";
+      _DB = new NpgsqlDBx(csb);
+      //_DB.DropDatabaseIfExists();
+      _DB.CreateIfRequired();
+      _DB.Struct = TestStruct;
+      _DB.UpdateStruct();
+
+      _Con = (NpgsqlDBxCon)(_DB.MainEntry.CreateCon());
+
+      //foreach(DBxTableStruct ts in TestStruct.Tables)
+      //  _Con.DeleteAll(ts.TableName);
+      // Чистить надо в обратном порядке
+      for (int i = TestStruct.Tables.Count - 1; i >= 0; i--)
+      {
+        //_Con.DeleteAll(TestStruct.Tables[i].TableName);
+        _Con.Delete(TestStruct.Tables[i].TableName, DummyFilter.AlwaysTrue);
+      }
+
+      _Con.AddRecords(TestData);
+    }
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+      if (_Con != null)
+        _Con.Dispose();
+      if (_DB != null)
+      {
+        //_DB.DropDatabaseIfExists();
+        _DB.Dispose();
+      }
+    }
+
+    private NpgsqlDBx _DB;
+
+    private NpgsqlDBxCon _Con;
+
+    #endregion
+
+    #region Переопределенные методы
+
+    protected override TestCompat Compat { get { return TestCompat.PostgreSQL | TestCompat.TimeSpan; } }
+
+    protected override DBxConBase Con { get { return _Con; } }
+
+    #endregion
+  }
+}
+
+namespace ExtDB_tests.Data_OleDB
+{
+  //[Platform("Windows,X86")]
+  public class SqlTestOleDB : ExtDB_tests.Data.SqlTestBaseDB
+  {
+    // OleDbDBx пока не поддерживает программное создание структуры БД
+
+    #region База данных в памяти
+
+    [OneTimeSetUp]
+    public void SetUp()
+    {
+      _TempDir = new FreeLibSet.IO.TempDirectory();
+      FreeLibSet.IO.AbsPath path = new FreeLibSet.IO.AbsPath(_TempDir.Dir, "test.mdb");
+      System.IO.File.WriteAllBytes(path.Path, TestTablesResource.SqlTestOleDB);
+
+      _DB = new OleDbDBx(path);
+      _DB.Struct = base.TestStruct;
+      _Con = (OleDbDBxCon)(_DB.MainEntry.CreateCon());
+      _Con.AddRecords(TestData);
+    }
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+      if (_Con != null)
+        _Con.Dispose();
+      if (_DB != null)
+      {
+        _DB.Dispose();
+      }
+
+      if (_TempDir != null)
+        _TempDir.Dispose();
+    }
+
+    private FreeLibSet.IO.TempDirectory _TempDir;
+
+    private OleDbDBx _DB;
+
+    private OleDbDBxCon _Con;
+
+    #endregion
+
+    #region Переопределенные методы
+
+    protected override TestCompat Compat { get { return TestCompat.OleDB | TestCompat.TimeSpan; } }
+
+    protected override DBxConBase Con { get { return _Con; } }
 
     #endregion
   }

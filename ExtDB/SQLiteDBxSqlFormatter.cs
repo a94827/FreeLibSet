@@ -192,6 +192,27 @@ namespace FreeLibSet.Data.SQLite
 
     #endregion
 
+    #region Функции
+
+    /// <summary>
+    /// Вместо функции IIF должен использоваться оператор CASE
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="function"></param>
+    /// <param name="formatInfo"></param>
+    protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      // Функция IIF появилась в SQLite версии 3.32.0.
+      // Сейчас исполльзуется версия 3.21.0
+
+      if (function.Function == DBxFunctionKind.IIf)
+        base.FormatIIfFunctionAsCaseOperator(buffer, function, formatInfo, false);
+      else
+        base.OnFormatFunction(buffer, function, formatInfo);
+    }
+
+    #endregion
+
     #region FormatFilter
 
     /// <summary>

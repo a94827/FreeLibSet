@@ -126,20 +126,33 @@ namespace FreeLibSet.Data
     /// <param name="formatInfo">Параметры форматирования</param>
     protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
     {
-      if (function.Function == DBxFunctionKind.Abs)
+      switch (function.Function)
       {
-        // 23.05.2023
-        buffer.SB.Append("IIF(");
-        this.OnFormatExpression(buffer, function.Arguments[0], formatInfo);
-        buffer.SB.Append(">=0,");
-        this.OnFormatExpression(buffer, function.Arguments[0], formatInfo);
-        buffer.SB.Append(",");
-        DBxFunction fnNeg = new DBxFunction(DBxFunctionKind.Neg, function.Arguments[0]);
-        OnFormatFunction(buffer, fnNeg, formatInfo);
-        buffer.SB.Append(")");
-        return;
+        case DBxFunctionKind.Coalesce:
+          // 02.06.2023
+          // В отличие от функции COALESCE в базах данных, функция ISNULL в DataView поддерживает только два аргумента
+          FormatFunctionCoalesceAsIsNullWith2args(buffer, function, formatInfo);
+          break;
+        case DBxFunctionKind.Abs:
+          FormatFunctionAbs(buffer, function, formatInfo);
+          break;
+        default:
+          base.OnFormatFunction(buffer, function, formatInfo);
+          break;
       }
-      base.OnFormatFunction(buffer, function, formatInfo);
+    }
+
+    private void FormatFunctionAbs(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      // 23.05.2023
+      buffer.SB.Append("IIF(");
+      this.OnFormatExpression(buffer, function.Arguments[0], formatInfo);
+      buffer.SB.Append(">=0,");
+      this.OnFormatExpression(buffer, function.Arguments[0], formatInfo);
+      buffer.SB.Append(",");
+      DBxFunction fnNeg = new DBxFunction(DBxFunctionKind.Neg, function.Arguments[0]);
+      OnFormatFunction(buffer, fnNeg, formatInfo);
+      buffer.SB.Append(")");
     }
 
     /// <summary>
@@ -148,7 +161,7 @@ namespace FreeLibSet.Data
     /// <param name="buffer"></param>
     /// <param name="function"></param>
     /// <param name="formatInfo"></param>
-    protected override void OnFormatAgregateFunction(DBxSqlBuffer buffer, DBxAgregateFunction function, DBxFormatExpressionInfo formatInfo)
+    protected override void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo)
     {
       throw new NotSupportedException("Для DataView не поддерживаются агрегатные функции");
     }

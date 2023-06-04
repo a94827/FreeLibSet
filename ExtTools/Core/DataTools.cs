@@ -766,6 +766,23 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
+    /// Получает объект <see cref="DateTime"/> в пределах суток указанной даты <paramref name="date"/>.
+    /// Если <paramref name="value"/> превышает 86400 секунд, берется значение по модулю.
+    /// Отрицательных значения заменяются, например, если <paramref name="value"/> равно минус 15 минут, то возвращается 23:45
+    /// </summary>
+    /// <param name="value">Произвольный интервал времени</param>
+    /// <param name="date">Базовая дата. Берется только дата, компонент времени игнорируется</param>
+    /// <returns>Значение в пределах даты <paramref name="date"/></returns>
+    public static DateTime GetDateTime(TimeSpan value, DateTime date)
+    {
+      long ticks = value.Ticks % TimeSpan.TicksPerDay;
+      // Значение может быть положительным или отрицательным
+      if (ticks < 0L)
+        ticks += TimeSpan.TicksPerDay;
+      return new DateTime(date.Date.Ticks + ticks);
+    }
+
+    /// <summary>
     /// Преобразование значения в тип DateTime без значения null.
     /// Значения null и DBNull преобразуется в DateTime.MinValue.
     /// Пустая строка также преобразуется в DateTime.MinValue, для непустой строки выполняется попытка преобразования с помощью Convert.ToDateTime().
@@ -3942,7 +3959,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получить значения поля для всех строк таблицы в виде массива
     /// Повторы и пустые значения не отбрасываются. Количество и порядок элементов в массиве соответствуют строкам в таблице
-    /// Хранящиеся в таблице значения DBNull заменяются на default.
+    /// Хранящиеся в таблице значения DBNull заменяются на default/null.
     /// Если тип массива T не совпадает с типом данных в столбце таблицы, используется метод Convert.ChangeType(). Методы типа GetInt() не применяются
     /// 
     /// Замечания для строковых полей:

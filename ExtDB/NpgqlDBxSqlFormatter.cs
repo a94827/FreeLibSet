@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace FreeLibSet.Data.Npgsql
 {
@@ -98,6 +99,57 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
+    #region Функции
+
+    /// <summary>
+    /// Определена функция "LENGTH"
+    /// </summary>
+    /// <param name="function"></param>
+    /// <returns></returns>
+    protected override string GetFunctionName(DBxFunctionKind function)
+    {
+      switch(function)
+      {
+        case DBxFunctionKind.Length:
+          return "Length"; // 29.05.2023
+        default:
+          return base.GetFunctionName(function);
+      }
+    }
+
+    /// <summary>
+    /// Вместо функции IIF должен использоваться оператор CASE
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="function"></param>
+    /// <param name="formatInfo"></param>
+    protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      if (function.Function == DBxFunctionKind.IIf)
+        base.FormatIIfFunctionAsCaseOperator(buffer, function, formatInfo, false);
+      else
+        base.OnFormatFunction(buffer, function, formatInfo);
+    }
+
+    /// <summary>
+    /// Переопределение для функции IIF
+    /// </summary>
+    /// <param name="expression"></param>
+    /// <returns></returns>
+    protected override bool OnAreParenthesesRequired(DBxExpression expression)
+    {
+      DBxFunction function = expression as DBxFunction;
+      if (function != null)
+      {
+        if (function.Function == DBxFunctionKind.IIf)
+          return true;
+      }
+
+      return base.OnAreParenthesesRequired(expression);
+    }
+
+    #endregion
+
     #region FormatFilter
 
     /// <summary>
@@ -114,11 +166,11 @@ namespace FreeLibSet.Data.Npgsql
       formatInfo.NoParentheses = false;
       buffer.FormatExpression(filter.Expression, formatInfo);
       if ( filter.IgnoreCase && StringIsCaseSensitive(filter.Value))
-        buffer.SB.Append(" LIKE '");
+        buffer.SB.Append(" ILIKE '");
       else
         buffer.SB.Append(" LIKE '");
 
-      MakeEscapedChars(buffer, filter.Value, new char[] { '%', '_', '[', '\'' }, "[", "]");
+      MakeEscapedChars(buffer, filter.Value, new char[] { '%', '_', '\'' }, "\\", "");
       buffer.SB.Append("%\'");
     }
 
@@ -250,26 +302,43 @@ namespace FreeLibSet.Data.Npgsql
 
     #region FormatOrder
 
-    // TODO: ?
+    /// <summary>
+    /// Форматирование порядка сортировки.
+    /// Добавляет признак NULLS FIRST / NULLS LAST для совместимости с остальными базами данных,
+    /// где NULL считается меньше, чем любое другое значение
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="order">Порядок сортировки</param>
+    protected override void OnFormatOrder(DBxSqlBuffer buffer, DBxOrder order)
+    {
+      for (int i = 0; i < order.Parts.Length; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(", ");
+        buffer.FormatExpression(order.Parts[i].Expression, new DBxFormatExpressionInfo());
 
-    ///// <summary>
-    ///// Форматирование элемента порядка сортировки.
-    ///// Вызывает виртуальные методы для записи конкретных элементов сортировки.
-    ///// Метод не должен добавлять суффиксы "ASC" и "DESC".
-    ///// Обычно этот метод не переопределяется
-    ///// </summary>
-    ///// <param name="Buffer">Буфер для записи</param>
-    ///// <param name="OrderItem">Элемент порядка сортировки</param>
-    //protected override void OnFormatOrderColumnIfNull(DBxSqlBuffer Buffer, DBxOrderColumnIfNull OrderItem)
-    //{
-    //  Buffer.SB.Append("IF(");
-    //  Buffer.FormatColumnName(OrderItem.ColumnName);
-    //  Buffer.SB.Append(" IS NULL, ");
-    //  Buffer.FormatOrderItem(OrderItem.IfNull);
-    //  Buffer.SB.Append(", ");
-    //  Buffer.FormatColumnName(OrderItem.ColumnName);
-    //  Buffer.SB.Append(")");
-    //}
+        bool useNulls = true;
+        DBxColumn column = order.Parts[i].Expression as DBxColumn;
+        if (column != null)
+        {
+          DBxColumnStruct colStr;
+          if (buffer.ColumnStructs.TryGetValue(column.ColumnName, out colStr))
+            useNulls = colStr.Nullable;
+        }
+
+        if (order.Parts[i].SortOrder == ListSortDirection.Descending)
+        {
+          buffer.SB.Append(" DESC");
+          if (useNulls)
+            buffer.SB.Append(" NULLS LAST");
+        }
+        else
+        {
+          if (useNulls)
+            buffer.SB.Append(" NULLS FIRST");
+        }
+      }
+    }
 
     #endregion
 

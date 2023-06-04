@@ -45,7 +45,7 @@ namespace FreeLibSet.Data.SqlClient
 
     #endregion
 
-    #region Выражения
+    #region Функции
 
     /// <summary>
     /// Возвращает имя функции.
@@ -57,10 +57,149 @@ namespace FreeLibSet.Data.SqlClient
     {
       switch (function)
       {
-        case DBxFunctionKind.Coalesce: return "ISNULL";
+        case DBxFunctionKind.Coalesce:
+          if (_DB.IsSqlServer2008R2orNewer) // м.б., 2008
+            return "COALESCE";
+          else
+            return "ISNULL";
         default:
           return base.GetFunctionName(function);
       }
+    }
+
+    /// <summary>
+    /// Спциальная реализация для SQL Server 2005
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="function"></param>
+    /// <param name="formatInfo"></param>
+    protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      // SQL Server 2005-2008R2 (и новее?) не поддерживает операции вида SELECT [Col1]>=0 ...
+      // Требуется оформлять их в виде SELECT CASE WHEN [Col1]>=0 THEN CONVERT(bit,1) WHEN (Col1)<0 THEN CONVERT(bit,0) END ...
+      if (DBxTools.IsComparision(function.Function))
+      {
+        FormatOperatorCompare2005(buffer, function, formatInfo);
+        return;
+      }
+
+      if (function.Function == DBxFunctionKind.IIf)
+      {
+        base.FormatIIfFunctionAsCaseOperator(buffer, function, formatInfo, true);
+        return;
+      }
+      if (function.Function == DBxFunctionKind.Coalesce && 
+        (!_DB.IsSqlServer2008R2orNewer))
+      {
+        base.FormatFunctionCoalesceAsIsNullWith2args(buffer, function, formatInfo);
+        return;
+      }
+
+      base.OnFormatFunction(buffer, function, formatInfo);
+    }
+
+    private void FormatOperatorCompare2005(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      switch (function.Function)
+      {
+        case DBxFunctionKind.Equal:
+          DoFormatOperatorCompare2005(buffer, function, formatInfo, "=", "<>");
+          break;
+        case DBxFunctionKind.LessThan:
+          DoFormatOperatorCompare2005(buffer, function, formatInfo, "<", ">=");
+          break;
+        case DBxFunctionKind.LessOrEqualThan:
+          DoFormatOperatorCompare2005(buffer, function, formatInfo, "<=", ">");
+          break;
+        case DBxFunctionKind.GreaterThan:
+          DoFormatOperatorCompare2005(buffer, function, formatInfo, ">", "<=");
+          break;
+        case DBxFunctionKind.GreaterOrEqualThan:
+          DoFormatOperatorCompare2005(buffer, function, formatInfo, ">=", "<");
+          break;
+        case DBxFunctionKind.NotEqual:
+          DoFormatOperatorCompare2005(buffer, function, formatInfo, "<>", "=");
+          break;
+        default:
+          throw new BugException();
+      }
+    }
+
+
+    private void DoFormatOperatorCompare2005(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo, string signTrue, string signFalse)
+    {
+      formatInfo.NoParentheses = false;
+      if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+        formatInfo.WantedColumnType = DBxColumnType.Int;
+
+      buffer.SB.Append("CASE WHEN ");
+      FormatExpression(buffer, function.Arguments[0], formatInfo);
+      buffer.SB.Append(signTrue);
+      FormatExpression(buffer, function.Arguments[1], formatInfo);
+      buffer.SB.Append(" THEN CONVERT(bit, 1) WHEN ");
+      FormatExpression(buffer, function.Arguments[0], formatInfo);
+      buffer.SB.Append(signFalse);
+      FormatExpression(buffer, function.Arguments[1], formatInfo);
+      buffer.SB.Append(" THEN CONVERT(bit, 0) END");
+    }
+
+
+    /// <summary>
+    /// Форматирование выражения-функции или математической операции.
+    /// Специальная реализация функции AVG() для целочисленного столбца.
+    /// </summary>
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="function">Выражение - функция</param>
+    /// <param name="formatInfo">Параметры форматирования</param>
+    protected override void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      // 31.05.2023
+      // Если функция AVG() вызвана для целочисленного столбца, то среднее возвращается тоже как целое число.
+      // Надо добавить вызов CONVERT() для получения правильного результата.
+      // NULL'ы обрабатываются правильно.
+      if (function.Function == DBxAggregateFunctionKind.Avg && IsIntegerExpression(function, buffer))
+      {
+        buffer.SB.Append("AVG(CONVERT(FLOAT,");
+        buffer.FormatExpression(function.Argument, new DBxFormatExpressionInfo());
+        buffer.SB.Append("))");
+        return;
+      }
+
+      base.OnFormatAggregateFunction(buffer, function, formatInfo);
+    }
+
+    private static bool IsIntegerExpression(DBxExpression expression, DBxSqlBuffer buffer)
+    {
+      List<DBxExpression> list = new List<DBxExpression>();
+      expression.GetAllExpressions(list);
+
+      bool hasInt = false;
+      bool hasNoInt = false;
+      foreach (DBxExpression expr2 in list)
+      {
+        DBxColumn col = expr2 as DBxColumn;
+        if (col != null)
+        {
+          DBxColumnStruct colStr;
+          if (buffer.ColumnStructs.TryGetValue(col.ColumnName, out colStr))
+          {
+            if (colStr.ColumnType == DBxColumnType.Int)
+              hasInt = true;
+            else
+              hasNoInt = true;
+          }
+        }
+        DBxConst cnst = expr2 as DBxConst;
+        if (cnst != null)
+        {
+          if (cnst.ColumnType == DBxColumnType.Int)
+            hasInt = true;
+          else
+            hasNoInt = true;
+        }
+      }
+
+      return hasInt && (!hasNoInt);
     }
 
     #endregion
@@ -162,6 +301,23 @@ namespace FreeLibSet.Data.SqlClient
     #endregion
 
     #region Форматирование значений
+
+    /// <summary>
+    /// Для значений <see cref="DateTime"/> возвращает 01.01.1753.
+    /// </summary>
+    /// <param name="columnType"></param>
+    /// <returns></returns>
+    protected override object GetDefaultValue(DBxColumnType columnType)
+    {
+      switch (columnType)
+      {
+        case DBxColumnType.Date:
+        case DBxColumnType.DateTime:
+          return SqlDBx.MinDateTimeSqlServer2005; // 04.06.2023. Для совместимости с сервером MS SQL Server 2005
+        default:
+          return base.GetDefaultValue(columnType);
+      }
+    }
 
     /// <summary>
     /// Логические значения записываются как строки

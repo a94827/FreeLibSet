@@ -339,6 +339,29 @@ namespace FreeLibSet.Data
 
         #endregion
 
+        #region Операции сравнения
+
+        case DBxFunctionKind.Equal:
+          DoFormatOperatorCompare(buffer, function, formatInfo, "=");
+          break;
+        case DBxFunctionKind.LessThan:
+          DoFormatOperatorCompare(buffer, function, formatInfo, "<");
+          break;
+        case DBxFunctionKind.LessOrEqualThan:
+          DoFormatOperatorCompare(buffer, function, formatInfo, "<=");
+          break;
+        case DBxFunctionKind.GreaterThan:
+          DoFormatOperatorCompare(buffer, function, formatInfo, ">");
+          break;
+        case DBxFunctionKind.GreaterOrEqualThan:
+          DoFormatOperatorCompare(buffer, function, formatInfo, ">=");
+          break;
+        case DBxFunctionKind.NotEqual:
+          DoFormatOperatorCompare(buffer, function, formatInfo, "<>");
+          break;
+
+        #endregion
+
         #region Функции
 
         case DBxFunctionKind.Abs:
@@ -387,7 +410,8 @@ namespace FreeLibSet.Data
         #endregion
 
         default:
-          throw new BugException("Неизвестная функция " + function.Function.ToString());
+          DoFormatFunction(buffer, function, formatInfo);
+          break;
       }
     }
 
@@ -404,6 +428,79 @@ namespace FreeLibSet.Data
         FormatExpression(buffer, function.Arguments[i], formatInfo);
       }
       buffer.SB.Append(')');
+    }
+
+
+    /// <summary>
+    /// Форматирование функции IIF как оператора CASE (для PostgeSQL)
+    /// </summary>
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="function">Выражение - функция</param>
+    /// <param name="formatInfo">Параметры форматирования</param>
+    /// <param name="useNEoperator">Если true, то после выражения-условия нужно поставить "меньше-больше 0".
+    /// Требуется для MS SQL Server 2005</param>
+    protected void FormatIIfFunctionAsCaseOperator(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo, bool useNEoperator)
+    {
+      formatInfo.NoParentheses = false;
+      buffer.SB.Append("CASE WHEN ");
+      if (useNEoperator)
+        buffer.SB.Append("(");
+      OnFormatExpression(buffer, function.Arguments[0], formatInfo);
+      if (useNEoperator)
+      {
+        buffer.SB.Append(")<>");
+        OnFormatValue(buffer, false, DBxColumnType.Boolean);
+      }
+      buffer.SB.Append(" THEN ");
+      OnFormatExpression(buffer, function.Arguments[1], formatInfo);
+      buffer.SB.Append(" ELSE ");
+      OnFormatExpression(buffer, function.Arguments[2], formatInfo);
+      buffer.SB.Append(" END");
+    }
+
+
+    /// <summary>
+    /// Форматирование функции <see cref="DBxFunctionKind.Coalesce"/> как функции ISNULL() с двумя аргументами.
+    /// Если у функции <paramref name="function"/> задано три или более аргумента, то добавляется несколько вызовов ISNULL.
+    /// Используется в DataView и MS SQL Server 2005
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="function"></param>
+    /// <param name="formatInfo"></param>
+    protected void FormatFunctionCoalesceAsIsNullWith2args(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
+    {
+      int currPos = 0;
+
+      DBxFormatExpressionInfo formatInfo2 = new DBxFormatExpressionInfo();
+      formatInfo2.WantedColumnType = formatInfo.WantedColumnType;
+      formatInfo2.NullAsDefaultValue = false;
+      formatInfo2.NoParentheses = true;
+
+      DoFormatFunctionCoalesceAsIsNullWith2args(buffer, function, formatInfo2, currPos);
+    }
+
+    private void DoFormatFunctionCoalesceAsIsNullWith2args(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo, int currPos)
+    {
+      buffer.SB.Append("ISNULL(");
+      FormatExpression(buffer, function.Arguments[currPos], formatInfo);
+      buffer.SB.Append(",");
+      if (currPos == function.Arguments.Length - 2)
+        FormatExpression(buffer, function.Arguments[currPos + 1], formatInfo);
+      else
+        DoFormatFunctionCoalesceAsIsNullWith2args(buffer, function, formatInfo, currPos + 1); // рекурсивный вызов
+      buffer.SB.Append(")");
+    }
+
+
+    private void DoFormatOperatorCompare(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo, string sign)
+    {
+      formatInfo.NoParentheses = false;
+      if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
+        formatInfo.WantedColumnType = DBxColumnType.Int;
+
+      FormatExpression(buffer, function.Arguments[0], formatInfo);
+      buffer.SB.Append(sign);
+      FormatExpression(buffer, function.Arguments[1], formatInfo);
     }
 
     /// <summary>
@@ -424,6 +521,13 @@ namespace FreeLibSet.Data
           case DBxFunctionKind.Multiply:
           case DBxFunctionKind.Divide:
           case DBxFunctionKind.Neg:
+
+          case DBxFunctionKind.Equal:
+          case DBxFunctionKind.LessThan:
+          case DBxFunctionKind.LessOrEqualThan:
+          case DBxFunctionKind.GreaterThan:
+          case DBxFunctionKind.GreaterOrEqualThan:
+          case DBxFunctionKind.NotEqual:
             return true;
           default:
             return false;
@@ -446,6 +550,7 @@ namespace FreeLibSet.Data
       {
         case DBxFunctionKind.Abs: return "ABS";
         case DBxFunctionKind.Coalesce: return "COALESCE";
+        case DBxFunctionKind.IIf: return "IIF";
         case DBxFunctionKind.Length: return "LEN";
         case DBxFunctionKind.Lower: return "LOWER";
         case DBxFunctionKind.Upper: return "UPPER";
@@ -462,7 +567,7 @@ namespace FreeLibSet.Data
     /// <param name="buffer">Буфер для создания SQL-запроса</param>
     /// <param name="function">Выражение - функция</param>
     /// <param name="formatInfo">Параметры форматирования</param>
-    protected override void OnFormatAgregateFunction(DBxSqlBuffer buffer, DBxAgregateFunction function, DBxFormatExpressionInfo formatInfo)
+    protected override void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo)
     {
       buffer.SB.Append(GetFunctionName(function.Function));
       buffer.SB.Append('(');
@@ -473,16 +578,16 @@ namespace FreeLibSet.Data
       buffer.SB.Append(')');
     }
 
-    private string GetFunctionName(DBxAgregateFunctionKind kind)
+    private string GetFunctionName(DBxAggregateFunctionKind kind)
     {
       // Можно было бы вернуть Kind.ToString().ToUpperInvariant(), но это небезопасно с точки зрения иньекции кода
       switch (kind)
       {
-        case DBxAgregateFunctionKind.Sum:
-        case DBxAgregateFunctionKind.Count:
-        case DBxAgregateFunctionKind.Min:
-        case DBxAgregateFunctionKind.Max:
-        case DBxAgregateFunctionKind.Avg:
+        case DBxAggregateFunctionKind.Sum:
+        case DBxAggregateFunctionKind.Count:
+        case DBxAggregateFunctionKind.Min:
+        case DBxAggregateFunctionKind.Max:
+        case DBxAggregateFunctionKind.Avg:
           return kind.ToString().ToUpperInvariant();
         default:
           throw new ArgumentException("Неизвестная агрегатная функция " + kind.ToString());
@@ -903,7 +1008,9 @@ namespace FreeLibSet.Data
         expr1 = filter.Expression;
         expr2 = new DBxConst(filter.Value, DBxColumnType.String);
       }
-      CompareFilter filter2 = new CompareFilter(expr1, expr2, CompareKind.Equal, true);
+
+      bool nullAsDefaultValue = filter.Value.Length == 0; // 02.06.2023
+      CompareFilter filter2 = new CompareFilter(expr1, expr2, CompareKind.Equal, nullAsDefaultValue);
       buffer.FormatFilter(filter2);
     }
 
@@ -923,7 +1030,7 @@ namespace FreeLibSet.Data
         expr1 = filter.Expression;
 
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
-      formatInfo.NullAsDefaultValue = true;
+      formatInfo.NullAsDefaultValue = false; //
       formatInfo.WantedColumnType = DBxColumnType.String;
       formatInfo.NoParentheses = false;
       buffer.FormatExpression(expr1, formatInfo);
@@ -1072,11 +1179,6 @@ namespace FreeLibSet.Data
         {
           CompareFilter filter2 = new CompareFilter(filter.Expression, new DBxConst(filter.MaxValue.Value), CompareKind.LessOrEqualThan, true);
           buffer.FormatFilter(filter2);
-        }
-        else
-        {
-          // Вырожденный фильтр
-          buffer.FormatFilter(DummyFilter.AlwaysTrue);
         }
       }
     }
