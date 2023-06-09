@@ -767,7 +767,7 @@ namespace ExtDBDocs_tests.Data_Docs
       return dts;
     }
 
-    private void AssertColumn(DBxColumnStructList columns, string colName, DBxColumnType columnType, bool? nullable, string message)
+    private void AssertColumn(DBxTableStruct.ColumnCollection columns, string colName, DBxColumnType columnType, bool? nullable, string message)
     {
       if (message == null)
         message += ", ";

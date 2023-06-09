@@ -185,7 +185,40 @@ namespace ExtDB_tests.Data
 
     #endregion
 
-    #region ById
+    #region FromColumns
+
+    [Test]
+    public void FromColumns_normal()
+    {
+      DBxColumns columns = new DBxColumns("F1,F2,F3");
+      DBxOrder res = DBxOrder.FromColumns(columns);
+      Assert.AreEqual(3, res.Parts.Length, "Length");
+
+      Assert.IsInstanceOf<DBxColumn>(res.Parts[0].Expression, "Expression #1");
+      Assert.AreEqual("F1", ((DBxColumn)(res.Parts[0].Expression)).ColumnName, "ColumnName #1");
+      Assert.AreEqual(ListSortDirection.Ascending, res.Parts[0].SortOrder, "SortOrder #1");
+
+      Assert.IsInstanceOf<DBxColumn>(res.Parts[1].Expression, "Expression #2");
+      Assert.AreEqual("F2", ((DBxColumn)(res.Parts[1].Expression)).ColumnName, "ColumnName #2");
+      Assert.AreEqual(ListSortDirection.Ascending, res.Parts[1].SortOrder, "SortOrder #2");
+
+      Assert.IsInstanceOf<DBxColumn>(res.Parts[2].Expression, "Expression #3");
+      Assert.AreEqual("F3", ((DBxColumn)(res.Parts[2].Expression)).ColumnName, "ColumnName #3");
+      Assert.AreEqual(ListSortDirection.Ascending, res.Parts[2].SortOrder, "SortOrder #3");
+    }
+
+    [Test]
+    public void FromColumns_null()
+    {
+      Assert.IsNull(DBxOrder.FromColumns(DBxColumns.Empty), "DBxColumns.Empty");
+
+      DBxColumns columns2 = null;
+      Assert.IsNull(DBxOrder.FromColumns(columns2), "null");
+    }
+
+    #endregion
+
+      #region ById
 
     [Test]
     public void ById()

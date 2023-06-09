@@ -11,7 +11,7 @@ namespace FreeLibSet.Data
   // Классы исключений, используемые в модуле ExtDB
 
   /// <summary>
-  /// Исключение генерируется, если обнаружена ошибка в заполнении объекта DBxStruct
+  /// Исключение генерируется, если обнаружена ошибка в заполнении объекта <see cref="DBxStruct"/>
   /// </summary>
   [Serializable]
   public class DBxStructException : Exception

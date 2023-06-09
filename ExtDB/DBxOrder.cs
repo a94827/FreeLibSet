@@ -278,6 +278,25 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
+    /// Возвращает объект <see cref="DBxOrder"/> из заданного списка столбцов.
+    /// Для всех столбцов предполагается сортировка по возрастанию.
+    /// Если <paramref name="columns"/>=null или задан пустой список столбцов, возвращается null.
+    /// </summary>
+    /// <param name="columns">Список столбцов</param>
+    /// <returns>Объект сортировки или null</returns>
+    public static DBxOrder FromColumns(DBxColumns columns)
+    {
+      if (columns == null)
+        return null;
+      if (columns.IsEmpty)
+        return null;
+      DBxOrderPart[] parts = new DBxOrderPart[columns.Count];
+      for (int i = 0; i < parts.Length; i++)
+        parts[i] = new DBxOrderPart(columns[i], ListSortDirection.Ascending);
+      return new DBxOrder(parts);
+    }
+
+    /// <summary>
     /// Порядок сортировки по полю "Id"
     /// </summary>
     public static readonly DBxOrder ById = new DBxOrder("Id");

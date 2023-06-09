@@ -9,6 +9,7 @@ using System.Data;
 using FreeLibSet.IO;
 using System.Data.Common;
 using FreeLibSet.Core;
+using FreeLibSet.Logging;
 
 namespace FreeLibSet.Data.Npgsql
 {
@@ -499,13 +500,14 @@ namespace FreeLibSet.Data.Npgsql
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    protected override void DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
+    protected override int DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
       NpgsqlCommand cmd = new NpgsqlCommand(cmdText, Connection);
       InitCmdParameters(cmd, paramValues);
       cmd.CommandTimeout = CommandTimeout;
       cmd.Transaction = CurrentTransaction;
-      cmd.ExecuteNonQuery();
+      return cmd.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -920,9 +922,15 @@ namespace FreeLibSet.Data.Npgsql
     /// <returns>Структура</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
+      int tableOID = GetTableOID(tableName);
+      if (tableOID == 0)
+        throw new BugException("Не удалось получить идентификатор object_id таблицы \"" + tableName + "\"");
+
       DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
-      #region Список столбцов, тип, MaxLen, Nullable
+      tableStr.Comment = GetTableComment(tableOID);
+
+      #region Список столбцов, тип, MaxLen, Nullable, DefaultValue
 
       DataTable table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, "public", tableName });
       table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
@@ -930,7 +938,7 @@ namespace FreeLibSet.Data.Npgsql
       foreach (DataRowView drv in table.DefaultView)
       {
         string columnName = DataTools.GetString(drv.Row, "column_name");
-        DBxColumnStruct colStr = new DBxColumnStruct(columnName);
+        DBxColumnStruct colDef = new DBxColumnStruct(columnName);
 
         string colTypeString = DataTools.GetString(drv.Row, "data_type");
         switch (colTypeString)
@@ -938,115 +946,136 @@ namespace FreeLibSet.Data.Npgsql
           case "char":
           case "nchar":
           case "bpchar":
-            colStr.ColumnType = DBxColumnType.String;
+            colDef.ColumnType = DBxColumnType.String;
             break;
 
           case "bigint":
           case "int8":
-            colStr.ColumnType = DBxColumnType.Int;
-            colStr.MinValue = Int64.MinValue;
-            colStr.MaxValue = Int64.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int64.MinValue;
+            colDef.MaxValue = Int64.MaxValue;
             break;
           case "int":
           case "int4":
-            colStr.ColumnType = DBxColumnType.Int;
-            colStr.MinValue = Int32.MinValue;
-            colStr.MaxValue = Int32.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int32.MinValue;
+            colDef.MaxValue = Int32.MaxValue;
             break;
           case "smallint":
           case "int2":
-            colStr.ColumnType = DBxColumnType.Int;
-            colStr.MinValue = Int16.MinValue;
-            colStr.MaxValue = Int16.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = Int16.MinValue;
+            colDef.MaxValue = Int16.MaxValue;
             break;
           case "tinyint":
-            colStr.ColumnType = DBxColumnType.Int;
-            colStr.MinValue = 0;
-            colStr.MaxValue = 255;
+            colDef.ColumnType = DBxColumnType.Int;
+            colDef.MinValue = 0;
+            colDef.MaxValue = 255;
             break;
 
           case "float":
           case "float4":
-            colStr.ColumnType = DBxColumnType.Float;
+            colDef.ColumnType = DBxColumnType.Float;
             // TODO: Использовать длину поля для разделения float/double
-            colStr.MinValue = Double.MinValue;
-            colStr.MaxValue = Double.MaxValue;
+            colDef.MinValue = Double.MinValue;
+            colDef.MaxValue = Double.MaxValue;
             break;
           case "real":
           case "float8":
-            colStr.ColumnType = DBxColumnType.Float;
+            colDef.ColumnType = DBxColumnType.Float;
             // TODO: Использовать длину поля для разделения float/double
-            colStr.MinValue = Single.MinValue;
-            colStr.MaxValue = Single.MaxValue;
+            colDef.MinValue = Single.MinValue;
+            colDef.MaxValue = Single.MaxValue;
             break;
 
           case "money":
-            colStr.ColumnType = DBxColumnType.Money;
-            colStr.MinValue = -922337203685477.5808;
-            colStr.MaxValue = 922337203685477.5807;
+            colDef.ColumnType = DBxColumnType.Money;
+            colDef.MinValue = -922337203685477.5808;
+            colDef.MaxValue = 922337203685477.5807;
             break;
           case "smallmoney":
-            colStr.ColumnType = DBxColumnType.Money;
-            colStr.MinValue = -214748.3648;
-            colStr.MaxValue = 214748.3647;
+            colDef.ColumnType = DBxColumnType.Money;
+            colDef.MinValue = -214748.3648;
+            colDef.MaxValue = 214748.3647;
             break;
 
           case "bit":
           case "bool":
-            colStr.ColumnType = DBxColumnType.Boolean;
+            colDef.ColumnType = DBxColumnType.Boolean;
             break;
 
           case "date":
-            colStr.ColumnType = DBxColumnType.Date;
+            colDef.ColumnType = DBxColumnType.Date;
             break;
 
           case "datetime":
           case "smalldatetime":
           case "datetimeoffset": // ???
           case "timestamp":
-          case "datetime2": colStr.ColumnType = DBxColumnType.DateTime; break;
+          case "datetime2": colDef.ColumnType = DBxColumnType.DateTime; break;
 
-          case "time": colStr.ColumnType = DBxColumnType.Time; break;
+          case "time": colDef.ColumnType = DBxColumnType.Time; break;
 
           case "varchar":
           case "nvarchar":
           case "text":
           case "ntext":
-            colStr.ColumnType = DBxColumnType.Memo;
+            colDef.ColumnType = DBxColumnType.Memo;
             break;
 
           case "image":
           case "varbinary":
-            colStr.ColumnType = DBxColumnType.Binary;
+            colDef.ColumnType = DBxColumnType.Binary;
             break;
 
           case "binary":
-            colStr.ColumnType = DBxColumnType.Binary;
+            colDef.ColumnType = DBxColumnType.Binary;
             //ColStr.MaxLength=
             break;
 
           case "xml":
-            colStr.ColumnType = DBxColumnType.Xml;
+            colDef.ColumnType = DBxColumnType.Xml;
             break;
 
           case "uuid": // 06.10.2021
-            colStr.ColumnType = DBxColumnType.Guid;
+            colDef.ColumnType = DBxColumnType.Guid;
             break;
 
           default:
             break;
         }
 
-        colStr.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+        colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
 
         string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
         switch (nullableStr) // 01.10.2019
         {
-          case "YES": colStr.Nullable = true; break;
-          case "NO": colStr.Nullable = false; break;
+          case "YES": colDef.Nullable = true; break;
+          case "NO": colDef.Nullable = false; break;
         }
 
-        tableStr.Columns.Add(colStr);
+        if ((!colDef.Nullable) && (!drv.Row.IsNull("column_default")))
+        {
+          try
+          {
+            // 09.06.2023
+            string sDefault = DataTools.GetString(drv.Row, "column_default");
+            colDef.DefaultValue = DBxTools.Convert(sDefault, colDef.ColumnType);
+          }
+          catch (Exception e)
+          {
+            e.Data["DB"] = DB.ToString();
+            e.Data["Table"] = tableName;
+            e.Data["Column"] = colDef.ColumnName;
+            LogoutTools.LogoutException(e, "Ошибка получения значения DBxColumnStruct.DefaultValue");
+          }
+        }
+
+        int colIndex = DataTools.GetInt(drv.Row, "ordinal_position");
+
+        colDef.Comment = GetColumnComment(tableOID, colIndex);
+
+        tableStr.Columns.Add(colDef);
       }
 
       #endregion
@@ -1061,10 +1090,6 @@ namespace FreeLibSet.Data.Npgsql
       //{ 
       //}
 
-
-      int tableOID = GetTableOID(tableName);
-      if (tableOID == 0)
-        throw new BugException("Не удалось получить идентификатор object_id таблицы \"" + tableName + "\"");
 
       Buffer.Clear();
       Buffer.SB.Append(@"SELECT confrelid,confdeltype,conkey FROM pg_catalog.pg_constraint WHERE contype='f' AND conrelid=");
@@ -1232,8 +1257,6 @@ namespace FreeLibSet.Data.Npgsql
         if (!table.AutoCreate)
           continue;
 
-        if (table.Columns.Count == 0)
-          throw new DBxStructException(table, "Не задано ни одного столбца");
         //CheckPrimaryKeyColumn(Table, Table.PrimaryKeyColumns[0]);
 
         if (dvTables.Find(table.TableName) < 0)
@@ -1244,6 +1267,19 @@ namespace FreeLibSet.Data.Npgsql
           CreateTable(table);
           errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
           modified = true;
+
+          #endregion
+
+          #region Комментарии
+
+          int tableOId = GetTableOID(table.TableName);
+          if (table.Comment.Length > 0)
+            SetTableComment(table.TableName, table.Comment);
+          for (int i = 0; i < table.Columns.Count; i++)
+          {
+            if (table.Columns[i].Comment.Length > 0)
+              SetColumnComment(table.TableName, table.Columns[i].ColumnName, table.Columns[i].Comment);
+          }
 
           #endregion
         }
@@ -1442,18 +1478,32 @@ namespace FreeLibSet.Data.Npgsql
           } // Цикл по столбцам
 
           #endregion
+
+          #region Комментарии
+
+          int tableOId = GetTableOID(table.TableName);
+          if (table.Comment != GetTableComment(tableOId))
+          {
+            SetTableComment(table.TableName, table.Comment);
+            errors.AddInfo("Для таблицы \"" + table.TableName + "\" изменен комментарий");
+            modified = true;
+          }
+          for (int i = 0; i < table.Columns.Count; i++)
+          {
+            // Нельзя использовать <i> в качестве colIndex, т.к. в таблице могут быть поля, не описанные текущей структурой
+            if (table.Columns[i].Comment != GetColumnComment(tableOId, table.Columns[i].ColumnName))
+            {
+              SetColumnComment(table.TableName, table.Columns[i].ColumnName, table.Columns[i].Comment);
+              errors.AddInfo("Для поля \"" + table.Columns[i].ColumnName + "\"в таблице \"" + table.TableName +
+                "\" изменен комментарий");
+              modified = true;
+            }
+          }
+
+          #endregion
         }
 
         // Таблица существует
-
-        #region Комментарии
-
-        SetTableComment(table.TableName, table.Comment);
-        for (int i = 0; i < table.Columns.Count; i++)
-          SetColumnComment(table.TableName, table.Columns[i].ColumnName, table.Columns[i].Comment);
-
-
-        #endregion
 
         splash.PhaseText = String.Empty;
         splash.IncPercent();
@@ -1635,7 +1685,7 @@ namespace FreeLibSet.Data.Npgsql
           // Ограничение может иметь имя в любом регистре.
           // ALTER TABLE DROP CONSTRAINT требует указания имени ограничения с учетом регистра.
           // Берем имя, как оно записано в базе данных.
-          string pkName2 = DataTools.GetString(drvCol.Row, "INDEX_NAME"); 
+          string pkName2 = DataTools.GetString(drvCol.Row, "INDEX_NAME");
 
           //if (IndexName.StartsWith("Index"))
           //  continue; // составной пользовательский индекс, в который входит поле "Id"
@@ -1660,9 +1710,41 @@ namespace FreeLibSet.Data.Npgsql
 
     #region Комментарии
 
+    private string GetTableComment(int tableOID)
+    {
+      Buffer.Clear();
+      Buffer.SB.Append("SELECT obj_description(");
+      Buffer.SB.Append(StdConvert.ToString(tableOID));
+      Buffer.SB.Append(")");
+      return DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
+    }
+
+    private string GetColumnComment(int tableOID, int colIndex)
+    {
+      Buffer.Clear();
+      Buffer.SB.Append("SELECT col_description(");
+      Buffer.SB.Append(StdConvert.ToString(tableOID));
+      Buffer.SB.Append(",");
+      Buffer.SB.Append(StdConvert.ToString(colIndex));
+      Buffer.SB.Append(")");
+      return DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
+    }
+
+    private string GetColumnComment(int tableOID, string columnName)
+    {
+      Buffer.Clear();
+      Buffer.SB.Append("SELECT attnum FROM pg_catalog.pg_attribute WHERE attrelid=");
+      Buffer.SB.Append(StdConvert.ToString(tableOID));
+      Buffer.SB.Append(" AND attname=");
+      Buffer.Formatter.FormatValue(Buffer, columnName, DBxColumnType.String);
+      int colIndex = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      if (colIndex == 0)
+        return String.Empty;
+      return GetColumnComment(tableOID, colIndex);
+    }
+
     private void SetTableComment(string tableName, string comment)
     {
-
       if (!String.IsNullOrEmpty(comment))
       {
         Buffer.Clear();

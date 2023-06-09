@@ -54,8 +54,15 @@
     <Compile Include="DateRangeCrossFilterTests.cs" />
     <Compile Include="DateRangeFilterTests.cs" />
     <Compile Include="DateRangeInclusionFilterTests.cs" />
+    <Compile Include="DBxIndexStructTests.cs" />
+    <Compile Include="DBxColumnStructTests.cs" />
+    <Compile Include="DBxDataWriterInfoTests.cs" />
+    <Compile Include="DBxDataWriterTests.cs" />
     <Compile Include="DBxOrderTests.cs" />
+    <Compile Include="DBxRealStructSourceTests.cs" />
     <Compile Include="DBxSelectInfoTests.cs" />
+    <Compile Include="DBxStructTests.cs" />
+    <Compile Include="DBxTableStructTests.cs" />
     <Compile Include="IdsFilterGeneratorTests.cs" />
     <Compile Include="NotNullFilterTests.cs" />
     <Compile Include="NumRangeFilterTests.cs" />

@@ -14,7 +14,8 @@ namespace FreeLibSet.Data
   #region Перечисление DBxDataWriterMode
 
   /// <summary>
-  /// Режим работы DBxDataWriter
+  /// Режим работы <see cref="DBxDataWriter"/>.
+  /// Свойство <see cref="DBxDataWriterInfo.Mode"/>.
   /// </summary>
   public enum DBxDataWriterMode
   {
@@ -37,8 +38,8 @@ namespace FreeLibSet.Data
   #endregion
 
   /// <summary>
-  /// Набор параметров для работы с DBxDataWriter.
-  /// Объект создается и заполняется в пользовательском коде. Затем вызывается метод DBxConBase.CreateWriter()
+  /// Набор параметров для работы с <see cref="DBxDataWriter"/>.
+  /// Объект создается и заполняется в пользовательском коде. Затем вызывается метод <see cref="DBxConBase.CreateWriter(DBxDataWriterInfo)"/>.
   /// </summary>
   [Serializable]
   public sealed class DBxDataWriterInfo : IReadOnlyObject, ICloneable
@@ -75,8 +76,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Список столбцов, которые будут обрабатываться в запросе.
     /// Свойство обязательно должно быть установлено.
-    /// Сюда должны входить все столбцы первичного ключа, если режим отличается от Insert.
-    /// В режимах Update и InsertOrUpdate() должен быть задан хотя бы один столбец, не входящий в первичный ключ или в список SearchColumns, если он задан.
+    /// Сюда должны входить все столбцы первичного ключа, если режим отличается от <see cref="DBxDataWriterMode.Insert"/>.
+    /// В режимах Update и InsertOrUpdate, должен быть задан хотя бы один столбец, не входящий в первичный ключ или в список <see cref="SearchColumns"/>, если он задан.
     /// </summary>
     public DBxColumns Columns
     {
@@ -92,7 +93,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Список столбцов, по которым будет выполняться поиск.
-    /// Если свойство не установлено в явном виде, будут использованы столбцы из свойства DBxTableStruct.PrimaryKey.
+    /// Если свойство не установлено в явном виде, будут использованы столбцы из свойства <see cref="DBxTableStruct.PrimaryKey"/>.
     /// </summary>
     public DBxColumns SearchColumns
     {
@@ -107,7 +108,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Режим работы.
-    /// По умолчанию - Insert
+    /// По умолчанию - <see cref="DBxDataWriterMode.Insert"/>.
     /// </summary>
     public DBxDataWriterMode Mode
     {
@@ -127,7 +128,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Ожидаемое количество строк, которые предстоит обработать.
     /// По умолчанию - 0 - неизвестно.
-    /// Свойство носит рекомендательный характер. Реальное количество строк, которые будут обработаны, может отличаться
+    /// Свойство носит рекомендательный характер. Реальное количество строк, которые будут обработаны, может отличаться.
     /// 
     /// Установка свойства может привести к изменению стратегии работы.
     /// Например, если ожидается добавление очень большого количества строк, может быть выгодно создать временную базу данных.
@@ -150,7 +151,7 @@ namespace FreeLibSet.Data
     /// Если задано положительное значение, то через указанное количество операций будет выполняться COMMINT TRANSACION,
     /// а затем начинаться новая транзакция.
     /// По умолчанию - 0 - промежуточное подтверждение транзакций не выполняется.
-    /// Свойство работает, только если конструктор DBxDataWriter начинает транзакцию. Если на момент вызова DBxConBase.CreateWrite().
+    /// Свойство работает, только если конструктор DBxDataWriter начинает транзакцию. 
     /// 
     /// Для SQLite есть предельный размер данных, который можно обработать. Если предел превышен, то возникает ошибка,
     /// приводящая к перезагрузке Windows. Это происходит только при очень большом количестве записей.
@@ -181,7 +182,7 @@ namespace FreeLibSet.Data
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Проверка IsReadOnly=false
+    /// Проверка <see cref="IsReadOnly"/>=false
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -209,8 +210,10 @@ namespace FreeLibSet.Data
       DBxDataWriterInfo res = new DBxDataWriterInfo();
       res.TableName = TableName;
       res.Columns = Columns;
+      res.SearchColumns = SearchColumns; // 06.06.2023
       res.Mode = Mode;
       res.ExpectedRowCount = ExpectedRowCount;
+      res.TransactionPulseRowCount = TransactionPulseRowCount; // 07.06.2023
       return res;
     }
 
@@ -225,7 +228,7 @@ namespace FreeLibSet.Data
   #region Перечисление DBxDataWriterState
 
   /// <summary>
-  /// Текущее состояние объекта DBxDataWriter
+  /// Текущее состояние объекта <see cref="DBxDataWriter"/>
   /// </summary>
   [Serializable]
   public enum DBxDataWriterState
@@ -262,10 +265,10 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Объект для добавления и/или изменения строк в таблице.
-  /// Создается вызовом DBxConBase.CreateWriter().
-  /// Вызывающий код должен заполнять буфер строки и вызывать метод Write() для каждой строки.
+  /// Создается вызовом <see cref="DBxConBase.CreateWriter(DBxDataWriterInfo)"/>.
+  /// Вызывающий код должен заполнять буфер строки и вызывать метод <see cref="Write()"/> для каждой строки.
   /// Также можно использовать метод LoadFrom() для группового добавления.
-  /// По окончании записи должны быть вызваны методы Finish() и Dispose().
+  /// По окончании записи должны быть вызваны методы <see cref="Finish()"/> и Dispose().
   /// Если вызовы методов Write() и Finish() не вызвали исключения, значит запись выполнена успешно.
   /// </summary>
   public abstract class DBxDataWriter : MarshalByRefDisposableObject
@@ -273,14 +276,20 @@ namespace FreeLibSet.Data
     #region Конструктор и Dispose
 
     /// <summary>
-    /// Инициализация объекта в состоянии Created.
-    /// Если нет текущей транзации (DBxConBase.CurrentTransaction=null), то начинает транзацию вызовом DBxConBase.TransactionBegin().
+    /// Инициализация объекта в состоянии <see cref="State"/>=Created.
+    /// Если нет текущей транзации (<see cref="DBxConBase.CurrentTransaction"/>=null), то начинает транзацию вызовом <see cref="DBxConBase.TransactionBegin()"/>.
     /// Если у соединения уже начата транзакция, то DBxDataWriter не будет обрабатывать транзакции.
     /// </summary>
-    /// <param name="con"></param>
-    /// <param name="writerInfo"></param>
+    /// <param name="con">Используемое соединение</param>
+    /// <param name="writerInfo">Параметры объекта.</param>
     public DBxDataWriter(DBxConBase con, DBxDataWriterInfo writerInfo)
     {
+      if (con == null)
+        throw new ArgumentNullException("con");
+      if (writerInfo == null)
+        throw new ArgumentNullException("writerInfo");
+      writerInfo.SetReadOnly();
+
       // Проверка аргументов находится в DBxConBase.CreateWriter()
 
       _Con = con;
@@ -292,7 +301,7 @@ namespace FreeLibSet.Data
       _TableStruct = con.DB.Struct.Tables[writerInfo.TableName];
 #if DEBUG
       if (_TableStruct == null)
-        throw new ArgumentException("Не найдена структура таблицы \"" + writerInfo.TableName + "\"");
+        throw new ArgumentException("Не найдена структура таблицы \"" + writerInfo.TableName + "\"", "writerInfo");
 #endif
 
       _ColumnDefs = new DBxColumnStruct[writerInfo.Columns.Count];
@@ -300,9 +309,8 @@ namespace FreeLibSet.Data
       {
         _ColumnDefs[i] = _TableStruct.Columns[writerInfo.Columns[i]];
         if (_ColumnDefs[i] == null)
-          throw new ArgumentException("Не найден столбец \"" + writerInfo.Columns[i] + "\" в таблице \"" + writerInfo.TableName + "\"");
+          throw new ArgumentException("Не найден столбец \"" + writerInfo.Columns[i] + "\" в таблице \"" + writerInfo.TableName + "\"", "writerInfo");
       }
-
 
       if (writerInfo.SearchColumns == null)
       {
@@ -361,10 +369,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Переводит объект в состояние State=Disposed.
-    /// При нормальной работе, перед вызовом метода Dispose() должен вызываться метод Finish().
-    /// Если метод Finish() не вызывался, или ему не удалось завершить транзакцию, вызывается DBxConBase.TransactionRollback(),
-    /// если транзакция была начата в конструкторе объекта
+    /// Переводит объект в состояние <see cref="State"/>=Disposed.
+    /// При нормальной работе, перед вызовом метода Dispose() должен вызываться метод <see cref="Finish()"/>.
+    /// Если метод Finish() не вызывался, или ему не удалось завершить транзакцию, вызывается <see cref="DBxConBase.TransactionRollback()"/>,
+    /// если транзакция была начата в конструкторе объекта.
     /// </summary>
     /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор объекта</param>
     protected override void Dispose(bool disposing)
@@ -389,7 +397,7 @@ namespace FreeLibSet.Data
     #region Основные свойства
 
     /// <summary>
-    /// Соединение с базой данной, для которого был вызван метод CreateCon().
+    /// Соединение с базой данной, для которого был вызван метод <see cref="DBxConBase.CreateWriter(DBxDataWriterInfo)"/>.
     /// Свойство объявлено защищенным, чтобы при вызове по сети не было незаконного доступа к объекту.
     /// </summary>
     protected DBxConBase Con { get { return _Con; } }
@@ -408,7 +416,7 @@ namespace FreeLibSet.Data
     public DBxDataWriterState State { get { return _State; } }
     private DBxDataWriterState _State;
 
-    bool _TransactionStarted;
+    private bool _TransactionStarted;
 
     #endregion
 
@@ -416,8 +424,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Буфер строки.
-    /// Длина массива соответствует полям в DBxDataWriterInfo.Columns.
-    /// Обычно используется индексированное свойство объекта DBxDataWriter для записи значений по одному
+    /// Длина массива соответствует полям в <see cref="DBxDataWriterInfo.Columns"/>.
+    /// Обычно используется индексированное свойство объекта <see cref="DBxDataWriter"/> для записи значений по одному.
     /// </summary>
     public object[] Values
     {
@@ -435,7 +443,7 @@ namespace FreeLibSet.Data
     private object[] _Values;
 
     /// <summary>
-    /// Доступ к полю буфера строки по индексу поля в списке DBxDataWriterInfo.Columns.
+    /// Доступ к полю буфера строки по индексу поля в списке <see cref="DBxDataWriterInfo.Columns"/>.
     /// </summary>
     /// <param name="columnIndex">Индекс столбца в списке</param>
     /// <returns>Значение поля</returns>
@@ -446,7 +454,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Доступ к буферу строки по имени поля в списке DBxDataWriterInfo.Columns.
+    /// Доступ к буферу строки по имени поля в списке <see cref="DBxDataWriterInfo.Columns"/>.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -477,21 +485,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public string GetString(string columnName) { return DataTools.GetString(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public string GetString(int columnIndex) { return DataTools.GetString(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetString(string columnName, string value)
     {
@@ -501,7 +509,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetString(int columnIndex, string value)
     {
@@ -539,21 +547,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public int GetInt(string columnName) { return DataTools.GetInt(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public int GetInt(int columnIndex) { return DataTools.GetInt(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetInt(string columnName, int value)
     {
@@ -563,7 +571,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetInt(int columnIndex, int value)
     {
@@ -587,25 +595,24 @@ namespace FreeLibSet.Data
       }
     }
 
-
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public long GetInt64(string columnName) { return DataTools.GetInt64(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public long GetInt64(int columnIndex) { return DataTools.GetInt64(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetInt64(string columnName, long value)
     {
@@ -615,7 +622,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetInt64(int columnIndex, long value)
     {
@@ -643,21 +650,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public float GetSingle(string columnName) { return DataTools.GetSingle(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public float GetSingle(int columnIndex) { return DataTools.GetSingle(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetSingle(string columnName, float value)
     {
@@ -667,7 +674,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetSingle(int columnIndex, float value)
     {
@@ -695,21 +702,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public double GetDouble(string columnName) { return DataTools.GetDouble(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public double GetDouble(int columnIndex) { return DataTools.GetDouble(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetDouble(string columnName, double value)
     {
@@ -719,7 +726,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetDouble(int columnIndex, double value)
     {
@@ -747,21 +754,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public decimal GetDecimal(string columnName) { return DataTools.GetDecimal(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public decimal GetDecimal(int columnIndex) { return DataTools.GetDecimal(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetDecimal(string columnName, decimal value)
     {
@@ -771,7 +778,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetDecimal(int columnIndex, decimal value)
     {
@@ -798,21 +805,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public bool GetBool(string columnName) { return DataTools.GetBool(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public bool GetBool(int columnIndex) { return DataTools.GetBool(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetBool(string columnName, bool value)
     {
@@ -822,7 +829,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetBool(int columnIndex, bool value)
     {
@@ -844,21 +851,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public DateTime GetDateTime(string columnName) { return DataTools.GetDateTime(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public DateTime GetDateTime(int columnIndex) { return DataTools.GetDateTime(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetDateTime(string columnName, DateTime value)
     {
@@ -868,7 +875,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetDateTime(int columnIndex, DateTime value)
     {
@@ -886,21 +893,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public DateTime? GetNullableDateTime(string columnName) { return DataTools.GetNullableDateTime(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public DateTime? GetNullableDateTime(int columnIndex) { return DataTools.GetNullableDateTime(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetNullableDateTime(string columnName, DateTime? value)
     {
@@ -910,7 +917,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetNullableDateTime(int columnIndex, DateTime? value)
     {
@@ -932,21 +939,21 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public Guid GetGuid(string columnName) { return DataTools.GetGuid(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
     public Guid GetGuid(int columnIndex) { return DataTools.GetGuid(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnName">Имя поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetGuid(string columnName, Guid value)
     {
@@ -956,7 +963,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
-    /// <param name="columnIndex">Индекс поля из списка DBxDataWriterInfo.Columns</param>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetGuid(int columnIndex, Guid value)
     {
@@ -999,31 +1006,31 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Описания столбцов таблицы, соответствующие DBxDataWriterInfo.Columns
+    /// Описания столбцов таблицы, соответствующие <see cref="DBxDataWriterInfo.Columns"/>
     /// </summary>
     public DBxColumnStruct[] ColumnDefs { get { return _ColumnDefs; } }
     private readonly DBxColumnStruct[] _ColumnDefs;
 
     /// <summary>
-    /// Имена столбцов первичного ключа или заданных в свойстве DBxDataWriterInfo.SearchColumns
+    /// Имена столбцов первичного ключа или заданных в свойстве <see cref="DBxDataWriterInfo.SearchColumns"/>.
     /// </summary>
     public DBxColumns SearchColumns { get { return _SearchColumns; } }
     private readonly DBxColumns _SearchColumns;
 
     /// <summary>
-    /// Позиции столбцов первичного ключа в массиве Values
+    /// Позиции столбцов первичного ключа в массиве <see cref="Values"/>.
     /// </summary>
     public int[] SearchColumnPositions { get { return _SearchColumnPositions; } }
     private readonly int[] _SearchColumnPositions;
 
     /// <summary>
-    /// Имена столбцов, не входящих в первичный ключ
+    /// Имена столбцов, не входящих в первичный ключ.
     /// </summary>
     public DBxColumns OtherColumns { get { return _OtherColumns; } }
     private readonly DBxColumns _OtherColumns;
 
     /// <summary>
-    /// Позиции прочих столбцов в массиве Values
+    /// Позиции прочих столбцов в массиве <see cref="Values"/>.
     /// </summary>
     public int[] OtherColumnPositions { get { return _OtherColumnPositions; } }
     private readonly int[] _OtherColumnPositions;
@@ -1039,11 +1046,12 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Обработка одной строки.
-    /// На момент вызова должен быть заполнен буфер строки
+    /// На момент вызова должен быть заполнен буфер строки.
     /// </summary>
     public void Write()
     {
       CheckStateWriteable();
+      _State = DBxDataWriterState.Writing; // 06.06.2023
       try
       {
         OnWrite();
@@ -1071,7 +1079,7 @@ namespace FreeLibSet.Data
     /// Завершение работы.
     /// Если используется какая-либо отложенная запись, она будет выполнена.
     /// Затем будет завершена транзакция
-    /// В случае успеха, метод переводит объект в состояние Finished.
+    /// В случае успеха, метод переводит объект в состояние <see cref="State"/>=Finished.
     /// </summary>
     public void Finish()
     {
@@ -1119,16 +1127,16 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Должен записать отложенные буферизованные данные, если такие есть.
-    /// Этот метод также вызывается из PulseTransaction()
+    /// Этот метод также вызывается из <see cref="PulseTransaction()"/>
     /// </summary>
     protected virtual void OnFinish()
     {
     }
 
     /// <summary>
-    /// Создает пустую таблицу данных, содержащую столбцы ColumnDefs
+    /// Создает пустую таблицу данных, содержащую столбцы <see cref="ColumnDefs"/>.
     /// </summary>
-    /// <returns>Новая таблица DataTable</returns>
+    /// <returns>Новая таблица <see cref="DataTable"/></returns>
     protected DataTable CreateDataTable()
     {
       DataTable table = new DataTable(WriterInfo.TableName);
@@ -1136,7 +1144,6 @@ namespace FreeLibSet.Data
         table.Columns.Add(ColumnDefs[i].CreateDataColumn());
       return table;
     }
-
 
     #endregion
 
@@ -1172,7 +1179,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Загрузка данных из DbDataReader
+    /// Загрузка данных из <see cref="DbDataReader"/>.
     /// </summary>
     /// <param name="reader">Источник, откуда будут взяты строки</param>
     public virtual void LoadFrom(DbDataReader reader)
@@ -1199,8 +1206,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Завершает текущую транзакцию, вызывая COMMIT_TRANSACTION, и начинает новую транзакцию.
-    /// Этот метод может вызываться автоматически из Write(), если было установлено свойство
-    /// DBxDataWriterInfo.TransactionPulseRowCount
+    /// Этот метод может вызываться автоматически из <see cref="Write()"/>, если было установлено свойство
+    /// <see cref="DBxDataWriterInfo.TransactionPulseRowCount"/>.
     /// </summary>
     /// <returns></returns>
     public bool PulseTransaction()
@@ -1220,8 +1227,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Вызывается из PulseTransaction().
-    /// Выполняет DBxCon.TransactionCommit() и DBxCon.TransactionBegin()
+    /// Вызывается из <see cref="PulseTransaction()"/>.
+    /// Выполняет <see cref="DBxCon.TransactionCommit()"/> и <see cref="DBxCon.TransactionBegin()"/>.
     /// </summary>
     protected virtual void OnPulseTransaction()
     {
@@ -1231,7 +1238,6 @@ namespace FreeLibSet.Data
       _Con.TransactionBegin();
       _TransactionStarted = true;
     }
-
 
     #endregion
   }
@@ -1270,16 +1276,16 @@ namespace FreeLibSet.Data
 #endif
 
   /// <summary>
-  /// Реализация DBxDataWriter по умолчанию.
-  /// Он вызывает методы класса DBxConBase для обработки каждой строки.
-  /// Вероятно, этот класс никогда не будет использоваться
+  /// Реализация <see cref="DBxDataWriter"/> по умолчанию.
+  /// Он вызывает методы класса <see cref="DBxConBase"/> для обработки каждой строки.
+  /// Вероятно, этот класс никогда не будет использоваться.
   /// </summary>
   public class DBxDefaultDataWriter : DBxDataWriter
   {
     #region Конструктор
 
     /// <summary>
-    /// Инициализация объекта в состоянии Created
+    /// Инициализация объекта в состоянии Created.
     /// </summary>
     /// <param name="con"></param>
     /// <param name="writerInfo"></param>
@@ -1304,10 +1310,10 @@ namespace FreeLibSet.Data
           break;
         case DBxDataWriterMode.Update:
         case DBxDataWriterMode.InsertOrUpdate:
-          DBxFilter[] Filters = new DBxFilter[SearchColumns.Count];
+          DBxFilter[] filters = new DBxFilter[SearchColumns.Count];
           for (int i = 0; i < SearchColumns.Count; i++)
-            Filters[i] = new ValueFilter(SearchColumns[i], this[SearchColumnPositions[i]]);
-          DBxFilter f = AndFilter.FromArray(Filters);
+            filters[i] = new ValueFilter(SearchColumns[i], this[SearchColumnPositions[i]]);
+          DBxFilter f = AndFilter.FromArray(filters);
 
           if (WriterInfo.Mode == DBxDataWriterMode.InsertOrUpdate)
           {
@@ -1324,7 +1330,7 @@ namespace FreeLibSet.Data
           for (int i = 0; i < v2.Length; i++)
             v2[i] = this[OtherColumnPositions[i]];
 
-          Con.SetValues(WriterInfo.TableName, AndFilter.FromArray(Filters), OtherColumns, v2);
+          Con.SetValues(WriterInfo.TableName, AndFilter.FromArray(filters), OtherColumns, v2);
           break;
         default:
           throw new BugException("Mode=" + WriterInfo.Mode.ToString());

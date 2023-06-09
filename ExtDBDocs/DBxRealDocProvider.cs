@@ -199,7 +199,7 @@ namespace FreeLibSet.Data.Docs
       using (DBxCon con = new DBxCon(_Source.MainDBEntry))
       {
         DataTable tbl = con.FillSelect(docTypeName, GetColumns(docTypeName, null), filter);
-        tblStruct.InitDataRowLimits(tbl);
+        InitMaxLength(tblStruct, tbl);
         tbl.AcceptChanges(); // 06.08.2018
         return tbl;
       }
@@ -226,11 +226,44 @@ namespace FreeLibSet.Data.Docs
 
         DataTable tbl = con.FillSelect(subDocTypeName, GetColumns(docTypeName, subDocTypeName),
           filter);
-        tblStruct.InitDataRowLimits(tbl);
+        InitMaxLength(tblStruct, tbl);
         tbl.AcceptChanges(); // 06.08.2018
         return tbl;
       }
     }
+
+
+    /// <summary>
+    /// Установка свойcтв <see cref="DataColumn.MaxLength"/>.
+    /// Таблица <paramref name="table"/> содержит столбцы, для которых устанавливаются ограничения.
+    /// Если в таблице есть посторонние столбцы, они пропускаются.
+    /// </summary>
+    /// <param name="ts">Описание структуры таблицы</param>
+    /// <param name="table">Таблица со столбцами, для которых требуется установить свойства</param>
+    public static void InitMaxLength(DBxTableStruct ts, DataTable table)
+    {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+#endif
+
+      foreach (DataColumn column in table.Columns)
+      {
+        int p = ts.Columns.IndexOf(column.ColumnName);
+        if (p < 0)
+          continue; // служебное поле
+        DBxColumnStruct colDef = ts.Columns[p];
+        if (colDef.ColumnType == DBxColumnType.String && column.DataType == typeof(string))
+          column.MaxLength = colDef.MaxLength;
+        /* Нельзя !
+        if (FieldDef.Type==DatabaseStruct.FieldType.String ||
+            FieldDef.Type==DatabaseStruct.FieldType.Date ||
+            FieldDef.Type==DatabaseStruct.FieldType.Time)
+          Column.AllowDBNull=FieldDef.CanBeEmpty;
+        */
+      }
+    }
+
 
     /// <summary>
     /// Выполнение SQL-запроса SELECT с заданием всех возможных параметров

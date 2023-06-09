@@ -765,14 +765,15 @@ namespace FreeLibSet.Data.SQLite
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
     [DebuggerStepThrough]
-    protected override void DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
+    protected override int DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
       SQLiteCommand cmd = new SQLiteCommand(cmdText, Connection);
       InitCmdParameters(cmd, paramValues);
       cmd.CommandTimeout = CommandTimeout;
       cmd.Transaction = CurrentTransaction;
-      cmd.ExecuteNonQuery();
+      return cmd.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -983,7 +984,8 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Получить реальное описание структуры таблицы
+    /// Получить реальное описание структуры таблицы.
+    /// SQLite не поддерживает описания таблиц и столбцов, несмотря на наличие в схеме столбца COLUMN_DESCRIPTION
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Структура</returns>
@@ -991,7 +993,7 @@ namespace FreeLibSet.Data.SQLite
     {
       DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
-      #region Список столбцов, тип, MaxLen, Nullable
+      #region Список столбцов, тип, MaxLen, Nullable, DefaultValue
 
       DataTable table = Connection.GetSchema("Columns", new string[] { null, null, tableName }); // исправлено 28.08.2020
       table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
@@ -1079,6 +1081,7 @@ namespace FreeLibSet.Data.SQLite
           case "note":
           case "text":
           case "ntext":
+          case "clob":
             colDef.ColumnType = DBxColumnType.Memo;
             break;
 
@@ -1118,13 +1121,31 @@ namespace FreeLibSet.Data.SQLite
             throw new BugException("Неизвестный тип поля: \"" + colTypeString + "\"");
         }
 
-        colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+        if (colDef.ColumnType == DBxColumnType.String) // 08.06.2023
+          colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
 
         string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
         switch (nullableStr)
         {
           case "TRUE": colDef.Nullable = true; break;  // исправлено 28.08.2020
           case "FALSE": colDef.Nullable = false; break;
+        }
+
+        if ((!colDef.Nullable) && (!drv.Row.IsNull("column_default")))
+        {
+          try 
+          {
+            // 09.06.2023
+            string sDefault = DataTools.GetString(drv.Row, "column_default");
+            colDef.DefaultValue = DBxTools.Convert(sDefault, colDef.ColumnType);
+          }
+          catch(Exception e)
+          {
+            e.Data["DB"] = DB.ToString();
+            e.Data["Table"] = tableName;
+            e.Data["Column"] = colDef.ColumnName;
+            LogoutTools.LogoutException(e, "Ошибка получения значения DBxColumnStruct.DefaultValue");
+          }
         }
 
         tableStr.Columns.Add(colDef);
@@ -1274,9 +1295,6 @@ namespace FreeLibSet.Data.SQLite
       {
         if (!table.AutoCreate)
           continue;
-
-        if (table.Columns.Count == 0)
-          throw new DBxStructException(table, "Не задано ни одного столбца");
 
         //CheckPrimaryKeyColumn(Table, Table.PrimaryKeyColumns[0]);
         //bool IndicesDropped = false;
@@ -2064,167 +2082,6 @@ namespace FreeLibSet.Data.SQLite
     public override DbConnectionStringBuilder CreateConnectionStringBuilder(string connectionString)
     {
       return new SQLiteConnectionStringBuilder(connectionString);
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Объект для записи в базу данных SQLite.
-  /// Для SQLite нет обходных путей для группового добавления записей, но есть оператор "INSERT OR UPDATE".
-  /// Также создаем однократно команду SQLiteCommand
-  /// </summary>
-  internal class SQLiteDBxDataWriter : DBxDataWriter
-  {
-    #region Конструктор и Dispose
-
-    public SQLiteDBxDataWriter(SQLiteDBxCon con, DBxDataWriterInfo writerInfo)
-      : base(con, writerInfo)
-    {
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        if (_Command != null)
-        {
-          _Command.Dispose(); // 28.12.2020
-          _Command = null;
-        }
-      }
-
-      base.Dispose(disposing);
-    }
-
-    #endregion
-
-    #region Подготовленная команда
-
-    private SQLiteCommand _Command;
-
-    private void PrepareCommand()
-    {
-      DBxSqlBuffer buffer = new DBxSqlBuffer(Con.DB.Formatter);
-      switch (WriterInfo.Mode)
-      {
-        case DBxDataWriterMode.Insert:
-          FormatInsertSQL(buffer);
-          break;
-
-        case DBxDataWriterMode.Update:
-          FormatUpdateSql(buffer);
-          break;
-
-        case DBxDataWriterMode.InsertOrUpdate:
-          // TODO: Можно-таки использовать "UPSERT", но только если нет внешних ключей на эту таблицу
-
-          //if (((SQLiteDBxCon)Con).ServerVersion>=new Version(3, 24))
-          //{ 
-          //}
-          //else
-          //{
-          // Используем "двойную" команду, сначала INSERT, потом UPDATE
-          // https://stackoverflow.com/questions/15277373/sqlite-upsert-update-or-insert/38463024#38463024
-          // см. ответ №69
-
-          FormatUpdateSql(buffer);
-          buffer.SB.Append(";");
-          buffer.SB.Append(Environment.NewLine);
-
-          //FormatInsertSQL(Buffer);
-          buffer.SB.Append("INSERT INTO ");
-          buffer.FormatTableName(WriterInfo.TableName);
-          buffer.SB.Append(" (");
-          buffer.FormatCSColumnNames(WriterInfo.Columns);
-          buffer.SB.Append(") SELECT ");
-
-          for (int i = 0; i < Values.Length; i++)
-          {
-            if (i > 0)
-              buffer.SB.Append(',');
-            buffer.FormatParamPlaceholder(i);
-          }
-
-          buffer.SB.Append(" WHERE (SELECT Changes()=0)");
-          //}
-          break;
-
-        default:
-          throw new BugException("Неизвестный Mode=" + WriterInfo.Mode.ToString());
-      }
-
-      _Command = new SQLiteCommand(buffer.SB.ToString());
-      for (int i = 0; i < Values.Length; i++)
-        _Command.Parameters.Add(new SQLiteParameter("P" + (i + 1).ToString(), null));
-      _Command.Connection = ((SQLiteDBxCon)Con).Connection;
-      _Command.Transaction = ((SQLiteDBxCon)Con).CurrentTransaction;
-      _Command.CommandTimeout = Con.CommandTimeout;
-      _Command.Prepare(); // для порядка.
-    }
-
-    private void FormatInsertSQL(DBxSqlBuffer buffer)
-    {
-      buffer.SB.Append("INSERT INTO ");
-      buffer.FormatTableName(WriterInfo.TableName);
-      buffer.SB.Append(" (");
-      buffer.FormatCSColumnNames(WriterInfo.Columns);
-      buffer.SB.Append(") VALUES (");
-
-      for (int i = 0; i < Values.Length; i++)
-      {
-        if (i > 0)
-          buffer.SB.Append(',');
-        buffer.FormatParamPlaceholder(i);
-      }
-      buffer.SB.Append(")");
-    }
-
-    private void FormatUpdateSql(DBxSqlBuffer buffer)
-    {
-      buffer.SB.Append("UPDATE ");
-      buffer.FormatTableName(WriterInfo.TableName);
-      buffer.SB.Append(" SET ");
-
-      for (int i = 0; i < OtherColumns.Count; i++)
-      {
-        if (i > 0)
-          buffer.SB.Append(", ");
-        buffer.FormatColumnName(OtherColumns[i]);
-        buffer.SB.Append("=");
-        buffer.FormatParamPlaceholder(OtherColumnPositions[i]);
-      }
-
-      buffer.SB.Append(" WHERE ");
-      for (int i = 0; i < SearchColumns.Count; i++)
-      {
-        if (i > 0)
-          buffer.SB.Append(" AND ");
-        buffer.FormatColumnName(SearchColumns[i]);
-        buffer.SB.Append("=");
-        buffer.FormatParamPlaceholder(SearchColumnPositions[i]);
-      }
-    }
-
-    #endregion
-
-    #region OnWrite
-
-    protected override void OnWrite()
-    {
-      if (_Command == null)
-        PrepareCommand();
-
-      for (int i = 0; i < Values.Length; i++)
-      {
-        object v = Con.DB.Formatter.PrepareParamValue(Values[i], ColumnDefs[i].ColumnType);
-        _Command.Parameters[i].Value = v;
-      }
-
-
-      // TODO: Требуется отладка SQL-запроса
-
-      _Command.ExecuteNonQuery();
     }
 
     #endregion

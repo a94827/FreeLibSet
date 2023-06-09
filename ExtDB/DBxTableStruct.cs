@@ -16,6 +16,769 @@ namespace FreeLibSet.Data
   [Serializable]
   public class DBxTableStruct : ObjectWithCode, IReadOnlyObject, ICloneable
   {
+    #region Вложенные классы
+
+    /// <summary>
+    /// Список столбцов для свойства DBxTableStruct.Columns
+    /// </summary>
+    [Serializable]
+    public class ColumnCollection : NamedList<DBxColumnStruct>
+    {
+      #region Защищенные конструкторы
+
+      internal ColumnCollection()
+        : base(true)
+      {
+      }
+
+      internal ColumnCollection(int capacity)
+        : base(capacity, true)
+      {
+      }
+
+      #endregion
+
+      #region ReadOnly
+
+      internal new void SetReadOnly()
+      {
+        base.SetReadOnly();
+        for (int i = 0; i < Count; i++)
+          this[i].SetReadOnly();
+      }
+
+      #endregion
+
+      #region Имена столбцов
+
+      /// <summary>
+      /// Добавляет имена всех столбцов в список.
+      /// </summary>
+      /// <param name="list">Заполняемый список</param>
+      public void GetColumnNames(DBxColumnList list)
+      {
+#if DEBUG
+        if (list == null)
+          throw new ArgumentNullException("list");
+#endif
+
+        list.CheckNotReadOnly();
+
+        for (int i = 0; i < Count; i++)
+          list.Add(this[i].ColumnName);
+      }
+
+      /// <summary>
+      /// Возвращает список имен столбцов в виде объекта DBxColumns.
+      /// Каждый раз создается новый объект.
+      /// </summary>
+      public DBxColumns Columns
+      {
+        get
+        {
+          string[] a = new string[Count];
+          for (int i = 0; i < a.Length; i++)
+            a[i] = this[i].ColumnName;
+          return new DBxColumns(a);
+        }
+      }
+
+      #endregion
+
+      #region Методы добавления столбцов
+
+      /// <summary>
+      /// Добавление целочисленого поля первичного ключа "Id"
+      /// </summary>
+      /// <returns>Описание поля</returns>
+      public DBxColumnStruct AddId()
+      {
+        return AddId("Id");
+      }
+
+      /// <summary>
+      /// Добавление целочисленного поля первичного ключа с заданным именем.
+      /// Устанавливает <see cref="DBxColumnStruct.Nullable"/>=false.
+      /// </summary>
+      /// <returns>Описание поля</returns>
+      public DBxColumnStruct AddId(string columnName)
+      {
+#if DEBUG
+        if (String.IsNullOrEmpty(columnName))
+          throw new ArgumentNullException("columnName");
+#endif
+        if (Count > 0)
+          throw new InvalidOperationException("Ключевое поле \"" + columnName + "\" должно быть первым в списке");
+
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        item.Nullable = false;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить строковое поле
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="maxLength">Максимальная длина строки (от 1 до 255 символов)</param>
+      /// <param name="nullable">True, если поле может содержать пустую строку, False-если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddString(string columnName, int maxLength, bool nullable)
+      {
+        if (maxLength < 1 || maxLength > 255)
+          throw new ArgumentOutOfRangeException("maxLength", maxLength, "Длина строкового поля может быть от 1 до 255 символов");
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.String;
+        item.MaxLength = maxLength;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле типа "Дата" (без времени)
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустую дату, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddDate(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Date;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле типа "Дата и время"
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустую дату, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddDateTime(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.DateTime;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле типа "время" (без даты)
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddTime(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Time;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 4-байтное целое со знаком
+      /// Поле может содержать значение NULL
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 4-байтное целое со знаком
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
+      /// Поле может содержать значение NULL
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="minValue">Диапазон значений, которые должны храниться в поле - минимальное значение</param>
+      /// <param name="maxValue">Диапазон значений, которые должны храниться в поле - максимальное значение</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName, int minValue, int maxValue)
+      {
+        if (minValue > maxValue)
+          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        item.MinValue = minValue;
+        item.MaxValue = maxValue;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="minValue">Диапазон значений, которые должны храниться в поле - минимальное значение</param>
+      /// <param name="maxValue">Диапазон значений, которые должны храниться в поле - максимальное значение</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName, int minValue, int maxValue, bool nullable)
+      {
+        if (minValue > maxValue)
+          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        item.MinValue = minValue;
+        item.MaxValue = maxValue;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
+      /// Поле может содержать значение NULL.
+      /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию DataTools.GetEnumRange()
+      /// для получения диапазона
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="range">Диапазон значений, которые должны храниться в поле</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName, MinMax<Int32> range)
+      {
+        if (range.HasValue)
+          return AddInt(columnName, range.MinValue, range.MaxValue);
+        else
+          return AddInt(columnName);
+      }
+
+      /// <summary>
+      /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
+      /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию <see cref="DataTools.GetEnumRange(Type)"/>  
+      /// для получения диапазона.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="range">Диапазон значений, которые должны храниться в поле</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName, MinMax<Int32> range, bool nullable)
+      {
+        if (range.HasValue)
+          return AddInt(columnName, range.MinValue, range.MaxValue, nullable);
+        else
+          return AddInt(columnName, nullable);
+      }
+
+      /// <summary>
+      /// Добавить целочисленное поле.
+      /// Поле может содержать значение NULL.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="minValue">Минимальное значение, которое нужно хранить в поле</param>
+      /// <param name="maxValue">Максимальное значение, которое нужно хранить в поле</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName, long minValue, long maxValue)
+      {
+        if (minValue > maxValue)
+          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        item.MinValue = minValue;
+        item.MaxValue = maxValue;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить целочисленное поле.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="minValue">Минимальное значение, которое нужно хранить в поле</param>
+      /// <param name="maxValue">Максимальное значение, которое нужно хранить в поле</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt(string columnName, long minValue, long maxValue, bool nullable)
+      {
+        if (minValue > maxValue)
+          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        item.MinValue = minValue;
+        item.MaxValue = maxValue;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 2-байтное целое со знаком.
+      /// Поле может содержать значение NULL.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt16(string columnName)
+      {
+        return AddInt(columnName, Int16.MinValue, Int16.MaxValue);
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 2-байтное целое со знаком.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt16(string columnName, bool nullable)
+      {
+        return AddInt(columnName, Int16.MinValue, Int16.MaxValue, nullable);
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 8-байтное целое со знаком.
+      /// Поле может содержать значение NULL.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt64(string columnName)
+      {
+        return AddInt(columnName, Int64.MinValue, Int64.MaxValue);
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 8-байтное целое со знаком.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddInt64(string columnName, bool nullable)
+      {
+        return AddInt(columnName, Int64.MinValue, Int64.MaxValue, nullable);
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее денежную сумму.
+      /// Поле может содержать значение NULL.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddMoney(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Money;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее денежную сумму.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddMoney(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Money;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 4-байтное число с плавающей точкой.
+      /// Поле может содержать значение NULL.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddSingle(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Float;
+        item.MinValue = Single.MinValue;
+        item.MaxValue = Single.MaxValue;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 4-байтное число с плавающей точкой.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddSingle(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Float;
+        item.MinValue = Single.MinValue;
+        item.MaxValue = Single.MaxValue;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 8-байтное число с плавающей точкой.
+      /// Поле может содержать значение NULL.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddDouble(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Float;
+        item.MinValue = Double.MinValue;
+        item.MaxValue = Double.MaxValue;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле, содержащее 8-байтное число с плавающей точкой.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddDouble(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Float;
+        item.MinValue = Double.MinValue;
+        item.MaxValue = Double.MaxValue;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить логическое поле, содержащее значения True или False.
+      /// Поле не может содержать значение NULL, а значением по умолчанию является false.
+      /// (<see cref="DBxColumnStruct.DefaultValue"/>=false).
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddBoolean(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Boolean;
+        item.DefaultValue = false; // 01.06.2023
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Объявление ссылочного поля
+      /// </summary>
+      /// <param name="columnName">Имя ссылочного поля</param>
+      /// <param name="masterTableName">Имя таблицы, на которую выполняется ссылка</param>
+      /// <param name="nullable">Является ли ссылка необязательной</param>
+      /// <param name="refType">Действия при удалении строки, на которую есть ссылка</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddReference(string columnName, string masterTableName, bool nullable, DBxRefType refType)
+      {
+        if (String.IsNullOrEmpty(masterTableName))
+          throw new ArgumentNullException("masterTableName");
+
+        if (refType == DBxRefType.Clear && (!nullable))
+          throw new ArgumentException("Тип ссылки не может быть DBxRefType.Clear, если nullable=false", "refType");
+
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Int;
+        item.MasterTableName = masterTableName;
+        item.Nullable = nullable;
+        item.RefType = refType;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавление ссылочного поля (<see cref="DBxColumnStruct.RefType"/>=Disallow)
+      /// </summary>
+      /// <param name="columnName">Имя ссылочного поля</param>
+      /// <param name="masterTableName">Имя таблицы, на которую выполняется ссылка</param>
+      /// <param name="nullable">Является ли ссылка необязательной</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddReference(string columnName, string masterTableName, bool nullable)
+      {
+        return AddReference(columnName, masterTableName, nullable, DBxRefType.Disallow);
+      }
+
+      /// <summary>
+      /// Добавление обязательного ссылочного поля (<see cref="DBxColumnStruct.Nullable"/>=false, <see cref="DBxColumnStruct.RefType"/>=Disallow)
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="masterTableName">Таблица, на которую ссылается поле</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddReference(string columnName, string masterTableName)
+      {
+        return AddReference(columnName, masterTableName, false, DBxRefType.Disallow);
+      }
+
+      /// <summary>
+      /// Добавление МЕМО-поля, хранящего текст
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddMemo(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Memo;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавление поля для хранения данных в XML-формате, кроме конфигурационных данных
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddXml(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Xml;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавление поля для хранения конфигурационных данных в XML-формате
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddXmlConfig(string columnName)
+      {
+        // В текущей реализации не отличается от прочих XML-полей
+
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Xml;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавление поля с двоичными данными
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddBinary(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Binary;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле типа GUID
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <param name="nullable">True, если поле может содержать значение NULL, False-если значение поля является обязательным</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddGuid(string columnName, bool nullable)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Guid;
+        item.Nullable = nullable;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить поле типа GUID.
+      /// Поле может содержать значение NULL.
+      /// </summary>
+      /// <param name="columnName">Имя поля</param>
+      /// <returns>Созданный объект объявления поля</returns>
+      public DBxColumnStruct AddGuid(string columnName)
+      {
+        DBxColumnStruct item = new DBxColumnStruct(columnName);
+        item.ColumnType = DBxColumnType.Guid;
+        Add(item);
+        return item;
+      }
+
+      #endregion
+
+      #region Дополнительно
+
+      /// <summary>
+      /// Возвращает описание последнего добавленного столбца.
+      /// Удобно, например, для установки свойства Comment после вызова AddXXX().
+      /// </summary>
+      public DBxColumnStruct LastAdded
+      {
+        get
+        {
+          if (Count == 0)
+            return null;
+          else
+            return this[Count - 1];
+        }
+      }
+
+      /// <summary>
+      /// Возвращает true, если в списке столбцов есть BLOB-поля.
+      /// Ищет поля типа Memo, Xml и Binary.
+      /// </summary>
+      /// <returns>Наличие полей</returns>
+      public bool ContainsBlob()
+      {
+        for (int i = 0; i < Count; i++)
+        {
+          switch (this[i].ColumnType)
+          {
+            case DBxColumnType.Binary:
+            case DBxColumnType.Memo:
+            case DBxColumnType.Xml:
+              return true;
+          }
+        }
+        return false;
+      }
+
+      #endregion
+    }
+
+
+    /// <summary>
+    /// Список столбцов для свойства DBxTableStruct.Columns
+    /// </summary>
+    [Serializable]
+    public class IndexCollection : NamedList<DBxIndexStruct>
+    {
+      #region Защищенные конструкторы
+
+      internal IndexCollection()
+      {
+      }
+
+      internal IndexCollection(int capacity)
+        : base(capacity)
+      {
+      }
+
+      #endregion
+
+      #region ReadOnly
+
+      internal new void SetReadOnly()
+      {
+        base.SetReadOnly();
+
+        for (int i = 0; i < Count; i++)
+          this[i].SetReadOnly(); // 18.09.2019
+      }
+
+      #endregion
+
+      #region Добавление индекса
+
+      /// <summary>
+      /// Добавляет описание индекса, основанного на заданном списке имен столбцов
+      /// </summary>
+      /// <param name="columns">Имена столбцов</param>
+      /// <returns>Описание индекса</returns>
+      public DBxIndexStruct Add(DBxColumns columns)
+      {
+        DBxIndexStruct item = new DBxIndexStruct("Index" + (Count + 1).ToString(), columns);
+        base.Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавляет описание индекса, основанного на заданном списке имен столбцов.
+      /// Имена столбцов задаются через запятую. Нельзя задавать признаки "ASC" / "DESC".
+      /// </summary>
+      /// <param name="columns">Имена столбцов</param>
+      /// <returns>Описание индекса</returns>
+      public DBxIndexStruct Add(string columns)
+      {
+#if DEBUG
+        if (String.IsNullOrEmpty(columns))
+          throw new ArgumentNullException("columns");
+#endif
+
+        return Add(new DBxColumns(columns));
+      }
+
+      #endregion
+
+      #region Дополнительно
+
+      /// <summary>
+      /// Возвращает описание последнего добавленного индекса.
+      /// </summary>                                  
+      public DBxIndexStruct LastAdded
+      {
+        get
+        {
+          if (Count == 0)
+            return null;
+          else
+            return this[Count - 1];
+        }
+      }
+
+      /// <summary>
+      /// Поиск индекса для указанного списка столбцов.
+      /// Возвращает описание индекса или null, если индекс не найден.
+      /// Порядок столбцов имеет значение.
+      /// </summary>
+      /// <param name="columns">Список столбцов</param>
+      /// <returns>Описание индекса или null</returns>
+      public DBxIndexStruct FindByColumns(DBxColumns columns)
+      {
+        if (columns == null)
+          return null;
+        if (columns.IsEmpty)
+          return null;
+
+        foreach (DBxIndexStruct str in this)
+        {
+          //if (str.Columns == columns)
+          if (ColumnsAreEqual(str.Columns, columns))
+            return str;
+        }
+        return null;
+      }
+
+      private static bool ColumnsAreEqual(DBxColumns a, DBxColumns b)
+      {
+        if (a.Count != b.Count)
+          return false;
+        for (int i = 0; i < a.Count; i++)
+        {
+          if (!String.Equals(a[i], b[i], StringComparison.Ordinal))
+            return false;
+        }
+        return true;
+      }
+
+
+      #endregion
+    }
+
+    #endregion
+
     #region Конструкторы
 
     /// <summary>
@@ -25,8 +788,8 @@ namespace FreeLibSet.Data
     public DBxTableStruct(string tableName)
       : base(tableName)
     {
-      _Columns = new DBxColumnStructList();
-      _Indexes = new DBxIndexStructList();
+      _Columns = new ColumnCollection();
+      _Indexes = new IndexCollection();
       _AutoPrimaryKey = true;
       _AutoCreate = true;
     }
@@ -37,10 +800,10 @@ namespace FreeLibSet.Data
     private DBxTableStruct(DBxTableStruct source, string tableName)
       : base(tableName)
     {
-      _Columns = new DBxColumnStructList(source.Columns.Count);
+      _Columns = new ColumnCollection(source.Columns.Count);
       for (int i = 0; i < source.Columns.Count; i++)
         _Columns.Add(source.Columns[i].Clone());
-      _Indexes = new DBxIndexStructList(source.Indexes.Count);
+      _Indexes = new IndexCollection(source.Indexes.Count);
       for (int i = 0; i < source.Indexes.Count; i++)
         _Indexes.Add(source.Indexes[i].Clone());
       _PrimaryKey = source._PrimaryKey; // копируется, если задано в явном виде
@@ -61,11 +824,11 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Список описаний столбцов
     /// </summary>
-    public DBxColumnStructList Columns { get { return _Columns; } }
-    private readonly DBxColumnStructList _Columns;
+    public ColumnCollection Columns { get { return _Columns; } }
+    private readonly ColumnCollection _Columns;
 
     /// <summary>
-    /// Имена всех обхявленных столбцов
+    /// Имена всех объявленных столбцов
     /// </summary>
     public string[] AllColumnNames
     {
@@ -164,7 +927,7 @@ namespace FreeLibSet.Data
     /// Автоматическое присвоение значения полю первичного ключа.
     /// Если свойство установлено в true (по умолчанию), то при добавлении поля первичного ключа
     /// будет установлен признак автоинкремента.
-    /// При создании/обновлении структуры таблицы возникнет ошибка, если свойство первичным ключом
+    /// При создании/обновлении структуры таблицы возникнет ошибка, если первичным ключом
     /// является поле, отличное от целочисленного, а AutoPrimaryKey=true.
     /// Если для таблицы задано отстутсвие первичного ключа, свойство игнорируется.
     /// </summary>
@@ -183,15 +946,15 @@ namespace FreeLibSet.Data
     /// Список описаний индексов
     /// Первичный ключ не входит в индексы
     /// </summary>
-    public DBxIndexStructList Indexes { get { return _Indexes; } }
-    private readonly DBxIndexStructList _Indexes;
+    public IndexCollection Indexes { get { return _Indexes; } }
+    private readonly IndexCollection _Indexes;
 
     /// <summary>
     /// Комментарий к таблице (если поддерживается базой данных)
     /// </summary>
     public string Comment
     {
-      get { return _Comment; }
+      get { return _Comment ?? String.Empty; }
       set
       {
         CheckNotReadOnly();
@@ -249,10 +1012,12 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает пустую таблицу <see cref="System.Data.DataTable"/> со всеми полями, описанными в структуре таблицы.
     /// Для каждого описания столбца вызывается метод <see cref="FreeLibSet.Data.DBxColumnStruct.CreateDataColumn()"/>.
-    /// Ограничения <see cref="System.Data.DataColumn.MaxLength"/> не устанавливается.
+    /// Ограничения <see cref="DataColumn.AllowDBNull"/> устанавливаются.
+    /// Ограничения <see cref="DataColumn.MaxLength"/> устанавливается.
+    /// Первичный ключ <see cref="DataTable.PrimaryKey"/> для таблицы не устанавливаются.
     /// Индексы <see cref="FreeLibSet.Data.DBxIndexStruct"/> не учитываются.
     /// </summary>
-    /// <returns>Пустой DataTable</returns>
+    /// <returns>Пустой объект <see cref="DataTable"/></returns>
     public DataTable CreateDataTable()
     {
       DataTable table = new DataTable(TableName);
@@ -260,37 +1025,6 @@ namespace FreeLibSet.Data
         table.Columns.Add(Columns[i].CreateDataColumn());
       return table;
     }
-
-    /// <summary>
-    /// Установка свойcтв DataColumn.MaxLength.
-    /// Таблица <paramref name="table"/> содержит столбцы, для которых устанавливаются ограничения.
-    /// Если в стаблице есть посторонние столбцы, они пропускаются
-    /// </summary>
-    /// <param name="table">Таблица со столбцами, для которых требуется установить свойства</param>
-    public void InitDataRowLimits(DataTable table)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-#endif
-
-      foreach (DataColumn column in table.Columns)
-      {
-        int p = Columns.IndexOf(column.ColumnName);
-        if (p < 0)
-          continue; // служебное поле
-        DBxColumnStruct colDef = Columns[p];
-        if (colDef.ColumnType == DBxColumnType.String && column.DataType == typeof(string))
-          column.MaxLength = colDef.MaxLength;
-        /* Нельзя !
-        if (FieldDef.Type==DatabaseStruct.FieldType.String ||
-            FieldDef.Type==DatabaseStruct.FieldType.Date ||
-            FieldDef.Type==DatabaseStruct.FieldType.Time)
-          Column.AllowDBNull=FieldDef.CanBeEmpty;
-        */
-      }
-    }
-
 
     #endregion
 
@@ -384,6 +1118,9 @@ namespace FreeLibSet.Data
           throw new DBxStructException(this, "Неправильное имя таблицы \"" + TableName + "\"." + errorText);
       }
 
+      if (Columns.Count == 0)
+        throw new DBxStructException(this, "Таблица \"" + TableName + "\" не содержит ни одного столбца"); // 07.06.2023
+
       foreach (DBxColumnStruct colDef in Columns)
         colDef.CheckStruct(this, db);
     }
@@ -413,633 +1150,7 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Список столбцов для свойства DBxTableStruct.Columns
-  /// </summary>
-  [Serializable]
-  public class DBxColumnStructList : NamedList<DBxColumnStruct>
-  {
-    #region Защищенные конструкторы
-
-    internal DBxColumnStructList()
-      : base(true)
-    {
-    }
-
-    internal DBxColumnStructList(int capacity)
-      : base(capacity, true)
-    {
-    }
-
-    #endregion
-
-    #region ReadOnly
-
-    internal new void SetReadOnly()
-    {
-      base.SetReadOnly();
-      for (int i = 0; i < Count; i++)
-        this[i].SetReadOnly();
-    }
-
-    #endregion
-
-    #region Имена столбцов
-
-    /// <summary>
-    /// Добавляет имена всех столбцов в список.
-    /// </summary>
-    /// <param name="list">Заполняемый список</param>
-    public void GetColumnNames(DBxColumnList list)
-    {
-#if DEBUG
-      if (list == null)
-        throw new ArgumentNullException("list");
-#endif
-
-      list.CheckNotReadOnly();
-
-      for (int i = 0; i < Count; i++)
-        list.Add(this[i].ColumnName);
-    }
-
-    /// <summary>
-    /// Возвращает список имен столбцов в виде объекта DBxColumns.
-    /// Каждый раз создается новый объект.
-    /// </summary>
-    public DBxColumns Columns
-    {
-      get
-      {
-        string[] a = new string[Count];
-        for (int i = 0; i < a.Length; i++)
-          a[i] = this[i].ColumnName;
-        return new DBxColumns(a);
-      }
-    }
-
-    #endregion
-
-    #region Методы добавления столбцов
-
-    /// <summary>
-    /// Добавление целочисленого поля первичного ключа "Id"
-    /// </summary>
-    /// <returns>Описание поля</returns>
-    public DBxColumnStruct AddId()
-    {
-      return AddId("Id");
-    }
-
-    /// <summary>
-    /// Добавление целочисленного поля первичного ключа с заданным именем.
-    /// Устанавливает <see cref="DBxColumnStruct.Nullable"/>=false.
-    /// </summary>
-    /// <returns>Описание поля</returns>
-    public DBxColumnStruct AddId(string columnName)
-    {
-#if DEBUG
-      if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
-#endif
-      if (Count > 0)
-        throw new InvalidOperationException("Ключевое поле \"" + columnName + "\" должно быть первым в списке");
-
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      item.Nullable = false;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить строковое поле
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="maxLength">Максимальная длина строки (от 1 до 255 символов)</param>
-    /// <param name="nullable">True, если поле может содержать пустую строку, False-если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddString(string columnName, int maxLength, bool nullable)
-    {
-      if (maxLength < 1 || maxLength > 255)
-        throw new ArgumentOutOfRangeException("maxLength", maxLength, "Длина строкового поля может быть от 1 до 255 символов");
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.String;
-      item.MaxLength = maxLength;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле типа "Дата" (без времени)
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустую дату, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddDate(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Date;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле типа "Дата и время"
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустую дату, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddDateTime(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.DateTime;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле типа "время" (без даты)
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddTime(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Time;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 4-байтное целое со знаком
-    /// Поле может содержать значение NULL
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 4-байтное целое со знаком
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
-    /// Поле может содержать значение NULL
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="minValue">Диапазон значений, которые должны храниться в поле - минимальное значение</param>
-    /// <param name="maxValue">Диапазон значений, которые должны храниться в поле - максимальное значение</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, int minValue, int maxValue)
-    {
-      if (minValue > maxValue)
-        throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
-
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      item.MinValue = minValue;
-      item.MaxValue = maxValue;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="minValue">Диапазон значений, которые должны храниться в поле - минимальное значение</param>
-    /// <param name="maxValue">Диапазон значений, которые должны храниться в поле - максимальное значение</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, int minValue, int maxValue, bool nullable)
-    {
-      if (minValue > maxValue)
-        throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
-
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      item.MinValue = minValue;
-      item.MaxValue = maxValue;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
-    /// Поле может содержать значение NULL.
-    /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию DataTools.GetEnumRange()
-    /// для получения диапазона
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="range">Диапазон значений, которые должны храниться в поле</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, MinMax<Int32> range)
-    {
-      if (range.HasValue)
-        return AddInt(columnName, range.MinValue, range.MaxValue);
-      else
-        return AddInt(columnName);
-    }
-
-    /// <summary>
-    /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
-    /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию <see cref="DataTools.GetEnumRange(Type)"/>  
-    /// для получения диапазона.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="range">Диапазон значений, которые должны храниться в поле</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, MinMax<Int32> range, bool nullable)
-    {
-      if (range.HasValue)
-        return AddInt(columnName, range.MinValue, range.MaxValue, nullable);
-      else
-        return AddInt(columnName, nullable);
-    }
-
-    /// <summary>
-    /// Добавить целочисленное поле.
-    /// Поле может содержать значение NULL.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="minValue">Минимальное значение, которое нужно хранить в поле</param>
-    /// <param name="maxValue">Максимальное значение, которое нужно хранить в поле</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, long minValue, long maxValue)
-    {
-      if (minValue > maxValue)
-        throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
-
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      item.MinValue = minValue;
-      item.MaxValue = maxValue;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить целочисленное поле.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="minValue">Минимальное значение, которое нужно хранить в поле</param>
-    /// <param name="maxValue">Максимальное значение, которое нужно хранить в поле</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt(string columnName, long minValue, long maxValue, bool nullable)
-    {
-      if (minValue > maxValue)
-        throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
-
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      item.MinValue = minValue;
-      item.MaxValue = maxValue;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 2-байтное целое со знаком.
-    /// Поле может содержать значение NULL.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt16(string columnName)
-    {
-      return AddInt(columnName, Int16.MinValue, Int16.MaxValue);
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 2-байтное целое со знаком.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt16(string columnName, bool nullable)
-    {
-      return AddInt(columnName, Int16.MinValue, Int16.MaxValue, nullable);
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 8-байтное целое со знаком.
-    /// Поле может содержать значение NULL.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt64(string columnName)
-    {
-      return AddInt(columnName, Int64.MinValue, Int64.MaxValue);
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 8-байтное целое со знаком.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddInt64(string columnName, bool nullable)
-    {
-      return AddInt(columnName, Int64.MinValue, Int64.MaxValue, nullable);
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее денежную сумму.
-    /// Поле может содержать значение NULL.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddMoney(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Money;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее денежную сумму.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddMoney(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Money;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 4-байтное число с плавающей точкой.
-    /// Поле может содержать значение NULL.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddSingle(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Float;
-      item.MinValue = Single.MinValue;
-      item.MaxValue = Single.MaxValue;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 4-байтное число с плавающей точкой.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddSingle(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Float;
-      item.MinValue = Single.MinValue;
-      item.MaxValue = Single.MaxValue;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 8-байтное число с плавающей точкой.
-    /// Поле может содержать значение NULL.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddDouble(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Float;
-      item.MinValue = Double.MinValue;
-      item.MaxValue = Double.MaxValue;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле, содержащее 8-байтное число с плавающей точкой.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать пустое значение, False, если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddDouble(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Float;
-      item.MinValue = Double.MinValue;
-      item.MaxValue = Double.MaxValue;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить логическое поле, содержащее значения True или False.
-    /// Поле не может содержать значение NULL, а значением по умолчанию является false.
-    /// (<see cref="DBxColumnStruct.DefaultValue"/>=false).
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddBoolean(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Boolean;
-      item.DefaultValue = false; // 01.06.2023
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Объявление ссылочного поля
-    /// </summary>
-    /// <param name="columnName">Имя ссылочного поля</param>
-    /// <param name="masterTableName">Имя таблицы, на которую выполняется ссылка</param>
-    /// <param name="nullable">Является ли ссылка необязательной</param>
-    /// <param name="refType">Действия при удалении строки, на которую есть ссылка</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddReference(string columnName, string masterTableName, bool nullable, DBxRefType refType)
-    {
-      if (String.IsNullOrEmpty(masterTableName))
-        throw new ArgumentNullException("masterTableName");
-
-      if (refType == DBxRefType.Clear && (!nullable))
-        throw new ArgumentException("Тип ссылки не может быть DBxRefType.Clear, если nullable=false", "refType");
-
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Int;
-      item.MasterTableName = masterTableName;
-      item.Nullable = nullable;
-      item.RefType = refType;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавление ссылочного поля (RefType=Disallow)
-    /// </summary>
-    /// <param name="columnName">Имя ссылочного поля</param>
-    /// <param name="masterTableName">Имя таблицы, на которую выполняется ссылка</param>
-    /// <param name="nullable">Является ли ссылка необязательной</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddReference(string columnName, string masterTableName, bool nullable)
-    {
-      return AddReference(columnName, masterTableName, nullable, DBxRefType.Disallow);
-    }
-
-    /// <summary>
-    /// Добавление обязательного ссылочного поля  (Nullable=false, RefType=Disallow)
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="masterTableName">Таблица, на которую ссылается поле</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddReference(string columnName, string masterTableName)
-    {
-      return AddReference(columnName, masterTableName, false, DBxRefType.Disallow);
-    }
-
-    /// <summary>
-    /// Добавление МЕМО-поля, хранящего текст
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddMemo(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Memo;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавление поля для хранения конфигурационных данных в XML-формате
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddXmlConfig(string columnName)
-    {
-      // В текущей реализации не отличается от прочих XML-полей
-
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Xml;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавление поля для хранения данных в XML-формате, кроме конфигурационных данных
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddXml(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Xml;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавление поля с двоичными данными
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddBinary(string columnName)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Binary;
-      Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавить поле типа GUID
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="nullable">True, если поле может содержать значение NULL, False-если значение поля является обязательным</param>
-    /// <returns>Созданный объект объявления поля</returns>
-    public DBxColumnStruct AddGuid(string columnName, bool nullable)
-    {
-      DBxColumnStruct item = new DBxColumnStruct(columnName);
-      item.ColumnType = DBxColumnType.Guid;
-      item.Nullable = nullable;
-      Add(item);
-      return item;
-    }
-
-    #endregion
-
-    #region Дополнительно
-
-    /// <summary>
-    /// Возвращает описание последнего добавленного столбца.
-    /// Удобно, например, для установки свойства Comment после вызова AddXXX().
-    /// </summary>
-    public DBxColumnStruct LastAdded
-    {
-      get
-      {
-        if (Count == 0)
-          return null;
-        else
-          return this[Count - 1];
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если в списке столбцов есть BLOB-поля.
-    /// Ищет поля типа Memo, Xml и Binary.
-    /// </summary>
-    /// <returns>Наличие полей</returns>
-    public bool ContainsBlob()
-    {
-      for (int i = 0; i < Count; i++)
-      {
-        switch (this[i].ColumnType)
-        {
-          case DBxColumnType.Binary:
-          case DBxColumnType.Memo:
-          case DBxColumnType.Xml:
-            return true;
-        }
-      }
-      return false;
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Описание одного реального поля в базе данных
+  /// Описание одного поля в структуре таблицы данных <see cref="DBxTableStruct"/>
   /// </summary>
   [Serializable]
   public class DBxColumnStruct : ObjectWithCode, IReadOnlyObject, ICloneable
@@ -1051,7 +1162,7 @@ namespace FreeLibSet.Data
     /// Свойство <see cref="Nullable"/> принимает значение True.
     /// Остальные свойства имеют нулевое значение.
     /// </summary>
-    /// <param name="columnName">Имя столбца</param>
+    /// <param name="columnName">Имя столбца. Не может быть пустой строкой</param>
     public DBxColumnStruct(string columnName)
       : base(columnName)
     {
@@ -1059,8 +1170,8 @@ namespace FreeLibSet.Data
       _DefaultValue = DBNull.Value;
     }
 
-    private DBxColumnStruct(DBxColumnStruct source)
-      : base(source.ColumnName)
+    private DBxColumnStruct(DBxColumnStruct source, string columnName)
+      : base(columnName)
     {
       _ColumnType = source.ColumnType;
       _MaxLength = source.MaxLength;
@@ -1087,7 +1198,11 @@ namespace FreeLibSet.Data
     public DBxColumnType ColumnType
     {
       get { return _ColumnType; }
-      set { _ColumnType = value; }
+      set 
+      {
+        CheckNotReadOnly(); // 07.06.2023
+        _ColumnType = value; 
+      }
     }
     private DBxColumnType _ColumnType;
 
@@ -1372,11 +1487,24 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает копию описания столбца.
     /// Копия не привязана к описанию таблицы и имеет <see cref="IsReadOnly"/>=false.
+    /// Созданный столбец имеет то же имя, что и текущий объект
     /// </summary>
     /// <returns>Копия описания столбца</returns>
     public DBxColumnStruct Clone()
     {
-      return new DBxColumnStruct(this);
+      return new DBxColumnStruct(this, this.ColumnName);
+    }
+
+
+    /// <summary>
+    /// Создает копию описания столбца.
+    /// Копия не привязана к описанию таблицы и имеет <see cref="IsReadOnly"/>=false.
+    /// </summary>
+    /// <param name="columnName">Имя нового столбца</param>
+    /// <returns>Копия описания столбца</returns>
+    public DBxColumnStruct Clone(string columnName)
+    {
+      return new DBxColumnStruct(this, columnName);
     }
 
     object ICloneable.Clone()
@@ -1427,7 +1555,7 @@ namespace FreeLibSet.Data
 
           case DBxColumnType.Float:
             if (MinValue == 0 && MaxValue == 0)
-              return typeof(Single);
+              return typeof(Double); // 07.06.2023
             else if (MinValue >= Single.MinValue && MaxValue <= Single.MaxValue)
               return typeof(Single);
             else
@@ -1516,12 +1644,15 @@ namespace FreeLibSet.Data
           break;
         case DBxColumnType.Int:
         case DBxColumnType.Float:
+        case DBxColumnType.Money:
           if (MinValue != 0.0 || MaxValue != 0.0)
           {
             if (MinValue > MaxValue)
               throw new DBxStructException(table, "Для числового столбца \"" + ColumnName + "\" не задан неправильный диапазон значений: {" + MinValue.ToString() + ":" + MaxValue.ToString() + "}");
           }
           break;
+        case DBxColumnType.Unknown:
+          throw new DBxStructException(table, "Для столбца \"" + ColumnName + "\" не задан тип данных");
       }
     }
 
@@ -1646,88 +1777,6 @@ namespace FreeLibSet.Data
   #endregion
 
   /// <summary>
-  /// Список столбцов для свойства DBxTableStruct.Columns
-  /// </summary>
-  [Serializable]
-  public class DBxIndexStructList : NamedList<DBxIndexStruct>
-  {
-    #region Защищенные конструкторы
-
-    internal DBxIndexStructList()
-    {
-    }
-
-    internal DBxIndexStructList(int capacity)
-      : base(capacity)
-    {
-    }
-
-    #endregion
-
-    #region ReadOnly
-
-    internal new void SetReadOnly()
-    {
-      base.SetReadOnly();
-
-      for (int i = 0; i < Count; i++)
-        this[i].SetReadOnly(); // 18.09.2019
-    }
-
-    #endregion
-
-    #region Добавление индекса
-
-    /// <summary>
-    /// Добавляет описание индекса, основанного на заданном списке имен столбцов
-    /// </summary>
-    /// <param name="columns">Имена столбцов</param>
-    /// <returns>Описание индекса</returns>
-    public DBxIndexStruct Add(DBxColumns columns)
-    {
-      DBxIndexStruct item = new DBxIndexStruct("Index" + (Count + 1).ToString(), columns);
-      base.Add(item);
-      return item;
-    }
-
-    /// <summary>
-    /// Добавляет описание индекса, основанного на заданном списке имен столбцов.
-    /// Имена столбцов задаются через запятую. Нельзя задавать признаки "ASC" / "DESC".
-    /// </summary>
-    /// <param name="columns">Имена столбцов</param>
-    /// <returns>Описание индекса</returns>
-    public DBxIndexStruct Add(string columns)
-    {
-#if DEBUG
-      if (String.IsNullOrEmpty(columns))
-        throw new ArgumentNullException("columns");
-#endif
-
-      return Add(new DBxColumns(columns));
-    }
-
-    #endregion
-
-    #region Дополнительно
-
-    /// <summary>
-    /// Возвращает описание последнего добавленного индекса.
-    /// </summary>                                  
-    public DBxIndexStruct LastAdded
-    {
-      get
-      {
-        if (Count == 0)
-          return null;
-        else
-          return this[Count - 1];
-      }
-    }
-
-    #endregion
-  }
-
-  /// <summary>
   /// Описание одного индекса в базе данных
   /// </summary>
   [Serializable]
@@ -1750,8 +1799,8 @@ namespace FreeLibSet.Data
       _Columns = columns;
     }
 
-    private DBxIndexStruct(DBxIndexStruct source)
-      : base(source.IndexName)
+    private DBxIndexStruct(DBxIndexStruct source, string indexName)
+      : base(indexName)
     {
       _Columns = source.Columns;
       _Comment = source.Comment;
@@ -1819,10 +1868,21 @@ namespace FreeLibSet.Data
     /// Создает копию описания индекса.
     /// Созданная копия не привязана к описанию таблицы и имеет значение <see cref="IsReadOnly"/>=false.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый экземпляр описания индекса</returns>
     public DBxIndexStruct Clone()
     {
-      return new DBxIndexStruct(this);
+      return new DBxIndexStruct(this, this.IndexName);
+    }
+
+    /// <summary>
+    /// Создает копию описания индекса.
+    /// Созданная копия не привязана к описанию таблицы и имеет значение <see cref="IsReadOnly"/>=false.
+    /// </summary>
+    /// <param name="indexName">Имя нового индекса</param>
+    /// <returns>Новый экземпляр описания индекса</returns>
+    public DBxIndexStruct Clone(string indexName)
+    {
+      return new DBxIndexStruct(this, indexName);
     }
 
     object ICloneable.Clone()

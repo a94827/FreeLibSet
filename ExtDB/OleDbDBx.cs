@@ -14,6 +14,7 @@ using System.Data;
 using System.Data.Common;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
+using FreeLibSet.Logging;
 
 namespace FreeLibSet.Data.OleDb
 {
@@ -506,13 +507,14 @@ namespace FreeLibSet.Data.OleDb
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    protected override void DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
+    protected override int DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
       OleDbCommand cmd = new OleDbCommand(cmdText, Connection);
       InitCmdParameters(cmd, paramValues);
       cmd.CommandTimeout = CommandTimeout;
       cmd.Transaction = CurrentTransaction;
-      cmd.ExecuteNonQuery();
+      return cmd.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -675,7 +677,17 @@ namespace FreeLibSet.Data.OleDb
     {
       DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
-      #region Список столбцов, тип, MaxLen, Nullable
+      #region Описание таблицы
+
+      DataTable tableTable = Connection.GetSchema("Tables", new string[] { null, null, tableName });
+      if (tableTable.Rows.Count == 1)
+      {
+        tableStr.Comment = DataTools.GetString(tableTable.Rows[0], "description"); // 09.06.2023
+      }
+
+      #endregion
+
+      #region Список столбцов, тип, MaxLen, Nullable, DefaultValue
 
       DataTable table = Connection.GetSchema("Columns", new string[] { null, null, tableName });
       table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
@@ -937,6 +949,34 @@ namespace FreeLibSet.Data.OleDb
 
         colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
         colDef.Nullable = DataTools.GetBool(drv.Row, "is_nullable");
+
+        if ((!colDef.Nullable) && DataTools.GetBool(drv.Row, "column_hasdefault"))
+        {
+          try
+          {
+            // 09.06.2023
+            string sDefault = DataTools.GetString(drv.Row, "column_default");
+            if (colDef.ColumnType == DBxColumnType.Boolean)
+            {
+              switch (sDefault.ToUpperInvariant())
+              {
+                case "YES": colDef.DefaultValue = true; break;
+                case "NO": colDef.DefaultValue = false; break;
+              }
+            }
+            else
+              colDef.DefaultValue = DBxTools.Convert(sDefault, colDef.ColumnType);
+          }
+          catch (Exception e)
+          {
+            e.Data["DB"] = DB.ToString();
+            e.Data["Table"] = tableName;
+            e.Data["Column"] = colDef.ColumnName;
+            LogoutTools.LogoutException(e, "Ошибка получения значения DBxColumnStruct.DefaultValue");
+          }
+        }
+
+        colDef.Comment = DataTools.GetString(drv.Row, "description"); // 09.06.2023
 
         tableStr.Columns.Add(colDef);
       }

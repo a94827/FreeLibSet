@@ -1,5 +1,7 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
+#define USE_NEW_READER
+
 
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using System.Data;
 using System.Data.Common;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
+using FreeLibSet.Logging;
 
 namespace FreeLibSet.Data.SqlClient
 {
@@ -805,13 +808,14 @@ namespace FreeLibSet.Data.SqlClient
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    protected override void DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
+    protected override int DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
       SqlCommand cmd = new SqlCommand(cmdText, Connection);
       InitCmdParameters(cmd, paramValues);
       cmd.CommandTimeout = CommandTimeout;
       cmd.Transaction = CurrentTransaction;
-      cmd.ExecuteNonQuery();
+      return cmd.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -1034,31 +1038,31 @@ namespace FreeLibSet.Data.SqlClient
       */
       //try
       //{
-        SqlBulkCopyOptions options = SqlBulkCopyOptions.Default;
-        if (hasKeyCol)
-          options |= SqlBulkCopyOptions.KeepIdentity;
-        using (SqlBulkCopy bc = new SqlBulkCopy(this.Connection, options, this.CurrentTransaction))
-        {
-          bc.DestinationTableName = tableName;
+      SqlBulkCopyOptions options = SqlBulkCopyOptions.Default;
+      if (hasKeyCol)
+        options |= SqlBulkCopyOptions.KeepIdentity;
+      using (SqlBulkCopy bc = new SqlBulkCopy(this.Connection, options, this.CurrentTransaction))
+      {
+        bc.DestinationTableName = tableName;
 
-          // 13.04.2017
-          // Таблицу соответствий задаем всегда, т.к. порядок полей в исходной таблице не
-          // обязан совпадать с полями в базе данных
-          for (int i = 0; i < table.Columns.Count; i++)
-            bc.ColumnMappings.Add(table.Columns[i].ColumnName, table.Columns[i].ColumnName);
+        // 13.04.2017
+        // Таблицу соответствий задаем всегда, т.к. порядок полей в исходной таблице не
+        // обязан совпадать с полями в базе данных
+        for (int i = 0; i < table.Columns.Count; i++)
+          bc.ColumnMappings.Add(table.Columns[i].ColumnName, table.Columns[i].ColumnName);
 
-          bc.WriteToServer(table);
-        }
+        bc.WriteToServer(table);
+      }
       //}
       //finally
       //{
-        /*
-      Buffer.Clear();
-        Buffer.SB.Append("SET IDENTITY_INSERT [");
-        Buffer.SB.Append(TableName);
-        Buffer.SB.Append("] OFF");
-        SQLExecuteNonQuery(Buffer.SB.ToString());
-         * */
+      /*
+    Buffer.Clear();
+      Buffer.SB.Append("SET IDENTITY_INSERT [");
+      Buffer.SB.Append(TableName);
+      Buffer.SB.Append("] OFF");
+      SQLExecuteNonQuery(Buffer.SB.ToString());
+       * */
       //}
     }
 
@@ -1141,10 +1145,14 @@ namespace FreeLibSet.Data.SqlClient
     /// <returns>Писатель</returns>
     protected override DBxDataWriter OnCreateWriter(DBxDataWriterInfo writerInfo)
     {
+#if USE_NEW_READER
+      return new SqlDBxDataWriter(this, writerInfo);
+#else
       if (writerInfo.Mode == DBxDataWriterMode.Insert)
         return new SqlDBxDataInsertWriter(this, writerInfo);
       else
         return base.OnCreateWriter(writerInfo); // TODO: Пока не реализовано
+#endif
     }
 
     #endregion
@@ -1295,6 +1303,33 @@ namespace FreeLibSet.Data.SqlClient
           case "NO": colDef.Nullable = false; break;
         }
 
+        if ((!colDef.Nullable) && (!drv.Row.IsNull("column_default")))
+        {
+          try
+          {
+            // 09.06.2023
+            string sDefault = DataTools.GetString(drv.Row, "column_default");
+            //if
+            //colDef.DefaultValue = DBxTools.Convert(sDefault, colDef.ColumnType);
+            Buffer.Clear();
+            if (sDefault.Length > 2)
+            {
+              if (sDefault[0] == '(' && sDefault[sDefault.Length - 1] == ')')
+                sDefault = sDefault.Substring(1, sDefault.Length - 2);
+              Buffer.SB.Append("SELECT ");
+              Buffer.SB.Append(sDefault);
+              colDef.DefaultValue = SQLExecuteScalar(Buffer.SB.ToString());
+            }
+          }
+          catch (Exception e)
+          {
+            e.Data["DB"] = DB.ToString();
+            e.Data["Table"] = tableName;
+            e.Data["Column"] = colDef.ColumnName;
+            LogoutTools.LogoutException(e, "Ошибка получения значения DBxColumnStruct.DefaultValue");
+          }
+        }
+
         TableStr.Columns.Add(colDef);
       }
 
@@ -1386,17 +1421,11 @@ namespace FreeLibSet.Data.SqlClient
 
     internal void CreateDatabaseByName(string databaseName)
     {
-      throw new NotImplementedException("Для не Express версии не реализовано");
-
-      // пока не на чем протестировать
-      // по идее, вот так
-      /*
       Buffer.Clear();
       Buffer.SB.Append("CREATE DATABASE [");
       Buffer.SB.Append(databaseName);
       Buffer.SB.Append("]");
       SQLExecuteNonQuery(Buffer.SB.ToString());
-       * */
     }
 
     internal void DropDatabase()
@@ -1463,8 +1492,6 @@ namespace FreeLibSet.Data.SqlClient
         if (!table.AutoCreate)
           continue;
 
-        if (table.Columns.Count == 0)
-          throw new DBxStructException(table, "Не задано ни одного столбца");
 
         //CheckPrimaryKeyColumn(Table, Table.Columns[0]);
 
@@ -1529,166 +1556,166 @@ namespace FreeLibSet.Data.SqlClient
 
                 // TODO: И что с этим делать?
               }
-//              else
-//              {
-                #region Проверка длины строкового поля
+              //              else
+              //              {
+              #region Проверка длины строкового поля
 
-                if (colDef.ColumnType == DBxColumnType.String)
+              if (colDef.ColumnType == DBxColumnType.String)
+              {
+                int realLen = DataTools.GetInt(columnRow, "CHARACTER_MAXIMUM_LENGTH");
+                if (realLen != colDef.MaxLength)
                 {
-                  int realLen = DataTools.GetInt(columnRow, "CHARACTER_MAXIMUM_LENGTH");
-                  if (realLen != colDef.MaxLength)
+                  if (realLen > colDef.MaxLength)
                   {
-                    if (realLen > colDef.MaxLength)
-                    {
-                      // !!! Проверка, нельзя ли укоротить поле
-                      errors.AddWarning("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
-                          table.TableName + "\" должно иметь длину " + colDef.MaxLength.ToString() +
-                          " символов, в то время, как реальное поле длиннее:  " + realLen.ToString() + " символов");
-                      //DisallowFieldChange = true;
-                    }
-                    else
-                    {
-                      // Лучше пересоздать все индексы
-                      errors.AddInfo("Все существующие индексы таблицы \"" + table.TableName + "\" будут удалены из-за изменения размера поля \"" + colDef.ColumnName + "\"");
-                      if (DeleteAllIndices(table.TableName, splash, errors))
-                        modified = true;
-
-                      // Увеличиваем длину поля
-                      splash.PhaseText = "Изменение длины поля \"" + colDef.ColumnName + "\" в таблице \"" + table.TableName + "\"";
-                      AlterColumn(table, colDef);
-                      errors.AddInfo("Длина поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                        "\" увеличена с " + realLen.ToString() + " до " + colDef.MaxLength.ToString() + " символов");
+                    // !!! Проверка, нельзя ли укоротить поле
+                    errors.AddWarning("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
+                        table.TableName + "\" должно иметь длину " + colDef.MaxLength.ToString() +
+                        " символов, в то время, как реальное поле длиннее:  " + realLen.ToString() + " символов");
+                    //DisallowFieldChange = true;
+                  }
+                  else
+                  {
+                    // Лучше пересоздать все индексы
+                    errors.AddInfo("Все существующие индексы таблицы \"" + table.TableName + "\" будут удалены из-за изменения размера поля \"" + colDef.ColumnName + "\"");
+                    if (DeleteAllIndices(table.TableName, splash, errors))
                       modified = true;
-                    }
-                  }
-                } // Строковое поле
 
-                #endregion
-
-                #region Проверка Default
-
-                // Установка свойства DEFAULT должна выполняться до установки NOT NULL, иначе возникнет ошибка
-
-                string wantedDefExpr = String.Empty;
-                if (colDef.DefaultExpression != null)
-                {
-                  buffer2.Clear();
-                  buffer2.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
-                  wantedDefExpr = buffer2.SB.ToString();
-                }
-                string RealDefExpr = DataTools.GetString(columnRow, "COLUMN_DEFAULT");
-
-                if (RealDefExpr != wantedDefExpr)
-                {
-                  // Вседа сначала убираем старое правило, потом добавляем новое
-                  if (RealDefExpr.Length > 0)
-                  {
-                    Buffer.Clear();
-                    //Buffer.SB.Append("ALTER TABLE ");
-                    //Buffer.FormatTableName(Table.TableName);
-                    //Buffer.SB.Append(" ALTER COLUMN ");
-                    //Buffer.FormatColumnName(Column.ColumnName);
-                    //Buffer.SB.Append(" DROP DEFAULT");
-
-                    // См.
-                    // https://stackoverflow.com/questions/1430456/how-to-drop-sql-default-constraint-without-knowing-its-name
-                    // ответ №11
-
-                    Buffer.SB.Append(@"DECLARE @ObjectName NVARCHAR(100);");
-                    Buffer.SB.Append(Environment.NewLine);
-                    Buffer.SB.Append(@"SELECT @ObjectName = OBJECT_NAME([default_object_id]) FROM SYS.COLUMNS WHERE [object_id] = OBJECT_ID('");
-                    Buffer.FormatTableName(table.TableName);
-                    Buffer.SB.Append(@"') AND [name] = '");
-                    Buffer.SB.Append(colDef.ColumnName); // а не FormatColumnName() !
-                    Buffer.SB.Append(@"';");
-                    Buffer.SB.Append(Environment.NewLine);
-                    Buffer.SB.Append(@"EXEC('ALTER TABLE ");
-                    Buffer.FormatTableName(table.TableName);
-                    Buffer.SB.Append(@" DROP CONSTRAINT ' + @ObjectName)");
-
-                    SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                        "\" очищен признак DEFAULT");
-                  }
-                  if (wantedDefExpr.Length > 0)
-                  {
-                    Buffer.Clear();
-                    Buffer.SB.Append("ALTER TABLE ");
-                    Buffer.FormatTableName(table.TableName);
-                    Buffer.SB.Append("ADD DEFAULT (");
-                    Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
-                    Buffer.SB.Append(") FOR ");
-                    Buffer.FormatColumnName(colDef.ColumnName);
-                    SQLExecuteNonQuery(Buffer.SB.ToString());
-
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" установлен признак DEFAULT " + wantedDefExpr);
-                  }
-                  modified = true;
-                }
-
-                #endregion
-
-                #region Проверка признака Nullable
-
-                //if (Table.TableName == "ПакетыФормУведомления" && Column.ColumnName == "Таймаут")
-                //{ 
-                //}
-
-                // Проверяем Nullable
-                string s1 = DataTools.GetString(columnRow, "IS_NULLABLE").ToUpperInvariant();
-                bool realNullable;
-                switch (s1)
-                {
-                  case "YES":
-                    realNullable = true;
-                    break;
-                  case "NO":
-                    realNullable = false;
-                    break;
-                  default:
-                    realNullable = colDef.Nullable;
-                    break;
-                }
-
-
-                if (colDef.Nullable != realNullable)
-                {
-                  if (DeleteAllIndices(table.TableName, splash, errors))
+                    // Увеличиваем длину поля
+                    splash.PhaseText = "Изменение длины поля \"" + colDef.ColumnName + "\" в таблице \"" + table.TableName + "\"";
+                    AlterColumn(table, colDef);
+                    errors.AddInfo("Длина поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                      "\" увеличена с " + realLen.ToString() + " до " + colDef.MaxLength.ToString() + " символов");
                     modified = true;
-
-                  #region Замена NULL'ов на DEFAULT
-
-                  if ((!colDef.Nullable) && colDef.DefaultExpression != null && GetRecordCount(table.TableName) > 0)
-                  {
-                    //SetValue(Table.TableName, new ValueFilter(Column.ColumnName, null, CompareKind.Equal, Column.ColumnType),Column.ColumnName, Column.Default)
-                    // Заменяем значения NULL на значение по умолчанию
-                    Buffer.Clear();
-                    Buffer.SB.Append("UPDATE ");
-                    Buffer.FormatTableName(table.TableName);
-                    Buffer.SB.Append(" SET ");
-                    Buffer.FormatColumnName(colDef.ColumnName);
-                    Buffer.SB.Append("=");
-                    Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
-                    Buffer.SB.Append(" WHERE ");
-                    Buffer.FormatColumnName(colDef.ColumnName);
-                    Buffer.SB.Append(" IS NULL");
-                    SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" значения NULL заменены на значение по умолчанию");
                   }
+                }
+              } // Строковое поле
 
-                  #endregion
+              #endregion
 
-                  // Делаем поле NULLABLE
-                  AlterColumn(table, colDef);
-                  if (colDef.Nullable != realNullable)
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
+              #region Проверка Default
+
+              // Установка свойства DEFAULT должна выполняться до установки NOT NULL, иначе возникнет ошибка
+
+              string wantedDefExpr = String.Empty;
+              if (colDef.DefaultExpression != null)
+              {
+                buffer2.Clear();
+                buffer2.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
+                wantedDefExpr = buffer2.SB.ToString();
+              }
+              string RealDefExpr = DataTools.GetString(columnRow, "COLUMN_DEFAULT");
+
+              if (RealDefExpr != wantedDefExpr)
+              {
+                // Вседа сначала убираем старое правило, потом добавляем новое
+                if (RealDefExpr.Length > 0)
+                {
+                  Buffer.Clear();
+                  //Buffer.SB.Append("ALTER TABLE ");
+                  //Buffer.FormatTableName(Table.TableName);
+                  //Buffer.SB.Append(" ALTER COLUMN ");
+                  //Buffer.FormatColumnName(Column.ColumnName);
+                  //Buffer.SB.Append(" DROP DEFAULT");
+
+                  // См.
+                  // https://stackoverflow.com/questions/1430456/how-to-drop-sql-default-constraint-without-knowing-its-name
+                  // ответ №11
+
+                  Buffer.SB.Append(@"DECLARE @ObjectName NVARCHAR(100);");
+                  Buffer.SB.Append(Environment.NewLine);
+                  Buffer.SB.Append(@"SELECT @ObjectName = OBJECT_NAME([default_object_id]) FROM SYS.COLUMNS WHERE [object_id] = OBJECT_ID('");
+                  Buffer.FormatTableName(table.TableName);
+                  Buffer.SB.Append(@"') AND [name] = '");
+                  Buffer.SB.Append(colDef.ColumnName); // а не FormatColumnName() !
+                  Buffer.SB.Append(@"';");
+                  Buffer.SB.Append(Environment.NewLine);
+                  Buffer.SB.Append(@"EXEC('ALTER TABLE ");
+                  Buffer.FormatTableName(table.TableName);
+                  Buffer.SB.Append(@" DROP CONSTRAINT ' + @ObjectName)");
+
+                  SQLExecuteNonQuery(Buffer.SB.ToString());
+                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                      "\" очищен признак DEFAULT");
+                }
+                if (wantedDefExpr.Length > 0)
+                {
+                  Buffer.Clear();
+                  Buffer.SB.Append("ALTER TABLE ");
+                  Buffer.FormatTableName(table.TableName);
+                  Buffer.SB.Append("ADD DEFAULT (");
+                  Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
+                  Buffer.SB.Append(") FOR ");
+                  Buffer.FormatColumnName(colDef.ColumnName);
+                  SQLExecuteNonQuery(Buffer.SB.ToString());
+
+                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                    "\" установлен признак DEFAULT " + wantedDefExpr);
+                }
+                modified = true;
+              }
+
+              #endregion
+
+              #region Проверка признака Nullable
+
+              //if (Table.TableName == "ПакетыФормУведомления" && Column.ColumnName == "Таймаут")
+              //{ 
+              //}
+
+              // Проверяем Nullable
+              string s1 = DataTools.GetString(columnRow, "IS_NULLABLE").ToUpperInvariant();
+              bool realNullable;
+              switch (s1)
+              {
+                case "YES":
+                  realNullable = true;
+                  break;
+                case "NO":
+                  realNullable = false;
+                  break;
+                default:
+                  realNullable = colDef.Nullable;
+                  break;
+              }
+
+
+              if (colDef.Nullable != realNullable)
+              {
+                if (DeleteAllIndices(table.TableName, splash, errors))
                   modified = true;
+
+                #region Замена NULL'ов на DEFAULT
+
+                if ((!colDef.Nullable) && colDef.DefaultExpression != null && GetRecordCount(table.TableName) > 0)
+                {
+                  //SetValue(Table.TableName, new ValueFilter(Column.ColumnName, null, CompareKind.Equal, Column.ColumnType),Column.ColumnName, Column.Default)
+                  // Заменяем значения NULL на значение по умолчанию
+                  Buffer.Clear();
+                  Buffer.SB.Append("UPDATE ");
+                  Buffer.FormatTableName(table.TableName);
+                  Buffer.SB.Append(" SET ");
+                  Buffer.FormatColumnName(colDef.ColumnName);
+                  Buffer.SB.Append("=");
+                  Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
+                  Buffer.SB.Append(" WHERE ");
+                  Buffer.FormatColumnName(colDef.ColumnName);
+                  Buffer.SB.Append(" IS NULL");
+                  SQLExecuteNonQuery(Buffer.SB.ToString());
+                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                    "\" значения NULL заменены на значение по умолчанию");
                 }
 
                 #endregion
+
+                // Делаем поле NULLABLE
+                AlterColumn(table, colDef);
+                if (colDef.Nullable != realNullable)
+                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
+                    "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
+                modified = true;
+              }
+
+              #endregion
 
               //}
             } // поле существует
@@ -2362,7 +2389,277 @@ namespace FreeLibSet.Data.SqlClient
     #endregion
   }
 
-#if !XXX
+#if USE_NEW_READER
+
+  // Новая версия DBxDataWriter для всех режимов.
+  // - Для режима Insert используется промежуточная DataTable, в которой накапливаются записи.
+  //   В OnFinish() вызывается SqlBulkCopy.WriteToServer() для группого добавления строк
+  // - Для режима Update используется объект SqlCommand для команды UPDATE, как в SQLiteDBxDataWriter.
+  // - Для режима InsertOrUpdate используется комбинация действий:
+  //   1. Выполняется поиск в накапливаемой таблице на предмет наличия добавленной строки, которая еще
+  //      не записана на сервер. Если строка найдена, она заменяется в DataTable без обращения к серверу.
+  //   2. Выполняется команда UPDATE. Возвращается переменная @@ROWCOUNT.
+  //   3. Если п.2 вернул 0, то строка добавляется в промежуточную таблицу Insert.
+  internal class SqlDBxDataWriter : DBxDataWriter
+  {
+    #region Конструктор и Dispose
+
+    public SqlDBxDataWriter(SqlDBxCon con, DBxDataWriterInfo writerInfo)
+      : base(con, writerInfo)
+    {
+    }
+
+    internal new SqlDBxCon Con { get { return (SqlDBxCon)(base.Con); } }
+
+    protected override void Dispose(bool disposing)
+    {
+      base.Dispose(disposing);
+    }
+
+    #endregion
+
+    #region OnWrite(), OnFinish()
+
+    protected override void OnWrite()
+    {
+      switch (WriterInfo.Mode)
+      {
+        case DBxDataWriterMode.Insert:
+          AddInsertRow();
+          break;
+        case DBxDataWriterMode.Update:
+          DoUpdate();
+          break;
+        case DBxDataWriterMode.InsertOrUpdate:
+          if (!UpdateInInsertTable())
+          {
+            if (!DoUpdate())
+              AddInsertRow();
+          }
+          break;
+        default:
+          throw new BugException("Invalid mode");
+      }
+    }
+
+    protected override void OnFinish()
+    {
+      FlushInsertTable();
+    }
+
+    /// <summary>
+    /// Быстрое добавление записей в режиме Insert
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    public override void LoadFrom(DataTable table)
+    {
+      if (WriterInfo.Mode == DBxDataWriterMode.Insert)
+      {
+        OnFinish(); // Если были построчные вызовы Write()
+        using (SqlBulkCopy bc = CreateBulkCopy())
+        {
+          bc.WriteToServer(table);
+        }
+      }
+      else
+        base.LoadFrom(table);
+    }
+
+    /// <summary>
+    /// Быстрое добавление записей в режиме Insert
+    /// </summary>
+    /// <param name="reader">Исходные записи</param>
+    public override void LoadFrom(DbDataReader reader)
+    {
+      if (WriterInfo.Mode == DBxDataWriterMode.Insert)
+      {
+        OnFinish(); // Если были построчные вызовы Write()
+        using (SqlBulkCopy bc = CreateBulkCopy())
+        {
+          bc.WriteToServer(reader);
+        }
+      }
+      else
+        base.LoadFrom(reader);
+    }
+
+    #endregion
+
+    #region Добавление записей
+
+    /// <summary>
+    /// Таблица для накопления новых строк в режимах Insert и InsertOrUpdate.
+    /// </summary>
+    private DataTable _InsertTable;
+
+    private object[] _InsertTableSearchKeys; // чтобы не создавать массив при каждом вызове
+
+    private void AddInsertRow()
+    {
+      if (_InsertTable == null)
+      {
+        _InsertTable = base.CreateDataTable();
+        if (WriterInfo.Mode == DBxDataWriterMode.InsertOrUpdate)
+        {
+          DBxOrder order = DBxOrder.FromColumns(SearchColumns);
+          _InsertTable.DefaultView.Sort = order.ToString();
+          _InsertTableSearchKeys = new object[SearchColumns.Count];
+        }
+      }
+
+      DataRow row = _InsertTable.NewRow();
+
+      for (int i = 0; i < Values.Length; i++)
+      {
+        object v = Con.DB.Formatter.PrepareParamValue(Values[i], ColumnDefs[i].ColumnType);
+        if (!Object.ReferenceEquals(v, null))
+          row[i] = v;
+      }
+
+      _InsertTable.Rows.Add(row);
+    }
+
+    /// <summary>
+    /// Выполняет поиск строки в InsertTable. 
+    /// Если строка найдена по ключевым полям, то заменяются неключевые поля и возвращается true
+    /// </summary>
+    /// <returns></returns>
+    private bool UpdateInInsertTable()
+    {
+      if (_InsertTable == null)
+        return false;
+      if (_InsertTable.Rows.Count == 0)
+        return false;
+
+      for (int i = 0; i < _InsertTableSearchKeys.Length; i++)
+      {
+        _InsertTableSearchKeys[i] = Values[SearchColumnPositions[i]];
+        if (_InsertTableSearchKeys[i] == null)
+          _InsertTableSearchKeys[i] = DBNull.Value;
+      }
+
+      int pos = _InsertTable.DefaultView.Find(_InsertTableSearchKeys);
+      if (pos < 0)
+        return false;
+
+      DataRow resRow = _InsertTable.DefaultView[pos].Row;
+      for (int i = 0; i < OtherColumnPositions.Length; i++)
+      {
+        object v = Values[OtherColumnPositions[i]];
+        if (v == null)
+          v = DBNull.Value;
+        resRow[OtherColumnPositions[i]] = v;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Групповой INSERT для строк из _InsertTable
+    /// </summary>
+    private void FlushInsertTable()
+    {
+      if (_InsertTable == null)
+        return;
+      if (_InsertTable.Rows.Count == 0)
+        return;
+
+      using (SqlBulkCopy bc = CreateBulkCopy())
+      {
+        bc.WriteToServer(_InsertTable);
+      }
+      _InsertTable.Rows.Clear();
+    }
+
+    private SqlBulkCopy CreateBulkCopy()
+    {
+      SqlBulkCopyOptions options = SqlBulkCopyOptions.Default;
+      if (base.SearchColumns.Count > 0)
+        options |= SqlBulkCopyOptions.KeepIdentity;
+
+      SqlBulkCopy bc = new SqlBulkCopy(Con.Connection, options, Con.CurrentTransaction);
+      bc.DestinationTableName = WriterInfo.TableName;
+
+      for (int i = 0; i < ColumnDefs.Length; i++)
+        bc.ColumnMappings.Add(ColumnDefs[i].ColumnName, ColumnDefs[i].ColumnName);
+
+      return bc;
+    }
+
+    #endregion
+
+    #region UPDATE
+
+    /// <summary>
+    /// Подготовленная команда
+    /// </summary>
+    private SqlCommand _Command;
+
+    private void PrepareCommand()
+    {
+      DBxSqlBuffer buffer = new DBxSqlBuffer(Con.DB.Formatter);
+      buffer.SB.Append("UPDATE ");
+      buffer.FormatTableName(WriterInfo.TableName);
+      buffer.SB.Append(" SET ");
+
+      for (int i = 0; i < OtherColumns.Count; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(", ");
+        buffer.FormatColumnName(OtherColumns[i]);
+        buffer.SB.Append("=");
+        buffer.FormatParamPlaceholder(OtherColumnPositions[i]);
+      }
+
+      buffer.SB.Append(" WHERE ");
+      for (int i = 0; i < SearchColumns.Count; i++)
+      {
+        if (i > 0)
+          buffer.SB.Append(" AND ");
+        buffer.FormatColumnName(SearchColumns[i]);
+        buffer.SB.Append("=");
+        buffer.FormatParamPlaceholder(SearchColumnPositions[i]);
+      }
+      // Не требуется, т.к. ExecuteNonQuery() и так возвращает количество строк
+      //if (WriterInfo.Mode == DBxDataWriterMode.InsertOrUpdate)
+      //{
+      //  buffer.SB.Append(";SELECT @@ROWCOUNT");
+      //}
+
+      _Command = new SqlCommand(buffer.SB.ToString());
+      for (int i = 0; i < Values.Length; i++)
+        _Command.Parameters.Add(new SqlParameter("P" + (i + 1).ToString(), null));
+      _Command.Connection = Con.Connection;
+      _Command.Transaction = Con.CurrentTransaction;
+      _Command.CommandTimeout = Con.CommandTimeout;
+      _Command.Prepare(); // для порядка.
+    }
+
+    /// <summary>
+    /// Выполнить команду UPDATE
+    /// </summary>
+    /// <returns>True, если строки были найдены и обновление выполнено</returns>
+    private bool DoUpdate()
+    {
+      if (_Command == null)
+        PrepareCommand();
+
+      for (int i = 0; i < Values.Length; i++)
+      {
+        object v = Con.DB.Formatter.PrepareParamValue(Values[i], ColumnDefs[i].ColumnType);
+        _Command.Parameters[i].Value = v;
+      }
+
+      int nRecs = Con.SQLExecuteNonQuery(_Command);
+      if (nRecs < 0)
+        throw new BugException("Не получено количество строк, обработанных командой UPDATE");
+      return nRecs > 0;
+    }
+
+    #endregion
+  }
+
+#else
+
   /// <summary>
   /// Объект для записи в базу данных MS SQL Server.
   /// Специальный объект SqlBulkCopy используется только для добавления строк
@@ -2370,7 +2667,7 @@ namespace FreeLibSet.Data.SqlClient
   /// </summary>
   internal class SqlDBxDataInsertWriter : DBxDataWriter
   {
-    #region Конструктор
+  #region Конструктор
 
     public SqlDBxDataInsertWriter(SqlDBxCon con, DBxDataWriterInfo writerInfo)
       : base(con, writerInfo)
@@ -2406,9 +2703,9 @@ namespace FreeLibSet.Data.SqlClient
       base.Dispose(disposing);
     }
 
-    #endregion
+  #endregion
 
-    #region OnWrite
+  #region OnWrite
 
     /// <summary>
     /// Копировщик ADO.NET
@@ -2416,7 +2713,7 @@ namespace FreeLibSet.Data.SqlClient
     private SqlBulkCopy _BC;
 
     /// <summary>
-    /// SqlBulkCopy требует на входе строки или таблицу.
+    /// <see cref="SqlBulkCopy"/> требует на входе строки или таблицу.
     /// Нет метода для одного набора значений
     /// </summary>
     private DataTable _Table;
@@ -2481,7 +2778,7 @@ namespace FreeLibSet.Data.SqlClient
       _BC.WriteToServer(reader);
     }
 
-    #endregion
+  #endregion
   }
 #endif
 }

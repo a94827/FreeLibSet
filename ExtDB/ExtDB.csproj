@@ -82,6 +82,7 @@
     <Compile Include="DBxSelectInfo.cs" />
     <Compile Include="DBxNameValidator.cs" />
     <Compile Include="DBxTools.cs" />
+    <Compile Include="SQLiteDBxDataWriter.cs" />
     <Compile Include="SQLiteDBxSqlFormatter.cs" />
     <Compile Include="DBUserPermission.cs" />
     <Compile Include="DBxManager.cs" />

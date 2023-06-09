@@ -1866,7 +1866,6 @@ namespace FreeLibSet.Data
       if (writerInfo.Columns.Count == 0)
         throw new ArgumentException("DBxDataWriterInfo.Columns.Count=null", "writerInfo");
 
-      writerInfo.SetReadOnly();
       return OnCreateWriter(writerInfo);
     }
 
@@ -3359,9 +3358,48 @@ namespace FreeLibSet.Data
 
       return res;
     }
+    /// <summary>
+    /// Выполнение SQL-запроса, возвращающего единственное значение
+    /// </summary>
+    /// <param name="command">Команда, ранее созданная для этого соединения</param>
+    /// <returns>Возвращаемое значение</returns>
+    public object SQLExecuteScalar(DbCommand command)
+    {
+      CheckNotDisposed();
+      CheckCommand(command);
+
+      //???Caller.OnBeforeActivity();
+      string cmdText = command.CommandText;
+
+      DBxConQueryInfo ti = TraceSqlBegin(cmdText);
+
+      object res = null;
+      try
+      {
+        res = command.ExecuteScalar();
+      }
+      catch (ThreadAbortException e)
+      {
+        TraceSqlEnd(ti, e);
+        throw;
+      }
+      catch (Exception e)
+      {
+        TraceSqlEnd(ti, e);
+        ThrowSqlException(cmdText, e);
+      }
+
+      TraceSqlEnd(ti, null);
+
+      // 18.08.2022
+      res = PrepareReturnedValue(res);
+
+      return res;
+    }
+
 
     /// <summary>
-    /// Подготовка одиночного возвращаемого значения: удаление концевых пробелов и замена формата DateTime
+    /// Подготовка одиночного возвращаемого значения: удаление концевых пробелов и замена формата <see cref="DateTime"/>.
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
@@ -3381,17 +3419,20 @@ namespace FreeLibSet.Data
     /// Выполнение запроса, не возвращающего значение
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
-    public void SQLExecuteNonQuery(string cmdText)
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
+    public int SQLExecuteNonQuery(string cmdText)
     {
-      SQLExecuteNonQuery(cmdText, null);
+      return SQLExecuteNonQuery(cmdText, null);
     }
     /// <summary>
     /// Выполнение SQL-запроса, не возвращающего значения
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    public void SQLExecuteNonQuery(string cmdText, object[] paramValues)
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
+    public int SQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
+      int res = -1;
       CheckNotDisposed();
       //???Caller.OnBeforeActivity();
 
@@ -3399,7 +3440,7 @@ namespace FreeLibSet.Data
 
       try
       {
-        DoSQLExecuteNonQuery(cmdText, paramValues);
+        res = DoSQLExecuteNonQuery(cmdText, paramValues);
       }
       catch (ThreadAbortException e)
       {
@@ -3413,12 +3454,58 @@ namespace FreeLibSet.Data
       }
 
       TraceSqlEnd(ti, null);
+      return res;
+    }
+
+    /// <summary>
+    /// Выполнение запроса, не возвращающего значение.
+    /// Вызывает <see cref="DbCommand.ExecuteNonQuery()"/>, выполняя трассировку SQL-запроса и перехват исключений
+    /// </summary>
+    /// <param name="command">Команда, ранее созданная для этого соединения</param>
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
+    public int SQLExecuteNonQuery(DbCommand command)
+    {
+      int res = -1;
+      CheckNotDisposed();
+      CheckCommand(command);
+      //???Caller.OnBeforeActivity();
+      string cmdText = command.CommandText;
+
+      DBxConQueryInfo ti = TraceSqlBegin(cmdText);
+
+      try
+      {
+        res = command.ExecuteNonQuery();
+      }
+      catch (ThreadAbortException e)
+      {
+        TraceSqlEnd(ti, e);
+        throw;
+      }
+      catch (Exception e)
+      {
+        TraceSqlEnd(ti, e);
+        ThrowSqlException(cmdText, e);
+      }
+
+      TraceSqlEnd(ti, null);
+      return res;
+    }
+
+    private void CheckCommand(DbCommand command)
+    {
+#if DEBUG
+      if (command == null)
+        throw new ArgumentNullException("commnd");
+#endif
+      if (!Object.ReferenceEquals(command.Connection, this.DbConnection))
+        throw new ArgumentException("Команда относится к другому соединению");
     }
 
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат записывается в
-    /// объект DataTable без имени
+    /// объект <see cref="DataTable"/> без имени.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <returns>Набор данных</returns>
@@ -3429,7 +3516,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат записывается в
-    /// объект DataTable с указанным именем
+    /// объект <see cref="DataTable"/> с указанным именем.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="tableName">Имя создаваемой таблицы</param>
@@ -3441,7 +3528,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат записывается в
-    /// объект DataTable с указанным именем
+    /// объект <see cref="DataTable"/> с указанным именем.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="tableName">Имя создаваемой таблицы</param>
@@ -3482,8 +3569,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Этот метод следует присоединить как обработчик события DataAdapter.FillError
-    /// для добавлению к исключению дополнительной отладочной информации
+    /// Этот метод следует присоединить как обработчик события <see cref="DataAdapter.FillError"/>
+    /// для добавления к исключению дополнительной отладочной информации.
     /// </summary>
     /// <param name="sender">Объект DataAdapter</param>
     /// <param name="args">Аргументы события FillError</param>
@@ -3494,11 +3581,11 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат не извлекается,
-    /// а возвращается DataReader. По окончании работы должен быть вызван метод
-    /// Close(). До этого не разрешается выполнять другие запросы
+    /// а возвращается <see cref="DbDataReader"/>. По окончании работы должен быть вызван метод
+    /// <see cref="DbDataReader.Close()"/>. До этого не разрешается выполнять другие запросы с текущим соединением.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader SQLExecuteReader(string cmdText)
     {
       return SQLExecuteReader(cmdText, null);
@@ -3506,12 +3593,12 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат не извлекается,
-    /// а возвращается DataReader. По окончании работы должен быть вызван метод
-    /// Close(). До этого не разрешается выполнять другие запросы
+    /// а возвращается <see cref="DbDataReader"/>. По окончании работы должен быть вызван метод
+    /// <see cref="DbDataReader.Close()"/>. До этого не разрешается выполнять другие запросы с текущим соединением.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader SQLExecuteReader(string cmdText, object[] paramValues)
     {
       CheckNotDisposed();
@@ -3541,11 +3628,48 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
+    /// Выполнение запроса, возвращающего набор строк. Результат не извлекается,
+    /// а возвращается <see cref="DbDataReader"/>. По окончании работы должен быть вызван метод
+    /// <see cref="DbDataReader.Close()"/>. До этого не разрешается выполнять другие запросы с текущим соединением.
+    /// </summary>
+    /// <param name="command">Команда, ранее созданная для этого соединения</param>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
+    public DbDataReader SQLExecuteReader(DbCommand command)
+    {
+      CheckNotDisposed();
+      CheckCommand(command);
+      string cmdText = command.CommandText;
+
+      DbDataReader rdr = null; // чтобы не было ошибки компиляции
+
+      DBxConQueryInfo ti = TraceSqlBegin(cmdText);
+
+      try
+      {
+        rdr = command.ExecuteReader();
+      }
+      catch (ThreadAbortException e)
+      {
+        TraceSqlEnd(ti, e);
+        throw;
+      }
+      catch (Exception e)
+      {
+        TraceSqlEnd(ti, e);
+        ThrowSqlException(cmdText, e);
+      }
+
+      TraceSqlEnd(ti, null);
+
+      return rdr;
+    }
+
+    /// <summary>
     /// Перевыброс исключения при выполнении SQL-запроса.
     /// Метод вызывается из блоков catch в методах SQLExecuteXXX().
-    /// Вызывает метод DBx.OnCreateSqlException для вызова пользовательского обработчика события CreateSqlException.
-    /// Затем, если установлено свойство LogoutSqlExceptions, вызывается метод LogoutException().
-    /// Наконец, выбрасывается исключение, которое, возможно было заменено в CreateSqlException.
+    /// Вызывает метод <see cref="DBx.OnCreateSqlException(DBxCreateSqlExceptionEventArgs)"/> для вызова пользовательского обработчика события <see cref="DBx.CreateSqlException"/>.
+    /// Затем, если установлено свойство <see cref="LogoutSqlExceptions"/>, вызывается метод <see cref="LogoutException(Exception, string)"/>.
+    /// Наконец, выбрасывается исключение, которое, возможно было заменено в <see cref="DBx.CreateSqlException"/>.
     /// </summary>
     /// <param name="cmdText">Текст SQLзапроса, при выполнении которого возникло исключение</param>
     /// <param name="innerException">Возникшее исключение</param>
@@ -3569,7 +3693,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Вызывает DBx.OnLogoutException()
+    /// Вызывает <see cref="DBx.OnLogoutException(DBxLogoutExceptionEventArgs)"/> 
     /// </summary>
     /// <param name="exception">Исключение</param>
     /// <param name="title">Описание</param>
@@ -3606,13 +3730,13 @@ namespace FreeLibSet.Data
     /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="tableName">Имя таблицы для возвращаемого DataTable</param>
+    /// <param name="tableName">Имя таблицы для возвращаемого <see cref="DataTable"/></param>
     /// <param name="paramValues">Параметры запроса</param>
     /// <returns>Заполненная таблица</returns>
     protected abstract DataTable DoSQLExecuteDataTable(string cmdText, string tableName, object[] paramValues);
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего DbDataReader
+    /// Абстрактный метод выполнения SLQ-запроса, возвращающего <see cref="DbDataReader"/>
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -3632,7 +3756,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    protected abstract void DoSQLExecuteNonQuery(string cmdText, object[] paramValues);
+    /// <returns>Количество обработанных записей или (-1), если неизвестно</returns> 
+    protected abstract int DoSQLExecuteNonQuery(string cmdText, object[] paramValues);
 
     /*
     /// <summary>
@@ -3651,7 +3776,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если был вызов ClearPool()
+    /// Возвращает true, если был вызов <see cref="ClearPool()"/>
     /// </summary>
     public bool ClearPoolCalled { get { return _ClearPoolCalled; } }
     private bool _ClearPoolCalled;

@@ -445,13 +445,14 @@ namespace FreeLibSet.Data.OracleClient
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    protected override void DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
+    /// <returns>Количество записей, обработанных в запросе, или (-1), если неизвестно</returns>
+    protected override int DoSQLExecuteNonQuery(string cmdText, object[] paramValues)
     {
       OracleCommand cmd = new OracleCommand(cmdText, Connection);
       InitCmdParameters(cmd, paramValues);
       cmd.CommandTimeout = CommandTimeout;
       cmd.Transaction = CurrentTransaction;
-      cmd.ExecuteNonQuery();
+      return cmd.ExecuteNonQuery();
     }
 
     /// <summary>
