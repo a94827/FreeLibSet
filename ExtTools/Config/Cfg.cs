@@ -12,6 +12,7 @@ using System.Diagnostics;
 using FreeLibSet.Win32;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using System.ComponentModel;
 
 namespace FreeLibSet.Config
 {
@@ -224,6 +225,58 @@ namespace FreeLibSet.Config
 
     #endregion
 
+    #region Boolean
+
+    /// <summary>
+    /// Преобразование значения в строку.
+    /// Вызывает метод <see cref="ToString(int)"/>, используя значения 1 и 0 в качестве аргумента.
+    /// </summary>
+    /// <param name="value">Преобразуемое значение</param>
+    /// <returns>Текстовое представление, используемое для записи значения</returns>
+    public virtual string ToString(bool value)
+    {
+      return (value ? 1 : 0).ToString();
+    }
+
+    /// <summary>
+    /// Попытка преобразование строки в значение.
+    /// Использует <see cref="TryParse(string, out int)"/>. Затем числовое значение преобразуется в логическое.
+    /// </summary>
+    /// <param name="s">Текстовое представление, используемое для хранения значения</param>
+    /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
+    /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
+    public virtual bool TryParse(string s, out bool value)
+    {
+      int value2;
+      if (TryParse(s, out value2))
+      {
+        value = value2 != 0;
+        return true;
+      }
+      else
+      {
+        value = false;
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Преобразование строки в значение.
+    /// Если строка имеет неподходящий формат, выбрасывается исключение.
+    /// </summary>
+    /// <param name="s">Текстовое представление, используемое для хранения значения</param>
+    /// <returns>Преобразованное значение</returns>
+    public bool ParseBool(string s)
+    {
+      bool value;
+      if (TryParse(s, out value))
+        return value;
+      else
+        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в логическое значение");
+    }
+
+    #endregion
+
     #region DateTime
 
     /// <summary>
@@ -332,7 +385,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Попытка преобразование строки в значение Guid
+    /// Попытка преобразование строки в значение <see cref="Guid"/>
     /// </summary>
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
@@ -655,7 +708,14 @@ namespace FreeLibSet.Config
     /// <returns>Значение</returns>
     public bool GetBool(string name)
     {
-      return GetInt(name) != 0;
+      string s = GetString(name);
+
+      bool value;
+
+      if (Converter.TryParse(s, out value))
+        return value;
+      else
+        return false;
     }
 
 
@@ -670,11 +730,15 @@ namespace FreeLibSet.Config
     /// <returns>true, если значение было прочитано, false в случае неудачи</returns>
     public bool GetBool(string name, ref bool value)
     {
-      int x = 0;
-      if (!GetInt(name, ref x))
+      string s = GetString(name);
+      bool x2;
+      if (Converter.TryParse(s, out x2))
+      {
+        value = x2;
+        return true;
+      }
+      else
         return false;
-      value = (x != 0);
-      return true;
     }
 
     /// <summary>
@@ -719,7 +783,7 @@ namespace FreeLibSet.Config
         return;
       }
 
-      SetString(name, value ? "1" : "0");
+      SetString(name, Converter.ToString(value));
     }
 
     #endregion
@@ -1176,7 +1240,7 @@ namespace FreeLibSet.Config
     /// Предполагается, что значение хранится как строка.
     /// Если нет сохраненного значения с заданным именем <paramref name="name"/>, то будет возвращено 
     /// перечислимое значение, соответствующее числовому значению 0 (даже если в перечислении нет такого элемента)
-    /// Если препочтительнее хранить числовые значения, используйте GetInt()
+    /// Если препочтительнее хранить числовые значения, используйте <see cref="GetInt(string)"/>.
     /// </summary>
     /// <typeparam name="T">Тип перечисления. Если T не является перечислением, возникнет ошибка времени выполнения</typeparam>
     /// <param name="name">Имя</param>
@@ -1194,7 +1258,7 @@ namespace FreeLibSet.Config
     /// Предполагается, что значение хранится как строка.
     /// Если нет сохраненного значения с заданным именем <paramref name="name"/>, то текущее значение,
     /// переданное по ссылке не изменяется
-    /// Если препочтительнее хранить числовые значения, используйте GetInt()
+    /// Если препочтительнее хранить числовые значения, используйте <see cref="GetInt(string, ref int)"/>.
     /// </summary>
     /// <typeparam name="T">Тип перечисления. Если T не является перечислением, возникнет ошибка времени выполнения</typeparam>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
@@ -1384,7 +1448,8 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Удаление вложенной секции и/или параметра с заданным именем
+    /// Удаление вложенной секции и/или параметра с заданным именем.
+    /// Если задано несуществующее имя секции или параметра, никаких действий не выполняется.
     /// </summary>
     /// <param name="name">Имя секции или параметра. Не может быть пустой строкой</param>
     public void Remove(string name)
@@ -1583,11 +1648,17 @@ namespace FreeLibSet.Config
     /// <returns>Nullable-значение</returns>
     public Nullable<bool> GetNullableBool(string name)
     {
-      Nullable<int> x = GetNullableInt(name);
-      if (x.HasValue)
-        return x.Value != 0;
-      else
+      string s = GetString(name);
+      if (String.IsNullOrEmpty(s))
         return null;
+      else
+      {
+        bool res;
+        if (Converter.TryParse(s, out res))
+          return res;
+        else
+          return null;
+      }
     }
 
     /// <summary>
@@ -1600,7 +1671,7 @@ namespace FreeLibSet.Config
     public void SetNullableBool(string name, Nullable<bool> value)
     {
       if (value.HasValue)
-        SetString(name, value.Value ? "1" : "0");
+        SetString(name, Converter.ToString(value.Value));
       else
         Remove(name);
     }
@@ -2090,17 +2161,14 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="values">Массив записываемых значений</param>
     /// <param name="useTime">true - использовать компонент времени</param>
+    [Obsolete("Используйте перегрузку без аргумента useTime или метод SetDateCommaString()", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void SetDateTimeCommaString(string name, DateTime[] values, bool useTime)
     {
-      if (values == null)
-        Remove(name);
+      if (useTime)
+        SetDateTimeCommaString(name, values);
       else
-      {
-        string[] a = new string[values.Length];
-        for (int i = 0; i < values.Length; i++)
-          a[i] = Converter.ToString(values[i], useTime);
-        SetString(name, String.Join(Converter.ListSeparator, a));
-      }
+        SetDateCommaString(name, values);
     }
 
     /// <summary>
@@ -2111,7 +2179,45 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="useTime">true - использовать компонент времени</param>
     /// <returns>Массив прочитанных значений или null</returns>
+    [Obsolete("Используйте перегрузку без аргумента useTime или метод GetDateCommaString()", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public DateTime[] GetDateTimeCommaString(string name, bool useTime)
+    {
+      if (useTime)
+        return GetDateTimeCommaString(name);
+      else
+        return GetDateCommaString(name);
+    }
+
+
+    /// <summary>
+    /// Записывает массив дат в виде одной строки, разделенной запятыми.
+    /// Если задано значение null, то записывается пустая строка.
+    /// Даты сохраняются вместе с компонентом времени.
+    /// </summary>
+    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
+    /// <param name="values">Массив записываемых значений</param>
+    public void SetDateTimeCommaString(string name, DateTime[] values)
+    {
+      if (values == null)
+        Remove(name);
+      else
+      {
+        string[] a = new string[values.Length];
+        for (int i = 0; i < values.Length; i++)
+          a[i] = Converter.ToString(values[i], true);
+        SetString(name, String.Join(Converter.ListSeparator, a));
+      }
+    }
+
+    /// <summary>
+    /// Считывает строку как массив дат с компонентом времени.
+    /// Если строка пустая, возвращается null, а не пустой массив.
+    /// Если строка имеет неправильный формат, генерируется исключение
+    /// </summary>
+    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
+    /// <returns>Массив прочитанных значений или null</returns>
+    public DateTime[] GetDateTimeCommaString(string name)
     {
       string s = GetString(name);
       if (String.IsNullOrEmpty(s))
@@ -2119,7 +2225,49 @@ namespace FreeLibSet.Config
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
       DateTime[] values = new DateTime[a.Length];
       for (int i = 0; i < values.Length; i++)
-        values[i] = Converter.ParseDateTime(a[i].Trim(), useTime);
+        values[i] = Converter.ParseDateTime(a[i].Trim(), true);
+
+      return values;
+    }
+
+
+
+    /// <summary>
+    /// Записывает массив дат в виде одной строки, разделенной запятыми.
+    /// Если задано значение null, то записывается пустая строка.
+    /// Даты сохраняются без компонента времени.
+    /// </summary>
+    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
+    /// <param name="values">Массив записываемых значений</param>
+    public void SetDateCommaString(string name, DateTime[] values)
+    {
+      if (values == null)
+        Remove(name);
+      else
+      {
+        string[] a = new string[values.Length];
+        for (int i = 0; i < values.Length; i++)
+          a[i] = Converter.ToString(values[i], false);
+        SetString(name, String.Join(Converter.ListSeparator, a));
+      }
+    }
+
+    /// <summary>
+    /// Считывает строку как массив дат без компонента времени.
+    /// Если строка пустая, возвращается null, а не пустой массив.
+    /// Если строка имеет неправильный формат, генерируется исключение
+    /// </summary>
+    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
+    /// <returns>Массив прочитанных значений или null</returns>
+    public DateTime[] GetDateCommaString(string name)
+    {
+      string s = GetString(name);
+      if (String.IsNullOrEmpty(s))
+        return null;
+      string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
+      DateTime[] values = new DateTime[a.Length];
+      for (int i = 0; i < values.Length; i++)
+        values[i] = Converter.ParseDateTime(a[i].Trim(), false);
 
       return values;
     }
@@ -2245,10 +2393,10 @@ namespace FreeLibSet.Config
         SetString(name, histList[0]);
         if (histList.Count > 1)
         {
-          CfgPart Part = GetChild(name + "_Hist", true);
-          Part.Clear();
+          CfgPart histPart = GetChild(name + "_Hist", true);
+          histPart.Clear();
           for (int i = 1; i < histList.Count; i++)
-            Part.SetString("H" + i.ToString(), histList[i]);
+            histPart.SetString("H" + i.ToString(), histList[i]);
         }
         else
           // Один элемент в списке - история стирается
@@ -2265,21 +2413,21 @@ namespace FreeLibSet.Config
     public HistoryList GetHist(string name)
     {
       string mainValue = GetString(name);
-      CfgPart part = GetChild(name + "_Hist", false);
-      if (String.IsNullOrEmpty(mainValue) && part == null)
+      CfgPart histPart = GetChild(name + "_Hist", false);
+      if (String.IsNullOrEmpty(mainValue) && histPart == null)
         return new HistoryList();
       else
       {
         //List<string> lst = new List<string>();
         SingleScopeList<string> lst = new SingleScopeList<string>(); // 20.06.2018
         lst.Add(mainValue);
-        if (part != null)
+        if (histPart != null)
         {
           int cnt = 0;
           while (true)
           {
             cnt++;
-            string s = part.GetString("H" + cnt.ToString());
+            string s = histPart.GetString("H" + cnt.ToString());
             if (String.IsNullOrEmpty(s))
               break;
             lst.Add(s);
@@ -2291,7 +2439,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Добавить запись к списку истории.
-    /// Эта перегрузка использует HistoryList.DefaultMaxHistLength для ограничения максимального размера списка истории.
+    /// Эта перегрузка использует <see cref="HistoryList.DefaultMaxHistLength"/> для ограничения максимального размера списка истории.
     /// </summary>
     /// <param name="name">Имя</param>
     /// <param name="value">Добавляемое значение истории</param>
@@ -2342,6 +2490,10 @@ namespace FreeLibSet.Config
       for (int i = 0; i < childNames.Length; i++)
       {
         CfgPart srcChild = GetChild(childNames[i], false);
+#if DEBUG
+        if (srcChild == null)
+          throw new BugException("В текущем объекте \"" + ToString() + "\" не найдена дочерняя секция с именем \"" + childNames[i] + "\", хотя она была возвращена методом GetChildNames()");
+#endif
         CfgPart destChild = dest.GetChild(childNames[i], true);
         // Рекурсивный вызов
         srcChild.CopyTo(destChild);
@@ -2419,7 +2571,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Пустая секция конфигурации с возможностью доступа только для чтения.
-    /// Все записывающие методы вызывают ObjectReadOnlyException
+    /// Все записывающие методы вызывают <see cref="ObjectReadOnlyException"/>
     /// </summary>
     public static readonly CfgPart Empty = new EmptyCfgPart();
 
@@ -2505,7 +2657,7 @@ namespace FreeLibSet.Config
 
   /// <summary>
   /// Секция, хранящаяся в XML-формате.
-  /// Для доступа к секциям используйте XmlCfgFile или TempCfg.
+  /// Для доступа к секциям используйте <see cref="XmlCfgFile"/> или <see cref="TempCfg"/>.
   /// </summary>
   public class XmlCfgPart : CfgPart
   {
@@ -2515,7 +2667,7 @@ namespace FreeLibSet.Config
     /// Защищенный конструктор, которому передается существующий тег в качесте корня
     /// </summary>
     /// <param name="converter">Конвертер для преобразование чисел и дат в строковый формат для хранения</param>
-    /// <param name="document">Объект XmlDocument</param>
+    /// <param name="document">Объект <see cref="XmlDocument"/></param>
     /// <param name="rootNode">Корневой узел для заданной секции</param>
     /// <param name="parent">Родительская секция</param>
     internal protected XmlCfgPart(CfgConverter converter, XmlDocument document, XmlNode rootNode, XmlCfgPart parent)
@@ -2527,7 +2679,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Защищенный конструктор, создающий XmlDocument и корневой тег "Config" 
+    /// Защищенный конструктор, создающий <see cref="XmlDocument"/> и корневой тег "Config" 
     /// </summary>
     /// <param name="converter">Конвертер для преобразование чисел и дат в строковый формат для хранения</param>
     internal protected XmlCfgPart(CfgConverter converter)
@@ -2544,7 +2696,7 @@ namespace FreeLibSet.Config
     #region Общие свойства
 
     /// <summary>
-    /// Объект XmlDocument, к которому относится секция
+    /// Объект <see cref="XmlDocument"/>, к которому относится секция
     /// </summary>
     public XmlDocument Document { get { return _Document; } }
     private readonly XmlDocument _Document;
@@ -2588,7 +2740,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Получить строкое значение.
-    /// Возвращает InnerText для элемента с заданным именем или пустую строку, если нет тега с таким именем.
+    /// Возвращает <see cref="XmlNode.InnerText"/> для элемента с заданным именем или пустую строку, если нет тега с таким именем.
     /// </summary>
     /// <param name="name">Имя тега. Не может быть пустой строкой</param>
     /// <returns>Значение</returns>
@@ -2765,7 +2917,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Возвращает true, если ли есть дочерняя секция или параметр с заданным именем.
-    /// Комбинация HasChild() и HasValue()
+    /// Комбинация HasChild() и HasValue().
     /// </summary>
     /// <param name="name">Имя дочерней секции или параметра. Если задана пустая строка, метод возвращает false</param>
     /// <returns>Наличие дочерней секции или записанного значения</returns>
@@ -2796,7 +2948,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Копирование одного значения части или дочерней секции (рекурсивное) в другую часть
-    /// Если в Dest существует поле или дочерняя часть с именем Name, то она удаляется
+    /// Если в <paramref name="dest"/> существует поле или дочерняя часть с именем <paramref name="name"/>, то она удаляется.
     /// Если исходная часть не содержит поля или дочерней части, то просто
     /// выполняется удаление
     /// </summary>
@@ -2831,7 +2983,7 @@ namespace FreeLibSet.Config
     #region Преобразование в XML
 
     /// <summary>
-    /// Преобразование всего XML-документа в строку или из строки
+    /// Преобразование секции и вложенных секций в строку в XML-формате
     /// </summary>
     public string PartAsXmlText
     {
@@ -2850,7 +3002,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Возвращает PartAsXmlText 
+    /// Возвращает <see cref="PartAsXmlText"/>
     /// </summary>
     /// <returns>Текстовое представление секции конфигурации</returns>
     public override string GetXmlText()
@@ -2864,7 +3016,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Вычисляет контрольную сумму MD5 для заданной секции.
-    /// Использует свойство XmlElement.OuterXml для получения текста секции (без форматирования),
+    /// Использует свойство <see cref="XmlNode.OuterXml"/> для получения текста секции (без форматирования),
     /// преобразует текст в массив байт в кодировке UTF-16, затем вычисляет MD5.
     /// </summary>
     /// <returns>MD5</returns>
@@ -3015,7 +3167,7 @@ namespace FreeLibSet.Config
     #region Методы
 
     /// <summary>
-    /// Записывает XML-файл в кодировке, задаваемой свойством Enciding
+    /// Записывает XML-файл в кодировке, задаваемой свойством <see cref="Encoding"/>.
     /// </summary>
     public void Save()
     {
@@ -3083,15 +3235,15 @@ namespace FreeLibSet.Config
 
   /// <summary>
   /// Секция конфигурации, хранящаяся в ветви реестра.
-  /// Внешний объект RegistryTree используется для доступа к данным реестра.
-  /// В пользовательском коде используйте класс RegistryCfg для доступа к реестру.
+  /// Внешний объект <see cref="RegistryTree"/> используется для доступа к данным реестра.
+  /// В пользовательском коде используйте класс <see cref="RegistryCfg"/> для доступа к реестру.
   /// </summary>
   public class RegistryCfgPart : CfgPart
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает секцию, используя конвертер по умолчанию CfgConverter.Default.
+    /// Создает секцию, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
     /// </summary>
     /// <param name="tree">Объект для доступа к реестру</param>
     /// <param name="keyName">Путь к ветви реестра</param>
@@ -3206,10 +3358,11 @@ namespace FreeLibSet.Config
       Tree.CheckNotReadOnly();
 
       Tree[KeyName].DeleteValue(name, false);
-      if (Tree.Exists(name))
+      //if (Tree.Exists(name))
+      if (Tree.Exists(KeyName + "\\" + name)) // испр.15.06.2023
       {
+        Tree.Close(KeyName + "\\" + name); // иначе будут недействительные узлы
         Tree[KeyName].DeleteSubKeyTree(name);
-        Tree.Close(); // иначе будут недействительные узлы
       }
     }
 
@@ -3225,7 +3378,9 @@ namespace FreeLibSet.Config
       //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
       string childKeyName = KeyName + "\\" + name;
 
-      if (!create)
+      if (create)
+        Tree.CheckNotReadOnly(); // 19.06.2023
+      else
       {
         if (!Tree.Exists(childKeyName))
           return null;
@@ -3275,9 +3430,11 @@ namespace FreeLibSet.Config
       // Удаляем дочерние узлы
       string[] subNames = Tree[KeyName].GetSubKeyNames();
       if (subNames.Length > 0)
-        Tree.Close(); // закрываем все узлы, т.к. удалять открытые узлы нельзя
-      for (int i = 0; i < subNames.Length; i++)
-        Tree[KeyName].DeleteSubKeyTree(subNames[i]);
+      {
+        Tree.CloseChildren(KeyName); // закрываем все узлы, т.к. удалять открытые узлы нельзя
+        for (int i = 0; i < subNames.Length; i++)
+          Tree[KeyName].DeleteSubKeyTree(subNames[i]);
+      }
     }
 
     /// <summary>
@@ -3325,7 +3482,7 @@ namespace FreeLibSet.Config
   }
 
   /// <summary>
-  /// Объединение объектов RegistryTree и RegistryCfgPart.
+  /// Объединение объектов <see cref="RegistryTree"/> и <see cref="RegistryCfgPart"/>.
   /// Обычно этот класс используется в прикладном коде.
   /// Обычно следует создавать объект для корневой ветви реестра, в которой хранится конфигурация приложения,
   /// например, "HKEY_CURRENT_USER\МояКомпания\МоеПриложение", а для обращения к вложенным ветвям использовать GetChild().
@@ -3335,7 +3492,7 @@ namespace FreeLibSet.Config
     #region Конструкторы и Dispose
 
     /// <summary>
-    /// Начать работу с реестром в режиме чтения и записи, используя конвертер по умолчанию CfgConverter.Default
+    /// Начать работу с реестром в режиме чтения и записи, используя конвертер по умолчанию CfgConverter.<see cref="CfgConverter.Default"/>.
     /// </summary>
     /// <param name="keyName">Путь к корневой ветви реестра</param>
     public RegistryCfg(string keyName)
@@ -3344,7 +3501,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Начать работу с реестром, используя конвертер по умолчанию CfgConverter.Default
+    /// Начать работу с реестром, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
     /// </summary>
     /// <param name="keyName">Путь к корневой ветви реестра</param>
     /// <param name="isReadOnly">true - режим только чтения</param>
@@ -3391,7 +3548,7 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Вызывается для закрытия ключей реестра
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose()</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="Dispose()"/></param>
     protected virtual void Dispose(bool disposing)
     {
       if (!IsDisposed)
@@ -3407,7 +3564,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Возвращает true, если был вызван метод Dispose()
+    /// Возвращает true, если был вызван метод <see cref="Dispose()"/>
     /// </summary>
     public bool IsDisposed { get { return _IsDisposed; } }
     private bool _IsDisposed;
@@ -3431,7 +3588,7 @@ namespace FreeLibSet.Config
     #region Конструктор
 
     /// <summary>
-    /// Создает секцию, используя конвертер по умолчанию CfgConverter.Default.
+    /// Создает секцию, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
     /// </summary>
     /// <param name="tree">Объект для доступа к реестру</param>
     /// <param name="keyName">Путь к ветви реестра</param>
@@ -3550,7 +3707,8 @@ namespace FreeLibSet.Config
       Tree.CheckNotReadOnly();
 
       Tree[KeyName].DeleteValue(name, false);
-      if (Tree.Exists(name))
+      // if (Tree.Exists(name))
+      if (Tree.Exists(KeyName + "\\" + name)) // испр.15.06.2023
       {
         Tree[KeyName].DeleteSubKeyTree(name);
         Tree.Close(); // иначе будут недействительные узлы
@@ -3569,7 +3727,9 @@ namespace FreeLibSet.Config
       //  throw new ArgumentException("Дочерний узел не может содержать символа \'\\\'");
       string childKeyName = KeyName + "\\" + name;
 
-      if (!create)
+      if (create)
+        Tree.CheckNotReadOnly(); // 19.06.2023
+      else
       {
         if (!Tree.Exists(childKeyName))
           return null;
@@ -3681,7 +3841,7 @@ namespace FreeLibSet.Config
     #region Конструкторы и Dispose
 
     /// <summary>
-    /// Начать работу с реестром в режиме чтения и записи, используя конвертер по умолчанию CfgConverter.Default
+    /// Начать работу с реестром в режиме чтения и записи, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
     /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
     /// разрядности операционной системы, а не от разрядности приложения.
     /// </summary>
@@ -3692,7 +3852,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Начать работу с реестром, используя конвертер по умолчанию CfgConverter.Default
+    /// Начать работу с реестром, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
     /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
     /// разрядности операционной системы, а не от разрядности приложения.
     /// </summary>
@@ -3717,7 +3877,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Начать работу с реестром, используя конвертер по умолчанию CfgConverter.Default.
+    /// Начать работу с реестром, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
     /// Эта версия позволяет задать режим виртуализации.
     /// </summary>
     /// <param name="keyName">Путь к корневой ветви реестра</param>
@@ -3806,13 +3966,24 @@ namespace FreeLibSet.Config
   /// </summary>
   public class TempCfg : XmlCfgPart
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
-    /// Создает пустое хранилище в памяти
+    /// Создает пустое хранилище в памяти. Использует конвертер по умолчанию
     /// </summary>
     public TempCfg()
       : base(CfgConverter.Default)
+    {
+    }
+
+    /// <summary>
+    /// Создает пустое хранилище в памяти.
+    /// Обычно используется версия конструктора с конвертером по умолчанию.
+    /// Эта перегрузка предназначена, в основном, для тестовых целей.
+    /// </summary>
+    /// <param name="converter"></param>
+    public TempCfg(CfgConverter converter)
+      : base(converter)
     {
     }
 
@@ -3863,26 +4034,29 @@ namespace FreeLibSet.Config
   /// Использование ini-файлов для хранения настроек приложения не рекомендуется.
   /// В отличие от xml-файлов и реестра, в ini-файле нет вложенных секций.
   /// Для их эмуляции используются имена секций вида "Родитель\Дочерняя\..\Дочерняя".
+  /// 
+  /// Нельзя хранить значения вне какой-либо секции в ini-файле, поэтому нет версии конструктора для ini-файла в-целом.
+  /// Задание имени секции является обязательным
   /// </summary>
   public class IniCfgPart : CfgPart
   {
     #region Конструктор
 
     /// <summary>
-    /// Создать объект доступа к секции, испрользуя конвертер по умолчанию CfgConverter.Default.
+    /// Создать объект доступа к секции, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
     /// </summary>
-    /// <param name="file">Объект доступа к ini-файлу</param>
-    /// <param name="sectionName">Имя секции конфигурации</param>
+    /// <param name="file">Объект доступа к ini-файлу. Должен быть задан.</param>
+    /// <param name="sectionName">Имя секции конфигурации. Не может быть пустой строкой.</param>
     public IniCfgPart(IIniFile file, string sectionName)
       : this(file, sectionName, CfgConverter.Default)
     {
     }
 
     /// <summary>
-    /// Создать объект доступа к секции, испрользуя заданный конвертер.
+    /// Создать объект доступа к секции, используя заданный конвертер.
     /// </summary>
-    /// <param name="file">Объект доступа к ini-файлу</param>
-    /// <param name="sectionName">Имя секции конфигурации</param>
+    /// <param name="file">Объект доступа к ini-файлу. Должен быть задан.</param>
+    /// <param name="sectionName">Имя секции конфигурации. Не может быть пустой строкой.</param>
     /// <param name="converter">Конвертер чисел и дат</param>
     public IniCfgPart(IIniFile file, string sectionName, CfgConverter converter)
     {
@@ -3890,6 +4064,10 @@ namespace FreeLibSet.Config
         throw new ArgumentNullException("file");
       if (String.IsNullOrEmpty(sectionName))
         throw new ArgumentNullException("sectionName");
+      if (sectionName.IndexOf('[') >= 0 || sectionName.IndexOf('[') >= 0)
+        throw new ArgumentException("Имя секции не должно содержать квадратные скобки", sectionName);
+      if (sectionName[0] == '\\' || sectionName[sectionName.Length - 1] == '\\' || sectionName.IndexOf("\\\\") >= 0)
+        throw new ArgumentException("Имя секции не может начинаться или заканчиваться символом-разделителем, или содержать два разделителя подряд", "sectionName");
       if (converter == null)
         throw new ArgumentNullException("converter");
 
@@ -3922,6 +4100,15 @@ namespace FreeLibSet.Config
     /// </summary>
     public override CfgConverter Converter { get { return _Converter; } }
     private readonly CfgConverter _Converter;
+
+    /// <summary>
+    /// Возвращает <see cref="SectionName"/>, дополненное именем ini-файла, если доступно
+    /// </summary>
+    /// <returns>Текстовое представление для отладки</returns>
+    public override string ToString()
+    {
+      return File.ToString() + ":[" + SectionName + "]";
+    }
 
     #endregion
 
@@ -3984,7 +4171,8 @@ namespace FreeLibSet.Config
       {
         // Проверяем наличие секции
         string[] allNames = File.GetSectionNames();
-        if (Array.LastIndexOf<string>(allNames, name) < 0)
+        //if (Array.LastIndexOf<string>(allNames, name) < 0)
+        if (Array.LastIndexOf<string>(allNames, subName) < 0) // испр. 15.06.2023
           return null;
       }
 
@@ -4006,9 +4194,12 @@ namespace FreeLibSet.Config
       {
         if (allNames[i].StartsWith(name2, StringComparison.Ordinal))
         {
+          string subName = allNames[i].Substring(name2.Length);
+          if (subName.IndexOf('\\') >= 0)
+            continue; // 15.06.2023
           if (subNames == null)
             subNames = new List<string>();
-          subNames.Add(allNames[i].Substring(name2.Length));
+          subNames.Add(subName);
         }
       }
 
@@ -4060,11 +4251,12 @@ namespace FreeLibSet.Config
     /// <returns>Наличие дочерней секции</returns>
     protected override bool DoHasChild(string name)
     {
-      //string SubName = SectionName + "\\" + name;
+      string subName = SectionName + "\\" + name;
 
       // Проверяем наличие секции
       string[] allNames = File.GetSectionNames();
-      return Array.LastIndexOf<string>(allNames, name) >= 0;
+      //return Array.LastIndexOf<string>(allNames, name) >= 0;
+      return Array.LastIndexOf<string>(allNames, subName) >= 0; // испр. 15.06.2023
     }
 
     /// <summary>

@@ -1625,6 +1625,36 @@ namespace FreeLibSet.Data
 
     #endregion
 
+    #region DbType
+
+    ///// <summary>
+    ///// Возвращает тип данных для столбца
+    ///// </summary>
+    //internal DbType DbType
+    //{
+    //  get
+    //  {
+    //    switch (ColumnType)
+    //    {
+    //      case DBxColumnType.String: return DbType.String;
+    //      case DBxColumnType.Int: return DbType.Int64; // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //      case DBxColumnType.Float: return DbType.Double;
+    //      case DBxColumnType.Money: return DbType.Decimal;
+    //      case DBxColumnType.Boolean: return DbType.Boolean;
+    //      case DBxColumnType.Date: return DbType.Date;
+    //      case DBxColumnType.DateTime: return DbType.DateTime;
+    //      case DBxColumnType.Time: return DbType.Time;
+    //      case DBxColumnType.Guid: return DbType.Guid;
+    //      case DBxColumnType.Memo: return DbType.String;
+    //      case DBxColumnType.Xml: return DbType.Xml;
+    //      case DBxColumnType.Binary: return DbType.Binary;
+    //      default: return DbType.Object; // ?
+    //    }
+    //  }
+    //}
+
+    #endregion
+
     #region Проверка
 
     internal void CheckStruct(DBxTableStruct table, DBx db)

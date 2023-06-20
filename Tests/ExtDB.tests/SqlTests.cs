@@ -1480,7 +1480,7 @@ namespace ExtDB_tests.Data
 namespace ExtDB_tests.Data_SQLite
 {
   [TestFixture]
-  public class SqlTestSQLite : ExtDB_tests.Data.SqlTestBaseDB
+  public class SqlTest_SQLite : ExtDB_tests.Data.SqlTestBaseDB
   {
     #region База данных в памяти
 
@@ -1524,7 +1524,7 @@ namespace ExtDB_tests.Data_SQLite
 namespace ExtDB_tests.Data_SqlClient
 {
   //[Category("MSSQL")]
-  public class SqlTestMSSQL : ExtDB_tests.Data.SqlTestBaseDB
+  public class SqlTest_MSSQL : ExtDB_tests.Data.SqlTestBaseDB
   {
     #region База данных в памяти
 
@@ -1610,7 +1610,7 @@ namespace ExtDB_tests.Data_SqlClient
 
 namespace ExtDB_tests.Data_Npgsql
 {
-  public class SqlTestNpgsql : ExtDB_tests.Data.SqlTestBaseDB
+  public class SqlTest_Npgsql : ExtDB_tests.Data.SqlTestBaseDB
   {
     #region База данных в памяти
 
@@ -1673,7 +1673,7 @@ namespace ExtDB_tests.Data_Npgsql
 namespace ExtDB_tests.Data_OleDB
 {
   //[Platform("Windows,X86")]
-  public class SqlTestOleDB : ExtDB_tests.Data.SqlTestBaseDB
+  public class SqlTest_OleDB : ExtDB_tests.Data.SqlTestBaseDB
   {
     // OleDbDBx пока не поддерживает программное создание структуры БД
 

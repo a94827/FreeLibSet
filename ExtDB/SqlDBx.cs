@@ -264,6 +264,74 @@ namespace FreeLibSet.Data.SqlClient
         return _ServerVersionText;
       }
     }
+
+    /*
+    internal static SqlDbType GetSqlDbType(DBxColumnStruct colDef)
+    {
+      switch (colDef.ColumnType)
+      {
+        case DBxColumnType.String: return SqlDbType.NVarChar;
+        case DBxColumnType.Int:return SqlDbType.Int; // TODO:
+        case DBxColumnType.Float: return SqlDbType.Float; // TODO:
+        case DBxColumnType.Money:return SqlDbType.Decimal;
+        case DBxColumnType.Boolean:return SqlDbType.Bit;
+        case DBxColumnType.Date:return SqlDbType.Date;
+        case DBxColumnType.DateTime: return SqlDbType.DateTime2;
+        case DBxColumnType.Time:return SqlDbType.Time;
+        case DBxColumnType.Guid:return SqlDbType.NVarChar; // TODO:
+        case DBxColumnType.Memo: return SqlDbType.NVarChar;
+        case DBxColumnType.Xml:return SqlDbType.Xml;
+        case DBxColumnType.Binary: return SqlDbType.VarBinary;
+        default: return SqlDbType.Variant; // ?
+}
+  }
+    */
+
+    internal static void InitSqlParameter(DBxColumnStruct colDef, SqlParameter p)
+    {
+      switch (colDef.ColumnType)
+      {
+        case DBxColumnType.String:
+          p.SqlDbType = SqlDbType.NChar;
+          p.Size = colDef.MaxLength;
+          break;
+        case DBxColumnType.Int:
+          p.SqlDbType = SqlDbType.Int; // TODO:
+          break;
+        case DBxColumnType.Float:
+          p.SqlDbType = SqlDbType.Float; // TODO:
+          break;
+        case DBxColumnType.Money:
+          p.SqlDbType = SqlDbType.Decimal;
+          break;
+        case DBxColumnType.Boolean:
+          p.SqlDbType = SqlDbType.Bit;
+          break;
+        case DBxColumnType.Date:
+          p.SqlDbType = SqlDbType.Date;
+          break;
+        case DBxColumnType.DateTime:
+          p.SqlDbType = SqlDbType.DateTime2;
+          break;
+        case DBxColumnType.Time:
+          p.SqlDbType = SqlDbType.Time;
+          break;
+        case DBxColumnType.Guid:
+          p.SqlDbType = SqlDbType.NChar;
+          p.Size = 36;//?
+          break;
+        case DBxColumnType.Memo:
+          p.SqlDbType = SqlDbType.NVarChar;
+          break;
+        case DBxColumnType.Xml:
+          p.SqlDbType = SqlDbType.Xml;
+          break;
+        case DBxColumnType.Binary:
+          p.SqlDbType = SqlDbType.VarBinary;
+          break;
+      }
+    }
+
     private string _ServerVersionText;
 
     /// <summary>
@@ -2388,397 +2456,4 @@ namespace FreeLibSet.Data.SqlClient
 
     #endregion
   }
-
-#if USE_NEW_READER
-
-  // Новая версия DBxDataWriter для всех режимов.
-  // - Для режима Insert используется промежуточная DataTable, в которой накапливаются записи.
-  //   В OnFinish() вызывается SqlBulkCopy.WriteToServer() для группого добавления строк
-  // - Для режима Update используется объект SqlCommand для команды UPDATE, как в SQLiteDBxDataWriter.
-  // - Для режима InsertOrUpdate используется комбинация действий:
-  //   1. Выполняется поиск в накапливаемой таблице на предмет наличия добавленной строки, которая еще
-  //      не записана на сервер. Если строка найдена, она заменяется в DataTable без обращения к серверу.
-  //   2. Выполняется команда UPDATE. Возвращается переменная @@ROWCOUNT.
-  //   3. Если п.2 вернул 0, то строка добавляется в промежуточную таблицу Insert.
-  internal class SqlDBxDataWriter : DBxDataWriter
-  {
-    #region Конструктор и Dispose
-
-    public SqlDBxDataWriter(SqlDBxCon con, DBxDataWriterInfo writerInfo)
-      : base(con, writerInfo)
-    {
-    }
-
-    internal new SqlDBxCon Con { get { return (SqlDBxCon)(base.Con); } }
-
-    protected override void Dispose(bool disposing)
-    {
-      base.Dispose(disposing);
-    }
-
-    #endregion
-
-    #region OnWrite(), OnFinish()
-
-    protected override void OnWrite()
-    {
-      switch (WriterInfo.Mode)
-      {
-        case DBxDataWriterMode.Insert:
-          AddInsertRow();
-          break;
-        case DBxDataWriterMode.Update:
-          DoUpdate();
-          break;
-        case DBxDataWriterMode.InsertOrUpdate:
-          if (!UpdateInInsertTable())
-          {
-            if (!DoUpdate())
-              AddInsertRow();
-          }
-          break;
-        default:
-          throw new BugException("Invalid mode");
-      }
-    }
-
-    protected override void OnFinish()
-    {
-      FlushInsertTable();
-    }
-
-    /// <summary>
-    /// Быстрое добавление записей в режиме Insert
-    /// </summary>
-    /// <param name="table">Таблица</param>
-    public override void LoadFrom(DataTable table)
-    {
-      if (WriterInfo.Mode == DBxDataWriterMode.Insert)
-      {
-        OnFinish(); // Если были построчные вызовы Write()
-        using (SqlBulkCopy bc = CreateBulkCopy())
-        {
-          bc.WriteToServer(table);
-        }
-      }
-      else
-        base.LoadFrom(table);
-    }
-
-    /// <summary>
-    /// Быстрое добавление записей в режиме Insert
-    /// </summary>
-    /// <param name="reader">Исходные записи</param>
-    public override void LoadFrom(DbDataReader reader)
-    {
-      if (WriterInfo.Mode == DBxDataWriterMode.Insert)
-      {
-        OnFinish(); // Если были построчные вызовы Write()
-        using (SqlBulkCopy bc = CreateBulkCopy())
-        {
-          bc.WriteToServer(reader);
-        }
-      }
-      else
-        base.LoadFrom(reader);
-    }
-
-    #endregion
-
-    #region Добавление записей
-
-    /// <summary>
-    /// Таблица для накопления новых строк в режимах Insert и InsertOrUpdate.
-    /// </summary>
-    private DataTable _InsertTable;
-
-    private object[] _InsertTableSearchKeys; // чтобы не создавать массив при каждом вызове
-
-    private void AddInsertRow()
-    {
-      if (_InsertTable == null)
-      {
-        _InsertTable = base.CreateDataTable();
-        if (WriterInfo.Mode == DBxDataWriterMode.InsertOrUpdate)
-        {
-          DBxOrder order = DBxOrder.FromColumns(SearchColumns);
-          _InsertTable.DefaultView.Sort = order.ToString();
-          _InsertTableSearchKeys = new object[SearchColumns.Count];
-        }
-      }
-
-      DataRow row = _InsertTable.NewRow();
-
-      for (int i = 0; i < Values.Length; i++)
-      {
-        object v = Con.DB.Formatter.PrepareParamValue(Values[i], ColumnDefs[i].ColumnType);
-        if (!Object.ReferenceEquals(v, null))
-          row[i] = v;
-      }
-
-      _InsertTable.Rows.Add(row);
-    }
-
-    /// <summary>
-    /// Выполняет поиск строки в InsertTable. 
-    /// Если строка найдена по ключевым полям, то заменяются неключевые поля и возвращается true
-    /// </summary>
-    /// <returns></returns>
-    private bool UpdateInInsertTable()
-    {
-      if (_InsertTable == null)
-        return false;
-      if (_InsertTable.Rows.Count == 0)
-        return false;
-
-      for (int i = 0; i < _InsertTableSearchKeys.Length; i++)
-      {
-        _InsertTableSearchKeys[i] = Values[SearchColumnPositions[i]];
-        if (_InsertTableSearchKeys[i] == null)
-          _InsertTableSearchKeys[i] = DBNull.Value;
-      }
-
-      int pos = _InsertTable.DefaultView.Find(_InsertTableSearchKeys);
-      if (pos < 0)
-        return false;
-
-      DataRow resRow = _InsertTable.DefaultView[pos].Row;
-      for (int i = 0; i < OtherColumnPositions.Length; i++)
-      {
-        object v = Values[OtherColumnPositions[i]];
-        if (v == null)
-          v = DBNull.Value;
-        resRow[OtherColumnPositions[i]] = v;
-      }
-      return true;
-    }
-
-    /// <summary>
-    /// Групповой INSERT для строк из _InsertTable
-    /// </summary>
-    private void FlushInsertTable()
-    {
-      if (_InsertTable == null)
-        return;
-      if (_InsertTable.Rows.Count == 0)
-        return;
-
-      using (SqlBulkCopy bc = CreateBulkCopy())
-      {
-        bc.WriteToServer(_InsertTable);
-      }
-      _InsertTable.Rows.Clear();
-    }
-
-    private SqlBulkCopy CreateBulkCopy()
-    {
-      SqlBulkCopyOptions options = SqlBulkCopyOptions.Default;
-      if (base.SearchColumns.Count > 0)
-        options |= SqlBulkCopyOptions.KeepIdentity;
-
-      SqlBulkCopy bc = new SqlBulkCopy(Con.Connection, options, Con.CurrentTransaction);
-      bc.DestinationTableName = WriterInfo.TableName;
-
-      for (int i = 0; i < ColumnDefs.Length; i++)
-        bc.ColumnMappings.Add(ColumnDefs[i].ColumnName, ColumnDefs[i].ColumnName);
-
-      return bc;
-    }
-
-    #endregion
-
-    #region UPDATE
-
-    /// <summary>
-    /// Подготовленная команда
-    /// </summary>
-    private SqlCommand _Command;
-
-    private void PrepareCommand()
-    {
-      DBxSqlBuffer buffer = new DBxSqlBuffer(Con.DB.Formatter);
-      buffer.SB.Append("UPDATE ");
-      buffer.FormatTableName(WriterInfo.TableName);
-      buffer.SB.Append(" SET ");
-
-      for (int i = 0; i < OtherColumns.Count; i++)
-      {
-        if (i > 0)
-          buffer.SB.Append(", ");
-        buffer.FormatColumnName(OtherColumns[i]);
-        buffer.SB.Append("=");
-        buffer.FormatParamPlaceholder(OtherColumnPositions[i]);
-      }
-
-      buffer.SB.Append(" WHERE ");
-      for (int i = 0; i < SearchColumns.Count; i++)
-      {
-        if (i > 0)
-          buffer.SB.Append(" AND ");
-        buffer.FormatColumnName(SearchColumns[i]);
-        buffer.SB.Append("=");
-        buffer.FormatParamPlaceholder(SearchColumnPositions[i]);
-      }
-      // Не требуется, т.к. ExecuteNonQuery() и так возвращает количество строк
-      //if (WriterInfo.Mode == DBxDataWriterMode.InsertOrUpdate)
-      //{
-      //  buffer.SB.Append(";SELECT @@ROWCOUNT");
-      //}
-
-      _Command = new SqlCommand(buffer.SB.ToString());
-      for (int i = 0; i < Values.Length; i++)
-        _Command.Parameters.Add(new SqlParameter("P" + (i + 1).ToString(), null));
-      _Command.Connection = Con.Connection;
-      _Command.Transaction = Con.CurrentTransaction;
-      _Command.CommandTimeout = Con.CommandTimeout;
-      _Command.Prepare(); // для порядка.
-    }
-
-    /// <summary>
-    /// Выполнить команду UPDATE
-    /// </summary>
-    /// <returns>True, если строки были найдены и обновление выполнено</returns>
-    private bool DoUpdate()
-    {
-      if (_Command == null)
-        PrepareCommand();
-
-      for (int i = 0; i < Values.Length; i++)
-      {
-        object v = Con.DB.Formatter.PrepareParamValue(Values[i], ColumnDefs[i].ColumnType);
-        _Command.Parameters[i].Value = v;
-      }
-
-      int nRecs = Con.SQLExecuteNonQuery(_Command);
-      if (nRecs < 0)
-        throw new BugException("Не получено количество строк, обработанных командой UPDATE");
-      return nRecs > 0;
-    }
-
-    #endregion
-  }
-
-#else
-
-  /// <summary>
-  /// Объект для записи в базу данных MS SQL Server.
-  /// Специальный объект SqlBulkCopy используется только для добавления строк
-  /// (режим Insert).
-  /// </summary>
-  internal class SqlDBxDataInsertWriter : DBxDataWriter
-  {
-  #region Конструктор
-
-    public SqlDBxDataInsertWriter(SqlDBxCon con, DBxDataWriterInfo writerInfo)
-      : base(con, writerInfo)
-    {
-#if DEBUG
-      if (writerInfo.Mode != DBxDataWriterMode.Insert)
-        throw new ArgumentException("writerInfo.Mode=" + writerInfo.Mode.ToString(), "writerInfo");
-#endif
-
-      PrepareBC();
-    }
-
-    internal new SqlDBxCon Con { get { return (SqlDBxCon)(base.Con); } }
-
-    private void PrepareBC()
-    {
-      SqlBulkCopyOptions options = SqlBulkCopyOptions.Default;
-      if (base.SearchColumns.Count > 0)
-        options |= SqlBulkCopyOptions.KeepIdentity;
-
-      _BC = new SqlBulkCopy(Con.Connection, options, Con.CurrentTransaction);
-      _BC.DestinationTableName = WriterInfo.TableName;
-
-      for (int i = 0; i < ColumnDefs.Length; i++)
-        _BC.ColumnMappings.Add(ColumnDefs[i].ColumnName, ColumnDefs[i].ColumnName);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-        ((IDisposable)_BC).Dispose();
-      _BC = null;
-      base.Dispose(disposing);
-    }
-
-  #endregion
-
-  #region OnWrite
-
-    /// <summary>
-    /// Копировщик ADO.NET
-    /// </summary>
-    private SqlBulkCopy _BC;
-
-    /// <summary>
-    /// <see cref="SqlBulkCopy"/> требует на входе строки или таблицу.
-    /// Нет метода для одного набора значений
-    /// </summary>
-    private DataTable _Table;
-
-    protected override void OnWrite()
-    {
-      // У метода SqlBulkCopy.WriteToServer() на входе могут быть только строки
-      // таблицы
-      if (_Table == null)
-        _Table = base.CreateDataTable();
-
-      DataRow row = _Table.NewRow();
-
-      for (int i = 0; i < Values.Length; i++)
-      {
-        object v = Con.DB.Formatter.PrepareParamValue(Values[i], ColumnDefs[i].ColumnType);
-        if (!Object.ReferenceEquals(v, null))
-          row[i] = v;
-      }
-
-      _Table.Rows.Add(row);
-    }
-
-    protected override void OnFinish()
-    {
-      if (_Table != null)
-      {
-        if (_Table.Rows.Count > 0)
-        {
-          //object[] a = _Table.Rows[0].ItemArray;
-          //_Table.Rows[0][2] = Guid.Empty.ToString();
-          _BC.WriteToServer(_Table);
-          _Table.Rows.Clear();
-        }
-      }
-    }
-
-    protected override void OnPulseTransaction()
-    {
-      // Метод OnFinish() уже вызван
-
-      if (_BC != null)
-      {
-        ((IDisposable)_BC).Dispose();
-        _BC = null;
-      }
-
-      base.OnPulseTransaction();
-
-      PrepareBC(); // из-за смены транзакции, объект больше недействителен
-    }
-
-    public override void LoadFrom(DataTable table)
-    {
-      OnFinish(); // Если были построчные вызовы Write()
-      _BC.WriteToServer(table);
-    }
-
-    public override void LoadFrom(DbDataReader reader)
-    {
-      OnFinish(); // Если были построчные вызовы Write()
-      _BC.WriteToServer(reader);
-    }
-
-  #endregion
-  }
-#endif
 }

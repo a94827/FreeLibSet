@@ -73,10 +73,10 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Базовый класс для пользовательского разрешения
+  /// Базовый класс для пользовательского разрешения.
   /// В приложении могут быть созданы собственные классы-наследники, например, задающие ограничения сразу для
-  /// нескольких таблиц
-  /// Классы должны быть "однократной записи" (кроме вспомогательных полей)
+  /// нескольких таблиц.
+  /// Классы должны быть "однократной записи" (кроме вспомогательных полей).
   /// </summary>
   public abstract class UserPermission : IReadOnlyObject
   {
@@ -180,7 +180,7 @@ namespace FreeLibSet.Data
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Свойство возвращает true, если разрешение присоединено к коллекции (Owner!=null) и коллекция
+    /// Свойство возвращает true, если разрешение присоединено к коллекции (<see cref="Owner"/>!=null) и коллекция
     /// переведена в состояние "только для чтения"
     /// </summary>
     public bool IsReadOnly
@@ -195,7 +195,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -232,7 +232,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Представление в виде XML, совместимого с конфигурационными данными (корневой узел "Config")
-    /// Для установки используется метод Read()
+    /// Для установки используется метод <see cref="Read(CfgPart)"/>
     /// </summary>
     public string AsXmlText
     {
@@ -246,7 +246,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Запись пользовательских разрешений в секцию конфигурации.
-    /// Используется при передаче разрешений от сервера к клиенту
+    /// Используется при передаче разрешений от сервера к клиенту.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public void Write(CfgPart cfg)
@@ -262,7 +262,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Чтение пользовательских разрешений из секции конфигурации.
-    /// Используется при передаче разрешений от сервера к клиенту
+    /// Используется при передаче разрешений от сервера к клиенту.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public void Read(CfgPart cfg)
@@ -287,7 +287,7 @@ namespace FreeLibSet.Data
     #region Создание разрешений
 
     /// <summary>
-    /// Список генераторов разрешений, используемых методом Add().
+    /// Список генераторов разрешений, используемых методом <see cref="Add(UserPermission)"/>.
     /// Задается в конструкторе и имеет IsReadOnly=true.
     /// </summary>
     public UserPermissionCreators Creators { get { return _Creators; } }
@@ -295,7 +295,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавляет разрешение в список, используя генератор разрешения.
-    /// Вызывается метод UserPermissionCreators.Create() для создания экземпляра UserPermission.
+    /// Вызывается метод <see cref="UserPermissionCreators.Create(string)"/> для создания экземпляра <see cref="UserPermission"/>.
     /// </summary>
     /// <param name="classCode">Код класса разрешения</param>
     /// <returns>Созданное разрешение</returns>
@@ -313,7 +313,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавляет разрешение в список.
-    /// Кроме вызова метода базового класса, устанавливает свойство UserPermission.Owner.
+    /// Кроме вызова метода базового класса, устанавливает свойство <see cref="UserPermission.Owner"/>.
     /// </summary>
     /// <param name="permission">Добавляемое разрешение</param>
     public new void Add(UserPermission permission)
@@ -341,7 +341,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Установка разрешений на базу данных, таблицы и поля.
-    /// Для каждого разрешения в списке вызывается виртуальный метод UserPermission.ApplyDbPermissions().
+    /// Для каждого разрешения в списке вызывается виртуальный метод <see cref="UserPermission.ApplyDbPermissions(DBxPermissions)"/> .
     /// Для текущего списка UserPermissions устанавливается IsReadOnly=true (но не для <paramref name="dbPermissions"/>).
     /// </summary>
     /// <param name="dbPermissions">Заполняемый объект разрешений. Должен иметь свойство IsReadOnly=false</param>
@@ -364,7 +364,7 @@ namespace FreeLibSet.Data
     /// Получить последнее в списке разрешение заданного класса.
     /// Если в списке нет ни одного разрешения такого класса (или производного от него), возвращается null.
     /// </summary>
-    /// <typeparam name="T">Тип разрешения, производного от UserPermission</typeparam>
+    /// <typeparam name="T">Тип разрешения, производного от <see cref="UserPermission"/></typeparam>
     /// <returns>Найденное разрешение или null</returns>
     public T GetLast<T>()
       where T : UserPermission
@@ -398,26 +398,26 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Интерфейс генератора объекта UserPermission
+  /// Интерфейс генератора объекта <see cref="UserPermission"/>
   /// </summary>
   public interface IUserPermissionCreator : IObjectWithCode
   {
     /// <summary>
-    /// Создать новый объект UserPermission со значениями свойств по умолчанию
+    /// Создать новый объект <see cref="UserPermission"/> со значениями свойств по умолчанию
     /// </summary>
     /// <returns>Созданное разрешение</returns>
     UserPermission CreateUserPermission();
   }
 
   /// <summary>
-  /// Расширение интерфейса IUserPermissionCreator методами пре- и пост-инициализациит разрешений для базы данных.
+  /// Расширение интерфейса <see cref="IUserPermissionCreator"/> методами пре- и пост-инициализациит разрешений для базы данных.
   /// Эти методы будут вызываться в до и после вызова методов ApplyDbPermissions() для всех разрешений.
   /// Реализуется в ExtDBDocs классом DocTypePermission.Creator
   /// </summary>
   public interface IUserPermissionCreatorWithDbInitialization
   {
     /// <summary>
-    /// Вызывается перед циклом вызова методов UserPermission.ApplyDbPermission()
+    /// Вызывается перед циклом вызова методов <see cref="UserPermission.ApplyDbPermissions(DBxPermissions)"/> 
     /// </summary>
     /// <param name="userPermissions">Список пользовательских разрешений. Его нельзя менять</param>
     /// <param name="dbPermissions">Разрешения для базы данных</param>
@@ -425,16 +425,16 @@ namespace FreeLibSet.Data
     object BeforeApplyDbPermissions(UserPermissions userPermissions, DBxPermissions dbPermissions);
 
     /// <summary>
-    /// Вызывается после цикла вызова методов UserPermission.ApplyDbPermission()
+    /// Вызывается после цикла вызова методов <see cref="UserPermission.ApplyDbPermissions(DBxPermissions)"/>
     /// </summary>
     /// <param name="userPermissions">Список пользовательских разрешений. Его нельзя менять</param>
     /// <param name="dbPermissions">Разрешения для базы данных</param>
-    /// <param name="userData">Пользовательские данные, полученные от BeforeApplyDbPermissions</param>
+    /// <param name="userData">Пользовательские данные, полученные от <see cref="BeforeApplyDbPermissions(UserPermissions, DBxPermissions)"/></param>
     void AfterApplyDbPermissions(UserPermissions userPermissions, DBxPermissions dbPermissions, object userData);
   }
 
   /// <summary>
-  /// Коллекция генераторов разрешений UserPermission
+  /// Коллекция генераторов разрешений <see cref="UserPermission"/>
   /// </summary>
   public class UserPermissionCreators : NamedCollection<IUserPermissionCreator>
   {
@@ -459,7 +459,7 @@ namespace FreeLibSet.Data
     /// Переводит список генераторов в режим "только чтение".
     /// Повторные вызовы игнорируются.
     /// Нет необходимости вызывать этот метод из пользовательского кода, так как он автоматически
-    /// вызывается при создании списка разрешений UserPermissions.
+    /// вызывается при создании списка разрешений <see cref="UserPermissions"/>.
     /// </summary>
     public new void SetReadOnly()
     {
@@ -468,9 +468,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает разрешение заданного класса (свойство IUserPermissionCreator.Code).
-    /// Если в списке нет генератора разрешения заданного класса, возвращается разрешение UnknownUserPermission.
+    /// Если в списке нет генератора разрешения заданного класса, возвращается разрешение <see cref="UnknownUserPermission"/>.
     /// Таким образом, возвращаемое значение не может быть null.
-    /// Используется методом UserPermissions.Add().
+    /// Используется методом <see cref="UserPermissions.Add(UserPermission)"/>().
     /// </summary>
     /// <param name="classCode">Код класса разрешения. Не может быть пустой строкой</param>
     /// <returns>Созданное разрешение</returns>
@@ -501,7 +501,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает разрешение заданного класса (свойство IUserPermissionCreator.Code)
     /// и выполняет чтение значения для разрешения из секции конфигурации.
-    /// Если в списке нет генератора разрешения заданного класса, возвращается разрешение UnknownUserPermission.
+    /// Если в списке нет генератора разрешения заданного класса, возвращается разрешение <see cref="UnknownUserPermission"/>.
     /// Таким образом, возвращаемое значение не может быть null.
     /// </summary>
     /// <param name="classCode">Код класса разрешения. Не может быть пустой строкой</param>
@@ -518,7 +518,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает массив объектов, реализующих интерфейс IUserPermissionCreatorWithDbInitialization
+    /// Возвращает массив объектов, реализующих интерфейс <see cref="IUserPermissionCreatorWithDbInitialization"/>.
     /// </summary>
     /// <returns>Массив ссылок на интерфейс</returns>
     public IUserPermissionCreatorWithDbInitialization[] GetDbInitializators()
@@ -562,8 +562,8 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Разрешение - заглушка.
-  /// Использует внутренний объект TempCfg для хранения "параметров разрешения", которые самим
-  /// объектом UnknownUserPermission не используются.
+  /// Использует внутренний объект <see cref="TempCfg"/> для хранения "параметров разрешения", которые самим
+  /// объектом <see cref="UnknownUserPermission"/> не используются.
   /// Заглушка используется, когда в базе данных записаны разрешения пользователя неизвестного
   /// класса. Такие разрешения могут теоретически появиться при неудачном изменении конфигурации
   /// программного обеспечения.
@@ -588,7 +588,7 @@ namespace FreeLibSet.Data
     #region Переопределенные свойства и методы
 
     /// <summary>
-    /// Выгружает сохраненные настройки из TempCfg в <paramref name="cfg"/>.
+    /// Выгружает сохраненные настройки из <see cref="TempCfg"/> в <paramref name="cfg"/>.
     /// </summary>
     /// <param name="cfg">Записываемая секция конфигурации</param>
     public override void Write(CfgPart cfg)
@@ -597,7 +597,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Сохраняет копию <paramref name="cfg"/> во внутреннем объекте TempCfg
+    /// Сохраняет копию <paramref name="cfg"/> во внутреннем объекте <see cref="TempCfg"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void Read(CfgPart cfg)

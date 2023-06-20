@@ -51,6 +51,8 @@
     <Compile Include="Collections\SelectionFlagListTests.cs" />
     <Compile Include="Collections\SingleScopeSortedListTests.cs" />
     <Compile Include="Collections\SingleScopeStringListTests.cs" />
+    <Compile Include="Config\CfgPartTests.cs" />
+    <Compile Include="Config\CfgPart_ConverterTests.cs" />
     <Compile Include="Core\DataRowValueArrayTests.cs" />
     <Compile Include="Core\DataTableValueArrayTests.cs" />
     <Compile Include="Core\DataToolsTests_AggregateFunctions.cs" />

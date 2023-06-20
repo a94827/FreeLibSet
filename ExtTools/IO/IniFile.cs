@@ -70,8 +70,8 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Интефрейс доступа к INI-файлам.
-  /// Доступ может быть реализован путем обычного чтения-записи файла (класс IniFile)
-  /// или вызовами Windows API (класс IniFileWindows)
+  /// Доступ может быть реализован путем обычного чтения-записи файла (класс <see cref="IniFile"/>)
+  /// или вызовами Windows API (класс <see cref="FreeLibSet.Win32.IniFileWindows"/>)
   /// </summary>
   public interface IIniFile : IReadOnlyObject
   {
@@ -143,8 +143,8 @@ namespace FreeLibSet.IO
   /// <summary>
   /// Доступ к INI-файлу в режиме чтения и записи файла как целого.
   /// Работает, в том числе и на платформах, отличных от Windows.
-  /// Для загрузки значений и сохранения изменений используйте методы Load() и Save().
-  /// Для работы с INI-файлами с помощью функций Windows, используйте класс IniFileWindows.
+  /// Для загрузки значений и сохранения изменений используйте методы <see cref="Load(AbsPath)"/> и <see cref="Save(AbsPath)"/>.
+  /// Для работы с INI-файлами с помощью функций Windows, используйте класс <see cref="FreeLibSet.Win32.IniFileWindows"/>.
   /// </summary>
   public class IniFile : IIniFile
   {
@@ -327,7 +327,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Записывает данные в файл, используя кодировку, принятую по умолчанию.
-    /// Этот метод нельзя вызывать при IsReadOnly=true.
+    /// Этот метод нельзя вызывать при <see cref="IsReadOnly"/>=true.
     /// </summary>
     /// <param name="filePath">Имя файла</param>
     public void Save(AbsPath filePath)
@@ -346,7 +346,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Записывает данные в файл в указанной кодировке.
-    /// Этот метод нельзя вызывать при IsReadOnly=true.
+    /// Этот метод нельзя вызывать при <see cref="IsReadOnly"/>=true.
     /// </summary>
     /// <param name="filePath">Имя файла</param>
     /// <param name="encoding">Кодировка</param>
@@ -397,7 +397,7 @@ namespace FreeLibSet.IO
     private AbsPath _FilePath;
 
     /// <summary>
-    /// Возвращает имя файла, для которого был вызван Load() или Save() или "no file"
+    /// Возвращает имя файла, для которого был вызван <see cref="Load(AbsPath)"/> или <see cref="Save(AbsPath)"/> или "no file"
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -545,7 +545,7 @@ namespace FreeLibSet.IO
     /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
     /// </summary>
     /// <param name="section">Имя секции</param>
-    /// <returns>Объект, реализующий интерфейс IEnumerable</returns>
+    /// <returns>Объект, реализующий интерфейс <see cref="IEnumerable"/></returns>
     public IEnumerable<IniKeyValue> GetKeyValues(string section)
     {
       if (String.IsNullOrEmpty(section))
@@ -569,7 +569,7 @@ namespace FreeLibSet.IO
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {

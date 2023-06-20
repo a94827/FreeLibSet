@@ -112,7 +112,7 @@ namespace FreeLibSet.Win32
     #region Доступ к объектам RegistryKey
 
     /// <summary>
-    /// Возвращает открытый объект RegistryKey для доступа к ветви реестра.
+    /// Возвращает открытый объект <see cref="RegistryKey"/> для доступа к ветви реестра.
     /// Также рекурсивно отрываются все родительскте ветви реестра.
     /// Объекты буферизуются во внутреннем списке и закрываются при вызове Close() или Dispose().
     /// Возвращает null, если ветвь реестра не существует.
@@ -147,11 +147,11 @@ namespace FreeLibSet.Win32
         if (parentKey == null)
           return null;
 
-        string SubName = keyName.Substring(p + 1);
-        item = parentKey.OpenSubKey(SubName, !IsReadOnly);
+        string subName = keyName.Substring(p + 1);
+        item = parentKey.OpenSubKey(subName, !IsReadOnly);
 
         if (item == null && (!IsReadOnly))
-          item = parentKey.CreateSubKey(SubName);
+          item = parentKey.CreateSubKey(subName);
 
         // Добавляем узел в коллекцию
         _Items.Add(keyName, item);
@@ -163,7 +163,7 @@ namespace FreeLibSet.Win32
     /// Возвращает корневой узел по имени.
     /// </summary>
     /// <param name="keyName">Имя, например, "HKEY_CLASSES_ROOT"</param>
-    /// <returns>Статическое свойство из класса Registry</returns>
+    /// <returns>Статическое свойство из класса <see cref="Registry"/></returns>
     public static RegistryKey GetRootKey(string keyName)
     {
       // Возврашаем корневой узел
@@ -206,7 +206,7 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Закрывает все открытые секции, вызывая RegistryKey.Close()
+    /// Закрывает все открытые разделы, вызывая <see cref="RegistryKey.Close()"/>
     /// </summary>
     public void Close()
     {
@@ -224,6 +224,69 @@ namespace FreeLibSet.Win32
       }
 
       _Items.Clear();
+    }
+
+    /// <summary>
+    /// Закрывает открытые разделы реестра, начиная с указанного раздела (включительно), и все вложенные разделы.
+    /// Если разделы не были открыты, никаких действий не выполняется
+    /// </summary>
+    /// <param name="keyName">Закрываемый раздел реестра</param>
+    public void Close(string keyName)
+    {
+      DoClose(keyName, true);
+    }
+
+    /// <summary>
+    /// Закрывает открытые разделы реестра, расположенные внутри, и все вложенные разделы.
+    /// Сам раздел <paramref name="keyName"/>, если он был открыт, не закрывается.
+    /// Если разделы не были открыты, никаких действий не выполняется
+    /// </summary>
+    /// <param name="keyName">Родительский раздел</param>
+    public void CloseChildren(string keyName)
+    {
+      DoClose(keyName, false);
+    }
+
+    private void DoClose(string keyName, bool includeMain)
+    {
+      if (String.IsNullOrEmpty(keyName))
+      {
+        Close();
+        return;
+      }
+
+      List<KeyValuePair<string, RegistryKey>> lst = null;
+      string keyName2 = keyName + "\\";
+      foreach (KeyValuePair<string, RegistryKey> pair in _Items)
+      {
+        if (includeMain && 
+          String.Equals(pair.Key, keyName, StringComparison.OrdinalIgnoreCase) && 
+          keyName.IndexOf("\\")>=0) // корневой раздел не закрываем
+        {
+          if (lst == null) lst = new List<KeyValuePair<string, RegistryKey>>();
+          lst.Add(pair);
+        }
+
+        if (pair.Key.StartsWith(keyName2, StringComparison.OrdinalIgnoreCase))
+        {
+          if (lst == null) lst = new List<KeyValuePair<string, RegistryKey>>();
+          lst.Add(pair);
+        }
+      }
+
+      if (lst == null)
+        return;
+
+      foreach (KeyValuePair<string, RegistryKey> pair in lst)
+      {
+        if (pair.Value != null)
+        {
+          try { pair.Value.Close(); }
+          catch { }
+        }
+
+        _Items.Remove(pair.Key);
+      }
     }
 
     /// <summary>
@@ -262,6 +325,31 @@ namespace FreeLibSet.Win32
 
       _Items.Add(keyName, subKey);
       return true;
+    }
+
+    /// <summary>
+    /// Удаляет раздел, задаваемый путем <paramref name="keyName"/> и, рекурсивно, все дочерние разделы.
+    /// Для удаления используется метод <see cref="RegistryKey.DeleteSubKeyTree(string)"/>.
+    /// Применяйте метод с осторожностью!
+    /// </summary>
+    /// <param name="keyName">Путь к удаляемому реестру</param>
+    public void DeleteTree(string keyName)
+    {
+      CheckNotDisposed();
+      CheckNotReadOnly();
+
+      if (!Exists(keyName))
+        return;
+
+      int p = keyName.LastIndexOf('\\');
+      if (p < 0)
+        throw new InvalidOperationException("Нельзя удалить корневой узел");
+
+      string parentKeyName = keyName.Substring(0, p);
+      RegistryKey parentKey = this[parentKeyName];
+      string subName = keyName.Substring(p + 1);
+      Close(keyName);
+      parentKey.DeleteSubKeyTree(subName);
     }
 
     #endregion

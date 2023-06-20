@@ -63,7 +63,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Режим доступа к базе данных в-целом.
-    /// Установка свойства должна выполняться в первую очередь, так как списки разрешений на таблицы очищаются
+    /// Установка свойства должна выполняться в первую очередь, так как списки разрешений на таблицы очищаются.
+    /// Значение по умолчанию - Full.
     /// </summary>
     public DBxAccessMode DBMode
     {
@@ -72,7 +73,7 @@ namespace FreeLibSet.Data
       {
         CheckNotReadOnly();
         _DBMode = value;
-        _TableDefs = null;
+        _TableData = null;
       }
     }
     private DBxAccessMode _DBMode;
@@ -105,10 +106,10 @@ namespace FreeLibSet.Data
       {
         get
         {
-          if (_Owner._TableDefs == null)
+          if (_Owner._TableData == null)
             return _Owner.DBMode;
-          TableDef td;
-          if (_Owner._TableDefs.TryGetValue(tableName, out td))
+          InternalTableData td;
+          if (_Owner._TableData.TryGetValue(tableName, out td))
             return td.TableMode;
           else
             return _Owner.DBMode;
@@ -119,39 +120,45 @@ namespace FreeLibSet.Data
           if (String.IsNullOrEmpty(tableName))
             throw new ArgumentNullException("TableName");
 
-          if (_Owner._TableDefs == null)
-            _Owner._TableDefs = new Dictionary<string, TableDef>();
-          TableDef td;
-          if (!_Owner._TableDefs.TryGetValue(tableName, out td))
+          if (_Owner._TableData == null)
+            _Owner._TableData = new Dictionary<string, InternalTableData>();
+          InternalTableData td;
+          if (!_Owner._TableData.TryGetValue(tableName, out td))
           {
-            td = new TableDef();
-            _Owner._TableDefs.Add(tableName, td);
+            td = new InternalTableData();
+            _Owner._TableData.Add(tableName, td);
           }
           td.TableMode = value;
+          td.ColumnModes = null; // 13.06.2023
         }
       }
     }
+
+    // Нельзя реализовать свойства TableModes и ColumnModes как одноразовые структуры,
+    // так как будет ошибка компиляции в прикладном коде при вызовах:
+    // DBxPermissions p=new DBxPermissions();
+    // p.TableModes["T1"]=DBxAccessMode.ReadOnly; // <- присвоение значения
 
     /// <summary>
     /// Разрешения на доступ к таблицам
     /// </summary>
     public TableList TableModes { get { return _TableModes; } }
     /// <summary>
-    /// Этот список не содержит реальных данных. Данные хранятся в поле _TableDefs
+    /// Этот список не содержит реальных данных. Данные хранятся в поле _TableDefs.
     /// </summary>
     private TableList _TableModes;
 
     /// <summary>
-    /// Метод возвращает true, если хотя бы для одной таблицы есть режим, отличающийся от DBMode
+    /// Метод возвращает true, если хотя бы для одной таблицы есть режим, отличающийся от <see cref="DBMode"/>.
     /// </summary>
     /// <returns>Наличие разрешений на таблицы</returns>
     public bool ContainsTableModes()
     {
-      if (_TableDefs == null)
+      if (_TableData == null)
         return false;
-      if (_TableDefs.Count == 0)
+      if (_TableData.Count == 0)
         return false;
-      foreach (TableDef td in _TableDefs.Values)
+      foreach (InternalTableData td in _TableData.Values)
       {
         if (td.TableMode != _DBMode)
           return true;
@@ -170,11 +177,11 @@ namespace FreeLibSet.Data
       if (_DBMode == tableMode)
         return true;
 
-      if (_TableDefs == null)
+      if (_TableData == null)
         return false;
-      if (_TableDefs.Count == 0)
+      if (_TableData.Count == 0)
         return false;
-      foreach (TableDef td in _TableDefs.Values)
+      foreach (InternalTableData td in _TableData.Values)
       {
         if (td.TableMode == tableMode)
           return true;
@@ -187,7 +194,7 @@ namespace FreeLibSet.Data
     #region Столбцы
 
     /// <summary>
-    /// Реализация свойства ColumnModes
+    /// Реализация свойства <see cref="DBxPermissions.ColumnModes"/>
     /// </summary>
     [Serializable]
     public class ColumnList
@@ -210,10 +217,10 @@ namespace FreeLibSet.Data
       {
         get
         {
-          if (_Owner._TableDefs == null)
+          if (_Owner._TableData == null)
             return _Owner._DBMode;
-          TableDef td;
-          if (_Owner._TableDefs.TryGetValue(tableName, out td))
+          InternalTableData td;
+          if (_Owner._TableData.TryGetValue(tableName, out td))
           {
             if (td.ColumnModes == null)
               return td.TableMode;
@@ -234,14 +241,14 @@ namespace FreeLibSet.Data
           if (String.IsNullOrEmpty(columnName))
             throw new ArgumentNullException("columnName");
 
-          if (_Owner._TableDefs == null)
-            _Owner._TableDefs = new Dictionary<string, TableDef>();
-          TableDef td;
-          if (!_Owner._TableDefs.TryGetValue(tableName, out td))
+          if (_Owner._TableData == null)
+            _Owner._TableData = new Dictionary<string, InternalTableData>();
+          InternalTableData td;
+          if (!_Owner._TableData.TryGetValue(tableName, out td))
           {
-            td = new TableDef();
+            td = new InternalTableData();
             td.TableMode = _Owner.DBMode;
-            _Owner._TableDefs.Add(tableName, td);
+            _Owner._TableData.Add(tableName, td);
           }
 
           if (td.ColumnModes == null)
@@ -260,7 +267,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public ColumnList ColumnModes { get { return _ColumnModes; } }
     /// <summary>
-    /// Этот список не содержит реальных данных. Данные хранятся в списке FTableDefs
+    /// Этот список не содержит реальных данных. Данные хранятся в списке _TableDefs
     /// </summary>
     private ColumnList _ColumnModes;
 
@@ -271,11 +278,11 @@ namespace FreeLibSet.Data
     /// <returns>Наличия разрешений на столбцы</returns>
     public bool ContainsColumnModes(string tableName)
     {
-      if (_TableDefs == null)
+      if (_TableData == null)
         return false;
 
-      TableDef td;
-      if (!_TableDefs.TryGetValue(tableName, out td))
+      InternalTableData td;
+      if (!_TableData.TryGetValue(tableName, out td))
         return false;
 
       if (td.ColumnModes == null)
@@ -290,8 +297,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Метод возвращает true, если для заданной таблицы есть хотя бы одно поле, режим которого 
-    /// равен ColumnMode
-    /// Метод возвращает true, если сама таблица находится в этом режиме
+    /// равен <paramref name="columnMode"/>.
+    /// Метод возвращает true, если сама таблица находится в этом режиме.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnMode">Режим доступа к столбцу</param>
@@ -301,11 +308,11 @@ namespace FreeLibSet.Data
       if (TableModes[tableName] == columnMode)
         return true;
 
-      if (_TableDefs == null)
+      if (_TableData == null)
         return false;
 
-      TableDef td;
-      if (!_TableDefs.TryGetValue(tableName, out td))
+      InternalTableData td;
+      if (!_TableData.TryGetValue(tableName, out td))
         return false;
 
       if (td.ColumnModes == null)
@@ -325,7 +332,7 @@ namespace FreeLibSet.Data
     #region Внутренние данные
 
     [Serializable]
-    private class TableDef
+    private class InternalTableData
     {
       #region Поля
 
@@ -379,7 +386,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Здесь хранятся реальные данные разрешений
     /// </summary>
-    private Dictionary<string, TableDef> _TableDefs;
+    private Dictionary<string, InternalTableData> _TableData;
 
     #endregion
 
@@ -394,7 +401,7 @@ namespace FreeLibSet.Data
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерация исключения, если IsReadOnly=true
+    /// Генерация исключения, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -470,7 +477,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Минимальное из двух разрешений.
-    /// Например, если <paramref name="mode1"/>=Full, а <paramref name="mode2"/>=ReadOnly, вовзврашается ReadOnly
+    /// Например, если <paramref name="mode1"/>=Full, а <paramref name="mode2"/>=ReadOnly, возврашается ReadOnly
     /// </summary>
     /// <param name="mode1">Первое разрешение</param>
     /// <param name="mode2">Второе разрешение</param>
@@ -483,7 +490,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Максимальное из двух разрешений.
-    /// Например, если <paramref name="mode1"/>=Full, а <paramref name="mode2"/>=ReadOnly, вовзврашается Full
+    /// Например, если <paramref name="mode1"/>=Full, а <paramref name="mode2"/>=ReadOnly, возврашается Full
     /// </summary>
     /// <param name="mode1">Первое разрешение</param>
     /// <param name="mode2">Второе разрешение</param>
@@ -535,16 +542,16 @@ namespace FreeLibSet.Data
     {
       DBxPermissions res = new DBxPermissions();
       res._DBMode = this._DBMode;
-      if (this._TableDefs != null)
+      if (this._TableData != null)
       {
-        res._TableDefs = new Dictionary<string, TableDef>(this._TableDefs.Count);
-        foreach (KeyValuePair<string, TableDef> pair in (this._TableDefs))
+        res._TableData = new Dictionary<string, InternalTableData>(this._TableData.Count);
+        foreach (KeyValuePair<string, InternalTableData> pair in (this._TableData))
         {
-          TableDef tdres = new TableDef();
+          InternalTableData tdres = new InternalTableData();
           tdres.TableMode = pair.Value.TableMode;
           if (pair.Value.ColumnModes != null)
             tdres.ColumnModes = new Dictionary<string, DBxAccessMode>(pair.Value.ColumnModes); // создает копию
-          res._TableDefs.Add(pair.Key, tdres);
+          res._TableData.Add(pair.Key, tdres);
         }
       }
       return res;

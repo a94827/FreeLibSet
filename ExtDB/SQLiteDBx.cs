@@ -2060,13 +2060,15 @@ namespace FreeLibSet.Data.SQLite
 
       //csb.DataSource = ReplaceDBItem(csb.DataSource, OldDBName, NewDBName);
       // 31.07.2018. Вместо простой замены текста, заменяем имя файла
-      AbsPath path = new AbsPath(csb.DataSource);
-      if (String.Equals(path.FileNameWithoutExtension, oldDBName, StringComparison.OrdinalIgnoreCase))
-      {
-        string fileName = newDBName + path.Extension;
-        path = new AbsPath(path.ParentDir, fileName);
-        csb.DataSource = path.Path;
-      }
+      //AbsPath path = new AbsPath(csb.DataSource);
+      //if (String.Equals(path.FileNameWithoutExtension, oldDBName, StringComparison.OrdinalIgnoreCase))
+      //{
+      //  string fileName = newDBName + path.Extension;
+      //  path = new AbsPath(path.ParentDir, fileName);
+      //  csb.DataSource = path.Path;
+      //}
+      // 16.06.2023
+      csb.DataSource = ReplaceFileItem(csb.DataSource, oldDBName, newDBName);
 
       return csb.ConnectionString;
     }

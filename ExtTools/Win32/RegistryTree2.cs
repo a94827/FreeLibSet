@@ -10,7 +10,7 @@ namespace FreeLibSet.Win32
 {
 
   /// <summary>
-  /// Этот объект используется при переборе реестра методом RegistryTree2.Enumerate()
+  /// Этот объект используется при переборе реестра методом <see cref="RegistryTree2.Enumerate(string)"/>
   /// </summary>
   public sealed class EnumRegistryEntry2
   {
@@ -32,23 +32,23 @@ namespace FreeLibSet.Win32
     /// Текущий раздел реестра
     /// </summary>
     public RegistryKey2 Key { get { return _Key; } }
-    private RegistryKey2 _Key;
+    private readonly RegistryKey2 _Key;
 
     /// <summary>
-    /// Уровень раздела Key относительно раздела, с которого начато перечисление.
-    /// Если сейчас перечисляется стартновый раздел, свойство возвращает 0, если один из его
+    /// Уровень раздела <see cref="Key"/> относительно раздела, с которого начато перечисление.
+    /// Если сейчас перечисляется стартовый раздел, свойство возвращает 0, если один из его
     /// дочерних разделов, то 1, и т.д.
     /// </summary>
     public int EnumKeyLevel { get { return _EnumKeyLevel; } }
-    private int _EnumKeyLevel;
+    private readonly int _EnumKeyLevel;
 
     /// <summary>
     /// Имя текущего значения.
-    /// Сначала перечислитель вызываетсz для раздела, при этом свойство возвращает true.
+    /// Сначала перечислитель вызывается для раздела, при этом свойство возвращает пустое значение.
     /// Затем, если перечисление значений включено, это свойство возвращает имя очередного значения.
     /// </summary>
     public string ValueName { get { return _ValueName; } }
-    private string _ValueName;
+    private readonly string _ValueName;
 
     /// <summary>
     /// Возвращает "Key.Name" или "Key.Name : Value", если сейчас перебирается значение
@@ -67,8 +67,8 @@ namespace FreeLibSet.Win32
   }
 
   /// <summary>
-  /// Хранение коллекции объектов RegistryKey2.
-  /// В отличие от RegistryTree, который использует стандартные объекты NetFramework (RegistryKey),
+  /// Хранение коллекции объектов <see cref="RegistryKey2"/>.
+  /// В отличие от <see cref="RegistryTree"/>, который использует стандартные объекты NetFramework (<see cref="Microsoft.Win32.RegistryKey"/>),
   /// эта коллекция позволяет получить доступ к реестру с правильной "визуализацией",
   /// когда 32-битное приложение работает в Windows-64
   /// </summary>
@@ -79,7 +79,7 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Создает пустой список.
     /// Секции будут доступны для записи.
-    /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
+    /// Будет использован режим виртуализации <see cref="View"/>=Registry64 или Registry32 в зависимости от
     /// разрядности операционной системы, а не от разрядности приложения.
     /// </summary>
     public RegistryTree2()
@@ -89,7 +89,7 @@ namespace FreeLibSet.Win32
 
     /// <summary>
     /// Создает пустой список.
-    /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
+    /// Будет использован режим виртуализации <see cref="View"/>=Registry64 или Registry32 в зависимости от
     /// разрядности операционной системы, а не от разрядности приложения.
     /// </summary>
     /// <param name="isReadOnly">true, если данные будут доступны только для чтения</param>
@@ -140,8 +140,8 @@ namespace FreeLibSet.Win32
     #region Доступ к объектам RegistryKey2
 
     /// <summary>
-    /// Возвращает открытый объект RegistryKey для доступа к ветви реестра.
-    /// Также рекурсивно отрываются все родительскте ветви реестра.
+    /// Возвращает открытый объект <see cref="RegistryKey2"/> для доступа к ветви реестра.
+    /// Также рекурсивно открываются все родительские ветви реестра.
     /// Объекты буферизуются во внутреннем списке и закрываются при вызове Close() или Dispose().
     /// Возвращает null, если ветвь реестра не существует.
     /// </summary>
@@ -191,7 +191,7 @@ namespace FreeLibSet.Win32
     /// Возвращает корневой узел по имени.
     /// </summary>
     /// <param name="keyName">Имя, например, "HKEY_CLASSES_ROOT"</param>
-    /// <returns>Статическое свойство из класса Registry</returns>
+    /// <returns>Статическое свойство из класса <see cref="Microsoft.Win32.Registry"/></returns>
     public RegistryKey2 GetRootKey(string keyName)
     {
       // Возврашаем корневой узел
@@ -208,7 +208,7 @@ namespace FreeLibSet.Win32
 
     /// <summary>
     /// Список открытых узлов реестра. Корневые узлы не хранятся.
-    /// Могут быть значения null для несуществующих узлов в режиме IsReadOnly
+    /// Могут быть значения null для несуществующих узлов в режиме <see cref="IsReadOnly"/>=true.
     /// </summary>
     private Dictionary<string, RegistryKey2> _Items;
 
@@ -218,8 +218,8 @@ namespace FreeLibSet.Win32
 
     /// <summary>
     /// Режим "только для чтения". Задается в конструкторе.
-    /// Когда выполняется обращение к несуществующему узлу реестра, при IsReadOnly=true возвращается null,
-    /// а при false - создается новый узел
+    /// Когда выполняется обращение к несуществующему узлу реестра, при <see cref="IsReadOnly"/>=true возвращается null,
+    /// а при false - создается новый узел.
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private readonly bool _IsReadOnly;
@@ -232,7 +232,7 @@ namespace FreeLibSet.Win32
     private readonly RegistryView2 _View;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -241,7 +241,7 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Закрывает все открытые секции, вызывая RegistryKey.Close()
+    /// Закрывает все открытые секции, вызывая <see cref="RegistryKey2"/>.Dispose().
     /// </summary>
     public void Close()
     {
@@ -259,6 +259,69 @@ namespace FreeLibSet.Win32
       }
 
       _Items.Clear();
+    }
+
+    /// <summary>
+    /// Закрывает открытые разделы реестра, начиная с указанного раздела (включительно), и все вложенные разделы.
+    /// Если разделы не были открыты, никаких действий не выполняется
+    /// </summary>
+    /// <param name="keyName">Закрываемый раздел реестра</param>
+    public void Close(string keyName)
+    {
+      DoClose(keyName, true);
+    }
+
+    /// <summary>
+    /// Закрывает открытые разделы реестра, расположенные внутри, и все вложенные разделы.
+    /// Сам раздел <paramref name="keyName"/>, если он был открыт, не закрывается.
+    /// Если разделы не были открыты, никаких действий не выполняется
+    /// </summary>
+    /// <param name="keyName">Родительский раздел</param>
+    public void CloseChildren(string keyName)
+    {
+      DoClose(keyName, false);
+    }
+
+    private void DoClose(string keyName, bool includeMain)
+    {
+      if (String.IsNullOrEmpty(keyName))
+      {
+        Close();
+        return;
+      }
+
+      List<KeyValuePair<string, RegistryKey2>> lst = null;
+      string keyName2 = keyName + "\\";
+      foreach (KeyValuePair<string, RegistryKey2> pair in _Items)
+      {
+        if (includeMain &&
+          String.Equals(pair.Key, keyName, StringComparison.OrdinalIgnoreCase) &&
+          keyName.IndexOf("\\") >= 0) // корневой раздел не закрываем
+        {
+          if (lst == null) lst = new List<KeyValuePair<string, RegistryKey2>>();
+          lst.Add(pair);
+        }
+
+        if (pair.Key.StartsWith(keyName2, StringComparison.OrdinalIgnoreCase))
+        {
+          if (lst == null) lst = new List<KeyValuePair<string, RegistryKey2>>();
+          lst.Add(pair);
+        }
+      }
+
+      if (lst == null)
+        return;
+
+      foreach (KeyValuePair<string, RegistryKey2> pair in lst)
+      {
+        if (pair.Value != null)
+        {
+          try { pair.Value.Dispose(); }
+          catch { }
+        }
+
+        _Items.Remove(pair.Key);
+      }
     }
 
     /// <summary>
@@ -299,6 +362,31 @@ namespace FreeLibSet.Win32
       return true;
     }
 
+    /// <summary>
+    /// Удаляет раздел, задаваемый путем <paramref name="keyName"/> и, рекурсивно, все дочерние разделы.
+    /// Для удаления используется метод <see cref="RegistryKey2.DeleteSubKeyTree(string)"/>.
+    /// Применяйте метод с осторожностью!
+    /// </summary>
+    /// <param name="keyName">Путь к удаляемому реестру</param>
+    public void DeleteTree(string keyName)
+    {
+      CheckNotDisposed();
+      CheckNotReadOnly();
+
+      if (!Exists(keyName))
+        return;
+
+      int p = keyName.LastIndexOf('\\');
+      if (p < 0)
+        throw new InvalidOperationException("Нельзя удалить корневой узел");
+
+      string parentKeyName = keyName.Substring(0, p);
+      RegistryKey2 parentKey = this[parentKeyName];
+      string subName = keyName.Substring(p + 1);
+      Close(keyName);
+      parentKey.DeleteSubKeyTree(subName);
+    }
+
     #endregion
 
     #region Методы чтения значений
@@ -324,7 +412,7 @@ namespace FreeLibSet.Win32
     /// Если узла нет, возвращается пустая строка.
     /// </summary>
     /// <param name="keyName">Путь к узлу реестра</param>
-    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
+    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую строку</param>
     /// <returns>Значение</returns>
     public string GetString(string keyName, string valueName)
     {
@@ -334,10 +422,10 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Получить числовое значение.
     /// Если узла нет или значение является пустой строкой, возвращается 0.
-    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение
+    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение.
     /// </summary>
     /// <param name="keyName">Путь к узлу реестра</param>
-    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
+    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую строку</param>
     /// <returns>Значение</returns>
     public int GetInt(string keyName, string valueName)
     {
@@ -350,10 +438,10 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Получить числовое значение.
     /// Если узла нет или значение является пустой строкой, возвращается 0.
-    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение
+    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение.
     /// </summary>
     /// <param name="keyName">Путь к узлу реестра</param>
-    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
+    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую строку</param>
     /// <returns>Значение</returns>
     public long GetInt64(string keyName, string valueName)
     {
@@ -366,10 +454,10 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Получить числовое значение.
     /// Если узла нет или значение является пустой строкой, возвращается 0.
-    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение
+    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение.
     /// </summary>
     /// <param name="keyName">Путь к узлу реестра</param>
-    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
+    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую строку</param>
     /// <returns>Значение</returns>
     public float GetSingle(string keyName, string valueName)
     {
@@ -382,10 +470,10 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Получить числовое значение.
     /// Если узла нет или значение является пустой строкой, возвращается 0.
-    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение
+    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение.
     /// </summary>
     /// <param name="keyName">Путь к узлу реестра</param>
-    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
+    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую строку</param>
     /// <returns>Значение</returns>
     public double GetDouble(string keyName, string valueName)
     {
@@ -398,10 +486,10 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Получить числовое значение.
     /// Если узла нет или значение является пустой строкой, возвращается 0.
-    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение
+    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение.
     /// </summary>
     /// <param name="keyName">Путь к узлу реестра</param>
-    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
+    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую строку</param>
     /// <returns>Значение</returns>
     public decimal GetDecimal(string keyName, string valueName)
     {
@@ -414,10 +502,10 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Получить логическое значение.
     /// Если узла нет или значение является пустой строкой, возвращается false.
-    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение
+    /// Если хранимое значение нельзя преобразовать в число, генерируется исключение.
     /// </summary>
     /// <param name="keyName">Путь к узлу реестра</param>
-    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
+    /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую строку</param>
     /// <returns>Значение</returns>
     public bool GetBool(string keyName, string valueName)
     {
@@ -495,11 +583,11 @@ namespace FreeLibSet.Win32
     /// Перечисление начинается с заданного пути реестра, затем перечисляются все значения
     /// (кроме "безымянного" значения по умолчанию), затем рекурсивно перечисляются дочерние разделы.
     /// Если раздела <paramref name="keyName"/> нет в реестре, перечислитель ни разу не вызывается.
-    /// При перечислении используется объект EnumRegistryEntry.
+    /// При перечислении используется объект <see cref="EnumRegistryEntry"/>.
     /// При перечислении системных разделов реестра Windows у пользователя может не быть прав на запись.
-    /// Используйте RegistryTree2 в режиме IsReadOnly=true.
-    /// Для однократного перечисления может быть выгоднее использовать статический метод StaticEnumerate(),
-    /// который не требует явного создания и удаления объекта RegistryTree2.
+    /// Используйте <see cref="RegistryTree2"/> в режиме <see cref="IsReadOnly"/>=true.
+    /// Для однократного перечисления может быть выгоднее использовать статический метод <see cref="StaticEnumerate(string)"/>,
+    /// который не требует явного создания и удаления объекта <see cref="RegistryTree2"/>.
     /// </summary>
     /// <param name="keyName">Путь к разделу реестра, который нужно перечислить</param>
     /// <returns>Объект для использования в цикле foreach</returns>
@@ -513,11 +601,11 @@ namespace FreeLibSet.Win32
     /// Перечисление начинается с заданного пути реестра, затем, если <paramref name="enumerateValues"/>=true, перечисляются все значения
     /// (кроме "безымянного" значения по умолчанию), затем рекурсивно перечисляются дочерние разделы.
     /// Если раздела <paramref name="keyName"/> нет в реестре, перечислитель ни разу не вызывается.
-    /// При перечислении используется объект EnumRegistryEntry.
+    /// При перечислении используется объект <see cref="EnumRegistryEntry"/>.
     /// При перечислении системных разделов реестра Windows у пользователя может не быть прав на запись.
-    /// Используйте RegistryTree в режиме IsReadOnly=true.
-    /// Для однократного перечисления может быть выгоднее использовать статический метод StaticEnumerate(),
-    /// который не требует явного создания и удаления объекта RegistryTree.
+    /// Используйте <see cref="RegistryTree2"/> в режиме <see cref="IsReadOnly"/>=true.
+    /// Для однократного перечисления может быть выгоднее использовать статический метод <see cref="StaticEnumerate(string)"/>,
+    /// который не требует явного создания и удаления объекта <see cref="RegistryTree2"/>.
     /// </summary>
     /// <param name="keyName">Путь к разделу реестра, который нужно перечислить</param>
     /// <param name="enumerateValues">Нужно ли перечислять также все значения в разделах (true),
@@ -668,9 +756,9 @@ namespace FreeLibSet.Win32
     /// Перечисление начинается с заданного пути реестра, затем перечисляются все значения
     /// (кроме "безымянного" значения по умолчанию), затем рекурсивно перечисляются дочерние разделы.
     /// Если раздела <paramref name="keyName"/> нет в реестре, перечислитель ни разу не вызывается.
-    /// При перечислении используется объект EnumRegistryEntry.
-    /// Для перечисления создается временныый объект RegistryTree2. Если требуется многократное перечисление
-    /// реестра, то следует использовать нестатическую версию метода Enumerate().
+    /// При перечислении используется объект <see cref="EnumRegistryEntry"/>.
+    /// Для перечисления создается временныый объект <see cref="RegistryTree2"/>. Если требуется многократное перечисление
+    /// реестра, то следует использовать нестатическую версию метода <see cref="Enumerate(string)"/>.
     /// </summary>
     /// <param name="keyName">Путь к разделу реестра, который нужно перечислить</param>
     /// <returns>Объект для использования в цикле foreach</returns>
@@ -684,9 +772,9 @@ namespace FreeLibSet.Win32
     /// Перечисление начинается с заданного пути реестра, затем, если <paramref name="enumerateValues"/>=true, перечисляются все значения
     /// (кроме "безымянного" значения по умолчанию), затем рекурсивно перечисляются дочерние разделы.
     /// Если раздела <paramref name="keyName"/> нет в реестре, перечислитель ни разу не вызывается.
-    /// При перечислении используется объект EnumRegistryEntry.
-    /// Для перечисления создается временныый объект RegistryTree. Если требуется многократное перечисление
-    /// реестра, то следует использовать нестатическую версию метода Enumerate().
+    /// При перечислении используется объект <see cref="EnumRegistryEntry"/>.
+    /// Для перечисления создается временныый объект <see cref="RegistryTree2"/>. Если требуется многократное перечисление
+    /// реестра, то следует использовать нестатическую версию метода <see cref="Enumerate(string, bool)"/>.
     /// </summary>
     /// <param name="keyName">Путь к разделу реестра, который нужно перечислить</param>
     /// <param name="enumerateValues">Нужно ли перечислять также все значения в разделах (true),

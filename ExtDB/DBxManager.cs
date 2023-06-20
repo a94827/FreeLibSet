@@ -6,17 +6,21 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 using FreeLibSet.Collections;
+using FreeLibSet.Core;
+
+// В autodoc'е не определены ссылки на класс System.Configuration.ConnectionStringSettings,
+// т.к. нет ссылки на сборку System.configurations.dll
 
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Генератор объектов DBx для строк подключения.
-  /// Для каждого типа базы данных выводится свой (закрытый) класс, производный от DBxManager.
-  /// Статический список DBxManager.Managers содержит список менеждеров, по одному на каждый тип
+  /// Генератор объектов <see cref="DBx"/> для строк подключения.
+  /// Для каждого типа базы данных выводится свой (закрытый) класс, производный от <see cref="DBxManager"/>.
+  /// Статический список <see cref="DBxManager.Managers"/> содержит список менеждеров, по одному на каждый тип
   /// базы данных.
   /// В качестве кода используется имя провайдера базы данных, принятое в Net Framework. 
   /// Например, для Microsoft SQL Server используется код "System.Data.SqlClient".
-  /// См. свойство System.Configuration.ConnectionStringSettings.ProviderName
+  /// См. свойство System.Configuration.ConnectionStringSettings.ProviderName.
   /// Этот класс является потокобезопасным.
   /// </summary>
   public abstract class DBxManager : ObjectWithCode
@@ -38,13 +42,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Имя провайдера Net Framework.
-    /// Является ключом в статическом списке Managers.
+    /// Является ключом в статическом списке <see cref="Managers"/>.
     /// </summary>
     public string ProviderName { get { return base.Code; } }
 
     /// <summary>
     /// Генератор объектов, специфических для базы данных.
-    /// Если есть созданный объект базы данных DBx, используйте свойство DBx.ProviderFactory
+    /// Если есть созданный объект базы данных <see cref="DBx"/>, используйте свойство <see cref="DBx.ProviderFactory"/>.
     /// </summary>
     public abstract DbProviderFactory ProviderFactory { get; }
 
@@ -56,12 +60,12 @@ namespace FreeLibSet.Data
     /// Создать объект базы данных, используя строку подключения
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
-    /// <returns>Созданный объект DBx</returns>
+    /// <returns>Созданный объект <see cref="DBx"/></returns>
     public abstract DBx CreateDBObject(string connectionString);
 
     /// <summary>
     /// Получить строку подключения для другой базы данных "по образцу".
-    /// Реализация метода получает "структурированную" строку подключения (производную от DBConnectionString)
+    /// Реализация метода получает "структурированную" строку подключения (производную от <see cref="DBConnectionString"/>)
     /// и выполняет замену свойств, например, DatabaseName.
     /// Если в строке подключения заданы имена файлов (или каталогов), они также должны быть осмысленно
     /// изменены.
@@ -75,13 +79,13 @@ namespace FreeLibSet.Data
     /// Например, если в исходной строке подключения задано имя базы данных "myprog_db1", а требуется
     /// заменить имя базы данных "db1" на "db2", то метод должен задать в строке подключения имя 
     /// базы данных "myprog_db2".
-    /// Для выполнения замены следует использовать методы ReplaceDatabaseItem() и ReplaceFileItem(),
+    /// Для выполнения замены следует использовать методы <see cref="ReplaceDBItem(string, string, string)"/> и <see cref="ReplaceFileItem(string, string, string)"/>,
     /// которые обрабатывают наличие префиксов
     /// </remarks>
     public abstract string ReplaceDBName(string connectionString, string oldDBName, string newDBName);
 
     /// <summary>
-    /// Создает объект DbConnectionStringBuilder для заданной строки подключения.
+    /// Создает объект <see cref="DbConnectionStringBuilder"/> для заданной строки подключения.
     /// Возвращается объект производного класса
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
@@ -117,6 +121,8 @@ namespace FreeLibSet.Data
       return oldItem.Substring(0, p) + newName + oldItem.Substring(p + oldName.Length);
     }
 
+    private static readonly string InvalidFileNameChars = new String(System.IO.Path.GetInvalidFileNameChars());
+
     /// <summary>
     /// Замена имени базы данных в имени файла.
     /// Этот метод заменяет только имя файла, но не каталог, в котором файл расположен
@@ -137,6 +143,11 @@ namespace FreeLibSet.Data
       int p = oldItem.LastIndexOf(System.IO.Path.DirectorySeparatorChar);
       string dir = oldItem.Substring(0, p + 1); // включая символ каталога
       string fileName = oldItem.Substring(p + 1); // без пути
+
+      if (DataTools.IndexOfAny(fileName, InvalidFileNameChars) >= 0)
+        throw new ArgumentException("Имя файла \"" + fileName + "\" содержит недопустимые символы", "oldItem");
+      // Путь dir не проверяем
+
       string ext = System.IO.Path.GetExtension(fileName);
       fileName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
@@ -153,7 +164,6 @@ namespace FreeLibSet.Data
       return dir + fileName + ext;
     }
 
-
     #endregion
 
     #region Статический список
@@ -161,20 +171,20 @@ namespace FreeLibSet.Data
     // Нельзя инициализировать список непосредственно или в статическом конструкторе DBxManager,
     // т.к. будет конфликт: В список надо добавить объекты классов, производных от DBxManager.
     // Во избежание неприятностей делаем отложенную инициалацию списка
-    //public static SyncNamedCollection<DBxManager> Managers { get { return FManagers; } }
-    //private static SyncNamedCollection<DBxManager> FManagers =  new SyncNamedCollection<DBxManager>();
+    //public static SyncNamedCollection<DBxManager> Managers { get { return _Managers; } }
+    //private static SyncNamedCollection<DBxManager> _Managers =  new SyncNamedCollection<DBxManager>();
 
     /// <summary>
     /// Список зарегистрированных менеджеров.
     /// По умолчанию список содержит менеджеры для всех провайдеров, реализованных в ExtDB.dll.
-    /// См. константы в DBxProviderNames
+    /// См. константы в <see cref="DBxProviderNames"/>.
     /// Можно добавить менеджеры, реализованные в приложении
     /// </summary>
     public static SyncNamedCollection<DBxManager> Managers 
     { 
       get 
       {
-        lock (SyncRoot)
+        lock (_SyncRoot)
         {
           if (_Managers == null)
           {
@@ -189,7 +199,7 @@ namespace FreeLibSet.Data
     }
     private static SyncNamedCollection<DBxManager> _Managers = null;
 
-    private static object SyncRoot = new object();
+    private static object _SyncRoot = new object();
 
     #endregion
   }

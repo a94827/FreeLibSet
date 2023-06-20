@@ -298,7 +298,7 @@ namespace FreeLibSet.Data
       _Values = new object[writerInfo.Columns.Count];
       _ColumnNameIndexer = new StringArrayIndexer(writerInfo.Columns.AsArray, false);
 
-      _TableStruct = con.DB.Struct.Tables[writerInfo.TableName];
+      _TableStruct = con.GetTableStruct(writerInfo.TableName);
 #if DEBUG
       if (_TableStruct == null)
         throw new ArgumentException("Не найдена структура таблицы \"" + writerInfo.TableName + "\"", "writerInfo");

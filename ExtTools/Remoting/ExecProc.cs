@@ -4454,7 +4454,7 @@ namespace FreeLibSet.Remoting
     #region IAsyncResult Members
 
     /// <summary>
-    /// Вовзвращает объект, переданный конструктору
+    /// Возвращает объект, переданный конструктору
     /// </summary>
     public object AsyncState { get { return _AsyncState; } }
     private object _AsyncState;

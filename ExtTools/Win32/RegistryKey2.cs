@@ -17,8 +17,8 @@ namespace FreeLibSet.Win32
   #region Перечисление RegistryView2
 
   /// <summary>
-  /// Способ виртуализации при просмотре реестра в RegistryKey2.
-  /// Идентично перечислению Microsoft.Win32.RegistryView в Net Framework 4/
+  /// Способ виртуализации при просмотре реестра в <see cref="RegistryKey2"/>.
+  /// Идентично перечислению Microsoft.Win32.RegistryView в Net Framework 4.
   /// </summary>
   public enum RegistryView2
   {
@@ -42,8 +42,9 @@ namespace FreeLibSet.Win32
 
   /// <summary>
   /// В Net Framework 2 нет возможности использовать RegistryView.
-  /// Для доступа к узлам реестра используйте статический метод OpenBaseKey() и, далее, OpenSubKey()/CreateSubKey.
-  /// Обычно удобнее использовать класс RegistryTree2, который автоматически откывает нужные родительские узлы
+  /// Для доступа к узлам реестра используйте статический метод <see cref="OpenBaseKey(Microsoft.Win32.RegistryHive, RegistryView2)"/> и, далее, 
+  /// <see cref="OpenSubKey(string, bool)"/> или <see cref="CreateSubKey(string)"/>.
+  /// Обычно удобнее использовать класс <see cref="RegistryTree2"/>, который автоматически откывает нужные родительские узлы
   /// и обеспечивает их буферизацию.
   /// Класс с большими упрощениями взят из Mono и модифицирован.
   /// </summary>
@@ -114,7 +115,8 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Так как RegistryKey2 является DisposableObject(), лучше не доводить дела до вызова деструктора, чтобы "не портить статистику" в отладочном режиме
+    /// Так как <see cref="RegistryKey2"/> является <see cref="DisposableObject"/>, лучше не доводить дела до вызова деструктора, 
+    /// чтобы "не портить статистику" в отладочном режиме.
     /// </summary>
     private static Dictionary<long, RegistryKey2> _BaseKeys = new Dictionary<long, RegistryKey2>(); // 22.05.2020
 
@@ -262,7 +264,7 @@ namespace FreeLibSet.Win32
     /// Возвращает null, если нет такого дочернего узла.
     /// </summary>
     /// <param name="name">Имя дочернего узла (без слэшей)</param>
-    /// <param name="writable">true если требуется запись значений или дочерниз узлов</param>
+    /// <param name="writable">true если требуется запись значений или дочерних узлов</param>
     /// <returns></returns>
     public RegistryKey2 OpenSubKey(string name, bool writable)
     {
@@ -317,7 +319,9 @@ namespace FreeLibSet.Win32
           0, // reserved
           IntPtr.Zero, // lpClass
           0, // options
-          OpenRegKeyWrite | (int)View, // access
+          OpenRegKeyRead | // добавлено 14.06.2023
+          OpenRegKeyWrite | 
+          (int)View, // access
           IntPtr.Zero, // securityAttrs
           out childHandle, out disposition);
 
@@ -936,7 +940,7 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Возвращает свойство Name
+    /// Возвращает свойство <see cref="Name"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()

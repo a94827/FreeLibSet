@@ -58,7 +58,9 @@
     <Compile Include="DBxColumnStructTests.cs" />
     <Compile Include="DBxDataWriterInfoTests.cs" />
     <Compile Include="DBxDataWriterTests.cs" />
+    <Compile Include="DBxManagerTests.cs" />
     <Compile Include="DBxOrderTests.cs" />
+    <Compile Include="DBxPermissionsTests.cs" />
     <Compile Include="DBxRealStructSourceTests.cs" />
     <Compile Include="DBxSelectInfoTests.cs" />
     <Compile Include="DBxStructTests.cs" />

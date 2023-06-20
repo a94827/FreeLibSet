@@ -702,7 +702,7 @@ namespace FreeLibSet.Data.Npgsql
 
       #region Определяем режимы копирования
 
-      CopyFormattingMode[] Modes = new CopyFormattingMode[columnNames.Count];
+      CopyFormattingMode[] formatModes = new CopyFormattingMode[columnNames.Count];
 
       for (int i = 0; i < columnNames.Count; i++)
       {
@@ -716,15 +716,15 @@ namespace FreeLibSet.Data.Npgsql
           case DBxColumnType.DateTime:
           case DBxColumnType.Time:
           case DBxColumnType.Money:
-            Modes[i] = CopyFormattingMode.FormatValue;
+            formatModes[i] = CopyFormattingMode.FormatValue;
             break;
           case DBxColumnType.String:
           case DBxColumnType.Xml:
           case DBxColumnType.Memo: // 18.12.2020
-            Modes[i] = CopyFormattingMode.String;
+            formatModes[i] = CopyFormattingMode.String;
             break;
           case DBxColumnType.Guid: // 08.10.2019 - для GUID'а не нужно добавлять апострофы
-            Modes[i] = CopyFormattingMode.Guid;
+            formatModes[i] = CopyFormattingMode.Guid;
             break;
           default:
             // Неизвестный формат.
@@ -762,7 +762,7 @@ namespace FreeLibSet.Data.Npgsql
           {
             DBxColumnStruct colDef = ts.Columns[columnNames[i]];
 
-            switch (Modes[i])
+            switch (formatModes[i])
             {
               case CopyFormattingMode.FormatValue:
                 Buffer.Clear();
