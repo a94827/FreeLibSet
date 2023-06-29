@@ -138,6 +138,7 @@
     <Compile Include="Diagnosics\TimeSpanTracker.cs" />
     <Compile Include="Models\Tree\TreeModelBase.cs" />
     <Compile Include="Collections\TypedCollections.cs" />
+    <Compile Include="Win32\Wow64FileRedirectionSupressor.cs" />
     <Compile Include="Win32\WTS.cs" />
     <Compile Include="Calendar\YearMonth.cs" />
     <Compile Include="IO\ZipFileCreator.cs" />

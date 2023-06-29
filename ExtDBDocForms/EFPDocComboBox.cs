@@ -2276,7 +2276,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
     /// <param name="subDocs">Список поддокументов, из которых можно выбирать</param>
-    /// <param name="ui">Интефрейс для доступа к документам</param>
+    /// <param name="ui">Интерфейс для доступа к документам</param>
     public EFPInsideSubDocComboBox(EFPBaseProvider baseProvider, UserSelComboBox control, DBxMultiSubDocs subDocs, DBUI ui)
       : base(baseProvider, control, ui)
     {

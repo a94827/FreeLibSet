@@ -777,6 +777,25 @@ namespace FreeLibSet.Forms
       SelectedCode = _SelectedCodeEx.Value;
     }
 
+    /// <summary>
+    /// Возвращает провайдер кнопки по коду.
+    /// </summary>
+    /// <param name="code">Код кнопки в массиве <see cref="Codes"/>.</param>
+    /// <returns>Найденная кнопка или null</returns>
+    public EFPSingleRadioButton FindByCode(string code)
+    {
+      if (_Codes == null)
+        return null;
+      if (String.IsNullOrEmpty(code))
+        return null;
+      int p = Array.IndexOf<string>(_Codes, code);
+      if (p >= 0)
+        return _Buttons[p];
+      else
+        return null;
+    }
+
+
     #endregion
 
     #region Управление синхронизацией

@@ -12,7 +12,7 @@ namespace FreeLibSet.Forms
   #region IEFPTreeView
 
   /// <summary>
-  /// Интефрейс, реализуемый EFPTreeView и EFPTreeViewAdv
+  /// Интерфейс, реализуемый EFPTreeView и EFPTreeViewAdv
   /// (для поддержки общих команд локального меню)
   /// </summary>
   public interface IEFPTreeView : IEFPControl

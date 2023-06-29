@@ -10,7 +10,7 @@ using FreeLibSet.Config;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Интефрейс сохранения изображений предварительного просмотра композиций интерфейса.
+  /// Интерфейс сохранения изображений предварительного просмотра композиций интерфейса.
   /// Используется свойством EFPApp.SnapshotManager
   /// </summary>
   public interface IEFPSnapshotManager

@@ -658,7 +658,7 @@ namespace FreeLibSet.Shell
         psi.Arguments = "\"" + fileName.Path + "\"";
         if (asTemplate)
           psi.Arguments = "-n " + psi.Arguments;
-        using (new FileRedirectionSupressor())
+        using (new Wow64FileRedirectionSupressor())
         {
           Process.Start(psi);
         }
@@ -681,7 +681,7 @@ namespace FreeLibSet.Shell
         if (asTemplate)
           psi.Arguments = "-n " + psi.Arguments;
 
-        using (new FileRedirectionSupressor())
+        using (new Wow64FileRedirectionSupressor())
         {
           Process.Start(psi);
         }

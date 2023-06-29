@@ -14,7 +14,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Расширенная сортировка табличного просмотра, основанного на наборе данных
-  /// Поддерживает задание полей с помощью выражений DBxOrder, в том числе, содержащих функции.
+  /// Поддерживает задание полей с помощью выражений <see cref="DBxOrder"/>, в том числе, содержащих функции.
   /// Для этого в набор данных добавляются виртуальные вычисляемые столбцы.
   /// </summary>
   public class EFPDBxViewOrder : EFPDataViewOrder
@@ -33,10 +33,10 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("order");
       _Order = order;
 
-      string ColumnName;
-      ListSortDirection SortOrder;
-      _Order.GetFirstColumnInfo(out ColumnName, out SortOrder);
-      SortInfo = new EFPDataGridViewSortInfo(ColumnName, SortOrder);
+      string columnName;
+      ListSortDirection sortOrder;
+      _Order.GetFirstColumnInfo(out columnName, out sortOrder);
+      SortInfo = new EFPDataGridViewSortInfo(columnName, sortOrder);
     }
 
     #endregion
@@ -63,8 +63,8 @@ namespace FreeLibSet.Forms.Docs
     #region Выполнение сортировки
 
     /// <summary>
-    /// Реализация интерфейса INamedValuesAccess.
-    /// Возвращает значения по умолчанию для всех столбцов данных таблицы
+    /// Реализация интерфейса <see cref="INamedValuesAccess"/>.
+    /// Возвращает значения по умолчанию для всех столбцов данных таблицы.
     /// </summary>
     private class DefValAccess : INamedValuesAccess
     {
@@ -108,11 +108,11 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выполняет сортировку в табличного просмотре.
-    /// Провайдер должен иметь тип, производный от EFPDBxGridView.
-    /// Источником данных должен быть объект DataView (свойство EFPDataGridView.SourceAsDataView должно возвращать непустое значение).
-    /// Устанавливает свойство DataView.Sort.
-    /// Если среди компонентов сортировки есть объекты, отличные от DBxOrderColumn,
-    /// то в таблицу добавляются вычисляемые столбцы "$$Sort_XXX", для которых устанавливается свойство DataColumn.Expression.
+    /// Провайдер должен иметь тип, производный от <see cref="EFPDBxGridView"/>.
+    /// Источником данных должен быть объект <see cref="DataView"/> (свойство <see cref="EFPDataGridView.SourceAsDataView"/> должно возвращать непустое значение).
+    /// Устанавливает свойство <see cref="DataView.Sort"/>.
+    /// Если среди компонентов сортировки есть объекты, отличные от <see cref="DBxColumn"/>,
+    /// то в таблицу добавляются вычисляемые столбцы "$$Sort_XXX", для которых устанавливается свойство <see cref="DataColumn.Expression"/>.
     /// </summary>     
     /// <param name="controlProvider">Провайдер табличного просмотра, для которого нужно установить порядок сортировки.</param>
     public override void PerformSort(IEFPDataView controlProvider)
@@ -148,29 +148,29 @@ namespace FreeLibSet.Forms.Docs
           DBxSqlBuffer buf2 = new DBxSqlBuffer();
           buf2.Clear();
           buf2.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
-          string Expr = buf2.SB.ToString();
+          string expr = buf2.SB.ToString();
           // Имя столбца
-          string ExprColName = "$$Sort_" + DataTools.MD5SumFromString(Expr);
+          string exprColName = "$$Sort_" + DataTools.MD5SumFromString(expr);
 
           // 16.10.2019
           // Тип данных для столбца проверяем по другому
           DefValAccess dva = new DefValAccess(dv.Table);
-          object defVal = Order.Parts[i].Expression.GetValue(dva, false);
+          object defVal = Order.Parts[i].Expression.GetValue(dva);
           if (defVal == null)
-            throw new NullReferenceException("Для выражения \"" + Expr + "\" порядка сортировки \"" + DisplayName + "\" не удалось вычислить значение по умолчанию, чтобы определить тип данных");
+            throw new NullReferenceException("Для выражения \"" + expr + "\" порядка сортировки \"" + DisplayName + "\" не удалось вычислить значение по умолчанию, чтобы определить тип данных");
           Type dataType = defVal.GetType();
 
 
           // Столбец добавляется только при необходимости, чтобы исключить размножение
           // столбцов при каждом переключении сортировки
-          if (!dv.Table.Columns.Contains(ExprColName))
+          if (!dv.Table.Columns.Contains(exprColName))
           {
-            DataColumn Col = new DataColumn(ExprColName, dataType, Expr);
-            dv.Table.Columns.Add(Col);
+            DataColumn col = new DataColumn(exprColName, dataType, expr);
+            dv.Table.Columns.Add(col);
           }
 
           // В Sort добавляется имя вычисляемого столбца
-          buf.SB.Append(ExprColName);
+          buf.SB.Append(exprColName);
         }
 
         // Признак обратной сортировки
@@ -183,15 +183,15 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Реализация свойства EFPDBxGridView.Orders.
-  /// Также используется для EFPDBxGridProducer.Orders.
+  /// Реализация свойства <see cref="EFPDBxGridView.Orders"/>.
+  /// Также используется для <see cref="EFPDBxGridProducer.Orders"/>.
   /// </summary>
   public class EFPDBxViewOrders : EFPDataViewOrders
   {
     #region Методы добавления
 
     /// <summary>
-    /// Создает порядок сортировки EFPDBxGridViewOrder и добавляет его в список
+    /// Создает порядок сортировки <see cref="EFPDBxViewOrder"/> и добавляет его в список.
     /// </summary>
     /// <param name="order">Порядок сортировки для SELECT .. ORDER BY</param>
     /// <param name="displayName">Отображаемое имя для меню</param>
@@ -218,7 +218,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает порядок сортировки EFPDBxGridViewOrder и добавляет его в список.
+    /// Создает порядок сортировки <see cref="EFPDBxViewOrder"/> и добавляет его в список.
     /// Столбец табличного просмотра для нажатия мышью определяется автоматически.
     /// </summary>
     /// <param name="order">Порядок сортировки для SELECT .. ORDER BY</param>

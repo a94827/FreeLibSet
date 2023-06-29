@@ -2619,15 +2619,15 @@ namespace FreeLibSet.Logging
       args.WriteHeader("Загруженные сборки");
       if (!IsAssemblyEntryPointAvailable)
         args.WriteLine("[ Информация Assembly.EntryPoint недоступна ]");
-      Assembly[] asses = AppDomain.CurrentDomain.GetAssemblies();
+      Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
       int cnt = 0;
       args.WriteLine("Приватные");
       args.IndentLevel++;
-      DoLogoutAssemblies1(args, ref cnt, asses, false);
+      DoLogoutAssemblies1(args, ref cnt, asms, false);
       args.IndentLevel--;
       args.WriteLine("Из глобального кэша сборок");
       args.IndentLevel++;
-      DoLogoutAssemblies1(args, ref cnt, asses, true);
+      DoLogoutAssemblies1(args, ref cnt, asms, true);
       args.IndentLevel--;
     }
 
@@ -2654,16 +2654,16 @@ namespace FreeLibSet.Logging
     }
 
     [DebuggerStepThrough]
-    private static void DoLogoutAssemblies1(LogoutInfoNeededEventArgs args, ref int cnt, Assembly[] asses, bool isGAC)
+    private static void DoLogoutAssemblies1(LogoutInfoNeededEventArgs args, ref int cnt, Assembly[] asms, bool isGAC)
     {
-      for (int i = 0; i < asses.Length; i++)
+      for (int i = 0; i < asms.Length; i++)
       {
-        if (asses[i].GlobalAssemblyCache != isGAC)
+        if (asms[i].GlobalAssemblyCache != isGAC)
           continue;
         cnt++;
 
         bool debugMode = false;
-        DebuggableAttribute attrDebug = (DebuggableAttribute)Attribute.GetCustomAttribute(asses[i], typeof(DebuggableAttribute));
+        DebuggableAttribute attrDebug = (DebuggableAttribute)Attribute.GetCustomAttribute(asms[i], typeof(DebuggableAttribute));
         if (attrDebug != null)
         {
           if (attrDebug.IsJITTrackingEnabled)
@@ -2671,7 +2671,7 @@ namespace FreeLibSet.Logging
         }
 
         bool isPIA = false;
-        PrimaryInteropAssemblyAttribute attrPIA = (PrimaryInteropAssemblyAttribute)Attribute.GetCustomAttribute(asses[i], typeof(PrimaryInteropAssemblyAttribute));
+        PrimaryInteropAssemblyAttribute attrPIA = (PrimaryInteropAssemblyAttribute)Attribute.GetCustomAttribute(asms[i], typeof(PrimaryInteropAssemblyAttribute));
         if (attrPIA != null)
         {
           isPIA = true; // Надо ли извлекать номер версии - не знаю
@@ -2679,16 +2679,16 @@ namespace FreeLibSet.Logging
 
 
 
-        args.WriteLine(cnt.ToString() + ". " + asses[i].ToString());
+        args.WriteLine(cnt.ToString() + ". " + asms[i].ToString());
         //" Version: " + asses[i].GetName().Version.ToString() + 
 
         args.IndentLevel++;
-        args.WriteLine("Build: " + (debugMode ? " (Debug)" : " (Release)") + " (" + asses[i].GetName().ProcessorArchitecture.ToString() + ")" + (isPIA ? " [PrimaryInteropAssembly]" : String.Empty));
-        args.WriteLine(asses[i].CodeBase);
+        args.WriteLine("Build: " + (debugMode ? " (Debug)" : " (Release)") + " (" + asms[i].GetName().ProcessorArchitecture.ToString() + ")" + (isPIA ? " [PrimaryInteropAssembly]" : String.Empty));
+        args.WriteLine(asms[i].CodeBase);
         int indentLevel = args.IndentLevel;
         try
         {
-          AbsPath filePath = new AbsPath(asses[i].CodeBase);
+          AbsPath filePath = new AbsPath(asms[i].CodeBase);
           if (File.Exists(filePath.Path))
           {
             args.IndentLevel++;
@@ -2699,12 +2699,12 @@ namespace FreeLibSet.Logging
         catch { }
         args.IndentLevel = indentLevel;
 
-        if (asses[i].ReflectionOnly)
+        if (asms[i].ReflectionOnly)
           args.WriteLine("Reflection only");
         if (IsAssemblyEntryPointAvailable)
         {
-          if (asses[i].EntryPoint != null)
-            args.WriteLine("Entry point: " + asses[i].EntryPoint.DeclaringType.Name + "." + asses[i].EntryPoint.Name); // TODO: Вывести правильно имя метода по синтаксису C# 
+          if (asms[i].EntryPoint != null)
+            args.WriteLine("Entry point: " + asms[i].EntryPoint.DeclaringType.Name + "." + asms[i].EntryPoint.Name); // TODO: Вывести правильно имя метода по синтаксису C# 
         }
         args.IndentLevel--;
       }

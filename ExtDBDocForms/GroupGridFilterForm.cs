@@ -115,7 +115,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создает фильтр
     /// </summary>
-    /// <param name="ui">Интефрейс пользователя для базы данных</param>
+    /// <param name="ui">Интерфейс пользователя для базы данных</param>
     /// <param name="groupDocTypeName">Имя вида документов групп</param>
     /// <param name="groupRefColumnName">Ссылочное поле на группу</param>
     public RefGroupDocGridFilter(DBUI ui, string groupDocTypeName, string groupRefColumnName)

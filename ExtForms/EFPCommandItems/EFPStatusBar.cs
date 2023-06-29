@@ -22,7 +22,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Эта версия конструктора предназначена для создания панелей для управляющего элемента
     /// </summary>
-    /// <param name="statusBarControl">Интефрейс управляющего элемента статусной строки. Не может быть null</param>
+    /// <param name="statusBarControl">Интерфейс управляющего элемента статусной строки. Не может быть null</param>
     /// <param name="ownerControl">Если не null, то к этому элементу будет присоединен
     /// обработчик Disposed, чтобы выполнить Dispose() для коллекции</param>
     public EFPStatusBarPanels(IEFPStatusBarControl statusBarControl, Control ownerControl)

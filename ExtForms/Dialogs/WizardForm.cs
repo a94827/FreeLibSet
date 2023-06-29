@@ -490,9 +490,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Разрушение мастера.
-    /// Вызывает обработчик события Disposed, если он установлен.
-    /// Затем вызывается метод Dispose() для всех присоединенных объектов
-    /// в списке DisposableObjects. Затем ликвидируются объекты WizardStep.
+    /// Вызывает обработчик события <see cref="Disposed"/>, если он установлен.
+    /// Затем вызывается метод <see cref="IDisposable.Dispose()"/> для всех объектов, присоединенных методом <see cref="AddDisposable(IDisposable)"/>.
+    /// Затем ликвидируются объекты <see cref="WizardStep"/>.
     /// </summary>
     /// <param name="disposing">true, если был вызван метод Dispose()</param>
     protected override void Dispose(bool disposing)
@@ -532,9 +532,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавляет в список объект, который должен быть удален.
     /// Когда работа мастера завершается, то для всех добавленных
-    /// в список объектов будет вызван метод Dispose()
+    /// в список объектов будет вызван метод <see cref="IDisposable.Dispose()"/>.
+    /// Если передано значение null, никаких действий не выполняется.
     /// </summary>
-    /// <param name="obj">Объект, реализующий интерфейс IDisposable</param>
+    /// <param name="obj">Объект, реализующий интерфейс <see cref="IDisposable"/>. Может быть null.</param>
     public void AddDisposable(IDisposable obj)
     {
       CheckNotDisposed();
@@ -552,48 +553,103 @@ namespace FreeLibSet.Forms
 
     #region Свойства, устанавливаемые до запуска
 
+    private void CheckNotStarted()
+    {
+      if (TheForm != null)
+        throw new InvalidOperationException("Свойство можно устанавливать только до запуска мастера");
+    }
+
     /// <summary>
-    /// Заголовок окна
+    /// Заголовок окна. 
+    /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
-    public string Title { get { return _Title; } set { _Title = value; } }
+    public string Title {
+      get { return _Title??String.Empty; }
+      set
+      {
+        CheckNotStarted();
+        _Title = value;
+      }
+    }
     private string _Title;
 
     /// <summary>
     /// Должно ли показываться изображение в левой части экрана (по умолчанию - true).
-    /// Можно запретить изображение для отдельных шагов, устанавливая 
-    /// StepWizard.ShowImage=false
+    /// Можно запретить изображение для отдельных шагов, устанавливая свойства
+    /// <see cref="WizardStep.ShowImage"/>=false.
+    /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
-    public bool ShowImage { get { return _ShowImage; } set { _ShowImage = value; } }
+    public bool ShowImage
+    { get { return _ShowImage; }
+      set
+      {
+        CheckNotStarted();
+        _ShowImage = value;
+      }
+    }
     private bool _ShowImage;
 
     /// <summary>
     /// Если true, то пользователь может менять размеры окна. Также имеется кнопка
-    /// "Развернуть". По умолчанию - false, изменять размеры окна нельзя
+    /// "Развернуть". По умолчанию - false, изменять размеры окна нельзя.
+    /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
-    public bool Sizeable { get { return _Sizeable; } set { _Sizeable = value; } }
+    public bool Sizeable
+    { get { return _Sizeable; }
+      set
+      {
+        CheckNotStarted();
+        _Sizeable = value;
+      }
+    }
     private bool _Sizeable;
 
     /// <summary>
-    /// Изображения для значка формы мастера из EFPApp.MainImages.
-    /// Если не задано (по умолчанию), то окно не содержит иконки
+    /// Изображения для значка формы мастера из <see cref="EFPApp.MainImages"/>.
+    /// Если не задано (по умолчанию), то окно не содержит иконки.
+    /// Если свойство не задано и не установлено главное окно программы, то выводится значок приложения.
+    /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
-    public string ImageKey { get { return _ImageKey; } set { _ImageKey = value; } }
+    public string ImageKey
+    { get { return _ImageKey ?? String.Empty; }
+      set
+      {
+        CheckNotStarted();
+        _ImageKey = value;
+      }
+    }
     private string _ImageKey;
 
     /// <summary>
-    /// Контекст справки для формы в-целом
+    /// Контекст справки для формы в-целом.
+    /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
     public string HelpContext
     {
-      get { return _HelpContext; }
+      get { return _HelpContext ?? String.Empty; }
       set
       {
-        if (TheForm != null)
-          throw new InvalidOperationException("Свойство можно устанавливать только до запуска мастера");
+        CheckNotStarted();
         _HelpContext = value;
       }
     }
+
     private string _HelpContext;
+
+    /// <summary>
+    /// Имя секции конфигурации для хранения положения формы (и размеров, если установлено свойство <see cref="Sizeable"/>=true.
+    /// Свойство можно устанавливать только до запуска мастера.
+    /// </summary>
+    public string ConfigSectionName
+    {
+      get { return _ConfigSectionName??String.Empty; }
+      set
+      {
+        CheckNotStarted();
+        _ConfigSectionName = value;
+      }
+    }
+    private string _ConfigSectionName;
 
     #endregion
 
@@ -604,8 +660,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Текущий шаг "Мастера".
     /// Переключение шагов мастера выполняется при нажатии кнопок пользователем.
+    /// Первый шаг мастера задается в конструкторе объекта <see cref="Wizard"/>.
     /// Определение следующего шага мастера определяется обработчиком события
-    /// WizardStep.NextStep и не может быть изменено снаружи.
+    /// <see cref="WizardStep.GetNext"/> и не может быть изменено снаружи.
     /// </summary>
     public WizardStep CurrentStep
     {
@@ -694,6 +751,7 @@ namespace FreeLibSet.Forms
         TheForm.MaximizeBox = true;
       }
       TheForm.efpForm.HelpContext = HelpContext;
+      TheForm.efpForm.ConfigSectionName = ConfigSectionName;
 
       EFPApp.ShowDialog(TheForm, true);
       // Самоликвидируемся
@@ -766,7 +824,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущая отображаемая временная страница или null в обычном состоянии, когда
-    /// отображается шаг мастера
+    /// отображается шаг мастера.
     /// </summary>
     public WizardTempPage TempPage { get { return _TempPage; } }
     internal WizardTempPage _TempPage;
@@ -832,15 +890,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Это событие вызывается, когда при выполнении мастера возникает исключение, перед вызовом
-    /// EFPApp.ShowException().
+    /// <see cref="EFPApp.ShowException(Exception, string)"/>.
     /// Обработчик может, например, добавить к исключению собственные данные или самостоятельно
     /// вывести сообщение об ошибке.
-    /// Если обработик установил свойство Handled, показ исключения не выполняется
+    /// Если обработик установил свойство Handled, показ исключения не выполняется.
     /// </summary>
     public event EFPAppExceptionEventHandler HandleException;
 
     /// <summary>
-    /// Вызывает EFPApp.ShowException(), предварительно вызывая событие HandleException
+    /// Вызывает <see cref="EFPApp.ShowException(Exception, string)"/>, предварительно вызывая событие <see cref="HandleException"/>.
     /// </summary>
     /// <param name="exception">Перехваченное исключение</param>
     /// <param name="exceptionTitle">Заголовок исключения</param>
@@ -918,7 +976,7 @@ namespace FreeLibSet.Forms
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события WizardStep.GetNext
+  /// Аргументы события <see cref="WizardStep.GetNext"/>
   /// </summary>
   public class WizardGetNextEventArgs : EventArgs
   {
@@ -953,15 +1011,15 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события WizardStep.GetNext
+  /// Делегат события <see cref="WizardStep.GetNext"/>
   /// </summary>
-  /// <param name="sender">Ссылка на текщий шаг Мастера (WizardStep)</param>
+  /// <param name="sender">Ссылка на текщий шаг Мастера (<see cref="WizardStep"/>)</param>
   /// <param name="args">Аргументы события</param>
   public delegate void WizardGetNextEventHandler(object sender,
     WizardGetNextEventArgs args);
 
   /// <summary>
-  /// Аргументы события WizardStep.BeginStep
+  /// Аргументы события <see cref="WizardStep.BeginStep"/>
   /// </summary>
   public class WizardBeginStepEventArgs : EventArgs
   {
@@ -1004,15 +1062,15 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события WizardStep.BeginStep
+  /// Делегат события <see cref="WizardStep.BeginStep"/>
   /// </summary>
-  /// <param name="sender">Ссылка на текщий шаг Мастера (WizardStep)</param>
+  /// <param name="sender">Ссылка на текщий шаг Мастера (<see cref="WizardStep"/>)</param>
   /// <param name="args">Аргументы события</param>
   public delegate void WizardBeginStepEventHandler(object sender,
     WizardBeginStepEventArgs args);
 
   /// <summary>
-  /// Аргументы события WizardStep.EndStep
+  /// Аргументы события <see cref="WizardStep.EndStep"/>
   /// </summary>           
   public class WizardEndStepEventArgs : EventArgs
   {
@@ -1062,9 +1120,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события WizardStep.EndStep
+  /// Делегат события <see cref="WizardStep.EndStep"/>
   /// </summary>
-  /// <param name="sender">Ссылка на текщий шаг Мастера (WizardStep)</param>
+  /// <param name="sender">Ссылка на текщий шаг Мастера (<see cref="WizardStep"/>)</param>
   /// <param name="args">Аргументы события</param>
   public delegate void WizardEndStepEventHandler(object sender,
     WizardEndStepEventArgs args);
@@ -1150,7 +1208,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Показывать ли изображение для этого шага? (по умолчанию - true)
-    /// Свойство не действует, если Wizard.ShowImage=false;
+    /// Свойство не действует, если <see cref="Wizard.ShowImage"/>=false;
     /// </summary>
     public bool ShowImage { get { return _ShowImage; } set { _ShowImage = value; } }
     private bool _ShowImage;
@@ -1247,7 +1305,7 @@ namespace FreeLibSet.Forms
     internal Wizard _Wizard;
 
     /// <summary>
-    /// Свойство возврщае тrue, когда этот шаг является текущим в мастере
+    /// Свойство возвращает тrue, когда этот шаг является текущим в мастере
     /// </summary>
     public bool IsCurrentStep
     {
@@ -1271,8 +1329,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при активации шага мастера.
-    /// Непереопределенный метод активирует контекст справки, если свойство WizardStep.HelpContext установлено.
-    /// Затем вызывается событие BeginStep.
+    /// Непереопределенный метод активирует контекст справки, если свойство <see cref="WizardStep.HelpContext"/> установлено.
+    /// Затем вызывается событие <see cref="BeginStep"/>.
     /// </summary>
     /// <param name="action">Причина открытия</param>
     internal protected virtual void OnBeginStep(WizardAction action)
@@ -1310,7 +1368,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Завершение шага мастера.
-    /// Непереопределенный метод вызывает событие EndStep.
+    /// Непереопределенный метод вызывает событие <see cref="EndStep"/>.
     /// Метод возвращает true, если шаг мастера может быть завершен
     /// </summary>
     /// <param name="action"></param>
@@ -1348,9 +1406,9 @@ namespace FreeLibSet.Forms
     public event WizardGetNextEventHandler GetNext;
 
     /// <summary>
-    /// Непереопределенный метод вызывает событие GetNext.
+    /// Непереопределенный метод вызывает событие <see cref="GetNext"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Следующий шаг мастера, который должен быть выполнен</returns>
     internal protected virtual WizardStep OnGetNext()
     {
       if (GetNext != null)
@@ -1414,7 +1472,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Разрушает Control, если данный объект является его владельцем
+    /// Разрушает <see cref="Control"/>, если данный объект является его владельцем
     /// </summary>
     internal protected virtual void Close()
     {
@@ -1496,8 +1554,8 @@ namespace FreeLibSet.Forms
     public event EventHandler CancelClick;
 
     /// <summary>
-    /// Вызывает обработчик события CancelClick, если он установлен.
-    /// Если CancelEnabled=false, то событие не вызывается.
+    /// Вызывает обработчик события <see cref="CancelClick"/>, если он установлен.
+    /// Если <see cref="CancelEnabled"/>=false, то событие не вызывается.
     /// </summary>
     internal protected virtual void OnCancelClick()
     {

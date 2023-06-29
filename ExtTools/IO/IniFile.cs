@@ -69,7 +69,7 @@ namespace FreeLibSet.IO
   }
 
   /// <summary>
-  /// Интефрейс доступа к INI-файлам.
+  /// Интерфейс доступа к INI-файлам.
   /// Доступ может быть реализован путем обычного чтения-записи файла (класс <see cref="IniFile"/>)
   /// или вызовами Windows API (класс <see cref="FreeLibSet.Win32.IniFileWindows"/>)
   /// </summary>

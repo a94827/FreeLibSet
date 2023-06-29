@@ -21,7 +21,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Окно с процентным индикатором
   /// Окно может быть создано из любого потока, но дальнейшая вся работа должна выполняться из него же.
-  /// Для созданного окна в блоке finally должен быть вызван метод Close() или можно использовать конструкцию using
+  /// Для созданного окна в блоке finally должен быть вызван метод <see cref="Close()"/> или можно использовать конструкцию using
   /// </summary>
   public class Splash : ISplash, IDisposable
   {
@@ -29,7 +29,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Эта версия конструктора создает заставку, состояющую из одной фазы.
-    /// Текст заставки - "Идет процесс" (SplashTools.DefaultSplashItems)
+    /// Текст заставки - "Идет процесс" (<see cref="SplashTools.DefaultSplashItems"/>)
     /// </summary>
     public Splash()
       : this(SplashTools.DefaultSplashItems)
@@ -229,9 +229,9 @@ namespace FreeLibSet.Forms
     #region Текущая фаза
 
     /// <summary>
-    /// Номер текущей фазы в диапазоне от 0 до Items.Count-1.
+    /// Номер текущей фазы в диапазоне от 0 до <see cref="PhaseCount"/>.
     /// Установка свойства из прикладного кода не рекомендуется.
-    /// Используйте методы Complete() и Skip().
+    /// Используйте методы <see cref="Complete()"/> и <see cref="Skip()"/>.
     /// </summary>
     public int Phase
     {
@@ -296,7 +296,7 @@ namespace FreeLibSet.Forms
     private string _PhaseText;
 
     /// <summary>
-    /// Закрываем текущую тему установкой отметки "Выполнено" и переходим к следующей
+    /// Закрываем текущую фазу установкой отметки "Выполнено" и переходим к следующей
     /// </summary>
     public void Complete()
     {
@@ -304,7 +304,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Закрываем текущую тему установкой отметки "Отменено" и переходим к следующей
+    /// Закрываем текущую фазу установкой отметки "Отменено" и переходим к следующей
     /// </summary>
     public void Skip()
     {
@@ -314,7 +314,7 @@ namespace FreeLibSet.Forms
     private int _CurrentIndex;
 
     /// <summary>
-    /// Установка темы на текущую позицию 
+    /// Установка фазы на текущую позицию 
     /// </summary>
     private void DoSetItem()
     {
@@ -360,7 +360,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает состояние заданной фазы
     /// </summary>
-    /// <param name="phase">Индекс фазы от 0 до PhaseCount-1</param>
+    /// <param name="phase">Индекс фазы от 0 до <see cref="PhaseCount"/>-1</param>
     /// <returns>Состояние фазы</returns>
     public SplashPhaseState GetPhaseState(int phase)
     {
@@ -382,7 +382,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить состояния для всех фаз
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив состояний</returns>
     public SplashPhaseState[] GetPhaseStates()
     {
       SplashPhaseState[] a = new SplashPhaseState[_Phases.Length];
@@ -408,7 +408,7 @@ namespace FreeLibSet.Forms
     /// Возможность прерывания процесса пользователем
     /// (доступность кнопки "Отмена"). По умолчанию - false.
     /// Если программа устанавливает свойство, она должна
-    /// периодически опрашивать свойство Cancelled
+    /// периодически опрашивать свойство <see cref="Cancelled"/>
     /// </summary>
     public bool AllowCancel
     {
@@ -431,8 +431,8 @@ namespace FreeLibSet.Forms
     private bool _AllowCancel;
 
     /// <summary>
-    /// Инициализация доступности кнопки "Отмена" при установке свойства AllowCancel.
-    /// Если заставка встраивается в Wizard, то выполняются другие действия.
+    /// Инициализация доступности кнопки "Отмена" при установке свойства <see cref="AllowCancel"/>=true.
+    /// Если заставка встраивается в <see cref="Wizard"/>, то выполняются другие действия.
     /// </summary>
     protected virtual void InitCancelButton()
     {
@@ -461,7 +461,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Проверяет свойство Cancelled и генерирует исключение, если пользователь прервал процесс
+    /// Проверяет свойство <see cref="Cancelled"/> и генерирует исключение <see cref="UserCancelException"/>, если пользователь прервал процесс
     /// </summary>
     public void CheckCancelled()
     {
@@ -471,13 +471,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает Application.DoEvents() и Thread.Sleep()
+    /// Вызывает <see cref="Application.DoEvents()"/> и <see cref="Thread.Sleep(int)"/>
     /// </summary>
-    /// <param name="Milliseconds"></param>
-    public void Sleep(int Milliseconds)
+    /// <param name="milliseconds">Время ожидания в миллисекундах</param>
+    public void Sleep(int milliseconds)
     {
       Application.DoEvents();
-      System.Threading.Thread.Sleep(Milliseconds);
+      System.Threading.Thread.Sleep(milliseconds);
       Application.DoEvents(); // 31.08.2017
     }
 
@@ -486,8 +486,8 @@ namespace FreeLibSet.Forms
     #region Процентный индикатор
 
     /// <summary>
-    /// Диапазон для процентного индикатора. 0-нет процентного индикатора
-    /// Установка значения свойства сбрасывает Percent в 0
+    /// Диапазон для процентного индикатора. 0-нет процентного индикатора.
+    /// Установка значения свойства сбрасывает <see cref="Percent"/> в 0
     /// </summary>
     public int PercentMax
     {
@@ -498,8 +498,8 @@ namespace FreeLibSet.Forms
     private int _PercentMax;
 
     /// <summary>
-    /// Установка процентного индикатора
-    /// CheckCancelled() не вызывается
+    /// Установка процентного индикатора.
+    /// <see cref="CheckCancelled()"/> не вызывается.
     /// </summary>
     /// <param name="percent">Текущее значение процентного индикатора</param>
     /// <param name="percentMax">Максимальное значение процентного индикатора</param>
@@ -523,9 +523,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Текущее значение для процентного индикатора
-    /// Установка свойства вызывает CheckCancelled(), если AllowCancel=true, 
-    /// Вызывается Application.DoEvents()
+    /// Текущее значение для процентного индикатора.
+    /// Установка свойства вызывает <see cref="CheckCancelled()"/>, если <see cref="AllowCancel"/>=true.
+    /// Вызывается <see cref="Application.DoEvents()"/>.
     /// </summary>
     public int Percent
     {
@@ -552,8 +552,9 @@ namespace FreeLibSet.Forms
     private int _Percent;
 
     /// <summary>
-    /// Увеличение значения процентного индикатора на 1
-    /// Вызывает CheckCancelled(), если AllowCancel=true, 
+    /// Увеличение значения процентного индикатора на 1.
+    /// Установка свойства вызывает <see cref="CheckCancelled()"/>, если <see cref="AllowCancel"/>=true.
+    /// Вызывается <see cref="Application.DoEvents()"/>.
     /// </summary>
     public void IncPercent()
     {
@@ -565,8 +566,8 @@ namespace FreeLibSet.Forms
     #region Дополнительно
 
     /// <summary>
-    /// Используется объектом SplashStack.
-    /// Не предназначено для использования в пользовательском коде
+    /// Используется объектом <see cref="SplashStack"/>.
+    /// Не предназначено для использования в пользовательском коде.
     /// </summary>
     public int StackSerialId { get { return _StackSerialId; } set { _StackSerialId = value; } }
     private int _StackSerialId;
@@ -585,20 +586,20 @@ namespace FreeLibSet.Forms
     private Thread _DebugTheThread;
 
     /// <summary>
-    /// Возвращает true, если заставка была создана из основного потока EFPApp.
+    /// Возвращает true, если заставка была создана из основного потока <see cref="EFPApp.MainThread"/>.
     /// Только для отладочных целей.
     /// </summary>
     public bool DebugIsMainThread { get { return Object.ReferenceEquals(_DebugTheThread, EFPApp.MainThread); } }
 
     /// <summary>
-    /// Возвращает true, если заставка была создана в текущем потоке Thread.CurrentThread.
+    /// Возвращает true, если заставка была создана в текущем потоке <see cref="Thread.CurrentThread"/>.
     /// Только для отладочных целей.
     /// </summary>
     public bool DebugIsCurrentThread { get { return Object.ReferenceEquals(_DebugTheThread, Thread.CurrentThread); } }
 
     /// <summary>
-    /// Генерирует исключение DifferentThreadException при вызове из потока,
-    /// отличного от того, где была создана заставка
+    /// Генерирует исключение <see cref="DifferentThreadException"/> при вызове из потока,
+    /// отличного от того, где была создана заставка.
     /// </summary>
     internal void CheckThread()
     {
@@ -660,8 +661,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Стек экранных заставок. Управляет объектами Splash (окнами заставок Windows Forms).
-  /// Объект предназначен для работы только в одном потоке, но не обязательно в основном потоке, в котором вызывался EFPApp.InitApp()
+  /// Стек экранных заставок. Управляет объектами <see cref="FreeLibSet.Forms.Splash"/> (окнами заставок Windows Forms).
+  /// Объект предназначен для работы только в одном потоке, но не обязательно в основном потоке, в котором вызывался <see cref="EFPApp.InitApp()"/>.
   /// </summary>
   public sealed class SplashStack : SimpleDisposableObject, ISplashStack
   {
@@ -672,7 +673,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает пустой стек заставок.
     /// Может вызываться из любого потока. Все последующие вызовы методов объекта должны выполняться из потока, в котором вызван конструктор.
-    /// Эта версия конструктора создает автономный объект, ни к чему его не присоединяя
+    /// Эта версия конструктора создает автономный объект, ни к чему его не присоединяя.
     /// </summary>
     public SplashStack()
       : this(false)
@@ -680,11 +681,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает пустой стек заставок и, опционально, вызывает SplashTools.PushThreadSplashStack().
-    /// Когда будет вызван метод Dispose(), то, при необходимости, вызывается PopThreadSplashStack().
+    /// Создает пустой стек заставок и, опционально, вызывает <see cref="SplashTools.PushThreadSplashStack()"/>.
+    /// Когда будет вызван метод Dispose(), то, при необходимости, вызывается <see cref="SplashTools.PopThreadSplashStack()"/>.
     /// Используется, когда стек заставок создается для выполнения ограниченных действий, чтобы ограничиться одним блоком using.
     /// </summary>
-    /// <param name="pushForThread">Если true, то будут вызываться SplashTools.Push/PopThreadSplashStack()</param>
+    /// <param name="pushForThread">Если true, то будут вызываться <see cref="SplashTools.PushThreadSplashStack()"/> 
+    /// и <see cref="SplashTools.PopThreadSplashStack()"/></param>
     public SplashStack(bool pushForThread)
     {
 #if DEBUG
@@ -702,9 +704,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Закрытие стека заставок.
-    /// Если вызван из метода Dispose(), то закрывает все заставки, для которых нее было парного вызова EndSplash()
+    /// Если вызван из метода Dispose(), то закрывает все заставки, для которых нее было парного вызова <see cref="EndSplash()"/>.
     /// </summary>
-    /// <param name="disposing"></param>
+    /// <param name="disposing">True, если был вызван метод Dispose().</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -744,7 +746,7 @@ namespace FreeLibSet.Forms
     private int _StackVersion;
 
     /// <summary>
-    /// Создает новую экранную заставку Splash и помещает ее в стек.
+    /// Создает новую экранную заставку <see cref="FreeLibSet.Forms.Splash"/> и помещает ее в стек.
     /// Заставка немедленно отображается на экране.
     /// </summary>
     /// <param name="phases">Список названий фаз. Список не может быть пустым</param>
@@ -768,7 +770,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает новую экранную заставку Splash из одной фазы и помещает ее в стек.
+    /// Создает новую экранную заставку <see cref="FreeLibSet.Forms.Splash"/> из одной фазы и помещает ее в стек.
     /// Заставка немедленно отображается на экране.
     /// </summary>
     /// <param name="phaseText">Название фазы</param>
@@ -779,7 +781,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает новую экранную заставку Splash из одной фазы "Идет процесс" и помещает ее в стек.
+    /// Создает новую экранную заставку <see cref="FreeLibSet.Forms.Splash"/> из одной фазы "Идет процесс" (<see cref="SplashTools.DefaultSplashItems"/>) 
+    /// и помещает ее в стек.
     /// Заставка немедленно отображается на экране.
     /// </summary>
     /// <returns>Интферфейс управления заставкой</returns>
@@ -789,7 +792,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Закрывает заставку, открытую последним вызовом BeginSplash().
+    /// Закрывает заставку, открытую последним вызовом <see cref="BeginSplash()"/>.
     /// Заставка немедленно убирается с экрана.
     /// </summary>
     public void EndSplash()
@@ -810,7 +813,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает итерфейс управления текущей (активной) заставкой на экране.
     /// Если стек заставок пустой, то возвращается null.
-    /// Если на экране есть другие заставки Splash, созданные вне данного стека, то к ним не доступа из текущего объекта SplashStack.
+    /// Если на экране есть другие заставки <see cref="FreeLibSet.Forms.Splash"/>, созданные вне данного стека, 
+    /// то к ним не доступа из текущего объекта <see cref="SplashStack"/>.
     /// </summary>
     public ISplash Splash
     {
@@ -831,7 +835,7 @@ namespace FreeLibSet.Forms
     /// Возвращает массив экранных заставок в данном стеке.
     /// Текущая (активная) заставка имеет индекс 0.
     /// Если стек не содержит заставок, возвращается пустой массив.
-    /// Если на экране есть другие заставки Splash, созданные вне данного стека, то они не учитываются.
+    /// Если на экране есть другие заставки <see cref="FreeLibSet.Forms.Splash"/>, созданные вне данного стека, то они не учитываются.
     /// </summary>
     /// <returns>Массив интерфейсов управления экранными заставками</returns>
     public ISplash[] GetSplashStack()
@@ -844,7 +848,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Метод предназначен для использования в MemorySplashStack.
+    /// Метод предназначен для использования в <see cref="MemorySplashStack"/>.
     /// </summary>
     /// <param name="stackVersion"></param>
     /// <returns></returns>
@@ -868,14 +872,16 @@ namespace FreeLibSet.Forms
 #if DEBUG
 
     /// <summary>
-    /// Поток, из которого был вызван конструктор стека
+    /// Поток, из которого был вызван конструктор стека.
+    /// Не использовать в прикладном коде.
     /// </summary>
     public Thread TheThread { get { return _TheThread; } }
     private Thread _TheThread;
 
     /// <summary>
-    /// Генерирует исключение DifferentThreadException при вызове из потока,
-    /// отличного от того, где была создана заставка
+    /// Генерирует исключение <see cref="DifferentThreadException"/> при вызове из потока,
+    /// отличного от того, где была создана заставка.
+    /// Не использовать в прикладном коде.
     /// </summary>
     public void CheckThread()
     {

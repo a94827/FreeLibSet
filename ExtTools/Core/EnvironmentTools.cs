@@ -58,6 +58,7 @@ namespace FreeLibSet.Core
       // 26.03.2018
       // Используем статический конструктор, чтобы поля инициализировались в правильном порядке,
       // а не как придется
+      _Is64BitOperatingSystem = GetIs64BitOperatingSystem();
       _IsWine = GetIsWine();
       _MonoVersion = GetMonoVersion();
 
@@ -82,8 +83,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает Assembly.GetEntryAssembly()
-    /// Для доменов, отличных от домена приложения, пытается вернуть самую первую сборку
+    /// Возвращает <see cref="Assembly.GetEntryAssembly()"/>
+    /// Для доменов, отличных от домена приложения, пытается вернуть самую первую сборку.
     /// </summary>
     public static Assembly EntryAssembly
     {
@@ -131,8 +132,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает версию Mono.
-    /// Эта версия не совпадает с Environment.Version.
-    /// Если IsMono=false, возвращает версию "0.0.0.0"
+    /// Эта версия не совпадает с <see cref="Environment.Version"/>.
+    /// Если <see cref="IsMono"/>=false, возвращает версию "0.0.0.0"
     /// </summary>
     public static Version MonoVersion
     {
@@ -172,7 +173,6 @@ namespace FreeLibSet.Core
       }
     }
 
-
     /// <summary>
     /// Возвращает читаемое название версии .NET Framework/Mono с указанием разрядности.
     /// Для моно возвращается версия mono и версия Common Language Runtime.
@@ -188,13 +188,12 @@ namespace FreeLibSet.Core
       }
     }
 
-
     #endregion
 
     #region OS
 
     /// <summary>
-    /// Текстовое представление для версии ОС Environment.OSVersion, дополненное разрядностью (32 bit, 64 bit)
+    /// Текстовое представление для версии ОС <see cref="Environment.OSVersion"/>, дополненное разрядностью (32 bit, 64 bit)
     /// </summary>
     public static string OSVersionText { get { return _OSVersionText; } }
     private static string _OSVersionText;
@@ -249,7 +248,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает уточненный тип операционной системы Windows NT.
-    /// Значение действительно только, если Systrem.Environment.OSVersion.Platform = Win32NT
+    /// Значение действительно только, если <see cref="System.Environment.OSVersion"/>.Platform = Win32NT
     /// </summary>
     public static WinNTProductType WinNTProductType { get { return _WinNTProductType; } }
     private static WinNTProductType _WinNTProductType;
@@ -415,7 +414,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает версию Windows-10, которая подделывается под Windows 8.1.
+    /// Возвращает версию Windows-10/11, которая подделывается под Windows 8.1.
     /// Смотрим версию по файлу "user32.dll" 
     /// </summary>
     /// <returns></returns>
@@ -471,25 +470,26 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает true, если работает 64-битная версия Widnows
-    /// В Net Framework 4 есть аналогичное свойство в классе Environment
+    /// В Net Framework 4 есть аналогичное свойство в классе <see cref="Environment"/>.
     /// </summary>
-    public static bool Is64BitOperatingSystem
+    public static bool Is64BitOperatingSystem { get { return _Is64BitOperatingSystem; } }
+    private static bool _Is64BitOperatingSystem;
+
+    private static bool GetIs64BitOperatingSystem()
     {
-      get
+      if (Environment.OSVersion.Platform == PlatformID.Win32NT)
       {
-        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-        {
-          if (Environment.OSVersion.Version.Major < 5)
-            return false;
+        if (Environment.OSVersion.Version.Major < 5)
+          return false;
 
-          string KeyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment";
+        string KeyName = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment";
 
-          string s = Registry.GetValue(KeyName, "PROCESSOR_ARCHITECTURE", String.Empty).ToString();
-          return s != "x86";
-        }
-
-        return false; // !!!
+        string s = Registry.GetValue(KeyName, "PROCESSOR_ARCHITECTURE", String.Empty).ToString();
+        return s != "x86";
       }
+
+      //return false;
+      return IntPtr.Size == 8; // 28.06.2023
     }
 
     #endregion
@@ -498,7 +498,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Идентификатор сессии, от которой запущен текущий процесс.
-    /// Возвращает Process.SessionId
+    /// Возвращает <see cref="Process.SessionId"/>.
     /// </summary>
     public static int CurrentProcessSessionId
     {
@@ -517,14 +517,14 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Отсутствие сессии (-1).
-    /// Возвращается ActiveConsoleSessionId для неподходящей операционной системы
+    /// Возвращается <see cref="ActiveConsoleSessionId"/> для неподходящей операционной системы
     /// </summary>
     public const int NoSessionId = -1;
 
     /// <summary>
     /// Идентификатор сессии, связанной с текущей консолью.
     /// Работает только для Windows XP (или Windows 2000?) и старше. Использует WTSGetActiveConsoleSessionId().
-    /// Для остальных операционных систем возвращает NoSessionId
+    /// Для остальных операционных систем возвращает <see cref="NoSessionId"/>.
     /// </summary>
     public static int ActiveConsoleSessionId
     {

@@ -1032,7 +1032,7 @@ namespace FreeLibSet.Core
     #region ISimpleSplash
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     public int PercentMax
     {
@@ -1041,7 +1041,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     public int Percent
     {
@@ -1050,7 +1050,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     /// <param name="percent"></param>
     /// <param name="percentMax"></param>
@@ -1060,7 +1060,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     public void IncPercent()
     {
@@ -1068,7 +1068,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     public bool AllowCancel
     {
@@ -1077,7 +1077,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     public bool Cancelled
     {
@@ -1086,7 +1086,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     public void CheckCancelled()
     {
@@ -1094,7 +1094,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интефрейса ISimpleSplash
+    /// Реализация метода интерфейса ISimpleSplash
     /// </summary>
     /// <param name="milliseconds"></param>
     public void Sleep(int milliseconds)
@@ -1180,7 +1180,7 @@ namespace FreeLibSet.Remoting
   #endregion
 
   /// <summary>
-  /// Содержит ссылки на интефрейсы IAsyncResultWithSplash и IServerSplashWatcher.
+  /// Содержит ссылки на интерфейсы IAsyncResultWithSplash и IServerSplashWatcher.
   /// Метод GetIsCompledted() вызывает метод интерфейса IAsyncResultWithSplash и сохраняет во внутреннем поле объект SplashInfoPack.
   /// Реализует метод интерфейса IServerSplashWatcher.GetSplashInfoPack(). При этом возвращается сохраненный SplashInfoPack.
   /// Остальная реализация интерфейса IServerSplashWatcher переадресуется по существующей ссылке

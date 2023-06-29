@@ -21,9 +21,28 @@ namespace FreeLibSet.IO
   /// Не выполняет никаких действий с реальными файлами и каталогами.
   /// </summary>
   [Serializable]
-  public struct AbsPath: IEquatable<AbsPath>
+  public struct AbsPath : IEquatable<AbsPath>
   {
     #region Конструкторы
+
+    static AbsPath()
+    {
+      switch (Environment.OSVersion.Platform)
+      {
+        case PlatformID.Win32NT:
+        case PlatformID.Win32Windows:
+        case PlatformID.Win32S:
+        case PlatformID.WinCE:
+          ComparisonType = StringComparison.OrdinalIgnoreCase;
+          Comparer = StringComparer.OrdinalIgnoreCase;
+          break;
+        default:
+          ComparisonType = StringComparison.Ordinal;
+          Comparer = StringComparer.Ordinal;
+          break;
+      }
+
+    }
 
     /// <summary>
     /// Создает объект, содержащий абсолютный путь к файлу или каталогу.
@@ -40,7 +59,7 @@ namespace FreeLibSet.IO
         string s2 = RemoveQuotes(s);
         s2 = RemoveDirNameSlash(s2);
         if (String.IsNullOrEmpty(s2))
-          _Path = String.Empty;
+          _Path = null;
         else
         {
           if (s2.StartsWith("file:///", StringComparison.OrdinalIgnoreCase)) // 28.11.2014
@@ -186,12 +205,12 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Создает объект AbsPath. 
-    /// Если задана пустая строка или возникает ошибка преобразования, возвращается AbsPath.Empty.
-    /// См. описание соответствующего конструктора AbsPath.
+    /// Создает объект <see cref="AbsPath"/>.
+    /// Если задана пустая строка или возникает ошибка преобразования, возвращается <see cref="AbsPath.Empty"/>.
+    /// См. описание соответствующего конструктора <see cref="AbsPath"/>.
     /// </summary>
     /// <param name="s">Путь, который нужно преобразовать</param>
-    /// <returns>Объект AbsPath</returns>
+    /// <returns>Объект <see cref="AbsPath"/></returns>
     [DebuggerStepThrough]
     public static AbsPath Create(string s)
     {
@@ -209,14 +228,14 @@ namespace FreeLibSet.IO
 
 
     /// <summary>
-    /// Создает объект AbsPath. 
+    /// Создает объект <see cref="AbsPath"/>. 
     /// Если <paramref name="basePath"/>.IsEmpty=true или возникает ошибка преобразования,
-    /// возвращается AbsPath.Empty.
-    /// См. описание соответствующего конструктора AbsPath.
+    /// возвращается <see cref="AbsPath.Empty"/>.
+    /// См. описание соответствующего конструктора <see cref="AbsPath"/>.
     /// </summary>
     /// <param name="basePath">Базовый каталог</param>
     /// <param name="subNames">Дочерние подкаталоги</param>
-    /// <returns>Объект AbsPath</returns>
+    /// <returns>Объект <see cref="AbsPath"/></returns>
     [DebuggerStepThrough]
     public static AbsPath Create(AbsPath basePath, params string[] subNames)
     {
@@ -242,7 +261,7 @@ namespace FreeLibSet.IO
     /// для использования методами классов в System.IO.
     /// Задается в конструкторе.
     /// </summary>
-    public string Path { get { return _Path; } }
+    public string Path { get { return _Path ?? String.Empty; /* 29.06.2023 */ } }
     private readonly string _Path;
 
     /// <summary>
@@ -251,16 +270,13 @@ namespace FreeLibSet.IO
     public bool IsEmpty { get { return String.IsNullOrEmpty(_Path); } }
 
     /// <summary>
-    /// Возвращает Path.
-    /// Если <see cref="IsEmpty"/>=true, то возаращается пустая строка.
+    /// Возвращает свойство <see cref="Path"/>.
+    /// Если <see cref="IsEmpty"/>=true, то возвращается пустая строка.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      if (_Path == null)
-        return String.Empty;
-      else
-        return _Path;
+      return Path;
     }
 
     /// <summary>
@@ -283,13 +299,33 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Возвращает идентификатор ресурса "file://".
+    /// Для пустого экземпляра (<see cref="IsEmpty"/>=true) возвращает null.
     /// </summary>
     public Uri Uri
     {
       get
       {
-        // ??? Может быть нужна замена пробелов на %20 ???
-        return new Uri("file://" + Path);
+        if (IsEmpty)
+          return null; // 29.06.2023
+        else
+          // ??? Может быть нужна замена пробелов на %20 ???
+          return new Uri("file://" + Path);
+      }
+    }
+
+    /// <summary>
+    /// Путь в виде строки идентификатора ресурса "file://".
+    /// В отличие от основного свойства <see cref="Uri"/>, для пустого пути (<see cref="Empty"/>=true) возвращает <see cref="String.Empty"/>, а не null.
+    /// Используется метод <see cref="Uri.ToString()"/>.
+    /// </summary>
+    public string UriString
+    {
+      get
+      {
+        if (IsEmpty)
+          return String.Empty;
+        else
+          return new Uri("file://" + Path).ToString();
       }
     }
 
@@ -314,7 +350,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Добавление относительного пути.
-    /// Использует функцию System.IO.Path.Combine().
+    /// Использует функцию <see cref="System.IO.Path.Combine(string, string)"/>.
     /// </summary>
     /// <param name="basePath">Исходный путь. Не может быть пустым</param>
     /// <param name="subDir">Подкаталог. Если задана пустая строка, возвращается <paramref name="basePath"/>.</param>
@@ -352,7 +388,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Родительский каталог ("..").
-    /// Использует метод System.IO.Path.GetDirectoryName().
+    /// Использует метод <see cref="System.IO.Path.GetDirectoryName(string)"/>.
     /// </summary>
     public AbsPath ParentDir
     {
@@ -391,7 +427,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Возвращает корневой каталог.
-    /// Использует метод System.IO.Path.GetPathRoot().
+    /// Использует метод <see cref="System.IO.Path.GetPathRoot(string)"/>.
     /// Если <see cref="IsEmpty"/>=true, то возвращается пустой путь без выброса исключения.
     /// </summary>
     public AbsPath RootDir
@@ -411,44 +447,44 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Получить имя файла или каталога самого вложенного уровня (последнюю часть пути после разделителя)
-    /// (вызов System.IO.Path.GetFileName()).
+    /// (вызов <see cref="System.IO.Path.GetFileName(string)"/>).
     /// </summary>
     public string FileName
     {
       get
       {
-        return System.IO.Path.GetFileName(_Path);
+        return System.IO.Path.GetFileName(Path);
       }
     }
 
     /// <summary>
     /// Получить имя файла или каталога самого вложенного уровня без расширения
-    /// (вызов System.IO.Path.GetFileNameWithoutExtension())
+    /// (вызов <see cref="System.IO.Path.GetFileNameWithoutExtension(string)"/>)
     /// </summary>
     public string FileNameWithoutExtension
     {
       get
       {
-        return System.IO.Path.GetFileNameWithoutExtension(_Path);
+        return System.IO.Path.GetFileNameWithoutExtension(Path);
       }
     }
 
     /// <summary>
     /// Расширение имени файла или каталога самого вложенного уровня, включая точку
-    /// (вызов System.IO.Path.GetExtension())
+    /// (вызов <see cref="System.IO.Path.GetExtension(string)"/>)
     /// </summary>
     public string Extension
     {
       get
       {
-        return System.IO.Path.GetExtension(_Path);
+        return System.IO.Path.GetExtension(Path);
       }
     }
 
     /// <summary>
     /// Изменить расширение.
-    /// (вызов System.IO.Path.ChangeExtension())
-    /// Создает новый экземпляр AbsPath.
+    /// (вызов <see cref="System.IO.Path.ChangeExtension(string, string)"/>)
+    /// Создает новый экземпляр <see cref="AbsPath"/>.
     /// Если <see cref="IsEmpty"/>=true, выбрасывается исключение.
     /// </summary>
     /// <param name="newExtension">Новое расширение, включающее ведущую точку</param>
@@ -457,7 +493,7 @@ namespace FreeLibSet.IO
     {
       if (IsEmpty)
         throw new InvalidOperationException();
-      return new AbsPath(System.IO.Path.ChangeExtension(_Path, newExtension));
+      return new AbsPath(System.IO.Path.ChangeExtension(Path, newExtension));
     }
 
     #endregion
@@ -465,28 +501,17 @@ namespace FreeLibSet.IO
     #region Сравнение путей
 
     /// <summary>
-    /// Содержит true, если при сравнении путей учитывается регистр (Unix), или нет (Windows)
+    /// Учет регистра при сравнении путей. Содержит Ordinal (Unix), или OrdinalIgnoreCase (Windows)
     /// </summary>
-    internal static readonly StringComparison ComparisonType = GetComparisonType();
-
-    private static StringComparison GetComparisonType()
-    {
-      switch (Environment.OSVersion.Platform)
-      {
-        case PlatformID.Win32NT:
-        case PlatformID.Win32Windows:
-        case PlatformID.Win32S:
-        case PlatformID.WinCE:
-          return StringComparison.OrdinalIgnoreCase;
-        case PlatformID.Unix:
-          return StringComparison.Ordinal;
-        default:
-          throw new PlatformNotSupportedException();
-      }
-    }
+    internal static readonly StringComparison ComparisonType;
 
     /// <summary>
-    /// Возвращает true, если два пути являются одинаковыми (свойства Path совпадают).
+    /// Компаратор для сравнения строк
+    /// </summary>
+    internal static readonly StringComparer Comparer;
+
+    /// <summary>
+    /// Возвращает true, если два пути являются одинаковыми (свойства <see cref="Path"/> совпадают).
     /// Регистр символов учитывается или игнорируется, в зависимости от платформы.
     /// </summary>
     /// <param name="path1">Первый сравниваемый путь</param>
@@ -503,7 +528,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает false, если два пути являются одинаковыми (свойства Path совпадают).
+    /// Возвращает false, если два пути являются одинаковыми (свойства <see cref="Path"/> совпадают).
     /// Регистр символов учитывается или игнорируется, в зависимости от платформы.
     /// </summary>
     /// <param name="path1">Первый сравниваемый путь</param>
@@ -515,7 +540,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Сравнение с другим AbsPath
+    /// Сравнение с другим <see cref="AbsPath"/>
     /// </summary>
     /// <param name="other">Второй сравниваемый путь</param>
     /// <returns>Результат сравнения</returns>
@@ -525,7 +550,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Сравнение с другим AbsPath
+    /// Сравнение с другим <see cref="AbsPath"/>
     /// </summary>
     /// <param name="other">Второй сравниваемый путь</param>
     /// <returns>Результат сравнения</returns>
@@ -547,16 +572,21 @@ namespace FreeLibSet.IO
       if (IsEmpty)
         return 0;
       else
+      {
         //return FPath.GetHashCode();
         // Так нельзя, т.к. мы сравниваем строки без учета регистра
-        return _Path.Length;
+        //return _Path.Length;
+
+        // 29.06.2023
+        return Comparer.GetHashCode(_Path);
+      }
     }
 
     /// <summary>
     /// Возвращает true, если текущий путь равен <paramref name="path"/> или является вложенным по отношению к <paramref name="path"/>.
     /// Например, если path=C:/Windows, то для текущего пути c:/WINDOWS и c:/Windows/temp/123.txt будет возвращено true.
     /// Если текущий каталог начинается так же, но не относится к <paramref name="path"/>, то возвращается false, например для
-    /// c:/windows2 и c:/Windows2/temp/123.txt. Этим метод отличается от простого вызова метода AbsPath.Path.StartsWith().
+    /// c:/windows2 и c:/Windows2/temp/123.txt. Этим метод отличается от простого вызова метода <see cref="String.StartsWith(string)"/>.
     /// Регистр символов учитывается или не учитывается, в зависимости от платформы.
     /// Если текущий путь или <paramref name="path"/> - пустой, возвращается false.
     /// </summary>

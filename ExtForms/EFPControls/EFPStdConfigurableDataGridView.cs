@@ -11,7 +11,7 @@ using FreeLibSet.Data;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Расширение провайдера табличного просмотра для использования класса продюсера EFPGridProducer, вместо интефрейса IEFPGridProducer.
+  /// Расширение провайдера табличного просмотра для использования класса продюсера EFPGridProducer, вместо интерфейса IEFPGridProducer.
   /// Позволяет использовать повторитель таблиц EFPGridProducerDataTableRepeater.
   /// </summary>
   public class EFPStdConfigurableDataGridView : EFPConfigurableDataGridView

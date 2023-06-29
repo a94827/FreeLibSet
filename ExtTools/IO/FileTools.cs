@@ -107,6 +107,8 @@ namespace FreeLibSet.IO
 
     // Аргументы имен файлов и каталогов должны иметь тип AbsPath, а не String для большинтва методов
 
+    #region Native methods
+
     /// <summary>
     /// Функции и структуры, специфические для платформы Windows
     /// </summary>
@@ -236,6 +238,8 @@ namespace FreeLibSet.IO
       }
     }
 
+    #endregion
+
     #region Имена файлов
 
     /// <summary>
@@ -329,20 +333,20 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Проверяет относительное имя файла на соответствие шаблону.
     /// Имя файла и шаблон может содержать символ разделителя каталога. Для успешной проверки число разделителей в шаблоне и в имени файла должно совпадать
-    /// (одинаковый уровень вложения). Каждая часть пути проверяется отдельно с помощью TestFileNameWildcards
-    /// в расширении
+    /// (одинаковый уровень вложения). Каждая часть пути проверяется отдельно с помощью <see cref="TestFileNameWildcards(string, string)"/>
+    /// в расширении.
     /// </summary>
-    /// <param name="fileName">Проверяемое имя файла</param>
+    /// <param name="fileName">Проверяемое имя файла. Может содержать символы разделителя каталога <see cref="Path.DirectorySeparatorChar"/>, но не букву диска.
+    /// Не может содержать симолы "*" и "?".
+    /// Не может быть пустой строкой.</param>
     /// <param name="template">Шаблон</param>
     /// <returns>true, если имя файла соответствует шаблону</returns>
     public static bool TestRelFileNameWildcards(string fileName, string template)
     {
-#if DEBUG
       if (String.IsNullOrEmpty(fileName))
         throw new ArgumentNullException("fileName");
       if (String.IsNullOrEmpty(template))
         throw new ArgumentNullException("template");
-#endif
 
       if (fileName.IndexOf(Path.DirectorySeparatorChar) < 0 && template.IndexOf(Path.DirectorySeparatorChar) < 0)
         // Нет разделителей каталога - простая проверка
@@ -375,16 +379,15 @@ namespace FreeLibSet.IO
     /// <returns>true, если имя файла соответствует шаблону</returns>
     public static bool TestFileNameWildcards(string fileName, string template)
     {
-#if DEBUG
       if (String.IsNullOrEmpty(fileName))
         throw new ArgumentNullException("fileName");
       if (String.IsNullOrEmpty(template))
         throw new ArgumentNullException("template");
-#endif
 
-      if (fileName.IndexOfAny(new char[] { '*', '?' }) >= 0)
-        throw new ArgumentException("Имя файла не может содержать шаблонные символы \"*\" и \"?\"", "fileName");
-
+      if (fileName.IndexOfAny(new char[] { '*', '?', Path.DirectorySeparatorChar }) >= 0)
+        throw new ArgumentException("Имя файла не может содержать шаблонные символы \"*\" и \"?\" и символ разделителя каталога", "fileName");
+      if (template.IndexOf(Path.DirectorySeparatorChar) >= 0)
+        throw new ArgumentException("Шаблон не может содержать шаблонные символы символ разделителя каталога", "template");
 
       int p;
       string fileName1, fileName2;
@@ -488,7 +491,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Проверка имени каталога, завершающегося обратной чертой
     /// Реальное существование каталога не проверяется.
-    /// Перегрузка соответствует режиму TestPathMode.FormatOnly.
+    /// Перегрузка соответствует режиму <see cref="TestPathMode.FormatOnly"/>.
+    /// Пустая строка считается ошибочной.
     /// </summary>
     /// <param name="dirName">Имя каталога, выбранное пользователем</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
@@ -510,7 +514,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Проверка имени файла
     /// Реальное существование файла и пути к нему не проверяется
-    /// Перегрузка соответствует режиму TestPathMode.FormatOnly.
+    /// Перегрузка соответствует режиму <see cref="TestPathMode.FormatOnly"/>.
+    /// Пустая строка считается ошибочной.
     /// </summary>
     /// <param name="fileName">Имя файла, выбранное пользователем</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
@@ -670,7 +675,7 @@ namespace FreeLibSet.IO
     /// В режиме <paramref name="mode"/>=None всегда возвращает true.
     /// </summary>
     /// <param name="dirName">Имя каталога, выбранное пользователем</param>
-    /// <param name="mode">Режим проверки. Значение FileExists не допускается</param>
+    /// <param name="mode">Режим проверки. Значение <see cref="TestPathMode.FileExists"/> не допускается</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
     /// <returns>true - имя каталога правильное</returns>
     public static bool TestDirSlashedPath(string dirName, TestPathMode mode, out string errorText)
@@ -787,7 +792,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Проверяет наличие файла на диске.
-    /// Если файл не существует, то генерируется исключение FileNotFoundException
+    /// Если файл не существует, то генерируется исключение <see cref="FileNotFoundException"/> или <see cref="DirectoryNotFoundException"/>.
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
     public static void CheckFileExists(AbsPath filePath)
@@ -796,12 +801,17 @@ namespace FreeLibSet.IO
         throw new ArgumentException("Путь не задан", "filePath");
 
       if (!File.Exists(filePath.Path))
-        throw new FileNotFoundException("Файл " + filePath.QuotedPath + " не найден");
+      {
+        if (Directory.Exists(filePath.ParentDir.Path))
+          throw new FileNotFoundException("Файл " + filePath.QuotedPath + " не найден");
+        else
+          throw new DirectoryNotFoundException("Каталог " + filePath.ParentDir.QuotedPath + " не найден"); // 26.06.2023
+      }
     }
 
     /// <summary>
     /// Проверяет наличие каталога на диске.
-    /// Если каталога не существует, то генерируется исключение DirectoryNotFoundException
+    /// Если каталога не существует, то генерируется исключение <see cref="DirectoryNotFoundException"/>
     /// </summary>
     /// <param name="dirPath">Путь к каталогу</param>
     public static void CheckDirectoryExists(AbsPath dirPath)
@@ -841,12 +851,12 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Удаление файлов.
-    /// Комбинация вызова метода System.IO.Directory.GetFiles() и 
-    /// удаления каждого файла с помощью DeleteFile().
+    /// Комбинация вызова метода <see cref="System.IO.Directory.GetFiles(string, string, SearchOption)"/> и 
+    /// удаления каждого файла с помощью <see cref="DeleteFile(AbsPath)"/>.
     /// Если для файла установлен атрибут "Только для чтения", атрибут снимается.
     /// В режиме рекурсивного удаления каталоги не удаляются.
     /// Если требуется очистить каталог от всех файлов и подкаталогов, используйте
-    /// метод ForceDirsAndClear().
+    /// метод <see cref="ForceDirsAndClear(AbsPath)"/>.
     /// В случае невозможности удалить один из файлов выбрасывается исключение.
     /// При этом некоторые файлы уже могут быть удалены.
     /// </summary>
@@ -866,8 +876,8 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Удаление файлов из текущего каталога.
-    /// Комбинация вызова метода System.IO.Directory.GetFiles() и 
-    /// удаления каждого файла с помощью DeleteFile().
+    /// Комбинация вызова метода <see cref="System.IO.Directory.GetFiles(string, string)"/> и 
+    /// удаления каждого файла с помощью <see cref="DeleteFile(AbsPath)"/>.
     /// Если для файла установлен атрибут "Только для чтения", атрибут снимается.
     /// Подкаталоги не просматриваются.
     /// В случае невозможности удалить один из файлов выбрасывается исключение.
@@ -885,7 +895,7 @@ namespace FreeLibSet.IO
     #region Создание цепочки каталогов
 
     /// <summary>
-    /// Обеспечение существования каталога. Имя каталога может, но не обязано заканчиваться на слэш
+    /// Обеспечение существования каталога
     /// </summary>
     /// <param name="dirPath">Каталог, который должен существовать</param>
     public static void ForceDirs(AbsPath dirPath)
@@ -899,7 +909,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Создать каталог, если его не существует, затем удалить все файлы, и 
-    /// вложенные каталоги, которые в нем есть
+    /// вложенные каталоги, которые в нем есть.
     /// Если очистка не удалась, вызывается исключения
     /// </summary>
     /// <param name="dirPath">Имя создаваемого каталога</param>
@@ -910,7 +920,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Создать каталог, если его не существует, затем удалить все файлы, и 
-    /// вложенные каталоги, которые в нем есть
+    /// вложенные каталоги, которые в нем есть.
     /// Возможна либо обязательная очистка, либо очистка "по возможности"
     /// </summary>
     /// <param name="dirPath">Имя создаваемого каталога</param>
@@ -935,7 +945,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Очищает каталог от файлов и вложенных каталогов, насколько это возможно
     /// Сам каталог <paramref name="dirPath"/> не удаляется
-    /// В отличие от методов рекурсивного удаления Directory.Delete(), невозможность удаления одного из файлов не прекращает процесс
+    /// В отличие от методов рекурсивного удаления <see cref="Directory.Delete(string, bool)"/>, невозможность удаления одного из файлов не прекращает процесс.
     /// Предупреждение. Неверное применение метода может привести к разрушительным последствиям
     /// </summary>
     /// <param name="dirPath">Очищаемый каталог</param>
@@ -1022,8 +1032,8 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Очищает каталог от файлов и вложенных каталогов, насколько это возможно.
-    /// В отличие от ClearDirAsPossible(), сам каталог <paramref name="dirPath"/> также удаляется.
-    /// В отличие от методов рекурсивного удаления Directory.Delete(), невозможность удаления одного из файлов не прекращает процесс.
+    /// В отличие от <see cref="ClearDirAsPossible(AbsPath)"/>, сам каталог <paramref name="dirPath"/> также удаляется.
+    /// В отличие от методов рекурсивного удаления <see cref="Directory.Delete(string, bool)"/>, невозможность удаления одного из файлов не прекращает процесс.
     /// Предупреждение. Неверное применение метода может привести к разрушительным последствиям.
     /// Если каталог <paramref name="dirPath"/> не существует, возвращается true.
     /// </summary>
@@ -1048,8 +1058,8 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Рекурсивное удаление пустых каталогов.
-    /// Файлы не удаляются. Каталоги, в которых есть файлы также не удаляются.
-    /// В отличие от метода Directory.Delete(каталог, true), удаление пустых каталогов не прекращается, даже встретился 
+    /// Файлы не удаляются. Каталоги, в которых есть файлы, также не удаляются.
+    /// В отличие от метода <see cref="Directory.Delete(string, bool)"/>, удаление пустых каталогов не прекращается, даже встретился 
     /// непустой каталог. Также, при <paramref name="deleteRootDir"/>=false можно удалить подкаталоги, оставив корневой каталог.
     /// </summary>
     /// <param name="dirPath">Каталог, начиная с которого надо выполнить удаление</param>
@@ -1200,19 +1210,19 @@ namespace FreeLibSet.IO
 
 
     /// <summary>
-    /// Копирование исходного потока SrcStream в результирующий DstStream
-    /// Выполняется позиционирование исходного потока на начало
+    /// Копирование исходного потока <paramref name="srcStream"/> в результирующий <paramref name="dstStream"/>.
+    /// Выполняется позиционирование исходного потока на начало.
     /// </summary>
     /// <param name="srcStream">Исходный поток</param>
     /// <param name="dstStream">Записываемый поток</param>
+    [Obsolete("Используйте перегрузку с 3 аргументами", false)]
     public static void CopyStream(Stream srcStream, Stream dstStream)
     {
       CopyStream(srcStream, dstStream, true);
     }
 
     /// <summary>
-    /// Копирование исходного потока SrcStream в результирующий DstStream
-    /// Выполняется позиционирование исходного потока на начало
+    /// Копирование исходного потока <paramref name="srcStream"/> в результирующий <paramref name="dstStream"/>.
     /// </summary>
     /// <param name="srcStream">Исходный поток</param>
     /// <param name="dstStream">Записываемый поток</param>
@@ -1423,8 +1433,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Запись XML-документа в текстовый файл.
     /// Используется кодировка, заданная в декларации XML-документа или unicode,
-    /// если декларации нет
-    /// Выполняется красивое форматирование документа
+    /// если декларации нет.
+    /// Выполняется красивое форматирование документа.
     /// </summary>
     /// <param name="filePath">Имя файла для записи</param>
     /// <param name="xmlDoc">Записываемый документ</param>
@@ -1451,10 +1461,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Запись XML-документа в текстовый файл, заданный как поток (например, MemoryStream).
+    /// Запись XML-документа в текстовый файл, заданный как поток (например, <see cref="MemoryStream"/>).
     /// Используется кодировка, заданная в декларации XML-документа или unicode,
-    /// если декларации нет
-    /// Выполняется красивое форматирование документа
+    /// если декларации нет.
+    /// Выполняется красивое форматирование документа.
     /// </summary>
     /// <param name="outStream">Поток для записи</param>
     /// <param name="xmlDoc">Записываемый документ</param>
@@ -1490,7 +1500,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Чтение XML-документа.
-    /// Вызывает XmlDocument.Load()
+    /// Вызывает <see cref="XmlDocument.Load(string)"/>.
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
     /// <returns>XML-документ</returns>
@@ -1506,7 +1516,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Чтение XML-документа.
-    /// Вызывает XmlDocument.Load()
+    /// Вызывает <see cref="XmlDocument.Load(Stream)"/>.
     /// </summary>
     /// <param name="inStream">Поток для загрузки XML-документа</param>
     /// <returns>XML-документ</returns>
@@ -1577,10 +1587,11 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает true, если байты потока, начиная с текущей позиции, соответствуют XML-файлу в любой (определяемой) кодировке
     /// Функция применяется для проверки загруженного в память файла неизвестного
-    /// содержимого перед вызовом XmlDocument.Load(), чтобы избежать лишнего вызова
+    /// содержимого перед вызовом <see cref="XmlDocument.Load(Stream)"/>, чтобы избежать лишнего вызова
     /// исключения, когда файл может быть не-XML документом.
     /// Проверяется только начало файла, а не корректность всего XML-документа.
-    /// Поток должен поддерживать позиционирование, так как используется свойство Position. В противном случае будет сгенерировано NotSupportedException
+    /// Поток должен поддерживать позиционирование, так как используется свойство <see cref="Stream.Position"/>. 
+    /// В противном случае будет сгенерировано <see cref="NotSupportedException"/>
     /// </summary>
     /// <param name="inStream">Открытый на чтение поток</param>
     /// <returns>true, если есть смысл попытаться преобразовать файл в XML-формат</returns>
@@ -1601,10 +1612,10 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает true, если байты потока, начиная с текущей позиции, соответствуют XML-файлу в любой (определяемой) кодировке
     /// Функция применяется для проверки загруженного в память файла неизвестного
-    /// содержимого перед вызовом XmlDocument.Load(), чтобы избежать лишнего вызова
+    /// содержимого перед вызовом <see cref="XmlDocument.Load(string)"/>, чтобы избежать лишнего вызова
     /// исключения, когда файл может быть не-XML документом.
     /// Проверяется только начало файла, а не корректность всего XML-документа.
-    /// Рекомендуется использовать перегрузку с аргументом InStream, во избежание повторного открытия файла, если планируется дальнейшая загрузка документа
+    /// Рекомендуется использовать перегрузку с аргументом <see cref="Stream"/>, во избежание повторного открытия файла, если планируется дальнейшая загрузка документа
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
     /// <returns>true, если есть смысл попытаться преобразовать файл в XML-формат</returns>
@@ -1628,7 +1639,7 @@ namespace FreeLibSet.IO
     #region Чтение и запись файлов DataSet
 
     /// <summary>
-    /// Записать набор данных DataSet в двоичном формате в файл
+    /// Записать набор данных <see cref="DataSet"/> в двоичном формате в файл
     /// Поскольку формат двоичного файла не документирован и теоретически
     /// может измениться в будущих версиях NET Framework, двоичный формат
     /// следует использовать только для временных файлов, которые можно
@@ -1636,7 +1647,7 @@ namespace FreeLibSet.IO
     /// Если файл существует, то он будет перезаписан
     /// </summary>
     /// <param name="filePath">Путь создаваемого файла</param>
-    /// <param name="ds"></param>
+    /// <param name="ds">Записываемый набор данных</param>
     public static void WriteDataSetBinary(AbsPath filePath, DataSet ds)
     {
       if (filePath.IsEmpty)
@@ -1658,8 +1669,8 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Прочитать набор данных DataSet из файла двоичного формата,
-    /// созданного WriteDataSetBinary()
+    /// Прочитать набор данных <see cref="DataSet"/> из файла двоичного формата,
+    /// созданного <see cref="WriteDataSetBinary(AbsPath, DataSet)"/>.
     /// </summary>
     /// <param name="filePath">Путь к файлу. Файл должен существовать</param>
     /// <returns>Загруженный набор данных</returns>
@@ -1705,12 +1716,12 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Получить версию в виде объекта Version из объекта FileVersionInfo
-    /// Берется поле FileVersionInfo.FileVersion, а при его отсутствии - ProductVersion
+    /// Получить версию в виде объекта <see cref="Version"/> из объекта <see cref="FileVersionInfo"/>.
+    /// Берется поле <see cref="FileVersionInfo.FileVersion"/>, а при его отсутствии - <see cref="FileVersionInfo.ProductVersion"/>.
     /// Версия файла задается как строка, поэтому может содержать посторонние 
-    /// символы. Эти символы удаляются, пытаемся получить то, что можно
+    /// символы. Эти символы удаляются, пытаемся получить то, что можно.
     /// </summary>
-    /// <param name="fvi">FileVersiobnInfo. Если null, то будет возвращен null</param>
+    /// <param name="fvi">Ссылка на <see cref="FileVersionInfo"/>. Если null, то будет возвращен null</param>
     /// <returns>Версия или null</returns>
     public static Version GetFileVersion(FileVersionInfo fvi)
     {
@@ -1870,7 +1881,7 @@ namespace FreeLibSet.IO
     #region Дискеты
 
     /// <summary>
-    /// Возвращает true, если путь Path относится к дискете, которую надо бы проверить
+    /// Возвращает true, если путь <paramref name="path"/> относится к дискете, которую надо бы проверить
     /// после записи на нее файлов
     /// </summary>
     /// <param name="path">Путь к файлу или каталогу</param>
@@ -1905,7 +1916,7 @@ namespace FreeLibSet.IO
     #region Список компьютеров в сети
 
     /// <summary>
-    /// Свойство возвращает true, если функция GetNetworkMachineNames() поддерживается
+    /// Свойство возвращает true, если функция <see cref="GetNetworkMachineNames()"/> поддерживается.
     /// </summary>
     public static bool GetNetworkMachineNamesSupported
     {
@@ -1917,9 +1928,9 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Получить список имен компьютеров в сетевом окружении
-    /// Не совместимо с Windows-98
+    /// Не совместимо с Windows-98.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Список машин в сети</returns>
     public static string[] GetNetworkMachineNames()
     {
       if (!WindowsNative.IsWindowsPlatform)
@@ -1982,7 +1993,7 @@ namespace FreeLibSet.IO
     #region Копирование файлов
 
     /// <summary>
-    /// Копирование файлов с указанием шаблонов и процентного индикатора
+    /// Копирование файлов с указанием шаблонов и процентного индикатора.
     /// </summary>
     /// <param name="srcDir">Каталог с исходными файлами</param>
     /// <param name="resDir">Каталог для записи файлов</param>
@@ -2129,7 +2140,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Каталог приложения.
-    /// Обычно возвращает ApplicationPath.ParentDir, но при запуске в VisualStudio или после
+    /// Обычно возвращает <see cref="ApplicationPath"/>.ParentDir, но при запуске в VisualStudio или после
     /// компиляции программы обрезает каталоги "Debug", "Release", "x86" и др.
     /// </summary>
     public static AbsPath ApplicationBaseDir
@@ -2164,13 +2175,13 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Выполняет поиск выполняемого файла с использованием переменной PATH.
-    /// Если файл не найден, возвращает AbsPath.Empty.
+    /// Если файл не найден, возвращает <see cref="AbsPath.Empty"/>.
     /// Поиск в текущем каталоге НЕ выполняется. 
     /// Если задан абсолютный путь к файлу, то проверяется наличие файла на диске. Если файл существует, возвращается <paramref name="fileName"/> без изменений.
-    /// Иначе возвращается AbsPath.Empty.
+    /// Иначе возвращается <see cref="AbsPath.Empty"/>.
     /// </summary>
     /// <param name="fileName">Имя выполняемого файла (с расширением). Может быть задан абсолютный или относительный путь.</param>
-    /// <returns></returns>
+    /// <returns>Путь к файлу или пустое значение</returns>
     public static AbsPath FindExecutableFilePath(string fileName)
     {
       if (String.IsNullOrEmpty(fileName))
@@ -2213,17 +2224,18 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Получение хэш-суммы данных из потока по алгоритму MD5.
-    /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами
-    /// Если Stream=null, то возвращается хэш-сумма для массива нулевой длины
+    /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами.
+    /// Если <paramref name="stream"/>=null, то возвращается хэш-сумма для массива нулевой длины.
+    /// Для расчета суммы для массива байтов или строки используйте методы в <see cref="DataTools"/>.
     /// </summary>
-    /// <param name="strm">Поток данных для чтения</param>
+    /// <param name="stream">Поток данных для чтения</param>
     /// <returns>Строка хэш-суммы</returns>
-    public static string MD5Sum(Stream strm)
+    public static string MD5Sum(Stream stream)
     {
-      if (strm == null)
+      if (stream == null)
         return DataTools.MD5Sum(new byte[0]);
       System.Security.Cryptography.MD5 md5Hasher = System.Security.Cryptography.MD5.Create();
-      byte[] hashRes = md5Hasher.ComputeHash(strm);
+      byte[] hashRes = md5Hasher.ComputeHash(stream);
       return DataTools.BytesToHex(hashRes, false);
     }
 
@@ -2231,8 +2243,9 @@ namespace FreeLibSet.IO
     /// Получение хэш-суммы для файла по алгоритму MD5.
     /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами.
     /// Файл должен существовать.
+    /// Для расчета суммы для массива байтов или строки используйте методы в <see cref="DataTools"/>.
     /// </summary>
-    /// <param name="filePath">Имя файла (с указанием пути)</param>
+    /// <param name="filePath">Путь к файлу</param>
     /// <returns>Строка хэш-суммы</returns>
     public static string MD5Sum(AbsPath filePath)
     {
@@ -2301,7 +2314,7 @@ namespace FreeLibSet.IO
     #region Конструктор и Dispose
 
     /// <summary>
-    /// Создает временный каталог со случайным именем в пределах RootDir.
+    /// Создает временный каталог со случайным именем в пределах <see cref="RootDir"/>.
     /// Созданный каталог не содержит файлов.
     /// </summary>
     public TempDirectory()
@@ -2380,12 +2393,12 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Разделяемый временный каталог
-  /// В отличие от TempDirectory, имя каталога не является уникальным. Несколько копий программы будут
+  /// В отличие от <see cref="TempDirectory"/>, имя каталога не является уникальным. Несколько копий программы будут
   /// использовать один и тот же каталог. Каталог не создается в конструкторе; вместо этого создание выполняется
-  /// при запросе временного файла
+  /// при запросе временного файла.
   /// Может применяться, например, для реализации команды "Файл-Передать" в Microsoft Word
-  /// Все методы, кроме Dispose(), являются потокобезопасными
-  /// Так как вызов Dispose() выполняет очистку каталога, рекомендуется создать объект SharedTempDirectory 
+  /// Все методы, кроме Dispose(), являются потокобезопасными.
+  /// Так как вызов Dispose() выполняет очистку каталога, рекомендуется создать объект <see cref="SharedTempDirectory"/>
   /// при запуске программы и удалять при завершении.
   /// </summary>
   public class SharedTempDirectory : DisposableObject
@@ -2481,10 +2494,10 @@ namespace FreeLibSet.IO
     #region Получение имен файлов
 
     /// <summary>
-    /// Получить имя временного файла с заданным расширением
-    /// Генерируется уникальное имя файла 
-    /// Возвращается полный путь к файлу
-    /// Если временный каталог не существует, он создается
+    /// Получить имя временного файла с заданным расширением.
+    /// Генерируется уникальное имя файла.
+    /// Возвращается полный путь к файлу.
+    /// Если временный каталог не существует, он создается.
     /// </summary>
     /// <param name="extension">Расширение файла без ведущей точки</param>
     /// <returns>Путь к файлу</returns>
@@ -2502,10 +2515,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Получить имя временного файла с заданным именем (и расширением)
-    /// Возвращается полный путь к файлу
-    /// Если временный каталог не существует, он создается
-    /// Создается вложенный временный каталог с уникальным именем, внутри которого будет размещен файл
+    /// Получить имя временного файла с заданным именем (и расширением).
+    /// Возвращается полный путь к файлу.
+    /// Если временный каталог не существует, он создается.
+    /// Создается вложенный временный каталог с уникальным именем, внутри которого будет размещен файл.
     /// </summary>
     /// <param name="fileName">Имя файла (с расширением), но без указания пути</param>
     /// <returns>Путь к файлу</returns>
@@ -2515,7 +2528,6 @@ namespace FreeLibSet.IO
 
       if (String.IsNullOrEmpty(fileName))
         throw new ArgumentNullException("fileName");
-
 
       string subDirName = Guid.NewGuid().ToString("D");
       AbsPath dir2 = new AbsPath(Dir, subDirName);
@@ -2549,7 +2561,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Создает шаблон.
-    /// Рекурсия по подкаталогам не задается
+    /// Рекурсия по подкаталогам не задается.
     /// </summary>
     /// <param name="template">Шаблон</param>
     public FileTemplateItem(string template)
@@ -2600,8 +2612,8 @@ namespace FreeLibSet.IO
     #region Методы
 
     /// <summary>
-    /// Если шаблон Template содержит подкаталоги, то возвращается путь, к которому добавляются подкаталоги, и
-    /// шаблон без 
+    /// Если шаблон <see cref="Template"/> содержит подкаталоги (<see cref="HasSubDir"/>=true), то возвращается путь, 
+    /// к которому добавляются подкаталоги, и шаблон без подкаталогов.
     /// </summary>
     /// <param name="rootDir"></param>
     /// <param name="newRootDir"></param>
@@ -2767,13 +2779,13 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Получение списка относительных путей файлов, удовлетворяющих шаблонам
-    /// Если файл входит больше, чем в два шаблона, повторы отбрасываются
-    /// Список файлов сортируется по алфавиту
+    /// Получение списка относительных путей файлов, удовлетворяющих шаблонам.
+    /// Если файл входит больше, чем в два шаблона, повторы отбрасываются.
+    /// Список файлов сортируется по алфавиту.
     /// </summary>
     /// <param name="root">Корневой каталог, относительно которого заданы шаблоны</param>
     /// <param name="splash">Необязательная экранная заставка</param>
-    /// <returns></returns>
+    /// <returns>Массив путей</returns>
     public string[] GetRelFileNames(AbsPath root, ISimpleSplash splash)
     {
       if (root.IsEmpty)
@@ -2817,13 +2829,13 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Получение списка абсолютных путей файлов, удовлетворяющих шаблонам
-    /// Если файл входит больше, чем в два шаблона, повторы отбрасываются
-    /// Список файлов сортируется по алфавиту
+    /// Получение списка абсолютных путей файлов, удовлетворяющих шаблонам.
+    /// Если файл входит больше, чем в два шаблона, повторы отбрасываются.
+    /// Список файлов сортируется по алфавиту.
     /// </summary>
     /// <param name="root">Корневой каталог, относительно которого заданы шаблоны</param>
     /// <param name="splash">Необязательная экранная заставка</param>
-    /// <returns></returns>
+    /// <returns>Массив путей</returns>
     public string[] GetAbsFileNames(AbsPath root, ISimpleSplash splash)
     {
       if (root.IsEmpty)
@@ -2866,116 +2878,4 @@ namespace FreeLibSet.IO
   }
 
   #endregion
-
-  /// <summary>
-  /// Подавление подстановки каталогов (Redirection) в 64-разрядных версиях windows.
-  /// Использование:
-  /// using(new FileRedirectionSupressor() )
-  /// { 
-  ///   // Код, в котором используются истинные имена без подстановок
-  /// }
-  /// Используются функции Wow64DisableWow64FsRedirection() и Wow64RevertWow64FsRedirection
-  /// Если операционная система не поддерживает redirection, код в блоке using выполняется без дополнительных действий
-  /// </summary>
-  public sealed class FileRedirectionSupressor : SimpleDisposableObject
-  {
-    #region Функции Widnows
-
-    private static class WindowsNative
-    {
-      [DllImport("kernel32.dll")]
-      internal extern static Int32 Wow64DisableWow64FsRedirection(out IntPtr oldValue);
-
-      [DllImport("kernel32.dll")]
-      internal extern static Int32 Wow64RevertWow64FsRedirection(IntPtr oldValue);
-    }
-
-    #endregion
-
-    #region Конструктор и Dispose
-
-    /// <summary>
-    /// Создает объект.
-    /// Если операционная система не поддерживает redirection, ничего не делается.
-    /// </summary>
-    public FileRedirectionSupressor()
-    {
-      if (OSSupported)
-      {
-        if (WindowsNative.Wow64DisableWow64FsRedirection(out _OldValue) != 0)
-          _Active = true;
-      }
-    }
-
-    /// <summary>
-    /// Отключает подавление, если оно было включено.
-    /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор</param>
-    protected override void Dispose(bool disposing)
-    {
-      if (_Active)
-      {
-        _Active = false;
-        WindowsNative.Wow64RevertWow64FsRedirection(_OldValue);
-      }
-      base.Dispose(disposing);
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Возвращает true, если redirection был включен в конструкторе
-    /// </summary>
-    public bool Active { get { return _Active; } }
-    private bool _Active;
-
-    private IntPtr _OldValue;
-
-    #endregion
-
-    #region Статическое свойство и метод
-
-    /// <summary>
-    /// Свойство возвращает true, если операционная система имеет функции для redirection
-    /// </summary>
-    public static bool OSSupported
-    {
-      get
-      {
-        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-        {
-          //if (IntPtr.Size==8)
-          //  return true;
-          if (Environment.OSVersion.Version.Major > 6)
-            return true;
-          if (Environment.OSVersion.Version.Major < 6)
-            return false;
-
-          // Проверка для WinXP 64-bit - должно возвращать true
-          return true;
-        }
-        return false;
-      }
-    }
-
-    /// <summary>
-    /// Свойство возвращает true, если есть redirection 
-    /// </summary>
-    public static bool TestRedirection
-    {
-      get
-      {
-        bool res;
-        using (FileRedirectionSupressor Obj = new FileRedirectionSupressor())
-        {
-          res = Obj.Active;
-        }
-        return res;
-      }
-    }
-
-    #endregion
-  }
 }

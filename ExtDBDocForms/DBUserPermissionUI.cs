@@ -14,7 +14,7 @@ using FreeLibSet.Controls;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Абстрактный класс интефрейса разрешения, задаваемого перечислимым значением.
+  /// Абстрактный класс интерфейса разрешения, задаваемого перечислимым значением.
   /// Может также использоваться для разрешений, задаваемых логическим значением, типа "Разрешено-Запрещено"
   /// </summary>
   public abstract class EnumUserPermissionUI : UserPermissionUI

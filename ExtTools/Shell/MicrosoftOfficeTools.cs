@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Reflection;
 using FreeLibSet.OLE;
 using FreeLibSet.IO;
-using System.Threading;
+using FreeLibSet.Win32;
 using System.Runtime.InteropServices;
 using FreeLibSet.Logging;
 using FreeLibSet.Core;
@@ -139,7 +139,7 @@ namespace FreeLibSet.Shell
     {
       get
       {
-        using (new FileRedirectionSupressor())
+        using (new Wow64FileRedirectionSupressor())
         {
           return OLEHelper.GetLocalServer32Version("Word.Application");
         }
@@ -175,7 +175,7 @@ namespace FreeLibSet.Shell
     {
       get
       {
-        using (new FileRedirectionSupressor())
+        using (new Wow64FileRedirectionSupressor())
         {
           return OLEHelper.GetLocalServer32Version("Excel.Application");
         }

@@ -33,26 +33,26 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Способ хранения настроек пользователя.
-  /// Значение, возвращаемое свойством IEFPConfigManager.Persistence
+  /// Значение, возвращаемое свойством <see cref="IEFPConfigManager.Persistence"/>
   /// </summary>
   public enum EFPConfigPersistence
-  { 
+  {
     /// <summary>
     /// Настройки не сохраняются даже в течение сеанса работы программы.
-    /// Это значение возвращается EFPDummyConfigManager
+    /// Это значение возвращается <see cref="EFPDummyConfigManager"/>
     /// </summary>
     None,
 
     /// <summary>
     /// Настройки сохраняются только на время работы программы, а при завершении работы - удаляются.
-    /// Это значение возвращается EFPRuntimeOnlyConfigManager
+    /// Это значение возвращается <see cref="EFPRuntimeOnlyConfigManager"/>
     /// </summary>
     Runtime,
 
     /// <summary>
     /// Настройки сохраняются между сеансами работы программы.
     /// Настройки либо храняется локально на компьютере, либо доступны только для текущего компьютера.
-    /// Это значение возвращается, например, EFPRegistryConfigManager
+    /// Это значение возвращается, например, <see cref="EFPRegistryConfigManager"/>
     /// </summary>
     Machine,
 
@@ -62,8 +62,8 @@ namespace FreeLibSet.Forms
     /// Часть настроек может относиться к пользователю, независимо от того, с какого компьютера
     /// выполнен вход.
     /// Для определения того, какие секции относятся к пользователю в-целом, а какие применимы
-    /// только для текущего компьютера, пользовательский код, реализуюзий интерфейс IEFPConfigManager,
-    /// может использовать метод EFPConfigCategories.IsMachineDepended()
+    /// только для текущего компьютера, пользовательский код, реализуюзий интерфейс <see cref="IEFPConfigManager"/>,
+    /// может использовать метод <see cref="EFPConfigCategories.IsMachineDepended(string)"/>
     /// </summary>
     Network,
   }
@@ -80,7 +80,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создание объекта.
-    /// Эта версия конструктора позволяет задать свойство "UserSetName"
+    /// Эта версия конструктора позволяет задать свойство <see cref="UserSetName"/>
     /// </summary>
     /// <param name="configSectionName">Имя секции конфигурации для разделения данных разных объектов.
     /// Обязательный параметр</param>
@@ -105,7 +105,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создание объекта.
-    /// Эта версия конструктора не задает свойство "UserSetName"
+    /// Эта версия конструктора не задает свойство <see cref="UserSetName"/>.
     /// </summary>
     /// <param name="configSectionName">Имя секции конфигурации для разделения данных разных объектов.
     /// Обязательный параметр</param>
@@ -129,7 +129,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Категория сохраняемых данных ("Filters", "Order", ...). 
-    /// Модули ExtForms и ExtDBDocForms используют константы из EFPConfigCategories. 
+    /// Модули ExtForms и ExtDBDocForms используют константы из <see cref="EFPConfigCategories"/>. 
     /// Пользовательский код может использовать собственные имена категорий. 
     /// Не может быть null или пустой строкой.
     /// </summary>
@@ -139,7 +139,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Название пользовательского набора данных. 
     /// Также используется для хранения истории.
-    /// Обычно, пустая строка
+    /// Обычно, пустая строка.
     /// </summary>
     public string UserSetName { get { return _UserSetName; } }
     private string _UserSetName;
@@ -221,7 +221,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает ConfigSectionName.GetHashCode()
+    /// Возвращает <see cref="ConfigSectionName"/>.GetHashCode()
     /// </summary>
     /// <returns>Хэш-код</returns>
     public override int GetHashCode()
@@ -235,9 +235,9 @@ namespace FreeLibSet.Forms
   #region IEFPConfigManager
 
   /// <summary>
-  /// Интефрейс для записи и чтения конфигурационных данных.
-  /// Если программа хранит настройки в базе данных, должна быть создана реаоизация интефрейса.
-  /// Для локального хранения настроек может быть использован, например, готовый класс EFPRegistryConfigManager
+  /// Интерфейс для записи и чтения конфигурационных данных.
+  /// Если программа хранит настройки в базе данных, должна быть создана реаоизация интерфейса.
+  /// Для локального хранения настроек может быть использован, например, готовый класс <see cref="EFPRegistryConfigManager"/>.
   /// </summary>
   public interface IEFPConfigManager
   {
@@ -256,7 +256,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Свойство возвращает "сохранность" настроек.
-    /// Менеджер EFPDummyConfigManager, используемый по умолчанию, возвращает None
+    /// Менеджер <see cref="EFPDummyConfigManager"/>, используемый по умолчанию, возвращает None
     /// </summary>
     EFPConfigPersistence Persistence { get; }
 
@@ -278,12 +278,12 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Класс содержит строковые константы, используемые при вызове метода IEFPConfigManager.GetConfig()
+  /// Класс содержит строковые константы, используемые при вызове метода <see cref="IEFPConfigManager.GetConfig(EFPConfigSectionInfo, EFPConfigMode, out CfgPart)"/>.
   /// для параметра Category.
-  /// Перечислены все категории, используемые модулями ExtForms и ExtDBDocForms
-  /// Пользовательский код может использовать собственные категории с другими именами
+  /// Перечислены все категории, используемые модулями ExtForms и ExtDBDocForms.
+  /// Пользовательский код может использовать собственные категории с другими именами.
   /// Пользовательский код не может изменить значения констант. Если требуется хранить данные под другими именами,
-  /// следует создать собственную реализацию IEFPConfigManager
+  /// следует создать собственную реализацию <see cref="IEFPConfigManager"/>.
   /// </summary>
   public static class EFPConfigCategories
   {
@@ -472,19 +472,19 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Менеджер-заглушка для "сохранения" конфигурации.
   /// Ничего не сохраняет, каждый раз возвращает секцию-пустышку
-  /// Используется свойством EFPApp.ConfigManager в качестве значения по умолчанию
+  /// Используется свойством <see cref="EFPApp.ConfigManager"/> в качестве значения по умолчанию
   /// </summary>
   public sealed class EFPDummyConfigManager : IEFPConfigManager
   {
     #region IEFPConfigManager members
 
     /// <summary>
-    /// Возвращает новый объект TempCfg
+    /// Возвращает новый объект <see cref="TempCfg"/>
     /// </summary>
     /// <param name="configInfo">Не используется</param>
     /// <param name="rwMode">Не используется</param>
     /// <param name="cfg">Сюда записывается секция конфигурации</param>
-    /// <returns>Фиктивный объект DisposableObject</returns>
+    /// <returns>Фиктивный объект, реализующий <see cref="IDisposable"/></returns>
     public IDisposable GetConfig(EFPConfigSectionInfo configInfo, EFPConfigMode rwMode, out CfgPart cfg)
     {
       cfg = new TempCfg();
@@ -588,7 +588,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя корневого раздела реестра.
-    /// Обычно, это HKEY_CURRENT_USER/Имя приложения
+    /// Обычно, это HKEY_CURRENT_USER/Компания/Имя приложения
     /// В нем будут создаваться подразделы для ConfigSectionName
     /// </summary>
     public string KeyName { get { return _KeyName; } }
@@ -599,13 +599,13 @@ namespace FreeLibSet.Forms
     #region IEFPConfigManager members
 
     /// <summary>
-    /// Создает объект RegistryCfg.
+    /// Создает объект <see cref="RegistryCfg"/>.
     /// </summary>
     /// <param name="configInfo">Информация о секции конфигурации.
     /// Определяет имя вложенного раздела реестра относительно заданного свойством KeyName</param>
     /// <param name="rwMode">Определяет режим доступа к разделу реестра: Чтение или запись</param>
-    /// <param name="cfg">Сюда помещается созданный RegistryCfg.</param>
-    /// <returns></returns>
+    /// <param name="cfg">Сюда помещается созданный <see cref="RegistryCfg"/>.</param>
+    /// <returns>Копия ссылки на <see cref="RegistryCfg"/>, который самостоятельно реализует интефрейс <see cref="IDisposable"/></returns>
     public IDisposable GetConfig(EFPConfigSectionInfo configInfo, EFPConfigMode rwMode, out CfgPart cfg)
     {
       string thisKeyName = KeyName + "\\" + configInfo.ConfigSectionName + "\\" + configInfo.Category;

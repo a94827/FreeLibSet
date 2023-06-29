@@ -17,7 +17,9 @@ namespace ExtTools_tests.IO
       using (TempDirectory sut = new TempDirectory())
       {
         dir = sut.Dir;
+        Assert.IsFalse(sut.Dir.IsEmpty, "Dir.IsEmpty");
         Assert.IsTrue(System.IO.Directory.Exists(dir.Path), "Directory created");
+        Assert.IsTrue(sut.DeleteOnDispose, "DeleteOnDispose");
 
         System.IO.File.WriteAllBytes(new AbsPath(dir, "test1.bin").Path, DataTools.EmptyBytes);
 
@@ -36,12 +38,20 @@ namespace ExtTools_tests.IO
       {
         dir = sut.Dir;
 
+        Assert.IsTrue(sut.DeleteOnDispose, "DeleteOnDispose #1");
         sut.DeleteOnDispose = false;
+        Assert.IsFalse(sut.DeleteOnDispose, "DeleteOnDispose #2");
       }
 
       Assert.IsTrue(System.IO.Directory.Exists(dir.Path), "Directory still exists");
 
       System.IO.Directory.Delete(dir.Path);
+    }
+
+    [Test]
+    public void RootDir()
+    {
+      Assert.IsFalse(TempDirectory.RootDir.IsEmpty, "IsEmpty");
     }
   }
 }

@@ -16,7 +16,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Объект поддержки интерфейса пользователя.
   /// Базовый класс для EFPAppInterfaceMDI и EFPAppInterfaceSDI, которые реализуют разные варианты
-  /// интефрейса
+  /// интерфейса
   /// </summary>
   public abstract class EFPAppInterface : IObjectWithCode, IEnumerable<EFPAppMainWindowLayout>
   {
@@ -48,7 +48,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если используется нумерация главных окон (свойство EFPAppMainWindowLayout.MainWindowNumberText возвращает непустую строку).
     /// Для интерфейса MDI возращает true, если открыто больше одного главного окна.
-    /// Для интефрейса SDI всегда возвращает false
+    /// Для интерфейса SDI всегда возвращает false
     /// </summary>
     public virtual bool MainWindowNumberUsed
     {
@@ -569,7 +569,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Закрывает все дочерние окна.
-    /// Для интефрейса SDI не остается ни одного открытого окна.
+    /// Для интерфейса SDI не остается ни одного открытого окна.
     /// Для MDI остается пустое главное окно (или несколько окон).
     /// Закрытие окон может быть отменено, если окно выдает подтверждение на закрытие 
     /// несохраненных данных, а пользователь откажется закрывать окно.
@@ -615,7 +615,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Упорядочивание дочерних окон.
-    /// Для интефрейса SDI применяется ко всем окнам.
+    /// Для интерфейса SDI применяется ко всем окнам.
     /// Для MDI и TDI применяется только к текущему главному окну
     /// </summary>
     /// <param name="mdiLayout">Способ упорядочения</param>

@@ -138,7 +138,7 @@ namespace FreeLibSet.Parsing
   #region IParser
 
   /// <summary>
-  /// Интефрейс одного парсера, добавляемого в список ParserList
+  /// Интерфейс одного парсера, добавляемого в список ParserList
   /// </summary>
   public interface IParser
   {

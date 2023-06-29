@@ -5,7 +5,13 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2023-06-19T22:09:36.574000000"/>
+	<meta name="changed" content="2023-06-29T21:45:03.573000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -605,13 +611,13 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
+		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
-		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
-		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
-		a:link { color: #0000ff; so-language: zxx }
+		h1.cjk { font-family: "NSimSun" }
+		h1.ctl { font-family: "Mangal" }
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
+		a:link { color: #0000ff }
 		a:visited { color: #800080 }
 	</style>
 </head>
@@ -646,7 +652,7 @@
 			<p lang="en-US" align="center">345</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.04.2023-19.06.2023</p>
+			<p lang="en-US" align="center">21.04.2023-29.06.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Небольшая
@@ -679,32 +685,36 @@
 			<p><span lang="en-US">7. FileTools.WriteStream() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v003p1"><span lang="en-US">v.3
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не
 			выполняет позиционирование на начало потока.</span></p>
-			<p lang="en-US">8. <span lang="ru-RU">Метод
+			<p><span lang="en-US">8. FileTools.CheckFileExists() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v177p1"><span lang="en-US">v.177
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) может
+			выбрасывать исключение </span><span lang="en-US">DirectoryNotFoundException,
+			</span><span lang="ru-RU">если не существует каталог.</span></p>
+			<p lang="en-US">9. <span lang="ru-RU">Метод
 			</span>ZipFileTools.ExtractZipResourceFile()</p>
-			<p><span lang="en-US">9</span><span lang="ru-RU">. Метод
+			<p><span lang="en-US">10</span><span lang="ru-RU">. Метод
 			</span><span lang="en-US">RegistryKey2.CreateSubKey</span><span lang="ru-RU">()
 			(</span><a href="ExtTools_11.htm#v160p3"><span lang="en-US">v.160
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
 			задавал не все флаги разрешений при вызове RegCreateKeyEx().
 			Нельзя было потом прочитать список значений.</span></p>
-			<p lang="en-US">10. <span lang="ru-RU">Исправлена ошибка в методах
+			<p lang="en-US">11. <span lang="ru-RU">Исправлена ошибка в методах
 			</span>RegistryCfgPart, RegistryCfgPart2.DoRemove() <span lang="ru-RU">при
 			удалении дочерней группы</span>. <span lang="ru-RU">В методе
 			</span>DoGetChild() <span lang="ru-RU">проверяется
 			</span>Tree.CheckNotReadOnly() <span lang="ru-RU">при </span>create=true.</p>
-			<p lang="en-US">11. <span lang="ru-RU">Методы </span>RegistryCfgPart,
+			<p lang="en-US">12. <span lang="ru-RU">Методы </span>RegistryCfgPart,
 			RegistryCfgPart2.Close(), CloseChildren(), DeleteTree()</p>
-			<p lang="en-US">12. <span lang="ru-RU">Исправлены</span> <span lang="ru-RU">ошибки</span>
+			<p lang="en-US">13. <span lang="ru-RU">Исправлены</span> <span lang="ru-RU">ошибки</span>
 			<span lang="ru-RU">в методах </span>IniCfgPart.GetChildNames()<span lang="ru-RU">,
 			</span>DoHasChild(), DoGetChild()</p>
-			<p><span lang="en-US">13. </span><span lang="ru-RU">Методы в
+			<p><span lang="en-US">14. </span><span lang="ru-RU">Методы в
 			</span><span lang="en-US">CfgConverter </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v024p1"><span lang="en-US">v.24
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) для
 			типа </span><span lang="en-US">Boolean. Р</span><span lang="ru-RU">аньше
 			в </span><span lang="en-US">CfgPart </span><span lang="ru-RU">использовалось
 			преобразование в/из </span><span lang="en-US">Int32 </span><span lang="ru-RU">без
 			возможности настройки</span></p>
-			<p><span lang="en-US">14. </span><span lang="ru-RU">Методы
+			<p><span lang="en-US">15. </span><span lang="ru-RU">Методы
 			</span><span lang="en-US">CfgPart.SetDateTimeCommaString() </span><span lang="ru-RU">и
 			</span><span lang="en-US">GetDateTimeCommaString</span><span lang="ru-RU">()</span>
 			<span lang="en-US">(<a href="ExtTools_11.htm#v124p1">v.124 </a></span><a href="ExtTools_11.htm#v124p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
@@ -713,6 +723,35 @@
 			</span><span lang="en-US">Set/GetDateTimeCommaString/DateCommaString().
 			</span><span lang="ru-RU">Существующие методы помечены атрибутом
 			</span><span lang="en-US">[Obsolete]</span></p>
+			<p><span lang="en-US">16. </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">EnvironmentTools.Is64bitOperatingSystem
+			(<a href="ExtTools_11.htm#v030p4">v.30 </a></span><a href="ExtTools_11.htm#v030p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">для не-</span><span lang="en-US">Windows
+			</span><span lang="ru-RU">возвращает значение, зависящее от
+			</span><span lang="en-US">IntPtr.Size</span></p>
+			<p><span lang="en-US">17. </span><span lang="ru-RU">Изменения в
+			FileRedirectionSupressor (</span><a href="ExtTools_11.htm#v030p5"><span lang="en-US">v.30
+			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">):</span></p>
+			<p><span lang="ru-RU">- Класс переименован в
+			</span><span lang="en-US">Wow64</span><span lang="ru-RU">FileRedirectionSupressor
+			и перенесен в пространство имен </span><span lang="en-US">FreeLibSet.Win32</span></p>
+			<p><span lang="ru-RU">- Свойство </span><span lang="en-US">OSSupported
+			</span><span lang="ru-RU">возвращает </span><span lang="en-US">true
+			</span><span lang="ru-RU">только для 64-битных </span><span lang="en-US">Windows,
+			</span><span lang="ru-RU">но не для 32-разрядных</span></p>
+			<p>- Конструктор не выполняет никаких действий, если приложение
+			является 64-разрядным.</p>
+			<p><span lang="en-US">18. </span><span lang="ru-RU">Изменения в
+			</span><span lang="en-US">AbsPath (<a href="ExtTools_11.htm#v012p1">v.12
+			</a></span><a href="ExtTools_11.htm#v012p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Используется статический
+			конструктор</span></p>
+			<p lang="en-US"><span lang="ru-RU">- </span>GetHashCode()
+			<span lang="ru-RU">возвращает более осмысленное значение с
+			использованием подходящего </span>StringComparer.GetHashCode().</p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство </span>Uri
+			<span lang="ru-RU">возвращает </span>null, <span lang="ru-RU">если
+			</span>IsEmpty=true. <span lang="ru-RU">Новое свойство </span>UriString</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -2060,7 +2099,7 @@
 			</p>
 			<p><span lang="en-US">-</span> <font color="#000000"><span lang="ru-RU">Поддержка
 			</span></font><span lang="ru-RU">прокрутки значений стрелочками
-			вверх/вниз. Интефрейсы IUpDownHandler&lt;T&gt; и IMinMaxSource&lt;T&gt;.
+			вверх/вниз. Интерфейсы IUpDownHandler&lt;T&gt; и IMinMaxSource&lt;T&gt;.
 			Абстрактный класс IncrementUpDownHandler</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">,
 			реализации Int/</span><font color="#000000"><span lang="en-US">Single/Double/Decimal</span></font><span lang="ru-RU">UpDownHandler</span><span lang="en-US">.
 			</span><span lang="ru-RU">Класс NumArrayUpDownHandler&lt;T&gt; для

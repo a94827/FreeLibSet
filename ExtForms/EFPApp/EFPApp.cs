@@ -1221,7 +1221,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось создать окно класса \"" + sdiFormType.ToString() + "\" для интефрейса SDI. Будет создано пустое окно");
+          EFPApp.ShowException(e, "Не удалось создать окно класса \"" + sdiFormType.ToString() + "\" для интерфейса SDI. Будет создано пустое окно");
         }
       }
 
@@ -1262,7 +1262,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось создать окно для интефрейса SDI. Будет создано пустое окно");
+          EFPApp.ShowException(e, "Не удалось создать окно для интерфейса SDI. Будет создано пустое окно");
         }
       }
 
@@ -1546,7 +1546,7 @@ namespace FreeLibSet.Forms
               EFPApp.Interface = AvailableInterfaces[p];
             else
             {
-              EFPApp.WarningMessageBox("Интефрейс типа \"" + interfaceType + "\" недоступен. Будет использован интерфейс \"" + AvailableInterfaces[0].Name + "\"", "Восстановление интерфейса");
+              EFPApp.WarningMessageBox("Интерфейс типа \"" + interfaceType + "\" недоступен. Будет использован интерфейс \"" + AvailableInterfaces[0].Name + "\"", "Восстановление интерфейса");
               EFPApp.Interface = AvailableInterfaces[0];
             }
           }
@@ -5580,7 +5580,7 @@ namespace FreeLibSet.Forms
     /// Если приложению требуется сохранять пользовательские настройки, свойству следует присвоить значение, 
     /// например, создав объект EFPRegistryConfigManager.
     /// 
-    /// Инициализация менеджера настроек должна выполняться до начала работы с интефрейсом (установки свойства EFPApp.Interface
+    /// Инициализация менеджера настроек должна выполняться до начала работы с интерфейсом (установки свойства EFPApp.Interface
     /// и вызова ShowMainWindow()), иначе окно может получить значения по умолчанию.
     /// 
     /// Свойство никогда не принимает значение null.
