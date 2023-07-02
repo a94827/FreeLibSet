@@ -84,8 +84,11 @@
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />
     <Compile Include="Collections\HashtableTests.cs" />
     <Compile Include="IO\AbsPathTests.cs" />
+    <Compile Include="IO\FileContainerTests.cs" />
     <Compile Include="IO\FileToolsTests.cs" />
+    <Compile Include="IO\RelPathTests.cs" />
     <Compile Include="IO\SharedTempDirectoryTests.cs" />
+    <Compile Include="IO\StoredFileInfoTests.cs" />
     <Compile Include="Models\Tree\DataTableTreeModelTests.cs" />
     <Compile Include="Models\Tree\DataTableTreeModelWithIdsTests.cs" />
     <Compile Include="Models\Tree\TreePathEnumerableTests.cs" />

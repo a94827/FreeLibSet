@@ -312,7 +312,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(wanted.FileInfo.Name, real.FileInfo.Name, ", DocId=" + docId + ", file name");
       Assert.AreEqual(wanted.FileInfo.Length, real.FileInfo.Length, ", DocId=" + docId + ", file length");
       Assert.AreEqual(CorrectTime(wanted.FileInfo.LastWriteTime), CorrectTime(real.FileInfo.LastWriteTime), ", DocId=" + docId + ", LastWriteTime");
-      Assert.AreEqual(wanted.Contents, real.Contents, ", DocId=" + docId + ", file contents");
+      Assert.AreEqual(wanted.Content, real.Content, ", DocId=" + docId + ", file contents");
     }
 
     /// <summary>

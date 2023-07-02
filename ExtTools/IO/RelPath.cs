@@ -9,8 +9,8 @@ namespace FreeLibSet.IO
 {
   /// <summary>
   /// Относительный или абсолютный путь к файлу или каталогу
-  /// Реализует методы для манипуляции с путями, заявленные в System.IO.Path
-  /// Не выполняет никаких действий с реальными файлами и каталогами
+  /// Реализует методы для манипуляции с путями, заявленные в <see cref="System.IO.Path"/>.
+  /// Не выполняет никаких действий с реальными файлами и каталогами.
   /// </summary>
   [Serializable]
   public class RelPath
@@ -18,11 +18,11 @@ namespace FreeLibSet.IO
     #region Конструкторы
 
     /// <summary>
-    /// Создает объект, содержащий абсолютный путь к файлу или каталогу
-    /// Если аргумент заканчивается на слэш, то он удаляется
+    /// Создает объект, содержащий абсолютный или относительный путь к файлу или каталогу.
+    /// Если аргумент заканчивается на слэш, то он удаляется (кроме некоторых путей вида "C:\")
     /// Задание пути в Uri-формате не допускается
     /// </summary>
-    /// <param name="s"></param>
+    /// <param name="s">Задаваемый путь</param>
     public RelPath(string s)
     {
       try
@@ -31,7 +31,7 @@ namespace FreeLibSet.IO
         string s2 = AbsPath.RemoveQuotes(s);
         s2 = AbsPath.RemoveDirNameSlash(s2);
         if (String.IsNullOrEmpty(s2))
-          _Path = String.Empty;
+          _Path = null;
         else
         {
           if (AbsPath.StartsWithUriScheme(s2))
@@ -47,7 +47,7 @@ namespace FreeLibSet.IO
         throw new ArgumentException("Не удалось преобразовать \"" + s + "\" в относительный путь. " + e.Message, e);
       }
     }
- 
+
 
     /// <summary>
     /// Создает путь на основе базового, с произвольным числом подкаталогов
@@ -87,12 +87,11 @@ namespace FreeLibSet.IO
     #region Свойства
 
     /// <summary>
-    /// Путь к каталогу или файлу
-    /// Путь хранится в форме, пригодной
-    /// для использования методами классов в System.IO
+    /// Путь к каталогу или файлу.
+    /// Путь хранится в форме, пригодной для использования методами классов в System.IO.
     /// Задается в конструкторе.
     /// </summary>
-    public string Path { get { return _Path; } }
+    public string Path { get { return _Path ?? String.Empty; } }
     private readonly string _Path;
 
     /// <summary>
@@ -102,7 +101,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Возвращает true, если путь является абсолютным.
-    /// Вызывает System.IO.Path.IsPathRooted().
+    /// Вызывает <see cref="System.IO.Path.IsPathRooted(string)"/>.
     /// </summary>
     public bool IsAbsPath
     {
@@ -113,21 +112,18 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает Path
+    /// Возвращает <see cref="Path"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      if (_Path == null)
-        return String.Empty;
-      else
-        return _Path;
+      return Path;
     }
 
     /// <summary>
-    /// Возвращает путь, заканчивающийся обратным слэшем
+    /// Возвращает путь, заканчивающийся обратным слэшем.
     /// Используется, когда объект хранит каталог и нужно получить строку с именем
-    /// находящегося в каталоге файла
+    /// находящегося в каталоге файла.
     /// </summary>
     public string SlashedPath
     {
@@ -163,9 +159,10 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Преобразует в абсолютный путь, используя, при необходимости, текущий каталог в качестве базового.
+    /// Если <paramref name="relPath"/> - пустой, то возвращается пустой путь, а не текущий рабочий каталог
     /// </summary>
-    /// <param name="relPath"></param>
-    /// <returns></returns>
+    /// <param name="relPath">Относительный путь</param>
+    /// <returns>Абсолютный путь</returns>
     public static implicit operator AbsPath(RelPath relPath)
     {
       return new AbsPath(relPath.Path);
@@ -177,7 +174,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Добавление относительного пути.
-    /// Использует функцию System.IO.Path.Combine()
+    /// Использует функцию <see cref="System.IO.Path.Combine(string, string)"/>.
     /// </summary>
     /// <param name="basePath">Исходный путь</param>
     /// <param name="subDir">Подкаталог</param>
@@ -185,13 +182,35 @@ namespace FreeLibSet.IO
     public static RelPath operator +(RelPath basePath, string subDir)
     {
       if (basePath.IsEmpty)
-        //return new AbsPath(SubDir);
-        throw new ArgumentException("Базовый каталог пустой", "basePath");
+        //throw new ArgumentException("Базовый каталог пустой", "basePath");
+          return new RelPath(subDir); // 30.06.2023
 
-      if (String.IsNullOrEmpty(subDir))
-        return basePath;
+        if (String.IsNullOrEmpty(subDir))
+          return basePath;
 
-      return new RelPath(System.IO.Path.Combine(basePath.Path, subDir));
+      return basePath + new RelPath(subDir);
+    }
+
+    /// <summary>
+    /// Добавление относительного пути.
+    /// Использует функцию <see cref="System.IO.Path.Combine(string, string)"/>.
+    /// Если <paramref name="path2"/> задает полный путь, то он возвращается, а первый путь отбрасывается.
+    /// </summary>
+    /// <param name="path1">Исходный путь</param>
+    /// <param name="path2">Добавляемый путь</param>
+    /// <returns>Новый относительный путь</returns>
+    public static RelPath operator +(RelPath path1, RelPath path2)
+    {
+      if (path1.IsEmpty)
+        return path2;
+
+      if (path2.IsEmpty)
+        return path1;
+
+      if (path2.IsAbsPath)
+        return path2;
+
+      return new RelPath(System.IO.Path.Combine(path1.Path, path2.Path));
     }
 
     /// <summary>

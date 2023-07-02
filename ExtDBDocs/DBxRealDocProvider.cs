@@ -936,7 +936,7 @@ namespace FreeLibSet.Data.Docs
 #endif
       dict.Add(wantedId.DataId, fc);
 
-      int size = fc.Contents.Length;
+      int size = fc.Content.Length;
       if (size < MaxBinDataSize)
       {
         for (int i = 0; i < preloadIds.Count; i++)
@@ -947,9 +947,9 @@ namespace FreeLibSet.Data.Docs
           if (GetDocColumnAccess(tableName, columnName, preloadIds[i].DocId, preloadIds[i].SubDocId, docVersion))
           {
             fc = _Source.GlobalData.BinDataHandler.GetDBFile(preloadIds[i].DataId);
-            if (size > (MaxBinDataSize - fc.Contents.Length))
+            if (size > (MaxBinDataSize - fc.Content.Length))
               break; // получается, что SQL-запрос выполнен зря.
-            size += fc.Contents.Length;
+            size += fc.Content.Length;
             dict.Add(preloadIds[i].DataId, fc);
           }
         }

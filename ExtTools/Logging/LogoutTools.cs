@@ -920,7 +920,7 @@ namespace FreeLibSet.Logging
       {
         switch (args.PropertyName)
         {
-          case "Contents":
+          case "Content":
             args.Mode = LogoutPropMode.None;
             break;
         }
@@ -3312,7 +3312,7 @@ namespace FreeLibSet.Logging
     {
       if (file == null)
         throw new ArgumentNullException("file");
-      using (MemoryStream Stream = new MemoryStream(file.Contents))
+      using (MemoryStream Stream = new MemoryStream(file.Content))
       {
         return Extract(Stream);
       }

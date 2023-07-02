@@ -1553,7 +1553,7 @@ namespace FreeLibSet.Data.Docs
         return DBNull.Value;
 
       Int32 dataId;
-      string md5 = DataTools.MD5Sum(file.Contents);
+      string md5 = DataTools.MD5Sum(file.Content);
 
       #region Проверка повторного вызова
 
@@ -1605,7 +1605,7 @@ namespace FreeLibSet.Data.Docs
         else
         {
           dataId = (-tblBinData.Rows.Count) - 1; // -1, -2, ...
-          tblBinData.Rows.Add(dataId, md5, file.Contents);
+          tblBinData.Rows.Add(dataId, md5, file.Content);
         }
       }
 
@@ -1614,7 +1614,7 @@ namespace FreeLibSet.Data.Docs
       fileId = (-tblFileNames.Rows.Count) - 1; // -1, -2, ...
       tblFileNames.Rows.Add(fileId, file.FileInfo.Name, dataId,
         file.FileInfo.CreationTime, file.FileInfo.LastWriteTime,
-        file.Contents.Length);
+        file.Content.Length);
 
       #endregion
 

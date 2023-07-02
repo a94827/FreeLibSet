@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
-using System.Xml;
 using System.IO;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
@@ -15,8 +14,9 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Структура для хранения атрибутов файла, сохраняемого в базе данных или передаваемого между компьютерами
-  /// Содержит некоторые поля, объявленные в стандартном классе System.IO.FileInfo
-  /// Поля времени объявлены Nullable, чтобы яснее указывать, что данные недоступны
+  /// Содержит некоторые поля, объявленные в стандартном классе <see cref="System.IO.FileInfo"/>.
+  /// Поля времени объявлены Nullable, чтобы яснее указывать, что данные недоступны.
+  /// Структура однократной записи
   /// </summary>
   [Serializable]
   public struct StoredFileInfo
@@ -25,9 +25,9 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Заполнить структуру по заданному полному пути к файлу.
-    /// Если файл не существует, то инициализируется пустая структура. В том числе, свойство Name будет пустой строкой.
+    /// Если файл не существует, то инициализируется пустая структура. В том числе, свойство <see cref="Name"/> будет пустой строкой.
     /// </summary>
-    /// <param name="filePath"></param>
+    /// <param name="filePath">Полный путь к файлу</param>
     public StoredFileInfo(AbsPath filePath)
     {
       if (File.Exists(filePath.Path))
@@ -112,7 +112,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Имя и расширение файла (без пути)
     /// </summary>
-    public string Name { get { return _Name; } }
+    public string Name { get { return _Name ?? String.Empty; } }
     private readonly string _Name;
 
     /// <summary>
@@ -145,9 +145,9 @@ namespace FreeLibSet.IO
     #region Методы
 
     /// <summary>
-    /// Применить атрибуты CreationTime и LastWriteTime к заданному файлу.
-    /// Атрибуты NamePart и Length не применятся. Используется имя файла, заданное в
-    /// качестве аргумента
+    /// Применить свойства <see cref="CreationTime"/> и <see cref="LastWriteTime"/> к заданному файлу.
+    /// Свойства <see cref="Name"/> и <see cref="Length"/> не применятся. 
+    /// Используется имя файла, заданное в качестве аргумента
     /// </summary>
     /// <param name="filePath">Полный путь к файлу (а не только каталог)</param>
     public void ApplyToFile(AbsPath filePath)
@@ -209,11 +209,10 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Класс для хранения файла вместе с именем файла и атрибутами, а также для передачи его между клиентом
-  /// и сервером. Путь к файлу не хранится, но может быть задано свойство SubDir
-  /// В отличие от StoredFileInfo, не может хранить пустое имя файла
-  /// Объект целиком инициализируется в конструкторе. Все методы и свойства являются
-  /// потокобезопасными
-  /// Производные классы могут реализовывать динамическую загрузку данных
+  /// и сервером. Путь к файлу не хранится, но может быть задано свойство SubDir.
+  /// В отличие от структуры <see cref="StoredFileInfo"/>, не может хранить пустое имя файла.
+  /// Все методы и свойства являются потокобезопасными.
+  /// Производные классы могут реализовывать динамическую загрузку данных.
   /// </summary>
   [Serializable]
   public class FileContainer : ICloneable, IComparable<FileContainer>
@@ -232,8 +231,9 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Создать контейнер с загруженным содержимым
     /// </summary>
-    /// <param name="path">Полный путь к файлу. Аргумент SubDir не учитывается при загрузке файла</param>
-    /// <param name="subDir">Используется для установки свойства</param>
+    /// <param name="path">Полный путь к файлу. Аргумент <paramref name="subDir"/> не учитывается при загрузке файла</param>
+    /// <param name="subDir">Используется для установки свойства. 
+    /// В общем случае, подкаталог не обязан быть частью пути <paramref name="path"/> и реально существовать на диске</param>
     public FileContainer(AbsPath path, string subDir)
     {
       if (path.IsEmpty)
@@ -243,17 +243,17 @@ namespace FreeLibSet.IO
         throw new FileNotFoundException("Файл \"" + path + "\" не найден", path.Path);
 
       _FileInfo = new StoredFileInfo(path);
-      _Contents = File.ReadAllBytes(path.Path);
-      _SubDir = AddDirNameSlash(subDir);
+      _Content = File.ReadAllBytes(path.Path);
+      _SubDir = ToStoredSubDir(subDir);
     }
 
     /// <summary>
     /// Создает контейнер из файла в памяти
     /// </summary>
     /// <param name="fileInfo">Имя файла, длина и другие атрибуты</param>
-    /// <param name="contents">Содержимое файла. Длина массива должна соответствовать заявленной длине в <paramref name="fileInfo"/>.</param>
-    public FileContainer(StoredFileInfo fileInfo, byte[] contents)
-      : this(fileInfo, contents, String.Empty)
+    /// <param name="content">Содержимое файла. Длина массива должна соответствовать заявленной длине в <paramref name="fileInfo"/>.</param>
+    public FileContainer(StoredFileInfo fileInfo, byte[] content)
+      : this(fileInfo, content, String.Empty)
     {
     }
 
@@ -261,23 +261,24 @@ namespace FreeLibSet.IO
     /// Создает контейнер из файла в памяти
     /// </summary>
     /// <param name="fileInfo">Имя файла, длина и другие атрибуты</param>
-    /// <param name="contents">Содержимое файла. Длина массива должна соответствовать заявленной длине в <paramref name="fileInfo"/>.</param>
-    /// <param name="subDir">Имя подкаталога</param>
-    public FileContainer(StoredFileInfo fileInfo, byte[] contents, string subDir)
+    /// <param name="content">Содержимое файла. Длина массива должна соответствовать заявленной длине в <paramref name="fileInfo"/>.</param>
+    /// <param name="subDir">Имя подкаталога. Если используется несколько каталогов, то они должны разделяться символом разделителем
+    /// <see cref="System.IO.Path.DirectorySeparatorChar"/> для текущей операционной системы</param>
+    public FileContainer(StoredFileInfo fileInfo, byte[] content, string subDir)
     {
       if (fileInfo.IsEmpty)
         throw new ArgumentException("Информация о файле должна быть заполнена", "fileInfo");
 
-      if (contents == null)
-        contents = new byte[0];
+      if (content == null)
+        content = new byte[0];
 
-      if (fileInfo.Length != contents.Length)
-        throw new ArgumentException("Длина массива (" + contents.Length.ToString() +
+      if (fileInfo.Length != content.Length)
+        throw new ArgumentException("Длина массива (" + content.Length.ToString() +
           ") не совпадает с заданной в FileInfo (" + fileInfo.Length.ToString() + ") для файла \"" + fileInfo.Name + "\"", "contents");
 
       _FileInfo = fileInfo;
-      _Contents = contents;
-      _SubDir = AddDirNameSlash(subDir);
+      _Content = content;
+      _SubDir = ToStoredSubDir(subDir);
     }
 
     /// <summary>
@@ -285,38 +286,40 @@ namespace FreeLibSet.IO
     /// Время создания файла и время записи будут равны текущему времени.
     /// </summary>
     /// <param name="fileName">Имя файла</param>
-    /// <param name="contents">Содержимое файла</param>
-    public FileContainer(string fileName, byte[] contents)
-      : this(fileName, contents, String.Empty)
+    /// <param name="content">Содержимое файла</param>
+    public FileContainer(string fileName, byte[] content)
+      : this(fileName, content, String.Empty)
     {
     }
 
     /// <summary>
-    /// Создает контейнер из файла в памяти
+    /// Создает контейнер из файла в памяти.
     /// Время создания файла и время записи будут равны текущему времени.
     /// </summary>
     /// <param name="fileName">Имя файла</param>
-    /// <param name="contents">Содержимое файла</param>
-    /// <param name="subDir">Имя подкаталога</param>
-    public FileContainer(string fileName, byte[] contents, string subDir)
+    /// <param name="content">Содержимое файла</param>
+    /// <param name="subDir">Имя подкаталога. Если используется несколько каталогов, то они должны разделяться символом разделителем
+    /// <see cref="System.IO.Path.DirectorySeparatorChar"/> для текущей операционной системы</param>
+    public FileContainer(string fileName, byte[] content, string subDir)
     {
       if (String.IsNullOrEmpty(fileName))
         throw new ArgumentNullException("fileName");
 
-      if (contents == null)
-        _Contents = new byte[0];
+      if (content == null)
+        _Content = new byte[0];
       else
-        _Contents = contents;
+        _Content = content;
 
       //_FileInfo = new StoredFileInfo(fileName, contents.Length);
-      _FileInfo = new StoredFileInfo(fileName, _Contents.Length); // 27.12.2020
+      _FileInfo = new StoredFileInfo(fileName, _Content.Length); // 27.12.2020
 
-      _SubDir = AddDirNameSlash(subDir);
+      _SubDir = ToStoredSubDir(subDir);
     }
 
+#if XXX
     /// <summary>
     /// Создает контейнер из XML-файла в памяти.
-    /// Используется DataTools.XmlDocumentToByteArray() для сериализации XML-документа
+    /// Используется <see cref="DataTools.XmlDocumentToByteArray(XmlDocument)"/> для сериализации XML-документа.
     /// Время создания файла и время записи будут равны текущему времени.
     /// </summary>
     /// <param name="fileName">Имя файла</param>
@@ -328,7 +331,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Создает контейнер из XML-файла в памяти.
-    /// Используется DataTools.XmlDocumentToByteArray() для сериализации XML-документа
+    /// Используется <see cref="DataTools.XmlDocumentToByteArray(XmlDocument)"/> для сериализации XML-документа
     /// Время создания файла и время записи будут равны текущему времени.
     /// </summary>
     /// <param name="fileName">Имя файла</param>
@@ -342,15 +345,16 @@ namespace FreeLibSet.IO
       if (xmlDoc == null)
         throw new ArgumentNullException("xmlDoc");
 
-      _Contents = DataTools.XmlDocumentToByteArray(xmlDoc);
+      _Content = DataTools.XmlDocumentToByteArray(xmlDoc);
       int len;
-      if (_Contents == null)
+      if (_Content == null)
         len = 0;
       else
-        len = _Contents.Length;
+        len = _Content.Length;
       _FileInfo = new StoredFileInfo(fileName, len);
-      _SubDir = AddDirNameSlash(subDir);
+      _SubDir = GetSubDir(subDir);
     }
+#endif
 
     /// <summary>
     /// Может использоваться переопределенным классом, реализующим собственную инициализацию контейнера
@@ -370,18 +374,39 @@ namespace FreeLibSet.IO
 
 
     /// <summary>
-    /// Добавление к имени каталога символа "\"
+    /// Добавление к имени каталога символа "/"
     /// Если каталог не задан, то возвращается пустая строка
     /// </summary>
-    /// <param name="dirName">Имя каталога, которое может содержать или не содержать на конце слэш</param>
+    /// <param name="subDir">Имя каталога, которое может содержать или не содержать на конце слэш</param>
     /// <returns>Имя каталога со слэшем на конце</returns>
-    private static string AddDirNameSlash(string dirName)
+    private static string ToStoredSubDir(string subDir)
     {
-      if (String.IsNullOrEmpty(dirName))
+      if (String.IsNullOrEmpty(subDir))
+        return null;
+
+      if (System.IO.Path.IsPathRooted(subDir))
+        throw new ArgumentException("Каталог не может содержать абсолютный путь");
+      if (subDir.IndexOf("..") >= 0)
+        throw new ArgumentException("Каталог не может содержать символы \"..\"");
+      if (subDir[0] == System.IO.Path.DirectorySeparatorChar)
+        throw new ArgumentException("Каталог не может начинаться с символа каталога");
+
+      if (System.IO.Path.DirectorySeparatorChar != '/')
+        subDir = subDir.Replace(System.IO.Path.DirectorySeparatorChar, '/');
+
+      if (subDir[subDir.Length - 1] != '/')
+        subDir += '/';
+      return subDir;
+    }
+
+    private static string FromStoredSubDir(string subDir)
+    {
+      if (String.IsNullOrEmpty(subDir))
         return String.Empty;
-      if (!dirName.EndsWith("\\", StringComparison.Ordinal))
-        dirName += "\\";
-      return dirName;
+      if (System.IO.Path.DirectorySeparatorChar != '/')
+        subDir = subDir.Replace('/', System.IO.Path.DirectorySeparatorChar);
+
+      return subDir;
     }
 
     #endregion
@@ -394,8 +419,8 @@ namespace FreeLibSet.IO
     public virtual StoredFileInfo FileInfo { get { return _FileInfo; } }
 
     /// <summary>
-    /// Если производный класс переопределяет свойство FileInfo, 
-    /// он может испоользовать это поле для хранения данных
+    /// Если производный класс переопределяет свойство <see cref="FileInfo"/>, 
+    /// он может использовать это поле для хранения данных.
     /// </summary>
     protected StoredFileInfo FileInfoInternal { get { return _FileInfo; } set { _FileInfo = value; } }
     private StoredFileInfo _FileInfo;
@@ -403,25 +428,29 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Содержимое файла
     /// </summary>
-    public virtual byte[] Contents { get { return _Contents; } }
+    public virtual byte[] Content { get { return _Content; } }
 
     /// <summary>
-    /// Если производный класс переопределяет свойство Contents, 
-    /// он может испоользовать это поле для хранения данных
+    /// Если производный класс переопределяет свойство <see cref="Content"/>, 
+    /// он может использовать это поле для хранения данных
     /// </summary>
-    protected byte[] ContentsInternal { get { return _Contents; } set { _Contents = value; } }
-    private byte[] _Contents;
+    protected byte[] ContentInternal { get { return _Content; } set { _Content = value; } }
+    private byte[] _Content;
 
     /// <summary>
     /// Подкаталог. Если задан, то заканчивается символом "\"
     /// </summary>
-    public virtual string SubDir { get { return _SubDir; } }
+    public virtual string SubDir { get { return FromStoredSubDir(_SubDir); } }
 
     /// <summary>
-    /// Если производный класс переопределяет свойство SubDir, 
-    /// он может испоользовать это поле для хранения данных
+    /// Если производный класс переопределяет свойство <see cref="SubDir"/>, 
+    /// он может использовать это поле для хранения данных
     /// </summary>
-    protected string SubDirInternal { get { return _SubDir; } set { _SubDir = value; } }
+    protected string SubDirInternal
+    {
+      get { return FromStoredSubDir(_SubDir); }
+      set { _SubDir = ToStoredSubDir(value); }
+    }
     private string _SubDir;
 
     #endregion
@@ -430,8 +459,8 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Запись файла в каталог.
-    /// Учитывается каталог SubDir.
-    /// Если каталог не существует, то он создается
+    /// Учитывается каталог <see cref="SubDir"/>.
+    /// Если каталог не существует, то он создается.
     /// </summary>
     /// <param name="dir">Каталог для записи файла</param>
     public void Save(AbsPath dir)
@@ -442,14 +471,14 @@ namespace FreeLibSet.IO
       AbsPath dir2 = dir + SubDir;
       FileTools.ForceDirs(dir2);
       AbsPath resPath = dir2 + FileInfo.Name;
-      File.WriteAllBytes(resPath.Path, Contents);
+      File.WriteAllBytes(resPath.Path, Content);
       FileInfo.ApplyToFile(resPath);
     }
 
     /// <summary>
     /// Записать файл под указанным именем.
-    /// Текущее имя файла FileInfo.Name и каталог SubDir игнорируются
-    /// Если каталог не существует, то он создается
+    /// Текущее имя файла <see cref="FileInfo"/>.Name и каталог <see cref="SubDir"/> игнорируются.
+    /// Если каталог не существует, то он создается.
     /// </summary>
     /// <param name="filePath">Имя файла для записи</param>
     public void SaveAs(AbsPath filePath)
@@ -458,7 +487,7 @@ namespace FreeLibSet.IO
         throw new ArgumentException("Не задано имя файла для сохранения", "filePath");
 
       FileTools.ForceDirs(filePath.ParentDir);
-      File.WriteAllBytes(filePath.Path, Contents);
+      File.WriteAllBytes(filePath.Path, Content);
       FileInfo.ApplyToFile(filePath);
     }
 
@@ -468,17 +497,23 @@ namespace FreeLibSet.IO
     /// <returns></returns>
     public override string ToString()
     {
-      return _SubDir + _FileInfo.Name;
+      return SubDir + _FileInfo.Name;
     }
 
+#if XXX
     /// <summary>
     /// Получить в виде документа XML
     /// </summary>
     /// <returns></returns>
     public XmlDocument GetXml()
     {
-      return DataTools.XmlDocumentFromByteArray(Contents);
+      return DataTools.XmlDocumentFromByteArray(Content);
     }
+#endif
+
+    #endregion
+
+    #region ICloneable Members
 
     /// <summary>
     /// Возвращает копию объекта, содержащую загруженные данные
@@ -486,22 +521,18 @@ namespace FreeLibSet.IO
     /// <returns>Копия объекта</returns>
     public FileContainer Clone()
     {
-      return new FileContainer(this.FileInfo, this.Contents, this.SubDir);
+      return new FileContainer(this.FileInfo, this.Content, this.SubDir);
     }
 
     /// <summary>
-    /// Возвращает копию объекта, содержащую загруженные данные, с заменой SubDir
+    /// Возвращает копию объекта, содержащую загруженные данные, с заменой подкаталога
     /// </summary>
-    /// <param name="newSubDir">Новое значение свойства SubDir</param>
+    /// <param name="newSubDir">Новое значение свойства <see cref="SubDir"/></param>
     /// <returns>Копия объекта</returns>
     public FileContainer Clone(string newSubDir)
     {
-      return new FileContainer(this.FileInfo, this.Contents, newSubDir);
+      return new FileContainer(this.FileInfo, this.Content, newSubDir);
     }
-
-    #endregion
-
-    #region ICloneable Members
 
     object ICloneable.Clone()
     {
@@ -549,10 +580,10 @@ namespace FreeLibSet.IO
         return +1;
       else if (file1.FileInfo.Length < file2.FileInfo.Length)
         return -1;
-      for (int i = 0; i < file1.Contents.Length; i++)
+      for (int i = 0; i < file1.Content.Length; i++)
       {
-        byte b1 = file1.Contents[i];
-        byte b2 = file2.Contents[i];
+        byte b1 = file1.Content[i];
+        byte b2 = file2.Content[i];
         if (b1 > b2)
           return +1;
         else if (b1 < b2)
@@ -599,7 +630,7 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region IComparable<AccDepFileContainerList> Members
+    #region IComparable<FileContainer> Members
 
     /// <summary>
     /// Реализует интерфейс IComparable.

@@ -5,7 +5,11 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2023-06-29T21:45:03.573000000"/>
+	<meta name="changed" content="2023-06-30T22:32:03.387000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -652,7 +656,7 @@
 			<p lang="en-US" align="center">345</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">21.04.2023-29.06.2023</p>
+			<p lang="en-US" align="center">21.04.2023-30.06.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Небольшая
@@ -752,6 +756,33 @@
 			<p lang="en-US">- <span lang="ru-RU">Свойство </span>Uri
 			<span lang="ru-RU">возвращает </span>null, <span lang="ru-RU">если
 			</span>IsEmpty=true. <span lang="ru-RU">Новое свойство </span>UriString</p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство </span>IsNetwork
+			<span lang="ru-RU">объявлено устаревшим</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Методы </span>StartsWith(),
+			EndsWith() <span lang="ru-RU">и EndsWithIgnoreCase() возвращают
+			</span>true, <span lang="ru-RU">а не </span>false<span lang="ru-RU">,
+			если аргумент - пустой</span></p>
+			<p lang="en-US">19. <span lang="ru-RU">Изменения в </span>RelPath<span lang="ru-RU">
+			(</span><a href="ExtTools_11.htm#v137p2">v.137 <span lang="ru-RU">п.2</span></a><span lang="ru-RU">):</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Оператор &quot;+&quot; для
+			</span>RelPath+string <span lang="ru-RU">возвращает
+			</span>RelPath(subDir), <span lang="ru-RU">если </span>basePath -
+			<span lang="ru-RU">пустой</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Перегрузка оператора &quot;+&quot;
+			для </span>RelPath+RelPath</p>
+			<p><span lang="en-US">20</span><span lang="en-US">. </span><span lang="ru-RU">Изменения
+			в </span><span lang="en-US">FileContainer (<a href="ExtTools_11.htm#v042p3">v.42
+			</a></span><a href="ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
+			<p lang="en-US">- <span lang="ru-RU">Свойство </span>Contents
+			<span lang="ru-RU">переименовано в </span>Content</p>
+			<p lang="en-US">- <span lang="ru-RU">Убрана поддержка доступа к
+			</span>XmlDocument</p>
+			<p lang="en-US">- <span lang="ru-RU">Изменено хранение
+			подкаталогов. Во внутреннем поле подкаталоги разделяются символом
+			&laquo;/&raquo;, а не &laquo;\&raquo;, который динамически
+			преобразуется при необходимости. Позволяет передавать объекты из
+			</span>windows <span lang="ru-RU">в </span>linux <span lang="ru-RU">и
+			обратно</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace FreeLibSet.IO
 {
@@ -584,18 +585,23 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Возвращает true, если текущий путь равен <paramref name="path"/> или является вложенным по отношению к <paramref name="path"/>.
-    /// Например, если path=C:/Windows, то для текущего пути c:/WINDOWS и c:/Windows/temp/123.txt будет возвращено true.
+    /// Например, если <paramref name="path"/>=C:/Windows, то для текущего пути c:/WINDOWS и c:/Windows/temp/123.txt будет возвращено true.
     /// Если текущий каталог начинается так же, но не относится к <paramref name="path"/>, то возвращается false, например для
-    /// c:/windows2 и c:/Windows2/temp/123.txt. Этим метод отличается от простого вызова метода <see cref="String.StartsWith(string)"/>.
+    /// c:/windows и c:/Windows2/temp/123.txt. Этим метод отличается от простого вызова метода <see cref="String.StartsWith(string)"/>.
     /// Регистр символов учитывается или не учитывается, в зависимости от платформы.
-    /// Если текущий путь или <paramref name="path"/> - пустой, возвращается false.
+    /// Если текущий путь пустой (<see cref="IsEmpty"/>=true), возвращается false.
+    /// Eсли <paramref name="path"/>.IsEmpty=true, то возвращается true.
     /// </summary>
     /// <param name="path">Проверяемый (родительский) путь</param>
     /// <returns>Вхождение проверяемого пути в текущий</returns>
     public bool StartsWith(AbsPath path)
     {
-      if (path.IsEmpty || this.IsEmpty)
+      if (this.IsEmpty)
         return false;
+
+      if (path.IsEmpty)
+        return true;
+
       if (String.Equals(this.Path, path.Path, ComparisonType))
         return true; // текущий каталог
       if (this.Path.StartsWith(path.SlashedPath, ComparisonType))
@@ -607,21 +613,21 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает true, если каталог заканчивается заданными частями пути.
     /// Регистр учитывается или не учитывается, в зависимости от платформы.
+    /// Например, в Windows, если текущий путь равен
+    /// C:\Windows\System32\XPSViewer
+    /// и вызвать EndsWith("system32", "XPSViewer"), то будет возвращено true.
+    /// Если текущий объект пустой (<see cref="IsEmpty"/>=true), то возвращается false.
+    /// Если <paramref name="relParts"/> - пустой список, возвращается true.
     /// </summary>
     /// <param name="relParts">Конечные части путей</param>
     /// <returns>true, если конечная часть пути совпадает</returns>
-    /// <remarks>
-    /// Например, в Windows, если текущий путь равен
-    /// C:\Windows\System32\XPSViewer
-    /// и вызвать EndsWith("system32", "XPSViewer"), то будет возвращено true
-    /// </remarks>
     public bool EndsWith(params string[] relParts)
     {
-      if (relParts.Length == 0)
-        return false;
-
       if (IsEmpty)
         return false;
+
+      if (relParts.Length == 0)
+        return true; // 30.06.2023
 
       string relPath = String.Join(new string(System.IO.Path.DirectorySeparatorChar, 1), relParts);
 
@@ -636,19 +642,17 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает true, если каталог заканчивается заданными частями пути.
     /// Регистр не учитывается, независимо от платформы.
+    /// Для Windows метод совпадает с методом <see cref="EndsWith(string[])"/>.
     /// </summary>
     /// <param name="relParts">Конечные части путей</param>
     /// <returns>true, если конечная часть пути совпадает</returns>
-    /// <remarks>
-    /// Для Windows метод совпадает с методом EndsWith().
-    /// </remarks>
     public bool EndsWithIgnoreCase(params string[] relParts)
     {
-      if (relParts.Length == 0)
-        return false;
-
       if (IsEmpty)
         return false;
+
+      if (relParts.Length == 0)
+        return true; // 30.06.2023
 
       string relPath = String.Join(new string(System.IO.Path.DirectorySeparatorChar, 1), relParts);
 
@@ -667,6 +671,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает true, если путь начинается с @"\\" (Windows)
     /// </summary>
+    [Obsolete("Использование свойства не оправдано. Например, в Windows оно не позволяет отличить подключенные сетевые диски от обычных", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsNetwork
     {
       get
@@ -689,49 +695,12 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Определение наличия файла или каталога
-    /*
-    public bool DirectoryExists
-    {
-      get 
-      {
-        if (IsEmpty)
-          return false;
-        return System.IO.Directory.Exists(FPath);
-      }
-    }
-
-    public bool FileExists
-    {
-      get
-      {
-        if (IsEmpty)
-          return false;
-        return System.IO.File.Exists(FPath);
-      }
-    }
-     * */
-
-    #endregion
-
     #region Статические экземпляры
 
     /// <summary>
     /// Пустая структура
     /// </summary>
     public static readonly AbsPath Empty = new AbsPath(String.Empty);
-
-    /*
-    /// <summary>
-    /// Каталог, в котором находится выполняемый файл
-    /// </summary>
-    public static readonly AbsPath AppStartDir = new AbsPath(GetAppStartDir());
-
-    private static string GetAppStartDir()
-    {
-      throw new NotImplementedException();
-    }
-          */
 
     #endregion
   }

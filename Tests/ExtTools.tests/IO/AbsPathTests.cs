@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using NUnit.Framework;
 using FreeLibSet.IO;
-using System.IO;
 using FreeLibSet.Core;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.IO
 {
@@ -110,8 +111,8 @@ namespace ExtTools_tests.IO
     }
 
 
-    [Test]
     [Platform("Win")]
+    [Test]
     public void Create_basePath_error()
     {
       AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
@@ -123,19 +124,19 @@ namespace ExtTools_tests.IO
 
     #region SlashedPath, Uri, QuotedPath
 
+    [Platform("Win")]
     [TestCase(@"C:\Windows", @"C:\Windows\")]
     [TestCase(@"C:\", @"C:\")]
     [TestCase(@"", @"")]
-    [Platform("Win")]
     public void SlashedPath_windows(string s, string wantedRes)
     {
       AbsPath sut = new AbsPath(s);
       Assert.AreEqual(wantedRes, sut.SlashedPath);
     }
 
+    [Platform("Win")]
     [TestCase(@"C:\Windows", @"file:///C:/Windows")]
     [TestCase(@"C:\", @"file:///C:/")]
-    [Platform("Win")]
     public void Uri_windows(string s, string wantedRes)
     {
       AbsPath sut = new AbsPath(s);
@@ -151,10 +152,10 @@ namespace ExtTools_tests.IO
       Assert.AreEqual(String.Empty, sut.UriString, "UriString");
     }
 
+    [Platform("Win")]
     [TestCase(@"C:\Windows", @"""C:\Windows""")]
     [TestCase(@"C:\", @"""C:\""")]
     [TestCase(@"", @"")]
-    [Platform("Win")]
     public void QuotedPath_windows(string s, string wantedRes)
     {
       AbsPath sut = new AbsPath(s);
@@ -202,8 +203,8 @@ namespace ExtTools_tests.IO
       Assert.AreEqual(sut, res);
     }
 
-    [Test]
     [Platform("Win")]
+    [Test]
     public void ParentDir_diskroot_windows()
     {
       AbsPath sut = new AbsPath(@"C:\");
@@ -211,8 +212,8 @@ namespace ExtTools_tests.IO
       Assert.IsTrue(res.IsEmpty);
     }
 
-    [Test]
     [Platform("Linux")]
+    [Test]
     public void ParentDir_fileroot_linux()
     {
       AbsPath sut = new AbsPath("/");
@@ -273,8 +274,8 @@ namespace ExtTools_tests.IO
     }
 
     // Пока нет проверок
-    //[Test]
     //[Platform("Win")]
+    //[Test]
     //public void FileName_FileNameWithoutExtension_Extension_shareNaked_windows()
     //{
     //  AbsPath sut = new AbsPath(@"\\Server\Share");
@@ -283,8 +284,8 @@ namespace ExtTools_tests.IO
     //  Assert.AreEqual("", sut.Extension);
     //}
 
-    [Test]
     [Platform("Win")]
+    [Test]
     public void FileName_FileNameWithoutExtension_Extension_rootDir_windows()
     {
       AbsPath sut = new AbsPath(@"C:\");
@@ -293,8 +294,8 @@ namespace ExtTools_tests.IO
       Assert.AreEqual("", sut.Extension);
     }
 
-    [Test]
     [Platform("Linux")]
+    [Test]
     public void FileName_FileNameWithoutExtension_Extension_fileRoot_linux()
     {
       AbsPath sut = new AbsPath("/");
@@ -358,6 +359,202 @@ namespace ExtTools_tests.IO
 
     #endregion
 
-    // TODO: Остальные методы
+    #region Сравнение
+
+    [Platform("Win")]
+    [TestCase(@"C:\WINDOWS\SYSTEM32", @"c:\windows\system32", true)]
+    [TestCase(@"C:\WINDOWS\SYSTEM32", @"c:\windows", false)]
+    [TestCase(@"", @"c:\windows", false)]
+    [TestCase(@"", @"c:\", false)]
+    [TestCase(@"", @"", true)]
+    public void Equals_windows(string sa, string sb, bool wantedRes)
+    {
+      DoTestEquals(sa, sb, wantedRes, "#1");
+      DoTestEquals(sb, sa, wantedRes, "#2");
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/aaa/bbb", @"/aaa/bbb", true)]
+    [TestCase(@"/aaa/bbb", @"/Aaa/bbb", false)]
+    [TestCase(@"", @"/aaa/bbb", false)]
+    [TestCase(@"", @"", true)]
+    public void Equals_linux(string sa, string sb, bool wantedRes)
+    {
+      DoTestEquals(sa, sb, wantedRes, "#1");
+      DoTestEquals(sb, sa, wantedRes, "#2");
+    }
+
+    private static void DoTestEquals(string sa, string sb, bool wantedRes, string messagePrefix)
+    {
+      AbsPath a = new AbsPath(sa);
+      AbsPath b = new AbsPath(sb);
+
+      Assert.AreEqual(wantedRes, a == b, messagePrefix + ", ==");
+      Assert.AreEqual(!wantedRes, a != b, messagePrefix + ", !=");
+      Assert.AreEqual(wantedRes, a.Equals(b), messagePrefix + ", Equals(AbsPath)");
+      Assert.AreEqual(wantedRes, a.Equals((object)b), messagePrefix + ", Equals(object)");
+
+      if (wantedRes)
+        Assert.AreEqual(a.GetHashCode(), b.GetHashCode(), "GetHashCode()");
+    }
+
+    #endregion
+
+    #region Starts/EndsWith()
+
+    #region StartsWith()
+
+    [Platform("Win")]
+    [TestCase(@"C:\WINDOWS\SYSTEM32", @"c:\windows\system32", true)]
+    [TestCase(@"C:\WINDOWS\SYSTEM32", @"c:\windows", true)]
+    [TestCase(@"C:\WINDOWS", @"C:\WINDOWS\SYSTEM32", false)]
+    [TestCase(@"C:\WINDOWS123\SYSTEM32", @"C:\WINDOWS", false)]
+    [TestCase(@"C:\WINDOWS123", @"C:\WINDOWS", false)]
+    [TestCase(@"", @"c:\windows", false)]
+    [TestCase(@"c:\windows", @"c:\", true)]
+    [TestCase(@"c:\windows", @"", true)]
+    [TestCase(@"", @"", false)]
+    public void StartsWith_windows(string ssut, string spath, bool wantedRes)
+    {
+      DoTestStartsWith(ssut, spath, wantedRes);
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/aaa/bbb", @"/aaa/bbb", true)]
+    [TestCase(@"/aaa/bbb", @"/aaa", true)]
+    [TestCase(@"/AAA/bbb", @"/aaa", false)]
+    [TestCase(@"/aaa", @"/aaa/bbb", false)]
+    [TestCase(@"/aaa123/bbb", @"/aaa", false)]
+    [TestCase(@"/aaa123", @"/aaa", false)]
+    [TestCase(@"/aaa", @"", true)]
+    [TestCase(@"", @"/aaa", false)]
+    [TestCase(@"", @"", false)]
+    public void StartsWith_linux(string ssut, string spath, bool wantedRes)
+    {
+      DoTestStartsWith(ssut, spath, wantedRes);
+    }
+
+    private static void DoTestStartsWith(string ssut, string spath, bool wantedRes)
+    {
+      AbsPath sut = new AbsPath(ssut);
+      AbsPath path = new AbsPath(spath);
+
+      Assert.AreEqual(wantedRes, sut.StartsWith(path));
+    }
+
+    #endregion
+
+    #region EndsWith()
+
+    [Platform("Win")]
+    [TestCase(@"C:\aaa\bbb\ccc", "ccc", true)]
+    [TestCase(@"C:\aaa\bbb\ccc", "bbb|ccc", true)]
+    [TestCase(@"C:\aaa\bbb\ccc", "aaa|bbb|ccc", true)]
+    [TestCase(@"C:\aaa\bbb\ccc", "AAA|BBB|CCC", true)]
+    [TestCase(@"C:\aaa\bbb\ccc", "bbb", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "aaa", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "cc", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "cccc", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "bb|ccc", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "bbbb|ccc", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "aa|bbb|ccc", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "aaaa|bbb|ccc", false)]
+    [TestCase(@"C:\aaa\bbb\ccc", "", true)]
+    [TestCase(@"C:\", "", true)]
+    [TestCase(@"C:\", "C", false)]
+    [TestCase(@"", "", false)]
+    [TestCase(@"", "aaa", false)]
+    public void EndsWith_windows(string ssut, string sRelParts, bool wantedRes)
+    {
+      DoTestEndsWith(ssut, sRelParts, wantedRes);
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/aaa/bbb/ccc", "ccc", true)]
+    [TestCase(@"/aaa/bbb/ccc", "bbb|ccc", true)]
+    [TestCase(@"/aaa/bbb/ccc", "aaa|bbb|ccc", true)]
+    [TestCase(@"/aaa/bbb/ccc", "AAA|BBB|CCC", false)]
+    [TestCase(@"/aaa/bbb/ccc", "bbb", false)]
+    [TestCase(@"/aaa/bbb/ccc", "aaa", false)]
+    [TestCase(@"/aaa/bbb/ccc", "cc", false)]
+    [TestCase(@"/aaa/bbb/ccc", "cccc", false)]
+    [TestCase(@"/aaa/bbb/ccc", "bb|ccc", false)]
+    [TestCase(@"/aaa/bbb/ccc", "bbbb|ccc", false)]
+    [TestCase(@"/aaa/bbb/ccc", "aa|bbb|ccc", false)]
+    [TestCase(@"/aaa/bbb/ccc", "aaaa|bbb|ccc", false)]
+    [TestCase(@"/aaa/bbb/ccc", "", true)]
+    [TestCase(@"", "", false)]
+    [TestCase(@"", "aaa", false)]
+    public void EndsWith_linux(string ssut, string sRelParts, bool wantedRes)
+    {
+      DoTestEndsWith(ssut, sRelParts, wantedRes);
+    }
+
+    private static void DoTestEndsWith(string ssut, string sRelParts, bool wantedRes)
+    {
+      AbsPath sut = new AbsPath(ssut);
+      string[] relParts = DataTools.EmptyStrings;
+      if (sRelParts.Length > 0)
+        relParts = sRelParts.Split('|');
+
+      Assert.AreEqual(wantedRes, sut.EndsWith(relParts));
+    }
+
+    #endregion
+
+    #region EndsWithIgnoreCase()
+
+    [TestCase("BBB", true)]
+    [TestCase("bbb", true)]
+    [TestCase("AAA|BBB", true)]
+    [TestCase("aaa|bbb", true)]
+    [TestCase("AAA", false)]
+    [TestCase("BB", false)]
+    [TestCase("BBBB", false)]
+    [TestCase("", true)]
+    public void EndsWithIgnoreCase(string sRelParts, bool wantedRes)
+    {
+
+      AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
+      AbsPath sut = new AbsPath(basePath, "AAA", "BBB");
+
+      string[] relParts = DataTools.EmptyStrings;
+      if (sRelParts.Length > 0)
+        relParts = sRelParts.Split('|');
+
+      Assert.AreEqual(wantedRes, sut.EndsWithIgnoreCase(relParts));
+    }
+
+
+    #endregion
+
+    #endregion
+
+    // IsNetwork - устаревшее свойство
+
+    #region Empty
+
+    [Test]
+    public void Empty()
+    {
+      Assert.IsTrue(AbsPath.Empty.IsEmpty, "IsEmpty");
+      Assert.AreEqual(String.Empty, AbsPath.Empty.Path, "Path");
+    }
+
+    #endregion
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      AbsPath sut = new AbsPath(new AbsPath(Environment.CurrentDirectory));
+      byte[] b = SerializationTools.SerializeBinary(sut);
+
+      AbsPath res = (AbsPath)(SerializationTools.DeserializeBinary(b));
+      Assert.AreEqual(sut.Path, res.Path);
+    }
+
+    #endregion
   }
 }

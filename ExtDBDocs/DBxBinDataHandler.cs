@@ -727,7 +727,7 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentException("Слишком длинный файл");
 
       // Сначала ищем по содержимому файла
-      Int32 binDataId = AppendBinData(file.Contents);
+      Int32 binDataId = AppendBinData(file.Content);
       if (binDataId == 0)
         throw new BugException("AppendBinData вернул 0");
 

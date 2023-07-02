@@ -904,7 +904,7 @@ namespace FreeLibSet.Data.Docs
       if (File == null)
         return null;
       else
-        return File.GetXml();
+        return DataTools.XmlDocumentFromByteArray(File.Content);
     }
 
 
