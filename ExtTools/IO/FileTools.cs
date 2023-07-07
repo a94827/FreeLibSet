@@ -365,8 +365,6 @@ namespace FreeLibSet.IO
         }
         return true;
       }
-
-
     }
 
     /// <summary>
@@ -478,6 +476,23 @@ namespace FreeLibSet.IO
       }
 
       return String.Equals(fileName, template, CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Возвращает true, если в каталоге <paramref name="parentDir"/> существуют файлы, удовлетворяющие шаблону <paramref name="template"/>.
+    /// Рекурсивный поиск не выполняется.
+    /// Если требуется рекурсивный поиск, используйте <see cref="FileTemplateItem.IsAnyFileExist(AbsPath)"/>.
+    /// Если требуется поиск файлов по нескольким шаблонам, используйте <see cref="FileTemplateList.IsAnyFileExist(AbsPath)"/>.
+    /// Если требуется поиск точно известного имени файла (без шаблонных символов), используйте <see cref="System.IO.File.Exists(string)"/>.
+    /// Если каталог <paramref name="parentDir"/> не существует или <paramref name="parentDir"/>.IsEmpty=true, возвращается false.
+    /// </summary>
+    /// <param name="parentDir">Каталог, в котором требуется выполнить поиск</param>
+    /// <param name="template">Шаблон, содержащий символы "*" и/или "?"</param>
+    /// <returns>Наличие подходящего файла</returns>
+    public static bool IsAnyFileExist(AbsPath parentDir, string template)
+    {
+      FileTemplateItem item = new FileTemplateItem(template, false);
+      return item.IsAnyFileExist(parentDir);
     }
 
     #endregion
@@ -2633,6 +2648,41 @@ namespace FreeLibSet.IO
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если в каталоге <paramref name="root"/> существует хотя бы один файл, удовлетворяющий шаблону.
+    /// Проверяется только наличие файлов, но не каталогов.
+    /// Если каталог <paramref name="root"/> не существует, возвращается false.
+    /// </summary>
+    /// <param name="root">Проверяемый каталог</param>
+    /// <returns>Наличие файла</returns>
+    public bool IsAnyFileExist(AbsPath root)
+    {
+      if (root.IsEmpty)
+        return false;
+
+      if (!Directory.Exists(root.Path))
+        return false;
+
+      return DoIsAnyFileExist(root);
+    }
+
+    internal bool DoIsAnyFileExist(AbsPath root)
+    {
+      if (Directory.GetFiles(root.Path, Template, SearchOption.TopDirectoryOnly).Length > 0)
+        return true;
+
+      if (Recurse)
+      {
+        string[] subDirs = Directory.GetDirectories(root.Path);
+        for (int i = 0; i < subDirs.Length; i++)
+        {
+          if (Directory.GetFiles(subDirs[i], Template, SearchOption.TopDirectoryOnly).Length > 0)
+            return true;
+        }
+      }
+      return false;
+    }
+
     #endregion
   }
 
@@ -2872,6 +2922,30 @@ namespace FreeLibSet.IO
       Array.Sort<string>(a2);
 
       return a2;
+    }
+
+    /// <summary>
+    /// Возвращает true, если в каталоге <paramref name="root"/> существует хотя бы один файл, удовлетворяющий любому из шаблонов в списке.
+    /// Проверяется только наличие файлов, но не каталогов.
+    /// Если каталог <paramref name="root"/> не существует, возвращается false.
+    /// </summary>
+    /// <param name="root">Проверяемый каталог</param>
+    /// <returns>Наличие файла</returns>
+    public bool IsAnyFileExist(AbsPath root)
+    {
+      if (root.IsEmpty)
+        return false;
+
+      if (!Directory.Exists(root.Path))
+        return false;
+
+      for (int i = 0; i < Count; i++)
+      {
+        if (this[i].DoIsAnyFileExist(root))
+          return true;
+      }
+
+      return false;
     }
 
     #endregion

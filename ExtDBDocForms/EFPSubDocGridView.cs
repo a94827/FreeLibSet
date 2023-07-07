@@ -103,7 +103,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
+    public EFPSubDocGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
       : base(controlWithToolBar, mainEditor.UI)
     {
       Init(mainEditor, subDocs);
@@ -132,7 +132,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
     /// <param name="ui">Пользовательский интерфейс для документов</param>
-    public EFPSubDocGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DBxMultiSubDocs subDocs, DBUI ui)
+    public EFPSubDocGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DBxMultiSubDocs subDocs, DBUI ui)
       : base(controlWithToolBar, ui)
     {
       Init(null, subDocs);

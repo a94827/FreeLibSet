@@ -38,7 +38,7 @@ namespace FreeLibSet.IO
   #region Перечисление PathEnumerateMode
 
   /// <summary>
-  /// Порядок перебора файлов и каталогов в пределах родительского каталога с помощью FileEnumerable
+  /// Порядок перебора файлов и каталогов в пределах родительского каталога с помощью <see cref="AbsPathEnumerable"/> и <see cref="RelPathEnumerable"/>.
   /// </summary>
   public enum PathEnumerateMode
   {
@@ -110,7 +110,7 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Аргументы события.
-  /// Аргументы создаются AbsPathEnumerable.Enumerator в процессе перебора перед просмотром очередного каталога.
+  /// Аргументы создаются <see cref="AbsPathEnumerable.Enumerator"/> в процессе перебора перед просмотром очередного каталога.
   /// </summary>
   public sealed class EnumDirectoryEventArgs : EventArgs
   {
@@ -152,13 +152,14 @@ namespace FreeLibSet.IO
 
 
     /// <summary>
-    /// Просматриваемый каталог - Путь относительно RootDirectory
+    /// Просматриваемый каталог - Путь относительно <see cref="PathEnumerableBase.RootDirectory"/>
     /// </summary>
     public RelPath DirectoryRel { get { return _DirectoryRel; } }
     private RelPath _DirectoryRel;
 
     /// <summary>
-    /// Уровень вложения каталога Directory относительно базового каталога, с которого начинается перебор.
+    /// Уровень вложения каталога <see cref="Directory"/> относительно базового каталога <see cref="PathEnumerableBase.RootDirectory"/>, 
+    /// с которого начинается перебор.
     /// При первом вызове события для RootDirectory имеет значение 0. Для подкаталогов первого уровня - 1, и т.д.
     /// </summary>
     public int Level { get { return _Level; } }
@@ -185,7 +186,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Режим просмотра каталога.
-    /// Пользовательский обработчик может, например, пропустить ненужный каталог
+    /// Пользовательский обработчик может, например, пропустить ненужный каталог.
     /// </summary>
     public PathEnumerateMode EnumerateMode
     {
@@ -454,21 +455,22 @@ namespace FreeLibSet.IO
   }
 
   /// <summary>
-  /// Делегат для события EnumDirectory
+  /// Делегат для событий <see cref="PathEnumerableBase.BeforeDirectory"/> и <see cref="PathEnumerableBase.AfterDirectory"/>
   /// </summary>
-  /// <param name="sender">AbsPatheEnumerable или RelPathEnumerable</param>
-  /// <param name="args">Аргументы события. В них можно задавать правила перебора для очередного каталога</param>
+  /// <param name="sender">Ссылка на объект <see cref="AbsPathEnumerable"/> или <see cref="RelPathEnumerable"/></param>
+  /// <param name="args">Аргументы события. В них для события <see cref="PathEnumerableBase.BeforeDirectory"/> 
+  /// можно задавать правила перебора для очередного каталога</param>
   public delegate void EnumDirectoryEventHandler(object sender, EnumDirectoryEventArgs args);
 
   /// <summary>
-  /// Базовый класс для AbsPathEnumerable (и RelPathEnumerable, когда будет реализован)
+  /// Базовый класс для <see cref="AbsPathEnumerable"/> и <see cref="RelPathEnumerable"/>
   /// </summary>
   public class PathEnumerableBase
   {
     #region Защищенный конструктор
 
     /// <summary>
-    /// Создает объект, присваивая значения свойствам RootDirectory и EnumerateKind.
+    /// Создает объект, присваивая значения свойствам <see cref="RootDirectory"/> и <see cref="EnumerateKind"/>.
     /// </summary>
     /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
     /// <param name="enumerateKind">Что должно возвращаться при перечислении: файлы и/или каталоги</param>
@@ -506,7 +508,9 @@ namespace FreeLibSet.IO
     private PathEnumerateKind _EnumerateKind;
 
     /// <summary>
-    /// Режим перебора. По умолчанию - FilesAndDirectories - сначала файлы, потом - подкаталоги.
+    /// Режим перебора. По умолчанию - <see cref="PathEnumerateMode.FilesAndDirectories"/> - сначала файлы, потом - подкаталоги.
+    /// Значение применяетс в качестве начального для свойства <see cref="EnumDirectoryEventArgs.EnumerateMode"/> при
+    /// обходе очередного каталога и может меняться в обработчике события <see cref="BeforeDirectory"/>.
     /// </summary>
     public PathEnumerateMode EnumerateMode { get { return _EnumerateMode; } set { _EnumerateMode = value; } }
     private PathEnumerateMode _EnumerateMode;
@@ -518,7 +522,7 @@ namespace FreeLibSet.IO
     private string _FileSearchPattern;
 
     /// <summary>
-    /// Сортировка файлов при переборе. По умолчанию - None - порядок не определен.
+    /// Сортировка файлов при переборе. По умолчанию - <see cref="PathEnumerateSort.None"/> - порядок не определен.
     /// </summary>
     public PathEnumerateSort FileSort { get { return _FileSort; } set { _FileSort = value; } }
     private PathEnumerateSort _FileSort;
@@ -536,9 +540,8 @@ namespace FreeLibSet.IO
     public string DirectorySearchPattern { get { return _DirectorySearchPattern; } set { _DirectorySearchPattern = value; } }
     private string _DirectorySearchPattern;
 
-
     /// <summary>
-    /// Сортировка каталогов при переборе. По умолчанию - None - порядок не определен.
+    /// Сортировка каталогов при переборе. По умолчанию - <see cref="PathEnumerateSort.None"/> - порядок не определен.
     /// </summary>
     public PathEnumerateSort DirectorySort { get { return _DirectorySort; } set { _DirectorySort = value; } }
     private PathEnumerateSort _DirectorySort;
@@ -558,13 +561,13 @@ namespace FreeLibSet.IO
     /// Событие вызывается перед просмотром каждого каталога.
     /// Как минимум, вызывается один раз для просмотра корневого каталога.
     /// В аргументы события копируются настройки просмотра из этого объекта, а обработчик может их изменить.
-    /// Например, можно пропустить ненужные каталоги
+    /// Например, можно пропустить ненужные каталоги.
     /// </summary>
     public event EnumDirectoryEventHandler BeforeDirectory;
 
     /// <summary>
-    /// Событие вызывается после просмотра каждого каталога, для которого вызывалось событие BeforeDirectory.
-    /// Событие вызывается, даже если каталог пропускается установкой свойство EnumerateMode=None.
+    /// Событие вызывается после просмотра каждого каталога, для которого вызывалось событие <see cref="BeforeDirectory"/>.
+    /// Событие вызывается, даже если каталог пропускается установкой свойство <see cref="EnumDirectoryEventArgs.EnumerateMode"/>=<see cref="PathEnumerateMode.None"/>.
     /// Обработчик события не может менять свойства в аргументах события но может, например, удалить каталог.
     /// </summary>
     public event EnumDirectoryEventHandler AfterDirectory;
@@ -694,9 +697,9 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Рекурсивное перечисление файлов и подкаталогов в каталоге.
-  /// В отличие от System.Directory.GetFiles() и System.Directory.EnumerateFiles() (в Net Framework 4),
+  /// В отличие от <see cref="System.IO.Directory.GetFiles(string)"/> и System.IO.Directory.EnumerateFiles() (в Net Framework 4),
   /// позволяет управлять процессом перебора, чтобы не просматривать каталоги, которые не нужны.
-  /// Имена файлов и каталогов задаются как структуры AbsPath.
+  /// Имена файлов и каталогов при перечислении задаются как полные пути (структуры <see cref="AbsPath"/>).
   /// </summary>
   public sealed class AbsPathEnumerable : PathEnumerableBase, IEnumerable<AbsPath>
   {
@@ -712,10 +715,9 @@ namespace FreeLibSet.IO
     {
     }
 
-
     /// <summary>
     /// Создает объект, присваивая значения свойствам RootDirectory.
-    /// EnumerateKind принимает значение Files, то есть перечисляться будут имена файлов.
+    /// EnumerateKind принимает значение <see cref="PathEnumerateKind.Files"/>, то есть перечисляться будут имена файлов без каталогов.
     /// </summary>
     /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
     public AbsPathEnumerable(AbsPath rootDirectory)
@@ -830,7 +832,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает количество файлов и/или каталогов, выполнив перечисление
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Количество объектов файловой системы</returns>
     public int GetCount()
     {
       int cnt = 0;
@@ -840,7 +842,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает массив путей, выполнив перечисление
+    /// Возвращает массив путей, выполнив перечисление.
     /// </summary>
     public AbsPath[] ToArray()
     {
@@ -855,9 +857,12 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Рекурсивное перечисление файлов и подкаталогов в каталоге.
-  /// В отличие от System.Directory.GetFiles() и System.Directory.EnumerateFiles() (в Net Framework 4),
+  /// В отличие от <see cref="System.IO.Directory.GetFiles(string)"/> и System.Directory.EnumerateFiles() (в Net Framework 4),
   /// позволяет управлять процессом перебора, чтобы не просматривать каталоги, которые не нужны.
-  /// Имена файлов и каталогов задаются как структуры RelPath.
+  /// Имена файлов и каталогов задаются как относительные пути (структуры <see cref="RelPath"/>).
+  /// Пути задаются относительно базового каталога RootDirectory, а не текущего рабочего каталога программы,
+  /// что следует учитывать при получении информации о файле/каталоге.
+  /// Обычно следует пользоваться объектом <see cref="AbsPathEnumerable"/>, который использует полные, а не относительные пути.
   /// </summary>
   public sealed class RelPathEnumerable : PathEnumerableBase, IEnumerable<RelPath>
   {
@@ -877,7 +882,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Создает объект, присваивая значения свойствам RootDirectory.
-    /// EnumerateKind принимает значение Files, то есть перечисляться будут имена файлов.
+    /// EnumerateKind принимает значение <see cref="PathEnumerateKind.Files"/>, то есть перечисляться будут имена файлов без каталогов.
     /// </summary>
     /// <param name="rootDirectory">Корневой каталог для перечисления. Должен быть задан</param>
     public RelPathEnumerable(AbsPath rootDirectory)
@@ -995,7 +1000,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает количество файлов и/или каталогов, выполнив перечисление
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Количенство объектов файловой системы</returns>
     public int GetCount()
     {
       int cnt = 0;

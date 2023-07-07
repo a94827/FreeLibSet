@@ -250,7 +250,7 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Вычисление значения.
-    /// Этот метод должен быть переопределен в производном классе, если внешний обработчик Function не используетс
+    /// Этот метод должен быть переопределен в производном классе, если внешний обработчик Function не используется
     /// </summary>
     /// <returns></returns>
     protected virtual TResult Calculate()

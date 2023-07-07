@@ -299,7 +299,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает объект, привязанный к ControlWithToolBar
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элмент и панель инструментов</param>
+    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     public EFPGridFilterEditorGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar)
       : base(controlWithToolBar)
     {

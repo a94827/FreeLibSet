@@ -413,6 +413,11 @@ namespace FreeLibSet.IO
 
     #region Свойства
 
+    // 03.07.2023.
+    // TODO: Свойства XXXInternal надо убрать. Надо как-то решить проблему передачи данных через Marshal-By-Reference.
+    // Возможно, сделать свойство Source типа IFileContainerSource, которое позволит передавать файл по сети.
+    // Особая проблема: свойство SubDir при передаче между Windows и Linux через MBR.
+
     /// <summary>
     /// Имя и атрибуты файла
     /// </summary>
@@ -432,13 +437,14 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Если производный класс переопределяет свойство <see cref="Content"/>, 
-    /// он может использовать это поле для хранения данных
+    /// он может использовать это поле для хранения данных.
     /// </summary>
     protected byte[] ContentInternal { get { return _Content; } set { _Content = value; } }
     private byte[] _Content;
 
     /// <summary>
-    /// Подкаталог. Если задан, то заканчивается символом "\"
+    /// Подкаталог. Если задан, то заканчивается символом <see cref="System.IO.Path.DirectorySeparatorChar"/>.
+    /// При передаче контейнера по сети между компьютерами с разными операционными системами символ-разделитель может поменяться.
     /// </summary>
     public virtual string SubDir { get { return FromStoredSubDir(_SubDir); } }
 
@@ -649,7 +655,7 @@ namespace FreeLibSet.IO
 
   /// <summary>
   /// Список для хранения нескольких файлов.
-  /// Этот класс является потокобезопасным после вызова метода SetReadOnly()
+  /// Этот класс является потокобезопасным после вызова метода <see cref="FileContainerList.SetReadOnly()"/>.
   /// </summary>
   [Serializable]
   public class FileContainerList : ICloneable, IReadOnlyObject, ICollection<FileContainer>
@@ -699,8 +705,10 @@ namespace FreeLibSet.IO
     public FileContainer this[int index] { get { return _Items[index]; } }
 
     /// <summary>
-    /// Доступ к контейнеру по имени файла.
-    /// Свойство FileContainer.SubDir не учитывается при поиске.
+    /// Доступ к контейнеру по имени файла. 
+    /// Чувствительность к регистру при поиске определяется операционной системой на текущем компьютере (свойство <see cref="FileTools.CaseSensitive"/>).
+    /// При передаче списка контейнеров по сети между разными операционными системами регистрочувствительность может измениться.
+    /// Свойство <see cref="FileContainer.SubDir"/> не учитывается при поиске.
     /// Если нет контейнера с таким файлом, возвращается null.
     /// </summary>
     /// <param name="fileName">Имя файла</param>
@@ -727,9 +735,11 @@ namespace FreeLibSet.IO
     /// Добавление файла в список.
     /// Если в списке уже есть файл с таким именем, он заменяется на новый
     /// </summary>
-    /// <param name="item"></param>
+    /// <param name="item">Добавляемый файл. Не может быть null</param>
     public void Add(FileContainer item)
     {
+      if (item == null)
+        throw new ArgumentNullException("item"); // 03.07.2023
       CheckNotReadOnly();
 
       int p = IndexOf(item.FileInfo.Name);
@@ -803,9 +813,11 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает иедекс контейнера с заданным именем файла.
-    /// Свойство FileContainer.SubDir игнорируется.
-    /// Если контейнер не найден, возвращается (-1)
+    /// Возвращает индекс контейнера с заданным именем файла. 
+    /// Чувствительность к регистру при поиске определяется операционной системой на текущем компьютере (свойство <see cref="FileTools.CaseSensitive"/>).
+    /// При передаче списка контейнеров по сети между разными операционными системами регистрочувствительность может измениться.
+    /// Свойство <see cref="FileContainer.SubDir"/> игнорируется.
+    /// Если контейнер не найден, возвращается (-1).
     /// </summary>
     /// <param name="fileName">Имя файла для поиска</param>
     /// <returns>Индекс элемента</returns>
@@ -813,7 +825,8 @@ namespace FreeLibSet.IO
     {
       for (int i = 0; i < _Items.Count; i++)
       {
-        if (_Items[i].FileInfo.Name == fileName)
+        //if (_Items[i].FileInfo.Name == fileName)
+        if (String.Equals(_Items[i].FileInfo.Name, fileName, AbsPath.ComparisonType)) // 03.07.2023
           return i;
       }
 
@@ -884,15 +897,17 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает массив имен файлов (с подкаталогами, если есть)
+    /// Возвращает массив имен файлов (с подкаталогами <see cref="FileContainer.SubDir"/>, если есть).
+    /// Подкаталоги разделяются символом <see cref="System.IO.Path.DirectorySeparatorChar"/>, действующем на текущей машине.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив имен файлов</returns>
     public string[] GetFileNames()
     {
       string[] a;
       a = new string[_Items.Count];
       for (int i = 0; i < _Items.Count; i++)
-        a[i] = _Items[i].FileInfo.Name;
+        //a[i] = _Items[i].FileInfo.Name;
+        a[i] = _Items[i].SubDir + _Items[i].FileInfo.Name; // 03.07.2023
       return a;
     }
 
@@ -901,10 +916,9 @@ namespace FreeLibSet.IO
     #region ICloneable Members
 
     /// <summary>
-    /// Создает копию списка без признака ReadOnly.
+    /// Создает копию списка без признака <see cref="IsReadOnly"/>.
     /// Если контейнеры класса являются производными (с дополнительными методами 
-    /// загрузки), то они заменяются на обычные объекты AccDepFileContainer с
-    /// загруженными данными
+    /// загрузки), то они заменяются на обычные объекты <see cref="FileContainer"/> с загруженными данными.
     /// </summary>
     /// <returns>Копия списка файлов</returns>
     public FileContainerList Clone()

@@ -13,19 +13,18 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Провайдер табличного просмотра, предназначенного для редактирования данных DataTable "по месту".
-  /// Расширяет EFPDataGridView, в основном, для поддержки операций вставки из буфера обмена с автоматическим
-  /// добавлением строк.
-  /// Инициализация столбцов выполняется при инициализации свойства Data.
-  /// Свойство FixedRows позволяет работать с таблицами произвольного размера или с фиксированным числом строк.
-  /// В режиме 
+  /// Провайдер табличного просмотра, предназначенного для редактирования данных <see cref="DataTable"/> "по месту".
+  /// Инициализация столбцов просмотра выполняется при установке свойства <see cref="EFPInputDataGridView.Data"/>. 
+  /// Заполнение свойства <see cref="EFPDataGridView.Columns"/> из прикаладного кода не выполняется.
+  /// Данные хранятся в объекте <see cref="UIInputGridData"/>, который, кроме таблицы данных, содержит дополнительные свойства для столбцов и проверочные объекты.
+  /// Свойство <see cref="EFPInputDataGridView.FixedRows"/> позволяет работать с таблицами произвольного размера или с фиксированным числом строк.
   /// </summary>
   public class EFPInputDataGridView : EFPDataGridView
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает объект, привязанный к DataGridView
+    /// Создает объект, привязанный к <see cref="DataGridView"/>
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент Windows Forms</param>
@@ -36,10 +35,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает объект, привязанный к ControlWithToolBar
+    /// Создает объект, привязанный к ControlWithToolBar.
     /// </summary>
-    /// <param name="controlWithToolBar">Управляющий элмент и панель инструментов</param>
-    public EFPInputDataGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar)
+    /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
+    public EFPInputDataGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar)
       : base(controlWithToolBar)
     {
       Init();
@@ -59,6 +58,8 @@ namespace FreeLibSet.Forms
 
       _ValidatingResults = new Dictionary<int, RowValidatingResults>();
       _TempValidableObject = new UISimpleValidableObject();
+
+      FixedRows = false; // 04.07.2023
     }
 
     #endregion
@@ -86,7 +87,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Просматриваемые данные и настройки столбцов.
-    /// Установка свойства приводит к инициализации просмотра
+    /// Установка свойства приводит к инициализации просмотра. Создаются столбцы и строки.
+    /// В процессе редактирования таблица <see cref="UIInputGridData.Table"/> обновляется автоматически и всегда содержит актуальные данные.
     /// </summary>
     public UIInputGridData Data
     {
@@ -171,7 +173,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Реализует добавление и удаление строк
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Фиктивный аргумент</param>
     /// <returns></returns>
     protected override bool OnEditData(EventArgs args)
     {
@@ -219,7 +221,7 @@ namespace FreeLibSet.Forms
     #region Сжатие и проверка таблицы при закрытии формы
 
     /// <summary>
-    /// При закрытии формы выполняет сжатие таблицы данных
+    /// При закрытии формы выполняет сжатие таблицы данных вызовом <see cref="DataTable.AcceptChanges()"/>.
     /// </summary>
     protected override void OnValidate()
     {
@@ -342,6 +344,7 @@ namespace FreeLibSet.Forms
           DataRow row = ((DataView)sender)[args.NewIndex].Row;
           bool otherRowsChanged;
           InitManualOrderColumnValue(new DataRow[1] { row }, out otherRowsChanged);
+          _ValidatingResults.Clear(); // 07.07.2023
           break;
         default:// неохота проверять остальные режимы
           _ValidatingResults.Clear();
@@ -350,7 +353,19 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Присоединение обработчика ListChanged
+    /// Выполняет валидацию строки данных
+    /// </summary>
+    /// <param name="rowIndex">Индекс строки данных</param>
+    /// <param name="columnIndex">Индекс столбца</param>
+    /// <param name="reason">Причина вызова (ручное редактирование, буфер обмена, ...)</param>
+    public override void OnCellFinished(int rowIndex, int columnIndex, EFPDataGridViewCellFinishedReason reason)
+    {
+      _ValidatingResults.Remove(rowIndex); // 07.07.2023
+      base.OnCellFinished(rowIndex, columnIndex, reason);
+    }
+
+    /// <summary>
+    /// Присоединение обработчика <see cref="DataView.ListChanged"/>.
     /// </summary>
     protected override void OnAttached()
     {
@@ -360,7 +375,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Отключение обработчика ListChanged
+    /// Отключение обработчика <see cref="DataView.ListChanged"/>.
     /// </summary>
     protected override void OnDetached()
     {
@@ -375,9 +390,9 @@ namespace FreeLibSet.Forms
     #region Раскраска ячеек с ошибками
 
     /// <summary>
-    /// Получение списка сообщений для строки
+    /// Получение списка сообщений для строки.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Аргументы события</param>
     protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
     {
       base.OnGetRowAttributes(args);
@@ -487,6 +502,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Диалог для ввода табличных данных.
+  /// Данные хранятся в виде объекта <see cref="UIInputGridData"/>.
   /// </summary>
   public class InputDataGridDialog : BaseInputDialog
   {
@@ -510,13 +526,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Основное свойство - редактируемая таблица данных.
     /// В таблицу должны быть добавлены столбцы перед показом диалога.
-    /// Могут использоваться столбцы для просмотра, если установлено свойство DataColumn.Expression.
-    /// Дополнительные параметры для добавленных столбцов, например, формат, задавайте с помощью методов коллекции Columns.
+    /// Могут использоваться столбцы для просмотра, если установлено свойство <see cref="DataColumn.Expression"/>.
+    /// Дополнительные параметры для добавленных столбцов, например, формат, задавайте с помощью методов коллекции <see cref="UIInputGridData.Columns"/>.
     /// 
-    /// Если FixedRows=true, то в таблицу следует добавить строки, иначе пользователь не сможет ничего ввести.
-    /// 
-    /// После закрытия блока диалога свойство Table должно быть прочитано заново, так как оно содержит ссылку на новую таблицу.
-    /// По умолчанию - пустая таблица.
+    /// Если свойство <see cref="FixedRows"/>=true, то в таблицу следует добавить строки, 
+    /// иначе пользователь не сможет ничего ввести.
     /// </summary>
     public UIInputGridData Data
     {
@@ -616,5 +630,4 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
-
 }

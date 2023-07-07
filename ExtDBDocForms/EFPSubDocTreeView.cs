@@ -45,7 +45,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="mainEditor">Редактор основного документа, на вкладку которого добавляется табличный просмотр</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
-    public EFPSubDocTreeView(EFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
+    public EFPSubDocTreeView(IEFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DocumentEditor mainEditor, DBxMultiSubDocs subDocs)
       : base(controlWithToolBar, mainEditor.UI)
     {
       Init(mainEditor, subDocs);
@@ -74,7 +74,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="subDocs">Список просматриваемых поддокументов</param>
     /// <param name="ui">Пользовательский интерфейс для документов</param>
-    public EFPSubDocTreeView(EFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DBxMultiSubDocs subDocs, DBUI ui)
+    public EFPSubDocTreeView(IEFPControlWithToolBar<TreeViewAdv> controlWithToolBar, DBxMultiSubDocs subDocs, DBUI ui)
       : base(controlWithToolBar, ui)
     {
       Init(null, subDocs);

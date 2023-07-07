@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\PathEnumerableTests.cs" />
     <Compile Include="Calendar\YearMonthRangeTests.cs" />
     <Compile Include="Calendar\YearMonthTests.cs" />
     <Compile Include="Collections\ArrayIndexerTests.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="DependedValues\DepFromDictionaryTests.cs" />
     <Compile Include="Collections\HashtableTests.cs" />
     <Compile Include="IO\AbsPathTests.cs" />
+    <Compile Include="IO\FileContainerListTests.cs" />
     <Compile Include="IO\FileContainerTests.cs" />
     <Compile Include="IO\FileToolsTests.cs" />
     <Compile Include="IO\RelPathTests.cs" />

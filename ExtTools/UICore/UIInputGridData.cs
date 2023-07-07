@@ -44,8 +44,8 @@ namespace FreeLibSet.UICore
     #region Конструкторы
 
     /// <summary>
-    /// Создает объект для существующей таблицы DataTable.
-    /// Таблица не должна быть частью DataSet, в противном случае она будет от него отсоединена.
+    /// Создает объект для существующей таблицы <see cref="DataTable"/>, созданной в пользовательском коде.
+    /// Таблица не должна быть частью <see cref="DataSet"/>, в противном случае она будет от него отсоединена.
     /// </summary>
     /// <param name="table">Внешняя таблица данных. Не может быть null</param>
     public UIInputGridData(DataTable table)
@@ -61,7 +61,8 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект с новой таблицей DataTable
+    /// Создает объект с новой пустой таблицей <see cref="DataTable"/>.
+    /// Прикладной код должен будет добавить столбцы в коллекцию <see cref="ColumnCollection"/>, используя свойство <see cref="Table"/>.
     /// </summary>
     public UIInputGridData()
       : this(new DataTable("InputTable"))
@@ -75,14 +76,16 @@ namespace FreeLibSet.UICore
     private DataSet _DS;
 
     /// <summary>
-    /// Таблица данных
+    /// Таблица данных. Задается в конструкторе.
+    /// Если использовался конструктор без аргументов, то прикладной код должен добавить столбцы в таблицу.
     /// </summary>
     public DataTable Table { get { return _DS.Tables[0]; } }
 
     private TypedStringDictionary<ColumnInfo> _Dict;
 
     /// <summary>
-    /// Описания столбцов
+    /// Дополнительные описания столбцов таблицы.
+    /// Позволяют задавать форматирование значений и правила проверки.
     /// </summary>
     public ColumnCollection Columns { get { return new ColumnCollection(this); } }
 
@@ -91,9 +94,10 @@ namespace FreeLibSet.UICore
     #region CanBeEmpty
 
     /// <summary>
-    /// Может ли поле быть пустым.
-    /// Значение по умолчанию - Error - поле должно быть заполнено, иначе будет выдаваться ошибка.
+    /// Могут ли поля быть пустыми.
+    /// Значение по умолчанию - <see cref="UIValidateState.Error"/> - поля должны быть заполнены, иначе будет выдаваться ошибка.
     /// Установка свойства применяется ко всем полям таблицы.
+    /// Для задания индивидуальных органичений для столбцов используйте свойство <see cref="UIInputGridData.ColumnInfo.CanBeEmptyMode"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -108,12 +112,13 @@ namespace FreeLibSet.UICore
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Может ли поле быть пустым.
+    /// Могут ли поля быть пустыми.
     /// Значение по умолчанию: false (поле является обязательным).
-    /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
-    /// При CanBeEmptyMode=Warning это свойство возвращает true.
-    /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
-    /// Установка свойства применяется ко всем полям таблицы.
+    /// Это свойство дублирует <see cref="CanBeEmptyMode"/>, но не позволяет установить режим предупреждения.
+    /// При <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/> это свойство возвращает true.
+    /// Установка значения true эквивалентна установке <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Ok"/>, 
+    /// а false - <see cref="UIValidateState.Error"/>.
+    /// Установка свойства применяется ко всем полям таблицы. Для задания проверки для отдельныз столбцов используйте свойство <see cref="ColumnInfo.CanBeEmpty"/>.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -214,7 +219,7 @@ namespace FreeLibSet.UICore
       #region Форматированный доступ
 
       /// <summary>
-      /// Вызывает DepTools.ToTypeEx() для свойства ValueEx.
+      /// Вызывает <see cref="DepTools.ToTypeEx{T}(IDepValue)"/> для свойства <see cref="ValueEx"/>.
       /// </summary>
       /// <typeparam name="T">Тип данных, к которому нужно преобразовать текущее проверяемое значение</typeparam>
       /// <returns>Вычисляемый объект</returns>
@@ -260,7 +265,7 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Возвращает текущее проверяемое значение как дату/время.
-      /// Пустое значение возвращается как DateTimne.MinValue.
+      /// Пустое значение возвращается как <see cref="DateTime.MinValue"/>.
       /// </summary>
       public DepValue<DateTime> AsDateTimeEx { get { return ToTypeEx<DateTime>(); } }
 
@@ -307,13 +312,14 @@ namespace FreeLibSet.UICore
       private UIInputGridData _Owner;
 
       /// <summary>
-      /// Имя столбца
+      /// Имя столбца <see cref="DataColumn.ColumnName"/>.
       /// </summary>
       public string ColumnName { get { return _ColumnName; } }
       private string _ColumnName;
 
       /// <summary>
-      /// Столбец таблицы данных
+      /// Столбец таблицы данных.
+      /// Свойство используется для доступа к основным свойствам столбца <see cref="DataColumn"/>.
       /// </summary>
       public DataColumn Column { get { return _Owner.Table.Columns[_ColumnName]; } }
 
@@ -321,7 +327,7 @@ namespace FreeLibSet.UICore
       // private DataColumn _Column;
 
       /// <summary>
-      /// Возвращает свойство DataColumn.ColumnName
+      /// Возвращает свойство <see cref="DataColumn.ColumnName"/>
       /// </summary>
       /// <returns>Текстовое представление</returns>
       public override string ToString()
@@ -335,7 +341,7 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Горизонтальное выравнивание.
-      /// Если свойство не установлено в явном виде, то определяется по типу данных столбца (DataColumn.DataType).
+      /// Если свойство не установлено в явном виде, то определяется по типу данных столбца (<see cref="DataColumn.DataType"/>).
       /// Для числовых типов используется выравнивание по правому краю, для строк - по левому, для даты/времени и логического типа - по центру.
       /// </summary>
       public UIHorizontalAlignment Align
@@ -383,7 +389,7 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Весовой коэффициент для столбца, который должен заполнять таблицу по ширине.
-      /// По умолчанию - 0 - используется ширина столбца, задаваемая TextWidth.
+      /// По умолчанию - 0 - используется ширина столбца, задаваемая <see cref="TextWidth"/>, а заполнение не используется.
       /// </summary>
       public int FillWeight
       {
@@ -400,7 +406,7 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Может ли поле быть пустым.
-      /// Значение по умолчанию совпадает с текущим значением основного свойства UIInputGridData.CanBeEmptyMode.
+      /// Значение по умолчанию совпадает с текущим значением основного свойства <see cref="UIInputGridData.CanBeEmptyMode"/>.
       /// </summary>
       public UIValidateState CanBeEmptyMode
       {
@@ -411,10 +417,11 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Может ли поле быть пустым.
-      /// Значение по умолчанию совпадает с текущим значением основного свойства UIInputGridData.CanBeEmpty.
-      /// Это свойство дублирует CanBeEmptyMode, но не позволяет установить режим предупреждения.
-      /// При CanBeEmptyMode=Warning это свойство возвращает true.
-      /// Установка значения true эквивалентна установке CanBeEmptyMode=Ok, а false - CanBeEmptyMode=Error.
+      /// Значение по умолчанию совпадает с текущим значением основного свойства <see cref="UIInputGridData.CanBeEmpty"/>.
+      /// Это свойство дублирует <see cref="CanBeEmptyMode"/>, но не позволяет установить режим предупреждения.
+      /// При <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/> это свойство возвращает true.
+      /// Установка значения true эквивалентна установке <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Ok"/>, 
+      /// а false - <see cref="UIValidateState.Error"/>.
       /// </summary>
       public bool CanBeEmpty
       {
@@ -441,8 +448,9 @@ namespace FreeLibSet.UICore
       private ColumnValidators _Validators;
 
       /// <summary>
-      /// Возвращает true, если список Validators не пустой.
-      /// Используется для оптимизации, вместо обращения к Validators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+      /// Возвращает true, если список <see cref="Validators"/> не пустой.
+      /// Используется для оптимизации, вместо обращения к Validators.Count, 
+      /// позволяя обойтись без создания объекта списка, когда у столбца нет валидаторов.
       /// </summary>
       public bool HasValidators
       {
@@ -505,7 +513,7 @@ namespace FreeLibSet.UICore
       /// Доступ к свойствам столбца по имени.
       /// На момент вызова столбец должен быть добавлен в таблицу.
       /// </summary>
-      /// <param name="columnName">Имя столбца (свойство DataColumn.ColumnName)</param>
+      /// <param name="columnName">Имя столбца (свойство <see cref="DataColumn.ColumnName"/>)</param>
       /// <returns>Свойства столбца табличного просмотра</returns>
       public ColumnInfo this[string columnName]
       {
@@ -533,7 +541,7 @@ namespace FreeLibSet.UICore
       /// Доступ к свойствам столбца.
       /// На момент вызова столбец должен быть добавлен в таблицу.
       /// </summary>
-      /// <param name="column">Столбец DataTable</param>
+      /// <param name="column">Столбец таблицы <see cref="UIInputGridData.Table"/></param>
       /// <returns>Свойства столбца табличного просмотра</returns>
       public ColumnInfo this[DataColumn column]
       {
@@ -583,7 +591,7 @@ namespace FreeLibSet.UICore
     /// Установка значений для проверки строки.
     /// Этот метод не должен использоваться в прикладном коде.
     /// </summary>
-    /// <param name="row">Проверяемая строка таблицы Table</param>
+    /// <param name="row">Проверяемая строка таблицы <see cref="UIInputGridData.Table"/></param>
     public void InternalSetValidatingRow(DataRow row)
     {
       if (row == null)

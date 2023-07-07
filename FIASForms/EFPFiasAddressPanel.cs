@@ -41,7 +41,7 @@ namespace FreeLibSet.Forms.FIAS
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="ui">Ссылка на пользовательский интерфейс ФИАС</param>
     /// <param name="editorLevel">Уровень адреса, до которого можно редактировать</param>
-    public EFPFiasAddressPanel(EFPControlWithToolBar<FiasAddressPanel> controlWithToolBar, FiasUI ui, FiasEditorLevel editorLevel)
+    public EFPFiasAddressPanel(IEFPControlWithToolBar<FiasAddressPanel> controlWithToolBar, FiasUI ui, FiasEditorLevel editorLevel)
       : base(controlWithToolBar, false)
     {
       Init(ui, editorLevel);

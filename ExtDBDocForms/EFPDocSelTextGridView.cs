@@ -104,7 +104,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="docTypeUI">Интерфейс вида документов</param>
-    public EFPDocSelTextGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DocTypeUI docTypeUI)
+    public EFPDocSelTextGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DocTypeUI docTypeUI)
       : base(controlWithToolBar, docTypeUI.UI)
     {
       Init(docTypeUI);
@@ -129,7 +129,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     /// <param name="ui">Интерфейс для доступа к документам</param>
     /// <param name="DocTypeName">Имя вида документов в просмотре</param>
-    public EFPDocSelTextGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, DBUI ui, string DocTypeName)
+    public EFPDocSelTextGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, DBUI ui, string DocTypeName)
       : base(controlWithToolBar, ui)
     {
       Init(ui.DocTypes[DocTypeName]);

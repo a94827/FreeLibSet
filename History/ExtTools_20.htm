@@ -5,34 +5,7 @@
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2023-06-30T22:32:03.387000000"/>
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2023-07-07T21:03:07.281000000"/>
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
@@ -615,13 +588,13 @@
 	<meta name="created" content="00:00:00">
 	<meta name="created" content="00:00:00">
 	<style type="text/css">
-		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
+		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
-		h1.cjk { font-family: "NSimSun" }
-		h1.ctl { font-family: "Mangal" }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000 }
-		a:link { color: #0000ff }
+		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
+		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
+		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
 </head>
@@ -636,7 +609,7 @@
 свойства файла или в меню &laquo;О программе&raquo;, состоит из
 четырех чисел и имеет вид &laquo;<span lang="en-US">2</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
 В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
-<table width="100%" cellpadding="3" cellspacing="0">
+<table width="100%" cellpadding="2" cellspacing="0">
 	<col width="25*">
 	<col width="35*">
 	<col width="196*">
@@ -653,30 +626,58 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">346</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">03<span lang="ru-RU">.07.2023-04.07.2023</span></p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">1</span><span lang="ru-RU">.
+			Изменения в </span><span lang="en-US">FileContainerList (<a href="/C:/TEMP/ExtTools_11.htm#v042p3">v.42
+			</a></span><a href="/C:/TEMP/ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
+			<p lang="en-US" style="margin-bottom: 0cm; background: transparent">
+			- <span lang="ru-RU">Метод </span>IndexOf() (<span lang="ru-RU">и
+			свойство </span>this[name]) <span lang="ru-RU">использует режим
+			сравнения строк </span>AbsPath.ComparisionType. <span lang="ru-RU">Раньше
+			поиск был чувствительным к регистру</span></p>
+			<p lang="en-US" style="background: transparent"><span lang="ru-RU">-
+			Метод </span>GetFileNames() <span lang="ru-RU">не учитывал
+			</span>FileContainer.SubDir.</p>
+			<p lang="en-US" style="background: transparent">2<span lang="ru-RU">.
+			Методы </span>FileTools, FileTemplateItem,
+			FileTemplateList.IsAnyFileExist()</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">345</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">21.04.2023-30.06.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p><span lang="en-US">1. </span><span lang="ru-RU">Небольшая
-			оптимизация методов </span><span lang="en-US">DataTools.GetXxx()
-			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v001p1"><span lang="en-US">v.1
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">1.
+			</span><span lang="ru-RU">Небольшая оптимизация методов
+			</span><span lang="en-US">DataTools.GetXxx() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) при
 			преобразовании из </span><span lang="en-US">String. </span><span lang="ru-RU">Используется
-			&quot;</span><span lang="en-US">as</span><span lang="ru-RU">&quot;</span>
-			<span lang="ru-RU">вместо &quot;</span><span lang="en-US">is</span><span lang="ru-RU">&quot;</span><span lang="en-US">+</span><span lang="ru-RU">преобразование</span></p>
-			<p><span lang="en-US">2. </span><span lang="ru-RU">Исправлено
-			свойство </span><span lang="en-US">FileAssociationItem.UseURL
-			(<a href="#v301p2">v.301 </a></span><a href="#v301p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
-			<p lang="en-US">3. Функция DataTools.Substring()</p>
-			<p><span lang="en-US">4. Функция DataTools.GetString() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v001p1"><span lang="en-US">v.1
+			&quot;</span><span lang="en-US">as</span><span lang="ru-RU">&quot;
+			вместо &quot;</span><span lang="en-US">is</span><span lang="ru-RU">&quot;</span><span lang="en-US">+</span><span lang="ru-RU">преобразование</span></p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">2.
+			</span><span lang="ru-RU">Исправлено свойство
+			</span><span lang="en-US">FileAssociationItem.UseURL (<a href="#v301p2">v.301
+			</a></span><a href="#v301p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
+			<p style="margin-bottom: 0cm; background: transparent">3. Функция
+			DataTools.Substring()</p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">4.
+			Функция DataTools.GetString() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			использует </span><span lang="en-US">StdConvert </span><span lang="ru-RU">для
 			преобразования </span><span lang="en-US">DateTime </span><span lang="ru-RU">и
 			числовых значений.</span></p>
-			<p><span lang="en-US">5. DataTools.GetDateTime() </span><span lang="ru-RU">и
-			</span><span lang="en-US">GetNullableDateTime() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v001p1"><span lang="en-US">v.1
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">5.
+			DataTools.GetDateTime() </span><span lang="ru-RU">и
+			</span><span lang="en-US">GetNullableDateTime() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			разрешают аргумент </span><span lang="en-US">TimeSpan. </span><span lang="ru-RU">Отдельная
 			перегрузка </span><span lang="en-US">GetDateTime</span><span lang="ru-RU">()
@@ -684,105 +685,118 @@
 			</span><span lang="en-US">TimeSpan</span><span lang="ru-RU">+</span><span lang="en-US">DateTime.
 			DataTools.GetTimeSpan() </span><span lang="ru-RU">разрешает
 			аргумент </span><span lang="en-US">DateTime.</span></p>
-			<p><a name="v345p6"></a>6. Функция <span lang="en-US">DataTools.CompareNumbers().
+			<p style="margin-bottom: 0cm; background: transparent"><a name="v345p6"></a>
+			6. Функция <span lang="en-US">DataTools.CompareNumbers().
 			</span><span lang="ru-RU">Используется </span><span lang="en-US">ExcelFunctions.Compare()</span></p>
-			<p><span lang="en-US">7. FileTools.WriteStream() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v003p1"><span lang="en-US">v.3
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">7.
+			FileTools.WriteStream() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v003p1"><span lang="en-US">v.3
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не
 			выполняет позиционирование на начало потока.</span></p>
-			<p><span lang="en-US">8. FileTools.CheckFileExists() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v177p1"><span lang="en-US">v.177
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">8.
+			FileTools.CheckFileExists() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v177p1"><span lang="en-US">v.177
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) может
 			выбрасывать исключение </span><span lang="en-US">DirectoryNotFoundException,
 			</span><span lang="ru-RU">если не существует каталог.</span></p>
-			<p lang="en-US">9. <span lang="ru-RU">Метод
+			<p style="margin-bottom: 0cm; background: transparent">9. <span lang="ru-RU">Метод
 			</span>ZipFileTools.ExtractZipResourceFile()</p>
-			<p><span lang="en-US">10</span><span lang="ru-RU">. Метод
-			</span><span lang="en-US">RegistryKey2.CreateSubKey</span><span lang="ru-RU">()
-			(</span><a href="ExtTools_11.htm#v160p3"><span lang="en-US">v.160
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">10</span><span lang="ru-RU">.
+			Метод </span><span lang="en-US">RegistryKey2.CreateSubKey</span><span lang="ru-RU">()
+			(</span><a href="/C:/TEMP/ExtTools_11.htm#v160p3"><span lang="en-US">v.160
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
 			задавал не все флаги разрешений при вызове RegCreateKeyEx().
 			Нельзя было потом прочитать список значений.</span></p>
-			<p lang="en-US">11. <span lang="ru-RU">Исправлена ошибка в методах
-			</span>RegistryCfgPart, RegistryCfgPart2.DoRemove() <span lang="ru-RU">при
-			удалении дочерней группы</span>. <span lang="ru-RU">В методе
-			</span>DoGetChild() <span lang="ru-RU">проверяется
-			</span>Tree.CheckNotReadOnly() <span lang="ru-RU">при </span>create=true.</p>
-			<p lang="en-US">12. <span lang="ru-RU">Методы </span>RegistryCfgPart,
-			RegistryCfgPart2.Close(), CloseChildren(), DeleteTree()</p>
-			<p lang="en-US">13. <span lang="ru-RU">Исправлены</span> <span lang="ru-RU">ошибки</span>
+			<p style="margin-bottom: 0cm; background: transparent">11.
+			<span lang="ru-RU">Исправлена ошибка в методах </span>RegistryCfgPart,
+			RegistryCfgPart2.DoRemove() <span lang="ru-RU">при удалении
+			дочерней группы</span>. <span lang="ru-RU">В методе </span>DoGetChild()
+			<span lang="ru-RU">проверяется </span>Tree.CheckNotReadOnly() <span lang="ru-RU">при
+			</span>create=true.</p>
+			<p style="margin-bottom: 0cm; background: transparent">12. <span lang="ru-RU">Методы
+			</span>RegistryCfgPart, RegistryCfgPart2.Close(), CloseChildren(),
+			DeleteTree()</p>
+			<p style="margin-bottom: 0cm; background: transparent">13.
+			<span lang="ru-RU">Исправлены</span> <span lang="ru-RU">ошибки</span>
 			<span lang="ru-RU">в методах </span>IniCfgPart.GetChildNames()<span lang="ru-RU">,
 			</span>DoHasChild(), DoGetChild()</p>
-			<p><span lang="en-US">14. </span><span lang="ru-RU">Методы в
-			</span><span lang="en-US">CfgConverter </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v024p1"><span lang="en-US">v.24
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">14.
+			</span><span lang="ru-RU">Методы в </span><span lang="en-US">CfgConverter
+			</span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v024p1"><span lang="en-US">v.24
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) для
 			типа </span><span lang="en-US">Boolean. Р</span><span lang="ru-RU">аньше
 			в </span><span lang="en-US">CfgPart </span><span lang="ru-RU">использовалось
 			преобразование в/из </span><span lang="en-US">Int32 </span><span lang="ru-RU">без
 			возможности настройки</span></p>
-			<p><span lang="en-US">15. </span><span lang="ru-RU">Методы
-			</span><span lang="en-US">CfgPart.SetDateTimeCommaString() </span><span lang="ru-RU">и
-			</span><span lang="en-US">GetDateTimeCommaString</span><span lang="ru-RU">()</span>
-			<span lang="en-US">(<a href="ExtTools_11.htm#v124p1">v.124 </a></span><a href="ExtTools_11.htm#v124p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">15.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">CfgPart.SetDateTimeCommaString()
+			</span><span lang="ru-RU">и </span><span lang="en-US">GetDateTimeCommaString</span><span lang="ru-RU">()</span>
+			<span lang="en-US">(<a href="/C:/TEMP/ExtTools_11.htm#v124p1">v.124
+			</a></span><a href="/C:/TEMP/ExtTools_11.htm#v124p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">с аргументом </span><span lang="en-US">useTime
 			</span><span lang="ru-RU">замены на отдельные методы
 			</span><span lang="en-US">Set/GetDateTimeCommaString/DateCommaString().
 			</span><span lang="ru-RU">Существующие методы помечены атрибутом
 			</span><span lang="en-US">[Obsolete]</span></p>
-			<p><span lang="en-US">16. </span><span lang="ru-RU">Свойство
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">16.
+			</span><span lang="ru-RU">Свойство
 			</span><span lang="en-US">EnvironmentTools.Is64bitOperatingSystem
-			(<a href="ExtTools_11.htm#v030p4">v.30 </a></span><a href="ExtTools_11.htm#v030p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			(<a href="/C:/TEMP/ExtTools_11.htm#v030p4">v.30 </a></span><a href="/C:/TEMP/ExtTools_11.htm#v030p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">для не-</span><span lang="en-US">Windows
 			</span><span lang="ru-RU">возвращает значение, зависящее от
 			</span><span lang="en-US">IntPtr.Size</span></p>
-			<p><span lang="en-US">17. </span><span lang="ru-RU">Изменения в
-			FileRedirectionSupressor (</span><a href="ExtTools_11.htm#v030p5"><span lang="en-US">v.30
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">17.
+			</span><span lang="ru-RU">Изменения в FileRedirectionSupressor
+			(</span><a href="/C:/TEMP/ExtTools_11.htm#v030p5"><span lang="en-US">v.30
 			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">):</span></p>
-			<p><span lang="ru-RU">- Класс переименован в
-			</span><span lang="en-US">Wow64</span><span lang="ru-RU">FileRedirectionSupressor
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
+			Класс переименован в </span><span lang="en-US">Wow64</span><span lang="ru-RU">FileRedirectionSupressor
 			и перенесен в пространство имен </span><span lang="en-US">FreeLibSet.Win32</span></p>
-			<p><span lang="ru-RU">- Свойство </span><span lang="en-US">OSSupported
-			</span><span lang="ru-RU">возвращает </span><span lang="en-US">true
-			</span><span lang="ru-RU">только для 64-битных </span><span lang="en-US">Windows,
-			</span><span lang="ru-RU">но не для 32-разрядных</span></p>
-			<p>- Конструктор не выполняет никаких действий, если приложение
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
+			Свойство </span><span lang="en-US">OSSupported </span><span lang="ru-RU">возвращает
+			</span><span lang="en-US">true </span><span lang="ru-RU">только
+			для 64-битных </span><span lang="en-US">Windows, </span><span lang="ru-RU">но
+			не для 32-разрядных</span></p>
+			<p style="margin-bottom: 0cm; background: transparent">-
+			Конструктор не выполняет никаких действий, если приложение
 			является 64-разрядным.</p>
-			<p><span lang="en-US">18. </span><span lang="ru-RU">Изменения в
-			</span><span lang="en-US">AbsPath (<a href="ExtTools_11.htm#v012p1">v.12
-			</a></span><a href="ExtTools_11.htm#v012p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
-			<p lang="en-US">- <span lang="ru-RU">Используется статический
-			конструктор</span></p>
-			<p lang="en-US"><span lang="ru-RU">- </span>GetHashCode()
-			<span lang="ru-RU">возвращает более осмысленное значение с
-			использованием подходящего </span>StringComparer.GetHashCode().</p>
-			<p lang="en-US">- <span lang="ru-RU">Свойство </span>Uri
-			<span lang="ru-RU">возвращает </span>null, <span lang="ru-RU">если
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">18.
+			</span><span lang="ru-RU">Изменения в </span><span lang="en-US">AbsPath
+			(<a href="/C:/TEMP/ExtTools_11.htm#v012p1">v.12 </a></span><a href="/C:/TEMP/ExtTools_11.htm#v012p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
+			<p style="margin-bottom: 0cm; background: transparent">-
+			<span lang="ru-RU">Используется статический конструктор</span></p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
+			</span>GetHashCode() <span lang="ru-RU">возвращает более
+			осмысленное значение с использованием подходящего
+			</span>StringComparer.GetHashCode().</p>
+			<p style="margin-bottom: 0cm; background: transparent">- <span lang="ru-RU">Свойство
+			</span>Uri <span lang="ru-RU">возвращает </span>null, <span lang="ru-RU">если
 			</span>IsEmpty=true. <span lang="ru-RU">Новое свойство </span>UriString</p>
-			<p lang="en-US">- <span lang="ru-RU">Свойство </span>IsNetwork
-			<span lang="ru-RU">объявлено устаревшим</span></p>
-			<p lang="en-US">- <span lang="ru-RU">Методы </span>StartsWith(),
-			EndsWith() <span lang="ru-RU">и EndsWithIgnoreCase() возвращают
-			</span>true, <span lang="ru-RU">а не </span>false<span lang="ru-RU">,
-			если аргумент - пустой</span></p>
-			<p lang="en-US">19. <span lang="ru-RU">Изменения в </span>RelPath<span lang="ru-RU">
-			(</span><a href="ExtTools_11.htm#v137p2">v.137 <span lang="ru-RU">п.2</span></a><span lang="ru-RU">):</span></p>
-			<p lang="en-US"><span lang="ru-RU">- Оператор &quot;+&quot; для
-			</span>RelPath+string <span lang="ru-RU">возвращает
+			<p style="margin-bottom: 0cm; background: transparent">- <span lang="ru-RU">Свойство
+			</span>IsNetwork <span lang="ru-RU">объявлено устаревшим</span></p>
+			<p style="margin-bottom: 0cm; background: transparent">- <span lang="ru-RU">Методы
+			</span>StartsWith(), EndsWith() <span lang="ru-RU">и
+			EndsWithIgnoreCase() возвращают </span>true, <span lang="ru-RU">а
+			не </span>false<span lang="ru-RU">, если аргумент - пустой</span></p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">19.
+			</span><span lang="ru-RU">Изменения в </span><span lang="en-US">RelPath
+			</span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v137p2"><span lang="en-US">v.137
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">):</span></p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
+			Оператор &quot;+&quot; для </span>RelPath+string <span lang="ru-RU">возвращает
 			</span>RelPath(subDir), <span lang="ru-RU">если </span>basePath -
 			<span lang="ru-RU">пустой</span></p>
-			<p lang="en-US"><span lang="ru-RU">- Перегрузка оператора &quot;+&quot;
-			для </span>RelPath+RelPath</p>
-			<p><span lang="en-US">20</span><span lang="en-US">. </span><span lang="ru-RU">Изменения
-			в </span><span lang="en-US">FileContainer (<a href="ExtTools_11.htm#v042p3">v.42
-			</a></span><a href="ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
-			<p lang="en-US">- <span lang="ru-RU">Свойство </span>Contents
-			<span lang="ru-RU">переименовано в </span>Content</p>
-			<p lang="en-US">- <span lang="ru-RU">Убрана поддержка доступа к
-			</span>XmlDocument</p>
-			<p lang="en-US">- <span lang="ru-RU">Изменено хранение
-			подкаталогов. Во внутреннем поле подкаталоги разделяются символом
-			&laquo;/&raquo;, а не &laquo;\&raquo;, который динамически
-			преобразуется при необходимости. Позволяет передавать объекты из
-			</span>windows <span lang="ru-RU">в </span>linux <span lang="ru-RU">и
-			обратно</span></p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
+			Перегрузка оператора &quot;+&quot; для </span>RelPath+RelPath</p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">20.
+			</span><span lang="ru-RU">Изменения в </span><span lang="en-US">FileContainer
+			(<a href="/C:/TEMP/ExtTools_11.htm#v042p3">v.42 </a></span><a href="/C:/TEMP/ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
+			<p style="margin-bottom: 0cm; background: transparent">- <span lang="ru-RU">Свойство
+			</span>Contents <span lang="ru-RU">переименовано в </span>Content</p>
+			<p style="margin-bottom: 0cm; background: transparent">- <span lang="ru-RU">Убрана
+			поддержка доступа к </span>XmlDocument</p>
+			<p>- Изменено хранение подкаталогов. Во внутреннем поле
+			подкаталоги разделяются символом &laquo;/&raquo;, а не &laquo;\&raquo;,
+			который динамически преобразуется при необходимости. Позволяет
+			передавать объекты из windows в linux и обратно</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -971,8 +985,8 @@
 			<p lang="en-US" align="center">30.12.2022-10.01.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменения в
-			системе парсинга </span><span lang="en-US">(<a href="ExtTools_11.htm#v052p3">v.52
+			<p><a name="v335p1"></a><a name="v334p1"></a><span lang="en-US">1.
+			</span><span lang="ru-RU">Изменения в системе парсинга </span><span lang="en-US">(<a href="ExtTools_11.htm#v052p3">v.52
 			</a></span><a href="ExtTools_11.htm#v052p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">для отключения связи между классами,
 			реализующими </span><span lang="en-US">IExpression, </span><span lang="ru-RU">и
@@ -1041,8 +1055,8 @@
 			<p lang="en-US" align="center">16.12.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p><span lang="en-US">1. </span><span lang="ru-RU">Новый метод
-			</span><span lang="en-US">IExpression.Init() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v052p3"><span lang="en-US">v.52
+			<p><a name="v333p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Новый
+			метод </span><span lang="en-US">IExpression.Init() </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v052p3"><span lang="en-US">v.52
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span><span lang="en-US">.
 			</span><span lang="ru-RU">Событие
 			</span><span lang="en-US">FunctionDef.ArgExpressionsCreated (<a href="ExtTools_11.htm#v220p1">v.220
@@ -1268,7 +1282,7 @@
 			</span><span lang="ru-RU">не учитывался.</span></p>
 			<p lang="en-US">11. <span lang="ru-RU">Метод
 			</span>DataTools.CopyToArray()</p>
-			<p><span lang="en-US">12. </span><span lang="ru-RU">Функции
+			<p><a name="v325p12"></a><span lang="en-US">12. </span><span lang="ru-RU">Функции
 			округления </span><span lang="en-US">FLOOR, CEILING </span><span lang="ru-RU">и
 			</span><span lang="en-US">TRUNC (<a href="ExtTools_11.htm#v084p1">v.84
 			</a></span><a href="ExtTools_11.htm#v084p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
@@ -1365,7 +1379,7 @@
 			</span><span lang="ru-RU">возвращает </span><span lang="en-US">true
 			</span><span lang="ru-RU">для корневого каталога &quot;/&quot; при
 			TestPathMode=</span><span lang="en-US">RootExists.</span></p>
-			<p><span lang="en-US">4. OpenOfficeTools </span><span lang="ru-RU">не
+			<p><a name="v322p4"></a><span lang="en-US">4. OpenOfficeTools </span><span lang="ru-RU">не
 			определял версию нового </span><span lang="en-US">LibreOffice </span><span lang="ru-RU">в
 			</span><span lang="en-US">Linux. </span><span lang="ru-RU">В файле
 			&quot;</span><span lang="en-US">versionrc</span><span lang="ru-RU">&quot;</span>
@@ -1402,8 +1416,9 @@
 			<p lang="en-US" align="center">22.06.2022-29.06.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p><span lang="ru-RU">1</span><span lang="en-US">. </span><span lang="ru-RU">Модель
-			данных табличного просмотра для вставки текста:</span></p>
+			<p><a name="v320p1"></a><span lang="ru-RU">1</span><span lang="en-US">.
+			</span><span lang="ru-RU">Модель данных табличного просмотра для
+			вставки текста:</span></p>
 			<p>- Класс UISelRCGridData. 
 			</p>
 			<p><span lang="ru-RU">- Классы описаний столбцов </span><span lang="en-US">UISelRCColumn
@@ -1416,9 +1431,9 @@
 <br/>
 
 			</p>
-			<p><span lang="ru-RU">2</span><span lang="en-US">. </span><span lang="ru-RU">Методы
-			</span><span lang="en-US">UITools.CorrectNumberString() (<a href="#v301p10">v.301
-			</a></span><span lang="ru-RU"><a href="#v301p10">п.10</a>,
+			<p><a name="v320p2"></a><span lang="ru-RU">2</span><span lang="en-US">.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">UITools.CorrectNumberString()
+			(<a href="#v301p10">v.301 </a></span><span lang="ru-RU"><a href="#v301p10">п.10</a>,
 			</span><a href="ExtForms_20.htm#v320p2"><span lang="en-US">ExtForms,
 			v.320 </span><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">3. </span><span lang="ru-RU">Перегрузки
@@ -1438,9 +1453,10 @@
 			<p lang="en-US" align="center">26.05.2022-28.05.2022</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US">1. <span lang="ru-RU">Поддержка ручной сортировки
-			строк в табличном просмотре на основе </span>DataTable. <span lang="ru-RU">Интерфейс
-			IDataReorderHelper, классы DataTableReorderHelper </span>(<span lang="ru-RU">реализация
+			<p lang="en-US"><a name="v318p1"></a>1. <span lang="ru-RU">Поддержка
+			ручной сортировки строк в табличном просмотре на основе </span>DataTable.
+			<span lang="ru-RU">Интерфейс IDataReorderHelper, классы
+			DataTableReorderHelper </span>(<span lang="ru-RU">реализация
 			методов взята из </span>EFPDataGridViewCommandItems) <span lang="ru-RU">и
 			DataTableTreeReorderHelper.</span></p>
 			<p><span lang="en-US">2. DataTools.AddTableToDataSet() (<a href="ExtTools_11.htm#v058p3">v.58
@@ -1561,8 +1577,8 @@
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
 			</span><span lang="en-US">DataTools.FormatDataValue() (<a href="ExtTools_11.htm#v001p1">v.1
 			</a></span><span lang="ru-RU"><a href="ExtTools_11.htm#v001p1">п.1</a>)</span></p>
-			<p><span lang="en-US">2. </span><span lang="ru-RU">Изменения в
-			модели деревьев </span><span lang="en-US">(<a href="ExtTools_11.htm#v050p5">v.50
+			<p><a name="v311p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Изменения
+			в модели деревьев </span><span lang="en-US">(<a href="ExtTools_11.htm#v050p5">v.50
 			</a></span><span lang="ru-RU"><a href="ExtTools_11.htm#v050p5">п.5</a>,
 			<a href="ExtTools_11.htm#v050p6">6</a></span><span lang="en-US">)</span><span lang="ru-RU">:</span></p>
 			<p lang="en-US"><span lang="ru-RU">- Выделен интерфейс
@@ -1725,8 +1741,7 @@
 			<p lang="en-US"><span lang="ru-RU">- Исправлена ошибка в методе
 			</span>LimitKind().</p>
 			<p><span lang="en-US">3. </span><span lang="ru-RU">Исправлены
-			</span><span lang="en-US">перег</span><span lang="ru-RU">р</span><span lang="en-US">узки</span>
-			<span lang="en-US">DataTools.GetTimeSpan() </span><span lang="ru-RU">и
+			перегузки </span><span lang="en-US">DataTools.GetTimeSpan() </span><span lang="ru-RU">и
 			</span><span lang="en-US">GetDateTime() (<a href="ExtTools_11.htm#v001p1">v.1
 			</a></span><a href="ExtTools_11.htm#v001p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">с аргументом </span><span lang="en-US">DataRow.
@@ -1905,8 +1920,8 @@
 			суффикса -</span><span lang="en-US">Ex </span><span lang="ru-RU">объявлены
 			</span><span lang="en-US">private.</span></p>
 			<p>2. Интерфейс <span lang="en-US">IDepExpr</span></p>
-			<p><span lang="en-US">3. </span>Вычисляемые выражения на основе
-			аргументов <span lang="en-US">DepEvalExpr&lt;T&gt;</span></p>
+			<p><a name="v305p3"></a><span lang="en-US">3. </span>Вычисляемые
+			выражения на основе аргументов <span lang="en-US">DepEvalExpr&lt;T&gt;</span></p>
 			<p><span lang="en-US">4. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepFromArray&lt;T&gt;. </span><span lang="ru-RU">В
 			классе </span><span lang="en-US">DepByIndex&lt;T&gt; (<a href="ExtTools_11.htm#v244p2">v.244
@@ -1928,7 +1943,7 @@
 			</span><span lang="ru-RU">(</span><a href="#v301p6"><span lang="en-US">v.301
 			</span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">) без
 			аргументов</span></p>
-			<p><span lang="en-US">8. </span><span lang="ru-RU">Класс
+			<p><a name="v305p8"></a><span lang="en-US">8. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">UIInputGridTable. </span><span lang="ru-RU">Изменен
 			класс </span><span lang="en-US">InputDataGridDialog </span><span lang="ru-RU">(</span><a href="#v303p1"><span lang="en-US">v.303
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">):
@@ -1951,8 +1966,8 @@
 			</a></span><a href="ExtTools_11.htm#v071p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">).</span></p>
 			<p><span lang="en-US">12. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">UIValueValidatorList.</span></p>
-			<p><span lang="en-US">13. </span><span lang="ru-RU">В классах
-			</span><span lang="en-US">EFPCsvCodesTextBox </span><span lang="ru-RU">(</span><a href="#v304p5"><span lang="en-US">v.304
+			<p><a name="v305p13"></a><span lang="en-US">13. </span><span lang="ru-RU">В
+			классах </span><span lang="en-US">EFPCsvCodesTextBox </span><span lang="ru-RU">(</span><a href="#v304p5"><span lang="en-US">v.304
 			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">) и
 			CsvCodesComboBox (</span><a href="#v301p12"><span lang="en-US">v.301
 			</span><span lang="ru-RU">п.12</span></a><span lang="ru-RU">)
@@ -1969,7 +1984,7 @@
 			<p lang="en-US" align="center">26.11.2021-29.11.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p><span lang="en-US">1. </span><span lang="ru-RU">Класс
+			<p><a name="v304p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">RI.MaskedTextBox</span></p>
 			<p><span lang="en-US">2. </span><span lang="ru-RU">Значением по
 			умолчанию свойства InputDataGridColumn.</span><span lang="en-US">Align
@@ -1983,16 +1998,17 @@
 			</span><span lang="ru-RU">могло присваиваться значение </span><span lang="en-US">null
 			</span><span lang="ru-RU">вместо пустой строки, что приводила к
 			ошибке валидаторов.</span></p>
-			<p lang="en-US">4. <span lang="ru-RU">Поддержка динамического
-			текста сообщения об ошибке/предупреждении в валидаторах удаленного
-			интерфейса:</span></p>
+			<p lang="en-US"><a name="v304p4"></a>4. <span lang="ru-RU">Поддержка
+			динамического текста сообщения об ошибке/предупреждении в
+			валидаторах удаленного интерфейса:</span></p>
 			<p lang="en-US"><span lang="ru-RU">- Структура </span>UIValidateResult.</p>
 			<p lang="en-US">- <span lang="ru-RU">Свойства
 			</span>UIValidator.ExpressionEx <span lang="ru-RU">и </span>Message
 			<span lang="ru-RU">заменены на одно свойство</span> ResultEx.</p>
 			<p lang="en-US">- <span lang="ru-RU">Метод
 			</span>UITools.CreateValidateResultEx().</p>
-			<p lang="en-US">5. <span lang="ru-RU">Класс CsvCodesTextBox.</span></p>
+			<p lang="en-US"><a name="v304p5"></a>5. <span lang="ru-RU">Класс
+			CsvCodesTextBox.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -2003,7 +2019,7 @@
 			<p lang="en-US" align="center">24.11.2021-25.11.2021</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p><span lang="en-US">1. </span><span lang="ru-RU">Класс
+			<p><a name="v303p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Класс
 			InputGridDataDialog </span><span lang="en-US">(<a href="ExtTools_11.htm#v232p1">v.232
 			</a></span><a href="ExtTools_11.htm#v232p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">переименован </span><span lang="en-US">в
@@ -2030,16 +2046,16 @@
 			атрибутом </span><span lang="en-US">[NonSerialized], </span><span lang="ru-RU">чтобы
 			не возникало исключение сериализации при наличии обработчика
 			</span><span lang="en-US">CheckValue.</span></p>
-			<p><span lang="en-US">5. </span><span lang="ru-RU">Неуправляемые</span>
+			<p><a name="v303p5"></a><span lang="en-US">5. </span><span lang="ru-RU">Неуправляемые</span>
 			<span lang="ru-RU">свойства</span> <span lang="en-US">RI.Control.Enabled
 			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v167p1"><span lang="en-US">v.167
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) и
 			</span><span lang="en-US">RI.TextBox.ReadOnly </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v229p3"><span lang="en-US">v.229
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">) не
 			работали.</span></p>
-			<p lang="en-US">6. <span lang="ru-RU">Свойства </span>ReadOnly <span lang="ru-RU">и
-			</span>ReadOnlyEx <span lang="ru-RU">у следующих элементов
-			удаленного интерфейса:</span></p>
+			<p lang="en-US"><a name="v303p6"></a>6. <span lang="ru-RU">Свойства
+			</span>ReadOnly <span lang="ru-RU">и </span>ReadOnlyEx <span lang="ru-RU">у
+			следующих элементов удаленного интерфейса:</span></p>
 			<p lang="en-US"><span lang="ru-RU">- </span>DateTimeBox</p>
 			<p lang="en-US">- BaseNumEditBox&lt;T&gt;</p>
 			<p lang="en-US">- CsvCodesComboBox</p>
@@ -2082,7 +2098,7 @@
 			</span><span lang="ru-RU">больше не наследуется от </span><span lang="en-US">DepInput&lt;T&gt;.</span>
 			<span lang="ru-RU">Обработчик </span><span lang="en-US">ValueNeeded
 			</span><span lang="ru-RU">передается в конструкторе.</span></p>
-			<p><span lang="en-US">5. </span><span lang="ru-RU">Класс
+			<p><a name="v301p5"></a><span lang="en-US">5. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepInputWithCheck&lt;T&gt; </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v091p1"><span lang="en-US">v.91
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			упразднен. Событие </span><span lang="en-US">CheckValue </span><span lang="ru-RU">перенесено
@@ -2093,7 +2109,7 @@
 			реализация метода SetValueChanged(): после установки </span><span lang="en-US">Source=null
 			</span><span lang="ru-RU">текущее значение не меняется. Раньше
 			устанавливалось значение </span><span lang="en-US">default&lt;T&gt;.</span></p>
-			<p><span lang="en-US">6. </span><span lang="ru-RU">Класс
+			<p><a name="v301p6"></a><span lang="en-US">6. </span><span lang="ru-RU">Класс
 			</span><span lang="en-US">DepValueObject&lt;T&gt; </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v091p1"><span lang="en-US">v.91
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			переименован в </span><span lang="en-US">DepOutput&lt;T&gt;.
@@ -2111,7 +2127,7 @@
 			</span><span lang="en-US">EditableDateTimeFormatter.ContainsDate </span><span lang="ru-RU">и
 			ContainsTime, методы </span><span lang="en-US">ToNValue</span>
 			<span lang="en-US">(<a href="ExtTools_11.htm#v233p1">v.233 </a></span><a href="ExtTools_11.htm#v233p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
-			<p><font color="#000000"><span lang="en-US">10</span></font>.
+			<p><a name="v301p10"></a><font color="#000000"><span lang="en-US">10</span></font>.
 			Пространство имен <span lang="en-US">FreeLibSet.UICore:</span></p>
 			<p><span lang="en-US">- </span>Перечисление <span lang="en-US">UI</span>Valida<span lang="en-US">teState,
 			</span><span lang="ru-RU">интерфейс IUIValidableObject (был
@@ -2130,7 +2146,7 @@
 			</p>
 			<p><span lang="en-US">-</span> <font color="#000000"><span lang="ru-RU">Поддержка
 			</span></font><span lang="ru-RU">прокрутки значений стрелочками
-			вверх/вниз. Интерфейсы IUpDownHandler&lt;T&gt; и IMinMaxSource&lt;T&gt;.
+			вверх/вниз. Интефрейсы IUpDownHandler&lt;T&gt; и IMinMaxSource&lt;T&gt;.
 			Абстрактный класс IncrementUpDownHandler</span><span lang="en-US">&lt;T&gt;</span><span lang="ru-RU">,
 			реализации Int/</span><font color="#000000"><span lang="en-US">Single/Double/Decimal</span></font><span lang="ru-RU">UpDownHandler</span><span lang="en-US">.
 			</span><span lang="ru-RU">Класс NumArrayUpDownHandler&lt;T&gt; для
@@ -2145,7 +2161,7 @@
 			Изменены абстрактные методы, чтобы выполнялась проверка
 			корректности имени. Допускаются только буквы, цифры и символы &quot;.&quot;,
 			&quot;-&quot; и &quot;_&quot;. Первым символом должна быть буква.</span></font></p>
-			<p><font color="#000000"><span lang="en-US">1</span></font><font color="#000000"><span lang="ru-RU">2</span></font><span lang="en-US">.
+			<p><a name="v301p12"></a><font color="#000000"><span lang="en-US">1</span></font><font color="#000000"><span lang="ru-RU">2</span></font><span lang="en-US">.
 			</span><span lang="ru-RU">Удаленный интерфейс</span> <span lang="en-US">(<a href="ExtTools_11.htm#v059p11">v.59
 			</a></span><a href="ExtTools_11.htm#v059p11"><span lang="ru-RU">п.11</span></a><span lang="en-US">)</span><span lang="ru-RU">:</span></p>
 			<p lang="en-US">- <span lang="ru-RU">Свойства </span>HasXxxExProperty
@@ -2250,7 +2266,7 @@
 			п.1</span></a><span lang="ru-RU">) для преобразования из/в строку
 			используют методы </span><span lang="en-US">StdConvert, </span><span lang="ru-RU">чтобы
 			на преобразование не влияли региональные настройки.</span></p>
-			<p><span lang="en-US">18. </span><span lang="ru-RU">Перегрузки
+			<p><a name="v301p18"></a><span lang="en-US">18. </span><span lang="ru-RU">Перегрузки
 			конструкторов классов </span><span lang="en-US">OrderSortedList&lt;TKey,
 			TValue&gt; </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v068p1"><span lang="en-US">v.68
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">,
@@ -2269,7 +2285,7 @@
 			</span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v059p3"><span lang="en-US">v.59
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">),
 			принимающие аргумент </span><span lang="en-US">IComparer&lt;T&gt;.</span></p>
-			<p><span lang="en-US">19. </span><span lang="ru-RU">Классы
+			<p><a name="v301p19"></a><span lang="en-US">19. </span><span lang="ru-RU">Классы
 			SingleScopeStringList</span> <span lang="ru-RU">(</span><a href="ExtTools_11.htm#v086p1"><span lang="en-US">v.86
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">,
 			TypedStringDictionary&lt;TValue&gt; </span><span lang="ru-RU">(</span><a href="ExtTools_11.htm#v091p6"><span lang="en-US">v.91

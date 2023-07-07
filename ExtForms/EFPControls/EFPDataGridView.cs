@@ -6984,9 +6984,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызов события CellFinished
     /// </summary>
-    /// <param name="rowIndex"></param>
-    /// <param name="columnIndex"></param>
-    /// <param name="reason"></param>
+    /// <param name="rowIndex">Индекс строки данных</param>
+    /// <param name="columnIndex">Индекс столбца</param>
+    /// <param name="reason">Причина вызова (ручное редактирование, буфер обмена, ...)</param>
     public virtual void OnCellFinished(int rowIndex, int columnIndex, EFPDataGridViewCellFinishedReason reason)
     {
       if (CellFinished == null)
@@ -7294,7 +7294,9 @@ namespace FreeLibSet.Forms
           else
           {
             if (i >= bl.Count)
+            {
               bl.AddNew();
+            }
           }
 
           for (int j = rect.Left; j < rect.Right; j++)
@@ -7308,6 +7310,36 @@ namespace FreeLibSet.Forms
 
         Control.EndEdit();
 
+        //if (Control.AllowUserToAddRows && rect.Bottom == Control.RowCount && bl != null)
+        //{
+        //  if (bl.Count == rect.Bottom)
+        //    bl.AddNew();  // так сразу добавляется 2 строки
+        //}
+
+        // 07.07.2023
+        // Для DataView принудительно заканчиваем редактирование.
+        try
+        {
+          /*
+          DataView dv = SourceAsDataView;
+          if (dv != null)
+          {
+            DataRowView drv = dv[rect.Bottom - 1];
+            if (drv.IsEdit)
+              drv.EndEdit();
+          }
+          */
+
+          // Вариант 2
+          if (bl != null)
+          {
+            IEditableObject item = bl[rect.Bottom - 1] as IEditableObject; // DataRowView
+            if (item != null)
+              item.EndEdit();
+          }
+        }
+        catch { }
+
         // 11.01.2022
         // Надо сразу обновить текущую строку, как будто пользователь перешел на другую строку, а потом вернулся обратно.
         // Иначе текущая строка оказывается некомплектной и для нее могут возникать ошибки контроля в EFPInputDataGridView.
@@ -7315,7 +7347,11 @@ namespace FreeLibSet.Forms
         if (oldCell != null)
         {
           if (oldCellInNewRow)
+          {
             Control.CurrentCell = Control[oldCell.ColumnIndex, Control.RowCount - 1];
+            //if (bl!=null)
+              //bl.res
+          }
           else
             Control.CurrentCell = oldCell;
         }

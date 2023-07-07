@@ -261,6 +261,46 @@ namespace ExtTools_tests.IO
 
     #endregion
 
+    #region IsAnyFileExist()
+
+    [TestCase("aaa*", true, Description ="File in the directory")]
+    [TestCase("bbb*", false, Description = "Directory")]
+    [TestCase("ccc*", false, Description ="File in sub dir")]
+    public void IsAnyFileExist(string template, bool wantedRes)
+    {
+      using (TempDirectory dir = new TempDirectory())
+      {
+        AbsPath path1 = new AbsPath(dir.Dir, "aaa");
+        System.IO.File.WriteAllBytes(path1.Path, DataTools.EmptyBytes);
+        AbsPath path2 = new AbsPath(dir.Dir, "bbb");
+        FileTools.ForceDirs(path2);
+        AbsPath path3 = new AbsPath(dir.Dir, "SD", "ccc");
+        FileTools.ForceDirs(path3.ParentDir);
+        System.IO.File.WriteAllBytes(path3.Path, DataTools.EmptyBytes);
+
+        bool res = FileTools.IsAnyFileExist(dir.Dir, template);
+        Assert.AreEqual(wantedRes, res);
+      }
+    }
+
+    [Test]
+    public void IsAnyFileExist_noParentDir()
+    {
+      using (TempDirectory dir = new TempDirectory())
+      {
+        AbsPath testDir = new AbsPath(dir.Dir, "XXX");
+        Assert.IsFalse(FileTools.IsAnyFileExist(testDir, "*.*"));
+      }
+    }
+
+    [Test]
+    public void IsAnyFileExist_Empty()
+    {
+      Assert.IsFalse(FileTools.IsAnyFileExist(AbsPath.Empty, "*.*"));
+    }
+
+    #endregion
+
     #region DeleteFile()
 
     [Test]

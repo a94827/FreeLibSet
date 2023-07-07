@@ -138,7 +138,7 @@ namespace ExtTools_tests.IO
     public void Constructor_SubDir_exception(string subDir)
     {
       subDir = subDir.Replace('/', System.IO.Path.DirectorySeparatorChar);
-      Assert.Catch<ArgumentException>(delegate() { new FileContainer("test.bin", DataTools.EmptyBytes, subDir); });
+      Assert.Catch<ArgumentException>(delegate () { new FileContainer("test.bin", DataTools.EmptyBytes, subDir); });
     }
 
     #endregion
@@ -219,7 +219,7 @@ namespace ExtTools_tests.IO
     {
       FileContainer sut = CreateTestObject();
 
-      string newSubDir = "xxx" + System.IO.Path.DirectorySeparatorChar;
+      string newSubDir = "xxx"+Path.DirectorySeparatorChar;
       FileContainer res = sut.Clone(newSubDir);
 
       Assert.AreNotSame(sut, res, "Not same");
@@ -255,6 +255,78 @@ namespace ExtTools_tests.IO
 
     #endregion
 
+    #region Тестирование производного класса
 
+    // Не тестируем свойства XXXInternal, т.к. реализация, вероятно, будет изменена.
+
+    /// <summary>
+    /// Эта версия контейнера генерирует все свойства динамически
+    /// </summary>
+    private class TestContainer : FileContainer
+    {
+      public TestContainer()
+      {
+        // Конструктор базового класса является защищенным
+      }
+
+      public override StoredFileInfo FileInfo
+      {
+        get
+        {
+          return new StoredFileInfo("test.bin", 10, new DateTime(2023, 1, 1), new DateTime(2023, 7, 1));
+        }
+      }
+
+      public override string SubDir
+      {
+        get
+        {
+          return "aaa" + System.IO.Path.DirectorySeparatorChar + "bbb";
+        }
+      }
+
+      public override byte[] Content
+      {
+        get
+        {
+          byte[] a = new byte[10];
+          for (int i = 0; i < a.Length; i++)
+            a[i] = (byte)i;
+          return a;
+        }
+      }
+    }
+
+    [Test]
+    public void Save_Subclass()
+    {
+      TestContainer sut = new TestContainer();
+      using (TempDirectory dir = new TempDirectory())
+      {
+        sut.Save(dir.Dir);
+
+        AbsPath resPath = new AbsPath(dir.Dir, "aaa", "bbb", "test.bin");
+        Assert.IsTrue(System.IO.File.Exists(resPath.Path), "File exists");
+        CollectionAssert.AreEqual(sut.Content, System.IO.File.ReadAllBytes(resPath.Path), "Content");
+        Assert.AreEqual(sut.FileInfo.CreationTime, System.IO.File.GetCreationTime(resPath.Path), "CreationTime");
+        Assert.AreEqual(sut.FileInfo.LastWriteTime, System.IO.File.GetLastWriteTime(resPath.Path), "LastWriteTime");
+      }
+    }
+
+    [Test]
+    public void Clone_Subclass()
+    {
+      TestContainer sut = new TestContainer();
+      FileContainer res = sut.Clone("ddd");
+      Assert.AreEqual(typeof(FileContainer), res.GetType(), "GetType()");
+      Assert.AreEqual(sut.FileInfo.Name, res.FileInfo.Name, "Name");
+      Assert.AreEqual(sut.FileInfo.Length, res.FileInfo.Length, "Length");
+      Assert.AreEqual(sut.FileInfo.CreationTime, res.FileInfo.CreationTime, "CreationTime");
+      Assert.AreEqual(sut.FileInfo.LastWriteTime, res.FileInfo.LastWriteTime, "LastWriteTime");
+      Assert.AreEqual("ddd"+Path.DirectorySeparatorChar, res.SubDir, "SubDir");
+      CollectionAssert.AreEqual(sut.Content, res.Content, "Content");
+    }
+
+    #endregion
   }
 }

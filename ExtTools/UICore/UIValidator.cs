@@ -45,7 +45,7 @@ namespace FreeLibSet.UICore
 
   /// <summary>
   /// Интерфейс объекта, поддерживающего проверку ошибок.
-  /// Реализуется EFPControlBase, EFPValidatingEventArgs и некоторыми другими классами.
+  /// Реализуется EFPControlBase (ExtForms.dll), <see cref="UIValidatingEventArgs"/> и некоторыми другими классами.
   /// </summary>
   public interface IUIValidableObject
   {
@@ -87,7 +87,7 @@ namespace FreeLibSet.UICore
     #region Методы
 
     /// <summary>
-    /// Устанавливает состояние Ok
+    /// Устанавливает состояние <see cref="UIValidateState.Ok"/>.
     /// </summary>
     public void Clear()
     {
@@ -190,7 +190,7 @@ namespace FreeLibSet.UICore
     public UIValidateState ValidateState { get { return _ValidableObject.ValidateState; } }
 
     /// <summary>
-    /// Вспомогательный метод, вызывающий SetError() или SetWarning()
+    /// Вспомогательный метод, вызывающий <see cref="SetError(string)"/> или <see cref="SetWarning(string)"/>.
     /// </summary>
     /// <param name="state">Состояние</param>
     /// <param name="message">Сообщение</param>
@@ -215,8 +215,8 @@ namespace FreeLibSet.UICore
   /// <summary>
   /// Делегат события проверки
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Объект, выполняющий проверку</param>
+  /// <param name="args">Аргументы события</param>
   public delegate void UIValidatingEventHandler(object sender, UIValidatingEventArgs args);
 
   #endregion
@@ -259,7 +259,7 @@ namespace FreeLibSet.UICore
     public bool IsValid { get { return Object.ReferenceEquals(_Message, null); } }
 
     /// <summary>
-    /// Текст сообщения об ошибке при IsValid=false.
+    /// Текст сообщения об ошибке при <see cref="IsValid"/>=false.
     /// </summary>
     public string Message
     {
@@ -388,8 +388,8 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Вычисляемое выражение для выполнения проверки.
-    /// Если в вычисленном значении IsValid равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
-    /// в зависимости от свойства IsError.
+    /// Если в вычисленном значении <see cref="UIValidateResult.IsValid"/> равно false, то для управляющего элемента будет выдано сообщение об ошибке или предупреждение,
+    /// в зависимости от свойства <see cref="IsError"/>.
     /// Не может быть null.
     /// </summary>
     public DepValue<UIValidateResult> ResultEx { get { return _ResultEx; } }
@@ -397,7 +397,8 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// True, если нарушение условия является ошибкой, false-если предупреждением.
-    /// Если хотя бы один из объектов с IsError=true не проходит валидацию, нельзя закрыть блок диалога нажатием кнопки "ОК".
+    /// Если хотя бы один из объектов с <see cref="IsError"/>=true не проходит валидацию, 
+    /// нельзя закрыть блок диалога нажатием кнопки "ОК".
     /// Предупреждения не препятствуют закрытию диалога.
     /// </summary>
     public bool IsError { get { return _IsError; } }
@@ -406,13 +407,13 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Необязательное предусловие для выполнения проверки. Если выражение возвращает true, то проверка выполняется,
     /// если false - то отключается.
-    /// Если свойство не установлено (обычно), то проверка выполняется.
+    /// Если свойство не установлено (обычно), то проверка выполняется (как если бы предусловие всегда возвращало true).
     /// </summary>
     public DepValue<bool> PreconditionEx { get { return _PreconditionEx; } }
     private readonly DepValue<bool> _PreconditionEx;
 
     /// <summary>
-    /// Возвращает свойство UIValidateResult.Message или "Ok" (для отладки)
+    /// Возвращает свойство <see cref="UIValidateResult.Message"/> или "Ok" (для отладки)
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -424,7 +425,8 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Реализация свойства RIItem.Validators
+  /// Реализация свойства <see cref="FreeLibSet.RI.Control.Validators"/>, <see cref="FreeLibSet.RI.BaseInputDialog.Validators"/>.
+  /// Также используется в ExtForms.dll
   /// </summary>
   [Serializable]
   public class UIValidatorList : ListWithReadOnly<UIValidator>
@@ -445,7 +447,7 @@ namespace FreeLibSet.UICore
     #region AddError()
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=true и добавляет его в список.
     /// </summary>
     /// <param name="resultEx">Выражение валидации</param>
     /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
@@ -457,7 +459,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=true и добавляет его в список.
     /// </summary>
     /// <param name="resultEx">Выражение валидации</param>
     public UIValidator AddError(DepValue<UIValidateResult> resultEx)
@@ -468,10 +470,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=true и добавляет его в список.
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expressionEx">Выражение валидации, которое возвращает true, если данные правильные и false если данные некорректны</param>
+    /// <param name="message">Сообщение, выводимое в случае ошибки</param>
     public UIValidator AddError(DepValue<bool> expressionEx, string message)
     {
       UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), true, null);
@@ -480,10 +482,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=true и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=true и добавляет его в список.
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expressionEx">Выражение валидации, которое возвращает true, если данные правильные и false если данные некорректны</param>
+    /// <param name="message">Сообщение, выводимое в случае ошибки</param>
     /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
     public UIValidator AddError(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
     {
@@ -497,7 +499,7 @@ namespace FreeLibSet.UICore
     #region AddWarning()
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=false и добавляет его в список.
     /// </summary>
     /// <param name="resultEx">Выражение валидации</param>
     /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
@@ -509,7 +511,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=false и добавляет его в список.
     /// </summary>
     /// <param name="resultEx">Выражение валидации</param>
     public UIValidator AddWarning(DepValue<UIValidateResult> resultEx)
@@ -520,10 +522,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=false и добавляет его в список.
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expressionEx">Выражение валидации, которое возвращает true, если данные правильные и false если данные некорректны</param>
+    /// <param name="message">Сообщение, выводимое в случае ошибки</param>
     public UIValidator AddWarning(DepValue<bool> expressionEx, string message)
     {
       UIValidator item = new UIValidator(UITools.CreateValidateResultEx(expressionEx, message), false, null);
@@ -532,10 +534,10 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Создает объект Validator с IsError=false и добавляет его в список
+    /// Создает объект <see cref="UIValidator"/> с <see cref="UIValidator.IsError"/>=false и добавляет его в список.
     /// </summary>
-    /// <param name="expressionEx">Выражение валидации</param>
-    /// <param name="message">Сообщение</param>
+    /// <param name="expressionEx">Выражение валидации, которое возвращает true, если данные правильные и false если данные некорректны</param>
+    /// <param name="message">Сообщение, выводимое в случае ошибки</param>
     /// <param name="preconditionEx">Выражение предусловия. Может быть null, если проверка выполняется всегда</param>
     public UIValidator AddWarning(DepValue<bool> expressionEx, string message, DepValue<bool> preconditionEx)
     {
@@ -552,8 +554,8 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполнить проверку валидаторов в списке и поместить сообщение об ошибке или предупреждении в <paramref name="validableObject"/>.
-    /// Валидаторы, для которых PreconditionEx возвращает false, пропускается.
-    /// Проверка заканчивается, если очережной валидатор установил сообщение об ошибке.
+    /// Валидаторы, для которых <see cref="UIValidator.PreconditionEx"/> возвращает false, пропускаются.
+    /// Проверка заканчивается, если очередной валидатор установил сообщение об ошибке.
     /// Этот метод не используется в прикладном коде.
     /// </summary>
     /// <param name="validableObject">Реализация интерфейса для добавления сообщений.</param>
@@ -593,7 +595,7 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Переводит список в режим "Только чтение".
-    /// Метод не должен использоваться в прикладном коде
+    /// Метод не должен использоваться в прикладном коде.
     /// </summary>
     public new void SetReadOnly()
     {
@@ -621,8 +623,8 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Список валидаторов, предназначенных для проверки одного значения из списка.
-  /// Расширяет список UIValidatorList свойством ValueEx.
+  /// Список валидаторов, предназначенных для проверки одного значения.
+  /// Расширяет список <see cref="UIValidatorList"/> свойством ValueEx.
   /// </summary>
   [Serializable]
   public class UIValueValidatorList<T> : UIValidatorList
@@ -643,8 +645,8 @@ namespace FreeLibSet.UICore
     private DepInput<T> _ValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства ValueEx присоединен к другим объектам в качестве входа.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Возвращает true, если обработчик свойства <see cref="ValueEx"/> присоединен к другим объектам в качестве входа.
+    /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool InternalValueExConnected

@@ -2300,7 +2300,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает иедекс команды в текущем наборы
+    /// Возвращает индекс команды в текущем наборе
     /// </summary>
     /// <param name="Category">Категория</param>
     /// <param name="Name">Имя</param>

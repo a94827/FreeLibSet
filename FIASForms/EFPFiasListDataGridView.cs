@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms.FIAS
       Init(ui, tableType, isHistView);
     }
 
-    public EFPFiasListDataGridView(EFPControlWithToolBar<DataGridView> controlWithToolBar, FiasUI ui, FiasTableType tableType, bool isHistView)
+    public EFPFiasListDataGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar, FiasUI ui, FiasTableType tableType, bool isHistView)
       : base(controlWithToolBar)
     {
       Init(ui, tableType, isHistView);
