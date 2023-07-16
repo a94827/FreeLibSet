@@ -5,10 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
 using System.Globalization;
-using AgeyevAV;
 using System.Threading;
+using FreeLibSet.Forms;
+using FreeLibSet.Core;
+using FreeLibSet.Formatting;
 
 namespace TestCulture
 {
@@ -37,7 +38,7 @@ namespace TestCulture
       int selIndex = 0;
       for (int i = 0; i < AllCultures.Length; i++)
       {
-        names[i] = AllCultures[i].DisplayName;
+        names[i] = AllCultures[i].DisplayName + " (" + AllCultures[i].Name + ")";
         if (Object.ReferenceEquals(AllCultures[i], CultureInfo.CurrentCulture))
         {
           names[i] += " (Текущая)";
@@ -143,7 +144,7 @@ namespace TestCulture
     decimal InfoValue;
 
 
-    private static readonly string[] InfoTitles = new string[] { 
+    private static readonly string[] InfoTitles = new string[] {
           "ShortDatePattern",
           "DateSeparator",
           "LongDatePattern",
@@ -152,7 +153,8 @@ namespace TestCulture
           "LongTimePattern",
           "NumberDecimalSeparator",
           "NumberGroupSeparator",
-          "NumberGroupSizes"};
+          "NumberGroupSizes",
+          "FormatStringTools.DateFormatOrder"};
 
     void efpInfo_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
@@ -182,7 +184,8 @@ namespace TestCulture
 
             case 6: args.Value = ci.NumberFormat.NumberDecimalSeparator; break;
             case 7: args.Value = ci.NumberFormat.NumberGroupSeparator; break;
-            case 8: args.Value = DataTools.CommaStringFromIds(ci.NumberFormat.NumberGroupSizes, true); break;
+            case 8: args.Value = StdConvert.ToString(ci.NumberFormat.NumberGroupSizes); break;
+            case 9: args.Value = FormatStringTools.GetDateFormatOrder("d", ci.DateTimeFormat); break;
           }
         }
         else

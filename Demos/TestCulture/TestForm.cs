@@ -5,9 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
 using System.Globalization;
-using AgeyevAV;
+using FreeLibSet.Forms;
+using FreeLibSet.Calendar;
 
 namespace TestCulture
 {
@@ -27,7 +27,14 @@ namespace TestCulture
 
       efpDTP = new EFPDateTimePicker(efpForm, edDTP);
 
-      efpDB = new EFPDateBox(efpForm, edDB);
+      efpDBs = new EFPDateTimeBox[5];
+      efpDBs[0] = new EFPDateTimeBox(efpForm, edDB1);
+      efpDBs[1] = new EFPDateTimeBox(efpForm, edDB2);
+      efpDBs[2] = new EFPDateTimeBox(efpForm, edDB3);
+      efpDBs[3] = new EFPDateTimeBox(efpForm, edDB4);
+      efpDBs[4] = new EFPDateTimeBox(efpForm, edDB5);
+      for (int i = 0; i < efpDBs.Length; i++)
+        efpDBs[i].CanBeEmpty = true;
 
       efpDRB = new EFPDateRangeBox(efpForm, edDRB);
 
@@ -39,11 +46,7 @@ namespace TestCulture
 
       efpMDB = new EFPMonthDayBox(efpForm, edMDB);
 
-      efpNEB = new EFPNumEditBox(efpForm, edNEB);
-
-      efpNUD1 = new EFPNumericUpDown(efpForm, edNUD1);
-
-      efpNUD2 = new EFPExtNumericUpDown(efpForm, edNUD2);
+      efpDEB = new EFPDecimalEditBox(efpForm, edDEB);
 
       #endregion
 
@@ -69,26 +72,22 @@ namespace TestCulture
     #region Управляющие элементы
 
     EFPDateTimePicker efpDTP;
-    EFPDateBox efpDB;
+    EFPDateTimeBox[] efpDBs;
     EFPDateRangeBox efpDRB;
     EFPDateOrRangeBox efpDoRB;
     EFPYearMonthBox efpYMB;
     EFPYearMonthRangeBox efpYMRB;
     EFPMonthDayBox efpMDB;
-    EFPNumEditBox efpNEB;
-    EFPNumericUpDown efpNUD1;
-    EFPExtNumericUpDown efpNUD2;
+    EFPDecimalEditBox efpDEB;
 
     static DateTime? vDTP;
-    static DateTime? vDB;
+    static DateTime?[] vDBs = new DateTime?[5];
     static DateTime? vDRB1, vDRB2;
     static DateRange vDoRB;
     static YearMonth vYMB;
     static YearMonthRange vYMRB;
     static MonthDay vMDB;
-    static decimal vNEB;
-    static int vNUD1 = 1;
-    static int vNUD2 = 1;
+    static decimal? vDEB;
 
     #endregion
 
@@ -104,11 +103,13 @@ namespace TestCulture
     {
       TestForm frm = new TestForm();
 
-      frm.efpDTP.Value = vDTP;
-      frm.efpDB.Value = vDB;
-      frm.efpDRB.FirstDate.Value = vDRB1;
-      frm.efpDRB.LastDate.Value = vDRB2;
-      frm.efpDoRB.Value = vDoRB;
+      for (int i = 0; i < vDBs.Length; i++)
+        frm.efpDBs[i].NValue = vDBs[i];
+
+      frm.efpDTP.NValue = vDTP;
+      frm.efpDRB.First.NValue = vDRB1;
+      frm.efpDRB.Last.NValue = vDRB2;
+      frm.efpDoRB.DateRange = vDoRB;
       if (!vYMB.IsEmpty)
         frm.efpYMB.YM = vYMB;
       if (!vYMRB.IsEmpty)
@@ -116,9 +117,7 @@ namespace TestCulture
       if (!vMDB.IsEmpty)
         frm.efpMDB.Value = vMDB;
 
-      frm.efpNEB.DecimalValue = vNEB;
-      frm.efpNUD1.IntValue = vNUD1;
-      frm.efpNUD2.IntValue = vNUD2;
+      frm.efpDEB.NValue = vDEB;
 
       DataTable table = new DataTable();
       table.Columns.Add("Date", typeof(DateTime));
@@ -129,21 +128,21 @@ namespace TestCulture
         table.Rows.Add(tm.Date.AddDays(i), tm.AddMinutes(i), i * 100);
       frm.efpGr1.Control.DataSource = table.DefaultView;
 
-        if (EFPApp.ShowDialog(frm, true) != DialogResult.OK)
-          return;
+      if (EFPApp.ShowDialog(frm, true) != DialogResult.OK)
+        return;
 
-      vDTP = frm.efpDTP.Value;
-      vDB = frm.efpDB.Value;
-      vDRB1 = frm.efpDRB.FirstDate.Value;
-      vDRB2 = frm.efpDRB.LastDate.Value;
-      vDoRB = frm.efpDoRB.Value;
+      for (int i = 0; i < vDBs.Length; i++)
+        vDBs[i] = frm.efpDBs[i].NValue;
+
+      vDTP = frm.efpDTP.NValue;
+      vDRB1 = frm.efpDRB.First.NValue;
+      vDRB2 = frm.efpDRB.Last.NValue;
+      vDoRB = frm.efpDoRB.DateRange;
       vYMB = frm.efpYMB.YM;
       vYMRB = frm.efpYMRB.YMRange;
       vMDB = frm.efpMDB.Value;
 
-      vNEB = frm.efpNEB.DecimalValue;
-      vNUD1 = frm.efpNUD1.IntValue;
-      vNUD2 = frm.efpNUD2.IntValue;
+      vDEB = frm.efpDEB.NValue;
     }
 
     #endregion

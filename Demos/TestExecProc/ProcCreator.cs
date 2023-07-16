@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Remoting;
-using AgeyevAV;
 using System.Diagnostics;
+using FreeLibSet.Core;
+using FreeLibSet.Remoting;
+using FreeLibSet.Collections;
 
 namespace TestExecProc
 {

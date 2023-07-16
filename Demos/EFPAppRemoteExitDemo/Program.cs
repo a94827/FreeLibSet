@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
 
 namespace EFPAppRemoteExitDemo
 {
@@ -29,17 +29,13 @@ namespace EFPAppRemoteExitDemo
       MenuFile.MenuText = "Файл";
       EFPApp.CommandItems.Add(MenuFile);
 
-      EFPCommandItem ciNew = EFPApp.CommandItems.CreateCommand(EFPAppStdCommandItems.New);
+      EFPCommandItem ciNew = EFPApp.CommandItems.Add(EFPAppStdCommandItems.New, MenuFile);
       ciNew.Click += new EventHandler(ciNew_Click);
-      ciNew.Parent = MenuFile;
-      EFPApp.CommandItems.Add(ciNew);
 
       // Обычная команда выхода
-      EFPCommandItem ciExit = EFPApp.CommandItems.CreateCommand(EFPAppStdCommandItems.Exit);
-      ciExit.Parent = MenuFile;
+      EFPCommandItem ciExit = EFPApp.CommandItems.Add(EFPAppStdCommandItems.Exit, MenuFile);
       ciExit.GroupBegin = true;
       ciExit.Click += new EventHandler(ciExit_Click);
-      EFPApp.CommandItems.Add(ciExit);
 
       EFPMainMenu MainMenu = new EFPMainMenu();
       MainMenu.Add(EFPApp.CommandItems);
@@ -70,7 +66,7 @@ namespace EFPAppRemoteExitDemo
 
     static void ciNew_Click(object sender, EventArgs e)
     {
-      EFPApp.ShowMdiChild(new MdiChildForm());
+      EFPApp.ShowChildForm(new MdiChildForm());
     }
 
     static void ciExit_Click(object sender, EventArgs e)

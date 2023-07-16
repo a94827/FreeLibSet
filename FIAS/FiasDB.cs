@@ -360,7 +360,7 @@ namespace FreeLibSet.FIAS
         ts.Columns.AddId();
         ts.Columns.AddDate("ActualDate", false); // Дата актуальности классификатора
         ts.Columns.AddInt("Source", DataTools.GetEnumRange(typeof(FiasDBUpdateSource)), false); // Источник данных
-        ts.Columns.AddBoolean("Cumulative", false); // false - первоначальная загрузка, true - накопительное обновление
+        ts.Columns.AddBoolean("Cumulative"); // false - первоначальная загрузка, true - накопительное обновление
         ts.Columns.AddDateTime("StartTime", false); // Время начала обновления
         ts.Columns.AddDateTime("FinishTime", true); // Время окончания обновления. Если null, то обновление не закончено
         ts.Columns.AddInt("ErrorCount", true); // Количество ошибок при установке обновления
@@ -448,9 +448,9 @@ namespace FreeLibSet.FIAS
         // Поля для адресного объекта
         if (_DBSettings.UseHistory)
         {
-          ts.Columns.AddBoolean("Actual", false); // Соответствует полю ACTUALSTATUS в ФИАС. Равен true, если ACTUALSTATUS=1.
+          ts.Columns.AddBoolean("Actual"); // Соответствует полю ACTUALSTATUS в ФИАС. Равен true, если ACTUALSTATUS=1.
           // Если исторические записи не нужны, то у всех записей Actual=true и Live=true и поля не нужны
-          ts.Columns.AddBoolean("Live", false); // Соответствует полю LIVESTATUS в ФИАС
+          ts.Columns.AddBoolean("Live"); // Соответствует полю LIVESTATUS в ФИАС
         }
         ts.Columns.AddInt("AOLEVEL", /*DataTools.GetEnumRange(typeof(FiasLevel))*/ 1, 99, false); // Уровень адресного объекта
         ts.Columns.AddString("OFFNAME", 120, false); // Наименование объекта. Нельзя делать короче, так как есть такие ужасные названия
@@ -642,7 +642,7 @@ namespace FreeLibSet.FIAS
 
           // Поля для объекта
           if (DBSettings.UseHistory)
-            ts.Columns.AddBoolean("Live", false); // Соответствует полю LIVESTATUS в ФИАС
+            ts.Columns.AddBoolean("Live"); // Соответствует полю LIVESTATUS в ФИАС
           ts.Columns.AddInt("nFlatNumber", 0, 255, false); // Функция FiasTools.GetNumInt(FLATNUMBER)
           ts.Columns.AddString("FLATNUMBER", 50, true); // Номер квартиры, офиса или прочего
           ts.Columns.AddInt("FLATTYPE", DataTools.GetEnumRange(typeof(FiasFlatType)), false); // Тип помещения

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Caching;
-using AgeyevAV.IO;
-using System.Threading;
+using FreeLibSet.Caching;
+using FreeLibSet.Forms;
+using FreeLibSet.Forms.Diagnostics;
+using FreeLibSet.IO;
 
 namespace TestCache
 {

@@ -3119,13 +3119,7 @@ return true;                          */
           return null;
 
         if (_DataReorderHelper == null)
-        {
-          DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
-          OnDataReorderHelperNeeded(args);
-          if (args.Helper == null)
-            throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
-          _DataReorderHelper = args.Helper;
-        }
+          _DataReorderHelper = CreateDataReorderHelper();
         return _DataReorderHelper;
       }
     }
@@ -3158,6 +3152,30 @@ return true;                          */
         DataReorderHelperNeeded(this, args);
       if (args.Helper == null)
         args.Helper = CreateDefaultDataReorderHelper();
+    }
+
+    /// <summary>
+    /// Создает новый экземпляр <see cref="IDataReorderHelper"/>.
+    /// Вызывает метод <see cref="OnDataReorderHelperNeeded(DataReorderHelperNeededEventArgs)"/>.
+    /// </summary>
+    /// <returns>Объект для упорядочения строк</returns>
+    public IDataReorderHelper CreateDataReorderHelper()
+    {
+      DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
+      OnDataReorderHelperNeeded(args);
+      if (args.Helper == null)
+        throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
+      return args.Helper;
+    }
+
+    /// <summary>
+    /// Этот метод может использоваться в обработчике события <see cref="DataReorderHelperNeeded"/> другого провайдера, который должен использовать реализацию из текущего провайдера 
+    /// </summary>
+    /// <param name="sender">Объект, сгенерировавший событие. Не используется</param>
+    /// <param name="args">Аргументы события. В нем устанавливается свойство <see cref="DataReorderHelperNeededEventArgs.Helper"/></param>
+    public void CreateDataReorderHelper(object sender, DataReorderHelperNeededEventArgs args)
+    {
+      args.Helper = CreateDataReorderHelper();
     }
 
     /// <summary>

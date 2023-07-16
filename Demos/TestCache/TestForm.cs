@@ -5,13 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using System.Threading;
-using AgeyevAV.Caching;
-using AgeyevAV;
-using AgeyevAV.IO;
-using AgeyevAV.Diagnostics;
-using AgeyevAV.Logging;
+using FreeLibSet.Caching;
+using FreeLibSet.Core;
+using FreeLibSet.Diagnostics;
+using FreeLibSet.Forms;
+using FreeLibSet.Forms.Diagnostics;
+using FreeLibSet.IO;
 
 namespace TestCache
 {
@@ -40,7 +39,7 @@ namespace TestCache
       efpStat.Columns.AddFixedPoint("PrcMem", false, "% из памяти", 5, 1, "Percent");
       efpStat.Columns.AddFixedPoint("PrcFile", false, "% из файла", 5, 1, "Percent");
       efpStat.Columns.AddFixedPoint("PrcCreate", false, "% создание", 5, 1, "Percent");
-      MinMaxInt mmi = DataTools.GetEnumRange(typeof(CacheStatParam));
+      MinMax<int> mmi = DataTools.GetEnumRange(typeof(CacheStatParam));
       for (int i = 0; i <= mmi.MaxValue; i++)
       {
         CacheStatParam sp = ((CacheStatParam)i);
@@ -210,7 +209,7 @@ namespace TestCache
         grThreads[3, i].Value = Tests[i].Thread.ThreadState.ToString();
       }
 
-      MinMaxInt mmi = DataTools.GetEnumRange(typeof(CacheStatParam));
+      MinMax<int> mmi = DataTools.GetEnumRange(typeof(CacheStatParam));
       Type[] ObjTypes;
       CacheStat[] Stats;
       Cache.GetStat(out ObjTypes, out Stats);
@@ -278,7 +277,7 @@ namespace TestCache
         lblMemoryLoad.Text = ml.ToString() + "%";
     }
 
-    private void FillStatRow(int Row, CacheStat Stat, MinMaxInt mmi)
+    private void FillStatRow(int Row, CacheStat Stat, MinMax<int> mmi)
     {
       long N = Stat[CacheStatParam.AccessCount];
       grStat[1, Row].Value = GetPercentValue(Stat[CacheStatParam.FromMemCount], N);

@@ -5,8 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.IO;
+using FreeLibSet.Forms;
+using FreeLibSet.IO;
 
 namespace FileEnumeratorDemo
 {
@@ -56,7 +56,7 @@ namespace FileEnumeratorDemo
       efpReverseDirectories = new EFPCheckBox(efpForm, cbReverseDirectories);
 
 
-      btnOk.Image = EFPApp.MainImages.Images["OK"];
+      btnOk.Image = EFPApp.MainImages.Images["Ok"];
       btnOk.ImageAlign = ContentAlignment.MiddleLeft;
       EFPButton efpOk = new EFPButton(efpForm, btnOk);
       efpOk.Click += new EventHandler(efpOk_Click);

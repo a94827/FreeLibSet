@@ -214,7 +214,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Возвращает true, если библиотека ICSharpCode.SharpZipLib.dll загружена
-    /// и можно создавать объекты ZipFileCreator
+    /// и можно создавать объекты <see cref="ZipFileCreator"/>.
     /// </summary>
     public static bool ZipLibAvailable
     {
@@ -251,7 +251,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Выбрасывает исключение
+    /// Выбрасывает исключение, если <see cref="ZipLibAvailable"/>=false.
     /// </summary>
     public static void CheckZipLibAvailable()
     {
@@ -264,8 +264,7 @@ namespace FreeLibSet.IO
     #region Наличие библиотеки SevenZipSharp
 
     /// <summary>
-    /// Возвращает true, если библиотека SevenZipSharp.dll загружена
-    /// и можно создавать объекты ZipFileCreator
+    /// Возвращает true, если библиотека SevenZipSharp.dll загружена и можно работать с форматом архива 7z.
     /// </summary>
     public static bool SevenZipSharpAvailable
     {
@@ -293,7 +292,8 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает сообщение об ошибке, если SevenZipSharpAvailable возвращает false.
+    /// Возвращает сообщение об ошибке, если <see cref="SevenZipSharpAvailable"/> возвращает false.
+    /// В прикладном коде обычно следует использовать метод <see cref="CheckSevenZipSharpAvailable()"/>.
     /// </summary>
     public static string SevenZipSharpAvailabilityError
     {
@@ -349,7 +349,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Выбрасывает исключение
+    /// Выбрасывает исключение, если <see cref="SevenZipSharpAvailable"/>=false.
     /// </summary>
     public static void CheckSevenZipSharpAvailable()
     {

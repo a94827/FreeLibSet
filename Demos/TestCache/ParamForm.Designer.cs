@@ -35,15 +35,15 @@
       this.panel2 = new System.Windows.Forms.Panel();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label7 = new System.Windows.Forms.Label();
-      this.eCheckMemoryInterval = new AgeyevAV.ExtForms.NumEditBox();
+      this.eCheckMemoryInterval = new FreeLibSet.Controls.IntEditBox();
       this.label8 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
-      this.edCriticalMemoryLoad = new AgeyevAV.ExtForms.NumEditBox();
+      this.edCriticalMemoryLoad = new FreeLibSet.Controls.IntEditBox();
       this.label6 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
-      this.edLowMemorySize = new AgeyevAV.ExtForms.NumEditBox();
+      this.edLowMemorySize = new FreeLibSet.Controls.IntEditBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.edCapacity = new AgeyevAV.ExtForms.NumEditBox();
+      this.edCapacity = new FreeLibSet.Controls.IntEditBox();
       this.label1 = new System.Windows.Forms.Label();
       this.panel3 = new System.Windows.Forms.Panel();
       this.panel1 = new System.Windows.Forms.Panel();
@@ -51,7 +51,7 @@
       this.btnOk = new System.Windows.Forms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.grObjs = new System.Windows.Forms.DataGridView();
-      this.edThreads = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      this.edThreads = new FreeLibSet.Controls.IntEditBox();
       this.label2 = new System.Windows.Forms.Label();
       this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colPersistance = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -267,31 +267,15 @@
       // 
       // edThreads
       // 
-      this.edThreads.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
       this.edThreads.Location = new System.Drawing.Point(259, 29);
-      this.edThreads.Maximum = new decimal(new int[] {
-            64,
-            0,
-            0,
-            0});
-      this.edThreads.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edThreads.Maximum = 64;
+      this.edThreads.Minimum = 1;
       this.edThreads.Name = "edThreads";
       this.edThreads.Size = new System.Drawing.Size(134, 20);
       this.edThreads.TabIndex = 1;
       this.edThreads.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-      this.edThreads.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edThreads.Value = 1;
+      this.edThreads.Increment = 1;
       // 
       // label2
       // 
@@ -381,16 +365,16 @@
 
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.GroupBox groupBox1;
-    private AgeyevAV.ExtForms.NumEditBox edCapacity;
+    private FreeLibSet.Controls.IntEditBox edCapacity;
     private System.Windows.Forms.Label label1;
-    private AgeyevAV.ExtForms.NumEditBox edLowMemorySize;
+    private FreeLibSet.Controls.IntEditBox edLowMemorySize;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label5;
-    private AgeyevAV.ExtForms.NumEditBox edCriticalMemoryLoad;
+    private FreeLibSet.Controls.IntEditBox edCriticalMemoryLoad;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label7;
-    private AgeyevAV.ExtForms.NumEditBox eCheckMemoryInterval;
+    private FreeLibSet.Controls.IntEditBox eCheckMemoryInterval;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Panel panel3;
     private System.Windows.Forms.Panel panel1;
@@ -398,7 +382,7 @@
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.DataGridView grObjs;
-    private AgeyevAV.ExtForms.ExtNumericUpDown edThreads;
+    private FreeLibSet.Controls.IntEditBox edThreads;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.DataGridViewTextBoxColumn colType;
     private System.Windows.Forms.DataGridViewComboBoxColumn colPersistance;

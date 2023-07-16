@@ -18,6 +18,8 @@ namespace FreeLibSet.IO
   /// </summary>
   public class IniKeyValue : IObjectWithCode
   {
+    // Не может быть структурой, так как используется в качестве элемента хранения внутри IniFile
+
     #region Конструктор
 
     /// <summary>
@@ -87,7 +89,7 @@ namespace FreeLibSet.IO
     /// Удаление секции и всех значений в ней.
     /// Если секция не существует, никаких действий не выполняется.
     /// </summary>
-    /// <param name="section">Имя секции</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     void DeleteSection(string section);
 
     #endregion
@@ -99,16 +101,16 @@ namespace FreeLibSet.IO
     /// Если при чтении нет такой секции или ключа, возвращается пустое значение.
     /// При записи несуществующего значения выполняется создание секции или ключа
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Строковое значение</returns>
     string this[string section, string key] { get; set; }
 
     /// <summary>
     /// Получение строкого значения с указанием значения по умолчанию
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <param name="defaultValue">Значение по умолчанию</param>
     /// <returns>Строковое значение</returns>
     string GetString(string section, string key, string defaultValue);
@@ -116,29 +118,27 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает массив имен всех параметров для заданной секции
     /// </summary>
-    /// <param name="section">Имя секции</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Массив имен</returns>
     string[] GetKeyNames(string section);
 
     /// <summary>
     /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <returns>Объект, реализующий интерфейс IEnumerable</returns>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <returns>Объект, реализующий интерфейс <see cref="IEnumerable{IniKeyValue}"/></returns>
     IEnumerable<IniKeyValue> GetKeyValues(string section);
 
     /// <summary>
     /// Удаление параметра из секции.
     /// Если секция или значение не существуют, никаких действий не выполняется.
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     void DeleteKey(string section, string key);
 
     #endregion
   }
-
-
 
   /// <summary>
   /// Доступ к INI-файлу в режиме чтения и записи файла как целого.
@@ -213,7 +213,8 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Создает пустой список секций
+    /// Создает пустой список секций с указанием возможности доступа в режиме "Только чтения" (свойство <see cref="IsReadOnly"/>).
+    /// В режиме "Только чтение" можно загрузить данные из файла методами Load().
     /// </summary>
     /// <param name="isReadOnly">Если true, то список будет доступен только для чтения</param>
     public IniFile(bool isReadOnly)
@@ -365,7 +366,8 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Записывает данные в поток
+    /// Записывает данные в поток.
+    /// Этот метод нельзя вызывать при <see cref="IsReadOnly"/>=true.
     /// </summary>
     /// <param name="stream">Поток</param>
     /// <param name="encoding">Кодировка</param>
@@ -423,10 +425,11 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Чтение и запись строкового значения.
     /// Если при чтении нет такой секции или ключа, возвращается пустое значение.
-    /// При записи несуществующего значения выполняется создание секции или ключа
+    /// При записи несуществующего значения выполняется создание секции или ключа.
+    /// Нельзя устанавливать свойство при <see cref="IsReadOnly"/>=true.
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Строковое значение</returns>
     public string this[string section, string key]
     {
@@ -459,8 +462,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Получение строкого значения с указанием значения по умолчанию
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <param name="defaultValue">Значение по умолчанию</param>
     /// <returns>Строковое значение</returns>
     public string GetString(string section, string key, string defaultValue)
@@ -491,9 +494,10 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает массив имен всех параметров для заданной секции
+    /// Возвращает массив имен всех параметров для заданной секции.
+    /// Возвращает пустой массив строк, если секции не существует.
     /// </summary>
-    /// <param name="section"></param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Массив имен</returns>
     public string[] GetKeyNames(string section)
     {
@@ -510,8 +514,9 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Удаление секции и всех значений в ней.
     /// Если секция не существует, никаких действий не выполняется.
+    /// Этот метод нельзя вызывать при <see cref="IsReadOnly"/>=true.
     /// </summary>
-    /// <param name="section">Имя секции</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     public void DeleteSection(string section)
     {
       if (String.IsNullOrEmpty(section))
@@ -524,9 +529,10 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Удаление параметра из секции.
     /// Если секция или значение не существуют, никаких действий не выполняется.
+    /// Этот метод нельзя вызывать при <see cref="IsReadOnly"/>=true.
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     public void DeleteKey(string section, string key)
     {
       if (String.IsNullOrEmpty(section))
@@ -544,7 +550,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
     /// </summary>
-    /// <param name="section">Имя секции</param>
+    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Объект, реализующий интерфейс <see cref="IEnumerable"/></returns>
     public IEnumerable<IniKeyValue> GetKeyValues(string section)
     {

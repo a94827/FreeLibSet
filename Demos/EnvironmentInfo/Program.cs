@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Text;
-using AgeyevAV;
+using FreeLibSet.Core;
 
 namespace EnvironmentInfo
 {

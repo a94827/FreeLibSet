@@ -160,7 +160,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Уровень вложения каталога <see cref="Directory"/> относительно базового каталога <see cref="PathEnumerableBase.RootDirectory"/>, 
     /// с которого начинается перебор.
-    /// При первом вызове события для RootDirectory имеет значение 0. Для подкаталогов первого уровня - 1, и т.д.
+    /// При первом вызове события для каталога <see cref="PathEnumerableBase.RootDirectory"/> имеет значение 0. Для подкаталогов первого уровня - 1, и т.д.
     /// </summary>
     public int Level { get { return _Level; } }
     private int _Level;
@@ -411,7 +411,7 @@ namespace FreeLibSet.IO
         return res;
 
       // Эта проверка лишняя.
-      // В Windows никогда не будет одинаковых имен, отоичающихся регистром,
+      // В Windows никогда не будет одинаковых имен, отличающихся регистром,
       // поэтому предыдущее условие всегда будет выполнено
       // if (AbsPath.ComparisonType == StringComparison.Ordinal)
       return String.Compare(x2, y2, StringComparison.Ordinal);
@@ -509,7 +509,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Режим перебора. По умолчанию - <see cref="PathEnumerateMode.FilesAndDirectories"/> - сначала файлы, потом - подкаталоги.
-    /// Значение применяетс в качестве начального для свойства <see cref="EnumDirectoryEventArgs.EnumerateMode"/> при
+    /// Значение применяется в качестве начального для свойства <see cref="EnumDirectoryEventArgs.EnumerateMode"/> при
     /// обходе очередного каталога и может меняться в обработчике события <see cref="BeforeDirectory"/>.
     /// </summary>
     public PathEnumerateMode EnumerateMode { get { return _EnumerateMode; } set { _EnumerateMode = value; } }

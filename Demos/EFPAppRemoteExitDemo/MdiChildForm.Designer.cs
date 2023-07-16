@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.panel1 = new System.Windows.Forms.Panel();
-      this.infoLabel1 = new AgeyevAV.ExtForms.InfoLabel();
+      this.infoLabel1 = new FreeLibSet.Controls.InfoLabel();
       this.edText = new System.Windows.Forms.TextBox();
       this.btnSave = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
@@ -91,7 +91,7 @@
 
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.Button btnSave;
-    private AgeyevAV.ExtForms.InfoLabel infoLabel1;
+    private FreeLibSet.Controls.InfoLabel infoLabel1;
     private System.Windows.Forms.TextBox edText;
 
   }

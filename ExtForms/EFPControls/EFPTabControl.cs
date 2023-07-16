@@ -45,7 +45,7 @@ namespace FreeLibSet.Forms
       control.Disposed += new EventHandler(Control_Disposed);
 
       control.MouseDown += new MouseEventHandler(Control_MouseDown);
-      control.MouseUp += new MouseEventHandler(control_MouseUp);
+      control.MouseUp += new MouseEventHandler(Control_MouseUp);
 
       if (control.ImageList == null)
       {
@@ -228,7 +228,11 @@ namespace FreeLibSet.Forms
       #region Добавление страниц
 
       /// <summary>
-      /// Добавляет страницу в просмотр
+      /// Добавляет страницу в просмотр.
+      /// Эту версию можно использовать только при создании формы.
+      /// Добавление вкладки не делает ее активной. Используйте свойство <see cref="EFPTabControl.SelectedTab"/>.
+      /// Для динамического создания вкладки в процессе работы используйте конструктор EFPTabPage без ссылки на EFPTabControl,
+      /// заполните вкладку, и вызовите перегрузку метода<see cref="Add(EFPTabPage)"/>
       /// </summary>
       /// <param name="text">Заголовок закладки</param>
       /// <returns>Провайдер для новой страницы</returns>
@@ -236,7 +240,28 @@ namespace FreeLibSet.Forms
       {
         TabPage page = new TabPage(text);
         _Owner.Control.TabPages.Add(page);
-        return this[page];
+        return this[page]; // здесь создается новый объект EFPTabPage
+      }
+
+      /// <summary>
+      /// Присоединяет заполненную вкладку к просмотру.
+      /// Можно использовать и для динамического добавления вкладок.
+      /// Добавление вкладки не делает ее активной. Используйте свойство <see cref="EFPTabControl.SelectedTab"/>.
+      /// </summary>
+      /// <param name="tab">Созданный но не присоединенный провайдер страницы</param>
+      public void Add(EFPTabPage tab)
+      {
+#if DEBUG
+        if (tab == null)
+          throw new ArgumentNullException("tab");
+#endif
+        if (tab.Parent != null)
+          throw new ArgumentException("Страница уже была добавлена", "tab");
+        tab.BaseProvider.Parent = _Owner.BaseProvider;
+        tab.Parent = _Owner;
+        _Owner._Items.Add(tab);
+        if (tab.Visible)
+          _Owner.Control.TabPages.Add(tab.Control);
       }
 
       #endregion
@@ -630,7 +655,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
-    void control_MouseUp(object sender, MouseEventArgs args)
+    void Control_MouseUp(object sender, MouseEventArgs args)
     {
       if (args.Button == MouseButtons.Right)
         InitCurrentContextMenu();
@@ -710,8 +735,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создается закладка с заголовком <paramref name="text"/>.
-    /// В отличие от оригинального объекта TabPage, созданная закладка сразу же
-    /// добавляется в объект EFPTabControl
+    /// Cозданная закладка сразу же добавляется в объект EFPTabControl.
+    /// Этот конструктор можно использовать только до вывода формы на экран.
+    /// Для динамического создания страницы используйте версию конструктора без аргумента <see cref="EFPTabControl"/>.
     /// </summary>
     /// <param name="parent">Провайдер просмотра с вкладками</param>
     /// <param name="text">Заголовок закладки</param>
@@ -726,8 +752,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создается закладка без заголовка.
-    /// В отличие от оригинального объекта TabPage, созданная закладка сразу же
-    /// добавляется в объект EFPTabControl
+    /// Этот конструктор можно использовать только до вывода формы на экран.
+    /// Для динамического создания страницы используйте версию конструктора без аргумента <see cref="EFPTabControl"/>.
     /// </summary>
     /// <param name="parent">Провайдер просмотра с вкладками</param>
     public EFPTabPage(EFPTabControl parent)
@@ -743,22 +769,49 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("parent");
 #endif
 
+
       _Parent = parent;
-      _PageVisible = true;
-      ((EFPTabPageBaseProvider)BaseProvider).DisplayName = "Для TabPage \"" + control.Text + "\"";
-      ((EFPTabPageBaseProvider)BaseProvider).ControlProvider = this;
       BaseProvider.Parent = parent.BaseProvider;
 
-      InitControl();
+      Init();
     }
 
-    private void InitControl()
+
+    /// <summary>
+    /// Эта версия конструктора создает закладку новую закладку <see cref="TabPage"/>, не привязаную к <see cref="TabControl"/>.
+    /// После инициализации управляющих элементов, добавьте созданный <see cref="EFPTabPage"/> к коллекции вкладок вызовом метода Add().
+    /// Эту версию можно использовать для динамического добавления вкладок.
+    /// Создается закладка без заголовка.
+    /// </summary>
+    public EFPTabPage()
+      : this(String.Empty)
+    {
+      Init();
+    }
+
+    /// <summary>
+    /// Эта версия конструктора создает закладку новую закладку <see cref="TabPage"/>, не привязаную к <see cref="TabControl"/>.
+    /// После инициализации управляющих элементов, добавьте созданный <see cref="EFPTabPage"/> к коллекции вкладок вызовом метода Add().
+    /// Эту версию можно использовать для динамического добавления вкладок.
+    /// </summary>
+    /// <param name="text"></param>
+    public EFPTabPage(string text)
+      : base(new EFPTabPageBaseProvider(), new TabPage(text), false)
+    {
+      Init();
+    }
+
+    private void Init()
     {
       if (EFPApp.EasyInterface)
         Control.BackColor = SystemColors.Control;
       else
         Control.BackColor = Color.Transparent;
       Control.UseVisualStyleBackColor = !EFPApp.EasyInterface; // 10.04.2015
+
+      _PageVisible = true;
+      ((EFPTabPageBaseProvider)BaseProvider).DisplayName = "Для TabPage \"" + Control.Text + "\"";
+      ((EFPTabPageBaseProvider)BaseProvider).ControlProvider = this;
     }
 
     #endregion
@@ -792,7 +845,10 @@ namespace FreeLibSet.Forms
     /// Провайдер просмотра, к которому относится вкладка.
     /// Задается в конструкторе. Не может быть null.
     /// </summary>
-    public EFPTabControl Parent { get { return _Parent; } }
+    public EFPTabControl Parent { 
+      get { return _Parent; }
+      internal set { _Parent = value; }
+    }
     private EFPTabControl _Parent;
 
     #endregion
@@ -816,43 +872,47 @@ namespace FreeLibSet.Forms
         if (value == _PageVisible)
           return;
 
-        Parent.ValidateItemList(); // иначе закладка может совсем исчезнуть
+        _PageVisible = value; // перенсено наверх 16.07.2023
 
-        Parent._InsideVisibleChanged = true;
-        try
+        if (Parent != null)
         {
-          if (value)
+          Parent.ValidateItemList(); // иначе закладка может совсем исчезнуть
+
+          Parent._InsideVisibleChanged = true;
+          try
           {
-            // Ищем индекс предыдущей страницы
-            int prevPageIndex = -1;
-            for (int i = Parent.TabPages.IndexOf(this) - 1; i >= 0; i--)
+            if (value)
             {
-              if (Parent.TabPages[i].Visible)
+              // Ищем индекс предыдущей страницы
+              int prevPageIndex = -1;
+              for (int i = Parent.TabPages.IndexOf(this) - 1; i >= 0; i--)
               {
-                TabPage prevPage = Parent.TabPages[i].Control;
-                prevPageIndex = Parent.Control.TabPages.IndexOf(prevPage);
-                break;
+                if (Parent.TabPages[i].Visible)
+                {
+                  TabPage prevPage = Parent.TabPages[i].Control;
+                  prevPageIndex = Parent.Control.TabPages.IndexOf(prevPage);
+                  break;
+                }
               }
-            }
 
-            // Добавляем страницу в TabControl
-            int thisPageIndex = prevPageIndex + 1;
-            if (thisPageIndex < (Parent.TabPages.Count - 1))
-              Parent.Control.TabPages.Insert(thisPageIndex, Control);
+              // Добавляем страницу в TabControl
+              int thisPageIndex = prevPageIndex + 1;
+              if (thisPageIndex < (Parent.TabPages.Count - 1))
+                Parent.Control.TabPages.Insert(thisPageIndex, Control);
+              else
+                Parent.Control.TabPages.Add(Control);
+            }
             else
-              Parent.Control.TabPages.Add(Control);
+            {
+              // Удаляем страницу из TabContol
+              Parent.Control.TabPages.Remove(Control);
+            }
           }
-          else
+          finally
           {
-            // Удаляем страницу из TabContol
-            Parent.Control.TabPages.Remove(Control);
+            Parent._InsideVisibleChanged = false;
           }
         }
-        finally
-        {
-          Parent._InsideVisibleChanged = false;
-        }
-        _PageVisible = value;
         ControlVisibleChanged(Control, EventArgs.Empty);
       }
     }
@@ -876,7 +936,13 @@ namespace FreeLibSet.Forms
     /// </summary>
     public bool Selected
     {
-      get { return Parent.SelectedTab == this; }
+      get 
+      {
+        if (Parent == null)
+          return false;
+        else
+          return Parent.SelectedTab == this; 
+      }
     }
 
     /// <summary>

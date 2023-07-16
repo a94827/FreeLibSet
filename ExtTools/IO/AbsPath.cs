@@ -317,7 +317,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Путь в виде строки идентификатора ресурса "file://".
     /// В отличие от основного свойства <see cref="Uri"/>, для пустого пути (<see cref="Empty"/>=true) возвращает <see cref="String.Empty"/>, а не null.
-    /// Используется метод <see cref="Uri.ToString()"/>.
+    /// Используется метод <see cref="System.Uri.ToString()"/>.
     /// </summary>
     public string UriString
     {

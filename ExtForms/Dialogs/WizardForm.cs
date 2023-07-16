@@ -1208,7 +1208,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Показывать ли изображение для этого шага? (по умолчанию - true)
-    /// Свойство не действует, если <see cref="Wizard.ShowImage"/>=false;
+    /// Свойство не действует, если <see cref="FreeLibSet.Forms.Wizard.ShowImage"/>=false;
     /// </summary>
     public bool ShowImage { get { return _ShowImage; } set { _ShowImage = value; } }
     private bool _ShowImage;

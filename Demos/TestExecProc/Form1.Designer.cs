@@ -44,8 +44,8 @@
       this.btnInfo = new System.Windows.Forms.Button();
       this.btnGCCollect = new System.Windows.Forms.Button();
       this.label6 = new System.Windows.Forms.Label();
-      this.edSyncTime = new AgeyevAV.ExtForms.ExtNumericUpDown();
-      this.edCopies = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      this.edSyncTime = new FreeLibSet.Controls.IntEditBox();
+      this.edCopies = new FreeLibSet.Controls.IntEditBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.SuspendLayout();
@@ -244,22 +244,10 @@
       // 
       // edSyncTime
       // 
-      this.edSyncTime.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edSyncTime.Increment = 1;
       this.edSyncTime.Location = new System.Drawing.Point(117, 172);
-      this.edSyncTime.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-      this.edSyncTime.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
+      this.edSyncTime.Maximum = 5000;
+      this.edSyncTime.Minimum =0;
       this.edSyncTime.Name = "edSyncTime";
       this.edSyncTime.Size = new System.Drawing.Size(100, 20);
       this.edSyncTime.TabIndex = 11;
@@ -267,31 +255,15 @@
       // 
       // edCopies
       // 
-      this.edCopies.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edCopies.Increment = 1;
       this.edCopies.Location = new System.Drawing.Point(117, 146);
-      this.edCopies.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-      this.edCopies.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edCopies.Maximum = 10;
+      this.edCopies.Minimum = 1;
       this.edCopies.Name = "edCopies";
       this.edCopies.Size = new System.Drawing.Size(100, 20);
       this.edCopies.TabIndex = 9;
       this.edCopies.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-      this.edCopies.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edCopies.Value = 1;
       // 
       // MainForm
       // 
@@ -317,7 +289,7 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.ComboBox cbProcType;
     private System.Windows.Forms.Label label1;
-    private AgeyevAV.ExtForms.ExtNumericUpDown edCopies;
+    private FreeLibSet.Controls.IntEditBox edCopies;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnStart;
@@ -330,7 +302,7 @@
     private System.Windows.Forms.Button btnDebug;
     private System.Windows.Forms.ComboBox cbFromThread;
     private System.Windows.Forms.Label label5;
-    private AgeyevAV.ExtForms.ExtNumericUpDown edSyncTime;
+    private FreeLibSet.Controls.IntEditBox edSyncTime;
     private System.Windows.Forms.Label label6;
   }
 }

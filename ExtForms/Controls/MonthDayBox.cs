@@ -113,6 +113,41 @@ namespace FreeLibSet.Controls
 
     #endregion
 
+    #region Ограничение размеров
+
+    protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
+    {
+      base.SetBoundsCore(x, y, width, WantedHeight, specified);
+    }
+
+    public override Size GetPreferredSize(Size proposedSize)
+    {
+      return new Size(proposedSize.Width, WantedHeight);
+    }
+
+    protected override Size DefaultSize
+    {
+      get
+      {
+        // Метод может вызываться до вызова конструктора
+        return new Size(180, WantedHeight);
+      }
+    }
+
+    private int WantedHeight
+    {
+      get
+      {
+        if (edDay == null || cbMonth == null)
+          return 20;
+        else
+          return Math.Max(edDay.Height, cbMonth.Height);
+      }
+    }
+
+
+    #endregion
+
     #region Внутренняя реализация
 
     void cbMonth_SelectedIndexChanged(object sender, EventArgs args)

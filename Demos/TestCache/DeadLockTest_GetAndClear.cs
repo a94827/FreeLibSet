@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using AgeyevAV.Caching;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Caching;
+using FreeLibSet.Forms;
+using FreeLibSet.Forms.Diagnostics;
 
 namespace TestCache
 {

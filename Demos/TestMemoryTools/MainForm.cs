@@ -5,11 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Diagnostics;
-using AgeyevAV;
-using AgeyevAV.IO;
-using AgeyevAV.Logging;
+using FreeLibSet.Diagnostics;
+using FreeLibSet.Forms;
+using FreeLibSet.IO;
+using FreeLibSet.Logging;
 
 namespace TestMemoryTools
 {
@@ -23,9 +22,9 @@ namespace TestMemoryTools
 
       efpForm = new EFPFormProvider(this);
 
-      efpCount = new EFPExtNumericUpDown(efpForm, edCount);
+      efpCount = new EFPIntEditBox(efpForm, edCount);
 
-      efpSize = new EFPNumEditBox(efpForm, edSize);
+      efpSize = new EFPIntEditBox(efpForm, edSize);
 
       btnAlloc.Image = EFPApp.MainImages.Images["Insert"];
       btnAlloc.ImageAlign = ContentAlignment.MiddleLeft;
@@ -49,7 +48,7 @@ namespace TestMemoryTools
 
       InitTotalSize();
 
-      efpForm.UpdateByTime += new EventHandler(efpForm_UpdateByTime);
+      efpForm.UpdateByTimeHandlers.Add(new EFPUpdateByTimeHandler(new EventHandler(efpForm_UpdateByTime)));
     }
 
     #endregion
@@ -57,8 +56,8 @@ namespace TestMemoryTools
     #region Поля
 
     EFPFormProvider efpForm;
-    EFPExtNumericUpDown efpCount;
-    EFPNumEditBox efpSize;
+    EFPIntEditBox efpCount;
+    EFPIntEditBox efpSize;
 
     #endregion
 
@@ -106,10 +105,10 @@ namespace TestMemoryTools
       {
         using (Splash spl = new Splash("Выделяется память"))
         {
-          spl.PercentMax = efpCount.IntValue;
-          for (int i = 0; i < efpCount.IntValue; i++)
+          spl.PercentMax = efpCount.Value;
+          for (int i = 0; i < efpCount.Value; i++)
           {
-            lb1.Items.Add(new MemListItem(efpSize.IntValue));
+            lb1.Items.Add(new MemListItem(efpSize.Value));
             InitTotalSize();
             efpForm_UpdateByTime(null, null);
             spl.IncPercent();

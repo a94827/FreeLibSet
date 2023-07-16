@@ -5,11 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Caching;
-using AgeyevAV;
-using AgeyevAV.IO;
-using AgeyevAV.Diagnostics;
+using FreeLibSet.Caching;
+using FreeLibSet.Core;
+using FreeLibSet.Diagnostics;
+using FreeLibSet.Forms;
+using FreeLibSet.IO;
 
 namespace TestCache
 {
@@ -23,19 +23,19 @@ namespace TestCache
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
-      efpCapacity = new EFPNumEditBox(efpForm, edCapacity);
-      efpLowMemorySize = new EFPNumEditBox(efpForm, edLowMemorySize);
+      efpCapacity = new EFPIntEditBox(efpForm, edCapacity);
+      efpLowMemorySize = new EFPIntEditBox(efpForm, edLowMemorySize);
       efpLowMemorySize.Minimum = 1;
       efpLowMemorySize.Maximum = 1000;
-      efpCriticalMemoryLoad = new EFPNumEditBox(efpForm, edCriticalMemoryLoad);
+      efpCriticalMemoryLoad = new EFPIntEditBox(efpForm, edCriticalMemoryLoad);
       efpCriticalMemoryLoad.Minimum = 0;
       efpCriticalMemoryLoad.Maximum = 100;
 
-      efpCheckMemoryInterval = new EFPNumEditBox(efpForm, eCheckMemoryInterval);
+      efpCheckMemoryInterval = new EFPIntEditBox(efpForm, eCheckMemoryInterval);
       efpCheckMemoryInterval.Minimum = 1;
       efpCheckMemoryInterval.Maximum = 600;
 
-      efpThreads = new EFPExtNumericUpDown(efpForm, edThreads);
+      efpThreads = new EFPIntEditBox(efpForm, edThreads);
 
       ghObjs = new EFPDataGridView(efpForm, grObjs);
       ghObjs.ReadOnly = true;
@@ -58,15 +58,15 @@ namespace TestCache
 
     #region Поля
 
-    public EFPNumEditBox efpCapacity;
+    public EFPIntEditBox efpCapacity;
 
-    public EFPNumEditBox efpLowMemorySize;
+    public EFPIntEditBox efpLowMemorySize;
 
-    public EFPNumEditBox efpCriticalMemoryLoad;
+    public EFPIntEditBox efpCriticalMemoryLoad;
 
-    public EFPNumEditBox efpCheckMemoryInterval;
+    public EFPIntEditBox efpCheckMemoryInterval;
 
-    public EFPExtNumericUpDown efpThreads;
+    public EFPIntEditBox efpThreads;
 
     public EFPDataGridView ghObjs;
 
@@ -78,11 +78,11 @@ namespace TestCache
     {
       ThreadCount = 1;
       ParamForm Form = new ParamForm();
-      Form.efpCapacity.IntValue = Cache.Params.Capacity;
-      Form.efpLowMemorySize.IntValue = MemoryTools.LowMemorySizeMB;
-      Form.efpCriticalMemoryLoad.IntValue = Cache.Params.CriticalMemoryLoad;
-      Form.efpCheckMemoryInterval.IntValue = Cache.Params.CheckMemoryInterval / 1000;
-      Form.efpThreads.IntValue = ThreadCount;
+      Form.efpCapacity.Value = Cache.Params.Capacity;
+      Form.efpLowMemorySize.Value = MemoryTools.LowMemorySizeMB;
+      Form.efpCriticalMemoryLoad.Value = Cache.Params.CriticalMemoryLoad;
+      Form.efpCheckMemoryInterval.Value = Cache.Params.CheckMemoryInterval / 1000;
+      Form.efpThreads.Value = ThreadCount;
 
       DataTable TableObjs = new DataTable();
       TableObjs.Columns.Add("ObjType", typeof(string));
@@ -99,13 +99,13 @@ namespace TestCache
       if (EFPApp.ShowDialog(Form, true) != DialogResult.OK)
         return false;
 
-      Cache.Params.Capacity = Form.efpCapacity.IntValue;
+      Cache.Params.Capacity = Form.efpCapacity.Value;
 
-      MemoryTools.LowMemorySizeMB = Form.efpLowMemorySize.IntValue;
-      Cache.Params.CriticalMemoryLoad = Form.efpCriticalMemoryLoad.IntValue;
-      Cache.Params.CheckMemoryInterval = Form.efpCheckMemoryInterval.IntValue * 1000;
+      MemoryTools.LowMemorySizeMB = Form.efpLowMemorySize.Value;
+      Cache.Params.CriticalMemoryLoad = Form.efpCriticalMemoryLoad.Value;
+      Cache.Params.CheckMemoryInterval = Form.efpCheckMemoryInterval.Value * 1000;
 
-      ThreadCount = Form.efpThreads.IntValue;
+      ThreadCount = Form.efpThreads.Value;
 
       Cache.Params.PersistDir = AbsPath.Empty;
       TestExec.Settings1 = GetSetting(TableObjs.Rows[0]);

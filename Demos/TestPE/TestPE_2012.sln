@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C# Express 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAbsPath", "TestAbsPath.csproj", "{35393E2C-6ABF-411F-BB27-38CF1A27351E}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPE", "TestPE.csproj", "{B3FB396C-2EB7-47DA-85AB-451D398D9B5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtTools", "..\..\ExtTools\ExtTools.csproj", "{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}"
 EndProject
@@ -11,10 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{35393E2C-6ABF-411F-BB27-38CF1A27351E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35393E2C-6ABF-411F-BB27-38CF1A27351E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35393E2C-6ABF-411F-BB27-38CF1A27351E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35393E2C-6ABF-411F-BB27-38CF1A27351E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3FB396C-2EB7-47DA-85AB-451D398D9B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3FB396C-2EB7-47DA-85AB-451D398D9B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3FB396C-2EB7-47DA-85AB-451D398D9B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3FB396C-2EB7-47DA-85AB-451D398D9B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}.Release|Any CPU.ActiveCfg = Release|Any CPU

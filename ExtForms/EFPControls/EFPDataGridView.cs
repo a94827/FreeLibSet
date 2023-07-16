@@ -1712,6 +1712,19 @@ namespace FreeLibSet.Forms
     void ResetDataReorderHelper();
 
     /// <summary>
+    /// Создает новый экземпляр <see cref="IDataReorderHelper"/>.
+    /// </summary>
+    /// <returns>Объект для упорядочения строк</returns>
+    IDataReorderHelper CreateDataReorderHelper();
+
+    /// <summary>
+    /// Этот метод может использоваться в обработчике события DataReorderHelperNeeded другого провайдера, который должен использовать реализацию из текущего провайдера
+    /// </summary>
+    /// <param name="sender">Объект, сгенерировавший событие. Не используется</param>
+    /// <param name="args">Аргументы события. В нем устанавливается свойство <see cref="DataReorderHelperNeededEventArgs.Helper"/></param>
+    void CreateDataReorderHelper(object sender, DataReorderHelperNeededEventArgs args);
+
+    /// <summary>
     /// Вызывается, когда выполнена ручная сортировка строк (по окончании изменения
     /// значений поля для всех строк)
     /// </summary>
@@ -6287,13 +6300,7 @@ namespace FreeLibSet.Forms
           return null;
 
         if (_DataReorderHelper == null)
-        {
-          DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
-          OnDataReorderHelperNeeded(args);
-          if (args.Helper == null)
-            throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
-          _DataReorderHelper = args.Helper;
-        }
+          _DataReorderHelper = CreateDataReorderHelper();
         return _DataReorderHelper;
       }
     }
@@ -6329,6 +6336,30 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Создает новый экземпляр <see cref="IDataReorderHelper"/>.
+    /// Вызывает метод <see cref="OnDataReorderHelperNeeded(DataReorderHelperNeededEventArgs)"/>.
+    /// </summary>
+    /// <returns>Объект для упорядочения строк</returns>
+    public IDataReorderHelper CreateDataReorderHelper()
+    {
+      DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
+      OnDataReorderHelperNeeded(args);
+      if (args.Helper == null)
+        throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
+      return args.Helper;
+    }
+
+    /// <summary>
+    /// Этот метод может использоваться в обработчике события <see cref="DataReorderHelperNeeded"/> другого провайдера, который должен использовать реализацию из текущего провайдера
+    /// </summary>
+    /// <param name="sender">Объект, сгенерировавший событие. Не используется</param>
+    /// <param name="args">Аргументы события. В нем устанавливается свойство <see cref="DataReorderHelperNeededEventArgs.Helper"/></param>
+    public void CreateDataReorderHelper(object sender, DataReorderHelperNeededEventArgs args)
+    {
+      args.Helper = CreateDataReorderHelper();
+    }
+
+    /// <summary>
     /// Создает объект, предназначенный для сортировки строк с помощью числового поля.
     /// Используется при установленном свойстве ManualOrderColumn, если не установлен пользовательский обработчик события DataReorderHelperNeeded.
     /// Непереопределенный метод создает новый объект DataTableReorderHelper.
@@ -6347,7 +6378,6 @@ namespace FreeLibSet.Forms
 
       return new DataTableReorderHelper(dv, ManualOrderColumn);
     }
-
     #endregion
 
     #region Перестановка строк

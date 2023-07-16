@@ -5,7 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Forms;
+using FreeLibSet.Forms.Diagnostics;
 
 namespace EFPAppRemoteExitDemo
 {
@@ -19,8 +20,7 @@ namespace EFPAppRemoteExitDemo
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpMessage = new EFPTextBox(efpForm, edMessage);
-      efpMessage.CanBeEmpty = true;
-      efpMessage.WarningIfEmpty = true;
+      efpMessage.CanBeEmptyMode = FreeLibSet.UICore.UIValidateState.Warning;
 
       btnExit.Image = EFPApp.MainImages.Images["Exit"];
       btnExit.ImageAlign = ContentAlignment.MiddleLeft;

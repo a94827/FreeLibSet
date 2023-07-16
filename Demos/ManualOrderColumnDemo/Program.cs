@@ -90,9 +90,9 @@ namespace ManualOrderColumnDemo
           {
             gr1.Control.MultiSelect = parForm.efpMultiSelect.Checked;
             if (parForm.efpManualOrderColumn.Checked)
-              gr1.CommandItems.ManualOrderColumn = "Order";
+              gr1.ManualOrderColumn = "Order";
             if (parForm.efpDefaultManualOrderColumn.Checked)
-              gr1.CommandItems.DefaultManualOrderColumn = "Text";
+              gr1.DefaultManualOrderColumn = "Text";
 
             if (parForm.efpView.SelectedIndex != 3) // не EFPInputDataGridView
             {
@@ -112,9 +112,9 @@ namespace ManualOrderColumnDemo
             tv2.ReadOnly = parForm.efpReadOnly.Checked;
             tv2.CanView = false;
             if (parForm.efpManualOrderColumn.Checked)
-              tv2.CommandItems.ManualOrderColumn = "Order";
+              tv2.ManualOrderColumn = "Order";
             if (parForm.efpDefaultManualOrderColumn.Checked)
-              tv2.CommandItems.DefaultManualOrderColumn = "Text";
+              tv2.DefaultManualOrderColumn = "Text";
 
             DataTableTreeModel treeModel = new DataTableTreeModel(table, "Id", "ParentId");
             // не требуется. // treeModel.Sort = "Order";
@@ -123,7 +123,7 @@ namespace ManualOrderColumnDemo
             if (gr1 != null)
               // В режиме "Дерево плюс таблица" нужно, чтобы в таблице тоже использовался DataTableTreeReorderHelper,
               // а не стандартный объект. Иначе иерархия не будет учитываться при перестановке строк в таблице
-              gr1.CommandItems.DataReorderHelperNeeded += tv2.CommandItems.CreateDataReorderHelper;
+              gr1.DataReorderHelperNeeded += tv2.CreateDataReorderHelper;
           }
 
           Application.Run(testForm);

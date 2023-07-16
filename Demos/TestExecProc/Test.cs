@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AgeyevAV.Remoting;
-using AgeyevAV;
-using AgeyevAV.ExtForms;
+using FreeLibSet.Core;
+using FreeLibSet.Forms;
+using FreeLibSet.Remoting;
 
 namespace TestExecProc
 {

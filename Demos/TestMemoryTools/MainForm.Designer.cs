@@ -39,10 +39,10 @@
       this.btnInfo = new System.Windows.Forms.Button();
       this.btnFree = new System.Windows.Forms.Button();
       this.label6 = new System.Windows.Forms.Label();
-      this.edSize = new AgeyevAV.ExtForms.NumEditBox();
+      this.edSize = new FreeLibSet.Controls.IntEditBox();
       this.label5 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
-      this.edCount = new AgeyevAV.ExtForms.ExtNumericUpDown();
+      this.edCount = new FreeLibSet.Controls.IntEditBox();
       this.btnAlloc = new System.Windows.Forms.Button();
       this.lb1 = new System.Windows.Forms.ListBox();
       this.lblTotalSize = new System.Windows.Forms.Label();
@@ -185,11 +185,7 @@
       this.edSize.Name = "edSize";
       this.edSize.Size = new System.Drawing.Size(77, 20);
       this.edSize.TabIndex = 7;
-      this.edSize.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+      this.edSize.Value = 100;
       // 
       // label5
       // 
@@ -211,31 +207,15 @@
       // 
       // edCount
       // 
-      this.edCount.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edCount.Increment = 1;
       this.edCount.Location = new System.Drawing.Point(360, 23);
-      this.edCount.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-      this.edCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+      this.edCount.Maximum = 1000;
+      this.edCount.Minimum = 1;
       this.edCount.Name = "edCount";
       this.edCount.Size = new System.Drawing.Size(79, 20);
       this.edCount.TabIndex = 4;
       this.edCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-      this.edCount.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+      this.edCount.Value = 10;
       // 
       // btnAlloc
       // 
@@ -327,10 +307,10 @@
     private System.Windows.Forms.ListBox lb1;
     private System.Windows.Forms.Button btnFree;
     private System.Windows.Forms.Label label6;
-    private AgeyevAV.ExtForms.NumEditBox edSize;
+    private FreeLibSet.Controls.IntEditBox edSize;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Label label4;
-    private AgeyevAV.ExtForms.ExtNumericUpDown edCount;
+    private FreeLibSet.Controls.IntEditBox edCount;
     private System.Windows.Forms.Button btnInfo;
     private System.Windows.Forms.Label lblTotalPhysicalMemory;
     private System.Windows.Forms.Label label7;

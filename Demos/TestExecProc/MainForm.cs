@@ -5,10 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AgeyevAV.ExtForms;
-using AgeyevAV.Remoting;
-using AgeyevAV;
 using System.Reflection;
+using FreeLibSet.Forms.Diagnostics;
+using FreeLibSet.Remoting;
+using FreeLibSet.Forms;
+using FreeLibSet.UICore;
 
 namespace TestExecProc
 {
@@ -18,7 +19,7 @@ namespace TestExecProc
 
     public MainForm()
     {
-      Console.SetBufferSize(80, 1000);
+      Console.SetBufferSize(Math.Max(Console.BufferWidth, 80), Math.Max(Console.BufferHeight, 1000));
       LocalProcCreator = new ProcCreator();
       AppDomain TheDomain = AppDomain.CreateDomain("Second Domain");
       RemoteProcCreator = TheDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, "TestExecProc.ProcCreator") as ProcCreator;
@@ -40,10 +41,10 @@ namespace TestExecProc
       efpExecutionPlace = new EFPListComboBox(efpForm, cbExecutionPlace);
       efpExecutionPlace.SelectedIndex = 0;
 
-      efpCopies = new EFPExtNumericUpDown(efpForm, edCopies);
+      efpCopies = new EFPIntEditBox(efpForm, edCopies);
 
-      efpSyncTime = new EFPExtNumericUpDown(efpForm, edSyncTime);
-      efpSyncTime.IntValue = ExecProc.DefaultSyncTime;
+      efpSyncTime = new EFPIntEditBox(efpForm, edSyncTime);
+      efpSyncTime.Value = ExecProc.DefaultSyncTime;
 
       btnStart.Image = EFPApp.MainImages.Images["Ok"];
       btnStart.ImageAlign = ContentAlignment.MiddleLeft;
@@ -64,9 +65,9 @@ namespace TestExecProc
       efpDebug.Click += new EventHandler(efpDebug_Click);
     }
 
-    void efpFromThread_Validating(object sender, EFPValidatingEventArgs args)
+    void efpFromThread_Validating(object sender, UIValidatingEventArgs args)
     {
-      if (args.ValidateState == EFPValidateState.Error)
+      if (args.ValidateState == UIValidateState.Error)
         return;
 
       TestStartMode StartMode = (TestStartMode)(efpStartMode.SelectedIndex);
@@ -111,9 +112,9 @@ namespace TestExecProc
 
     EFPListComboBox efpExecutionPlace;
 
-    EFPExtNumericUpDown efpCopies;
+    EFPIntEditBox efpCopies;
 
-    EFPExtNumericUpDown efpSyncTime;
+    EFPIntEditBox efpSyncTime;
 
     EFPButton efpStart;
 
@@ -136,8 +137,8 @@ namespace TestExecProc
       test.StartMode = (TestStartMode)(cbStartMode.SelectedIndex);
       test.FromThread = (TestFromThread)(cbFromThread.SelectedIndex);
       test.ExecutionPlace = (TestExecutionPlace)(cbExecutionPlace.SelectedIndex);
-      test.Copies = efpCopies.IntValue;
-      test.SyncTime = efpSyncTime.IntValue;
+      test.Copies = efpCopies.Value;
+      test.SyncTime = efpSyncTime.Value;
       test.Run();
     }
 

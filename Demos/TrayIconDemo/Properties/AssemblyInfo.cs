@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("TrayIconDemo")]
-[assembly: AssemblyDescription("Тестирование значка в трее. Пока прилежение работает, значок должен появляться при входе других пользователей")]
+[assembly: AssemblyDescription("Тестирование значка в трее")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TrayIconDemo")]

@@ -16,7 +16,7 @@ namespace FreeLibSet.Formatting
   /// </summary>
   public enum DateFormatYMDOrder
   {
-    // Порядок элементов важен!
+    // Порядок элементов в перечислении важен!
 
     /// <summary>
     /// Год, месяц день ("японский")
@@ -24,7 +24,7 @@ namespace FreeLibSet.Formatting
     YMD = 0,
 
     /// <summary>
-    /// Год, день, месяц (не знаю, где такой есть)
+    /// Год, день, месяц (такой вариант, насколько я знаю, не встречается)
     /// </summary>
     YDM = 1,
 
@@ -77,6 +77,18 @@ namespace FreeLibSet.Formatting
       if (String.IsNullOrEmpty(format))
         return -1;
       if (format.Length == 1) // один из стандартных форматов, например, "G"
+      {
+        char ch = format[0];
+        if (ch>='A' && ch<='Z')
+          return -1;
+        if (ch >= 'a' && ch <= 'z')
+          return -1;
+
+        // 14.07.2023
+        // Односимвольный формат может быть "0"
+      }
+
+      if (format.IndexOfAny(new char[] { '0', '#' }) < 0)
         return -1;
 
       int p = format.IndexOf('.');
@@ -100,10 +112,10 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Определяет, содержит ли строка форматирования символы для даты и/или времени.
-    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу DateTime.ToString().
+    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу <see cref="DateTime.ToString(string)"/>.
     /// Если <paramref name="formatString"/>-пустая строка, то <paramref name="containsDate"/>=true и <paramref name="containsTime"/>=true.
     /// </summary>
-    /// <param name="formatString">Строка форматирования для DateTime</param>
+    /// <param name="formatString">Строка форматирования для <see cref="DateTime"/></param>
     /// <param name="containsDate">Сюда записывается true, если строка форматирования содержит дату</param>
     /// <param name="containsTime">Сюда записывается true, если строка форматирования содержит время</param>
     public static void ContainsDateTime(string formatString, out bool containsDate, out bool containsTime)
@@ -144,6 +156,8 @@ namespace FreeLibSet.Formatting
           case 's':
           case 'u':
           case 'U':
+          case 'o':
+          case 'O':
             containsDate = true;
             containsTime = true;
             break;
@@ -214,10 +228,10 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Определяет, содержит ли строка форматирования символы для даты.
-    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу DateTime.ToString().
+    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу <see cref="DateTime.ToString(string)"/>.
     /// Если <paramref name="formatString"/>-пустая строка, то возвращается true.
     /// </summary>
-    /// <param name="formatString">Строка форматирования для DateTime</param>
+    /// <param name="formatString">Строка форматирования для <see cref="DateTime"/></param>
     /// <returns>true, если строка форматирования содержит дату</returns>
     public static bool ContainsDate(string formatString)
     {
@@ -229,10 +243,10 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Определяет, содержит ли строка форматирования символы для времени.
-    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу DateTime.ToString().
+    /// Распознаются односимвольные и многосимвольные строки форматирования, которые можно передавать методу <see cref="DateTime.ToString(string)"/>.
     /// Если <paramref name="formatString"/>-пустая строка, то возвращается true.
     /// </summary>
-    /// <param name="formatString">Строка форматирования для DateTime</param>
+    /// <param name="formatString">Строка форматирования для <see cref="DateTime"/></param>
     /// <returns>true, если строка форматирования содержит времени</returns>
     public static bool ContainsTime(string formatString)
     {
@@ -243,36 +257,175 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает порядок следования дня, месяца и года в формате даты.
-    /// Если строка не задана или имеет длину в один символ (например, "d"), используется
-    /// ShortDatePattern из текущей культуры.
+    /// Расширяет односимвольный формат даты/времени в полный формат.
+    /// Если длина переданного формата отличается от 1 (формат не задан или задан пользовательский формат),
+    /// он возвращается без изменений.
+    /// Если передан неизвестный односимвольный формат, он также возвращается, без выброса исключений
+    /// </summary>
+    /// <param name="formatString">Исходный формат</param>
+    /// <param name="dateTimeFormat">Форматизатор. Если null, то используется формат из <see cref="CultureInfo.CurrentCulture"/></param>
+    /// <returns>Развернутый формат или <paramref name="formatString"/> без изменений</returns>
+    public static string ExpandDateTimeFormat(string formatString, DateTimeFormatInfo dateTimeFormat)
+    {
+      if (dateTimeFormat == null)
+        dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat;
+
+      switch (formatString)
+      {
+        case "d":
+          return dateTimeFormat.ShortDatePattern;
+        case "D":
+          return dateTimeFormat.LongDatePattern;
+        case "f":
+          return dateTimeFormat.LongDatePattern + " " + dateTimeFormat.ShortTimePattern;
+        case "F":
+        case "U":
+          return dateTimeFormat.FullDateTimePattern;
+        case "g":
+          return dateTimeFormat.ShortDatePattern + " " + dateTimeFormat.ShortTimePattern;
+        case "G":
+          return dateTimeFormat.ShortDatePattern + " " + dateTimeFormat.LongTimePattern;
+        case "o":
+        case "O":
+          return @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK";
+        case "r":
+        case "R":
+          return dateTimeFormat.RFC1123Pattern;
+        case "s":
+          return dateTimeFormat.SortableDateTimePattern;
+        case "u":
+          return dateTimeFormat.UniversalSortableDateTimePattern;
+        case "t":
+          return dateTimeFormat.ShortTimePattern;
+        case "T":
+          return dateTimeFormat.LongTimePattern;
+        case "M":
+        case "m":
+          return dateTimeFormat.MonthDayPattern;
+        case "Y":
+        case "y":
+          return dateTimeFormat.YearMonthPattern;
+      }
+      return formatString;
+    }
+
+    /// <summary>
+    /// Расширяет односимвольный формат даты/времени в полный формат.
+    /// Если длина переданного формата отличается от 1 (формат не задан или задан пользовательский формат),
+    /// он возвращается без изменений.
+    /// Если передан неизвестный односимвольный формат, он также возвращается, без выброса исключений.
+    /// Эта перегрузка использует объект <see cref="DateTimeFormatInfo"/> из <see cref="CultureInfo.CurrentCulture"/>.
+    /// </summary>
+    /// <param name="formatString">Исходный формат</param>
+    /// <returns>Развернутый формат или <paramref name="formatString"/> без изменений</returns>
+    public static string ExpandDateTimeFormat(string formatString)
+    {
+      return ExpandDateTimeFormat(formatString, null);
+    }
+
+
+    /// <summary>
+    /// Возвращает порядок следования дня, месяца и года в строке форматирования даты.
     /// Анализируется наличие символов "d", "M" и "y" для определения порядка.
-    /// Если каких-то элементов нет, подбирается наиболее подходящий вариант.
-    /// Если формат не содержит ни одного из символов, возвращается DateFormatYMDOrder.YMD
+    /// Если задан стандартный односимвольный формат (например, "D"), то он заменяется на полный формат 
+    /// с помощью метода <see cref="ExpandDateTimeFormat(string, DateTimeFormatInfo)"/>.
+    /// Если строка не задана или не содержит ни одного из символов "d", "M" и "y", то используется шаблон 
+    /// <see cref="DateTimeFormatInfo.ShortDatePattern"/>.
+    /// Если в строке части элементов нет, подбирается наиболее подходящий вариант.
+    /// </summary>
+    /// <param name="formatString">Короткий формат даты</param>
+    /// <param name="dateTimeFormat">Формат даты/времени, используемый для преобразования стандартного формата.
+    /// Если null, то используется <see cref="DateTimeFormatInfo"/> из <see cref="CultureInfo.CurrentCulture"/></param>
+    /// <returns>Порядок следования компонентов</returns>
+    public static DateFormatYMDOrder GetDateFormatOrder(string formatString, DateTimeFormatInfo dateTimeFormat)
+    {
+      if (dateTimeFormat == null)
+        dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat;
+
+      if (String.IsNullOrEmpty(formatString))
+        formatString = "d";
+      if (formatString.Length == 1) // стандартный формат, например, "d"
+        formatString = ExpandDateTimeFormat(formatString, dateTimeFormat); // 13.07.2023
+
+      DateFormatYMDOrder result;
+      if (!DoGetDateFormatOrder(formatString, out result))
+        DoGetDateFormatOrder(dateTimeFormat.ShortDatePattern, out result); // 13.07.2023
+      return result;
+    }
+
+    private static bool DoGetDateFormatOrder(string formatString, out DateFormatYMDOrder result)
+    {
+
+      //int pD = formatString.IndexOf('d');
+      //int pM = formatString.IndexOf('M');
+      //int pY = formatString.IndexOf('y');
+      //if (pY < 0)
+      //  pY = -3;
+      //if (pM < 0)
+      //  pM = -2;
+      //if (pD < 0)
+      //  pD = -1;
+
+      // 13.07.2023
+      // Учитываем возможность наличия текстовых фрагментов в строке и Escape-символов
+
+      int pY = -3;
+      int pM = -2;
+      int pD = -1;
+
+      int p = 0;
+      while (p < formatString.Length)
+      {
+        switch (formatString[p])
+        {
+          // Поскольку интересны только относительные положения символов d, M и y, неважно, будет ли использовано первое или последнее вхождение в последовательность.
+          case 'd': pD = p; break;
+          case 'M': pM = p; break;
+          case 'y': pY = p; break;
+
+          case '%': // получение шаблона
+          case '\\': // escape-символ
+            p++;
+            break;
+
+          case '\"':
+          case '\'':
+            // строки в кавычках
+            char ch = formatString[p];
+            p++;
+            while (p < formatString.Length)
+            {
+              if (formatString[p] == ch)
+                break;
+              else
+                p++;
+            }
+            break;
+        }
+        p++;
+      }
+
+      int index1 = pY < pM ? 0 : 2;
+      int index2 = pM < pD ? 0 : 1;
+      result = (DateFormatYMDOrder)(index1 + index2);
+      return (pY >= 0 || pM >= 0 || pD >= 0);
+    }
+
+    /// <summary>
+    /// Возвращает порядок следования дня, месяца и года в строке форматирования даты.
+    /// Анализируется наличие символов "d", "M" и "y" для определения порядка.
+    /// Если задан стандартный односимвольный формат (например, "D"), то он заменяется на полный формат 
+    /// с помощью метода <see cref="ExpandDateTimeFormat(string)"/>.
+    /// Если строка не задана или не содержит ни одного из символов "d", "M" и "y", то используется шаблон 
+    /// <see cref="DateTimeFormatInfo.ShortDatePattern"/> для текущей культуры.
+    /// Если в строке части элементов нет, подбирается наиболее подходящий вариант.
+    /// Эта перегрузка использует текущую культуру <see cref="CultureInfo.CurrentCulture"/> для стандартных форматов.
     /// </summary>
     /// <param name="formatString">Короткий формат даты</param>
     /// <returns>Порядок следования компонентов</returns>
     public static DateFormatYMDOrder GetDateFormatOrder(string formatString)
     {
-      if (String.IsNullOrEmpty(formatString))
-        formatString = Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern;
-      else if (formatString.Length == 1) // стандартный формат, например, "d"
-        formatString = Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern;
-
-      int pD = formatString.IndexOf('d');
-      int pM = formatString.IndexOf('M');
-      int pY = formatString.IndexOf('y');
-
-      if (pY < 0)
-        pY = -3;
-      if (pM < 0)
-        pM = -2;
-      if (pD < 0)
-        pD = -1;
-
-      int index1 = pY < pM ? 0 : 2;
-      int index2 = pM < pD ? 0 : 1;
-      return (DateFormatYMDOrder)(index1 + index2);
+      return GetDateFormatOrder(formatString, null);
     }
 
     /// <summary>
@@ -376,12 +529,16 @@ namespace FreeLibSet.Formatting
     private static readonly string[] _Date10Formats = new string[] { "yyyy/MM/dd", "yyyy/dd/MM", "MM/dd/yyyy", "dd/MM/yyyy" };
 
     /// <summary>
-    /// Используйте статические свойства класса EditableDateTimeFormatters для доступа к форматизаторам
+    /// Используйте статические свойства класса <see cref="EditableDateTimeFormatters"/> для доступа к форматизаторам
     /// </summary>
-    /// <param name="cultureInfo"></param>
-    /// <param name="kind"></param>
+    /// <param name="cultureInfo">Культура. Не может быть null</param>
+    /// <param name="kind">Способ форматирования даты/времени</param>
     public EditableDateTimeFormatter(CultureInfo cultureInfo, EditableDateTimeFormatterKind kind)
     {
+#if DEBUG
+      if (cultureInfo == null)
+        throw new ArgumentNullException("cultureInfo");
+#endif
       _FormatInfo = cultureInfo.DateTimeFormat;
       _kind = kind;
 
@@ -544,8 +701,8 @@ namespace FreeLibSet.Formatting
     private StdMaskProvider _MaskProvider;
 
     /// <summary>
-    /// Возвращает true, если методы Parse() и TryParse() могут обрабатывать аргумент defaultYear, когда
-    /// год не задан в преобразуемой строке. Если false, то этот аргумент игнорируется
+    /// Возвращает true, если методы <see cref="Parse(string, int)"/> и <see cref="TryParse(string, out DateTime, int)"/> могут обрабатывать аргумент defaultYear, когда
+    /// год не задан в преобразуемой строке. Если false, то этот аргумент игнорируется.
     /// </summary>
     public bool DefaultYearSupported
     {
@@ -558,7 +715,7 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Возвращает true, если в формате присутствует компонент даты.
-    /// Как минимум, одно из свойств ContainsDate и ContainsTime должно возвращать true.
+    /// Как минимум, одно из свойств <see cref="ContainsDate"/> и <see cref="ContainsTime"/> должно возвращать true.
     /// </summary>
     public bool ContainsDate
     {
@@ -578,7 +735,7 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Возвращает true, если в формате присутствует компонент времени.
-    /// Как минимум, одно из свойств ContainsDate и ContainsTime должно возвращать true.
+    /// Как минимум, одно из свойств <see cref="ContainsDate"/> и <see cref="ContainsTime"/> должно возвращать true.
     /// </summary>
     public bool ContainsTime
     {
@@ -602,7 +759,7 @@ namespace FreeLibSet.Formatting
     #region Методы
 
     /// <summary>
-    /// Возвращает дату/время, отформатированную в соответствии с полем Format
+    /// Возвращает дату/время, отформатированную в соответствии со свойством <see cref="Format"/>
     /// </summary>
     /// <param name="value">Значение</param>
     /// <returns>Текстовое представление</returns>
@@ -616,7 +773,7 @@ namespace FreeLibSet.Formatting
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается значение</param>
-    /// <param name="defaultYear">Если передано ненулевое значение, свойство DefaultYearSupported=true,
+    /// <param name="defaultYear">Если передано ненулевое значение, свойство <see cref="DefaultYearSupported"/>=true,
     /// а в строке нет года, то используется этот год</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
     public bool TryParse(string s, out DateTime value, int defaultYear)
@@ -644,10 +801,10 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Выполняет преобразование строки в значение даты/времени.
-    /// В случае ошибки генерируется FormatException
+    /// В случае ошибки генерируется <see cref="FormatException"/>.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
-    /// <param name="defaultYear">Если передано ненулевое значение, свойство DefaultYearSupported=true,
+    /// <param name="defaultYear">Если передано ненулевое значение, свойство <see cref="DefaultYearSupported"/>=true,
     /// а в строке нет года, то используется этот год</param>
     /// <returns>Преобразованное значение</returns>
     public DateTime Parse(string s, int defaultYear)
@@ -661,7 +818,7 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Выполняет преобразование строки в значение даты/времени.
-    /// В случае ошибки генерируется FormatException
+    /// В случае ошибки генерируется <see cref="FormatException"/>
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <returns>Преобразованное значение</returns>
@@ -675,7 +832,7 @@ namespace FreeLibSet.Formatting
     /// В случае ошибки возвращается null, как для пустой строки.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
-    /// <param name="defaultYear">Если передано ненулевое значение, свойство DefaultYearSupported=true,
+    /// <param name="defaultYear">Если передано ненулевое значение, свойство <see cref="DefaultYearSupported"/>=true,
     /// а в строке нет года, то используется этот год</param>
     /// <returns>Преобразованное значение или null</returns>
     public DateTime? ToNValue(string s, int defaultYear)
@@ -775,7 +932,7 @@ namespace FreeLibSet.Formatting
     #region Статические списки
 
     /// <summary>
-    /// Возвращает DateTimeFormatInfo.MonthNames без пустого 13-го месяца ("Январь", "Февраль", ..., "Декабрь")
+    /// Возвращает <see cref="DateTimeFormatInfo.MonthNames"/> без пустого 13-го месяца ("Январь", "Февраль", ..., "Декабрь")
     /// </summary>
     public static string[] MonthNames12
     {
@@ -786,8 +943,7 @@ namespace FreeLibSet.Formatting
         if (_MonthNames12 == null)
         {
           string[] a = new string[12];
-          for (int i = 0; i < 12; i++)
-            a[i] = CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[i];
+          Array.Copy(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames, 0, a, 0, 12);
           _MonthNames12 = a;
         }
         return _MonthNames12;
@@ -798,7 +954,7 @@ namespace FreeLibSet.Formatting
 
 
     /// <summary>
-    /// Возвращает DateTimeFormatInfo.MonthGenitiveNames без пустого 13-го месяца ("января", "февраля", ..., "декабря")
+    /// Возвращает <see cref="DateTimeFormatInfo.MonthGenitiveNames"/> без пустого 13-го месяца ("января", "февраля", ..., "декабря")
     /// </summary>
     public static string[] MonthGenitiveNames12
     {
@@ -809,8 +965,7 @@ namespace FreeLibSet.Formatting
         if (_MonthGenitiveNames12 == null)
         {
           string[] a = new string[12];
-          for (int i = 0; i < 12; i++)
-            a[i] = CultureInfo.CurrentCulture.DateTimeFormat.MonthGenitiveNames[i];
+          Array.Copy(CultureInfo.CurrentCulture.DateTimeFormat.MonthGenitiveNames, 0, a, 0, 12);
           _MonthGenitiveNames12 = a;
         }
         return _MonthGenitiveNames12;
