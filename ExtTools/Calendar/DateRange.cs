@@ -36,7 +36,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Создание интервала дат.
     /// Конечная дата не может быть меньше начальной.
-    /// Эта версия конструктора позволяет установить свойство Tag.
+    /// Эта версия конструктора позволяет установить свойство <see cref="Tag"/>.
     /// </summary>
     /// <param name="firstDate">Начальная дата диапазона</param>
     /// <param name="lastDate">Конечная дата диапазона</param>
@@ -51,7 +51,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Создает копию интервала дат с заданием нового значения свойства Tag
+    /// Создает копию интервала дат с заданием нового значения свойства <see cref="Tag"/>
     /// </summary>
     /// <param name="orgRange">Исходный диапазон дат</param>
     /// <param name="tag">Произвольные пользовательские данные</param>
@@ -115,9 +115,9 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Создает интервал из (полу)открытого интервала.
     /// Если обе даты заданы, то конечная дата не может быть меньше начальной.
-    /// Если начальная дата не задана, используется DateTime.MinValue (01.01.0001).
-    /// Если конечная дата не задана, используется DateTime.MaxValue.Date (31.12.9999).
-    /// Эта версия конструктора позволяет установить свойство Tag.
+    /// Если начальная дата не задана, используется <see cref="DateTime.MinValue"/> (01.01.0001).
+    /// Если конечная дата не задана, используется <see cref="DateTime.MaxValue"/>.Date (31.12.9999).
+    /// Эта версия конструктора позволяет установить свойство <see cref="Tag"/>.
     /// </summary>
     /// <param name="firstDate">Начальная дата диапазона</param>
     /// <param name="lastDate">Конечная дата диапазона</param>
@@ -130,8 +130,8 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Создает интервал из (полу)открытого интервала.
     /// Если обе даты заданы, то конечная дата не может быть меньше начальной.
-    /// Если начальная дата не задана, используется DateTime.MinValue (01.01.0001).
-    /// Если конечная дата не задана, используется DateTime.MaxValue.Date (31.12.9999).
+    /// Если начальная дата не задана, используется <see cref="DateTime.MinValue"/> (01.01.0001).
+    /// Если конечная дата не задана, используется <see cref="DateTime.MaxValue"/>.Date (31.12.9999).
     /// </summary>
     /// <param name="firstDate">Начальная дата диапазона</param>
     /// <param name="lastDate">Конечная дата диапазона</param>
@@ -258,8 +258,8 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Число целых месяцев в интервале. Вычисление по правилам для функции Excel DATEDIF() при mode="m" (с учетом того, что в Excel надо добавлять 1 день).
-    /// В отличие от свойства Months, не учитывается наличие полных месяцев.
-    /// Например, для интервала 28.02.2022-28.02.2022, свойство Months=2, а SimpleMonths=1
+    /// В отличие от свойства <see cref="Months"/>, не учитывается наличие полных месяцев.
+    /// Например, для интервала 28.02.2022-28.02.2022, свойство <see cref="Months"/>=2, а <see cref="SimpleMonths"/>=1
     /// </summary>
     public int SimpleMonths
     {
@@ -305,7 +305,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Создает объект MinMaxDateTime, равный текущему интервалу
+    /// Создает объект <see cref="MinMax{DateTime}"/>, равный текущему интервалу
     /// </summary>
     public MinMax<DateTime> MinMaxDate
     {
@@ -319,7 +319,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Создает объект MinMaxInt, соответствующий годам в текущем интервале
+    /// Создает объект <see cref="MinMax{Int}"/> , соответствующий годам в текущем интервале
     /// </summary>
     public MinMax<int> MinMaxYear
     {
@@ -351,7 +351,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Пустой интервал дат.
-    /// В этот интервал не входит ни одна дата, то есть Contains() всегда возвращает false
+    /// В этот интервал не входит ни одна дата, то есть <see cref="Contains(DateTime)"/> всегда возвращает false
     /// </summary>
     public static readonly DateRange Empty = new DateRange();
 
@@ -365,7 +365,7 @@ namespace FreeLibSet.Calendar
     #region Методы
 
     /// <summary>
-    /// Возвращает текстовое представление интервала дат и поля Tag, если оно задано
+    /// Возвращает текстовое представление интервала дат и свойсьва <see cref="Tag"/>, если оно задано
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -392,7 +392,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Корректирует дату <paramref name="date"/>, если она не попадает в диапазон.
-    /// Если IsEmpty=true, текущая дата не меняется
+    /// Если <see cref="IsEmpty"/>=true, текущая дата не меняется
     /// </summary>
     /// <param name="date">Проверяемая/корректируемая дата</param>
     public void DateToRange(ref DateTime date)
@@ -414,7 +414,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Возвращает объединенный интервал дат, в который полностью входят оба исходных интервала.
     /// Если первый или второй интервал пустой, возвращается другой интервал.
-    /// Свойство Tag копируется из первого интервала.
+    /// Свойство <see cref="Tag"/> копируется из первого интервала.
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -439,7 +439,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Сдвигает интервал на заданное число дней.
-    /// Если <paramref name="r1"/>IsEmpty=true, выбрасывается исключение.
+    /// Если <paramref name="r1"/>.IsEmpty=true, выбрасывается исключение.
     /// </summary>
     /// <param name="r1">Исходный интервал</param>
     /// <param name="days">Сдвиг в днях (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
@@ -454,7 +454,7 @@ namespace FreeLibSet.Calendar
     /// Сдвигает интервал на заданное число дней.
     /// </summary>
     /// <param name="r1">Исходный интервал</param>
-    /// <param name="delta">Сдвиг в днях. Берется свойство TimeSpan.Days (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
+    /// <param name="delta">Сдвиг в днях. Берется свойство <see cref="TimeSpan.Days"/> (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
     /// <returns>Новый интервал</returns>
     public static DateRange operator +(DateRange r1, TimeSpan delta)
     {
@@ -463,7 +463,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Сдвигает интервал на заданное число дней в обратную сторону.
-    /// Если <paramref name="r1"/>IsEmpty=true, выбрасывается исключение.
+    /// Если <paramref name="r1"/>.IsEmpty=true, выбрасывается исключение.
     /// </summary>
     /// <param name="r1">Исходный интервал</param>
     /// <param name="days">Сдвиг в днях (положительное значение - сдвиг назад, отрицательное - вперед, 0 - нет сдвига)</param>
@@ -478,7 +478,7 @@ namespace FreeLibSet.Calendar
     /// Сдвигает интервал на заданное число дней в обратную сторону.
     /// </summary>
     /// <param name="r1">Исходный интервал</param>
-    /// <param name="delta">Сдвиг в днях Берется свойство TimeSpan.Days (положительное значение - сдвиг назад, отрицательное - вперед, 0 - нет сдвига)</param>
+    /// <param name="delta">Сдвиг в днях Берется свойство <see cref="TimeSpan.Days"/> (положительное значение - сдвиг назад, отрицательное - вперед, 0 - нет сдвига)</param>
     /// <returns>Новый интервал</returns>
     public static DateRange operator -(DateRange r1, TimeSpan delta)
     {
@@ -502,7 +502,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Сдвиг интервала на указанное число месяцев.
-    /// Если текущий интервал задает полные месяцы (AreWholeMonths=true),
+    /// Если текущий интервал задает полные месяцы (<see cref="AreWholeMonths"/>=true),
     /// то и конечный интервал будет задавать полные месяцы.
     /// Иначе делается попытка получить даты с тем же днем месяца.
     /// 
@@ -512,7 +512,7 @@ namespace FreeLibSet.Calendar
     /// Неаддитивность происходит при переходе от неполномесячного интервала к интервалу с полными месяцами.
     /// Операции над интервалами с целыми месяцами всегда аддитивны.
     /// 
-    /// Если IsEmpty=true, выбрасывается исключение.
+    /// Если <see cref="IsEmpty"/>=true, выбрасывается исключение.
     /// </summary>                                               
     /// <param name="months">Сдвиг в месяцах (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
     /// <returns>Сдвинутый интервал</returns>
@@ -541,7 +541,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Сдвиг интервала на указанное число лет.
-    /// Если текущий интервал задает полные месяцы (AreWholeMonths=true),
+    /// Если текущий интервал задает полные месяцы (<see cref="AreWholeMonths"/>=true),
     /// то и конечный интервал будет задавать полные месяцы.
     /// Из-за этого операция сдвига в некоторых случаях может быть неаддитивной.
     /// Сдвиг интервала {01.02.2016-28.02.2016} на 4 года: {01.02.2020-28.02.2020}
@@ -549,7 +549,7 @@ namespace FreeLibSet.Calendar
     /// Неаддитивность происходит при переходе от неполномесячного интервала к интервалу с полными месяцами.
     /// Операции над интервалами с целыми месяцами всегда аддитивны.
     /// 
-    /// Если IsEmpty=true, выбрасывается исключение.
+    /// Если <see cref="IsEmpty"/>=true, выбрасывается исключение.
     /// </summary>                                               
     /// <param name="years">Сдвиг в годах (положительное значение - сдвиг вперед, отрицательное - назад, 0 - нет сдвига)</param>
     /// <returns>Сдвинутый интервал</returns>
@@ -560,7 +560,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Сдвиг интервала на указанное число периодов вперед
-    /// Если интервал <paramref name="r1"/> задает полные месяцы (AreWholeMonths=true),
+    /// Если интервал <paramref name="r1"/> задает полные месяцы (<see cref="AreWholeMonths"/>=true),
     /// то и конечный интервал будет задавать полные месяцы.
     /// Иначе сдвиг выполняется на количество дней в интервале <paramref name="r1"/>.Days.
     /// 
@@ -586,7 +586,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Сдвиг интервала на указанное число периодов назад
-    /// Если интервал <paramref name="r1"/> задает полные месяцы (AreWholeMonths=true),
+    /// Если интервал <paramref name="r1"/> задает полные месяцы (<see cref="AreWholeMonths"/>=true),
     /// то и конечный интервал будет задавать полные месяцы.
     /// Иначе сдвиг выполняется на количество дней в интервале <paramref name="r1"/>.Days.
     /// Из-за этого операция сдвига не аддивтивна.
@@ -610,9 +610,9 @@ namespace FreeLibSet.Calendar
     #region Объединение и пересечение периодов
 
     /// <summary>
-    /// Возвращает интервал, включающие в себя и r1 и r2 (расширение интервалов).
+    /// Возвращает интервал, включающие в себя и <paramref name="r1"/> и <paramref name="r2"/> (расширение интервалов).
     /// Операция применима к любым двум интервалам.
-    /// Интервалы r1 и r2 равноправны. Поле Tag берется из первого интервала
+    /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. Свойство <see cref="Tag"/> берется из первого интервала
     /// Если первый или второй интервал пустые, то возвращается пустой интервал.
     /// </summary>
     /// <param name="r1">Первый интервал</param>
@@ -628,9 +628,9 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает интервал, в который входит пересечение интервалов  r1 и r2
-    /// Если интервалы не пересекаются, вызывается исключение InvalidOperationException
-    /// Интервалы r1 и r2 равноправны. Поле Tag берется из первого интервала.
+    /// Возвращает интервал, в который входит пересечение интервалов  <paramref name="r1"/> и <paramref name="r2"/>
+    /// Если интервалы не пересекаются, вызывается исключение <see cref="InvalidOperationException"/>.
+    /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. Свойство <see cref="Tag"/> берется из первого интервала.
     /// Если первый или второй интервал пустые, то возвращается пустой интервал.
     /// </summary>
     /// <param name="r1">Первый интервал</param>
@@ -647,9 +647,9 @@ namespace FreeLibSet.Calendar
 
 
     /// <summary>
-    /// Возвращает интервал, в который входит пересечение интервалов  r1 и r2
+    /// Возвращает интервал, в который входит пересечение интервалов  <paramref name="r1"/> и <paramref name="r2"/>
     /// Если интервалы не пересекаются, возвращается пустой диапазон (в отличие от оператора "И")
-    /// Интервалы r1 и r2 равноправны. Поле Tag берется из первого интервала
+    /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. Свойство <see cref="Tag"/> берется из первого интервала
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -671,7 +671,7 @@ namespace FreeLibSet.Calendar
     /// Возвращает true, если два интервала пересекаются (имеют хотя бы один общий день)
     /// Такая проверка может понадобиться, например, перед вычислением пересечения
     /// интервалов оператором "И"
-    /// Интервалы r1 и r2 равноправны. 
+    /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. 
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -690,7 +690,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Разделяет интервал на один или более периодов с границами по годам
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Список интервалов</returns>
     public DateRangeList SplitIntoYears()
     {
       DateRangeList lst = new DateRangeList();
@@ -711,7 +711,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Разделяет интервал на один или более периодов с границами по месяцам
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Список интервалов</returns>
     public DateRangeList SplitIntoMonths()
     {
       DateRangeList lst = new DateRangeList();
@@ -736,7 +736,7 @@ namespace FreeLibSet.Calendar
     #region Сравнение интервалов
 
     /// <summary>
-    /// Возвращает true, если интервалы совпадают. Поле Tag не участвует в сравнении
+    /// Возвращает true, если интервалы совпадают. Свойство <see cref="Tag"/> не участвует в сравнении
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -747,7 +747,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает true, если интервалы различаются. Поле Tag не участвует в сравнении
+    /// Возвращает true, если интервалы различаются. Свойство <see cref="Tag"/> не участвует в сравнении
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -783,7 +783,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Хэш-код для коллекций
     /// </summary>
-    /// <returns>FirstDate.GetHashCode()</returns>
+    /// <returns><see cref="FirstDate"/>.GetHashCode()</returns>
     public override int GetHashCode()
     {
       return FirstDate.GetHashCode();
@@ -916,7 +916,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Получить диапазон из списка по индексу
     /// </summary>
-    /// <param name="index">Индекс от 0 до (Count-1)</param>
+    /// <param name="index">Индекс от 0 до (<see cref="Count"/>-1)</param>
     /// <returns></returns>
     public DateRange this[int index] { get { return _List[index]; } }
 
@@ -965,7 +965,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает MinMaxDateTime для списка, куда входит минимальная и максимальная дата
+    /// Возвращает <see cref="MinMax{DateTime}"/> для списка, куда входит минимальная и максимальная дата
     /// Возвращает пустой объект, если список интервалов пустой.
     /// </summary>
     public MinMax<DateTime> MinMaxDate
@@ -980,7 +980,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает MinMaxInt для минимального и максимального года в списке.
+    /// Возвращает <see cref="MinMax{Int32}"/> для минимального и максимального года в списке.
     /// Возвращает пустой объект, если список интервалов пустой.
     /// </summary>
     public MinMax<Int32> MinMaxYear
@@ -1013,7 +1013,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1072,7 +1072,7 @@ namespace FreeLibSet.Calendar
     /// существующей. То есть, метод может использоваться только для последовательного
     /// заполнения интервала дат
     /// 
-    /// Этот метод является устаревшим. Используйте Add()
+    /// Этот метод является устаревшим. Используйте <see cref="Add(DateRange)"/>
     /// </summary>
     /// <param name="firstDate">Начальная дата диапазона</param>
     /// <param name="lastDate">Конечная дата диапазона</param>
@@ -1093,7 +1093,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Найти индекс интервала, в который входит дата.
-    /// Возвращает -1, если дата не входит ни в один интервал
+    /// Возвращает (-1), если дата не входит ни в один интервал
     /// </summary>
     /// <param name="date">Проверяемая дата</param>
     /// <returns>Индекс найденного диапазона в списке</returns>
@@ -1188,7 +1188,7 @@ namespace FreeLibSet.Calendar
     /// Удалить (вырезать) интервал из списка
     /// Полностью пересекающиеся интервалы удаляются, а частично пересекающиеся -
     /// обрезаются сверху и снизу.
-    /// Поле Tag вычитаемого интевала <paramref name="range"/> нигде не используется.
+    /// Свойство <see cref="DateRange.Tag"/> вычитаемого интервала <paramref name="range"/> нигде не используется.
     /// </summary>
     /// <param name="range">Удаляемый диапазон</param>
     public void Remove(DateRange range)
@@ -1293,7 +1293,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Разбиение интервала на 2, если указанная дата попадает в какой-нибудь
-    /// интервал. При разбиении интервала поле Tag копируется из исходного DateRange в два
+    /// интервал. При разбиении интервала свойство <see cref="DateRange.Tag"/> копируется из исходного <see cref="DateRange"/> в два
     /// новых.
     /// Определено, что при разбиении <paramref name="date"/> задает конец первого интервала. Начало второго интервала - на один день больше.
     /// Например, если есть интервал {01.01.2021-31.01.2021} и дата равна 15.01.2021, то после разбиения будет {01.01.2021-15.01.2021},{16.01.2021-31.01.2021}.
@@ -1360,7 +1360,7 @@ namespace FreeLibSet.Calendar
     /// Объединение соседних интервалов
     /// Если есть два интервала и начальная дата второго на один день больше
     /// конечной даты первого, такие интервалы объединяются.
-    /// Поле Tag берется из более раннего интервала
+    /// Свойство <see cref="DateRange.Tag"/> берется из более раннего интервала
     /// </summary>
     public void Merge()
     {
@@ -1371,8 +1371,8 @@ namespace FreeLibSet.Calendar
     /// Объединение соседних интервалов
     /// Если есть два интервала и начальная дата второго на один день больше
     /// конечной даты первого, такие интервалы объединяются.
-    /// Если задано EqualTags=true, то объединение выполняется, только если поля
-    /// Tag совпадают. Для сравнения Tag используется метод object.Equals()
+    /// Если задано <paramref name="equalTags"/> =true, то объединение выполняется, только если свойства
+    /// <see cref="DateRange.Tag"/> совпадают. Для сравнения Tag используется метод <see cref="Object.Equals(object, object)"/>.
     /// </summary>
     /// <param name="equalTags">true - объединяются только диапазоны с одинаковыми Tag. false - поле Tag не учитывается и берется из более раннего диапазона</param>
     public void Merge(bool equalTags)
@@ -1511,7 +1511,7 @@ namespace FreeLibSet.Calendar
     #region ICloneable Members
 
     /// <summary>
-    /// Возвращает копию списка со сброшенным свойством IsReadOnly
+    /// Возвращает копию списка со сброшенным свойством <see cref="IsReadOnly"/>
     /// </summary>
     /// <returns></returns>
     public DateRangeList Clone()

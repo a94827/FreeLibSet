@@ -203,7 +203,7 @@ namespace FreeLibSet.Forms
         CurrentStep.BaseProvider.Validate();
       }
       panMain.Focus(); // добавлен 09.08.2011
-      // Активируем первый "полезный" управляющий элемент, иначе - кнопку "вперед"
+                       // Активируем первый "полезный" управляющий элемент, иначе - кнопку "вперед"
       panMain.SelectNextControl(null, true, true, true, false);
       if (!panMain.ContainsFocus)
       {
@@ -563,8 +563,9 @@ namespace FreeLibSet.Forms
     /// Заголовок окна. 
     /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
-    public string Title {
-      get { return _Title??String.Empty; }
+    public string Title
+    {
+      get { return _Title ?? String.Empty; }
       set
       {
         CheckNotStarted();
@@ -580,7 +581,8 @@ namespace FreeLibSet.Forms
     /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
     public bool ShowImage
-    { get { return _ShowImage; }
+    {
+      get { return _ShowImage; }
       set
       {
         CheckNotStarted();
@@ -595,7 +597,8 @@ namespace FreeLibSet.Forms
     /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
     public bool Sizeable
-    { get { return _Sizeable; }
+    {
+      get { return _Sizeable; }
       set
       {
         CheckNotStarted();
@@ -611,7 +614,8 @@ namespace FreeLibSet.Forms
     /// Свойство можно устанавливать только до запуска мастера.
     /// </summary>
     public string ImageKey
-    { get { return _ImageKey ?? String.Empty; }
+    {
+      get { return _ImageKey ?? String.Empty; }
       set
       {
         CheckNotStarted();
@@ -642,7 +646,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public string ConfigSectionName
     {
-      get { return _ConfigSectionName??String.Empty; }
+      get { return _ConfigSectionName ?? String.Empty; }
       set
       {
         CheckNotStarted();
@@ -801,7 +805,7 @@ namespace FreeLibSet.Forms
 
       return BeginTempPage(new string[] { item });
     }
-                
+
     /// <summary>
     /// Создать временную страницу с закладкой
     /// </summary>
@@ -852,9 +856,9 @@ namespace FreeLibSet.Forms
 
     ISplash ISplashStack.Splash
     {
-      get 
+      get
       {
-        WizardSplashPage page=TempPage as WizardSplashPage ;
+        WizardSplashPage page = TempPage as WizardSplashPage;
         if (TempPage == null)
           return null;
         else
@@ -1284,12 +1288,17 @@ namespace FreeLibSet.Forms
       get { return _HelpContext; }
       set
       {
-        if (Wizard != null)
-          throw new InvalidOperationException("Свойство может быть установлено только до присоединения шага к мастеру");
+        CheckNotAdded();
         _HelpContext = value;
       }
     }
     private string _HelpContext;
+
+    private void CheckNotAdded()
+    {
+      if (Wizard != null)
+        throw new InvalidOperationException("Свойство может быть установлено только до присоединения шага к мастеру");
+    }
 
     /// <summary>
     /// Произвольные пользовательские данные
@@ -1318,6 +1327,84 @@ namespace FreeLibSet.Forms
       }
     }
 
+    /// <summary>
+    /// Возвращает следующий шаг мастера в стеке.
+    /// Если шаг является последним в списке или еще не попал в стек, возвращается null.
+    /// Это свойство вряд-ли полезно для использования в прикладном коде.
+    /// </summary>
+    public WizardStep NextStep
+    {
+      get
+      {
+        if (_Wizard == null)
+          return null;
+        int p = _Wizard.Steps.IndexOf(this);
+        if (p >= 0 && p < (_Wizard.Steps.Count - 1))
+          return _Wizard.Steps[p + 1];
+        else
+          return null;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает предыдущий шаг мастера в стеке.
+    /// Если шаг является первым в списке или еще не попал в стек, возвращается null.
+    /// Это свойство вряд-ли полезно для использования в прикладном коде.
+    /// </summary>
+    public WizardStep PrevStep
+    {
+      get
+      {
+        if (_Wizard == null)
+          return null;
+        int p = _Wizard.Steps.IndexOf(this);
+        if (p > 0)
+          return _Wizard.Steps[p - 1];
+        else
+          return null;
+      }
+    }
+
+    /// <summary>
+    /// Переопределенный заголовок для шага мастера.
+    /// Будет ли заголовок распространятся на следующие шаги определяется свойством <see cref="TitleForThisStepOnly"/>.
+    /// По умолчанию - пустая строка - использование основного заголовка <see cref="FreeLibSet.Forms.Wizard.Title"/> или заголовка от предыдущего шага.
+    /// При нажатии кнопки "Назад" или "зацикленном" переходе к предыдущему шагу, восстанавливается заголовок для этого шага.
+    /// </summary>
+    public string Title
+    {
+      get { return _Title ?? String.Empty; }
+      set
+      {
+        // можно CheckNotAdded();
+        _Title = value;
+      }
+    }
+    private string _Title;
+
+    /// <summary>
+    /// Если true, то свойство <see cref="Title"/> определяет заголовок только для текущего шага мастера, а для следующих шагов, если они не определяют свой
+    /// заголовок, будет использоваться основной заголовок <see cref="FreeLibSet.Forms.Wizard.Title"/>.
+    /// Если false (по умолчанию), то заголовок будет распространятся и на все следующие шаги мастера.
+    /// </summary>
+    public bool TitleForThisStepOnly
+    {
+      get { return _TitleForThisStepOnly; }
+      set
+      {
+        // можно CheckNotAdded();
+        _TitleForThisStepOnly = value;
+      }
+    }
+    private bool _TitleForThisStepOnly;
+
+    /// <summary>
+    /// Вычисленный заголовок
+    /// </summary>
+    private string _ActualTitle;
+
+    private bool _ActualTitleForThisStepOnly;
+
     #endregion
 
     #region События
@@ -1341,12 +1428,6 @@ namespace FreeLibSet.Forms
 
 #endif
 
-      if (!String.IsNullOrEmpty(HelpContext))
-        _Wizard.TheForm.efpForm.HelpContext = HelpContext;
-      else
-        _Wizard.TheForm.efpForm.HelpContext = _Wizard.HelpContext;
-
-
       if (BeginStep != null)
       {
         try
@@ -1359,6 +1440,37 @@ namespace FreeLibSet.Forms
           _Wizard.ShowException(e, "Инициализация очередного шага мастера");
         }
       }
+
+      if (!String.IsNullOrEmpty(HelpContext))
+        _Wizard.TheForm.efpForm.HelpContext = HelpContext;
+      else
+        _Wizard.TheForm.efpForm.HelpContext = _Wizard.HelpContext;
+
+      if (action == WizardAction.Next)
+      {
+        if (String.IsNullOrEmpty(Title))
+        {
+          WizardStep prevStep = this.PrevStep;
+          if (prevStep != null)
+          {
+            if (prevStep._ActualTitleForThisStepOnly)
+              prevStep = null;
+          }
+
+          if (prevStep == null)
+            _ActualTitle = _Wizard.Title;
+          else
+            _ActualTitle = prevStep._ActualTitle;
+
+          _ActualTitleForThisStepOnly = false;
+        }
+        else
+        {
+          _ActualTitle = Title;
+          _ActualTitleForThisStepOnly = TitleForThisStepOnly;
+        }
+      }
+      _Wizard.TheForm.Text = _ActualTitle;
     }
 
     /// <summary>

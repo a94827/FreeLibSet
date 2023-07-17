@@ -47,11 +47,12 @@
 			<p lang="en-US" align="center">347</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center"><span lang="ru-RU">13.07.2023</span></p>
+			<p lang="en-US" align="center"><span lang="ru-RU">13.07.2023-17.07.2023</span></p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">1. Методы FormatStringTools.ExpandDateTimeFormat(). GetDateFormatOrder() правильно обрабатывает международные форматы, например, "s". Учитывается возможность наличия текстовых фрагментов в строке и Escape-символов, как в ContainsDateTime(). Перегрузка с аргументом DateTimeFormatInfo.</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">2. Метод FormatStringTools.DecimalPlacesFromNumberFormat() не учитывал односимвольный формат "0". Для нечисловых форматов ошибочно возвращался 0, а не (-1).</span></p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">3. Метод FileTools.TestDirSlashedPath() выдается сообщение "XXX является файлом, а не каталогом, по аналогии с TestFilePath()"</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

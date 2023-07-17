@@ -170,6 +170,11 @@ namespace FreeLibSet.Forms
     /// "Вставить"
     /// </summary>
     void Paste();
+
+    /// <summary>
+    /// Команды локального меню
+    /// </summary>
+    new EFPTextBoxCommandItems CommandItems { get; }
   }
 
   /// <summary>
@@ -1208,7 +1213,6 @@ namespace FreeLibSet.Forms
     protected override void OnValidate()
     {
       base.OnValidate();
-      // На момент вызова свойство Control всегда установлено
 
       if (ValidateState == UIValidateState.Error)
         return;
@@ -2037,11 +2041,17 @@ namespace FreeLibSet.Forms
 
       if (!alwaysReadOnly)
       {
-        ciPaste = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Paste);
-        ciPaste.ShortCutToRightText();
-        ciPaste.GroupEnd = true;
-        ciPaste.Click += new EventHandler(Paste);
-        Add(ciPaste);
+        _PasteHandler = new EFPPasteHandler(this);
+        //this[EFPAppStdCommandItems.Paste].ShortCutToRightText();
+        this[EFPAppStdCommandItems.PasteSpecial].GroupEnd = true;
+        _PasteHandler.PasteApplied += InitEnabled; // не уверен, что нужно
+
+        EFPPasteFormat fmtText = new EFPPasteFormat(DataFormats.UnicodeText);
+        fmtText.AutoConvert = true;
+        fmtText.DisplayName = "Текст";
+        fmtText.TestFormat += new EFPTestDataObjectEventHandler(fmtText_TestFormat);
+        fmtText.Paste += new EFPPasteDataObjectEventHandler(fmtText_Paste);
+        _PasteHandler.Add(fmtText);
       }
       //ciDelete=new VisinleClientItem(MainMenu.Delete);
       //ciDelete.Click+=new EventHandler(Delete);
@@ -2203,16 +2213,6 @@ namespace FreeLibSet.Forms
     public IEFPSimpleTextBox Owner { get { return _Owner; } }
     private IEFPSimpleTextBox _Owner;
 
-    /*
-     * Лень делать
-    /// <summary>
-    /// Если свойство установить в true, то команда "Вставить" обрабатывает
-    /// формат буфера обмена "FileDrop"
-    /// Свойство устанавливается для полей ввода и комбоблоков выбора файлов и папок
-    /// </summary>
-    public bool UseFileName;
-     * */
-
     /// <summary>
     /// Установка свойств EFPCommandItem.Usage
     /// </summary>
@@ -2260,7 +2260,16 @@ namespace FreeLibSet.Forms
 
     #region Внутренняя реализация
 
-    private EFPCommandItem ciUndo, ciCut, ciCopy, ciPaste, /*ciDelete, */ciSelectAll;
+    private EFPCommandItem ciUndo, ciCut, ciCopy, /*ciDelete, */ciSelectAll;
+    
+    /// <summary>
+    /// Обработчик для команды "Вставить".
+    /// Если элемент предназначен исключительно только для чтения, свойство возвращает null.
+    /// По умолчанию поддерживается только вставка текста
+    /// </summary>
+    public EFPPasteHandler PasteHandler { get { return _PasteHandler; } }
+    private EFPPasteHandler _PasteHandler;
+
     private EFPCommandItem ciCase;
     private EFPCommandItem ciUpperCase, ciLowerCase, ciChangeCase, ciRusLat;
     private EFPCommandItem ciNewLine;
@@ -2335,8 +2344,8 @@ namespace FreeLibSet.Forms
       if (ciCopy != null)
         ciCopy.Enabled = (selectionLength > 0) &&
           (!isPasswordInput); // 24.01.2019
-      if (ciPaste != null)
-        ciPaste.Enabled = Owner.Editable; // !!! проверка буфера обмена
+      if (PasteHandler != null)
+        PasteHandler.Enabled = Owner.Editable; 
       //ciDelete.EnabledEx=((!Control.DataReadOnly) && Control.SelectionLength>0);
       ciSelectAll.Enabled = (selectionLength < textLength);
       if (ciCase != null)
@@ -2413,48 +2422,25 @@ namespace FreeLibSet.Forms
       InitEnabled();
     }
 
-    private void Paste(object sender, EventArgs args)
+    private void fmtText_TestFormat(object sender, EFPTestDataObjectEventArgs args)
     {
-      string s = EFPApp.Clipboard.GetText();
-      if (EFPApp.Clipboard.HasError)
-        return;
-      if (!String.IsNullOrEmpty(s))
+    }
+
+
+    private void fmtText_Paste(object sender, EFPPasteDataObjectEventArgs args)
+    {
+      string s = args.GetData() as string;
+      if (String.IsNullOrEmpty(s))
+        EFPApp.ShowTempMessage("Буфер обмена не содержит текста");
+      else
       {
         if (Owner is IEFPTextBox)
           ((IEFPTextBox)Owner).Paste();
         else
           Owner.SelectedText = s;
-
-        InitEnabled();
-        return;
       }
-
-      /*
-      if (UseFileName)
-      {
-        string[] FileNames = Clipboard.GetData(DataFormats.FileDrop) as string[];
-        PasteFileNames(FileNames);
-      }
-       * */
-
-      EFPApp.ShowTempMessage("Буфер обмена не содержит текста");
     }
 
-    /*
-    private void PasteFileNames(string[] FileNames)
-    {
-      if (FileNames == null)
-        return;
-
-      if (FileNames.Length != 1)
-      {
-        EFPApp.ShowTempMessage("Поддерживается вставка только одного файла");
-        return;
-      }
-
-      Control.Text = FileNames[0];
-    }
-     * */
 
     //private void Delete(object Sender, EventArgs Args)
     //{

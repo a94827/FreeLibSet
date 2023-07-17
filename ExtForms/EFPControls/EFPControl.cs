@@ -265,6 +265,20 @@ namespace FreeLibSet.Forms
     ICollection<EFPUpdateByTimeHandler> UpdateByTimeHandlers { get; }
 
     /// <summary>
+    /// Событие вызывается из обработчика события <see cref="Control.Enter"/> перед выполнением стандартных действий.
+    /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Enter"/>.
+    /// </summary>
+    event EventHandler Enter;
+
+    /// <summary>
+    /// Событие вызывается из обработчика события <see cref="Control.Leave"/> перед выполнением стандартных действий.
+    /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Leave"/>.
+    /// </summary>
+    event EventHandler Leave;
+
+    /// <summary>
     /// Произвольные пользовательские данные
     /// </summary>
     object Tag { get; set; }
@@ -1639,6 +1653,9 @@ namespace FreeLibSet.Forms
 
       try
       {
+        if (Enter != null)
+          Enter(this, EventArgs.Empty);
+
         // 21.08.2015
         // Событие Enter может возникнуть до установки Visible=true
         UpdateFormProviderState();
@@ -1655,14 +1672,32 @@ namespace FreeLibSet.Forms
         _IdleValidationRequired = true;
     }
 
+    /// <summary>
+    /// Событие вызывается из обработчика события <see cref="Control.Enter"/> перед выполнением стандартных действий.
+    /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Enter"/>.
+    /// </summary>
+    public event EventHandler Enter;
+
     private void Control_Leave(object sender, EventArgs args)
     {
       _ControlHasFocus = false;
+
+      if (Leave != null)
+        Leave(this, EventArgs.Empty);
+
 
       if (ValidateWhenFocusChanged)
         _IdleValidationRequired = true;
       UpdateCommandItemsActive();
     }
+
+    /// <summary>
+    /// Событие вызывается из обработчика события <see cref="Control.Leave"/> перед выполнением стандартных действий.
+    /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Leave"/>.
+    /// </summary>
+    public event EventHandler Leave;
 
     private bool _ContextMenuWasInit;
 

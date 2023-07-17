@@ -504,7 +504,7 @@ namespace FreeLibSet.IO
     #region Режим FormatOnly
 
     /// <summary>
-    /// Проверка имени каталога, завершающегося обратной чертой
+    /// Проверка имени каталога, завершающегося обратной чертой.
     /// Реальное существование каталога не проверяется.
     /// Перегрузка соответствует режиму <see cref="TestPathMode.FormatOnly"/>.
     /// Пустая строка считается ошибочной.
@@ -733,7 +733,10 @@ namespace FreeLibSet.IO
               return true;
             else
             {
-              errorText = "Не найден каталог \"" + new AbsPath(dirName).Path + "\"";
+              if (File.Exists(new AbsPath(dirName).Path))
+                errorText = "\"" + new AbsPath(dirName).Path + "\" является файлом, а не каталогом"; // 17.07.2023
+              else
+                errorText = "Не найден каталог \"" + new AbsPath(dirName).Path + "\"";
               return false;
             }
           }

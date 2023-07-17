@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms
   [Obsolete("Используйте класс EFPHistComboBox", false)]
   public class EFPFolderHistComboBox : EFPHistComboBox
   {
-    #region Конструктор
+  #region Конструктор
 
     /// <summary>
     /// Создает провайдер
@@ -39,9 +39,9 @@ namespace FreeLibSet.Forms
     {
     }
 
-    #endregion
+  #endregion
 
-    #region Переопределенные методы
+  #region Переопределенные методы
 
     /// <summary>
     /// Проверка введенного значения.
@@ -61,7 +61,7 @@ namespace FreeLibSet.Forms
         SetError("Недопустимый символ \"" + Text.Substring(p, 1) + "\" в позиции " + (p + 1).ToString());
     }
 
-    #endregion
+  #endregion
   }
 
   /// <summary>
@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms
   [Obsolete("Используйте класс EFPHistComboBox", false)]
   public class EFPFileHistComboBox : EFPHistComboBox
   {
-    #region Конструктор
+  #region Конструктор
 
     /// <summary>
     /// Создает провайдер
@@ -84,9 +84,9 @@ namespace FreeLibSet.Forms
     {
     }
 
-    #endregion
+  #endregion
 
-    #region Переопределенные методы
+  #region Переопределенные методы
 
     /// <summary>
     /// Проверка введенного значения.
@@ -121,12 +121,12 @@ namespace FreeLibSet.Forms
       }
     }
 
-    #endregion
+  #endregion
   }
 #endif
 
   /// <summary>
-  /// Базовый класс для EFPFilePathValidator и EFPFolderPathValidator
+  /// Базовый класс для <see cref="EFPFilePathValidator"/> и <see cref="EFPFolderPathValidator"/> 
   /// </summary>
   public abstract class EFPPathValidatorBase
   {
@@ -135,7 +135,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация объекта
     /// </summary>
-    /// <param name="controlProvider">Провайдер основного управляющего элемента (текстового поля или комбоблока). Не может быть</param>
+    /// <param name="controlProvider">Провайдер основного управляющего элемента (текстового поля или комбоблока). Не может быть null</param>
     public EFPPathValidatorBase(IEFPSimpleTextBox controlProvider)
     {
       if (controlProvider == null)
@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки.
-    /// Если свойство не установлено в явном виде, возвращает значение свойства AmbientPathValidateMode.
+    /// Если свойство не установлено в явном виде, возвращает значение свойства <see cref="AmbientPathValidateMode"/>.
     /// </summary>
     public TestPathMode PathValidateMode
     {
@@ -195,8 +195,8 @@ namespace FreeLibSet.Forms
     private TestPathMode? _PathValidateMode;
 
     /// <summary>
-    /// Режим проверки по умолчанию, используемый, если свойство PathValidateMode не установлено в явном виде.
-    /// Провайдеры кнопки "Обзор" EFPFileDialogMode и EFPFolderBrowseButton устанавливают это свойство, в зависимости
+    /// Режим проверки по умолчанию, используемый, если свойство <see cref="PathValidateMode"/> не установлено в явном виде.
+    /// Провайдеры кнопки "Обзор" <see cref="EFPFileDialogButton"/> и <see cref="EFPFolderBrowserButton"/> и  устанавливают это свойство, в зависимости
     /// от текущих значений других свойств.
     /// </summary>
     public TestPathMode AmbientPathValidateMode
@@ -218,7 +218,7 @@ namespace FreeLibSet.Forms
     private TestPathMode _AmbientPathValidateMode;
 
     /// <summary>
-    /// Сбрасывает свойство PathValidateMode в исходное состояние, равное AmbientPathValidateMode.
+    /// Сбрасывает свойство <see cref="PathValidateMode"/> в исходное состояние, равное <see cref="AmbientPathValidateMode"/>.
     /// </summary>
     public void ResetPathValidateMode()
     {
@@ -232,8 +232,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Выполняет проверку при установке свойств PathValidateMode и AmbientPathValidateMode.
-    /// Должен выбрасывать исключение, если устанавливается недопустимое значение
+    /// Выполняет проверку при установке свойств <see cref="PathValidateMode"/> и <see cref="AmbientPathValidateMode"/>.
+    /// Должен выбрасывать исключение, если устанавливается недопустимое значение.
     /// </summary>
     /// <param name="value">Проверяемое значение</param>
     protected virtual void CheckValidateMode(TestPathMode value)
@@ -280,6 +280,12 @@ namespace FreeLibSet.Forms
       if (PathValidateMode == TestPathMode.None)
         return;
 
+      if (_ControlProvider.BaseProvider.ValidateReason == EFPFormValidateReason.ValidateForm || _ControlProvider.BaseProvider.ValidateReason == EFPFormValidateReason.Closing)
+      {
+        if (PrepareText())
+          _LastValidatedText = null;
+      }
+
       if (_LastValidatedText != null)
       {
         if (_ControlProvider.BaseProvider.ValidateReason == EFPFormValidateReason.Unknown && _ControlProvider.Control.ContainsFocus)
@@ -304,12 +310,21 @@ namespace FreeLibSet.Forms
         }
       }
 
-      // Регион полная проверка
+      // Полная проверка
       _LastValidatedText = _ControlProvider.Text;
       if (Validate(_LastValidatedText, PathValidateMode, out _LastValidateMessage))
         _LastValidateMessage = String.Empty; // а не null;
       else
         _ControlProvider.SetError(_LastValidateMessage);
+    }
+
+    /// <summary>
+    /// Переопределяется для <see cref="EFPFolderPathValidator"/>
+    /// </summary>
+    /// <returns>true, если текст изменился</returns>
+    protected virtual bool PrepareText()
+    {
+      return false;
     }
 
     /// <summary>
@@ -326,7 +341,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Автономный объект для проверки текстового поля на правильность ввода пути к файлу.
-  /// Обычно используется провайдер кнопки "Обзор" EFPFileDIalogButton, который использует внутреннюю копию валидатора.
+  /// Обычно используется провайдером кнопки "Обзор" <see cref="EFPFileDialogButton"/> , который использует внутреннюю копию валидатора.
   /// Прикладной код может использовать этот объект, если имеется поле ввода, но нет кнопки "Обзор".
   /// Может задаваться как абсолютный, так и относительный путь.
   /// Проверка формата пути выполняется при каждом изменении текста. 
@@ -339,7 +354,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает экземпляр валидатора и присоединяет его к текстовому полю.
-    /// Для поля добавляется обработчик события Validate и устанавливается свойство ValidateWhenFocusChanged=true.
+    /// Для поля добавляется обработчик события <see cref="EFPControlBase.Validating"/> и устанавливается свойство <see cref="EFPControlBase.ValidateWhenFocusChanged"/>=true.
     /// </summary>
     /// <param name="controlProvider">Провайдер основного управляющего элемента (текстового поля или комбоблока). 
     /// Не может быть null</param>
@@ -353,7 +368,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Вызывает EFPFileTools.TestFilePath() для проверки
+    /// Вызывает <see cref="EFPFileTools.TestFilePath(string, TestPathMode, out string)"/> для проверки
     /// </summary>
     /// <param name="text">Проверяемый путь</param>
     /// <param name="mode">Режим проверки</param>
@@ -369,13 +384,14 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Автономный объект для проверки текстового поля на правильность ввода пути к каталогу.
-  /// Обычно используется провайдер кнопки "Обзор" EFPFileDIalogButton, который использует внутреннюю копию валидатора.
+  /// Обычно используется провайдером кнопки "Обзор" <see cref="EFPFolderBrowserButton"/>, который использует внутреннюю копию валидатора.
   /// Прикладной код может использовать этот объект, если имеется поле ввода, но нет кнопки "Обзор".
   /// Может задаваться как абсолютный, так и относительный путь.
-  /// Имя каталога в Windows должно заканчиваться обратной косой чертой.
+  /// Имя каталога в Windows должно заканчиваться символом обратной косой черты <see cref="System.IO.Path.DirectorySeparatorChar"/>.
   /// Проверка формата пути выполняется при каждом изменении текста. 
   /// Проверка существования пути или его части выполняется только при открытии/закрытии формы или при получении/потере
   /// фокуса ввода элементом. 
+  /// Если пользователь ввел текст без завершающего символа, то символ добавляется автоматически при проверке формы или когда фокус ввода покидает поле.
   /// </summary>
   public class EFPFolderPathValidator : EFPPathValidatorBase
   {
@@ -383,13 +399,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает экземпляр валидатора и присоединяет его к текстовому полю.
-    /// Для поля добавляется обработчик события Validate и устанавливается свойство ValidateWhenFocusChanged=true.
+    /// Для поля добавляется обработчик события <see cref="EFPControlBase.Validating"/> и устанавливается свойство <see cref="EFPControlBase.ValidateWhenFocusChanged"/>=true.
     /// </summary>
     /// <param name="controlProvider">Провайдер основного управляющего элемента (текстового поля или комбоблока). 
     /// Не может быть null</param>
     public EFPFolderPathValidator(IEFPSimpleTextBox controlProvider)
       : base(controlProvider)
     {
+      controlProvider.Leave += ControlProvider_Leave;
     }
 
     #endregion
@@ -397,7 +414,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Выбрасывает исключение для <paramref name="value"/>=FileExists.
+    /// Выбрасывает исключение для <paramref name="value"/>=<see cref="TestPathMode.FileExists"/>.
     /// </summary>
     /// <param name="value">Проверяемый режим</param>
     protected override void CheckValidateMode(TestPathMode value)
@@ -407,8 +424,42 @@ namespace FreeLibSet.Forms
         throw new ArgumentException("Режим проверки " + value.ToString() + " не допускается для проверки каталога");
     }
 
+    private void ControlProvider_Leave(object sender, EventArgs args)
+    {
+      PrepareText();
+    }
+
     /// <summary>
-    /// Вызывает EFPFileTools.TestDirSlashedPath() для проверки
+    /// Если пользователь ввел или вставил из буфера обмена путь без слэша, то проверяем, не будет ли формат пути правильным, если добавить слэш.
+    /// Если добавление решает проблему, то меняем значение.
+    /// </summary>
+    /// <returns>true, если текст изменился</returns>
+    protected override bool PrepareText()
+    {
+      bool res = false;
+      try
+      {
+        string s = ControlProvider.Text;
+        if (!String.IsNullOrEmpty(s))
+        {
+          if (s[s.Length - 1] != Path.DirectorySeparatorChar)
+          {
+            s += Path.DirectorySeparatorChar;
+            string errorText;
+            if (EFPFileTools.TestDirSlashedPath(s, TestPathMode.FormatOnly, out errorText))
+            {
+              ControlProvider.Text = s;
+              res = true;
+            }
+          }
+        }
+      }
+      catch { }
+      return res;
+    }
+
+    /// <summary>
+    /// Вызывает <see cref="EFPFileTools.TestDirSlashedPath(string, TestPathMode, out string)"/> для проверки
     /// </summary>
     /// <param name="text">Проверяемый путь</param>
     /// <param name="mode">Режим проверки</param>
@@ -424,10 +475,10 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Кнопка "Обзор" для выбора каталога, имя которого вводится в поле ввода или комбоблоке с историей.
-  /// Предполагается, что в текстовом поле, к которому присоединена кнопка, находится путь к каталогу, заканчивающийся обратной косой чертой (в Windows).
+  /// Предполагается, что в текстовом поле, к которому присоединена кнопка, находится путь к каталогу, заканчивающийся обратной косой чертой (<see cref="System.IO.Path.DirectorySeparatorChar"/>).
   /// Кнопка также может использоваться совместно с текстовым полем только для чтения, когда обработка каталога должна выполнятся 
   /// после выбора каталога, а не при закрытии формы.
-  /// Событие EFPButton.Click вызывается только после того, как пользователь выбрал файл.
+  /// Событие <see cref="EFPButton.Click"/> вызывается только после того, как пользователь выбрал каталог.
   /// </summary>
   public class EFPFolderBrowserButton : EFPButton
   {
@@ -437,7 +488,7 @@ namespace FreeLibSet.Forms
     /// Создает провайдер управляющего элемента кнопки.
     /// </summary>
     /// <param name="mainProvider">Провайдер основного управляющего элемента,
-    /// предназначенного для ввода пути. Обычно это EFPTextBox или EFPFolderHistComboBox</param>
+    /// предназначенного для ввода пути. Обычно это <see cref="EFPTextBox"/> или <see cref="EFPHistComboBox"/></param>
     /// <param name="control">Управляющий элемент - кнопка "Обзор"</param>
     public EFPFolderBrowserButton(IEFPTextBox mainProvider, Button control)
       : base(mainProvider.BaseProvider, control)
@@ -450,6 +501,19 @@ namespace FreeLibSet.Forms
 
       _PathValidator = new EFPFolderPathValidator(mainProvider);
       _PathValidator.AmbientPathValidateMode = TestPathMode.DirectoryExists;
+
+      InitDragDrop(mainProvider.Control);
+      InitDragDrop(this.Control);
+
+      if (mainProvider.CommandItems.PasteHandler != null)
+      {
+        EFPPasteFormat fmtFileDrop = new EFPPasteFormat(DataFormats.FileDrop);
+        fmtFileDrop.AutoConvert = false;
+        fmtFileDrop.DisplayName = "Ссылка на папку";
+        fmtFileDrop.TestFormat += FmtFileDrop_TestFormat;
+        fmtFileDrop.Paste += FmtFileDrop_Paste;
+        mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
+      }
     }
 
     #endregion
@@ -458,227 +522,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущий выбранный каталог.
-    /// Если свойство MainProvider.Text не определяет корректный путь, свойство возвращает AbsPath.Empty.
-    /// Свойство PathValidateMode не влияет на это свойство
-    /// </summary>
-    public AbsPath Path
-    {
-      get { return new AbsPath(MainProvider.Text); }
-      set 
-      { 
-        MainProvider.Text = value.SlashedPath;
-        if (_PathEx != null)
-          _PathEx.Value = value;
-      }
-    }
-
-    /// <summary>
-    /// Управляемое свойство для Path
-    /// </summary>
-    public DepValue<AbsPath> PathEx
-    {
-      get
-      {
-        InitPathEx();
-        return _PathEx;
-      }
-      set
-      {
-        InitPathEx();
-        _PathEx.Source = value;
-      }
-    }
-    private DepInput<AbsPath> _PathEx;
-
-    private void InitPathEx()
-    {
-      if (_PathEx == null)
-      {
-        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
-        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
-        MainProvider.TextEx.ValueChanged+=MainProvider_TextChanged;
-      }
-    }
-
-    /// <summary>
-    /// При изменениях свойства Text, свойство Path может оставаться без изменений (Empty).
-    /// Обратная установка свойства Text приводила бы пользователя в замешательство.
-    /// </summary>
-    private bool _InsideTextChanged;
-
-    private void MainProvider_TextChanged(object sender, EventArgs args)
-    {
-      _InsideTextChanged = true;
-      try
-      {
-        _PathEx.Value = Path;
-      }
-      finally
-      {
-        _InsideTextChanged = false;
-      }
-    }
-
-    private void PathEx_ValueChanged(object sender, EventArgs args)
-    {
-      if (!_InsideTextChanged)
-        Path = _PathEx.Value; // Свойство изменено из прикладного кода.
-    }
-
-    #endregion
-
-    #region Свойство IsNotEmptyEx
-
-    /// <summary>
-    /// Управляемое свойство, которое возвращает true, если Path.IsEmpty=false.
-    /// В отличие от MainProvider.IsEmpty, свойство будет возвращать false, если введенный текст не завершается обратной косой чертой или задан неправильный путь по другим причинам.
-    /// </summary>
-    public DepValue<bool> IsNotEmptyEx
-    {
-      get
-      { 
-        if (_IsNotEmptyEx==null)
-        {
-          _IsNotEmptyEx = new DepExpr1<bool, AbsPath>(PathEx, CalcIsNotEmpty);
-          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
-        }
-        return _IsNotEmptyEx;
-      }
-    }
-    private DepValue<bool> _IsNotEmptyEx;
-
-    private static bool CalcIsNotEmpty(AbsPath path)
-    {
-      return !path.IsEmpty;
-    }
-
-    #endregion
-
-    #region Прочие свойства
-
-    /// <summary>
-    /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
-    /// </summary>
-    public IEFPTextBox MainProvider { get { return _MainProvider; } }
-    private IEFPTextBox _MainProvider;
-
-    /// <summary>
-    /// Описание, появляющееся в блоке диалога выбора папки при нажатии кнопки
-    /// Если свойство не задано, то в качестве пояснения будет использовано
-    /// MainProvider.DisplayName
-    /// </summary>
-    public string Description { get { return _Description; } set { _Description = value; } }
-    private string _Description;
-
-    /// <summary>
-    /// Наличие кнопки "Создать папку" в блоке диалога
-    /// </summary>
-    public bool ShowNewFolderButton
-    {
-      get { return _ShowNewFolderButton; }
-      set
-      {
-        _ShowNewFolderButton = value;
-        _PathValidator.AmbientPathValidateMode = value ? TestPathMode.RootExists : TestPathMode.DirectoryExists;
-      }
-    }
-    private bool _ShowNewFolderButton;
-
-    #endregion
-
-    #region Проверка введенного текста
-
-    private EFPFolderPathValidator _PathValidator;
-
-    /// <summary>
-    /// Режим проверки введенного пути.
-    /// Значение по умолчанию зависит от свойства ShowNewFolderButton. При ShowNewFolderButton=true возвращает RootExists,
-    /// а при false - DirectoryExists
-    /// </summary>
-    public TestPathMode PathValidateMode
-    {
-      get { return _PathValidator.PathValidateMode; }
-      set { _PathValidator.PathValidateMode = value; }
-    }
-
-    /// <summary>
-    /// Сбрасывает свойство PathValidateMode в значение по умолчанию
-    /// </summary>
-    public void ResetPathValidateMode()
-    {
-      _PathValidator.ResetPathValidateMode();
-    }
-
-    #endregion
-
-    #region Обработчики
-
-    /// <summary>
-    /// Выводит стандартный блок диалога выбора каталога FolderBrowserDialog.
-    /// Если пользователь закрыл диалог кнопкой "ОК", устанавливается свойство MainProvider.Text.
-    /// Затем вызывается обработчик события EFPButton.Click.
-    /// </summary>
-    protected override void OnClick()
-    {
-      using (FolderBrowserDialog dlg = new FolderBrowserDialog())
-      {
-        if (String.IsNullOrEmpty(Description))
-          dlg.Description = MainProvider.DisplayName;
-        else
-          dlg.Description = Description;
-        dlg.ShowNewFolderButton = ShowNewFolderButton;
-        AbsPath dir = new AbsPath(MainProvider.Text);
-        dlg.SelectedPath = dir.Path;
-        if (EFPApp.ShowDialog(dlg) == DialogResult.OK)
-        {
-          AbsPath Path = new AbsPath(dlg.SelectedPath);
-          MainProvider.Text = Path.SlashedPath;
-          base.OnClick();
-        }
-      }
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Кнопка "Обзор" для выбора файла, имя которого вводится в поле ввода или комбоблоке с историей.
-  /// Кнопка также может использоваться совместно с текстовым полем только для чтения, когда обработка файла должна выполнятся 
-  /// после выбора файла, а не при закрытии формы.
-  /// Предполагается, что текстовое поле содержит полный путь к файлу.
-  /// Событие EFPButton.Click вызывается только после того, как пользователь выбрал файл.
-  /// </summary>
-  public class EFPFileDialogButton : EFPButton
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает провайдер управляющего элемента кнопки
-    /// </summary>
-    /// <param name="mainProvider">Провайдер основного управляющего элемента,
-    /// предназначенного для ввода пути. Обычно это EFPTextBox или EFPFileHistComboBox</param>
-    /// <param name="control">Управляющий элемент - кнопка "Обзор"</param>
-    public EFPFileDialogButton(IEFPTextBox mainProvider, Button control)
-      : base(mainProvider.BaseProvider, control)
-    {
-      _MainProvider = mainProvider;
-      SetMainImageKey("Open");
-      VisibleEx = mainProvider.VisibleEx;
-      EnabledEx = mainProvider.EnabledEx;
-      base.ToolTipText = "Выбор файла с помощью стандартного блока диалога Windows";
-
-      _PathValidator = new EFPFilePathValidator(mainProvider);
-      Mode = FileDialogMode.Read;
-    }
-
-    #endregion
-
-    #region Свойство Path
-
-    /// <summary>
-    /// Текущий выбранный файл.
-    /// Если свойство MainProvider.Text не определяет корректный путь, свойство возвращает AbsPath.Empty.
-    /// Свойство PathValidateMode не влияет на это свойство.
+    /// Если свойство <see cref="MainProvider"/>.Text не определяет корректный путь (с учетом возможного добавления символа <see cref="System.IO.Path.DirectorySeparatorChar"/> в конце строки), свойство возвращает <see cref="AbsPath.Empty"/>.
+    /// Свойство <see cref="PathValidateMode"/> не влияет на это свойство.
     /// </summary>
     public AbsPath Path
     {
@@ -692,7 +537,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для Path
+    /// Управляемое свойство для <see cref="Path"/>
     /// </summary>
     public DepValue<AbsPath> PathEx
     {
@@ -749,8 +594,8 @@ namespace FreeLibSet.Forms
     #region Свойство IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, которое возвращает true, если Path.IsEmpty=false.
-    /// В отличие от MainProvider.IsEmpty, свойство будет возвращать false, если введенный текст задает путь в неправильном формате.
+    /// Управляемое свойство, которое возвращает true, если <see cref="Path"/>.IsEmpty=false.
+    /// В отличие от <see cref="MainProvider"/>.IsEmpty, свойство будет возвращать false, если задан неправильный путь.
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -784,15 +629,342 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Описание, появляющееся в блоке диалога выбора папки при нажатии кнопки
     /// Если свойство не задано, то в качестве пояснения будет использовано
-    /// MainProvider.DisplayName
+    /// <see cref="MainProvider"/>.DisplayName
     /// </summary>
-    public string Title { get { return _Title; } set { _Title = value; } }
+    public string Description { get { return _Description ?? String.Empty; } set { _Description = value; } }
+    private string _Description;
+
+    /// <summary>
+    /// Наличие кнопки "Создать папку" в блоке диалога
+    /// </summary>
+    public bool ShowNewFolderButton
+    {
+      get { return _ShowNewFolderButton; }
+      set
+      {
+        _ShowNewFolderButton = value;
+        _PathValidator.AmbientPathValidateMode = value ? TestPathMode.RootExists : TestPathMode.DirectoryExists;
+      }
+    }
+    private bool _ShowNewFolderButton;
+
+    #endregion
+
+    #region Проверка введенного текста
+
+    private EFPFolderPathValidator _PathValidator;
+
+    /// <summary>
+    /// Режим проверки введенного пути.
+    /// Значение по умолчанию зависит от свойства <see cref="ShowNewFolderButton"/>. При <see cref="ShowNewFolderButton"/>=true возвращает <see cref="TestPathMode.RootExists"/>,
+    /// а при false - <see cref="TestPathMode.DirectoryExists"/>
+    /// </summary>
+    public TestPathMode PathValidateMode
+    {
+      get { return _PathValidator.PathValidateMode; }
+      set { _PathValidator.PathValidateMode = value; }
+    }
+
+    /// <summary>
+    /// Сбрасывает свойство <see cref="PathValidateMode"/> в значение по умолчанию
+    /// </summary>
+    public void ResetPathValidateMode()
+    {
+      _PathValidator.ResetPathValidateMode();
+    }
+
+    #endregion
+
+    #region Обработчики
+
+    /// <summary>
+    /// Выводит стандартный блок диалога выбора каталога <see cref="FolderBrowserDialog"/>.
+    /// Если пользователь закрыл диалог кнопкой "ОК", устанавливается свойство <see cref="MainProvider"/>.Text.
+    /// Затем вызывается обработчик события <see cref="EFPButton.Click"/>.
+    /// </summary>
+    protected override void OnClick()
+    {
+      using (FolderBrowserDialog dlg = new FolderBrowserDialog())
+      {
+        if (String.IsNullOrEmpty(Description))
+          dlg.Description = MainProvider.DisplayName;
+        else
+          dlg.Description = Description;
+        dlg.ShowNewFolderButton = ShowNewFolderButton;
+        AbsPath dir = new AbsPath(MainProvider.Text);
+        dlg.SelectedPath = dir.Path;
+        if (EFPApp.ShowDialog(dlg) == DialogResult.OK)
+        {
+          AbsPath Path = new AbsPath(dlg.SelectedPath);
+          MainProvider.Text = Path.SlashedPath;
+          base.OnClick();
+        }
+      }
+    }
+
+    #endregion
+
+    #region Drag-and-drop
+
+    private void InitDragDrop(Control control)
+    {
+      control.AllowDrop = true;
+      control.DragEnter += Control_DragEnter;
+      control.DragDrop += Control_DragDrop;
+    }
+
+    private void Control_DragEnter(object sender, DragEventArgs args)
+    {
+      try
+      {
+        if (args.Data.GetDataPresent(DataFormats.FileDrop))
+          args.Effect = DragDropEffects.Link;
+      }
+      catch { }
+    }
+
+    private void Control_DragDrop(object sender, DragEventArgs args)
+    {
+      try
+      {
+        DoControl_DragDrop(args);
+      }
+      catch (Exception e)
+      {
+        EFPApp.ShowTempMessage("Перетаскивание не удалось: " + e.Message);
+      }
+    }
+
+    private void DoControl_DragDrop(DragEventArgs args)
+    {
+      if (!args.Data.GetDataPresent(DataFormats.FileDrop))
+        return;
+
+      string[] a = (string[])(args.Data.GetData(DataFormats.FileDrop));
+      if (a.Length != 1)
+      {
+        EFPApp.ShowTempMessage("Можно перетащить только один каталог");
+        return;
+      }
+
+      AbsPath path = new AbsPath(a[0]);
+      string errorText;
+      if (!EFPFileTools.TestDirSlashedPath(path.SlashedPath,
+        TestPathMode.DirectoryExists, // всегда проверяем, что это каталог, а не файл, независимо от свойства PathValidateMode
+        out errorText))
+      {
+        EFPApp.ShowTempMessage(errorText);
+        return;
+      }
+
+      MainProvider.Text = path.SlashedPath;
+    }
+
+    #endregion
+
+    #region Буфер обмена
+
+    private void FmtFileDrop_TestFormat(object sender, EFPTestDataObjectEventArgs args)
+    {
+      args.DataImageKey = "WindowsExplorer";
+      args.Appliable = true;
+    }
+
+    private void FmtFileDrop_Paste(object sender, EFPPasteDataObjectEventArgs args)
+    {
+      string[] a = args.Data.GetData(DataFormats.FileDrop) as string[];
+      if (a == null)
+      {
+        EFPApp.ShowTempMessage("В буфере обмена нет ссылок");
+        return;
+      }
+      if (a.Length != 1)
+      {
+        EFPApp.ShowTempMessage("Можно вставить только один каталог");
+        return;
+      }
+
+      AbsPath path = new AbsPath(a[0]);
+      string errorText;
+      if (!EFPFileTools.TestDirSlashedPath(path.SlashedPath,
+        TestPathMode.DirectoryExists, // всегда проверяем, что это каталог, а не файл, независимо от свойства PathValidateMode
+        out errorText))
+      {
+        EFPApp.ShowTempMessage(errorText);
+        return;
+      }
+
+      MainProvider.Text = path.SlashedPath;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Кнопка "Обзор" для выбора файла, имя которого вводится в поле ввода или комбоблоке с историей.
+  /// Кнопка также может использоваться совместно с текстовым полем только для чтения, когда обработка файла должна выполнятся 
+  /// после выбора файла, а не при закрытии формы.
+  /// Предполагается, что текстовое поле содержит полный путь к файлу.
+  /// Событие <see cref="EFPButton.Click"/> вызывается только после того, как пользователь выбрал файл.
+  /// </summary>
+  public class EFPFileDialogButton : EFPButton
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает провайдер управляющего элемента кнопки
+    /// </summary>
+    /// <param name="mainProvider">Провайдер основного управляющего элемента,
+    /// предназначенного для ввода пути. Обычно это <see cref="EFPTextBox"/> или <see cref="EFPHistComboBox"/>. Не иожет быть null</param>
+    /// <param name="control">Управляющий элемент - кнопка "Обзор"</param>
+    public EFPFileDialogButton(IEFPTextBox mainProvider, Button control)
+      : base(mainProvider.BaseProvider, control)
+    {
+      _MainProvider = mainProvider;
+      SetMainImageKey("Open");
+      VisibleEx = mainProvider.VisibleEx;
+      EnabledEx = mainProvider.EnabledEx;
+      base.ToolTipText = "Выбор файла с помощью стандартного блока диалога Windows";
+
+      _PathValidator = new EFPFilePathValidator(mainProvider);
+      Mode = FileDialogMode.Read;
+
+      InitDragDrop(mainProvider.Control);
+      InitDragDrop(this.Control);
+
+      if (mainProvider.CommandItems.PasteHandler != null)
+      {
+        EFPPasteFormat fmtFileDrop = new EFPPasteFormat(DataFormats.FileDrop);
+        fmtFileDrop.AutoConvert = false;
+        fmtFileDrop.DisplayName = "Ссылка на файл";
+        fmtFileDrop.TestFormat += FmtFileDrop_TestFormat;
+        fmtFileDrop.Paste += FmtFileDrop_Paste;
+        mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
+      }
+    }
+
+    #endregion
+
+    #region Свойство Path
+
+    /// <summary>
+    /// Текущий выбранный файл.
+    /// Если свойство <see cref="MainProvider"/>.Text не определяет корректный путь, свойство возвращает <see cref="AbsPath.Empty"/>.
+    /// Свойство <see cref="PathValidateMode"/> не влияет на это свойство.
+    /// </summary>
+    public AbsPath Path
+    {
+      get { return new AbsPath(MainProvider.Text); }
+      set
+      {
+        MainProvider.Text = value.SlashedPath;
+        if (_PathEx != null)
+          _PathEx.Value = value;
+      }
+    }
+
+    /// <summary>
+    /// Управляемое свойство для <see cref="Path"/>
+    /// </summary>
+    public DepValue<AbsPath> PathEx
+    {
+      get
+      {
+        InitPathEx();
+        return _PathEx;
+      }
+      set
+      {
+        InitPathEx();
+        _PathEx.Source = value;
+      }
+    }
+    private DepInput<AbsPath> _PathEx;
+
+    private void InitPathEx()
+    {
+      if (_PathEx == null)
+      {
+        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
+        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
+        MainProvider.TextEx.ValueChanged += MainProvider_TextChanged;
+      }
+    }
+
+    /// <summary>
+    /// При изменениях свойства Text, свойство Path может оставаться без изменений (Empty).
+    /// Обратная установка свойства Text приводила бы пользователя в замешательство.
+    /// </summary>
+    private bool _InsideTextChanged;
+
+    private void MainProvider_TextChanged(object sender, EventArgs args)
+    {
+      _InsideTextChanged = true;
+      try
+      {
+        _PathEx.Value = Path;
+      }
+      finally
+      {
+        _InsideTextChanged = false;
+      }
+    }
+
+    private void PathEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (!_InsideTextChanged)
+        Path = _PathEx.Value; // Свойство изменено из прикладного кода.
+    }
+
+    #endregion
+
+    #region Свойство IsNotEmptyEx
+
+    /// <summary>
+    /// Управляемое свойство, которое возвращает true, если <see cref="Path"/>.IsEmpty=false.
+    /// В отличие от <see cref="MainProvider"/>.IsEmpty, свойство будет возвращать false, если введенный текст задает путь в неправильном формате.
+    /// </summary>
+    public DepValue<bool> IsNotEmptyEx
+    {
+      get
+      {
+        if (_IsNotEmptyEx == null)
+        {
+          _IsNotEmptyEx = new DepExpr1<bool, AbsPath>(PathEx, CalcIsNotEmpty);
+          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
+        }
+        return _IsNotEmptyEx;
+      }
+    }
+    private DepValue<bool> _IsNotEmptyEx;
+
+    private static bool CalcIsNotEmpty(AbsPath path)
+    {
+      return !path.IsEmpty;
+    }
+
+    #endregion
+
+    #region Прочие свойства
+
+    /// <summary>
+    /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
+    /// </summary>
+    public IEFPTextBox MainProvider { get { return _MainProvider; } }
+    private IEFPTextBox _MainProvider;
+
+    /// <summary>
+    /// Описание, появляющееся в блоке диалога выбора папки при нажатии кнопки
+    /// Если свойство не задано, то в качестве пояснения будет использовано
+    /// <see cref="MainProvider"/>.DisplayName
+    /// </summary>
+    public string Title { get { return _Title ?? String.Empty; } set { _Title = value; } }
     private string _Title;
 
     /// <summary>
     /// Значение для свойства Filter (с разделителями "|")
     /// </summary>
-    public string Filter { get { return _Filter; } set { _Filter = value; } }
+    public string Filter { get { return _Filter??String.Empty; } set { _Filter = value; } }
     private string _Filter;
 
     /// <summary>
@@ -811,9 +983,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Каталог.
-    /// При открытии диалога используется в качестве свойства FileDialog.InitialDirectory,
+    /// При открытии диалога используется в качестве свойства <see cref="FileDialog.InitialDirectory"/>,
     /// если в поле ввода не задано имя файла.
-    /// После того, как файл выбран в диалоге, содержит каталог, соответствующий FileDialog.FileName
+    /// После того, как файл выбран в диалоге, содержит каталог, соответствующий файлу <see cref="FileDialog.FileName"/>.
     /// </summary>
     public AbsPath Directory
     {
@@ -830,8 +1002,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки введенного пути.
-    /// Значение по умолчанию зависит от свойства Mode. При Mode=Write возвращает RootExists,
-    /// а при Read - FileExists
+    /// Значение по умолчанию зависит от свойства <see cref="Mode"/>. При <see cref="Mode"/>=<see cref="FileDialogMode.Write"/> возвращает <see cref="TestPathMode.RootExists"/>,
+    /// а при <see cref="FileDialogMode.Read"/> - <see cref="TestPathMode.FileExists"/>
     /// </summary>
     public TestPathMode PathValidateMode
     {
@@ -840,7 +1012,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Сбрасывает свойство PathValidateMode в значение по умолчанию
+    /// Сбрасывает свойство <see cref="PathValidateMode"/> в значение по умолчанию
     /// </summary>
     public void ResetPathValidateMode()
     {
@@ -852,10 +1024,10 @@ namespace FreeLibSet.Forms
     #region Обработчики
 
     /// <summary>
-    /// Выводит стандартный блок диалога выбора файла OpenFileDialog или SaveFileDialog,
-    /// в зависимости от свойства Mode. Свойство FileName устанавливается равным текущему значению в поле ввода.
-    /// Если диалог закрыт нажатием кнопки "ОК" (файл выбран пользователем), устанавливается свойство MainProvider.Text.
-    /// Затем вызывается обработчик события EFPButton.Click.
+    /// Выводит стандартный блок диалога выбора файла <see cref="OpenFileDialog"/> или <see cref="SaveFileDialog"/>,
+    /// в зависимости от свойства <see cref="Mode"/>. Свойство <see cref="FileDialog.FileName"/>  устанавливается равным текущему значению в поле ввода.
+    /// Если диалог закрыт нажатием кнопки "ОК" (файл выбран пользователем), устанавливается свойство <see cref="MainProvider"/>.Text.
+    /// Затем вызывается обработчик события <see cref="EFPButton.Click"/>.
     /// </summary>
     protected override void OnClick()
     {
@@ -896,15 +1068,108 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    #region Drag-and-drop
+
+    private void InitDragDrop(Control control)
+    {
+      control.AllowDrop = true;
+      control.DragEnter += Control_DragEnter;
+      control.DragDrop += Control_DragDrop;
+    }
+
+    private void Control_DragEnter(object sender, DragEventArgs args)
+    {
+      try
+      {
+        if (args.Data.GetDataPresent(DataFormats.FileDrop))
+          args.Effect = DragDropEffects.Link;
+      }
+      catch { }
+    }
+
+    private void Control_DragDrop(object sender, DragEventArgs args)
+    {
+      try
+      {
+        DoControl_DragDrop(args);
+      }
+      catch (Exception e)
+      {
+        EFPApp.ShowTempMessage("Перетаскивание не удалось: " + e.Message);
+      }
+    }
+
+    private void DoControl_DragDrop(DragEventArgs args)
+    {
+      if (!args.Data.GetDataPresent(DataFormats.FileDrop))
+        return;
+
+      string[] a = args.Data.GetData(DataFormats.FileDrop) as string[];
+      if (a == null)
+      {
+        EFPApp.ShowTempMessage("В буфере обмена нет ссылок");
+        return;
+      }
+      if (a.Length != 1)
+      {
+        EFPApp.ShowTempMessage("Можно перетащить только один файл");
+        return;
+      }
+
+      AbsPath path = new AbsPath(a[0]);
+      string errorText;
+      if (!EFPFileTools.TestFilePath(path.Path,
+        TestPathMode.FileExists, // всегда проверяем, что это файл, а не каталог, независимо от свойства PathValidateMode
+        out errorText))
+      {
+        EFPApp.ShowTempMessage(errorText);
+        return;
+      }
+
+      MainProvider.Text = path.Path;
+    }
+
+    #endregion
+
+    #region Буфер обмена
+
+    private void FmtFileDrop_TestFormat(object sender, EFPTestDataObjectEventArgs args)
+    {
+      args.DataImageKey = "WindowsExplorer";
+    }
+
+    private void FmtFileDrop_Paste(object sender, EFPPasteDataObjectEventArgs args)
+    {
+      string[] a = (string[])(args.Data.GetData(DataFormats.FileDrop));
+      if (a.Length != 1)
+      {
+        EFPApp.ShowTempMessage("Можно перетащить только один файл");
+        return;
+      }
+
+      AbsPath path = new AbsPath(a[0]);
+      string errorText;
+      if (!EFPFileTools.TestFilePath(path.Path,
+        TestPathMode.FileExists, // всегда проверяем, что это файл, а не каталог, независимо от свойства PathValidateMode
+        out errorText))
+      {
+        EFPApp.ShowTempMessage(errorText);
+        return;
+      }
+
+      MainProvider.Text = path.Path;
+    }
+
+    #endregion
   }
 
   /// <summary>
   /// Кнопка "Проводник Windows" для просмотра каталогов с помощью Windows
-  /// Имя каталога или файла вводится в присоединенном поле ввода
-  /// или комбоблоке с историей.
+  /// Имя каталога или файла вводится в присоединенном поле ввода или комбоблоке с историей.
   /// Кнопка проводника может (и, обычно, должна, если только поле ввода не используется
-  /// исключительно в режиме просмотра (ReadOnly=true)) использоваться совместно с кнопкой "Обзор"
-  /// и провайдером EFPFolderBrowserButton.
+  /// исключительно в режиме просмотра (ReadOnly=true)) использоваться совместно с кнопкой "Обзор".
+  /// В отличие от <see cref="EFPFolderBrowserButton"/> и <see cref="EFPFileDialogButton"/>, не добавляет к полю вводу обработчики для проверки значения.
   /// </summary>
   public class EFPWindowsExplorerButton : EFPButton
   {
@@ -914,7 +1179,7 @@ namespace FreeLibSet.Forms
     /// Создает провайдер управляющего элемента
     /// </summary>
     /// <param name="mainProvider">Основной провайдер для поля ввода каталога.
-    /// Обычно это EFPTextBox или EFPFolderHistComboBox</param>
+    /// Обычно это <see cref="EFPTextBox"/> или <see cref="EFPHistComboBox"/></param>
     /// <param name="control">Управляющий элемент кнопки</param>
     public EFPWindowsExplorerButton(IEFPTextBox mainProvider, Button control)
       : base(mainProvider.BaseProvider, control)
@@ -942,7 +1207,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущий выбранный файл.
-    /// Если свойство MainProvider.Text не определяет корректный путь, свойство возвращает AbsPath.Empty.
+    /// Если свойство <see cref="MainProvider"/>.Text не определяет корректный путь, свойство возвращает <see cref="AbsPath.Empty"/>.
     /// Свойство PathValidateMode не влияет на это свойство.
     /// </summary>
     public AbsPath Path
@@ -957,7 +1222,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для Path
+    /// Управляемое свойство для <see cref="Path"/>
     /// </summary>
     public DepValue<AbsPath> PathEx
     {
@@ -1014,8 +1279,8 @@ namespace FreeLibSet.Forms
     #region Свойство IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, которое возвращает true, если Path.IsEmpty=false.
-    /// В отличие от MainProvider.IsEmpty, свойство будет возвращать false, если введенный текст задает путь в неправильном формате.
+    /// Управляемое свойство, которое возвращает true, если <see cref="Path"/>.IsEmpty=false.
+    /// В отличие от <see cref="MainProvider"/>.IsEmpty, свойство будет возвращать false, если введенный текст задает путь в неправильном формате.
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -1050,7 +1315,7 @@ namespace FreeLibSet.Forms
     /// Что вводится в строке: имя файла или имя каталога.
     /// Если свойство не установлено, то при нажатии кнопки определяется автоматически, исходя из
     /// существования файла или каталога и наличия расширении в имени.
-    /// Если введенное имя заканчивается на "\", то свойство игнорируется и
+    /// Если введенное имя заканчивается на <see cref="System.IO.Path.DirectorySeparatorChar"/>, то свойство игнорируется и
     /// предполагается каталог.
     /// </summary>
     public bool? IsFileName { get { return _IsFileName; } set { _IsFileName = value; } }

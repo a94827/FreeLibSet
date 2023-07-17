@@ -17,7 +17,8 @@ namespace FreeLibSet.Formatting
   {
     /// <summary>
     /// Выполняет проверку текстовой строке на соответствие маски.
-    /// В случае соответствия возвращает true. В случае несоответствия возвращает false, а <paramref name="errorText"/> содержит сообщение об ошибке
+    /// В случае соответствия возвращает true. В случае несоответствия возвращает false, а <paramref name="errorText"/> содержит сообщение об ошибке.
+    /// Пустая строка считается ошибочным значением.
     /// </summary>
     /// <param name="text">Проверяемый текст</param>
     /// <param name="errorText">Текст сообщения об ошибке</param>
@@ -25,32 +26,32 @@ namespace FreeLibSet.Formatting
     bool Test(string text, out string errorText);
 
     /// <summary>
-    /// Свойство возвращает маску, пригодую для использования в поле ввода MaskedTextBox или MaskedTextProvider.
-    /// Если объект не поддерживает маски, совместимые с MaskedTextProvider, свойство возвращает пустую строку
+    /// Свойство возвращает маску, пригодую для использования в поле ввода MaskedTextBox или <see cref="MaskedTextProvider"/>.
+    /// Если объект не поддерживает маски, совместимые с <see cref="MaskedTextProvider"/>, свойство возвращает пустую строку
     /// </summary>
     string EditMask { get;}
 
     /// <summary>
     /// Настройки локализации для символов-разделителей.
-    /// Если системные разделители не используются, свойство должно возвращать CultureInfo.InvariantCultrure
+    /// Если системные разделители не используются, свойство должно возвращать <see cref="System.Globalization.CultureInfo.InvariantCulture"/>
     /// </summary>
     CultureInfo Culture { get; }
   }
 
   /// <summary>
-  /// Переходник для стандартного MaskedTextProvider.
-  /// Этот класс является потокобезопасным. При работе с MaskedTextProvider выполняется блокировка объекта
+  /// Переходник для стандартного <see cref="MaskedTextProvider"/>.
+  /// Этот класс является потокобезопасным. При работе с <see cref="MaskedTextProvider"/> выполняется блокировка объекта
   /// </summary>
   /// <remarks>
   /// Если маска содержит только обязательные числовые позиции и символы-разделители, рекомендуется
-  /// использовать класс SimpleDigitalMaskProvider, обладающий лучшим быстродействием.
+  /// использовать класс <see cref="SimpleDigitalMaskProvider"/>, обладающий лучшим быстродействием.
   /// </remarks>
   public class StdMaskProvider : IMaskProvider
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает новый объект, используя созданный ранее MaskedTextProvider.
+    /// Создает новый объект, используя созданный ранее <see cref="MaskedTextProvider"/>.
     /// Для обеспечения потокобезопасности не следует использовать переданный <paramref name="provider"/>
     /// для других целей.
     /// </summary>
@@ -64,18 +65,18 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Создает новые объекты MaskedTextProvider и StdMaskProvider на основании заданной маски.
+    /// Создает новые объекты <see cref="MaskedTextProvider"/> и <see cref="StdMaskProvider"/> на основании заданной маски.
     /// </summary>
-    /// <param name="mask">Маска для MaskedTextProvider</param>
+    /// <param name="mask">Маска для <see cref="MaskedTextProvider"/></param>
     public StdMaskProvider(string mask)
       : this(new MaskedTextProvider(mask))
     {
     }
 
     /// <summary>
-    /// Создает новые объекты MaskedTextProvider и StdMaskProvider на основании заданной маски и культуры.
+    /// Создает новые объекты <see cref="MaskedTextProvider"/> и <see cref="StdMaskProvider"/> на основании заданной маски и культуры.
     /// </summary>
-    /// <param name="mask">Маска для MaskedTextProvider</param>
+    /// <param name="mask">Маска для <see cref="MaskedTextProvider"/></param>
     /// <param name="culture">Задает локализацию для используемых разделителей</param>
     public StdMaskProvider(string mask, CultureInfo culture)
       : this(new MaskedTextProvider(mask, culture))
@@ -88,13 +89,13 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Основной объект.
-    /// При работе с MaskedTextProvider выполняется Monitor.Enter()/Leave() для обеспечения потокобезопасности
+    /// При работе с <see cref="MaskedTextProvider"/> выполняется Monitor.Enter()/Leave() для обеспечения потокобезопасности
     /// </summary>
     public MaskedTextProvider Provider { get { return _Provider; } }
     private MaskedTextProvider _Provider;
 
     /// <summary>
-    /// Возвращает свойство MaskedTextProvider.Mask
+    /// Возвращает свойство <see cref="MaskedTextProvider.Mask"/>
     /// </summary>
     /// <returns>Текстовое представление объекта</returns>
     public override string ToString()
@@ -108,6 +109,7 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Проверить соответствие строки <paramref name="text"/> на соответствие маске.
+    /// Пустая строка считается ошибочным значением.
     /// </summary>
     /// <param name="text">Проверяемая строка</param>
     /// <param name="errorText">Сюда помещается сообщение об ошибке, если строка не соответствует маске</param>
@@ -164,7 +166,7 @@ namespace FreeLibSet.Formatting
 
 
     /// <summary>
-    /// Возвращает свойство MaskedTextProvider
+    /// Возвращает свойство <see cref="MaskedTextProvider.Mask"/>
     /// </summary>
     public string EditMask
     {
@@ -172,7 +174,7 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает свойство MaskedTextProvider.Culture
+    /// Возвращает свойство <see cref="MaskedTextProvider.Culture"/>
     /// </summary>
     public CultureInfo Culture { get { return _Provider.Culture; } }
 
@@ -180,7 +182,7 @@ namespace FreeLibSet.Formatting
   }
 
   /// <summary>
-  /// Простейшая реализация IMaskProvider. Провайдер поддерживает в маске только обязательные цифры (символ "0")
+  /// Простейшая реализация <see cref="IMaskProvider"/>. Провайдер поддерживает в маске только обязательные цифры (символ "0")
   /// и символы-разделители ".", "-", ":", " ". Необязательные цифры не поддерживаются.
   /// Класс является потокобезопасным.
   /// </summary>
@@ -228,7 +230,7 @@ namespace FreeLibSet.Formatting
     private string _Mask;
 
     /// <summary>
-    /// Возвращает свойство Mask
+    /// Возвращает свойство <see cref="Mask"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -242,6 +244,7 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Тестирование строки.
+    /// Пустая строка считается ошибочным значением.
     /// </summary>
     /// <param name="text">Проверяемая строка</param>
     /// <param name="errorText">Сообщение об ошибке</param>
@@ -296,8 +299,8 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает маску для редактирования, совместимую с MaskedTextProvider.
-    /// Возвращает Mask, в котором символы-разделители дополнены оброатной косой чертой
+    /// Возвращает маску для редактирования, совместимую с <see cref="MaskedTextProvider"/>.
+    /// Возвращает Mask, в котором символы-разделители экранированы обратной косой чертой
     /// </summary>
     public string EditMask
     {
@@ -334,7 +337,7 @@ namespace FreeLibSet.Formatting
     }
 
     /// <summary>
-    /// Возвращает CultureInfo.InvariantCulture
+    /// Возвращает <see cref="CultureInfo.InvariantCulture"/>
     /// </summary>
     public CultureInfo Culture { get { return CultureInfo.InvariantCulture; } }
 

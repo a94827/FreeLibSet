@@ -454,7 +454,6 @@ namespace FreeLibSet.Forms
     protected override void OnValidate()
     {
       base.OnValidate();
-      // На момент вызова свойство Control всегда установлено
 
       if (MaskCanBePartial)
         return;
