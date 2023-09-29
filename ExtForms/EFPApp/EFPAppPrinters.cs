@@ -33,8 +33,13 @@ namespace FreeLibSet.Forms
         // Извлекаем характеристики один раз
         if (_IsValid)
         {
-          _PaperSizes = new PaperSize[PrinterSettings.PaperSizes.Count];
-          PrinterSettings.PaperSizes.CopyTo(_PaperSizes, 0);
+          //_PaperSizes = new PaperSize[PrinterSettings.PaperSizes.Count];
+          //PrinterSettings.PaperSizes.CopyTo(_PaperSizes, 0);
+          // 28.08.2023. CopyTo() не реализован в Mono
+          List<PaperSize> lstPaperSize = new List<PaperSize>(PrinterSettings.PaperSizes.Count);
+          foreach (PaperSize ps in PrinterSettings.PaperSizes)
+            lstPaperSize.Add(ps);
+          _PaperSizes = lstPaperSize.ToArray();
 
           _CanDuplex = PrinterSettings.CanDuplex;
         }
@@ -122,8 +127,14 @@ namespace FreeLibSet.Forms
       try
       {
         // Список имен принтеров
-        _PrinterNames = new string[PrinterSettings.InstalledPrinters.Count];
-        PrinterSettings.InstalledPrinters.CopyTo(_PrinterNames, 0);
+        //_PrinterNames = new string[PrinterSettings.InstalledPrinters.Count];
+        // PrinterSettings.InstalledPrinters.CopyTo(_PrinterNames, 0);
+        // 28.08.2023
+        // В Mono (версия 6.12.0, без Wine) не реализован метод CopyTo()
+        List<string> lstPrinterName = new List<string>(PrinterSettings.InstalledPrinters.Count);
+        foreach (string name in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
+          lstPrinterName.Add(name);
+        _PrinterNames = lstPrinterName.ToArray();
 
         // Принтер по умолчанию
         _DefaultPrinterName = String.Empty;

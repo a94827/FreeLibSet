@@ -287,7 +287,7 @@ namespace FreeLibSet.Forms
     /// Создает EFPDateRangeBoxCommandItems.
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPDateRangeBoxCommandItems(this);
     }
@@ -722,7 +722,7 @@ namespace FreeLibSet.Forms
     /// Создает объект команд локального меню EFPDateOrRangeBoxCommandItems.
     /// </summary>
     /// <returns>Список команд</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       //if (EFPApp.EasyInterface)
       //  return base.GetCommandItems();

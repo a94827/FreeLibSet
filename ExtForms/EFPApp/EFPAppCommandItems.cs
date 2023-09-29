@@ -98,13 +98,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Не следует использовать.
-    /// Управляющие элементы используют дейтсвующие файловые ассоциации, заданные в операционной системе.
+    /// Управляющие элементы используют действующие файловые ассоциации, заданные в операционной системе.
     /// </summary>
-    SendToInternetExplorer,
+    SendToInternetBrowser,
 
     /// <summary>
     /// Не следует использовать
-    /// Управляющие элементы используют дейтсвующие файловые ассоциации, заданные в операционной системе.
+    /// Управляющие элементы используют действующие файловые ассоциации, заданные в операционной системе.
     /// </summary>
     SendToNotepad,
 
@@ -411,10 +411,10 @@ namespace FreeLibSet.Forms
           ci.MenuText = "Отправит&ь";
           break;
 
-        case EFPAppStdCommandItems.SendToInternetExplorer:
-          ci.MenuText = "Internet Explorer";
+        case EFPAppStdCommandItems.SendToInternetBrowser:
+          ci.MenuText = "Интернет-обозреватель";
           ci.ImageKey = "InternetExplorer";
-          ci.ToolTipText = "Открыть в Internet Explorer";
+          ci.ToolTipText = "Открыть в интернет-обозревателе";
           break;
         case EFPAppStdCommandItems.SendToMicrosoftWord:
           ci.MenuText = "Microsoft Word";

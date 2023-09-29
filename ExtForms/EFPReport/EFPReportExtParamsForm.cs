@@ -219,37 +219,6 @@ namespace FreeLibSet.Forms
   }
 
 
-  #region Перечисление EFPReportExtParamsPart
-
-  /// <summary>
-  /// Секции конфигурации для хранения параметров отчета
-  /// </summary>
-  [Flags]
-  public enum EFPReportExtParamsPart
-  {
-    /// <summary>
-    /// Основная секция данных, привязанная к пользователю
-    /// </summary>
-    User = 0x1,
-
-    /// <summary>
-    /// Здесь должна храниться дата или период, за который строится отчет.
-    /// Такие данные не хранятся в наборах истории или пользовательских наборах,
-    /// а сохраняется всегда последнее значение
-    /// </summary>
-    NoHistory = 0x2,
-
-    /// <summary>
-    /// Здесь должны храниться ссылки на файлы и каталоги, размещенные на компьютере пользователя.
-    /// Такие данные привязываются к пользователю и компьюьеру. Для приложений, работающих локально
-    /// использование этой секции не имеет смысла. Для сетевых приложений это важно, если пользователь
-    /// может входить с разных компьютеров, а настройки пользователя хранятся в базе данных
-    /// </summary>
-    Files = 0x4,
-  }
-
-  #endregion
-
   /// <summary>
   /// Расширенные параметры отчета
   /// Дополнительные виртуальные методы позволяют работать с формой ввода
@@ -275,7 +244,7 @@ namespace FreeLibSet.Forms
     /// Может задаваться несколько секций.
     /// Непереопределенное свойство возвращает EFPReportExtParamsPart.User - все данные хранятся в одной секции, привязанной к пользователю.
     /// </summary>
-    public virtual EFPReportExtParamsPart UsedParts { get { return EFPReportExtParamsPart.User; } }
+    public virtual SettingsPart UsedParts { get { return SettingsPart.User; } }
 
     #endregion
 
@@ -297,7 +266,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="form">Форма для редактирования параметров</param>
     /// <param name="part">Какую часть параметров нужно записать</param>
-    public abstract void WriteFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part);
+    public abstract void WriteFormValues(EFPReportExtParamsForm form, SettingsPart part);
 
     /// <summary>
     /// Переопределенный метод должен прочитать данные из полей формы и сохранить их в этом объекте
@@ -307,7 +276,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="form">Форма для редактирования параметров</param>
     /// <param name="part">Какую часть параметров нужно прочитать</param>
-    public abstract void ReadFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part);
+    public abstract void ReadFormValues(EFPReportExtParamsForm form, SettingsPart part);
 
     /// <summary>
     /// Этот метод вызывается после того, как текущие значения загружены из формы с помощью одного
@@ -340,7 +309,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="cfg">Секция конфигурации, открытая в режиме записи, куда должны быть помещены значения</param>
     /// <param name="part">Какую часть параметров нужно записать</param>
-    public abstract void WriteConfig(CfgPart cfg, EFPReportExtParamsPart part);
+    public abstract void WriteConfig(CfgPart cfg, SettingsPart part);
 
     /// <summary>
     /// Переопределенный метод должен прочитать данные из указанной секции конфигурации и поместить их
@@ -350,7 +319,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="cfg">Секция конфигурации, открытая в режиме чтения, откуда должны быть извлечены значения</param>
     /// <param name="part">Какую часть параметров нужно прочитать</param>
-    public abstract void ReadConfig(CfgPart cfg, EFPReportExtParamsPart part);
+    public abstract void ReadConfig(CfgPart cfg, SettingsPart part);
 
     /// <summary>
     /// Этот метод вызывается перед выводом формы параметров. Значения загружены
@@ -406,12 +375,12 @@ namespace FreeLibSet.Forms
       if (!EFPApp.InsideSaveComposition)
         throw new NotSupportedException("Эта перегрузка метода не должна вызываться для EFPReportExtParams");
 
-      if ((UsedParts & EFPReportExtParamsPart.User) == EFPReportExtParamsPart.User)
-        WriteConfig(cfg, EFPReportExtParamsPart.User);
-      if ((UsedParts & EFPReportExtParamsPart.NoHistory) == EFPReportExtParamsPart.NoHistory)
-        WriteConfig(cfg, EFPReportExtParamsPart.NoHistory);
-      if ((UsedParts & EFPReportExtParamsPart.Files) == EFPReportExtParamsPart.Files)
-        WriteConfig(cfg, EFPReportExtParamsPart.Files);
+      if ((UsedParts & SettingsPart.User) == SettingsPart.User)
+        WriteConfig(cfg, SettingsPart.User);
+      if ((UsedParts & SettingsPart.NoHistory) == SettingsPart.NoHistory)
+        WriteConfig(cfg, SettingsPart.NoHistory);
+      if ((UsedParts & SettingsPart.Machine) == SettingsPart.Machine)
+        WriteConfig(cfg, SettingsPart.Machine);
     }
 
     /// <summary>
@@ -425,12 +394,12 @@ namespace FreeLibSet.Forms
       if (!EFPApp.InsideLoadComposition)
         throw new NotSupportedException("Эта перегрузка метода не должна вызываться для EFPReportExtParams");
 
-      if ((UsedParts & EFPReportExtParamsPart.User) == EFPReportExtParamsPart.User)
-        ReadConfig(cfg, EFPReportExtParamsPart.User);
-      if ((UsedParts & EFPReportExtParamsPart.NoHistory) == EFPReportExtParamsPart.NoHistory)
-        ReadConfig(cfg, EFPReportExtParamsPart.NoHistory);
-      if ((UsedParts & EFPReportExtParamsPart.Files) == EFPReportExtParamsPart.Files)
-        ReadConfig(cfg, EFPReportExtParamsPart.Files);
+      if ((UsedParts & SettingsPart.User) == SettingsPart.User)
+        ReadConfig(cfg, SettingsPart.User);
+      if ((UsedParts & SettingsPart.NoHistory) == SettingsPart.NoHistory)
+        ReadConfig(cfg, SettingsPart.NoHistory);
+      if ((UsedParts & SettingsPart.Machine) == SettingsPart.Machine)
+        ReadConfig(cfg, SettingsPart.Machine);
     }
 
     #endregion
@@ -443,15 +412,15 @@ namespace FreeLibSet.Forms
     /// не содержит ни одной части.
     /// </summary>
     /// <param name="part">Перечислимое значение EFPReportExtParamsPart, которое должно ровно одну часть</param>
-    public void CheckSinglePart(EFPReportExtParamsPart part)
+    public void CheckSinglePart(SettingsPart part)
     {
       switch (part)
       {
-        case EFPReportExtParamsPart.User:
-        case EFPReportExtParamsPart.NoHistory:
-        case EFPReportExtParamsPart.Files:
+        case SettingsPart.User:
+        case SettingsPart.NoHistory:
+        case SettingsPart.Machine:
           break;
-        case (EFPReportExtParamsPart)0:
+        case (SettingsPart)0:
           throw new ArgumentException("Часть не задана", "part");
         default:
           throw new ArgumentException("Одновременно задано несколько частей: " + part.ToString(), "part");
@@ -536,8 +505,8 @@ namespace FreeLibSet.Forms
       #region Запоминаем данные "По умолчанию"
 
       _CfgEmpty = new TempCfg();
-      SafeReadConfigParts(_CfgEmpty, EFPReportExtParamsPart.User | EFPReportExtParamsPart.Files); // без этого часть параметров может быть задана неправильно
-      SafeWriteConfigParts(_CfgEmpty, EFPReportExtParamsPart.User | EFPReportExtParamsPart.Files);
+      SafeReadConfigParts(_CfgEmpty, SettingsPart.User | SettingsPart.Machine); // без этого часть параметров может быть задана неправильно
+      SafeWriteConfigParts(_CfgEmpty, SettingsPart.User | SettingsPart.Machine);
 
       _UseAuxText = EFPApp.ShowParamSetAuxText && (!Object.ReferenceEquals(SafeGetAuxText(), null));
 
@@ -567,7 +536,7 @@ namespace FreeLibSet.Forms
 
         SafeReadConfigParts(cfgCode, AllParts);
         if (!String.IsNullOrEmpty(cfgCode))
-          SafeReadConfigParts(String.Empty, EFPReportExtParamsPart.NoHistory);
+          SafeReadConfigParts(String.Empty, SettingsPart.NoHistory);
         try
         {
           ReportParams.BeforeQueryParams();
@@ -583,7 +552,7 @@ namespace FreeLibSet.Forms
 
         // Активация строки в списке
         TempCfg srchSect = new TempCfg();
-        SafeWriteConfigParts(srchSect, EFPReportExtParamsPart.User | EFPReportExtParamsPart.Files);
+        SafeWriteConfigParts(srchSect, SettingsPart.User | SettingsPart.Machine);
         _Form.SetComboBox.SelectedMD5Sum = srchSect.MD5Sum();
 
         _Form.FormProvider.AddFormCheck(new UIValidatingEventHandler(CheckForm));
@@ -597,7 +566,7 @@ namespace FreeLibSet.Forms
           // ReportParams.AfterQueryParam();
 
           srchSect = new TempCfg();
-          SafeWriteConfigParts(srchSect, EFPReportExtParamsPart.User | EFPReportExtParamsPart.Files);
+          SafeWriteConfigParts(srchSect, SettingsPart.User | SettingsPart.Machine);
           string md5Sum = srchSect.MD5Sum();
 
           bool found = false;
@@ -837,11 +806,11 @@ namespace FreeLibSet.Forms
       {
         if (_Form.FormProvider.ValidateForm())
         {
-          if ((ReportParams.UsedParts & EFPReportExtParamsPart.NoHistory) == EFPReportExtParamsPart.NoHistory)
+          if ((ReportParams.UsedParts & SettingsPart.NoHistory) == SettingsPart.NoHistory)
           {
-            ReportParams.ReadFormValues(_Form, EFPReportExtParamsPart.NoHistory);
+            ReportParams.ReadFormValues(_Form, SettingsPart.NoHistory);
             _CfgEditHist = new TempCfg();
-            ReportParams.WriteConfig(_CfgEditHist, EFPReportExtParamsPart.NoHistory);
+            ReportParams.WriteConfig(_CfgEditHist, SettingsPart.NoHistory);
           }
         }
         _Form.HistChangedFlag = false;
@@ -870,25 +839,25 @@ namespace FreeLibSet.Forms
         CfgPart cfgData;
         using (_Owner.ConfigManager.GetConfig(configInfo1, EFPConfigMode.Read, out cfgData))
         {
-          if ((ReportParams.UsedParts & EFPReportExtParamsPart.User) == EFPReportExtParamsPart.User)
-            ReportParams.ReadConfig(cfgData, EFPReportExtParamsPart.User); // все части
-          if ((ReportParams.UsedParts & EFPReportExtParamsPart.NoHistory) == EFPReportExtParamsPart.NoHistory)
+          if ((ReportParams.UsedParts & SettingsPart.User) == SettingsPart.User)
+            ReportParams.ReadConfig(cfgData, SettingsPart.User); // все части
+          if ((ReportParams.UsedParts & SettingsPart.NoHistory) == SettingsPart.NoHistory)
           {
             if (cfgCode.StartsWith("User", StringComparison.Ordinal) || cfgCode == "Empty") // TODO: 27.12.2020. Что имелось ввиду под "Empty"?
-              ReportParams.ReadConfig(_CfgEditHist, EFPReportExtParamsPart.NoHistory); // используем введенные вручную даты
+              ReportParams.ReadConfig(_CfgEditHist, SettingsPart.NoHistory); // используем введенные вручную даты
             else
-              ReportParams.ReadConfig(cfgData, EFPReportExtParamsPart.NoHistory); // используем даты из истории
+              ReportParams.ReadConfig(cfgData, SettingsPart.NoHistory); // используем даты из истории
           }
         }
 
-        if ((ReportParams.UsedParts & EFPReportExtParamsPart.Files) == EFPReportExtParamsPart.Files)
+        if ((ReportParams.UsedParts & SettingsPart.Machine) == SettingsPart.Machine)
         {
-          ReportParams.ReadConfig(cfgData, EFPReportExtParamsPart.Files);
+          ReportParams.ReadConfig(cfgData, SettingsPart.Machine);
           EFPConfigSectionInfo ConfigInfo2 = new EFPConfigSectionInfo(_Owner.ConfigSectionName,
             EFPConfigCategories.ReportFiles, cfgCode);
           using (_Owner.ConfigManager.GetConfig(ConfigInfo2, EFPConfigMode.Read, out cfgData))
           {
-            ReportParams.ReadConfig(cfgData, EFPReportExtParamsPart.Files); // 30.08.2017
+            ReportParams.ReadConfig(cfgData, SettingsPart.Machine); // 30.08.2017
           }
         }
       }
@@ -946,7 +915,7 @@ namespace FreeLibSet.Forms
       }
 
       //SectData.Clear();
-      SafeWriteConfigParts(cfgCode, EFPReportExtParamsPart.User | EFPReportExtParamsPart.Files);
+      SafeWriteConfigParts(cfgCode, SettingsPart.User | SettingsPart.Machine);
 
       string md5Sum = CalcMD5Sum();
       string auxText = String.Empty;
@@ -970,10 +939,10 @@ namespace FreeLibSet.Forms
     private string CalcMD5Sum()
     {
       TempCfg cfg = new TempCfg();
-      if ((ReportParams.UsedParts & EFPReportExtParamsPart.User) == EFPReportExtParamsPart.User)
-        ReportParams.WriteConfig(cfg, EFPReportExtParamsPart.User);
-      if ((ReportParams.UsedParts & EFPReportExtParamsPart.Files) == EFPReportExtParamsPart.Files)
-        ReportParams.WriteConfig(cfg, EFPReportExtParamsPart.Files);
+      if ((ReportParams.UsedParts & SettingsPart.User) == SettingsPart.User)
+        ReportParams.WriteConfig(cfg, SettingsPart.User);
+      if ((ReportParams.UsedParts & SettingsPart.Machine) == SettingsPart.Machine)
+        ReportParams.WriteConfig(cfg, SettingsPart.Machine);
       return cfg.MD5Sum();
     }
 
@@ -1023,14 +992,14 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Массив для организации циклов
     /// </summary>
-    private static readonly EFPReportExtParamsPart[] AllPartsArray = new EFPReportExtParamsPart[]{
-      EFPReportExtParamsPart.User, 
-      EFPReportExtParamsPart.NoHistory, 
-      EFPReportExtParamsPart.Files};
+    private static readonly SettingsPart[] AllPartsArray = new SettingsPart[]{
+      SettingsPart.User, 
+      SettingsPart.NoHistory, 
+      SettingsPart.Machine};
 
-    const EFPReportExtParamsPart AllParts = EFPReportExtParamsPart.User |
-      EFPReportExtParamsPart.NoHistory |
-      EFPReportExtParamsPart.Files;
+    const SettingsPart AllParts = SettingsPart.User |
+      SettingsPart.NoHistory |
+      SettingsPart.Machine;
 
     #region SafeRead/WriteConfigParts
 
@@ -1040,7 +1009,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="cfg">Секция конфигурации, открытая в режиме чтения</param>
     /// <param name="parts">Какие данные требуется прочитать</param>
-    private void SafeReadConfigParts(CfgPart cfg, EFPReportExtParamsPart parts)
+    private void SafeReadConfigParts(CfgPart cfg, SettingsPart parts)
     {
       try
       {
@@ -1060,28 +1029,28 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private void SafeReadConfigParts(string userSetName, EFPReportExtParamsPart parts)
+    private void SafeReadConfigParts(string userSetName, SettingsPart parts)
     {
       parts &= ReportParams.UsedParts;
       if (!String.IsNullOrEmpty(userSetName))
-        parts &= (~EFPReportExtParamsPart.NoHistory);
+        parts &= (~SettingsPart.NoHistory);
       CfgPart cfg;
-      if ((ReportParams.UsedParts & (EFPReportExtParamsPart.User | EFPReportExtParamsPart.NoHistory)) != (EFPReportExtParamsPart)0)
+      if ((ReportParams.UsedParts & (SettingsPart.User | SettingsPart.NoHistory)) != (SettingsPart)0)
       {
         EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_Owner.ConfigSectionName,
           EFPConfigCategories.ReportParams, userSetName);
         using (_Owner.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfg))
         {
-          SafeReadConfigParts(cfg, parts & (EFPReportExtParamsPart.User | EFPReportExtParamsPart.NoHistory));
+          SafeReadConfigParts(cfg, parts & (SettingsPart.User | SettingsPart.NoHistory));
         }
       }
-      if ((ReportParams.UsedParts & EFPReportExtParamsPart.Files) != (EFPReportExtParamsPart)0)
+      if ((ReportParams.UsedParts & SettingsPart.Machine) != (SettingsPart)0)
       {
         EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_Owner.ConfigSectionName,
           EFPConfigCategories.ReportFiles, userSetName);
         using (_Owner.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Read, out cfg))
         {
-          SafeReadConfigParts(cfg, EFPReportExtParamsPart.Files);
+          SafeReadConfigParts(cfg, SettingsPart.Machine);
         }
       }
     }
@@ -1092,7 +1061,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="cfg">Секция конфигурации, открытая в режиме записи</param>
     /// <param name="parts">Какие данные требуется записать</param>
-    private void SafeWriteConfigParts(CfgPart cfg, EFPReportExtParamsPart parts)
+    private void SafeWriteConfigParts(CfgPart cfg, SettingsPart parts)
     {
       try
       {
@@ -1112,28 +1081,28 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private void SafeWriteConfigParts(string userSetName, EFPReportExtParamsPart parts)
+    private void SafeWriteConfigParts(string userSetName, SettingsPart parts)
     {
       parts &= ReportParams.UsedParts;
       if (!String.IsNullOrEmpty(userSetName))
-        parts &= (~EFPReportExtParamsPart.NoHistory);
+        parts &= (~SettingsPart.NoHistory);
       CfgPart cfg;
-      if ((ReportParams.UsedParts & (EFPReportExtParamsPart.User | EFPReportExtParamsPart.NoHistory)) != (EFPReportExtParamsPart)0)
+      if ((ReportParams.UsedParts & (SettingsPart.User | SettingsPart.NoHistory)) != (SettingsPart)0)
       {
         EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_Owner.ConfigSectionName,
           EFPConfigCategories.ReportParams, userSetName);
         using (_Owner.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
         {
-          SafeWriteConfigParts(cfg, parts & (EFPReportExtParamsPart.User | EFPReportExtParamsPart.NoHistory));
+          SafeWriteConfigParts(cfg, parts & (SettingsPart.User | SettingsPart.NoHistory));
         }
       }
-      if ((ReportParams.UsedParts & EFPReportExtParamsPart.Files) != (EFPReportExtParamsPart)0)
+      if ((ReportParams.UsedParts & SettingsPart.Machine) != (SettingsPart)0)
       {
         EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(_Owner.ConfigSectionName,
           EFPConfigCategories.ReportFiles, userSetName);
         using (_Owner.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
         {
-          SafeWriteConfigParts(cfg, EFPReportExtParamsPart.Files);
+          SafeWriteConfigParts(cfg, SettingsPart.Machine);
         }
       }
     }
@@ -1161,7 +1130,7 @@ namespace FreeLibSet.Forms
 
     #region Read/WriteFormValues
 
-    private bool ReadFormValueParts(EFPReportExtParamsPart parts)
+    private bool ReadFormValueParts(SettingsPart parts)
     {
       bool res;
       _Form._InsideReadFormValues = true;
@@ -1184,7 +1153,7 @@ namespace FreeLibSet.Forms
       return res;
     }
 
-    private void WriteFormValueParts(EFPReportExtParamsPart parts)
+    private void WriteFormValueParts(SettingsPart parts)
     {
       _Form._InsideWriteFormValues = true;
       try
@@ -1314,7 +1283,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="Form"></param>
     /// <param name="Part"></param>
-    public override void WriteFormValues(EFPReportExtParamsForm Form, EFPReportExtParamsPart Part)
+    public override void WriteFormValues(EFPReportExtParamsForm Form, SettingsPart Part)
     {
       EFPReportFilterExtParamsForm form2 = (EFPReportFilterExtParamsForm)Form;
       form2.FiltersControlProvider.Filters = Filters;
@@ -1325,7 +1294,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="Form"></param>
     /// <param name="Part"></param>
-    public override void ReadFormValues(EFPReportExtParamsForm Form, EFPReportExtParamsPart Part)
+    public override void ReadFormValues(EFPReportExtParamsForm Form, SettingsPart Part)
     {
     }
 
@@ -1334,11 +1303,11 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="Config"></param>
     /// <param name="Part"></param>
-    public override void WriteConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void WriteConfig(FreeLibSet.Config.CfgPart Config, SettingsPart Part)
     {
       switch (Part)
       {
-        case EFPReportExtParamsPart.User:
+        case SettingsPart.User:
           Filters.WriteConfig(Config);
           break;
       }
@@ -1349,11 +1318,11 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="Config"></param>
     /// <param name="Part"></param>
-    public override void ReadConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void ReadConfig(FreeLibSet.Config.CfgPart Config, SettingsPart Part)
     {
       switch (Part)
       {
-        case EFPReportExtParamsPart.User:
+        case SettingsPart.User:
           Filters.ReadConfig(Config);
           break;
       }

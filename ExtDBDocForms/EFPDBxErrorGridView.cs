@@ -230,7 +230,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает EFPDBxErrorGridViewCommandItems
     /// </summary>
     /// <returns>Созданный список команд</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPDBxErrorGridViewCommandItems(this);
     }

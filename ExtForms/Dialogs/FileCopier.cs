@@ -548,7 +548,7 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        WizardTempPage tempPage = new WizardTempPage(_Form.MainPanel, true);
+        WizardTempPage tempPage = new WizardTempPage(_Form.MainPanel);
         tempPage.CancelClick += new EventHandler(TempPage_CancelClick);
         tempPage.CancelEnabled = true;
         _Wizard.BeginTempPage(tempPage);

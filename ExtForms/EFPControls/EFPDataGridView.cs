@@ -19,13 +19,14 @@ using FreeLibSet.Data;
 using FreeLibSet.Shell;
 using FreeLibSet.Logging;
 using FreeLibSet.UICore;
+using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms
 {
   #region Перечисления
 
   /// <summary>
-  /// Значения свойства EFPDataGridView.State
+  /// Значения свойства <see cref="EFPDataGridView.State"/>
   /// </summary>
   public enum EFPDataGridViewState
   {
@@ -59,7 +60,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Сколько строк сейчас выбрано в просмотре: Одна, ни одной или несколько
-  /// (свойство EFPDataGridView.SelectedRowState)
+  /// (свойство <see cref="EFPDataGridView.SelectedRowsState"/>)
   /// </summary>
   public enum EFPDataGridViewSelectedRowsState
   {
@@ -88,12 +89,12 @@ namespace FreeLibSet.Forms
   #region EFPDataGridViewColorType
 
   /// <summary>
-  /// Аргумент для метода SetCellAttr()
+  /// Тип стандартизированного цветового оформления ячеек табличного просмотра
   /// </summary>
   public enum EFPDataGridViewColorType
   {
     /// <summary>
-    /// Обычная ячейка
+    /// Обычная ячейка. Для невыделенной ячейки используется цвет фона <see cref="SystemColors.Window"/> и цвет текста <see cref="SystemColors.WindowText"/>.
     /// </summary>
     Normal,
 
@@ -104,7 +105,7 @@ namespace FreeLibSet.Forms
     Alter,
 
     /// <summary>
-    /// Выделение серым цветом
+    /// Выделение бледно-желтым цветом
     /// </summary>
     Special,
 
@@ -144,7 +145,7 @@ namespace FreeLibSet.Forms
   #region EFPDataGridViewBorderStyle
 
   /// <summary>
-  /// Типы границы ячейки
+  /// Типы границы ячейки при экспорте табличного просмотра в различные печатные форматы
   /// </summary>
   public enum EFPDataGridViewBorderStyle
   {
@@ -175,7 +176,7 @@ namespace FreeLibSet.Forms
   #region EFPDataGridViewAttributesReason
 
   /// <summary>
-  /// Для чего вызывается событие EFPDataGridView.GetRowAttributes или GetCellAttributes
+  /// Для чего вызывается событие <see cref="EFPDataGridView.GetRowAttributes"/> или <see cref="EFPDataGridView.GetCellAttributes"/>
   /// </summary>
   public enum EFPDataGridViewAttributesReason
   {
@@ -183,19 +184,20 @@ namespace FreeLibSet.Forms
     /// Для вывода на экран
     /// </summary>
     View,
+
     /// <summary>
     /// Для вывода на печать или для предварительного просмотра
     /// </summary>
     Print,
 
     /// <summary>
-    /// Обрабатывается сообщение CellToolTipNeeded для заголовка строки
+    /// Обрабатывается сообщение <see cref="DataGridView.CellToolTipTextNeeded"/>
     /// </summary>
     ToolTip,
 
     /// <summary>
     /// Определяется возможность редактирования ячейки. Обработчик события 
-    /// CellBeginEdit или вызван метод GetCellReadOnly
+    /// <see cref="DataGridView.CellBeginEdit"/> или вызван метод <see cref="EFPDataGridView.GetCellReadOnly(DataGridViewCell, out string)"/>.
     /// </summary>
     ReadOnly,
   }
@@ -205,13 +207,14 @@ namespace FreeLibSet.Forms
   #region EFPDataGridViewImageKind
 
   /// <summary>
-  /// Изображения, которые можно выводить в заголовке строк
-  /// С помощью свойства UserImage можно задавать произвольные изображения
+  /// Изображения, которые можно выводить в заголовке строк с помощью обработчика события <see cref="EFPDataGridView.GetRowAttributes"/>.
+  /// Значение для свойства <see cref="EFPDataGridViewRowAttributesEventArgs.ImageKind"/>. 
+  /// С помощью свойства <see cref="EFPDataGridViewRowAttributesEventArgs.UserImage"/> можно задавать произвольные изображения.
   /// </summary>
   public enum EFPDataGridViewImageKind
   {
     /// <summary>
-    /// Нет изображения
+    /// Нет изображения или изображение задается свойством <see cref="EFPDataGridViewRowAttributesEventArgs.UserImage"/>
     /// </summary>
     None,
 
@@ -236,8 +239,8 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Базовый класс для EFPDataGridViewRowAttributesEventArgs и 
-  /// EFPDataGridViewCellAttributesEventArgs
+  /// Базовый класс для <see cref="EFPDataGridViewRowAttributesEventArgs"/> и 
+  /// <see cref="EFPDataGridViewCellAttributesEventArgs"/>
   /// </summary>
   public class EFPDataGridViewCellAttributesEventArgsBase : EventArgs
   {
@@ -254,7 +257,7 @@ namespace FreeLibSet.Forms
     #region Свойства - исходные данные
 
     /// <summary>
-    /// Обработчик табличного просмотра
+    /// Провайдер табличного просмотра, для которого вызвано событие
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
     private EFPDataGridView _ControlProvider;
@@ -265,41 +268,41 @@ namespace FreeLibSet.Forms
     public DataGridView Control { get { return ControlProvider.Control; } }
 
     /// <summary>
-    /// Зачем было вызвано событие: для вывода на экран или для печати
+    /// Зачем было вызвано событие: для вывода на экран, для печати, получения подсказки, определения режима ReadOnly.
+    /// В прикладном коде обычно нет необходимости анализировать это свойство. Проще установить в обработчике все свойства сразу.
+    /// Исключение, если вычисление какого-либо свойства (например, <see cref="ReadOnly"/>) является достаточно затратным и
+    /// желательно избежать задержек. Свойства, используемые для режима <see cref="EFPDataGridViewAttributesReason.View"/>
+    /// обязательно должны в обработчике события вычисляться быстро, чтобы не вызывать задержек при прорисовке пользовательского интерфейса.
     /// </summary>
     public EFPDataGridViewAttributesReason Reason { get { return _Reason; } }
     private EFPDataGridViewAttributesReason _Reason;
 
     /// <summary>
-    /// Номер строки, для которой требуются атрибуты, в табличном просмотре
+    /// Индекс строки, для которой требуются атрибуты, в табличном просмотре
     /// </summary>
     public int RowIndex { get { return _RowIndex; } }
     private int _RowIndex;
 
     /// <summary>
-    /// Возвращает объект, привязанный к строке данных (например, DataRowView), или null.
+    /// Возвращает объект, привязанный к строке данных (например, <see cref="DataRowView"/>), или null.
     /// </summary>
     public object DataBoundItem { get { return ControlProvider.GetDataBoundItem(_RowIndex); } }
 
     /// <summary>
     /// Доступ к строке таблицы данных, если источником данных для табличного
-    /// просмотра является DataView. Иначе - null
+    /// просмотра является <see cref="DataView"/>. Иначе - null
     /// </summary>
     public DataRowView RowView
     {
       get
       {
-        DataView dv = ControlProvider.SourceAsDataView;
-        if (dv == null)
-          return null;
-        else
-          return dv[RowIndex];
+        return ControlProvider.GetDataBoundItem(_RowIndex) as DataRowView;
       }
     }
 
     /// <summary>
     /// Доступ к строке таблицы данных, если источником данных для табличного
-    /// просмотра является DataView. Иначе - null
+    /// просмотра является <see cref="DataView"/>. Иначе - null
     /// </summary>
     public DataRow DataRow
     {
@@ -313,7 +316,7 @@ namespace FreeLibSet.Forms
     /// Доступ к строке табличного просмотра. 
     /// Вызов метода делает строку Unshared
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Строка табличного просмотра</returns>
     public DataGridViewRow GetGridRow()
     {
       if (RowIndex < 0)
@@ -329,9 +332,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Цветовое оформление строки или ячейки.
-    /// Установка значения в EFPDataGridViewColorType.TotalRow для объекта EFPDataGridViewRowAttributesEventArgs приводит дополнительно
-    /// к установке свойств TopBorder и BottomBorder в значение Thick, что удобно для оформления таблиц отчетов.
-    /// Чтобы посторониие свойства не устанавливались, используйте метод SetColorTypeOnly()
+    /// Установка значения в <see cref="EFPDataGridViewColorType.TotalRow"/> для объекта <see cref="EFPDataGridViewRowAttributesEventArgs"/> приводит дополнительно
+    /// к установке свойств <see cref="TopBorder"/> и <see cref="BottomBorder"/> в значение <see cref="EFPDataGridViewBorderStyle.Thick"/>, что удобно для оформления таблиц отчетов.
+    /// Чтобы посторониие свойства не устанавливались, используйте метод <see cref="SetColorTypeOnly(EFPDataGridViewColorType)"/>.
+    /// 
+    /// Используется при вызове в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public EFPDataGridViewColorType ColorType
     {
@@ -354,7 +359,8 @@ namespace FreeLibSet.Forms
     private EFPDataGridViewColorType _ColorType;
 
     /// <summary>
-    /// Установка свойства ColorType без неявной установки других свойств
+    /// Установка свойства <see cref="ColorType"/> без неявной установки других свойств.
+    /// Используется при вызове в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     /// <param name="value">Значение свойства</param>
     public void SetColorTypeOnly(EFPDataGridViewColorType value)
@@ -363,8 +369,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если установить в true, то текст ячейки будет рисоваться серым шрифтом
-    /// По умолчанию - false
+    /// Если установить в true, то текст ячейки будет рисоваться серым шрифтом.
+    /// По умолчанию - false.
+    /// Используется при вызове в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public bool Grayed
     {
@@ -383,54 +390,65 @@ namespace FreeLibSet.Forms
     internal bool? _Grayed;
 
     /// <summary>
-    /// Левая граница ячейки, используемая при печати
+    /// Левая граница ячейки, используемая при печати.
+    /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public EFPDataGridViewBorderStyle LeftBorder { get { return _LeftBorder; } set { _LeftBorder = value; } }
     private EFPDataGridViewBorderStyle _LeftBorder;
 
     /// <summary>
-    /// Верняя граница ячейки, используемая при печати
+    /// Верняя граница ячейки, используемая при печати.
+    /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public EFPDataGridViewBorderStyle TopBorder { get { return _TopBorder; } set { _TopBorder = value; } }
     private EFPDataGridViewBorderStyle _TopBorder;
 
     /// <summary>
-    /// Правая граница ячейки, используемая при печати
+    /// Правая граница ячейки, используемая при печати.
+    /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public EFPDataGridViewBorderStyle RightBorder { get { return _RightBorder; } set { _RightBorder = value; } }
     private EFPDataGridViewBorderStyle _RightBorder;
 
     /// <summary>
-    /// Нижняя граница ячейки, используемая при печати
+    /// Нижняя граница ячейки, используемая при печати.
+    /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public EFPDataGridViewBorderStyle BottomBorder { get { return _BottomBorder; } set { _BottomBorder = value; } }
     private EFPDataGridViewBorderStyle _BottomBorder;
 
     /// <summary>
     /// Перечеркивание ячейки от левого нижнего угла к правому верхнему.
-    /// В отличие от других границ, работает в режиме просмотра.
-    /// Значение Default идентично None.
+    /// В отличие от других границ, работает в режиме просмотра (в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>).
+    /// Значение <see cref="EFPDataGridViewBorderStyle.Default"/> идентично <see cref="EFPDataGridViewBorderStyle.None"/>.
     /// </summary>
     public EFPDataGridViewBorderStyle DiagonalUpBorder { get { return _DiagonalUpBorder; } set { _DiagonalUpBorder = value; } }
     private EFPDataGridViewBorderStyle _DiagonalUpBorder;
 
     /// <summary>
     /// Перечеркивание ячейки от левого верхнего угла к правому нижнему.
-    /// В отличие от других границ, работает в режиме просмотра.
-    /// Значение Default идентично None.
+    /// В отличие от других границ, работает в режиме просмотра (в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>).
+    /// Значение <see cref="EFPDataGridViewBorderStyle.Default"/> идентично <see cref="EFPDataGridViewBorderStyle.None"/>.
     /// </summary>
     public EFPDataGridViewBorderStyle DiagonalDownBorder { get { return _DiagonalDownBorder; } set { _DiagonalDownBorder = value; } }
     private EFPDataGridViewBorderStyle _DiagonalDownBorder;
 
     /// <summary>
-    /// Используется в режиме Reason=ReadOnly
+    /// Если установить в true, то ячейка будет недоступна для редактирования по месту.
+    /// Событие не вызывается из <see cref="EFPDataGridView.PerformEditData(EFPDataGridViewState)"/>, если редактирование выполняется
+    /// в пользовательском обработчике <see cref="EFPDataGridView.EditData"/>.
+    /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.ReadOnly"/>.
+    /// Можно задать более информативное сообщение для вывода пользователю, если установить свойство <see cref="ReadOnlyMessage"/>.
     /// </summary>
     public bool ReadOnly { get { return _ReadOnly; } set { _ReadOnly = value; } }
     private bool _ReadOnly;
 
     /// <summary>
-    /// Используется в режиме Reason=ReadOnly
-    /// Текст сообщения, почему нельзя редактировать строку / ячейку
+    /// Текст сообщения, почему нельзя редактировать строку / ячейку.
+    /// Применяется совместно с установкой свойства <see cref="ReadOnly"/>=true, если стандартное сообщение недостаточно информативно.
+    /// Не используйте вместо установки этого свойства прямой вызов методов <see cref="EFPApp.ErrorMessageBox(string)"/> или <see cref="EFPApp.ShowTempMessage(string)"/>,
+    /// так как событие может быть вызвано не только, когда пользователь пытается начать редактирование.
+    /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.ReadOnly"/>.
     /// </summary>
     public string ReadOnlyMessage { get { return _ReadOnlyMessage; } set { _ReadOnlyMessage = value; } }
     private string _ReadOnlyMessage;
@@ -440,8 +458,9 @@ namespace FreeLibSet.Forms
     #region Методы
 
     /// <summary>
-    /// Устанавливает четыре границы (свойства LeftBorder, TopBorder, RightBorder, BottomBorder), используемые для печати.
-    /// Свойства DiagonalUpBorder и DiagonalDownBorder не меняются
+    /// Устанавливает четыре границы (свойства <see cref="LeftBorder"/>, <see cref="TopBorder"/>, <see cref="RightBorder"/>, <see cref="BottomBorder"/> ), используемые для печати.
+    /// Свойства <see cref="DiagonalUpBorder"/> и <see cref="DiagonalDownBorder"/> не меняются.
+    /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     /// <param name="style">Вид границы</param>
     public void SetAllBorders(EFPDataGridViewBorderStyle style)
@@ -450,11 +469,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает границы (свойства LeftBorder, TopBorder, RightBorder, BottomBorder), используемые для печати.
-    /// Также может устанавливать свойства DiagonalUpBorder и DiagonalDownBorder.
+    /// Устанавливает четыре границы (свойства <see cref="LeftBorder"/>, <see cref="TopBorder"/>, <see cref="RightBorder"/>, <see cref="BottomBorder"/> ), используемые для печати.
+    /// Также может устанавливать свойства <see cref="DiagonalUpBorder"/> и <see cref="DiagonalDownBorder"/>.
+    /// Используется в режиме просмотра (в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>).
     /// </summary>
     /// <param name="style">Вид границы</param>
-    /// <param name="diagonals">Если true, то дополнительно будет установлены свойства DiagonalUpBorder и DiagonalDownBorder</param>
+    /// <param name="diagonals">Если true, то дополнительно будет установлены свойства <see cref="DiagonalUpBorder"/> и <see cref="DiagonalDownBorder"/></param>
     public void SetAllBorders(EFPDataGridViewBorderStyle style, bool diagonals)
     {
       LeftBorder = style;
@@ -473,10 +493,10 @@ namespace FreeLibSet.Forms
     #region Защищенные методы
 
     /// <summary>
-    /// Инициализация аргументов
+    /// Инициализация свойств объекта.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки табличного просмотра</param>
-    /// <param name="reason">Свойство Reason</param>
+    /// <param name="rowIndex">Индекс строки табличного просмотра (свойство <see cref="RowIndex"/>)</param>
+    /// <param name="reason">Свойство <see cref="Reason"/></param>
     protected void InitRow(int rowIndex, EFPDataGridViewAttributesReason reason)
     {
       _RowIndex = rowIndex;
@@ -495,7 +515,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Аргументы события EFPDataGridView.GetRowAttributes
+  /// Аргументы события <see cref="EFPDataGridView.GetRowAttributes"/>
   /// </summary>
   public class EFPDataGridViewRowAttributesEventArgs : EFPDataGridViewCellAttributesEventArgsBase
   {
@@ -516,22 +536,28 @@ namespace FreeLibSet.Forms
     #region Устанавливаемые свойства
 
     /// <summary>
-    /// При печати запретить отрывать текущую строку от предыдущей
+    /// При печати запретить отрывать текущую строку от предыдущей.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public bool PrintWithPrevious { get { return _PrintWithPrevious; } set { _PrintWithPrevious = value; } }
     private bool _PrintWithPrevious;
 
     /// <summary>
-    /// При печати запретить отрывать текущую строку от следующей
+    /// При печати запретить отрывать текущую строку от следующей.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public bool PrintWithNext { get { return _PrintWithNext; } set { _PrintWithNext = value; } }
     private bool _PrintWithNext;
 
     /// <summary>
     /// Изображение, которое будет выведено в заголовке строки (в серой ячейке)
-    /// Должно быть установлено свойство EFPDataGridView.UseRowImages
-    /// Это свойство также используется при навигации по Ctrl-[, Ctrl-]
-    /// Стандартный значок может быть переопределен установкой свойства UserImage
+    /// Должно быть установлено свойство <see cref="EFPDataGridView.UseRowImages"/>
+    /// Это свойство также используется при навигации по Ctrl-[, Ctrl-].
+    /// Стандартный значок может быть переопределен установкой свойства <see cref="UserImage"/>.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/>.
+    /// 
+    /// Вместо прямой установки свойств <see cref="ImageKind"/> и <see cref="ToolTipText"/> обычно удобнее использовать
+    /// методы <see cref="AddRowErrorMessage(ErrorMessageItem, string)"/> и производные от него.
     /// </summary>
     public EFPDataGridViewImageKind ImageKind { get { return _ImageKind; } set { _ImageKind = value; } }
     private EFPDataGridViewImageKind _ImageKind;
@@ -540,18 +566,20 @@ namespace FreeLibSet.Forms
     /// Переопределение изображения, которое будет выведено в заголовке строки 
     /// (в серой ячейке)
     /// Если свойство не установлено (по умолчанию), то используются стандартные
-    /// значки для ImageKind=Information,Warning и Error, или пустое изображение
-    /// при ImageKind=None. 
-    /// Свойство не влияет на навигацию по строкам по Ctrl-[, Ctrl-]
-    /// Должно быть установлено свойство EFPDataGridView.UseRowImages
+    /// значки для <see cref="ImageKind"/>=Information,Warning и Error, или пустое изображение
+    /// при <see cref="ImageKind"/>=None. 
+    /// Свойство не влияет на навигацию по строкам по Ctrl-[, Ctrl-], поэтому установка этого свойства не отменяет
+    /// необходимость установки свойства <see cref="ImageKind"/>.
+    /// Должно быть установлено свойство <see cref="EFPDataGridView.UseRowImages"/>.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/>.
     /// </summary>
     public Image UserImage { get { return _UserImage; } set { _UserImage = value; } }
     private Image _UserImage;
 
     /// <summary>
     /// Всплывающая подсказка, которая будет выведена при наведении курсора на 
-    /// ячейку заголовка строки. Поле должно заполняться только при Reason=ToolTip.
-    /// В других режимах значение игнорируется
+    /// ячейку заголовка строки. 
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     public string ToolTipText { get { return _ToolTipText; } set { _ToolTipText = value; } }
     private string _ToolTipText;
@@ -569,7 +597,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Идентификатор строки, используемый при построении списка сообщений об ошибках.
-    /// Если свойство явно не устанавливается в обработчике GetRowAttributes, оно принимает значение по умолчанию
+    /// Если свойство явно не устанавливается, то используется значение по умолчанию <see cref="DefaultRowIdText"/>.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     public string RowIdText
     {
@@ -589,7 +618,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Идентификатор строки по умолчанию.
-    /// Если установлено свойство EFPDataGridView.RowIdTextDataColumnName
+    /// Используется, если свойство <see cref="RowIdText"/> не установлено в обработчике события.
+    /// Если установлено свойство <see cref="EFPDataGridView.RowIdTextDataColumnName"/> и просмотр присоединен к таблице данных,
+    /// то возвращается значение поля из строки <see cref="EFPDataGridViewCellAttributesEventArgsBase.DataRow"/>.
+    /// Иначе возвращается порядковый номер строки.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     public string DefaultRowIdText
     {
@@ -608,10 +641,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Используется вместо штучной установки свойства ContentVisible в обработчике
-    /// GetCellAttributes. По умолчанию - true. Если свойство сбросить в false,
-    /// то для всех ячеек типа DataGridViewCheckBoxCell, DataGridViewButtonCell и
-    /// DataGridViewComboBoxCell будет устанавливаться свойство ContentVisible=false
+    /// Используется вместо штучной установки свойства <see cref="EFPDataGridViewCellAttributesEventArgs.ContentVisible"/> в обработчике
+    /// <see cref="EFPDataGridView.GetCellAttributes"/>. По умолчанию - true. Если свойство сбросить в false,
+    /// то для всех ячеек типа <see cref="DataGridViewCheckBoxCell"/>, <see cref="DataGridViewButtonCell"/> и
+    /// <see cref="DataGridViewComboBoxCell"/> будет устанавливаться свойство <see cref="EFPDataGridViewCellAttributesEventArgs.ContentVisible"/>=false.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/>.
     /// </summary>
     public bool ControlContentVisible { get { return _ControlContentVisible; } set { _ControlContentVisible = value; } }
     private bool _ControlContentVisible;
@@ -623,9 +657,12 @@ namespace FreeLibSet.Forms
     #region Основные методы
 
     /// <summary>
-    /// Устанавливает для строки подходящее изображение и добавляет сообщения
-    /// к свойству ToolTipText из списка ошибок
-    /// Эквивалентно вызову метода AddRowErrorMessage() для каждого сообщения в списке
+    /// Устанавливает для строки подходящее изображение <see cref="ImageKind"/> и добавляет сообщения
+    /// к свойству <see cref="ToolTipText"/> из списка ошибок.
+    /// Устанавливается значок "максимальной серьезности" из ранее установленного значения <see cref="ImageKind"/> и <see cref="ErrorMessageItem.Kind"/>.
+    /// Сообщения добавляются в конец <see cref="ToolTipText"/> и отделяются от существующего текста символами новой строки <see cref="Environment.NewLine"/>.
+    /// Эквивалентно вызову метода <see cref="AddRowErrorMessage(ErrorMessageItem)"/> для каждого сообщения в списке.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     /// <param name="errors">Список ошибок</param>
     public void AddRowErrorMessages(ErrorMessageList errors)
@@ -637,10 +674,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки подходящее изображение и добавляет сообщение
-    /// к свойству ToolTipText.
-    /// Эквивалентно одному из вызовов: AddRowError(), AddRowWarning() или
-    /// AddRowInformation()
+    /// Устанавливает для строки подходящее изображение <see cref="ImageKind"/> и добавляет сообщение <paramref name="message"/>
+    /// к свойству <see cref="ToolTipText"/>.
+    /// Устанавливается значок "максимальной серьезности" из ранее установленного значения <see cref="ImageKind"/> и <see cref="ErrorMessageItem.Kind"/>.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
+    /// Эквивалентно одному из вызовов: <see cref="AddRowError(string)"/>, <see cref="AddRowWarning(string)"/> или
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
+    /// <see cref="AddRowInformation(string)"/>
     /// </summary>
     /// <param name="kind">Важность: Ошибка, предупреждение или сообщение</param>
     /// <param name="message">Текст сообщения</param>
@@ -650,44 +690,50 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки подходящее изображение и добавляет сообщение
-    /// к свойству ToolTipText.
-    /// Эквивалентно одному из вызовов: AddRowError(), AddRowWarning() или
-    /// AddRowInformation()
+    /// Устанавливает для строки подходящее изображение <see cref="ImageKind"/> и добавляет сообщение
+    /// к свойству <see cref="ToolTipText"/>.
+    /// Устанавливается значок "максимальной серьезности" из ранее установленного значения <see cref="ImageKind"/> и <see cref="ErrorMessageItem.Kind"/>.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
+    /// Эквивалентно одному из вызовов: <see cref="AddRowError(string)"/>, <see cref="AddRowWarning(string)"/> или
+    /// <see cref="AddRowInformation(string)"/>.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
-    /// <param name="error">Объект ошибки ErrorMessageItem</param>
-    public void AddRowErrorMessage(ErrorMessageItem error)
+    /// <param name="item">Объект ошибки ErrorMessageItem</param>
+    public void AddRowErrorMessage(ErrorMessageItem item)
     {
-      AddRowErrorMessage(error, String.Empty);
+      AddRowErrorMessage(item, String.Empty);
     }
 
     /// <summary>
-    /// Устанавливает для строки подходящее изображение и добавляет сообщение
-    /// к свойству ToolTipText.
+    /// Устанавливает для строки подходящее изображение <see cref="ImageKind"/> и добавляет сообщение
+    /// к свойству <see cref="ToolTipText"/>.
     /// Позволяет привязать сообщение об ошибке и задать подсветку для выбранных ячеек строки.
-    /// Эквивалентно одному из вызовов: AddRowError(), AddRowWarning() или
-    /// AddRowInformation()
+    /// Устанавливается значок "максимальной серьезности" из ранее установленного значения <see cref="ImageKind"/> и <see cref="ErrorMessageItem.Kind"/>.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
+    /// Эквивалентно одному из вызовов: <see cref="AddRowError(string)"/>, <see cref="AddRowWarning(string)"/> или
+    /// <see cref="AddRowInformation(string)"/>.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
-    /// <param name="error">Объект ошибки ErrorMessageItem</param>
+    /// <param name="item">Объект ошибки <see cref="ErrorMessageItem"/></param>
     /// <param name="columnNames">Список имен столбцов (через запятую), для которых задается подсветка ошибки</param>
-    public void AddRowErrorMessage(ErrorMessageItem error, string columnNames)
+    public void AddRowErrorMessage(ErrorMessageItem item, string columnNames)
     {
-      EFPDataGridViewImageKind NewImageKind;
-      switch (error.Kind)
+      EFPDataGridViewImageKind newImageKind;
+      switch (item.Kind)
       {
-        case ErrorMessageKind.Error: NewImageKind = EFPDataGridViewImageKind.Error; break;
-        case ErrorMessageKind.Warning: NewImageKind = EFPDataGridViewImageKind.Warning; break;
-        case ErrorMessageKind.Info: NewImageKind = EFPDataGridViewImageKind.Information; break;
+        case ErrorMessageKind.Error: newImageKind = EFPDataGridViewImageKind.Error; break;
+        case ErrorMessageKind.Warning: newImageKind = EFPDataGridViewImageKind.Warning; break;
+        case ErrorMessageKind.Info: newImageKind = EFPDataGridViewImageKind.Information; break;
         default:
-          throw new ArgumentException("Неправильное значение Error.Kind=" + error.Kind.ToString());
+          throw new ArgumentException("Неправильное значение Error.Kind=" + item.Kind.ToString());
       }
 
-      if ((int)NewImageKind > (int)ImageKind)
-        ImageKind = NewImageKind;
+      if ((int)newImageKind > (int)ImageKind)
+        ImageKind = newImageKind;
 
-      AddToolTipText(error.Text);
+      AddToolTipText(item.Text);
       if (RowErrorMessages != null)
-        RowErrorMessages.Add(new ErrorMessageItem(error.Kind, error.Text, error.Code, RowIndex)); // исправлено 09.11.2014
+        RowErrorMessages.Add(new ErrorMessageItem(item.Kind, item.Text, item.Code, RowIndex)); // исправлено 09.11.2014
 
       if (!String.IsNullOrEmpty(columnNames))
       {
@@ -695,10 +741,10 @@ namespace FreeLibSet.Forms
         {
           string[] a = columnNames.Split(',');
           for (int i = 0; i < a.Length; i++)
-            AddOneCellErrorMessage(error, a[i]);
+            AddOneCellErrorMessage(item, a[i]);
         }
         else
-          AddOneCellErrorMessage(error, columnNames);
+          AddOneCellErrorMessage(item, columnNames);
       }
     }
 
@@ -738,8 +784,9 @@ namespace FreeLibSet.Forms
     #region Дополнительные методы
 
     /// <summary>
-    /// Устанавливает для строки изображение ошибки и добавляет сообщение к свойству
-    /// ToolTipText
+    /// Устанавливает для строки изображение ошибки <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Error"/> 
+    /// и добавляет сообщение к свойству <see cref="ToolTipText"/>.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// </summary>
     /// <param name="message">Сообщение</param>
     public void AddRowError(string message)
@@ -748,9 +795,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение ошибки и добавляет сообщение к свойству
-    /// ToolTipText
+    /// Устанавливает для строки изображение ошибки <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Error"/> 
+    /// и добавляет сообщение к свойству <see cref="ToolTipText"/>.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// Позволяет привязать сообщение об ошибке и задать подсветку для выбранных ячеек строки.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     /// <param name="message">Сообщение</param>
     /// <param name="columnNames">Список имен столбцов (через запятую), для которых задается подсветка ошибки</param>
@@ -760,8 +809,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение предупреждения (если оно не установлено уже в ошибку)
-    /// и добавляет сообщение к свойству ToolTipText
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Warning"/>,
+    /// если оно не установлено уже в ошибку.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     /// <param name="message">Сообщение</param>
     public void AddRowWarning(string message)
@@ -770,9 +821,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение предупреждения (если оно не установлено уже в ошибку)
-    /// и добавляет сообщение к свойству ToolTipText
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Warning"/>,
+    /// если оно не установлено уже в ошибку.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// Позволяет привязать предупреждение и задать подсветку для выбранных ячеек строки.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     /// <param name="message">Сообщение</param>
     /// <param name="columnNames">Список имен столбцов (через запятую), для которых задается подсветка предупреждения</param>
@@ -782,8 +835,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение сообщения и добавляет сообщение к свойству
-    /// ToolTipText
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Information"/>,
+    /// если оно не установлено уже в ошибку или предупреждение.
+    /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     /// <param name="message">Сообщение</param>
     public void AddRowInformation(string message)
@@ -792,9 +847,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение сообщения и добавляет сообщение к свойству
-    /// ToolTipText.
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Information"/>,
+    /// если оно не установлено уже в ошибку или предупреждение.
     /// Позволяет привязать сообщение для выбранных ячеек строки.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     /// <param name="message">Сообщение</param>
     /// <param name="columnNames">Список имен столбцов (через запятую), для которых задается всплывающая подсказка</param>
@@ -807,7 +863,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Защишенные методы
+    #region Защищенные методы
 
     /// <summary>
     /// Инициализация аргументов
@@ -853,7 +909,7 @@ namespace FreeLibSet.Forms
 
 
   /// <summary>
-  /// Аргументы события EFPDataGridView.GetCellAttributes
+  /// Аргументы события <see cref="EFPDataGridView.GetCellAttributes"/>
   /// </summary>
   public class EFPDataGridViewCellAttributesEventArgs : EFPDataGridViewCellAttributesEventArgsBase
   {
@@ -874,29 +930,30 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Индекс столбца в табличном просмотре (независимо от текущего порядка столбцов).
-    /// Совпадает с DataGridViewColumn.Index
+    /// Совпадает с DataGridViewColumn.Index.
     /// </summary>
     public int ColumnIndex { get { return _ColumnIndex; } }
     private int _ColumnIndex;
 
     /// <summary>
-    /// Объект столбца в EFPDataGridView
+    /// Объект столбца в <see cref="EFPDataGridView"/>
     /// </summary>
     public EFPDataGridViewColumn Column { get { return _Column; } }
     private EFPDataGridViewColumn _Column;
 
     /// <summary>
-    /// Объект столбца в DataGridView
+    /// Объект столбца в <see cref="DataGridView"/>
     /// </summary>
     public DataGridViewColumn GridColumn { get { return Column.GridColumn; } }
 
     /// <summary>
-    /// Имя столбца DataGridViewColumn.Name
+    /// Имя столбца <see cref="DataGridViewColumn.Name"/>
     /// </summary>
     public string ColumnName { get { return Column.Name; } }
 
     /// <summary>
-    /// Настройки вида ячейки для выравнивания и др. атрибутов
+    /// Настройки вида ячейки для выравнивания и др. атрибутов.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public DataGridViewCellStyle CellStyle
     {
@@ -928,7 +985,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Доступ к ячейке табличного просмотра.
-    /// Вызов метода делает строку Unshared
+    /// Вызов метода делает строку <see cref="DataGridViewRow"/> Unshared
     /// </summary>
     /// <returns>Объект ячейки</returns>
     public DataGridViewCell GetGridCell()
@@ -946,7 +1003,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Исходное (неотформатированное) значение
+    /// Исходное (неотформатированное) значение.
     /// </summary>
     public object OriginalValue { get { return _OriginalValue; } }
     private object _OriginalValue;
@@ -956,29 +1013,32 @@ namespace FreeLibSet.Forms
     #region Устанавливаемые свойства
 
     /// <summary>
-    /// Форматируемое значение
+    /// Форматируемое значение.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public object Value { get { return _Value; } set { _Value = value; } }
     private object _Value;
 
     /// <summary>
-    /// Свойство должно быть установлено в true, если было применено форматирование
-    /// значения
+    /// Свойство должно быть установлено в true, если было применено форматирование значения.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public bool FormattingApplied { get { return _FormattingApplied; } set { _FormattingApplied = value; } }
     private bool _FormattingApplied;
 
     /// <summary>
     /// Отступ от левого или от правого края (в зависимости от горизонтального 
-    /// выравнивания) значения ячейки
+    /// выравнивания) значения ячейки.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public int IndentLevel { get { return _IndentLevel; } set { _IndentLevel = value; } }
     private int _IndentLevel;
 
     /// <summary>
-    /// Возвращает значение Value или OriginalValue, в зависимости от наличия значений
-    /// и свойства FormattingApplied
-    /// Это значение должно использоваться для вывода
+    /// Возвращает значение <see cref="Value"/> или <see cref="OriginalValue"/>, в зависимости от наличия значений
+    /// и свойства <see cref="FormattingApplied"/>.
+    /// Это значение должно использоваться для вывода.
+    /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     public object FormattedValue
     {
@@ -998,12 +1058,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Всплывающая подсказка, которая будет выведена при наведении курсора на 
-    /// ячейку. Поле должно заполняться только при Reason=ToolTip.
-    /// В других режимах значение игнорируется. Перед вызовом события GetCellAttributes
-    /// вызывается событик GridColumn.ToolTipNeeded, таким образом, поле уже может
-    /// содержать значение.
-    /// Значение подсказки для строки не копируется в это поле. Можно использовать
-    /// значение RowToolTipText
+    /// ячейку. 
+    /// Перед вызовом события <see cref="EFPDataGridView.GetCellAttributes"/>
+    /// вызывается событие <see cref="DataGridView.CellToolTipTextNeeded"/>, таким образом, поле уже может содержать значение.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
+    /// Значение подсказки для строки не копируется в это поле. 
+    /// Можно использовать значение <see cref="RowToolTipText"/>.
     /// </summary>
     public string ToolTipText
     {
@@ -1020,11 +1080,10 @@ namespace FreeLibSet.Forms
     private bool _ToolTipTextHasBeenSet;
 
     /// <summary>
-    /// Текст всплывающей подсказки для строки.
-    /// Свойство имеет значение только при Reason=ToolTip
-    /// Значение может быть использовано при формировании ToolTipText, чтобы 
-    /// не вычислять текст еше раз, когда подсказка для ячеки основывается на подсказке
-    /// для строки
+    /// Текст всплывающей подсказки для строки, полученное при вызове события <see cref="EFPDataGridView.GetRowAttributes"/>.
+    /// Значение может быть использовано при формировании свойства <see cref="ToolTipText"/>, чтобы 
+    /// не вычислять текст еше раз, когда подсказка для ячеки основывается на подсказке для строки.
+    /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
     /// </summary>
     public string RowToolTipText { get { return _RowToolTipText; } }
     private string _RowToolTipText;
@@ -1044,9 +1103,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализация аргументов.
-    /// В первую очередь вызывает InitRow(), а затем инициализирует параметры для ячейки
+    /// В первую очередь вызывает <see cref="EFPDataGridViewCellAttributesEventArgsBase.InitRow(int, EFPDataGridViewAttributesReason)"/>, а затем инициализирует параметры для ячейки
     /// </summary>
-    /// <param name="rowArgs">Аргументы вызванного ранее события EFPDataGridView.GetRowAttributes</param>
+    /// <param name="rowArgs">Аргументы вызванного ранее события <see cref="EFPDataGridView.GetRowAttributes"/></param>
     /// <param name="columnIndex">Индекс столбца DataGridViewColumn.Index</param>
     /// <param name="cellStyle">Форматирование ячейки</param>
     /// <param name="styleIsTemplate"></param>
@@ -1151,17 +1210,17 @@ namespace FreeLibSet.Forms
   #region Делегаты
 
   /// <summary>
-  /// Делегат события EFPDataGridView.GetRowAttributes
+  /// Делегат события <see cref="EFPDataGridView.GetRowAttributes"/>
   /// </summary>
-  /// <param name="sender">Объект EFPDataGridView</param>
+  /// <param name="sender">Объект <see cref="EFPDataGridView"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPDataGridViewRowAttributesEventHandler(object sender,
     EFPDataGridViewRowAttributesEventArgs args);
 
   /// <summary>
-  /// Делегат события EFPDataGridView.GetCellAttributes
+  /// Делегат события <see cref="EFPDataGridView.GetCellAttributes"/>
   /// </summary>
-  /// <param name="sender">Объект EFPDataGridView</param>
+  /// <param name="sender">Объект <see cref="EFPDataGridView"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPDataGridViewCellAttributesEventHandler(object sender,
     EFPDataGridViewCellAttributesEventArgs args);
@@ -1175,7 +1234,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// В MS Excel нельзя использовать те же цвета, что и в табличном просмотре
   /// на экране. Вместо этого можно использовать атрибуты шрифта
-  /// Метод EFPDataGridView.GetExcelCellAttr() позволяет получить атрибуты ячейки,
+  /// Метод <see cref="EFPDataGridView.GetExcelCellAttr(EFPDataGridViewCellAttributesEventArgs)"/> позволяет получить атрибуты ячейки,
   /// совместимые с Microsoft Excel
   /// </summary>
   public struct EFPDataGridViewExcelCellAttributes
@@ -1183,14 +1242,14 @@ namespace FreeLibSet.Forms
     #region Поля
 
     /// <summary>
-    /// Цвет фона ячейки
-    /// Значение Color.Empty означает использование цвета фона по умолчанию ("Авто")
+    /// Цвет фона ячейки.
+    /// Значение <see cref="Color.Empty"/> означает использование цвета фона по умолчанию ("Авто")
     /// </summary>
     public Color BackColor;
 
     /// <summary>
-    /// Цвет текста
-    /// Значение Color.Empty означает использование цвета шрифта по умолчанию ("Авто")
+    /// Цвет текста.
+    /// Значение <see cref="Color.Empty"/> означает использование цвета шрифта по умолчанию ("Авто")
     /// </summary>
     public Color ForeColor;
 
@@ -1214,7 +1273,7 @@ namespace FreeLibSet.Forms
     #region Дополнительные свойства
 
     /// <summary>
-    /// Возвращает true, если никакие атрибцты не установлены
+    /// Возвращает true, если никакие атрибуты не установлены
     /// </summary>
     public bool IsEmpty
     {
@@ -1233,47 +1292,47 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Возможные способы сохранения / восстановления текущей позиции в табличном 
-  /// просмотре (свойство EFPDataGridView.SelectedRowsMode)
+  /// просмотре (свойство <see cref="EFPDataGridView.SelectedRowsMode"/>)
   /// </summary>
   public enum EFPDataGridViewSelectedRowsMode
   {
     /// <summary>
-    /// Режим по умолчанию Текущая строка не может быть восстановлена
+    /// Режим по умолчанию.
+    /// Текущая строка не может быть восстановлена.
     /// </summary>
     None,
 
     /// <summary>
     /// Сохрание номеров строк.
-    /// Обычно подходит для табличных просмотров, не связанных с источником данных
+    /// Обычно подходит для табличных просмотров, не связанных с источником данных.
     /// </summary>
     RowIndex,
 
     /// <summary>
-    /// Сохранение ссылок на объекты DataRow
-    /// Подходит для просмотров, связанных с DataTable/DataView при условии, что
-    /// обновление таблицы не приводит к замене строк. Зато таблица может не иметь
-    /// ключевого поля.
+    /// Сохранение ссылок на объекты <see cref="System.Data.DataRow"/>.
+    /// Подходит для просмотров, связанных с <see cref="System.Data.DataTable"/> или <see cref="System.Data.DataView"/> при условии, что
+    /// обновление таблицы не приводит к замене строк. Зато таблица может не иметь ключевого поля.
     /// </summary>
     DataRow,
 
     /// <summary>
-    /// Самый подходящий режим для просмотров, связанных с DataTable/DataView,
-    /// имеющих ключевое поле (или несколько полей, составляющих первичный ключ)
+    /// Самый подходящий режим для просмотров, связанных с <see cref="System.Data.DataTable"/> или <see cref="System.Data.DataView"/>,
+    /// имеющих ключевое поле (или несколько полей, составляющих первичный ключ).
     /// </summary>
     PrimaryKey,
 
     /// <summary>
-    /// Сохранение значений полей сортировки, заданных в свойстве DataView.ViewOrder
+    /// Сохранение значений полей сортировки, заданных в свойстве <see cref="DataView.Sort"/>
     /// для объекта, связанного с табличным просмотром. Не следует использовать
-    /// этот режим, если в просмотре встречаются строки с одинаковыми значенями
-    /// полей (сортировка не обеспечивает уникальности)
+    /// этот режим, если в просмотре встречаются строки с одинаковыми значениями
+    /// полей (сортировка не обеспечивает уникальности).
     /// </summary>
     DataViewSort,
   }
 
   /// <summary>
-  /// Класс для сохранения текущей позиции и выбранных строк/столбцов в таблчном просмотре
-  /// (свойство EFPDataGridView.Selection)
+  /// Класс для сохранения текущей позиции и выбранных строк/столбцов в табличном просмотре
+  /// (свойство <see cref="EFPDataGridView.Selection"/>).
   /// Не содержит открытых полей
   /// </summary>
   public class EFPDataGridViewSelection
@@ -1299,7 +1358,7 @@ namespace FreeLibSet.Forms
     internal int CurrentColumnIndex;
 
     /// <summary>
-    /// true, если свойство DataGridView.DataSource было установлено
+    /// true, если свойство <see cref="DataGridView.DataSource"/> было установлено
     /// </summary>
     internal bool DataSourceExists;
   }
@@ -1309,7 +1368,7 @@ namespace FreeLibSet.Forms
   #region Режимы установки отметок строк
 
   /// <summary>
-  /// Аргумент RowList метода EFPDataGridView.CheckMarkRows()
+  /// Аргумент rows метода <see cref="EFPDataGridView.CheckMarkRows(EFPDataGridViewCheckMarkRows, EFPDataGridViewCheckMarkAction)"/>
   /// </summary>
   public enum EFPDataGridViewCheckMarkRows
   {
@@ -1325,7 +1384,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Аргумент Action метода EFPDataGridView.CheckMarkRows()
+  /// Аргумент action метода <see cref="EFPDataGridView.CheckMarkRows(EFPDataGridViewCheckMarkRows, EFPDataGridViewCheckMarkAction)"/>
   /// </summary>
   public enum EFPDataGridViewCheckMarkAction
   {
@@ -1350,18 +1409,17 @@ namespace FreeLibSet.Forms
   #region Событие CellFinished
 
   /// <summary>
-  /// Причина вызова события CellFinished
+  /// Причина вызова события <see cref="EFPDataGridView.CellFinished"/>
   /// </summary>
   public enum EFPDataGridViewCellFinishedReason
   {
     /// <summary>
-    /// Вызвано событие DataGridView.CellValueChanged в процессе редактирования ячейки
-    /// или значение вставлено из калькулятора
+    /// Вызвано событие <see cref="DataGridView.CellValueChanged"/> в процессе редактирования ячейки.
     /// </summary>
     Edit,
 
     /// <summary>
-    /// Вставлено текстовое значение из буфера обмена с помощью EFPDataGridViewCommandItems.PerformPasteText()
+    /// Вставлено текстовое значение из буфера обмена с помощью <see cref="EFPDataGridView.PerformPasteText(string[,])"/>
     /// </summary>
     Paste,
 
@@ -1371,13 +1429,13 @@ namespace FreeLibSet.Forms
     Clear,
 
     /// <summary>
-    /// Установка / снята отметка строки с помощью EFPDataGridView.CheckMarkRows()
+    /// Установка / снята отметка строки с помощью <see cref="EFPDataGridView.CheckMarkRows(EFPDataGridViewCheckMarkRows, EFPDataGridViewCheckMarkAction)"/>
     /// </summary>
     MarkRow,
   }
 
   /// <summary>
-  /// Аргументы события EFPDataGridView.CellFinished
+  /// Аргументы события <see cref="EFPDataGridView.CellFinished"/>
   /// </summary>
   public class EFPDataGridViewCellFinishedEventArgs : EventArgs
   {
@@ -1436,7 +1494,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Строка данных, если табличный просмотр связан с таблицей DataTable.
+    /// Строка данных, если табличный просмотр связан с таблицей <see cref="System.Data.DataTable"/>.
     /// Иначе возвращает null.
     /// </summary>
     public DataRow DataRow
@@ -1448,7 +1506,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Имя столбца табличного просмотра EFPDataGridViewColumn.Name.
+    /// Имя столбца табличного просмотра <see cref="EFPDataGridViewColumn.Name"/>.
     /// </summary>
     public string ColumnName { get { return _ControlProvider.Columns[ColumnIndex].Name; } }
 
@@ -1456,9 +1514,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события EFPDataGridView.CellFinished
+  /// Делегат события <see cref="EFPDataGridView.CellFinished"/>
   /// </summary>
-  /// <param name="sender">Объект EFPDataGridView</param>
+  /// <param name="sender">Объект <see cref="EFPDataGridView"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPDataGridViewCellFinishedEventHandler(object sender,
     EFPDataGridViewCellFinishedEventArgs args);
@@ -1468,13 +1526,13 @@ namespace FreeLibSet.Forms
   #region Режимы подбора высоты строк
 
   /// <summary>
-  /// Возможные значения свойства EFPDataGridView.AutoSizeRowsMode.
+  /// Возможные значения свойства <see cref="EFPDataGridView.AutoSizeRowsMode"/>.
   /// В текущей реализации существует единственный режим Auto.
   /// </summary>
   public enum EFPDataGridViewAutoSizeRowsMode
   {
     /// <summary>
-    /// Нет управления высотой строки или оно реализовано средствами DataGridView
+    /// Нет управления высотой строки или оно реализовано средствами <see cref="DataGridView"/>
     /// </summary>
     None,
 
@@ -1489,62 +1547,7 @@ namespace FreeLibSet.Forms
   #region Интерфейс IEFPDataView
 
   /// <summary>
-  /// Информация об одном столбце EFPDataGridView или EFPDataTreeView
-  /// </summary>
-  public struct EFPDataViewColumnInfo
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="dataPropertName"></param>
-    /// <param name="columnProducer"></param>
-    public EFPDataViewColumnInfo(string name, string dataPropertName, IEFPGridProducerColumn columnProducer)
-    {
-      _Name = name;
-      _DataPropertyName = dataPropertName;
-      _ColumnProducer = columnProducer;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Имя столбца. Должно быть уникальным в пределах просмотра
-    /// </summary>
-    public string Name { get { return _Name; } }
-    private string _Name;
-
-    /// <summary>
-    /// Имя поля источника данных, если столбец отображает данные из источника.
-    /// Для вычисляемых столбцов содержит null
-    /// </summary>
-    public string DataPropertyName { get { return _DataPropertyName; } }
-    private string _DataPropertyName;
-
-    /// <summary>
-    /// Генератор столбца табличного просмотра. Null, если не использовался GridProducer.
-    /// </summary>
-    public IEFPGridProducerColumn ColumnProducer { get { return _ColumnProducer; } }
-    private IEFPGridProducerColumn _ColumnProducer;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString()
-    {
-      return _Name;
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Общие методы и свойства для EFPDataGridView и EFPDataTreeView
+  /// Общие методы и свойства для <see cref="EFPDataGridView"/> и <see cref="EFPDataTreeView"/>
   /// </summary>
   public interface IEFPDataView : IEFPControl
   {
@@ -1554,47 +1557,47 @@ namespace FreeLibSet.Forms
     bool ReadOnly { get; set; }
 
     /// <summary>
-    /// Управляемое свойство для ReadOnly
+    /// Управляемое свойство для <see cref="ReadOnly"/>
     /// </summary>
     DepValue<bool> ReadOnlyEx { get; set; }
 
     /// <summary>
     /// true, если допускается создание новых записей.
-    /// Действует, если ReadOnly=false
+    /// Действует, если <see cref="ReadOnly"/>=false
     /// </summary>
     bool CanInsert { get; set; }
 
     /// <summary>
-    /// Управляемое свойство для CanInsert
+    /// Управляемое свойство для <see cref="CanInsert"/>
     /// </summary>
     DepValue<bool> CanInsertEx { get; set; }
 
     /// <summary>
     /// true, если допускается создание новых записей на основании существующей.
-    /// Действует, если ReadOnly=false, а CanInsert=true
+    /// Действует, если <see cref="ReadOnly"/>=false, а <see cref="CanInsert"/>=true
     /// </summary>
     bool CanInsertCopy { get; set; }
 
     /// <summary>
-    /// Управляемое свойство для CanInsertCopy
+    /// Управляемое свойство для <see cref="CanInsertCopy"/>
     /// </summary>
     DepValue<bool> CanInsertCopyEx { get; set; }
 
     /// <summary>
     /// true, если допускается удаление записей.
-    /// Действует, если ReadOnly=false
+    /// Действует, если <see cref="ReadOnly"/>=false
     /// </summary>
     bool CanDelete { get; set; }
 
     /// <summary>
-    /// Управляемое свойство для CanDelete
+    /// Управляемое свойство для <see cref="CanDelete"/>
     /// </summary>
     DepValue<bool> CanDeleteEx { get; set; }
 
     /// <summary>
     /// true, если допускается групповое редактирование и просмотр записей.
     /// false, если допускается редактирование / просмотр только одной записи за раз.
-    /// Действует, если ReadOnly=false или CanView=true.
+    /// Действует, если <see cref="ReadOnly"/>=false или <see cref="CanView"/>=true.
     /// Не влияет на возможность удаления нескольких записей
     /// </summary>
     bool CanMultiEdit { get; set; }
@@ -1605,36 +1608,37 @@ namespace FreeLibSet.Forms
     bool CanView { get; set; }
 
     /// <summary>
-    /// Управляемое свойство для ReadOnly
+    /// Управляемое свойство для <see cref="CanView"/>
     /// </summary>
     DepValue<bool> CanViewEx { get; set; }
 
     /// <summary>
-    /// Возвращает источник данных в виде DataTable.
+    /// Возвращает источник данных в виде <see cref="DataTable"/>.
     /// Возвращает null, если источник данных не является таблицей или просмотром таблицы
     /// </summary>
     DataTable SourceAsDataTable { get; }
 
     /// <summary>
-    /// Возвращает источник данных в виде DataView.
+    /// Возвращает источник данных в виде <see cref="DataView"/>.
     /// Возвращает null, если источник данных не является таблицей или просмотром таблицы
     /// </summary>
     DataView SourceAsDataView { get; }
 
     /// <summary>
-    /// Возвращает строку таблицы данных, соответствующую текущей строке / узлу
+    /// Возвращает строку <see cref="DataRow"/> таблицы данных, соответствующую текущей строке / узлу
     /// </summary>
     DataRow CurrentDataRow { get; set; }
 
     /// <summary>
     /// Выбранные строки данных, если поддерживается множественный выбор.
-    /// Если допускается выбор только одной строки, то массив содержит значение свойства CurrentDataRow
+    /// Если допускается выбор только одной строки, то массив содержит значение свойства <see cref="CurrentDataRow"/>
     /// </summary>
     DataRow[] SelectedDataRows { get; set; }
 
     /// <summary>
     /// Проверяет, что в просмотре выбрана ровно одна строка.
-    /// Выдает сообщение, если это не так
+    /// Выдает сообщение для пользователя, если это не так.
+    /// Этот метод обычно вызывается в начале выполнения команды локального меню, если команда работает с текущей строкой просмотра.
     /// </summary>
     /// <returns>true, если выбрана одна строка</returns>
     bool CheckSingleRow();
@@ -1642,38 +1646,50 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Доступна ли для пользователя команда "Обновить просмотр".
     /// Возвращает свойство CommandItems.UseRefresh.
-    /// В частности, для отчетов EFPReportDataGridViewPage возвращает false
+    /// В частности, для просмотра страницы отчета <see cref="EFPReportGridPage"/> возвращает false.
     /// </summary>
     bool UseRefresh { get; }
 
     /// <summary>
-    /// Выполняет обновление просмотра
+    /// Выполняет обновление просмотра.
     /// </summary>
     void PerformRefresh();
 
     /// <summary>
     /// Обновить все строки табличного просмотра.
-    /// В отличие от PerformRefresh(), обновляются только существующие строки, а не выполняется запрос к базе данных
+    /// В отличие от <see cref="PerformRefresh()"/>, обновляются только существующие строки, а не выполняется запрос к базе данных.
     /// </summary>
     void InvalidateAllRows();
 
     /// <summary>
-    /// Обновить в просмотре все выбранные строки SelectedRows, например, после
-    /// редактирования, если имеются вычисляемые столбцы
+    /// Обновить в просмотре все выбранные строки, например, после редактирования, если имеются вычисляемые столбцы
     /// </summary>
     void InvalidateSelectedRows();
 
     /// <summary>
-    /// Пометить на обновление строку табличного просмотра, связанную с заданной строкой таблицы данных
+    /// Пометить на обновление строку табличного просмотра, связанную с заданной строкой таблицы данных.
+    /// Предполагается, что просмотр связан с таблицей данных.
     /// </summary>
     /// <param name="row">Строка связанной таблицы данных</param>
     void InvalidateDataRow(DataRow row);
 
     /// <summary>
-    /// Пометить на обновление строки табличного просмотра, связанные с заданными строками таблицы данных
+    /// Пометить на обновление строки табличного просмотра, связанные с заданными строками таблицы данных.
+    /// Предполагается, что просмотр связан с таблицей данных.
     /// </summary>
     /// <param name="rows">Массив строк связанной таблицы данных</param>
     void InvalidateDataRows(DataRow[] rows);
+
+    /// <summary>
+    /// Список столбцов
+    /// </summary>
+    IEFPDataViewColumns Columns { get; }
+
+    /// <summary>
+    /// Возвращает информацию о видимых столбцах
+    /// </summary>
+    /// <returns></returns>
+    IEFPDataViewColumn[] VisibleColumns { get; }
 
     /// <summary>
     /// Имя текущего столбца. Если выбрано несколько столбцов (например, строка целиком),
@@ -1681,33 +1697,71 @@ namespace FreeLibSet.Forms
     /// </summary>
     string CurrentColumnName { get; }
 
+    /// <summary>
+    /// Возвращает индекс текущего столбца просмотра или (-1), если выбрана вся строка
+    /// </summary>
+    int CurrentColumnIndex { get; }
+
+    /// <summary>
+    /// Интерфейс для определения размеров элементов просмотра.
+    /// Не использовать в прикладном коде.
+    /// </summary>
+    IEFPGridControlMeasures Measures { get; }
+
+    /// <summary>
+    /// Текущая конфигурация столбцов просмотра.
+    /// </summary>
+    EFPDataGridViewConfig CurrentConfig { get; set; }
+
+    /// <summary>
+    /// Генератор столбцов табличного просмотра
+    /// </summary>
+    IEFPGridProducer GridProducer { get; }
+
+    /// <summary>
+    /// Должен заполнить в объекте <see cref="EFPDataGridViewConfigColumn"/> ширину и другие поля в сответствии с 
+    /// реальной шириной в просмотре.
+    /// Не использовать в прикладном коде.
+    /// </summary>
+    /// <param name="configColumn">Заполняемая информация о столбце</param>
+    /// <returns>true, если столбец есть в просмотре и данные были заполнены</returns>
+    bool InitColumnConfig(EFPDataGridViewConfigColumn configColumn);
+
+    /// <summary>
+    /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.
+    /// В возвращаемом объекте устанавливается свойство <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// Если нет текущей ячейки (просмотр пустой) или текущая ячейка прокручены мышью за пределы видимой области просмотра,
+    /// возвращается неинициализированный <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// </summary>
+    EFPDialogPosition CurrentPopupPosition { get; }
+
     #region Ручная сортировка строк с помощью столбца в DataTable
 
     /// <summary>
-    /// Имя числового столбца, который определяет порядок строк при ручной сортировке
-    /// Если задано, то в меню есть команды ручной сортировки
+    /// Имя числового столбца, который определяет порядок строк при ручной сортировке.
+    /// Если задано, то в меню есть команды ручной сортировки.
     /// </summary>
     string ManualOrderColumn { get; set; }
 
     /// <summary>
     /// Имя числового столбца, который определяет порядок строк по умолчанию при ручной
-    /// сортировке. Свойство действует при непустом значении ManualOrderColumn.
+    /// сортировке. Свойство действует при непустом значении <see cref="ManualOrderColumn"/>.
     /// Если имя присвоено, то действует команда "Восстановить порядок по умолчанию"
     /// </summary>
     string DefaultManualOrderColumn { get; set; }
 
     /// <summary>
-    /// Возвращает объект, реализующий интерфейс IDataReorderHelper.
-    /// Если свойство ManualOrderColumn не установлено, возвращается null.
+    /// Возвращает объект, реализующий интерфейс <see cref="IDataReorderHelper"/>.
+    /// Если свойство <see cref="ManualOrderColumn"/> не установлено, возвращается null.
     /// Для инициализации значения однократно вызывается событие DataReorderHelperNeeded.
-    /// Если требуется, чтобы свойство вернуло новое значение, используйте метод ResetDataReorderHelper().
+    /// Если требуется, чтобы свойство вернуло новое значение, используйте метод <see cref="ResetDataReorderHelper()"/>.
     /// </summary>
     /// <returns>Объект IDataReorderHelper</returns>
     IDataReorderHelper DataReorderHelper { get; }
 
     /// <summary>
-    /// Очищает сохраненное значение свойства DataReorderHelper, чтобы при следующем обращении к нему
-    /// вновь было вызвано событие DataReorderHelperNeeded
+    /// Очищает сохраненное значение свойства <see cref="DataReorderHelper"/>, чтобы при следующем обращении к нему
+    /// вновь было вызвано событие DataReorderHelperNeeded.
     /// </summary>
     void ResetDataReorderHelper();
 
@@ -1731,9 +1785,9 @@ namespace FreeLibSet.Forms
     event EventHandler ManualOrderChanged;
 
     /// <summary>
-    /// Выполняет инициализацию значения поля, заданного свойством ManualOrderColumn для новых строк, у которых поле имеет значение 0.
-    /// Вызывает метод IDataReorderHelper.InitRows().
-    /// Если свойcтво ManualOrderColumn не установлено, никаких действий не выполняется.
+    /// Выполняет инициализацию значения поля, заданного свойством <see cref="ManualOrderColumn"/> для новых строк, у которых поле имеет значение 0.
+    /// Вызывает метод <see cref="IDataReorderHelper.InitRows(DataRow[], out bool)"/>.
+    /// Если свойcтво <see cref="ManualOrderColumn"/> не установлено, никаких действий не выполняется.
     /// </summary>
     /// <param name="rows">Строки данных, которые нужно инициализировать</param>
     /// <param name="otherRowsChanged">Сюда записывается значение true, если были изменены другие строки в просмотре, кроме выбранных.</param>
@@ -1742,51 +1796,11 @@ namespace FreeLibSet.Forms
     bool InitManualOrderColumnValue(DataRow[] rows, out bool otherRowsChanged);
 
     #endregion
-  }
-
-  #endregion
-
-  #region Интерфейс IEFPGridControl
-
-  /// <summary>
-  /// Интерфейс провайдера табличного просмотра.
-  /// Предназначен исключительно для использования в библиотеке ExtForms и ExtDBDocForms.
-  /// </summary>
-  public interface IEFPGridControl : IEFPControl
-  {
-    /// <summary>
-    /// Интерфейс для определения размеров элементов просмотра
-    /// </summary>
-    IEFPGridControlMeasures Measures { get; }
 
     /// <summary>
-    /// Возвращает индекс текущего столбца просмотра или (-1), если выбрана вся строка
+    /// Получить сводку документа при экспорте.
     /// </summary>
-    int CurrentColumnIndex { get; }
-
-    /// <summary>
-    /// Текущая конфигурация столбцов просмотра
-    /// </summary>
-    EFPDataGridViewConfig CurrentConfig { get; set; }
-
-    /// <summary>
-    /// Генератор столбцов табличного просмотра
-    /// </summary>
-    IEFPGridProducer GridProducer { get; }
-
-    /// <summary>
-    /// Возвращает информацию о видимых столбцах
-    /// </summary>
-    /// <returns></returns>
-    EFPDataViewColumnInfo[] GetVisibleColumnsInfo();
-
-    /// <summary>
-    /// Должен заполнить в объекте EFPDataGridViewConfigColumn ширину и другие поля в сответствии с 
-    /// реальной шириной в просмотре.
-    /// </summary>
-    /// <param name="configColumn">Заполняемая информация о столбце</param>
-    /// <returns>true, если столбец есть в просмотре и данные были заполнены</returns>
-    bool InitColumnConfig(EFPDataGridViewConfigColumn configColumn);
+    BRDocumentProperties DocumentProperties { get; }
   }
 
   #endregion
@@ -1794,12 +1808,12 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Провайдер табличного просмотра
   /// </summary>
-  public class EFPDataGridView : EFPControl<DataGridView>, IEFPDataView, IEFPGridControl
+  public class EFPDataGridView : EFPControl<DataGridView>, IEFPDataView
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает объект, привязанный к DataGridView
+    /// Создает объект, привязанный к <see cref="DataGridView"/>
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент Windows Forms</param>
@@ -1810,7 +1824,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает объект, привязанный к ControlWithToolBar
+    /// Создает объект, привязанный к <see cref="IEFPControlWithToolBar{DataGridView}"/>
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элмент и панель инструментов</param>
     public EFPDataGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar)
@@ -1857,6 +1871,7 @@ namespace FreeLibSet.Forms
       _UseGridProducerOrders = true;
       _UseColumnHeaderClick = true;
       _UseDefaultDataError = true;
+      _DocumentProperties = BRReport.AppDefaultDocumentProperties.Clone();
 
       if (!DesignMode)
       {
@@ -1918,17 +1933,20 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает RefreshOrders()
+    /// Вызывает <see cref="EFPDataGridViewCommandItems.InitOrderItems()"/>
     /// </summary>
     protected override void OnAttached()
     {
       base.OnAttached();
       CommandItems.InitOrderItems();
       InitColumnHeaderTriangles();
+
+      if (String.IsNullOrEmpty(_DocumentProperties.Title))
+        _DocumentProperties.Title = WinFormsTools.GetControlText(Control);
     }
 
     /// <summary>
-    /// Дополнительный вызов ResetDataReorderHelper()
+    /// Дополнительный вызов <see cref="ResetDataReorderHelper()"/>
     /// </summary>
     protected override void OnDetached()
     {
@@ -1937,7 +1955,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает DataTableRepeater.Dispose(), если свойство TableRepeater было установлено.
+    /// Вызывает DataTableRepeater.Dispose(), если свойство <see cref="TableRepeater"/> было установлено.
     /// </summary>
     protected override void OnDisposed()
     {
@@ -2084,7 +2102,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот флажок устанавливается в true, когда нажата мышь или клавиша, что
-    /// означает, что просмотр есть на экране, и смена текущей ячейки выаолнена
+    /// означает, что просмотр есть на экране, и смена текущей ячейки выполнена
     /// пользователем
     /// </summary>
     private bool _MouseOrKeyboardFlag;
@@ -2100,16 +2118,7 @@ namespace FreeLibSet.Forms
           if (Control.CurrentCell != null && Control.Height > 0 && Control.Width > 0)
           {
             if (!Control.CurrentCell.Displayed)
-            {
-              try
-              {
-                Control.FirstDisplayedCell = Control.CurrentCell;
-              }
-              catch
-              {
-                // Может быть InvalidOpertationException, если строки не помещаются
-              }
-            }
+              SetFirstDisplayedCell();
           }
 
           //CommandItems.RefreshStatItems();
@@ -2120,6 +2129,22 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         EFPApp.ShowException(e, "Control_VisibleChanged");
+      }
+    }
+
+    /// <summary>
+    /// Установка свойства выделена в отдельный метод, чтобы подавить надоедливое исключение в отладчике
+    /// </summary>
+    [DebuggerStepThrough]
+    private void SetFirstDisplayedCell()
+    {
+      try
+      {
+        Control.FirstDisplayedCell = Control.CurrentCell;
+      }
+      catch
+      {
+        // Может быть InvalidOpertationException, если строки не помещаются
       }
     }
 
@@ -2141,11 +2166,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается после изменения свойств DataSource или DataMember.
+    /// Вызывается после изменения свойств <see cref="DataGridView.DataSource"/> или <see cref="DataGridView.DataMember"/>.
     /// Если требуется выполнить действия после того, как инициализировано количество строк в просмотре,
-    /// используйте OnDataBindingComplete.
+    /// используйте <see cref="OnDataBindingComplete(DataGridViewBindingCompleteEventArgs)"/>.
     /// 
-    /// Если метод переопределен в классе-наследнике, обязательно должен быть вызван метод базового класса
+    /// Если метод переопределен в классе-наследнике, обязательно должен быть вызван метод базового класса.
     /// </summary>
     protected virtual void OnDataBindingChanged()
     {
@@ -2200,7 +2225,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается при получении события DataGridView.DataBindingComplete.
+    /// Вызывается при получении события <see cref="DataGridView.DataBindingComplete"/>.
     /// Реентрантные события не вызывают метод.
     /// </summary>
     /// <param name="args">Аргументы события</param>
@@ -2323,7 +2348,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Контекст поиска по Ctrl-F / F3.
-    /// Свойство возвращает null, если TextSearchEnabled=false
+    /// Свойство возвращает null, если <see cref="TextSearchEnabled"/>=false
     /// </summary>
     public IEFPTextSearchContext TextSearchContext
     {
@@ -2342,7 +2367,7 @@ namespace FreeLibSet.Forms
     private IEFPTextSearchContext _TextSearchContext;
 
     /// <summary>
-    /// Создает объект EFPDataGridViewSearchContext.
+    /// Создает объект <see cref="EFPDataGridViewSearchContext"/>.
     /// Переопределенный метод может создать расширенный объект для поиска текста.
     /// </summary>
     /// <returns></returns>
@@ -2353,8 +2378,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если true (по умолчанию), то доступна команда "Найти" (Ctrl-F).
-    /// Если false, то свойство TextSearchContext возвращает null и поиск недоступен.
-    /// Свойство можно устанавливать только до вывода просмотра на экран
+    /// Если false, то свойство <see cref="TextSearchContext"/> возвращает null и поиск недоступен.
+    /// Свойство можно устанавливать только до вывода просмотра на экран.
     /// </summary>
     public bool TextSearchEnabled
     {
@@ -2374,7 +2399,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Генератор столбцов таблицы. Может устанавливаться только до показа табличного просмотра
-    /// На уровне EFPDataGridView используется при установке свойства CurrentConfig для инициализации
+    /// На уровне <see cref="EFPDataGridView"/> используется при установке свойства <see cref="CurrentConfig"/> для инициализации
     /// табличного просмотра.
     /// </summary>
     public IEFPGridProducer GridProducer
@@ -2393,10 +2418,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то используется порядок сортировки строк, заданный в 
-    /// GridProducer.
+    /// <see cref="GridProducer"/>.
     /// Если используется особая реализация просмотра, то можно отключить инициализацию порядка сортировки
     /// строк, установив значение false. Установка допускается только до вывода просмотра на экран.
-    /// Как правило, при установке значения в false, следует также устанавливать CustomOrderAllowed=false.
+    /// Как правило, при установке значения в false, следует также устанавливать <see cref="CustomOrderAllowed"/>=false.
     /// </summary>
     public bool UseGridProducerOrders
     {
@@ -2415,9 +2440,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущее состояние просмотра.
-    /// Используется в событии EditData.
+    /// Используется в событии <see cref="EditData"/>.
     /// Свойство кратковременно устанавливается во время наступления события редактирования.
-    /// В остальное время имеет значение View.
+    /// В остальное время имеет значение <see cref="EFPDataGridViewState.View"/>.
     /// </summary>
     public EFPDataGridViewState State { get { return _State; } }
     private EFPDataGridViewState _State;
@@ -2436,7 +2461,7 @@ namespace FreeLibSet.Forms
     }
     private EFPDataGridViewMeasures _Measures;
 
-    IEFPGridControlMeasures IEFPGridControl.Measures { get { return Measures; } }
+    IEFPGridControlMeasures IEFPDataView.Measures { get { return Measures; } }
 
     /// <summary>
     /// Установка / получения высоты всех строк просмотра в единицах количества
@@ -2463,10 +2488,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// true, если поддерживается только просмотр данных, а не редактирование.
     /// Установка свойства отключает видимость всех команд редактирования. 
-    /// Свойства CanInsert, CanDelete и CanInsertCopy перестают действовать
-    /// Значение по умолчанию: false (редактирование разрешено)
+    /// Свойства <see cref="CanInsert"/>, <see cref="CanDelete"/> и <see cref="CanInsertCopy"/> перестают действовать.
+    /// Значение по умолчанию: false (редактирование разрешено).
     /// Не влияет на возможность inline-редактирования. Возможно любое сочетание
-    /// свойств ReadOnly и Control.ReadOnly
+    /// свойств <see cref="ReadOnly"/> и <see cref="DataGridView.ReadOnly"/>.
     /// </summary>
     [DefaultValue(false)]
     public bool ReadOnly
@@ -2488,7 +2513,7 @@ namespace FreeLibSet.Forms
     private bool _ReadOnly;
 
     /// <summary>
-    /// Управляемое свойство для ReadOnly.
+    /// Управляемое свойство для <see cref="ReadOnly"/>.
     /// </summary>
     public DepValue<bool> ReadOnlyEx
     {
@@ -2524,7 +2549,7 @@ namespace FreeLibSet.Forms
     #region CanInsert
 
     /// <summary>
-    /// true, если можно добаввлять строки (при DataReadOnly=false)
+    /// true, если можно добавлять строки (при <see cref="ReadOnly"/>=false).
     /// Значение по умолчанию: true (добавление строк разрешено)
     /// </summary>
     [DefaultValue(true)]
@@ -2545,7 +2570,7 @@ namespace FreeLibSet.Forms
     private bool _CanInsert;
 
     /// <summary>
-    /// Управляемое свойство для CanInsert
+    /// Управляемое свойство для <see cref="CanInsert"/>
     /// </summary>
     public DepValue<bool> CanInsertEx
     {
@@ -2582,8 +2607,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// true, если разрешено добавлять строку по образцу существующей
-    /// (при DataReadOnly=false и CanInsert=true)
-    /// Значение по умолчанию: false (копирование запрещено)
+    /// (при <see cref="ReadOnly"/>=false и <see cref="CanInsert"/>=true).
+    /// Значение по умолчанию: false (копирование запрещено).
     /// </summary>
     [DefaultValue(false)]
     public bool CanInsertCopy
@@ -2603,7 +2628,7 @@ namespace FreeLibSet.Forms
     private bool _CanInsertCopy;
 
     /// <summary>
-    /// Управляемое свойство для Checked.
+    /// Управляемое свойство для <see cref="CanInsert"/>.
     /// </summary>
     public DepValue<bool> CanInsertCopyEx
     {
@@ -2639,7 +2664,7 @@ namespace FreeLibSet.Forms
     #region CanDelete
 
     /// <summary>
-    /// true, если можно удалять строки (при DataReadOnly=false)
+    /// true, если можно удалять строки (при <see cref="ReadOnly"/>=false).
     /// Значение по умолчанию: true (удаление разрешено)
     /// </summary>
     [DefaultValue(true)]
@@ -2660,7 +2685,7 @@ namespace FreeLibSet.Forms
     private bool _CanDelete;
 
     /// <summary>
-    /// Управляемое свойство для CanDelete.
+    /// Управляемое свойство для <see cref="CanDelete"/>.
     /// </summary>
     public DepValue<bool> CanDeleteEx
     {
@@ -2752,8 +2777,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// true, если разрешено редактирование и просмотр одновременно 
-    /// нескольких выбранных строк
-    /// По умолчанию - false
+    /// нескольких выбранных строк.
+    /// По умолчанию - false, множественое редактирование запрещено.
     /// </summary>
     [DefaultValue(false)]
     public bool CanMultiEdit
@@ -2772,8 +2797,9 @@ namespace FreeLibSet.Forms
     private bool _CanMultiEdit;
 
     /// <summary>
-    /// Блокировка сортировки для всех столбцов
-    /// Для столбцов, определенных в Orders, сортировка остается разрешенной
+    /// Блокировка сортировки для всех столбцов.
+    /// Для столбцов, определенных в <see cref="Orders"/>, сортировка остается разрешенной.
+    /// Этот метод должен вызываться после добавления стобцов с помощью <see cref="EFPDataGridViewColumns"/>.
     /// </summary>
     public void DisableOrdering()
     {
@@ -2821,11 +2847,11 @@ namespace FreeLibSet.Forms
 #endif
 
     /// <summary>
-    /// Установить свойство DataReadOnly для всех столбцов просмотра.
-    /// Метод используется, когда требуется разрешить редактирование "по месту" 
-    /// только для некоторых столбцов, а большая часть столбцов не редактируется
-    /// Метод должен вызываться после установки общих свойств DataReadOnly табличного 
-    /// просмотра, иначе признак у столбцов может быть изменен неявно
+    /// Установить свойство <see cref="DataGridViewColumn.ReadOnly"/> для всех столбцов просмотра.
+    /// Метод используется, когда требуется разрешить редактирование "по месту"
+    /// только для некоторых столбцов, а большая часть столбцов не редактируется.
+    /// Метод должен вызываться после установки общего свойства <see cref="ReadOnly"/> табличного 
+    /// просмотра, иначе признак у столбцов может быть изменен неявно.
     /// </summary>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetColumnsReadOnly(bool value)
@@ -2835,11 +2861,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установить свойство DataReadOnly для заданных столбцов просмотра.
+    /// Установить свойство <see cref="DataGridViewColumn.ReadOnly"/> для заданных столбцов просмотра.
     /// Метод используется, когда требуется разрешить редактирование "по месту" 
-    /// только для некоторых столбцов, а большая часть столбцов не редактируется
-    /// Метод должен вызываться после установки общих свойств DataReadOnly табличного 
-    /// просмотра, иначе признак у столбцов может быть изменен неявно
+    /// только для некоторых столбцов, а большая часть столбцов не редактируется.
+    /// Метод должен вызываться после установки общего свойства <see cref="ReadOnly"/> табличного 
+    /// просмотра, иначе признак у столбцов может быть изменен неявно.
     /// </summary>
     /// <param name="columnNames">Список имен столбцов через запятую. Если столбец с заданным именем не найден, то ошибка не выдается</param>
     /// <param name="value">Устанавливаемое значение</param>
@@ -2860,14 +2886,12 @@ namespace FreeLibSet.Forms
         CommandItems.PerformRefreshItems();
     }
 
-
     #endregion
 
     #region Список столбцов
 
     /// <summary>
-    /// Дополнительная информация о столбцах, альтернативные методы добавления
-    /// столбцов
+    /// Дополнительная информация о столбцах, альтернативные методы добавления столбцов
     /// </summary>
     public EFPDataGridViewColumns Columns
     {
@@ -2880,8 +2904,10 @@ namespace FreeLibSet.Forms
     }
     private EFPDataGridViewColumns _Columns;
 
+    IEFPDataViewColumns IEFPDataView.Columns { get { return Columns; } }
+
     /// <summary>
-    /// Создает EFPDataGridViewColumns.
+    /// Создает <see cref="EFPDataGridViewColumns"/>.
     /// </summary>
     /// <returns>Новый объект</returns>
     protected virtual EFPDataGridViewColumns CreateColumns()
@@ -2889,16 +2915,7 @@ namespace FreeLibSet.Forms
       return new EFPDataGridViewColumns(this);
     }
 
-    EFPDataViewColumnInfo[] IEFPGridControl.GetVisibleColumnsInfo()
-    {
-      EFPDataGridViewColumn[] realColumns = VisibleColumns;
-      EFPDataViewColumnInfo[] a = new EFPDataViewColumnInfo[realColumns.Length];
-      for (int i = 0; i < realColumns.Length; i++)
-        a[i] = new EFPDataViewColumnInfo(realColumns[i].Name, realColumns[i].GridColumn.DataPropertyName, realColumns[i].ColumnProducer);
-      return a;
-    }
-
-    bool IEFPGridControl.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
+    bool IEFPDataView.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
     {
       EFPDataGridViewColumn col = Columns[configColumn.ColumnName];
       if (col == null)
@@ -2911,14 +2928,30 @@ namespace FreeLibSet.Forms
       return true;
     }
 
+    /// <summary>
+    /// Возвращает true, если в списке столбцов имеется хотя бы один с установленным свойством <see cref="EFPDataGridViewColumn.Summable"/>.
+    /// </summary>
+    internal bool HasSummableColumns
+    {
+      get
+      {
+        for (int i = 0; i < Control.Columns.Count; i++)
+        {
+          if (Columns[i].Summable)
+            return true;
+        }
+        return false;
+      }
+    }
+
     #endregion
 
     #region Доступ к выбранным ячейкам независимо от типа данных
 
     /// <summary>
     /// Сколько строк выбрано сейчас в просмотре (одна, много или ни одной)
-    /// Для точного определения используйте свойство SelectedRows.
-    /// В отличие от SelectedRows метод вычисляется всегда быстро
+    /// Для точного определения используйте свойство <see cref="SelectedGridRows"/>.
+    /// В отличие от обращения к свойству <see cref="SelectedGridRows"/>, это свойство вычисляется всегда быстро
     /// </summary>
     public EFPDataGridViewSelectedRowsState SelectedRowsState
     {
@@ -3197,8 +3230,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вспомогательное свойство. Возвращает число выбранных строк в просмотре.
-    /// Оптимальнее, чем вызов SelectedRows.Length
+    /// Оптимальнее, чем вызов <see cref="SelectedGridRows"/>.Length.
     /// </summary>
+    /// <seealso cref="SelectedRowsState"/>
     public int SelectedRowCount
     {
       get
@@ -3233,11 +3267,8 @@ namespace FreeLibSet.Forms
       }
     }
 
-
-
     /// <summary>
-    /// Оригинальное свойство DataGridView.CurrentRow не позволяет
-    /// установить позицию.
+    /// Оригинальное свойство <see cref="DataGridView.CurrentRow"/> не позволяет установить позицию.
     /// </summary>
     public DataGridViewRow CurrentGridRow
     {
@@ -3259,10 +3290,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Эквивалентно установке свойства CurrentGridRow, но в просмотре выделяется,
-    /// если возможно, строка целиком
+    /// Эквивалентно установке свойства <seealso cref="CurrentGridRow"/>, но в просмотре выделяется,
+    /// если возможно, строка целиком. Для этого требуется соответствующая установка свойства <seealso cref="DataGridView.SelectionMode"/>.
     /// </summary>
-    /// <param name="row"></param>
+    /// <param name="row">Выделяемая строка</param>
     void SelectGridRow(DataGridViewRow row)
     {
       if (row == null)
@@ -3281,7 +3312,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойства SelectedRows. Вместо объекта DataGridViewRow 
+    /// Расширение свойства <seealso cref="SelectedGridRows"/>. Вместо объектов <seealso cref="DataGridViewRow"/> 
     /// используются индексы строк
     /// </summary>
     public int[] SelectedRowIndices
@@ -3317,7 +3348,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойства CurrentRow. Вместо объекта DataGridViewRow 
+    /// Расширение свойства <seealso cref="CurrentGridRow"/>. Вместо объекта <see cref="DataGridViewRow"/>  
     /// используется индекс строки
     /// </summary>
     public int CurrentRowIndex
@@ -3503,7 +3534,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вспомогательное свойство только для чтения. Возвращает true, если свойство
-    /// CurrentRow установлено (в просмотре есть текущая строка) и она является
+    /// <see cref="CurrentGridRow"/> установлено (в просмотре есть текущая строка) и она является
     /// единственной выбранной строкой
     /// </summary>
     public bool IsCurrentRowSingleSelected
@@ -3543,7 +3574,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Выбор прямоугольной области ячеек
+    /// Выбор прямоугольной области ячеек.
     /// Свойство возвращает/устанавливает выбранные строки и столбцы в виде 
     /// координат прямоугольника
     /// </summary>
@@ -3572,16 +3603,16 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вспомогательный метод
+    /// Вспомогательный метод.
     /// Возвращает true, если в просмотре есть только одна выбранная (текущая) строка
     /// Если в просмотре нет текущей строки или выбрано больше одной строки, то
-    /// выдается соответствующее сообщение с помошью EFPApp.ShowTempMessage().
-    /// Возвращаемое значение соответствует свойству IsCurrentRowSingleSelected
+    /// выдается соответствующее сообщение с помошью <see cref="EFPApp.ShowTempMessage(string)"/>.
+    /// Возвращаемое значение соответствует свойству <see cref="IsCurrentRowSingleSelected"/>.
     /// Используйте метод для упрощения реализации методов редактирования или команд
     /// локального меню, если они должны работать с единственной строкой. После
     /// вызова метода используйте одно из свойств CurrentXxxRow для доступа к строке
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true, если в просмотре выбрана одна строка</returns>
     public bool CheckSingleRow()
     {
       if (CurrentGridRow == null)
@@ -3599,7 +3630,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Перечислитель по выбранным ячейкам таблицы для всех режимов.
-    /// Элементом перечисления является структура Point, содержащая индекс строки (Y) и столбца (X)
+    /// Элементом перечисления является структура <see cref="Point"/>, содержащая индекс строки (Y) и столбца (X)
     /// очередной ячейки.
     /// Скрытые строки и столбцы не учитываются.
     /// Правильно обрабатываются и сложно выбранные ячейки.
@@ -3707,7 +3738,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Перечислитель по адресам выбранных ячеек (для оператора foreach)
+    /// Перечислитель по адресам выбранных ячеек (для оператора foreach).
+    /// Элементом перечисления является структура <see cref="Point"/>, содержащая индекс строки (Y) и столбца (X)
+    /// очередной ячейки.
+    /// Скрытые строки и столбцы не учитываются.
+    /// Правильно обрабатываются и сложно выбранные ячейки.
     /// </summary>
     public SelectedCellAddressEnumerable SelectedCellAddresses { get { return new SelectedCellAddressEnumerable(Control); } }
 
@@ -3716,10 +3751,10 @@ namespace FreeLibSet.Forms
     #region Доступ к выбранным ячейкам для источника данных DataView или DataTable
 
     /// <summary>
-    /// Получение Control.DataSource в виде DataTable или null, если другой источник
-    /// (не DataTable или DataView).
+    /// Получение <see cref="DataGridView.DataSource"/> в виде <see cref="DataTable"/> или null, если присоединен другой источник
+    /// (не <see cref="DataTable"/> или <see cref="DataView"/>).
     /// Наличие таблицы-повторителя не учитывается, возвращается таблица, присоединенная к просмотру. 
-    /// Если есть повторитель, то возвращается DataTableRepeater.SlaveTable.
+    /// Если есть повторитель, то возвращается <see cref="DataTableRepeater.SlaveTable"/>.
     /// </summary>
     public DataTable SourceAsDataTable
     {
@@ -3756,12 +3791,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получение DataGridView.DataSource в виде DataTable 
-    /// Для источника DataTable возвращает DefaultView
-    /// Возвращает null, если другой источник.
+    /// Получение <see cref="DataGridView.DataSource"/> в виде <see cref="DataView"/>.
+    /// Для источника <see cref="DataTable"/>возвращает <see cref="DataTable.DefaultView"/>.
+    /// Возвращает null, если присоединен другой источник.
     /// 
     /// Наличие таблицы-повторителя не учитывается, возвращается таблица, присоединенная к просмотру. 
-    /// Если есть повторитель, то возвращается DataTableRepeater.SlaveTable.DefaultView
+    /// Если есть повторитель, то возвращается <see cref="DataTableRepeater.SlaveTable"/>.DefaultView.
     /// </summary>
     public DataView SourceAsDataView
     {
@@ -3802,7 +3837,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получение строки <see cref="DataRow"/> по номеру строки в табличном просмотре. 
-    /// Не делает строку Unshared, т.к. не обращается к объекту DataGridViewRow.
+    /// Не делает строку Unshared, т.к. не обращается к объекту <see cref="DataGridViewRow"/>.
     /// Если используется таблица-повторитель, то возвращается строка таблицы-повторителя.
     /// </summary>
     /// <param name="rowIndex">Номер строки</param>
@@ -3822,12 +3857,12 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Получить массив строк DataRow по индексам строк.
-    /// Если какой-либо индекс не относится к DataRow, элемент массива содержит null.
+    /// Получить массив строк <see cref="DataRow "/> по индексам строк.
+    /// Если какой-либо индекс не относится к <see cref="DataRow"/>, элемент массива содержит null.
     /// Если используется таблица-повторитель, то возвращаются строки таблицы-повторителя.
     /// </summary>
-    /// <param name="rowIndices">Номера строк в просмотре DataGridView</param>
-    /// <returns>Массив объектов DataRow</returns>
+    /// <param name="rowIndices">Номера строк в просмотре <see cref="DataGridView.Rows"/></param>
+    /// <returns>Массив объектов <see cref="DataRow"/></returns>
     public DataRow[] GetDataRows(int[] rowIndices)
     {
       DataView dv = null;
@@ -3860,12 +3895,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить или установить выбранные строки в просмотре.
-    /// Расширяет реализацию свойства SelectedRows, используя вместо объектов
-    /// DataGridViewRow строки таблицы данных DataRow.
+    /// Расширяет реализацию свойства <see cref="SelectedGridRows"/>, используя вместо объектов
+    /// <see cref="DataGridViewRow"/> строки таблицы данных <see cref="DataRow"/>.
     /// Если просмотр не присоединен к таблице данных, свойство возвращает массив, содержащий значения null.
     /// 
     /// Если используется таблица-повторитель, то возвращаются и должны устанавливаться строки таблицы, присоединенной к просмотру,
-    /// то есть DataTableRepeater.SlaveTable.
+    /// то есть <see cref="DataTableRepeater.SlaveTable"/>.
     /// </summary>
     public DataRow[] SelectedDataRows
     {
@@ -3967,12 +4002,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойства CurrentRow (чтение и установка текущей строки).
-    /// В качестве значения используется строка таблицы данных (объект DataRow)
-    /// Просмотр должен быть присоединен к DataSource типа DataView.
+    /// Расширение свойства <see cref="CurrentGridRow"/> (чтение и установка текущей строки).
+    /// В качестве значения используется строка таблицы данных (объект <see cref="DataRow"/>)
+    /// Просмотр должен быть присоединен к источнику данных типа <see cref="DataTable"/> или <see cref="DataView"/>.
     /// 
     /// Если используется таблица-повторитель, то возвращается и должна устанавливаться строка таблицы, присоединенной к просмотру,
-    /// то есть DataTableRepeater.SlaveTable.
+    /// то есть <see cref="DataTableRepeater.SlaveTable"/>.
     /// </summary>
     public DataRow CurrentDataRow
     {
@@ -4023,13 +4058,12 @@ namespace FreeLibSet.Forms
 #endif
 
     /// <summary>
-    /// Расширение свойств SelectedRows / SelectedDataRows
-    /// В качестве текущих позиций запоминаются значения ключевых полей в DataTable
+    /// Расширение свойства <see cref="SelectedGridRows"/> / <see cref="SelectedDataRows"/>.
+    /// В качестве текущих позиций запоминаются значения ключевых полей в <see cref="DataTable"/>.
     /// Первый индекс двумерного массива соответствует количеству строк.
-    /// Второй индекс соответствует количеству полей в DataTable.PrimaryKey 
-    /// (обычно равно 1)
-    /// Свойство возвращает null, если таблица не присоединена к просмотру (напрямую или через DataView)
-    /// или не имеет первичного ключа
+    /// Второй индекс соответствует количеству полей в <see cref="DataTable.PrimaryKey"/> (обычно равно 1).
+    /// Свойство возвращает null, если таблица не присоединена к просмотру (напрямую или через <see cref="DataView"/>).
+    /// или не имеет первичного ключа.
     /// </summary>
     public object[,] SelectedDataRowKeys
     {
@@ -4056,8 +4090,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойств CurrentRow / CurrentDataRow для получения / установки 
-    /// текущей строки с помощью значений ключевых полей в DataTable
+    /// Расширение свойств <see cref="CurrentGridRow"/> / <see cref="CurrentDataRow"/> для получения / установки 
+    /// текущей строки с помощью значений ключевых полей в <see cref="DataTable"/>.
+    /// Индекс массива соответствует количеству полей в <see cref="DataTable.PrimaryKey"/> (обычно равно 1).
+    /// Свойство возвращает null, если таблица не присоединена к просмотру (напрямую или через <see cref="DataView"/>).
+    /// или не имеет первичного ключа.
     /// </summary>
     public object[] CurrentDataRowKeys
     {
@@ -4083,13 +4120,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойств SelectedRows / SelectedDataRows
-    /// В качестве текущих позиций запоминаются значения полей, заданных в DataView.ViewOrder
+    /// Расширение свойства <see cref="SelectedGridRows"/> / <see cref="SelectedDataRows"/>.
+    /// В качестве текущих позиций запоминаются значения полей, заданных в <see cref="DataView.Sort"/>.
     /// Первый индекс двумерного массива соответствует количеству строк.
-    /// Второй индекс соответствует количеству полей сортировки в DataView
+    /// Второй индекс соответствует количеству полей сортировки в <see cref="DataView.Sort"/>.
     /// (обычно равно 1)
-    /// Свойство возвращает null, если просмотру не соединен с DataView 
-    /// или DataView не имеет полей сортировки
+    /// Свойство возвращает null, если просмотр не соединен с <see cref="DataView"/>
+    /// или <see cref="DataView.Sort"/> не имеет полей сортировки.
     /// </summary>
     public object[,] SelectedDataViewSortKeys
     {
@@ -4139,8 +4176,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойств CurrentRow / CurrentDataRow для получения / установки 
-    /// текущей строки с помощью значений полей сортировки в DataView
+    /// Расширение свойств <see cref="CurrentGridRow"/> / <see cref="CurrentDataRow"/> для получения / установки 
+    /// текущей строки с помощью значений полей сортировки в <see cref="DataView.Sort"/>.
+    /// Свойство возвращает null, если просмотр не соединен с <see cref="DataView"/>
+    /// или <see cref="DataView.Sort"/> не имеет полей сортировки.
     /// </summary>
     public object[] CurrentDataViewSortKeys
     {
@@ -4183,9 +4222,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Повторитель таблицы.
-    /// При установке свойства устанавливается DataGridView.DataSource=DataTableRepeater.SlaveTable.
+    /// При установке свойства устанавливается <see cref="DataGridView.DataSource"/>=<see cref="DataTableRepeater.SlaveTable"/>.
     /// Предполагается, что повторитель относится персонально к этому табличному просмотру.
-    /// Когда управляющий элемент разрушается, вызывается DataTableRepeater.Dispose().
+    /// Когда управляющий элемент разрушается, вызывается <see cref="DataTableRepeater"/>.Dispose().
     /// При повторной установке значения предыдущий повторитель также удаляется.
     /// </summary>
     public DataTableRepeater TableRepeater
@@ -4208,15 +4247,15 @@ namespace FreeLibSet.Forms
     private DataTableRepeater _TableRepeater;
 
     /// <summary>
-    /// Вызывается после установки свойства TableRepeater
+    /// Вызывается после установки свойства <see cref="TableRepeater"/>.
     /// </summary>
     protected virtual void OnTableRepeaterChanged()
     {
     }
 
     /// <summary>
-    /// Возвращает строку в таблице-повторителе DataTableRepeater.SlaveTable, которая соответствует строке в исходной таблице DataTableRepeater.MasterTable.
-    /// Если повторитель TableRepeater не установлен, возврашает исходные данные без изменений.
+    /// Возвращает строку в таблице-повторителе <see cref="DataTableRepeater.SlaveTable"/>, которая соответствует строке в исходной таблице <see cref="DataTableRepeater.MasterTable"/>.
+    /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходную строку без изменений.
     /// </summary>
     /// <param name="masterRow">Строка таблицы MasterTable</param>
     /// <returns>Строка таблицы SlaveTable</returns>
@@ -4229,8 +4268,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает строки в таблице-повторителе DataTableRepeater.SlaveTable, которые соответствуют строкам в исходной таблице DataTableRepeater.MasterTable
-    /// Если повторитель TableRepeater не установлен, возврашает исходные данные без изменений.
+    /// Возвращает строки в таблице-повторителе <see cref="DataTableRepeater.SlaveTable"/>, которые соответствуют строкам в исходной таблице <see cref="DataTableRepeater.MasterTable"/>.
+    /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходные данные без изменений.
     /// </summary>
     /// <param name="masterRows">Массив строк таблицы MasterTable</param>
     /// <returns>Строки таблицы SlaveTable</returns>
@@ -4243,10 +4282,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает строку в основной таблице DataTableRepeater.MasterTable, которая соответствует строке в таблице-повторителе DataTableRepeater.SlaveTable.
+    /// Возвращает строку в основной таблице <see cref="DataTableRepeater.MasterTable"/>, которая соответствует строке в таблице-повторителе <see cref="DataTableRepeater.SlaveTable"/>.
     /// Используется для реализации редактирования, т.к. изменения должны вноситься в ведущую
     /// таблицу, а не ту, которая отображается в просмотре.
-    /// Если повторитель TableRepeater не установлен, возврашает исходные данные без изменений.
+    /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходные данные без изменений.
     /// </summary>
     /// <param name="slaveRow">Строка таблицы SlaveTable</param>
     /// <returns>Строка таблицы MasterTable</returns>
@@ -4259,10 +4298,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает строки в основной таблице DataTableRepeater.MasterTable, которые соответствуют строкам в таблице-повторителе DataTableRepeater.SlaveTable.
+    /// Возвращает строки в основной таблице <see cref="DataTableRepeater.MasterTable"/>, которые соответствуют строкам в таблице-повторителе <see cref="DataTableRepeater.SlaveTable"/>.
     /// Используется для реализации редактирования, т.к. изменения должны вноситься в ведущую
     /// таблицу, а не ту, которая отображается в просмотре.
-    /// Если повторитель TableRepeater не установлен, возврашает исходные данные без изменений.
+    /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходные данные без изменений.
     /// </summary>
     /// <param name="slaveRows">Строки таблицы SlaveTable</param>
     /// <returns>Строки таблицы MasterTable</returns>
@@ -4275,8 +4314,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если есть таблица-повторитель, то возвращается мастер-таблица DataTableRepeater.MasterTable.
-    /// Иначе возвращается SourceAsDataTable.
+    /// Если есть таблица-повторитель, то возвращается мастер-таблица <see cref="DataTableRepeater.MasterTable"/>.
+    /// Иначе возвращается <see cref="SourceAsDataTable"/>.
     /// </summary>
     public DataTable MasterDataTable
     {
@@ -4290,8 +4329,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если есть таблица-повторитель, то возвращается DataView для мастер-таблицы DataTableRepeater.MasterTable.DefaultView.
-    /// Иначе возвращается SourceAsDataView.
+    /// Если есть таблица-повторитель, то возвращается <see cref="DataView"/> для мастер-таблицы <see cref="DataTableRepeater.MasterTable"/>.DefaultView.
+    /// Иначе возвращается <see cref="SourceAsDataView"/>.
     /// </summary>
     public DataView MasterDataView
     {
@@ -4309,7 +4348,7 @@ namespace FreeLibSet.Forms
     #region Видимые строки
 
     /// <summary>
-    /// Возвращает массив объектов DataRow, связанных со строками, видимыми в просмотре
+    /// Возвращает массив объектов <see cref="DataRow"/>, связанных со строками, видимыми в просмотре.
     /// </summary>
     public DataRow[] DisplayedDataRows
     {
@@ -4333,10 +4372,10 @@ namespace FreeLibSet.Forms
     #region Сохранение / восстановление выбранных строк
 
     /// <summary>
-    /// Режим сохранения выбранных строк свойствами SelectedRowsObject и
-    /// CurrentRowObject
-    /// По умолчанию для EFPDataGridView - значение None.
-    /// Может быть переопределено в производных классах
+    /// Режим сохранения выбранных строк свойствами <see cref="SelectedRowsObject"/> и
+    /// <see cref="CurrentRowObject"/>.
+    /// По умолчанию для <see cref="EFPDataGridView"/> - значение <see cref="EFPDataGridViewSelectedRowsMode.None"/>.
+    /// Может быть переопределено в производных классах.
     /// </summary>
     public EFPDataGridViewSelectedRowsMode SelectedRowsMode
     {
@@ -4348,7 +4387,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохранение и восстановление выбранных строк просмотра в виде одного объекта,
-    /// в зависимости от свойства SelectedRowsMode
+    /// в зависимости от свойства <see cref="SelectedRowsMode"/>
     /// </summary>
     public virtual object SelectedRowsObject
     {
@@ -4397,7 +4436,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохранение и восстановление текущей (одной) строки просмотра.
-    /// Тип свойства зависит от режима SelectedRowsMode.
+    /// Тип свойства зависит от режима <see cref="SelectedRowsMode"/>.
     /// </summary>
     public virtual object CurrentRowObject
     {
@@ -4448,10 +4487,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохранение и восстановление текущих строк и столбца табличного просмотра.
-    /// Режим сохранения строк определеятся свойство SelectedRowsMode
-    /// Значение включает в себя: признак AreAllCellsSelected, список выделенных
-    /// строк SelectedRowsObject, текущую строку CurrentRowObject и индекс
-    /// столбца с текущей ячейкой CurrentColumnIndex.
+    /// Режим сохранения строк определеятся свойство <see cref="SelectedRowsMode"/>.
+    /// Значение включает в себя: признак <see cref="DataGridView.AreAllCellsSelected(bool)"/>, список выделенных
+    /// строк <see cref="SelectedRowsObject"/>, текущую строку <see cref="CurrentRowObject"/> и индекс
+    /// столбца с текущей ячейкой <see cref="CurrentColumnIndex"/>.
     /// При установке значения свойства перехватываются все исключения.
     /// </summary>
     public EFPDataGridViewSelection Selection
@@ -4590,7 +4629,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает индекс столбца, который следует активировать по умолчанию.
-    /// При показе просмотра, если свойство CurrentColumnIndex не установлено в явном виде, 
+    /// При показе просмотра, если свойство <see cref="CurrentColumnIndex"/> не установлено в явном виде, 
     /// выбирается этот столбец.
     /// Предпочтительно возвращает первый столбец с инкрементным поиском.
     /// Иначе старается вернуть первый столбец, кроме значка.
@@ -4630,7 +4669,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить массив видимых столбцов в просмотре в порядке вывода на экран
-    /// Объекты EFPDataGridViewColumn
+    /// как объекты <see cref="EFPDataGridViewColumn"/>
     /// </summary>
     public EFPDataGridViewColumn[] VisibleColumns
     {
@@ -4643,6 +4682,8 @@ namespace FreeLibSet.Forms
         return a;
       }
     }
+
+    IEFPDataViewColumn[] IEFPDataView.VisibleColumns { get { return VisibleColumns; } }
 
 #if XXX
     /// <summary>
@@ -4666,7 +4707,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить массив видимых столбцов в просмотре в порядке вывода на экран
-    /// Объекты столбцов табличного просмотра
+    /// как объекты <see cref="DataGridViewColumn"/>
     /// </summary>
     public DataGridViewColumn[] VisibleGridColumns
     {
@@ -4704,9 +4745,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить строки с заданными условиями в виде массива
+    /// как объекты <see cref="DataGridViewRow"/>.
+    /// Строки становятся Unshared.
     /// </summary>
-    /// <param name="states"></param>
-    /// <returns></returns>
+    /// <param name="states">Критерий поиска</param>
+    /// <returns>Массив строк</returns>
     public DataGridViewRow[] GetGridRows(DataGridViewElementStates states)
     {
       List<DataGridViewRow> rows = new List<DataGridViewRow>();
@@ -4721,8 +4764,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить массив видимых строк в просмотре в порядке вывода на экран
-    /// Объекты видимых строк табличного просмотра
+    /// как объекты <see cref="DataGridViewRow"/>.
+    /// Строки становятся Unshared, поэтому обычно не следует обращаться к этому свойству.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public DataGridViewRow[] VisibleGridRows
     {
       get
@@ -4734,7 +4779,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает высоту в пикселах, которую бы хотел иметь табличный просмотр
     /// для размещения всех строк
-    /// Возвращаемое значение не превышает высоту экрана
+    /// Возвращаемое значение не превышает высоту экрана.
     /// </summary>
     public int WantedHeight
     {
@@ -4785,8 +4830,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обновить строки табличного просмотра.
-    /// Выполняет только вызов Control.InvalidateRow().
-    /// Для обновления строк с загрузкой данных используйте UpdateRows()
+    /// Выполняет только вызов <see cref="DataGridView.InvalidateRow(int)"/>.
+    /// Для обновления строк с загрузкой данных используйте <see cref="UpdateRows(int[])"/>.
     /// </summary>
     /// <param name="rowIndices">Индексы строк в просмотре или null, если должны быть обновлены все строки</param>
     public void InvalidateRows(int[] rowIndices)
@@ -4824,7 +4869,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Обновить в просмотре все выбранные строки SelectedRows, например, после
+    /// Обновить в просмотре все выбранные строки <see cref="SelectedGridRows"/>, например, после
     /// редактирования, если имеются вычисляемые столбцы
     /// </summary>
     public void InvalidateSelectedRows()
@@ -4902,7 +4947,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Обновить строки табличного просмотра, загрузив исходные данные.
     /// Производный класс должен обновить данные в источнике данных просмотра.
-    /// Непереопределенная реализация в EFPDataGridView() просто вызывает InvalidateRows()
+    /// Непереопределенная реализация в <see cref="EFPDataGridView"/> просто вызывает <see cref="InvalidateRows(int[])"/>.
     /// </summary>
     /// <param name="rowIndices">Индексы строк в просмотре или null, если должны быть обновлены все строки</param>
     public virtual void UpdateRows(int[] rowIndices)
@@ -4919,7 +4964,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Обновить в просмотре все выбранные строки SelectedRows, например, после
+    /// Обновить в просмотре все выбранные строки <see cref="SelectedGridRows"/>, например, после
     /// редактирования, если имеются вычисляемые столбцы
     /// </summary>
     public void UpdateSelectedRows()
@@ -5013,7 +5058,7 @@ namespace FreeLibSet.Forms
     private EFPDataViewOrders _Orders;
 
     /// <summary>
-    /// Создает объект EFPDataGridViewOrders.
+    /// Создает объект <see cref="EFPDataViewOrders"/>.
     /// </summary>
     /// <returns>Новый объект</returns>
     protected virtual EFPDataViewOrders CreateOrders()
@@ -5022,7 +5067,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Количество элементов в массиве Orders
+    /// Количество элементов в списке <see cref="Orders"/>
     /// </summary>
     public int OrderCount
     {
@@ -5036,9 +5081,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Текущий порядок предопределенной сортировки (индекс в массиве Orders).
-    /// Если используется произвольная сортировка сортировка не установлена, свойство возращает (-1).
-    /// Для инициализации произвольной сортировки устанавливайте свойство CustomOrderActive.
+    /// Текущий порядок предопределенной сортировки (индекс в списке <see cref="Orders"/>).
+    /// Если используется произвольная сортировка сортировка, свойство возращает (-1).
+    /// Для инициализации произвольной сортировки устанавливайте свойство <see cref="CustomOrderActive"/>.
     /// </summary>
     public int CurrentOrderIndex
     {
@@ -5065,38 +5110,55 @@ namespace FreeLibSet.Forms
 
     private void InternalSetCurrentOrder()
     {
-      if (ProviderState != EFPControlProviderState.Attached)
-        return;
-
-      EFPDataGridViewSelection oldSel = Selection;
-      CommandItems.InitCurentOrder();
-      if (WinFormsTools.AreControlAndFormVisible(Control))
+      if (ProviderState == EFPControlProviderState.Attached)
       {
-        if (OrderChangesToRefresh)
-          PerformRefresh();
-        else
+        EFPDataGridViewSelection oldSel = Selection;
+        // 24.07.2023. Не нужно, т.к. дальше есть вызов InitOrderItems() 
+        // CommandItems.InitCurentOrder();
+        if (WinFormsTools.AreControlAndFormVisible(Control))
         {
-          if (AutoSort)
-          {
-            if (Control.DataSource != null)
-              PerformAutoSort();
-          }
+          if (OrderChangesToRefresh)
+            PerformRefresh();
           else
           {
-            //if (OrderChanged == null)
-            //  throw new InvalidOperationException("OrderChangesToRefresh=false, AutoSort=false и событие OrderChanged не имеет обработчика");
+            if (AutoSort)
+            {
+              if (Control.DataSource != null)
+                PerformAutoSort();
+            }
+            else
+            {
+              //if (OrderChanged == null)
+              //  throw new InvalidOperationException("OrderChangesToRefresh=false, AutoSort=false и событие OrderChanged не имеет обработчика");
 
-            // 22.03.2022. Отсутствие обработчика больше не считается ошибкой
-            OnOrderChanged(EventArgs.Empty);
+              // 22.03.2022. Отсутствие обработчика больше не считается ошибкой
+              OnOrderChanged(EventArgs.Empty);
+            }
           }
         }
+        Selection = oldSel;
+        if (ProviderState == EFPControlProviderState.Attached)
+          CommandItems.InitOrderItems();
       }
+      else
+      {
+        // 24.08.2023
+        // Если элемент невидим, то сортировку все равно выполнять надо
+        if (AutoSort)
+        {
+          if (Control.DataSource != null)
+            PerformAutoSort();
+        }
+        else
+        {
+          //if (OrderChanged == null)
+          //  throw new InvalidOperationException("OrderChangesToRefresh=false, AutoSort=false и событие OrderChanged не имеет обработчика");
 
-      Selection = oldSel;
-
+          // 22.03.2022. Отсутствие обработчика больше не считается ошибкой
+          OnOrderChanged(EventArgs.Empty);
+        }
+      }
       OnCurrentOrderChanged(EventArgs.Empty);
-      if (ProviderState == EFPControlProviderState.Attached)
-        CommandItems.InitOrderItems();
       InitColumnHeaderTriangles();
     }
 
@@ -5107,7 +5169,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Разрешение использовать произвольную сортировку.
     /// По умолчанию - false - запрещено (если не переопределено в конструкторе производного класса).
-    /// Свойство можно устанавливать только до вызова события Created.
+    /// Свойство можно устанавливать только до вызова события <see cref="EFPControlBase.Created"/>.
     /// </summary>
     public bool CustomOrderAllowed
     {
@@ -5126,16 +5188,17 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// True, если в текущий момент используется произвольная сортировка.
-    /// Для установки в true, требуется сначала установить CustomOrderAllowed=true.
+    /// Для установки в true, требуется сначала установить <see cref="CustomOrderAllowed"/>=true.
     /// 
-    /// При переключении с предопределнной сортировки на произвольную проверяется с помощью IsSelectableCustomOrder(), что для текущей сортировки CurrentOrder в 
+    /// При переключении с предопределенной сортировки на произвольную проверяется с помощью <see cref="IsSelectableCustomOrder(EFPDataViewOrder)"/>,
+    /// что для текущей сортировки <see cref="CurrentOrder"/> в 
     /// просмотре имеются все столбцы, с помощью которых такую сортировку можно воспроизвести. Если столбцов не хватает,
-    /// устанавливается произвольная сортировка по умолчанию. Если же и DefaultCustomOrder возвращает null, то переключение
-    /// не выполняется и CustomOrderActive остается равным false.
+    /// устанавливается произвольная сортировка по умолчанию. Если же и <see cref="DefaultCustomOrder"/> возвращает null, то переключение
+    /// не выполняется и <see cref="CustomOrderActive"/> остается равным false.
     /// 
-    /// При переключении с произвольной сортировки на предопределенную выполняется поиск в списке Orders порядка,
-    /// соответствующему CurrentOrder. Если найден, то он устанавливается. Иначе выбирается первый элемент в списке Orders.
-    /// Если список Orders пустой, устанавливается CurrentOrder=null.
+    /// При переключении с произвольной сортировки на предопределенную выполняется поиск в списке <see cref="Orders"/> порядка,
+    /// соответствующему <see cref="CurrentOrder"/>. Если найден, то он устанавливается. Иначе выбирается первый элемент в списке <see cref="Orders"/>.
+    /// Если список <see cref="Orders"/> пустой, устанавливается <see cref="CurrentOrder"/>=null.
     /// </summary>
     public bool CustomOrderActive
     {
@@ -5194,12 +5257,12 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает порядок выборочной сортировки по умолчанию.
     /// Находится первый видимый столбец, для которого разрешена пользовательская сортировка.
-    /// Возвращается новый EFPDataViewOrder для одного столбца с сортировкой по возрастанию.
+    /// Возвращается новый <see cref="EFPDataViewOrder"/> для одного столбца с сортировкой по возрастанию.
     /// Если в просмотре нет ни одного столбца с разрешенной произвольной сортировкой, возвращается null.
     /// 
-    /// Никаких изменений в просмотре не происходит
+    /// Никаких изменений в просмотре не происходит.
     /// </summary>
-    /// <returns>EFPDataViewOrder или null</returns>
+    /// <returns><see cref="EFPDataViewOrder"/> или null</returns>
     public EFPDataViewOrder DefaultCustomOrder
     {
       get
@@ -5217,9 +5280,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если указанный порядок сортировки можно получить, нажимая на заголовки столбцов просмотра.
-    /// Свойство EFPDataGidView.CustomOrderActive не проверяется. Учитываются только свойства столбцов EFPDatGridViewColumn.CustomOrderColumnName
+    /// Свойство <see cref="CustomOrderActive"/> не проверяется. Учитываются только свойства столбцов <see cref="EFPDataGridViewColumn.CustomOrderColumnName"/>.
     /// 
-    /// Никаких изменений в просмотре не происходит
+    /// Никаких изменений в просмотре не происходит.
     /// </summary>
     /// <param name="order">Проверяемый порядок</param>
     /// <returns>Возможность его выбора</returns>
@@ -5251,12 +5314,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущий порядок сортировки строк.
-    /// Содержит один из элементов в списке Orders, если используется предопределенная сортировка.
-    /// Если используется произвольная сортировка, содержит актуальный объект EFPDataViewOrder.
-    /// Установка свойства не меняет значения CustomOrderActive. Если CustomOrderActive имеет значение false,
-    /// то присваиваимое значение должно быть из списка Orders. Если CustomOrderActive имеет значение true,
+    /// Содержит один из элементов в списке <see cref="Orders"/>, если используется предопределенная сортировка.
+    /// Если используется произвольная сортировка, содержит актуальный объект <see cref="EFPDataViewOrder"/>.
+    /// Установка свойства не меняет значения <see cref="CustomOrderActive"/>. Если <see cref="CustomOrderActive"/> имеет значение false,
+    /// то присваиваимое значение должно быть из списка <see cref="Orders"/>. Если <see cref="CustomOrderActive"/> имеет значение true,
     /// то присваиваимое значение может быть любым, включая null. Переключения на предопределенную сортировку
-    /// не будет, даже если значение совпадает с одним из элементов списка Orders.
+    /// не будет, даже если значение совпадает с одним из элементов списка <see cref="Orders"/>.
     /// </summary>
     public EFPDataViewOrder CurrentOrder
     {
@@ -5347,14 +5410,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Это извещение посылается после установки нового значения свойства 
-    /// CurrentOrderIndex (или CurrentOrder / CurrentOrderName)
+    /// <see cref="CurrentOrderIndex"/> (или <see cref="CurrentOrder"/> / <see cref="CurrentOrderName"/>)
     /// </summary>
     public event EventHandler CurrentOrderChanged;
 
     /// <summary>
     /// Вызывается после установки нового значения свойства 
-    /// CurrentOrderIndex (или CurrentOrder / CurrentOrderName).
-    /// Непереопределенный метод вызывает событие CurrentOrderChanged.
+    /// <see cref="CurrentOrderIndex"/> (или <see cref="CurrentOrder"/> / <see cref="CurrentOrderName"/>)
+    /// Непереопределенный метод вызывает событие <see cref="CurrentOrderChanged"/>.
     /// </summary>
     /// <param name="args">Пустой аргумент</param>
     protected virtual void OnCurrentOrderChanged(EventArgs args)
@@ -5364,15 +5427,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Это событие должно обрабатывать установку порядка строк
-    /// Событие не вызывается, если установлено свойство AutoSort или
-    /// если вызывается метод PerformRefresh().
-    /// Поэтому обработчик Refresh также должен устанавливать порядок строки.
+    /// Это событие должно обрабатывать установку порядка строк.
+    /// Событие не вызывается, если установлено свойство <see cref="AutoSort"/>=true или
+    /// если вызывается метод <see cref="PerformRefresh()"/>.
+    /// Поэтому обработчик события <see cref="RefreshData"/> также должен устанавливать порядок строки.
     /// </summary>
     public event EventHandler OrderChanged;
 
     /// <summary>
-    /// Вызывает событие OrderChanged
+    /// Вызывает событие <see cref="OrderChanged"/>
     /// </summary>
     /// <param name="args">Пустой аргумент</param>
     protected virtual void OnOrderChanged(EventArgs args)
@@ -5383,7 +5446,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если установить значение этого свойства в true, то будет вызываться событие
-    /// Refresh при изменении порядка строк.
+    /// <see cref="RefreshData"/> при изменении порядка строк.
     /// </summary>
     public bool OrderChangesToRefresh { get { return _OrderChangesToRefresh; } set { _OrderChangesToRefresh = value; } }
     private bool _OrderChangesToRefresh;
@@ -5391,12 +5454,12 @@ namespace FreeLibSet.Forms
     private bool _CustomOrderAutoActivated;
 
     /// <summary>
-    /// Проверяет текущее значение CurrentOrder.
+    /// Проверяет текущее значение <see cref="CurrentOrder"/>.
     /// Если в таблице нет полей, необходимых для сортировки,
-    /// то устанавливается новое значение CurrentOrder.
-    /// Также может измениться значение CustomOrderActive.
+    /// то устанавливается новое значение <see cref="CurrentOrder"/>.
+    /// Также может измениться значение <see cref="CustomOrderActive"/>.
     /// 
-    /// Метод вызывается после присоединения к просмотру таблицы данных
+    /// Метод вызывается после присоединения к просмотру таблицы данных.
     /// </summary>
     private void ValidateCurrentOrder()
     {
@@ -5463,9 +5526,9 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Если установить свойство в true, то не будет вызываться событие CurrentOrderChanged
+    /// Если установить свойство в true, то не будет вызываться событие <see cref="CurrentOrderChanged"/>.
     /// Вместо этого при переключении порядка сортировки пользователеми будет 
-    /// вызываться метод PerformAutoSort() для установки значения DataView.ViewOrder
+    /// вызываться метод <see cref="PerformAutoSort()"/> для установки значения <see cref="DataView.Sort"/>.
     /// </summary>
     public bool AutoSort { get { return _AutoSort; } set { _AutoSort = value; } }
     private bool _AutoSort;
@@ -5473,8 +5536,8 @@ namespace FreeLibSet.Forms
     private static bool _Inside_PerformAutoSort; // 09.09.2020
 
     /// <summary>
-    /// Установить значение DataView.ViewOrder
-    /// Используйте этот метод в событии Refresh
+    /// Установить значение <see cref="DataView.Sort"/>.
+    /// Используйте этот метод в обработчике события <see cref="RefreshData"/>
     /// </summary>
     public void PerformAutoSort()
     {
@@ -5756,12 +5819,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Должен ли EFPDataGridView управлять свойствами DataGridViewColumn.SortMode и DataGridViewColumnHeaderCell.SortGlyphDirection
+    /// Должен ли <see cref="EFPDataGridView"/> управлять свойствами <see cref="DataGridViewColumn.SortMode"/> и <see cref="DataGridViewColumnHeaderCell.SortGlyphDirection"/>
     /// для рисования треугольников в заголовках столбцов, и выполнять сортировку по нажатию кнопки мыши.
-    /// По умолчанию - true - обработка разрешена. При этом, если OrderCount=0 и CustomOrderAllowed=false,
+    /// По умолчанию - true - обработка разрешена. При этом, если <see cref="OrderCount"/>=0 и <see cref="CustomOrderAllowed"/>=false,
     /// щелчок по заголовку выдает сообщение в статусной строке "Сортировка невозможна".
-    /// Установка значения false восстанавливает поведение DataGridView по умолчанию для автоматической сортировки.
-    /// Свойство можно устанавливать только до появления события Created.
+    /// Установка значения false восстанавливает поведение <see cref="DataGridView"/> по умолчанию для автоматической сортировки.
+    /// Свойство можно устанавливать только до появления события <see cref="EFPControlBase.Created"/>.
     /// </summary>
     public bool UseColumnHeaderClick
     {
@@ -5901,10 +5964,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Показать диалог выбора порядка строк из массива Orders
-    /// Если пользователь выбирает порядок, то устанавливается свойство CurrentOrder
+    /// Показать диалог выбора порядка строк из списка <see cref="Orders"/> или пользовательской сортировки, если она разрешена.
+    /// Если пользователь выбирает порядок, то устанавливается свойство <see cref="CurrentOrder"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True, если порядок сортировки был установлен пользователем</returns>
     public bool ShowSelectOrderDialog()
     {
 #if XXX
@@ -5974,11 +6037,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает имя столбца табличного просмотра (EFPDataGridViewColumn.Name), который будет использоваться для щелчка мыши для заданного порядка сортировки.
-    /// Если в просмотре нет ни одного подходящего столбца, возвращается пустая строка
+    /// Возвращает имя столбца табличного просмотра (<see cref="EFPDataGridViewColumn.Name"/>), который будет использоваться для щелчка мыши для заданного порядка сортировки.
+    /// Если в просмотре нет ни одного подходящего столбца, возвращается пустая строка.
     /// </summary>
     /// <param name="item">Порядок сортировки</param>
-    /// <returns>Индекс столбца</returns>
+    /// <returns>Имя столбца</returns>
     public string GetUsedColumnName(EFPDataViewOrder item)
     {
       int p = IndexOfUsedColumnName(item);
@@ -5989,11 +6052,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает столбец EFPDataGridViewColumn, который будет использоваться для щелчка мыши для заданного порядка сортировки.
-    /// Если в просмотре нет ни одного подходящего столбца, возвращается null
+    /// Возвращает столбец <see cref="EFPDataGridViewColumn"/>, который будет использоваться для щелчка мыши для заданного порядка сортировки.
+    /// Если в просмотре нет ни одного подходящего столбца, возвращается null.
     /// </summary>
     /// <param name="item">Порядок сортировки</param>
-    /// <returns>Индекс столбца</returns>
+    /// <returns>Объект столбца</returns>
     public EFPDataGridViewColumn GetUsedColumn(EFPDataViewOrder item)
     {
       int p = IndexOfUsedColumnName(item);
@@ -6087,8 +6150,9 @@ namespace FreeLibSet.Forms
     public event EventHandler ManualOrderChanged;
 
     /// <summary>
-    /// Генерирует событие ManualOrderChanged
+    /// Генерирует событие <see cref="ManualOrderChanged"/>
     /// </summary>
+    /// <param name="args">Пустой аргумент события</param>
     protected virtual void OnManualOrderChanged(EventArgs args)
     {
       if (ManualOrderChanged != null)
@@ -6103,7 +6167,7 @@ namespace FreeLibSet.Forms
     /// Если установлено в true, то доступны команды ручной сортировки строк.
     /// Сортировка основывается на порядке строк в коллекции, а не на значении
     /// столбца. При сортировке строки переставляются местами внутри объекта
-    /// DataGridViewRowCollection
+    /// <see cref="DataGridViewRowCollection"/>
     /// </summary>
     public bool ManualOrderRows
     {
@@ -6118,7 +6182,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Массив строк табличного просмотра в порядке по умолчанию. Свойство действует
-    /// при ManualOrderRows=true. Если массив присвоен, то действует команда
+    /// при <see cref="ManualOrderRows"/>=true. Если массив присвоен, то действует команда
     /// "Восстановить порядок по умолчанию"
     /// </summary>
     public DataGridViewRow[] DefaultManualOrderRows { get { return _DefaultManualOrderRows; } set { _DefaultManualOrderRows = value; } }
@@ -6215,7 +6279,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Восстановление порядка по умолчанию на основании DefaultManualOrderRows
+    /// Восстановление порядка по умолчанию на основании <see cref="DefaultManualOrderRows"/>
     /// </summary>
     /// <returns></returns>
     private bool DoSortRestoreRows()
@@ -6282,10 +6346,10 @@ namespace FreeLibSet.Forms
     #region Свойство DataReorderHelper
 
     /// <summary>
-    /// Возвращает объект, реализующий интерфейс IDataReorderHelper.
-    /// Если свойство ManualOrderColumn не установлено, возвращается null.
-    /// Для инициализации значения однократно вызывается событие DataReorderHelperNeeded.
-    /// Если требуется, чтобы свойство вернуло новое значение, используйте метод ResetDataReorderHelper().
+    /// Возвращает объект, реализующий интерфейс <see cref="IDataReorderHelper"/>.
+    /// Если свойство <see cref="ManualOrderColumn"/> не установлено, возвращается null.
+    /// Для инициализации значения однократно вызывается событие <see cref="DataReorderHelperNeeded"/>.
+    /// Если требуется, чтобы свойство вернуло новое значение, используйте метод <see cref="ResetDataReorderHelper()"/>.
     /// </summary>
     /// <returns>Объект IDataReorderHelper</returns>
     public IDataReorderHelper DataReorderHelper
@@ -6306,8 +6370,8 @@ namespace FreeLibSet.Forms
     private IDataReorderHelper _DataReorderHelper;
 
     /// <summary>
-    /// Очищает сохраненное значение свойства DataReorderHelper, чтобы при следующем обращении к нему
-    /// вновь было вызвано событие DataReorderHelperNeeded
+    /// Очищает сохраненное значение свойства <see cref="DataReorderHelper"/>, чтобы при следующем обращении к нему
+    /// вновь было вызвано событие <see cref="DataReorderHelperNeeded"/>.
     /// </summary>
     public virtual void ResetDataReorderHelper()
     {
@@ -6315,15 +6379,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Событие вызывается при выполнении команд ручной сортировки, если установлено свойство ManualOrderColumn.
-    /// Обработчик события может создать собственный экземпляр и установить свойство Helper.
-    /// Если обработчика нет, или он не создал объект, то создается объект по умолчанию
+    /// Событие вызывается при выполнении команд ручной сортировки, если установлено свойство <see cref="ManualOrderColumn"/>.
+    /// Обработчик события может создать собственный экземпляр и установить свойство <see cref="DataReorderHelperNeededEventArgs.Helper"/>.
+    /// Если обработчика нет, или он не создал объект, то создается объект по умолчанию.
     /// </summary>
     public event DataReorderHelperNeededEventHandler DataReorderHelperNeeded;
 
     /// <summary>
-    /// Вызывает обработчик события DataReorderHelperNeeded.
-    /// Если IDataReorderHelper не получен, объект создается вызовом метода CreateDefaultDataReorderHelper().
+    /// Вызывает обработчик события <see cref="DataReorderHelperNeeded"/>.
+    /// Если <see cref="IDataReorderHelper"/> не получен, объект создается вызовом метода <see cref="CreateDefaultDataReorderHelper()"/>.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnDataReorderHelperNeeded(DataReorderHelperNeededEventArgs args)
@@ -6360,11 +6424,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает объект, предназначенный для сортировки строк с помощью числового поля.
-    /// Используется при установленном свойстве ManualOrderColumn, если не установлен пользовательский обработчик события DataReorderHelperNeeded.
-    /// Непереопределенный метод создает новый объект DataTableReorderHelper.
+    /// Используется при установленном свойстве <see cref="ManualOrderColumn"/>, если не установлен пользовательский обработчик события <see cref="DataReorderHelperNeeded"/>.
+    /// Непереопределенный метод создает новый объект <see cref="DataTableReorderHelper"/>.
     /// Переопределяется, если табличный просмотр предназначен для просмотра иерархических данных, а не плоской таблицы.
     /// </summary>
-    /// <returns>Объект, реализующий интерфейс IDataReorderHelper </returns>
+    /// <returns>Объект, реализующий интерфейс <see cref="IDataReorderHelper"/></returns>
     protected virtual IDataReorderHelper CreateDefaultDataReorderHelper()
     {
       if (String.IsNullOrEmpty(ManualOrderColumn))
@@ -6382,8 +6446,8 @@ namespace FreeLibSet.Forms
     #region Перестановка строк
 
     /// <summary>
-    /// Имя числового столбца, который определяет порядок строк при ручной сортировке
-    /// Если задано, то в меню есть команды ручной сортировки
+    /// Имя числового столбца, который определяет порядок строк при ручной сортировке.
+    /// Если задано, то в меню есть команды ручной сортировки.
     /// </summary>
     public string ManualOrderColumn
     {
@@ -6452,7 +6516,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя числового столбца, который определяет порядок строк по умолчанию при ручной
-    /// сортировке. Свойство действует при непустом значении ManualOrderColumn.
+    /// сортировке. Свойство действует при непустом значении <see cref="ManualOrderColumn"/>.
     /// Если имя присвоено, то действует команда "Восстановить порядок по умолчанию"
     /// </summary>
     public string DefaultManualOrderColumn
@@ -6496,9 +6560,9 @@ namespace FreeLibSet.Forms
     #region InitManualOrderColumnValue()
 
     /// <summary>
-    /// Выполняет инициализацию значения поля, заданного свойством ManualOrderColumn для новых строк, у которых поле имеет значение 0.
-    /// Вызывает метод IDataReorderHelper.InitRows().
-    /// Если свойcтво ManualOrderColumn не установлено, никаких действий не выполняется.
+    /// Выполняет инициализацию значения поля, заданного свойством <see cref="ManualOrderColumn"/> для новых строк, у которых поле имеет значение 0.
+    /// Вызывает метод <see cref="IDataReorderHelper.InitRows(DataRow[], out bool)"/>.
+    /// Если свойcтво <see cref="ManualOrderColumn"/> не установлено, никаких действий не выполняется.
     /// </summary>
     /// <param name="rows">Строки данных, которые нужно инициализировать</param>
     /// <param name="otherRowsChanged">Сюда записывается значение true, если были изменены другие строки в просмотре, кроме выбранных.</param>
@@ -6529,10 +6593,10 @@ namespace FreeLibSet.Forms
     public new EFPDataGridViewCommandItems CommandItems { get { return (EFPDataGridViewCommandItems)(base.CommandItems); } }
 
     /// <summary>
-    /// Создает EFPDataGridViewCommandItems
+    /// Создает <see cref="EFPDataGridViewCommandItems"/>
     /// </summary>
-    /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    /// <returns>Новый экземпляр команд меню</returns>
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPDataGridViewCommandItems(this);
     }
@@ -6569,7 +6633,7 @@ namespace FreeLibSet.Forms
     /// Встроенное выполнение операций редактирования без использования
     /// внешних обработчиков.
     /// Поддерживаются режимы "Редактирование" и "Удаление"
-    /// В режиме Edit вызывается DataGridView.BeginEdit(), при этом проверяются свойства ReadOnly
+    /// В режиме <paramref name="state"/>=Edit вызывается <see cref="DataGridView.BeginEdit(bool)"/>, при этом проверяются свойства ReadOnly
     /// </summary>
     /// <param name="state">Edit или Delete</param>
     public void InlineEditData(EFPDataGridViewState state)
@@ -6974,7 +7038,8 @@ namespace FreeLibSet.Forms
     }
 
     private bool _InsideCellValueChanged;
-    private void DoControl_CellValueChanged(DataGridViewCellEventArgs Args)
+
+    private void DoControl_CellValueChanged(DataGridViewCellEventArgs args)
     {
       if (_InsideCellValueChanged)
         return;
@@ -6984,10 +7049,10 @@ namespace FreeLibSet.Forms
       {
         if (Control.IsCurrentCellInEditMode)
         {
-          if (Control.CurrentCell.RowIndex == Args.RowIndex && Control.CurrentCell.ColumnIndex == Args.ColumnIndex)
+          if (Control.CurrentCell.RowIndex == args.RowIndex && Control.CurrentCell.ColumnIndex == args.ColumnIndex)
           {
-            OnCellFinished(Args.RowIndex, Args.ColumnIndex, EFPDataGridViewCellFinishedReason.Edit);
-            Control.InvalidateRow(Args.RowIndex);
+            OnCellFinished(args.RowIndex, args.ColumnIndex, EFPDataGridViewCellFinishedReason.Edit);
+            Control.InvalidateRow(args.RowIndex);
           }
         }
       }
@@ -6999,7 +7064,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается, когда закончено редактирование ячейки и новое значение
-    /// Cell.Value установлено (вызывается из CellValueChanged). Событие не 
+    /// <see cref="DataGridViewCell.Value"/> установлено (вызывается из <see cref="DataGridView.CellValueChanged"/>. Событие не 
     /// вызывается, если пользователь нажал Esc.
     /// Обработчик может, например, выполнить расчет других значений строки или
     /// расчет итоговой строки.
@@ -7011,7 +7076,7 @@ namespace FreeLibSet.Forms
     private bool _CellFinishedErrorShown = false;
 
     /// <summary>
-    /// Вызов события CellFinished
+    /// Вызов события <see cref="CellFinished"/>
     /// </summary>
     /// <param name="rowIndex">Индекс строки данных</param>
     /// <param name="columnIndex">Индекс столбца</param>
@@ -7058,7 +7123,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если заданная ячейка имеет установленный атрибут "только чтение".
-    /// В первую очередь вызывается GetRowReadOnly() для проверки атрибута строки.
+    /// В первую очередь вызывается <see cref="GetRowReadOnly(int, out string)"/> для проверки атрибута строки.
     /// </summary>
     /// <param name="rowIndex">Индекс строки</param>
     /// <param name="columnIndex">Индекс столбца</param>
@@ -7077,7 +7142,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если заданная строка имеет установленный атрибут "только чтение".
     /// Также может быть задан атрибут для отдельных ячеек.
-    /// Обычно следует использовать метод GetCellReadOnly().
+    /// Обычно следует использовать метод <see cref="GetCellReadOnly(int, int, out string)"/>.
     /// </summary>
     /// <param name="rowIndex">Индекс строки</param>
     /// <param name="readOnlyMessage">Сюда помещается текст, почему нельзя редактировать строку</param>
@@ -7102,7 +7167,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Запрашивает атрибуты строки и ячейки в режиме View и возвращает признак
+    /// Запрашивает атрибуты строки и ячейки в режиме <see cref="EFPDataGridViewAttributesReason.View"/> и возвращает признак
     /// ContentVisible.
     /// </summary>
     /// <param name="rowIndex">Индекс строки</param>
@@ -7403,11 +7468,11 @@ namespace FreeLibSet.Forms
     public event EventHandler EditData;
 
     /// <summary>
-    /// Вызывает обработчик события EditData и возвращает true, если он установлен
+    /// Вызывает обработчик события <see cref="EditData"/> и возвращает true, если он установлен
     /// Если метод возвращает false, выполняется редактирование "по месту"
     /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
+    /// <param name="args">Пустой аргумент</param>
+    /// <returns>True, если обработчик события был вызван</returns>
     protected virtual bool OnEditData(EventArgs args)
     {
       if (EditData != null)
@@ -7426,8 +7491,8 @@ namespace FreeLibSet.Forms
     public event EventHandler RefreshData;
 
     /// <summary>
-    /// Вызывает событие RefreshData.
-    /// Вызывайте этот метод из OnRefreshData(), если Вы полностью переопределяете его, не вызывая
+    /// Вызывает событие <see cref="RefreshData"/>.
+    /// Вызывайте этот метод из <see cref="OnRefreshData(EventArgs)"/>, если Вы полностью переопределяете его, не вызывая
     /// метод базового класса.
     /// </summary>
     protected void CallRefreshDataEventHandler(EventArgs args)
@@ -7437,8 +7502,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Непереопределенный метод вызывает событие RefreshData.
-    /// Если метод переопределен, также должно быть переопределено свойство HasRefreshDataHandler
+    /// Непереопределенный метод вызывает событие <see cref="RefreshData"/>.
+    /// Если метод переопределен, также должно быть переопределено свойство <see cref="HasRefreshDataHandler"/>
     /// </summary>
     /// <param name="args"></param>
     protected virtual void OnRefreshData(EventArgs args)
@@ -7447,7 +7512,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если есть установленный обработчик события RefreshData
+    /// Возвращает true, если есть установленный обработчик события <see cref="RefreshData"/>
     /// </summary>
     public virtual bool HasRefreshDataHandler { get { return RefreshData != null; } }
 
@@ -7455,8 +7520,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Принудительное обновление просмотра.
-    /// Обновление выполняется, даже если CommandItems.UseRefresh=false.
-    /// Сохраняется и восстанавливается, если возможно, текущее выделение в просмотре с помощью свойства Selection
+    /// Обновление выполняется, даже если <see cref="EFPDataGridViewCommandItems.UseRefresh"/>=false.
+    /// Сохраняется и восстанавливается, если возможно, текущее выделение в просмотре с помощью свойства <see cref="Selection"/>
     /// </summary>
     public virtual void PerformRefresh()
     {
@@ -7498,7 +7563,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызов метода PerformRefresh(), который можно выполнять из обработчика события
+    /// Вызов метода <see cref="PerformRefresh()"/>, который можно выполнять из обработчика события
     /// </summary>
     /// <param name="sender">Игнорируется</param>
     /// <param name="args">Игнорируется</param>
@@ -7575,7 +7640,7 @@ namespace FreeLibSet.Forms
     /// Операция выполнима, даже если ячейка имеет свойство ReadOnly.
     /// Выполняется преобразование в нужный тип данных и проверка коррекстности
     /// (соответствие маске, если она задана для столбца). Если преобразование
-    /// невозможно, вызывается исключение
+    /// невозможно, вызывается исключение.
     /// </summary>
     /// <param name="cell">Ячейка просмотра</param>
     /// <param name="textValue">Записываемое значение</param>
@@ -7591,10 +7656,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Попытка присвоить текстовое значение ячейке.
     /// Операция считается выполнимой, даже если ячейка имеет свойство ReadOnly.
-    /// Следует также выполнять проверку методом GetCellReadOnly()
+    /// Следует также выполнять проверку методом <see cref="GetCellReadOnly(int, int, out string)"/>.
     /// Выполняется преобразование в нужный тип данных и проверка корректности
     /// (соответствие маске, если она задана для столбца). Если преобразование
-    /// невозможно, возвращается false и текст сообщения об ошибке
+    /// невозможно, возвращается false и текст сообщения об ошибке.
     /// </summary>
     /// <param name="cell">Ячейка просмотра</param>
     /// <param name="textValue">Записываемое значение</param>
@@ -7676,6 +7741,28 @@ namespace FreeLibSet.Forms
       return list[rowIndex];
     }
 
+    /// <summary>
+    /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.
+    /// В возвращаемом объекте устанавливается свойство <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// Если нет текущей ячейки (просмотр пустой) или текущая ячейка прокручены мышью за пределы видимой области просмотра,
+    /// возвращается неинициализированный <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// </summary>
+    public EFPDialogPosition CurrentPopupPosition
+    {
+      get
+      {
+        Point pt = Control.CurrentCellAddress;
+        if (pt.X < 0 || pt.Y < 0)
+          return new EFPDialogPosition();
+        Rectangle rc = Control.GetCellDisplayRectangle(pt.X, pt.Y, true);
+        if (rc.Width<=0||rc.Height<=0)
+          return new EFPDialogPosition();
+        EFPDialogPosition res = new EFPDialogPosition();
+        res.PopupOwnerBounds = Control.RectangleToScreen(rc);
+        return res;
+      }
+    }
+
     #endregion
 
     #region Обработка события DataError
@@ -7716,12 +7803,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Использовать ли обработку события DataGridView.DataError по умолчанию
+    /// Использовать ли обработку события <see cref="DataGridView.DataError"/> по умолчанию.
     /// Если свойство установлено в true, то обработчик события выдает отладочное окно
     /// и выводит в log-файл специальный тип исключения о возникшей ошибке.
     /// Если свойство установлено в false, то никакие действия не выполняются и
     /// сообщения об ошибке не выдается (включая стандартное). При этом предполагается,
-    /// что имеется дополнительный пользовательский обработчик события DataGridView.DataError,
+    /// что имеется дополнительный пользовательский обработчик события <see cref="DataGridView.DataError"/>,
     /// который может вызывать метод DefaultShowDataError() для выдачи сообщения.
     /// Значение по умолчанию - true
     /// </summary>
@@ -7753,10 +7840,10 @@ namespace FreeLibSet.Forms
     private bool _FormatDisplayErrorWasShown = false;
 
     /// <summary>
-    /// Выдача сообщения об ошибке в обработчике DataGridView.DataError
+    /// Выдача сообщения об ошибке в обработчике <see cref="DataGridView.DataError"/> 
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
+    /// <param name="sender">Объект <see cref="DataGridView"/></param>
+    /// <param name="args">Аргументы события</param>
     public void DefaultShowDataError(object sender, DataGridViewDataErrorEventArgs args)
     {
       DataGridView control = (DataGridView)sender;
@@ -7871,7 +7958,7 @@ namespace FreeLibSet.Forms
     /// Событие вызывается перед рисованием строки и должно устанавливать общие атрибуты
     /// для ячеек строки.
     /// Если будет использоваться вывод сообщений об ошибках по строке, то должно быть установлено свойство
-    /// UserRowImages
+    /// <see cref="UseRowImages"/>.
     /// </summary>
     public event EFPDataGridViewRowAttributesEventHandler GetRowAttributes;
 
@@ -7915,8 +8002,8 @@ namespace FreeLibSet.Forms
     public event EFPDataGridViewCellAttributesEventHandler GetCellAttributes;
 
     /// <summary>
-    /// Вызывает событие GetCellAttributes.
-    /// Этот метод вызывается только после предварительного вызова OnGetRowAttributes() (возможно,
+    /// Вызывает событие <see cref="GetCellAttributes"/>.
+    /// Этот метод должен вызываться только после предварительного вызова <see cref="OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs)"/> (возможно,
     /// несколько раз для разных столбцов), в котором указываются индекс строки и причина вызова.
     /// </summary>
     /// <param name="args">Аргументы события</param>
@@ -7948,11 +8035,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Общедоступный метод получения атрибутов ячейки.
-    /// Перед вызовами метода должен идти один вызов DoGetRowAttributes() для строки
+    /// Перед вызовами метода должен идти один вызов <see cref="DoGetRowAttributes(int, EFPDataGridViewAttributesReason)"/> для строки
     /// </summary>
-    /// <param name="_ColumnIndex">Номер столбца</param>
+    /// <param name="columnIndex">Номер столбца</param>
     /// <returns>Атрибуты ячейки</returns>
-    public EFPDataGridViewCellAttributesEventArgs DoGetCellAttributes(int _ColumnIndex)
+    public EFPDataGridViewCellAttributesEventArgs DoGetCellAttributes(int columnIndex)
     {
       // // Избегаем делать строки Unshared
       // DataGridViewRow Row = Control.RowList.SharedRow(GetRowAttributesArgs.RowIndex);
@@ -7977,7 +8064,7 @@ namespace FreeLibSet.Forms
       // чтобы он мог вернуть значение ячейки. 
       // И почему нельзя было сделать метод DataGridViewCell.GetValue() общедоступным?
 
-      DataGridViewCell cell = Control[_ColumnIndex, _GetRowAttributesArgs.RowIndex];
+      DataGridViewCell cell = Control[columnIndex, _GetRowAttributesArgs.RowIndex];
 
       // 30.06.2021
       // Если строкое значение получено из DataRow, которая была загружена из базы данных, 
@@ -7989,7 +8076,7 @@ namespace FreeLibSet.Forms
         _GetCellAttributesArgs.Value = cell.Value;
       _GetCellAttributesArgs.FormattingApplied = false;
 
-      CallOnGetCellAttributes(_ColumnIndex, cell.InheritedStyle, true, _GetCellAttributesArgs.Value);
+      CallOnGetCellAttributes(columnIndex, cell.InheritedStyle, true, _GetCellAttributesArgs.Value);
 
       if (_GetCellAttributesArgs.Reason == EFPDataGridViewAttributesReason.View ||
         _GetCellAttributesArgs.Reason == EFPDataGridViewAttributesReason.Print) // 06.02.2018
@@ -8102,8 +8189,6 @@ namespace FreeLibSet.Forms
       return new Pen(color, w);
     }
 
-
-
     void Control_CellFormatting(object sender, DataGridViewCellFormattingEventArgs args)
     {
       if (args.RowIndex < 0)
@@ -8158,12 +8243,12 @@ namespace FreeLibSet.Forms
             case DataGridViewContentAlignment.TopLeft:
             case DataGridViewContentAlignment.MiddleLeft:
             case DataGridViewContentAlignment.BottomLeft:
-              pd.Left += (int)(Measures.CharWidthDots * 2 * _GetCellAttributesArgs.IndentLevel);
+              pd.Left += (int)(Measures.CharWidthPixel * 2 * _GetCellAttributesArgs.IndentLevel);
               break;
             case DataGridViewContentAlignment.TopRight:
             case DataGridViewContentAlignment.MiddleRight:
             case DataGridViewContentAlignment.BottomRight:
-              pd.Right += (int)(Measures.CharWidthDots * 2 * _GetCellAttributesArgs.IndentLevel);
+              pd.Right += (int)(Measures.CharWidthPixel * 2 * _GetCellAttributesArgs.IndentLevel);
               break;
           }
           args.CellStyle.Padding = pd;
@@ -8180,7 +8265,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить цвет фона и шрифта для заданных параметров ячейки.
-    /// Цвета помещаются в объект CellStyle
+    /// Цвета помещаются в объект <see cref="DataGridViewCellStyle"/>.
     /// </summary>
     /// <param name="cellStyle">Заполняемый объект</param>
     /// <param name="colorType">Вариант цветного оформления ячейки</param>
@@ -8191,7 +8276,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить цвет фона и шрифта для заданных параметров ячейки.
-    /// Цвета помещаются в объект CellStyle
+    /// Цвета помещаются в объект <see cref="DataGridViewCellStyle"/>.
     /// </summary>
     /// <param name="cellStyle">Заполняемый объект</param>
     /// <param name="colorType">Вариант цветного оформления ячейки</param>
@@ -8203,13 +8288,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить цвет фона и шрифта для заданных параметров ячейки.
-    /// Цвета помещаются в объект CellStyle
+    /// Цвета помещаются в объект <see cref="DataGridViewCellStyle"/>.
     /// </summary>
     /// <param name="cellStyle">Заполняемый объект</param>
     /// <param name="colorType">Вариант цветного оформления ячейки</param>
     /// <param name="grayed">true -Выделение серым цветом</param>
     /// <param name="contentVisible">true - должно ли быть видно содержимое ячейки.
-    /// Если false, то в <paramref name="cellStyle"/>.ForeColor помещается Color.Transparent</param>
+    /// Если false, то в <paramref name="cellStyle"/>.ForeColor помещается <see cref="Color.Transparent"/></param>
     public static void SetCellAttr(DataGridViewCellStyle cellStyle, EFPDataGridViewColorType colorType, bool grayed, bool contentVisible)
     {
       //if (ColorType == EFPDataGridViewColorType.Alter)
@@ -8227,14 +8312,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить цвет фона и шрифта для заданных параметров ячейки.
-    /// Статический метод, не привязанный к табличному просмотру и объекту DataGridViewCellStyle.
+    /// Статический метод, не привязанный к табличному просмотру и объекту <see cref="DataGridViewCellStyle"/>.
     /// </summary>
     /// <param name="colorType">Вариант цветного оформления ячейки</param>
     /// <param name="grayed">true -Выделение серым цветом</param>
     /// <param name="contentVisible">true - должно ли быть видно содержимое ячейки.
-    /// Если false, то в <paramref name="foreColor"/> помещается Color.Transparent</param>
+    /// Если false, то в <paramref name="foreColor"/> помещается <see cref="Color.Transparent"/></param>
     /// <param name="backColor">Сюда помещается цвет фона, зависящий от <paramref name="colorType"/>.
-    /// Для ColorType.Normal записывается Color.Empty</param>
+    /// Для <paramref name="colorType"/>=Normal записывается <see cref="Color.Empty"/></param>
     /// <param name="foreColor">Сюда помещается цвет текста, зависящий от <paramref name="colorType"/>,
     /// <paramref name="grayed"/> и <paramref name="contentVisible"/>.</param>
     public static void SetCellAttr(EFPDataGridViewColorType colorType, bool grayed, bool contentVisible, out Color backColor, out Color foreColor)
@@ -8286,8 +8371,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить атрибуты ячейки для передачи в Excel, соответствующие атрибутам ячейки табличного просмотра.
     /// </summary>
-    /// <param name="cellAttr">Атрибуты ячейки ддя EFPDataGridView</param>
-    /// <returns>Атрибуnы ячейки для передачи в Excel</returns>
+    /// <param name="cellAttr">Атрибуты ячейки ддя <see cref="EFPDataGridView"/></param>
+    /// <returns>Атрибуты ячейки для передачи в Excel</returns>
     public static EFPDataGridViewExcelCellAttributes GetExcelCellAttr(EFPDataGridViewCellAttributesEventArgs cellAttr)
     {
       return GetExcelCellAttr(cellAttr.ColorType, cellAttr.Grayed);
@@ -8298,7 +8383,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="colorType">Цвет ячейки</param>
     /// <param name="grayed">true, если текст выделяется серым цветом</param>
-    /// <returns>Атрибуnы ячейки для передачи в Excel</returns>
+    /// <returns>Атрибуты ячейки для передачи в Excel</returns>
     public static EFPDataGridViewExcelCellAttributes GetExcelCellAttr(EFPDataGridViewColorType colorType, bool grayed)
     {
       EFPDataGridViewExcelCellAttributes attr = new EFPDataGridViewExcelCellAttributes();
@@ -8367,7 +8452,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если true, то при утере просмотром фокуса ввода, подсветка выделенных
-    /// ячеек не выполняется (аналогично свойству у TextBox, TreeView и др.)
+    /// ячеек не выполняется (аналогично свойству у <see cref="TextBox"/>, <see cref="TreeView"/> и др.)
     /// В отличие от этих управляющих элементов, значением по умолчанию
     /// является false, то есть подсветка сохраняется
     /// </summary>
@@ -8416,7 +8501,7 @@ namespace FreeLibSet.Forms
     #region Картинки в заголовках строк и всплывающие подсказки
 
     /// <summary>
-    /// Возвращает имя изображения в списке EFPApp.MainImages, соответствующее EFPDataGridViewImageKind.
+    /// Возвращает имя изображения в списке <see cref="EFPApp.MainImages"/>, соответствующее <see cref="EFPDataGridViewImageKind"/>.
     /// Для <paramref name="imageKind"/>=None возвращает "EmptyImage".
     /// </summary>
     /// <param name="imageKind">Вариант изображения</param>
@@ -8427,7 +8512,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает имя изображения в списке EFPApp.MainImages, соответствующее EFPDataGridViewImageKind.
+    /// Возвращает имя изображения в списке <see cref="EFPApp.MainImages"/>, соответствующее <see cref="EFPDataGridViewImageKind"/>.
     /// </summary>
     /// <param name="imageKind">Вариант изображения</param>
     /// <param name="noneImageKey">Имя изображения для <paramref name="imageKind"/>=None</param>
@@ -8447,7 +8532,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Разрешить рисование изображений в заголовках строк и вывод всплывающих
     /// подсказок. При установленном свойстве не будут правильно отображаться 
-    /// значки и подсказки об ошибках в строках с помощью DataRow.RowError.
+    /// значки и подсказки об ошибках в строках с помощью <see cref="DataRow.RowError"/>.
     /// По умолчанию - false (можно использовать стандартный механизм индикации в
     /// DataGridView).
     /// </summary>
@@ -8471,12 +8556,12 @@ namespace FreeLibSet.Forms
     private bool _UseRowImages;
 
     /// <summary>
-    /// Использовать свойство DataRow.RowError для отображения признака ошибки в 
-    /// заголовке строки и подсказки, как это по умолчанию делеает DataGridView.
-    /// Свойство имеет значение при установленном UseRowImages.
+    /// Использовать свойство <see cref="DataRow.RowError"/> для отображения признака ошибки в 
+    /// заголовке строки и подсказки, как это по умолчанию делает <see cref="DataGridView"/>.
+    /// Свойство имеет значение при установленном <see cref="UseRowImages"/>=true.
     /// По умолчанию - false (предполагается, что признак ошибки строки 
-    /// устанавливается обработчиком GetRowAttributes)
-    /// Установка свойства не препятствует реализации GetRowAttributes
+    /// устанавливается обработчиком события <see cref="GetRowAttributes"/>)
+    /// Установка свойства не препятствует реализации <see cref="GetRowAttributes"/>
     /// </summary>
     [DefaultValue(false)]
     public bool UseRowImagesDataError
@@ -8494,9 +8579,9 @@ namespace FreeLibSet.Forms
     private bool _UseRowImagesDataError;
 
     /// <summary>
-    /// Изображение, которое следует вывести в верхней левой ячейке просмотра
-    /// Произвольное изображение может быть задано с помощью свойства TopLeftCellUserImage
-    /// Свойство UseRowImages должно быть установлено
+    /// Изображение, которое следует вывести в верхней левой ячейке просмотра.
+    /// Произвольное изображение может быть задано с помощью свойства <see cref="TopLeftCellUserImage"/>.
+    /// Свойство <see cref="UseRowImages"/> должно быть установлено.
     /// </summary>
     [DefaultValue(EFPDataGridViewImageKind.None)]
     public EFPDataGridViewImageKind TopLeftCellImageKind
@@ -8516,8 +8601,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Произвольное изображение, которое следует вывести в верхней левой ячейке 
-    /// просмотра
-    /// Свойство UseRowImages должно быть установлено
+    /// просмотра.
+    /// Свойство <see cref="UseRowImages"/> должно быть установлено.
     /// </summary>
     [DefaultValue(null)]
     public Image TopLeftCellUserImage
@@ -8538,8 +8623,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Текст всплывающей подсказки, выводимой при наведении курсора мыши на
     /// верхнюю левую ячейку просмотра.
-    /// Свойство инициализируется автоматически, если UseRowImages установлено в true.
-    /// Свойство не включает в себя текст, генерируемый ShowRowCountInTopLeftCellToolTipText
+    /// Свойство инициализируется автоматически, если <see cref="UseRowImages"/> установлено в true.
+    /// Свойство не включает в себя текст, генерируемый <see cref="ShowRowCountInTopLeftCellToolTipText"/>
     /// </summary>
     public string TopLeftCellToolTipText
     {
@@ -8571,7 +8656,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установить в true, то в верхней левой ячейке будет отображаться всплывающая
     /// подсказка "Записей в просмотре: XXX". 
-    /// Свойство подключает обработку события DataGridView.DataBindingComplete. Не работает, если табличный
+    /// Свойство подключает обработку события <see cref="DataGridView.DataBindingComplete"/>. Не работает, если табличный
     /// просмотр не присоединен к источнику данных.
     /// По умолчанию - false - свойство отключено.
     /// </summary>
@@ -8629,7 +8714,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="rowIndex">Индекс строки или (-1) для верхней левой ячейки</param>
     /// <returns>Текст всплывающей подсказки, получаемый с помощью события 
-    /// GetRowAttributes или значениек свойства TopLeftCellToolTpText</returns>
+    /// <see cref="GetRowAttributes"/> или значение свойства <see cref="TopLeftCellToolTipText"/></returns>
     public string GetRowToolTipText(int rowIndex)
     {
       if (rowIndex < 0)
@@ -8641,9 +8726,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить текст подсказки для ячейки
     /// </summary>
-    /// <param name="rowIndex"></param>
-    /// <param name="columnIndex"></param>
-    /// <returns></returns>
+    /// <param name="rowIndex">Индекс строки или (-1) для заголовков столбцов</param>
+    /// <param name="columnIndex">Индекс столбца или (-1) для заголовков строк</param>
+    /// <returns>Текст всплывающей подсказки</returns>
     public string GetCellToolTipText(int rowIndex, int columnIndex)
     {
       if (columnIndex < 0)
@@ -8735,7 +8820,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Перейти к следующей или предыдущей строке с ошибкой
+    /// Перейти к следующей или предыдущей строке с ошибкой.
+    /// Используется для реализации соответствующих команд локального меню.
     /// </summary>
     /// <param name="fromTableBegin">true - перейти к первой или последней строке в таблице с подходящим условием,
     /// false - перейти к следующей или предыдущей относительно текущей строки</param>
@@ -8860,9 +8946,9 @@ namespace FreeLibSet.Forms
     /// Получить тип изображения для строки
     /// </summary>
     /// <param name="rowIndex">Индекс строки в просмотре. 
-    /// Если равно (-1), возвращается значение свойства TopLeftCellImageKind.
-    /// Иначе генерируется событие GetRowAttributes для получения значка строки</param>
-    /// <returns></returns>
+    /// Если равно (-1), возвращается значение свойства <see cref="TopLeftCellImageKind"/>.
+    /// Иначе генерируется событие <see cref="GetRowAttributes"/> для получения значка строки</param>
+    /// <returns>Тип изображения</returns>
     public EFPDataGridViewImageKind GetRowImageKind(int rowIndex)
     {
       if (rowIndex < 0)
@@ -8873,14 +8959,19 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Имя текстового столбца в связанном наборе данных, используемое для идентификации строки при выводе сообщений об ошибках для группы строк
+    /// Имя текстового столбца в связанном наборе данных, используемое для идентификации строки при выводе сообщений об ошибках для группы строк.
+    /// Если использования столбца недостаточно для идентификации, устанавливайте свойство <see cref="EFPDataGridViewRowAttributesEventArgs.RowIdText"/> 
+    /// в обработчике события <see cref="GetRowAttributes"/>.
     /// </summary>
     public string RowIdTextDataColumnName { get { return _RowIdTextDataColumnName; } set { _RowIdTextDataColumnName = value; } }
     private string _RowIdTextDataColumnName;
 
     /// <summary>
-    /// Добавить в список ErrorMessages сообщения, относящиеся к строке с заданным
+    /// Добавить в список <paramref name="errorMessages"/> сообщения, относящиеся к строке с заданным
     /// индексом.
+    /// Выполняет вызов обработчика события <see cref="GetRowAttributes"/> и возвращает сообщения для строки.
+    /// В отличие от использования свойств <see cref="EFPDataGridViewRowAttributesEventArgs.ToolTipText"/> и <see cref="EFPDataGridViewRowAttributesEventArgs.ImageKind"/>,
+    /// не теряется информация, какое сообщение является ошибкой, какое предупреждением, и т.д.
     /// </summary>
     /// <param name="errorMessages">Список для добавления сообщений</param>
     /// <param name="rowIndex">Индекс строки просмотра</param>
@@ -8890,8 +8981,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавить в список ErrorMessages сообщения, относящиеся к строке с заданным
+    /// Добавить в список <paramref name="errorMessages"/> сообщения, относящиеся к строке с заданным
     /// индексом.
+    /// Выполняет вызов обработчика события <see cref="GetRowAttributes"/> и возвращает сообщения для строки.
+    /// В отличие от использования свойств <see cref="EFPDataGridViewRowAttributesEventArgs.ToolTipText"/> и <see cref="EFPDataGridViewRowAttributesEventArgs.ImageKind"/>,
+    /// не теряется информация, какое сообщение является ошибкой, какое предупреждением, и т.д.
     /// </summary>
     /// <param name="errorMessages">Список для добавления сообщений</param>
     /// <param name="rowIndex">Индекс строки просмотра</param>
@@ -8942,7 +9036,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить список сообщений для выбранных строк в просмотре
+    /// Получить список сообщений для выбранных строк в просмотре.
+    /// См. пояснения к <see cref="GetRowErrorMessages(ErrorMessageList, int, bool)"/>.
     /// </summary>
     /// <param name="errorMessages">Список, куда будут добавлены сообщения</param>
     /// <param name="useRowIdText">true - добавить перед сообщениями номера строк</param>
@@ -8967,6 +9062,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить список сообщений для выбранных строк в просмотре
     /// Текст, идентифицирующий строку, задается, если число выбранных строк больше 1
+    /// См. пояснения к <see cref="GetRowErrorMessages(ErrorMessageList, int, bool)"/>.
     /// </summary>
     /// <param name="errorMessages">Список, куда будут добавлены сообщения</param>
     public void GetSelectedRowsErrorMessages(ErrorMessageList errorMessages)
@@ -8989,9 +9085,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить список сообщений для всех строк в просмотре.
-    /// Перед сообщениями добавляется текст, идентифицирующий строку
+    /// Перед сообщениями добавляется текст, идентифицирующий строку.
+    /// См. пояснения к <see cref="GetRowErrorMessages(ErrorMessageList, int, bool)"/>.
     /// </summary>
-    /// <param name="errorMessages"></param>
+    /// <param name="errorMessages">Список, куда будут добавлены сообщения</param>
     public void GetAllRowsErrorMessages(ErrorMessageList errorMessages)
     {
       if (errorMessages == null)
@@ -9012,13 +9109,13 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализировать значок и всплывающую подсказку для верхней левой ячейки 
     /// табличного просмотра, где будет выведено количество ошибок и предупреждений
-    /// Устанавливает свойства TopLeftCellImageKind и TopLeftCellToolTipText
+    /// Устанавливает свойства <see cref="TopLeftCellImageKind"/> и <see cref="TopLeftCellToolTipText"/>.
     /// При вызове метода перебираются все строки табличного просмотра. Для каждой
-    /// строки вызывается метод GetRowImageKind(), который, в свою очередь, вызывает
-    /// для строки событие GetRowAttributes.
+    /// строки вызывается метод <see cref="GetRowImageKind(int)"/>, который, в свою очередь, вызывает
+    /// для строки событие <see cref="GetRowAttributes"/>.
     /// Строки с состоянием Information не учитываются и значок (i) в верхней левой
     /// ячейке не выводится.
-    /// Метод ничего не делает при UseRowImages=false.
+    /// Метод ничего не делает при <see cref="UseRowImages"/>=false.
     /// </summary>
     public void InitTopLeftCellTotalInfo()
     {
@@ -9080,10 +9177,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Перебирает все строки просмотра и возвращает максимальное значение типа
-    /// ошибки для строки
+    /// Перебирает все строки просмотра и возвращает максимальное значение типа ошибки для строки
     /// </summary>
-    /// <returns>Тип значка.</returns>
+    /// <returns>Тип значка</returns>
     public EFPDataGridViewImageKind GetAllRowsImageKind()
     {
       int n = Control.RowCount;
@@ -9448,7 +9544,7 @@ namespace FreeLibSet.Forms
     internal bool IncSearchDataViewIsManual;
 
     /// <summary>
-    /// Получить индекс первого столбца с установленным CanIncSearch или (-1), если
+    /// Получить индекс первого столбца с установленным <see cref="EFPDataGridViewColumn.CanIncSearch"/> или (-1), если
     /// таких столбцов нет.
     /// Может применяться при инициализации просмотра для определения начального 
     /// активного столбца
@@ -9472,7 +9568,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выбранная настройка табличного просмотра.
-    /// Если свойство GridProducer не установлено, должен быть задан обработчик CurrentGridConfigChanged,
+    /// Если свойство <see cref="GridProducer"/> не установлено, должен быть задан обработчик <see cref="CurrentConfigChanged"/>,
     /// который выполнит реальную настройку просмотра
     /// </summary>
     public EFPDataGridViewConfig CurrentConfig
@@ -9517,27 +9613,27 @@ namespace FreeLibSet.Forms
     private EFPDataGridViewConfig _CurrentConfig;
 
     /// <summary>
-    /// Флажок нахождения в пределах сеттера свойства CurrentConfig.
+    /// Флажок нахождения в пределах сеттера свойства <see cref="CurrentConfig"/>.
     /// </summary>
     protected bool InsideSetCurrentConfig = false;
 
     /// <summary>
-    /// Признак того, что свойство CurrentConfig уже устанавливалось
+    /// Признак того, что свойство <see cref="CurrentConfig"/> уже устанавливалось
     /// </summary>
     protected bool CurrentConfigHasBeenSet { get { return _CurrentConfigHasBeenSet; } }
     private bool _CurrentConfigHasBeenSet = false;
 
     /// <summary>
-    /// Вызывается при изменении свойства CurrentConfig.
-    /// Если аргумент Cancel обработчиком установлен в true, то предполагается,
+    /// Вызывается при изменении свойства <see cref="CurrentConfig"/>.
+    /// Если аргумент <see cref="CancelEventArgs.Cancel"/> обработчиком установлен в true, то предполагается,
     /// что инициализация просмотра выполнена в обработчике. В противном случае
     /// (по умолчанию Cancel=false или при отстутствии обработчика) будет вызван
-    /// метод EFPGridProducer.InitGridView()
+    /// метод <see cref="IEFPGridProducer.InitGridView(EFPDataGridView, bool)"/>.
     /// </summary>
     public event CancelEventHandler CurrentConfigChanged;
 
     /// <summary>
-    /// Вызывает событие CurrentConfigChanged.
+    /// Вызывает событие <see cref="CurrentConfigChanged"/>.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnCurrentConfigChanged(CancelEventArgs args)
@@ -9548,12 +9644,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Это событие вызывается после того, как конфигурация табличного просмотра инициализирована
-    /// с помощью EFPGridProducer.InitGridView()
+    /// с помощью <see cref="IEFPGridProducer.InitGridView(EFPDataGridView, bool)"/>.
     /// </summary>
     public event EventHandler GridProducerPostInit;
 
     /// <summary>
-    /// Вызывает событие GridProducerPostInit
+    /// Вызывает событие <see cref="GridProducerPostInit"/>
     /// </summary>
     public void PerformGridProducerPostInit()
     {
@@ -9572,7 +9668,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает событие GridProducerPostInit
+    /// Вызывает событие <see cref="GridProducerPostInit"/>
     /// </summary>
     protected virtual void OnGridProducerPostInit()
     {
@@ -9585,16 +9681,16 @@ namespace FreeLibSet.Forms
     #region Установка отметок строк в столбце CheckBox
 
     /// <summary>
-    /// Столбец CheckBox, с помощью которого устанавливаются отметки для строк
+    /// Столбец <see cref="DataGridViewCheckBoxColumn"/>, с помощью которого устанавливаются отметки для строк
     /// Если свойство установлено, то в локальном меню просмотра появляется
     /// подменю "Установка отметок для строк"
     /// Свойство может быть установлено при добавлении столбца с помощью аргумента
-    /// MarkRows в методе EFPDataGridViewColumns.AddBool()
+    /// markRows в методе EFPDataGridViewColumns.AddBool()
     /// Свойство следует устанавливать после добавления всех столбцов в просмотр,
-    /// но перед вызовом SetCommandItems(). Также допускается повторная установка свойства в процессе работы, если столбцы создаются заново
-    /// При установке свойства, если DataGridView.ReadOnly=true, устанавливается свойство
-    /// DataGridViewColumn.ReadOnly для всех столбцов, кроме заданного, а DataGridView.ReadOnly устанавливается в false.
-    /// Также устанавливается в true свойство DataGridView.MultiSelect=true.
+    /// но перед вызовом SetCommandItems(). Также допускается повторная установка свойства в процессе работы, если столбцы создаются заново.
+    /// При установке свойства, если <see cref="DataGridView.ReadOnly"/>=true, устанавливается свойство
+    /// <see cref="DataGridViewColumn.ReadOnly"/> для всех столбцов, кроме заданного, а <see cref="DataGridView.ReadOnly"/>  устанавливается в false.
+    /// Также устанавливается в true свойство <see cref="DataGridView.MultiSelect"/>.
     /// </summary>
     public DataGridViewCheckBoxColumn MarkRowsGridColumn
     {
@@ -9641,7 +9737,7 @@ namespace FreeLibSet.Forms
     private DataGridViewCheckBoxColumn _MarkRowsGridColumn;
 
     /// <summary>
-    /// Альтернативная установка свойства MarkRowsColumn
+    /// Альтернативная установка свойства <see cref="MarkRowsColumn"/>
     /// </summary>
     public int MarkRowsColumnIndex
     {
@@ -9662,7 +9758,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Задает один из столбцов с списке Columns для установки отметок строк.
+    /// Задает один из столбцов с списке <see cref="Columns"/> для установки отметок строк.
     /// По умолчанию возвращает null.
     /// </summary>
     public EFPDataGridViewColumn MarkRowsColumn
@@ -9684,7 +9780,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Имя столбца в списке Columns, соответствующего MarkRowsColumn.
+    /// Имя столбца в списке <see cref="Columns"/>, соответствующего <see cref="MarkRowsColumn"/>.
     /// </summary>
     public string MarkRowsColumnName
     {
@@ -9705,8 +9801,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка отметок в CheckBoxColumn для требуемых строк
-    /// Должно быть установлено свойство MarkRowsColumn
+    /// Установка отметок в <see cref="DataGridViewCheckBoxColumn"/> для требуемых строк.
+    /// Должно быть установлено свойство <see cref="MarkRowsColumn"/>.
     /// Скрытые строки пропускаются
     /// </summary>
     /// <param name="rows">Какие строки обрабатываются</param>
@@ -9909,13 +10005,13 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="rangeMode">Заданный режим выделения</param>
     /// <returns>Массив строк и столбцов</returns>
-    public EFPDataGridViewRectArea GetRectArea(EFPDataGridViewExpRange rangeMode)
+    public EFPDataGridViewRectArea GetRectArea(EFPDataViewExpRange rangeMode)
     {
       switch (rangeMode)
       {
-        case EFPDataGridViewExpRange.All:
+        case EFPDataViewExpRange.All:
           return new EFPDataGridViewRectArea(Control, EFPDataGridViewRectAreaCreation.Visible);
-        case EFPDataGridViewExpRange.Selected:
+        case EFPDataViewExpRange.Selected:
           return new EFPDataGridViewRectArea(Control, EFPDataGridViewRectAreaCreation.Selected);
         default:
           throw new ArgumentException("Неизвестный режим выделения: " + rangeMode.ToString(), "rangeMode");
@@ -9940,7 +10036,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="columns">Столбцы</param>
     /// <returns>Массив заголовков</returns>
-    public virtual EFPDataGridViewColumnHeaderArray GetColumnHeaderArray(EFPDataGridViewColumn[] columns)
+    public virtual BRColumnHeaderArray GetColumnHeaderArray(EFPDataGridViewColumn[] columns)
     {
       // Метод переопределен в программе "Бюджетный учет" для поддержки заголовков из параметров страницы.
 
@@ -9962,7 +10058,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      EFPDataGridViewColumnHeaderArray ha = new EFPDataGridViewColumnHeaderArray(headers, ColumnHeaderMixedSpanAllowed);
+      BRColumnHeaderArray ha = new BRColumnHeaderArray(headers, ColumnHeaderMixedSpanAllowed);
       return ha;
     }
 
@@ -9971,7 +10067,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="area">Выбранная область. Используются только столбцы, строки игнорируются</param>
     /// <returns>Описания столбцов</returns>
-    public /*virtual*/ EFPDataGridViewColumnHeaderArray GetColumnHeaderArray(EFPDataGridViewRectArea area)
+    public /*virtual*/ BRColumnHeaderArray GetColumnHeaderArray(EFPDataGridViewRectArea area)
     {
 #if DEBUG
       if (area == null)
@@ -9986,31 +10082,21 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить сводку документа при экспорте.
-    /// Реализация по умолчанию возвращает копию EFPApp.DefaultDocProperties
-    /// с установленным свойством Title в соответствии с DisplayName или
-    /// заголовком окна, если просмотр является единственным управляющим элементом
+    /// По умолчанию содержит копию <see cref="BRReport.AppDefaultDocumentProperties"/>
+    /// с установленным свойством <see cref="BRDocumentProperties.Title"/> в соответствии с <see cref="EFPControlBase.DisplayName"/> или
+    /// заголовком окна, если просмотр является единственным управляющим элементом.
     /// </summary>
-    public virtual EFPDocumentProperties DocumentProperties
+    public BRDocumentProperties DocumentProperties
     {
-      // Свойство доопределяется в программе "Бюджетный учет" для учета имени текущего пользователя в качестве автора
-
-      get
+      get { return _DocumentProperties; }
+      set
       {
-        EFPDocumentProperties docProps = EFPApp.DefaultDocumentProperties;
-        //if (String.IsNullOrEmpty(DisplayName))
-        try
-        {
-          docProps.Title = WinFormsTools.GetControlText(Control);
-        }
-        catch
-        {
-        }
-        //else
-        //  Props.Title = DisplayName;
-
-        return docProps;
+        if (value == null)
+          throw new ArgumentNullException();
+        _DocumentProperties = value;
       }
     }
+    private BRDocumentProperties _DocumentProperties;
 
     /// <summary>
     /// Возвращает true, если есть установленная версия Microsoft Excel, в которую можно выполнить передачу данных табличного просмотра
@@ -10086,7 +10172,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Для отладочных целей.
     /// Возвращает количество строк в просмотре, для которых еще не было выполнено Unshare.
-    /// Выполняется медленно, т.к. требцется перебрать все строки в просмотре.
+    /// Выполняется медленно, т.к. требуется перебрать все строки в просмотре.
     /// </summary>
     public int SharedRowCount
     {
@@ -10111,8 +10197,8 @@ namespace FreeLibSet.Forms
     private DataRowValueArray _RowValueArray;
 
     /// <summary>
-    /// Получить объект EFPDataViewRowInfo для строки.
-    /// Когда он больше не нужен, должен быть вызван FreeRowInfo()
+    /// Получить объект <see cref="EFPDataViewRowInfo"/> для строки.
+    /// Когда он больше не нужен, должен быть вызван <see cref="FreeRowInfo(EFPDataViewRowInfo)"/>.
     /// </summary>
     /// <param name="rowIndex">Индекс строки табличного просмотра</param>
     /// <returns>Информация о строке</returns>
@@ -10137,7 +10223,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает объект DataRowValueArray для доступа к данным.
+    /// Создает объект <see cref="DataRowValueArray"/> для доступа к данным.
     /// Класс-наследник может создавать объект, который, например, использует буферизацию данных
     /// </summary>
     /// <returns>Объект для доступа к данным</returns>
@@ -10160,9 +10246,8 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
-
   /// <summary>
-  /// Исключение, выбрасываемое, если источник данных (например, свойство DataGridView.DataSource)
+  /// Исключение, выбрасываемое, если источник данных (например, свойство <see cref="DataGridView.DataSource"/>)
   /// имеет неподходящий тип.
   /// </summary>
   [Serializable]

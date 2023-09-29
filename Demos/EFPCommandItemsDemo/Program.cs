@@ -9,6 +9,8 @@ namespace EFPCommandItemsDemo
 {
   static class Program
   {
+    const string ConfigRegKey = @"HKEY_CURRENT_USER\Software\FreeLibSet\EFPCommandItemsDemo";
+
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
@@ -21,6 +23,8 @@ namespace EFPCommandItemsDemo
       EFPApp.InitApp();
       try
       {
+        EFPApp.ConfigManager = new EFPRegistryConfigManager(ConfigRegKey);
+
         StartParamsForm paramForm = new StartParamsForm();
         if (EFPApp.ShowDialog(paramForm, true) != DialogResult.OK)
           return;
@@ -33,6 +37,7 @@ namespace EFPCommandItemsDemo
 
         EFPApp.AvailableInterfaces = new EFPAppInterface[] { new EFPAppInterfaceMDI(), new EFPAppInterfaceSDI() };
         EFPApp.SetInterface(paramForm.efpUIType.SelectedIndex == 0 ? "MDI" : "SDI", typeof(Form1));
+        EFPApp.MainWindowTitle = "EFPCommandItemsDemo";
 
         Application.Run();
       }
@@ -50,20 +55,32 @@ namespace EFPCommandItemsDemo
       EFPCommandItem ciNew = h.CommandItems.Add(EFPAppStdCommandItems.New, menuFile);
       ciNew.Click += new EventHandler(ciNew_Click);
 
-      EFPCommandItem ciWizard = new EFPCommandItem("File", "WizardTest");
-      ciWizard.MenuText = "Тест запуска Wizard";
-      ciWizard.ImageKey = "ArrowRight";
-      ciWizard.ShortCut = Keys.F4;
-      ciWizard.Click += new EventHandler(ciWizard_Click);
-      ciWizard.Parent = menuFile;
-      h.CommandItems.Add(ciWizard);
-
       h.AddExit(menuFile);
 
       EFPCommandItem menuEdit = h.CommandItems.Add(EFPAppStdCommandItems.MenuEdit);
       h.CommandItems.Add(EFPAppStdCommandItems.Cut, menuEdit).Enabled = false;
       h.CommandItems.Add(EFPAppStdCommandItems.Copy, menuEdit).Enabled = false;
       h.CommandItems.Add(EFPAppStdCommandItems.Paste, menuEdit).Enabled = false;
+
+      EFPCommandItem menuDialogs = new EFPCommandItem("", "Dialogs");
+      menuDialogs.MenuText = "Диалоги";
+      h.CommandItems.Add(menuDialogs);
+
+      EFPCommandItem ciWizard = new EFPCommandItem("File", "WizardTest");
+      ciWizard.MenuText = "Тест запуска Wizard";
+      ciWizard.ImageKey = "ArrowRight";
+      ciWizard.ShortCut = Keys.F4;
+      ciWizard.Click += new EventHandler(ciWizard_Click);
+      ciWizard.Parent = menuDialogs;
+      h.CommandItems.Add(ciWizard);
+
+      EFPCommandItem ciSettingsDialog = new EFPCommandItem("Dialogs", "SettingsDialog");
+      ciSettingsDialog.MenuText = "SettingsDialog";
+      ciSettingsDialog.ImageKey = "Settings";
+      ciSettingsDialog.Click += new EventHandler(ciSettings_Click);
+      ciSettingsDialog.Parent = menuDialogs;
+      h.CommandItems.Add(ciSettingsDialog);
+
 
       EFPCommandItem menuWindow = h.CommandItems.Add(EFPAppStdCommandItems.MenuWindow);
       h.AddWindowMenuCommands(menuWindow);
@@ -105,5 +122,18 @@ namespace EFPCommandItemsDemo
     {
       new WizardTest().Test();
     }
+
+    private static void ciSettings_Click(object sender, EventArgs args)
+    {
+      SettingsDialog dlg = new SettingsDialog();
+      dlg.Title = "Тестирование SettingsDialog";
+      dlg.ImageKey = "Settings";
+      dlg.ConfigSectionName = "SettingsDialogTest";
+      new SettingsTemplateForm1(dlg);
+      new SettingsTemplateForm2(dlg);
+      dlg.ShowDialog();
+    }
+
+
   }
 }

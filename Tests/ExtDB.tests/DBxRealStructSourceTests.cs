@@ -7,11 +7,12 @@ using FreeLibSet.Core;
 using FreeLibSet.Data.SQLite;
 using System.Data;
 using FreeLibSet.Data.SqlClient;
+using FreeLibSet.Tests;
 
 namespace ExtDB_tests.Data
 {
   [TestFixture]
-  public abstract class DBxRealStructSourceTestsBase
+  public abstract class DBxRealStructSourceTestsBase: FixtureWithSetUp
   {
     #region Конструктор
 
@@ -85,9 +86,10 @@ namespace ExtDB_tests.Data_SQLite
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       _DB = new SQLiteDBx();
 
       StringBuilder sb = new StringBuilder();
@@ -130,11 +132,11 @@ namespace ExtDB_tests.Data_SQLite
       }
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_DB != null)
         _DB.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private SQLiteDBx _DB;

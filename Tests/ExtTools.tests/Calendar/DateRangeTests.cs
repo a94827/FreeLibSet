@@ -4,12 +4,16 @@ using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
+using FreeLibSet.Tests;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Calendar
 {
   [TestFixture]
   public class DateRangeTests
   {
+    #region Конструкторы
+
     [Test]
     public void Constructor_simple()
     {
@@ -71,6 +75,10 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(DateRange.Whole.LastDate, sut3.LastDate, "LastDate");
     }
 
+    #endregion
+
+    #region Empty, Whole
+
     [Test]
     public void Empty()
     {
@@ -98,12 +106,17 @@ namespace ExtTools_tests.Calendar
       Assert.IsFalse(DateRange.Whole.IsEmpty, "IsEmpty");
       Assert.IsTrue(DateRange.Whole.AreWholeMonths, "AreWholeMonths");
       Assert.IsTrue(DateRange.Whole.AreWholeYears, "AreWholeYears");
+      Assert.IsNull(DateRange.Whole.Tag, "Tag");
 
       Assert.Catch<ArgumentException>(delegate() { DateRange.Whole.AddDays(1); }, "AddDays(+1)");
       Assert.Catch<ArgumentException>(delegate() { DateRange.Whole.AddDays(-1); }, "AddDays(-1)");
       Assert.Catch<ArgumentException>(delegate() { DateRange.Whole.AddMonths(1); }, "AddMonths(+1)");
       Assert.Catch<ArgumentException>(delegate() { DateRange.Whole.AddMonths(-1); }, "AddMonths(-1)");
     }
+
+    #endregion
+
+    #region Days, Months, Years
 
     [Test]
     public void Days()
@@ -112,66 +125,74 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(365, sut.Days);
     }
 
-    [TestCase("20210101", "20211231", Result = 12)]
-    [TestCase("20210102", "20211231", Result = 11)]
-    [TestCase("20210101", "20211230", Result = 11)]
-    [TestCase("20210101", "20220101", Result = 12)]
-    [TestCase("20200201", "20200228", Result = 0)]
-    [TestCase("20200201", "20200229", Result = 1)]
-    [TestCase("20210201", "20210228", Result = 1)]
-    [TestCase("20220101", "20220228", Result = 2)]
-    public int Months(string sDate1, string sDate2)
+    [TestCase("20210101-20211231", Result = 12)]
+    [TestCase("20210102-20211231", Result = 11)]
+    [TestCase("20210101-20211230", Result = 11)]
+    [TestCase("20210101-20220101", Result = 12)]
+    [TestCase("20200201-20200228", Result = 0)]
+    [TestCase("20200201-20200229", Result = 1)]
+    [TestCase("20210201-20210228", Result = 1)]
+    [TestCase("20220101-20220228", Result = 2)]
+    public int Months(string sSUT)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange sut = Creators.DateRange(sSUT);
       return sut.Months;
     }
 
-    [TestCase("20220101", "20221231",Result =1)]
-    [TestCase("20220102", "20221231", Result = 0)]
-    public int Years(string sDate1, string sDate2)
+    [TestCase("20220101-20221231",Result =1)]
+    [TestCase("20220102-20221231", Result = 0)]
+    public int Years(string sSUT)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange sut = Creators.DateRange(sSUT);
       return sut.Years;
     }
 
-    [TestCase("20220101", "20220228", Result = 2)]
-    [TestCase("20220101", "20220101", Result = 0, Description="Minimum possible 1-day range")]
-    [TestCase("20220115", "20220213", Result = 0)]
-    [TestCase("20220115", "20220214", Result = 1)]
-    public int SimpleMonths(string sDate1, string sDate2)
+    [TestCase("20220101-20220228", Result = 2)]
+    [TestCase("20220101-20220101", Result = 0, Description="Minimum possible 1-day range")]
+    [TestCase("20220115-20220213", Result = 0)]
+    [TestCase("20220115-20220214", Result = 1)]
+    public int SimpleMonths(string sSUT)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange sut = Creators.DateRange(sSUT);
       return sut.SimpleMonths;
     }
 
-    [TestCase("20220101", "20221231", Result = 1)]
-    [TestCase("20220101", "20221230", Result = 0)]
-    [TestCase("20220115", "20230114", Result = 1)]
-    [TestCase("20220115", "20230113", Result = 0)]
-    public int SimpleYears(string sDate1, string sDate2)
+    [TestCase("20220101-20221231", Result = 1)]
+    [TestCase("20220101-20221230", Result = 0)]
+    [TestCase("20220115-20230114", Result = 1)]
+    [TestCase("20220115-20230113", Result = 0)]
+    public int SimpleYears(string sSUT)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange sut = Creators.DateRange(sSUT);
       return sut.SimpleYears;
     }
 
+    #endregion
 
-    [TestCase("20190101", "20210228", Result = true)]
-    [TestCase("20190101", "20200228", Result = false)]
-    public bool AreWholeMonths(string sDate1, string sDate2)
+    #region AreWholeMonths/Years()
+
+
+    [TestCase("20190101-20210228", Result = true)]
+    [TestCase("20190101-20200228", Result = false)]
+    public bool AreWholeMonths(string sSUT)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange sut = Creators.DateRange(sSUT);
       return sut.AreWholeMonths;
     }
 
 
-    [TestCase("20190101", "20211231", Result = true)]
-    [TestCase("20190101", "20211230", Result = false)]
-    [TestCase("20190201", "20200131", Result = false)]
-    public bool AreWholeYears(string sDate1, string sDate2)
+    [TestCase("20190101-20211231", Result = true)]
+    [TestCase("20190101-20211230", Result = false)]
+    [TestCase("20190201-20200131", Result = false)]
+    public bool AreWholeYears(string sSUT)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
+      DateRange sut = Creators.DateRange(sSUT);
       return sut.AreWholeYears;
     }
+
+    #endregion
+
+    #region YMRange
 
     [Test]
     public void YMRange()
@@ -179,6 +200,10 @@ namespace ExtTools_tests.Calendar
       DateRange sut = new DateRange(2021);
       Assert.AreEqual(new YearMonthRange(2021, 1, 12), sut.YMRange);
     }
+
+    #endregion
+
+    #region MinMaxDate/Year
 
     [Test]
     public void MinMaxDate()
@@ -196,27 +221,37 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(wanted, sut.MinMaxYear);
     }
 
-    [TestCase("20210101", "20211231", "20210101", Result = true)]
-    [TestCase("20210101", "20211231", "20201231", Result = false)]
-    [TestCase("20210101", "20211231", "20211231", Result = true)]
-    [TestCase("20210101", "20211231", "20220101", Result = false)]
-    public bool Contains(string sDate1, string sDate2, string sTest)
+    #endregion
+
+    #region Contains()
+
+    [TestCase("20210101-20211231", "20210101", true)]
+    [TestCase("20210101-20211231", "20201231", false)]
+    [TestCase("20210101-20211231", "20211231", true)]
+    [TestCase("20210101-20211231", "20220101", false)]
+    public void Contains(string sSUT, string sDt, bool wantedRes)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
-      return sut.Contains(CreateDate(sTest));
+      DateRange sut = Creators.DateRange(sSUT);
+      DateTime test = Creators.DateTime(sDt);
+      Assert.AreEqual(wantedRes, sut.Contains(test));
     }
 
-    [TestCase("20210101", "20211231", "20210101", "20210101")]
-    [TestCase("20210101", "20211231", "20201231", "20210101")]
-    [TestCase("20210101", "20211231", "20211231", "20211231")]
-    [TestCase("20210101", "20211231", "20220101", "20211231")]
-    public void DateToRange(string sDate1, string sDate2, string sTest, string sRes)
+    #endregion
+
+    #region DateToRange()
+
+    [TestCase("20210101-20211231", "20210101", "20210101")]
+    [TestCase("20210101-20211231", "20201231", "20210101")]
+    [TestCase("20210101-20211231", "20211231", "20211231")]
+    [TestCase("20210101-20211231", "20220101", "20211231")]
+    public void DateToRange(string sDTR, string sDt, string sWantedRes)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2));
-      DateTime dt = CreateDate(sTest);
+      DateRange sut = Creators.DateRange(sDTR);
+      DateTime dt = Creators.DateTime(sDt);
+      DateTime wantedRes = Creators.DateTime(sWantedRes);
       sut.DateToRange(ref dt);
 
-      Assert.AreEqual(CreateDate(sRes), dt);
+      Assert.AreEqual(wantedRes, dt);
     }
 
     [Test]
@@ -228,16 +263,22 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(dt1, dt2);
     }
 
-    [TestCase("20210101", "20211231", "20200101", "20200131", "20200101", "20211231")]
-    [TestCase("20200101", "20200131", "20210101", "20211231", "20200101", "20211231")]
-    [TestCase("20210101", "20211231", "20210201", "20210228", "20210101", "20211231")]
-    public void Operator_Add_Range(string sDate1, string sDate2, string sDate3, string sDate4, string sDate5, string sDate6)
+    #endregion
+
+    #region Операторы
+
+    [TestCase("20210101-20211231", "20200101-20200131", "20200101-20211231")]
+    [TestCase("20200101-20200131", "20210101-20211231", "20200101-20211231")]
+    [TestCase("20210101-20211231", "20210201-20210228", "20210101-20211231")]
+    public void Operator_Add_Range(string sSUT, string sArg, string sWantedRes)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2), "123");
-      DateRange arg = new DateRange(CreateDate(sDate3), CreateDate(sDate4), "456");
+      DateRange sut = new DateRange(Creators.DateRange(sSUT), "123");
+      DateRange arg = new DateRange(Creators.DateRange(sArg), "456");
+      DateRange wantedRes = Creators.DateRange(sWantedRes);
+
       DateRange res1 = sut + arg;
-      Assert.AreEqual(CreateDate(sDate5), res1.FirstDate, "FirstDate");
-      Assert.AreEqual(CreateDate(sDate6), res1.LastDate, "LastDate");
+      Assert.AreEqual(wantedRes.FirstDate, res1.FirstDate, "FirstDate");
+      Assert.AreEqual(wantedRes.LastDate, res1.LastDate, "LastDate");
       Assert.AreEqual("123", res1.Tag, "Tag");
 
       // Такой же результат дает оператор "|"
@@ -283,81 +324,106 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(new DateTime(2021, 12, 28), res.LastDate, "LastDate");
     }
 
-    [TestCase("20190101", "20191231", 2, "20190301", "20200229")]
-    [TestCase("20190101", "20191225", 2, "20190301", "20200225")]
-    [TestCase("20190101", "20191231", 0, "20190101", "20191231")]
-    [TestCase("20190301", "20200229", -2, "20190101", "20191231")]
-    [TestCase("20190301", "20200225", -2, "20190101", "20191225")]
-    public void AddMonths(string sDate1, string sDate2, int months, string sDate3, string sDate4)
+    #endregion
+
+    #region AddMonths()
+
+    [TestCase("20190101-20191231", 2, "20190301-20200229")]
+    [TestCase("20190101-20191225", 2, "20190301-20200225")]
+    [TestCase("20190101-20191231", 0, "20190101-20191231")]
+    [TestCase("20190301-20200229", -2, "20190101-20191231")]
+    [TestCase("20190301-20200225", -2, "20190101-20191225")]
+    public void AddMonths(string sSUT, int months, string sWantedRes)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2), "123");
+      DateRange sut = new DateRange(Creators.DateRange(sSUT), "123");
+      DateRange wantedRes = Creators.DateRange(sWantedRes);
+
       DateRange res = sut.AddMonths(months);
-      Assert.AreEqual(CreateDate(sDate3), res.FirstDate, "FirstDate");
-      Assert.AreEqual(CreateDate(sDate4), res.LastDate, "LastDate");
+
+      Assert.AreEqual(wantedRes.FirstDate, res.FirstDate, "FirstDate");
+      Assert.AreEqual(wantedRes.LastDate, res.LastDate, "LastDate");
       Assert.AreEqual("123", res.Tag, "Tag");
     }
 
-    [TestCase("20210101", "20210228", 2, "20210501", "20210630")]
-    [TestCase("20210101", "20210228", 0, "20210101", "20210228")]
-    [TestCase("20210101", "20210228", -2, "20200901", "20201031")]
-    [TestCase("20210101", "20210105", 2, "20210111", "20210115")]
-    [TestCase("20210101", "20210105", -2, "20201222", "20201226")]
-    public void Operator_Shr(string sDate1, string sDate2, int rangeCount, string sDate3, string sDate4)
+    #endregion
+
+    #region Операторы сдвига
+
+    [TestCase("20210101-20210228", 2, "20210501-20210630")]
+    [TestCase("20210101-20210228", 0, "20210101-20210228")]
+    [TestCase("20210101-20210228", -2, "20200901-20201031")]
+    [TestCase("20210101-20210105", 2, "20210111-20210115")]
+    [TestCase("20210101-20210105", -2, "20201222-20201226")]
+    public void Operator_Shr(string sSUT, int rangeCount, string sWantedRes)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2), "123");
+      DateRange sut = new DateRange(Creators.DateRange(sSUT), "123");
+      DateRange wantedRes = Creators.DateRange(sWantedRes);
+
       DateRange res = sut >> rangeCount;
-      Assert.AreEqual(CreateDate(sDate3), res.FirstDate, "FirstDate");
-      Assert.AreEqual(CreateDate(sDate4), res.LastDate, "LastDate");
+
+      Assert.AreEqual(wantedRes.FirstDate, res.FirstDate, "FirstDate");
+      Assert.AreEqual(wantedRes.LastDate, res.LastDate, "LastDate");
       Assert.AreEqual("123", res.Tag, "Tag");
     }
 
-    [TestCase("20210101", "20210228", 2, "20200901", "20201031")]
-    [TestCase("20210101", "20210228", 0, "20210101", "20210228")]
-    [TestCase("20210101", "20210228", -2, "20210501", "20210630")]
-    [TestCase("20210101", "20210105", 2, "20201222", "20201226")]
-    [TestCase("20210101", "20210105", -2, "20210111", "20210115")]
-    public void Operator_Shl(string sDate1, string sDate2, int rangeCount, string sDate3, string sDate4)
+    [TestCase("20210101-20210228", 2, "20200901-20201031")]
+    [TestCase("20210101-20210228", 0, "20210101-20210228")]
+    [TestCase("20210101-20210228", -2, "20210501-20210630")]
+    [TestCase("20210101-20210105", 2, "20201222-20201226")]
+    [TestCase("20210101-20210105", -2, "20210111-20210115")]
+    public void Operator_Shl(string sSUT, int rangeCount, string sWantedRes)
     {
-      DateRange sut = new DateRange(CreateDate(sDate1), CreateDate(sDate2), "123");
+      DateRange sut = new DateRange(Creators.DateRange(sSUT), "123");
+      DateRange wantedRes = Creators.DateRange(sWantedRes);
+
       DateRange res = sut << rangeCount;
-      Assert.AreEqual(CreateDate(sDate3), res.FirstDate, "FirstDate");
-      Assert.AreEqual(CreateDate(sDate4), res.LastDate, "LastDate");
+      Assert.AreEqual(wantedRes.FirstDate, res.FirstDate, "FirstDate");
+      Assert.AreEqual(wantedRes.LastDate, res.LastDate, "LastDate");
       Assert.AreEqual("123", res.Tag, "Tag");
     }
 
-    [TestCase("20210101", "20210331", "20210201", "20210430", "20210201", "20210331")]
-    [TestCase("20210101", "20210331", "20210201", "20210228", "20210201", "20210228")]
-    public void GetCross_true(string sDate1, string sDate2, string sDate3, string sDate4, string sDate5, string sDate6)
+    #endregion
+
+    #region GetCross()
+
+    [TestCase("20210101-20210331", "20210201-20210430", "20210201-20210331")]
+    [TestCase("20210101-20210331", "20210201-20210228", "20210201-20210228")]
+    public void GetCross_true(string sArg1, string sArg2, string sWantedRes)
     {
-      DateRange sut1 = new DateRange(CreateDate(sDate1), CreateDate(sDate2), "123");
-      DateRange sut2 = new DateRange(CreateDate(sDate3), CreateDate(sDate4), "456");
+      DateRange arg1 = new DateRange(Creators.DateRange(sArg1), "123");
+      DateRange arg2 = new DateRange(Creators.DateRange(sArg2), "456");
+      DateRange wantedRes = Creators.DateRange(sWantedRes);
 
-      Assert.IsTrue(DateRange.IsCrossed(sut1, sut2), "IsCrossed");
+      Assert.IsTrue(DateRange.IsCrossed(arg1, arg2), "IsCrossed");
 
-      DateRange res1 = DateRange.GetCross(sut1, sut2);
-      Assert.AreEqual(CreateDate(sDate5), res1.FirstDate, "FirstDate");
-      Assert.AreEqual(CreateDate(sDate6), res1.LastDate, "LastDate");
+      DateRange res1 = DateRange.GetCross(arg1, arg2);
+      Assert.AreEqual(wantedRes.FirstDate, res1.FirstDate, "FirstDate");
+      Assert.AreEqual(wantedRes.LastDate, res1.LastDate, "LastDate");
       Assert.AreEqual("123", res1.Tag, "Tag");
 
-      DateRange res2 = sut1 & sut2;
+      DateRange res2 = arg1 & arg2;
       Assert.AreEqual(res1, res2, "operator &");
     }
 
-    [TestCase("20210101", "20211231", "20200101", "20201231")]
-    [TestCase("20200101", "20201231", "20210101", "20211231")]
-    public void GetCross_false(string sDate1, string sDate2, string sDate3, string sDate4)
+    [TestCase("20210101-20211231", "20200101-20201231")]
+    [TestCase("20200101-20201231", "20210101-20211231")]
+    public void GetCross_false(string sArg1, string sArg2)
     {
-      DateRange sut1 = new DateRange(CreateDate(sDate1), CreateDate(sDate2), "123");
-      DateRange sut2 = new DateRange(CreateDate(sDate3), CreateDate(sDate4), "456");
+      DateRange arg1 = new DateRange(Creators.DateRange(sArg1), "123");
+      DateRange arg2 = new DateRange(Creators.DateRange(sArg2), "456");
 
-      Assert.IsFalse(DateRange.IsCrossed(sut1, sut2), "IsCrossed");
+      Assert.IsFalse(DateRange.IsCrossed(arg1, arg2), "IsCrossed");
 
-      DateRange res1 = DateRange.GetCross(sut1, sut2);
+      DateRange res1 = DateRange.GetCross(arg1, arg2);
       Assert.IsTrue(res1.IsEmpty, "IsEmpty");
 
       DateRange dummy;
-      Assert.Catch<Exception>(delegate() { dummy = sut1 & sut2; }, "operator &");
+      Assert.Catch<Exception>(delegate() { dummy = arg1 & arg2; }, "operator &");
     }
+
+    #endregion
+
+    #region SplitIntoYears/Months()
 
     [Test]
     public void SplitIntoYears()
@@ -381,6 +447,10 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(23, res.Count, "Count");
     }
 
+    #endregion
+
+    #region GetEnumerator()
+
     [Test]
     public void GetEnumerator()
     {
@@ -394,11 +464,20 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(31, cnt, "Count");
     }
 
-    #region Вспомогательные методы
+    #endregion
 
-    public static DateTime CreateDate(string s)
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
     {
-      return DateTime.ParseExact(s, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+      DateRange sut = new DateRange(new DateTime(2023,1,1), new DateTime(2023,1,29), "123");
+
+      byte[] b = SerializationTools.SerializeBinary(sut);
+      DateRange res = (DateRange)(SerializationTools.DeserializeBinary(b));
+      Assert.AreEqual(sut.FirstDate, res.FirstDate, "FirstDate");
+      Assert.AreEqual(sut.LastDate, res.LastDate, "LastDate");
+      Assert.AreEqual(sut.Tag, res.Tag, "Tag");
     }
 
     #endregion

@@ -475,7 +475,7 @@ namespace FreeLibSet.Forms
     /// Создает список команд локального меню
     /// </summary>
     /// <returns>Новый список команд</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPSelRCDataGridViewCommandItems(this);
     }
@@ -575,38 +575,6 @@ namespace FreeLibSet.Forms
         else
           ciInitColumns.Enabled = ControlProvider.Data.SelColumns.UnassignedCodes.Length > 0;
       }
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Шаг мастера для привязки строк и столбцов
-  /// Используется в мастерах вставки в справочники из буфера обмена
-  /// </summary>
-  public class WizardStepSelRC : WizardStepWithDataGridView
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает шаг мастера
-    /// </summary>
-    public WizardStepSelRC()
-      : base(false)
-    {
-      DoInit(new EFPSelRCDataGridView(base.BaseProvider, new DataGridView()));
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Провайдер табличного просмотра
-    /// </summary>
-    public new EFPSelRCDataGridView TheControlProvider
-    {
-      get { return (EFPSelRCDataGridView)(base.TheControlProvider); }
     }
 
     #endregion

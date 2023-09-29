@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
+using FreeLibSet.Tests;
 using NUnit.Framework;
 
 namespace ExtTools_tests.Core
@@ -872,7 +873,7 @@ namespace ExtTools_tests.Core
 
       switch (s[0])
       {
-        case 'D': arg = Creators.CreateDate(s.Substring(1)); break;
+        case 'D': arg = Creators.DateTime(s.Substring(1)); break;
         case 'T': arg = StdConvert.ToTimeSpan(s.Substring(1)); break;
         case 'M': arg = StdConvert.ToDecimal(s.Substring(1)); break;
         default: throw new ArgumentException();

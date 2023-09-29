@@ -42,7 +42,7 @@ namespace FreeLibSet.Core
         }
         else
           if (s1 != null)
-            s1.Append(str[i]);
+          s1.Append(str[i]);
       }
       if (s1 == null)
         return str;
@@ -767,6 +767,94 @@ namespace FreeLibSet.Core
         if (searchChars.IndexOf(str[i]) < 0)
           return i;
       }
+      return -1;
+    }
+
+    #endregion
+
+    #region IndexOfOccuirence, LastIndexOfOccuirence
+
+    /// <summary>
+    /// Найти позицию заданного вхождения подстроки <paramref name="value"/> в строку <paramref name="str"/>.
+    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.IndexOf(string)"/>.
+    /// Если <paramref name="value"/> - пустая строка, то возвращается 0.
+    /// Если строка не содержит нужного количества вхождений, возвращается (-1).
+    ///    
+    /// Обрабатывается перекрытие вхождений. Например, если <paramref name="str"/>="ABABABA", <paramref name="value"/>="ABA",
+    /// <paramref name="occurence"/>=1, то возвращается 4, а не 2.
+    /// </summary>
+    /// <param name="str">Строка, в которой выполняется поиск</param>
+    /// <param name="value">Искомая подстрока</param>
+    /// <param name="occurence">Номер вхождения. Нумерация вхождений начинается с 0</param>
+    /// <param name="comparisonType">Режим сравнения строк</param>
+    /// <returns>Найденная позиция</returns>
+    public static int IndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType)
+    {
+      if (occurence < 0)
+        throw new ArgumentOutOfRangeException("occurence");
+
+      if (String.IsNullOrEmpty(value))
+        return 0;
+      if (String.IsNullOrEmpty(str))
+        return -1;
+
+      int currPos = 0;
+      int count = 0;
+      while (currPos < str.Length)
+      {
+        int p = str.IndexOf(value, currPos, str.Length - currPos, comparisonType);
+        if (p < 0)
+          return -1;
+        if (count == occurence)
+          return p;
+
+        count++;
+        currPos = p + value.Length;
+      }
+
+      return -1;
+    }
+
+
+    /// <summary>
+    /// Найти позицию заданного вхождения подстроки <paramref name="value"/> в строку <paramref name="str"/>, начиная просмотр с конца строки.
+    /// Если длина подстроки больше 1, то возвращается позиция первого символа найденного вхождения.
+    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.LastIndexOf(string)"/>.
+    /// Если <paramref name="value"/> - пустая строка, то возвращается 0.
+    /// Если строка не содержит нужного количества вхождений, возвращается (-1).
+    ///    
+    /// Обрабатывается перекрытие вхождений. Например, если <paramref name="str"/>="ABABABA", <paramref name="value"/>="ABA",
+    /// <paramref name="occurence"/>=1, то возвращается 4, а не 2.
+    /// </summary>
+    /// <param name="str">Строка, в которой выполняется поиск</param>
+    /// <param name="value">Искомая подстрока</param>
+    /// <param name="occurence">Номер вхождения. Нумерация вхождений начинается с 0</param>
+    /// <param name="comparisonType">Режим сравнения строк</param>
+    /// <returns>Найденная позиция</returns>
+    public static int LastIndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType)
+    {
+      if (occurence < 0)
+        throw new ArgumentOutOfRangeException("occurence");
+
+      if (String.IsNullOrEmpty(value))
+        return 0;
+      if (String.IsNullOrEmpty(str))
+        return -1;
+
+      int currPos = str.Length - 1;
+      int count = 0;
+      while (currPos >= 0)
+      {
+        int p = str.LastIndexOf(value, currPos, currPos + 1, comparisonType);
+        if (p < 0)
+          return -1;
+        if (count == occurence)
+          return p;
+
+        count++;
+        currPos = p - 1;// value.Length;
+      }
+
       return -1;
     }
 

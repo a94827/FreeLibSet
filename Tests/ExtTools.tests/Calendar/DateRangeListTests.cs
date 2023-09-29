@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework;
 using System.Globalization;
+using NUnit.Framework;
+using FreeLibSet.Tests;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Calendar
 {
   [TestFixture]
   class DateRangeListTests
   {
+    #region Конструктор
+
     [Test]
     public void Constructor()
     {
@@ -25,6 +29,10 @@ namespace ExtTools_tests.Calendar
 
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
     }
+
+    #endregion
+
+    #region Empty, Whole
 
     [Test]
     public void Empty()
@@ -41,6 +49,10 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(DateTime.MaxValue.Date, DateRangeList.Whole.LastDate);
       Assert.IsTrue(DateRangeList.Whole.IsReadOnly, "IsReadOnly");
     }
+
+    #endregion
+
+    #region Append()
 
     [Test]
     public void Append_first()
@@ -83,6 +95,9 @@ namespace ExtTools_tests.Calendar
       Assert.Catch<Exception>(delegate() { sut.Append(r); });
     }
 
+    #endregion
+
+    #region SetReadOnly()
 
     [Test]
     public void SetReadOnly()
@@ -121,6 +136,10 @@ namespace ExtTools_tests.Calendar
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.Merge(); }, "Merge()");
     }
 
+    #endregion
+
+    #region Clear()
+
     [Test]
     public void Clear()
     {
@@ -130,6 +149,10 @@ namespace ExtTools_tests.Calendar
       sut.Clear();
       Assert.AreEqual(0, sut.Count);
     }
+
+    #endregion
+
+    #region IndexOf()
 
     [TestCase("20181231", Result = -1)]
     [TestCase("20190101", Result = 0)]
@@ -145,8 +168,12 @@ namespace ExtTools_tests.Calendar
       sut.Append(new DateRange(2019));
       sut.Append(new DateRange(2021));
 
-      return sut.IndexOf(Creators.CreateDate(sDate));
+      return sut.IndexOf(Creators.DateTime(sDate));
     }
+
+    #endregion
+
+    #region Merge()
 
     [Test]
     public void Merge_ok()
@@ -189,14 +216,19 @@ namespace ExtTools_tests.Calendar
       return sut.Count;
     }
 
+    #endregion
+
+    #region Add()
+
     [TestCase("20200201-20200229", "20190101-20191231,20200201-20200229,20210101-20211231")]
     [TestCase("20210201-20210228", "20190101-20191231,20210101-20211231")]
     [TestCase("20180201-20180228", "20180201-20180228,20190101-20191231,20210101-20211231")]
     [TestCase("20191101-20200228", "20190101-20200228,20210101-20211231")]
     [TestCase("20200101-20201231", "20190101-20211231")]
-    public void Add(string sDTR, string result)
+    public void Add(string sDTR, string sWantedRes)
     {
-      DateRange r = Creators.CreateDateRange(sDTR);
+      DateRange r = Creators.DateRange(sDTR);
+      DateRange[] wantedRes = Creators.DateRangeArray(sWantedRes);
       DateRangeList list2 = new DateRangeList();
       list2.Append(r);
 
@@ -207,21 +239,26 @@ namespace ExtTools_tests.Calendar
 
       sut1.Add(r);
       sut1.Merge(); // иначе пересечения интервалов могут зависеть от реализации
-      Assert.AreEqual(result, ToString(sut1));
+      CollectionAssert.AreEqual(wantedRes, sut1);
 
       sut2.Add(list2);
       sut2.Merge(); // иначе пересечения интервалов могут зависеть от реализации
-      Assert.AreEqual(result, ToString(sut2));
+      CollectionAssert.AreEqual(wantedRes, sut2);
     }
+
+    #endregion
+
+    #region Remove()
 
     [TestCase("20200201-20200229", "20190101-20191231,20210101-20211231")]
     [TestCase("20210201-20210228", "20190101-20191231,20210101-20210131,20210301-20211231")]
     [TestCase("20201230-20210228", "20190101-20191231,20210301-20211231")]
     [TestCase("20201230-20211231", "20190101-20191231")]
     [TestCase("20190101-20211231", "")]
-    public void Remove(string sDTR, string result)
+    public void Remove(string sDTR, string sWantedRes)
     {
-      DateRange r = Creators.CreateDateRange(sDTR);
+      DateRange r = Creators.DateRange(sDTR);
+      DateRange[] wantedRes = Creators.DateRangeArray(sWantedRes);
       DateRangeList list2 = new DateRangeList();
       list2.Append(r);
 
@@ -232,25 +269,30 @@ namespace ExtTools_tests.Calendar
 
       sut1.Remove(r);
       sut1.Merge(); // иначе пересечения интервалов могут зависеть от реализации
-      Assert.AreEqual(result, ToString(sut1));
+      CollectionAssert.AreEqual(wantedRes, sut1);
 
       sut2.Remove(list2);
       sut2.Merge(); // иначе пересечения интервалов могут зависеть от реализации
-      Assert.AreEqual(result, ToString(sut2));
+      CollectionAssert.AreEqual(wantedRes, sut2);
     }
+
+    #endregion
+
+    #region Split()
 
     [TestCase("20210501", "20210101-20210501,20210502-20211231")]
     [TestCase("20210101", "20210101-20210101,20210102-20211231")]
     [TestCase("20211231", "20210101-20211231")]
     [TestCase("20201231", "20210101-20211231")]
     [TestCase("20220101", "20210101-20211231")]
-    public void Split_Date(string sDate, string result)
+    public void Split_Date(string sDate, string sWantedRes)
     {
+      DateRange[] wantedRes = Creators.DateRangeArray(sWantedRes);
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2021));
 
-      sut.Split(Creators.CreateDate(sDate));
-      Assert.AreEqual(result, ToString(sut));
+      sut.Split(Creators.DateTime(sDate));
+      CollectionAssert.AreEqual(wantedRes, sut);
     }
 
     [Test]
@@ -261,8 +303,8 @@ namespace ExtTools_tests.Calendar
 
       sut.Split(new DateTime[] { new DateTime(2021, 5, 1), new DateTime(2020, 5, 1) });
 
-
-      Assert.AreEqual("20210101-20210501,20210502-20211231", ToString(sut));
+      DateRange[] wantedRes = Creators.DateRangeArray("20210101-20210501,20210502-20211231");
+      CollectionAssert.AreEqual(wantedRes, sut);
     }
 
     [Test]
@@ -274,8 +316,8 @@ namespace ExtTools_tests.Calendar
 
       sut.SplitIntoYears();
 
-      Assert.AreEqual("20180501-20181231,20190101-20191231,20200101-20200315,20200501-20201231,20210101-20210315",
-        ToString(sut));
+      DateRange[] wantedRes = Creators.DateRangeArray("20180501-20181231,20190101-20191231,20200101-20200315,20200501-20201231,20210101-20210315");
+      CollectionAssert.AreEqual(wantedRes, sut);
     }
 
     [Test]
@@ -294,6 +336,10 @@ namespace ExtTools_tests.Calendar
       }
     }
 
+    #endregion
+
+    #region IsCrossed()
+
     [TestCase("20180101-20181231", Result = false)]
     [TestCase("20190101-20190101", Result = true)]
     [TestCase("20201201-20210131", Result = true)]
@@ -301,7 +347,7 @@ namespace ExtTools_tests.Calendar
     [TestCase("20220101-20221231", Result = false)]
     public bool IsCrossed_DateRange(string sDTR)
     {
-      DateRange r = Creators.CreateDateRange(sDTR);
+      DateRange r = Creators.DateRange(sDTR);
 
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2019));
@@ -352,39 +398,48 @@ namespace ExtTools_tests.Calendar
       Assert.IsFalse(sut.IsCrossed(arg));
     }
 
-    [TestCase("20180101-20181231", Result = "")]
-    [TestCase("20190101-20190101", Result = "20190101-20190101")]
-    [TestCase("20201201-20210131", Result = "20210101-20210131")]
-    [TestCase("20200101-20201231", Result = "")]
-    [TestCase("20220101-20221231", Result = "")]
-    [TestCase("20181201-20210131", Result = "20190101-20191231,20210101-20210131")]
-    [TestCase("20181201-20221231", Result = "20190101-20191231,20210101-20211231")]
-    public string GetCross_DateRange(string sDTR)
+    #endregion
+
+    #region GetCross()
+
+    [TestCase("20180101-20181231", "")]
+    [TestCase("20190101-20190101", "20190101-20190101")]
+    [TestCase("20201201-20210131", "20210101-20210131")]
+    [TestCase("20200101-20201231", "")]
+    [TestCase("20220101-20221231", "")]
+    [TestCase("20181201-20210131", "20190101-20191231,20210101-20210131")]
+    [TestCase("20181201-20221231", "20190101-20191231,20210101-20211231")]
+    public void GetCross_DateRange(string sDTR, string sWantedRes)
     {
-      DateRange r = Creators.CreateDateRange(sDTR);
+      DateRange r = Creators.DateRange(sDTR);
+      DateRange[] wantedRes = Creators.DateRangeArray(sWantedRes);
 
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2019));
       sut.Append(new DateRange(2021));
 
       DateRangeList res = sut.GetCross(r);
-      return ToString(res);
+      CollectionAssert.AreEqual(wantedRes, res);
     }
 
-    [TestCase("20210301-20210331", Result = true)]
-    [TestCase("20210101-20211231", Result = true)]
-    [TestCase("20201231-20211231", Result = false)]
-    [TestCase("20210101-20220101", Result = false)]
-    [TestCase("20190101-20211231", Result = false)]
-    public bool ContainsWhole_DateRange(string sDTR)
+    #endregion
+
+    #region ContainsWhole()
+
+    [TestCase("20210301-20210331", true)]
+    [TestCase("20210101-20211231", true)]
+    [TestCase("20201231-20211231", false)]
+    [TestCase("20210101-20220101", false)]
+    [TestCase("20190101-20211231", false)]
+    public void ContainsWhole_DateRange(string sDTR, bool wantedRes)
     {
-      DateRange r = Creators.CreateDateRange(sDTR);
+      DateRange r = Creators.DateRange(sDTR);
 
       DateRangeList sut = new DateRangeList();
       sut.Append(new DateRange(2019));
       sut.Append(new DateRange(2021));
 
-      return sut.ContainsWhole(r);
+      Assert.AreEqual(wantedRes, sut.ContainsWhole(r));
     }
 
     [Test]
@@ -477,6 +532,10 @@ namespace ExtTools_tests.Calendar
       Assert.IsTrue(sut.ContainsWhole(arg));
     }
 
+    #endregion
+
+    #region Clone()
+
     [Test]
     public void Clone()
     {
@@ -488,23 +547,47 @@ namespace ExtTools_tests.Calendar
       DateRangeList res = sut.Clone();
 
       Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.AreEqual("20190101-20191231,20210101-20211231", ToString(res), "List");
+
+      DateRange[] wantedRes = Creators.DateRangeArray("20190101-20191231,20210101-20211231");
+      CollectionAssert.AreEqual(wantedRes, res, "List");
     }
 
-    #region Вспомогательные методы
+    #endregion
 
-    public static string ToString(DateRangeList obj)
+    #region GetEnumerator()
+
+    [Test]
+    public void GetEnumerator()
     {
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < obj.Count; i++)
-      {
-        if (i > 0)
-          sb.Append(',');
-        sb.Append(obj[i].FirstDate.ToString("yyyyMMdd", CultureInfo.InvariantCulture));
-        sb.Append('-');
-        sb.Append(obj[i].LastDate.ToString("yyyyMMdd", CultureInfo.InvariantCulture));
-      }
-      return sb.ToString();
+      DateRangeList sut = new DateRangeList();
+      sut.Add(Creators.DateRange("20230101-20230105"));
+      sut.Add(Creators.DateRange("20221201-20221205"));
+      sut.Add(Creators.DateRange("20230501-20230505"));
+
+      List<DateRange> lst = new List<DateRange>();
+      foreach (DateRange dtr in sut)
+        lst.Add(dtr);
+
+      DateRange[] wantedRes = Creators.DateRangeArray("20221201-20221205,20230101-20230105,20230501-20230505");
+      CollectionAssert.AreEqual(wantedRes, lst);
+    }
+
+    #endregion
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      DateRangeList sut = new DateRangeList();
+      sut.Add(Creators.DateRange("20221201-20221205"));
+      sut.Add(Creators.DateRange("20230101-20230105"));
+      sut.Add(Creators.DateRange("20230501-20230505"));
+
+      byte[] b = SerializationTools.SerializeBinary(sut);
+
+      DateRangeList res = (DateRangeList)(SerializationTools.DeserializeBinary(b));
+      CollectionAssert.AreEqual(sut, res);
     }
 
     #endregion

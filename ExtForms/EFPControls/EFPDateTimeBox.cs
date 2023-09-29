@@ -839,7 +839,7 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// Создает провадер
+    /// Создает провайдер
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
@@ -871,10 +871,10 @@ namespace FreeLibSet.Forms
     /// Создает EFPTextBoxCommandItems()
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       if (EFPApp.EasyInterface)
-        return base.GetCommandItems();
+        return base.CreateCommandItems();
       else
         return new EFPTextBoxCommandItems(this, false);
     }

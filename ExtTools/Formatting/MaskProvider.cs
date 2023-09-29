@@ -66,6 +66,7 @@ namespace FreeLibSet.Formatting
 
     /// <summary>
     /// Создает новые объекты <see cref="MaskedTextProvider"/> и <see cref="StdMaskProvider"/> на основании заданной маски.
+    /// Свойство <see cref="MaskedTextProvider.Culture"/> принимает значение по умолчанию - <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     /// <param name="mask">Маска для <see cref="MaskedTextProvider"/></param>
     public StdMaskProvider(string mask)
@@ -77,7 +78,7 @@ namespace FreeLibSet.Formatting
     /// Создает новые объекты <see cref="MaskedTextProvider"/> и <see cref="StdMaskProvider"/> на основании заданной маски и культуры.
     /// </summary>
     /// <param name="mask">Маска для <see cref="MaskedTextProvider"/></param>
-    /// <param name="culture">Задает локализацию для используемых разделителей</param>
+    /// <param name="culture">Задает локализацию для используемых разделителей. Если null, то используется <see cref="CultureInfo.CurrentCulture"/></param>
     public StdMaskProvider(string mask, CultureInfo culture)
       : this(new MaskedTextProvider(mask, culture))
     {
@@ -183,8 +184,9 @@ namespace FreeLibSet.Formatting
 
   /// <summary>
   /// Простейшая реализация <see cref="IMaskProvider"/>. Провайдер поддерживает в маске только обязательные цифры (символ "0")
-  /// и символы-разделители ".", "-", ":", " ". Необязательные цифры не поддерживаются.
+  /// и символы-разделители ".", "-", ":", " ", "/", "[", "]", "(", ")", "{", "}". Необязательные цифры не поддерживаются.
   /// Класс является потокобезопасным.
+  /// Текущая используемая культура <see cref="CultureInfo.CurrentCulture"/> не имеет значения.
   /// </summary>
   public class SimpleDigitalMaskProvider : IMaskProvider
   {
@@ -221,7 +223,7 @@ namespace FreeLibSet.Formatting
 
     #region Свойства
 
-    const string ValidMaskChars = "0 .:-";
+    const string ValidMaskChars = "0 .:-/()[]{}";
 
     /// <summary>
     /// Маска
@@ -313,12 +315,14 @@ namespace FreeLibSet.Formatting
           {
             case '.':
             case ':':
+            case '/':
               // Требуется экранирование
               if (sb == null)
               {
                 sb = new StringBuilder();
                 if (i > 0)
-                  sb.Append(_Mask, 0, i - 1); // добавили предыдущие символы
+                  //sb.Append(_Mask, 0, i - 1); // добавили предыдущие символы
+                  sb.Append(_Mask, 0, i); // испр. 18.07.2023
               }
               sb.Append('\\');
               sb.Append(_Mask[i]);

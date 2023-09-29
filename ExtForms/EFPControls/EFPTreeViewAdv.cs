@@ -182,9 +182,8 @@ namespace FreeLibSet.Forms
     {
       base.OnAttached();
 
-      if ((!Control.UseColumns))
-        InitDefaultNodeControls(); // 08.02.2023
-
+      // 15.08.2023 - всегда добавляем // if ((!Control.UseColumns))
+      InitDefaultNodeControls(); // 08.02.2023
     }
 
     /// <summary>
@@ -197,29 +196,42 @@ namespace FreeLibSet.Forms
 
     private void InitDefaultNodeControls()
     {
-      bool hasNodeStateIcon = false;
-      bool hasNodeText = false;
-      foreach (NodeControl nc in Control.NodeControls)
+      int posNodeStateIcon = -1;
+      int posNodeText = -1;
+      for (int i = 0; i < Control.NodeControls.Count; i++)
       {
-        if (nc is NodeStateIcon)
-          hasNodeStateIcon = true;
-        if (nc is BaseTextControl)
-          hasNodeText = true;
+        NodeControl nc = Control.NodeControls[i];
+        if ((nc is NodeStateIcon) && posNodeStateIcon < 0)
+          posNodeStateIcon = i;
+        if ((nc is BaseTextControl) && posNodeText < 0)
+          posNodeText = i;
       }
 
-      if (!hasNodeStateIcon)
+      if (Control.UseColumns && Control.Columns.Count == 0)
       {
-        NodeStateIcon ni = new NodeStateIcon();
-        Control.NodeControls.Add(ni);
+        TreeColumn column = new TreeColumn();
+        Control.Columns.Add(column);
       }
 
-      if (!hasNodeText)
+      if (posNodeText < 0)
       {
         NodeTextBox tb = new NodeTextBox();
         tb.VirtualMode = true;
         tb.ValueNeeded += new EventHandler<NodeControlValueEventArgs>(DefaultTextBox_ValueNeeded);
         tb.EditEnabled = false;
+        if (Control.UseColumns)
+          tb.ParentColumn = Control.Columns[0];
         Control.NodeControls.Add(tb);
+        posNodeText = Control.NodeControls.Count - 1;
+      }
+
+      if (posNodeStateIcon < 0)
+      {
+        NodeStateIcon ni = new NodeStateIcon();
+        if (Control.UseColumns)
+          //ni.ParentColumn = Control.NodeControls[posNodeText].ParentColumn;
+          ni.ParentColumn = Control.Columns[0];
+        Control.NodeControls.Insert(posNodeText, ni); // 15.08.2023
       }
     }
 
@@ -707,7 +719,7 @@ namespace FreeLibSet.Forms
     /// Создает EFPTreeViewAdvCommandItems.
     /// </summary>
     /// <returns>Список команд</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPTreeViewAdvCommandItems(this);
     }
@@ -911,7 +923,7 @@ namespace FreeLibSet.Forms
         if (_CheckBoxStorage != null && _CheckBoxControl != null)
           _CheckBoxStorage.Detach(_CheckBoxControl);
 
-        if (_CheckBoxControl!=null)
+        if (_CheckBoxControl != null)
           _CheckBoxControl.CheckStateChanged -= CheckBoxControl_CheckStateChanged;
 
         _CheckBoxControl = value;
@@ -1124,7 +1136,7 @@ namespace FreeLibSet.Forms
     /// Модель дерева должна быть присоединена.
     /// </summary>
     public void SelectFirstCheckedNode()
-    { 
+    {
       if (CheckBoxControl == null)
         throw new InvalidOperationException("Свойство CheckBoxControl не установлено");
 
@@ -1141,41 +1153,73 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Извлечение текста
+    #region Получение NodeControl
 
     /// <summary>
-    /// Возвращает первый текстовый элемент дерева.
-    /// Теоретически, свойство может возвращать null
+    /// Возвращает первый <see cref="NodeControl"/> заданного типа или производного класса.
+    /// Null, если нет ни одного подходящего столбца
     /// </summary>
-    public BaseTextControl FirstTextControl
+    /// <typeparam name="T">Тип элемента. Например, <see cref="BaseTextControl"/> для текстового столбца</typeparam>
+    public T GetFirstNodeControl<T>()
+      where T : NodeControl
     {
-      get
+      foreach (NodeControl ctrl in Control.NodeControls)
       {
-        foreach (NodeControl ctrl in Control.NodeControls)
-        {
-          if (ctrl is BaseTextControl)
-            return (BaseTextControl)ctrl;
-        }
-        return null;
+        if (ctrl is T)
+          return (T)ctrl;
       }
+      return null;
     }
 
     /// <summary>
-    /// Возвращает массив всех текстовых элементов дерева
+    /// Возвращает массив всех элементов <see cref="NodeControl"/> заданного типа или производного класса.
     /// </summary>
-    public BaseTextControl[] TextControls
+    /// <typeparam name="T">Тип элемента. Например, <see cref="BaseTextControl"/> для получения всех текстовых столбцов</typeparam>
+    public T[] GetNodeControls<T>()
+      where T : NodeControl
     {
-      get
+      List<T> lst = null;
+      foreach (NodeControl ctrl in Control.NodeControls)
       {
-        List<BaseTextControl> lst = new List<BaseTextControl>();
-        foreach (NodeControl ctrl in Control.NodeControls)
-        {
-          if (ctrl is BaseTextControl)
-            lst.Add((BaseTextControl)ctrl);
-        }
+        if (lst == null)
+          lst = new List<T>();
+        if (ctrl is T)
+          lst.Add((T)ctrl);
+      }
+      if (lst == null)
+        return new T[0];
+      else
         return lst.ToArray();
-      }
     }
+
+    /// <summary>
+    /// Возвращает массив всех <see cref="NodeControl"/>, относящихся к данному столбцу
+    /// </summary>
+    /// <param name="column">Столбец, к которому относятся элементы</param>
+    /// <returns></returns>
+    /// <typeparam name="T">Тип элемента. Например, <see cref="BaseTextControl"/> для получения всех текстовых столбцов. Если равен <see cref="NodeControl"/>, возвращаются все элементы</typeparam>
+    public T[] GetNodeControls<T>(TreeColumn column)
+      where T : NodeControl
+    {
+      List<T> lst = null;
+      foreach (NodeControl ctrl in Control.NodeControls)
+      {
+        if (ctrl.ParentColumn != column)
+          continue;
+        if (lst == null)
+          lst = new List<T>();
+        if (ctrl is T)
+          lst.Add((T)ctrl);
+      }
+      if (lst == null)
+        return new T[0];
+      else
+        return lst.ToArray();
+    }
+
+    #endregion
+
+    #region Извлечение текста
 
     /// <summary>
     /// Возвращает двумерный массив строк, соответствующий выбранным строкам

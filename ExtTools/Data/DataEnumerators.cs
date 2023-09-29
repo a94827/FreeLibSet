@@ -10,19 +10,24 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Поиск строк в таблице с совпадающими значениями полей, входящих в DataView.Sort.
+  /// Поиск строк в таблице с совпадающими значениями полей, входящих в <see cref="DataView.Sort"/>.
   /// Реализует перечислитель по массивам строк с одинаковыми значениями полей.
   /// </summary>
   public sealed class DataViewRowPairEnumarable : IEnumerable<DataRow[]>
   {
+    // Какой-то не очень удачный класс получился.
+    // По умолчанию пропускает одиночные строки, что вряд ли хорошо.
+    // Не используется ни в АССОО-2, ни в его макросах.
+    // Может его изменить?
+
     #region Конструктор
 
     /// <summary>
     /// Создает объект, для которого можно вызвать оператор foreach.
     /// Будут возвращаться только строки с совпадающими значениями полей.
-    /// При сравнении учитываются все столбцы, заданные в DataView.Sort
+    /// При сравнении учитываются все столбцы, заданные в <see cref="DataView.Sort"/>.
     /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством Sort</param>
+    /// <param name="dv">Набор данных с установленным свойством <see cref="DataView.Sort"/></param>
     public DataViewRowPairEnumarable(DataView dv)
       : this(dv, 0, false)
     {
@@ -31,9 +36,9 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает объект, для которого можно вызвать оператор foreach.
     /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством Sort</param>
+    /// <param name="dv">Набор данных с установленным свойством <see cref="DataView.Sort"/></param>
     /// <param name="compareColumnCount">Количество столбцов, участвующих в сравнении.
-    /// В сравнении участвуют первые столбцы, заданные в DataView.Sort, но могут использоваться не все столбцы.
+    /// В сравнении участвуют первые столбцы, заданные в <see cref="DataView.Sort"/>, но могут использоваться не все столбцы.
     /// Нулевое значение означает использование всех столбцов.</param>
     public DataViewRowPairEnumarable(DataView dv, int compareColumnCount)
       : this(dv, compareColumnCount, false)
@@ -43,11 +48,11 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает объект, для которого можно вызвать оператор foreach.
     /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством Sort</param>
+    /// <param name="dv">Набор данных с установленным свойством <see cref="DataView.Sort"/></param>
     /// <param name="compareColumnCount">Количество столбцов, участвующих в сравнении.
-    /// В сравнении участвуют первые столбцы, заданные в DataView.Sort, но могут использоваться не все столбцы.
+    /// В сравнении участвуют первые столбцы, заданные в <see cref="DataView.Sort"/>, но могут использоваться не все столбцы.
     /// Нулевое значение означает использование всех столбцов.</param>
-    /// <param name="enumSingleRows">Если true, то будут перебраны все строки в DataView, включая одиночные.
+    /// <param name="enumSingleRows">Если true, то будут перебраны все строки в <see cref="DataView"/>, включая одиночные.
     /// Если false, то будут возвращаться только строки с совпадающими значениями полей.</param>
     public DataViewRowPairEnumarable(DataView dv, int compareColumnCount, bool enumSingleRows)
     {
@@ -83,18 +88,18 @@ namespace FreeLibSet.Data
     /// Набор данных, по которому выполняется перечисление
     /// </summary>
     public DataView DV { get { return _DV; } }
-    private DataView _DV;
+    private readonly DataView _DV;
 
     /// <summary>
     /// Массив текущих позиций столбцов, входящих в DataView.Sort.
     /// </summary>
-    private int[] _ColPoss;
+    private readonly int[] _ColPoss;
 
     /// <summary>
-    /// Надо ли перебирать одиночные строки (true) или только с совпадющими значениями (false).
+    /// Надо ли перебирать одиночные строки (true) или только с совпадающими значениями (false).
     /// </summary>
     public bool EnumSingleRows { get { return _EnumSingleRows; } }
-    private bool _EnumSingleRows;
+    private readonly bool _EnumSingleRows;
 
     #endregion
 

@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Calendar;
+using FreeLibSet.Tests;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Calendar
 {
   [TestFixture]
   public class MonthDayRangeTests
   {
+    #region Конструкторы
+
     [Test]
     public void Constructor_Simple()
     {
@@ -43,6 +47,10 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual("AAA", sut.Tag, "Tag");
     }
 
+    #endregion
+
+    #region Days
+
     [TestCase("0101-0331", 31 + 28 + 31)]
     [TestCase("1101-0131", 30 + 31 + 31)]
     [TestCase("0101-1231", 365)]
@@ -52,21 +60,30 @@ namespace ExtTools_tests.Calendar
     [TestCase("0701-0630", 365)]
     public void Days(string sSUT, int wanted)
     {
-      MonthDayRange sut = Creators.CreateMonthDayRange(sSUT);
+      MonthDayRange sut = Creators.MonthDayRange(sSUT);
 
       Assert.AreEqual(wanted, sut.Days);
     }
+
+    #endregion
+
+    #region Complement
 
     [TestCase("0503-0701", "0702-0502")]
     [TestCase("0702-0502", "0503-0701")]
     public void Complement(string sSUT, string sWanted)
     {
-      MonthDayRange sut = Creators.CreateMonthDayRange(sSUT);
+      MonthDayRange sut = Creators.MonthDayRange(sSUT);
+      MonthDayRange wanted = Creators.MonthDayRange(sWanted);
 
       MonthDayRange res = sut.Complement;
 
-      Assert.AreEqual(sWanted, Creators.ToString(res));
+      Assert.AreEqual(wanted, res);
     }
+
+    #endregion
+
+    #region Contains()
 
     [TestCase("0305-0701", "0410", true)]
     [TestCase("0305-0701", "0305", true)]
@@ -81,8 +98,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("0701-0305", "0306", false)]
     public void Contains(string sSUT, string sMD, bool wanted)
     {
-      MonthDayRange sut = Creators.CreateMonthDayRange(sSUT);
-      MonthDay md = Creators.CreateMonthDay(sMD);
+      MonthDayRange sut = Creators.MonthDayRange(sSUT);
+      MonthDay md = Creators.MonthDay(sMD);
       Assert.AreEqual(wanted, sut.Contains(md), "Contains MonthDay");
 
       DateTime dt = new DateTime(2021, md.Month, md.Day);
@@ -103,6 +120,10 @@ namespace ExtTools_tests.Calendar
       MonthDayRange sut3 = new MonthDayRange(new MonthDay(3, 1), new MonthDay(2, 27));
       Assert.IsFalse(sut3.Contains(dt), sut3.ToString());
     }
+
+    #endregion
+
+    #region GetCrosses()
 
 #if XXX // Метод GetCross() является устаревшим
     [TestCase("0201-0331", "0325-0408", "0325-0331")]
@@ -157,21 +178,26 @@ namespace ExtTools_tests.Calendar
     [TestCase("0601-0630", "0101-1231", "0601-0630")] // полный год
     public void GetCrosses(string sR1, string sR2, string sWanted)
     {
-      MonthDayRange r1 = Creators.CreateMonthDayRange(sR1);
+      MonthDayRange r1 = Creators.MonthDayRange(sR1);
       r1 = new MonthDayRange(r1, "123");
-      MonthDayRange r2 = Creators.CreateMonthDayRange(sR2);
+      MonthDayRange r2 = Creators.MonthDayRange(sR2);
       r2 = new MonthDayRange(r2, "456");
+      MonthDayRange[] wanted = Creators.MonthDayRangeArray(sWanted);
 
       MonthDayRange[] res1 = MonthDayRange.GetCrosses(r1, r2);
-      Assert.AreEqual(sWanted, Creators.ToString(res1), "GetCross() - Direct");
-      Assert.AreEqual(sWanted.Length > 0, MonthDayRange.IsCrossed(r1, r2), "IsCrossed() - Direct");
+      CollectionAssert.AreEqual(wanted, res1, "GetCross() - Direct");
+      Assert.AreEqual(wanted.Length > 0, MonthDayRange.IsCrossed(r1, r2), "IsCrossed() - Direct");
       for (int i = 0; i < res1.Length; i++)
         Assert.AreEqual("123", res1[i].Tag, "Tag");
 
       MonthDayRange[] res2 = MonthDayRange.GetCrosses(r2, r1);
-      Assert.AreEqual(sWanted, Creators.ToString(res2), "GetCross() - Inverted");
-      Assert.AreEqual(sWanted.Length > 0, MonthDayRange.IsCrossed(r2, r1), "IsCrossed() - Inverted");
+      CollectionAssert.AreEqual(wanted, res2, "GetCross() - Inverted");
+      Assert.AreEqual(wanted.Length > 0, MonthDayRange.IsCrossed(r2, r1), "IsCrossed() - Inverted");
     }
+
+    #endregion
+
+    #region GetDateRange()
 
     [TestCase("0228-0331", 2020, false, "20200228-20200331")]
     [TestCase("0228-0331", 2020, true, "20200228-20200331")]
@@ -181,11 +207,15 @@ namespace ExtTools_tests.Calendar
     [TestCase("0408-0325", 2021, true, "20200408-20210325")]
     public void GetDateRange(string sMDR, int year, bool yearIsForLastDay, string sWanted)
     {
-      MonthDayRange sut = Creators.CreateMonthDayRange(sMDR);
+      DateRange wantedRes = Creators.DateRange(sWanted);
+      MonthDayRange sut = Creators.MonthDayRange(sMDR);
       DateRange res = sut.GetDateRange(year, yearIsForLastDay);
-      string sRes = Creators.ToString(res);
-      Assert.AreEqual(sWanted, sRes);
+      Assert.AreEqual(wantedRes, res);
     }
+
+    #endregion
+
+    #region AddDays()
 
     [TestCase("0401-0630", 10, "0411-0710")]
     [TestCase("0401-0630", 0, "0401-0630")]
@@ -194,14 +224,18 @@ namespace ExtTools_tests.Calendar
     [TestCase("0401-0630", -2 * 365, "0401-0630")]
     public void AddDays(string sMDR, int days, string sWanted)
     {
-      MonthDayRange sut = Creators.CreateMonthDayRange(sMDR);
+      MonthDayRange wanted = Creators.MonthDayRange(sWanted);
+      MonthDayRange sut = Creators.MonthDayRange(sMDR);
       sut = new MonthDayRange(sut, "123");
 
       MonthDayRange res = sut.AddDays(days);
-      string sRes = Creators.ToString(res);
-      Assert.AreEqual(sWanted, sRes, "Result");
+      Assert.AreEqual(wanted, res, "Result");
       Assert.AreEqual("123", res.Tag, "Tag");
     }
+
+    #endregion
+
+    #region Статические поля
 
     [Test]
     public void Empty()
@@ -225,6 +259,10 @@ namespace ExtTools_tests.Calendar
       Assert.IsTrue(MonthDayRange.WholeYear.Complement.IsWholeYear, "Complement");
     }
 
+    #endregion
+
+    #region Сравнение
+
     [TestCase("1231-0102", "1231-0102", true)]
     [TestCase("1231-0102", "0102-1231", false)]
     [TestCase("", "0102-1231", false)]
@@ -234,8 +272,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("0810-0809", "0201-0131", true)] // whole year
     public void Operator_Equal(string sArg1, string sArg2, bool wanted)
     {
-      MonthDayRange arg1 = Creators.CreateMonthDayRange(sArg1);
-      MonthDayRange arg2 = Creators.CreateMonthDayRange(sArg2);
+      MonthDayRange arg1 = Creators.MonthDayRange(sArg1);
+      MonthDayRange arg2 = Creators.MonthDayRange(sArg2);
 
       bool res1 = (arg1 == arg2);
       Assert.AreEqual(wanted, res1, "==");
@@ -244,18 +282,40 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(!wanted, res2, "!=");
     }
 
+    #endregion
+
+    #region GetEnumerator()
+
     [TestCase("0101-0104", "0101,0102,0103,0104")]
     [TestCase("1231-0102", "1231,0101,0102")]
     [TestCase("", "")]
     public void GetEnumerator(string sMDR, string sWanted)
     {
-      MonthDayRange sut = Creators.CreateMonthDayRange(sMDR);
+      MonthDayRange sut = Creators.MonthDayRange(sMDR);
       List<MonthDay> lst = new List<MonthDay>();
       foreach (MonthDay item in sut)
         lst.Add(item);
-
-      string sRes = Creators.ToString(lst.ToArray());
-      Assert.AreEqual(sWanted, sRes);
+      MonthDay[] wanted = Creators.MonthDayArray(sWanted);
+      CollectionAssert.AreEqual(wanted, lst);
     }
+
+    #endregion
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      MonthDayRange sut = new MonthDayRange (Creators.MonthDayRange("0101-0104"), "123");
+
+      byte[] b = SerializationTools.SerializeBinary(sut);
+      MonthDayRange res = (MonthDayRange)(SerializationTools.DeserializeBinary(b));
+
+      Assert.AreEqual(sut.First, res.First, "First");
+      Assert.AreEqual(sut.Last, res.Last, "Last");
+      Assert.AreEqual(sut.Tag, res.Tag, "Tag");
+    }
+
+    #endregion
   }
 }

@@ -8,8 +8,6 @@ using System.Xml;
 
 namespace ExtTools_tests.IO
 {
-  // TODO: Не все
-
   [TestFixture]
   public class FileToolsTests
   {
@@ -134,12 +132,18 @@ namespace ExtTools_tests.IO
     {
       using (TempDirectory dir = new TempDirectory())
       {
-        AbsPath dirName1 = new AbsPath(dir.Dir, "1");
+        AbsPath dirName1 = new AbsPath(dir.Dir, "1"); // существующий каталог
         System.IO.Directory.CreateDirectory(dirName1.Path);
-        AbsPath dirName2 = new AbsPath(dir.Dir, "2");
-        AbsPath dirName3 = new AbsPath(dir.Dir, "2");
+        AbsPath dirName2 = new AbsPath(dir.Dir, "2"); // несуществующий каталог
+        AbsPath dirName3 = new AbsPath(dir.Dir, "3");
         System.IO.File.WriteAllBytes(dirName3.Path, DataTools.EmptyBytes); // файл вместо каталога
-        string errorText;
+
+        Console.WriteLine ("dirName1=" + dirName1.Path);
+        Console.WriteLine ("dirName1.RootDir=" + dirName1.RootDir.Path);
+
+        string errorText=null;
+        try
+        {
         Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 1");
         Assert.IsFalse(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 2");
         Assert.IsFalse(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 3");
@@ -149,6 +153,12 @@ namespace ExtTools_tests.IO
         Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 1");
         Assert.IsTrue(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 2");
         Assert.IsTrue(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 3");
+        }
+        catch 
+        {
+          Console.WriteLine ("ErrorText=" + errorText);
+          throw;
+        }
         Assert.Catch<ArgumentException>(delegate () { FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.FileExists, out errorText); }, "#7");
       }
     }
@@ -432,9 +442,25 @@ namespace ExtTools_tests.IO
 
     #region ClearDirAsPossible(), DeleteDirAsPossible()
 
+    // Под Widnows наличие открытого файла означает невозможность очисти/удаления каталога
+    // Под Linux можно удалить каталог, в котором есть открытый файл
+
     [Test]
-    public void ClearDirAsPossible([Values(false, true)] bool lockFile1, [Values(false, true)] bool lockFile2)
+    [Platform("Win")]
+    public void ClearDirAsPossible_Windows([Values(false, true)] bool lockFile1, [Values(false, true)] bool lockFile2)
     {
+      DoClearDirAsPossible(lockFile1, lockFile2);
+    }
+
+    [Test]
+    [Platform("Linux")]
+    public void ClearDirAsPossible_Linux()
+    {
+      DoClearDirAsPossible(false, false);
+    }
+
+    private void DoClearDirAsPossible(bool lockFile1, bool lockFile2)
+    { 
       using (TempDirectory dir = new TempDirectory())
       {
         AbsPath dir1 = new AbsPath(dir.Dir, "1");
@@ -473,8 +499,22 @@ namespace ExtTools_tests.IO
       }
     }
 
+
     [Test]
-    public void DeleteDirAsPossible([Values(false, true)] bool lockFile1, [Values(false, true)] bool lockFile2)
+    [Platform("Win")]
+    public void DeleteDirAsPossible_Windows([Values(false, true)] bool lockFile1, [Values(false, true)] bool lockFile2)
+    {
+      DoDeleteDirAsPossible(lockFile1, lockFile2);
+    }
+
+    [Test]
+    [Platform("Linux")]
+    public void DeleteDirAsPossible_Linux()
+    {
+      DoDeleteDirAsPossible(false, false);
+    }
+
+    private void DoDeleteDirAsPossible(bool lockFile1, bool lockFile2)
     {
       using (TempDirectory dir = new TempDirectory())
       {
@@ -889,11 +929,22 @@ namespace ExtTools_tests.IO
 
           switch (ei.CodePage)
           {
-            case 20924: // IBM Латиница-1 на Windows-XP
+            //case 20924: // IBM Латиница-1 на Windows-XP
             case 1047: // IBM Латиница-1 на Windows-7
             case 65000: // UTF-7
+            case 500: // 03.09.2023: Эти кодировки не проходят тест в Linux
+            case 870:
+            case 875:
+            case 1026:
+            case 37:
               continue;
           }
+		    // 03.09.2023: Пропускаем все кодировки EBCDIC и IBB. Под Linux тесты не проходят
+	      if (ei.CodePage >= 20000 && ei.CodePage <= 29999)
+		      continue;
+		    if (ei.CodePage >= 1140 && ei.CodePage <= 1149)
+		      continue;
+
 
           lst.Add(new EncodingInfo2(ei));
         }
@@ -1157,7 +1208,35 @@ namespace ExtTools_tests.IO
 
     #endregion
 
-    // TODO: FindExecutableFilePath()
+    #region FindExecutableFilePath()
+
+    [Test]
+    [Platform("Win32NT")]
+    public void FindExecutableFilePath_fileName()
+    {
+      AbsPath res = FileTools.FindExecutableFilePath("kernel32.dll");
+      Assert.IsFalse(res.IsEmpty, "IsEmpty");
+      StringAssert.AreEqualIgnoringCase("kernel32.dll", res.FileName, "FileName");
+      Assert.IsTrue(System.IO.File.Exists(res.Path), "FileExists");
+    }
+
+    [Test]
+    public void FindExecutableFilePath_absPath()
+    {
+      AbsPath testPath = FileTools.ApplicationPath;
+      AbsPath res = FileTools.FindExecutableFilePath(testPath.Path);
+      Assert.AreEqual(testPath, res);
+    }
+
+    [Test]
+    public void FindExecutableFilePath_unknownAbsPath()
+    {
+      AbsPath testPath = new AbsPath(FileTools.ApplicationBaseDir, "abracadabra.exe");
+      AbsPath res = FileTools.FindExecutableFilePath(testPath.Path);
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    #endregion
 
     #region MD5Sum()
 

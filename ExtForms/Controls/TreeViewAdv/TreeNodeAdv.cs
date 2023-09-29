@@ -16,10 +16,14 @@ using System.Security.Permissions;
 
 namespace FreeLibSet.Controls
 {
+  /// <summary>
+  /// Узел в дереве <see cref="TreeViewAdv"/>
+  /// </summary>
   [Serializable]
   public sealed class TreeNodeAdv : ISerializable
   {
-    #region NodeCollection
+    #region NodeCollection class
+
     private class NodeCollection : Collection<TreeNodeAdv>
     {
       private TreeNodeAdv _owner;
@@ -81,32 +85,71 @@ namespace FreeLibSet.Controls
         InsertItem(index, item);
       }
     }
+
+    #endregion
+
+    #region Конструкторы
+
+    /// <summary>
+    /// Не знаю, зачем может понадобиться
+    /// </summary>
+    /// <param name="tag"></param>
+    public TreeNodeAdv(object tag)
+      : this(null, tag)
+    {
+    }
+
+    internal TreeNodeAdv(TreeViewAdv tree, object tag)
+    {
+      _row = -1;
+      _tree = tree;
+      _nodes = new NodeCollection(this);
+      _children = new ReadOnlyCollection<TreeNodeAdv>(_nodes);
+      _tag = tag;
+    }
+
     #endregion
 
     #region Events
 
+    /// <summary>
+    /// Вызывается перед свертыванием узла в дереве
+    /// </summary>
     public event EventHandler<TreeViewAdvEventArgs> Collapsing;
+
     internal void OnCollapsing()
     {
       if (Collapsing != null)
         Collapsing(this, new TreeViewAdvEventArgs(this));
     }
 
+    /// <summary>
+    /// Вызывается после свертывания узла в дереве
+    /// </summary>
     public event EventHandler<TreeViewAdvEventArgs> Collapsed;
+
     internal void OnCollapsed()
     {
       if (Collapsed != null)
         Collapsed(this, new TreeViewAdvEventArgs(this));
     }
 
+    /// <summary>
+    /// Вызывается перед развертыванием узла в дереве
+    /// </summary>
     public event EventHandler<TreeViewAdvEventArgs> Expanding;
+
     internal void OnExpanding()
     {
       if (Expanding != null)
         Expanding(this, new TreeViewAdvEventArgs(this));
     }
 
+    /// <summary>
+    /// Вызывается поле развертыывания узла в дереве
+    /// </summary>
     public event EventHandler<TreeViewAdvEventArgs> Expanded;
+
     internal void OnExpanded()
     {
       if (Expanded != null)
@@ -117,36 +160,32 @@ namespace FreeLibSet.Controls
 
     #region Properties
 
-    private TreeViewAdv _tree;
-    public TreeViewAdv Tree
-    {
-      get { return _tree; }
-    }
+    /// <summary>
+    /// Просмотр, к которому относится узел
+    /// </summary>
+    public TreeViewAdv Tree { get { return _tree; } }
+    private readonly TreeViewAdv _tree;
 
-    private int _row;
     /// <summary>
     /// Индекс узла в пределах просмотра, с учетом только видимых узлов.
-    /// Узлы, которые принадлежат свернутым родительским узлам, не учитываются
+    /// Узлы, которые принадлежат свернутым родительским узлам, не учитываются.
     /// </summary>
     public int Row
     {
       get { return _row; }
       internal set { _row = value; }
     }
+    private int _row;
 
-    private int _index = -1;
     /// <summary>
     /// Индекс данного узла в пределах родительского
     /// </summary>
-    public int Index
-    {
-      get
-      {
-        return _index;
-      }
-    }
+    public int Index { get { return _index; } }
+    private int _index = -1;
 
-    private bool _isSelected;
+    /// <summary>
+    /// True, если данный узел является выбранным
+    /// </summary>
     public bool IsSelected
     {
       get { return _isSelected; }
@@ -174,6 +213,7 @@ namespace FreeLibSet.Controls
         }
       }
     }
+    private bool _isSelected;
 
     /// <summary>
     /// Returns true if all parent nodes of this node are expanded.
@@ -191,23 +231,30 @@ namespace FreeLibSet.Controls
         }
         return true;
       }
+
     }
 
-    private bool _isLeaf;
+    /// <summary>
+    /// Возвращает true, если для этого узла нет дочерних узлов
+    /// </summary>
     public bool IsLeaf
     {
       get { return _isLeaf; }
       internal set { _isLeaf = value; }
     }
+    private bool _isLeaf;
 
-    private bool _isExpandedOnce;
     public bool IsExpandedOnce
     {
       get { return _isExpandedOnce; }
       internal set { _isExpandedOnce = value; }
     }
+    private bool _isExpandedOnce;
 
-    private bool _isExpanded;
+    /// <summary>
+    /// True, если узел развернут.
+    /// Установка значения в true разворачивает список дочерних узлов, вызывая <see cref="Expand()"/>, а в false - сворачивает вызовом <see cref="Collapse()"/>.
+    /// </summary>
     public bool IsExpanded
     {
       get { return _isExpanded; }
@@ -219,25 +266,23 @@ namespace FreeLibSet.Controls
           Collapse();
       }
     }
+    private bool _isExpanded;
 
     internal void AssignIsExpanded(bool value)
     {
       _isExpanded = value;
     }
 
-    private TreeNodeAdv _parent;
     /// <summary>
     /// Возвращает родительский узел.
-    /// Для узла TreeViewAdv.Root возвращает null
+    /// Для узла <see cref="TreeViewAdv.Root"/> возвращает null
     /// </summary>
-    public TreeNodeAdv Parent
-    {
-      get { return _parent; }
-    }
+    public TreeNodeAdv Parent { get { return _parent; } }
+    private TreeNodeAdv _parent;
 
     /// <summary>
     /// Возвращает уровень уровень узла.
-    /// Для узла TreeViewAdv.Root возвращает null
+    /// Для узла <see cref="TreeViewAdv.Root"/> возвращает 0.
     /// </summary>
     public int Level
     {
@@ -249,7 +294,7 @@ namespace FreeLibSet.Controls
           return _parent.Level + 1;
       }
     }
-    
+
     /// <summary>
     /// Возвращает предыдущий узел, относящийся к тому же родительскому узлу.
     /// Если текущий узел является первым, то свойство возвращает null
@@ -319,6 +364,9 @@ namespace FreeLibSet.Controls
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если узел содержит дочерние узлы или это пока неизвестно.
+    /// </summary>
     public bool CanExpand
     {
       get
@@ -327,74 +375,57 @@ namespace FreeLibSet.Controls
       }
     }
 
-    private object _tag;
     /// <summary>
-    /// Данные для узла (например, DataRow)
+    /// Данные для узла (например, <see cref="System.Data.DataRow"/> для <see cref="FreeLibSet.Models.Tree.DataTableTreeModel"/>)
     /// </summary>
-    public object Tag
-    {
-      get { return _tag; }
-    }
+    public object Tag { get { return _tag; } }
+    private object _tag;
 
+    internal Collection<TreeNodeAdv> Nodes { get { return _nodes; } }
     private Collection<TreeNodeAdv> _nodes;
-    internal Collection<TreeNodeAdv> Nodes
-    {
-      get { return _nodes; }
-    }
 
+    /// <summary>
+    /// Коллекция дочерних узлов, принадлежащих данному узлу (прямые потомки)
+    /// </summary>
+    public ReadOnlyCollection<TreeNodeAdv> Children { get { return _children; } }
     private ReadOnlyCollection<TreeNodeAdv> _children;
-    public ReadOnlyCollection<TreeNodeAdv> Children
-    {
-      get
-      {
-        return _children;
-      }
-    }
 
-    private int? _rightBounds;
     internal int? RightBounds
     {
       get { return _rightBounds; }
       set { _rightBounds = value; }
     }
+    private int? _rightBounds;
 
-    private int? _height;
     internal int? Height
     {
       get { return _height; }
       set { _height = value; }
     }
+    private int? _height;
 
-    private bool _isExpandingNow;
     internal bool IsExpandingNow
     {
       get { return _isExpandingNow; }
       set { _isExpandingNow = value; }
     }
+    private bool _isExpandingNow;
 
-    private bool _autoExpandOnStructureChanged = false;
     public bool AutoExpandOnStructureChanged
     {
       get { return _autoExpandOnStructureChanged; }
       set { _autoExpandOnStructureChanged = value; }
     }
+    private bool _autoExpandOnStructureChanged = false;
 
     #endregion
 
-    public TreeNodeAdv(object tag)
-      : this(null, tag)
-    {
-    }
+    #region Методы
 
-    internal TreeNodeAdv(TreeViewAdv tree, object tag)
-    {
-      _row = -1;
-      _tree = tree;
-      _nodes = new NodeCollection(this);
-      _children = new ReadOnlyCollection<TreeNodeAdv>(_nodes);
-      _tag = tag;
-    }
-
+    /// <summary>
+    /// Возвращает текстовое представление для <see cref="Tag"/>.
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
       if (Tag != null)
@@ -403,33 +434,55 @@ namespace FreeLibSet.Controls
         return base.ToString();
     }
 
+    /// <summary>
+    /// Сворачивает узел. Если узел уже свернут, никаких действий не выполняется.
+    /// Дочерние узлы не сворачиваются.
+    /// </summary>
     public void Collapse()
     {
       if (_isExpanded)
         Collapse(true);
     }
 
+    /// <summary>
+    /// Сворачивает узел и все дочерние узлы. Дочерние узлы сворачиваются, даже если текущий узел уже свернут.
+    /// </summary>
     public void CollapseAll()
     {
       Collapse(false);
     }
 
+    /// <summary>
+    /// Сворачивает узел и, опционально, дочерние узлы
+    /// </summary>
+    /// <param name="ignoreChildren">true - свернуть только текущий узел (метод <see cref="Collapse()"/>). false - свернуть также и дочерние узлы (метод <see cref="CollapseAll()"/>)</param>
     public void Collapse(bool ignoreChildren)
     {
       SetIsExpanded(false, ignoreChildren);
     }
 
+    /// <summary>
+    /// Развернуть узел. Если узел уже развернут, никаких действий не выполняется.
+    /// Дочерние узлы не разворачиваются.
+    /// </summary>
     public void Expand()
     {
       if (!_isExpanded)
         Expand(true);
     }
 
+    /// <summary>
+    /// Развернуть узел и все дочерние узлы
+    /// </summary>
     public void ExpandAll()
     {
       Expand(false);
     }
 
+    /// <summary>
+    /// Разворачивает узел и, опционально, дочерние узлы
+    /// </summary>
+    /// <param name="ignoreChildren">true - развернуть только текущий узел (метод <see cref="Expand()"/>). false - развернуть также и дочерние узлы (метод <see cref="ExpandAll()"/>)</param>
     public void Expand(bool ignoreChildren)
     {
       SetIsExpanded(true, ignoreChildren);
@@ -442,6 +495,8 @@ namespace FreeLibSet.Controls
       else
         Tree.SetIsExpanded(this, value, ignoreChildren);
     }
+
+    #endregion
 
     #region ISerializable Members
 

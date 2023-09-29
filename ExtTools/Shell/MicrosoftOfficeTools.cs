@@ -322,6 +322,7 @@ namespace FreeLibSet.Shell
      * Здесь - урезанная копия
      */
 
+#if XXX
     #region Программная модель Word
 
     #region Основной объект
@@ -1175,6 +1176,8 @@ namespace FreeLibSet.Shell
 
     #endregion
 
+#endif
+
     /// <summary>
     /// Открыть файл текстового документа в редакторе Microsoft Office Word
     /// </summary>
@@ -1189,15 +1192,15 @@ namespace FreeLibSet.Shell
 
       try
       {
-        using (WordHelper helper = new WordHelper())
+        using (OLE.Word.WordHelper helper = new OLE.Word.WordHelper())
         {
-          WdAlertLevel OldDisplayAlerts = helper.Application.DisplayAlerts;
-          helper.Application.SetDisplayAlerts(WdAlertLevel.wdAlertsNone);
+          OLE.Word.WdAlertLevel OldDisplayAlerts = helper.Application.DisplayAlerts;
+          helper.Application.SetDisplayAlerts(OLE.Word.WdAlertLevel.wdAlertsNone);
           try
           {
             if (asTemplate)
             {
-              WordDocument doc = helper.Application.Documents.Add();
+              OLE.Word.Document doc = helper.Application.Documents.Add();
               doc.Range().InsertFile(fileName.Path);
               doc.Saved = true;
             }
@@ -1231,7 +1234,7 @@ namespace FreeLibSet.Shell
         throw new FileNotFoundException("Файл не найден: \"" + fileName.Path + "\"", fileName.Path);
       try
       {
-        using (ExcelHelper helper = new ExcelHelper(true))
+        using (OLE.Excel.ExcelHelper helper = new OLE.Excel.ExcelHelper(true))
         {
           bool oldDisplayAlerts = helper.Application.DisplayAlerts; // по идее, всегда возвращает true
           helper.Application.SetDisplayAlerts(false);
@@ -1240,7 +1243,7 @@ namespace FreeLibSet.Shell
             if (asTemplate)
             {
               helper.Application.Workbooks.Open(fileName.Path);
-              ExcelWorkbook wbk1 = helper.Application.ActiveWorkbook;
+              OLE.Excel.Workbook wbk1 = helper.Application.ActiveWorkbook;
               string Title = wbk1.Title;
               string Subject = wbk1.Subject;
               string Author = wbk1.Author;
@@ -1248,7 +1251,7 @@ namespace FreeLibSet.Shell
               wbk1.Sheets.Copy();
               wbk1.Close();
 
-              ExcelWorkbook wbk2 = helper.Application.ActiveWorkbook;
+              OLE.Excel.Workbook wbk2 = helper.Application.ActiveWorkbook;
               wbk2.SetTitle(Title);
               wbk2.SetSubject(Subject);
               wbk2.SetAuthor(Author);
@@ -1410,5 +1413,4 @@ namespace FreeLibSet.Shell
 
     #endregion
   }
-
 }

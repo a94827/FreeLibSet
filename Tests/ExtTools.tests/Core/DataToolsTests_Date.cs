@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Tests;
 using FreeLibSet.Core;
 using FreeLibSet.Calendar;
 
@@ -30,8 +31,8 @@ namespace ExtTools_tests.Core
     [Test]
     public void Constants()
     {
-      Assert.AreEqual(DateTime.MinValue, Creators.CreateDate(MinDate));
-      Assert.AreEqual(DateTime.MaxValue.Date, Creators.CreateDate(MaxDate));
+      Assert.AreEqual(DateTime.MinValue, Creators.DateTime(MinDate));
+      Assert.AreEqual(DateTime.MaxValue.Date, Creators.DateTime(MaxDate));
     }
 
     #endregion
@@ -49,9 +50,9 @@ namespace ExtTools_tests.Core
     [TestCase("20210714", "", "20210713", false)]
     public void DateInRange(string sTestDate, string sFirstDate, string sLastDate, bool wanted)
     {
-      DateTime testDate = Creators.CreateDate(sTestDate);
-      DateTime? firstDate = Creators.CreateNDate(sFirstDate);
-      DateTime? lastDate = Creators.CreateNDate(sLastDate);
+      DateTime testDate = Creators.DateTime(sTestDate);
+      DateTime? firstDate = Creators.NDateTime(sFirstDate);
+      DateTime? lastDate = Creators.NDateTime(sLastDate);
 
       bool res1 = DataTools.DateInRange(testDate, firstDate, lastDate);
       Assert.AreEqual(wanted, res1, "Nullable<DateTime>");
@@ -85,10 +86,10 @@ namespace ExtTools_tests.Core
     [TestCase("", "", "", "", true)]
     public void DateRangeInRange(string sFirstDate1, string sLastDate1, string sFirstDate2, string sLastDate2, bool wanted)
     {
-      DateTime? firstDate1 = Creators.CreateNDate(sFirstDate1);
-      DateTime? lastDate1 = Creators.CreateNDate(sLastDate1);
-      DateTime? firstDate2 = Creators.CreateNDate(sFirstDate2);
-      DateTime? lastDate2 = Creators.CreateNDate(sLastDate2);
+      DateTime? firstDate1 = Creators.NDateTime(sFirstDate1);
+      DateTime? lastDate1 = Creators.NDateTime(sLastDate1);
+      DateTime? firstDate2 = Creators.NDateTime(sFirstDate2);
+      DateTime? lastDate2 = Creators.NDateTime(sLastDate2);
 
       bool res = DataTools.DateRangeInRange(firstDate1, lastDate1, firstDate2, lastDate2);
       Assert.AreEqual(wanted, res);
@@ -111,8 +112,8 @@ namespace ExtTools_tests.Core
     [TestCase("", "", "", "", Result = true)]
     public bool DateRangeCrossed(string firstDate1, string lastDate1, string firstDate2, string lastDate2)
     {
-      return DataTools.DateRangeCrossed(Creators.CreateNDate(firstDate1), Creators.CreateNDate(lastDate1),
-        Creators.CreateNDate(firstDate2), Creators.CreateNDate(lastDate2));
+      return DataTools.DateRangeCrossed(Creators.NDateTime(firstDate1), Creators.NDateTime(lastDate1),
+        Creators.NDateTime(firstDate2), Creators.NDateTime(lastDate2));
     }
 
     #endregion
@@ -131,11 +132,11 @@ namespace ExtTools_tests.Core
     [TestCase("20210714", "20210715", "", "20210715")]
     public void DateToRange(string testDate, string firstDate, string lastDate, string res)
     {
-      DateTime dt = Creators.CreateDate(testDate);
+      DateTime dt = Creators.DateTime(testDate);
       DataTools.DateToRange(ref dt,
-        Creators.CreateNDate(firstDate), Creators.CreateNDate(lastDate));
+        Creators.NDateTime(firstDate), Creators.NDateTime(lastDate));
 
-      Assert.AreEqual(Creators.CreateDate(res), dt);
+      Assert.AreEqual(Creators.DateTime(res), dt);
     }
 
     #endregion
@@ -149,16 +150,16 @@ namespace ExtTools_tests.Core
     [TestCase("20210714", "20210715", "", "", true, "20210714", "20210715")]
     public void GetDateRangeCross(string sdt11, string sdt12, string sdt21, string sdt22, bool wanted, string sdt11res, string sdt12res)
     {
-      DateTime? dt11 = Creators.CreateNDate(sdt11);
-      DateTime? dt12 = Creators.CreateNDate(sdt12);
-      DateTime? dt21 = Creators.CreateNDate(sdt21);
-      DateTime? dt22 = Creators.CreateNDate(sdt22);
+      DateTime? dt11 = Creators.NDateTime(sdt11);
+      DateTime? dt12 = Creators.NDateTime(sdt12);
+      DateTime? dt21 = Creators.NDateTime(sdt21);
+      DateTime? dt22 = Creators.NDateTime(sdt22);
 
       bool res = DataTools.GetDateRangeCross(ref dt11, ref dt12, dt21, dt22);
 
       Assert.AreEqual(wanted, res, "Result");
-      Assert.AreEqual(Creators.CreateNDate(sdt11res), dt11, "FirstDate1");
-      Assert.AreEqual(Creators.CreateNDate(sdt12res), dt12, "LastDate1");
+      Assert.AreEqual(Creators.NDateTime(sdt11res), dt11, "FirstDate1");
+      Assert.AreEqual(Creators.NDateTime(sdt12res), dt12, "LastDate1");
     }
 
     #endregion
@@ -172,15 +173,15 @@ namespace ExtTools_tests.Core
     [TestCase("20210714", "", "", "20210716", "", "")]
     public void GetDateRangeUnion(string sdt11, string sdt12, string sdt21, string sdt22, string sdt11res, string sdt12res)
     {
-      DateTime? dt11 = Creators.CreateNDate(sdt11);
-      DateTime? dt12 = Creators.CreateNDate(sdt12);
-      DateTime? dt21 = Creators.CreateNDate(sdt21);
-      DateTime? dt22 = Creators.CreateNDate(sdt22);
+      DateTime? dt11 = Creators.NDateTime(sdt11);
+      DateTime? dt12 = Creators.NDateTime(sdt12);
+      DateTime? dt21 = Creators.NDateTime(sdt21);
+      DateTime? dt22 = Creators.NDateTime(sdt22);
 
       DataTools.GetDateRangeUnion(ref dt11, ref dt12, dt21, dt22);
 
-      Assert.AreEqual(Creators.CreateNDate(sdt11res), dt11, "FirstDate1");
-      Assert.AreEqual(Creators.CreateNDate(sdt12res), dt12, "LastDate1");
+      Assert.AreEqual(Creators.NDateTime(sdt11res), dt11, "FirstDate1");
+      Assert.AreEqual(Creators.NDateTime(sdt12res), dt12, "LastDate1");
     }
 
     #endregion
@@ -196,7 +197,7 @@ namespace ExtTools_tests.Core
     [TestCase(9999, "", "", Result = true)]
     public bool YearInRange(int year, string firstDate, string lastDate)
     {
-      return DataTools.YearInRange(year, Creators.CreateNDate(firstDate), Creators.CreateNDate(lastDate));
+      return DataTools.YearInRange(year, Creators.NDateTime(firstDate), Creators.NDateTime(lastDate));
     }
 
     #endregion
@@ -208,13 +209,14 @@ namespace ExtTools_tests.Core
     [TestCase("20211231", "20210101")]
     public void BottomOfYear(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res1 = DataTools.BottomOfYear(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res1), "BottomOfYear(DateTime)");
+      Assert.AreEqual(wanted, res1, "BottomOfYear(DateTime)");
 
       DateTime res2 = DataTools.BottomOfYear(dt.Year);
-      Assert.AreEqual(sWanted, Creators.ToString(res2), "BottomOfYear(int)");
+      Assert.AreEqual(wanted, res2, "BottomOfYear(int)");
 
       bool res3 = DataTools.IsBottomOfYear(dt);
       Assert.AreEqual(res1 == dt, res3, "IsBottomOfYear()");
@@ -225,13 +227,14 @@ namespace ExtTools_tests.Core
     [TestCase("20211231", "20211231")]
     public void EndOfYear(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res1 = DataTools.EndOfYear(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res1), "EndOfYear(DateTime)");
+      Assert.AreEqual(wanted, res1, "EndOfYear(DateTime)");
 
       DateTime res2 = DataTools.EndOfYear(dt.Year);
-      Assert.AreEqual(sWanted, Creators.ToString(res2), "EndOfYear(int)");
+      Assert.AreEqual(wanted, res2, "EndOfYear(int)");
 
       bool res3 = DataTools.IsEndOfYear(dt);
       Assert.AreEqual(res1 == dt, res3, "IsEndOfYear()");
@@ -243,13 +246,14 @@ namespace ExtTools_tests.Core
     [TestCase("20211231", "20211201")]
     public void BottomOfMonth(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res1 = DataTools.BottomOfMonth(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res1), "BottomOfMonth(DateTime)");
+      Assert.AreEqual(wanted, res1, "BottomOfMonth(DateTime)");
 
       DateTime res2 = DataTools.BottomOfMonth(dt.Year, dt.Month);
-      Assert.AreEqual(sWanted, Creators.ToString(res2), "BottomOfMonth(int, int)");
+      Assert.AreEqual(wanted, res2, "BottomOfMonth(int, int)");
 
       bool res3 = DataTools.IsBottomOfMonth(dt);
       Assert.AreEqual(res1 == dt, res3, "IsBottomOfMonth()");
@@ -264,13 +268,14 @@ namespace ExtTools_tests.Core
     [TestCase("20211231", "20211231")]
     public void EndOfMonth(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res1 = DataTools.EndOfMonth(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res1), "EndOfMonth(DateTime)");
+      Assert.AreEqual(wanted, res1, "EndOfMonth(DateTime)");
 
       DateTime res2 = DataTools.EndOfMonth(dt.Year, dt.Month);
-      Assert.AreEqual(sWanted, Creators.ToString(res2), "EndOfMonth(int, int)");
+      Assert.AreEqual(wanted, res2, "EndOfMonth(int, int)");
 
       bool res3 = DataTools.IsEndOfMonth(dt);
       Assert.AreEqual(res1 == dt, res3, "EndOfMonth()");
@@ -286,10 +291,11 @@ namespace ExtTools_tests.Core
     [TestCase("20211231", "20211001")]
     public void BottomOfQuarter(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res1 = DataTools.BottomOfQuarter(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res1), "BottomOfQuarter(DateTime)");
+      Assert.AreEqual(wanted, res1, "BottomOfQuarter(DateTime)");
 
       bool res2 = DataTools.IsBottomOfQuarter(dt);
       Assert.AreEqual(res1 == dt, res2, "IsBottomOfQuarter()");
@@ -305,10 +311,11 @@ namespace ExtTools_tests.Core
     [TestCase("20211231", "20211231")]
     public void EndOfQuarter(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res1 = DataTools.EndOfQuarter(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res1), "EndOfQuarter(DateTime)");
+      Assert.AreEqual(wanted, res1, "EndOfQuarter(DateTime)");
 
       bool res2 = DataTools.IsEndOfQuarter(dt);
       Assert.AreEqual(res1 == dt, res2, "IsEndOfQuarter()");
@@ -320,10 +327,11 @@ namespace ExtTools_tests.Core
     [TestCase("20210924", DayOfWeek.Saturday, "20210918")]
     public void BottomOfWeek(string sValue, DayOfWeek dow, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res = DataTools.BottomOfWeek(dt, dow);
-      Assert.AreEqual(sWanted, Creators.ToString(res));
+      Assert.AreEqual(wanted, res);
     }
 
     [TestCase("20210919", "20210913")]
@@ -331,10 +339,11 @@ namespace ExtTools_tests.Core
     [TestCase("20210921", "20210920")]
     public void BottomOfWeekMonday(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res = DataTools.BottomOfWeekMonday(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res));
+      Assert.AreEqual(wanted, res);
     }
 
     [TestCase("20210924", DayOfWeek.Monday, "20210927")]
@@ -343,10 +352,11 @@ namespace ExtTools_tests.Core
     [TestCase("20210924", DayOfWeek.Saturday, "20210925")]
     public void EndOfWeek(string sValue, DayOfWeek dow, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res = DataTools.EndOfWeek(dt, dow);
-      Assert.AreEqual(sWanted, Creators.ToString(res));
+      Assert.AreEqual(wanted, res);
     }
 
     [TestCase("20210918", "20210919")]
@@ -354,10 +364,11 @@ namespace ExtTools_tests.Core
     [TestCase("20210920", "20210926")]
     public void EndOfWeekSunday(string sValue, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sValue);
+      DateTime dt = Creators.DateTime(sValue);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res = DataTools.EndOfWeekSunday(dt);
-      Assert.AreEqual(sWanted, Creators.ToString(res));
+      Assert.AreEqual(wanted, res);
     }
 
     #endregion
@@ -367,9 +378,9 @@ namespace ExtTools_tests.Core
     [TestCase("20211220", "20211221", "20211220")]
     public void Min_DateTime(string s1, string s2, string sWanted)
     {
-      DateTime dt1 = Creators.CreateDate(s1);
-      DateTime dt2 = Creators.CreateDate(s2);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt1 = Creators.DateTime(s1);
+      DateTime dt2 = Creators.DateTime(s2);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DataTools.Min(dt1, dt2), "#1");
       Assert.AreEqual(wanted, DataTools.Min(dt2, dt1), "#2");
@@ -378,9 +389,9 @@ namespace ExtTools_tests.Core
     [TestCase("20211220", "20211221", "20211221")]
     public void Max_DateTime(string s1, string s2, string sWanted)
     {
-      DateTime dt1 = Creators.CreateDate(s1);
-      DateTime dt2 = Creators.CreateDate(s2);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt1 = Creators.DateTime(s1);
+      DateTime dt2 = Creators.DateTime(s2);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DataTools.Max(dt1, dt2), "#1");
       Assert.AreEqual(wanted, DataTools.Max(dt2, dt1), "#2");
@@ -391,9 +402,9 @@ namespace ExtTools_tests.Core
     [TestCase("", "", "")]
     public void Min_NDateTime(string s1, string s2, string sWanted)
     {
-      DateTime? dt1 = Creators.CreateNDate(s1);
-      DateTime? dt2 = Creators.CreateNDate(s2);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt1 = Creators.NDateTime(s1);
+      DateTime? dt2 = Creators.NDateTime(s2);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DataTools.Min(dt1, dt2), "#1");
       Assert.AreEqual(wanted, DataTools.Min(dt2, dt1), "#2");
@@ -404,9 +415,9 @@ namespace ExtTools_tests.Core
     [TestCase("", "", "")]
     public void Max_NDateTime(string s1, string s2, string sWanted)
     {
-      DateTime? dt1 = Creators.CreateNDate(s1);
-      DateTime? dt2 = Creators.CreateNDate(s2);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt1 = Creators.NDateTime(s1);
+      DateTime? dt2 = Creators.NDateTime(s2);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DataTools.Max(dt1, dt2), "#1");
       Assert.AreEqual(wanted, DataTools.Max(dt2, dt1), "#2");
@@ -440,9 +451,9 @@ namespace ExtTools_tests.Core
     [TestCase("", "", "")]
     public void Min_NTimeSpan(string s1, string s2, string sWanted)
     {
-      TimeSpan? ts1 = Creators.CreateNTimeSpan(s1);
-      TimeSpan? ts2 = Creators.CreateNTimeSpan(s2);
-      TimeSpan? wanted = Creators.CreateNTimeSpan(sWanted);
+      TimeSpan? ts1 = Creators.NTimeSpan(s1);
+      TimeSpan? ts2 = Creators.NTimeSpan(s2);
+      TimeSpan? wanted = Creators.NTimeSpan(sWanted);
 
       Assert.AreEqual(wanted, DataTools.Min(ts1, ts2), "#1");
       Assert.AreEqual(wanted, DataTools.Min(ts2, ts1), "#2");
@@ -453,9 +464,9 @@ namespace ExtTools_tests.Core
     [TestCase("", "", "")]
     public void Max_NTimeSpan(string s1, string s2, string sWanted)
     {
-      TimeSpan? ts1 = Creators.CreateNTimeSpan(s1);
-      TimeSpan? ts2 = Creators.CreateNTimeSpan(s2);
-      TimeSpan? wanted = Creators.CreateNTimeSpan(sWanted);
+      TimeSpan? ts1 = Creators.NTimeSpan(s1);
+      TimeSpan? ts2 = Creators.NTimeSpan(s2);
+      TimeSpan? wanted = Creators.NTimeSpan(sWanted);
 
       Assert.AreEqual(wanted, DataTools.Max(ts1, ts2), "#1");
       Assert.AreEqual(wanted, DataTools.Max(ts2, ts1), "#2");
@@ -470,8 +481,8 @@ namespace ExtTools_tests.Core
     [TestCase("20211220", "20201220", false)]
     public void IsEqualYearAndMonth_DateTime(string s1, string s2, bool wanted)
     {
-      DateTime dt1 = Creators.CreateDate(s1);
-      DateTime dt2 = Creators.CreateDate(s2);
+      DateTime dt1 = Creators.DateTime(s1);
+      DateTime dt2 = Creators.DateTime(s2);
 
       Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt1, dt2), "#1");
       Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt2, dt1), "#2");
@@ -484,8 +495,8 @@ namespace ExtTools_tests.Core
     [TestCase("", "", true)]
     public void IsEqualYearAndMonth_NDateTime(string s1, string s2, bool wanted)
     {
-      DateTime? dt1 = Creators.CreateNDate(s1);
-      DateTime? dt2 = Creators.CreateNDate(s2);
+      DateTime? dt1 = Creators.NDateTime(s1);
+      DateTime? dt2 = Creators.NDateTime(s2);
 
       Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt1, dt2), "#1");
       Assert.AreEqual(wanted, DataTools.IsEqualYearAndMonth(dt2, dt1), "#2");
@@ -503,7 +514,7 @@ namespace ExtTools_tests.Core
     [TestCase(2021, 13, 15, "20211215")]
     public void CreateDateTime_YMD(int y, int m, int d, string sWanted)
     {
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res = DataTools.CreateDateTime(y, m, d);
       Assert.AreEqual(wanted, res);
@@ -514,8 +525,8 @@ namespace ExtTools_tests.Core
     [TestCase("20211215", 32, "20211231")]
     public void CreateDateTime_DateTime(string sDate, int d, string sWanted)
     {
-      DateTime date = Creators.CreateDate(sDate);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime date = Creators.DateTime(sDate);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       DateTime res = DataTools.CreateDateTime(date, d);
       Assert.AreEqual(wanted, res);

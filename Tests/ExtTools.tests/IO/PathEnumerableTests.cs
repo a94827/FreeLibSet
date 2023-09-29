@@ -6,13 +6,14 @@ using NUnit.Framework;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
 using FreeLibSet.Remoting;
+using FreeLibSet.Tests;
 
 namespace ExtTools_tests.IO
 {
   /// <summary>
   /// Создает тестовую структуру каталогов и файлов для перебора
   /// </summary>
-  public abstract class PathEnumerableTestsBase
+  public abstract class PathEnumerableTestsBase: FixtureWithSetUp
   {
     // Тестовая структура
     //
@@ -37,10 +38,15 @@ namespace ExtTools_tests.IO
 
     #region Создания тестовой структуры файлов
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       _TempDir = new TempDirectory();
+
+      if (_TempDir.Dir.IsEmpty)
+        throw new BugException("TempDir.Dir.IsEmpty");
+
       FileTools.ForceDirs(new AbsPath(_TempDir.Dir, "D1", "D11", "D111"));
       FileTools.ForceDirs(new AbsPath(_TempDir.Dir, "D1", "D11", "D112"));
       FileTools.ForceDirs(new AbsPath(_TempDir.Dir, "D1", "D12"));
@@ -59,14 +65,14 @@ namespace ExtTools_tests.IO
       File.WriteAllBytes(new AbsPath(_TempDir.Dir, "f4.txt").Path, DataTools.EmptyBytes);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_TempDir != null)
       {
         _TempDir.Dispose();
         _TempDir = null;
       }
+      base.OnOneTimeTearDown();
     }
 
     private TempDirectory _TempDir;
@@ -327,7 +333,7 @@ namespace ExtTools_tests.IO
     private static void Set_DirectorySearchPattern(object sender, EnumDirectoryEventArgs args)
     {
       if (args.Directory.FileName == "D11")
-        args.DirectorySearchPattern = "*2.";
+        args.DirectorySearchPattern = "*2";
     }
 
     [Test]
@@ -445,6 +451,9 @@ namespace ExtTools_tests.IO
     [Test]
     public void Constructor_1arg()
     {
+      //if (RootDir.IsEmpty)
+      //  throw new BugException("PathEnumerableTestsBase.SetUp has not been called");
+
       AbsPathEnumerable sut = new AbsPathEnumerable(RootDir);
 
       Assert.AreEqual(RootDir, sut.RootDirectory, "RootDirectory");

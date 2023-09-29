@@ -1,10 +1,10 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+using FreeLibSet.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Windows.Forms;
    
 // Прочие провайдеры управляющих элементов
@@ -74,7 +74,7 @@ namespace FreeLibSet.Forms
     /// Возвращает EFPEMailLabelCommandItems
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPEMailLabelCommandItems(this);
     }
@@ -159,26 +159,6 @@ namespace FreeLibSet.Forms
         EFPApp.ShowTempMessage("Адрес электронной почты не задан");
       else
         EFPApp.Clipboard.SetText(ControlProvider.Address);
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Провайдер элемента предварительного просмотра
-  /// </summary>
-  public class EFPExtPrintPreviewControl : EFPControl<ExtPrintPreviewControl>
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает провайдер для управляющего элемента
-    /// </summary>
-    /// <param name="baseProvider">Базовый провайдер. Должен быть задан</param>
-    /// <param name="control">Управляющий элемент</param>
-    public EFPExtPrintPreviewControl(EFPBaseProvider baseProvider, ExtPrintPreviewControl control)
-      : base(baseProvider, control, true)
-    {
     }
 
     #endregion

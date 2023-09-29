@@ -6,10 +6,11 @@ using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using System.Data;
 using FreeLibSet.Core;
+using FreeLibSet.Tests;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
-  public class DBxDocSetTestsBase
+  public class DBxDocSetTestsBase: FixtureWithSetUp
   {
     /*
      * Структура тестовой базы данных
@@ -169,8 +170,7 @@ namespace ExtDBDocs_tests.Data_Docs
       args.Doc.Values["F107"].SetInteger(args.Doc.Values["F102"].AsInteger * 2);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_TestDBs == null)
         return;
@@ -180,6 +180,7 @@ namespace ExtDBDocs_tests.Data_Docs
           _TestDBs[i].GlobalData.DisposeDBs();
       }
       _TestDBs = null;
+      base.OnOneTimeTearDown();
     }
 
     #endregion

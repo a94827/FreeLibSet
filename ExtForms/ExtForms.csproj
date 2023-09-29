@@ -43,6 +43,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="PdfSharp, Version=1.31.1789.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Others\PdfSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -64,11 +69,20 @@
     <Compile Include="Controls\NumEditBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
     <Compile Include="Controls\ComboBoxImagesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ComboBoxImagesResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TreeViewAdv\NodeControls\NodeDateTimeBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
+    <Compile Include="Dialogs\SettingsDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\SettingsDialogForm.Designer.cs">
+      <DependentUpon>SettingsDialogForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPApp\ApplicationExceptionHandler.cs" />
     <Compile Include="EFPApp\BackgroundPrinting.cs" />
@@ -92,6 +106,8 @@
       <DependentUpon>EFPAppRemoteExitHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPApp\EFPAppTrayIcon.cs" />
+    <Compile Include="EFPControls\EFPExtPrintPreviewControl.cs" />
+    <Compile Include="EFPControls\EFPMenuOutHandler.cs" />
     <Compile Include="MainImagesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -102,7 +118,6 @@
     <Compile Include="EFPControls\EFPConfigParamSetComboBox.cs" />
     <Compile Include="EFPControls\EFPConfigurableDataTreeView.cs" />
     <Compile Include="EFPControls\EFPControlWithToolBar.cs" />
-    <Compile Include="EFPControls\EFPDataGridViewColumnHeaderArray.cs" />
     <Compile Include="EFPControls\EFPDataGridViewOrderForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -219,7 +234,9 @@
     <Compile Include="EFPControls\EFPXmlViewBox.cs" />
     <Compile Include="EFPControls\EFPYearMonthBox.cs" />
     <Compile Include="Controls\ExtDataGridViewCheckBoxColumn.cs" />
-    <Compile Include="Controls\ExtPrintPreviewControl.cs" />
+    <Compile Include="Controls\ExtPrintPreviewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Drawing\ExtTextRenderer.cs" />
     <Compile Include="Dialogs\FileBrowseForm.cs">
       <SubType>Form</SubType>
@@ -311,13 +328,71 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Reporting\BRDataTreeViewTable.cs" />
+    <Compile Include="Reporting\BRDataViewPageSetupAppearance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupAppearance.Designer.cs">
+      <DependentUpon>BRDataViewPageSetupAppearance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupCellParamDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupCellParamDialog.Designer.cs">
+      <DependentUpon>BRDataViewPageSetupCellParamDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupColumns.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupColumns.Designer.cs">
+      <DependentUpon>BRDataViewPageSetupColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupExport.Designer.cs">
+      <DependentUpon>BRDataViewPageSetupExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRMenuOutItem.cs" />
+    <Compile Include="Reporting\BRPageSetupBitmap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupBitmap.Designer.cs">
+      <DependentUpon>BRPageSetupBitmap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupFont.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupFont.Designer.cs">
+      <DependentUpon>BRPageSetupFont.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupMargins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupMargins.Designer.cs">
+      <DependentUpon>BRPageSetupMargins.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupPaper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupPaper.Designer.cs">
+      <DependentUpon>BRPageSetupPaper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupPrinter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRPageSetupPrinter.Designer.cs">
+      <DependentUpon>BRPageSetupPrinter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\BRReportPainter.cs" />
+    <Compile Include="Reporting\BRPdfReportPainter.cs" />
+    <Compile Include="Reporting\PdfTextRenderer.cs" />
     <Compile Include="SplashImagesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SplashImagesResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Win32\OLEExcel.cs" />
-    <Compile Include="Win32\OLEWord.cs" />
+    <Compile Include="Win32\ExcelWinFormsTools.cs" />
     <Compile Include="Controls\ParamSetComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -509,7 +584,9 @@
       <DependentUpon>WizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WizardSteps2.cs" />
-    <Compile Include="EFPControls\XmlEditor.cs" />
+    <Compile Include="EFPControls\XmlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\XmlViewBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -525,6 +602,7 @@
     <Compile Include="Controls\YearMonthRangeBox.Designer.cs">
       <DependentUpon>YearMonthRangeBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Win32\WordWinFormsTools.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
@@ -579,6 +657,33 @@
     <EmbeddedResource Include="Dialogs\SimpleAboutDialog.resx">
       <DependentUpon>SimpleAboutDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupAppearance.resx">
+      <DependentUpon>BRDataViewPageSetupAppearance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupCellParamDialog.resx">
+      <DependentUpon>BRDataViewPageSetupCellParamDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupColumns.resx">
+      <DependentUpon>BRDataViewPageSetupColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupExport.resx">
+      <DependentUpon>BRDataViewPageSetupExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupBitmap.resx">
+      <DependentUpon>BRPageSetupBitmap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupFont.resx">
+      <DependentUpon>BRPageSetupFont.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupMargins.resx">
+      <DependentUpon>BRPageSetupMargins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupPaper.resx">
+      <DependentUpon>BRPageSetupPaper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupPrinter.resx">
+      <DependentUpon>BRPageSetupPrinter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Splash\SplashForm.resx">
       <DependentUpon>SplashForm.cs</DependentUpon>
@@ -704,6 +809,10 @@
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ComboBoxImagesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SettingsDialogForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SettingsDialogForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainImagesResource.resx">
       <SubType>Designer</SubType>
@@ -1471,6 +1580,10 @@
   <ItemGroup>
     <None Include="Images\Main\Menu\Properties.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\Count.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

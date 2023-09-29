@@ -495,6 +495,41 @@ namespace FreeLibSet.Config
     protected abstract string DoGetString(string name);
 
     /// <summary>
+    /// Получить строку.
+    /// Если в хранилище нет такой строки или там записано пустое значение, сохраняется существующее 
+    /// значение <paramref name="value"/>.
+    /// </summary>
+    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
+    /// <param name="value">Сюда будет помещено прочитанное значение в случае успеха</param>
+    /// <returns>true, если значение было прочитано, false в случае неудачи</returns>
+    public bool GetString(string name, ref string value)
+    {
+      string s = GetString(name);
+      if (s.Length>0)
+      { 
+        value = s;
+        return true;
+      }
+      else
+        return false;
+    }
+
+    /// <summary>
+    /// Получить строковое значение.
+    /// Если в хранилище нет такой строки или там записано пустое значение, возвращается 
+    /// значение <paramref name="defValue"/>.
+    /// </summary>
+    /// <param name="name">Имя</param>
+    /// <param name="defValue">Значение по умолчанию</param>
+    /// <returns>Прочитанное значение или значение по умолчанию</returns>
+    public string GetStringDef(string name, string defValue)
+    {
+      GetString(name, ref defValue);
+      return defValue;
+    }
+
+
+    /// <summary>
     /// Записать строку с заданным именем.
     /// Строка записывается, даже если <paramref name="Value"/> задает пустую строку.
     /// </summary>

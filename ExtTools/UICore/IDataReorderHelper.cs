@@ -12,8 +12,8 @@ namespace FreeLibSet.UICore
   /// <summary>
   /// Интерфейс вспомогательного объекта, предназначенного для ручной перестановки строк табличного просмотра, связанного с DataTable.
   /// Требуемый порядок строк в просмотре определяется числовым полем.
-  /// Интерфейс реализуется классами DataTableReorderHelper (плоская таблица) и DataTableTreeReorderHelper (дерево).
-  /// Используется для реализации команд локального меню в EFPDataGridViewCommandItems и EFPDataTreeViewCommandItems.
+  /// Интерфейс реализуется классами <see cref="DataTableReorderHelper"/> (плоская таблица) и <see cref="DataTableTreeReorderHelper"/> (дерево).
+  /// Используется для реализации команд локального меню в EFPDataGridViewCommandItems и EFPDataTreeViewCommandItems (ExtForms.dll).
   /// </summary>
   public interface IDataReorderHelper
   {
@@ -47,7 +47,7 @@ namespace FreeLibSet.UICore
     /// </summary>
     /// <param name="rows">Строки данных, которые нужно инициализировать</param>
     /// <param name="otherRowsChanged">Сюда записывается значение true, если были изменены другие строки в просмотре, кроме выбранных.
-    /// Используется только для иерархической структуры, для плоской таблицы (DataTableReorderHelper) всегда записывается false.</param>
+    /// Используется только для иерархической структуры, для плоской таблицы (<see cref="DataTableReorderHelper"/>) всегда записывается false.</param>
     /// <returns>True, если строки (одна или несколько) содержали нулевое значение и были инициализированы.
     /// Если все строки уже содержали ненулевое значение, то возвращается false.</returns>
     bool InitRows(DataRow[] rows, out bool otherRowsChanged);
@@ -80,7 +80,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает объект
     /// </summary>
-    /// <param name="dv">Просмотр DataView</param>
+    /// <param name="dv">Просмотр <see cref="DataView"/></param>
     /// <param name="orderColumnName">Числовой столбец, используемый для сортировки</param>
     public DataTableReorderHelper(DataView dv, string orderColumnName)
     {
@@ -102,10 +102,10 @@ namespace FreeLibSet.UICore
     #region Свойства
 
     /// <summary>
-    /// Просмотр DataView.
+    /// Просмотр <see cref="DataView"/>.
     /// </summary>
     public DataView DV { get { return _DV; } }
-    private DataView _DV;
+    private readonly DataView _DV;
 
     /// <summary>
     /// Имя числового столбца, используемого для сортировки
@@ -114,7 +114,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Позиция числового столбца, используемого для сортировки
     /// </summary>
-    private int _OrderColumnPos;
+    private readonly int _OrderColumnPos;
 
     /// <summary>
     /// Возвращает true, если просмотр DV отсортирован по OrderColumnName
@@ -248,7 +248,7 @@ namespace FreeLibSet.UICore
     /// </summary>
     /// <param name="selRows">Выбранные строки. Этот массив сортируется и, возможно, сокращается</param>
     /// <param name="rows1"></param>
-    /// <returns></returns>
+    /// <returns>Массив позиций строк</returns>
     internal static int[] GetSelRowPositions(ref DataRow[] selRows, DataRow[] rows1)
     {
       // Промежуточная коллекция.
@@ -281,7 +281,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Инициализация строки после добавления в просмотр или редактирования.
     /// Если числовое поле для сортировки имеет значение 0, то для него устанавливается такое значение, чтобы строка
-    /// оказалась в конце списка (для дерева - в пределах своего уровня).
+    /// оказалась в конце списка.
     /// Если поле уже содержит нулевое значение, то никаких действий не выполняется.
     /// </summary>
     /// <param name="rows">Строки данных, которые нужно инициализировать</param>
@@ -367,7 +367,7 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Объект для ручной перестановки строк в таблице иерархического просмотра на основании IDataTableTreeModel.
+  /// Объект для ручной перестановки строк в таблице иерархического просмотра на основании <see cref="IDataTableTreeModel"/>.
   /// Перестановка строк выполняется в пределах одного родительского узла, но при этом может меняться порядок остальных
   /// строк, чтобы обычный табличный просмотр отображал строки в том же порядке, что и дерево.
   /// </summary>
@@ -403,12 +403,13 @@ namespace FreeLibSet.UICore
     /// Модель иерархического просмотра
     /// </summary>
     public IDataTableTreeModel Model { get { return _Model; } }
-    private IDataTableTreeModel _Model;
+    private readonly IDataTableTreeModel _Model;
 
     /// <summary>
     /// Имя числового столбца, используемого для сортировки
     /// </summary>
     public string OrderColumnName { get { return _Model.Table.Columns[_OrderColumnPos].ColumnName; } }
+    
     /// <summary>
     /// Позиция числового столбца, используемого для сортировки
     /// </summary>
@@ -562,11 +563,11 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Инициализация строки после добавления в просмотр или редактирования.
     /// Если числовое поле для сортировки имеет значение 0, то для него устанавливается такое значение, чтобы строка
-    /// оказалась в конце списка в пределах своего родтельского элемента.
+    /// оказалась в конце списка в пределах своего родительского элемента.
     /// Если поле уже содержит нулевое значение, то никаких действий не выполняется.
     /// </summary>
     /// <param name="rows">Строки данных, которые нужно инициализировать.
-    /// В отличие от методов MoveUp() и MoveDown(), строки не обязаны относиться к одному родительскому узлу</param>
+    /// В отличие от методов <see cref="MoveUp(DataRow[])"/> и <see cref="MoveDown(DataRow[])"/>, строки не обязаны относиться к одному родительскому узлу</param>
     /// <param name="otherRowsChanged">Сюда записывается значение true, если были изменены другие строки в просмотре, кроме выбранных.</param>
     /// <returns>True, если строки (одна или несколько) содержали нулевое значение и были инициализированы.
     /// Если все строки уже содержали ненулевое значение, то возвращается false.</returns>

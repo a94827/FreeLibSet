@@ -25,6 +25,10 @@ using System.ComponentModel;
 
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
+  /// <summary>
+  /// Редактируемая часть иерахического просмотра.
+  /// Наследуется классом <see cref="BaseTextControl"/>.
+  /// </summary>
   public abstract class EditableControl : InteractiveControl
   {
     private Timer _timer;

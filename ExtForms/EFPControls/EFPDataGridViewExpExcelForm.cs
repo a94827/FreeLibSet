@@ -91,7 +91,7 @@ namespace FreeLibSet.Forms
 
     public void LoadValues(EFPDataGridViewExpExcelSettings settings)
     {
-      efpArea.SelectedIndex = settings.RangeMode == EFPDataGridViewExpRange.Selected ? 1 : 0;
+      efpArea.SelectedIndex = settings.RangeMode == EFPDataViewExpRange.Selected ? 1 : 0;
       efpHeaders.Checked = settings.ShowColumnHeaders;
 
       efpUseFill.Checked = settings.UseInterior;
@@ -105,11 +105,11 @@ namespace FreeLibSet.Forms
 
     public void SaveValues(EFPDataGridViewExpExcelSettings settings)
     {
-      settings.RangeMode = efpArea.SelectedIndex == 1 ? EFPDataGridViewExpRange.Selected : EFPDataGridViewExpRange.All;
+      settings.RangeMode = efpArea.SelectedIndex == 1 ? EFPDataViewExpRange.Selected : EFPDataViewExpRange.All;
       settings.ShowColumnHeaders = efpHeaders.Checked;
       settings.UseInterior = efpUseFill.Checked;
       settings.UseBorders = efpUseBorders.Checked;
-      settings.BoolMode = (EFPDataGridViewExpExcelBoolMode)(efpBoolMode.SelectedIndex);
+      settings.BoolMode = (EFPDataViewExpExcelBoolMode)(efpBoolMode.SelectedIndex);
     }
 
     #endregion
@@ -265,8 +265,8 @@ namespace FreeLibSet.Forms
           for (j = 0; j < area.ColumnCount; j++)
           {
             int columnIndex = area.ColumnIndices[j];
-            EFPDataGridViewCellAttributesEventArgs CellArgs = controlProvider.DoGetCellAttributes(columnIndex);
-            object v = CellArgs.FormattedValue;
+            EFPDataGridViewCellAttributesEventArgs cellArgs = controlProvider.DoGetCellAttributes(columnIndex);
+            object v = cellArgs.FormattedValue;
             if (v is Bitmap)
               v = null;
             rowBuffer[j] = MyGetCellFormula(v);
@@ -277,8 +277,8 @@ namespace FreeLibSet.Forms
             // то определяем его для ячейки
             XlHAlign colHAlign = GetHAlign(area.Columns[j].DefaultCellStyle.Alignment);
             XlVAlign colVAlign = GetVAlign(area.Columns[j].DefaultCellStyle.Alignment);
-            XlHAlign cellHAlign = GetHAlign(CellArgs.CellStyle.Alignment);
-            XlVAlign cellVAlign = GetVAlign(CellArgs.CellStyle.Alignment);
+            XlHAlign cellHAlign = GetHAlign(cellArgs.CellStyle.Alignment);
+            XlVAlign cellVAlign = GetVAlign(cellArgs.CellStyle.Alignment);
             if (cellHAlign != colHAlign)
             {
               if (!cellDefined)
@@ -297,14 +297,14 @@ namespace FreeLibSet.Forms
               }
               r.VerticalAlignment = cellVAlign;
             }
-            if (CellArgs.IndentLevel > 0)
+            if (cellArgs.IndentLevel > 0)
             {
               if (!cellDefined)
               {
                 r = sheet.Cells[currRow, firstCol + j];
                 cellDefined = true;
               }
-              int indentLevel = CellArgs.IndentLevel;
+              int indentLevel = cellArgs.IndentLevel;
               // if (IndentLevel < 0) IndentLevel = 0; // 27.12.2020 Лишняя проверка
               if (indentLevel > 15) indentLevel = 15;
               r.IndentLevel = indentLevel;
@@ -313,7 +313,7 @@ namespace FreeLibSet.Forms
 
             // Цвета
             if (settings.UseInterior)
-              cellAttrBuffer[j] = EFPDataGridView.GetExcelCellAttr(CellArgs);
+              cellAttrBuffer[j] = EFPDataGridView.GetExcelCellAttr(cellArgs);
           } // цикл по ячейкам в строке
 
           r = sheet.GetRange(currRow, firstCol, currRow, firstCol + area.ColumnCount - 1);
@@ -341,9 +341,9 @@ namespace FreeLibSet.Forms
               {
                 r = sheet.Cells[currRow, firstCol + j];
                 if (!cellAttrBuffer[j].BackColor.IsEmpty)
-                  r.Interior.SetColor(cellAttrBuffer[j].BackColor);
+                  r.Interior.SetColor(ExcelWinFormsTools.ColorToRgb(cellAttrBuffer[j].BackColor));
                 if (!cellAttrBuffer[j].ForeColor.IsEmpty)
-                  r.Font.SetColor(cellAttrBuffer[j].ForeColor);
+                  r.Font.SetColor(ExcelWinFormsTools.ColorToRgb(cellAttrBuffer[j].ForeColor));
                 if (cellAttrBuffer[j].Bold)
                   r.Font.SetBold(true);
                 if (cellAttrBuffer[j].Italic)
@@ -531,7 +531,7 @@ namespace FreeLibSet.Forms
 
       string fileName = EFPApp.SharedTempDir.GetTempFileName("ods").Path;
       controlProvider.SaveOpenOfficeCalc(fileName, settings);
-      EFPApp.UsedOpenOffice.OpenWithCalc(new AbsPath(fileName), true); // без указания имени файла
+      EFPApp.UsedOpenOffice.Parts[OpenOfficePart.Calc].OpenFile(new AbsPath(fileName), true); // без указания имени файла
     }
 
     #endregion

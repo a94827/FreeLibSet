@@ -12,7 +12,7 @@ using FreeLibSet.Config;
 using FreeLibSet.Core;
 using FreeLibSet.Models.SpreadsheetBase;
 using FreeLibSet.Shell;
-
+using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms
 {
@@ -21,7 +21,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Значения свойства EFPDataGridViewExpExcelSettings.BoolMode
   /// </summary>
-  public enum EFPDataGridViewExpExcelBoolMode
+  public enum EFPDataViewExpExcelBoolMode
   {
     // Члены не переименовывать!
     // Используются при записи конфигурации
@@ -58,11 +58,11 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPDataGridViewExpExcelSettings()
     {
-      _RangeMode = EFPDataGridViewExpRange.All;
+      _RangeMode = EFPDataViewExpRange.All;
       _ShowColumnHeaders = true;
       _UseInterior = true;
       _UseBorders = true;
-      _BoolMode = EFPDataGridViewExpExcelBoolMode.Boolean;
+      _BoolMode = EFPDataViewExpExcelBoolMode.Boolean;
     }
 
     #endregion
@@ -72,8 +72,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Диапазон ячеек для экспорта (по умолчанию - All)
     /// </summary>
-    public EFPDataGridViewExpRange RangeMode { get { return _RangeMode; } set { _RangeMode = value; } }
-    private EFPDataGridViewExpRange _RangeMode;
+    public EFPDataViewExpRange RangeMode { get { return _RangeMode; } set { _RangeMode = value; } }
+    private EFPDataViewExpRange _RangeMode;
 
     /// <summary>
     /// true (по умолчанию) - выводить заголовки столбцов
@@ -96,8 +96,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Режим вывода логических значений
     /// </summary>
-    public EFPDataGridViewExpExcelBoolMode BoolMode { get { return _BoolMode; } set { _BoolMode = value; } }
-    private EFPDataGridViewExpExcelBoolMode _BoolMode;
+    public EFPDataViewExpExcelBoolMode BoolMode { get { return _BoolMode; } set { _BoolMode = value; } }
+    private EFPDataViewExpExcelBoolMode _BoolMode;
 
     /// <summary>
     /// Использовать "неэкономное" форматирование для повышения читаемости XML-файла
@@ -140,17 +140,17 @@ namespace FreeLibSet.Forms
 #endif
 
       if (cfg.GetString("Range") == "Selected")
-        RangeMode = EFPDataGridViewExpRange.Selected;
+        RangeMode = EFPDataViewExpRange.Selected;
       else
-        RangeMode = EFPDataGridViewExpRange.All;
+        RangeMode = EFPDataViewExpRange.All;
       ShowColumnHeaders = !cfg.GetBool("NoColumnHeaders");
       UseInterior = !cfg.GetBool("NoInterior");
       UseBorders = !cfg.GetBool("NoBorders");
       switch (cfg.GetString("BoolMode"))
       {
-        case "Digit": BoolMode = EFPDataGridViewExpExcelBoolMode.Digit; break;
-        case "Brackets": BoolMode = EFPDataGridViewExpExcelBoolMode.Brackets; break;
-        default: BoolMode = EFPDataGridViewExpExcelBoolMode.Boolean; break;
+        case "Digit": BoolMode = EFPDataViewExpExcelBoolMode.Digit; break;
+        case "Brackets": BoolMode = EFPDataViewExpExcelBoolMode.Brackets; break;
+        default: BoolMode = EFPDataViewExpExcelBoolMode.Boolean; break;
       }
     }
 
@@ -246,7 +246,7 @@ namespace FreeLibSet.Forms
       XmlElement elDocumentProperties = xmlDoc.CreateElement("DocumentProperties", nmspcO);
       elWholeDoc.AppendChild(elDocumentProperties);
 
-      EFPDocumentProperties docProps = controlProvider.DocumentProperties;
+      BRDocumentProperties docProps = controlProvider.DocumentProperties;
 
       if (!String.IsNullOrEmpty(docProps.Title))
       {
@@ -276,7 +276,7 @@ namespace FreeLibSet.Forms
       // Таблица стилей нужна обязательно. 
       // Первый стиль "ColHdr" используется для заголовков,
       // Остальные стили добавляются в таблицу по мере необходимости, чтобы
-      // не делать для каждой ячейки отдельный стили
+      // не делать для каждой ячейки отдельный стиль
       XmlElement elStyles = xmlDoc.CreateElement("Styles", nmspcSS);
       elWholeDoc.AppendChild(elStyles);
       // М.б. нужен стиль "Default"?
@@ -348,7 +348,7 @@ namespace FreeLibSet.Forms
       // Заголовки столбцов
       if (settings.ShowColumnHeaders)
       {
-        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
+        BRColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
         for (int i = 0; i < headerArray.RowCount; i++)
         {
@@ -706,15 +706,15 @@ namespace FreeLibSet.Forms
         case "Boolean":
           switch (settings.BoolMode)
           {
-            case EFPDataGridViewExpExcelBoolMode.Boolean:
+            case EFPDataViewExpExcelBoolMode.Boolean:
               valueText = (bool)v ? "1" : "0";
               typeText = "Boolean";
               break;
-            case EFPDataGridViewExpExcelBoolMode.Digit:
+            case EFPDataViewExpExcelBoolMode.Digit:
               valueText = (bool)v ? "1" : "0";
               typeText = "Number";
               break;
-            case EFPDataGridViewExpExcelBoolMode.Brackets:
+            case EFPDataViewExpExcelBoolMode.Brackets:
               valueText = (bool)v ? "[X]" : "[ ]";
               typeText = "String";
               break;
@@ -1479,7 +1479,7 @@ namespace FreeLibSet.Forms
           EFPDataGridViewBorderStyle.None, EFPDataGridViewBorderStyle.None,
           DataGridViewContentAlignment.MiddleCenter, 0, true, String.Empty);
 
-        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
+        BRColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
         for (int i = 0; i < headerArray.RowCount; i++)
         {
@@ -1615,15 +1615,15 @@ namespace FreeLibSet.Forms
         case "Boolean":
           switch (settings.BoolMode)
           {
-            case EFPDataGridViewExpExcelBoolMode.Boolean:
+            case EFPDataViewExpExcelBoolMode.Boolean:
               valueText = (bool)v ? "1" : "0";
               typeText = "b";
               break;
-            case EFPDataGridViewExpExcelBoolMode.Digit:
+            case EFPDataViewExpExcelBoolMode.Digit:
               valueText = (bool)v ? "1" : "0";
               typeText = "n";
               break;
-            case EFPDataGridViewExpExcelBoolMode.Brackets:
+            case EFPDataViewExpExcelBoolMode.Brackets:
               valueText = (bool)v ? "[X]" : "[ ]";
               typeText = "s";
               break;
@@ -1857,16 +1857,16 @@ namespace FreeLibSet.Forms
       XmlElement elMeta = xmlDoc.CreateElement("office:meta", nmspcOffice);
       elRoot.AppendChild(elMeta);
 
-      EFPDocumentProperties Props = controlProvider.DocumentProperties;
+      BRDocumentProperties docProps = controlProvider.DocumentProperties;
 
       // Требуется соответствие с определением useragent
       // в протоколе HTTP, описанного в разделе 14.43 [RFC2616]
       //AddTextNode(elMeta, "meta:generator", "Бухгалтерия ИП Агеев А.В., v." +
       //  AccDepDataTools.AccDepModuleVersion, nmspcMeta);
-      if (!String.IsNullOrEmpty(Props.Author))
+      if (!String.IsNullOrEmpty(docProps.Author))
       {
-        AddTextNode(elMeta, "meta:initial-creator", Props.Author, nmspcMeta);
-        AddTextNode(elMeta, "meta:creator", Props.Author, nmspcMeta);
+        AddTextNode(elMeta, "meta:initial-creator", docProps.Author, nmspcMeta);
+        AddTextNode(elMeta, "meta:creator", docProps.Author, nmspcMeta);
       }
       AddTextNode(elMeta, "meta:creation-date", DateTime.Now.ToString("s"), nmspcMeta);
 
@@ -2017,7 +2017,7 @@ namespace FreeLibSet.Forms
         elHeadStyle.AppendChild(elParProps);
         SetAttr(elParProps, "fo:text-align", "center", nmspcFo);
 
-        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
+        BRColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
         for (int i = 0; i < headerArray.RowCount; i++)
         {
@@ -2311,12 +2311,12 @@ namespace FreeLibSet.Forms
             {
               switch (settings.BoolMode)
               {
-                case EFPDataGridViewExpExcelBoolMode.Boolean:
+                case EFPDataViewExpExcelBoolMode.Boolean:
                   break; // как есть
-                case EFPDataGridViewExpExcelBoolMode.Digit:
+                case EFPDataViewExpExcelBoolMode.Digit:
                   cellValue = ((bool)cellValue) ? 1 : 0;
                   break;
-                case EFPDataGridViewExpExcelBoolMode.Brackets:
+                case EFPDataViewExpExcelBoolMode.Brackets:
                   cellValue = ((bool)cellValue) ? "[X]" : "[ ]";
                   break;
               }

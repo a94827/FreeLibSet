@@ -37,9 +37,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\DisposableDictionaryTests.cs" />
     <Compile Include="Formatting\EditableDateTimeFormattersTests.cs" />
     <Compile Include="Formatting\EditableDateTimeFormatterTests.cs" />
     <Compile Include="Formatting\FormatStringToolsTests.cs" />
+    <Compile Include="Formatting\SimpleDigitalMaskProviderTests.cs" />
+    <Compile Include="Formatting\StdMaskProviderTests.cs" />
     <Compile Include="IO\IniFileTests.cs" />
     <Compile Include="IO\PathEnumerableTests.cs" />
     <Compile Include="Calendar\YearMonthRangeTests.cs" />
@@ -97,6 +100,9 @@
     <Compile Include="IO\StoredFileInfoTests.cs" />
     <Compile Include="Models\Tree\DataTableTreeModelTests.cs" />
     <Compile Include="Models\Tree\DataTableTreeModelWithIdsTests.cs" />
+    <Compile Include="Models\Tree\ListTreeModelTests.cs" />
+    <Compile Include="Models\Tree\SimpleListTreeModelTests.cs" />
+    <Compile Include="Models\Tree\SortedTreeModelTests.cs" />
     <Compile Include="Models\Tree\TreePathEnumerableTests.cs" />
     <Compile Include="Models\Tree\TreePathTests.cs" />
     <Compile Include="Parsing\ExcelFunctionsTests.cs" />
@@ -105,6 +111,8 @@
     <Compile Include="Remoting\SerializationToolsTests.cs" />
     <Compile Include="Models\SpreadsheetBase\RangeRefTests.cs" />
     <Compile Include="Models\SpreadsheetBase\CellRefTests.cs" />
+    <Compile Include="Reporting\BRPaginatorTests.cs" />
+    <Compile Include="Tests\DateTimeAssertTests.cs" />
     <Compile Include="Text\CsvTextConvertTests.cs" />
     <Compile Include="DependedValues\DepConstTests.cs" />
     <Compile Include="DependedValues\DepDelayedValueTests.cs" />
@@ -121,7 +129,7 @@
     <Compile Include="DependedValues\DepOutputTests.cs" />
     <Compile Include="DependedValues\DepToolsTests.cs" />
     <Compile Include="Collections\DictionaryWithMRUTests.cs" />
-    <Compile Include="Creators.cs" />
+    <Compile Include="TestTable.cs" />
     <Compile Include="Core\DataToolsTests_DataRow.cs" />
     <Compile Include="Core\DataToolsTests_DataView.cs" />
     <Compile Include="Core\DataToolsTests_Other.cs" />
@@ -133,24 +141,28 @@
     <Compile Include="Collections\ListWithMRUTests.cs" />
     <Compile Include="Calendar\MonthDayRangeTests.cs" />
     <Compile Include="Calendar\MonthDayTests.cs" />
-    <Compile Include="PropertyAssert.cs" />
+    <Compile Include="Tests\PropertyAssertTests.cs" />
     <Compile Include="IO\TempDirectoryTests.cs" />
     <Compile Include="Collections\WeakReferenceCollectionTests.cs" />
     <Compile Include="Text\TextWithRowsTests.cs" />
     <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />
     <Compile Include="UICore\DataTableReorderHelperTests.cs" />
+    <Compile Include="UICore\NumArrayUpDownHandlerTests.cs" />
     <Compile Include="UICore\UISelRCColumnTests.cs" />
     <Compile Include="UICore\UISelRCGridDataTests.cs" />
     <Compile Include="UICore\UIToolsTests.cs" />
+    <Compile Include="UICore\IncrementUpDownHandlerTests.cs" />
+    <Compile Include="Win32\ResourceIDTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">
       <Project>{e61b6cf2-a434-46f2-af4a-db5e4851d170}</Project>
       <Name>ExtTools</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\ExtTestHelpers\ExtTestHelpers.csproj">
+      <Project>{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}</Project>
+      <Name>ExtTestHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DBF\DbfResource.resx">
@@ -167,6 +179,9 @@
     <None Include="DBF\Samples\dbase4.dbf" />
     <None Include="DBF\Samples\dbase4m.dbf" />
     <None Include="DBF\Samples\dbase4m.dbt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

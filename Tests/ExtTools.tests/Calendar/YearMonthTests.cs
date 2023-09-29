@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Calendar;
+using FreeLibSet.Tests;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Calendar
 {
@@ -62,7 +64,7 @@ namespace ExtTools_tests.Calendar
     [TestCase(2020, 2, "20200201")]
     public void BottomOfMonth(int year, int month, string sWantedRes)
     {
-      DateTime wantedRes = Creators.CreateDate(sWantedRes);
+      DateTime wantedRes = Creators.DateTime(sWantedRes);
       YearMonth sut = new YearMonth(year, month);
       Assert.AreEqual(wantedRes, sut.BottomOfMonth);
     }
@@ -71,7 +73,7 @@ namespace ExtTools_tests.Calendar
     [TestCase(2020, 2, "20200229")]
     public void EndOfMonth(int year, int month, string sWantedRes)
     {
-      DateTime wantedRes = Creators.CreateDate(sWantedRes);
+      DateTime wantedRes = Creators.DateTime(sWantedRes);
       YearMonth sut = new YearMonth(year, month);
       Assert.AreEqual(wantedRes, sut.EndOfMonth);
     }
@@ -80,7 +82,7 @@ namespace ExtTools_tests.Calendar
     [TestCase(2020, 2, "20200201-20200229")]
     public void DateRange(int year, int month, string sWantedRes)
     {
-      DateRange wantedRes = Creators.CreateDateRange(sWantedRes);
+      DateRange wantedRes = Creators.DateRange(sWantedRes);
       YearMonth sut = new YearMonth(year, month);
       Assert.AreEqual(wantedRes, sut.DateRange);
     }
@@ -95,7 +97,7 @@ namespace ExtTools_tests.Calendar
     [TestCase(2023, 3, "20230401", false)]
     public void Contains(int year, int month, string sDate, bool wantedRes)
     {
-      DateTime date = Creators.CreateDate(sDate);
+      DateTime date = Creators.DateTime(sDate);
       YearMonth sut = new YearMonth(year, month);
       Assert.AreEqual(wantedRes, sut.Contains(date));
     }
@@ -106,8 +108,8 @@ namespace ExtTools_tests.Calendar
     [TestCase(2023, 3, "20230401", "20230331")]
     public void DateToRange(int year, int month, string sDate, string sWantedRes)
     {
-      DateTime date = Creators.CreateDate(sDate);
-      DateTime wantedRes = Creators.CreateDate(sWantedRes);
+      DateTime date = Creators.DateTime(sDate);
+      DateTime wantedRes = Creators.DateTime(sWantedRes);
       YearMonth sut = new YearMonth(year, month);
       sut.DateToRange(ref date);
       Assert.AreEqual(wantedRes, date);
@@ -132,9 +134,9 @@ namespace ExtTools_tests.Calendar
     [TestCase("", "", "", false)]
     public void IsInRange(string sSUT, string sMin, string sMax, bool wantedRes)
     {
-      YearMonth sut = Creators.CreateYearMonth(sSUT);
-      YearMonth min = Creators.CreateYearMonth(sMin);
-      YearMonth max = Creators.CreateYearMonth(sMax);
+      YearMonth sut = Creators.YearMonth(sSUT);
+      YearMonth min = Creators.YearMonth(sMin);
+      YearMonth max = Creators.YearMonth(sMax);
       Assert.AreEqual(wantedRes, sut.IsInRange(min, max));
     }
 
@@ -147,8 +149,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("202303", -10, "202205")]
     public void OpAdd_months(string sSUT, int months, string sWantedRes)
     {
-      YearMonth sut = Creators.CreateYearMonth(sSUT);
-      YearMonth wantedRes = Creators.CreateYearMonth(sWantedRes);
+      YearMonth sut = Creators.YearMonth(sSUT);
+      YearMonth wantedRes = Creators.YearMonth(sWantedRes);
       YearMonth res = sut + months;
       Assert.AreEqual(wantedRes, res);
     }
@@ -166,8 +168,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("202303", -10, "202401")]
     public void OpSub_months(string sSUT, int months, string sWantedRes)
     {
-      YearMonth sut = Creators.CreateYearMonth(sSUT);
-      YearMonth wantedRes = Creators.CreateYearMonth(sWantedRes);
+      YearMonth sut = Creators.YearMonth(sSUT);
+      YearMonth wantedRes = Creators.YearMonth(sWantedRes);
       YearMonth res = sut - months;
       Assert.AreEqual(wantedRes, res);
     }
@@ -185,8 +187,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("202303", "202201", 14)]
     public void OpSub_YearMonth(string sArg1, string sArg2, int wantedRes)
     {
-      YearMonth arg1 = Creators.CreateYearMonth(sArg1);
-      YearMonth arg2 = Creators.CreateYearMonth(sArg2);
+      YearMonth arg1 = Creators.YearMonth(sArg1);
+      YearMonth arg2 = Creators.YearMonth(sArg2);
       int res = arg1 - arg2;
       Assert.AreEqual(wantedRes, res);
     }
@@ -196,8 +198,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("", "")]
     public void OpSub_YearMonth_empty(string sArg1, string sArg2)
     {
-      YearMonth arg1 = Creators.CreateYearMonth(sArg1);
-      YearMonth arg2 = Creators.CreateYearMonth(sArg2);
+      YearMonth arg1 = Creators.YearMonth(sArg1);
+      YearMonth arg2 = Creators.YearMonth(sArg2);
       int res;
 
       Assert.Catch(delegate() { res = arg1 - arg2; });
@@ -215,8 +217,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("", "", 0)]
     public void Compare(string sArg1, string sArg2, int wantedRes)
     {
-      YearMonth arg1 = Creators.CreateYearMonth(sArg1);
-      YearMonth arg2 = Creators.CreateYearMonth(sArg2);
+      YearMonth arg1 = Creators.YearMonth(sArg1);
+      YearMonth arg2 = Creators.YearMonth(sArg2);
       int res1 = arg1.CompareTo(arg2);
       Assert.AreEqual(wantedRes, Math.Sign(res1), "CompareTo(YearMonth)");
 
@@ -230,6 +232,22 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(wantedRes == 0, arg1.Equals((object)arg2), "Equals(Object)");
       if (wantedRes == 0)
         Assert.IsTrue(arg1.GetHashCode() == arg2.GetHashCode(), "GetHashCode()");
+    }
+
+    #endregion
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      YearMonth sut = Creators.YearMonth("202307");
+
+      byte[] b = SerializationTools.SerializeBinary(sut);
+      YearMonth res = (YearMonth)(SerializationTools.DeserializeBinary(b));
+
+      Assert.AreEqual(sut.Year, res.Year, "Year");
+      Assert.AreEqual(sut.Month, res.Month, "Month");
     }
 
     #endregion

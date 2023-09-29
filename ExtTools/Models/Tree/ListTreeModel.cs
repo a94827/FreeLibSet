@@ -12,9 +12,9 @@ namespace FreeLibSet.Models.Tree
 
   /// <summary>
   /// Простейшая модель "дерева", содержащая узлы только одного уровня.
-  /// Узлы задаются списком IList.
+  /// Узлы задаются списком <see cref="IList"/>.
   /// Содержит методы для добавления, удаления и изменения узлов.
-  /// Если список предназначен только для просмотра, используйте класс SimpleListTreeModel
+  /// Если список предназначен только для просмотра, используйте класс <see cref="SimpleListTreeModel"/>
   /// </summary>
   public class ListTreeModel : TreeModelBase
   {
@@ -31,7 +31,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Создает модель с заданным списком узлов.
     /// Передаваемый список <paramref name="list"/> является "рабочим".
-    /// Методы изменения узлов в ListModel будут вносить изменения в этот список.
+    /// Методы изменения узлов в <see cref="ListTreeModel"/> будут вносить изменения в этот список.
     /// </summary>
     /// <param name="list">Список</param>
     public ListTreeModel(IList list)
@@ -82,9 +82,25 @@ namespace FreeLibSet.Models.Tree
     /// <param name="items">Добавляемые узлы</param>
     public void AddRange(IEnumerable items)
     {
+      int cnt = 0;
       foreach (object obj in items)
+      {
         _list.Add(obj);
-      OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
+        cnt++;
+      }
+
+      switch (cnt) // 18.07.2023
+      {
+        case 0:
+          break;
+        case 1:
+          object item = _list[_list.Count - 1];
+          OnNodesInserted(new TreeModelEventArgs(TreePath.Empty, new int[] { _list.Count - 1 }, new object[] { item }));
+          break;
+        default:
+          OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
+          break;
+      }
     }
 
     /// <summary>
@@ -102,8 +118,11 @@ namespace FreeLibSet.Models.Tree
     /// </summary>
     public void Clear()
     {
-      _list.Clear();
-      OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
+      if (_list.Count > 0) // 18.07.2023
+      {
+        _list.Clear();
+        OnStructureChanged(new TreePathEventArgs(TreePath.Empty));
+      }
     }
 
     #endregion
@@ -111,7 +130,7 @@ namespace FreeLibSet.Models.Tree
 
   /// <summary>
   /// Простейший переходник для списка, чтобы отображать его в дереве.
-  /// Принимает интерфейс IEnumerable.
+  /// Принимает интерфейс <see cref="IEnumerable"/>.
   /// Список предназначен только для просмотра, изменение списка не предусмотрено.
   /// </summary>
   public sealed class SimpleListTreeModel : TreeModelBase
@@ -143,7 +162,7 @@ namespace FreeLibSet.Models.Tree
     #region ITreeModel Members
 
     /// <summary>
-    /// Возращает список для TreePath.Empty и фиктивный перечислитель для непустого пути
+    /// Возращает список для <see cref="TreePath.Empty"/> и фиктивный перечислитель для непустого пути
     /// </summary>
     /// <param name="treePath">Путь к корневому узлу</param>
     /// <returns>Перечислитель</returns>

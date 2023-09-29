@@ -7,6 +7,7 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using FreeLibSet.Core;
+using System.Diagnostics;
 
 /*
  * Расширенное средство рисования текста.
@@ -39,12 +40,14 @@ namespace FreeLibSet.Drawing
 
     #region Конструктор и Dispose
 
+    private const string DefaultFontName = "Arial";
+
     /// <summary>
     /// Создает объект и инициализирует его шрифтом Arial 10пт.
     /// </summary>
     public ExtTextRenderer()
     {
-      _FontName = "Arial";
+      _FontName = DefaultFontName;
       _FontHeight = 10;
       _FontWidth = 0; // признак необходимости вычислить ширину
       _Bold = false;
@@ -386,33 +389,19 @@ namespace FreeLibSet.Drawing
                 break;
             }
 
-            if (_Font == null)
-              throw new BugException("Не удалось применить для шрифта ни \"" + FontName + "\" ни одной комбинации атрибутов");
-          }
+            //if (_Font == null)
+            //  throw new BugException("Не удалось применить для шрифта ни \"" + FontName + "\" ни одной комбинации атрибутов");
 
-          try
-          {
-            _Font = new Font(_FontName, _FontHeight, st);
-          }
-          catch
-          {
-            // Если шрифт не поддерживает стиль Regular
-            st = InvStyle(st, FontStyle.Italic);
-            try
-            {
-              _Font = new Font(_FontName, _FontHeight, st);
-            }
-            catch
-            {
-              // Пытаемся обойтись без стиля
-              _Font = new Font(_FontName, _FontHeight);
-            }
+            if (_Font == null)
+              CreateSubstFont(st1);
           }
         }
         return _Font;
       }
     }
+    private Font _Font;
 
+    [DebuggerStepThrough]
     private bool TryCreateFont(FontStyle st)
     {
       try
@@ -426,6 +415,21 @@ namespace FreeLibSet.Drawing
       }
     }
 
+    [DebuggerStepThrough]
+    private void CreateSubstFont(FontStyle st)
+    {
+      try
+      {
+        // Пытаемся обойтись без стиля
+        _Font = new Font(_FontName, _FontHeight);
+      }
+      catch
+      {
+        // Используем стандартный шрифт
+        _Font = new Font(DefaultFontName, _FontHeight, st);
+      }
+    }
+
     /// <summary>
     /// Инверсия стиля шрифта
     /// </summary>
@@ -436,7 +440,6 @@ namespace FreeLibSet.Drawing
     {
       return orgStyle ^ inv;
     }
-    private Font _Font;
 
     /// <summary>
     /// Сброс объекта шрифта
@@ -572,7 +575,7 @@ namespace FreeLibSet.Drawing
     private Color _Color;
 
     /// <summary>
-    /// Кисть для заполнения фона
+    /// Кисть для вывода текста (не фона)
     /// </summary>
     public Brush Brush
     {
@@ -693,6 +696,7 @@ namespace FreeLibSet.Drawing
       sz1 = new SizeF(0, LineHeight);
       sz1 = PointsToPageUnits(sz1);
       lh = sz1.Height;
+      //System.Windows.Forms.MessageBox.Show("LineHeight="+LineHeight.ToString()+"пт., lh="+ lh.ToString(), "Measures");
 
       float wholeH = lines.Length * lh;
 
@@ -700,6 +704,7 @@ namespace FreeLibSet.Drawing
       for (i = 0; i < lines.Length; i++)
       {
         SizeF sz = MeasureString(lines[i]);
+        //System.Windows.Forms.MessageBox.Show(sz.ToString(), lines[i]);
         maxW = Math.Max(maxW, sz.Width);
       }
       // Прежде, чем уменьшать размер шрифта, пытаемся уменьшить межстрочный интервал
@@ -711,12 +716,13 @@ namespace FreeLibSet.Drawing
         lh = lh * scaleY1;
         wholeH = lines.Length * lh;
       }
+      //System.Windows.Forms.MessageBox.Show(lh.ToString(), "lh");
 
-      // Дополнительные размерные множители, если текст не помещается
       float orgFontHeight = FontHeight;
       float orgFontWidth = FontWidth;
       try
       {
+        // Дополнительные размерные множители, если текст не помещается
         float scaleY2 = 1f;
         if (wholeH > rc.Height)
         {
@@ -783,19 +789,31 @@ namespace FreeLibSet.Drawing
     /// <returns></returns>
     private PointF PointsToPageUnits(PointF pt)
     {
-      _Point1Array[0] = pt;
-      GraphicsUnit oldPU = Graphics.PageUnit;
-      try
+      // 28.08.2023:
+      // Для стандартных единиц выполняем преобразование самостоятельно, для лучшей совместимости с Mono  
+      switch (Graphics.PageUnit)
       {
-        Graphics.PageUnit = GraphicsUnit.Point;
-        Graphics.TransformPoints(CoordinateSpace.Device, CoordinateSpace.Page, _Point1Array);
+        case GraphicsUnit.Point:
+          return pt;
+        case GraphicsUnit.Inch:
+          return new PointF(pt.X / 72f, pt.Y / 72f);
+        case GraphicsUnit.Millimeter:
+          return new PointF(pt.X / 72f * 25.4f, pt.Y / 72f * 25.4f);
+        default:
+          _Point1Array[0] = pt;
+          GraphicsUnit oldPU = Graphics.PageUnit;
+          try
+          {
+            Graphics.PageUnit = GraphicsUnit.Point;
+            Graphics.TransformPoints(CoordinateSpace.Device, CoordinateSpace.Page, _Point1Array);
+          }
+          finally
+          {
+            Graphics.PageUnit = oldPU;
+          }
+          Graphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device, _Point1Array);
+          return _Point1Array[0];
       }
-      finally
-      {
-        Graphics.PageUnit = oldPU;
-      }
-      Graphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device, _Point1Array);
-      return _Point1Array[0];
     }
 
     /// <summary>
@@ -1073,6 +1091,8 @@ namespace FreeLibSet.Drawing
         Graphics.PageUnit = GraphicsUnit.Point;
         SizeF sz = Graphics.MeasureString(TemplateStr, Font,
           new SizeF(float.MaxValue, float.MaxValue), CalcDefaultFontWidthStringFormat);
+        if (sz.Width <= 0f)
+          return Font.Height / 2f; // 09.08.2023 - Заглушка на случай невозможности вычисления
         res = sz.Width / (float)(TemplateStr.Length);
       }
       finally

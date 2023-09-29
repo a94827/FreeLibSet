@@ -116,11 +116,11 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="controlProvider"></param>
     /// <returns></returns>
-    public EFPDataGridViewConfig Clone(IEFPGridControl controlProvider)
+    public EFPDataGridViewConfig Clone(IEFPDataView controlProvider)
     {
       EFPDataGridViewConfig res = new EFPDataGridViewConfig();
 
-      EFPDataViewColumnInfo[] realColInfos = controlProvider.GetVisibleColumnsInfo();
+      IEFPDataViewColumn[] realColInfos = ((IEFPDataView)controlProvider).VisibleColumns;
 
       for (int i = 0; i < realColInfos.Length; i++)
       {
@@ -692,12 +692,12 @@ namespace FreeLibSet.Forms
     /// Используются свойство ConfigManager и ConfigHandler.
     /// Свойство должно быть установлено до вызова ShowDialog()
     /// </summary>
-    public IEFPGridControl CallerControlProvider
+    public IEFPDataView CallerControlProvider
     {
       get { return _CallerControlProvider; }
       set { _CallerControlProvider = value; }
     }
-    private IEFPGridControl _CallerControlProvider;
+    private IEFPDataView _CallerControlProvider;
 
     /// <summary>
     /// Источник настроек.

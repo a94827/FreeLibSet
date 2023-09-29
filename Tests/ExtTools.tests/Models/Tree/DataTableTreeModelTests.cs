@@ -239,100 +239,12 @@ namespace ExtTools_tests.Models.Tree
 
     #region События
 
-    /// <summary>
-    /// Тестировщик событий для ITreeModel
-    /// </summary>
-    private class EventTester
-    {
-      #region Конструктор
-
-      public EventTester(ITreeModel model)
-      {
-        model.NodesChanged += model_NodesChanged;
-        model.NodesInserted += model_NodesInserted;
-        model.NodesRemoved += model_NodesRemoved;
-        model.StructureChanged += model_StructureChanged;
-
-        NodesChangedPaths = new List<TreePath>();
-        NodesChangedChildren = new List<object[]>();
-        NodesChangedIndices = new List<int[]>();
-
-        NodesInsertedPaths = new List<TreePath>();
-        NodesInsertedChildren = new List<object[]>();
-        NodesInsertedIndices = new List<int[]>();
-
-        NodesRemovedPaths = new List<TreePath>();
-        NodesRemovedChildren = new List<object[]>();
-        NodesRemovedIndices = new List<int[]>();
-
-        StructureChangedPaths = new List<TreePath>();
-      }
-
-      #endregion
-
-      #region NodesChanged
-
-      public List<TreePath> NodesChangedPaths;
-      public List<object[]> NodesChangedChildren;
-      public List<int[]> NodesChangedIndices;
-
-      void model_NodesChanged(object sender, TreeModelEventArgs args)
-      {
-        NodesChangedPaths.Add(args.Path);
-        NodesChangedChildren.Add(args.Children);
-        NodesChangedIndices.Add(args.Indices);
-      }
-
-      #endregion
-
-      #region NodesInserted
-
-      public List<TreePath> NodesInsertedPaths;
-      public List<object[]> NodesInsertedChildren;
-      public List<int[]> NodesInsertedIndices;
-
-      void model_NodesInserted(object sender, TreeModelEventArgs args)
-      {
-        NodesInsertedPaths.Add(args.Path);
-        NodesInsertedChildren.Add(args.Children);
-        NodesInsertedIndices.Add(args.Indices);
-      }
-
-      #endregion
-
-      #region NodesRemoved
-
-      public List<TreePath> NodesRemovedPaths;
-      public List<object[]> NodesRemovedChildren;
-      public List<int[]> NodesRemovedIndices;
-
-      void model_NodesRemoved(object sender, TreeModelEventArgs args)
-      {
-        NodesRemovedPaths.Add(args.Path);
-        NodesRemovedChildren.Add(args.Children);
-        NodesRemovedIndices.Add(args.Indices);
-      }
-
-      #endregion
-
-      #region StructureChanged
-
-      public List<TreePath> StructureChangedPaths;
-
-      void model_StructureChanged(object sender, TreePathEventArgs args)
-      {
-        StructureChangedPaths.Add(args.Path);
-      }
-
-      #endregion
-    }
-
     [Test]
     public void NodesChanged_topRow([Values(true, false)]bool usePK)
     {
       DataTable table = CreateTestTableWithStringIds(usePK);
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
-      EventTester tester = new EventTester(sut);
+      TreeModelEventTester tester = new TreeModelEventTester(sut);
       table.Rows[0]["F3"] = "XXX";
 
       Assert.AreEqual(1, tester.NodesChangedPaths.Count, "NodesChanged count");
@@ -350,7 +262,7 @@ namespace ExtTools_tests.Models.Tree
     {
       DataTable table = CreateTestTableWithStringIds(usePK);
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
-      EventTester tester = new EventTester(sut);
+      TreeModelEventTester tester = new TreeModelEventTester(sut);
       table.Rows[1]["F3"] = "XXX";
 
       Assert.AreEqual(1, tester.NodesChangedPaths.Count, "NodesChanged count");
@@ -364,7 +276,7 @@ namespace ExtTools_tests.Models.Tree
     {
       DataTable table = CreateTestTableWithStringIds(usePK);
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
-      EventTester tester = new EventTester(sut);
+      TreeModelEventTester tester = new TreeModelEventTester(sut);
       table.Rows.Add("4", DBNull.Value, "XXX");
 
       Assert.AreEqual(1, tester.NodesInsertedPaths.Count, "NodesInserted count");
@@ -382,7 +294,7 @@ namespace ExtTools_tests.Models.Tree
     {
       DataTable table = CreateTestTableWithStringIds(usePK);
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
-      EventTester tester = new EventTester(sut);
+      TreeModelEventTester tester = new TreeModelEventTester(sut);
       table.Rows.Add("4", "2", "XXX");
 
       Assert.AreEqual(1, tester.NodesInsertedPaths.Count, "NodesInserted count");
@@ -403,7 +315,7 @@ namespace ExtTools_tests.Models.Tree
     {
       DataTable table = CreateTestTableWithStringIds(usePK);
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
-      EventTester tester = new EventTester(sut);
+      TreeModelEventTester tester = new TreeModelEventTester(sut);
       DataRow delRow = table.Rows[1];
       delRow.Delete();
 
@@ -428,7 +340,7 @@ namespace ExtTools_tests.Models.Tree
       Assert.AreEqual("", GetTestStringIds(sut.GetChildRows(table.Rows[2])), "#0 GetChildren(3)");
 
       // 1. Переносим узел 2: 1 <- 3 <- 2
-      EventTester tester1 = new EventTester(sut);
+      TreeModelEventTester tester1 = new TreeModelEventTester(sut);
       table.Rows[1]["F2"] = "3";
       Assert.AreEqual("3", GetTestStringIds(sut.GetChildRows(table.Rows[0])), "#1 GetChildren(1)");
       Assert.AreEqual("", GetTestStringIds(sut.GetChildRows(table.Rows[1])), "#1 GetChildren(2)");
@@ -438,7 +350,7 @@ namespace ExtTools_tests.Models.Tree
       Assert.IsTrue(tester1.StructureChangedPaths.Contains(path1), "#1 StructureChanged(1)");
 
       // 2. Переносим узел 3 в корень: 1, 3 <- 2
-      EventTester tester2 = new EventTester(sut);
+      TreeModelEventTester tester2 = new TreeModelEventTester(sut);
       table.Rows[2]["F2"] = DBNull.Value;
       Assert.AreEqual("", GetTestStringIds(sut.GetChildRows(table.Rows[0])), "#2 GetChildren(1)");
       Assert.AreEqual("", GetTestStringIds(sut.GetChildRows(table.Rows[1])), "#2 GetChildren(2)");
@@ -447,7 +359,7 @@ namespace ExtTools_tests.Models.Tree
       Assert.IsTrue(tester2.StructureChangedPaths.Contains(TreePath.Empty), "#2 StructureChanged(all)");
 
       // 3. Снова переносим узел 2: 1<-2, 3
-      EventTester tester3 = new EventTester(sut);
+      TreeModelEventTester tester3 = new TreeModelEventTester(sut);
       table.Rows[1]["F2"] = "1";
       Assert.AreEqual("2", GetTestStringIds(sut.GetChildRows(table.Rows[0])), "#3 GetChildren(1)");
       Assert.AreEqual("", GetTestStringIds(sut.GetChildRows(table.Rows[1])), "#3 GetChildren(2)");
@@ -470,7 +382,7 @@ namespace ExtTools_tests.Models.Tree
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
 
       // 1. Переносим узел 2: 1 <- 3 <- 2
-      EventTester tester1 = new EventTester(sut);
+      TreeModelEventTester tester1 = new TreeModelEventTester(sut);
       sut.BeginUpdate(); // #1
       try
       {
@@ -502,7 +414,7 @@ namespace ExtTools_tests.Models.Tree
     {
       DataTable table = CreateTestTableWithStringIds(false);
       DataTableTreeModel sut = new DataTableTreeModel(table, "F1", "F2");
-      EventTester tester1 = new EventTester(sut);
+      TreeModelEventTester tester1 = new TreeModelEventTester(sut);
       sut.BeginUpdate();
       sut.EndUpdate();
       Assert.AreEqual(0, tester1.StructureChangedPaths.Count);
@@ -580,6 +492,94 @@ namespace ExtTools_tests.Models.Tree
     }
 
 #endif
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Тестировщик событий для ITreeModel
+  /// </summary>
+  internal class TreeModelEventTester
+  {
+    #region Конструктор
+
+    public TreeModelEventTester(ITreeModel model)
+    {
+      model.NodesChanged += model_NodesChanged;
+      model.NodesInserted += model_NodesInserted;
+      model.NodesRemoved += model_NodesRemoved;
+      model.StructureChanged += model_StructureChanged;
+
+      NodesChangedPaths = new List<TreePath>();
+      NodesChangedChildren = new List<object[]>();
+      NodesChangedIndices = new List<int[]>();
+
+      NodesInsertedPaths = new List<TreePath>();
+      NodesInsertedChildren = new List<object[]>();
+      NodesInsertedIndices = new List<int[]>();
+
+      NodesRemovedPaths = new List<TreePath>();
+      NodesRemovedChildren = new List<object[]>();
+      NodesRemovedIndices = new List<int[]>();
+
+      StructureChangedPaths = new List<TreePath>();
+    }
+
+    #endregion
+
+    #region NodesChanged
+
+    public List<TreePath> NodesChangedPaths;
+    public List<object[]> NodesChangedChildren;
+    public List<int[]> NodesChangedIndices;
+
+    void model_NodesChanged(object sender, TreeModelEventArgs args)
+    {
+      NodesChangedPaths.Add(args.Path);
+      NodesChangedChildren.Add(args.Children);
+      NodesChangedIndices.Add(args.Indices);
+    }
+
+    #endregion
+
+    #region NodesInserted
+
+    public List<TreePath> NodesInsertedPaths;
+    public List<object[]> NodesInsertedChildren;
+    public List<int[]> NodesInsertedIndices;
+
+    void model_NodesInserted(object sender, TreeModelEventArgs args)
+    {
+      NodesInsertedPaths.Add(args.Path);
+      NodesInsertedChildren.Add(args.Children);
+      NodesInsertedIndices.Add(args.Indices);
+    }
+
+    #endregion
+
+    #region NodesRemoved
+
+    public List<TreePath> NodesRemovedPaths;
+    public List<object[]> NodesRemovedChildren;
+    public List<int[]> NodesRemovedIndices;
+
+    void model_NodesRemoved(object sender, TreeModelEventArgs args)
+    {
+      NodesRemovedPaths.Add(args.Path);
+      NodesRemovedChildren.Add(args.Children);
+      NodesRemovedIndices.Add(args.Indices);
+    }
+
+    #endregion
+
+    #region StructureChanged
+
+    public List<TreePath> StructureChangedPaths;
+
+    void model_StructureChanged(object sender, TreePathEventArgs args)
+    {
+      StructureChangedPaths.Add(args.Path);
+    }
 
     #endregion
   }

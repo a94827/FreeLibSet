@@ -49,6 +49,13 @@ namespace TestCulture
       efpCulture.SelectedIndex = selIndex;
       efpCulture.SelectedIndexEx.ValueChanged += new EventHandler(efpCulture_ValueChanged);
 
+      btnShowTable.Image = EFPApp.MainImages.Images["Table"];
+      btnShowTable.ImageAlign = ContentAlignment.MiddleCenter;
+      EFPButton efpShowTable = new EFPButton(efpForm, btnShowTable);
+      efpShowTable.DisplayName = "Таблица CultureInfo";
+      efpShowTable.ToolTipText = "Открывает таблицу со списком всех таблиц";
+      efpShowTable.Click += EfpShowTable_Click;
+
       #endregion
 
       InfoTime = DateTime.Now;
@@ -136,9 +143,73 @@ namespace TestCulture
 
     #endregion
 
-    #region Список параметров
+    #region Таблица со списком культур
 
-    EFPDataGridView efpInfo;
+    private void EfpShowTable_Click(object sender, EventArgs args)
+    {
+      DataTable table = new DataTable();
+      table.Columns.Add("Name", typeof(string));
+      table.Columns.Add("DisplayName", typeof(string));
+      table.Columns.Add("EnglishName", typeof(string));
+      table.Columns.Add("NativeName", typeof(string));
+      table.Columns.Add("IsNeutralCulture", typeof(bool));
+      table.Columns.Add("LCID", typeof(int));
+      table.Columns.Add("ThreeLetterWindowsLanguageName", typeof(string));
+      table.Columns.Add("ThreeLetterISOLanguageName", typeof(string));
+      table.Columns.Add("TwoLetterISOLanguageName", typeof(string));
+
+      table.Columns.Add("FormatStringTools.DateFormatOrder", typeof(string));
+
+      foreach (CultureInfo ci in AllCultures)
+      {
+        DataRow row = table.NewRow();
+        DataTools.SetString(row, "Name", ci.Name);
+        try
+        {
+          DataTools.SetString(row, "DisplayName", ci.DisplayName);
+          DataTools.SetString(row, "EnglishName", ci.EnglishName);
+          DataTools.SetString(row, "NativeName", ci.NativeName);
+          row["IsNeutralCulture"] = ci.IsNeutralCulture;
+          row["LCID"] = ci.LCID;
+          DataTools.SetString(row, "ThreeLetterWindowsLanguageName", ci.ThreeLetterWindowsLanguageName);
+          DataTools.SetString(row, "ThreeLetterISOLanguageName", ci.ThreeLetterISOLanguageName);
+          DataTools.SetString(row, "TwoLetterISOLanguageName", ci.TwoLetterISOLanguageName);
+        }
+        catch { }
+
+        try
+        {
+          row["FormatStringTools.DateFormatOrder"] = FormatStringTools.GetDateFormatOrder("d", ci.DateTimeFormat);
+        }
+        catch (Exception e)
+        {
+          row["FormatStringTools.DateFormatOrder"] = e.Message;
+        }
+
+        table.Rows.Add(row);
+      }
+      table.DefaultView.Sort = "DisplayName";
+
+      SimpleGridForm form = new SimpleGridForm();
+      form.Text = "Все культуры";
+      EFPDataGridView efpGr = new EFPDataGridView(form.ControlWithToolBar);
+      efpGr.Control.AutoGenerateColumns = true;
+      efpGr.ReadOnly = true;
+      efpGr.Control.ReadOnly = true;
+      efpGr.CanView = false;
+      efpGr.AutoSort = true;
+      efpGr.CustomOrderAllowed = true;
+      efpGr.CustomOrderActive = true;
+      efpGr.Control.DataSource = table.DefaultView;
+
+      EFPApp.ShowDialog(form, true);
+    }
+
+  #endregion
+
+  #region Список параметров
+
+  EFPDataGridView efpInfo;
 
     DateTime InfoTime;
     decimal InfoValue;
@@ -251,6 +322,7 @@ namespace TestCulture
         return;
 
       EditableDateTimeFormatter f = _Formatters[args.RowIndex];
+      if (f!=null)
       {
         switch (args.ColumnIndex)
         {

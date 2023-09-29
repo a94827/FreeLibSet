@@ -1481,16 +1481,16 @@ namespace FreeLibSet.Forms
           EFPReportExtParams ep = ReportParams as EFPReportExtParams;
           if (ep != null)
           {
-            if ((ep.UsedParts & EFPReportExtParamsPart.User) != 0)
+            if ((ep.UsedParts & SettingsPart.User) != 0)
             {
               TempCfg cfg = new TempCfg();
-              ep.WriteConfig(cfg, EFPReportExtParamsPart.User);
+              ep.WriteConfig(cfg, SettingsPart.User);
               e.Data["EFPReport.ReportParams.CfgPartUser"] = DataTools.XmlDocumentToString(cfg.Document);
             }
-            if ((ep.UsedParts & EFPReportExtParamsPart.Files) != 0)
+            if ((ep.UsedParts & SettingsPart.Machine) != 0)
             {
               TempCfg cfg = new TempCfg();
-              ep.WriteConfig(cfg, EFPReportExtParamsPart.Files);
+              ep.WriteConfig(cfg, SettingsPart.Machine);
               e.Data["EFPReport.ReportParams.CfgPartFiles"] = DataTools.XmlDocumentToString(cfg.Document);
             }
           }

@@ -555,6 +555,23 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Возвращает true, если команда располагается внутри кнопки-уголочка
+    /// </summary>
+    internal bool IsInToolBarDropDown
+    {
+      get
+      {
+        EFPCommandItem ci = this;
+        while (ci.Parent != null)
+        {
+          if ((ci.Parent.Usage & EFPCommandItemUsage.ToolBarDropDown) != 0)
+            return true;
+        }
+        return false;
+      }
+    }
+
+    /// <summary>
     /// Возвращает true, если данная команда может быть добавлена в статусную строку (установлен флаг Usage.StatusBar и
     /// задана непустая строка в свойстве StatusBarText)
     /// </summary>

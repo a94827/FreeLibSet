@@ -42,7 +42,7 @@
       // 
       // panButtons
       // 
-      this.panButtons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.panButtons.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.panButtons.Controls.Add(this.btnCancel);
       this.panButtons.Controls.Add(this.btnNext);
       this.panButtons.Controls.Add(this.btnBack);

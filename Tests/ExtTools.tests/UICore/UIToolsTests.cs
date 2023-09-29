@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data;
+using System.Globalization;
 using NUnit.Framework;
 using FreeLibSet.UICore;
-using System.Data;
 using FreeLibSet.Core;
 using FreeLibSet.DependedValues;
-using System.Globalization;
+using FreeLibSet.Tests;
+using FreeLibSet.Formatting;
+using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace ExtTools_tests.UICore
 {
@@ -79,10 +83,10 @@ namespace ExtTools_tests.UICore
     [TestCase("", "", false, false, "", "")]
     public void ShiftDateRange(string sArg1, string sArg2, bool forward, bool wantedRes, string sRes1, string sRes2)
     {
-      DateTime? dt1 = Creators.CreateNDate(sArg1);
-      DateTime? dt2 = Creators.CreateNDate(sArg2);
-      DateTime? res1 = Creators.CreateNDate(sRes1);
-      DateTime? res2 = Creators.CreateNDate(sRes2);
+      DateTime? dt1 = Creators.NDateTime(sArg1);
+      DateTime? dt2 = Creators.NDateTime(sArg2);
+      DateTime? res1 = Creators.NDateTime(sRes1);
+      DateTime? res2 = Creators.NDateTime(sRes2);
 
       bool res = UITools.ShiftDateRange(ref dt1, ref dt2, forward);
       Assert.AreEqual(wantedRes, res, "Result");
@@ -101,10 +105,10 @@ namespace ExtTools_tests.UICore
     [TestCase("", "", false, false, "", "")]
     public void ShiftDateRangeYear(string sArg1, string sArg2, bool forward, bool wantedRes, string sRes1, string sRes2)
     {
-      DateTime? dt1 = Creators.CreateNDate(sArg1);
-      DateTime? dt2 = Creators.CreateNDate(sArg2);
-      DateTime? res1 = Creators.CreateNDate(sRes1);
-      DateTime? res2 = Creators.CreateNDate(sRes2);
+      DateTime? dt1 = Creators.NDateTime(sArg1);
+      DateTime? dt2 = Creators.NDateTime(sArg2);
+      DateTime? res1 = Creators.NDateTime(sRes1);
+      DateTime? res2 = Creators.NDateTime(sRes2);
 
       bool res = UITools.ShiftDateRangeYear(ref dt1, ref dt2, forward);
       Assert.AreEqual(wantedRes, res, "Result");
@@ -173,16 +177,106 @@ namespace ExtTools_tests.UICore
         Console.WriteLine("Testing " + ci.ToString() + "...");
         double v1 = 1234567.89;
         string s1 = v1.ToString("#.##", ci.NumberFormat);
-        double v2=0;
-        Assert.DoesNotThrow(delegate() { v2 = double.Parse(s1, NumberStyles.Number, ci.NumberFormat); }, "parsing #1 \"" + s1 + "\", Culture: " + ci.ToString());
+        double v2 = 0;
+        Assert.DoesNotThrow(delegate () { v2 = double.Parse(s1, NumberStyles.Number, ci.NumberFormat); }, "parsing #1 \"" + s1 + "\", Culture: " + ci.ToString());
         Assert.AreEqual(v1, v2, "unchanged string \"" + s1 + "\", Culture: " + ci.ToString());
 
         string s2 = s1;
         UITools.CorrectNumberString(ref s2, ci.NumberFormat);
         double v3 = 0;
-        Assert.DoesNotThrow(delegate() { v3 = double.Parse(s2, NumberStyles.Number, ci.NumberFormat); }, "parsing #2 \"" + s2 + "\", Culture: " + ci.ToString());
+        Assert.DoesNotThrow(delegate () { v3 = double.Parse(s2, NumberStyles.Number, ci.NumberFormat); }, "parsing #2 \"" + s2 + "\", Culture: " + ci.ToString());
         Assert.AreEqual(v1, v3, "changed string \"" + s2 + "\", Culture: " + ci.ToString());
       }
+    }
+
+    #endregion
+
+    #region GetMaskedText()
+
+    [TestCase("00/00/0000", "07/19/2023", "07/19/2023")]
+    [TestCase("00/00/0000", "07/19", "07/19")]
+    [TestCase("00.##", "12.  ", "12")]
+    [TestCase("00.##", "12.3 ", "12.3")]
+    [TestCase("00.##", "12.34", "12.34")]
+    [TestCase(@"[00\.00]", "[", "")]
+    [TestCase(@"[00\.00]", "[0", "[0")]
+    [TestCase(@"[00\.00]", "[00", "[00")]
+    [TestCase(@"[00\.00]", "[00.0", "[00.0")]
+    [TestCase(@"[00\.00]", "[00.00", "[00.00]")]
+    public void GetMaskedText(string mask, string input, string wantedRes)
+    {
+      MaskedTextProvider provider = new MaskedTextProvider(mask, CultureInfo.GetCultureInfo("en-US"));
+      provider.Set(input);
+
+      string res = UITools.GetMaskedText(provider);
+
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
+    #region IsNormalCharacterCasing()
+
+    // не допускается конструктором [TestCase(@"", true)]
+    [TestCase(@"0", false)]
+    [TestCase(@"9", false)]
+    [TestCase(@"#", false)]
+    [TestCase(@"0.00#", false)]
+    [TestCase(@"CC", true)]
+    [TestCase(@">CC", false)]
+    [TestCase(@"<CC", false)]
+    [TestCase(@"\>CC", true)]
+    [TestCase(@"000 >CC", false)]
+    [TestCase(@"000 <CC", false)]
+    [TestCase(@"000 \<CC", true)]
+    public void IsNormalCharacterCasing(string mask, bool wantedRes)
+    {
+      MaskedTextProvider provider = new MaskedTextProvider(mask);
+      bool res = UITools.IsNormalCharacterCasing(provider);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [Test]
+    public void IsNormalCharacterCasing_null()
+    {
+      MaskedTextProvider provider = null;
+      bool res = UITools.IsNormalCharacterCasing(provider);
+      Assert.IsTrue(res);
+    }
+
+    #endregion
+
+    #region GetGuidEditMask(), GetGuidRegEx()
+
+    [Test]
+    public void GetGuidEditMask([Values("", "N", "D", "B", "P")]string format, [Values(false, true)] bool upperCase)
+    {
+      string editMask = UITools.GetGuidEditMask(format, upperCase);
+      StdMaskProvider mp = new StdMaskProvider(editMask);
+      Assert.AreEqual(32, mp.Provider.EditPositionCount, "EditPositionCount");
+
+      Guid g = new Guid("373D38E8-6845-496A-9B66-154FAD471BBA");
+      string text = g.ToString(format);
+      Assert.IsTrue(mp.Test(text), "Valid format: " + text);
+
+      string badText = text.Replace('3', '!');
+      Assert.IsFalse(mp.Test(badText), "Bad format: " + badText);
+    }
+
+    [Test]
+    public void GetGuidRegEx([Values("", "N", "D", "B", "P")]string format, [Values(false, true)] bool upperCase)
+    {
+      string pattern = UITools.GetGuidRegEx(format);
+      Guid g = new Guid("373D38E8-6845-496A-9B66-154FAD471BBA");
+
+      string text = g.ToString(format);
+      if (upperCase)
+        text = text.ToUpperInvariant();
+
+      Assert.IsTrue(Regex.IsMatch(text, pattern), "Valid format: " + text);
+
+      string badText = text.Replace('D', 'G').Replace('d', 'g');
+      Assert.IsFalse(Regex.IsMatch(badText, pattern), "Bad format: " + badText);
     }
 
     #endregion

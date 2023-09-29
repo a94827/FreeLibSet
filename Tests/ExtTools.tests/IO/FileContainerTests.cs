@@ -6,6 +6,7 @@ using NUnit.Framework;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
 using FreeLibSet.Remoting;
+using FreeLibSet.Tests;
 
 namespace ExtTools_tests.IO
 {
@@ -156,8 +157,9 @@ namespace ExtTools_tests.IO
         AbsPath resPath = new AbsPath(dir.Dir, "aaa", "bbb", sut.FileInfo.Name);
         Assert.IsTrue(System.IO.File.Exists(resPath.Path), "File exists");
         CollectionAssert.AreEqual(sut.Content, System.IO.File.ReadAllBytes(resPath.Path), "Content");
-        Assert.AreEqual(sut.FileInfo.CreationTime, System.IO.File.GetCreationTime(resPath.Path), "CreationTime");
-        Assert.AreEqual(sut.FileInfo.LastWriteTime, System.IO.File.GetLastWriteTime(resPath.Path), "LastWriteTime");
+        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+          DateTimeAssert.AreEqual(sut.FileInfo.CreationTime, System.IO.File.GetCreationTime(resPath.Path), FileTools.FileTimeMaxDelta, "CreationTime");
+        DateTimeAssert.AreEqual(sut.FileInfo.LastWriteTime, System.IO.File.GetLastWriteTime(resPath.Path), FileTools.FileTimeMaxDelta, "LastWriteTime");
       }
     }
 
@@ -172,8 +174,9 @@ namespace ExtTools_tests.IO
 
         Assert.IsTrue(System.IO.File.Exists(resPath.Path), "File exists");
         CollectionAssert.AreEqual(sut.Content, System.IO.File.ReadAllBytes(resPath.Path), "Content");
-        Assert.AreEqual(sut.FileInfo.CreationTime, System.IO.File.GetCreationTime(resPath.Path), "CreationTime");
-        Assert.AreEqual(sut.FileInfo.LastWriteTime, System.IO.File.GetLastWriteTime(resPath.Path), "LastWriteTime");
+        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+          DateTimeAssert.AreEqual(sut.FileInfo.CreationTime, System.IO.File.GetCreationTime(resPath.Path), FileTools.FileTimeMaxDelta, "CreationTime");
+        DateTimeAssert.AreEqual(sut.FileInfo.LastWriteTime, System.IO.File.GetLastWriteTime(resPath.Path), FileTools.FileTimeMaxDelta, "LastWriteTime");
 
         Assert.IsFalse(System.IO.Directory.Exists(dir.Dir.SlashedPath + "aaa"), "Dont create dir");
       }
@@ -208,7 +211,7 @@ namespace ExtTools_tests.IO
       Assert.AreNotSame(sut, res, "Not same");
       Assert.AreEqual(sut.FileInfo.Name, res.FileInfo.Name, "Name");
       Assert.AreEqual(sut.FileInfo.Length, res.FileInfo.Length, "Length");
-      Assert.AreEqual(sut.FileInfo.CreationTime, res.FileInfo.CreationTime, "CreationTime");
+      Assert.AreEqual(sut.FileInfo.CreationTime, res.FileInfo.CreationTime, "CreationTime"); // здесь точное сравнение, без дельты
       Assert.AreEqual(sut.FileInfo.LastWriteTime, res.FileInfo.LastWriteTime, "LastWriteTime");
       Assert.AreEqual(sut.SubDir, res.SubDir, "SubDir");
       CollectionAssert.AreEqual(sut.Content, res.Content, "Content");
@@ -308,8 +311,9 @@ namespace ExtTools_tests.IO
         AbsPath resPath = new AbsPath(dir.Dir, "aaa", "bbb", "test.bin");
         Assert.IsTrue(System.IO.File.Exists(resPath.Path), "File exists");
         CollectionAssert.AreEqual(sut.Content, System.IO.File.ReadAllBytes(resPath.Path), "Content");
-        Assert.AreEqual(sut.FileInfo.CreationTime, System.IO.File.GetCreationTime(resPath.Path), "CreationTime");
-        Assert.AreEqual(sut.FileInfo.LastWriteTime, System.IO.File.GetLastWriteTime(resPath.Path), "LastWriteTime");
+        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+          DateTimeAssert.AreEqual(sut.FileInfo.CreationTime, System.IO.File.GetCreationTime(resPath.Path), FileTools.FileTimeMaxDelta, "CreationTime");
+        DateTimeAssert.AreEqual(sut.FileInfo.LastWriteTime, System.IO.File.GetLastWriteTime(resPath.Path), FileTools.FileTimeMaxDelta, "LastWriteTime");
       }
     }
 

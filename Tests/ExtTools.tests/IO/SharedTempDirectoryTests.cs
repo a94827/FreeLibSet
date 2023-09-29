@@ -63,7 +63,8 @@ namespace ExtTools_tests.IO
 
         sut.Clear();
         Assert.IsFalse(System.IO.File.Exists(testPath1.Path), "#1 After");
-        Assert.IsTrue(System.IO.File.Exists(testPath2.Path), "#2 After");
+        if (Environment.OSVersion.Platform == PlatformID.Win32NT) // под Linux очистка будет полной
+          Assert.IsTrue(System.IO.File.Exists(testPath2.Path), "#2 After");
 
         fs2.Close();
 

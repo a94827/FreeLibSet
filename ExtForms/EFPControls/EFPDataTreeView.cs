@@ -13,6 +13,7 @@ using FreeLibSet.Controls;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms
 {
@@ -898,7 +899,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Древовидный просмотр с поддержкой столбцов
   /// </summary>
-  public class EFPDataTreeView : EFPTreeViewAdv, IEFPDataView, IEFPGridControl
+  public class EFPDataTreeView : EFPTreeViewAdv, IEFPDataView
   {
     #region Конструкторы
 
@@ -931,6 +932,7 @@ namespace FreeLibSet.Forms
       _CurrentOrderIndex = 0;
       _OrderChangesToRefresh = false;
       _AutoSort = false;
+      _DocumentProperties = BRReport.AppDefaultDocumentProperties.Clone();
 
       if (!DesignMode)
       {
@@ -966,6 +968,17 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Изменения в ProviderState
+
+    /// <summary>
+    /// Инициализирует свойство <see cref="BRDocumentProperties.Title"/>
+    /// </summary>
+    protected override void OnAttached()
+    {
+      base.OnAttached();
+
+      if (String.IsNullOrEmpty(_DocumentProperties.Title))
+        _DocumentProperties.Title = WinFormsTools.GetControlText(Control);
+    }
 
     /// <summary>
     /// Вызов ResetDataReorderHelper();
@@ -1212,7 +1225,7 @@ namespace FreeLibSet.Forms
     }
     private EFPDataTreeViewMeasures _Measures;
 
-    IEFPGridControlMeasures IEFPGridControl.Measures { get { return Measures; } }
+    IEFPGridControlMeasures IEFPDataView.Measures { get { return Measures; } }
 
 
     /*
@@ -1330,6 +1343,8 @@ namespace FreeLibSet.Forms
     }
     private EFPDataTreeViewColumns _Columns;
 
+    IEFPDataViewColumns IEFPDataView.Columns { get { return Columns; } }
+
     /// <summary>
     /// Создает объект EFPDataTreeViewColumns
     /// </summary>
@@ -1343,12 +1358,28 @@ namespace FreeLibSet.Forms
     //{
     //}
 
-    EFPDataViewColumnInfo[] IEFPGridControl.GetVisibleColumnsInfo()
+    /// <summary>
+    /// Получить массив видимых столбцов в просмотре в порядке вывода на экран
+    /// как объекты <see cref="EFPDataTreeViewColumn"/>
+    /// </summary>
+    public EFPDataTreeViewColumn[] VisibleColumns
     {
-      throw new NotImplementedException();
+      get
+      {
+        // Для TreeVuewAdv п
+        List<EFPDataTreeViewColumn> lst = new List<EFPDataTreeViewColumn>();
+        for (int i = 0; i < Columns.Count; i++)
+        {
+          if (Columns[i].TreeColumn.IsVisible)
+            lst.Add(Columns[i]);
+        }
+        return lst.ToArray();
+      }
     }
 
-    bool IEFPGridControl.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
+    IEFPDataViewColumn[] IEFPDataView.VisibleColumns { get { return VisibleColumns; } }
+
+    bool IEFPDataView.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
     {
       throw new NotImplementedException();
     }
@@ -2321,6 +2352,22 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+
+    /// <summary>
+    /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.
+    /// В возвращаемом объекте устанавливается свойство <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// Если нет текущей ячейки (просмотр пустой) или текущая ячейка прокручены мышью за пределы видимой области просмотра,
+    /// возвращается неинициализированный <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// </summary>
+    public EFPDialogPosition CurrentPopupPosition
+    {
+      get
+      {
+        // TODO: Не реализовано
+        return new EFPDialogPosition();
+      }
+    }
 
     #region Видимые столбцы
 
@@ -3357,7 +3404,7 @@ return true;                          */
     /// Создает новый объект EFPDataTreeViewCommandItems
     /// </summary>
     /// <returns>Созданный объект</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPDataTreeViewCommandItems(this);
     }
@@ -3403,5 +3450,65 @@ return true;                          */
     }
 
     #endregion
+
+    /// <summary>
+    /// Используется при получении иерархических заголовков столбцов методами GetColumnHeaderArray().
+    /// Если true, то разрешено объединение по горизонтали для строк, когда выше имеются необъединенные ячейки.
+    /// Если false (по умолчанию), то заголовки являются строго иерархическими, при этом может быть повторяющийся текст.
+    /// </summary>
+    public bool ColumnHeaderMixedSpanAllowed
+    {
+      get { return _ColumnHeaderMixedSpanAllowed; }
+      set { _ColumnHeaderMixedSpanAllowed = value; }
+    }
+    private bool _ColumnHeaderMixedSpanAllowed;
+
+    /// <summary>
+    /// Возвращает массив заголовков столбцов, используемый при экспорте в электронные таблицы и других случаях, когда
+    /// поддерживаются многоуровневые заголовки
+    /// </summary>
+    /// <param name="columns">Столбцы</param>
+    /// <returns>Массив заголовков</returns>
+    public BRColumnHeaderArray GetColumnHeaderArray(EFPDataTreeViewColumn[] columns)
+    {
+#if DEBUG
+      if (columns == null)
+        throw new ArgumentNullException("columns");
+#endif
+
+      #region Получение массива заголовков столбцов
+
+      string[][] headers = new string[columns.Length][];
+
+      for (int i = 0; i < columns.Length; i++)
+      {
+        headers[i] = columns[i].PrintHeaders;
+        if (headers[i] == null)
+          headers[i] = new string[] { columns[i].TreeColumn.Header };
+      }
+
+      #endregion
+
+      BRColumnHeaderArray ha = new BRColumnHeaderArray(headers, ColumnHeaderMixedSpanAllowed);
+      return ha;
+    }
+
+    /// <summary>
+    /// Получить сводку документа при экспорте.
+    /// По умолчанию содержит копию <see cref="BRReport.AppDefaultDocumentProperties"/>
+    /// с установленным свойством <see cref="BRDocumentProperties.Title"/> в соответствии с <see cref="EFPControlBase.DisplayName"/> или
+    /// заголовком окна, если просмотр является единственным управляющим элементом.
+    /// </summary>
+    public BRDocumentProperties DocumentProperties
+    {
+      get { return _DocumentProperties; }
+      set
+      {
+        if (value == null)
+          throw new ArgumentNullException();
+        _DocumentProperties = value;
+      }
+    }
+    private BRDocumentProperties _DocumentProperties;
   }
 }

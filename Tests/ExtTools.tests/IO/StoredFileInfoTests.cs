@@ -6,6 +6,7 @@ using NUnit.Framework;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
 using FreeLibSet.Remoting;
+using FreeLibSet.Tests;
 
 namespace ExtTools_tests.IO
 {
@@ -20,8 +21,8 @@ namespace ExtTools_tests.IO
       StoredFileInfo sut = new StoredFileInfo("test.txt", 123L, new DateTime(2023, 1, 1, 12, 34, 56), new DateTime(2023, 6, 30, 12, 34, 56));
       Assert.AreEqual("test.txt", sut.Name, "Name");
       Assert.AreEqual(123L, sut.Length, "Length");
-      Assert.AreEqual(new DateTime(2023, 1, 1, 12, 34, 56), sut.CreationTime, "CreationTime");
-      Assert.AreEqual(new DateTime(2023, 6, 30, 12, 34, 56), sut.LastWriteTime, "LastWriteTime");
+      DateTimeAssert.AreEqual(new DateTime(2023, 1, 1, 12, 34, 56), sut.CreationTime, FileTools.FileTimeMaxDelta, "CreationTime");
+      DateTimeAssert.AreEqual(new DateTime(2023, 6, 30, 12, 34, 56), sut.LastWriteTime, FileTools.FileTimeMaxDelta, "LastWriteTime");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -49,8 +50,8 @@ namespace ExtTools_tests.IO
 
         Assert.AreEqual("test.txt", sut.Name, "Name");
         Assert.AreEqual(10L, sut.Length, "Length");
-        Assert.AreEqual(System.IO.File.GetCreationTime(path.Path), sut.CreationTime, "CreationTime");
-        Assert.AreEqual(System.IO.File.GetCreationTime(path.Path), sut.LastWriteTime, "LastWriteTime");
+        DateTimeAssert.AreEqual(System.IO.File.GetCreationTime(path.Path), sut.CreationTime, FileTools.FileTimeMaxDelta, "CreationTime");
+        DateTimeAssert.AreEqual(System.IO.File.GetCreationTime(path.Path), sut.LastWriteTime, FileTools.FileTimeMaxDelta, "LastWriteTime");
         Assert.IsFalse(sut.IsEmpty, "IsEmpty");
       }
     }
@@ -102,8 +103,9 @@ namespace ExtTools_tests.IO
 
         FileInfo fi = new FileInfo(path.Path);
         Assert.AreEqual(10, fi.Length, "Length");
-        Assert.AreEqual(new DateTime(2023, 1, 1, 12, 34, 0), fi.CreationTime, "CreationTime");
-        Assert.AreEqual(new DateTime(2023, 6, 30, 11, 22, 0), fi.LastWriteTime, "LastWriteTime");
+        if(Environment.OSVersion.Platform == PlatformID.Win32NT)
+          DateTimeAssert.AreEqual(new DateTime(2023, 1, 1, 12, 34, 0), fi.CreationTime, FileTools.FileTimeMaxDelta, "CreationTime");
+        DateTimeAssert.AreEqual(new DateTime(2023, 6, 30, 11, 22, 0), fi.LastWriteTime, FileTools.FileTimeMaxDelta, "LastWriteTime");
       }
     }
     #endregion

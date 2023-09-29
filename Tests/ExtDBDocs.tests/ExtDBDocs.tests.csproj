@@ -67,8 +67,12 @@
       <Name>ExtTools</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExtDB.tests\ExtDB.tests.csproj">
-      <Project>{A5E79E2A-EEA5-4B9C-A62F-CF234BC4B325}</Project>
+      <Project>{a5e79e2a-eea5-4b9c-a62f-cf234bc4b325}</Project>
       <Name>ExtDB.tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtTestHelpers\ExtTestHelpers.csproj">
+      <Project>{a9f0ba9d-6b87-4b3d-808b-91c0de371480}</Project>
+      <Name>ExtTestHelpers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

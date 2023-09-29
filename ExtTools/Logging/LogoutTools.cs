@@ -973,7 +973,7 @@ namespace FreeLibSet.Logging
       if (args.Object is FileInfo) // 18.08.2021
       {
         switch (args.PropertyName)
-        { 
+        {
           case "Directory":
             args.Mode = LogoutPropMode.None;
             break;
@@ -1004,6 +1004,15 @@ namespace FreeLibSet.Logging
           case "ProductBuildPart":
           case "ProductPrivatePart": // дублируются в свойстве "ProductVersion"
 
+            args.Mode = LogoutPropMode.None;
+            break;
+        }
+      }
+      if (args.Object is WTSSession)
+      {
+        switch (args.PropertyName)
+        {
+          case "Server":
             args.Mode = LogoutPropMode.None;
             break;
         }
@@ -1953,7 +1962,7 @@ namespace FreeLibSet.Logging
       if (!dict.Contains("password"))
         return dict;
 
-      string value=DataTools.GetString(dict["password"]);
+      string value = DataTools.GetString(dict["password"]);
       if (value.Length == 0)
         return dict;
 
@@ -2032,7 +2041,7 @@ namespace FreeLibSet.Logging
         {
           args.WriteLine("*** Ошибка получения информации о выполняемом файле ***. " + e.Message);
         }
-        args.IndentLevel=currIndentLevel;
+        args.IndentLevel = currIndentLevel;
       }
 
       args.WritePair("App. base dir", FileTools.ApplicationBaseDir.Path);
@@ -2155,9 +2164,13 @@ namespace FreeLibSet.Logging
 
       #region Environment variables
 
+      List<DictionaryEntry> lstEnv = new List<DictionaryEntry>();
+      foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+        lstEnv.Add(de);
+      lstEnv.Sort(EnvListComparision);
       args.WriteHeader("Environment variables");
       args.IndentLevel++;
-      foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+      foreach (DictionaryEntry de in lstEnv)
       {
         string sValue = de.Value.ToString();
         switch (de.Key.ToString().ToUpperInvariant())
@@ -2427,6 +2440,17 @@ namespace FreeLibSet.Logging
       #endregion
     }
 
+    private static int EnvListComparision(DictionaryEntry x, DictionaryEntry y)
+    {
+      string name1 = x.Key.ToString();
+      string name2 = y.Key.ToString();
+      int res1 = string.Compare(name1, name2, StringComparison.OrdinalIgnoreCase);
+      if (res1 == 0)
+        return string.Compare(name1, name2, StringComparison.Ordinal);
+      else
+        return res1;
+    }
+
     /// <summary>
     /// Выделено в отдельный метод, т.к. GCSettings.LatencyMode есть не во всех версиях Net Framework
     /// </summary>
@@ -2515,6 +2539,7 @@ namespace FreeLibSet.Logging
         if (Win32.WTSSession.IsSupported)
         {
           args.WriteHeader("Windows Terminal Session");
+#if XXX
           args.WritePair("ActiveConsoleSessionId", EnvironmentTools.ActiveConsoleSessionId.ToString());
           if (EnvironmentTools.ActiveConsoleSessionId != EnvironmentTools.NoSessionId)
           {
@@ -2531,6 +2556,14 @@ namespace FreeLibSet.Logging
             LogoutObject(args, new WTSSession(EnvironmentTools.CurrentProcessSessionId));
             args.IndentLevel--;
           }
+#else
+          args.WritePair("ActiveConsoleSessionId", EnvironmentTools.ActiveConsoleSessionId.ToString());
+          args.WritePair("CurrentProcessSessionId", EnvironmentTools.CurrentProcessSessionId.ToString());
+          args.WriteLine("WTSServer.CurrentServer");
+          args.IndentLevel++;
+          LogoutObject(args, WTSServer.CurrentServer);
+          args.IndentLevel--;
+#endif
         }
       }
       catch (Exception e)
@@ -2647,7 +2680,7 @@ namespace FreeLibSet.Logging
           return true;
         if (!EnvironmentTools.IsMono)
           return true;
-        if (EnvironmentTools.MonoVersion < new Version(6,12))
+        if (EnvironmentTools.MonoVersion < new Version(6, 12))
           return false;
         return true;
       }

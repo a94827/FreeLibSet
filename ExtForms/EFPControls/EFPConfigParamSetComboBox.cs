@@ -218,25 +218,25 @@ namespace FreeLibSet.Forms
       /// Набор параметров для значения "по умолчанию"
       /// </summary>
       public TempCfg Config { get { return _Config; } }
-      private TempCfg _Config;
+      private readonly TempCfg _Config;
 
       /// <summary>
       /// Отображаемое имя (без скобок)
       /// </summary>
       public string DisplayName { get { return _DisplayName; } }
-      private string _DisplayName;
+      private readonly string _DisplayName;
 
       /// <summary>
       /// Значок в списке EFPApp.MainImages
       /// </summary>
       public string ImageKey { get { return _ImageKey; } }
-      private string _ImageKey;
+      private readonly string _ImageKey;
 
       /// <summary>
       /// Контрольная сумма для секции конфигурации
       /// </summary>
       public string MD5Sum { get { return _MD5Sum; } }
-      private string _MD5Sum;
+      private readonly string _MD5Sum;
 
       /// <summary>
       /// Возвращает свойство DisplayName

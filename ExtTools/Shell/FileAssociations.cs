@@ -20,9 +20,35 @@ namespace FreeLibSet.Shell
   /// Описание команды "Открыть" или "Открыть с помощью"
   /// </summary>
   [Serializable]
-  public class FileAssociationItem
+  public sealed class FileAssociationItem : IObjectWithCode
   {
-    #region Конструктор
+    #region Конструкторы
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="progId"></param>
+    /// <param name="programPath"></param>
+    /// <param name="arguments"></param>
+    /// <param name="displayName"></param>
+    public FileAssociationItem(string progId, AbsPath programPath, string arguments, string displayName)
+      : this(progId, programPath, arguments, displayName, AbsPath.Empty, -1, false, String.Empty)
+    {
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="progId"></param>
+    /// <param name="programPath"></param>
+    /// <param name="arguments"></param>
+    /// <param name="displayName"></param>
+    /// <param name="iconPath"></param>
+    /// <param name="iconIndex"></param>
+    public FileAssociationItem(string progId, AbsPath programPath, string arguments, string displayName, AbsPath iconPath, int iconIndex)
+      : this(progId, programPath, arguments, displayName, iconPath, iconIndex, false, String.Empty)
+    {
+    }
 
     internal FileAssociationItem(string progId, AbsPath programPath, string arguments, string displayName, AbsPath iconPath, int iconIndex, bool useURL, string infoSourceString)
     {
@@ -93,10 +119,12 @@ namespace FreeLibSet.Shell
     #region Свойства
 
     /// <summary>
-    /// Идентификатор ProgId
+    /// Идентификатор ProgId. Должен быть уникальным в пределах списка <see cref="FileAssociations"/>.
     /// </summary>
     public string ProgId { get { return _ProgId; } }
     private readonly string _ProgId;
+
+    string IObjectWithCode.Code { get { return _ProgId; } }
 
     /// <summary>
     /// Путь к выполняемому файлу приложения
@@ -132,6 +160,7 @@ namespace FreeLibSet.Shell
     /// </summary>
     public int IconIndex { get { return _IconIndex; } }
     private readonly int _IconIndex;
+
     /// <summary>
     /// Если true, то при подстановке имени файла в командную строку будет использоваться форма "file:///"
     /// </summary>
@@ -145,6 +174,7 @@ namespace FreeLibSet.Shell
     /// </summary>
     public string InfoSourceString { get { return _InfoSourceString; } }
     private readonly string _InfoSourceString;
+
 #endif
 
     /// <summary>
@@ -247,13 +277,12 @@ namespace FreeLibSet.Shell
   /// Для получения ассоциаций используйте статический метод FromFileExtension()
   /// </summary>
   [Serializable]
-  public class FileAssociations : IReadOnlyObject
+  public class FileAssociations : NamedList<FileAssociationItem>
   {
     #region Конструктор
 
     private FileAssociations(bool isReadOnly)
     {
-      _OpenWithItems = new OpenWithItemList();
       if (isReadOnly)
         SetReadOnly();
     }
@@ -263,57 +292,102 @@ namespace FreeLibSet.Shell
     #region Свойства
 
     /// <summary>
-    /// Команда "Открыть"
+    /// Если во время получения списка ассоциаций возникло исключение, оно сохраняется
+    /// в этом поле.
+    /// Если получение прошло успешно, то свойство содержит null.
     /// </summary>
-    public FileAssociationItem OpenItem
+    public Exception Exception
     {
-      get { return _OpenItem; }
+      get { return _Exception; }
       set
       {
         ((IReadOnlyObject)this).CheckNotReadOnly();
-        _OpenItem = value;
+        _Exception = value;
       }
     }
-    private FileAssociationItem _OpenItem;
-
-    [Serializable]
-    private class OpenWithItemList : ListWithReadOnly<FileAssociationItem>
-    {
-      // Первоначально использовался базовый класс NamedList.
-      // Но не имеет смысла использовать, т.к. поиск существующего элемента ведется и по ProgId и по ProgramPath
-
-      #region Методы
-
-      public new void SetReadOnly()
-      {
-        base.SetReadOnly();
-      }
-
-      #endregion
-    }
+    [NonSerialized]
+    private Exception _Exception;
 
     /// <summary>
-    /// Команды "Открыть с помощью"
+    /// Возвращает первый элемент списка, или null.
     /// </summary>
-    public IList<FileAssociationItem> OpenWithItems { get { return _OpenWithItems; } }
-    private readonly OpenWithItemList _OpenWithItems;
-
-    private bool OpenWithContains(FileAssociationItem item)
+    public FileAssociationItem FirstItem
     {
-      return OpenWithIndexOf(item) >= 0;
+      get
+      {
+        if (Count == 0)
+          return null;
+        else
+          return this[0];
+      }
     }
 
-    private int OpenWithIndexOf(FileAssociationItem item)
+    #endregion
+
+    #region Общедоступные методы
+
+    /// <summary>
+    /// Возвращает файловую ассоциацию по значению свойства <see cref="FileAssociationItem.DisplayName"/>.
+    /// Если <paramref name="displayName"/> - пустая строка или задает несуществующее значение, возвращается значение <see cref="FirstItem"/>.
+    /// Если текущий объект не содержит ассоциаций, возвращается null.
+    /// </summary>
+    /// <param name="displayName"></param>
+    /// <returns>Файловая ассоциаиция</returns>
+    public FileAssociationItem GetByDisplayName(string displayName)
     {
-      for (int i = 0; i < _OpenWithItems.Count; i++)
+      if (!String.IsNullOrEmpty(displayName))
       {
-        if (String.Equals(_OpenWithItems[i].ProgId, item.ProgId, StringComparison.OrdinalIgnoreCase))
+        for (int i = 0; i < Count; i++)
+        {
+          if (String.Equals(this[i].DisplayName, displayName, StringComparison.Ordinal))
+            return this[i];
+        }
+      }
+      return FirstItem;
+    }
+
+    #endregion
+
+    #region Методы для добавления
+
+    private bool ExtContains(FileAssociationItem item)
+    {
+      return ExtIndexOf(item) >= 0;
+    }
+
+    private int ExtIndexOf(FileAssociationItem item)
+    {
+      for (int i = 0; i < Count; i++)
+      {
+        if (String.Equals(this[i].ProgId, item.ProgId, StringComparison.OrdinalIgnoreCase))
           return i;
-        if (_OpenWithItems[i].ProgramPath == item.ProgramPath)
+        if (this[i].ProgramPath == item.ProgramPath)
           return i;
       }
       return -1;
     }
+
+    private bool _FirstItemAdded;
+
+    private void ExtAdd(FileAssociationItem item, bool isFirst)
+    {
+      if (item == null)
+        return;
+      if (ExtContains(item))
+        return;
+
+      if (isFirst && (!_FirstItemAdded))
+      {
+        base.Insert(0, item);
+        _FirstItemAdded = true;
+      }
+      else
+        base.Add(item);
+    }
+
+    #endregion
+
+    #region Статические свойства
 
     /// <summary>
     /// Пустой список, доступный только для чтения
@@ -340,23 +414,6 @@ namespace FreeLibSet.Shell
         }
       }
     }
-
-    /// <summary>
-    /// Если во время получения списка ассоциаций возникло исключение, оно сохраняется
-    /// в этом поле.
-    /// Если получение прошло успешно, то свойство содержит null.
-    /// </summary>
-    public Exception Exception
-    {
-      get { return _Exception; }
-      set
-      {
-        ((IReadOnlyObject)this).CheckNotReadOnly();
-        _Exception = value;
-      }
-    }
-    [NonSerialized]
-    private Exception _Exception;
 
     #endregion
 
@@ -533,15 +590,6 @@ namespace FreeLibSet.Shell
         {
           FromFileExtensionExplorer(fileExt, faItems, tree);
           FromFileExtensionsHKCR(fileExt, faItems, tree);
-
-          if (faItems.OpenItem == null && faItems.OpenWithItems.Count > 0)
-            faItems.OpenItem = faItems.OpenWithItems[0];
-          else if (faItems.OpenItem != null)
-          {
-            if (!faItems.OpenWithContains(faItems.OpenItem))
-              //FA.OpenWithItems.Insert(0, FA.OpenItem);
-              faItems.OpenWithItems.Add(faItems.OpenItem);
-          }
         }
 
         return faItems;
@@ -552,13 +600,8 @@ namespace FreeLibSet.Shell
         RegistryKey2 key2 = tree[@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + fileExt + @"\UserChoice"];
         if (key2 != null)
         {
-          FileAssociationItem item2 = GetProgIdItem(tree, DataTools.GetString(key2.GetValue("progid")), key2.Name);
-          if (item2 != null)
-          {
-            faItems.OpenItem = item2;
-            if (!faItems.OpenWithContains(item2))
-              faItems.OpenWithItems.Insert(0, item2);
-          }
+          FileAssociationItem item2 = GetProgIdItem(fileExt, tree, DataTools.GetString(key2.GetValue("progid")), key2.Name);
+          faItems.ExtAdd(item2, true);
         }
 
         // Теперь - OpenWithList
@@ -570,9 +613,8 @@ namespace FreeLibSet.Shell
           {
             string valName = new string(mruList[i], 1); // строка из одной буквы
             string progId3 = DataTools.GetString(key3.GetValue(valName));
-            FileAssociationItem item = GetProgIdItem(tree, progId3, key3.Name);
-            if (item != null && (!faItems.OpenWithContains(item)))
-              faItems._OpenWithItems.Add(item);
+            FileAssociationItem item = GetProgIdItem(fileExt, tree, progId3, key3.Name);
+            faItems.ExtAdd(item, false);
           }
         }
       }
@@ -582,60 +624,60 @@ namespace FreeLibSet.Shell
         RegistryKey2 key1 = tree[@"HKEY_CLASSES_ROOT\" + fileExt];
         if (key1 != null)
         {
-          RegistryKey2 keyOWPI = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithProgIds"];
-          if (keyOWPI != null)
+          if (IsWindowsXP)
           {
-            string[] aProgIds = keyOWPI.GetValueNames();
-            for (int i = 0; i < aProgIds.Length; i++)
+            RegistryKey2 keyOWPI = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithProgIds"];
+            if (keyOWPI != null)
             {
-              FileAssociationItem item = GetProgIdItem(tree, aProgIds[i], keyOWPI.Name);
-              if (item != null && (!faItems.OpenWithContains(item)))
-                faItems._OpenWithItems.Add(item);
+              string[] aProgIds = keyOWPI.GetValueNames();
+              for (int i = 0; i < aProgIds.Length; i++)
+              {
+                FileAssociationItem item = GetProgIdItem(fileExt, tree, aProgIds[i], keyOWPI.Name);
+                faItems.ExtAdd(item, false);
+              }
             }
           }
-          RegistryKey2 keyOWL = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithList"];
-          if (keyOWL != null)
+          else
           {
-            string[] aProgIds = keyOWL.GetSubKeyNames(); // а не value names
-            for (int i = 0; i < aProgIds.Length; i++)
+            // Использовалось Для версий до Windows-XP
+            RegistryKey2 keyOWL = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithList"];
+            if (keyOWL != null)
             {
-              FileAssociationItem item = GetProgIdItem(tree, aProgIds[i], keyOWL.Name);
-              if (item != null && (!faItems.OpenWithContains(item)))
-                faItems._OpenWithItems.Add(item);
+              string[] aProgIds = keyOWL.GetSubKeyNames(); // а не value names
+              for (int i = 0; i < aProgIds.Length; i++)
+              {
+                FileAssociationItem item = GetProgIdItem(fileExt, tree, aProgIds[i], keyOWL.Name);
+                faItems.ExtAdd(item, false);
+              }
             }
           }
 
-          FileAssociationItem item0 = GetProgIdItem(tree, DataTools.GetString(key1.GetValue(String.Empty)), key1.Name);
-          if (item0 != null)
-          {
-            int p = faItems.OpenWithIndexOf(item0);
-            if (p < 0)
-            {
-              faItems.OpenWithItems.Insert(0, item0);
-              p = 0;
-            }
-            faItems.OpenItem = faItems.OpenWithItems[p]; // а не Item0
-          }
+          FileAssociationItem item0 = GetProgIdItem(fileExt, tree, DataTools.GetString(key1.GetValue(String.Empty)), key1.Name);
+          faItems.ExtAdd(item0, true);
         }
       }
 
-      private static FileAssociationItem GetProgIdItem(RegistryTree2 tree, string progId, string infoSourceString)
+      private static FileAssociationItem GetProgIdItem(string fileExt, RegistryTree2 tree, string progId, string infoSourceString)
       {
         if (String.IsNullOrEmpty(progId))
           return null;
 
         RegistryKey2 keyProgId = tree[@"HKEY_CLASSES_ROOT\" + progId];
         if (keyProgId == null)
-          return GetProgIdItemForExeFile(tree, progId, infoSourceString);
+          return GetProgIdItemForExeFile(fileExt, tree, progId, infoSourceString);
 
-        return DoGetProgIdItem(tree, progId, keyProgId, infoSourceString);
+        return DoGetProgIdItem(fileExt, tree, progId, keyProgId, infoSourceString);
       }
 
-      private static FileAssociationItem DoGetProgIdItem(RegistryTree2 tree, string progId, RegistryKey2 keyProgId, string infoSourceString)
+      private static FileAssociationItem DoGetProgIdItem(string fileExt, RegistryTree2 tree, string progId, RegistryKey2 keyProgId, string infoSourceString)
       {
         string cmd = tree.GetString(keyProgId.Name + @"\shell\open\command", String.Empty);
         if (String.IsNullOrEmpty(cmd))
-          return null;
+        {
+          cmd = tree.GetString(keyProgId.Name + @"\shell\edit\command", String.Empty); // 21.09.2023
+          if (String.IsNullOrEmpty(cmd))
+            return null;
+        }
 
         if (cmd.IndexOf(@"%1", StringComparison.Ordinal) < 0)
           // Обмен с помощью DDE не реализован
@@ -671,15 +713,41 @@ namespace FreeLibSet.Shell
 
         AbsPath iconPath = AbsPath.Empty;
         int iconIndex = 0;
-        RegistryKey2 keyDefIcon = tree[keyProgId.Name + @"\DefaultIcon"];
-        if (keyDefIcon != null)
+
+        // Убрано 21.09.2023
+        //RegistryKey2 keyDefIcon = tree[keyProgId.Name + @"\DefaultIcon"];
+        //if (keyDefIcon != null)
+        //{
+        //  string s = DataTools.GetString(keyDefIcon.GetValue(String.Empty));
+        //  if (!(s == "%1" || s == "\"%1\""))
+        //  {
+        //    ParseIconInfo(s, out iconPath, out iconIndex);
+        //  }
+        //}
+
+
+        // Специальная реализация для Mono+Wine
+        if (EnvironmentTools.IsMono &&
+          String.Equals(path.FileName, "winebrowser.exe", StringComparison.OrdinalIgnoreCase) &&
+          (!String.IsNullOrEmpty(fileExt)))
         {
-          string s = DataTools.GetString(keyDefIcon.GetValue(String.Empty));
-          if (!(s == "%1" || s == "\"%1\""))
+          //Console.WriteLine("winebrowser.exe. fileExt=" + fileExt);
+          string mimeType = tree.GetString(@"HKEY_CLASSES_ROOT\" + fileExt, "Content Type");
+          //Console.WriteLine("mimeType==" + mimeType);
+          if (!String.IsNullOrEmpty(mimeType))
           {
-            ParseIconInfo(s, out iconPath, out iconIndex);
+            string clsId = tree.GetString(@"HKEY_CLASSES_ROOT\MIME\Database\Content Type\" + mimeType, "Content Type");
+            //Console.WriteLine("clsId==" + clsId);
+            if (!String.IsNullOrEmpty(clsId))
+            {
+              string defIcon = tree.GetString(@"HKEY_CLASSES_ROOT\CLSID\" + clsId + @"\DefaultIcon", String.Empty);
+              //Console.WriteLine("defIcon==" + defIcon);
+              ParseIconInfo(defIcon, out iconPath, out iconIndex);
+              //Console.WriteLine("IconPath=\"" + iconPath+"\", IconIndex="+iconIndex);
+            }
           }
         }
+
         if (iconPath.IsEmpty)
         {
           iconPath = path;
@@ -723,19 +791,19 @@ namespace FreeLibSet.Shell
         }
       }
 
-      private static FileAssociationItem GetProgIdItemForExeFile(RegistryTree2 tree, string progId, string infoSourceString)
+      private static FileAssociationItem GetProgIdItemForExeFile(string fileExt, RegistryTree2 tree, string progId, string infoSourceString)
       {
         if (!progId.EndsWith(".EXE", StringComparison.OrdinalIgnoreCase))
           return null;
 
-        FileAssociationItem faItem = GetProgIdItemForExeFileHKCRApplications(tree, progId, infoSourceString);
+        FileAssociationItem faItem = GetProgIdItemForExeFileHKCRApplications(fileExt, tree, progId, infoSourceString);
         if (faItem != null)
           return faItem;
         else
           return GetProgIdItemForExeFileAppPathes(tree, progId, infoSourceString);
       }
 
-      private static FileAssociationItem GetProgIdItemForExeFileHKCRApplications(RegistryTree2 tree, string progId, string infoSourceString)
+      private static FileAssociationItem GetProgIdItemForExeFileHKCRApplications(string fileExt, RegistryTree2 tree, string progId, string infoSourceString)
       {
         RegistryKey2 keyProgId = tree[@"HKEY_CLASSES_ROOT\Applications\" + progId];
         if (keyProgId == null && progId.IndexOf('\\') < 0)
@@ -749,7 +817,7 @@ namespace FreeLibSet.Shell
         if (keyProgId == null)
           return null;
 
-        return DoGetProgIdItem(tree, progId, keyProgId, infoSourceString);
+        return DoGetProgIdItem(fileExt, tree, progId, keyProgId, infoSourceString);
       }
 
       private static FileAssociationItem GetProgIdItemForExeFileAppPathes(RegistryTree2 tree, string progId, string infoSourceString)
@@ -819,15 +887,6 @@ namespace FreeLibSet.Shell
         using (RegistryTree2 tree = new RegistryTree2(true))
         {
           FromMimeTypeHKCR_MIME(mimeType, faItems, tree);
-
-          if (faItems.OpenItem == null && faItems.OpenWithItems.Count > 0)
-            faItems.OpenItem = faItems.OpenWithItems[0];
-          else if (faItems.OpenItem != null)
-          {
-            if (!faItems.OpenWithContains(faItems.OpenItem))
-              //FA.OpenWithItems.Insert(0, FA.OpenItem);
-              faItems.OpenWithItems.Add(faItems.OpenItem);
-          }
         }
 
         return faItems;
@@ -845,9 +904,8 @@ namespace FreeLibSet.Shell
             if (key2 != null)
             {
               string progId = DataTools.GetString(key2.GetValue(String.Empty));
-              FileAssociationItem faItem = GetProgIdItem(tree, progId, key1.Name);
-              if (faItem != null)
-                faItems.OpenWithItems.Add(faItem);
+              FileAssociationItem item = GetProgIdItem(String.Empty, tree, progId, key1.Name);
+              faItems.ExtAdd(item, false);
             }
           }
         }
@@ -871,12 +929,106 @@ namespace FreeLibSet.Shell
           return faItems;
         }
 
-        FileAssociationItem faItem = new FileAssociationItem("Explorer", path, "%1", "Windows Explorer",
+        FileAssociationItem item = new FileAssociationItem("Explorer", path, "%1", "Windows Explorer",
           path, 0, false, "Fixed");
-        faItems.OpenWithItems.Add(faItem);
-        faItems.OpenItem = faItem;
+        faItems.ExtAdd(item, true);
+
         return faItems;
       }
+
+      #endregion
+
+      #region Вспомогательные методы и свойства
+
+      private static bool SplitFileNameAndArgs(string commandLine, out string fileName, out string arguments)
+      {
+        fileName = String.Empty;
+        arguments = String.Empty;
+        if (String.IsNullOrEmpty(commandLine))
+          return false;
+
+        if (commandLine[0] == '\"')
+        {
+          // Имя программы в кавычках
+          StringBuilder sb = new StringBuilder();
+          int pEndQuota = -1;
+          for (int i = 1; i < commandLine.Length; i++)
+          {
+            if (commandLine[i] == '\"')
+            {
+              if (i < (commandLine.Length - 1))
+              {
+                char nextChar = commandLine[i + 1];
+                if (nextChar == '\"') // удвоенная кавычка
+                {
+                  sb.Append('\"');
+                  i++; // пропускаем один символ
+                  continue;
+                }
+              }
+              pEndQuota = i;
+              break;
+            }
+            else
+              sb.Append(commandLine[i]);
+          }
+          fileName = sb.ToString();
+          if (pEndQuota < 0)
+            return false;
+
+          if (pEndQuota < (commandLine.Length - 1))
+            arguments = commandLine.Substring(pEndQuota + 1).TrimStart(' ');
+          return true;
+        }
+        else
+        {
+          // Имя программы от аргументов отделяется пробелом
+          // 15.09.2023
+          // Может быть командная строка без кавычек, например: C:\Program Files\AlterOffice\program\atext.exe -o "%1"
+
+          int p1 = commandLine.LastIndexOf('\\');
+          if (p1 >= 0)
+          {
+            int p2 = commandLine.IndexOf(' ', p1 + 1);
+            if (p2 >= 0)
+            {
+              fileName = commandLine.Substring(0, p2);
+              arguments = commandLine.Substring(p2 + 1);
+              return true;
+            }
+          }
+
+          int p3 = commandLine.IndexOf(' ');
+          if (p3 >= 0)
+          {
+            fileName = commandLine.Substring(0, p3);
+            arguments = commandLine.Substring(p3 + 1);
+          }
+          else
+          {
+            // нет пробела
+            fileName = commandLine;
+          }
+          return true;
+        }
+      }
+
+      public static bool IsWindowsXP
+      {
+        get
+        {
+          if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            return false;
+          if (Environment.OSVersion.Version.Major < 5)
+            return false;
+          if (Environment.OSVersion.Version.Major > 5)
+            return true;
+          // Windows-2000: 5.0
+          // Windows-XP: 5.1
+          return Environment.OSVersion.Version.Minor > 0;
+        }
+      }
+
 
       #endregion
     }
@@ -1007,25 +1159,51 @@ namespace FreeLibSet.Shell
       /// Так как класс FileAssociations предполагается потокобезопасным,
       /// иногда необходимо выполнять блокировку
       /// </summary>
-      private static object _SyncRoot = new object();
-
-      private static string _DefaultsListFilePath = "~/.local/share/applications/defaults.list";
-
-      private static string _MimeinfoCacheFilePath = "/usr/share/applications/mimeinfo.cache";
+      private static readonly object _SyncRoot = new object();
 
       /// <summary>
-      /// Время модификации файла "~/.local/share/applications/defaults.list"
+      /// INI-файл, содержащий секцию [MIME Cache] и пары mimetype=список_файлов_desktop.
+      /// Если файла нет, содержит пустой путь
       /// </summary>
-      private static DateTime _DefaultsListFileTime;
+      private static readonly AbsPath _MimeinfoFilePath = TryGetFiles(new string[] {
+        "/usr/share/applications/mimeinfo.cache" });
+
+      /// <summary>
+      /// INI-файл, содержащий секцию [Default Applications], в котором есть пары mimetype=список_файлов_desktop.
+      /// Порядок desktop-файлов содержит пользовательские предпочтения.
+      /// </summary>
+      private static readonly AbsPath _UserFilePath = TryGetFiles(new string[] {
+        "~/.local/share/applications/defaults.list",
+        "~/.config/mimeapps.list" /* 21.09.2023 */});
 
       /// <summary>
       /// Время модификации файла "/usr/share/applications/mimeinfo.cache"
       /// </summary>
-      private static DateTime _MimeinfoCacheFileTime;
+      private static DateTime _MimeinfoFileTime;
+
+      /// <summary>
+      /// Время модификации файла "~/.local/share/applications/defaults.list"
+      /// </summary>
+      private static DateTime _UserFileTime;
+
+      private static AbsPath TryGetFiles(string[] a)
+      {
+        try
+        {
+          for (int i = 0; i < a.Length; i++)
+          {
+            AbsPath p = new AbsPath(a[i]);
+            if (System.IO.File.Exists(p.Path))
+              return p;
+          }
+        }
+        catch { }
+        return AbsPath.Empty;
+      }
 
       /// <summary>
       /// Таблица соответствий mime-типов и desktop-файлов.
-      /// Ключ - MIME-тип, значение - список ярылков .desktop (через точку с запятой)
+      /// Ключ - MIME-тип, значение - список ярлыков .desktop (через точку с запятой)
       /// </summary>
       private static Dictionary<string, string> _MimeDesktopFiles;
 
@@ -1055,17 +1233,111 @@ namespace FreeLibSet.Shell
 #endif
 
         string[] aDesktopFiles = sDesktopFiles.Split(';');
-        FileAssociations faItems = new FileAssociations(false);
+        // В массиве могут быть повторяющиеся элементы, так как добавлялись пользовательские предпочтения.
+        SingleScopeStringList lstDesktopFiles = new SingleScopeStringList(aDesktopFiles.Length, false);
         for (int i = 0; i < aDesktopFiles.Length; i++)
         {
-          FileAssociationItem faItem = CreateFromDesktopFile(aDesktopFiles[i]);
-          if (faItem != null)
-            faItems.OpenWithItems.Add(faItem);
+          if (aDesktopFiles[i].Length > 0)
+            lstDesktopFiles.Add(aDesktopFiles[i]);
         }
-        if (faItems.OpenWithItems.Count > 0)
-          faItems.OpenItem = faItems.OpenWithItems[0];
+        FileAssociations faItems = new FileAssociations(false);
+        for (int i = 0; i < lstDesktopFiles.Count; i++)
+        {
+          FileAssociationItem item = CreateFromDesktopFile(lstDesktopFiles[i]);
+          faItems.ExtAdd(item, false);
+        }
         faItems.SetReadOnly();
         return faItems;
+      }
+
+      /// <summary>
+      /// Список путей, по которым нужно искать значки приложений
+      /// </summary>
+      private static AbsPath[] SearchIconPathes
+      {
+        get
+        {
+          if (_SearchIconPathes == null)
+            _SearchIconPathes = GetSearchIconPathes();
+          return _SearchIconPathes;
+        }
+      }
+      private static AbsPath[] _SearchIconPathes = null;
+
+      private static AbsPath[] GetSearchIconPathes()
+      {
+        #region Список тем, откуда в порядке очереди берутся значки
+
+        List<string> lstThemes = new List<string>();
+        lstThemes.Add("hicolor");
+
+        #endregion
+
+        #region Список каталогов, в которых могут быть темы
+
+        // См. https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout - порядок просмотра каталогов
+        // См. https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables - значения по умолчанию, когда переменные окружения не объявлены
+
+        SingleScopeList<AbsPath> lstBaseDirs = new SingleScopeList<AbsPath>();
+        AbsPath p;
+
+        // #1
+        p = new AbsPath("~/.icons");
+        if (System.IO.Directory.Exists(p.Path))
+          lstBaseDirs.Add(p);
+
+        // #2
+        if (String.IsNullOrEmpty(Environment.GetEnvironmentVariable("$XDG_DATA_HOME")))
+          p = new AbsPath("~/.local/share");
+        else
+          p = new AbsPath(Environment.GetEnvironmentVariable("$XDG_DATA_HOME"));
+        if (System.IO.Directory.Exists(p.Path))
+          lstBaseDirs.Add(p);
+        if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("$XDG_DATA_DIRS")))
+        {
+          string[] a = Environment.GetEnvironmentVariable("$XDG_DATA_DIRS").Split(':');
+          for (int i = 0; i < a.Length; i++)
+          {
+            p = new AbsPath(a[i]);
+            if (System.IO.Directory.Exists(p.Path))
+              lstBaseDirs.Add(p);
+          }
+        }
+
+        // #3
+        p = new AbsPath("/usr/share/pixmaps");
+        if (System.IO.Directory.Exists(p.Path))
+          lstBaseDirs.Add(p);
+
+        // #4 Агеев
+        p = new AbsPath("/usr/share/icons");
+        if (System.IO.Directory.Exists(p.Path))
+          lstBaseDirs.Add(p);
+
+        #endregion
+
+        #region Определение каталогов
+
+        string[] sizeSubNames = new string[] { "32x32", "28x28", "36x36", "24x24", "22x22", "20x20", "16x16", "48x48" };
+
+        List<AbsPath> lst = new List<AbsPath>();
+
+        foreach (string theme in lstThemes)
+        {
+          foreach (string sizeSubName in sizeSubNames)
+          {
+            foreach (AbsPath baseDir in lstBaseDirs)
+            {
+              p = new AbsPath(baseDir, theme, sizeSubName, "apps");
+              if (System.IO.Directory.Exists(p.Path))
+                lst.Add(p);
+            }
+          }
+        }
+
+        #endregion
+
+        return lst.ToArray();
       }
 
       private static FileAssociationItem CreateFromDesktopFile(string desktopFileName)
@@ -1074,8 +1346,8 @@ namespace FreeLibSet.Shell
           return null;
         if (!desktopFileName.EndsWith(".desktop", StringComparison.Ordinal))
           desktopFileName += ".desktop";
-        AbsPath DesktopFilePath = new AbsPath("/usr/share/applications/" + desktopFileName);
-        if (!System.IO.File.Exists(DesktopFilePath.Path))
+        AbsPath desktopFilePath = new AbsPath("/usr/share/applications/" + desktopFileName);
+        if (!System.IO.File.Exists(desktopFilePath.Path))
         {
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("Desktop entry file not found: " + DesktopFilePath.Path);
@@ -1084,7 +1356,7 @@ namespace FreeLibSet.Shell
         }
 
         IniFile file = new IniFile(true);
-        file.Load(DesktopFilePath);
+        file.Load(desktopFilePath);
         string displayName = file["Desktop Entry", "Name[" + LanguageStr + "]"]; // Name[ru]
         if (String.IsNullOrEmpty(displayName))
           displayName = file["Desktop Entry", "Name"];
@@ -1117,6 +1389,8 @@ namespace FreeLibSet.Shell
           return null;
         }
 
+        programPath = FileTools.GetRealPath(programPath); // 18.09.2023
+
         AbsPath iconPath = AbsPath.Empty;
         string sIcon = file["Desktop Entry", "Icon"];
 
@@ -1127,40 +1401,44 @@ namespace FreeLibSet.Shell
         {
           try
           {
-            /*
-
-            AbsPath IndexThemePath = new AbsPath("/usr/share/icons/default/index.theme");
-            if (System.IO.File.Exists(IndexThemePath.Path))
+            if (sIcon[0] == '~' || sIcon[0] == '/')
+              iconPath = new AbsPath(sIcon); // 21.09.2023
+            else
             {
-              IniFile IndexThemeFile = new IniFile();
-              IndexThemeFile.Load(IndexThemePath.Path);
-              string Theme = IndexThemeFile["Icon Theme", "Inherits"];
-#if USE_TRACE
-              System.Diagnostics.Trace.WriteLine("Theme=" + Theme);
-#endif
-              if (!String.IsNullOrEmpty(Theme))
-              {
-                AbsPath IconPath2 = new AbsPath("/usr/share/icons/" + Theme + "/" + sIcon + ".png");
-#if USE_TRACE
-                System.Diagnostics.Trace.WriteLine("Icon Path=" + IconPath2);
-#endif
-                if (System.IO.File.Exists(IconPath2.Path))
-                  IconPath = IconPath2;
-              }
-            }
-             * 
-             * */
 
-            // Х.З., как правильно выбрать тему
-            string[] a = System.IO.Directory.GetFiles("/usr/share/icons", sIcon + ".png", System.IO.SearchOption.AllDirectories);
-            if (a.Length > 0)
-              iconPath = new AbsPath(a[0]);
+              //DoGetIconPath(ref iconPath, "~/.icons", sIcon); // 21.09.2023
+              //DoGetIconPath(ref iconPath, "~/.local/share/icons", sIcon); // 21.09.2023
+              //DoGetIconPath(ref iconPath, "/usr/share/icons", sIcon);
+
+              foreach (AbsPath dir in SearchIconPathes)
+              {
+                AbsPath p = new AbsPath(dir, sIcon + ".png");
+                if (System.IO.File.Exists(p.Path))
+                {
+                  iconPath = p;
+                  break;
+                }
+              }
+
+            }
           }
           catch { }
         }
 
-        return new FileAssociationItem(desktopFileName, programPath, arguments, displayName, iconPath, 0, false, DesktopFilePath.Path);
+        return new FileAssociationItem(desktopFileName, programPath, arguments, displayName, iconPath, 0, false, desktopFilePath.Path);
       }
+
+      //private static void DoGetIconPath(ref AbsPath iconPath, string dir, string sIcon)
+      //{
+      //  if (!iconPath.IsEmpty)
+      //    return; // нашли при предыдущем вызове
+      //  if (!System.IO.Directory.Exists(dir))
+      //    return; // нет каталога
+
+      //  string[] a = System.IO.Directory.GetFiles(dir, sIcon + ".png", System.IO.SearchOption.AllDirectories);
+      //  if (a.Length > 0)
+      //    iconPath = new AbsPath(a[0]);
+      //}
 
       /// <summary>
       /// Возвращает идентификатор языка системы, например, "ru"
@@ -1185,17 +1463,18 @@ namespace FreeLibSet.Shell
       {
         if (_MimeDesktopFiles == null)
           return true;
-        if (System.IO.File.Exists(_DefaultsListFilePath))
+        if (!_MimeinfoFilePath.IsEmpty)
         {
-          if (System.IO.File.GetLastWriteTime(_DefaultsListFilePath) != _DefaultsListFileTime)
+          if (System.IO.File.GetLastWriteTime(_MimeinfoFilePath.Path) != _MimeinfoFileTime)
             return true;
         }
 
-        if (System.IO.File.Exists(_MimeinfoCacheFilePath))
+        if (!_UserFilePath.IsEmpty)
         {
-          if (System.IO.File.GetLastWriteTime(_MimeinfoCacheFilePath) != _MimeinfoCacheFileTime)
+          if (System.IO.File.GetLastWriteTime(_UserFilePath.Path) != _UserFileTime)
             return true;
         }
+
         return false;
       }
 
@@ -1208,32 +1487,37 @@ namespace FreeLibSet.Shell
 
         #region Общий список
 
-        if (System.IO.File.Exists(_MimeinfoCacheFilePath))
+        if (!_MimeinfoFilePath.IsEmpty)
         {
 #if USE_TRACE
-          System.Diagnostics.Trace.WriteLine("  from " + MimeinfoCacheFilePath);
+          System.Diagnostics.Trace.WriteLine("  from " + MimeinfoFilePath);
 #endif
           FreeLibSet.IO.IniFile ini = new IniFile(true);
-          ini.Load(new AbsPath(_MimeinfoCacheFilePath));
+          ini.Load(_MimeinfoFilePath);
           foreach (IniKeyValue pair in ini.GetKeyValues("MIME Cache"))
             _MimeDesktopFiles[pair.Key] = pair.Value;
-          _MimeinfoCacheFileTime = System.IO.File.GetLastWriteTime(_MimeinfoCacheFilePath);
+          _MimeinfoFileTime = System.IO.File.GetLastWriteTime(_MimeinfoFilePath.Path);
         }
 
         #endregion
 
         #region Пользовательские настройки
 
-        if (System.IO.File.Exists(_DefaultsListFilePath))
+        if (!_UserFilePath.IsEmpty)
         {
 #if USE_TRACE
           System.Diagnostics.Trace.WriteLine("  from " + DefaultsListFilePath);
 #endif
           FreeLibSet.IO.IniFile ini = new IniFile(true);
-          ini.Load(new AbsPath(_DefaultsListFilePath));
+          ini.Load(_UserFilePath);
           foreach (IniKeyValue pair in ini.GetKeyValues("Default Applications"))
-            _MimeDesktopFiles[pair.Key] = pair.Value;
-          _DefaultsListFileTime = System.IO.File.GetLastWriteTime(_DefaultsListFilePath);
+          {
+            if (_MimeDesktopFiles.ContainsKey(pair.Key))
+              _MimeDesktopFiles[pair.Key] = pair.Value + ";" + _MimeDesktopFiles[pair.Key]; // пользовательские предпочтения вперед
+            else
+              _MimeDesktopFiles.Add(pair.Key, pair.Value);
+          }
+          _UserFileTime = System.IO.File.GetLastWriteTime(_UserFilePath.Path);
         }
 
         #endregion
@@ -1253,85 +1537,67 @@ namespace FreeLibSet.Shell
       }
 
       #endregion
-    }
 
-    #endregion
+      #region Вспомогательные методы
 
-    #region Вспомогательные методы
+      // Этот метод отличается от того, который в Windows!
 
-    private static bool SplitFileNameAndArgs(string commandLine, out string fileName, out string arguments)
-    {
-      fileName = String.Empty;
-      arguments = String.Empty;
-      if (String.IsNullOrEmpty(commandLine))
-        return false;
-
-      if (commandLine[0] == '\"')
+      private static bool SplitFileNameAndArgs(string commandLine, out string fileName, out string arguments)
       {
-        // Имя программы в кавычках
-        StringBuilder sb = new StringBuilder();
-        int pEndQuota = -1;
-        for (int i = 1; i < commandLine.Length; i++)
-        {
-          if (commandLine[i] == '\"')
-          {
-            if (i < (commandLine.Length - 1))
-            {
-              char nextChar = commandLine[i + 1];
-              if (nextChar == '\"') // удвоенная кавычка
-              {
-                sb.Append('\"');
-                i++; // пропускаем один символ
-                continue;
-              }
-            }
-            pEndQuota = i;
-            break;
-          }
-          else
-            sb.Append(commandLine[i]);
-        }
-        fileName = sb.ToString();
-        if (pEndQuota < 0)
+        fileName = String.Empty;
+        arguments = String.Empty;
+        if (String.IsNullOrEmpty(commandLine))
           return false;
 
-        if (pEndQuota < (commandLine.Length - 1))
-          arguments = commandLine.Substring(pEndQuota + 1).TrimStart(' ');
-        return true;
-      }
-      else
-      {
-        // Имя программы от аргументов отделяется пробелом
-        int p = commandLine.IndexOf(' ');
-        if (p >= 0)
+        if (commandLine[0] == '\"')
         {
-          fileName = commandLine.Substring(0, p);
-          arguments = commandLine.Substring(p + 1);
+          // Имя программы в кавычках
+          StringBuilder sb = new StringBuilder();
+          int pEndQuota = -1;
+          for (int i = 1; i < commandLine.Length; i++)
+          {
+            if (commandLine[i] == '\"')
+            {
+              if (i < (commandLine.Length - 1))
+              {
+                char nextChar = commandLine[i + 1];
+                if (nextChar == '\"') // удвоенная кавычка
+                {
+                  sb.Append('\"');
+                  i++; // пропускаем один символ
+                  continue;
+                }
+              }
+              pEndQuota = i;
+              break;
+            }
+            else
+              sb.Append(commandLine[i]);
+          }
+          fileName = sb.ToString();
+          if (pEndQuota < 0)
+            return false;
+
+          if (pEndQuota < (commandLine.Length - 1))
+            arguments = commandLine.Substring(pEndQuota + 1).TrimStart(' ');
+          return true;
         }
         else
-          fileName = commandLine;
-        return true;
+        {
+          // Имя программы от аргументов отделяется пробелом
+          int p = commandLine.IndexOf(' ');
+          if (p >= 0)
+          {
+            fileName = commandLine.Substring(0, p);
+            arguments = commandLine.Substring(p + 1);
+          }
+          else
+            fileName = commandLine;
+          return true;
+        }
       }
-    }
 
-    #endregion
-
-    #region IReadOnlyObject Members
-
-    bool IReadOnlyObject.IsReadOnly
-    {
-      get { return _OpenWithItems.IsReadOnly; }
-    }
-
-    void IReadOnlyObject.CheckNotReadOnly()
-    {
-      if (_OpenWithItems.IsReadOnly)
-        throw new ObjectReadOnlyException();
-    }
-
-    private void SetReadOnly()
-    {
-      _OpenWithItems.SetReadOnly();
+      #endregion
     }
 
     #endregion

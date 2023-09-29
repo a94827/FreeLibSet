@@ -57,7 +57,7 @@ namespace FreeLibSet.Forms
     private EFPDataGridViewColumn _Column;
 
     /// <summary>
-    /// Провадер табличного просмотра.
+    /// Провайдер табличного просмотра.
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _Column.ControlProvider; } }
 
@@ -98,9 +98,114 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
+  /// Общая часть описаний для <see cref="EFPDataGridViewColumn"/> и <see cref="EFPDataTreeViewColumn"/>
+  /// </summary>
+  public interface IEFPDataViewColumn
+  {
+    #region Свойства
+
+    /// <summary>
+    /// Объект - владелец
+    /// </summary>
+    IEFPDataView ControlProvider { get; }
+
+    /// <summary>
+    /// Условное имя столбца
+    /// </summary>
+    string Name { get; }
+
+    /// <summary>
+    /// Отображаемое имя столбца. Используется в диалоге параметров страницы
+    /// </summary>
+    string DisplayName { get; }
+
+    /// <summary>
+    /// Если столбец был создан с помощью <see cref="EFPGridProducer"/>, то ссылка на генератор столбца,
+    /// иначе - null.
+    /// </summary>
+    IEFPGridProducerColumn ColumnProducer { get; }
+
+
+    /// <summary>
+    /// Возвращает true, если столбец является видимым (актуально только для <see cref="EFPDataGridViewColumn"/> 
+    /// </summary>
+    bool Visible { get; }
+
+    /// <summary>
+    /// Ширина столбца в пикселях
+    /// </summary>
+    int Width { get; }
+
+    /// <summary>
+    /// Ширина столбца в пунктах, в зависимости от разрешения экрана
+    /// </summary>
+    int WidthPt { get; }
+
+    /// <summary>
+    /// Ширина столбца в текстовых единицах (условная)
+    /// </summary>
+    double TextWidth { get; }
+
+    /// <summary>
+    /// Имя группы для синхронизации размеров столбцов. Если несколько столбцов имеют
+    /// одинаковое и непустое значение этого свойства, то изменение размера одного из
+    /// этих столбцов приводит к синхронному изменению размеров остальных столбцов группы.
+    /// </summary>
+    string SizeGroup { get; }
+
+    /// <summary>
+    /// Возвращает true (обычно), если столбец может быть выведен в отчет
+    /// </summary>
+    bool Printable { get; }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Общая часть коллекций столбцов <see cref="EFPDataGridViewColumns"/> и <see cref="EFPDataTreeViewColumns"/>
+  /// </summary>
+  public interface IEFPDataViewColumns : IEnumerable<IEFPDataViewColumn>
+  {
+    /// <summary>
+    /// Возвращает количество столбцов в просмотре
+    /// </summary>
+    int Count { get; }
+
+    /// <summary>
+    /// Доступ к столбцу по индексу.
+    /// </summary>
+    /// <param name="index">Индекс столбца </param>
+    /// <returns>Столбец</returns>
+    IEFPDataViewColumn this[int index] { get; }
+
+    /// <summary>
+    /// Доступ по имени столбца
+    /// Если просмотр не содержит столбца с таким именем, возвращается null
+    /// </summary>
+    /// <param name="name">Имя столбца <see cref="IEFPDataViewColumn.Name"/></param>
+    /// <returns>Столбец </returns>
+    IEFPDataViewColumn this[string name] { get; }
+
+    /// <summary>
+    /// Возвращает столбец, связанный с заданным генератором столбцов.
+    /// Возвращает null, если для данного генератора не было создано столбца в просмотре.
+    /// </summary>
+    /// <param name="columnProducer">Генератор столбцов</param>
+    /// <returns>Столбец или null</returns>
+    IEFPDataViewColumn this[IEFPGridProducerColumn columnProducer] { get; }
+
+    /// <summary>
+    /// Поиск столбца в табличном просмотре по имени
+    /// </summary>
+    /// <param name="name">Имя столбца <see cref="IEFPDataViewColumn.Name"/></param>
+    /// <returns>Индекс столбца или (-1), если столбец не найден</returns>
+    int IndexOf(string name);
+  }
+
+  /// <summary>
   /// Столбец в EFPDataGridView
   /// </summary>
-  public class EFPDataGridViewColumn
+  public class EFPDataGridViewColumn : IEFPDataViewColumn
   {
     #region Защищенный конструктор
 
@@ -128,6 +233,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
     private EFPDataGridView _ControlProvider;
+
+    IEFPDataView IEFPDataViewColumn.ControlProvider { get { return ControlProvider; } }
 
     /// <summary>
     /// Столбец табличного просмотра
@@ -165,13 +272,23 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        if (!String.IsNullOrEmpty(GridColumn.HeaderText))
-          return GridColumn.HeaderText;
-        if (!String.IsNullOrEmpty(GridColumn.ToolTipText))
-          return GridColumn.ToolTipText;
-        return Name;
+        if (String.IsNullOrEmpty(_DisplayName))
+        {
+          if (!String.IsNullOrEmpty(GridColumn.HeaderText))
+            return GridColumn.HeaderText.Replace(Environment.NewLine, " ");
+          if (!String.IsNullOrEmpty(GridColumn.ToolTipText))
+            return GridColumn.ToolTipText.Replace(Environment.NewLine, " ");
+          return Name;
+        }
+        else
+          return _DisplayName;
+      }
+      set
+      {
+        _DisplayName = value;
       }
     }
+    private string _DisplayName;
 
     /// <summary>
     /// Пользовательские данные (вместо занятого DataGridViewColumn.Tag)
@@ -185,6 +302,16 @@ namespace FreeLibSet.Forms
     /// </summary>
     public IEFPGridProducerColumn ColumnProducer { get { return _ColumnProducer; } set { _ColumnProducer = value; } }
     private IEFPGridProducerColumn _ColumnProducer;
+
+    /// <summary>
+    /// Может ли для столбца выполняться суммирование.
+    /// По умолчанию - false - суммирование не выполняется.
+    /// Если столбец создан с помощью <see cref="EFPGridProducer"/>, то используется значение свойство 
+    /// </summary>
+    public bool Summable { get { return _Summable; } set { _Summable = value; } }
+    private bool _Summable;
+
+    bool IEFPDataViewColumn.Visible { get { return GridColumn.Visible; } }
 
     #endregion
 
@@ -529,6 +656,20 @@ namespace FreeLibSet.Forms
     #region Печать
 
     /// <summary>
+    /// Возвращает true для всех столбцов, кроме изображений
+    /// </summary>
+    public bool Printable
+    {
+      get
+      {
+        if (GridColumn is DataGridViewImageColumn)
+          return false;
+        else
+          return true;
+      }
+    }
+
+    /// <summary>
     /// Многострочные заголовки при печати таблицы
     /// </summary>
     public string[] PrintHeaders { get { return _PrintHeaders; } set { _PrintHeaders = value; } }
@@ -740,7 +881,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Псевдоколлекция столбцов - реализация свойства EFPDataGridView.Columns
   /// </summary>
-  public class EFPDataGridViewColumns : IEnumerable<EFPDataGridViewColumn>
+  public class EFPDataGridViewColumns : IEnumerable<EFPDataGridViewColumn>, IEFPDataViewColumns
   {
     #region Защищенный конструктор
 
@@ -816,6 +957,12 @@ namespace FreeLibSet.Forms
       }
     }
 
+    IEFPDataViewColumn IEFPDataViewColumns.this[int index]
+    {
+      get { return this[index]; }
+    }
+
+
     /// <summary>
     /// Доступ по имени столбца
     /// Если просмотр не содержит столбца с таким именем, возвращается null
@@ -835,6 +982,11 @@ namespace FreeLibSet.Forms
         }
         return null;
       }
+    }
+
+    IEFPDataViewColumn IEFPDataViewColumns.this[string name]
+    {
+      get { return this[name]; }
     }
 
     /// <summary>
@@ -858,6 +1010,12 @@ namespace FreeLibSet.Forms
         return null;
       }
     }
+
+    IEFPDataViewColumn IEFPDataViewColumns.this[IEFPGridProducerColumn columnProducer]
+    {
+      get { return this[columnProducer]; }
+    }
+
 
     /// <summary>
     /// Поиск столбца в табличном просмотре по имени
@@ -1568,7 +1726,7 @@ namespace FreeLibSet.Forms
     /// Порядок перечисления соответствует DataGridViewColumn.Index, а не порядку отображения столбцов в просмотре.
     /// Скрытые столбцы также перечисляются.
     /// </summary>
-    public struct Enumerator : IEnumerator<EFPDataGridViewColumn>
+    public struct Enumerator : IEnumerator<EFPDataGridViewColumn>, IEnumerator<IEFPDataViewColumn>
     {
       #region Конструктор
 
@@ -1600,6 +1758,9 @@ namespace FreeLibSet.Forms
       public void Dispose()
       {
       }
+
+      IEFPDataViewColumn IEnumerator<IEFPDataViewColumn>.Current { get { return Current; } }
+
 
       object System.Collections.IEnumerator.Current { get { return _Columns[_Index]; } }
 
@@ -1633,6 +1794,11 @@ namespace FreeLibSet.Forms
     IEnumerator<EFPDataGridViewColumn> IEnumerable<EFPDataGridViewColumn>.GetEnumerator()
     {
       return new Enumerator(this);
+    }
+
+    IEnumerator<IEFPDataViewColumn> IEnumerable<IEFPDataViewColumn>.GetEnumerator()
+    {
+      return GetEnumerator();
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

@@ -152,7 +152,7 @@ namespace FreeLibSet.Forms
     private string[] _Items;
 
     /// <summary>
-    /// Текущая позиция при отключенном MultiSelect
+    /// Текущая позиция
     /// </summary>
     public int SelectedIndex
     {

@@ -27,6 +27,17 @@ namespace ExtTools_tests.IO
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
+    [Platform("Linux")]
+    [TestCase(@"/", @"/", true, Description = "Root dir")]
+    [TestCase(@"/tmp", @"/tmp", true, Description = "Abs dir")]
+    public void Constructor_string_abs_linux(string s, string wantedPath, bool wantedIsAbsPath)
+    {
+      RelPath sut = new RelPath(s);
+      Assert.AreEqual(wantedPath, sut.Path, "Path");
+      Assert.AreEqual(wantedIsAbsPath, sut.IsAbsPath, "IsAbsPath");
+      Assert.IsFalse(sut.IsEmpty, "IsEmpty");
+    }
+
     [Test]
     public void Constructor_string_empty()
     {
@@ -54,6 +65,23 @@ namespace ExtTools_tests.IO
       Assert.AreEqual(wantedPath, sut.Path);
     }
 
+    [Platform("Linux")]
+    [TestCase(@"/usr/bin", "AAA|BBB", @"/usr/bin/AAA/BBB")]
+    [TestCase(@"/usr/bin", "", @"/usr/bin")]
+    [TestCase(@"../AAA", "BBB|CCC", @"../AAA/BBB/CCC")]
+    [TestCase(@"", "AAA", @"AAA")]
+    public void Constructor_basePath_linux(string sBasePath, string sSubNames, string wantedPath)
+    {
+      string[] subNames = DataTools.EmptyStrings;
+      if (sSubNames.Length > 0)
+        subNames = sSubNames.Split('|');
+      RelPath basePath = new RelPath(sBasePath);
+
+      RelPath sut = new RelPath(basePath, subNames);
+
+      Assert.AreEqual(wantedPath, sut.Path);
+    }
+
     #endregion
 
     #region SlashedPath, QuotedPath
@@ -65,6 +93,18 @@ namespace ExtTools_tests.IO
     [TestCase(@"..", @"..\")]
     [TestCase(@"aaa\bbb", @"aaa\bbb\")]
     public void SlashedPath_windows(string s, string wantedRes)
+    {
+      RelPath sut = new RelPath(s);
+      Assert.AreEqual(wantedRes, sut.SlashedPath);
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/usr", @"/usr/")]
+    [TestCase(@"/", @"/")]
+    [TestCase(@"", @"")]
+    [TestCase(@"..", @"../")]
+    [TestCase(@"aaa/bbb", @"aaa/bbb/")]
+    public void SlashedPath_linux(string s, string wantedRes)
     {
       RelPath sut = new RelPath(s);
       Assert.AreEqual(wantedRes, sut.SlashedPath);

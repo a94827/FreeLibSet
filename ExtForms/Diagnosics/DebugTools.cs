@@ -20,6 +20,8 @@ using FreeLibSet.Parsing;
 using FreeLibSet.Shell;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Models.Tree;
+using FreeLibSet.Controls;
 
 namespace FreeLibSet.Forms.Diagnostics
 {
@@ -611,6 +613,145 @@ namespace FreeLibSet.Forms.Diagnostics
         theGrid.SelectedObject = null;
       else
         theGrid.SelectedObject = args.Node.Tag;
+    }
+
+    #endregion
+
+    #region Команды меню EFPCommandItems
+
+    /// <summary>
+    /// Модель дерева для команд меню.
+    /// Объектом узла модели является <see cref="EFPCommandItem"/>
+    /// </summary>
+    private class EFPCommandItemsTreeModel : Models.Tree.TreeModelBase
+    {
+      #region Конструктор
+
+      public EFPCommandItemsTreeModel(EFPCommandItems commandItems)
+      {
+        if (commandItems == null)
+          throw new ArgumentNullException("commandItems");
+
+        _CommandItems = commandItems;
+      }
+
+      private EFPCommandItems _CommandItems;
+
+      #endregion
+
+      #region Переопределенные методы
+
+      public override IEnumerable GetChildren(TreePath treePath)
+      {
+        if (treePath.IsEmpty)
+          return _CommandItems.TopLevelItems.Items;
+        else
+        {
+          EFPCommandItem item = (EFPCommandItem)(treePath.LastNode);
+          return item.Children.Items;
+        }
+      }
+
+      public override bool IsLeaf(TreePath treePath)
+      {
+        EFPCommandItem item = (EFPCommandItem)(treePath.LastNode);
+        if (item == null)
+          return false;
+        else
+          return !item.HasChildren;
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Отладка списка команд меню, панелей инструментов.
+    /// Метод может вызываться только из того потока, в котором разрешена работа с <see cref="EFPCommandItems"/>.
+    /// </summary>
+    /// <param name="commandItems">Список команд</param>
+    /// <param name="title">Заголовок окна</param>
+    public static void DebugCommandItems(EFPCommandItems commandItems, string title)
+    {
+      if (title == null)
+        title = "EFPCommandItems";
+
+      if (commandItems == null)
+      {
+        EFPApp.MessageBox("EFPCommandItems=null", title);
+        return;
+      }
+
+      Form frm = new Form();
+      frm.Text = title;
+      frm.Icon = EFPApp.MainImages.Icons["Debug"];
+      frm.StartPosition = FormStartPosition.WindowsDefaultBounds;
+      EFPFormProvider formProvider = new EFPFormProvider(frm);
+      EFPTabControl efpTabControl = new EFPTabControl(formProvider);
+
+      EFPTabPage efpTPTree = efpTabControl.TabPages.Add("Command");
+      efpTPTree.ImageKey = "TreeView";
+      EFPControlWithToolBar<TreeViewAdv> cwtTree = new EFPControlWithToolBar<TreeViewAdv>(efpTPTree);
+      EFPDataTreeView efpTree = new EFPDataTreeView(cwtTree);
+      efpTree.Columns.AddText("CategoryAndName", true, "CategoryAndName", 30, 10);
+      efpTree.Columns.AddInt("ItemId", true, "ItemId", 4);
+      efpTree.Columns.AddText("Usage", true, "Usage", 20, 10);
+      efpTree.Columns.AddBool("MenuUsage", true, "MenuUsage");
+      efpTree.Columns.AddBool("ToolBarUsage", true, "ToolBarUsage");
+      efpTree.Columns.AddBool("IsInToolBarDropDown", true, "IsInToolBarDropDown");
+      efpTree.Columns.AddBool("StatusBarUsage", true, "StatusBarUsage");
+      efpTree.Columns.AddBool("ShortCutUsage", true, "ShortCutUsage");
+      efpTree.Columns.AddText("MenuText", true, "MenuText", 20, 10);
+      //efpTree.Columns.AddBool("HasImage", true, "HasImage");
+      Controls.TreeViewAdvNodeControls.NodeIcon niImage = efpTree.Columns.AddImage("Image");
+      niImage.VirtualMode = true;
+      niImage.ValueNeeded += CommandItemNode_Image_ValueNeeded;
+      efpTree.Columns.AddText("ToolTipText", true, "ToolTipText", 30, 10);
+      efpTree.Columns.AddText("ShortCutText", true, "ShortCutText", 10, 5);
+      efpTree.Columns.AddText("MenuRightText", true, "MenuRightText", 10, 5);
+      efpTree.Columns.AddText("StatusBarText", true, "StatusBarText", 15, 5);
+      efpTree.Columns.AddText("DisplayName", true, "DisplayName", 20, 10);
+      efpTree.Columns.AddBool("Visible", true, "Visible");
+      efpTree.Columns.AddBool("Enabled", true, "Enabled");
+      efpTree.Columns.AddBool("Checked", true, "Checked");
+      efpTree.Columns.AddBool("GroupBegin", true, "GroupBegin");
+      efpTree.Columns.AddBool("GroupEnd", true, "GroupEnd");
+
+      Controls.TreeViewAdvNodeControls.NodeTextBox ntbUIObjects = efpTree.Columns.AddText("UIObjects", false, "UIObjects", 40, 10);
+      ntbUIObjects.VirtualMode = true;
+      ntbUIObjects.ValueNeeded += CommandItemNode_UIObjects_ValueNeeded;
+
+      efpTree.Control.Model = new EFPCommandItemsTreeModel(commandItems);
+
+      EFPApp.ShowFormOrDialog(frm);
+    }
+
+    private static void CommandItemNode_Image_ValueNeeded(object sender, Controls.TreeViewAdvNodeControls.NodeControlValueEventArgs args)
+    {
+      EFPCommandItem ci = args.Node.Tag as EFPCommandItem;
+      if (ci == null)
+        return;
+      if (ci.Image == null)
+      {
+        if (String.IsNullOrEmpty(ci.ImageKey))
+          args.Value = null;
+        else
+          args.Value = EFPApp.MainImages.Images[ci.ImageKey];
+      }
+      else
+        args.Value = ci.Image;
+    }
+
+    private static void CommandItemNode_UIObjects_ValueNeeded(object sender, Controls.TreeViewAdvNodeControls.NodeControlValueEventArgs args)
+    {
+      EFPCommandItem ci = args.Node.Tag as EFPCommandItem;
+      if (ci == null)
+        return;
+
+      EFPUIObjBase[] a1 = ci.GetUIObjects();
+      string[] a2 = new string[a1.Length];
+      for (int i = 0; i < a1.Length; i++)
+        a2[i] = a1[i].GetType().Name;
+      args.Value = String.Join(", ", a2);
     }
 
     #endregion
@@ -1714,7 +1855,13 @@ namespace FreeLibSet.Forms.Diagnostics
       if (EFPApp.IsMainThread)
         args.WritePair("ExternalDialogOwnerWindow", EFPApp.ExternalDialogOwnerWindow == null ? "null" : (EFPApp.ExternalDialogOwnerWindow.ToString()));
       args.WritePair("CompositionHistoryCount", EFPApp.CompositionHistoryCount.ToString());
-
+      args.WritePair("ConfigManager", EFPApp.ConfigManager.ToString());
+      if (!(EFPApp.ConfigManager is EFPDummyConfigManager))
+      {
+        args.IndentLevel++;
+        LogoutTools.LogoutObject(args, EFPApp.ConfigManager);
+        args.IndentLevel--;
+      }
       args.WriteLine("Упрощение интерфейса");
       args.IndentLevel++;
       args.WritePair("EasyInterface", EFPApp.EasyInterface.ToString());
@@ -1856,7 +2003,7 @@ namespace FreeLibSet.Forms.Diagnostics
       args.WriteLine("Все установленные версии OpenOffice / LibreOffice (" + OpenOfficeTools.Installations.Length.ToString() + ")");
       for (int i = 0; i < OpenOfficeTools.Installations.Length; i++)
       {
-        OpenOfficeTools.OfficeInfo inf = OpenOfficeTools.Installations[i];
+        OpenOfficeInfo inf = OpenOfficeTools.Installations[i];
         args.WritePair("[" + (i + 1).ToString() + "]", inf.ToString()); // Название и версия
         args.IndentLevel++;
         args.WritePair("Program dir", inf.ProgramDir.Path);

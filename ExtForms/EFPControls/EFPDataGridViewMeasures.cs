@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms
       {
         _DpiX = gr.DpiX;
         _DpiY = gr.DpiY;
-        _CharWidthDots = ExtTextRenderer.CalcDefaultFontWidth(gr, controlProvider.Control.DefaultCellStyle.Font) * DpiX / 72.0;
+        _CharWidthPixel = ExtTextRenderer.CalcDefaultFontWidth(gr, controlProvider.Control.DefaultCellStyle.Font) * DpiX / 72.0;
       }
       finally
       {
@@ -159,7 +159,7 @@ namespace FreeLibSet.Forms
       // Так было до 05.11.2009
       // return TextWidth * 8 + 10;
 
-      double w1 = _CharWidthDots * textWidth;
+      double w1 = _CharWidthPixel * textWidth;
       double w2 = GetLeftRightGaps();
 
       return (int)Math.Ceiling(w1 + w2);
@@ -203,15 +203,15 @@ namespace FreeLibSet.Forms
     public double GetColumnWidthChars(int width)
     {
       double w1 = (double)width - GetLeftRightGaps();
-      return w1 / _CharWidthDots;
+      return w1 / _CharWidthPixel;
     }
 
     /// <summary>
     /// Средняя ширина одного символа шрифта ячейки по умолчанию в пикселях,
     /// соответствующая текущему разрешению экрана
     /// </summary>
-    public double CharWidthDots { get { return _CharWidthDots; } }
-    private double _CharWidthDots;
+    public double CharWidthPixel { get { return _CharWidthPixel; } }
+    private double _CharWidthPixel;
 
     #endregion
   }
@@ -234,7 +234,7 @@ namespace FreeLibSet.Forms
       {
         _DpiX = gr.DpiX;
         _DpiY = gr.DpiY;
-        //FCharWidthDots = ExtTextRenderer.CalcDefaultFontWidth(gr, ControlProvider.Control.DefaultCellStyle.Font) * DpiX / 72.0;
+        _CharWidthPixel = ExtTextRenderer.CalcDefaultFontWidth(gr, controlProvider.Control.Font) * DpiX / 72.0;
       }
       finally
       {
@@ -333,18 +333,12 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public int GetTextColumnWidth(double textWidth)
     {
-      throw new NotImplementedException();
-                                          /*
-      // Так было до 05.11.2009
-      // return TextWidth * 8 + 10;
-
-      double w1 = FCharWidthDots * TextWidth;
+      double w1 = _CharWidthPixel * textWidth;
       double w2 = GetLeftRightGaps();
 
-      return (int)Math.Ceiling(w1 + w2);    */
+      return (int)Math.Ceiling(w1 + w2);
     }
 
-#if XXX
     /// <summary>
     /// Суммарный зазор слева и справа в пикселях, который надо добавить к
     /// ширине столбца в пискелях, чтобы поместился текст
@@ -353,28 +347,8 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     private double GetLeftRightGaps()
     {
-      int w = FControlProvider.Control.DefaultCellStyle.Padding.Left +
-        FControlProvider.Control.DefaultCellStyle.Padding.Right;
-      w += 2; // Ширина рамки ячейки по умолчанию
-      switch (FControlProvider.Control.AdvancedCellBorderStyle.Left)
-      {
-        case DataGridViewAdvancedCellBorderStyle.InsetDouble:
-        case DataGridViewAdvancedCellBorderStyle.OutsetDouble:
-          w++;
-          break;
-      }
-      switch (FControlProvider.Control.AdvancedCellBorderStyle.Right)
-      {
-        case DataGridViewAdvancedCellBorderStyle.InsetDouble:
-        case DataGridViewAdvancedCellBorderStyle.OutsetDouble:
-          w++;
-          break;
-      }
-      w += 4; // не знаю почему, но иначе не входит
-
-      return (double)w * DpiX / 96.0; // ???
+      return 2 * SystemInformation.BorderSize.Width;
     }
-#endif
 
     /// <summary>
     /// Определить число символов, которые можно отобразить в поле заданной ширины
@@ -383,21 +357,17 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public double GetColumnWidthChars(int width)
     {
-      throw new NotImplementedException();
-      /*
-      double w1 = (double)Width - GetLeftRightGaps();
-      return w1 / FCharWidthDots;*/
+      double w1 = (double)width - GetLeftRightGaps();
+      return w1 / _CharWidthPixel;
     }
 
-#if XXX
     /// <summary>
     /// Средняя ширина одного символа шрифта ячейки по умолчанию в пикселях,
     /// соответствующая текущему разрешению экрана
     /// </summary>
-    public double CharWidthDots { get { return FCharWidthDots; } }
-    private double FCharWidthDots;
+    public double CharWidthPixel { get { return _CharWidthPixel; } }
+    private double _CharWidthPixel;
 
-#endif
     #endregion
   }
 }

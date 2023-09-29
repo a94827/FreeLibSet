@@ -21,9 +21,17 @@ using FreeLibSet.Controls.TreeViewAdvInternal;
 
 namespace FreeLibSet.Controls
 {
+  /// <summary>
+  /// Столбец иерахического просмотра в режиме <see cref="TreeViewAdv.UseColumns"/>=true.
+  /// В столбец может входить один (обычно) или несколько элементов <see cref="FreeLibSet.Controls.TreeViewAdvNodeControls.NodeControl"/>.
+  /// Привязка элемента к столбцу выполняется с помощью свойства <see cref="FreeLibSet.Controls.TreeViewAdvNodeControls.NodeControl.ParentColumn"/>.
+  /// Из объекта <see cref="TreeColumn"/> нельзя получить список элементов, которые в него входят.
+  /// </summary>
   [TypeConverter(typeof(TreeColumn.TreeColumnConverter)), DesignTimeVisible(false), ToolboxItem(false)]
   public class TreeColumn : Component
   {
+    #region Константы
+
     private class TreeColumnConverter : ComponentConverter
     {
       public TreeColumnConverter()
@@ -45,17 +53,48 @@ namespace FreeLibSet.Controls
     private TextFormatFlags _baseHeaderFlags = TextFormatFlags.NoPadding |
                                                TextFormatFlags.EndEllipsis |
                                                TextFormatFlags.VerticalCenter |
-                    TextFormatFlags.PreserveGraphicsTranslateTransform;
+                                               TextFormatFlags.PreserveGraphicsTranslateTransform;
+    
+    #endregion
+
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает столбец без текста заголовка шириной 50 пикселей
+    /// </summary>
+    public TreeColumn()
+    : this(string.Empty, 50)
+    {
+    }
+
+
+    /// <summary>
+    /// Создает столбец с заданным текстом заголовка и шириной
+    /// </summary>
+    /// <param name="header">Текст заголовка</param>
+    /// <param name="width">Ширина в пикселях</param>
+    public TreeColumn(string header, int width)
+    {
+      _header = header;
+      _width = width;
+      _headerFlags = _baseHeaderFlags | TextFormatFlags.Left;
+    }
+
+    #endregion
 
     #region Properties
 
-    private TreeColumnCollection _owner;
     internal TreeColumnCollection Owner
     {
       get { return _owner; }
       set { _owner = value; }
     }
+    private TreeColumnCollection _owner;
 
+    /// <summary>
+    /// Возвращает индекс столбца в просмотре.
+    /// Возвращает (-1), если столбец еще не добавлен в просмотр
+    /// </summary>
     [Browsable(false)]
     public int Index
     {
@@ -68,7 +107,6 @@ namespace FreeLibSet.Controls
       }
     }
 
-    private string _header;
     /// <summary>
     /// Текст заголовка столбца
     /// </summary>
@@ -82,16 +120,22 @@ namespace FreeLibSet.Controls
         OnHeaderChanged();
       }
     }
+    private string _header;
 
-    private string _tooltipText;
+    /// <summary>
+    /// Всплывающая подсказка, которая появляется при наведении курсора мыши на заголовок столбца
+    /// </summary>
     [Localizable(true)]
     public string TooltipText
     {
       get { return _tooltipText; }
       set { _tooltipText = value; }
     }
+    private string _tooltipText;
 
-    private int _width;
+    /// <summary>
+    /// Ширина столбца в пикселях
+    /// </summary>
     [DefaultValue(50), Localizable(true)]
     public int Width
     {
@@ -112,8 +156,11 @@ namespace FreeLibSet.Controls
         }
       }
     }
+    private int _width;
 
-    private int _minColumnWidth;
+    /// <summary>
+    /// Минимальная ширина столбца в пикселях
+    /// </summary>
     [DefaultValue(0)]
     public int MinColumnWidth
     {
@@ -127,8 +174,12 @@ namespace FreeLibSet.Controls
         Width = Math.Max(value, Width);
       }
     }
+    private int _minColumnWidth;
 
-    private int _maxColumnWidth;
+    /// <summary>
+    /// Максимальная ширина столбца в пикселях.
+    /// Нулевое значение означает отсутствие ограничений.
+    /// </summary>
     [DefaultValue(0)]
     public int MaxColumnWidth
     {
@@ -143,8 +194,11 @@ namespace FreeLibSet.Controls
           Width = Math.Min(value, _width);
       }
     }
+    private int _maxColumnWidth;
 
-    private bool _visible = true;
+    /// <summary>
+    /// Видимость столбца
+    /// </summary>
     [DefaultValue(true)]
     public bool IsVisible
     {
@@ -155,12 +209,13 @@ namespace FreeLibSet.Controls
         OnIsVisibleChanged();
       }
     }
+    private bool _visible = true;
 
     private HorizontalAlignment _textAlign = HorizontalAlignment.Left;
 
     /// <summary>
     /// Горизонтальное выравнивание для заголовка столбца.
-    /// Не влияет на выравнивание содержимого столбца, которое задается в BaseTextControl.TextAlign.
+    /// Не влияет на выравнивание содержимого столбца, которое задается в <see cref="FreeLibSet.Controls.TreeViewAdvNodeControls.BaseTextControl.TextAlign"/>.
     /// </summary>
     [DefaultValue(HorizontalAlignment.Left)]
     public HorizontalAlignment TextAlign
@@ -177,15 +232,20 @@ namespace FreeLibSet.Controls
       }
     }
 
-    private bool _sortable = false;
+    /// <summary>
+    /// Если true, то пользователь может сортировать столбец, нажимая на заголовок столбца.
+    /// </summary>
     [DefaultValue(false)]
     public bool Sortable
     {
       get { return _sortable; }
       set { _sortable = value; }
     }
+    private bool _sortable = false;
 
-    private SortOrder _sort_order = SortOrder.None;
+    /// <summary>
+    /// Текущий порядок сортировки: Нет, По возрастанию, По убыванию.
+    /// </summary>
     public SortOrder SortOrder
     {
       get { return _sort_order; }
@@ -197,7 +257,11 @@ namespace FreeLibSet.Controls
         OnSortOrderChanged();
       }
     }
+    private SortOrder _sort_order = SortOrder.None;
 
+    /// <summary>
+    /// Размер значка сортировки в пикселях
+    /// </summary>
     public Size SortMarkSize
     {
       get
@@ -208,21 +272,15 @@ namespace FreeLibSet.Controls
           return new Size(7, 4);
       }
     }
+
     #endregion
 
-    public TreeColumn()
-      :
-      this(string.Empty, 50)
-    {
-    }
+    #region Прочие методы
 
-    public TreeColumn(string header, int width)
-    {
-      _header = header;
-      _width = width;
-      _headerFlags = _baseHeaderFlags | TextFormatFlags.Left;
-    }
-
+    /// <summary>
+    /// Возвращает текст заголовка столбца, если он задан
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       if (string.IsNullOrEmpty(Header))
@@ -231,10 +289,16 @@ namespace FreeLibSet.Controls
         return Header;
     }
 
+    /// <summary>
+    /// Ничего не делает
+    /// </summary>
+    /// <param name="disposing"></param>
     protected override void Dispose(bool disposing)
     {
       base.Dispose(disposing);
     }
+
+    #endregion
 
     #region Draw
 
@@ -262,6 +326,14 @@ namespace FreeLibSet.Controls
       return b;
     }
 
+    /// <summary>
+    /// Рисование заголовка столбца
+    /// </summary>
+    /// <param name="gr"></param>
+    /// <param name="bounds"></param>
+    /// <param name="font"></param>
+    /// <param name="pressed"></param>
+    /// <param name="hot"></param>
     internal void Draw(Graphics gr, Rectangle bounds, Font font, bool pressed, bool hot)
     {
       DrawBackground(gr, bounds, pressed, hot);
@@ -359,6 +431,9 @@ namespace FreeLibSet.Controls
 
     #region Events
 
+    /// <summary>
+    /// Вызывается при изменении текста заголовка
+    /// </summary>
     public event EventHandler HeaderChanged;
     private void OnHeaderChanged()
     {
@@ -366,6 +441,9 @@ namespace FreeLibSet.Controls
         HeaderChanged(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Вызывается при изменении свойства <see cref="SortOrder"/>
+    /// </summary>
     public event EventHandler SortOrderChanged;
     private void OnSortOrderChanged()
     {
@@ -373,6 +451,9 @@ namespace FreeLibSet.Controls
         SortOrderChanged(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Вызывается при изменении видимости столбца
+    /// </summary>
     public event EventHandler IsVisibleChanged;
     private void OnIsVisibleChanged()
     {
@@ -380,6 +461,9 @@ namespace FreeLibSet.Controls
         IsVisibleChanged(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Вызывается при изменении ширины столбца
+    /// </summary>
     public event EventHandler WidthChanged;
     private void OnWidthChanged()
     {

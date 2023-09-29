@@ -63,10 +63,10 @@ namespace FreeLibSet.Forms
     /// Создает EFPTextBoxCommandItems()
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       if (EFPApp.EasyInterface)
-        return base.GetCommandItems();
+        return base.CreateCommandItems();
       else
         return new EFPTextBoxCommandItems(this, false);
     }

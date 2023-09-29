@@ -68,6 +68,18 @@ using FreeLibSet.Core;
  * метод Dispose() при закрытии Мастера
  */
 
+/*
+ * 21.07.2023
+ * Мысли по разрушению пользовательских элементов.
+ * Можно убрать свойство WizardStep.ControlOwning. Свойство Control можно сделать однократной записи.
+ * Метод Wizard.AddDisposable() в общем-то не нужен, но можно оставить для совместимости
+ * Когда шаг мастера создается для панели на пользовательской форме, разрушение формы не приводит к разрушению элемента,
+ * так как он уже не относится к форме.
+ * Когда создается "одноразовый" шаг мастера, например, WizardStepWithDataGridView, то ссылка на Control не сохраняется в
+ * пользовательском коде. Если шаг завершается нажатием "Назад", то WizardForm перестает ссылаться на элемент Control, 
+ * а Wizard - на объект WizardStep. Когда происходит сборка мусора, оба объекта удаляются
+ */
+
 namespace FreeLibSet.Forms
 {
   internal partial class WizardForm : Form
@@ -100,8 +112,9 @@ namespace FreeLibSet.Forms
 
       _TheWizard = theWizard;
 
-      if (!theWizard.ShowImage)
-        panImage.Visible = false;
+      //if (!theWizard.ShowImage)
+      //  panImage.Visible = false;
+      panImage.Visible = false;
     }
 
     #endregion
@@ -175,6 +188,9 @@ namespace FreeLibSet.Forms
         throw new BugException("Выведена временная страница");
 #endif
 
+      if (CurrentStep.Control.IsDisposed)
+        throw new ObjectDisposedException(CurrentStep.Control.ToString(), "Панель для шага мастера уже разрушена");
+
       panMain.SuspendLayout();
       try
       {
@@ -191,8 +207,8 @@ namespace FreeLibSet.Forms
 
       InitButtons();
 
-      if (TheWizard.ShowImage)
-        panImage.Visible = CurrentStep.ShowImage;
+      //if (TheWizard.ShowImage)
+      //  panImage.Visible = CurrentStep.ShowImage;
 
       if (firstInit)
       {
@@ -277,7 +293,6 @@ namespace FreeLibSet.Forms
 
     private void DeleteLastStep()
     {
-      CurrentStep.Close();
       TheWizard.Steps.RemoveAt(CurrentStepIndex);
     }
 
@@ -430,7 +445,6 @@ namespace FreeLibSet.Forms
       while (TheWizard.TempPage != null)
       {
         WizardTempPage thisPage = TheWizard.TempPage;
-        thisPage.Close();
         TheWizard._TempPage = thisPage.PrevTempPage;
         thisPage.PrevTempPage = null;
         thisPage._Wizard = null;
@@ -447,7 +461,6 @@ namespace FreeLibSet.Forms
       panMain.Controls.Clear(); // Иначе нельзя разрушать управляющие элементы закладки
 
       WizardTempPage thisPage = TheWizard.TempPage;
-      thisPage.Close();
       TheWizard._TempPage = thisPage.PrevTempPage;
       thisPage.PrevTempPage = null;
       thisPage._Wizard = null;
@@ -485,7 +498,7 @@ namespace FreeLibSet.Forms
 
       Steps.Add(firstStep);
 
-      ShowImage = true;
+      //ShowImage = true;
     }
 
     /// <summary>
@@ -520,8 +533,6 @@ namespace FreeLibSet.Forms
         _DisposableObjects = null;
       }
 
-      for (int j = 0; j < Steps.Count; j++)
-        Steps[j].Close();
       Steps.Clear();
 
       base.Dispose(disposing);
@@ -574,22 +585,22 @@ namespace FreeLibSet.Forms
     }
     private string _Title;
 
-    /// <summary>
-    /// Должно ли показываться изображение в левой части экрана (по умолчанию - true).
-    /// Можно запретить изображение для отдельных шагов, устанавливая свойства
-    /// <see cref="WizardStep.ShowImage"/>=false.
-    /// Свойство можно устанавливать только до запуска мастера.
-    /// </summary>
-    public bool ShowImage
-    {
-      get { return _ShowImage; }
-      set
-      {
-        CheckNotStarted();
-        _ShowImage = value;
-      }
-    }
-    private bool _ShowImage;
+    ///// <summary>
+    ///// Должно ли показываться изображение в левой части экрана (по умолчанию - true).
+    ///// Можно запретить изображение для отдельных шагов, устанавливая свойства
+    ///// <see cref="WizardStep.ShowImage"/>=false.
+    ///// Свойство можно устанавливать только до запуска мастера.
+    ///// </summary>
+    //public bool ShowImage
+    //{
+    //  get { return _ShowImage; }
+    //  set
+    //  {
+    //    CheckNotStarted();
+    //    _ShowImage = value;
+    //  }
+    //}
+    //private bool _ShowImage;
 
     /// <summary>
     /// Если true, то пользователь может менять размеры окна. Также имеется кнопка
@@ -654,6 +665,22 @@ namespace FreeLibSet.Forms
       }
     }
     private string _ConfigSectionName;
+
+    /// <summary>
+    /// Если true, то в окне Мастера будет использоваться собственная статусная строка.
+    /// По умолчанию - false.
+    /// Свойство можно устанавливать только до запуска мастера.
+    /// </summary>
+    public bool OwnStatusBar
+    {
+      get { return _OwnStatusBar; }
+      set
+      {
+        CheckNotStarted();
+        _OwnStatusBar = value;
+      }
+    }
+    private bool _OwnStatusBar;
 
     #endregion
 
@@ -754,8 +781,11 @@ namespace FreeLibSet.Forms
         TheForm.FormBorderStyle = FormBorderStyle.Sizable;
         TheForm.MaximizeBox = true;
       }
+      TheForm.MinimizeBox = true; // будет скорректировано в ShowDialog()
       TheForm.efpForm.HelpContext = HelpContext;
       TheForm.efpForm.ConfigSectionName = ConfigSectionName;
+      if (OwnStatusBar)
+        TheForm.efpForm.OwnStatusBar = true;
 
       EFPApp.ShowDialog(TheForm, true);
       // Самоликвидируемся
@@ -1017,7 +1047,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Делегат события <see cref="WizardStep.GetNext"/>
   /// </summary>
-  /// <param name="sender">Ссылка на текщий шаг Мастера (<see cref="WizardStep"/>)</param>
+  /// <param name="sender">Ссылка на текущий шаг Мастера (<see cref="WizardStep"/>)</param>
   /// <param name="args">Аргументы события</param>
   public delegate void WizardGetNextEventHandler(object sender,
     WizardGetNextEventArgs args);
@@ -1068,7 +1098,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Делегат события <see cref="WizardStep.BeginStep"/>
   /// </summary>
-  /// <param name="sender">Ссылка на текщий шаг Мастера (<see cref="WizardStep"/>)</param>
+  /// <param name="sender">Ссылка на текущий шаг Мастера (<see cref="WizardStep"/>)</param>
   /// <param name="args">Аргументы события</param>
   public delegate void WizardBeginStepEventHandler(object sender,
     WizardBeginStepEventArgs args);
@@ -1126,7 +1156,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Делегат события <see cref="WizardStep.EndStep"/>
   /// </summary>
-  /// <param name="sender">Ссылка на текщий шаг Мастера (<see cref="WizardStep"/>)</param>
+  /// <param name="sender">Ссылка на текущий шаг Мастера (<see cref="WizardStep"/>)</param>
   /// <param name="args">Аргументы события</param>
   public delegate void WizardEndStepEventHandler(object sender,
     WizardEndStepEventArgs args);
@@ -1141,49 +1171,37 @@ namespace FreeLibSet.Forms
     #region Конструкторы
 
     /// <summary>
-    /// Создает шаг мастера для заданной панели с управляющими элементами.
-    /// При закрытии шага панель не будет удалена.
-    /// Эта версия конструктора обычно применяется, когда шаги управляющие элементы мастера располагаются на форме-заготовке
-    /// и шаги создаются однократно в сеансе работы мастера
+    /// Создает шаг мастера для заданного управляющего элемента
     /// </summary>
-    /// <param name="control">Панель с управляющими элементами</param>
-    public WizardStep(Panel control)
-      : this(control, false)
-    {
-    }
-
-    /// <summary>
-    /// Создает шаг мастера для заданной панели с управляющими элементами.
-    /// </summary>
-    /// <param name="control">Панель с управляющими элементами</param>
-    /// <param name="controlOwning">Должен ли шаг мастера вызовать Control.Dispose(), когда шаг закрывается.
-    /// Используйте значение true, если панель с элементами была создана специально для этого шага и не явлляется "многоразовой"</param>
-    public WizardStep(Panel control, bool controlOwning)
+    /// <param name="control">Обычно панель с управляющими элементами (<see cref="Panel"/>), но может быть и другим контейнером, например, <see cref="GroupBox"/>.
+    /// Не может быть объектом <see cref="TabPage"/></param>
+    public WizardStep(Control control)
     {
       if (control == null)
         throw new ArgumentNullException("control");
       if (control.IsDisposed)
-        throw new ObjectDisposedException("control");
+        throw new ObjectDisposedException(control.ToString(), "Панель шага мастера уже разрушена");
+      if (control is Form)
+        throw new ArgumentException("Управляющий элемент не может быть Form. Если используется форма-шаблон, то добавьте панель элементами и передавайте Panel в конструктор WizardStep");
+      if (control is TabPage)
+        throw new ArgumentException("Управляющий элемент не может быть TabPage. Если используется форма-шаблон, то добавьте на TabPage объект Panel с элементами и передавайте Panel в конструктор WizardStep");
+
       control.Dock = DockStyle.Fill;
+
       _Control = control;
-      _ControlOwning = controlOwning;
 
       _BaseProvider = new EFPBaseProvider();
-      ShowImage = true;
+      //_ShowImage = true;
       _ForwardEnabled = true;
       _BackEnabled = true;
     }
 
     /// <summary>
-    /// Разрушает Control, если данный объект является его владельцем
+    /// Создает шаг мастера с контейнером типа <see cref="Panel"/> для добавления пользовательских управляющих элементов
     /// </summary>
-    internal protected virtual void Close()
+    public WizardStep()
+      : this(new Panel())
     {
-      if (_Control != null && _ControlOwning)
-      {
-        _Control.Dispose();
-        _Control = null;
-      }
     }
 
     #endregion
@@ -1191,34 +1209,26 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Управляющий элемент, выводимый в форме
+    /// Управляющий элемент - панель, выводимый в форме
     /// </summary>
-    public Panel Control { get { return _Control; } }
-    private Panel _Control;
-
-    /// <summary>
-    /// True, если управляющий элемент должен быть разрушен вместе с данным шагом.
-    /// Используется для шагов, экраны которых не предоставлены формой-хозяином, а
-    /// создаются динамически
-    /// </summary>
-    public bool ControlOwning { get { return _ControlOwning; } }
-    private bool _ControlOwning;
+    public Control Control { get { return _Control; } }
+    private readonly Control _Control;
 
     /// <summary>
     /// Провайдер для присоединения управляющих элементов
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
+
+    ///// <summary>
+    ///// Показывать ли изображение для этого шага? (по умолчанию - true)
+    ///// Свойство не действует, если <see cref="FreeLibSet.Forms.Wizard.ShowImage"/>=false;
+    ///// </summary>
+    //public bool ShowImage { get { return _ShowImage; } set { _ShowImage = value; } }
+    //private bool _ShowImage;
 
     /// <summary>
-    /// Показывать ли изображение для этого шага? (по умолчанию - true)
-    /// Свойство не действует, если <see cref="FreeLibSet.Forms.Wizard.ShowImage"/>=false;
-    /// </summary>
-    public bool ShowImage { get { return _ShowImage; } set { _ShowImage = value; } }
-    private bool _ShowImage;
-
-    /// <summary>
-    /// Должно быть установлено в true для последнего шага мастера
+    /// Должно быть установлено в true для последнего шага мастера.
     /// Свойство может устанавливаться динамически в процессе показа шага на
     /// экран, переключая кнопку в нужный режим
     /// </summary>
@@ -1237,7 +1247,7 @@ namespace FreeLibSet.Forms
     private bool _FinalStep;
 
     /// <summary>
-    /// Свойство определяет доступность кнопки "Вперед" или "Готово" (по умолчанию-true)
+    /// Свойство определяет доступность кнопки "Вперед" или "Готово" (по умолчанию - true)
     /// Свойство, вероятно, должно устанавливаться в процессе показа текущего шага
     /// на экране, в зависимости от состояния пользовательского ввода. 
     /// Также может "жестко" устанавливаться для тупиковых кадров мастера (с выводом
@@ -1261,7 +1271,7 @@ namespace FreeLibSet.Forms
     /// Это свойство опрделяет доступность кнопки "Назад". По умолчанию - true
     /// (шаг назад разрешается). Свойство может быть установлено в false, если 
     /// возврат назад невозможен. Возможна динамическая установка свойства в
-    /// процессе показа кадра
+    /// процессе показа кадра.
     /// Свойство не имеет значения для первого кадра мастера, когда кнопка "Назад"
     /// отключена
     /// </summary>
@@ -1281,24 +1291,29 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Контекст справки для данного шага мастера.
-    /// Если свойство не установлено, используется общий контекст справки
+    /// Если свойство не установлено, используется общий контекст справки <see cref="Wizard.HelpContext"/>.
     /// </summary>
     public string HelpContext
     {
-      get { return _HelpContext; }
+      get { return _HelpContext ?? String.Empty; }
       set
       {
-        CheckNotAdded();
+        if (value == null)
+          value = String.Empty;
+        if (String.Equals(value, _HelpContext ?? String.Empty, StringComparison.Ordinal))
+          return;
+
         _HelpContext = value;
+        InitHelpContext();
       }
     }
     private string _HelpContext;
 
-    private void CheckNotAdded()
-    {
-      if (Wizard != null)
-        throw new InvalidOperationException("Свойство может быть установлено только до присоединения шага к мастеру");
-    }
+    //private void CheckNotAdded()
+    //{
+    //  if (Wizard != null)
+    //    throw new InvalidOperationException("Свойство может быть установлено только до присоединения шага к мастеру");
+    //}
 
     /// <summary>
     /// Произвольные пользовательские данные
@@ -1370,14 +1385,21 @@ namespace FreeLibSet.Forms
     /// Будет ли заголовок распространятся на следующие шаги определяется свойством <see cref="TitleForThisStepOnly"/>.
     /// По умолчанию - пустая строка - использование основного заголовка <see cref="FreeLibSet.Forms.Wizard.Title"/> или заголовка от предыдущего шага.
     /// При нажатии кнопки "Назад" или "зацикленном" переходе к предыдущему шагу, восстанавливается заголовок для этого шага.
+    /// Свойство может устанавливаться и динамически в процессе показа шага на экране, меняя заголок формы
     /// </summary>
     public string Title
     {
       get { return _Title ?? String.Empty; }
       set
       {
-        // можно CheckNotAdded();
+        if (value == null)
+          value = String.Empty;
+        if (String.Equals(value, _Title ?? String.Empty, StringComparison.Ordinal))
+          return;
+
         _Title = value;
+        if (IsCurrentStep)
+          InitTitle(true);
       }
     }
     private string _Title;
@@ -1392,8 +1414,11 @@ namespace FreeLibSet.Forms
       get { return _TitleForThisStepOnly; }
       set
       {
-        // можно CheckNotAdded();
+        if (value == _TitleForThisStepOnly)
+          return;
         _TitleForThisStepOnly = value;
+        if (IsCurrentStep)
+          InitTitle(true);
       }
     }
     private bool _TitleForThisStepOnly;
@@ -1441,12 +1466,21 @@ namespace FreeLibSet.Forms
         }
       }
 
+      InitHelpContext();
+      InitTitle(action == WizardAction.Next);
+    }
+
+    private void InitHelpContext()
+    {
       if (!String.IsNullOrEmpty(HelpContext))
         _Wizard.TheForm.efpForm.HelpContext = HelpContext;
       else
         _Wizard.TheForm.efpForm.HelpContext = _Wizard.HelpContext;
+    }
 
-      if (action == WizardAction.Next)
+    private void InitTitle(bool initActualValues)
+    {
+      if (initActualValues)
       {
         if (String.IsNullOrEmpty(Title))
         {
@@ -1559,40 +1593,15 @@ namespace FreeLibSet.Forms
     /// Создает временную страницу
     /// </summary>
     /// <param name="control">Панель для размещения содержимого</param>
-    public WizardTempPage(Panel control)
-      : this(control, false)
-    {
-    }
-
-    /// <summary>
-    /// Создает временную страницу
-    /// </summary>
-    /// <param name="control">Панель для размещения содержимого</param>
-    /// <param name="controlOwning">True, если управляющий элемент должен быть разрушен вместе с данным шагом.
-    /// Используется для шагов, экраны которых не предоставлены формой-хозяином, а
-    /// создаются динамически</param>
-    public WizardTempPage(Panel control, bool controlOwning)
+    public WizardTempPage(Control control)
     {
       if (control == null)
         throw new ArgumentNullException("control");
       if (control.IsDisposed)
         throw new ObjectDisposedException("control");
       _Control = control;
-      _ControlOwning = controlOwning;
 
       _BaseProvider = new EFPBaseProvider();
-    }
-
-    /// <summary>
-    /// Разрушает <see cref="Control"/>, если данный объект является его владельцем
-    /// </summary>
-    internal protected virtual void Close()
-    {
-      if (_Control != null && _ControlOwning)
-      {
-        _Control.Dispose();
-        _Control = null;
-      }
     }
 
     #endregion
@@ -1602,16 +1611,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Управляющий элемент, выводимый в форме
     /// </summary>
-    public Panel Control { get { return _Control; } }
-    private Panel _Control;
-
-    /// <summary>
-    /// True, если управляющий элемент должен быть разрушен вместе с данным шагом.
-    /// Используется для шагов, экраны которых не предоставлены формой-хозяином, а
-    /// создаются динамически
-    /// </summary>
-    public bool ControlOwning { get { return _ControlOwning; } }
-    private bool _ControlOwning;
+    public Control Control { get { return _Control; } }
+    private Control _Control;
 
     /// <summary>
     /// Провайдер для присоединения управляющих элементов
@@ -1702,17 +1703,10 @@ namespace FreeLibSet.Forms
       // Не знаю, как обойтись без фиктивного конструктора
     }
 
-    internal WizardSplashPage(string[] items, SplashForm form)
-      : base(form.MainPanel, false) // сами удалим
+    private WizardSplashPage(string[] items, SplashForm form)
+      : base(form.MainPanel)
     {
       _Splash = new Splash2(items, form, this);
-    }
-
-    protected internal override void Close()
-    {
-      base.Close();
-      _Splash.Close();
-      _Splash = null;
     }
 
     #endregion
@@ -1757,6 +1751,9 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
+    /// <summary>
+    /// Интерфейс управления закладкой
+    /// </summary>
     public ISplash Splash { get { return _Splash; } }
     private Splash2 _Splash;
 
@@ -1769,6 +1766,64 @@ namespace FreeLibSet.Forms
       _Splash.Cancelled = true;
       base.OnCancelClick();
     }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Обертка для вызовов методов <see cref="Wizard.BeginTempPage(string[])"/> и <see cref="Wizard.EndTempPage()"/>,
+  /// которую можно использовать в конструкции using
+  /// </summary>
+  public struct WizardSplashHelper:IDisposable
+  {
+    #region Конструктор и Dispose()
+
+    /// <summary>
+    /// Вызывает <see cref="Wizard.BeginTempPage(string[])"/>
+    /// </summary>
+    /// <param name="wizard">Объект мастера</param>
+    /// <param name="items">Заголовки для заставки</param>
+    public WizardSplashHelper(Wizard wizard, string[] items)
+    {
+      _Splash = wizard.BeginTempPage(items);
+      _Wizard = wizard;
+    }
+
+    /// <summary>
+    /// Вызывает <see cref="Wizard.BeginTempPage(string)"/>
+    /// </summary>
+    /// <param name="wizard">Объект мастера</param>
+    /// <param name="item">Заголовок для заставки</param>
+    public WizardSplashHelper(Wizard wizard, string item)
+    {
+      _Splash = wizard.BeginTempPage(item);
+      _Wizard = wizard;
+    }
+
+    /// <summary>
+    /// Вызывает <see cref="Wizard.EndTempPage()"/>
+    /// </summary>
+    public void Dispose()
+    {
+      if (_Wizard != null)
+      {
+        _Splash = null;
+        _Wizard.EndTempPage();
+        _Wizard = null;
+      }
+    }
+
+    #endregion
+
+    #region Свойства
+
+    private Wizard _Wizard;
+
+    /// <summary>
+    /// Интерфейс для управления заставкой
+    /// </summary>
+    public ISplash Splash { get { return _Splash; } }
+    private ISplash _Splash;
 
     #endregion
   }

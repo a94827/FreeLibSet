@@ -86,10 +86,11 @@ namespace FreeLibSet.Forms.Diagnostics
 
         #region Открыть с помощью
 
-        if (faItems.OpenWithItems.Count > 0)
+        if (faItems.Count > 1)
         {
-          foreach (FileAssociationItem faItem in faItems.OpenWithItems)
+          for (int i=1; i<faItems.Count;i++)
           {
+            FileAssociationItem faItem = faItems[i];
             ToolStripMenuItem faMenuItem = new ToolStripMenuItem();
             faMenuItem.Text = faItem.DisplayName;
             try
@@ -125,14 +126,14 @@ namespace FreeLibSet.Forms.Diagnostics
 
         #region Основная кнопка "Отчет"
 
-        if (faItems.OpenItem == null)
+        if (faItems.FirstItem == null)
           btnEdit.Click += new EventHandler(ViewMenuItem_Click);
         else
         {
           try
           {
-            btnEdit.Image = WinFormsTools.ExtractIconImage(faItems.OpenItem, true);
-            btnEdit.Tag = faItems.OpenItem;
+            btnEdit.Image = WinFormsTools.ExtractIconImage(faItems.FirstItem, true);
+            btnEdit.Tag = faItems.FirstItem;
             btnEdit.Click += new EventHandler(FAMenuItem_Click);
           }
           catch { }

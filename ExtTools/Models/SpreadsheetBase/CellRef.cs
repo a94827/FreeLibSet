@@ -13,7 +13,6 @@ namespace FreeLibSet.Models.SpreadsheetBase
   /// </summary>
   public static class SpreadsheetTools
   {
-
     #region ֽמלונא סעמכבצמג
 
     /// <summary>

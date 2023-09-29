@@ -251,7 +251,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Сообщение об ошибке или null.
     /// </summary>
-    private string _Message;
+    private readonly string _Message;
 
     /// <summary>
     /// Результат проверки. True - правильное значение. False - есть ошибка
@@ -283,6 +283,11 @@ namespace FreeLibSet.UICore
       else
         return _Message;
     }
+
+    /// <summary>
+    /// Статический экземпляр, означающий отсутствие ошибки
+    /// </summary>
+    public static readonly UIValidateResult Ok = new UIValidateResult(true, null);
 
     #endregion
 

@@ -450,7 +450,10 @@ namespace FreeLibSet.Forms
         }
 
         WinFormsTools.InitAppIcon(form);
-        form.ShowIcon = !EFPApp.MainWindowVisible;
+        //form.ShowIcon = !EFPApp.MainWindowVisible;
+        // 12.09.2023
+        if (EFPApp.MainWindowVisible)
+          form.ShowIcon = false;
       }
 
       #endregion

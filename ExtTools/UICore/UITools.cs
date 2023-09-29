@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.ComponentModel;
 
 namespace FreeLibSet.UICore
 {
@@ -324,6 +325,156 @@ namespace FreeLibSet.UICore
         NumberFormatInfo nfi = formatProvider.GetFormat(typeof(NumberFormatInfo)) as NumberFormatInfo;
         CorrectNumberString(ref s, nfi);
       }
+    }
+
+    #endregion
+
+    #region Для MaskedTextProdider
+
+    /// <summary>
+    /// Возвращает текущее значение, введенное пользователем, из объекта <see cref="MaskedTextProvider "/>.
+    /// Если пользователь не заполнил ни одной позиции, то возвращается пустая строка.
+    /// Если пользователь заполнил все доступные позиции, возвращается весь текст, включая литеральные символы.
+    /// Если заполнена часть символов, то возврашается текст по последний введенный символ включительно, но без литеральных символов справа.
+    /// Используется провайдерами управляющих элементов, такими как EFPMaskedTextBox, для извлечения осмысленного текста, который можно
+    /// проверяет и передавать в прикладной код
+    /// </summary>
+    /// <param name="provider">Провайдер, из которого нужно извлечь текст. Не может быть null</param>
+    /// <returns>Извлеченный текст</returns>
+    public static string GetMaskedText(MaskedTextProvider provider)
+    {
+#if DEBUG
+      if (provider == null)
+        throw new ArgumentNullException("provider");
+#endif
+
+      // Первоначальная реализация была в методе EFPMaskedTextBox.get_ControlText
+
+      if (provider.AssignedEditPositionCount == 0)
+        return String.Empty;
+
+      // Убрано 27.03.2013 (ExtForms, v.36 п.1)
+      // Например, если задана маска "00.##" и введено значение "12.  ", то MaskCompleted=true, но Text="12.". Должно возвращаться значение "12".
+      // if (Control.MaskCompleted)
+      //   return Control.Text;
+
+      // 19.07.2023
+      // Однако, если в конце маски есть литеральные символы, например при вводе Guid в формате "B" ("{CCCCCCCC-...-C}"), то последний литерал должен
+      // попасть в возвращаемый текст
+      if (provider.AssignedEditPositionCount == provider.EditPositionCount) // не то же самое, что и MaskCompleted
+        return provider.ToString();
+
+      // Маска заполнена частично
+      int p = provider.LastAssignedPosition;
+      //if (p >= Control.Text.Length)
+      //  return Control.Text;
+      return provider.ToString().Substring(0, p + 1);
+    }
+
+    /// <summary>
+    /// Возвращает true, если в маске есть позиции для ввода буквенных символов, но нет маркеров преобразования регистра (знаков "больше" и "меньше").
+    /// Если <paramref name="provider"/>=null или <see cref="MaskedTextProvider.Mask"/> не задана, возвращается true.
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <returns></returns>
+    public static bool IsNormalCharacterCasing(MaskedTextProvider provider)
+    {
+      if (provider == null)
+        return true;
+      string mask = provider.Mask;
+      if (String.IsNullOrEmpty(mask))
+        return true;
+
+      bool hasLetter=false;
+      int i = 0;
+      while (i < mask.Length)
+      {
+        switch (mask[i])
+        {
+          case '\\':
+            i++;
+            break; // пропускаем экранированный символ
+          case '>':
+          case '<':
+            return false; // можно дальше не искать
+          case 'L':
+          case '?':
+          case '&':
+          case 'C':
+          case 'A':
+          case 'a':
+            hasLetter = true;
+            break;
+        }
+        i++;
+      }
+
+      return hasLetter; 
+    }
+
+    #endregion
+
+    #region Маски для ввода GUID'ов
+
+    /// <summary>
+    /// Возвращает маску ввода GUID для MaskedTextBox или <see cref="MaskedTextProvider.Mask"/>
+    /// </summary>
+    /// <param name="format">Один из форматов "N", "D", "B", "P". Пустая строка означает "D". 
+    /// См. описание форматов метода<see cref="Guid.ToString(string)"/>.</param>
+    /// <param name="upperCase">Если true, то предполагается ввод символов верхнего регистра, если false - нижнего</param>
+    /// <returns>Маска ввода</returns>
+    public static string GetGuidEditMask(string format, bool upperCase)
+    {
+      if (String.IsNullOrEmpty(format))
+        format = "D";
+
+      switch (format)
+      {
+        case "N":
+        case "D":
+        case "B":
+        case "P":
+          break;
+        default:
+          throw new ArgumentException("Неизвестный формат", "format");
+      }
+
+      string mask = Guid.Empty.ToString(format); // получили строку из нулей и знаков
+      mask = mask.Replace('0', 'A');
+      if (upperCase)
+        mask = ">" + mask;
+      else
+        mask = "<" + mask;
+      return mask;
+    }
+
+    /// <summary>
+    /// Возвращает регулярное выражение, которое можно использовать для проверки корректности регулярного выражения для ввода GUID
+    /// </summary>
+    /// <param name="format">Один из форматов "N", "D", "B", "P". Пустая строка означает "D". 
+    /// См. описание форматов метода<see cref="Guid.ToString(string)"/>.</param>
+    /// <returns>Шаблон регулярного выражения</returns>
+    public static string GetGuidRegEx(string format)
+    {
+      if (String.IsNullOrEmpty(format))
+        format = "D";
+
+      if (format == "N")
+        return "^[0-9A-Fa-f]{32}$";
+
+      string s = @"[0-9A-Fa-f]{8}\-[0-9A-Fa-f]{4}\-[0-9A-Fa-f]{4}\-[0-9A-Fa-f]{4}\-[0-9A-Fa-f]{12}";
+      switch (format)
+      {
+        case "D":
+          break;
+        case "B":
+          s = @"\{" + s + @"\}";
+          break;
+        case "P":
+          s = @"\(" + s + @"\)";
+          break;
+      }
+      return "^" + s + "$";
     }
 
     #endregion

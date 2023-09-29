@@ -105,7 +105,7 @@ namespace FreeLibSet.Forms
     /// <param name="baseProvider">Базовый провайдер редактора настроек</param>
     /// <param name="callerControlProvider">Провайдер настраиваемого табличного просмотра</param>
     /// <returns>Интерфейс объекта редактора</returns>
-    IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPGridControl callerControlProvider);
+    IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPDataView callerControlProvider);
   }
 
   #endregion
@@ -397,12 +397,14 @@ namespace FreeLibSet.Forms
         col2.ColumnProducer = colDef;
         col2.SizeGroup = colDef.SizeGroup;
         col2.CanIncSearch = colDef.CanIncSearch;
+        col2.Summable = colDef.Summable;
         col2.MaskProvider = colDef.MaskProvider;
         col2.DbfInfo = colDef.DbfInfo;
         col2.PrintHeaders = colDef.PrintHeaders;
         col2.ColorType = colDef.ColorType;
         col2.Grayed = colDef.Grayed;
         col2.CustomOrderColumnName = colDef.CustomOrderSourceColumnName;
+        col2.DisplayName = colDef.DisplayName;
 
         maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
@@ -683,15 +685,18 @@ namespace FreeLibSet.Forms
 
         // Запоминаем поля, которые нужны
         colDef.GetColumnNames(usedColumns);
-        /*
-        EFPDataGridViewColumn Col2 = ControlProvider.Columns[Col];
-        Col2.ColumnProducer = ColDef;
-        Col2.SizeGroup = ColDef.SizeGroup;
-        Col2.CanIncSearch = ColDef.CanIncSearch;
-        Col2.MaskProvider = ColDef.MaskProvider;
-        Col2.DbfInfo = ColDef.DbfInfo;
-        Col2.PrintHeaders = ColDef.PrintHeaders;
-                                                                            */
+        
+        EFPDataTreeViewColumn col2 = controlProvider.Columns[tc];
+        col2.ColumnProducer = colDef;
+        col2.SizeGroup = colDef.SizeGroup;
+        col2.CanIncSearch = colDef.CanIncSearch;
+        col2.MaskProvider = colDef.MaskProvider;
+        col2.DbfInfo = colDef.DbfInfo;
+        col2.PrintHeaders = colDef.PrintHeaders;
+        col2.ColorType = colDef.ColorType;
+        col2.Grayed = colDef.Grayed;
+        col2.DisplayName = colDef.DisplayName;
+
         maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
 
@@ -1006,7 +1011,7 @@ namespace FreeLibSet.Forms
     /// <param name="baseProvider">Базовый провайдер редактора настроек</param>
     /// <param name="callerControlProvider">Провайдер настраиваемого табличного просмотра</param>
     /// <returns>Интерфейс объекта редактора</returns>
-    public IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPGridControl callerControlProvider)
+    public IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPDataView callerControlProvider)
     {
       EFPGridProducerEditor form = new EFPGridProducerEditor(this, callerControlProvider, baseProvider);
       parentControl.Controls.Add(form.TheTabControl);

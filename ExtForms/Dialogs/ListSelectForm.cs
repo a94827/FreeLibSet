@@ -608,6 +608,8 @@ namespace FreeLibSet.Forms
       get { return _Selections; }
       set
       {
+        if (!MultiSelect)
+          throw new InvalidOperationException("Свойство MultiSelect не установлено");
         value.CopyTo(_Selections, 0);
       }
     }

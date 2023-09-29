@@ -236,7 +236,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс для записи и чтения конфигурационных данных.
-  /// Если программа хранит настройки в базе данных, должна быть создана реаоизация интерфейса.
+  /// Если программа хранит настройки в базе данных, должна быть создана реализация интерфейса.
   /// Для локального хранения настроек может быть использован, например, готовый класс <see cref="EFPRegistryConfigManager"/>.
   /// </summary>
   public interface IEFPConfigManager
@@ -592,7 +592,7 @@ namespace FreeLibSet.Forms
     /// В нем будут создаваться подразделы для ConfigSectionName
     /// </summary>
     public string KeyName { get { return _KeyName; } }
-    private string _KeyName;
+    private readonly string _KeyName;
 
     #endregion
 

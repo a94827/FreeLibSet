@@ -78,10 +78,32 @@ namespace FreeLibSet.Forms
     private string _Text;
 
     /// <summary>
-    /// Сюда должно быть помещено имя изображения из EFPApp.MainImages
+    /// Сюда может быть помещено имя изображения из EFPApp.MainImages
     /// </summary>
-    public string ImageKey { get { return _ImageKey; } set { _ImageKey = value; } }
+    public string ImageKey
+    {
+      get { return _ImageKey; }
+      set
+      {
+        _Image = null;
+        _ImageKey = value;
+      }
+    }
     private string _ImageKey;
+
+    /// <summary>
+    /// Альтернативная установка изображения
+    /// </summary>
+    public Image Image
+    {
+      get { return _Image; }
+      set
+      {
+        _ImageKey = null;
+        _Image = value;
+      }
+    }
+    private Image _Image;
 
     /// <summary>
     /// Здесь можно задать произвольные цвета для элемента.
@@ -166,25 +188,25 @@ namespace FreeLibSet.Forms
     /// Цвет фона невыделенного элемента. Например, SystemColors.Window
     /// </summary>
     public Color BackColor { get { return _BackColor; } }
-    private Color _BackColor;
+    private readonly Color _BackColor;
 
     /// <summary>
     /// Цвет текста невыделенного элемента. Например, SystemColors.WindowText
     /// </summary>
     public Color ForeColor { get { return _ForeColor; } }
-    private Color _ForeColor;
+    private readonly Color _ForeColor;
 
     /// <summary>
     /// Цвет фона выделенного элемента. Например, SystemColors.Highlight
     /// </summary>
     public Color SelectedBackColor { get { return _SelectedBackColor; } }
-    private Color _SelectedBackColor;
+    private readonly Color _SelectedBackColor;
 
     /// <summary>
     /// Цвет текста выделенного элемента. Например, SystemColors.HighliteText
     /// </summary>
     public Color SelectedForeColor { get { return _SelectedForeColor; } }
-    private Color _SelectedForeColor;
+    private readonly Color _SelectedForeColor;
 
     #endregion
 
@@ -395,6 +417,17 @@ namespace FreeLibSet.Forms
     public string OutOfRangeImageKey { get { return _OutOfRangeImageKey; } set { _OutOfRangeImageKey = value; } }
     private string _OutOfRangeImageKey;
 
+    /// <summary>
+    /// Если установить в true, то при значении <see cref="Control.Enabled"/>=false, рисование будет выполняться в полноцветном режиме.
+    /// По умолчанию - false - картинка делается серой
+    /// </summary>
+    public bool IgnoreDisabledState
+    {
+      get { return _IgnoreDisabledState; }
+      set { _IgnoreDisabledState = value; }
+    }
+    private bool _IgnoreDisabledState;
+
     #endregion
 
     #region Обработчик
@@ -436,10 +469,20 @@ namespace FreeLibSet.Forms
         _Handler(this, _PainterArgs);
 
       // Рисуем
-      if (_PainterArgs.Colors == null)
-        PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.ImageKey, _PainterArgs.ValidateState, _PainterArgs.LeftMargin);
+      if (_PainterArgs.Image == null)
+      {
+        if (_PainterArgs.Colors == null)
+          PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.ImageKey, _PainterArgs.ValidateState, _PainterArgs.LeftMargin, IgnoreDisabledState);
+        else
+          PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.ImageKey, _PainterArgs.Colors, _PainterArgs.LeftMargin, IgnoreDisabledState);
+      }
       else
-        PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.ImageKey, _PainterArgs.Colors, _PainterArgs.LeftMargin);
+      {
+        if (_PainterArgs.Colors == null)
+          PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.Image, _PainterArgs.ValidateState, _PainterArgs.LeftMargin, IgnoreDisabledState);
+        else
+          PerformDrawItem(_Control, args, _PainterArgs.Text, _PainterArgs.Image, _PainterArgs.Colors, _PainterArgs.LeftMargin, IgnoreDisabledState);
+      }
     }
 
     #endregion
@@ -469,7 +512,7 @@ namespace FreeLibSet.Forms
     /// Пустая строка или null означает отсутствие значка, при этом место используется для рисования текста</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey)
     {
-      PerformDrawItem(control, args, text, imageKey, ListItemColors.ControlDefault, 0);
+      PerformDrawItem(control, args, text, imageKey, ListItemColors.ControlDefault, 0, false);
     }
 
     /// <summary>
@@ -487,7 +530,7 @@ namespace FreeLibSet.Forms
     /// Используется основной цвет текста элемента Control.ForeColor</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, UIValidateState? validateState)
     {
-      PerformDrawItem(control, args, text, imageKey, validateState, 0);
+      PerformDrawItem(control, args, text, imageKey, validateState, 0, false);
     }
 
     /// <summary>
@@ -507,6 +550,27 @@ namespace FreeLibSet.Forms
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, UIValidateState? validateState, int leftMargin)
     {
+      PerformDrawItem(control, args, text, imageKey, validateState, leftMargin, false);
+    }
+
+    /// <summary>
+    /// Статический метод рисования элемента списка.
+    /// Предназначен для реализации обработки события ListBox/ComboBox.DrawItem.
+    /// </summary>
+    /// <param name="control">Управляющий элемент, для которого выполняется рисования</param>
+    /// <param name="args">Аргументы события DrawItem. Методы объекта используются для рисования в контексте устройства.</param>
+    /// <param name="text">Текст элемента</param>
+    /// <param name="imageKey">Значок элемента в списке EFPApp.MainImages.
+    /// Пустая строка или null означает отсутствие значка, при этом место используется для рисования текста</param>
+    /// <param name="validateState">Определяет цвет текста элемента 
+    /// (обычный черный, красный (ошибка) или сиреневый (предупреждение)).
+    /// Если передано значение null, то цвет элемента не задается в явном виде. 
+    /// Используется основной цвет текста элемента Control.ForeColor</param>
+    /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
+    /// до значка. Используется для рисования иерархического списка с отступами.</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, UIValidateState? validateState, int leftMargin, bool ignoreDisabledState)
+    {
       Image image;
       if (String.IsNullOrEmpty(imageKey))
         image = null;
@@ -516,7 +580,7 @@ namespace FreeLibSet.Forms
         if (image == null)
           image = EFPApp.MainImages.Images["Error"];
       }
-      PerformDrawItem(control, args, text, image, validateState, leftMargin);
+      PerformDrawItem(control, args, text, image, validateState, leftMargin, ignoreDisabledState);
     }
 
 
@@ -527,12 +591,12 @@ namespace FreeLibSet.Forms
     /// <param name="control">Управляющий элемент, для которого выполняется рисования</param>
     /// <param name="args">Аргументы события DrawItem. Методы объекта используются для рисования в контексте устройства.</param>
     /// <param name="text">Текст элемента</param>
-    /// <param name="ImageKey">Значок элемента в списке EFPApp.MainImages.
+    /// <param name="imageKey">Значок элемента в списке EFPApp.MainImages.
     /// Пустая строка или null означает отсутствие значка, при этом место используется для рисования текста</param>
-    /// <param name="Colors">Цвета для элемента. Если null, то используются стандартные цвета</param>
-    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string ImageKey, ListItemColors Colors)
+    /// <param name="colors">Цвета для элемента. Если null, то используются стандартные цвета</param>
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, ListItemColors colors)
     {
-      PerformDrawItem(control, args, text, ImageKey, Colors, 0);
+      PerformDrawItem(control, args, text, imageKey, colors, 0, false);
     }
 
     /// <summary>
@@ -549,6 +613,24 @@ namespace FreeLibSet.Forms
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, ListItemColors colors, int leftMargin)
     {
+      PerformDrawItem(control, args, text, imageKey, colors, leftMargin, false);
+    }
+
+    /// <summary>
+    /// Статический метод рисования элемента списка.
+    /// Предназначен для реализации обработки события ListBox/ComboBox.DrawItem.
+    /// </summary>
+    /// <param name="control">Управляющий элемент, для которого выполняется рисования</param>
+    /// <param name="args">Аргументы события DrawItem. Методы объекта используются для рисования в контексте устройства.</param>
+    /// <param name="text">Текст элемента</param>
+    /// <param name="imageKey">Значок элемента в списке EFPApp.MainImages.
+    /// Пустая строка или null означает отсутствие значка, при этом место используется для рисования текста</param>
+    /// <param name="colors">Цвета для элемента. Если null, то используются стандартные цвета</param>
+    /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
+    /// до значка. Используется для рисования иерархического списка с отступами.</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, ListItemColors colors, int leftMargin, bool ignoreDisabledState)
+    {
       Image image;
       if (String.IsNullOrEmpty(imageKey))
         image = null;
@@ -558,7 +640,7 @@ namespace FreeLibSet.Forms
         if (image == null)
           image = EFPApp.MainImages.Images["Error"];
       }
-      PerformDrawItem(control, args, text, image, colors, leftMargin);
+      PerformDrawItem(control, args, text, image, colors, leftMargin, ignoreDisabledState);
     }
 
 
@@ -573,7 +655,7 @@ namespace FreeLibSet.Forms
     /// Значение null означает отсутствие значка, при этом место используется для рисования текста</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image)
     {
-      PerformDrawItem(control, args, text, image, ListItemColors.ControlDefault, 0);
+      PerformDrawItem(control, args, text, image, ListItemColors.ControlDefault, 0, false);
     }
 
     /// <summary>
@@ -591,7 +673,7 @@ namespace FreeLibSet.Forms
     /// Используется основной цвет текста элемента Control.ForeColor</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, UIValidateState? validateState)
     {
-      PerformDrawItem(control, args, text, image, validateState, 0);
+      PerformDrawItem(control, args, text, image, validateState, 0, false);
     }
 
     /// <summary>
@@ -611,13 +693,34 @@ namespace FreeLibSet.Forms
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, UIValidateState? validateState, int leftMargin)
     {
+      PerformDrawItem(control, args, text, image, validateState, leftMargin, false);
+    }
+
+    /// <summary>
+    /// Статический метод рисования элемента списка.
+    /// Предназначен для реализации обработки события ListBox/ComboBox.DrawItem.
+    /// </summary>
+    /// <param name="control">Управляющий элемент, для которого выполняется рисования</param>
+    /// <param name="args">Аргументы события DrawItem. Методы объекта используются для рисования в контексте устройства.</param>
+    /// <param name="text">Текст элемента</param>
+    /// <param name="image">Значок элемента.
+    /// Значение null означает отсутствие значка, при этом место используется для рисования текста</param>
+    /// <param name="validateState">Определяет цвет текста элемента 
+    /// (обычный черный, красный (ошибка) или сиреневый (предупреждение)).
+    /// Если передано значение null, то цвет элемента не задается в явном виде. 
+    /// Используется основной цвет текста элемента Control.ForeColor</param>
+    /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
+    /// до значка. Используется для рисования иерархического списка с отступами.</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, UIValidateState? validateState, int leftMargin, bool ignoreDisabledState)
+    {
       ListItemColors colors;
       if (validateState.HasValue)
         colors = ListItemColors.FromValidateState(validateState.Value);
       else
         colors = ListItemColors.ControlDefault;
 
-      PerformDrawItem(control, args, text, image, colors, leftMargin);
+      PerformDrawItem(control, args, text, image, colors, leftMargin, ignoreDisabledState);
     }
 
     /// <summary>
@@ -632,8 +735,9 @@ namespace FreeLibSet.Forms
     /// <param name="colors">Цвета для элемента. Если null, то используются стандартные цвета</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, ListItemColors colors)
     {
-      PerformDrawItem(control, args, text, image, colors, 0);
+      PerformDrawItem(control, args, text, image, colors, 0, false);
     }
+
 
     /// <summary>
     /// Статический метод рисования элемента списка.
@@ -649,6 +753,23 @@ namespace FreeLibSet.Forms
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, ListItemColors colors, int leftMargin)
     {
+      PerformDrawItem(control, args, text, image, colors, leftMargin, false);
+    }
+    /// <summary>
+    /// Статический метод рисования элемента списка.
+    /// Предназначен для реализации обработки события ListBox/ComboBox.DrawItem.
+    /// </summary>
+    /// <param name="control">Управляющий элемент, для которого выполняется рисования</param>
+    /// <param name="args">Аргументы события DrawItem. Методы объекта используются для рисования в контексте устройства.</param>
+    /// <param name="text">Текст элемента</param>
+    /// <param name="image">Значок элемента.
+    /// Значение null означает отсутствие значка, при этом место используется для рисования текста</param>
+    /// <param name="colors">Цвета для элемента. Если null, то используются стандартные цвета</param>
+    /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
+    /// до значка. Используется для рисования иерархического списка с отступами.</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, ListItemColors colors, int leftMargin, bool ignoreDisabledState)
+    {
       #region Определяем цвета для рисования
 
       if (colors == null)
@@ -658,7 +779,7 @@ namespace FreeLibSet.Forms
       bool isSelected = (args.State & DrawItemState.Selected) != 0;
 
       Color backColor, foreColor;
-      if (control.Enabled)
+      if (control.Enabled || ignoreDisabledState)
       {
 
         backColor = isSelected ? colors.SelectedBackColor : colors.BackColor;
@@ -696,7 +817,7 @@ namespace FreeLibSet.Forms
           r1.Height = 16;
         }
 
-        if (!control.Enabled)
+        if (!(control.Enabled || ignoreDisabledState))
           image = ToolStripRenderer.CreateDisabledImage(image); // 13.06.2019
         args.Graphics.DrawImage(image, r1);
       }

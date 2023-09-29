@@ -61,7 +61,7 @@ namespace FreeLibSet.Forms
     /// Создает объект EFPWebBrowserCommandItems
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPWebBrowserCommandItems(this);
     }
@@ -443,7 +443,7 @@ namespace FreeLibSet.Forms
     /// Создает объект EFPXmlViewBoxCommandItems
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPXmlViewBoxCommandItems(this);
     }
@@ -668,7 +668,7 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          EFPApp.UsedOpenOffice.OpenWithWriter(new AbsPath(fileName), true);
+          EFPApp.UsedOpenOffice.Parts[OpenOfficePart.Writer].OpenFile(new AbsPath(fileName), true);
         }
         catch (Exception e)
         {
@@ -832,7 +832,7 @@ namespace FreeLibSet.Forms
 
       try
       {
-        EFPApp.UsedOpenOffice.OpenWithWriter(filePath, true);
+        EFPApp.UsedOpenOffice.Parts[OpenOfficePart.Writer].OpenFile(filePath, true);
       }
       catch (Exception e)
       {

@@ -9,6 +9,7 @@ using System.Data;
 using FreeLibSet.Data.SqlClient;
 using Npgsql;
 using FreeLibSet.Data.Npgsql;
+using FreeLibSet.Tests;
 
 namespace ExtDB_tests.Data
 {
@@ -17,7 +18,7 @@ namespace ExtDB_tests.Data
   /// Наследуются реализации для конкретных баз данных и реализаций DBxDataWriter
   /// </summary>
   [TestFixture]
-  public abstract class DBxDataWriterTestsBase
+  public abstract class DBxDataWriterTestsBase: FixtureWithSetUp
   {
     #region Конструктор
 
@@ -582,9 +583,9 @@ namespace ExtDB_tests.Data_SQLite
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
       _DB = new SQLiteDBx();
       DBxStruct dbs = new DBxStruct();
       _DB.Struct = TestStruct;
@@ -593,13 +594,15 @@ namespace ExtDB_tests.Data_SQLite
       _Con = _DB.MainEntry.CreateCon();
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
       if (_DB != null)
         _DB.Dispose();
+
+      base.OnOneTimeTearDown();
     }
 
     private SQLiteDBx _DB;
@@ -627,9 +630,9 @@ namespace ExtDB_tests.Data_SQLite
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
       _DB = new SQLiteDBx();
       DBxStruct dbs = new DBxStruct();
       _DB.Struct = TestStruct;
@@ -638,13 +641,13 @@ namespace ExtDB_tests.Data_SQLite
       _Con = _DB.MainEntry.CreateCon();
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
       if (_DB != null)
         _DB.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private SQLiteDBx _DB;
@@ -670,9 +673,10 @@ namespace ExtDB_tests.Data_SqlClient
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       _DB = CreateDB();
 
       _Con = (SqlDBxCon)(_DB.MainEntry.CreateCon());
@@ -701,13 +705,13 @@ namespace ExtDB_tests.Data_SqlClient
       return new SqlDBx(csb);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
       if (_DB != null)
         _DB.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private SqlDBx _DB;
@@ -740,9 +744,10 @@ namespace ExtDB_tests.Data_Npgsql
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       NpgsqlConnectionStringBuilder csb = new NpgsqlConnectionStringBuilder();
       csb.Host = "127.0.0.1";
       csb.Database = "testdatawriter";
@@ -757,13 +762,13 @@ namespace ExtDB_tests.Data_Npgsql
       _Con = _DB.MainEntry.CreateCon();
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
       if (_DB != null)
         _DB.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private NpgsqlDBx _DB;

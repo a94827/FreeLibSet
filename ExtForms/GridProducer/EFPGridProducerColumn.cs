@@ -398,6 +398,7 @@ namespace FreeLibSet.Forms
         item.Format = "0.00";
       item.SizeGroup = "Money";
       item.DataType = typeof(Decimal);
+      item.Summable = true;
       Add(item);
       return item;
     }
@@ -460,6 +461,7 @@ namespace FreeLibSet.Forms
       item.SizeGroup = "Money";
       item.ValueNeeded += valueNeeded;
       item.DataType = typeof(Decimal);
+      item.Summable = true;
       Add(item);
       return item;
     }
@@ -484,6 +486,7 @@ namespace FreeLibSet.Forms
       item.Format = "0.00";
       item.SizeGroup = "Money";
       item.DataType = typeof(Decimal);
+      item.Summable = true;
       Add(item);
       return item;
     }
@@ -1225,6 +1228,14 @@ namespace FreeLibSet.Forms
     /// </summary>
     public bool CanIncSearch { get { return _CanIncSearch; } set { _CanIncSearch = value; } }
     private bool _CanIncSearch;
+
+    /// <summary>
+    /// Может ли для столбца выполняться суммирование.
+    /// По умолчанию - false - суммирование не выполняется.
+    /// Если столбец создан с помощью методов <see cref="EFPGridProducerColumns.AddMoney(string)"/> или <see cref="EFPGridProducerColumns.AddUserMoney(string, string, EFPGridProducerValueNeededEventHandler, string)"/>, то устанавливается начальное значение true.
+    /// </summary>
+    public bool Summable { get { return _Summable; } set { _Summable = value; } }
+    private bool _Summable;
 
     /// <summary>
     /// Используется при поиске по первым буквам

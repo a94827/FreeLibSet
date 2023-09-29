@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
 using FreeLibSet.Core;
+using System.Drawing.Printing;
 
 #pragma warning disable 1591
 
@@ -90,6 +91,42 @@ namespace FreeLibSet.Forms
 
     public ExtPrintPreviewControl()
     {
+    }
+
+    #endregion
+
+    #region Свойство Document
+
+    // Дополняем событием DocumentChanged
+
+    /// <summary>
+    /// Основное свойство - печатаемый документ
+    /// </summary>
+    public new PrintDocument Document
+    {
+      get { return base.Document; }
+      set
+      {
+        if (object.ReferenceEquals(value, base.Document))
+          return;
+        base.Document = value;
+        OnDocumentChanged(EventArgs.Empty);
+      }
+    }
+
+    /// <summary>
+    /// Событие вызывается при установке свойства <see cref="Document"/>.
+    /// </summary>
+    public event EventHandler DocumentChanged;
+
+    /// <summary>
+    /// Вызывает событие <see cref="DocumentChanged"/>
+    /// </summary>
+    /// <param name="args">Не используется</param>
+    protected virtual void OnDocumentChanged(EventArgs args)
+    {
+      if (DocumentChanged != null)
+        DocumentChanged(this, args);
     }
 
     #endregion

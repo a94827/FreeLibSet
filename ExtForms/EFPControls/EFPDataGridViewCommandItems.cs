@@ -463,8 +463,7 @@ namespace FreeLibSet.Forms
         ciStatCount = new EFPCommandItem("View", "StatusCount");
         ciStatCount.StatusBarText = "????";
         ciStatCount.MenuText = "Количество чисел";
-        ciStatCount.ToolTipText = "Количество чисел в выбранных ячейках табличного просмотра" + Environment.NewLine +
-          "Двойной щелчок мыши - копирование числа в буфер обмена";
+        ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + StatCountToolTipText2;
         ciStatCount.Usage = EFPCommandItemUsage.StatusBar;
         ciStatCount.Click += new EventHandler(ciStatCount_Click);
         Add(ciStatCount);
@@ -473,8 +472,7 @@ namespace FreeLibSet.Forms
         ciStatSumma.StatusBarText = "??????????";
         //ciStatSumma.ImageKey = "Sum";
         ciStatSumma.MenuText = "Сумма";
-        ciStatSumma.ToolTipText = "Сумма выбранных ячеек" + Environment.NewLine +
-          "Двойной щелчок мыши - копирование суммы в буфер обмена";
+        ciStatSumma.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + StatSummaToolTipText2;
         ciStatSumma.Usage = EFPCommandItemUsage.StatusBar;
         ciStatSumma.Click += new EventHandler(ciStatSumma_Click);
         Add(ciStatSumma);
@@ -693,6 +691,11 @@ namespace FreeLibSet.Forms
         if (!(ControlProvider.Control.MultiSelect && (ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.CellSelect ||
           ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.RowHeaderSelect ||
           ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.ColumnHeaderSelect)))
+        {
+          ciStatCount.Visible = false;
+          ciStatSumma.Visible = false;
+        }
+        else if (!ControlProvider.HasSummableColumns)
         {
           ciStatCount.Visible = false;
           ciStatSumma.Visible = false;
@@ -1342,7 +1345,7 @@ namespace FreeLibSet.Forms
 
           if ((CopyFormats & (EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV)) != 0)
           {
-            EFPDataGridViewRectArea area = ControlProvider.GetRectArea(EFPDataGridViewExpRange.Selected);
+            EFPDataGridViewRectArea area = ControlProvider.GetRectArea(EFPDataViewExpRange.Selected);
             string[,] a = ControlProvider.GetCellTextValues(area);
 
             if ((CopyFormats & EFPDataViewCopyFormats.Text) == EFPDataViewCopyFormats.Text)
@@ -1363,7 +1366,7 @@ namespace FreeLibSet.Forms
           {
             // HTML-формат собираем сами
             EFPDataGridViewExpHtmlSettings settings = new EFPDataGridViewExpHtmlSettings();
-            settings.RangeMode = EFPDataGridViewExpRange.Selected;
+            settings.RangeMode = EFPDataViewExpRange.Selected;
             //if (Owner.Control.SelectionMode == DataGridViewSelectionMode.FullColumnSelect ||
             //  Owner.Control.SelectionMode == DataGridViewSelectionMode.ColumnHeaderSelect)
             //  Settings.ShowColumnHeaders = true;
@@ -1638,8 +1641,8 @@ namespace FreeLibSet.Forms
       }
       else
         if (!ControlProvider.CurrentIncSearchColumn.PerformIncSearch(ControlProvider.CurrentIncSearchChars.ToUpper(), true))
-          EFPApp.ShowTempMessage("Нет больше строк, в которых значение поля начинается с \"" +
-            ControlProvider.CurrentIncSearchChars + "\"");
+        EFPApp.ShowTempMessage("Нет больше строк, в которых значение поля начинается с \"" +
+          ControlProvider.CurrentIncSearchChars + "\"");
     }
 
     #endregion
@@ -2042,8 +2045,11 @@ namespace FreeLibSet.Forms
 
     private const string EmptyStatCountText = "    ";
     private const string EmptyStatSummaText = "    ";
-    //private const int StatCountLen = 4;
-    //private const int StatSummaLen = 12;
+    private const string StatCountToolTipText1 = "Количество чисел в выбранных ячейках табличного просмотра";
+    private const string StatCountToolTipText2 = "Двойной щелчок мыши - копирование числа в буфер обмена";
+    private const string StatSummaToolTipText1 = "Сумма выбранных ячеек";
+    private const string StatSummaToolTipText2 = "Двойной щелчок мыши - копирование суммы в буфер обмена";
+
 
     /// <summary>
     /// Сколько ячеек можно просуммировать, прежде чем посмотреть на часы
@@ -2063,9 +2069,12 @@ namespace FreeLibSet.Forms
         return;
       if (_StatSummaTimer != null)
         _StatSummaTimer.Enabled = false;
-      ciStatSumma.ImageKey = String.Empty;
       ciStatCount.StatusBarText = EmptyStatCountText;
+      ciStatCount.ImageKey = String.Empty;
+      ciStatCount.ToolTipText = StatCountToolTipText1;
+      ciStatSumma.ImageKey = String.Empty;
       ciStatSumma.StatusBarText = EmptyStatSummaText;
+      ciStatSumma.ToolTipText = StatSummaToolTipText1;
       if (!WantCalcStatItems())
         return;
 
@@ -2073,6 +2082,7 @@ namespace FreeLibSet.Forms
       _CurrStatCellSumma = null;
       _CurrStatCellSummaDigits = 0;
       _CurrStatCellCount = null;
+      _CurrStatState = StatCalcState.Process;
       ciStatSumma.ImageKey = "HourGlass";
       if (ControlProvider.Control.SelectedCells.Count <= StatCellCountPerCheck)
       {
@@ -2130,41 +2140,83 @@ namespace FreeLibSet.Forms
     /// </summary>
     private int _CurrStatCellSummaDigits;
 
+    private enum StatCalcState { Process, Ok, Error, NotSummable }
+    private StatCalcState _CurrStatState;
+
     private bool CalcStatSum(bool checkTime)
     {
-      bool res = true;
+      if (_CurrStatCellIndex == 0)
+        ciStatSumma.StatusBarText = "Идет расчет";
+
+      string errorMessage = null;
       try
       {
-        if (_CurrStatCellIndex == 0)
-          ciStatSumma.StatusBarText = "Идет расчет";
-        if (DoCalcStatSum(checkTime))
-        {
+        if (!DoCalcStatSum(checkTime))
+          return false;
+        if (_CurrStatState == StatCalcState.Process)
+          _CurrStatState = StatCalcState.Ok;
+      }
+      catch (Exception e)
+      {
+        _CurrStatState = StatCalcState.Error;
+        errorMessage = e.Message;
+      }
+
+      // Вычисления закончены или завершились с ошибкой
+      switch (_CurrStatState)
+      {
+        case StatCalcState.Ok:
+          if (_CurrStatCellCount.HasValue)
+          {
+            ciStatCount.StatusBarText = _CurrStatCellCount.Value.ToString();
+            ciStatCount.ImageKey = "Count";
+            ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + StatCountToolTipText2;
+          }
+          else
+          {
+            ciStatCount.StatusBarText = EmptyStatCountText;
+            ciStatCount.ImageKey = String.Empty;
+            ciStatCount.ToolTipText = StatCountToolTipText1;
+          }
+
           if (_CurrStatCellSumma.HasValue)
           {
             ciStatSumma.StatusBarText = /*Math.Round(*/_CurrStatCellSumma.Value/*, CurrStatCellSummaDigits, MidpointRounding.AwayFromZero)*/.ToString();
             ciStatSumma.ImageKey = "Sum";
+            ciStatSumma.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + StatSummaToolTipText2;
           }
           else
           {
             ciStatSumma.StatusBarText = EmptyStatSummaText;
             ciStatSumma.ImageKey = String.Empty;
+            ciStatSumma.ToolTipText = StatSummaToolTipText1;
           }
-          if (_CurrStatCellCount.HasValue)
-            ciStatCount.StatusBarText = _CurrStatCellCount.Value.ToString();
-          else
-            ciStatCount.StatusBarText = EmptyStatCountText;
-        }
-        else
-          res = false;
-      }
-      catch
-      {
-        ciStatSumma.StatusBarText = "Ошибка!";
-        ciStatSumma.ImageKey = String.Empty;
-        ciStatCount.StatusBarText = EmptyStatCountText;
+          break;
+
+        case StatCalcState.Error:
+          ciStatCount.StatusBarText = EmptyStatCountText;
+          ciStatCount.ImageKey = String.Empty;
+          ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + "Ошибка при выполнении суммирования. " + Environment.NewLine + errorMessage;
+          ciStatSumma.StatusBarText = "Ошибка!";
+          ciStatSumma.ImageKey = "Error";
+          ciStatCount.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + "Ошибка при выполнении суммирования. " + Environment.NewLine + errorMessage;
+          break;
+
+        case StatCalcState.NotSummable:
+          ciStatCount.StatusBarText = EmptyStatCountText;
+          ciStatCount.ImageKey = String.Empty;
+          ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + "Некоторые выбранные ячейки не являются суммируемыми";
+          ciStatSumma.StatusBarText = EmptyStatSummaText;
+          ciStatSumma.ImageKey = String.Empty;
+          ciStatSumma.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + "Некоторые выбранные ячейки не являются суммируемыми";
+          break;
+#if DEBUG
+        default:
+          throw new BugException(_CurrStatState.ToString());
+#endif
       }
 
-      return res;
+      return true;
     }
 
     private bool DoCalcStatSum(bool checkTime)
@@ -2179,6 +2231,13 @@ namespace FreeLibSet.Forms
             return false;
         }
         DataGridViewCell cell = ControlProvider.Control.SelectedCells[_CurrStatCellIndex];
+        EFPDataGridViewColumn col = ControlProvider.Columns[cell.ColumnIndex];
+        if (!col.Summable)
+        {
+          _CurrStatState = StatCalcState.NotSummable;
+          return true;
+        }
+
         _CurrStatCellIndex++;
         ControlProvider.DoGetRowAttributes(cell.RowIndex, EFPDataGridViewAttributesReason.View);
         EFPDataGridViewCellAttributesEventArgs args = ControlProvider.DoGetCellAttributes(cell.ColumnIndex);

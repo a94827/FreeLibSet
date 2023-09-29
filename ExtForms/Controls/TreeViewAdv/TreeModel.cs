@@ -10,10 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
-using FreeLibSet.Models.Tree;
 using System.Windows.Forms;
 using System.Drawing;
 #pragma warning disable 1591
+
+// Эта модель должна быть в ExtForms.dll, а не ExtTools.dll, т.к. использует CheckState и Image
 
 namespace FreeLibSet.Models.Tree
 {

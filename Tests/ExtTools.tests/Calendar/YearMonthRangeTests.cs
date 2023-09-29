@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Calendar;
+using FreeLibSet.Tests;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Calendar
 {
@@ -20,7 +22,7 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(arg1, sut.FirstYM, "FirstYM");
       Assert.AreEqual(arg2, sut.LastYM, "LastYM");
       Assert.AreEqual(15, sut.MonthCount, "MonthCount");
-      Assert.AreEqual(Creators.CreateDateRange("20220101-20230331"), sut.DateRange, "DateRange");
+      Assert.AreEqual(Creators.DateRange("20220101-20230331"), sut.DateRange, "DateRange");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -30,8 +32,8 @@ namespace ExtTools_tests.Calendar
     // Случай [TestCase("", "")] пока не определен
     public void Constructor_YearMonth_exception(string sArg1, string sArg2)
     {
-      YearMonth arg1 = Creators.CreateYearMonth(sArg1);
-      YearMonth arg2 = Creators.CreateYearMonth(sArg2);
+      YearMonth arg1 = Creators.YearMonth(sArg1);
+      YearMonth arg2 = Creators.YearMonth(sArg2);
       YearMonthRange sut;
       Assert.Catch(delegate() { sut = new YearMonthRange(arg1, arg2); });
     }
@@ -42,10 +44,10 @@ namespace ExtTools_tests.Calendar
       DateTime arg1 = new DateTime(2022, 12, 15);
       DateTime arg2 = new DateTime(2023, 3, 9);
       YearMonthRange sut = new YearMonthRange(arg1, arg2);
-      Assert.AreEqual(Creators.CreateYearMonth("202212"), sut.FirstYM, "FirstYM");
-      Assert.AreEqual(Creators.CreateYearMonth("202303"), sut.LastYM, "LastYM");
+      Assert.AreEqual(Creators.YearMonth("202212"), sut.FirstYM, "FirstYM");
+      Assert.AreEqual(Creators.YearMonth("202303"), sut.LastYM, "LastYM");
       Assert.AreEqual(4, sut.MonthCount, "MonthCount");
-      Assert.AreEqual(Creators.CreateDateRange("20221201-20230331"), sut.DateRange, "DateRange");
+      Assert.AreEqual(Creators.DateRange("20221201-20230331"), sut.DateRange, "DateRange");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -53,10 +55,10 @@ namespace ExtTools_tests.Calendar
     public void Constructor_Year()
     {
       YearMonthRange sut = new YearMonthRange(2023);
-      Assert.AreEqual(Creators.CreateYearMonth("202301"), sut.FirstYM, "FirstYM");
-      Assert.AreEqual(Creators.CreateYearMonth("202312"), sut.LastYM, "LastYM");
+      Assert.AreEqual(Creators.YearMonth("202301"), sut.FirstYM, "FirstYM");
+      Assert.AreEqual(Creators.YearMonth("202312"), sut.LastYM, "LastYM");
       Assert.AreEqual(12, sut.MonthCount, "MonthCount");
-      Assert.AreEqual(Creators.CreateDateRange("20230101-20231231"), sut.DateRange, "DateRange");
+      Assert.AreEqual(Creators.DateRange("20230101-20231231"), sut.DateRange, "DateRange");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -64,10 +66,10 @@ namespace ExtTools_tests.Calendar
     public void Constructor_Year_Month()
     {
       YearMonthRange sut = new YearMonthRange(2023, 3);
-      Assert.AreEqual(Creators.CreateYearMonth("202303"), sut.FirstYM, "FirstYM");
-      Assert.AreEqual(Creators.CreateYearMonth("202303"), sut.LastYM, "LastYM");
+      Assert.AreEqual(Creators.YearMonth("202303"), sut.FirstYM, "FirstYM");
+      Assert.AreEqual(Creators.YearMonth("202303"), sut.LastYM, "LastYM");
       Assert.AreEqual(1, sut.MonthCount, "MonthCount");
-      Assert.AreEqual(Creators.CreateDateRange("20230301-20230331"), sut.DateRange, "DateRange");
+      Assert.AreEqual(Creators.DateRange("20230301-20230331"), sut.DateRange, "DateRange");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -76,10 +78,10 @@ namespace ExtTools_tests.Calendar
     {
       YearMonth arg = new YearMonth(2023, 3);
       YearMonthRange sut = new YearMonthRange(arg);
-      Assert.AreEqual(Creators.CreateYearMonth("202303"), sut.FirstYM, "FirstYM");
-      Assert.AreEqual(Creators.CreateYearMonth("202303"), sut.LastYM, "LastYM");
+      Assert.AreEqual(Creators.YearMonth("202303"), sut.FirstYM, "FirstYM");
+      Assert.AreEqual(Creators.YearMonth("202303"), sut.LastYM, "LastYM");
       Assert.AreEqual(1, sut.MonthCount, "MonthCount");
-      Assert.AreEqual(Creators.CreateDateRange("20230301-20230331"), sut.DateRange, "DateRange");
+      Assert.AreEqual(Creators.DateRange("20230301-20230331"), sut.DateRange, "DateRange");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -87,10 +89,10 @@ namespace ExtTools_tests.Calendar
     public void Constructor_Year_TwoMonths()
     {
       YearMonthRange sut = new YearMonthRange(2023, 2, 3);
-      Assert.AreEqual(Creators.CreateYearMonth("202302"), sut.FirstYM, "FirstYM");
-      Assert.AreEqual(Creators.CreateYearMonth("202303"), sut.LastYM, "LastYM");
+      Assert.AreEqual(Creators.YearMonth("202302"), sut.FirstYM, "FirstYM");
+      Assert.AreEqual(Creators.YearMonth("202303"), sut.LastYM, "LastYM");
       Assert.AreEqual(2, sut.MonthCount, "MonthCount");
-      Assert.AreEqual(Creators.CreateDateRange("20230201-20230331"), sut.DateRange, "DateRange");
+      Assert.AreEqual(Creators.DateRange("20230201-20230331"), sut.DateRange, "DateRange");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -113,12 +115,12 @@ namespace ExtTools_tests.Calendar
     [Test]
     public void Item()
     {
-      YearMonthRange sut = Creators.CreateYearMonthRange("202211-202303");
-      Assert.AreEqual(Creators.CreateYearMonth("202211"), sut[0], "[0]");
-      Assert.AreEqual(Creators.CreateYearMonth("202212"), sut[1], "[1]");
-      Assert.AreEqual(Creators.CreateYearMonth("202301"), sut[2], "[2]");
-      Assert.AreEqual(Creators.CreateYearMonth("202302"), sut[3], "[3]");
-      Assert.AreEqual(Creators.CreateYearMonth("202303"), sut[4], "[4]");
+      YearMonthRange sut = Creators.YearMonthRange("202211-202303");
+      Assert.AreEqual(Creators.YearMonth("202211"), sut[0], "[0]");
+      Assert.AreEqual(Creators.YearMonth("202212"), sut[1], "[1]");
+      Assert.AreEqual(Creators.YearMonth("202301"), sut[2], "[2]");
+      Assert.AreEqual(Creators.YearMonth("202302"), sut[3], "[3]");
+      Assert.AreEqual(Creators.YearMonth("202303"), sut[4], "[4]");
 
       YearMonth dummy;
       Assert.Catch<ArgumentOutOfRangeException>(delegate() { dummy = sut[-1]; }, "[-1]");
@@ -132,14 +134,14 @@ namespace ExtTools_tests.Calendar
     [Test]
     public void ToArray()
     {
-      YearMonthRange sut = Creators.CreateYearMonthRange("202211-202303");
+      YearMonthRange sut = Creators.YearMonthRange("202211-202303");
       YearMonth[] res = sut.ToArray();
       Assert.AreEqual(new YearMonth[5]{
-        Creators.CreateYearMonth("202211"),
-        Creators.CreateYearMonth("202212"),
-        Creators.CreateYearMonth("202301"),
-        Creators.CreateYearMonth("202302"),
-        Creators.CreateYearMonth("202303")}, res);
+        Creators.YearMonth("202211"),
+        Creators.YearMonth("202212"),
+        Creators.YearMonth("202301"),
+        Creators.YearMonth("202302"),
+        Creators.YearMonth("202303")}, res);
     }
 
     #endregion
@@ -153,9 +155,9 @@ namespace ExtTools_tests.Calendar
     [TestCase("", "", "")]
     public void OpOr(string sArg1, string sArg2, string sWantedRes)
     {
-      YearMonthRange arg1 = Creators.CreateYearMonthRange(sArg1);
-      YearMonthRange arg2 = Creators.CreateYearMonthRange(sArg2);
-      YearMonthRange wantedRes = Creators.CreateYearMonthRange(sWantedRes);
+      YearMonthRange arg1 = Creators.YearMonthRange(sArg1);
+      YearMonthRange arg2 = Creators.YearMonthRange(sArg2);
+      YearMonthRange wantedRes = Creators.YearMonthRange(sWantedRes);
 
       YearMonthRange res1 = arg1 | arg2;
       Assert.AreEqual(wantedRes, res1, "#1");
@@ -168,9 +170,9 @@ namespace ExtTools_tests.Calendar
     [TestCase("202112-202302", "202205-202207", "202205-202207")]
     public void OpAnd(string sArg1, string sArg2, string sWantedRes)
     {
-      YearMonthRange arg1 = Creators.CreateYearMonthRange(sArg1);
-      YearMonthRange arg2 = Creators.CreateYearMonthRange(sArg2);
-      YearMonthRange wantedRes = Creators.CreateYearMonthRange(sWantedRes);
+      YearMonthRange arg1 = Creators.YearMonthRange(sArg1);
+      YearMonthRange arg2 = Creators.YearMonthRange(sArg2);
+      YearMonthRange wantedRes = Creators.YearMonthRange(sWantedRes);
 
       YearMonthRange res1 = arg1 & arg2;
       Assert.AreEqual(wantedRes, res1, "#1");
@@ -184,8 +186,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("", "")]
     public void OpAnd_exception(string sArg1, string sArg2)
     {
-      YearMonthRange arg1 = Creators.CreateYearMonthRange(sArg1);
-      YearMonthRange arg2 = Creators.CreateYearMonthRange(sArg2);
+      YearMonthRange arg1 = Creators.YearMonthRange(sArg1);
+      YearMonthRange arg2 = Creators.YearMonthRange(sArg2);
 
       YearMonthRange dummy;
       Assert.Catch(delegate() { dummy = arg1 & arg2; }, "#1");
@@ -200,8 +202,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("", "", false)]
     public void IsCrossed(string sArg1, string sArg2, bool wantedRes)
     {
-      YearMonthRange arg1 = Creators.CreateYearMonthRange(sArg1);
-      YearMonthRange arg2 = Creators.CreateYearMonthRange(sArg2);
+      YearMonthRange arg1 = Creators.YearMonthRange(sArg1);
+      YearMonthRange arg2 = Creators.YearMonthRange(sArg2);
 
       Assert.AreEqual(wantedRes, YearMonthRange.IsCrossed(arg1, arg2), "#1");
       Assert.AreEqual(wantedRes, YearMonthRange.IsCrossed(arg2, arg1), "#2");
@@ -216,8 +218,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("202105-202203", -8, "202009-202107")]
     public void OpAdd_months(string sSut, int months, string sWantedRes)
     {
-      YearMonthRange sut = Creators.CreateYearMonthRange(sSut);
-      YearMonthRange wantedRes = Creators.CreateYearMonthRange(sWantedRes);
+      YearMonthRange sut = Creators.YearMonthRange(sSut);
+      YearMonthRange wantedRes = Creators.YearMonthRange(sWantedRes);
 
       Assert.AreEqual(wantedRes, sut + months);
     }
@@ -235,8 +237,8 @@ namespace ExtTools_tests.Calendar
     [TestCase("202105-202203", -8, "202201-202211")]
     public void OpSub_months(string sSut, int months, string sWantedRes)
     {
-      YearMonthRange sut = Creators.CreateYearMonthRange(sSut);
-      YearMonthRange wantedRes = Creators.CreateYearMonthRange(sWantedRes);
+      YearMonthRange sut = Creators.YearMonthRange(sSut);
+      YearMonthRange wantedRes = Creators.YearMonthRange(sWantedRes);
 
       Assert.AreEqual(wantedRes, sut - months);
     }
@@ -256,27 +258,44 @@ namespace ExtTools_tests.Calendar
     [Test]
     public void Enumerator()
     {
-      YearMonthRange sut = Creators.CreateYearMonthRange("202211-202302");
+      YearMonthRange sut = Creators.YearMonthRange("202211-202302");
       List<YearMonth> lst = new List<YearMonth>();
       foreach (YearMonth ym in sut)
         lst.Add(ym);
 
       Assert.AreEqual(new YearMonth[4]{
-        Creators.CreateYearMonth("202211"),
-        Creators.CreateYearMonth("202212"),
-        Creators.CreateYearMonth("202301"),
-        Creators.CreateYearMonth("202302")}, lst.ToArray());
+        Creators.YearMonth("202211"),
+        Creators.YearMonth("202212"),
+        Creators.YearMonth("202301"),
+        Creators.YearMonth("202302")}, lst.ToArray());
     }
 
     [Test]
     public void Enumerator_empty()
     {
-      YearMonthRange sut = Creators.CreateYearMonthRange("");
+      YearMonthRange sut = Creators.YearMonthRange("");
       List<YearMonth> lst = new List<YearMonth>();
       foreach (YearMonth ym in sut)
         lst.Add(ym);
 
       Assert.AreEqual(0, lst.Count);
+    }
+
+    #endregion
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      YearMonthRange sut = Creators.YearMonthRange("202301-202307");
+
+      byte[] b = SerializationTools.SerializeBinary(sut);
+      YearMonthRange res = (YearMonthRange)(SerializationTools.DeserializeBinary(b));
+
+      Assert.AreEqual(sut.FirstYM, res.FirstYM, "FirstYM");
+      Assert.AreEqual(sut.LastYM, res.LastYM, "LastYM");
+      // пока нет поля Tag Assert.AreEqual(sut.Tag, res.Tag, "Tag");
     }
 
     #endregion

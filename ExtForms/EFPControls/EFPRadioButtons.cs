@@ -1131,7 +1131,7 @@ namespace FreeLibSet.Forms
     #region IEnumerable<EFPSingleRadioButton> Members
 
     /// <summary>
-    /// Возвращает перечислитель по провадерам отдельных кнопок.
+    /// Возвращает перечислитель по провайдерам отдельных кнопок.
     /// </summary>
     /// <returns></returns>
     public IEnumerator<EFPSingleRadioButton> GetEnumerator()

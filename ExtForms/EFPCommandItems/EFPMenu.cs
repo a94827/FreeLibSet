@@ -192,12 +192,17 @@ namespace FreeLibSet.Forms
           {
             if (ItemDict.ContainsKey(item.CategoryAndName))
               continue; // уже добавили на предыдущем проходе
+
             if (item.Parent != null)
             {
-              if (!item.Parent.MenuUsage)
+              if ((!item.Parent.MenuUsage))
+              {
+                if (item.IsInToolBarDropDown)
+                  continue;
                 throw new InvalidOperationException("Нельзя присоединить команду \"" + item.ToString() +
                   "\" к меню, потому что ее родительская команда \"" + item.Parent.ToString() +
                   "\" не относится к меню");
+              }
               if (!items.Contains(item.Parent))
                 throw new InvalidOperationException("Нельзя присоединить команду \"" + item.ToString() +
                   "\" к меню, потому что ее родительская команда \"" + item.Parent.ToString() +
@@ -888,7 +893,7 @@ namespace FreeLibSet.Forms
       InitSeparatorVisiblity();
 
       control.Disposed += new EventHandler(ControlDisposed); // обработчик Dispose только для верхнего элемента
-      DoAttach(control); 
+      DoAttach(control);
     }
 
     /// <summary>

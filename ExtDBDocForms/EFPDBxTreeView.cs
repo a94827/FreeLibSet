@@ -952,7 +952,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает объект EFPDBxTreeViewCommandItems
     /// </summary>
     /// <returns>Список команд</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPDBxTreeViewCommandItems(this);
     }

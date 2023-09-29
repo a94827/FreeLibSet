@@ -28,10 +28,10 @@ namespace FreeLibSet.OLE
     /// </summary>
     public OLEHelper()
     {
-      Args1 = new object[1];
-      Args2 = new object[2];
-      Args3 = new object[3];
-      Args4 = new object[4];
+      _Args1 = new object[1];
+      _Args2 = new object[2];
+      _Args3 = new object[3];
+      _Args4 = new object[4];
     }
 
     /// <summary>
@@ -161,8 +161,8 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args1[0] = value;
-      obj.GetType().InvokeMember(name, BindingFlags.SetProperty, null, obj, Args1, CultureInfo);
+      _Args1[0] = value;
+      obj.GetType().InvokeMember(name, BindingFlags.SetProperty, null, obj, _Args1, CultureInfo);
     }
 
     /// <summary>
@@ -178,8 +178,8 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args1[0] = index;
-      return obj.GetType().InvokeMember(name, BindingFlags.GetProperty, null, obj, Args1, CultureInfo);
+      _Args1[0] = index;
+      return obj.GetType().InvokeMember(name, BindingFlags.GetProperty, null, obj, _Args1, CultureInfo);
     }
 
     /// <summary>
@@ -196,9 +196,9 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args2[0] = index1;
-      Args2[1] = index2;
-      return obj.GetType().InvokeMember(name, BindingFlags.GetProperty, null, obj, Args2, CultureInfo);
+      _Args2[0] = index1;
+      _Args2[1] = index2;
+      return obj.GetType().InvokeMember(name, BindingFlags.GetProperty, null, obj, _Args2, CultureInfo);
     }
 
     #endregion
@@ -233,8 +233,8 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args1[0] = arg1;
-      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, Args1, CultureInfo);
+      _Args1[0] = arg1;
+      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, _Args1, CultureInfo);
     }
 
     /// <summary>
@@ -251,9 +251,9 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args2[0] = arg1;
-      Args2[1] = arg2;
-      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, Args2, CultureInfo);
+      _Args2[0] = arg1;
+      _Args2[1] = arg2;
+      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, _Args2, CultureInfo);
     }
 
     /// <summary>
@@ -271,10 +271,10 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args3[0] = arg1;
-      Args3[1] = arg2;
-      Args3[2] = arg3;
-      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, Args3, CultureInfo);
+      _Args3[0] = arg1;
+      _Args3[1] = arg2;
+      _Args3[2] = arg3;
+      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, _Args3, CultureInfo);
     }
 
     /// <summary>
@@ -293,11 +293,11 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args4[0] = arg1;
-      Args4[1] = arg2;
-      Args4[2] = arg3;
-      Args4[3] = arg4;
-      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, Args4, CultureInfo);
+      _Args4[0] = arg1;
+      _Args4[1] = arg2;
+      _Args4[2] = arg3;
+      _Args4[3] = arg4;
+      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, _Args4, CultureInfo);
     }
 
     /// <summary>
@@ -319,7 +319,7 @@ namespace FreeLibSet.OLE
 
     #region Установка свойств для LCID 0409
 
-    private static readonly System.Globalization.CultureInfo CultureInfo0409 =
+    private static readonly System.Globalization.CultureInfo _CultureInfo0409 =
       System.Globalization.CultureInfo.GetCultureInfo(0x0409);
 
     /// <summary>
@@ -334,7 +334,7 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      return obj.GetType().InvokeMember(name, BindingFlags.GetProperty, null, obj, null, null, CultureInfo0409, null);
+      return obj.GetType().InvokeMember(name, BindingFlags.GetProperty, null, obj, null, null, _CultureInfo0409, null);
     }
 
     /// <summary>
@@ -349,18 +349,18 @@ namespace FreeLibSet.OLE
       CheckNotDisposed();
 #endif
 
-      Args1[0] = value;
-      obj.GetType().InvokeMember(name, BindingFlags.SetProperty, null, obj, Args1, null, CultureInfo0409, null);
+      _Args1[0] = value;
+      obj.GetType().InvokeMember(name, BindingFlags.SetProperty, null, obj, _Args1, null, _CultureInfo0409, null);
     }
 
     #endregion
 
     #region Внутренняя реализация
 
-    private readonly object[] Args1;
-    private readonly object[] Args2;
-    private readonly object[] Args3;
-    private readonly object[] Args4;
+    private readonly object[] _Args1;
+    private readonly object[] _Args2;
+    private readonly object[] _Args3;
+    private readonly object[] _Args4;
 
     #endregion
 

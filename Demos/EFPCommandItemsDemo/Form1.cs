@@ -20,6 +20,7 @@ namespace EFPCommandItemsDemo
       _FormNumber = Program.LastFormNumber;
 
       Text = "Форма №" + _FormNumber.ToString();
+      Icon = EFPApp.MainImages.Icons["CircleBlack"];
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       EFPCommandItem ci;
@@ -67,6 +68,7 @@ namespace EFPCommandItemsDemo
 
       EFPTextBox efpText2 = new EFPTextBox(efpTabControl.TabPages[1].BaseProvider, tb2);
       efpText2.CanBeEmpty = true;
+      efpText2.ToolBarPanel = panSpb2;
 
 
       ci = new EFPCommandItem("Test", "Item32");

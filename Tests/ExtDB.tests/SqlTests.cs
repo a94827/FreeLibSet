@@ -11,10 +11,11 @@ using FreeLibSet.Data.SqlClient;
 using FreeLibSet.Data.Npgsql;
 using Npgsql;
 using FreeLibSet.Data.OleDb;
+using FreeLibSet.Tests;
 
 namespace ExtDB_tests.Data
 {
-  public abstract class SqlTestBase
+  public abstract class SqlTestBase: FixtureWithSetUp
   {
     #region Конструктор
 
@@ -1484,9 +1485,9 @@ namespace ExtDB_tests.Data_SQLite
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
       _DB = new SQLiteDBx();
       DBxStruct dbs = new DBxStruct();
       _DB.Struct = TestStruct;
@@ -1496,13 +1497,13 @@ namespace ExtDB_tests.Data_SQLite
       _Con.AddRecords(TestData);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
       if (_DB != null)
         _DB.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private SQLiteDBx _DB;
@@ -1528,9 +1529,10 @@ namespace ExtDB_tests.Data_SqlClient
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       _DB = CreateDB();
 
       _Con = (SqlDBxCon)(_DB.MainEntry.CreateCon());
@@ -1561,13 +1563,13 @@ namespace ExtDB_tests.Data_SqlClient
       return new SqlDBx(csb);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
       if (_DB != null)
         _DB.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private SqlDBx _DB;
@@ -1614,9 +1616,10 @@ namespace ExtDB_tests.Data_Npgsql
   {
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       NpgsqlConnectionStringBuilder csb = new NpgsqlConnectionStringBuilder();
       csb.Host = "127.0.0.1";
       csb.Database = "test";
@@ -1642,8 +1645,7 @@ namespace ExtDB_tests.Data_Npgsql
       _Con.AddRecords(TestData);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
@@ -1652,7 +1654,10 @@ namespace ExtDB_tests.Data_Npgsql
         //_DB.DropDatabaseIfExists();
         _DB.Dispose();
       }
+
+      base.OnOneTimeTearDown();
     }
+
 
     private NpgsqlDBx _DB;
 
@@ -1679,9 +1684,10 @@ namespace ExtDB_tests.Data_OleDB
 
     #region База данных в памяти
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       _TempDir = new FreeLibSet.IO.TempDirectory();
       FreeLibSet.IO.AbsPath path = new FreeLibSet.IO.AbsPath(_TempDir.Dir, "test.mdb");
       System.IO.File.WriteAllBytes(path.Path, TestTablesResource.SqlTestOleDB);
@@ -1692,8 +1698,7 @@ namespace ExtDB_tests.Data_OleDB
       _Con.AddRecords(TestData);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Con != null)
         _Con.Dispose();
@@ -1704,6 +1709,7 @@ namespace ExtDB_tests.Data_OleDB
 
       if (_TempDir != null)
         _TempDir.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private FreeLibSet.IO.TempDirectory _TempDir;

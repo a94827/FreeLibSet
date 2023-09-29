@@ -7,15 +7,19 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using FreeLibSet.Core;
+using FreeLibSet.Controls;
+using System.ComponentModel;
 
 // Реализации WizardStep стандартных видов
 
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Расширение класса WizardStep, содержащее элемент управления GroupBox и два
+  /// Расширение класса <see cref="WizardStep"/>, содержащее элемент управления <see cref="GroupBox"/> и два
   /// текстовых блока (сверху и снизу). Текстовые блоки автоматически подбирают
-  /// свои размеры. GroupBox занимает всю площадь панели, кроме текстовых блоков
+  /// свои размеры. <see cref="GroupBox"/> занимает всю площадь панели, кроме текстовых блоков.
+  /// 
+  /// Этот класс считается устаревшим. Используйте <see cref="ExtWizardStep"/>
   /// </summary>
   public class WizardStepWithGroupBox : WizardStep
   {
@@ -25,7 +29,6 @@ namespace FreeLibSet.Forms
     /// Создает шаг мастера
     /// </summary>
     public WizardStepWithGroupBox()
-      : base(new Panel(), true)
     {
       _TheGroupBox = new GroupBox();
       _TheGroupBox.Dock = DockStyle.Fill;
@@ -89,9 +92,198 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Расширение класса WizardStep, предназначенное для вывода сообщения
+  /// Расширение класса <see cref="WizardStep"/>. Основную часть занимает панель MainPanel, в которую следует добавлять элементы.
+  /// Если установить свойство GroupTitle, то будет добавлен контейнер <see cref="GroupBox"/>, а панель перемещена внутрь элемента
+  /// В нижней части может находиться информационная панель <see cref="InfoLabel"/>, в которой выводятся пояснения.
+  /// Видимость информационной панели определяется наличием текста в ней.
   /// </summary>
-  public class WizardStepWithMessage : WizardStep
+  public class ExtWizardStep : WizardStep
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект с пустым контейнером <see cref="MainPanel"/>
+    /// </summary>
+    public ExtWizardStep()
+    {
+      _MainPanel = new Panel();
+      _MainPanel.Dock = DockStyle.Fill;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Основной контейнер для добавления управляющих элементов
+    /// </summary>
+    public Panel MainPanel { get { return _MainPanel; } }
+    private Panel _MainPanel;
+
+    private GroupBox _GroupBox;
+
+    private InfoLabel _InfoLabel;
+
+    /// <summary>
+    /// Заголовок контейнера <see cref="GroupBox"/>.
+    /// По умолчанию - пустая строка, рамка не используется. Содержимое <see cref="MainPanel"/> выводится непосредственно в панели шага мастера.
+    /// Установка свойства в непустое значение создает элемент <see cref="GroupBox"/>.
+    /// </summary>
+    public string GroupTitle
+    {
+      get
+      {
+        if (_GroupBox == null)
+          return String.Empty;
+        else
+          return _GroupBox.Text;
+      }
+      set
+      {
+        if (_GroupBox == null)
+        {
+          _GroupBox = new GroupBox();
+          _GroupBox.Dock = DockStyle.Fill;
+        }
+        _GroupBox.Text = value;
+        _LayoutComplete = false;
+      }
+    }
+
+    /// <summary>
+    /// Текст информационного сообщения в нижней части кадра мастера.
+    /// Если свойство установлено, будет показано добавлен элемент <see cref="InfoLabel"/>
+    /// </summary>
+    public string InfoText
+    {
+      get
+      {
+        if (_InfoLabel == null)
+          return String.Empty;
+        else
+          return _InfoLabel.Text;
+      }
+      set
+      {
+        if (_InfoLabel == null)
+        {
+          _InfoLabel = new InfoLabel();
+          _InfoLabel.AutoSize = true;
+          _InfoLabel.Dock = DockStyle.Bottom;
+        }
+        _InfoLabel.Text = value;
+        _LayoutComplete = false;
+      }
+    }
+
+    /// <summary>
+    /// Значок информационного сообщения. По умолчанию <see cref="MessageBoxIcon.None"/>.
+    /// Свойство действует, только если задан текст сообщения <see cref="InfoText"/>.
+    /// </summary>
+    public MessageBoxIcon InfoIcon
+    {
+      get
+      {
+        if (_InfoLabel == null)
+          return MessageBoxIcon.None;
+        else
+          return _InfoLabel.Icon;
+      }
+      set
+      {
+        if (_InfoLabel == null)
+        {
+          _InfoLabel = new InfoLabel();
+          _InfoLabel.AutoSize = true;
+          _InfoLabel.Dock = DockStyle.Bottom;
+        }
+        _InfoLabel.Icon = value;
+        _LayoutComplete = false;
+      }
+    }
+
+    /// <summary>
+    /// Размер значка информационного сообщения. По умолчанию <see cref="MessageBoxIconSize.Small"/>
+    /// Свойство действует, только если задан текст сообщения <see cref="InfoText"/> и задано свойство <see cref="InfoIcon"/>.
+    /// </summary>
+    public MessageBoxIconSize InfoIconSize
+    {
+      get
+      {
+        if (_InfoLabel == null)
+          return MessageBoxIconSize.Small;
+        else
+          return _InfoLabel.IconSize;
+      }
+      set
+      {
+        if (_InfoLabel == null)
+        {
+          _InfoLabel = new InfoLabel();
+          _InfoLabel.AutoSize = true;
+          _InfoLabel.Dock = DockStyle.Bottom;
+        }
+        _InfoLabel.IconSize = value;
+        _LayoutComplete = false;
+      }
+    }
+
+    #endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Не должно использоваться
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new Control Control { get { return base.Control; } }
+
+    #endregion
+
+    #region Переопределенные методы
+
+    private bool _LayoutComplete;
+
+    /// <summary>
+    /// Выполняет размещение элементов
+    /// </summary>
+    /// <param name="action">Причина открытия шага</param>
+    protected internal override void OnBeginStep(WizardAction action)
+    {
+      base.OnBeginStep(action);
+
+      if (!_LayoutComplete)
+      {
+        base.Control.Controls.Clear();
+
+        // Сначала основной элемент
+        if (_GroupBox != null && (!String.IsNullOrEmpty(_GroupBox.Text)))
+        {
+          base.Control.Controls.Add(_GroupBox);
+          _MainPanel.Parent = _GroupBox;
+        }
+        else
+        {
+          base.Control.Controls.Add(_MainPanel);
+        }
+
+        // Затем - метка
+        if (_InfoLabel != null && (!String.IsNullOrEmpty(_InfoLabel.Text)))
+        {
+          base.Control.Controls.Add(_InfoLabel);
+        }
+
+        _LayoutComplete = true;
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Расширение класса <see cref="WizardStep"/>, предназначенное для вывода сообщения
+  /// </summary>
+  public class WizardStepWithMessage : ExtWizardStep
   {
     #region Конструктор
 
@@ -99,81 +291,71 @@ namespace FreeLibSet.Forms
     /// Инициализация шага мастера
     /// </summary>
     public WizardStepWithMessage()
-      : base(new Panel(), true)
     {
-      _TheGroupBox = new GroupBox();
-      _TheGroupBox.Dock = DockStyle.Fill;
-      base.Control.Controls.Add(_TheGroupBox);
+      _MainControl = new InfoLabel();
+      _MainControl.Dock = DockStyle.Fill;
+      UseInfoColor = false;
 
-      _TheLabel = new Label();
-      _TheLabel.AutoSize = false;
-      _TheLabel.Dock = DockStyle.Fill;
-      _TheLabel.UseMnemonic = false;
-      _TheLabel.Padding = new Padding(3);
-      _TheLabel.TextAlign = ContentAlignment.MiddleLeft;
-      _TheGroupBox.Controls.Add(_TheLabel);
-
-      _ThePicture = new PictureBox();
-      _ThePicture.Dock = DockStyle.Left;
-      _ThePicture.SizeMode = PictureBoxSizeMode.CenterImage;
-      _ThePicture.Visible = false;
-      _TheGroupBox.Controls.Add(_ThePicture);
-
-      _Icon = MessageBoxIcon.None;
+      base.MainPanel.Controls.Add(_MainControl);
     }
 
     #endregion
 
     #region Свойства
 
-    private GroupBox _TheGroupBox;
-    private PictureBox _ThePicture;
-
-    private Label _TheLabel;
+    private InfoLabel _MainControl;
 
     /// <summary>
     /// Текст сообщения
     /// </summary>
     public string Text
     {
-      get { return _TheLabel.Text; }
-      set { _TheLabel.Text = value; }
+      get { return _MainControl.Text; }
+      set { _MainControl.Text = value; }
     }
-
-    /// <summary>
-    /// Заголовок сообщения (но не всего окна мастера)
-    /// </summary>
-    public string Caption
-    {
-      get { return _TheGroupBox.Text; }
-      set { _TheGroupBox.Text = value; }
-    }
-
 
     /// <summary>
     /// Значок: нет (по умолчанию), информация, предупреждение, ошибка
     /// </summary>
     public MessageBoxIcon Icon
     {
-      get { return _Icon; }
+      get { return _MainControl.Icon; }
+      set { _MainControl.Icon = value; }
+    }
+
+    /// <summary>
+    /// Если true, то для сообщения будет использовано цветовое оформление <see cref="SystemColors.Info"/> / <see cref="SystemColors.Info"/> (желтый фон).
+    /// Если false (по умолчанию), то <see cref="SystemColors.Info"/> / <see cref="SystemColors.Info"/> (обычный цвет управляющих элементов).
+    /// </summary>
+    public bool UseInfoColor
+    {
+      get { return _UseInfoColor; }
       set
       {
-        if (value == _Icon)
-          return;
-        Icon newIcon = WinFormsTools.GetSystemIcon(value);
-        if (newIcon == null)
-          _ThePicture.Visible = false;
+        _UseInfoColor = value;
+        if (value)
+        {
+          _MainControl.ResetBackColor();
+          _MainControl.ResetForeColor();
+        }
         else
         {
-          _ThePicture.Image = newIcon.ToBitmap();
-          newIcon.Dispose();
-          _ThePicture.Width = _ThePicture.Image.Width + 8;
-          _ThePicture.Visible = true;
+          _MainControl.BackColor = SystemColors.Window;
+          _MainControl.ForeColor = SystemColors.WindowText;
         }
-        _Icon = value;
       }
     }
-    private MessageBoxIcon _Icon;
+    private bool _UseInfoColor;
+
+    #endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Не должно использоваться
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new Panel MainPanel { get { return base.MainPanel ; } }
 
     #endregion
   }
@@ -181,7 +363,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Шаг мастера с единственной группой радиокнопок
   /// </summary>
-  public class WizardStepWithRadioButtons : WizardStepWithGroupBox
+  public class WizardStepWithRadioButtons : ExtWizardStep
   {
     #region Конструктор
 
@@ -202,7 +384,7 @@ namespace FreeLibSet.Forms
       panel.RowCount = items.Length;
       panel.ColumnCount = 1;
       panel.Dock = DockStyle.Fill;
-      TheGroupBox.Controls.Add(panel);
+      MainPanel.Controls.Add(panel);
       RadioButton[] btns = new RadioButton[items.Length];
       for (int i = 0; i < items.Length; i++)
       {
@@ -216,6 +398,13 @@ namespace FreeLibSet.Forms
 
       _TheButtons = new EFPRadioButtons(BaseProvider, btns);
       _TheButtons.SelectedIndex = 0; // 07.05.2022
+      _TheButtons.SelectedIndexEx.ValueChanged += SelectedIndexEx_ValueChanged;
+    }
+
+    private void SelectedIndexEx_ValueChanged(object sender, EventArgs args)
+    {
+      if (_ItemInfoTextArray != null && _TheButtons.SelectedIndex >= 0)
+        InfoText = _ItemInfoTextArray[_TheButtons.SelectedIndex];
     }
 
     #endregion
@@ -228,6 +417,37 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPRadioButtons TheButtons { get { return _TheButtons; } }
     private EFPRadioButtons _TheButtons;
+
+    /// <summary>
+    /// Поясняющий текст для каждой кнопки.
+    /// Если массив задан, то при выборе пользователем кнопки меняется текст <see cref="ExtWizardStep.InfoText"/>. Длина массива должна быть равна <see cref="TheButtons"/>.Count.
+    /// По умолчанию - false - управление информационным текстом может выполняться прикладным кодом.
+    /// </summary>
+    public string[] ItemInfoTextArray
+    {
+      get { return _ItemInfoTextArray; }
+      set
+      {
+        if (value != null)
+        {
+          if (value.Length != _TheButtons.Count)
+            throw new ArgumentException("Неправильная длина массива. Ожидалось подсказок: " + _TheButtons.Count.ToString());
+          InfoText = "?";
+        }
+        _ItemInfoTextArray = value;
+      }
+    }
+    private string[] _ItemInfoTextArray;
+
+    /// <summary>
+    /// Инициализация текста подсказки
+    /// </summary>
+    /// <param name="action"></param>
+    protected internal override void OnBeginStep(WizardAction action)
+    {
+      base.OnBeginStep(action);
+      SelectedIndexEx_ValueChanged(null, null);
+    }
 
     #endregion
 
@@ -247,12 +467,55 @@ namespace FreeLibSet.Forms
     //}
 
     //#endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Не должно использоваться
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new Panel MainPanel { get { return base.MainPanel; } }
+
+    #endregion
   }
+
+#if XXX // Не очень полезный класс 
+
+  /// <summary>
+  /// Шаблонный класс шага мастера с одним управляющим элементом, занимающим весь экран, и панелью инструментов
+  /// </summary>
+  /// <typeparam name="TControl"></typeparam>
+  /// <typeparam name="TControlProvider"></typeparam>
+  public class WizardStepWithToolBar<TControl, TControlProvider> : ExtWizardStepBase
+    where TControl:Control, new()
+    where TControlProvider : EFPControlBase
+  {
+  #region Конструктор
+
+    public delegate TControlProvider ProviderCreator(EFPControlWithToolBar<TControl> cwt);
+
+    public WizardStepWithToolBar(ProviderCreator creator)
+    {
+      EFPControlWithToolBar<TControl> cwt = new EFPControlWithToolBar<TControl>(BaseProvider, MainPanel);
+      _ControlProvider = creator(cwt);
+    }
+
+  #endregion
+
+  #region Свойства
+
+    public TControlProvider ControlProvider { get { return _ControlProvider; } }
+    private TControlProvider _ControlProvider;
+
+  #endregion
+  }
+
+#endif
 
   /// <summary>
   /// Шаг мастера со списком для выбора одной строки
   /// </summary>
-  public class WizardStepWithListView : WizardStepWithGroupBox
+  public class WizardStepWithListView : ExtWizardStep
   {
     #region Конструктор
 
@@ -272,7 +535,7 @@ namespace FreeLibSet.Forms
       control.LabelEdit = false;
       control.FullRowSelect = true;
       control.HideSelection = false;
-      TheGroupBox.Controls.Add(control);
+      MainPanel.Controls.Add(control);
 
       _Items = items;
       for (int i = 0; i < items.Length; i++)
@@ -403,66 +666,54 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Не должно использоваться
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new Panel MainPanel { get { return base.MainPanel; } }
+
+    #endregion
   }
+
 
   /// <summary>
   /// Шаг мастера с табличным просмотром
   /// </summary>
-  public class WizardStepWithDataGridView : WizardStepWithGroupBox
+  public class WizardStepWithDataGridView : ExtWizardStep
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает шаг мастера с провадером EFPDataGridView.
+    /// 
     /// </summary>
-    public WizardStepWithDataGridView()
-    {
-      DoInit(new EFPDataGridView(BaseProvider, new DataGridView()));
-    }
+    /// <param name="cwt"></param>
+    /// <returns></returns>
+    public delegate EFPDataGridView ProviderCreator(EFPControlWithToolBar<DataGridView> cwt);
 
     /// <summary>
-    /// Создает шаг мастера с указанным провадером
+    /// Создает шаг мастера с провайдером, который создается с помощью передаваемого делегата.
     /// </summary>
-    /// <param name="controlProvider">Созданный провайдер, производный от EFPDataGridView</param>
-    public WizardStepWithDataGridView(EFPDataGridView controlProvider)
+    /// <param name="creator">Делегат, который создает провайдер табличного просмотра</param>
+    public WizardStepWithDataGridView(ProviderCreator creator)
     {
-#if DEBUG
-      if (controlProvider == null)
-        throw new ArgumentNullException("controlProvider");
-      if (controlProvider.BaseProvider.Parent != null)
-        throw new ArgumentException("Свойство EFPDataGridView.BaseProvider.Parent уже установлено. " +
-          "Этот конструктор может получать только свежесозданный, ни к чему не присоединенный обработчик табличного просмотра", "controlProvider");
-#endif
+      EFPControlWithToolBar<DataGridView> cwt = new EFPControlWithToolBar<DataGridView>(BaseProvider, MainPanel);
+      _TheControlProvider = creator(cwt);
+      if (_TheControlProvider == null)
+        throw new NullReferenceException("Делегат не создал провайдер EFPDataGridView");
 
       // Присоединяем BaseProvider
-      controlProvider.BaseProvider.Parent = BaseProvider;
-
-      DoInit(controlProvider);
+      cwt.BaseProvider.Parent = BaseProvider;
     }
 
     /// <summary>
-    /// Защищенная версия конструктора, не создающая табличный просмотр и провайдер.
-    /// Предполагается, что конструктор производного класса вызывает метод DoInit()
+    /// Создает шаг мастера с провайдером EFPDataGridView.
     /// </summary>
-    /// <param name="dummy">Не используется</param>
-    protected WizardStepWithDataGridView(bool dummy)
+    public WizardStepWithDataGridView()
+      : this(delegate(EFPControlWithToolBar<DataGridView> cwt) { return new EFPDataGridView(cwt); })
     {
-    }
-
-    /// <summary>
-    /// Используется конструктором производного класса для присоединения табличного просмотра.
-    /// </summary>
-    /// <param name="controlProvider">Созданный провайдер табличного просмотра</param>
-    protected void DoInit(EFPDataGridView controlProvider)
-    {
-      _TheControlProvider = controlProvider;
-      controlProvider.Control.Dock = DockStyle.Fill;
-      TheGroupBox.Controls.Add(controlProvider.Control);
-
-      _TheSpeedPanel = new Panel();
-      _TheSpeedPanel.Dock = DockStyle.Top;
-      TheGroupBox.Controls.Add(_TheSpeedPanel);
-      TheControlProvider.ToolBarPanel = _TheSpeedPanel;
     }
 
     #endregion
@@ -476,8 +727,6 @@ namespace FreeLibSet.Forms
     public EFPDataGridView TheControlProvider { get { return _TheControlProvider; } }
     private EFPDataGridView _TheControlProvider;
 
-    private Panel _TheSpeedPanel;
-
     #endregion
 
     #region Переопределенные методы
@@ -489,17 +738,15 @@ namespace FreeLibSet.Forms
     /// <param name="action">Действие</param>
     internal protected override void OnBeginStep(WizardAction action)
     {
-      // Убрано 07.05.2022
-      //if (!_TheControlProvider.CommandItems.IsReadOnly)
-      //  _TheControlProvider.ToolBarPanel = _TheSpeedPanel;
+      // Перенесено наверх 26.07.2023
+      // Обработчик события BeginStep может присоединить таблицу к просмотру
+      base.OnBeginStep(action); 
 
       if (_TheControlProvider.UseRowImages &&
         (!_TheControlProvider.UseRowImagesDataError) &&
         _TheControlProvider.TopLeftCellUserImage == null)
 
         _TheControlProvider.InitTopLeftCellTotalInfo();
-
-      base.OnBeginStep(action);
 
       // Убрано 07.05.2022
       //_TheControlProvider.PrepareCommandItems();
@@ -524,6 +771,16 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    #region Заглушка
+
+    /// <summary>
+    /// Не должно использоваться
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new Panel MainPanel { get { return base.MainPanel; } }
+
+    #endregion
   }
 
   /// <summary>
@@ -539,9 +796,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="codeWidth">Ширина столба для вывода кода ошибки в символах. 0-нет столбца</param>
     public WizardStepWithErrorDataGridView(int codeWidth)
-      : base(false)
+      : base(delegate (EFPControlWithToolBar<DataGridView> cwt) { return new EFPErrorDataGridView(cwt); })
     {
-      DoInit(new EFPErrorDataGridView(BaseProvider, new DataGridView()));
       TheControlProvider.CodeWidth = codeWidth;
     }
 
@@ -574,6 +830,120 @@ namespace FreeLibSet.Forms
       get { return TheControlProvider.ErrorMessages; }
       set { TheControlProvider.ErrorMessages = value; }
     }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Шаг мастера для привязки строк и столбцов
+  /// Используется в мастерах вставки в справочники из буфера обмена
+  /// </summary>
+  public class WizardStepSelRC : WizardStepWithDataGridView
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает шаг мастера
+    /// </summary>
+    public WizardStepSelRC()
+      : base(delegate (EFPControlWithToolBar<DataGridView> cwt) { return new EFPSelRCDataGridView(cwt); })
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Провайдер табличного просмотра
+    /// </summary>
+    public new EFPSelRCDataGridView TheControlProvider
+    {
+      get { return (EFPSelRCDataGridView)(base.TheControlProvider); }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Шаг мастера с табличным просмотром, предназначенным для ввода данных пользователем
+  /// </summary>
+  public class WizardStepWithInputDataGridView : WizardStepWithDataGridView
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает шаг мастера
+    /// </summary>
+    public WizardStepWithInputDataGridView()
+      : base(delegate (EFPControlWithToolBar<DataGridView> cwt) { return new EFPInputDataGridView(cwt); })
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Провайдер табличного просмотра
+    /// </summary>
+    public new EFPInputDataGridView TheControlProvider
+    {
+      get { return (EFPInputDataGridView)(base.TheControlProvider); }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Шаг мастера с несколькими вкладками
+  /// </summary>
+  public class WizardStepWithTabControl : ExtWizardStep
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает пустой <see cref="TabControl"/> без вкладок
+    /// </summary>
+    public WizardStepWithTabControl()
+    {
+      TabControl tc = new TabControl();
+      tc.Dock = DockStyle.Fill;
+      tc.ImageList = EFPApp.MainImages.ImageList;
+      MainPanel.Controls.Add(tc);
+      _TheTabControl = new EFPTabControl(this.BaseProvider, tc);
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Провайдер для <see cref="TabControl"/>.
+    /// Используйте его для добавление вкладок
+    /// </summary>
+    public EFPTabControl TheTabControl { get { return _TheTabControl; } }
+    private EFPTabControl _TheTabControl;
+
+    /// <summary>
+    /// Использовать рамку вокруг TabControl не следует
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new string GroupTitle
+    {
+      get { return base.GroupTitle; }
+      set { base.GroupTitle = value; }
+    }
+
+    #region Заглушка
+
+    /// <summary>
+    /// Не должно использоваться
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new Panel MainPanel { get { return base.MainPanel; } }
+
+    #endregion
 
     #endregion
   }

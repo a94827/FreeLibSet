@@ -20,11 +20,11 @@ using FreeLibSet.Controls.TreeViewAdvInternal;
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   /// <summary>
-  /// Базовый класс для NodeTextBox, NodeComboBox, NodeNumericUpDown
+  /// Базовый класс для <see cref="NodeTextBox"/>, <see cref="NodeComboBox"/>, <see cref="NodeIntEditBox"/>, <see cref="NodeSingleEditBox"/>, <see cref="NodeDoubleEditBox"/>,<see cref="NodeDecimalEditBox"/>
   /// </summary>
   public abstract class BaseTextControl : EditableControl
   {
-    private TextFormatFlags _baseFormatFlags;
+    private readonly TextFormatFlags _baseFormatFlags;
     private TextFormatFlags _formatFlags;
     private Pen _focusPen;
     private StringFormat _format;

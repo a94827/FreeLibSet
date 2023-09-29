@@ -313,8 +313,6 @@ namespace FreeLibSet.Forms
 #endif
 
 
-      _BaseProvider = baseProvider;
-      _BaseProvider.AddControlProvider(this);
       _Control = control;
       _ValidateState = UIValidateState.Ok;
       _LabelNeeded = labelNeeded;
@@ -326,6 +324,8 @@ namespace FreeLibSet.Forms
       _ProviderState = EFPControlProviderState.Initialization;
       _ConfigSectionName = String.Empty;
 
+      _BaseProvider = baseProvider;
+      _BaseProvider.AddControlProvider(this);
 
       // Автоматическое присоединение метки
       if (labelNeeded)
@@ -1554,7 +1554,7 @@ namespace FreeLibSet.Forms
           }
 
           if (_CommandItems == null)
-            _CommandItems = GetCommandItems();
+            _CommandItems = CreateCommandItems();
         }
         return _CommandItems;
       }
@@ -1582,7 +1582,7 @@ namespace FreeLibSet.Forms
     /// При этом вызывать иетод EFPControlBase.GetCommandItems() не нужно
     /// </summary>
     /// <returns></returns>
-    protected virtual EFPControlCommandItems GetCommandItems()
+    protected virtual EFPControlCommandItems CreateCommandItems()
     {
       return new EFPControlCommandItems(this);
     }

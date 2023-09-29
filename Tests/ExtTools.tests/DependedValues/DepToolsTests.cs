@@ -3,10 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
 using NUnit.Framework;
+using FreeLibSet.Tests;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Calendar;
-using System.Globalization;
 
 namespace ExtTools_tests.DependedValues
 {
@@ -142,7 +143,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", 2021)]
     public void YearEx_NDate(string sDate, int wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.YearEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -150,7 +151,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", 2021)]
     public void YearEx_Date(string sDate, int wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.YearEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -160,7 +161,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", 12)]
     public void MonthEx_NDate(string sDate, int wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.MonthEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -168,7 +169,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", 12)]
     public void MonthEx_Date(string sDate, int wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.MonthEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -178,7 +179,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", 1)]
     public void DayEx_NDate(string sDate, int wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.DayEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -186,7 +187,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", 1)]
     public void DayEx_Date(string sDate, int wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.DayEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -196,7 +197,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", "Wednesday")]
     public void DayOfWeekEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(sWanted, DepTools.DayOfWeekEx(new DepConst<DateTime?>(dt)).Value.ToString());
     }
@@ -204,7 +205,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", "Wednesday")]
     public void DayOfWeekEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(sWanted, DepTools.DayOfWeekEx(new DepConst<DateTime>(dt)).Value.ToString());
     }
@@ -221,7 +222,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210101", true)]
     public void IsBottomOfYearEx_NDate(string sDate, bool wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsBottomOfYearEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -232,7 +233,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211231", true)]
     public void IsEndOfYearEx_NDate(string sDate, bool wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsEndOfYearEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -243,7 +244,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210101", true)]
     public void IsBottomOfYearEx_Date(string sDate, bool wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsBottomOfYearEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -253,7 +254,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211231", true)]
     public void IsEndOfYearEx_Date(string sDate, bool wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsEndOfYearEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -268,7 +269,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210101", true)]
     public void IsBottomOfQuarterEx_NDate(string sDate, bool wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsBottomOfQuarterEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -279,7 +280,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211231", true)]
     public void IsEndOfQuarterEx_NDate(string sDate, bool wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsEndOfQuarterEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -290,7 +291,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210101", true)]
     public void IsBottomOfQuarterEx_Date(string sDate, bool wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsBottomOfQuarterEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -300,7 +301,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211231", true)]
     public void IsEndOfQuarterEx_Date(string sDate, bool wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsEndOfQuarterEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -314,7 +315,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210802", false)]
     public void IsBottomOfMonthEx_NDate(string sDate, bool wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsBottomOfMonthEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -324,7 +325,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210802", false)]
     public void IsEndOfMonthEx_NDate(string sDate, bool wanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
+      DateTime? dt = Creators.NDateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsEndOfMonthEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -334,7 +335,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210802", false)]
     public void IsBottomOfMonthEx_Date(string sDate, bool wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsBottomOfMonthEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -343,7 +344,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210802", false)]
     public void IsEndOfMonthEx_Date(string sDate, bool wanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
+      DateTime dt = Creators.DateTime(sDate);
 
       Assert.AreEqual(wanted, DepTools.IsEndOfMonthEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -360,8 +361,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void BottomOfYearEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.BottomOfYearEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -369,8 +370,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210515", "20210101")]
     public void BottomOfYearEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.BottomOfYearEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -380,8 +381,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void EndOfYearEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.EndOfYearEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -389,8 +390,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210515", "20211231")]
     public void EndOfYearEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.EndOfYearEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -403,8 +404,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void BottomOfQuarterEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.BottomOfQuarterEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -412,8 +413,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210515", "20210401")]
     public void BottomOfQuarterEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.BottomOfQuarterEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -423,8 +424,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void EndOfQuarterEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.EndOfQuarterEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -432,8 +433,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210515", "20210630")]
     public void EndOfQuarterEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.EndOfQuarterEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -446,8 +447,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void BottomOfMonthEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.BottomOfMonthEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -455,8 +456,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210515", "20210501")]
     public void BottomOfMonthEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.BottomOfMonthEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -466,8 +467,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void EndOfMonthEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.EndOfMonthEx(new DepConst<DateTime?>(dt)).Value);
     }
@@ -475,8 +476,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210515", "20210531")]
     public void EndOfMonthEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.EndOfMonthEx(new DepConst<DateTime>(dt)).Value);
     }
@@ -495,7 +496,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", 0)]
     public void YearEx(string sYM, int wanted)
     {
-      YearMonth ym = Creators.CreateYearMonth(sYM);
+      YearMonth ym = Creators.YearMonth(sYM);
       Assert.AreEqual(wanted, DepTools.YearEx(new DepConst<YearMonth>(ym)).Value);
     }
 
@@ -503,7 +504,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", 0)]
     public void MonthEx(string sYM, int wanted)
     {
-      YearMonth ym = Creators.CreateYearMonth(sYM);
+      YearMonth ym = Creators.YearMonth(sYM);
       Assert.AreEqual(wanted, DepTools.MonthEx(new DepConst<YearMonth>(ym)).Value);
     }
 
@@ -515,8 +516,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void NBottomOfMonthEx(string sYM, string sWanted)
     {
-      YearMonth ym = Creators.CreateYearMonth(sYM);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      YearMonth ym = Creators.YearMonth(sYM);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.NBottomOfMonthEx(new DepConst<YearMonth>(ym)).Value);
     }
@@ -524,8 +525,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("202105", "20210501")]
     public void BottomOfMonthEx(string sYM, string sWanted)
     {
-      YearMonth ym = Creators.CreateYearMonth(sYM);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      YearMonth ym = Creators.YearMonth(sYM);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.BottomOfMonthEx(new DepConst<YearMonth>(ym)).Value);
     }
@@ -534,8 +535,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void NEndOfMonthEx(string sYM, string sWanted)
     {
-      YearMonth ym = Creators.CreateYearMonth(sYM);
-      DateTime? wanted = Creators.CreateNDate(sWanted);
+      YearMonth ym = Creators.YearMonth(sYM);
+      DateTime? wanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.NEndOfMonthEx(new DepConst<YearMonth>(ym)).Value);
     }
@@ -543,8 +544,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("202105", "20210531")]
     public void EndOfMonthEx(string sYM, string sWanted)
     {
-      YearMonth ym = Creators.CreateYearMonth(sYM);
-      DateTime wanted = Creators.CreateDate(sWanted);
+      YearMonth ym = Creators.YearMonth(sYM);
+      DateTime wanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(wanted, DepTools.EndOfMonthEx(new DepConst<YearMonth>(ym)).Value);
     }
@@ -561,7 +562,7 @@ namespace ExtTools_tests.DependedValues
     {
       YearMonth ym = DepTools.YearMonthEx(new DepConst<int>(year), new DepConst<int>(month)).Value;
 
-      YearMonth wanted = Creators.CreateYearMonth(sWanted);
+      YearMonth wanted = Creators.YearMonth(sWanted);
       Assert.AreEqual(wanted, ym);
     }
 
@@ -569,16 +570,16 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void YearMonthEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      YearMonth wanted = Creators.CreateYearMonth(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      YearMonth wanted = Creators.YearMonth(sWanted);
       Assert.AreEqual(wanted, DepTools.YearMonthEx(new DepConst<DateTime?>(dt)).Value);
     }
 
     [TestCase("20210515", "202105")]
     public void YearMonthEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      YearMonth wanted = Creators.CreateYearMonth(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      YearMonth wanted = Creators.YearMonth(sWanted);
       Assert.AreEqual(wanted, DepTools.YearMonthEx(new DepConst<DateTime>(dt)).Value);
     }
 
@@ -590,7 +591,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", false)]
     public void IsNotEmptyEx(string sYM, bool wanted)
     {
-      YearMonth ym = Creators.CreateYearMonth(sYM);
+      YearMonth ym = Creators.YearMonth(sYM);
 
       Assert.AreEqual(wanted, DepTools.IsNotEmptyEx(new DepConst<YearMonth>(ym)).Value);
     }
@@ -607,7 +608,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", 0)]
     public void MonthEx(string sMD, int wanted)
     {
-      MonthDay md = Creators.CreateMonthDay(sMD);
+      MonthDay md = Creators.MonthDay(sMD);
       Assert.AreEqual(wanted, DepTools.MonthEx(new DepConst<MonthDay>(md)).Value);
     }
 
@@ -615,7 +616,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", 0)]
     public void DayEx(string sMD, int wanted)
     {
-      MonthDay md = Creators.CreateMonthDay(sMD);
+      MonthDay md = Creators.MonthDay(sMD);
       Assert.AreEqual(wanted, DepTools.DayEx(new DepConst<MonthDay>(md)).Value);
     }
 
@@ -631,7 +632,7 @@ namespace ExtTools_tests.DependedValues
     {
       MonthDay md = DepTools.MonthDayEx(new DepConst<int>(month), new DepConst<int>(day)).Value;
 
-      MonthDay wanted = Creators.CreateMonthDay(sWanted);
+      MonthDay wanted = Creators.MonthDay(sWanted);
       Assert.AreEqual(wanted, md);
     }
 
@@ -639,16 +640,16 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "")]
     public void MonthExEx_NDate(string sDate, string sWanted)
     {
-      DateTime? dt = Creators.CreateNDate(sDate);
-      MonthDay wanted = Creators.CreateMonthDay(sWanted);
+      DateTime? dt = Creators.NDateTime(sDate);
+      MonthDay wanted = Creators.MonthDay(sWanted);
       Assert.AreEqual(wanted, DepTools.MonthDayEx(new DepConst<DateTime?>(dt)).Value);
     }
 
     [TestCase("20210515", "0515")]
     public void YearMonthEx_Date(string sDate, string sWanted)
     {
-      DateTime dt = Creators.CreateDate(sDate);
-      MonthDay wanted = Creators.CreateMonthDay(sWanted);
+      DateTime dt = Creators.DateTime(sDate);
+      MonthDay wanted = Creators.MonthDay(sWanted);
       Assert.AreEqual(wanted, DepTools.MonthDayEx(new DepConst<DateTime>(dt)).Value);
     }
 
@@ -660,7 +661,7 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", false)]
     public void IsNotEmptyEx(string sMD, bool wanted)
     {
-      MonthDay md = Creators.CreateMonthDay(sMD);
+      MonthDay md = Creators.MonthDay(sMD);
 
       Assert.AreEqual(wanted, DepTools.IsNotEmptyEx(new DepConst<MonthDay>(md)).Value);
     }
@@ -675,8 +676,8 @@ namespace ExtTools_tests.DependedValues
     [TestCase("0228", 10000, false, "")]
     public void GetNDateEx(string sMD, int year, bool february29, string sWanted)
     {
-      MonthDay md = Creators.CreateMonthDay(sMD);
-      DateTime? wanted1 = Creators.CreateNDate(sWanted);
+      MonthDay md = Creators.MonthDay(sMD);
+      DateTime? wanted1 = Creators.NDateTime(sWanted);
       DateTime wanted2 = wanted1 ?? DateTime.MinValue;
 
       Assert.AreEqual(wanted1, DepTools.GetNDateEx(new DepConst<MonthDay>(md),
@@ -701,10 +702,10 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", "20211215", "20210408", "20210408")]
     public void MinEx_simple(string sDate1, string sDate2, string sDate3, string sWanted)
     {
-      DateTime dt1 = Creators.CreateDate(sDate1);
-      DateTime dt2 = Creators.CreateDate(sDate2);
-      DateTime dt3 = Creators.CreateDate(sDate3);
-      DateTime dtWanted = Creators.CreateDate(sWanted);
+      DateTime dt1 = Creators.DateTime(sDate1);
+      DateTime dt2 = Creators.DateTime(sDate2);
+      DateTime dt3 = Creators.DateTime(sDate3);
+      DateTime dtWanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(dtWanted, DepTools.MinEx<DateTime>(new DepConst<DateTime>(dt1),
         new DepConst<DateTime>(dt2),
@@ -716,10 +717,10 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20211201", "20210408", "20211215", "20211215")]
     public void MaxEx_simple(string sDate1, string sDate2, string sDate3, string sWanted)
     {
-      DateTime dt1 = Creators.CreateDate(sDate1);
-      DateTime dt2 = Creators.CreateDate(sDate2);
-      DateTime dt3 = Creators.CreateDate(sDate3);
-      DateTime dtWanted = Creators.CreateDate(sWanted);
+      DateTime dt1 = Creators.DateTime(sDate1);
+      DateTime dt2 = Creators.DateTime(sDate2);
+      DateTime dt3 = Creators.DateTime(sDate3);
+      DateTime dtWanted = Creators.DateTime(sWanted);
 
       Assert.AreEqual(dtWanted, DepTools.MaxEx<DateTime>(new DepConst<DateTime>(dt1),
         new DepConst<DateTime>(dt2),
@@ -734,10 +735,10 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "", "", "")]
     public void MinEx_nullable(string sDate1, string sDate2, string sDate3, string sWanted)
     {
-      DateTime? dt1 = Creators.CreateNDate(sDate1);
-      DateTime? dt2 = Creators.CreateNDate(sDate2);
-      DateTime? dt3 = Creators.CreateNDate(sDate3);
-      DateTime? dtWanted = Creators.CreateNDate(sWanted);
+      DateTime? dt1 = Creators.NDateTime(sDate1);
+      DateTime? dt2 = Creators.NDateTime(sDate2);
+      DateTime? dt3 = Creators.NDateTime(sDate3);
+      DateTime? dtWanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(dtWanted, DepTools.MinEx<DateTime>(new DepConst<DateTime?>(dt1),
         new DepConst<DateTime?>(dt2),
@@ -752,10 +753,10 @@ namespace ExtTools_tests.DependedValues
     [TestCase("", "", "", "")]
     public void MaxEx_nullable(string sDate1, string sDate2, string sDate3, string sWanted)
     {
-      DateTime? dt1 = Creators.CreateNDate(sDate1);
-      DateTime? dt2 = Creators.CreateNDate(sDate2);
-      DateTime? dt3 = Creators.CreateNDate(sDate3);
-      DateTime? dtWanted = Creators.CreateNDate(sWanted);
+      DateTime? dt1 = Creators.NDateTime(sDate1);
+      DateTime? dt2 = Creators.NDateTime(sDate2);
+      DateTime? dt3 = Creators.NDateTime(sDate3);
+      DateTime? dtWanted = Creators.NDateTime(sWanted);
 
       Assert.AreEqual(dtWanted, DepTools.MaxEx<DateTime>(new DepConst<DateTime?>(dt1),
         new DepConst<DateTime?>(dt2),
@@ -778,9 +779,9 @@ namespace ExtTools_tests.DependedValues
     [TestCase("20210515", "", "", true)]
     public void InRangeEx(string sDate1, string sDate2, string sDate3, bool wanted)
     {
-      DateTime dt1 = Creators.CreateDate(sDate1);
-      DateTime? dt2 = Creators.CreateNDate(sDate2);
-      DateTime? dt3 = Creators.CreateNDate(sDate3);
+      DateTime dt1 = Creators.DateTime(sDate1);
+      DateTime? dt2 = Creators.NDateTime(sDate2);
+      DateTime? dt3 = Creators.NDateTime(sDate3);
 
       Assert.AreEqual(wanted, DepTools.InRangeEx<DateTime>(new DepConst<DateTime>(dt1),
         new DepConst<DateTime?>(dt2),

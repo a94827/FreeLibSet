@@ -18,12 +18,24 @@ using System.Windows.Forms.VisualStyles;
 
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
+  /// <summary>
+  /// Базовый класс для всех отображаемых элементов просмотра <see cref="TreeViewAdv"/>.
+  /// Наследуется классами <see cref="BindableControl"/> (основные элементы, отображающие даннные модели), <see cref="NodePlusMinus"/>, <see cref="NodeStateIcon"/> (не напрямую).
+  /// При <see cref="TreeViewAdv.UseColumns"/>=true элементы отображаются внутри столбцов <see cref="TreeColumn"/>. Обычно в столбце располагается один элемент <see cref="BindableControl"/>,
+  /// а в первом столбце - также <see cref="NodeStateIcon"/>, <see cref="NodePlusMinus"/> и <see cref="NodeCheckBox"/> (флажки для отметки строк).
+  /// При <see cref="TreeViewAdv.UseColumns"/>=false элементы отображаются непосредственно в строке, без использования <see cref="TreeColumn"/>.
+  /// 
+  /// Для разных строк элементы могут иметь разные размеры. За прорисовку и определение размеров элемента отвечают классы-наследники.
+  /// </summary>
   [DesignTimeVisible(false), ToolboxItem(false)]
   public abstract class NodeControl : Component
   {
     #region Properties
 
-    private TreeViewAdv _parent;
+    /// <summary>
+    /// Просмотр, к которому добавлен элемент.
+    /// Установка свойства присоединяет элемент к коллекции <see cref="TreeViewAdv.NodeControls"/>.
+    /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public TreeViewAdv Parent
@@ -41,16 +53,25 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
         }
       }
     }
+    private TreeViewAdv _parent;
 
-    private ITreeViewAdvToolTipProvider _toolTipProvider;
+    /// <summary>
+    /// Генератор всплывающих подсказок для элемента.
+    /// Если null (по умолчанию), то подсказки не показываются.
+    /// </summary>
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ITreeViewAdvToolTipProvider ToolTipProvider
     {
       get { return _toolTipProvider; }
       set { _toolTipProvider = value; }
     }
+    private ITreeViewAdvToolTipProvider _toolTipProvider;
 
-    private TreeColumn _parentColumn;
+    /// <summary>
+    /// Столбец, к которому присоединен элемент в режиме <see cref="TreeViewAdv.UseColumns"/>=true. В этом режиме свойство должно быть обязательно установлено,
+    /// иначе элемент отображаться не будет.
+    /// В пределах столбца элементы, если их несколько, отображаются в том порядке, в котором они расположены в коллекции <see cref="TreeViewAdv.NodeControls"/>.
+    /// </summary>
     [DefaultValue(null)]
     public TreeColumn ParentColumn
     {
@@ -62,8 +83,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
           _parent.FullUpdate();
       }
     }
+    private TreeColumn _parentColumn;
 
-    private VerticalAlignment _verticalAlign = VerticalAlignment.Center;
+    /// <summary>
+    /// Вертикальное выравнивание для элемента в пределах высоты строки данных <see cref="TreeNodeAdv.Height"/>. По умолчанию - по центру.
+    /// </summary>
     [DefaultValue(VerticalAlignment.Center)]
     public VerticalAlignment VerticalAlign
     {
@@ -75,8 +99,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
           _parent.FullUpdate();
       }
     }
+    private VerticalAlignment _verticalAlign = VerticalAlignment.Center;
 
-    private int _leftMargin = 0;
+    /// <summary>
+    /// Отступ от предыдущего элемента в пикселях. По умолчанию - 0.
+    /// </summary>
     public int LeftMargin
     {
       get { return _leftMargin; }
@@ -90,7 +117,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
           _parent.FullUpdate();
       }
     }
+    private int _leftMargin = 0;
+
     #endregion
+
+    #region Методы
 
     internal virtual void AssignParent(TreeViewAdv parent)
     {
@@ -120,6 +151,15 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
           throw new InvalidOperationException("Cross-thread calls are not allowed");
     }
 
+    /// <summary>
+    /// Возвращает true, если элемент должен быть отображен для текущей строки данных. Если false, то элементы, находящиеся справа от этого элемента (в пределах
+    /// того же <see cref="TreeColumn"/> при <see cref="TreeViewAdv.UseColumns"/>=true) сдвигаются влево.
+    /// Не влияет на оторажения столбца, которое задается свойством <see cref="TreeColumn.IsVisible"/>. Если столбец скрыт, то входящие в него элементы не отображаются.
+    /// 
+    /// Для получения значения используется событие <see cref="IsVisibleValueNeeded"/>.
+    /// </summary>
+    /// <param name="node">Узел дерева, к которому относится строка</param>
+    /// <returns>Признак видимости</returns>
     public bool IsVisible(TreeNodeAdv node)
     {
       NodeControlValueEventArgs args = new NodeControlValueEventArgs(node);
@@ -143,6 +183,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     public abstract void Draw(TreeNodeAdv node, TreeViewAdvDrawContext context);
 
+    /// <summary>
+    /// Возвращает строку всплывающе подсказки, используя <see cref="ToolTipProvider"/>.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
     public virtual string GetToolTip(TreeNodeAdv node)
     {
       if (ToolTipProvider != null)
@@ -171,11 +216,22 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     {
     }
 
+    /// <summary>
+    /// Определение видимости элемента для текущей строки.
+    /// Событие вызывается методом <see cref="IsVisible(TreeNodeAdv)"/>.
+    /// </summary>
     public event EventHandler<NodeControlValueEventArgs> IsVisibleValueNeeded;
+
+    /// <summary>
+    /// Вызывает событие <see cref="IsVisibleValueNeeded"/>.
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
     protected virtual void OnIsVisibleValueNeeded(NodeControlValueEventArgs args)
     {
       if (IsVisibleValueNeeded != null)
         IsVisibleValueNeeded(this, args);
     }
+
+    #endregion
   }
 }

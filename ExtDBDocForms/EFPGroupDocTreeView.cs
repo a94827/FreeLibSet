@@ -179,8 +179,8 @@ namespace FreeLibSet.Forms.Docs
       {
         Int32 oldId = base.CurrentId;
 
-        if (FirstTextControl != null)
-          _RootNodeDataRow[FirstTextControl.DataPropertyName] = this.RootNodeTextValue;
+        if (GetFirstNodeControl<BaseTextControl>() != null)
+          _RootNodeDataRow[GetFirstNodeControl<BaseTextControl>().DataPropertyName] = this.RootNodeTextValue;
         DBxDocTreeModel model = (DBxDocTreeModel)(Control.Model);
         model.RefreshNode(model.TreePathFromDataRow(_RootNodeDataRow));
 
@@ -224,8 +224,8 @@ namespace FreeLibSet.Forms.Docs
 
         if (_RootNodeDataRow != null)
         {
-          if (FirstTextControl != null)
-            _RootNodeDataRow[FirstTextControl.DataPropertyName] = this.RootNodeTextValue;
+          if (GetFirstNodeControl<BaseTextControl>() != null)
+            _RootNodeDataRow[GetFirstNodeControl<BaseTextControl>().DataPropertyName] = this.RootNodeTextValue;
           DBxDocTreeModel model = (DBxDocTreeModel)(Control.Model);
           model.RefreshNode(model.TreePathFromDataRow(_RootNodeDataRow));
         }
@@ -292,7 +292,7 @@ namespace FreeLibSet.Forms.Docs
         // Сначала нужно добавить корневой узел, а потом уже делать ссылки на него
         _RootNodeDataRow = model.Table.NewRow();
         _RootNodeDataRow["Id"] = RootNodeDocId;
-        BaseTextControl tc = base.FirstTextControl;
+        BaseTextControl tc = base.GetFirstNodeControl<BaseTextControl>();
         if (tc != null)
           _RootNodeDataRow[tc.DataPropertyName] = RootNodeTextValue;
         model.Table.Rows.Add(_RootNodeDataRow);
@@ -329,8 +329,8 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         _RootNodeTextValue = value;
-        if (_RootNodeDataRow != null && FirstTextControl != null)
-          _RootNodeDataRow[FirstTextControl.DataPropertyName] = this.RootNodeTextValue;
+        if (_RootNodeDataRow != null && GetFirstNodeControl<BaseTextControl>() != null)
+          _RootNodeDataRow[GetFirstNodeControl<BaseTextControl>().DataPropertyName] = this.RootNodeTextValue;
       }
     }
     private string _RootNodeTextValue;

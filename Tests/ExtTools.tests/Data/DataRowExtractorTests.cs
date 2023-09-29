@@ -141,26 +141,26 @@ namespace ExtTools_tests.Data
     [Test]
     public void DataRowGuidExtractor()
     {
-      DoTest<Guid, Guid>(new DataRowGuidExtractor("F1"), Creators.Row1.VGuid, Creators.Row2.VGuid, Guid.Empty);
+      DoTest<Guid, Guid>(new DataRowGuidExtractor("F1"), TestTable.Row1.VGuid, TestTable.Row2.VGuid, Guid.Empty);
     }
 
     [Test]
     public void DataRowNullableGuidExtractor()
     {
-      DoTest<Guid, Guid?>(new DataRowNullableGuidExtractor("F1"), Creators.Row1.VGuid, Creators.Row2.VGuid, null);
+      DoTest<Guid, Guid?>(new DataRowNullableGuidExtractor("F1"), TestTable.Row1.VGuid, TestTable.Row2.VGuid, null);
     }
 
 
     [Test]
     public void DataRowEnumExtractor()
     {
-      DoTest<int, Creators.TestEnum>(new DataRowEnumExtractor<Creators.TestEnum>("F1"), Creators.TestEnum.One, Creators.TestEnum.Two, Creators.TestEnum.Zero);
+      DoTest<int, TestEnum>(new DataRowEnumExtractor<TestEnum>("F1"), TestEnum.One, TestEnum.Two, TestEnum.Zero);
     }
 
     [Test]
     public void DataRowNullableEnumExtractor()
     {
-      DoTest<int, Creators.TestEnum?>(new DataRowNullableEnumExtractor<Creators.TestEnum>("F1"), Creators.TestEnum.One, Creators.TestEnum.Two, null);
+      DoTest<int, TestEnum?>(new DataRowNullableEnumExtractor<TestEnum>("F1"), TestEnum.One, TestEnum.Two, null);
     }
 
     #endregion

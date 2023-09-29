@@ -28,9 +28,9 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Интерфейс, возвразающий свойства Minimum и Maximum.
+  /// Интерфейс, возвращающий свойства Minimum и Maximum.
   /// Реализуется управляющими элементами, в которых есть свойства Minimum, Maximum и Increment, и
-  /// которые реализуют свойство Increment через IncrementUpDownHandler.
+  /// которые реализуют свойство Increment через <see cref="IncrementUpDownHandler{T}"/>.
   /// </summary>
   /// <typeparam name="T">Тип свойств Minimum и Maximum. Для поля ввода числа - это Nullable-тип</typeparam>
   public interface IMinMaxSource<T>
@@ -77,7 +77,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Возвращает неабстрактную реализацию для типов Int32, Single, Double и Decimal.
+    /// Возвращает неабстрактную реализацию для типов <see cref="Int32"/>, <see cref="Single"/>, <see cref="Double"/> и <see cref="Decimal"/>.
     /// </summary>
     public static IncrementUpDownHandler<T> Create(T increment, IMinMaxSource<T?> minMaxSource)
     {
@@ -187,7 +187,7 @@ namespace FreeLibSet.UICore
         if (nextValue.Value.CompareTo(Maximum.Value) > 0)
           nextValue = Maximum;
       }
-      hasNext = true; // в любом случая
+      hasNext = true; // в любом случае
     }
 
     private void DoGetPrev(T currValue, out bool hasPrev, out T? prevValue)
@@ -221,14 +221,16 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Получить следующее значение
+    /// Получить следующее значение.
+    /// Метод не должен проверять попадание значения в диапазон {<see cref="Minimum"/>-<see cref="Maximum"/>}.
     /// </summary>
     /// <param name="currValue">Текущее значение</param>
     /// <returns>Результат инкремента</returns>
     protected abstract T GetIncrement(T currValue);
 
     /// <summary>
-    /// Получить предыдущее значение
+    /// Получить предыдущее значение.
+    /// Метод не должен проверять попадание значения в диапазон {<see cref="Minimum"/>-<see cref="Maximum"/>}.
     /// </summary>
     /// <param name="currValue">Текущее значение</param>
     /// <returns>Результат декремента</returns>
@@ -246,14 +248,6 @@ namespace FreeLibSet.UICore
     #endregion
   }
 
-  // Получение инкрементного значения для редактора числового поля со стрелочками прокрутки.
-  // Обычно возвращает <paramref name="currValue"/>+<paramref name="increment"/>, но сначала выполняет
-  // округление исходного значения в нужную сторону. Например, если <paramref name="increment"/>=0.2,
-  // то будут возвращаться значения 0, 0.2, 0.4, 0.6, ... Но, для значения 0.1 возвращается 0.2, а не 0.3.
-  // Если <paramref name="increment"/> не является дробью вида 1/n, где n-целое число, то выполняется
-  // обычное сложение.
-
-  // TODO: Не реализована прокрутка с учетом округления текущего значения
 
   /// <summary>
   /// Реализация инкремента для числового значения
@@ -271,6 +265,8 @@ namespace FreeLibSet.UICore
     public IntUpDownHandler(int increment, IMinMaxSource<Int32?> minMaxSource)
       : base(increment, minMaxSource)
     {
+      if (increment < 1)
+        throw new ArgumentOutOfRangeException("increment");
     }
 
     #endregion
@@ -284,7 +280,12 @@ namespace FreeLibSet.UICore
     /// <returns>Результат инкремента</returns>
     protected override int GetIncrement(int currValue)
     {
-      return currValue + Increment;
+      if ((currValue % Increment) == 0)
+        return currValue + Increment;
+      if (currValue > 0)
+        return currValue + Increment - (currValue % Increment);
+      else
+        return currValue - (currValue % Increment);
     }
 
     /// <summary>
@@ -294,7 +295,131 @@ namespace FreeLibSet.UICore
     /// <returns>Результат декремента</returns>
     protected override int GetDecrement(int currValue)
     {
-      return currValue - Increment;
+      if ((currValue % Increment) == 0)
+        return currValue - Increment;
+      if (currValue < 0)
+        return currValue - Increment - (currValue % Increment);
+      else
+        return currValue - (currValue % Increment);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Функции для вычисления целочисленного инкремента
+  /// </summary>
+  internal static class NumUpDownHandlerFunctions
+  {
+    #region Целочисленная реализация
+
+
+    // Для инкремента, отличного от 1, выполняется прокрутка к ближайшему значения.
+    // Например, если инкремент равен 5:
+    // prev - current - next
+    //  -5        0      5
+    //   0        1      5
+    //   0        2      5
+    //   0        3      5
+    //   0        4      5
+    //   0        5     10
+    //   5        6     10
+
+    // Особенности для нецелого инкремента
+    // Например, если инкремент равен 0.35:
+    // -0.35      0     0.35 
+    //  0.00   0.10     0.35 
+    //  0.00   0.20     0.35 
+    //  0.00   0.30     0.35 
+    //  0.00   0.35     0.70 
+    //  0.35   0.40     0.70 
+    // Так как в поле ввода используется десятичная система записи числа, она неявно используется при округлении.
+    // Предыдущий пример можно представить в виде расчета для целочисленного инкремента, равного 350, и дополнительного множителя m, равного 1000.00
+    // Методы GetIncrement(), GetDecrement() реализуются следующим образом:
+    // 1. currValue2=currValue * m, округление до целого
+    // 2. Вызов целочисленного инкремента для currValue2 и Increment*m: 
+    //    result2 = IntGetIncrement(currValue2, Increment*m)
+    // 3. return result2 / m
+    //
+    // Множитель m зависит только от инкремента и может быть вычислен в конструкторе
+    // Он должен быть таким, чтобы произведение Increment*m было целым числом.
+    // При этом необходим некоторый запас, так как при расчете currValue может оказаться меньшим, чем число разарядов в Increment
+    // Increment  m
+    //     0.25   1000
+    //     0.3    1000
+    //     0.35   1000
+    //     0.5    1000
+    //     1      100
+    //     2      100
+    //    10      10 
+    //    11      10 
+    // Расчет m:
+    // 1. Взять десятичный логарифм от Increment
+    // 2. Округлить его до целого числа вниз.
+    // 3. Возвести 10 в целую степень (значение m2):
+    // 4. Разделить 1 на m2 и умножить на 1000
+    // Increment Log10  m2 = 10^Log10 m=1/m2*1000
+    //     0.25  -1       0.1         10000.0
+    //     0.3   -1       0.1         10000.0  
+    //     0.35  -1       0.1         10000.0 
+    //     0.5   -1       0.1         10000.0  
+    //     1      0       1.0          1000.0
+    //     2      0       1.0          1000.0
+    //    10      1      10.0           100.0  
+    //    11      1      10.0           100.0  
+
+    /// <summary>
+    /// Получить следующее значение
+    /// </summary>
+    /// <param name="currValue">Текущее значение</param>
+    /// <param name="increment">Инкремент</param>
+    /// <returns>Результат инкремента</returns>
+    public static long GetIncrement(long currValue, long increment)
+    {
+#if DEBUG
+      if (increment < 1L)
+        throw new ArgumentOutOfRangeException("increment");
+#endif
+
+      if ((currValue % increment) == 0)
+        return currValue + increment;
+      if (currValue > 0)
+        return currValue + increment - (currValue % increment);
+      else
+        return currValue - (currValue % increment);
+    }
+
+    /// <summary>
+    /// Получить предыдущее значение
+    /// </summary>
+    /// <param name="currValue">Текущее значение</param>
+    /// <param name="increment">Инкремент</param>
+    /// <returns>Результат декремента</returns>
+    public static long GetDecrement(long currValue, long increment)
+    {
+#if DEBUG
+      if (increment < 1L)
+        throw new ArgumentOutOfRangeException("increment");
+#endif
+
+      if ((currValue % increment) == 0)
+        return currValue - increment;
+      if (currValue < 0)
+        return currValue - increment - (currValue % increment);
+      else
+        return currValue - (currValue % increment);
+    }
+
+    /// <summary>
+    /// Возвращает множитель для вычисления инкремента с плавающей точкой через целочисленное приведение
+    /// </summary>
+    /// <param name="increment">Заданный инкремент</param>
+    /// <returns>Множитель</returns>
+    public static double CalcM(double increment)
+    {
+      double log10 = Math.Floor(Math.Log10(increment));
+      double m2 = Math.Pow(10, log10);
+      return 1 / m2 * 1000;
     }
 
     #endregion
@@ -316,7 +441,19 @@ namespace FreeLibSet.UICore
     public SingleUpDownHandler(float increment, IMinMaxSource<Single?> minMaxSource)
       : base(increment, minMaxSource)
     {
+      if (increment <= 0f)
+        throw new ArgumentOutOfRangeException("increment");
+
+      _M = (float)NumUpDownHandlerFunctions.CalcM((double)increment);
+      _Increment2 = (long)Math.Round(increment * _M, 0, MidpointRounding.AwayFromZero);
+#if DEBUG
+      if (_Increment2 < 1L)
+        throw new BugException("Increment");
+#endif
     }
+
+    private readonly float _M;
+    private long _Increment2;
 
     #endregion
 
@@ -329,7 +466,9 @@ namespace FreeLibSet.UICore
     /// <returns>Результат инкремента</returns>
     protected override float GetIncrement(float currValue)
     {
-      return currValue + Increment;
+      long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
+      long res2 = NumUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
+      return (float)res2 / _M;
     }
 
     /// <summary>
@@ -339,7 +478,9 @@ namespace FreeLibSet.UICore
     /// <returns>Результат декремента</returns>
     protected override float GetDecrement(float currValue)
     {
-      return currValue - Increment;
+      long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
+      long res2 = NumUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
+      return (float)res2 / _M;
     }
 
     #endregion
@@ -361,7 +502,19 @@ namespace FreeLibSet.UICore
     public DoubleUpDownHandler(double increment, IMinMaxSource<Double?> minMaxSource)
       : base(increment, minMaxSource)
     {
+      if (increment <= 0.0)
+        throw new ArgumentOutOfRangeException("increment");
+
+      _M = NumUpDownHandlerFunctions.CalcM(increment);
+      _Increment2 = (long)Math.Round(increment * _M, 0, MidpointRounding.AwayFromZero);
+#if DEBUG
+      if (_Increment2 < 1L)
+        throw new BugException("Increment"); 
+#endif
     }
+
+    private readonly double _M;
+    private long _Increment2;
 
     #endregion
 
@@ -374,7 +527,9 @@ namespace FreeLibSet.UICore
     /// <returns>Результат инкремента</returns>
     protected override double GetIncrement(double currValue)
     {
-      return currValue + Increment;
+      long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
+      long res2 = NumUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
+      return (double)res2 / _M;
     }
 
     /// <summary>
@@ -384,7 +539,9 @@ namespace FreeLibSet.UICore
     /// <returns>Результат декремента</returns>
     protected override double GetDecrement(double currValue)
     {
-      return currValue - Increment;
+      long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
+      long res2 = NumUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
+      return (double)res2 / _M;
     }
 
     #endregion
@@ -406,7 +563,19 @@ namespace FreeLibSet.UICore
     public DecimalUpDownHandler(decimal increment, IMinMaxSource<Decimal?> minMaxSource)
       : base(increment, minMaxSource)
     {
+      if (increment <= 0m)
+        throw new ArgumentOutOfRangeException("increment");
+
+      _M = (decimal)NumUpDownHandlerFunctions.CalcM((double)increment);
+      _Increment2 = (long)Math.Round(increment * _M, 0, MidpointRounding.AwayFromZero);
+#if DEBUG
+      if (_Increment2 < 1L)
+        throw new BugException("Increment");
+#endif
     }
+
+    private readonly decimal _M;
+    private long _Increment2;
 
     #endregion
 
@@ -419,7 +588,9 @@ namespace FreeLibSet.UICore
     /// <returns>Результат инкремента</returns>
     protected override decimal GetIncrement(decimal currValue)
     {
-      return currValue + Increment;
+      long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
+      long res2 = NumUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
+      return (decimal)res2 / _M;
     }
 
     /// <summary>
@@ -429,7 +600,9 @@ namespace FreeLibSet.UICore
     /// <returns>Результат декремента</returns>
     protected override decimal GetDecrement(decimal currValue)
     {
-      return currValue - Increment;
+      long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
+      long res2 = NumUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
+      return (decimal)res2 / _M;
     }
 
     #endregion
@@ -444,37 +617,71 @@ namespace FreeLibSet.UICore
   /// <typeparam name="T">Тип данных</typeparam>
   [Serializable]
   public class NumArrayUpDownHandler<T> : IUpDownHandler<T?>
-    where T : struct, IComparable<T>
+    where T : struct
   {
     #region Конструкторы
 
+    // Не пытаемся в конструкторе присваивать значение полю _Comparer, если оно не задано.
+    // Это бы усложнило сериализацию объекта
+
     /// <summary>
     /// Создает объект прокрутки на основании массива значений.
+    /// Объект использует ссылку на переданный массив, а не создает копию. Конструктор может выполнить сортировку массива.
+    /// Для сравнения элементов используется компаратор по умолчанию <see cref="Comparer{T}.Default"/>.
     /// </summary>
     /// <param name="items">Массив значений</param>
     /// <param name="performSort">Нужно ли выполнять сортировку массива (true), или массив уже отсортирован (false)</param>
     public NumArrayUpDownHandler(T[] items, bool performSort)
+      :this(items, performSort, null)
     {
-      if (items == null)
-        items = new T[0];
-
-      if (performSort)
-        System.Array.Sort<T>(items);
-
-      _Items = items; ;
     }
 
     /// <summary>
     /// Создает объект прокрутки на основании массива значений.
-    /// Выполняется сортировка массива.
+    /// Объект использует ссылку на переданный массив, а не создает копию. Конструктор может выполнить сортировку массива.
+    /// </summary>
+    /// <param name="items">Массив значений</param>
+    /// <param name="performSort">Нужно ли выполнять сортировку массива (true), или массив уже отсортирован (false)</param>
+    /// <param name="comparer">Компаратор для сравнения элементов. Если не задан, используется компаратор по умолчанию</param>
+    public NumArrayUpDownHandler(T[] items, bool performSort, IComparer<T> comparer)
+    {
+      if (items == null)
+        items = new T[0];
+
+      _Comparer = comparer;
+
+      if (performSort)
+        System.Array.Sort<T>(items, this.Comparer);
+
+      _Items = items;
+    }
+
+    /// <summary>
+    /// Создает объект прокрутки на перечислимого списка значений.
+    /// Создается внутренний отсортированный массив элементов.
+    /// Для сравнения элементов используется компаратор по умолчанию <see cref="Comparer{T}.Default"/>.
     /// </summary>
     /// <param name="items">Массив значений</param>
     public NumArrayUpDownHandler(IEnumerable<T> items)
+      :this(items, null)
     {
+    }
+
+    /// <summary>
+    /// Создает объект прокрутки на перечислимого списка значений.
+    /// Создается внутренний отсортированный массив элементов.
+    /// </summary>
+    /// <param name="items">Массив значений</param>
+    /// <param name="comparer">Компаратор для сравнения элементов. Если не задан, используется компаратор по умолчанию</param>
+    public NumArrayUpDownHandler(IEnumerable<T> items, IComparer<T>comparer)
+    {
+      _Comparer = comparer;
+
       List<T> lst = new List<T>();
       if (items != null)
         lst.AddRange(items);
-      lst.Sort();
+      lst.Sort(this.Comparer);
+
       _Items = lst.ToArray();
     }
 
@@ -486,7 +693,23 @@ namespace FreeLibSet.UICore
     /// Отсортированный массив элементов, из которых осуществляется выбор
     /// </summary>
     public T[] Items { get { return _Items; } }
-    private T[] _Items;
+    private readonly T[] _Items;
+
+    /// <summary>
+    /// Компаратор для сравнения элементов.
+    /// Если не был задан в конструкторе в явном виде, возвращает <see cref="Comparer{T}.Default"/>.
+    /// </summary>
+    public IComparer<T> Comparer
+    {
+      get
+      {
+        if (_Comparer == null)
+          return Comparer<T>.Default;
+        else
+          return _Comparer;
+      }
+    }
+    private readonly IComparer<T> _Comparer;
 
     #endregion
 
@@ -511,7 +734,7 @@ namespace FreeLibSet.UICore
 
       if (current.HasValue)
       {
-        int p = System.Array.BinarySearch<T>(Items, current.Value);
+        int p = System.Array.BinarySearch<T>(Items, current.Value, Comparer);
         if (p >= 0)
         {
           // Найдена позиция в массиве
@@ -530,7 +753,7 @@ namespace FreeLibSet.UICore
         {
           // Найдена позиция между элементами массива или за его пределами
           p = ~p;
-          if (p <= Items.Length)
+          if (p < Items.Length) // испр. 20.07.2023
           {
             hasNext = true;
             nextValue = Items[p];

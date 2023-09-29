@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms
     /// Создает объект EFPThumbnailPictureButtonCommandItems
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPThumbnailPictureButtonCommandItems(this);
     }

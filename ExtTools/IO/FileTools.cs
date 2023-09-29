@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Reflection;
 using FreeLibSet.Core;
+using System.Runtime.CompilerServices;
 
 namespace FreeLibSet.IO
 {
@@ -102,6 +103,12 @@ namespace FreeLibSet.IO
     {
       return ((double)length / (double)MByte).ToString("#,##0") + "MB";
     }
+
+    /// <summary>
+    /// Точность, с которой сохраняется время создания/изменения файла.
+    /// В некоторых файловых системах поля времени задаются с точностью до 2 секунд
+    /// </summary>
+    public static readonly TimeSpan FileTimeMaxDelta = new TimeSpan(0, 0, 2);
 
     #endregion
 
@@ -1873,7 +1880,7 @@ namespace FreeLibSet.IO
 
           // Проверка сигнатуры PE
           fs.Position = pePos;
-          if (rdr.ReadUInt32() != 0x00004550)
+          if (rdr.ReadUInt32() != 0x00004550) // "PE\0\0"
             return null;
           UInt16 machine = rdr.ReadUInt16();
           switch (machine)
@@ -2233,6 +2240,40 @@ namespace FreeLibSet.IO
         catch { } // может не быть доступа к каталогу
       }
       return AbsPath.Empty;
+    }
+
+    #endregion
+
+    #region Раскрытие символических ссылок
+
+    /// <summary>
+    /// Раскрывает символическую ссылку Linux.
+    /// Для Windows возвращает <paramref name="path"/> без изменений
+    /// </summary>
+    /// <param name="path">Путь к файлу или символической ссылке</param>
+    /// <returns>Путь к файлу</returns>
+    public static AbsPath GetRealPath(AbsPath path)
+    {
+      if (path.IsEmpty)
+        return path;
+
+      switch (Environment.OSVersion.Platform)
+      {
+        case PlatformID.Unix:
+          if (File.Exists(path.Path))
+            return GetRealPathLinux(path);
+          else
+            return path;
+        default:
+          return path;
+      }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static AbsPath GetRealPathLinux(AbsPath path)
+    {
+      // Обязательно нужен отдельный метод, чтобы сборка Mono.Posix.dll не пыталась загружаться в Windows
+      return new AbsPath(Mono.Unix.UnixPath.GetRealPath(path.Path));
     }
 
     #endregion

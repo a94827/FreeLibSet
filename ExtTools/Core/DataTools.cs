@@ -7793,6 +7793,24 @@ namespace FreeLibSet.Core
       refValue2 = V3;
     }
 
+    /// <summary>
+    /// Вызывает для переданной ссылки метод <see cref="IDisposable.Dispose()"/>, а затем присваивает ссылке значение null.
+    /// Если <paramref name="refValue"/> равно null, никаких действий не выполняется.
+    /// Используется для упрощения кода в реализациях метода Dispose() для очистки вложенных объектов.
+    /// </summary>
+    /// <typeparam name="T">Тип объекта, реализующего интерфейс <see cref="IDisposable"/>.
+    /// Не может быть типом значения, даже если он реализует интерфейс</typeparam>
+    /// <param name="refValue">Ссылка на поле, содержащее ссылку на объект с интерфейсом <see cref="IDisposable"/></param>
+    public static void Dispose<T>(ref T refValue)
+      where T:class, IDisposable
+    {
+      if (refValue != null)
+      {
+        refValue.Dispose();
+        refValue = default(T); // обычно, null
+      }
+    }
+
     #endregion
 
     #region Эксперимент

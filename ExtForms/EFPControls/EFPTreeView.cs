@@ -100,7 +100,7 @@ namespace FreeLibSet.Forms
     /// Создает EFPTreeViewCommandItems
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       //if (EFPApp.EasyInterface)
       //  return base.GetCommandItems();

@@ -1097,7 +1097,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает EFPDBxGridViewCommandItems
     /// </summary>
     /// <returns>Команды локального меню</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPDBxGridViewCommandItems(this);
     }

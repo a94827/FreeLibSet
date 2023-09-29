@@ -7,6 +7,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
+using System.Collections;
 
 /*
  * Работа с закрытыми интервалами дат
@@ -882,7 +883,7 @@ namespace FreeLibSet.Calendar
   /// Интервалы в списке отсортированы по возрастанию и не могут пересекаться
   /// </summary>
   [Serializable]
-  public class DateRangeList : ICloneable, IReadOnlyObject
+  public class DateRangeList : ICloneable, IReadOnlyObject, IEnumerable<DateRange>
   {
     #region Конструктор
 
@@ -1539,6 +1540,30 @@ namespace FreeLibSet.Calendar
     /// Список, содержащий интервал дат с 01.01.0001 до 31.12.9999
     /// </summary>
     public static readonly DateRangeList Whole = new DateRangeList(true);
+
+    #endregion
+
+    #region IEnumerable members
+
+    /// <summary>
+    /// Возвращает перечислитель по входящим интервалам дат.
+    /// В будущих реализациях может измениться тип возвращаемого значения
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public List<DateRange>.Enumerator GetEnumerator()
+    {
+      return _List.GetEnumerator();
+    }
+
+    IEnumerator<DateRange> IEnumerable<DateRange>.GetEnumerator()
+    {
+      return _List.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return _List.GetEnumerator();
+    }
 
     #endregion
   }

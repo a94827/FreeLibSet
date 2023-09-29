@@ -7,6 +7,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.IO;
 using NUnit.Framework;
 using FreeLibSet.Core;
+using FreeLibSet.Tests;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
@@ -14,7 +15,7 @@ namespace ExtDBDocs_tests.Data_Docs
   /// Проверка тестирования документов с помощью IDBxDocPermission.TestDocument()
   /// </summary>
   [TestFixture]
-  public class DBxDocPermissionsTests
+  public class DBxDocPermissionsTests: FixtureWithSetUp
   {
     #region Тестирование вызовов TestDocAllowed()
 
@@ -817,9 +818,10 @@ namespace ExtDBDocs_tests.Data_Docs
 
     #region Setup() / TearDown()
 
-    [OneTimeSetUp]
-    public void Setup()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       //_TempDir = new TempDirectory();
 
       DBxDocTypes dts = new DBxDocTypes();
@@ -856,8 +858,7 @@ namespace ExtDBDocs_tests.Data_Docs
       _SourceWithTrace.UserPermissions = upsWT;
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_GlobalData != null)
       {
@@ -871,6 +872,8 @@ namespace ExtDBDocs_tests.Data_Docs
         _TempDir.Dispose();
         _TempDir = null;
       } */
+
+      base.OnOneTimeTearDown();
     }
 
     #endregion

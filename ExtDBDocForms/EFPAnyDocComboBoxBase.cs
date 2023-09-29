@@ -427,10 +427,10 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает набор команд EFPAnyDocComboBoxBaseControlItems.
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       if (!GetDocSelSupported)
-        return base.GetCommandItems();
+        return base.CreateCommandItems();
 
       EFPAnyDocComboBoxBaseCommandItems Items = new EFPAnyDocComboBoxBaseCommandItems(this);
       Items.InitEnabled();

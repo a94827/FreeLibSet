@@ -12,6 +12,7 @@ using FreeLibSet.Controls;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using System.ComponentModel;
 
 // Обработчики для комбоблоков отличаются. 
 // EFPListComboBox предназначен для комбоблоков со стилем DropDownList. В них
@@ -403,7 +404,7 @@ namespace FreeLibSet.Forms
     public EFPMaskedComboBox(EFPBaseProvider baseProvider, UserMaskedComboBox control)
       : base(baseProvider, control)
     {
-       control.ClearButtonToolTipText = "Очистить введенное значение";
+      control.ClearButtonToolTipText = "Очистить введенное значение";
     }
 
     #endregion
@@ -491,21 +492,18 @@ namespace FreeLibSet.Forms
       {
         if (Control.MaskedTextProvider == null)
           return Control.Text;
-        if (Control.MaskedTextProvider.AssignedEditPositionCount == 0)
-          return "";
-        // Убрано 27.03.2013
-        // if (Control.MaskCompleted)
-        //   return Control.Text;
-
-        // Маска заполнена частично
-        int p = Control.MaskedTextProvider.LastAssignedPosition;
-        return Control.Text.Substring(0, p + 1);
+        else
+          return UITools.GetMaskedText(Control.MaskedTextProvider);
       }
       set
       {
         Control.Text = value;
       }
     }
+
+    bool IEFPTextBox.NormalCharacterCasing { get { return UITools.IsNormalCharacterCasing(Control.MaskedTextProvider); } }
+
+    MaskedTextProvider IEFPTextBox.MaskedTextProvider { get { return Control.MaskedTextProvider; } }
 
     #endregion
 

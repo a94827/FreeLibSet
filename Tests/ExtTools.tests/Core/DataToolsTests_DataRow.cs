@@ -99,26 +99,26 @@ namespace ExtTools_tests.Core
     [Test]
     public void GetXXX_NotNull()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
 
-      Assert.AreEqual(Creators.Row1.VString, DataTools.GetString(row, "FString"), "GetString()");
-      Assert.AreEqual(Creators.Row1.VInt32, DataTools.GetInt(row, "FInt32"), "GetInt()");
-      Assert.AreEqual(Creators.Row1.VInt64, DataTools.GetInt64(row, "FInt64"), "GetInt64()");
-      Assert.AreEqual(Creators.Row1.VSingle, DataTools.GetSingle(row, "FSingle"), "GetSingle()");
-      Assert.AreEqual(Creators.Row1.VDouble, DataTools.GetDouble(row, "FDouble"), "GetDouble()");
-      Assert.AreEqual(Creators.Row1.VDecimal, DataTools.GetDecimal(row, "FDecimal"), "GetDecimal()");
-      Assert.AreEqual(Creators.Row1.VBool, DataTools.GetBool(row, "FBoolean"), "GetBoolean");
-      Assert.AreEqual(Creators.Row1.VDateTime, DataTools.GetDateTime(row, "FDateTime"), "GetDateTime()");
-      Assert.AreEqual(Creators.Row1.VTimeSpan, DataTools.GetTimeSpan(row, "FTimeSpan"), "GetTimeSpan()");
-      Assert.AreEqual(Creators.Row1.VGuid, DataTools.GetGuid(row, "FGuid"), "GetGuid()");
-      Assert.AreEqual(Creators.Row1.VEnum, DataTools.GetEnum<Creators.TestEnum>(row, "FEnum"), "GetEnum<>()");
+      Assert.AreEqual(TestTable.Row1.VString, DataTools.GetString(row, "FString"), "GetString()");
+      Assert.AreEqual(TestTable.Row1.VInt32, DataTools.GetInt(row, "FInt32"), "GetInt()");
+      Assert.AreEqual(TestTable.Row1.VInt64, DataTools.GetInt64(row, "FInt64"), "GetInt64()");
+      Assert.AreEqual(TestTable.Row1.VSingle, DataTools.GetSingle(row, "FSingle"), "GetSingle()");
+      Assert.AreEqual(TestTable.Row1.VDouble, DataTools.GetDouble(row, "FDouble"), "GetDouble()");
+      Assert.AreEqual(TestTable.Row1.VDecimal, DataTools.GetDecimal(row, "FDecimal"), "GetDecimal()");
+      Assert.AreEqual(TestTable.Row1.VBool, DataTools.GetBool(row, "FBoolean"), "GetBoolean");
+      Assert.AreEqual(TestTable.Row1.VDateTime, DataTools.GetDateTime(row, "FDateTime"), "GetDateTime()");
+      Assert.AreEqual(TestTable.Row1.VTimeSpan, DataTools.GetTimeSpan(row, "FTimeSpan"), "GetTimeSpan()");
+      Assert.AreEqual(TestTable.Row1.VGuid, DataTools.GetGuid(row, "FGuid"), "GetGuid()");
+      Assert.AreEqual(TestTable.Row1.VEnum, DataTools.GetEnum<TestEnum>(row, "FEnum"), "GetEnum<>()");
     }
 
     [Test]
     public void GetXXX_DBNull()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[0];
 
       Assert.AreEqual("", DataTools.GetString(row, "FString"), "GetString()");
@@ -131,13 +131,13 @@ namespace ExtTools_tests.Core
       Assert.AreEqual(DateTime.MinValue, DataTools.GetDateTime(row, "FDateTime"), "GetDateTime()");
       Assert.AreEqual(TimeSpan.Zero, DataTools.GetTimeSpan(row, "FTimeSpan"), "GetTimeSpan()");
       Assert.AreEqual(Guid.Empty, DataTools.GetGuid(row, "FGuid"), "GetGuid()");
-      Assert.AreEqual(Creators.TestEnum.Zero, DataTools.GetEnum<Creators.TestEnum>(row, "FEnum"), "GetEnum<>()");
+      Assert.AreEqual(TestEnum.Zero, DataTools.GetEnum<TestEnum>(row, "FEnum"), "GetEnum<>()");
     }
 
     [Test]
     public void GetNullableXXX_NotNull()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
 
       // Пока для DataRow есть только GetNullableDateTime
@@ -147,7 +147,7 @@ namespace ExtTools_tests.Core
       //Assert.AreEqual(1f, DataTools.GetNullableSingle(row, "FSingle"), "GetNullableSingle()");
       //Assert.AreEqual(1.0, DataTools.GetNullableDouble(row, "FDouble"), "GetNullableDouble()");
       //Assert.AreEqual(1m, DataTools.GetNullableDecimal(row, "FDecimal"), "GetNullableDecimal()");
-      Assert.AreEqual(Creators.Row1.VDateTime, DataTools.GetNullableDateTime(row, "FDateTime"), "GetNullableDateTime()");
+      Assert.AreEqual(TestTable.Row1.VDateTime, DataTools.GetNullableDateTime(row, "FDateTime"), "GetNullableDateTime()");
       //Assert.AreEqual(new TimeSpan(1, 2, 3), DataTools.GetGetNullableTimeSpan(row, "FTimeSpan"), "GetNullableTimeSpan()");
       //Assert.AreEqual(TestGuid, DataTools.GetGetNullableGuid(row, "FGuid"), "GetNullableGuid()");
       //Assert.AreEqual(TestEnum.Two, DataTools.GetGetNullableEnum<TestEnum>(row, "FEnum"), "GetNullableEnum<>()");
@@ -156,7 +156,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void GetNullableXXX_DBNull()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[0];
 
       // Пока для DataRow есть только GetNullableDateTime
@@ -179,7 +179,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void SetXXX_NotZero()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
 
       DataTools.SetString(row, "FString", "XXX");
@@ -211,7 +211,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void SetXXX_Zero()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
 
       DataTools.SetString(row, "FString", String.Empty);
@@ -246,32 +246,32 @@ namespace ExtTools_tests.Core
     [Test]
     public void IncXXX_delta_NotNull()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
 
       DataTools.IncInt(row, "FInt32", 1);
-      Assert.AreEqual(Creators.Row1.VInt32 + 1, row["FInt32"], "IncInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32 + 1, row["FInt32"], "IncInt()");
 
       DataTools.IncInt64(row, "FInt64", 1L);
-      Assert.AreEqual(Creators.Row1.VInt64 + 1L, row["FInt64"], "IncInt64()");
+      Assert.AreEqual(TestTable.Row1.VInt64 + 1L, row["FInt64"], "IncInt64()");
 
       DataTools.IncSingle(row, "FSingle", 1f);
-      Assert.AreEqual(Creators.Row1.VSingle + 1f, row["FSingle"], "IncSingle()");
+      Assert.AreEqual(TestTable.Row1.VSingle + 1f, row["FSingle"], "IncSingle()");
 
       DataTools.IncDouble(row, "FDouble", 1.0);
-      Assert.AreEqual(Creators.Row1.VDouble + 1.0, row["FDouble"], "IncDouble()");
+      Assert.AreEqual(TestTable.Row1.VDouble + 1.0, row["FDouble"], "IncDouble()");
 
       DataTools.IncDecimal(row, "FDecimal", 1m);
-      Assert.AreEqual(Creators.Row1.VDecimal + 1m, row["FDecimal"], "IncDecimal()");
+      Assert.AreEqual(TestTable.Row1.VDecimal + 1m, row["FDecimal"], "IncDecimal()");
 
       DataTools.IncTimeSpan(row, "FTimeSpan", new TimeSpan(1, 0, 0));
-      Assert.AreEqual(Creators.Row1.VTimeSpan + new TimeSpan(1, 0, 0), row["FTimeSpan"], "IncTimeSpan()");
+      Assert.AreEqual(TestTable.Row1.VTimeSpan + new TimeSpan(1, 0, 0), row["FTimeSpan"], "IncTimeSpan()");
     }
 
     [Test]
     public void IncXXX_delta_DBNull()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[0];
 
       DataTools.IncInt(row, "FInt32", 1);
@@ -296,78 +296,78 @@ namespace ExtTools_tests.Core
     [Test]
     public void IncXXX_RowRow()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
       DataRow row2 = tbl.Rows[2];
 
       DataTools.IncInt(row2, row, "FInt32");
-      Assert.AreEqual(Creators.Row1.VInt32 + Creators.Row2.VInt32, row["FInt32"], "IncInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, row["FInt32"], "IncInt()");
 
       DataTools.IncInt64(row2, row, "FInt64");
-      Assert.AreEqual(Creators.Row1.VInt64 + Creators.Row2.VInt64, row["FInt64"], "IncInt64()");
+      Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, row["FInt64"], "IncInt64()");
 
       DataTools.IncSingle(row2, row, "FSingle");
-      Assert.AreEqual(Creators.Row1.VSingle + Creators.Row2.VSingle, row["FSingle"], "IncSingle()");
+      Assert.AreEqual(TestTable.Row1.VSingle + TestTable.Row2.VSingle, row["FSingle"], "IncSingle()");
 
       DataTools.IncDouble(row2, row, "FDouble");
-      Assert.AreEqual(Creators.Row1.VDouble + Creators.Row2.VDouble, row["FDouble"], "IncDouble()");
+      Assert.AreEqual(TestTable.Row1.VDouble + TestTable.Row2.VDouble, row["FDouble"], "IncDouble()");
 
       DataTools.IncDecimal(row2, row, "FDecimal");
-      Assert.AreEqual(Creators.Row1.VDecimal + Creators.Row2.VDecimal, row["FDecimal"], "IncDecimal()");
+      Assert.AreEqual(TestTable.Row1.VDecimal + TestTable.Row2.VDecimal, row["FDecimal"], "IncDecimal()");
 
       DataTools.IncTimeSpan(row2, row, "FTimeSpan");
-      Assert.AreEqual(Creators.Row1.VTimeSpan + Creators.Row2.VTimeSpan, row["FTimeSpan"], "IncTimeSpan()");
+      Assert.AreEqual(TestTable.Row1.VTimeSpan + TestTable.Row2.VTimeSpan, row["FTimeSpan"], "IncTimeSpan()");
     }
 
     [Test]
     public void IncValue_delta()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
 
       DataTools.IncValue(row, "FInt32", 1);
-      Assert.AreEqual(Creators.Row1.VInt32 + 1, row["FInt32"], "Int32");
+      Assert.AreEqual(TestTable.Row1.VInt32 + 1, row["FInt32"], "Int32");
 
       DataTools.IncValue(row, "FInt64", 1L);
-      Assert.AreEqual(Creators.Row1.VInt64 + 1L, row["FInt64"], "Int64");
+      Assert.AreEqual(TestTable.Row1.VInt64 + 1L, row["FInt64"], "Int64");
 
       DataTools.IncValue(row, "FSingle", 1f);
-      Assert.AreEqual(Creators.Row1.VSingle + 1f, row["FSingle"], "Single");
+      Assert.AreEqual(TestTable.Row1.VSingle + 1f, row["FSingle"], "Single");
 
       DataTools.IncValue(row, "FDouble", 1.0);
-      Assert.AreEqual(Creators.Row1.VDouble + 1.0, row["FDouble"], "Double");
+      Assert.AreEqual(TestTable.Row1.VDouble + 1.0, row["FDouble"], "Double");
 
       DataTools.IncValue(row, "FDecimal", 1m);
-      Assert.AreEqual(Creators.Row1.VDecimal + 1m, row["FDecimal"], "Decimal");
+      Assert.AreEqual(TestTable.Row1.VDecimal + 1m, row["FDecimal"], "Decimal");
 
       DataTools.IncValue(row, "FTimeSpan", new TimeSpan(1, 0, 0));
-      Assert.AreEqual(Creators.Row1.VTimeSpan + new TimeSpan(1, 0, 0), row["FTimeSpan"], "TimeSpan");
+      Assert.AreEqual(TestTable.Row1.VTimeSpan + new TimeSpan(1, 0, 0), row["FTimeSpan"], "TimeSpan");
     }
 
     [Test]
     public void IncValue_RowRow()
     {
-      DataTable tbl = Creators.CreateTestDataTable();
+      DataTable tbl = TestTable.CreateTestDataTable();
       DataRow row = tbl.Rows[1];
       DataRow row2 = tbl.Rows[2];
 
       DataTools.IncValue(row2, row, "FInt32");
-      Assert.AreEqual(Creators.Row1.VInt32 + Creators.Row2.VInt32, row["FInt32"], "Int32");
+      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, row["FInt32"], "Int32");
 
       DataTools.IncValue(row2, row, "FInt64");
-      Assert.AreEqual(Creators.Row1.VInt64 + Creators.Row2.VInt64, row["FInt64"], "Int64");
+      Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, row["FInt64"], "Int64");
 
       DataTools.IncValue(row2, row, "FSingle");
-      Assert.AreEqual(Creators.Row1.VSingle + Creators.Row2.VSingle, row["FSingle"], "Single");
+      Assert.AreEqual(TestTable.Row1.VSingle + TestTable.Row2.VSingle, row["FSingle"], "Single");
 
       DataTools.IncValue(row2, row, "FDouble");
-      Assert.AreEqual(Creators.Row1.VDouble + Creators.Row2.VDouble, row["FDouble"], "Double");
+      Assert.AreEqual(TestTable.Row1.VDouble + TestTable.Row2.VDouble, row["FDouble"], "Double");
 
       DataTools.IncValue(row2, row, "FDecimal");
-      Assert.AreEqual(Creators.Row1.VDecimal + Creators.Row2.VDecimal, row["FDecimal"], "Decimal");
+      Assert.AreEqual(TestTable.Row1.VDecimal + TestTable.Row2.VDecimal, row["FDecimal"], "Decimal");
 
       DataTools.IncValue(row2, row, "FTimeSpan");
-      Assert.AreEqual(Creators.Row1.VTimeSpan + Creators.Row2.VTimeSpan, row["FTimeSpan"], "TimeSpan");
+      Assert.AreEqual(TestTable.Row1.VTimeSpan + TestTable.Row2.VTimeSpan, row["FTimeSpan"], "TimeSpan");
     }
 
     #endregion

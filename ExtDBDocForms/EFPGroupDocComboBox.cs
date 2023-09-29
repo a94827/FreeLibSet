@@ -808,7 +808,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает команды локального меню
     /// </summary>
     /// <returns>Созданный объект EFPControlCommandItems</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       ControlItems items = new ControlItems(this);
       items.InitEnabled();

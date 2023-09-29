@@ -17,28 +17,84 @@ using FreeLibSet.Formatting;
 
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
-  public abstract class NodeNumEditBoxBase<T> : BaseTextControl, IMinMaxSource<T?>
+  public abstract class BaseFormattedTextControl : BaseTextControl
+  {
+    public BaseFormattedTextControl()
+    {
+      _Format = String.Empty;
+    }
+
+    #region Свойства
+
+    [Bindable(true)]
+    [DefaultValue("")]
+    [Description("Форматирование текстового вывода")]
+    [RefreshProperties(RefreshProperties.All)]
+    [Category("Appearance")]
+    public virtual string Format
+    {
+      get { return _Format; }
+      set
+      {
+        if (value == null)
+          value = String.Empty;
+        if (String.Equals(value, _Format, StringComparison.Ordinal))
+          return;
+
+        _Format = value;
+      }
+    }
+    private string _Format;
+
+    /// <summary>
+    /// Форматировщик для числового значения
+    /// </summary>
+    [Browsable(false)]
+    public virtual IFormatProvider FormatProvider
+    {
+      get
+      {
+        if (_FormatProvider == null)
+          return CultureInfo.CurrentCulture;
+        else
+          return _FormatProvider;
+      }
+      set
+      {
+        _FormatProvider = value;
+      }
+    }
+    private IFormatProvider _FormatProvider;
+
+    #endregion
+
+    #region Переопределенные методы
+
+    protected override string FormatLabel(object obj)
+    {
+      IFormattable fv = obj as IFormattable;
+      if (fv != null)
+        return fv.ToString(Format, FormatProvider);
+      else
+        return base.FormatLabel(obj);
+    }
+
+    #endregion
+  }
+
+  public abstract class NodeNumEditBoxBase<T> : BaseFormattedTextControl, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
   {
     #region Конструктор
 
     public NodeNumEditBoxBase()
     {
-      _editorWidth = 100;
-      _Format = String.Empty;
+      TextAlign = HorizontalAlignment.Right;
     }
 
     #endregion
 
     #region Свойства
-
-    [DefaultValue(100)]
-    public int EditorWidth
-    {
-      get { return _editorWidth; }
-      set { _editorWidth = value; }
-    }
-    private int _editorWidth;
 
     #region Свойство Increment
 
@@ -112,49 +168,20 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     #region Свойство Format
 
-    [Bindable(true)]
-    [DefaultValue("")]
-    [Description("Форматирование текстового вывода")]
-    [RefreshProperties(RefreshProperties.All)]
-    [Category("Appearance")]
-    public string Format
+    public override string Format
     {
-      get { return _Format; }
+      get { return base.Format; }
       set
       {
         if (value == null)
           value = String.Empty;
-        if (String.Equals(value, _Format, StringComparison.Ordinal))
-          return;
-
         // Проверяем корректность формата
         // Используем InvariantCulture во избежание неожиданностей от национальных настроек
         default(T).ToString(value, CultureInfo.InvariantCulture); // может произойти FormatException
 
-        _Format = value;
+        base.Format = value;
       }
     }
-    private string _Format;
-
-    /// <summary>
-    /// Форматировщик для числового значения
-    /// </summary>
-    [Browsable(false)]
-    public IFormatProvider FormatProvider
-    {
-      get
-      {
-        if (_FormatProvider == null)
-          return CultureInfo.CurrentCulture;
-        else
-          return _FormatProvider;
-      }
-      set
-      {
-        _FormatProvider = value;
-      }
-    }
-    private IFormatProvider _FormatProvider;
 
     /// <summary>
     /// Вспомогательное свойство.
@@ -168,7 +195,12 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     public virtual int DecimalPlaces
     {
       get { return FormatStringTools.DecimalPlacesFromNumberFormat(Format); }
-      set { Format = FormatStringTools.DecimalPlacesToNumberFormat(value); }
+      set
+      {
+        if (value < 0)
+          throw new ArgumentOutOfRangeException();
+        Format = FormatStringTools.DecimalPlacesToNumberFormat(value);
+      }
     }
 
     #endregion
@@ -182,7 +214,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       if (Parent.UseColumns)
         return context.Bounds.Size;
       else
-        return new Size(EditorWidth, context.Bounds.Height);
+      {
+        int n = DecimalPlaces + 10;
+        int w = (int)context.DrawContext.Graphics.MeasureString(new string('0', n), Parent.Font).Width + 2 * SystemInformation.BorderSize.Width;
+        return new Size(w, context.Bounds.Height);
+      }
     }
 
     protected override Control CreateEditor(TreeNodeAdv node)

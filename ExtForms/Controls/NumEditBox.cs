@@ -47,16 +47,20 @@ namespace FreeLibSet.Controls
       internal InternalUpDown(NumEditBoxBase<T> owner)
       {
         _Owner = owner;
-        foreach (Control c in base.Controls)
+        if (base.Controls.Count != 2)
+          throw new BugException("Неправильная реализация UpDownBase");
+        _ScrollPart = base.Controls[0];
+        _MainPart = (TextBox)(base.Controls[1]);
+
+        // 28.08.2023
+        // В Mono (v.6.12.0, без Wine) почему-то не работет размещение элементов в UpDownBase.
+        // Выполняем размещение самостоятельно в методе OnSizeChanged()
+
+        if (EnvironmentTools.IsMono)
         {
-          if (c is TextBox)
-          {
-            _MainPart = (TextBox)c;
-            break;
-          }
+          _ScrollPart.Dock = DockStyle.None;
+          _MainPart.Dock = DockStyle.None;
         }
-        if (_MainPart == null)
-          throw new BugException("Не найден TextBox");
       }
 
       private NumEditBoxBase<T> _Owner;
@@ -71,6 +75,27 @@ namespace FreeLibSet.Controls
       /// </summary>
       public TextBox MainPart { get { return _MainPart; } }
       private TextBox _MainPart;
+
+      /// <summary>
+      /// Элемент со стрелочками
+      /// </summary>
+      private Control _ScrollPart;
+
+      protected override void OnSizeChanged(EventArgs args)
+      {
+        base.OnSizeChanged(args);
+
+        // Метод может вызываться из конструктора базового класса.
+        // В этом случае ничего не делаем
+
+        if (_MainPart != null && EnvironmentTools.IsMono)
+        {
+          Rectangle r = ClientRectangle;
+          int w = SystemInformation.VerticalScrollBarWidth;
+          _ScrollPart.SetBounds(r.Width - w, r.Top, w, r.Height);
+          _MainPart.SetBounds(r.Left, r.Top, r.Width - w, r.Height);
+        }
+      }
 
       #endregion
 

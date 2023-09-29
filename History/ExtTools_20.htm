@@ -4,14 +4,16 @@
 	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
 	<title>Изменения в модуле ExtTools.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
-	<meta name="changed" content="2023-07-07T21:03:07.281000000"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2023-08-13T17:20:59.468000000"/>
+	<meta name="created" content="00:00:00">
 	<style type="text/css">
+		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		td p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent; color: #000000; line-height: 115% }
 		a:link { color: #0000ff; so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -44,15 +46,128 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">348</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">18.07.2023-22.09.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p style="margin-bottom: 0cm; background: transparent">1.
+			Исправлена ошибка в SimpleDigitalMaskProvider.EditMask (<a href="ExtTools_11.htm#v136p2"><span lang="en-US">v.136
+			</span>п.2</a>). Добавлены символы разделители: &quot;/&quot;,
+			круглые, квадратные и фигурные скобки</p>
+			<p style="margin-bottom: 0cm; background: transparent">2.
+			Оптимизация вызова событий изменения модели дерева при вызове
+			ListTreeModel.AddRange() и Clear()</p>
+			<p style="margin-bottom: 0cm; background: transparent">3.
+			Оптимизация передачи из базовой модели события <span lang="en-US">NodesRemoved
+			</span>в <span lang="en-US">SortedTreeModel (<a href="ExtTools_11.htm#v050p5">v.50
+			</a></span><a href="ExtTools_11.htm#v050p5">п.5</a><span lang="en-US">)</span></p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">4</span>.
+			Метод UITools.GetMaskedText() (выделено из геттера свойства
+			EFPTextBox.ControlText). С учетом изменений (<a href="ExtForms_11.htm#v036p1">ExtForms,
+			v.36 п.1</a>). Новое изменение: Если пользователь заполнил все
+			доступные позиции, то возвращается весь текст, включая литерала
+			справа от шаблонных символов</p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">5</span>.
+			Метод UITools.IsNormalCharacterCasing()</p>
+			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">6</span>.
+			Методы UITools.GetGuidEditMask() и GetGuidRegEx()</p>
+			<p style="margin-bottom: 0cm; background: transparent">7.
+			IntUpDownHandler, SignleUpDownHandler, DoubleUpDownHandler и
+			DecimalUpDownHandler (<a href="#v301p10"><span lang="en-US">v.301
+			</span>п.10</a>) выполняют правильную прокрутку значений при
+			Increment, отличном от 1. Например, если Increment=5, а
+			CurrValue=3, то возвращаются значения 0 и 5, а не -2 и 8. Для
+			чисел с плавающей точкой используется внутреннее приведение к типу
+			long. Используется вспомогательный внутренний класс
+			NumUpDownHandlerFunctions</p>
+			<p style="margin-bottom: 0cm; background: transparent">8.
+			Исправлена ошибка в <span lang="en-US">NumArrayUpDownHandler&lt;T&gt;.GetUpDown</span>()
+			(<a href="#v301p10"><span lang="en-US">v.301 </span>п.10</a>).
+			Новое свойство Comparer, тип <span lang="en-US">&lt;</span>T<span lang="en-US">&gt;</span>
+			не обязан реализовывать интерфейс <span lang="en-US">IComparable&lt;T&gt;.</span></p>
+			<p style="background: transparent"><span lang="ru-RU">9</span><span lang="en-US">.
+			</span><span lang="ru-RU">Внутренний метод
+			</span><span lang="en-US">EditableDateTimeFormatter.GetAMPMMask()
+			(<a href="ExtTools_11.htm#v233p1">v.233 </a></span><a href="ExtTools_11.htm#v233p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">возвращает простую маску из символов &quot;</span><span lang="en-US">C</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+			</span><span lang="ru-RU">без попытки поиска одинаковых символов и
+			добавления их как литералов, если в тексте есть нестандартные
+			символы. Возникала ошибка для культуры &quot;</span><span lang="en-US">ne-NP</span><span lang="ru-RU">&quot;</span><span lang="en-US">
+			(</span><span lang="ru-RU">Непальский язык</span><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
+			<p style="margin-bottom: 0cm; background: transparent">10.
+			Оператор вычитания AbsPath-AbsPath, возвращающий относительный
+			путь RelPath</p>
+			<p style="margin-bottom: 0cm; background: transparent">11. Методы
+			AbsPath.ContainsExtension(), Split() и Join()</p>
+			<p>12. Исправлена реализация внутреннего метода AbsPath.RemoveDirNameSlash(). Под Linux корневой каталог / заменялся на пустую строку</p>
+			<p style="margin-bottom: 0cm; background: transparent">13. Методы
+			DataTools.IndexOfOccurence(), LastIndexOfOccurence()</p>
+			<p style="margin-bottom: 0cm; background: transparent">14. Класс
+			DisposableDictionary&lt;TKey, TValue&gt;</p>
+			<p style="margin-bottom: 0cm; background: transparent">15. Метод
+			DataTools.Dispose&lt;T&gt;()</p>
+			<p lang="en-US" style="background: transparent">16. <span lang="ru-RU">Класс
+			</span>SettingsDataList. <span lang="ru-RU">Интерфейс
+			</span>ISettingsDataItem. <span lang="ru-RU">Перечисление
+			</span>ISettingsPart (<span lang="ru-RU">перенесено из </span>ExtForms)</p>
+			<p>17. Модель отчетов BRReport</p>
+			<p>18. Объект для разбиения на страницы BRPaginator</p>
+			<p>19. Класс BRColumnHeaderArray (перенесено из ExtForms.dll). Добавлено свойство BaseCells и метод GetMergeArea()</p>
+			<p>20. Класс BRDocumentProperties(перенесено из ExtForms.dll). Сделано классом вместо структуры. Метод Clone()</p>
+                        <p>21. Передача отчета в Excel с помощью OLE. Класс BRReportOLEExcelSender</p>
+                        <p>22. Создание файлов в формате Excel2003-XML. Класс BRReportExcel2003XmlWriter</p>
+                        <p>23. Создание файлов OpenOffice/LibreOffice ODS. Класс BRReportODSWriter</p>
+                        <p>24. Создание файлов HTML. Класс BRReportHtmlWriter (черновой вариант)</p>
+			<p>25. Недостающая перегрузка метода CfgPart.GetString() со вторым аргументом, переданным по ссылке. Метод GetStringDef()</p>
+			<p>26. Класс WTSServer с возможностью перебора сессий WTSSession. Конструктор WTSSession, принимающий аргумент WTSServer. Убрана буферизация значений свойств WTSSession</p>
+			<p>27. Класс ExeFileInfo для просмотра структуры exe-файла</p>
+			<p>28. Класс ResourceTable. Структура ResourceID</p>
+			<p>29. Классы WordHelper и ExcelHelper перенесены из ExtForms.dll. Внутренние "обрезанные" реализации в MicrosoftOfficeTools убраны</p>
+                        <p>30. Метод FileTools.GetRealPath(). В Linux раскрывает символическую ссылку. Используется библиотека Mono.Posix.dll (только ссылка для сборки ExtTools.dll; при работе используется актуальная библиотека Mono</p>
+			<p>31. Изменения в FileAssociations:</p>
+                        <p>- Структура упрощена. Вместо свойств OpenItem и списка OpenWithList, сам класс является списком. Первый элемент является командой по умолчанию</p>
+                        <p>- При загрузке ассоциаций для Windows раздел HKEY_CLASSES_ROOT\.XXX\OpenWithProgIds просматривается только под Windows XP и новее, а HKEY_CLASSES_ROOT\.XXX\OpenWithList - только в старых версиях Windows</p>
+                        <p>- При загрузке ассоциаций для Windows возвращается основной значок выполняемого файла, раздел HKEY_CLASSES_ROOT\FILEID\DefaultIcon не используется</p>
+                        <p>- Внутренний метод Windows.SplitFileNameAndArgs() определяет неправильную командную строку, когда путь с пробелами к exe-файлу задан без кавычек</p>
+                        <p>- При загрузке ассоциаций для Linux для пользовательских предпочтений используется файл "~/.config/mimeapps.list" наравне с "~/.local/share/applications/defaults.list". Предпочтения дополняют системные установки "/usr/share/applications/mimeinfo.cache", а не заменяют.</p>
+                        <p>- При загрузке значков для Linux учитывается, что в desktop-файле может быть задан полный путь к значку. При поиске по имени просматриваются каталоги "~/.icons" и "~/.local/share/icons", наряду с "/usr/share/icons". Выбор значка для действующей темы все еще не реализован.</p>
+                        <p>32. Изменения в OpenOfficeTools:</p>
+                        <p>- Класс OpenOfficeTools.OfficeInfo заменен на класс верхнего уровня OpenOfficeInfo</p>
+                        <p>- Новый класс OpenOfficePartInfo для получения информации об отдельных компонентах, перечисление OpenOfficePart</p>
+                        <p>- Поиск по файловым ассоциациям</p>
+                        <p>- Свойство OpenOfficePartInfo.FileAssociation</p>
+                        <p>- Проверяется большее количество предопределенных путей при поиске LibreOffice под Linux</p>
+                        <p>- Поддержка AlterOffice</p>
+                        <p>- В Linux определяется реальный путь, если в /usr/bin/libreoffice задан однострочный сценарий с командой exec</p>
+                        <p>- OpenOfficeTools.ODFAddDateTimeFormat() обрабатывает компоненты "H" и "t". Для развертки односимвольных форматов используется FormatStringTools.ExpandDateTimeFormat()</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">347</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center"><span lang="ru-RU">13.07.2023-17.07.2023</span></p>
+			<p align="center">13.07.2023-17.07.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">1. Методы FormatStringTools.ExpandDateTimeFormat(). GetDateFormatOrder() правильно обрабатывает международные форматы, например, "s". Учитывается возможность наличия текстовых фрагментов в строке и Escape-символов, как в ContainsDateTime(). Перегрузка с аргументом DateTimeFormatInfo.</span></p>
-			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">2. Метод FormatStringTools.DecimalPlacesFromNumberFormat() не учитывал односимвольный формат "0". Для нечисловых форматов ошибочно возвращался 0, а не (-1).</span></p>
-			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">3. Метод FileTools.TestDirSlashedPath() выдается сообщение "XXX является файлом, а не каталогом, по аналогии с TestFilePath()"</span></p>
+			<p style="margin-bottom: 0cm; background: transparent">1. Методы
+			FormatStringTools.ExpandDateTimeFormat(). GetDateFormatOrder()
+			<span lang="en-US">(<a href="ExtTools_11.htm#v233p2">v.233 </a></span><a href="ExtTools_11.htm#v233p2">п.2</a><span lang="en-US">)
+			</span>правильно обрабатывает международные форматы, например,
+			&quot;s&quot;. Учитывается возможность наличия текстовых
+			фрагментов в строке и Escape-символов, как в ContainsDateTime().
+			Перегрузка с аргументом DateTimeFormatInfo.</p>
+			<p style="margin-bottom: 0cm; background: transparent">2. Метод
+			FormatStringTools.DecimalPlacesFromNumberFormat() (<a href="#v301p13"><span lang="en-US">v.301
+			</span>п.13</a>) не учитывал односимвольный формат &quot;0&quot;.
+			Для нечисловых форматов ошибочно возвращался 0, а не (-1).</p>
+			<p style="background: transparent">3. Метод
+			FileTools.TestDirSlashedPath() <span lang="en-US">(<a href="ExtTools_11.htm#v224p2">v.224
+			</a></span><a href="ExtTools_11.htm#v224p2">п.2</a><span lang="en-US">)
+			</span>выдается сообщение &quot;XXX является файлом, а не
+			каталогом, по аналогии с TestFilePath()&quot;</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -60,12 +175,12 @@
 			<p lang="en-US" align="center">346</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center"><span lang="ru-RU">03.07.2023-04.07.2023</span></p>
+			<p align="center">03.07.2023-04.07.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">1</span><span lang="ru-RU">.
-			Изменения в </span><span lang="en-US">FileContainerList (<a href="/C:/TEMP/ExtTools_11.htm#v042p3">v.42
-			</a></span><a href="/C:/TEMP/ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
+			Изменения в </span><span lang="en-US">FileContainerList (<a href="../../../temp/ExtTools_11.htm#v042p3">v.42
+			</a></span><a href="../../../temp/ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
 			<p lang="en-US" style="margin-bottom: 0cm; background: transparent">
 			- <span lang="ru-RU">Метод </span>IndexOf() (<span lang="ru-RU">и
 			свойство </span>this[name]) <span lang="ru-RU">использует режим
@@ -89,7 +204,7 @@
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">1.
 			</span><span lang="ru-RU">Небольшая оптимизация методов
-			</span><span lang="en-US">DataTools.GetXxx() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
+			</span><span lang="en-US">DataTools.GetXxx() </span><span lang="ru-RU">(</span><a href="../../../temp/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) при
 			преобразовании из </span><span lang="en-US">String. </span><span lang="ru-RU">Используется
 			&quot;</span><span lang="en-US">as</span><span lang="ru-RU">&quot;
@@ -101,14 +216,14 @@
 			<p style="margin-bottom: 0cm; background: transparent">3. Функция
 			DataTools.Substring()</p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">4.
-			Функция DataTools.GetString() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
+			Функция DataTools.GetString() </span><span lang="ru-RU">(</span><a href="../../../temp/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			использует </span><span lang="en-US">StdConvert </span><span lang="ru-RU">для
 			преобразования </span><span lang="en-US">DateTime </span><span lang="ru-RU">и
 			числовых значений.</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">5.
 			DataTools.GetDateTime() </span><span lang="ru-RU">и
-			</span><span lang="en-US">GetNullableDateTime() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
+			</span><span lang="en-US">GetNullableDateTime() </span><span lang="ru-RU">(</span><a href="../../../temp/ExtTools_11.htm#v001p1"><span lang="en-US">v.1
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			разрешают аргумент </span><span lang="en-US">TimeSpan. </span><span lang="ru-RU">Отдельная
 			перегрузка </span><span lang="en-US">GetDateTime</span><span lang="ru-RU">()
@@ -120,11 +235,11 @@
 			6. Функция <span lang="en-US">DataTools.CompareNumbers().
 			</span><span lang="ru-RU">Используется </span><span lang="en-US">ExcelFunctions.Compare()</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">7.
-			FileTools.WriteStream() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v003p1"><span lang="en-US">v.3
+			FileTools.WriteStream() </span><span lang="ru-RU">(</span><a href="../../../temp/ExtTools_11.htm#v003p1"><span lang="en-US">v.3
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) не
 			выполняет позиционирование на начало потока.</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">8.
-			FileTools.CheckFileExists() </span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v177p1"><span lang="en-US">v.177
+			FileTools.CheckFileExists() </span><span lang="ru-RU">(</span><a href="../../../temp/ExtTools_11.htm#v177p1"><span lang="en-US">v.177
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) может
 			выбрасывать исключение </span><span lang="en-US">DirectoryNotFoundException,
 			</span><span lang="ru-RU">если не существует каталог.</span></p>
@@ -132,7 +247,7 @@
 			</span>ZipFileTools.ExtractZipResourceFile()</p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">10</span><span lang="ru-RU">.
 			Метод </span><span lang="en-US">RegistryKey2.CreateSubKey</span><span lang="ru-RU">()
-			(</span><a href="/C:/TEMP/ExtTools_11.htm#v160p3"><span lang="en-US">v.160
+			(</span><a href="../../../temp/ExtTools_11.htm#v160p3"><span lang="en-US">v.160
 			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
 			задавал не все флаги разрешений при вызове RegCreateKeyEx().
 			Нельзя было потом прочитать список значений.</span></p>
@@ -151,7 +266,7 @@
 			</span>DoHasChild(), DoGetChild()</p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">14.
 			</span><span lang="ru-RU">Методы в </span><span lang="en-US">CfgConverter
-			</span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v024p1"><span lang="en-US">v.24
+			</span><span lang="ru-RU">(</span><a href="../../../temp/ExtTools_11.htm#v024p1"><span lang="en-US">v.24
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) для
 			типа </span><span lang="en-US">Boolean. Р</span><span lang="ru-RU">аньше
 			в </span><span lang="en-US">CfgPart </span><span lang="ru-RU">использовалось
@@ -160,8 +275,8 @@
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">15.
 			</span><span lang="ru-RU">Методы </span><span lang="en-US">CfgPart.SetDateTimeCommaString()
 			</span><span lang="ru-RU">и </span><span lang="en-US">GetDateTimeCommaString</span><span lang="ru-RU">()</span>
-			<span lang="en-US">(<a href="/C:/TEMP/ExtTools_11.htm#v124p1">v.124
-			</a></span><a href="/C:/TEMP/ExtTools_11.htm#v124p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			<span lang="en-US">(<a href="../../../temp/ExtTools_11.htm#v124p1">v.124
+			</a></span><a href="../../../temp/ExtTools_11.htm#v124p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">с аргументом </span><span lang="en-US">useTime
 			</span><span lang="ru-RU">замены на отдельные методы
 			</span><span lang="en-US">Set/GetDateTimeCommaString/DateCommaString().
@@ -170,13 +285,13 @@
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">16.
 			</span><span lang="ru-RU">Свойство
 			</span><span lang="en-US">EnvironmentTools.Is64bitOperatingSystem
-			(<a href="/C:/TEMP/ExtTools_11.htm#v030p4">v.30 </a></span><a href="/C:/TEMP/ExtTools_11.htm#v030p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			(<a href="../../../temp/ExtTools_11.htm#v030p4">v.30 </a></span><a href="../../../temp/ExtTools_11.htm#v030p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
 			</span><span lang="ru-RU">для не-</span><span lang="en-US">Windows
 			</span><span lang="ru-RU">возвращает значение, зависящее от
 			</span><span lang="en-US">IntPtr.Size</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">17.
 			</span><span lang="ru-RU">Изменения в FileRedirectionSupressor
-			(</span><a href="/C:/TEMP/ExtTools_11.htm#v030p5"><span lang="en-US">v.30
+			(</span><a href="../../../temp/ExtTools_11.htm#v030p5"><span lang="en-US">v.30
 			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">):</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
 			Класс переименован в </span><span lang="en-US">Wow64</span><span lang="ru-RU">FileRedirectionSupressor
@@ -191,7 +306,7 @@
 			является 64-разрядным.</p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">18.
 			</span><span lang="ru-RU">Изменения в </span><span lang="en-US">AbsPath
-			(<a href="/C:/TEMP/ExtTools_11.htm#v012p1">v.12 </a></span><a href="/C:/TEMP/ExtTools_11.htm#v012p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
+			(<a href="../../../temp/ExtTools_11.htm#v012p1">v.12 </a></span><a href="../../../temp/ExtTools_11.htm#v012p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">):</span></p>
 			<p style="margin-bottom: 0cm; background: transparent">-
 			<span lang="ru-RU">Используется статический конструктор</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
@@ -209,7 +324,7 @@
 			не </span>false<span lang="ru-RU">, если аргумент - пустой</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">19.
 			</span><span lang="ru-RU">Изменения в </span><span lang="en-US">RelPath
-			</span><span lang="ru-RU">(</span><a href="/C:/TEMP/ExtTools_11.htm#v137p2"><span lang="en-US">v.137
+			</span><span lang="ru-RU">(</span><a href="../../../temp/ExtTools_11.htm#v137p2"><span lang="en-US">v.137
 			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">):</span></p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="ru-RU">-
 			Оператор &quot;+&quot; для </span>RelPath+string <span lang="ru-RU">возвращает
@@ -219,7 +334,7 @@
 			Перегрузка оператора &quot;+&quot; для </span>RelPath+RelPath</p>
 			<p style="margin-bottom: 0cm; background: transparent"><span lang="en-US">20.
 			</span><span lang="ru-RU">Изменения в </span><span lang="en-US">FileContainer
-			(<a href="/C:/TEMP/ExtTools_11.htm#v042p3">v.42 </a></span><a href="/C:/TEMP/ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
+			(<a href="../../../temp/ExtTools_11.htm#v042p3">v.42 </a></span><a href="../../../temp/ExtTools_11.htm#v042p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">):</span></p>
 			<p style="margin-bottom: 0cm; background: transparent">- <span lang="ru-RU">Свойство
 			</span>Contents <span lang="ru-RU">переименовано в </span>Content</p>
 			<p style="margin-bottom: 0cm; background: transparent">- <span lang="ru-RU">Убрана
@@ -1670,12 +1785,14 @@
 			построения валидаторов.</font></p>
 			<p><font color="#000000">- </font><font color="#000000"><span lang="ru-RU">Проверяется
 			корректность свойства </span></font><font color="#000000"><span lang="en-US">RIItem.Name</span></font></p>
-			<p><font color="#000000"><span lang="en-US">1</span></font><font color="#000000"><span lang="ru-RU">3</span></font><span lang="en-US">.
+			<p><a name="v301p13"></a><font color="#000000"><span lang="en-US">1</span></font><font color="#000000"><span lang="ru-RU">3</span></font><span lang="en-US">.
 			</span><span lang="ru-RU">Методы
 			</span><span lang="en-US">DataTools.DecimalPlacesToNumberFormat()
 			</span><span lang="ru-RU">и DecimalPlacesToNumberFormat() (</span><a href="ExtTools_11.htm#v183p7"><span lang="en-US">v.183
 			</span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">)
-			перенесены в </span><span lang="en-US">FormatStringTools</span></p>
+			перенесены в </span><span lang="en-US">FormatStringTools</span>
+			<span lang="ru-RU">(</span><a href="ExtTools_11.htm#v232p5"><span lang="en-US">v.232
+			</span><span lang="ru-RU">п.5</span></a><span lang="ru-RU">)</span></p>
 			<p lang="en-US">14. <span lang="ru-RU">Метод
 			</span>DataTools.ToArray2&lt;T&gt;<span lang="ru-RU">()</span></p>
 			<p><span lang="en-US">15. </span><span lang="ru-RU">Методы

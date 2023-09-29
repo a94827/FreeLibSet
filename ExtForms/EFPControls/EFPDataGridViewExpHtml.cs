@@ -9,15 +9,16 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
+using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms
 {
-  #region Перечисление EFPDataGridViewExpRange
+  #region Перечисление EFPDataViewExpRange
 
   /// <summary>
   /// Диапазон ячеек табличного просмотра для экспорта
   /// </summary>
-  public enum EFPDataGridViewExpRange
+  public enum EFPDataViewExpRange
   {
     // Члены не переименовывать!
     // Имена используются при сохранении конфигурации
@@ -36,73 +37,6 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Поля сводки документа, используемые при сохранении табличного просмотра
-  /// </summary>
-  public struct EFPDocumentProperties
-  {
-    #region Поля для сводки
-
-    /// <summary>
-    /// Сводка документа - название
-    /// </summary>
-    public string Title { get { return GetText(_Title); } set { _Title = value; } }
-    private string _Title;
-
-    /// <summary>
-    /// Сводка документа - тема
-    /// </summary>
-    public string Subject { get { return GetText(_Subject); } set { _Subject = value; } }
-    private string _Subject;
-
-    /// <summary>
-    /// Сводка документа - автор
-    /// </summary>
-    public string Author { get { return GetText(_Author); } set { _Author = value; } }
-    private string _Author;
-
-    /// <summary>
-    /// Сводка документа - учреждение
-    /// </summary>
-    public string Company { get { return GetText(_Company); } set { _Company = value; } }
-    private string _Company;
-
-    private static string GetText(string s)
-    {
-      if (s == null)
-        return String.Empty;
-      s = s.Replace(Environment.NewLine, " ");
-      s = DataTools.ReplaceCharRange(s, (char)0, (char)31, ' ');
-      s = s.Replace(DataTools.SoftHyphenStr, "");
-      s = s.Replace(DataTools.NonBreakSpaceChar, ' ');
-      return s;
-    }
-
-    #endregion
-
-    #region Другие свойства
-
-    /// <summary>
-    /// Для отладки
-    /// </summary>
-    /// <returns>Текстовое представление</returns>
-    public override string ToString()
-    {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("Title: ");
-      sb.Append(Title);
-      sb.Append(", Subject: ");
-      sb.Append(Subject);
-      sb.Append(", Author: ");
-      sb.Append(Author);
-      sb.Append(", Company: ");
-      sb.Append(Company);
-      return sb.ToString();
-    }
-
-    #endregion
-  }
-
-  /// <summary>
   /// Параметры для экспорта табличного просмотра в HTML-файл
   /// </summary>
   public class EFPDataGridViewExpHtmlSettings
@@ -114,7 +48,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPDataGridViewExpHtmlSettings()
     {
-      _RangeMode = EFPDataGridViewExpRange.All;
+      _RangeMode = EFPDataViewExpRange.All;
       _ShowColumnHeaders = true;
       _Encoding = Encoding.UTF8;
     }
@@ -126,8 +60,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Диапазон ячеек для экспорта (по умолчанию - All)
     /// </summary>
-    public EFPDataGridViewExpRange RangeMode { get { return _RangeMode; } set { _RangeMode = value; } }
-    private EFPDataGridViewExpRange _RangeMode;
+    public EFPDataViewExpRange RangeMode { get { return _RangeMode; } set { _RangeMode = value; } }
+    private EFPDataViewExpRange _RangeMode;
 
     /// <summary>
     /// true (по умолчанию), если заголовки столбцов должны быть добавлены в таблицу
@@ -268,7 +202,7 @@ namespace FreeLibSet.Forms
         wrt.WriteLine();
       }
 
-      EFPDocumentProperties docProps = controlProvider.DocumentProperties;
+      BRDocumentProperties docProps = controlProvider.DocumentProperties;
 
       int offStartHtml = GetHtmlOff(wrt, strm);
       wrt.WriteLine("<HTML>");
@@ -300,7 +234,7 @@ namespace FreeLibSet.Forms
 
       if (useFragment)
         wrt.WriteLine("<!--StartFragment-->");
-      int OffStartFragment = GetHtmlOff(wrt, strm);
+      int offStartFragment = GetHtmlOff(wrt, strm);
 
       // Ширина столбцов
       for (int j = 0; j < area.ColumnCount; j++)
@@ -313,7 +247,7 @@ namespace FreeLibSet.Forms
       // Многострочные заголовки
       if (settings.ShowColumnHeaders)
       {
-        EFPDataGridViewColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
+        BRColumnHeaderArray headerArray = controlProvider.GetColumnHeaderArray(area);
 
         for (int i = 0; i < headerArray.RowCount; i++)
         {
@@ -362,15 +296,15 @@ namespace FreeLibSet.Forms
 
       wrt.WriteLine("</BODY>");
       wrt.WriteLine("</HTML>");
-      int OffEndHtml = GetHtmlOff(wrt, strm) - 2; // CRLF
+      int offEndHtml = GetHtmlOff(wrt, strm) - 2; // CRLF
 
       wrt.Flush();
       strm.Flush();
       if (useFragment)
       {
         WriteHtmlOff(strm, PosWrStartHtml + posOff, offStartHtml - posOff);
-        WriteHtmlOff(strm, PosWrEndHtml + posOff, OffEndHtml - posOff);
-        WriteHtmlOff(strm, PosWrStartFragment + posOff, OffStartFragment - posOff);
+        WriteHtmlOff(strm, PosWrEndHtml + posOff, offEndHtml - posOff);
+        WriteHtmlOff(strm, PosWrStartFragment + posOff, offStartFragment - posOff);
         WriteHtmlOff(strm, PosWrEndFragment + posOff, offEndFragment - posOff);
       }
     }

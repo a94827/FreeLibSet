@@ -317,7 +317,6 @@ namespace FreeLibSet.Controls
     /// The model associated with this <see cref="TreeViewAdv"/>.
     /// </Summary>
     /// <seealso cref="ITreeModel"/>
-    /// <seealso cref="TreeModel"/>
     [Browsable(false)]
     [DefaultValue(null)]
     public ITreeModel Model

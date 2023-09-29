@@ -54,12 +54,12 @@ namespace FreeLibSet.Forms
         else
           faItems = FileAssociations.Empty;
 
-        if (faItems.OpenItem != null)
+        if (faItems.FirstItem != null)
         {
-          EFPCommandItem ci = CreateCommandItem(faItems.OpenItem);
+          EFPCommandItem ci = CreateCommandItem(faItems.FirstItem);
           ci.MenuText = "Открыть";
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;
-          if (ci.HasImage)
+          if (!ci.HasImage)
             ci.ImageKey = "UnknownState";
           commandItems.Add(ci);
           //CmdItems.DefaultCommandItem = ci;
@@ -91,11 +91,11 @@ namespace FreeLibSet.Forms
         commandItems.Add(smOpenWith);
         _AllCommands.Add(smOpenWith);
 
-        if (faItems.OpenWithItems.Count > 0)
+        if (faItems.Count > 1)
         {
-          for (int i = 0; i < faItems.OpenWithItems.Count; i++)
+          for (int i = 1; i < faItems.Count; i++)
           {
-            EFPCommandItem ci = CreateCommandItem(faItems.OpenWithItems[i]);
+            EFPCommandItem ci = CreateCommandItem(faItems[i]);
             ci.Parent = smOpenWith;
             ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
             commandItems.Add(ci);
@@ -303,6 +303,169 @@ namespace FreeLibSet.Forms
     /// </summary>
     public object Tag { get { return _Tag; } set { _Tag = value; } }
     private object _Tag;
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Комбоблок для выбора файловой ассоциации
+  /// </summary>
+  public class EFPFileAssociationsComboBox : EFPListComboBox
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает провайдер.
+    /// </summary>
+    /// <param name="baseProvider">Базовый провайдер</param>
+    /// <param name="control">Управляющий элемент</param>
+    public EFPFileAssociationsComboBox(EFPBaseProvider baseProvider, System.Windows.Forms.ComboBox control)
+      : base(baseProvider, control)
+    {
+      FileExt = String.Empty;
+      ListControlImagePainter painter = new ListControlImagePainter(Control, ItemPainter);
+      painter.IgnoreDisabledState = true;
+    }
+
+    #endregion
+
+    #region Рисование элемента
+
+    /// <summary>
+    /// Элемент, добавляемый в комбоблок
+    /// </summary>
+    private class CBItem
+    {
+      #region Поля
+
+      public FileAssociationItem FA;
+
+      public Image Image;
+
+      public bool IsDefault;
+
+      public override string ToString()
+      {
+        if (FA == null)
+          return String.Empty;
+        return FA.DisplayName;
+      }
+
+      #endregion
+    }
+
+    private void ItemPainter(object sender, ListControlImageEventArgs args)
+    {
+      CBItem cbItem = args.Item as CBItem;
+      if (cbItem == null)
+        return;
+      if (cbItem.IsDefault)
+        args.Text += " (по умолчанию)";
+      args.Image = cbItem.Image;
+    }
+
+    #endregion
+
+    #region Свойство FileExt
+
+    /// <summary>
+    /// Расширение файла.
+    /// В расширении должна быть задана ведущая точка.
+    /// Установка свойства заполняет выпадающий список.
+    /// </summary>
+    public string FileExt
+    {
+      get { return _FileExt; }
+      set
+      {
+        _FileExt = value;
+
+        FreeLibSet.Shell.FileAssociations faItems;
+        if (EFPApp.FileExtAssociations.IsSupported && (!String.IsNullOrEmpty(_FileExt)))
+          faItems = EFPApp.FileExtAssociations[_FileExt];
+        else
+          faItems = FreeLibSet.Shell.FileAssociations.Empty;
+
+        List<string> lstCodes = new List<string>();
+        List<CBItem> lstItems = new List<CBItem>();
+
+        int selIndex = -1;
+
+        Control.BeginUpdate();
+        try
+        {
+          for (int i = 0; i < faItems.Count; i++)
+          {
+            lstItems.Add(CreateCBItem(faItems[i], false));
+            lstCodes.Add(faItems[i].DisplayName);
+          }
+
+          _FileAssociations = null;
+          Control.Items.Clear();
+          Control.Items.AddRange(lstItems.ToArray());
+          base.Codes = lstCodes.ToArray();
+
+          if (selIndex >= 0)
+            Control.SelectedIndex = selIndex;
+        }
+        finally
+        {
+          Control.EndUpdate();
+        }
+      }
+    }
+
+    #region Свойство FileAssociations
+
+    /// <summary>
+    /// Список элементов для выбора в виде массива
+    /// </summary>
+    public FileAssociationItem[] FileAssociations
+    {
+      get { return _FileAssociations; }
+      set
+      {
+        if (value == null)
+          value = new FileAssociationItem[0];
+        _FileAssociations = value;
+        Control.BeginUpdate();
+        try
+        {
+          CBItem[] cbItems = new CBItem[_FileAssociations.Length];
+          string[] aCodes = new string[_FileAssociations.Length];
+
+          for (int i = 0; i < _FileAssociations.Length; i++)
+          {
+            cbItems[i] = CreateCBItem(_FileAssociations[i], false);
+            aCodes[i] = _FileAssociations[i].DisplayName;
+          }
+
+          Control.Items.Clear();
+          Control.Items.AddRange(cbItems);
+          base.Codes = aCodes;
+        }
+        finally
+        {
+          Control.EndUpdate();
+        }
+      }
+    }
+    private FileAssociationItem[] _FileAssociations;
+
+    #endregion
+
+    private static CBItem CreateCBItem(FileAssociationItem fa, bool isDefault)
+    {
+      CBItem cbItem = new CBItem();
+      cbItem.FA = fa;
+      cbItem.Image = EFPApp.FileExtAssociations.GetIconImage(fa.IconPath, fa.IconIndex, true);
+      if (cbItem.Image == null)
+        cbItem.Image = EFPApp.MainImages.Images["EmptyImage"];
+      cbItem.IsDefault = isDefault;
+      return cbItem;
+    }
+
+    private string _FileExt;
 
     #endregion
   }

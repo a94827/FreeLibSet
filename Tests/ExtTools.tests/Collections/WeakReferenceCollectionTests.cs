@@ -5,6 +5,7 @@ using NUnit.Framework;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using System.Threading;
+using FreeLibSet.Tests;
 
 namespace ExtTools_tests.Collections
 {
@@ -46,7 +47,7 @@ namespace ExtTools_tests.Collections
       sut.Add(obj2);
       sut.Add(obj3);
 
-      DoGCCollect();
+      TestTools.GCCollect();
 
       Assert.AreEqual(3, sut.Count, "Count");
       Assert.AreEqual(3, sut.ToArray().Length, "ToArray.Length");
@@ -97,7 +98,7 @@ namespace ExtTools_tests.Collections
           _SUT.Add(obj);
 
         if (_UseGCCollect)
-          DoGCCollect();
+          TestTools.GCCollect();
       }
 
       #endregion
@@ -197,7 +198,7 @@ namespace ExtTools_tests.Collections
       {
         sum2 += obj.Value;
         if (obj.Value == 4)
-          DoGCCollect();
+          TestTools.GCCollect();
       }
 
       Assert.AreEqual(sum2, sum1);
@@ -218,28 +219,16 @@ namespace ExtTools_tests.Collections
 
       WeakReferenceCollection<TestObject> sut = new WeakReferenceCollection<TestObject>();
       TestObject obj = DoAddRefs(sut, checkedItem); // Отдельный метод, чтобы можно было очистить список
+      Assert.AreEqual(checkedItem, obj.Value, "ChekedItem.Value");
 
       // Чистим ненужное
-      DoGCCollect();
+      TestTools.GCCollect();
 
       TestObject[] a = sut.ToArray();
-      Assert.AreEqual(1, a.Length, "ToArray().Length");
-      Assert.AreSame(obj, a[0], "Item");
+      CollectionAssert.AreEqual(new TestObject[1] { obj }, a, "ToArray()");
     }
 
-    /// <summary>
-    /// Вызов GC.Collect
-    /// </summary>
-    private static void DoGCCollect()
-    {
-      GC.Collect();
-
-      // В Mono этого недостаточно.
-      GC.WaitForPendingFinalizers();
-      GC.Collect();
-    }
-
-    private TestObject DoAddRefs(WeakReferenceCollection<TestObject> sut, int checkedItem)
+    private static TestObject DoAddRefs(WeakReferenceCollection<TestObject> sut, int checkedItem)
     {
       TestObject res = null;
       for (int i = 0; i < 4; i++)

@@ -1266,6 +1266,358 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
+  /// Словарь, поддерживающее автоматическое удаление значений.
+  /// Класс не является потокобезопасным. При необходимости можно использовать дополнительную обертку <see cref="SyncDictionary{TKey, TValue}"/>.
+  /// </summary>
+  /// <typeparam name="TKey">Ключ словаря</typeparam>
+  /// <typeparam name="TValue">Значения словаря, поддерживающие интерейс <see cref="IDisposable"/></typeparam>
+  // [Serializable] // SimpleDisposableObject не является сериализуемым типом
+  public class DisposableDictionary<TKey, TValue> : SimpleDisposableObject, IDictionary<TKey, TValue>, IDictionary, IReadOnlyObject
+    where TValue : IDisposable
+  {
+    #region Конструктор и Dispose()
+
+    /// <summary>
+    /// Создает пустой словарь с параметрами по умолчанию
+    /// </summary>
+    public DisposableDictionary()
+    {
+      _Dict = new Dictionary<TKey, TValue>();
+    }
+
+    /// <summary>
+    /// Создает пустой словарь с заданным компаратором
+    /// </summary>
+    /// <param name="comparer">Компаратор</param>
+    public DisposableDictionary(IEqualityComparer<TKey> comparer)
+    {
+      _Dict = new Dictionary<TKey, TValue>(comparer);
+    }
+
+    /// <summary>
+    /// Создает пустой словарь с заданной начальной емкостью и компаратором
+    /// </summary>
+    /// <param name="capacity">Начальная емкость</param>
+    /// <param name="comparer">Компаратор</param>
+    public DisposableDictionary(int capacity, IEqualityComparer<TKey> comparer)
+    {
+      _Dict = new Dictionary<TKey, TValue>(capacity, comparer);
+    }
+
+    /// <summary>
+    /// Создает пустой словарь с заданной начальной емкостью
+    /// </summary>
+    /// <param name="capacity">Начальная емкость</param>
+    public DisposableDictionary(int capacity)
+    {
+      _Dict = new Dictionary<TKey, TValue>(capacity);
+    }
+
+    /// <summary>
+    /// Создает обертку вокруг существующего словаря
+    /// </summary>
+    /// <param name="source">Исходный словарь. Не может быть null</param>
+    /// <param name="isReadOnly">Если true, то обертка будет сразу переведена в режим "Только чтение"</param>
+    public DisposableDictionary(IDictionary<TKey, TValue> source, bool isReadOnly)
+    {
+      if (source == null)
+        throw new ArgumentNullException("source");
+      _Dict = source;
+      _IsReadOnly = isReadOnly;
+    }
+
+    /// <summary>
+    /// Создает обертку вокруг существующего словаря
+    /// </summary>
+    /// <param name="source">Исходный словарь. Не может быть null</param>
+    public DisposableDictionary(IDictionary<TKey, TValue> source)
+      : this(source, false)
+    {
+    }
+
+    /// <summary>
+    /// Вызывает метод <see cref="Clear()"/> для удаления существующих объектов при вызове из <see cref="IDisposable.Dispose()"/>.
+    /// </summary>
+    /// <param name="disposing">True, если выполняется вызов <see cref="IDisposable.Dispose()"/></param>
+    protected override void Dispose(bool disposing)
+    {
+      //if (disposing || DisposeOnDestuction)
+        DoClear();
+
+      base.Dispose(disposing);
+    }
+
+    #endregion
+
+    #region Свойства
+
+    private IDictionary<TKey, TValue> _Dict;
+
+
+    // Нельзя реализовать свойство DisposeOnDestuction.
+    // Когда вызывается деструктор, то коллекция _Dict уже может быть разрушена и ее нельзя перебирать
+    ///// <summary>
+    ///// Нужно ли вызывать <see cref="IDisposable.Dispose()"/> для значений словаря, если вызван деструктор для текущего словаря.
+    ///// По умолчанию - false: Методы вызываются только при явном вызове Dispose(), но не деструктора.
+    ///// </summary>
+    //public bool DisposeOnDestuction
+    //{
+    //  get { return _DisposeOnDestuction; }
+    //  set { _DisposeOnDestuction = value; }
+    //}
+    //private bool _DisposeOnDestuction;
+
+
+    #endregion
+
+    #region Методы IDictionary
+
+    /// <summary>
+    /// Доступ к значению по ключу.
+    /// При установке значения свойства проверяется, не было ли значения с таким ключом.
+    /// Если значение было и значения не совпадают, вызывается <see cref="IDisposable.Dispose()"/> для старого значения
+    /// </summary>
+    /// <param name="key">Ключ</param>
+    /// <returns>Значение</returns>
+    public TValue this[TKey key]
+    {
+      get { return _Dict[key]; }
+
+      set
+      {
+        CheckNotReadOnly();
+        CheckNotDisposed();
+
+        TValue oldValue;
+        if (_Dict.TryGetValue(key, out oldValue))
+        {
+          if (EqualityComparer<TValue>.Default.Equals(oldValue, value))
+            return;
+
+          oldValue.Dispose();
+        }
+        _Dict[key] = value;
+      }
+    }
+
+    object IDictionary.this[object key]
+    {
+      get { return this[(TKey)key]; }
+      set { this[(TKey)key] = (TValue)value; }
+    }
+
+    /// <summary>
+    /// Возвращает количество элементов в словаре
+    /// </summary>
+    public int Count { get { return _Dict.Count; } }
+
+    /// <summary>
+    /// Возврашает коллекцию ключей.
+    /// Коллекция предназначена только для чтения.
+    /// </summary>
+    public ICollection<TKey> Keys { get { return _Dict.Keys; } }
+
+    /// <summary>
+    /// Возвращает коллекцию значений, соответствующих коллекции ключей <see cref="Keys"/>.
+    /// Коллекция предназначена только для чтения.
+    /// </summary>
+    public ICollection<TValue> Values { get { return _Dict.Values; } }
+
+
+    bool IDictionary.IsFixedSize { get { return ((IDictionary)_Dict).IsFixedSize; } }
+
+    bool ICollection.IsSynchronized { get { return ((ICollection)_Dict).IsSynchronized; } }
+
+    ICollection IDictionary.Keys { get { return ((IDictionary)_Dict).Keys; } }
+
+    object ICollection.SyncRoot { get { return ((ICollection)_Dict).SyncRoot; } }
+
+    ICollection IDictionary.Values { get { return ((IDictionary)_Dict).Values; } }
+
+    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
+    {
+      Add(item.Key, item.Value);
+    }
+
+    /// <summary>
+    /// Добавляет пару "Ключ-Значение" в словарь
+    /// </summary>
+    /// <param name="key">Ключ</param>
+    /// <param name="value">Значение</param>
+    public void Add(TKey key, TValue value)
+    {
+      CheckNotReadOnly();
+      CheckNotDisposed();
+      _Dict.Add(key, value);
+    }
+
+    /// <summary>
+    /// Очищает словарь.
+    /// Для каждого значения в словаре выполняется вызов <see cref="IDisposable.Dispose()"/>.
+    /// </summary>
+    public void Clear()
+    {
+      CheckNotReadOnly();
+      CheckNotDisposed();
+      DoClear();
+    }
+
+    private void DoClear()
+    {
+      foreach (KeyValuePair<TKey, TValue> pair in _Dict)
+        pair.Value.Dispose();
+      _Dict.Clear();
+    }
+
+    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
+    {
+      return _Dict.Contains(item);
+    }
+
+    /// <summary>
+    /// Возвращает true, если словарь содержит ключ
+    /// </summary>
+    /// <param name="key">Ключ</param>
+    /// <returns>Наличие ключа</returns>
+    public bool ContainsKey(TKey key)
+    {
+      return _Dict.ContainsKey(key);
+    }
+
+    /// <summary>
+    /// Копирует пары "Ключ-Значение" в указанный массив
+    /// </summary>
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="arrayIndex">Начальный индекс в массиве</param>
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    {
+      _Dict.CopyTo(array, arrayIndex);
+    }
+
+    bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
+    {
+      CheckNotReadOnly();
+      CheckNotDisposed();
+
+      if (!((ICollection<KeyValuePair<TKey, TValue>>)_Dict).Contains(item))
+        return false;
+
+      TValue oldValue = _Dict[item.Key];
+      oldValue.Dispose();
+      _Dict.Remove(item.Key);
+      return true;
+    }
+
+    /// <summary>
+    /// Удаляет из словаря элемент с указанным ключом.
+    /// Если элемент найден, то для него вызывается <see cref="IDisposable.Dispose()"/>.
+    /// </summary>
+    /// <param name="key">Ключ</param>
+    /// <returns>True, если значение было найдено и удалено</returns>
+    public bool Remove(TKey key)
+    {
+      CheckNotReadOnly();
+      CheckNotDisposed();
+
+      TValue oldValue;
+      if (_Dict.TryGetValue(key, out oldValue))
+      {
+        oldValue.Dispose();
+        _Dict.Remove(key);
+        return true;
+      }
+      else
+        return false;
+    }
+
+    /// <summary>
+    /// Пытается найти значение с указанным ключом
+    /// </summary>
+    /// <param name="key">Ключ</param>
+    /// <param name="value">Сюда помещается значение, если оно найдено в словаре</param>
+    /// <returns>True, если значение найдено</returns>
+    public bool TryGetValue(TKey key, out TValue value)
+    {
+      return _Dict.TryGetValue(key, out value);
+    }
+
+    void IDictionary.Add(object key, object value)
+    {
+      CheckNotReadOnly();
+      CheckNotDisposed();
+      _Dict.Add((TKey)key, (TValue)value);
+    }
+
+
+    bool IDictionary.Contains(object key)
+    {
+      return ContainsKey((TKey)key);
+    }
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      ((ICollection)_Dict).CopyTo(array, index);
+    }
+
+    void IDictionary.Remove(object key)
+    {
+      Remove((TKey)key);
+    }
+
+    #endregion
+
+    #region GetEnumerator()
+
+    /// <summary>
+    /// Возвращет перечислитель по парам "Ключ-Значение"
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    {
+      return _Dict.GetEnumerator();
+    }
+
+    IDictionaryEnumerator IDictionary.GetEnumerator()
+    {
+      return ((IDictionary)_Dict).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return GetEnumerator();
+    }
+
+    #endregion
+
+    #region IObjectReadOnly
+
+    /// <summary>
+    /// Возвращает true, если словарь находится в режиме "Только чтение"
+    /// </summary>
+    public bool IsReadOnly { get { return _IsReadOnly; } }
+    private bool _IsReadOnly;
+
+    /// <summary>
+    /// Выбрасывает исключение, если <see cref="IsReadOnly"/>=true.
+    /// </summary>
+    public void CheckNotReadOnly()
+    {
+      if (_IsReadOnly)
+        throw new ObjectReadOnlyException();
+    }
+
+    /// <summary>
+    /// Переводит словарь в режим "Только чтение"
+    /// </summary>
+    protected void SetReadOnly()
+    {
+      _IsReadOnly = true;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
   /// Потокобезопасная коллекция объектов, реализующая перечислитель по копии списка.
   /// Этот класс не является сериализуемым.
   /// </summary>
@@ -6009,7 +6361,7 @@ namespace FreeLibSet.Collections
   [Serializable]
   public class RepeatableDictionary<TKey, TValue> : IDictionary<TKey, TValue[]>, IDictionary, IReadOnlyObject
   {
-    #region Вложенные типы данных
+  #region Вложенные типы данных
 
     /// <summary>
     /// Элементы внутренней коллекции.
@@ -6020,7 +6372,7 @@ namespace FreeLibSet.Collections
     [Serializable]
     private struct DictValue<TValue>
     {
-      #region Конструктор
+  #region Конструктор
 
       internal DictValue(TValue value, ValueNode<TValue> chain)
       {
@@ -6028,9 +6380,9 @@ namespace FreeLibSet.Collections
         _Chain = chain;
       }
 
-      #endregion
+  #endregion
 
-      #region Свойства
+  #region Свойства
 
       /// <summary>
       /// Первое значение для данного ключа
@@ -6044,7 +6396,7 @@ namespace FreeLibSet.Collections
       internal ValueNode<TValue> Chain { get { return _Chain; } }
       private readonly ValueNode<TValue> _Chain;
 
-      #endregion
+  #endregion
     }
 
     /// <summary>
@@ -6056,7 +6408,7 @@ namespace FreeLibSet.Collections
     [Serializable]
     private class ValueNode<TValue>
     {
-      #region Конструктор
+  #region Конструктор
 
       internal ValueNode(TValue value, ValueNode<TValue> next)
       {
@@ -6064,9 +6416,9 @@ namespace FreeLibSet.Collections
         _Next = next;
       }
 
-      #endregion
+  #endregion
 
-      #region Свойства
+  #region Свойства
 
       /// <summary>
       /// Очередное значение для ключа
@@ -6080,12 +6432,12 @@ namespace FreeLibSet.Collections
       internal ValueNode<TValue> Next { get { return _Next; } }
       private readonly ValueNode<TValue> _Next;
 
-      #endregion
+  #endregion
     }
 
-    #endregion
+  #endregion
 
-    #region Конструкторы
+  #region Конструкторы
 
     public RepeatableDictionary()
     {
@@ -6121,15 +6473,15 @@ namespace FreeLibSet.Collections
         _Dict.Add(pair.Key, new DictValue<TValue>(pair.Value, null));
     }
 
-    #endregion
+  #endregion
 
-    #region Основная коллекция данных
+  #region Основная коллекция данных
 
     private Dictionary<TKey, DictValue<TValue>> _Dict;
 
-    #endregion
+  #endregion
 
-    #region IDictionary<TKey,TValue[]> Members
+  #region IDictionary<TKey,TValue[]> Members
 
     /// <summary>
     /// Добавляет значение в словарь.
@@ -6251,9 +6603,9 @@ namespace FreeLibSet.Collections
       }
     }
 
-    #endregion
+  #endregion
 
-    #region ICollection<KeyValuePair<TKey,TValue[]>> Members
+  #region ICollection<KeyValuePair<TKey,TValue[]>> Members
 
     void ICollection<KeyValuePair<TKey, TValue[]>>.Add(KeyValuePair<TKey, TValue[]> item)
     {
@@ -6290,25 +6642,25 @@ namespace FreeLibSet.Collections
       throw new NotImplementedException();
     }
 
-    #endregion
+  #endregion
 
-    #region IEnumerable<KeyValuePair<TKey,TValue[]>> Members
+  #region IEnumerable<KeyValuePair<TKey,TValue[]>> Members
 
     IEnumerator<KeyValuePair<TKey, TValue[]>> IEnumerable<KeyValuePair<TKey, TValue[]>>.GetEnumerator()
     {
       throw new NotImplementedException();
     }
 
-    #endregion
+  #endregion
 
-    #region IEnumerable Members
+  #region IEnumerable Members
 
     IEnumerator IEnumerable.GetEnumerator()
     {
       throw new NotImplementedException();
     }
 
-    #endregion
+  #endregion
   }
 #endif
 

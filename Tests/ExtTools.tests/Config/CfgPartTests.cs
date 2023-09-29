@@ -6,11 +6,12 @@ using FreeLibSet.Config;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
+using FreeLibSet.Tests;
 
 namespace ExtTools_tests.Config
 {
   [TestFixture]
-  public abstract class CfgPartTests
+  public abstract class CfgPartTests: FixtureWithSetUp
   {
     #region Абстрактные методы
 
@@ -2342,19 +2343,18 @@ namespace ExtTools_tests.Config
   {
     #region Временный файл
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
       _TempDir = new TempDirectory();
       _File = new XmlCfgFile(new AbsPath(_TempDir.Dir, "test.xml"));
     }
 
-
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_TempDir != null)
         _TempDir.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private TempDirectory _TempDir;
@@ -2599,15 +2599,15 @@ namespace ExtTools_tests.Config
 
     private string TestSubKey;
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       TestSubKey = Guid.NewGuid().ToString("B");
       _Object = new RegistryCfg(RootPath + "\\" + TestSubKey);
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Object != null)
       {
@@ -2616,6 +2616,8 @@ namespace ExtTools_tests.Config
         catch { }
         _Object.Dispose();
       }
+
+      base.OnOneTimeTearDown();
     }
 
     private RegistryCfg _Object;
@@ -2754,16 +2756,15 @@ namespace ExtTools_tests.Config
 
     private string TestSubKey;
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       TestSubKey = Guid.NewGuid().ToString("B");
       _Object = new RegistryCfg2(RootPath + "\\" + TestSubKey, false, FreeLibSet.Win32.RegistryView2.Default);
     }
 
-
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Object != null)
       {
@@ -2771,6 +2772,8 @@ namespace ExtTools_tests.Config
         _Object.Tree.DeleteTree(_Object.KeyName);
         _Object.Dispose();
       }
+
+      base.OnOneTimeTearDown();
     }
 
     private RegistryCfg2 _Object;
@@ -3034,17 +3037,12 @@ namespace ExtTools_tests.Config
 
     private IniFile _File;
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
       _File = new IniFile();
     }
 
-
-    [OneTimeTearDown]
-    public void TearDown()
-    {
-    }
 
     int _Count;
 
@@ -3090,19 +3088,20 @@ namespace ExtTools_tests.Config
     TempDirectory _Dir;
     private FreeLibSet.Win32.IniFileWindows _File;
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
+
       _Dir = new TempDirectory();
       _File = new FreeLibSet.Win32.IniFileWindows(new AbsPath(_Dir.Dir, "test.ini"));
     }
 
-
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_Dir != null)
         _Dir.Dispose();
+
+      base.OnOneTimeTearDown();
     }
 
     int _Count;

@@ -635,13 +635,37 @@ namespace FreeLibSet.Formatting
     {
       string s1 = formatInfo.AMDesignator;
       string s2 = formatInfo.PMDesignator;
-      int nChars = Math.Max(s1.Length, s2.Length);
+      ampmTextWidth = Math.Max(s1.Length, s2.Length);
       // Вряд ли десигнаторы могут быть разной длины, но на всякий случай проверим
-      s1 = s1.PadRight(nChars);
-      s2 = s2.PadRight(nChars);
 
+      bool hasStrangeChars = false;
+      for (int i = 0; i < s1.Length; i++)
+      {
+        UnicodeCategory uc = Char.GetUnicodeCategory(s1, i);
+        if (!Char.IsLetterOrDigit(s1, i))
+        {
+          hasStrangeChars = true;
+          break;
+        }
+      }
+      for (int i = 0; i < s2.Length; i++)
+      {
+        if (!Char.IsLetterOrDigit(s2, i))
+        {
+          hasStrangeChars = true;
+          break;
+        }
+      }
+
+      if (hasStrangeChars)
+        return new String('C', ampmTextWidth); // 20.07.2023
+
+      s1 = s1.PadRight(ampmTextWidth);
+      s2 = s2.PadRight(ampmTextWidth);
+
+      
       StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < nChars; i++)
+      for (int i = 0; i < ampmTextWidth; i++)
       {
         if (s1[i] == s2[i])
         {
@@ -656,7 +680,6 @@ namespace FreeLibSet.Formatting
         }
       }
 
-      ampmTextWidth = nChars;
       return sb.ToString();
     }
 

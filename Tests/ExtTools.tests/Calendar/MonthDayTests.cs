@@ -3,18 +3,26 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Calendar;
+using FreeLibSet.Tests;
+using FreeLibSet.Remoting;
 
 namespace ExtTools_tests.Calendar
 {
   [TestFixture]
   public class MonthDayTests
   {
+    #region Константы для тестов
+
     /// <summary>
     /// Номер дня в году для 8 марта
     /// </summary>
     const int March8Day = 31 + 28 + 8;
     const int February28Day = 31 + 28;
     const int March1Day = 31 + 28 + 1;
+
+    #endregion
+
+    #region Конструкторы
 
     [Test]
     public void Constructor_Day()
@@ -47,6 +55,10 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(8, sut.Day, "Day");
     }
 
+    #endregion
+
+    #region Статические экземпляры
+
     [Test]
     public void Empty()
     {
@@ -59,6 +71,10 @@ namespace ExtTools_tests.Calendar
       Assert.IsTrue(MonthDay.Empty.PrevDay.IsEmpty, "PrevDay");
       Assert.IsTrue(MonthDay.Empty.AddDays(1).IsEmpty, "AddDays()");
     }
+
+    #endregion
+
+    #region Bottom/EndOfXxx
 
     [Test]
     public void BottomOfMonth()
@@ -100,15 +116,19 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(365, MonthDay.EndOfYear.DayOfYear);
     }
 
+    #endregion
+
+    #region Next/PrevDay
+
     [TestCase("0308", "0309")]
     [TestCase("0101", "0102")]
     [TestCase("1231", "0101")]
     [TestCase("0228", "0301")]
     public void NextDay(string sCurr, string sWanted)
     {
-      MonthDay sut = Creators.CreateMonthDay(sCurr);
+      MonthDay sut = Creators.MonthDay(sCurr);
       MonthDay res = sut.NextDay;
-      MonthDay wanted = Creators.CreateMonthDay(sWanted);
+      MonthDay wanted = Creators.MonthDay(sWanted);
       Assert.AreEqual(wanted, res);
     }
 
@@ -118,11 +138,15 @@ namespace ExtTools_tests.Calendar
     [TestCase("0301", "0228")]
     public void PrevDay(string sCurr, string sWanted)
     {
-      MonthDay sut = Creators.CreateMonthDay(sCurr);
+      MonthDay sut = Creators.MonthDay(sCurr);
       MonthDay res = sut.PrevDay;
-      MonthDay wanted = Creators.CreateMonthDay(sWanted);
+      MonthDay wanted = Creators.MonthDay(sWanted);
       Assert.AreEqual(wanted, res);
     }
+
+    #endregion
+
+    #region Операторы
 
     [TestCase("0228", 1, "0301")]
     [TestCase("0228", 3 * 365 + 1, "0301")]
@@ -132,9 +156,9 @@ namespace ExtTools_tests.Calendar
     [TestCase("0228", 365, "0228")]
     public void Operator_Add_Days(string sCurr, int days, string sWanted)
     {
-      MonthDay arg = Creators.CreateMonthDay(sCurr);
+      MonthDay arg = Creators.MonthDay(sCurr);
       MonthDay res = arg + days;
-      MonthDay wanted = Creators.CreateMonthDay(sWanted);
+      MonthDay wanted = Creators.MonthDay(sWanted);
       Assert.AreEqual(wanted, res);
     }
 
@@ -146,9 +170,9 @@ namespace ExtTools_tests.Calendar
     [TestCase("0228", 365, "0228")]
     public void Operator_Substract_Days(string sCurr, int days, string sWanted)
     {
-      MonthDay arg = Creators.CreateMonthDay(sCurr);
+      MonthDay arg = Creators.MonthDay(sCurr);
       MonthDay res = arg - days;
-      MonthDay wanted = Creators.CreateMonthDay(sWanted);
+      MonthDay wanted = Creators.MonthDay(sWanted);
       Assert.AreEqual(wanted, res);
     }
 
@@ -159,11 +183,15 @@ namespace ExtTools_tests.Calendar
     [TestCase("0228", "0301", 364)]
     public void Operator_Substract_MonthDay(string arg1, string arg2, int wanted)
     {
-      MonthDay arg1a = Creators.CreateMonthDay(arg1);
-      MonthDay arg2a = Creators.CreateMonthDay(arg2);
+      MonthDay arg1a = Creators.MonthDay(arg1);
+      MonthDay arg2a = Creators.MonthDay(arg2);
       int res = arg1a - arg2a;
       Assert.AreEqual(wanted, res);
     }
+
+    #endregion
+
+    #region AddDays()
 
     [TestCase("0101", 1, 2)]
     [TestCase("1231", 1, 1)]
@@ -173,11 +201,15 @@ namespace ExtTools_tests.Calendar
     [TestCase("0101", 0, 1)]
     public void AddDays(string sCurr, int days, int wanted)
     {
-      MonthDay sut = Creators.CreateMonthDay(sCurr);
+      MonthDay sut = Creators.MonthDay(sCurr);
       MonthDay res = sut.AddDays(days);
       Assert.IsFalse(res.IsEmpty, "IsEmpty");
       Assert.AreEqual(wanted, res.DayOfYear, "DayOfYear");
     }
+
+    #endregion
+
+    #region GetDate()
 
     [TestCase("0101", 2021, false, "20210101")]
     [TestCase("0228", 2020, false, "20200228")]
@@ -186,9 +218,27 @@ namespace ExtTools_tests.Calendar
     [TestCase("0228", 2021, true, "20210228")]
     public void GetDate(string sCurr, int year, bool february29, string sRes)
     {
-      MonthDay sut = Creators.CreateMonthDay(sCurr);
+      MonthDay sut = Creators.MonthDay(sCurr);
       DateTime dt = sut.GetDate(year, february29);
-      Assert.AreEqual(Creators.CreateDate(sRes), dt);
+      Assert.AreEqual(Creators.DateTime(sRes), dt);
     }
+
+    #endregion
+
+    #region Сериализация
+
+    [Test]
+    public void Serialization()
+    {
+      MonthDay sut = new MonthDay(7, 18);
+
+      byte[] b = SerializationTools.SerializeBinary(sut);
+      MonthDay res = (MonthDay)(SerializationTools.DeserializeBinary(b));
+
+      Assert.AreEqual(sut.Month, res.Month, "Month");
+      Assert.AreEqual(sut.Day, res.Day, "Day");
+    }
+
+    #endregion
   }
 }

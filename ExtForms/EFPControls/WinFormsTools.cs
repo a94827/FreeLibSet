@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms
         Control control2 = null;
         if (control is ToolStripContainer)
           control2 = ((ToolStripContainer)control).ContentPanel.GetNextControl(null, true);
-        else if ((control is ContainerControl || control is Panel|| control is GroupBox))
+        else if ((control is ContainerControl || control is Panel || control is GroupBox))
           control2 = control.GetNextControl(null, true);
         if (control2 == null || control2 == control)
           break;
@@ -477,6 +477,13 @@ namespace FreeLibSet.Forms
     /// <param name="child">Добавляемый управляющий элемент</param>
     public static void AddControlAndScale(Control newParent, Control child)
     {
+#if DEBUG
+      if (newParent == null)
+        throw new ArgumentNullException("newParent");
+      if (child == null)
+        throw new ArgumentNullException("child");
+#endif
+
       Form oldForm = child.FindForm();
       Form newForm = newParent.FindForm();
       child.Parent = null;
@@ -2502,9 +2509,26 @@ namespace FreeLibSet.Forms
             _AppIconDefined = true;
             try
             {
+#if OLD
               //FAppIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
               if (!FileTools.ApplicationPath.IsEmpty)
                 _AppIcon = Icon.ExtractAssociatedIcon(FileTools.ApplicationPath.Path); // 10.04.2015
+#else
+              // 08.09.2023
+              // Не используем функции Windows для получения значка
+              if (!FileTools.ApplicationPath.IsEmpty)
+              {
+                using (Win32.ExeFileInfo fi = new Win32.ExeFileInfo(FileTools.ApplicationPath))
+                {
+                  byte[] b = fi.Resources.GetIconBytes();
+                  if (b != null)
+                  {
+                    MemoryStream ms = new MemoryStream(b);
+                    _AppIcon = new Icon(ms);
+                  }
+                }
+              }
+#endif
             }
             catch
             {
@@ -2555,6 +2579,26 @@ namespace FreeLibSet.Forms
       if (!System.IO.File.Exists(filePath.Path))
         return null;
 
+      if (EnvironmentTools.IsMono && Win32.ExeFileInfo.IsExeExtension(filePath.Extension))
+      {
+        using (Win32.ExeFileInfo fi = new Win32.ExeFileInfo(filePath))
+        {
+          if (fi.Resources != null)
+          {
+            byte[] b = fi.Resources.ExtractIconBytes(iconIndex, smallIcon);
+            if (b == null)
+              return null;
+            else
+            {
+              MemoryStream ms = new MemoryStream(b);
+              return new Icon(ms);
+            }
+          }
+          else
+            return null;
+        }
+      }
+
       switch (Environment.OSVersion.Platform)
       {
         case PlatformID.Win32NT:
@@ -2578,7 +2622,10 @@ namespace FreeLibSet.Forms
           hIcon = DoExtractSmallIcon(filePath, iconIndex);
       }
       if (hIcon == IntPtr.Zero)
+      {
+        //EFPApp.MessageBox("Для значка " + filePath + ", IconIndex=" + iconIndex + " ExtractIcon/Ex() вернули IntPtr.Zero ");
         return null;
+      }
 
       // К сожалению, нельзя вернуть значок, чтобы Net Framework отвечал за вызов DestroyIcon,
       // т.к. соответствующий конструктор защищенный.
@@ -2675,6 +2722,41 @@ namespace FreeLibSet.Forms
       Image img2 = CreateThumbnailImage(icon.ToBitmap(), maxSize);
       icon.Dispose();
       return img2;
+    }
+
+    #endregion
+
+    #region Значок из изображения
+
+    /// <summary>
+    /// Инициализирует свойства <see cref="Form.Icon"/> и <see cref="Form.ShowIcon"/> с помощью изображения <paramref name="image"/>
+    /// </summary>
+    /// <param name="form"></param>
+    /// <param name="image"></param>
+    /// <returns></returns>
+    public static void InitIcon(Form form, Image image)
+    {
+      Icon ico = GetIcon(image);
+      if (ico == null)
+        form.ShowIcon = false;
+      else
+      {
+        form.Icon = ico;
+        form.ShowIcon = true;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает з
+    /// </summary>
+    /// <param name="image"></param>
+    /// <returns></returns>
+    public static Icon GetIcon(Image image)
+    {
+      Bitmap bmp = image as Bitmap;
+      if (bmp == null)
+        return null;
+      return Icon.FromHandle(bmp.GetHicon());
     }
 
     #endregion

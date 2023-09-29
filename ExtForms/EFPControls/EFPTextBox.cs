@@ -175,6 +175,18 @@ namespace FreeLibSet.Forms
     /// Команды локального меню
     /// </summary>
     new EFPTextBoxCommandItems CommandItems { get; }
+
+    /// <summary>
+    /// Возвращает true, если в поле допускается вводить символы разного регистра.
+    /// Если задано свойство <see cref="TextBox.CharacterCasing"/>, то возвращается false.
+    /// В этом случае в локальном меню недоступны команды изменения регистра.
+    /// </summary>
+    bool NormalCharacterCasing { get; }
+
+    /// <summary>
+    /// Возврашает провайдер ввода текста по маске для провайдеров <see cref="EFPMaskedTextBox"/> и <see cref="EFPMaskedComboBox"/>
+    /// </summary>
+    MaskedTextProvider MaskedTextProvider { get; }
   }
 
   /// <summary>
@@ -269,7 +281,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnValidate()
     {
-      base.OnValidate();
+      base.OnValidate(); // ничего не делает, формальность
       if (base.ValidateState == UIValidateState.Error)
         return; // никогда не будет
 
@@ -317,7 +329,7 @@ namespace FreeLibSet.Forms
     /// Создает EFPTextBoxCommandItems.
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       //if (EFPApp.EasyInterface)
       //  return base.GetCommandItems();
@@ -803,6 +815,10 @@ namespace FreeLibSet.Forms
         SelectedText = s;
     }
 
+    bool IEFPTextBox.NormalCharacterCasing { get { return true; } }
+
+    MaskedTextProvider IEFPTextBox.MaskedTextProvider { get { return null; } }
+
     #endregion
 
     #region IEFPSimpleTextBox Members
@@ -1137,6 +1153,10 @@ namespace FreeLibSet.Forms
       Control.Paste();
     }
 
+    bool IEFPTextBox.NormalCharacterCasing { get { return Control.CharacterCasing == CharacterCasing.Normal; } }
+
+    MaskedTextProvider IEFPTextBox.MaskedTextProvider { get { return null; } }
+
     #endregion
 
     #region IEFPTextBoxWithStatusBar Members
@@ -1212,7 +1232,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnValidate()
     {
-      base.OnValidate();
+      base.OnValidate(); // проверка на пустое значение
 
       if (ValidateState == UIValidateState.Error)
         return;
@@ -1249,18 +1269,25 @@ namespace FreeLibSet.Forms
       {
         if (Control.MaskedTextProvider == null)
           return Control.Text;
-        if (Control.MaskedTextProvider.AssignedEditPositionCount == 0)
-          return "";
+        else
+          return UITools.GetMaskedText(Control.MaskedTextProvider);
 
-        // Убрано 27.03.2013
-        // if (Control.MaskCompleted)
-        //   return Control.Text;
+        //if (Control.MaskedTextProvider.AssignedEditPositionCount == 0)
+        //  return "";
 
-        // Маска заполнена частично
-        int p = Control.MaskedTextProvider.LastAssignedPosition;
-        if (p >= Control.Text.Length)
-          return Control.Text;
-        return Control.Text.Substring(0, p + 1);
+        //// Убрано 27.03.2013
+        //// Например, если задана маска "00.##" и введено значение "12.  ", то MaskCompleted=true, но Text="12.". Должно возвращаться значение "12".
+        //// if (Control.MaskCompleted)
+        ////   return Control.Text;
+
+        //if (Control.MaskedTextProvider.AssignedEditPositionCount == Control.MaskedTextProvider.EditPositionCount)
+        //  return Control.Text;
+
+        //// Маска заполнена частично
+        //int p = Control.MaskedTextProvider.LastAssignedPosition;
+        //if (p >= Control.Text.Length)
+        //  return Control.Text;
+        //return Control.Text.Substring(0, p + 1);
       }
       set
       {
@@ -1285,6 +1312,10 @@ namespace FreeLibSet.Forms
       get { return Control.MaxLength; }
       set { Control.MaxLength = value; }
     }
+
+    bool IEFPTextBox.NormalCharacterCasing { get { return UITools.IsNormalCharacterCasing(Control.MaskedTextProvider); } }
+
+    MaskedTextProvider IEFPTextBox.MaskedTextProvider { get { return Control.MaskedTextProvider; } }
 
     #endregion
 
@@ -1691,6 +1722,10 @@ namespace FreeLibSet.Forms
       Control.Paste();
     }
 
+    bool IEFPTextBox.NormalCharacterCasing { get { return true; } }
+
+    MaskedTextProvider IEFPTextBox.MaskedTextProvider { get { return null; } }
+
     #endregion
 
     #region IEFPTextBoxWithStatusBar Members
@@ -2002,7 +2037,7 @@ namespace FreeLibSet.Forms
     /// <param name="alwaysReadOnly">Если true, то не будут созданы команды "Вырезать" и "Вставить",
     /// а будет только команда "Копировать"</param>
     public EFPTextBoxCommandItems(IEFPSimpleTextBox controlProvider, bool useConvert, bool alwaysReadOnly)
-      :base((EFPControlBase)controlProvider)
+      : base((EFPControlBase)controlProvider)
     {
       _Owner = controlProvider;
 
@@ -2089,7 +2124,8 @@ namespace FreeLibSet.Forms
 
       if (controlProvider is IEFPTextBox)
       {
-        if (((IEFPTextBox)controlProvider).MultiLineSupported)
+        if (((IEFPTextBox)controlProvider).MultiLineSupported &&
+          ((IEFPTextBox)controlProvider).IsMultiLine /* 22.09.2023. Чтобы не запрашивать ассоциации для однострочного поля ввода*/ )
         {
           #region Вставить перевод строки
 
@@ -2112,7 +2148,7 @@ namespace FreeLibSet.Forms
           #endregion
 
           #region Отправить
-
+#if XXX
           ciMenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);
           ciMenuSendTo.Usage = EFPCommandItemUsage.Menu;
           Add(ciMenuSendTo);
@@ -2127,7 +2163,7 @@ namespace FreeLibSet.Forms
           ciSendToOpenOfficeWriter.Parent = ciMenuSendTo;
           ciSendToOpenOfficeWriter.Click += SendToOpenOfficeWriter;
           Add(ciSendToOpenOfficeWriter);
-
+#endif
           #endregion
         }
       }
@@ -2261,7 +2297,7 @@ namespace FreeLibSet.Forms
     #region Внутренняя реализация
 
     private EFPCommandItem ciUndo, ciCut, ciCopy, /*ciDelete, */ciSelectAll;
-    
+
     /// <summary>
     /// Обработчик для команды "Вставить".
     /// Если элемент предназначен исключительно только для чтения, свойство возвращает null.
@@ -2325,12 +2361,17 @@ namespace FreeLibSet.Forms
       bool canUndo = false; // выделено 27.12.2020
       bool isMultiLine = false; // выделено 27.12.2020
       bool acceptsReturn = false; // выделено 27.12.2020
+      bool normalCharacterCasing = true;
+      string mask = String.Empty;
       if (owner2 != null)
       {
         isPasswordInput = owner2.IsPasswordInput;
         canUndo = owner2.CanUndo;
         isMultiLine = owner2.IsMultiLine;
         acceptsReturn = owner2.AcceptsReturn;
+        normalCharacterCasing = owner2.NormalCharacterCasing;
+        if (owner2.MaskedTextProvider != null)
+          mask = owner2.MaskedTextProvider.Mask;
       }
 
       int textLength = Owner.TextLength;
@@ -2345,17 +2386,19 @@ namespace FreeLibSet.Forms
         ciCopy.Enabled = (selectionLength > 0) &&
           (!isPasswordInput); // 24.01.2019
       if (PasteHandler != null)
-        PasteHandler.Enabled = Owner.Editable; 
+        PasteHandler.Enabled = Owner.Editable;
       //ciDelete.EnabledEx=((!Control.DataReadOnly) && Control.SelectionLength>0);
       ciSelectAll.Enabled = (selectionLength < textLength);
       if (ciCase != null)
       {
         ciCase.Visible = !isPasswordInput; // 24.01.2019
 
-        ciUpperCase.Enabled = Owner.Editable && (textLength > 0) /*&& ControlCanChangeCase*/;
+        ciUpperCase.Enabled = Owner.Editable && (textLength > 0)
+          && normalCharacterCasing; // 19.07.2023
         ciLowerCase.Enabled = ciUpperCase.Enabled;
         ciChangeCase.Enabled = ciUpperCase.Enabled;
-        ciRusLat.Enabled = Owner.Editable && (textLength > 0);
+        ciRusLat.Enabled = Owner.Editable && (textLength > 0)
+          && String.IsNullOrEmpty(mask); // 19.07.2023. По идее, в некоторых случаях можно было бы и разрешить
         ciCase.Enabled = Owner.Editable;
       }
 
@@ -2367,10 +2410,12 @@ namespace FreeLibSet.Forms
           Keys.Control | Keys.Enter);
       }
 
+#if XXX
       if (ciSendToMicrosoftWord != null)
         ciSendToMicrosoftWord.Visible = EFPApp.MicrosoftWordVersion.Major > 0 && isMultiLine;
       if (ciSendToOpenOfficeWriter != null)
         ciSendToOpenOfficeWriter.Visible = EFPApp.OpenOfficeKind != OpenOfficeKind.Unknown && isMultiLine;
+#endif
 
       if (_FileAssociationsHandler != null)
         _FileAssociationsHandler.Visible = (!isPasswordInput) && // 24.01.2019
@@ -2475,9 +2520,9 @@ namespace FreeLibSet.Forms
       Owner.SelectedText = Environment.NewLine;
     }
 
-    #endregion
+#endregion
 
-    #region Команды поиска
+#region Команды поиска
 
     EFPCommandItem ciFind, ciFindNext;
 
@@ -2502,9 +2547,9 @@ namespace FreeLibSet.Forms
       ciFindNext.Enabled = owner2.TextSearchContext.ContinueEnabled;
     }
 
-    #endregion
+#endregion
 
-    #region Команды "Преобразовать"
+#region Команды "Преобразовать"
 
     /// <summary>
     /// Доступность команд "Преобразовать".
@@ -2584,9 +2629,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-    #endregion
+#endregion
 
-    #region Команды "Открыть" и "Открыть с помощью"
+#region Команды "Открыть" и "Открыть с помощью"
 
     /// <summary>
     /// Обработчик команд "Открыть" и "Открыть с помощью"
@@ -2618,10 +2663,10 @@ namespace FreeLibSet.Forms
         Owner.Text, enc);
     }
 
-    #endregion
+#endregion
 
-    #region Команды "Отправить"
-
+#region Команды "Отправить"
+#if XXX
     private EFPCommandItem ciMenuSendTo;
     private EFPCommandItem ciSendToMicrosoftWord, ciSendToOpenOfficeWriter;
 
@@ -2660,12 +2705,13 @@ namespace FreeLibSet.Forms
 
       string tempFileName = EFPApp.SharedTempDir.GetTempFileName("TXT").Path;
       System.IO.File.WriteAllText(tempFileName, text, Encoding.Default);
-      EFPApp.UsedOpenOffice.OpenWithWriter(new AbsPath(tempFileName), true);
+      EFPApp.UsedOpenOffice.Parts[OpenOfficePart.Writer].OpenFile(new AbsPath(tempFileName), true);
     }
 
-    #endregion
+#endif
+#endregion
 
-    #region Статусная строка
+#region Статусная строка
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то в статусной строке выводятся панельки "Строка"
@@ -2693,6 +2739,6 @@ namespace FreeLibSet.Forms
       ciStatusColumn.StatusBarText = "Столбец " + currCol.ToString();
     }
 
-    #endregion
+#endregion
   }
 }

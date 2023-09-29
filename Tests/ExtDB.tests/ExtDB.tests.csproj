@@ -111,6 +111,10 @@
       <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
       <Name>ExtTools</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExtTestHelpers\ExtTestHelpers.csproj">
+      <Project>{a9f0ba9d-6b87-4b3d-808b-91c0de371480}</Project>
+      <Name>ExtTestHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Others\x64\SQLite.Interop.dll">

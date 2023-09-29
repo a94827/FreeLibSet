@@ -7,11 +7,12 @@ using FreeLibSet.Core;
 using System.Data;
 using FreeLibSet.Data.SQLite;
 using FreeLibSet.Remoting;
+using FreeLibSet.Tests;
 
 namespace ExtDB_tests.Data
 {
   [TestFixture]
-  public class DBxStructTests
+  public class DBxStructTests:FixtureWithSetUp
   {
     #region Тестовые объекты
 
@@ -625,17 +626,17 @@ namespace ExtDB_tests.Data
 
     #region CheckStruct()
 
-    [OneTimeSetUp]
-    public void SetUp()
+    protected override void OnOneTimeSetUp()
     {
+      base.OnOneTimeSetUp();
       _CheckStructDB = new SQLiteDBx();
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    protected override void OnOneTimeTearDown()
     {
       if (_CheckStructDB != null)
         _CheckStructDB.Dispose();
+      base.OnOneTimeTearDown();
     }
 
     private SQLiteDBx _CheckStructDB;

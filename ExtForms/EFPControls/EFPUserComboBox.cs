@@ -1138,7 +1138,6 @@ namespace FreeLibSet.Forms
 
     #region Переопределенные методы и свойства
 
-
     /// <summary>
     /// Установка кнопки очистки
     /// </summary>

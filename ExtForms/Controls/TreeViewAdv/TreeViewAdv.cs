@@ -57,6 +57,60 @@ namespace FreeLibSet.Controls
     private List<TreeNodeAdv> _expandingNodes = new List<TreeNodeAdv>();
     private AbortableThreadPool _threadPool = new AbortableThreadPool();
 
+    #region Конструктор
+
+    /// <summary>
+    /// Создает управляющий элемент
+    /// </summary>
+    public TreeViewAdv()
+    {
+      InitializeComponent();
+      SetStyle(ControlStyles.AllPaintingInWmPaint
+        | ControlStyles.UserPaint
+        | ControlStyles.OptimizedDoubleBuffer // из-за этого флажка неправильно рисуются цвета в 16-цветном режиме
+        | ControlStyles.ResizeRedraw
+        | ControlStyles.Selectable
+        , true);
+
+
+      if (Application.RenderWithVisualStyles)
+        _columnHeaderHeight = 20;
+      else
+        _columnHeaderHeight = 17;
+
+      //BorderStyle = BorderStyle.Fixed3D;
+      _hScrollBar.Height = SystemInformation.HorizontalScrollBarHeight;
+      _vScrollBar.Width = SystemInformation.VerticalScrollBarWidth;
+      _rowLayout = new FixedRowHeightLayout(this, RowHeight);
+      _rowMap = new List<TreeNodeAdv>();
+      _selection = new List<TreeNodeAdv>();
+      _readonlySelection = new ReadOnlyCollection<TreeNodeAdv>(_selection);
+      _columns = new TreeColumnCollection(this);
+      _toolTip = new ToolTip();
+
+      _measureContext = new TreeViewAdvDrawContext();
+      _measureContext.Font = Font;
+      _measureContext.Graphics = Graphics.FromImage(new Bitmap(1, 1));
+
+      Input = new NormalInputState(this);
+      _search = new TreeViewAdvIncrementalSearch(this);
+      CreateNodes();
+      CreatePens();
+
+      ArrangeControls();
+
+      _plusMinus = new NodePlusMinus();
+      _controls = new NodeControlsCollection(this);
+
+      Font = _font;
+      ExpandingIcon.IconChanged += ExpandingIconChanged;
+
+      //base.BackColor = SystemColors.Window;
+      //base.ForeColor = SystemColors.WindowText;
+    }
+
+    #endregion
+
     #region Public Events
 
     [Category("Action")]
@@ -216,57 +270,6 @@ namespace FreeLibSet.Controls
     }
     #endregion
 
-    #region Конструктор
-
-    public TreeViewAdv()
-    {
-      InitializeComponent();
-      SetStyle(ControlStyles.AllPaintingInWmPaint
-        | ControlStyles.UserPaint
-        | ControlStyles.OptimizedDoubleBuffer // из-за этого флажка неправильно рисуются цвета в 16-цветном режиме
-        | ControlStyles.ResizeRedraw
-        | ControlStyles.Selectable
-        , true);
-
-
-      if (Application.RenderWithVisualStyles)
-        _columnHeaderHeight = 20;
-      else
-        _columnHeaderHeight = 17;
-
-      //BorderStyle = BorderStyle.Fixed3D;
-      _hScrollBar.Height = SystemInformation.HorizontalScrollBarHeight;
-      _vScrollBar.Width = SystemInformation.VerticalScrollBarWidth;
-      _rowLayout = new FixedRowHeightLayout(this, RowHeight);
-      _rowMap = new List<TreeNodeAdv>();
-      _selection = new List<TreeNodeAdv>();
-      _readonlySelection = new ReadOnlyCollection<TreeNodeAdv>(_selection);
-      _columns = new TreeColumnCollection(this);
-      _toolTip = new ToolTip();
-
-      _measureContext = new TreeViewAdvDrawContext();
-      _measureContext.Font = Font;
-      _measureContext.Graphics = Graphics.FromImage(new Bitmap(1, 1));
-
-      Input = new NormalInputState(this);
-      _search = new TreeViewAdvIncrementalSearch(this);
-      CreateNodes();
-      CreatePens();
-
-      ArrangeControls();
-
-      _plusMinus = new NodePlusMinus();
-      _controls = new NodeControlsCollection(this);
-
-      Font = _font;
-      ExpandingIcon.IconChanged += ExpandingIconChanged;
-
-      //base.BackColor = SystemColors.Window;
-      //base.ForeColor = SystemColors.WindowText;
-    }
-
-    #endregion
-
     void ExpandingIconChanged(object sender, EventArgs e)
     {
       if (IsHandleCreated && !IsDisposed)
@@ -313,7 +316,7 @@ namespace FreeLibSet.Controls
     #region Public Methods
 
     /// <summary>
-    /// Возвращает путь к заданному узлу от корня дерева. Путь содержит последовательность значений TreeNodeAdv.Tag
+    /// Возвращает путь к заданному узлу от корня дерева. Путь содержит последовательность значений <see cref="TreeNodeAdv.Tag"/>
     /// </summary>
     /// <param name="node">Узел, относящийся к дереву</param>
     /// <returns>Путь к узлу</returns>
@@ -333,12 +336,24 @@ namespace FreeLibSet.Controls
       }
     }
 
+    /// <summary>
+    /// Возвращает узел, к которому относится точка.
+    /// Если координаты точки не соответствуют никакому узлу, возвращается null.
+    /// </summary>
+    /// <param name="point">Координаты точки в системе координат управляющего элемента</param>
+    /// <returns>Узел</returns>
     public TreeNodeAdv GetNodeAt(Point point)
     {
       NodeControlInfo info = GetNodeControlInfoAt(point);
       return info.Node;
     }
 
+    /// <summary>
+    /// Возвращает узел и допонительную информацию, к которому относится точка.
+    /// Если координаты точки не соответствуют никакому узлу, возвращается <see cref="NodeControlInfo.Empty"/>.
+    /// </summary>
+    /// <param name="point">Координаты точки в системе координат управляющего элемента</param>
+    /// <returns>Информация об узле</returns>
     public NodeControlInfo GetNodeControlInfoAt(Point point)
     {
       if (point.X < 0 || point.Y < 0)
@@ -366,12 +381,19 @@ namespace FreeLibSet.Controls
         return NodeControlInfo.Empty;
     }
 
+    /// <summary>
+    /// Временно отключает перерисовку дерева и выброс исключений.
+    /// Вызовы <see cref="BeginUpdate()"/> и <see cref="EndUpdate()"/> должны выполняться парами с использованием блока using.
+    /// </summary>
     public void BeginUpdate()
     {
       _suspendUpdate = true;
       SuspendSelectionEvent = true;
     }
 
+    /// <summary>
+    /// Восстанавливает прорисовку, отключенную <see cref="BeginUpdate()"/>.
+    /// </summary>
     public void EndUpdate()
     {
       _suspendUpdate = false;
@@ -382,11 +404,17 @@ namespace FreeLibSet.Controls
       SuspendSelectionEvent = false;
     }
 
+    /// <summary>
+    /// Разворачивает все узлы дерева
+    /// </summary>
     public void ExpandAll()
     {
       _root.ExpandAll();
     }
 
+    /// <summary>
+    /// Сворачивает все узлы дерева
+    /// </summary>
     public void CollapseAll()
     {
       _root.CollapseAll();
@@ -395,6 +423,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Expand all parent nodes, and scroll to the specified node
     /// </summary>
+    /// <param name="node">Узел, который должен оказаться видимым в просмотре</param>
     public void EnsureVisible(TreeNodeAdv node)
     {
       if (node == null)
@@ -418,7 +447,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Make node visible, scroll if needed. All parent nodes of the specified node must be expanded
     /// </summary>
-    /// <param name="node"></param>
+    /// <param name="node">Узел, который должен оказаться видимым в просмотре</param>
     public void ScrollTo(TreeNodeAdv node)
     {
       if (node == null)
@@ -446,6 +475,10 @@ namespace FreeLibSet.Controls
         _vScrollBar.Value = row;
     }
 
+    /// <summary>
+    /// Очищает список выбранных узлов.
+    /// Для всех узлов устанавливается <see cref="TreeNodeAdv.IsSelected"/>=false.
+    /// </summary>
     public void ClearSelection()
     {
       BeginUpdate();
@@ -656,6 +689,9 @@ namespace FreeLibSet.Controls
       return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
     }
 
+    /// <summary>
+    /// Выполняет полное обновление всех узлов дерева
+    /// </summary>
     public void FullUpdate()
     {
       HideEditor();
@@ -762,6 +798,10 @@ namespace FreeLibSet.Controls
       public bool IgnoreChildren;
     }
 
+    /// <summary>
+    /// Прекращает все асинхронные операции по разворачиванию узлов.
+    /// Если <see cref="AsyncExpanding"/>=false, то асинхронное развертывание не используется и метод не выполняет никаких действий
+    /// </summary>
     public void AbortBackgroundExpandingThreads()
     {
       _threadPool.CancelAll(true);
@@ -954,6 +994,11 @@ namespace FreeLibSet.Controls
         FullUpdate();
     }
 
+    /// <summary>
+    /// Возвращает true, если узел принадлежит этому дереву (свойство <see cref="TreeNodeAdv.Tree"/>) и узел не был отсоединен.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
     internal bool IsMyNode(TreeNodeAdv node)
     {
       if (node == null)
@@ -997,11 +1042,26 @@ namespace FreeLibSet.Controls
       }
     }
 
+    /// <summary>
+    /// Найти узел в дереве.
+    /// Эта версия предполагает, что узел уже был прочитан, в противном случае узел не будет найден.
+    /// Поиск выполняется среди узлов с уровнем, определяемым длиной массива <see cref="TreePath.FullPath"/>.
+    /// </summary>
+    /// <param name="path">Путь в модели к искомому узлу</param>
+    /// <returns>Найденный узел или null</returns>
     public TreeNodeAdv FindNode(TreePath path)
     {
       return FindNode(path, false);
     }
 
+    /// <summary>
+    /// Найти узел в дереве.
+    /// Эта версия позволяет выполнить чтение данных модели, для которых не были созданы узлы.
+    /// Поиск выполняется среди узлов с уровнем, определяемым длиной массива <see cref="TreePath.FullPath"/>.
+    /// </summary>
+    /// <param name="path">Путь в модели к искомому узлу</param>
+    /// <param name="readChilds">Если true, то будет выполняться чтение данных модели для создания недостающих узлов</param>
+    /// <returns>Найденный узел или null</returns>
     public TreeNodeAdv FindNode(TreePath path, bool readChilds)
     {
       if (path.IsEmpty)
@@ -1014,6 +1074,7 @@ namespace FreeLibSet.Controls
     {
       if (!root.IsExpandedOnce && readChilds)
         ReadChilds(root);
+
 
       for (int i = 0; i < root.Nodes.Count; i++)
       {
@@ -1029,6 +1090,12 @@ namespace FreeLibSet.Controls
       return null;
     }
 
+    /// <summary>
+    /// Найти узел по тегу модели.
+    /// Поиск выполняется среди всех узлов дерева, которые были прочитаны.
+    /// </summary>
+    /// <param name="tag"></param>
+    /// <returns></returns>
     public TreeNodeAdv FindNodeByTag(object tag)
     {
       return FindNodeByTag(_root, tag);
@@ -1047,6 +1114,9 @@ namespace FreeLibSet.Controls
       return null;
     }
 
+    /// <summary>
+    /// Пометить все узлы дерева
+    /// </summary>
     public void SelectAllNodes()
     {
       SuspendSelectionEvent = true;
@@ -1054,6 +1124,8 @@ namespace FreeLibSet.Controls
       {
         if (SelectionMode == TreeViewAdvSelectionMode.MultiSameParent)
         {
+          // TODO: Тут я не понимаю, почему используется CurrentNode, а не Root
+
           if (CurrentNode != null)
           {
             foreach (TreeNodeAdv n in CurrentNode.Parent.Nodes)

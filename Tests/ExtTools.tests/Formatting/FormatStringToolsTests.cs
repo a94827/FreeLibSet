@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using FreeLibSet.IO;
-using FreeLibSet.Core;
 using FreeLibSet.Formatting;
 using System.Threading;
 using System.Globalization;

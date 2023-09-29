@@ -827,7 +827,7 @@ namespace FreeLibSet.DBF
   /// Класс исключения, генерируемого при нарушении формата DBF-файла
   /// </summary>
   [Serializable]
-  public class DbfMemoFileMissingException : DbfFileFormatException 
+  public class DbfMemoFileMissingException : DbfFileFormatException
   {
     #region Конструктор
 
@@ -1120,6 +1120,11 @@ namespace FreeLibSet.DBF
         if ((code & 0x80) != 0)
         {
           AbsPath dbtPath = dbfPath.ChangeExtension(".DBT");
+          if (AbsPath.ComparisonType == StringComparison.Ordinal) // для Linux
+          {
+            if (!File.Exists(dbtPath.Path))
+              dbtPath = dbfPath.ChangeExtension(".dbt");
+          }
           if (File.Exists(dbtPath.Path))
           {
             if (isReadOnly)
@@ -1557,7 +1562,12 @@ namespace FreeLibSet.DBF
 
         if (dbStruct.HasMemo)
         {
-          AbsPath dbtFilePath = dbfPath.ChangeExtension(".dbt");
+          AbsPath dbtFilePath;
+          if (dbfPath.Extension == ".DBF")
+            dbtFilePath = dbfPath.ChangeExtension(".DBT");
+          else
+            dbtFilePath = dbfPath.ChangeExtension(".dbt");
+
           _fsDBT = new FileStream(dbtFilePath.Path, FileMode.Create, FileAccess.ReadWrite);
         }
 
@@ -2883,7 +2893,7 @@ namespace FreeLibSet.DBF
       for (int i = p1; i < p2; i++)
       {
         switch (_RecordBuffer[i])
-        { 
+        {
           case 0:
           case 32:
             break;

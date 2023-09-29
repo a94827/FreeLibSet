@@ -5,15 +5,15 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2023-07-16T16:34:03.109000000"/>
+	<meta name="changed" content="2023-08-25T21:08:35.025000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
-		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		td p { margin-bottom: 0.25cm; background: transparent; line-height: 120%; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 120% }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -45,10 +45,126 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">348</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">19.07.2023-26.09.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>1. Из геттера EFPTextBox, EFPMaskedComboBox.ControlText выделен
+			метод UITools.GetMaskedText()</p>
+			<p>2. Свойства IEFPTextBox.NormalCharacterCasing и
+			MaskedTextProvider. Используются в EFPTextBoxCommandItems для
+			блокировки команд подменю &quot;Преобразовать текст&quot;</p>
+			<p>3. Изменения в мастерах Wizard:</p>
+			<p>- Убраны свойства Wizard.ShowImage и WizardStep.ShowImage, так
+			как показ большого изображения не был реализован</p>
+			<p>- Свойство Wizard.OwmStatusBar</p>
+			<p>- Убраны свойства WizardStep и WizardTempPage.ControlOwning и
+			соответствующие перегрузки конструкторов. Свойство Control
+			является свойством однократной записи.</p>
+			<p>- Свойства WizardStep и WizardTempPage.Control могут быть
+			любого типа, не обязательно Panel</p>
+			<p>- Перегрузка конструктора WizardStep без аргументов, создающая
+			Panel</p>
+			<p>- Свойства WizardStep.Title, TitleForThisStepOnly (v.347 п.9) и
+			HelpContext можно устанавливать в процессе показа шага на экране</p>
+			<p>- Класс ExtWizardStep со свойствами GroupTitle, InfoText,
+			InfoIcon и InfoIconSize. Создает элементы GroupBox и InfoLabel при
+			необходимости. Используется в качестве базового для других классов
+			взамен WizardStepWithGroupBox</p>
+			<p>- WizardStepWithMessage наследуется от ExtWizardStep и
+			использует InfoLabel. Новое свойство UseInfoColor</p>
+			<p>- Изменен конструктор WizardStepWithDataGridView для создания
+			наследников EFPDataGridView. Требует аргумент-делегат для создания
+			провайдера. Убран защищенный метод DoInit()</p>
+			<p>- Вспомогательная структура WizardSplashHelper для упрощенной реализации заставок с использованием using</p>
+			<p>4. Перегрузки конструкторов EFPControlWithToolBar с аргументом
+			groupTitle для создания дополнительного GroupBox.</p>
+			<p>5. Свойства EFPDataGridViewColumn и
+			EFPGridProducerColumn.Summable. Внутренние изменения при
+			выполнении расчета суммирования ячеек для статусной строки
+			табличного просмотра.</p>
+			<p><span lang="en-US">6. </span><span lang="ru-RU">Метод
+			</span><span lang="en-US">EFPControlBase.GetCommandItems() (<a href="ExtForms_11.htm#v017p2">v.17
+			</a></span><a href="ExtForms_11.htm#v017p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">переименован в </span><span lang="en-US">CreateCommandItems()</span></p>
+			<p>7. Событие ExtPrintPreviewControl.DocumentChanged. Свойство
+			PageCount, которое обычно вычисляется автоматически, но может быть
+			установлено</p>
+			<p>8. Команды локального меню
+			EFPExtPrintPreviewControlCommandItems. В частности, выполняется
+			рисование сантиметровой сетки</p>
+			<p lang="en-US">9. <span lang="ru-RU">Перечисление
+			EFPReportExtParams</span>Part <span lang="ru-RU">переименовано в
+			</span>SettingsPart <span lang="ru-RU">и перенесено в
+			</span>ExtTools.dll, <span lang="ru-RU">пространство имен
+			</span>FreeLibSet.Config</p>
+			<p>9. Автоматическое добавление значка и текстового столбца при их
+			отсутствии выполняется в EFPTreeViewAdv.InitDefaultNodeControls()
+			и в режиме TreeViewAdv.UseColumns=true. Если текстовый столбец
+			есть, а значка - нет, то значок ошибочно добавлялся после текста,
+			а не до него.</p>
+			<p>10. Реализация доступа к объектам EFPDataTreeViewColumn в
+			коллекции EFPDataTreeViewColumns с автоматической генерацией
+			недостающих объектов столбцов.</p>
+			<p>11. Обобщенные интерфейсы IEFPDataViewColumn (вместо
+			EFPDataViewColumnInfo) и IEFPDataViewColumns. Убран интерфейс
+			IEFPGridControl. Его методы перенесены в IEFPDataView</p>
+			<p>12. Изменена реализация
+			EFPDataGridView.InternalSetCurrentOrder(). Если набор данных
+			DataView присоединяется до вывода просмотра на экран и не
+			используется EFPGridProducer, то автоматическая сортировка не
+			выполялась</p>
+			<p>13. Свойство EFPDataGridViewColumn.DisplayName сделано
+			устанавливаемым</p>
+			<p>14. Убрано свойство NodeNumEditBoxBase.EditorWidth. Добавлен
+			промежуточный класс BaseFormattedTextControl</p>
+			<p>15. Поля даты NodeDateTimeBox для TreeViewAdv</p>
+			<p>16. Изменена реализация BindableControl для TreeViewAdv. Вместо
+			структуры MemberAdapter используется интерфейс IMemberAdapter и
+			реализующие его классы. Поддержка DataRow и DataRowView с доступам
+			к полям таблицы. Внутренняя буферизация адаптеров.</p>
+			<p>17. Диалог настроек, собираемых из отдельных вкладок
+			SettingsDialog</p>
+			<p>18. Поддержка команд печати, экспорта в файл и отправки
+			EFPMenuOutHandler. Абстрактный класс EFPMenuOutItem. Используется
+			в командах локального меню элементов EFPDataTreeView и
+			EFPExtPrintPreviewControl</p>
+			<p>19. Класс BRMenuOutItem для печати отчетов.</p>
+                        <p>20. Получение отчета для EFPDataTreeView с возможностью выбора столбцов. Класс BRDataTreeViewTable</p>
+			<p>21. Класс EFPDataGridViewColumnHeaderArray перенесен в
+			ExtTools.dll, класс BRColumnHeaderArray</p>
+			<p>22. Структура EFPDocumentProperties перенесена в ExtTools.dll,
+			класс BRDocumentProperties. Убрано свойство
+			EFPApp.DefaultDocumentProperties. Свойство
+			EFPDataGridView.DocumentProperties больше не является виртуальным</p>
+			<p>23. Прорисовка отчетов BRReportPainter</p>
+			<p lang="en-US">24. <span lang="ru-RU">Изменена реализация
+			получения шрифта в </span>ExtTextRenderer.Font</p>
+			<p>25. Внутренний метод ExtTextRenderer.PointsToPageUnits() для Graphics.PageUnit=Inch, Point и Millimeter выполняет вычисления самостоятельно, без вызова TransformPoints(). В Mono для единицы Millimeter преобразования выполнялось как для пунктов.</p>
+			<p lang="en-US">26. <span lang="ru-RU">Использование библиотеки
+			</span>PdfSharp. <span lang="ru-RU">Классы </span>PdfTextRenderer и PdfFileTools</p>
+                        <p>27. Отправка отчетов в PDF-формат. Класс BRPdfReportPainter</p>
+			<p>28. В классах EFPAppPrinters и EFPPrinterInfo вызовы CopyTo() заменены на поштучное копирование элементов, так как CopyTo() не реализованы в Mono</p>
+			<p>29. Внутренний класс NumEdiitBox.IniternalUpDown в Mono самостоятельно размещает дочерние элементы TextBox и UpDownSpinner. Текстовое поле почему-то занимало всю область элемента, и на него накладывались стрелочки прокрутки.</p>
+			<p>30. Элемент перечисления EFPAppStdCommandItems.SendToInternetExplorer заменен на SendToInternetBrowser</p>
+			<p>31. WinFormsTools.AppIcon для получения значка использует ExeFileInfo, а не функции Windows. Значок возвращается в Wine и когда программа запущена по сетевому пути Windows</p>
+			<p>32. EFPAppMainImages.IconCollection.InitForm() устанавливает Form.ShowIcon=false, если изображение не задано и WinFormsTools.AppIcon=null/p>
+                        <p>33. Методы WinFormsTools.GetIcon() и InitIcon()</p>
+			<p>34. Классы WordHelper и ExcelHelper перенесены в ExtTools.dll. Статические методы, связанные с System.Drawing и System.Windows.Forms перенесены в новые статические классы ExcelWinFormsTools и WordWinFormsTools/p>
+                        <p>35. Свойства ListControlImageEventArgs.Image, ListControlImagePainter.IgnoreDisabledState. Дополнительные перегрузки ListControlImagePainter.PerformDrawItem()</p>
+                        <p>36. Провайдер комбоблока для выбора файловой ассоциации EFPFileAssociationsComboBox</p>
+                        <p>37. Из EFPTextBoxCommandItems убраны команды "Отправить" - "Microsoft Word" и "Open/LibreOfficeWriter", т.к. они дублировали команды "Открыть"</p>
+                        <p>38. WinFormsTools.ExtractFileIcon() в Mono использует ExeFileInfo, вместо вызова функций Windows, которые не работают</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">347</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p align="center"><span lang="ru-RU">14.07.2023-17.07.2023</span></p>
+			<p align="center">14.07.2023-17.07.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="left">1. Для MonthDayBox <span lang="en-US">(<a href="ExtForms.htm#v012p1">v.12
@@ -62,20 +178,28 @@
 			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) без
 			привязки к </span><span lang="en-US">EFPTabControl. </span><span lang="ru-RU">Перегрузка
 			</span><span lang="en-US">EFPTabControl.TabPageCollection.Add() </span><span lang="ru-RU">с
-			аргументом </span><span lang="en-US">EFPTabPage.</span><span lang="en-US">
-			</span><span lang="ru-RU">Используются для динамического
-			добавления страниц. </span>Раньше <span lang="ru-RU">п</span>рикладной
-			код не мог инициализировать локальное меню страницы, так как
+			аргументом </span><span lang="en-US">EFPTabPage.</span>
+			<span lang="ru-RU">Используются для динамического добавления
+			страниц. </span>Раньше <span lang="ru-RU">п</span>рикладной код не
+			мог инициализировать локальное меню страницы, так как
 			<span lang="en-US">EFPCommandItems </span>блокировался от
 			изменений сразу после вызова конструктора. Существующие перегрузки
 			конструктора можно по прежнему использовать для добавления страниц
 			до показа формы.</p>
 			<p align="left">4. События EFPContralBase.Enter и Leave</p>
-			<p align="left">5. В интерфейс IEFPTextBox добавлено свойство CommandItems типа EFPTextBoxCommandItems</p>
-			<p align="left">6. Свойство EFPTextBoxCommandItems.PasteHandler вместо собственной реализации команды "Вставить"</p>
-			<p align="left">7. EFPFolderPathValidator автоматически подставляет недостающий слэш в конце имени каталога при утере элементом фокуса ввода или при проверке значений формы</p>
-			<p align="left">8. EFPFolderBrowseButton и EFPFileDialogButton поддерживают drag-and-drop для перетаскивания каталога/файла из Проводника в поле ввода или на кнопку. Поддерживается формат вставки FileDrop для полей ввода</p>
-			<p align="left">9. Свойства WizardStep.Title и TitleForThisStepOnly</p>
+			<p align="left">5. В интерфейс IEFPTextBox добавлено свойство
+			CommandItems типа EFPTextBoxCommandItems</p>
+			<p align="left">6. Свойство EFPTextBoxCommandItems.PasteHandler
+			вместо собственной реализации команды &quot;Вставить&quot;</p>
+			<p align="left">7. EFPFolderPathValidator автоматически
+			подставляет недостающий слэш в конце имени каталога при утере
+			элементом фокуса ввода или при проверке значений формы</p>
+			<p align="left">8. EFPFolderBrowseButton и EFPFileDialogButton
+			поддерживают drag-and-drop для перетаскивания каталога/файла из
+			Проводника в поле ввода или на кнопку. Поддерживается формат
+			вставки FileDrop для полей ввода</p>
+			<p align="left">9. Свойства WizardStep.Title и
+			TitleForThisStepOnly</p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -115,12 +239,12 @@
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Вспомогательный
-			метод E</span><span lang="en-US">FPRadioButtons.FindByCode() (<a href="../../../temp/ExtForms_11.htm#v017p2">v.17
-			</a></span><a href="../../../temp/ExtForms_11.htm#v017p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
+			метод E</span><span lang="en-US">FPRadioButtons.FindByCode() (<a href="../../../Temp/ExtForms_11.htm#v017p2">v.17
+			</a></span><a href="../../../Temp/ExtForms_11.htm#v017p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
 			<p><span lang="en-US">2. </span><span lang="ru-RU">Свойство
-			</span><span lang="en-US">Wizard.ConfigSectionName (<a href="../../../temp/ExtForms_11.htm#v058p3">v.58
-			</a></span><span lang="ru-RU"><a href="../../../temp/ExtForms_11.htm#v058p3">п.3</a>,
-			</span><a href="../../../temp/ExtForms_11.htm#v279p1"><span lang="en-US">v.279
+			</span><span lang="en-US">Wizard.ConfigSectionName (<a href="../../../Temp/ExtForms_11.htm#v058p3">v.58
+			</a></span><span lang="ru-RU"><a href="../../../Temp/ExtForms_11.htm#v058p3">п.3</a>,
+			</span><a href="../../../Temp/ExtForms_11.htm#v279p1"><span lang="en-US">v.279
 			</span><span lang="ru-RU">п.1</span></a><span lang="en-US">),
 			</span><span lang="ru-RU">чтобы сохранялось положение (и размер)
 			формы мастера.</span></p>

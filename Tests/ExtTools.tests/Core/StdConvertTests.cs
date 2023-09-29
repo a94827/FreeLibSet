@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FreeLibSet.Core;
 using NUnit.Framework;
+using FreeLibSet.Core;
+using FreeLibSet.Tests;
 
 namespace ExtTools_tests.Core
 {
@@ -194,7 +195,7 @@ namespace ExtTools_tests.Core
     [TestCase("20211223", true, "2021-12-23T00:00:00")]
     public void ToString_DateTime(string sValue, bool useTime, string wanted)
     {
-      DateTime value = Creators.CreateDate(sValue);
+      DateTime value = Creators.DateTime(sValue);
       Assert.AreEqual(wanted, StdConvert.ToString(value, useTime));
     }
 
@@ -210,7 +211,7 @@ namespace ExtTools_tests.Core
       if (sWantedValue.Length == 0)
         wantedValue = DateTime.MinValue;
       else
-        wantedValue = Creators.CreateDate(sWantedValue);
+        wantedValue = Creators.DateTime(sWantedValue);
 
       DateTime value1;
       bool res1 = StdConvert.TryParse(s, out value1, useTime);
@@ -267,31 +268,31 @@ namespace ExtTools_tests.Core
 
     #region Enum
 
-    [TestCase(Creators.TestEnum.Zero, "Zero")]
-    [TestCase(Creators.TestEnum.One, "One")]
-    public void EnumToString(Creators.TestEnum value, string wanted)
+    [TestCase(TestEnum.Zero, "Zero")]
+    [TestCase(TestEnum.One, "One")]
+    public void EnumToString(TestEnum value, string wanted)
     {
-      Assert.AreEqual(wanted, StdConvert.EnumToString<Creators.TestEnum>(value));
+      Assert.AreEqual(wanted, StdConvert.EnumToString<TestEnum>(value));
     }
 
-    [TestCase("One", true, Creators.TestEnum.One)]
-    [TestCase("", false, Creators.TestEnum.Zero)]
-    [TestCase("Hello", false, Creators.TestEnum.Zero)]
-    public void ToEnum(string s, bool wantedIsOk, Creators.TestEnum wantedValue)
+    [TestCase("One", true, TestEnum.One)]
+    [TestCase("", false, TestEnum.Zero)]
+    [TestCase("Hello", false, TestEnum.Zero)]
+    public void ToEnum(string s, bool wantedIsOk, TestEnum wantedValue)
     {
-      Creators.TestEnum value1;
-      bool res1 = StdConvert.TryParseEnum<Creators.TestEnum>(s, out value1);
+      TestEnum value1;
+      bool res1 = StdConvert.TryParseEnum<TestEnum>(s, out value1);
       Assert.AreEqual(wantedIsOk, res1, "TryParseEnum() result");
       Assert.AreEqual(wantedValue, value1, "TryParseEnum() value");
 
       if (wantedIsOk)
       {
-        Creators.TestEnum value2 = StdConvert.ToEnum<Creators.TestEnum>(s);
+        TestEnum value2 = StdConvert.ToEnum<TestEnum>(s);
         Assert.AreEqual(wantedValue, value2, "ToEnum()");
       }
       else
       {
-        Assert.Catch(delegate() { StdConvert.ToEnum<Creators.TestEnum>(s); }, "ToEnum()");
+        Assert.Catch(delegate() { StdConvert.ToEnum<TestEnum>(s); }, "ToEnum()");
       }
     }
 
@@ -777,27 +778,27 @@ namespace ExtTools_tests.Core
     [Test]
     public void EnumToString_Array_array()
     {
-      Assert.AreEqual("One,Two", StdConvert.EnumToString<Creators.TestEnum>(new Creators.TestEnum[] { Creators.TestEnum.One, Creators.TestEnum.Two }));
+      Assert.AreEqual("One,Two", StdConvert.EnumToString<TestEnum>(new TestEnum[] { TestEnum.One, TestEnum.Two }));
     }
 
     [Test]
     public void EnumToString_Array_null()
     {
-      Assert.AreEqual("", StdConvert.EnumToString<Creators.TestEnum>((Creators.TestEnum[])null));
+      Assert.AreEqual("", StdConvert.EnumToString<TestEnum>((TestEnum[])null));
     }
 
     [Test]
     public void ToEnumArray_ok()
     {
       string s = "One,Two";
-      Creators.TestEnum[] wantedValue = new Creators.TestEnum[] { Creators.TestEnum.One, Creators.TestEnum.Two };
+      TestEnum[] wantedValue = new TestEnum[] { TestEnum.One, TestEnum.Two };
 
-      Creators.TestEnum[] value1;
-      bool res1 = StdConvert.TryParseEnum<Creators.TestEnum>(s, out value1);
+      TestEnum[] value1;
+      bool res1 = StdConvert.TryParseEnum<TestEnum>(s, out value1);
       Assert.IsTrue(res1, "TryParseEnum() result");
       Assert.AreEqual(wantedValue, value1, "TryParseEnum() value");
 
-      Creators.TestEnum[] value2 = StdConvert.ToEnumArray<Creators.TestEnum>(s);
+      TestEnum[] value2 = StdConvert.ToEnumArray<TestEnum>(s);
       Assert.AreEqual(wantedValue, value2, "ToEnumArray()");
     }
 
@@ -805,14 +806,14 @@ namespace ExtTools_tests.Core
     public void ToEnumArray_empty()
     {
       string s = "";
-      Creators.TestEnum[] wantedValue = new Creators.TestEnum[0];
+      TestEnum[] wantedValue = new TestEnum[0];
 
-      Creators.TestEnum[] value1;
-      bool res1 = StdConvert.TryParseEnum<Creators.TestEnum>(s, out value1);
+      TestEnum[] value1;
+      bool res1 = StdConvert.TryParseEnum<TestEnum>(s, out value1);
       Assert.IsTrue(res1, "TryParse() result");
       Assert.AreEqual(wantedValue, value1, "TryParse() value");
 
-      Creators.TestEnum[] value2 = StdConvert.ToEnumArray<Creators.TestEnum>(s);
+      TestEnum[] value2 = StdConvert.ToEnumArray<TestEnum>(s);
       Assert.AreEqual(wantedValue, value2, "ToEnumArray()");
     }
 
@@ -821,10 +822,10 @@ namespace ExtTools_tests.Core
     [TestCase("One,,Two")]
     public void ToEnumArray_error(string s)
     {
-      Creators.TestEnum[] value1;
-      bool res1 = StdConvert.TryParseEnum<Creators.TestEnum>(s, out value1);
+      TestEnum[] value1;
+      bool res1 = StdConvert.TryParseEnum<TestEnum>(s, out value1);
       Assert.IsFalse(res1, "TryParseEnum() result");
-      Assert.Catch(delegate() { StdConvert.ToEnumArray<Creators.TestEnum>(s); }, "ToEnumArray()");
+      Assert.Catch(delegate() { StdConvert.ToEnumArray<TestEnum>(s); }, "ToEnumArray()");
     }
 
     #endregion

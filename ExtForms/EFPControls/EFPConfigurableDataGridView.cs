@@ -323,7 +323,7 @@ namespace FreeLibSet.Forms
     /// Создает объект EFPConfigurableDataGridViewCommandItems
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPConfigurableDataGridViewCommandItems(this);
     }

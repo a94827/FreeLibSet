@@ -64,7 +64,15 @@ namespace ExtTools_tests.Formatting
         {
           Thread.CurrentThread.CurrentCulture = ci;
 
-          EditableDateTimeFormatter sut = pi.GetValue(null, null) as EditableDateTimeFormatter;
+          EditableDateTimeFormatter sut;
+          try
+          {
+            sut = pi.GetValue(null, null) as EditableDateTimeFormatter;
+          }
+          catch (Exception e)
+          {
+            throw new Exception(MessagePrefix + "Не удалось получить EditableDateTimeFormatter для kind=" + kind.ToString(), e);
+          }
           Assert.IsNotNull(sut, MessagePrefix + "IsNotNull");
 
           Assert.AreSame(sut, EditableDateTimeFormatters.Get(kind), MessagePrefix + "Get()");

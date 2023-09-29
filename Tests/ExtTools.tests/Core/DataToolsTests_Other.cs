@@ -6,6 +6,7 @@ using System.Collections;
 using NUnit.Framework;
 using FreeLibSet.Core;
 using System.ComponentModel;
+using FreeLibSet.Tests;
 
 namespace ExtTools_tests.Core
 {
@@ -554,7 +555,7 @@ namespace ExtTools_tests.Core
 
       DataColumn col2 = DataTools.CloneDataColumn(col1);
 
-      PropertyAssert.ProperiesEqual(col1, col2);
+      PropertyAssert.AreEqual(col1, col2);
     }
 
     #endregion
@@ -1867,13 +1868,13 @@ namespace ExtTools_tests.Core
     {
       DataTable tbl = new DataTable();
       tbl.Columns.Add("F1", typeof(Guid));
-      tbl.Rows.Add(Creators.Row1.VGuid);
-      tbl.Rows.Add(Creators.Row2.VGuid);
+      tbl.Rows.Add(TestTable.Row1.VGuid);
+      tbl.Rows.Add(TestTable.Row2.VGuid);
       tbl.Rows.Add(DBNull.Value);
-      tbl.Rows.Add(Creators.Row1.VGuid);
+      tbl.Rows.Add(TestTable.Row1.VGuid);
       tbl.Rows.Add(DBNull.Value);
 
-      Guid[] wanted = new Guid[] { Creators.Row1.VGuid, Creators.Row2.VGuid };
+      Guid[] wanted = new Guid[] { TestTable.Row1.VGuid, TestTable.Row2.VGuid };
       Array.Sort(wanted); // не уверен насчет порядка тестовых GUID.
 
       Guid[] res1 = DataTools.GetUniqueGuids(tbl, "F1", true);
@@ -1894,13 +1895,13 @@ namespace ExtTools_tests.Core
     {
       DataTable tbl = new DataTable();
       tbl.Columns.Add("F1", typeof(Guid));
-      tbl.Rows.Add(Creators.Row1.VGuid);
-      tbl.Rows.Add(Creators.Row2.VGuid);
+      tbl.Rows.Add(TestTable.Row1.VGuid);
+      tbl.Rows.Add(TestTable.Row2.VGuid);
       tbl.Rows.Add(DBNull.Value);
-      tbl.Rows.Add(Creators.Row1.VGuid);
+      tbl.Rows.Add(TestTable.Row1.VGuid);
       tbl.Rows.Add(DBNull.Value);
 
-      Guid[] wanted = new Guid[] { Guid.Empty, Creators.Row1.VGuid, Creators.Row2.VGuid };
+      Guid[] wanted = new Guid[] { Guid.Empty, TestTable.Row1.VGuid, TestTable.Row2.VGuid };
       Array.Sort(wanted); // не уверен насчет порядка тестовых GUID.
 
       Guid[] res1 = DataTools.GetUniqueGuids(tbl, "F1", false);
@@ -1925,23 +1926,23 @@ namespace ExtTools_tests.Core
     {
       DataTable tbl = new DataTable();
       tbl.Columns.Add("F1", typeof(int));
-      tbl.Rows.Add((int)Creators.TestEnum.One);
-      tbl.Rows.Add((int)Creators.TestEnum.Two);
+      tbl.Rows.Add((int)TestEnum.One);
+      tbl.Rows.Add((int)TestEnum.Two);
       tbl.Rows.Add(DBNull.Value);
-      tbl.Rows.Add((int)Creators.TestEnum.One);
+      tbl.Rows.Add((int)TestEnum.One);
       tbl.Rows.Add(DBNull.Value);
 
-      Creators.TestEnum[] wanted = new Creators.TestEnum[] { Creators.TestEnum.One, Creators.TestEnum.Two };
+      TestEnum[] wanted = new TestEnum[] { TestEnum.One, TestEnum.Two };
 
-      Creators.TestEnum[] res1 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl, "F1", true);
+      TestEnum[] res1 = DataTools.GetUniqueEnums<TestEnum>(tbl, "F1", true);
       Array.Sort(res1);
       Assert.AreEqual(wanted, res1, "DataTable");
 
-      Creators.TestEnum[] res2 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl.DefaultView, "F1", true);
+      TestEnum[] res2 = DataTools.GetUniqueEnums<TestEnum>(tbl.DefaultView, "F1", true);
       Array.Sort(res2);
       Assert.AreEqual(wanted, res2, "DataView");
 
-      Creators.TestEnum[] res3 = DataTools.GetUniqueEnums<Creators.TestEnum>(DataTools.GetDataTableRows(tbl), "F1", true);
+      TestEnum[] res3 = DataTools.GetUniqueEnums<TestEnum>(DataTools.GetDataTableRows(tbl), "F1", true);
       Array.Sort(res3);
       Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
     }
@@ -1951,23 +1952,23 @@ namespace ExtTools_tests.Core
     {
       DataTable tbl = new DataTable();
       tbl.Columns.Add("F1", typeof(int));
-      tbl.Rows.Add((int)Creators.TestEnum.One);
-      tbl.Rows.Add((int)Creators.TestEnum.Two);
+      tbl.Rows.Add((int)TestEnum.One);
+      tbl.Rows.Add((int)TestEnum.Two);
       tbl.Rows.Add(DBNull.Value);
-      tbl.Rows.Add((int)Creators.TestEnum.One);
+      tbl.Rows.Add((int)TestEnum.One);
       tbl.Rows.Add(DBNull.Value);
 
-      Creators.TestEnum[] wanted = new Creators.TestEnum[] { Creators.TestEnum.Zero, Creators.TestEnum.One, Creators.TestEnum.Two };
+      TestEnum[] wanted = new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Two };
 
-      Creators.TestEnum[] res1 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl, "F1", false);
+      TestEnum[] res1 = DataTools.GetUniqueEnums<TestEnum>(tbl, "F1", false);
       Array.Sort(res1);
       Assert.AreEqual(wanted, res1, "DataTable");
 
-      Creators.TestEnum[] res2 = DataTools.GetUniqueEnums<Creators.TestEnum>(tbl.DefaultView, "F1", false);
+      TestEnum[] res2 = DataTools.GetUniqueEnums<TestEnum>(tbl.DefaultView, "F1", false);
       Array.Sort(res2);
       Assert.AreEqual(wanted, res2, "DataView");
 
-      Creators.TestEnum[] res3 = DataTools.GetUniqueEnums<Creators.TestEnum>(DataTools.GetDataTableRows(tbl), "F1", false);
+      TestEnum[] res3 = DataTools.GetUniqueEnums<TestEnum>(DataTools.GetDataTableRows(tbl), "F1", false);
       Array.Sort(res3);
       Assert.AreEqual(wanted, res3, "IEnumerable<DataRow>");
     }
@@ -2998,7 +2999,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void GetEnumRange()
     {
-      MinMax<int> r = DataTools.GetEnumRange(typeof(Creators.TestEnum));
+      MinMax<int> r = DataTools.GetEnumRange(typeof(TestEnum));
       Assert.AreEqual(0, r.MinValue, "MinValue");
       Assert.AreEqual(3, r.MaxValue, "MaxValue");
     }
@@ -3013,6 +3014,25 @@ namespace ExtTools_tests.Core
 
       Assert.AreEqual(2, v1, "v1");
       Assert.AreEqual(1, v2, "v2");
+    }
+
+    #endregion
+
+    #region Dispose()
+
+    [Test]
+    public void Dispose()
+    {
+      DisposableObject obj = new DisposableObject();
+      DisposableObject refValue = obj;
+
+      DataTools.Dispose<DisposableObject>(ref refValue);
+      Assert.IsNull(refValue, "RefValue #1");
+      Assert.IsTrue(obj.IsDisposed, "IdDisposed #1");
+
+      // Вызываем еще раз
+      DataTools.Dispose<DisposableObject>(ref refValue);
+      Assert.IsNull(refValue, "RefValue #2");
     }
 
     #endregion

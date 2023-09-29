@@ -20,7 +20,7 @@ namespace FreeLibSet.Forms
   {
     #region Конструктор
 
-    public EFPGridProducerEditor(EFPGridProducer gridProducer, IEFPGridControl controlProvider, EFPBaseProvider baseProvider)
+    public EFPGridProducerEditor(EFPGridProducer gridProducer, IEFPDataView controlProvider, EFPBaseProvider baseProvider)
     {
       InitializeComponent();
       this._GridProducer = gridProducer;
@@ -125,7 +125,7 @@ namespace FreeLibSet.Forms
     private EFPDataGridView ghColumns, ghToolTips;
 
     private EFPGridProducer _GridProducer;
-    private IEFPGridControl _TheControlProvider;
+    private IEFPDataView _TheControlProvider;
 
     /// <summary>
     /// Список "Активировать при открытии".

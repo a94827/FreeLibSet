@@ -236,7 +236,7 @@ CommandItems.PerformRefreshItems();
     /// Создает объект EFPConfigurableDataTreeViewCommandItems.
     /// </summary>
     /// <returns>Новый объект</returns>
-    protected override EFPControlCommandItems GetCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPConfigurableDataTreeViewCommandItems(this);
     }

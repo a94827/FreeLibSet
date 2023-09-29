@@ -20,15 +20,26 @@ namespace ExtTools_tests.IO
     [TestCase(@"W:\", @"W:\", Description = "Backslash is not removed")]
     [TestCase(@"V:", @"V:\", Description = "Backslash added")]
     [TestCase(@"""U:\123 456\789 012""", @"U:\123 456\789 012", Description = "Quotes removed")]
-    [TestCase(@"\\Server\Share\123\456.txt", @"\\Server\Share\123\456.txt", Description = "Share path")]
-    // В текущей реализации завершающий backslash не добавляется
-    //[TestCase(@"\\Server\Share\", @"\\Server\Share\", Description = "Share naked")]
+    [TestCase(@"\\Server\Share\", @"\\Server\Share", Description = "Share naked")] // no backslash at the end. See Path.GetRootDir()
+    [TestCase(@"\\Server\Share\123.txt", @"\\Server\Share\123.txt", Description = "Share path")]
+    [TestCase(@"\\Server\Share\123\456.txt", @"\\Server\Share\123\456.txt", Description = "Share path with subdir")]
     public void Constructor_string_abs_windows(string s, string wantedPath)
     {
       AbsPath sut = new AbsPath(s);
       Assert.AreEqual(wantedPath, sut.Path, "Path");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
+
+    [Platform("Linux")]
+    [TestCase(@"/", @"/", Description = "Root dir")]
+    [TestCase(@"/tmp", @"/tmp", Description = "Abs dir")]
+    public void Constructor_string_abs_linux(string s, string wantedPath)
+    {
+      AbsPath sut = new AbsPath(s);
+      Assert.AreEqual(wantedPath, sut.Path, "Path");
+      Assert.IsFalse(sut.IsEmpty, "IsEmpty");
+    }
+
 
     [TestCase("123.txt")]
     [TestCase("123/456.txt")]
@@ -69,6 +80,13 @@ namespace ExtTools_tests.IO
       Assert.Catch(delegate () { new AbsPath(@"\:"); });
     }
 
+    [Platform("Linux")]
+    [Test]
+    public void Constructor_string_exception_linux()
+    {
+      Assert.Catch(delegate () { new AbsPath("\0xxx"); });
+    }
+
     [TestCase("123.txt")]
     [TestCase("123/456.txt")]
     [TestCase("123/456/789.txt")]
@@ -94,11 +112,23 @@ namespace ExtTools_tests.IO
     [TestCase(@"D:\123", @"D:\123")]
     [TestCase("", "")]
     [TestCase(@":\", "")]
-    public void Create_string(string s, string wantedPath)
+    public void Create_string_windows(string s, string wantedPath)
     {
       AbsPath res = AbsPath.Create(s);
       Assert.AreEqual(wantedPath, res.Path);
     }
+
+    [Platform("Linux")]
+    [TestCase("/", "/")]
+    [TestCase("/123/456", "/123/456")]
+    [TestCase("", "")]
+    [TestCase("\0xxx", "")]
+    public void Create_string_linux(string s, string wantedPath)
+    {
+      AbsPath res = AbsPath.Create(s);
+      Assert.AreEqual(wantedPath, res.Path);
+    }
+
 
     [Test]
     public void Create_basePath_normal()
@@ -113,10 +143,19 @@ namespace ExtTools_tests.IO
 
     [Platform("Win")]
     [Test]
-    public void Create_basePath_error()
+    public void Create_basePath_error_windows()
     {
       AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
       AbsPath res = AbsPath.Create(basePath, ":");
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    [Platform("Linux")]
+    [Test]
+    public void Create_basePath_error_linux()
+    {
+      AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
+      AbsPath res = AbsPath.Create(basePath, "\0xxx");
       Assert.IsTrue(res.IsEmpty);
     }
 
@@ -129,6 +168,16 @@ namespace ExtTools_tests.IO
     [TestCase(@"C:\", @"C:\")]
     [TestCase(@"", @"")]
     public void SlashedPath_windows(string s, string wantedRes)
+    {
+      AbsPath sut = new AbsPath(s);
+      Assert.AreEqual(wantedRes, sut.SlashedPath);
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/123", @"/123/")]
+    [TestCase(@"/", @"/")]
+    [TestCase(@"", @"")]
+    public void SlashedPath_linux(string s, string wantedRes)
     {
       AbsPath sut = new AbsPath(s);
       Assert.AreEqual(wantedRes, sut.SlashedPath);
@@ -175,11 +224,52 @@ namespace ExtTools_tests.IO
     }
 
     [Test]
-    public void Operator_empty()
+    public void Operator_Add_empty()
     {
       AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
       AbsPath res = basePath + "";
       Assert.AreEqual(basePath.Path, res.Path);
+    }
+
+    #endregion
+
+    #region Получение относительного каталога
+
+    [Platform("Win")]
+    [TestCase(@"C:\AAA\BBB", @"C:\AAA", @"BBB")]
+    [TestCase(@"C:\AAA\BBB", @"C:\AAA\CCC", @"..\BBB")]
+    [TestCase(@"C:\AAA\BBB\CCC\DDD", @"C:\AAA\BBB\DDD\EEE", @"..\..\CCC\DDD")]
+    [TestCase(@"C:\AAA\BBB", @"C:\CCC", @"..\AAA\BBB")]
+    [TestCase(@"C:\AAA\BBB", @"", @"C:\AAA\BBB")]
+    [TestCase(@"", @"C:\AAA\BBB", @"")]
+    [TestCase(@"C:\AAA\BBB", @"C:\AAA\BBB", @".")]
+    [TestCase(@"C:\AAA\BBB\CCC", @"D:\AAA\BBB", @"C:\AAA\BBB\CCC")]
+    public void Operator_Substract_windows(string sChild, string sBase, string sWantedRes)
+    {
+      AbsPath childPath = new AbsPath(sChild);
+      AbsPath basePath = new AbsPath(sBase);
+
+      RelPath res = childPath - basePath;
+      RelPath wantedRes = new RelPath(sWantedRes);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [Platform("Linux")]
+    [TestCase("/AAA/BBB", "/AAA", "BBB")]
+    [TestCase("/AAA/BBB", "/AAA/CCC", "../BBB")]
+    [TestCase("/AAA/BBB/CCC/DDD", "/AAA/BBB/DDD/EEE", "../../CCC/DDD")]
+    [TestCase("/AAA/BBB", "/CCC", "../AAA/BBB")]
+    [TestCase("/AAA/BBB", "", "/AAA/BBB")]
+    [TestCase("", "/AAA/BBB", "")]
+    [TestCase("/AAA/BBB", "/AAA/BBB", ".")]
+    public void Operator_Substract_linux(string sChild, string sBase, string sWantedRes)
+    {
+      AbsPath childPath = new AbsPath(sChild);
+      AbsPath basePath = new AbsPath(sBase);
+
+      RelPath res = childPath - basePath;
+      RelPath wantedRes = new RelPath(sWantedRes);
+      Assert.AreEqual(wantedRes, res);
     }
 
     #endregion
@@ -338,7 +428,7 @@ namespace ExtTools_tests.IO
       AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
       AbsPath sut = new AbsPath(basePath, "readme.txt");
 
-      AbsPath res = sut.ChangeExtension("");
+      AbsPath res = sut.ChangeExtension(null);
 
       string wantedPath = sut.Path.Substring(0, sut.Path.Length - 4);
       Assert.AreEqual(wantedPath, res.Path);
@@ -355,6 +445,51 @@ namespace ExtTools_tests.IO
       //AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
       //AbsPath sut2 = basePath.RootDir;
       //Assert.Catch(delegate () { sut2.ChangeExtension(".txt"); }, "RootDir");
+    }
+
+    #endregion
+
+    #region ContainsExtension
+
+    [TestCase("readme.txt", ".txt", true)]
+    [TestCase("readme.txt", ".txt2", false)]
+    [TestCase("readme.txt", ".tx", false)]
+    [TestCase("readme.txt", "", false)]
+    [TestCase("readme", ".txt", false)]
+    [TestCase("readme", "", true)]
+    [TestCase("book.fb2.zip", ".zip", true)]
+    [TestCase("book.fb2.zip", ".fb2.zip", true)]
+    [TestCase("book.fb2.zip", ".fb2", false)]
+    // Такие странные имена файлов тоже могут быть, в том числе и в Windows
+    [TestCase(".fb2.zip", ".zip", true)]
+    [TestCase(".fb2.zip", ".fb2.zip", false)]
+    [TestCase(".fb2.zip", ".fb2", false)]
+    public void ContainsExtension(string fileName, string extension, bool wantedRes)
+    {
+      AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
+      AbsPath sut = new AbsPath(basePath, fileName);
+
+      bool res = sut.ContainsExtension(extension);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [TestCase(".txt")]
+    [TestCase("")]
+    public void ContainsExtension_empty(string extension)
+    {
+      AbsPath sut = AbsPath.Empty;
+
+      bool res = sut.ContainsExtension(extension);
+      Assert.IsFalse(res);
+    }
+
+    [Platform("Win")]
+    [Test]
+    public void ContainsExtension_windows_ignoreCase()
+    {
+      AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
+      AbsPath sut = new AbsPath(basePath, "readme.Txt");
+      Assert.IsTrue(sut.ContainsExtension(".tXt"));
     }
 
     #endregion
@@ -531,6 +666,65 @@ namespace ExtTools_tests.IO
     #endregion
 
     // IsNetwork - устаревшее свойство
+
+    #region Split() / Join()
+
+    [Platform("Win")]
+    [TestCase(@"C:\123\456.txt", @"C:\|123|456.txt")]
+    [TestCase(@"C:\123.txt", @"C:\|123.txt")]
+    [TestCase(@"C:\", @"C:\")]
+    [TestCase(@"\\Server1\Share2\123.txt", @"\\Server1\Share2|123.txt")]
+    [TestCase(@"\\Server1\Share2\Dir3\123.txt", @"\\Server1\Share2|Dir3|123.txt")]
+    [TestCase(@"\\Server1\Share2\Dir3\Dir4\123.txt", @"\\Server1\Share2|Dir3|Dir4|123.txt")]
+    public void Split_Join_windows(string path, string sWantedParts)
+    {
+      DoSplit_Join(path, sWantedParts);
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/123/456.txt", @"/|123|456.txt")]
+    [TestCase(@"/123.txt", @"/|123.txt")]
+    [TestCase(@"/", @"/")]
+    public void Split_Join_linux(string path, string sWantedParts)
+    {
+      DoSplit_Join(path, sWantedParts);
+    }
+
+    private static void DoSplit_Join(string path, string sWantedParts)
+    {
+      string[] wantedParts = sWantedParts.Split('|');
+
+      AbsPath sut1 = new AbsPath(path);
+      string[] parts1 = sut1.Split();
+      CollectionAssert.AreEqual(wantedParts, parts1, "Split()");
+
+      AbsPath res2 = AbsPath.Join(parts1);
+      Assert.AreEqual(sut1, res2, "Join()");
+    }
+
+    [Test]
+    public void Split_emptyPath()
+    {
+      string[] res = AbsPath.Empty.Split();
+      CollectionAssert.AreEqual(DataTools.EmptyStrings, res);
+    }
+
+    [Test]
+    public void Join_emptyStrings()
+    {
+      AbsPath res = AbsPath.Join(DataTools.EmptyStrings);
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    [Test]
+    public void Join_null()
+    {
+      string[] arg = null;
+      AbsPath res = AbsPath.Join(arg);
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    #endregion
 
     #region Empty
 

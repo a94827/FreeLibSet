@@ -12,6 +12,9 @@ using System.Globalization;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Forms.Reporting;
+using FreeLibSet.Reporting;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
 
 namespace FreeLibSet.Forms
 {
@@ -135,6 +138,17 @@ namespace FreeLibSet.Forms
 
       #region Отправить
 
+      _OutHandler = new EFPMenuOutHandler(this);
+      BRMenuOutItem outItem = new BRMenuOutItem("Control");
+      outItem.DisplayName = "Иерархический просмотр";
+      outItem.SettingsData.Add(new BRFontSettings());
+      outItem.SettingsData.Add(new BRDataViewData());
+      outItem.Prepare += OutItem_Prepare;
+      outItem.InitDialog += OutItem_InitDialog;
+      outItem.CreateReport += OutItem_CreateReport;
+      _OutHandler.Items.Add(outItem);
+
+#if XXX
       _MenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);
       _MenuSendTo.Usage = EFPCommandItemUsage.Menu;
       Add(MenuSendTo);
@@ -148,10 +162,52 @@ namespace FreeLibSet.Forms
       ciSendToOpenOfficeCalc.Parent = MenuSendTo;
       ciSendToOpenOfficeCalc.Click += ciSendToOpenOfficeCalc_Click;
       Add(ciSendToOpenOfficeCalc);
-
+#endif
       #endregion
 
       #endregion
+    }
+
+    private void OutItem_Prepare(object sender, EventArgs args)
+    {
+      BRMenuOutItem outItem = (BRMenuOutItem)sender;
+      outItem.SettingsData.GetRequired<BRDataViewData>().UseExpColumnHeaders = ControlProvider.Control.UseColumns;
+      outItem.SettingsData.GetRequired<BRDataViewData>().UseColorStyle = false;
+
+      bool hasBoolColumns = false;
+      foreach (NodeControl nc in ControlProvider.Control.NodeControls)
+      {
+        if (nc is NodeCheckBox)
+        {
+          hasBoolColumns = true;
+          break;
+        }
+      }
+      outItem.SettingsData.GetRequired<BRDataViewData>().UseBoolMode = hasBoolColumns;
+    }
+
+    private void OutItem_InitDialog(object sender, BRMenuOutItemInitDialogEventArgs args)
+    {
+      if (args.Action == BROutAction.Print)
+      {
+        args.AddFontPage();
+        if (ControlProvider.Control.UseColumns)
+          new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
+        new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
+      }
+      if (args.Action == BROutAction.SendTo)
+        new BRDataViewPageSetupExport(args.Dialog, ControlProvider);
+    }
+
+    private void OutItem_CreateReport(object sender, BRMenuOutItemCreateReportEventArgs args)
+    {
+      BRMenuOutItem outItem = (BRMenuOutItem)sender;
+      BRFontSettings fontSettings = outItem.SettingsData.GetRequired<BRFontSettings>();
+      fontSettings.InitCellStyle(args.Report.DefaultCellStyle);
+      args.Report.DocumentProperties = ControlProvider.DocumentProperties.Clone();
+      BRSection sect = args.Report.Sections.Add();
+      sect.PageSetup = outItem.SettingsData.GetItem<BRPageSetup>();
+      sect.Bands.Add(new BRDataTreeViewTable(sect, ControlProvider, outItem.SettingsData, args.Action == BROutAction.SendTo));
     }
 
     #endregion
@@ -162,6 +218,11 @@ namespace FreeLibSet.Forms
     /// Провайдер управляющего элемента
     /// </summary>
     public new EFPDataTreeView ControlProvider { get { return (EFPDataTreeView)(base.ControlProvider); } }
+
+    /// <summary>
+    /// Локальное подменю "Отправить"
+    /// </summary>
+    public EFPCommandItem MenuSendTo { get { return _OutHandler.MenuSendTo; } }
 
     /// <summary>
     /// Установка свойств EFPCommandItem.Usage
@@ -228,8 +289,8 @@ namespace FreeLibSet.Forms
       ciSendToMicrosoftExcel.Visible = EFPDataGridView.CanSendToMicrosoftExcel;
       ciSendToOpenOfficeCalc.Visible = EFPDataGridView.CanSendToOpenOfficeCalc;
         */
-      ciSendToMicrosoftExcel.Visible = false;
-      ciSendToOpenOfficeCalc.Visible = false;
+      //ciSendToMicrosoftExcel.Visible = false;
+      //ciSendToOpenOfficeCalc.Visible = false;
 
       PerformRefreshItems();
     }
@@ -363,6 +424,14 @@ namespace FreeLibSet.Forms
     #region Отправить
 
     /// <summary>
+    /// Объект для печати/просмотра/экспорта/отправки
+    /// </summary>
+    public EFPMenuOutHandler OutHandler { get { return _OutHandler; } }
+    private readonly EFPMenuOutHandler _OutHandler;
+
+#if XXX
+
+    /// <summary>
     /// Меню "Отправить"
     /// </summary>
     public EFPCommandItem MenuSendTo { get { return _MenuSendTo; } }
@@ -426,7 +495,7 @@ namespace FreeLibSet.Forms
        */
     }
 
-
+#endif
     #endregion
   }
 }

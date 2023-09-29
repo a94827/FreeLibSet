@@ -183,6 +183,42 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region IndexOfOccurence(), LastIndexOfOccurence()
+
+    [TestCase("ABABABA", "ABA", 0, StringComparison.Ordinal, 0)]
+    [TestCase("ABABABA", "ABA", 1, StringComparison.Ordinal, 4)]
+    [TestCase("ABABABA", "ABA", 2, StringComparison.Ordinal, -1)]
+    [TestCase("ABABABA", "aba", 1, StringComparison.Ordinal, -1)]
+    [TestCase("ABABABA", "aba", 1, StringComparison.OrdinalIgnoreCase, 4)]
+    [TestCase("ABABABA", "", 0, StringComparison.Ordinal, 0)]
+    [TestCase("", "ABA", 0, StringComparison.Ordinal, -1)]
+    // Специальный случай просмотра конца строки
+    [TestCase("AAA", "A", 2, StringComparison.Ordinal, 2)]
+    [TestCase("AAA", "A", 3, StringComparison.Ordinal, -1)]
+    public void IndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType, int wantedRes)
+    {
+      int res = DataTools.IndexOfOccurence(str, value, occurence, comparisonType);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [TestCase("ABABABA", "ABA", 0, StringComparison.Ordinal, 4)]
+    [TestCase("ABABABA", "ABA", 1, StringComparison.Ordinal, 0)]
+    [TestCase("ABABABA", "ABA", 2, StringComparison.Ordinal, -1)]
+    [TestCase("ABABABA", "aba", 1, StringComparison.Ordinal, -1)]
+    [TestCase("ABABABA", "aba", 1, StringComparison.OrdinalIgnoreCase, 0)]
+    [TestCase("ABABABA", "", 0, StringComparison.Ordinal, 0)]
+    [TestCase("", "ABA", 0, StringComparison.Ordinal, -1)]
+    // Специальный случай просмотра конца строки
+    [TestCase("AAA", "A", 2, StringComparison.Ordinal, 0)]
+    [TestCase("AAA", "A", 3, StringComparison.Ordinal, -1)]
+    public void LastIndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType, int wantedRes)
+    {
+      int res = DataTools.LastIndexOfOccurence(str, value, occurence, comparisonType);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
     #region Substring()
 
     [TestCase("ABCDEF", 2, 3, "CDE")]

@@ -59,7 +59,7 @@ namespace FreeLibSet.Data.OracleClient
     #region Свойства
 
     /// <summary>
-    /// Возвразает имя базы данных
+    /// Возвращает имя базы данных
     /// </summary>
     public override string DatabaseName { get { return _DatabaseName; } }
     private string _DatabaseName;
