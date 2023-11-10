@@ -11,6 +11,7 @@ using FreeLibSet.DBF;
 using FreeLibSet.Formatting;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
+using FreeLibSet.Forms.Reporting;
 
 /*
  * Дополнительные описания для стоблцов табличного просмотра
@@ -28,7 +29,7 @@ namespace FreeLibSet.Forms
   #region GridProducerColumnCellToolTipTextNeededEventHandler
 
   /// <summary>
-  /// Аргументы события EFPDataGridViewColumn.CellToopTextNeeded
+  /// Аргументы события <see cref="EFPDataGridViewColumn.CellToolTextNeeded"/>
   /// </summary>
   public class EFPDataGridViewCellToolTipTextNeededEventArgs : EventArgs
   {
@@ -54,7 +55,7 @@ namespace FreeLibSet.Forms
     /// Столбец провайдера табличного просмотра, к которому относится ячейка
     /// </summary>
     public EFPDataGridViewColumn Column { get { return _Column; } }
-    private EFPDataGridViewColumn _Column;
+    private readonly EFPDataGridViewColumn _Column;
 
     /// <summary>
     /// Провайдер табличного просмотра.
@@ -65,7 +66,7 @@ namespace FreeLibSet.Forms
     /// Индекс строки табличного просмотра, к которому относится ячейка
     /// </summary>
     public int RowIndex { get { return _RowIndex; } }
-    private int _RowIndex;
+    private readonly int _RowIndex;
 
     /// <summary>
     /// Возвращает строку данных для ячейки, если табличный просмотр привязан к таблице данных.
@@ -74,7 +75,7 @@ namespace FreeLibSet.Forms
     public DataRow Row { get { return ControlProvider.GetDataRow(_RowIndex); } }
 
     /// <summary>
-    /// Имя столбца табличного просмотра, к которому относится ячейка (свойство EFPDataGridViewColumn.Name)
+    /// Имя столбца табличного просмотра, к которому относится ячейка (свойство <see cref="EFPDataGridViewColumn.Name"/>)
     /// </summary>
     public string ColumnName { get { return _Column.Name; } }
 
@@ -88,7 +89,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делагет события EFPDataGridViewColumn.CellToopTextNeeded
+  /// Делегат события <see cref="EFPDataGridViewColumn.CellToolTextNeeded"/>
   /// </summary>
   /// <param name="sender">Источник события (столбец)</param>
   /// <param name="args">Аргументы события</param>
@@ -127,6 +128,11 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
+    /// Индекс столбца в списке <see cref="IEFPDataViewColumns"/>
+    /// </summary>
+    int Index { get; }
+
+    /// <summary>
     /// Возвращает true, если столбец является видимым (актуально только для <see cref="EFPDataGridViewColumn"/> 
     /// </summary>
     bool Visible { get; }
@@ -145,6 +151,16 @@ namespace FreeLibSet.Forms
     /// Ширина столбца в текстовых единицах (условная)
     /// </summary>
     double TextWidth { get; }
+
+    /// <summary>
+    /// Минимально допустимая ширина столбца в текстовых единицах (условная)
+    /// </summary>
+    double MinTextWidth { get; }
+
+    /// <summary>
+    /// Возвращает true, если столбец занимает свободное пространство в просмотре
+    /// </summary>
+    bool AutoGrow { get; }
 
     /// <summary>
     /// Имя группы для синхронизации размеров столбцов. Если несколько столбцов имеют
@@ -203,7 +219,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Столбец в EFPDataGridView
+  /// Столбец в <see cref="EFPDataGridView"/> 
   /// </summary>
   public class EFPDataGridViewColumn : IEFPDataViewColumn
   {
@@ -213,7 +229,18 @@ namespace FreeLibSet.Forms
     {
       _ControlProvider = controlProvider;
       _GridColumn = gridColumn;
-      gridColumn.Tag = this;
+
+#if DEBUG
+      if (!Object.ReferenceEquals(GridColumn.DataGridView, controlProvider.Control))
+      {
+        if (gridColumn.DataGridView == null)
+          throw new ArgumentException("Столбец не присоединен к табличному просмотру", "gridColumn");
+        else
+          throw new ArgumentException("Столбец присоединен к другому табличному просмотру", "gridColumn");
+      }
+#endif
+
+      //лишнее gridColumn.Tag = this;
 
       _CanIncSearch = false;
 
@@ -232,18 +259,47 @@ namespace FreeLibSet.Forms
     /// Объект - владелец
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataGridView _ControlProvider;
+    private readonly EFPDataGridView _ControlProvider;
 
     IEFPDataView IEFPDataViewColumn.ControlProvider { get { return ControlProvider; } }
 
     /// <summary>
     /// Столбец табличного просмотра
     /// </summary>
-    public DataGridViewColumn GridColumn { get { return _GridColumn; } }
+    public DataGridViewColumn GridColumn
+    {
+      get
+      {
+        // 03.10.2023
+        // В процессе работы столбец DataGridViewColumn может быть заменен на другой экземпляр объекта (с сохранением свойств)
+        if (!Object.ReferenceEquals(_GridColumn.DataGridView, _ControlProvider.Control))
+          ReInitGridColumnRef();
+        return _GridColumn;
+      }
+    }
     private DataGridViewColumn _GridColumn;
 
+    private void ReInitGridColumnRef()
+    {
+      for (int i = 0; i < _ControlProvider.Control.ColumnCount; i++)
+      {
+        DataGridViewColumn col = _ControlProvider.Control.Columns[i];
+        if (col.Tag == this)
+        {
+          _GridColumn = col;
+          return;
+        }
+      }
+    }
+
+
     /// <summary>
-    /// Имя столбца. В отличие от свойства DataGridViewColumn.GroupName, всегда определено
+    /// Индекс столбца в табличном просмотре. Индекс соответствует порядку добавления столбцов. Столбцы могут быть скрыты или переставлены местами. 
+    /// </summary>
+    public int Index { get { return _GridColumn.Index; } }
+
+    /// <summary>
+    /// Имя столбца. В отличие от свойства <see cref="DataGridViewColumn.Name"/>, всегда определено
     /// </summary>
     public string Name
     {
@@ -291,13 +347,13 @@ namespace FreeLibSet.Forms
     private string _DisplayName;
 
     /// <summary>
-    /// Пользовательские данные (вместо занятого DataGridViewColumn.Tag)
+    /// Пользовательские данные (вместо занятого <see cref="DataGridViewBand.Tag"/>)
     /// </summary>
     public object Tag { get { return _Tag; } set { _Tag = value; } }
     private object _Tag;
 
     /// <summary>
-    /// Если столбец был создан с помощью GridProducer, то ссылка на генератор столбца,
+    /// Если столбец был создан с помощью <see cref="EFPGridProducer"/>, то ссылка на генератор столбца,
     /// иначе - null.
     /// </summary>
     public IEFPGridProducerColumn ColumnProducer { get { return _ColumnProducer; } set { _ColumnProducer = value; } }
@@ -486,9 +542,9 @@ namespace FreeLibSet.Forms
     #region Ширина столбца
 
     /// <summary>
-    /// Ширина столбца в пикселях (дублирование DataGridViewColumn.Width).
+    /// Ширина столбца в пикселях (дублирование <see cref="DataGridViewColumn.Width"/> ).
     /// При попытке установить ширину меньше DataGridView.MinimimumWidth устанавливается равной минимальной ширине,
-    /// чтобы избежать выброса исключения ArgumentOutOfRangeException.
+    /// чтобы избежать выброса исключения <see cref="ArgumentOutOfRangeException"/>.
     /// </summary>
     public int Width
     {
@@ -502,7 +558,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Ширина столбца в пунктах, в зависимости от разрешения экрана
     /// При попытке установить ширину меньше DataGridView.MinimimumWidth устанавливается равной минимальной ширине,
-    /// чтобы избежать выброса исключения ArgumentOutOfRangeException.
+    /// чтобы избежать выброса исключения <see cref="ArgumentOutOfRangeException"/>.
     /// </summary>
     public int WidthPt
     {
@@ -513,13 +569,26 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Ширина столбца в текстовых единицах (условная)
     /// При попытке установить ширину меньше DataGridView.MinimimumWidth устанавливается равной минимальной ширине,
-    /// чтобы избежать выброса исключения ArgumentOutOfRangeException.
+    /// чтобы избежать выброса исключения <see cref="ArgumentOutOfRangeException"/>.
     /// </summary>
     public double TextWidth
     {
       get { return ControlProvider.Measures.GetColumnWidthChars(GridColumn.Width); }
       set { this.Width = ControlProvider.Measures.GetTextColumnWidth(value); }
     }
+
+    /// <summary>
+    /// Минимальная ширина столбца в текстовых единицах (условная)
+    /// При попытке установить ширину меньше DataGridView.MinimimumWidth устанавливается равной минимальной ширине,
+    /// чтобы избежать выброса исключения <see cref="ArgumentOutOfRangeException"/>.
+    /// </summary>
+    public double MinTextWidth
+    {
+      get { return ControlProvider.Measures.GetColumnWidthChars(GridColumn.MinimumWidth); }
+      set { GridColumn.MinimumWidth = ControlProvider.Measures.GetTextColumnWidth(value); }
+    }
+
+    bool IEFPDataViewColumn.AutoGrow { get { return GridColumn.InheritedAutoSizeMode == DataGridViewAutoSizeColumnMode.Fill; } }
 
     #endregion
 
@@ -562,7 +631,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при наведении курсора на ячейку, относящуюся к столбцу
-    /// Обработчик может установить свойство Args.ToolTipText.
+    /// Обработчик может установить свойство ToolTipText.
     /// К подсказке могут быть добавлены дополнительные строки, если это указано
     /// в текущей конфигурации просмотра
     /// </summary>
@@ -602,7 +671,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// True, если разрешена произвольная сортировка по этому столбцу.
     /// Когда столбец добавляется методом AddXXX(), свойство устанавливается в true, если аргумент isDataColumn=true.
-    /// Это свойство дублирует CustomOrderColumnName
+    /// Это свойство дублирует <see cref="CustomOrderColumnName"/> 
     /// </summary>
     public bool CustomOrderAllowed
     {
@@ -622,8 +691,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Цвет столбца. Используется, если для текущей строки в событии 
-    /// EFPDataGridView.GetRowAttributres не определен более приоритетный цвет
-    /// На момент вызова обработчика EFPDataGridView.GetCellAttributres, если он задан,
+    /// <see cref="EFPDataGridView.GetRowAttributes"/> не определен более приоритетный цвет
+    /// На момент вызова обработчика <see cref="EFPDataGridView.GetCellAttributes"/>, если он задан,
     /// цвет уже применен
     /// </summary>
     public EFPDataGridViewColorType ColorType { get { return _ColorType; } set { _ColorType = value; } }
@@ -636,16 +705,16 @@ namespace FreeLibSet.Forms
     private bool _Grayed;
 
     /// <summary>
-    /// Рамка для левой границы столбца
-    /// На момент вызова обработчика EFPDataGridView.GetCellAttributres, если он задан,
+    /// Рамка для левой границы столбца.
+    /// На момент вызова обработчика <see cref="EFPDataGridView.GetCellAttributes"/>, если он задан,
     /// стиль рамки уже применен
     /// </summary>
     public EFPDataGridViewBorderStyle LeftBorder { get { return _LeftBorder; } set { _LeftBorder = value; } }
     private EFPDataGridViewBorderStyle _LeftBorder;
 
     /// <summary>
-    /// Рамка для правой границы столбца
-    /// На момент вызова обработчика EFPDataGridView.GetCellAttributres, если он задан,
+    /// Рамка для правой границы столбца.
+    /// На момент вызова обработчика <see cref="EFPDataGridView.GetCellAttributes"/>, если он задан,
     /// стиль рамки уже применен
     /// </summary>
     public EFPDataGridViewBorderStyle RightBorder { get { return _RightBorder; } set { _RightBorder = value; } }
@@ -688,6 +757,138 @@ namespace FreeLibSet.Forms
       set { PrintHeaders = DataTools.StrToSpecCharsArray(value); }
     }
 
+    /// <summary>
+    /// Устанавливает признак печати столбца.
+    /// Если <see cref="Printable"/>=false, то никаких действий не выполняется.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">Признак печати</param>
+    public void SetPrinted(string defCfgCode, bool value)
+    {
+      GetSettings(defCfgCode).View.SetColumnPrinted(this, value);
+    }
+
+    /// <summary>
+    /// Возвращает признак печати столбца.
+    /// Если <see cref="Printable"/>=false, то возвращает false.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>true, если столбец должен быть напечатан</returns>
+    public bool GetPrinted(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnPrinted(this);
+    }
+
+    /// <summary>
+    /// Признак печати столбца в настройках по умолчанию.
+    /// </summary>
+    public bool Printed
+    {
+      get { return GetPrinted(String.Empty); }
+      set { SetPrinted(String.Empty, value); }
+    }
+
+    /// <summary>
+    /// Установить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="SizeGroup"/>, то ширина будет установлена для всех столбцов данной группы.
+    /// Нулевое значение задает размер по умолчанию, исходя из параметров шрифта и ширины колонки в просмотре.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то задает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">Ширина</param>
+    public void SetPrintWidth(string defCfgCode, int value)
+    {
+      GetSettings(defCfgCode).View.SetColumnWidth(this, value);
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает нулевое значение.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>Ширина или 0</returns>
+    public int GetPrintWidth(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnWidth(this);
+    }
+
+    /// <summary>
+    /// Ширину столбца при печати в единицах 0.1мм в настройках по умолчанию.
+    /// Если ширина не была явно установлена, возвращает нулевое значение, при этом размер столбца будет определен автоматически, исходя из
+    /// ширины столбца в просмотре и параметров шрифта, заданных для печати.
+    /// </summary>
+    public int PrintWidth
+    {
+      get { return GetPrintWidth(String.Empty); }
+      set { SetPrintWidth(String.Empty, value); }
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает значение, определяемое из ширины столбца на экране и параметров шрифта при печати.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>Ширина</returns>
+    public int GetRealPrintWidth(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetRealColumnWidth(this, GetSettings(defCfgCode).Font);
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм в настройке по умолчанию.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает значение, определяемое из ширины столбца на экране и параметров шрифта при печати.
+    /// </summary>
+    public int RealPrintWidth { get { return GetRealPrintWidth(String.Empty); } }
+
+    /// <summary>
+    /// Задать признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
+    /// Если true, то <see cref="SetPrintWidth(string, int)"/> задает минимальную ширину столбца.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">true, если столбец должен участвовать в заполнении листа при печати</param>
+    public void SetPrintAutoGrow(string defCfgCode, bool value)
+    {
+      GetSettings(defCfgCode).View.SetColumnAutoGrow(this, value);
+    }
+
+    /// <summary>
+    /// Получить признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
+    /// Если true, то <see cref="SetPrintWidth(string, int)"/> задает минимальную ширину столбца.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>true, если столбец должен участвовать в заполнении листа при печати</returns>
+    public bool GetPrintAutoGrow(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnAutoGrow(this);
+    }
+
+    /// <summary>
+    /// Признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца в настройках по умолчанию.
+    /// Если true, то <see cref="PrintWidth"/> задает минимальную ширину столбца.
+    /// По умолчанию свойство возвращает true, если <see cref="DataGridViewColumn.AutoSizeMode"/>=<see cref="DataGridViewAutoSizeColumnMode.Fill"/>, 
+    /// например, если столбец был создан с помощью <see cref="EFPDataGridViewColumns.AddTextFill(string)"/>.
+    /// </summary>
+    public bool PrintAutoGrow
+    {
+      get { return GetPrintAutoGrow(String.Empty); }
+      set { SetPrintAutoGrow(String.Empty, value); }
+    }
+
+    private EFPDataViewMenuOutSettings GetSettings(string defCfgCode)
+    {
+      EFPDataGridViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
+      if (outItem == null)
+        throw new InvalidOperationException("Стандартный вариант печати табличного просмотра был удален");
+      return outItem[defCfgCode];
+    }
+
     #endregion
 
     #region Вспомогательные методы и свойства
@@ -711,7 +912,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Выполняет вызов DataGridView.InvalidateColumn()
+    /// Выполняет вызов <see cref="DataGridView.InvalidateColumn(int)"/>.
     /// </summary>
     public void InvalidateColumn()
     {
@@ -719,7 +920,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает свойство Name
+    /// Возвращает свойство <see cref="Name"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -733,14 +934,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Описание поля для сохранения в Dbf формате, если было задано в явном
-    /// виде или получено из GridProducerColumn. Иначе-пустая структура
+    /// виде или получено из <see cref="EFPGridProducerColumn"/>. Иначе-пустая структура
     /// </summary>
     public DbfFieldInfo DbfInfo { get { return _DbfInfo; } set { _DbfInfo = value; } }
     private DbfFieldInfo _DbfInfo;
 
     /// <summary>
     /// Имя DBF-поля для этого столбца по умолчанию
-    /// Текущее значение свойства DbfInfo не учитывается
+    /// Текущее значение свойства <see cref="DbfInfo"/> не учитывается
     /// </summary>
     public string DefaultDbfName
     {
@@ -879,7 +1080,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Псевдоколлекция столбцов - реализация свойства EFPDataGridView.Columns
+  /// Псевдоколлекция столбцов - реализация свойства <see cref="EFPDataGridView.Columns"/>
   /// </summary>
   public class EFPDataGridViewColumns : IEnumerable<EFPDataGridViewColumn>, IEFPDataViewColumns
   {
@@ -910,7 +1111,7 @@ namespace FreeLibSet.Forms
     #region Свойства и методы доступа к элементам коллекции
 
     /// <summary>
-    /// Возвращает реальное количество столбцов табличного просмотра DataGridView.Columns.Count.
+    /// Возвращает реальное количество столбцов табличного просмотра <see cref="DataGridView.ColumnCount"/>
     /// </summary>
     public int Count
     {
@@ -921,10 +1122,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Доступ к столбцу, соответствующему объекту DataGridViewColumn
+    /// Доступ к столбцу, соответствующему объекту <see cref="DataGridViewColumn"/>
     /// </summary>
     /// <param name="gridColumn">Столбец табличного просмотра</param>
-    /// <returns>Столбец в EFPDataGriodView</returns>
+    /// <returns>Столбец в <see cref="EFPDataGridView"/></returns>
     public EFPDataGridViewColumn this[DataGridViewColumn gridColumn]
     {
       get
@@ -932,23 +1133,29 @@ namespace FreeLibSet.Forms
 #if DEBUG
         if (gridColumn == null)
           throw new ArgumentNullException("gridColumn");
-        //if (GridColumn.DataGridView != null)
-        //{
-        //  if (GridColumn.DataGridView != GridHandler.Control)
-        //    throw new ArgumentException("Столбец относится к другому табличному просмотру", "GridColumn");
-        //}
+        if (gridColumn.DataGridView != null)
+        {
+          if (!Object.ReferenceEquals(gridColumn.DataGridView, ControlProvider.Control))
+            throw new ArgumentException("Столбец относится к другому табличному просмотру", "gridColumn");
+        }
 #endif
         if (gridColumn.Tag == null)
           gridColumn.Tag = new EFPDataGridViewColumn(ControlProvider, gridColumn); // исправлено 29.06.2021
-        return (EFPDataGridViewColumn)(gridColumn.Tag);
+        EFPDataGridViewColumn res = (EFPDataGridViewColumn)(gridColumn.Tag);
+#if DEBUG
+        if (!Object.ReferenceEquals(gridColumn, res.GridColumn))
+          throw new BugException("GridColumn");
+#endif
+
+        return res;
       }
     }
 
     /// <summary>
     /// Доступ к столбцу по индексу.
     /// </summary>
-    /// <param name="index">Индекс столбца в списке DataGridViewColumnCollection</param>
-    /// <returns>Столбец в EFPDataGriodView</returns>
+    /// <param name="index">Индекс столбца в списке <see cref="DataGridViewColumnCollection"/></param>
+    /// <returns>Столбец в <see cref="EFPDataGridView"/></returns>
     public EFPDataGridViewColumn this[int index]
     {
       get
@@ -967,8 +1174,8 @@ namespace FreeLibSet.Forms
     /// Доступ по имени столбца
     /// Если просмотр не содержит столбца с таким именем, возвращается null
     /// </summary>
-    /// <param name="name">Имя столбца EFPDataGridViewColumn.Name</param>
-    /// <returns>Столбец в EFPDataGriodView</returns>
+    /// <param name="name">Имя столбца <see cref="EFPDataGridViewColumn.Name"/></param>
+    /// <returns>Столбец в <see cref="EFPDataGridView"/></returns>
     public EFPDataGridViewColumn this[string name]
     {
       get
@@ -990,7 +1197,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает столбец EFPDataGridViewColumn, связанные с заданным генератором столбцов.
+    /// Возвращает столбец <see cref="EFPDataGridViewColumn"/>, связанные с заданным генератором столбцов.
     /// Возвращает null, если для данного генератора не было создано столбца в просмотре.
     /// </summary>
     /// <param name="columnProducer">Генератор столбцов</param>
@@ -1020,7 +1227,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Поиск столбца в табличном просмотре по имени
     /// </summary>
-    /// <param name="name">Имя столбца EFPDataGridViewColumn.Name</param>
+    /// <param name="name">Имя столбца <see cref="EFPDataGridViewColumn.Name"/></param>
     /// <returns>Индекс столбца или (-1), если столбец не найден</returns>
     public int IndexOf(string name)
     {
@@ -1041,16 +1248,16 @@ namespace FreeLibSet.Forms
     #region Текст
 
     /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn.
+    /// Добавляет текстовый столбец <see cref="DataGridViewTextBoxColumn"/>.
     /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца <see cref="DataColumn.ColumnName"/></param>
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство <see cref="DataGridViewColumn.DataPropertyName"/>).
     /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах (количество символов средней ширины)</param>
     /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах</param>
     /// <param name="alignment">Горизонтальное выравнивание</param>
-    /// <returns>Объект столбца табличного просмотра (а не EFPDataGrodViewColumn)</returns>
+    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
     public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth, DataGridViewContentAlignment alignment)
     {
       if (textWidth < 1)

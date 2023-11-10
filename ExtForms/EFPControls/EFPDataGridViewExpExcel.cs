@@ -13,37 +13,10 @@ using FreeLibSet.Core;
 using FreeLibSet.Models.SpreadsheetBase;
 using FreeLibSet.Shell;
 using FreeLibSet.Reporting;
+using FreeLibSet.Forms.Reporting;
 
 namespace FreeLibSet.Forms
 {
-  #region Перечисление EFPDataGridViewExpExcelBoolMode
-
-  /// <summary>
-  /// Значения свойства EFPDataGridViewExpExcelSettings.BoolMode
-  /// </summary>
-  public enum EFPDataViewExpExcelBoolMode
-  {
-    // Члены не переименовывать!
-    // Используются при записи конфигурации
-
-    /// <summary>
-    /// Не заменять ("ИСТИНА", "ЛОЖЬ")
-    /// </summary>
-    Boolean,
-
-    /// <summary>
-    /// 1=ИСТИНА, 0=ЛОЖЬ
-    /// </summary>
-    Digit,
-
-    /// <summary>
-    /// [X]=ИСТИНА, [0]=ЛОЖЬ
-    /// </summary>
-    Brackets,
-  }
-
-  #endregion
-
   /// <summary>
   /// Настройки для копирования таблицы в Microsoft Excel
   /// Доступны через свойство GridPageSetupBase.SendToExcel
@@ -62,7 +35,7 @@ namespace FreeLibSet.Forms
       _ShowColumnHeaders = true;
       _UseInterior = true;
       _UseBorders = true;
-      _BoolMode = EFPDataViewExpExcelBoolMode.Boolean;
+      _BoolMode = BRDataViewBoolMode.Boolean;
     }
 
     #endregion
@@ -96,8 +69,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Режим вывода логических значений
     /// </summary>
-    public EFPDataViewExpExcelBoolMode BoolMode { get { return _BoolMode; } set { _BoolMode = value; } }
-    private EFPDataViewExpExcelBoolMode _BoolMode;
+    public BRDataViewBoolMode BoolMode { get { return _BoolMode; } set { _BoolMode = value; } }
+    private BRDataViewBoolMode _BoolMode;
 
     /// <summary>
     /// Использовать "неэкономное" форматирование для повышения читаемости XML-файла
@@ -148,9 +121,9 @@ namespace FreeLibSet.Forms
       UseBorders = !cfg.GetBool("NoBorders");
       switch (cfg.GetString("BoolMode"))
       {
-        case "Digit": BoolMode = EFPDataViewExpExcelBoolMode.Digit; break;
-        case "Brackets": BoolMode = EFPDataViewExpExcelBoolMode.Brackets; break;
-        default: BoolMode = EFPDataViewExpExcelBoolMode.Boolean; break;
+        case "Digit": BoolMode = BRDataViewBoolMode.Integer; break;
+        case "Brackets": BoolMode = BRDataViewBoolMode.Text; break;
+        default: BoolMode = BRDataViewBoolMode.Boolean; break;
       }
     }
 
@@ -706,15 +679,15 @@ namespace FreeLibSet.Forms
         case "Boolean":
           switch (settings.BoolMode)
           {
-            case EFPDataViewExpExcelBoolMode.Boolean:
+            case BRDataViewBoolMode.Boolean:
               valueText = (bool)v ? "1" : "0";
               typeText = "Boolean";
               break;
-            case EFPDataViewExpExcelBoolMode.Digit:
+            case BRDataViewBoolMode.Integer:
               valueText = (bool)v ? "1" : "0";
               typeText = "Number";
               break;
-            case EFPDataViewExpExcelBoolMode.Brackets:
+            case BRDataViewBoolMode.Text:
               valueText = (bool)v ? "[X]" : "[ ]";
               typeText = "String";
               break;
@@ -1615,15 +1588,15 @@ namespace FreeLibSet.Forms
         case "Boolean":
           switch (settings.BoolMode)
           {
-            case EFPDataViewExpExcelBoolMode.Boolean:
+            case BRDataViewBoolMode.Boolean:
               valueText = (bool)v ? "1" : "0";
               typeText = "b";
               break;
-            case EFPDataViewExpExcelBoolMode.Digit:
+            case BRDataViewBoolMode.Integer:
               valueText = (bool)v ? "1" : "0";
               typeText = "n";
               break;
-            case EFPDataViewExpExcelBoolMode.Brackets:
+            case BRDataViewBoolMode.Text:
               valueText = (bool)v ? "[X]" : "[ ]";
               typeText = "s";
               break;
@@ -2311,12 +2284,12 @@ namespace FreeLibSet.Forms
             {
               switch (settings.BoolMode)
               {
-                case EFPDataViewExpExcelBoolMode.Boolean:
+                case BRDataViewBoolMode.Boolean:
                   break; // как есть
-                case EFPDataViewExpExcelBoolMode.Digit:
+                case BRDataViewBoolMode.Integer:
                   cellValue = ((bool)cellValue) ? 1 : 0;
                   break;
-                case EFPDataViewExpExcelBoolMode.Brackets:
+                case BRDataViewBoolMode.Text:
                   cellValue = ((bool)cellValue) ? "[X]" : "[ ]";
                   break;
               }

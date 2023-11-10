@@ -41,20 +41,20 @@ namespace FreeLibSet.Drawing.Reporting
 
       lock (_Renderer)
       {
-        InitRenderer(_Renderer, sel);
+        InitRenderer(_Renderer, sel.CellStyle);
         return GetWantedHeight(_Renderer, sel, columnWidth);
       }
 
     }
 
-    public void MeasureString(BRSelector sel, string s, out int width, out int height)
+    public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
     {
       if (_Renderer == null)
         _Renderer = new ExtTextRenderer();
 
       lock (_Renderer)
       {
-        InitRenderer(_Renderer, sel);
+        InitRenderer(_Renderer, cellStyle);
         Size sz = _Renderer.MeasureStringLM(s);
         width = sz.Width;
         height = sz.Height;
@@ -62,26 +62,32 @@ namespace FreeLibSet.Drawing.Reporting
     }
 
 
-    internal static void InitRenderer(ExtTextRenderer renderer, BRSelector sel)
+    internal static void InitRenderer(ExtTextRenderer renderer, BRCellStyle cellStyle)
     {
-      renderer.FontName = sel.CellStyle.FontName;
-      renderer.FontHeight = sel.CellStyle.FontHeightPt;
-      if (sel.CellStyle.LineHeightTwip > 0)
-        renderer.LineHeight = sel.CellStyle.LineHeightPt;
-      if (sel.CellStyle.FontWidthPt > 0)
-        renderer.FontWidth = sel.CellStyle.FontWidthPt;
-      else if (sel.CellStyle.FontWidthPercent > 0 && sel.CellStyle.FontWidthPercent != 100)
-        renderer.FontWidth = renderer.DefaultFontWidth * sel.CellStyle.FontWidthPercent / 100f;
-      renderer.Bold = sel.CellStyle.Bold;
-      renderer.Italic = sel.CellStyle.Italic;
-      renderer.Underline = sel.CellStyle.Underline;
-      renderer.Strikeout = sel.CellStyle.Strikeout;
+      renderer.FontName = cellStyle.FontName;
+      renderer.FontHeight = cellStyle.FontHeightPt;
+      if (cellStyle.LineHeightTwip > 0)
+        renderer.LineHeight = cellStyle.LineHeightPt;
+      else
+        renderer.LineHeight = 0;
+      if (cellStyle.FontWidthPt > 0)
+        renderer.FontWidth = cellStyle.FontWidthPt;
+      else if (cellStyle.FontWidthPercent > 0 && cellStyle.FontWidthPercent != 100)
+        renderer.FontWidth = renderer.DefaultFontWidth * cellStyle.FontWidthPercent / 100f;
+      else
+        renderer.FontWidth = 0;
+      renderer.Bold = cellStyle.Bold;
+      renderer.Italic = cellStyle.Italic;
+      renderer.Underline = cellStyle.Underline;
+      renderer.Strikeout = cellStyle.Strikeout;
 
-      renderer.WordWrap = sel.CellStyle.WrapMode == BRWrapMode.WordWrap;
+      renderer.WordWrap = cellStyle.WrapMode == BRWrapMode.WordWrap;
 
-      BRColor clr = sel.CellStyle.ForeColor;
+      BRColor clr = cellStyle.ForeColor;
       if (clr != BRColor.Auto)
         renderer.Color = Color.FromArgb(clr.R, clr.G, clr.B);
+      else
+        renderer.Color = Color.Black;
     }
 
     internal static int GetWantedHeight(ExtTextRenderer renderer, BRSelector sel, int columnWidth)
@@ -226,34 +232,34 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private DisposableDictionary<string, ExtTextRenderer> _FontRenderers;
 
-    private ExtTextRenderer GetTextRenderer(BRSelector sel)
+    private ExtTextRenderer GetTextRenderer(BRCellStyle cellStyle)
     {
       _SB.Length = 0;
-      _SB.Append(sel.CellStyle.FontName);
+      _SB.Append(cellStyle.FontName);
       _SB.Append('|');
-      _SB.Append(sel.CellStyle.FontHeightTwip);
+      _SB.Append(cellStyle.FontHeightTwip);
       _SB.Append('|');
-      _SB.Append(sel.CellStyle.LineHeightTwip);
+      _SB.Append(cellStyle.LineHeightTwip);
       _SB.Append('|');
-      _SB.Append(sel.CellStyle.FontWidthTwip);
+      _SB.Append(cellStyle.FontWidthTwip);
       _SB.Append('|');
-      _SB.Append(sel.CellStyle.FontWidthPercent);
+      _SB.Append(cellStyle.FontWidthPercent);
       _SB.Append('|');
-      _SB.Append(sel.CellStyle.Bold ? '1' : '0');
-      _SB.Append(sel.CellStyle.Italic ? '1' : '0');
-      _SB.Append(sel.CellStyle.Underline ? '1' : '0');
-      _SB.Append(sel.CellStyle.Strikeout ? '1' : '0');
+      _SB.Append(cellStyle.Bold ? '1' : '0');
+      _SB.Append(cellStyle.Italic ? '1' : '0');
+      _SB.Append(cellStyle.Underline ? '1' : '0');
+      _SB.Append(cellStyle.Strikeout ? '1' : '0');
       _SB.Append('|');
-      _SB.Append((int)(sel.CellStyle.WrapMode));
+      _SB.Append((int)(cellStyle.WrapMode));
       _SB.Append('|');
-      _SB.Append(sel.CellStyle.ForeColor.IntValue);
+      _SB.Append(cellStyle.ForeColor.IntValue);
 
       string key = _SB.ToString();
       ExtTextRenderer renderer;
       if (!_FontRenderers.TryGetValue(key, out renderer))
       {
         renderer = new ExtTextRenderer();
-        BRMeasurer.InitRenderer(renderer, sel);
+        BRMeasurer.InitRenderer(renderer, cellStyle);
 
         _FontRenderers.Add(key, renderer);
       }
@@ -455,7 +461,7 @@ namespace FreeLibSet.Drawing.Reporting
         graphics.FillRectangle(br, rc);
       }
 
-      ExtTextRenderer renderer = GetTextRenderer(sel);
+      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle);
       PrepareRendererAlign(sel, renderer);
 
       string[] lines;
@@ -493,7 +499,8 @@ namespace FreeLibSet.Drawing.Reporting
         }
       }
 
-      float orgFontWidth = -1; // Если потребуется поменять ширину шрифта, то здесь ее запомним
+      float orgFontHeight = renderer.FontHeight;
+      float orgFontWidth = renderer.FontWidth; // Если потребуется поменять ширину шрифта, то здесь ее запомним
       if (sel.CellStyle.MaxEnlargePercent > 100)
       {
         // Разрешено увеличение размеров шрифта
@@ -519,7 +526,6 @@ namespace FreeLibSet.Drawing.Reporting
 
           if (enPrc > 100)
           {
-            orgFontWidth = renderer.FontWidth;
             renderer.FontWidth = orgFontWidth * enPrc / 100f;
             //float TextW2 = 0f;
             //for (int i = 0; i < lines.Length; i++)
@@ -531,8 +537,8 @@ namespace FreeLibSet.Drawing.Reporting
       // Рисование текстовых строк
       //System.Windows.Forms.MessageBox.Show(rc.ToString());
       renderer.DrawLines(lines, rc);
-      if (orgFontWidth > 0)
-        renderer.FontWidth = orgFontWidth;
+      renderer.FontHeight = orgFontHeight;
+      renderer.FontWidth = orgFontWidth;
 
       // Прорисовка заполнителя
       if (sel.CellStyle.TextLeader != BRTextLeader.None)
@@ -631,7 +637,7 @@ namespace FreeLibSet.Drawing.Reporting
       if (sel.CellStyle.TextLeader == BRTextLeader.TwoLines)
       {
         // Перо
-        LeaderPen.Width = ThinLineWidth01mm * Scale; // Тонкая линия
+        LeaderPen.Width = (float)BRLine.ThinLineWidth01mm * Scale; // Тонкая линия
         // Расстояние между двумя линиями
         float dh = (sel.CellStyle.FontHeightPt / 72f * 254f) * 0.25f * Scale; // !!!
         renderer.Graphics.DrawLine(LeaderPen,
@@ -643,17 +649,17 @@ namespace FreeLibSet.Drawing.Reporting
       }
       else
       {
-        float w;
+        double w;
 
         switch (sel.CellStyle.TextLeader)
         {
-          case BRTextLeader.Thin: w = ThinLineWidth01mm; break;
-          case BRTextLeader.Medium: w = MediumLineWidth01mm; break;
-          case BRTextLeader.Thick: w = ThickLineWidth01mm; break;
+          case BRTextLeader.Thin: w = BRLine.ThinLineWidth01mm; break;
+          case BRTextLeader.Medium: w = BRLine.MediumLineWidth01mm; break;
+          case BRTextLeader.Thick: w = BRLine.ThickLineWidth01mm; break;
           default: return;
         }
         // Перо
-        LeaderPen.Width = w * Scale; // Тонкая линия
+        LeaderPen.Width = (float)w * Scale; // Тонкая линия
         renderer.Graphics.DrawLine(LeaderPen,
           rc.X, rc.Y + rc.Height / 2f,
           rc.Right, rc.Y + rc.Height / 2f);
@@ -663,68 +669,6 @@ namespace FreeLibSet.Drawing.Reporting
     #endregion
 
     #region Вспомогательные методы рисования рамок
-
-    #region Константы
-
-    /// <summary>
-    /// Толщина пера для тонких линий в единицах 0.1 мм
-    /// </summary>
-    public const float ThinLineWidth01mm = 2f;
-
-    /// <summary>
-    /// Толщина пера для средних линий в единицах 0.1 мм
-    /// </summary>
-    public const float MediumLineWidth01mm = 5f;
-
-    /// <summary>
-    /// Толщина пера для толстых линий в единицах 0.1 мм
-    /// </summary>
-    public const float ThickLineWidth01mm = 10f;
-
-
-    ///// <summary>
-    ///// Толщина пера для тонких линий в пунктах
-    ///// </summary>
-    //public const double ThinLineWidthPt = 0.57;
-
-    ///// <summary>
-    ///// Толщина пера для средних линий в пунктах
-    ///// </summary>
-    //public const double MediumLineWidthPt = 1.42;
-
-    ///// <summary>
-    ///// Толщина пера для толстых линий в пунктах
-    ///// </summary>
-    //public const double ThickLineWidthPt = 2.83;
-
-
-    ///// <summary>
-    ///// Толщина пера для тонких линий в пунктах
-    ///// </summary>
-    //public const int ThinLineWidthTwips = 11;
-
-    ///// <summary>
-    ///// Толщина пера для средних линий в пунктах
-    ///// </summary>
-    //public const int MediumLineWidthTwips = 28;
-
-    ///// <summary>
-    ///// Толщина пера для толстых линий в пунктах
-    ///// </summary>
-    //public const int ThickLineWidthTwips = 57;
-
-    //public static double GetLineWidthPt(PaperDocLineStyle LineStyle)
-    //{
-    //  switch (LineStyle)
-    //  {
-    //    case BRLineStyle.None: return 0;
-    //    case BRLineStyle.Medium: return MediumLineWidthPt;
-    //    case BRLineStyle.Thick: return ThickLineWidthPt;
-    //    default: return ThinLineWidthPt;
-    //  }
-    //}
-
-    #endregion
 
     /// <summary>
     /// Перо для рисования рамок
@@ -761,41 +705,33 @@ namespace FreeLibSet.Drawing.Reporting
 
     private void MyInitBorderPen(BRLine line)
     {
-      float w;
       switch (line.Style)
       {
         case BRLineStyle.Thin:
           BorderPen.DashStyle = DashStyle.Solid;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.Medium:
           BorderPen.DashStyle = DashStyle.Solid;
-          w = MediumLineWidth01mm;
           break;
         case BRLineStyle.Thick:
           BorderPen.DashStyle = DashStyle.Solid;
-          w = ThickLineWidth01mm;
           break;
         case BRLineStyle.Dot:
           BorderPen.DashStyle = DashStyle.Dot;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.Dash:
           BorderPen.DashStyle = DashStyle.Dash;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.DashDot:
           BorderPen.DashStyle = DashStyle.DashDot;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.DashDotDot:
           BorderPen.DashStyle = DashStyle.DashDotDot;
-          w = ThinLineWidth01mm;
           break;
         default:
           throw new Exception("Неправильная толщина линии");
       }
-      BorderPen.Width = w * Scale;
+      BorderPen.Width = (float)BRLine.GetLineWidthPt01mm(line.Style) * Scale;
       if (line.Color == BRColor.Auto)
         BorderPen.Color = Color.Black;
       else
@@ -808,6 +744,10 @@ namespace FreeLibSet.Drawing.Reporting
 
     private class PrintDocumentHelper : IBRMeasurer
     {
+      public PrintDocumentHelper()
+      {
+      }
+
       public BRReport Report;
       public BRPaginatorPageInfo[] Pages;
       private BRReportPainter _Painter;
@@ -816,9 +756,17 @@ namespace FreeLibSet.Drawing.Reporting
 
       internal void BeginPrint(object sender, PrintEventArgs args)
       {
-        if (_Painter == null)
-          _Painter = new BRReportPainter();
+        PreparePainter();
+
         pageCount = 0;
+      }
+
+      private void PreparePainter()
+      {
+        if (_Painter == null)
+        {
+          _Painter = new BRReportPainter();
+        }
       }
 
       internal void PrintPage(object sender, PrintPageEventArgs args)
@@ -856,15 +804,13 @@ namespace FreeLibSet.Drawing.Reporting
 
       int IBRMeasurer.GetWantedHeight(BRSelector sel, int columnWidth)
       {
-        if (_Painter == null)
-          _Painter = new BRReportPainter();
+        PreparePainter();
         return ((IBRMeasurer)_Painter).GetWantedHeight(sel, columnWidth);
       }
-      void IBRMeasurer.MeasureString(BRSelector sel, string s, out int width, out int height)
+      void IBRMeasurer.MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
       {
-        if (_Painter == null)
-          _Painter = new BRReportPainter();
-        ((IBRMeasurer)_Painter).MeasureString(sel, s, out width, out height);
+        PreparePainter();
+        ((IBRMeasurer)_Painter).MeasureString(s, cellStyle, out width, out height);
       }
     }
 
@@ -893,10 +839,10 @@ namespace FreeLibSet.Drawing.Reporting
 
     public static void CopyPageSettings(BRPageSetup src, PageSettings res)
     {
-      res.Landscape = src.Landscape;
+      res.Landscape = src.Orientation == BROrientation.Landscape;
       int w = Inch100(src.PaperWidth);
       int h = Inch100(src.PaperHeight);
-      if (src.Landscape)
+      if (src.Orientation == BROrientation.Landscape)
         DataTools.Swap<int>(ref w, ref h);
 
       bool found = false;
@@ -937,12 +883,12 @@ namespace FreeLibSet.Drawing.Reporting
 
     int IBRMeasurer.GetWantedHeight(BRSelector sel, int columnWidth)
     {
-      ExtTextRenderer renderer = GetTextRenderer(sel);
+      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle);
       return BRMeasurer.GetWantedHeight(renderer, sel, columnWidth);
     }
-    public void MeasureString(BRSelector sel, string s, out int width, out int height)
+    public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
     {
-      ExtTextRenderer renderer = GetTextRenderer(sel);
+      ExtTextRenderer renderer = GetTextRenderer(cellStyle);
       Size sz = renderer.MeasureStringLM(s);
       width = sz.Width;
       height = sz.Height;
@@ -952,7 +898,7 @@ namespace FreeLibSet.Drawing.Reporting
 
     #region Создание графических файлов
 
-    public static void CreateTIFFFile(BRReport report, AbsPath filePath, BRBitmapSettings bitmapSettings, ISplash spl)
+    public static void CreateTIFFFile(BRReport report, AbsPath filePath, BRBitmapSettingsDataItem bitmapSettings, ISplash spl)
     {
       if (report == null)
         throw new ArgumentNullException("report");
@@ -1021,7 +967,7 @@ namespace FreeLibSet.Drawing.Reporting
       }
     }
 
-    private Bitmap CreateBitmap(BRPaginatorPageInfo page, BRBitmapSettings bitmapSettings)
+    private Bitmap CreateBitmap(BRPaginatorPageInfo page, BRBitmapSettingsDataItem bitmapSettings)
     {
       PixelFormat format = bitmapSettings.PixelFormat;
 

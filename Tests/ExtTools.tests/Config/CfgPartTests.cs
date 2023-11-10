@@ -2080,7 +2080,7 @@ namespace ExtTools_tests.Config
       CollectionAssert.AreEquivalent(new string[] { "Sect1", "Sect2", "Value1", "Value2", "Value3" }, sut.GetChildAndValueNames(), "#2");
     }
 
-    private static void InitChildrenAndValues(CfgPart sut)
+    protected static void InitChildrenAndValues(CfgPart sut)
     {
       CfgPart p1 = sut.GetChild("Sect1", true);
       CfgPart p2 = sut.GetChild("Sect2", true);
@@ -3026,6 +3026,21 @@ namespace ExtTools_tests.Config
       TempCfg sut = new TempCfg();
       XmlCfgPart p1 = sut.GetChild("Sect1", true) as XmlCfgPart;
       Assert.AreSame(sut, p1.Parent, "Parent");
+    }
+
+    #endregion
+
+    #region Clone()
+
+    [Test]
+    public void Clone()
+    {
+      TempCfg sut = new TempCfg();
+      InitChildrenAndValues(sut);
+
+      TempCfg res = sut.Clone();
+      CollectionAssert.AreEquivalent(new string[] { "Sect1", "Sect2" }, res.GetChildNames(), "GetChildNames()");
+      CollectionAssert.AreEquivalent(new string[] { "Value1", "Value2", "Value3" }, res.GetValueNames(), "GetValueNames()");
     }
 
     #endregion

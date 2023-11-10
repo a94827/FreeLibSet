@@ -28,9 +28,9 @@ namespace FreeLibSet.Forms
     /// Создает объект.
     /// Далее должны быть установлены свойства FirstDateBox и LastDateBox.
     /// </summary>
-    public EFPDateBoxRangeCheck()
+    public EFPDateBoxRangeCheck ()
     {
-      DoInit();
+      DoInit ();
     }
 
     /// <summary>
@@ -38,31 +38,31 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="firstDateBox">Провайдер поля ввода начальной даты диапазона</param>
     /// <param name="lastDateBox">Провайдер поля ввода конечной даты диапазона</param>
-    public EFPDateBoxRangeCheck(EFPDateTimeBox firstDateBox, EFPDateTimeBox lastDateBox)
+    public EFPDateBoxRangeCheck (EFPDateTimeBox firstDateBox, EFPDateTimeBox lastDateBox)
     {
-      DoInit();
+      DoInit ();
       this.FirstDateBox = firstDateBox;
       this.LastDateBox = lastDateBox;
     }
 
-    internal EFPDateBoxRangeCheck(EFPDateTimeBox firstDateBox, EFPDateTimeBox lastDateBox, EFPDateRangeBox owner)
+    internal EFPDateBoxRangeCheck (EFPDateTimeBox firstDateBox, EFPDateTimeBox lastDateBox, EFPDateRangeBox owner)
     {
-      DoInit();
+      DoInit ();
       this.FirstDateBox = firstDateBox;
       this.LastDateBox = lastDateBox;
       _Owner = owner;
     }
 
-    private void DoInit()
+    private void DoInit ()
     {
-      _FirstDateInput = new DepInput<DateTime?>(null, FirstDateInput_ValueChanged);
-      _FirstDateInput.OwnerInfo = new DepOwnerInfo(this, "FirstDateInput");
+      _FirstDateInput = new DepInput<DateTime?> (null, FirstDateInput_ValueChanged);
+      _FirstDateInput.OwnerInfo = new DepOwnerInfo (this, "FirstDateInput");
 
-      _LastDateInput = new DepInput<DateTime?>(null, LastDateInput_ValueChanged);
-      _LastDateInput.OwnerInfo = new DepOwnerInfo(this, "LastDateInput");
+      _LastDateInput = new DepInput<DateTime?> (null, LastDateInput_ValueChanged);
+      _LastDateInput.OwnerInfo = new DepOwnerInfo (this, "LastDateInput");
 
-      _EHValidatingFirstDate = new UIValidatingEventHandler(DoValidate);
-      _EHValidatingLastDate = new UIValidatingEventHandler(DoValidate);
+      _EHValidatingFirstDate = new UIValidatingEventHandler (DoValidate);
+      _EHValidatingLastDate = new UIValidatingEventHandler (DoValidate);
     }
 
     #endregion
@@ -92,6 +92,7 @@ namespace FreeLibSet.Forms
           _FirstDateInput.Source = value.NValueEx;
       }
     }
+
     private EFPDateTimeBox _FirstDateBox;
 
     /// <summary>
@@ -117,6 +118,7 @@ namespace FreeLibSet.Forms
           _LastDateInput.Source = value.NValueEx;
       }
     }
+
     private EFPDateTimeBox _LastDateBox;
 
     private EFPDateRangeBox _Owner;
@@ -128,33 +130,33 @@ namespace FreeLibSet.Forms
     private DepInput<Nullable<DateTime>> _FirstDateInput;
     private DepInput<Nullable<DateTime>> _LastDateInput;
 
-    void FirstDateInput_ValueChanged(object sender, EventArgs args)
+    void FirstDateInput_ValueChanged (object sender, EventArgs args)
     {
       if (LastDateBox != null)
-        LastDateBox.Validate();
+        LastDateBox.Validate ();
     }
 
-    void LastDateInput_ValueChanged(object sender, EventArgs args)
+    void LastDateInput_ValueChanged (object sender, EventArgs args)
     {
       if (FirstDateBox != null)
-        FirstDateBox.Validate();
+        FirstDateBox.Validate ();
     }
 
 
     private UIValidatingEventHandler _EHValidatingFirstDate;
     private UIValidatingEventHandler _EHValidatingLastDate;
 
-    private void DoValidate(object sender, UIValidatingEventArgs args)
+    private void DoValidate (object sender, UIValidatingEventArgs args)
     {
       if (_Owner != null)
-        _Owner.Validate();
+        _Owner.Validate ();
 
       if (_FirstDateInput.Value.HasValue && _LastDateInput.Value.HasValue)
       {
         if (FirstDateBox.Enabled && LastDateBox.Enabled)
         {
           if (_FirstDateInput.Value.Value > _LastDateInput.Value.Value)
-            args.SetError("Неправильный интервал дат. Начальная дата больше конечной");
+            args.SetError ("Неправильный интервал дат. Начальная дата больше конечной");
         }
       }
     }
@@ -175,25 +177,25 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
-    public EFPDateRangeBox(EFPBaseProvider baseProvider, DateRangeBox control)
-      : base(new EFPDateRangeBoxBaseProvider(), control, true)
+    public EFPDateRangeBox (EFPBaseProvider baseProvider, DateRangeBox control)
+      : base (new EFPDateRangeBoxBaseProvider (), control, true)
     {
       this.BaseProvider.Parent = baseProvider;
       ((EFPDateRangeBoxBaseProvider)(this.BaseProvider)).ControlProvider = this;
 
-      _First = new EFPDateTimeBox(this.BaseProvider, control.First);
+      _First = new EFPDateTimeBox (this.BaseProvider, control.First);
       _First.DisplayName = "Начальная дата";
-      _Last = new EFPDateTimeBox(this.BaseProvider, control.Last);
+      _Last = new EFPDateTimeBox (this.BaseProvider, control.Last);
       _Last.DisplayName = "Конечная дата";
-      new EFPDateBoxRangeCheck(_First, _Last, this);
+      new EFPDateBoxRangeCheck (_First, _Last, this);
 
-      _First.NValueEx.ValueChanged += new EventHandler(InitCommandItemsState);
-      _Last.NValueEx.ValueChanged += new EventHandler(InitCommandItemsState);
-      _First.EditableEx.ValueChanged += new EventHandler(InitCommandItemsState);
-      _Last.EditableEx.ValueChanged += new EventHandler(InitCommandItemsState);
+      _First.NValueEx.ValueChanged += new EventHandler (InitCommandItemsState);
+      _Last.NValueEx.ValueChanged += new EventHandler (InitCommandItemsState);
+      _First.EditableEx.ValueChanged += new EventHandler (InitCommandItemsState);
+      _Last.EditableEx.ValueChanged += new EventHandler (InitCommandItemsState);
 
       if (!DesignMode)
-        control.MenuButtonClicked += new System.ComponentModel.CancelEventHandler(Control_MenuButtonClicked);
+        control.MenuButtonClicked += new System.ComponentModel.CancelEventHandler (Control_MenuButtonClicked);
     }
 
     #endregion
@@ -204,12 +206,14 @@ namespace FreeLibSet.Forms
     /// Провайдер поля ввода начальной даты диапазона.
     /// </summary>
     public EFPDateTimeBox First { get { return _First; } }
+
     private EFPDateTimeBox _First;
 
     /// <summary>
     /// Провайдер поля ввода конечной даты диапазона.
     /// </summary>
     public EFPDateTimeBox Last { get { return _Last; } }
+
     private EFPDateTimeBox _Last;
 
     #endregion
@@ -230,7 +234,7 @@ namespace FreeLibSet.Forms
       {
         base.ToolTipText = value;
         string s = String.Empty;
-        if (!String.IsNullOrEmpty(value))
+        if (!String.IsNullOrEmpty (value))
           s = value + " - ";
         First.ToolTipText = s + "Начальная дата";
         Last.ToolTipText = s + "Конечная дата";
@@ -243,16 +247,16 @@ namespace FreeLibSet.Forms
     /// Проверка корректности.
     /// Вызывает метод проверки для "вложенных" провайдеров.
     /// </summary>
-    protected override void OnValidate()
+    protected override void OnValidate ()
     {
       if (_InsideOnValidate)
         return;
       _InsideOnValidate = true;
       try
       {
-        base.OnValidate();
-        First.Validate();
-        Last.Validate();
+        base.OnValidate ();
+        First.Validate ();
+        Last.Validate ();
       }
       finally
       {
@@ -270,14 +274,14 @@ namespace FreeLibSet.Forms
 
       public EFPDateRangeBox ControlProvider;
 
-      public override void InitCommandItemList(List<EFPCommandItems> list)
+      public override void InitCommandItemList (List<EFPCommandItems> list)
       {
         if (ControlProvider != null)
         {
           if (ControlProvider.CommandItems.Count > 0)
-            list.Add(ControlProvider.CommandItems);
+            list.Add (ControlProvider.CommandItems);
         }
-        base.InitCommandItemList(list);
+        base.InitCommandItemList (list);
       }
 
       #endregion
@@ -287,21 +291,21 @@ namespace FreeLibSet.Forms
     /// Создает EFPDateRangeBoxCommandItems.
     /// </summary>
     /// <returns></returns>
-    protected override EFPControlCommandItems CreateCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems ()
     {
-      return new EFPDateRangeBoxCommandItems(this);
+      return new EFPDateRangeBoxCommandItems (this);
     }
 
-    void InitCommandItemsState(object sender, EventArgs args)
+    void InitCommandItemsState (object sender, EventArgs args)
     {
       EFPDateRangeBoxCommandItems commandItems2 = CommandItemsIfAssigned as EFPDateRangeBoxCommandItems;
       if (commandItems2 != null)
-        commandItems2.InitCommandItemsState();
+        commandItems2.InitCommandItemsState ();
     }
 
-    void Control_MenuButtonClicked(object sender, System.ComponentModel.CancelEventArgs args)
+    void Control_MenuButtonClicked (object sender, System.ComponentModel.CancelEventArgs args)
     {
-      PrepareContextMenu(); // иначе меню не будет показано
+      PrepareContextMenu (); // иначе меню не будет показано
     }
 
     #endregion
@@ -314,77 +318,77 @@ namespace FreeLibSet.Forms
   {
     #region Конструктор
 
-    public EFPDateRangeBoxCommandItems(EFPDateRangeBox controlProvider)
-      :base(controlProvider)
+    public EFPDateRangeBoxCommandItems (EFPDateRangeBox controlProvider)
+      : base (controlProvider)
     {
-      ciToday = new EFPCommandItem("Edit", "Today");
+      ciToday = new EFPCommandItem ("Edit", "Today");
       ciToday.MenuText = "Сегодня";
       ciToday.ShortCut = Keys.Control | Keys.T;
       ciToday.Click += ciToday_Click;
-      Add(ciToday);
+      Add (ciToday);
 
-      ci1To2 = new EFPCommandItem("Edit", "LastDateEqualFirst");
+      ci1To2 = new EFPCommandItem ("Edit", "LastDateEqualFirst");
       ci1To2.MenuText = "Конечная дата равна начальной";
       ci1To2.ShortCut = Keys.Control | Keys.OemCloseBrackets;
       ci1To2.Click += ci1To2_Click;
       ci1To2.GroupBegin = true;
-      Add(ci1To2);
+      Add (ci1To2);
 
-      ci2To1 = new EFPCommandItem("Правка", "FirstDateEqualLast");
+      ci2To1 = new EFPCommandItem ("Правка", "FirstDateEqualLast");
       ci2To1.MenuText = "Начальная дата равна конечной";
       ci2To1.ShortCut = Keys.Control | Keys.OemOpenBrackets;
       ci2To1.Click += ci2To1_Click;
       ci2To1.GroupEnd = true;
-      Add(ci2To1);
+      Add (ci2To1);
 
-      ciMonth = new EFPCommandItem("Edit", "Month");
+      ciMonth = new EFPCommandItem ("Edit", "Month");
       ciMonth.MenuText = "Месяц";
       ciMonth.ShortCut = Keys.Control | Keys.M;
       ciMonth.Click += ciMonth_Click;
       ciMonth.GroupBegin = true;
-      Add(ciMonth);
+      Add (ciMonth);
 
-      ciQuarter = new EFPCommandItem("Edit", "Quarter");
+      ciQuarter = new EFPCommandItem ("Edit", "Quarter");
       ciQuarter.MenuText = "Квартал";
       ciQuarter.ShortCut = Keys.Control | Keys.Q;
       ciQuarter.Click += ciQuarter_Click;
-      Add(ciQuarter);
+      Add (ciQuarter);
 
-      ciYear = new EFPCommandItem("Edit", "Year");
+      ciYear = new EFPCommandItem ("Edit", "Year");
       ciYear.MenuText = "Год";
       ciYear.ShortCut = Keys.Control | Keys.Y; // Redo все равно недоступна, можно занимать
       ciYear.Click += ciYear_Click;
-      Add(ciYear);
+      Add (ciYear);
 
-      ciNextPeriod = new EFPCommandItem("Edit", "NextPeriod");
+      ciNextPeriod = new EFPCommandItem ("Edit", "NextPeriod");
       ciNextPeriod.MenuText = controlProvider.Control.TheRightButton.ToolTipText;
       ciNextPeriod.ShortCut = Keys.Control | Keys.OemPeriod;
       ciNextPeriod.ImageKey = "DateRangeBoxRight";
-      ciNextPeriod.Click += new EventHandler(controlProvider.Control.TheRightButton_Click);
+      ciNextPeriod.Click += new EventHandler (controlProvider.Control.TheRightButton_Click);
       ciNextPeriod.GroupBegin = true;
-      Add(ciNextPeriod);
+      Add (ciNextPeriod);
 
-      ciPrevPeriod = new EFPCommandItem("Edit", "PrevPeriod");
+      ciPrevPeriod = new EFPCommandItem ("Edit", "PrevPeriod");
       ciPrevPeriod.MenuText = controlProvider.Control.TheLeftButton.ToolTipText;
       ciPrevPeriod.ShortCut = Keys.Control | Keys.Oemcomma;
       ciPrevPeriod.ImageKey = "DateRangeBoxLeft";
-      ciPrevPeriod.Click += new EventHandler(controlProvider.Control.TheLeftButton_Click);
-      Add(ciPrevPeriod);
+      ciPrevPeriod.Click += new EventHandler (controlProvider.Control.TheLeftButton_Click);
+      Add (ciPrevPeriod);
 
-      ciNextYear = new EFPCommandItem("Edit", "NextYear");
+      ciNextYear = new EFPCommandItem ("Edit", "NextYear");
       ciNextYear.MenuText = "Следующий год";
       ciNextYear.ShortCut = Keys.Control | Keys.Shift | Keys.OemPeriod;
-      ciNextYear.Click += new EventHandler(ciNextYear_Click);
-      Add(ciNextYear);
+      ciNextYear.Click += new EventHandler (ciNextYear_Click);
+      Add (ciNextYear);
 
-      ciPrevYear = new EFPCommandItem("Edit", "PrevYear");
+      ciPrevYear = new EFPCommandItem ("Edit", "PrevYear");
       ciPrevYear.MenuText = "Предыдущий год";
       ciPrevYear.ShortCut = Keys.Control | Keys.Shift | Keys.Oemcomma;
-      ciPrevYear.Click += new EventHandler(ciPrevYear_Click);
+      ciPrevYear.Click += new EventHandler (ciPrevYear_Click);
       ciPrevYear.GroupEnd = true;
-      Add(ciPrevYear);
+      Add (ciPrevYear);
 
-      InitCommandItemsState();
+      InitCommandItemsState ();
     }
 
     #endregion
@@ -399,18 +403,18 @@ namespace FreeLibSet.Forms
 
     EFPCommandItem ciToday, ci1To2, ci2To1;
 
-    private void ciToday_Click(object sender, EventArgs args)
+    private void ciToday_Click (object sender, EventArgs args)
     {
       ControlProvider.First.NValue = DateTime.Today;
       ControlProvider.Last.NValue = ControlProvider.First.NValue;
     }
 
-    private void ci1To2_Click(object sender, EventArgs args)
+    private void ci1To2_Click (object sender, EventArgs args)
     {
       ControlProvider.Last.NValue = ControlProvider.First.NValue;
     }
 
-    private void ci2To1_Click(object sender, EventArgs args)
+    private void ci2To1_Click (object sender, EventArgs args)
     {
       ControlProvider.First.NValue = ControlProvider.Last.NValue;
     }
@@ -421,30 +425,30 @@ namespace FreeLibSet.Forms
 
     EFPCommandItem ciMonth, ciQuarter, ciYear;
 
-    private void ciMonth_Click(object sender, EventArgs args)
+    private void ciMonth_Click (object sender, EventArgs args)
     {
-      DoPeriod(1);
+      DoPeriod (1);
     }
 
-    private void ciQuarter_Click(object sender, EventArgs args)
+    private void ciQuarter_Click (object sender, EventArgs args)
     {
-      DoPeriod(2);
+      DoPeriod (2);
     }
 
-    private void ciYear_Click(object sender, EventArgs args)
+    private void ciYear_Click (object sender, EventArgs args)
     {
-      DoPeriod(3);
+      DoPeriod (3);
     }
 
-    private void DoPeriod(int mode)
+    private void DoPeriod (int mode)
     {
       DateTime firstDateValue, lastDateValue;
-      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
+      GetPeriodValues (mode, out firstDateValue, out lastDateValue);
       ControlProvider.First.NValue = firstDateValue;
       ControlProvider.Last.NValue = lastDateValue;
     }
 
-    private void GetPeriodValues(int mode, out DateTime firstDateValue, out DateTime lastDateValue)
+    private void GetPeriodValues (int mode, out DateTime firstDateValue, out DateTime lastDateValue)
     {
       DateTime date;
       if (ControlProvider.First.NValue.HasValue)
@@ -459,22 +463,22 @@ namespace FreeLibSet.Forms
 
       switch (mode)
       {
-        case 1:
+      case 1:
           // Для месяца ничего не делаем
-          break;
-        case 2:
+        break;
+      case 2:
           // Квартал
-          m1 = ((m1 - 1) / 3) * 3 + 1;
-          m2 = ((m2 + 2) / 3) * 3;
-          break;
-        case 3:
+        m1 = ((m1 - 1) / 3) * 3 + 1;
+        m2 = ((m2 + 2) / 3) * 3;
+        break;
+      case 3:
           // Год
-          m1 = 1;
-          m2 = 12;
-          break;
+        m1 = 1;
+        m2 = 12;
+        break;
       }
-      firstDateValue = new DateTime(date.Year, m1, 1);
-      lastDateValue = new DateTime(date.Year, m2, DateTime.DaysInMonth(date.Year, m2));
+      firstDateValue = new DateTime (date.Year, m1, 1);
+      lastDateValue = new DateTime (date.Year, m2, DateTime.DaysInMonth (date.Year, m2));
     }
 
     #endregion
@@ -483,38 +487,38 @@ namespace FreeLibSet.Forms
 
     EFPCommandItem ciNextPeriod, ciPrevPeriod, ciNextYear, ciPrevYear;
 
-    void ciNextYear_Click(object sender, EventArgs args)
+    void ciNextYear_Click (object sender, EventArgs args)
     {
-      ShiftYear(true);
+      ShiftYear (true);
     }
 
-    void ciPrevYear_Click(object sender, EventArgs args)
+    void ciPrevYear_Click (object sender, EventArgs args)
     {
-      ShiftYear(false);
+      ShiftYear (false);
     }
 
-    private void ShiftYear(bool forward)
+    private void ShiftYear (bool forward)
     {
       DateTime? firstDate = ControlProvider.First.NValue;
       DateTime? lastDate = ControlProvider.Last.NValue;
-      if (UITools.ShiftDateRangeYear(ref firstDate, ref lastDate, forward))
+      if (UITools.ShiftDateRangeYear (ref firstDate, ref lastDate, forward))
       {
         ControlProvider.First.NValue = firstDate;
         ControlProvider.Last.NValue = lastDate;
       }
       else
-        EFPApp.ShowTempMessage("Нельзя изменить год");
+        EFPApp.ShowTempMessage ("Нельзя изменить год");
     }
 
     #endregion
 
     #region Управление доступностью команд и текстом справа
 
-    public void InitCommandItemsState()
+    public void InitCommandItemsState ()
     {
       DateRangeFormatter formatter = ControlProvider.Control.Formatter;
 
-      SetMenuRightText(ciToday, formatter.ToString(DateTime.Today, false));
+      SetMenuRightText (ciToday, formatter.ToString (DateTime.Today, false));
 
       bool rangeEnabled = ControlProvider.First.Editable && ControlProvider.Last.Editable;
 
@@ -527,32 +531,32 @@ namespace FreeLibSet.Forms
       if (rangeEnabled)
       {
         if (ControlProvider.First.NValue.HasValue)
-          SetMenuRightText(ci1To2, formatter.ToString(ControlProvider.First.NValue.Value, false));
+          SetMenuRightText (ci1To2, formatter.ToString (ControlProvider.First.NValue.Value, false));
         else
         {
-          SetMenuRightText(ci1To2, String.Empty);
+          SetMenuRightText (ci1To2, String.Empty);
           ci1To2.Enabled = false;
         }
         if (ControlProvider.Last.NValue.HasValue)
-          SetMenuRightText(ci2To1, formatter.ToString(ControlProvider.Last.NValue.Value, false));
+          SetMenuRightText (ci2To1, formatter.ToString (ControlProvider.Last.NValue.Value, false));
         else
         {
-          SetMenuRightText(ci2To1, String.Empty);
+          SetMenuRightText (ci2To1, String.Empty);
           ci2To1.Enabled = false;
         }
 
-        SetMenuRightText(ciMonth, GetPeriodText(1));
-        SetMenuRightText(ciQuarter, GetPeriodText(2));
-        SetMenuRightText(ciYear, GetPeriodText(3));
+        SetMenuRightText (ciMonth, GetPeriodText (1));
+        SetMenuRightText (ciQuarter, GetPeriodText (2));
+        SetMenuRightText (ciYear, GetPeriodText (3));
 
       }
       else
       {
-        SetMenuRightText(ci1To2, String.Empty);
-        SetMenuRightText(ci2To1, String.Empty);
-        SetMenuRightText(ciMonth, String.Empty);
-        SetMenuRightText(ciQuarter, String.Empty);
-        SetMenuRightText(ciYear, String.Empty);
+        SetMenuRightText (ci1To2, String.Empty);
+        SetMenuRightText (ci2To1, String.Empty);
+        SetMenuRightText (ciMonth, String.Empty);
+        SetMenuRightText (ciQuarter, String.Empty);
+        SetMenuRightText (ciYear, String.Empty);
       }
 
       DateTime? dt1;
@@ -563,48 +567,48 @@ namespace FreeLibSet.Forms
       {
         dt1 = ControlProvider.First.NValue;
         dt2 = ControlProvider.Last.NValue;
-        UITools.ShiftDateRange(ref dt1, ref dt2, true);
-        SetMenuRightText(ciNextPeriod, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
+        UITools.ShiftDateRange (ref dt1, ref dt2, true);
+        SetMenuRightText (ciNextPeriod, ControlProvider.Control.Formatter.ToString (dt1, dt2, false));
       }
       else
-        SetMenuRightText(ciNextPeriod, String.Empty);
+        SetMenuRightText (ciNextPeriod, String.Empty);
 
       ciPrevPeriod.Enabled = ControlProvider.Control.TheLeftButton.Enabled;
       if (ciPrevPeriod.Enabled)
       {
         dt1 = ControlProvider.First.NValue;
         dt2 = ControlProvider.Last.NValue;
-        UITools.ShiftDateRange(ref dt1, ref dt2, false);
-        SetMenuRightText(ciPrevPeriod, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
+        UITools.ShiftDateRange (ref dt1, ref dt2, false);
+        SetMenuRightText (ciPrevPeriod, ControlProvider.Control.Formatter.ToString (dt1, dt2, false));
       }
       else
-        SetMenuRightText(ciPrevPeriod, String.Empty);
+        SetMenuRightText (ciPrevPeriod, String.Empty);
 
       dt1 = ControlProvider.First.NValue;
       dt2 = ControlProvider.Last.NValue;
-      ciNextYear.Enabled = UITools.ShiftDateRangeYear(ref dt1, ref dt2, true);
+      ciNextYear.Enabled = UITools.ShiftDateRangeYear (ref dt1, ref dt2, true);
       if (ciNextYear.Enabled)
-        SetMenuRightText(ciNextYear, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
+        SetMenuRightText (ciNextYear, ControlProvider.Control.Formatter.ToString (dt1, dt2, false));
       else
-        SetMenuRightText(ciNextYear, String.Empty);
+        SetMenuRightText (ciNextYear, String.Empty);
 
       dt1 = ControlProvider.First.NValue;
       dt2 = ControlProvider.Last.NValue;
-      ciPrevYear.Enabled = UITools.ShiftDateRangeYear(ref dt1, ref dt2, false);
+      ciPrevYear.Enabled = UITools.ShiftDateRangeYear (ref dt1, ref dt2, false);
       if (ciPrevYear.Enabled)
-        SetMenuRightText(ciPrevYear, ControlProvider.Control.Formatter.ToString(dt1, dt2, false));
+        SetMenuRightText (ciPrevYear, ControlProvider.Control.Formatter.ToString (dt1, dt2, false));
       else
-        SetMenuRightText(ciPrevYear, String.Empty);
+        SetMenuRightText (ciPrevYear, String.Empty);
     }
 
-    private string GetPeriodText(int mode)
+    private string GetPeriodText (int mode)
     {
       DateTime firstDateValue, lastDateValue;
-      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
-      return ControlProvider.Control.Formatter.ToString(firstDateValue, lastDateValue, false);
+      GetPeriodValues (mode, out firstDateValue, out lastDateValue);
+      return ControlProvider.Control.Formatter.ToString (firstDateValue, lastDateValue, false);
     }
 
-    internal static void SetMenuRightText(EFPCommandItem ci, string text)
+    internal static void SetMenuRightText (EFPCommandItem ci, string text)
     {
 #if XXX
       string s2 = EFPCommandItem.GetShortCutText(ci.ShortCut);
@@ -638,17 +642,18 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
-    public EFPDateOrRangeBox(EFPBaseProvider baseProvider, UserMaskedComboBox control)
-      : base(baseProvider, control, true)
+    public EFPDateOrRangeBox (EFPBaseProvider baseProvider, UserMaskedComboBox control)
+      : base (baseProvider, control, true)
     {
       control.Mask = EditableDateTimeFormatters.Date.EditMask;
       if (!DesignMode)
       {
-        control.TextChanged += new EventHandler(Control_TextChanged);
-        control.PopupClick += new EventHandler(Control_PopupClick);
-        control.ClearClick += new EventHandler(Control_ClearClick);
+        control.TextChanged += new EventHandler (Control_TextChanged);
+        control.PopupClick += new EventHandler (Control_PopupClick);
+        control.ClearClick += new EventHandler (Control_ClearClick);
       }
     }
+
     #endregion
 
     #region Переопределяемые методы
@@ -666,37 +671,37 @@ namespace FreeLibSet.Forms
     /// у других управляющих элементов, а через свойство ReadOnly
     /// </summary>
     /// <param name="value">True-выключить блокировку, false-включить</param>
-    public override void SyncMasterState(bool value)
+    public override void SyncMasterState (bool value)
     {
-      InitReadOnlyEx();
+      InitReadOnlyEx ();
       _NotReadOnlySync.Value = value;
     }
 
     /// <summary>
     /// Проверка попадания обних дат диапазона в интервал {Minimum, Maximum}
     /// </summary>
-    protected override void OnValidate()
+    protected override void OnValidate ()
     {
       if (!DateRange.IsEmpty)
       {
-        if ((!DataTools.DateInRange(DateRange.FirstDate, Minimum, Maximum)) ||
-          (!DataTools.DateInRange(DateRange.LastDate, Minimum, Maximum)))
-          SetError("Дата должна быть в диапазоне " + Formatter.ToString(Minimum, Maximum, true));
+        if ((!DataTools.DateInRange (DateRange.FirstDate, Minimum, Maximum)) ||
+            (!DataTools.DateInRange (DateRange.LastDate, Minimum, Maximum)))
+          SetError ("Дата должна быть в диапазоне " + Formatter.ToString (Minimum, Maximum, true));
       }
       else
       {
         switch (CanBeEmptyMode)
         {
-          case UIValidateState.Error:
-            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
-            break;
+        case UIValidateState.Error:
+          SetError ("Поле \"" + DisplayName + "\" должно быть заполнено");
+          break;
+        case UIValidateState.Warning:
+          SetWarning ("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
+          break;
         }
       }
 
-      base.OnValidate();
+      base.OnValidate ();
     }
 
     /// <summary>
@@ -722,12 +727,12 @@ namespace FreeLibSet.Forms
     /// Создает объект команд локального меню EFPDateOrRangeBoxCommandItems.
     /// </summary>
     /// <returns>Список команд</returns>
-    protected override EFPControlCommandItems CreateCommandItems()
+    protected override EFPControlCommandItems CreateCommandItems ()
     {
       //if (EFPApp.EasyInterface)
       //  return base.GetCommandItems();
       //else
-      return new EFPDateOrRangeBoxCommandItems(this);
+      return new EFPDateOrRangeBoxCommandItems (this);
     }
 
     /// <summary>
@@ -739,14 +744,14 @@ namespace FreeLibSet.Forms
 
     #region Выпадающий диалог и кнопка очистки
 
-    void Control_PopupClick(object sender, EventArgs args)
+    void Control_PopupClick (object sender, EventArgs args)
     {
-      InitText(); // на случай частично введенной даты, типа "12.03.19"
+      InitText (); // на случай частично введенной даты, типа "12.03.19"
 
       if (DateRange.IsEmpty || DateRange.LastDate == DateRange.FirstDate)
-        ShowDateDialog();
+        ShowDateDialog ();
       else
-        ShowRangeDialog();
+        ShowRangeDialog ();
     }
 
     #region Для одиночной даты
@@ -757,24 +762,24 @@ namespace FreeLibSet.Forms
     {
       public EFPDateOrRangeBox Owner;
 
-      protected override void OnDateSelected(DateRangeEventArgs drEvent)
+      protected override void OnDateSelected (DateRangeEventArgs drEvent)
       {
         try
         {
-          base.OnDateSelected(drEvent);
-          Owner.DateRange = new DateRange(SelectionStart);
+          base.OnDateSelected (drEvent);
+          Owner.DateRange = new DateRange (SelectionStart);
           //Owner.MainControl.SelectAll();
-          FindForm().Hide();
+          FindForm ().Hide ();
         }
         catch (Exception e)
         {
-          MessageBox.Show(e.Message, "Ошибка вызова OnDateSelected");
+          MessageBox.Show (e.Message, "Ошибка вызова OnDateSelected");
         }
       }
 
-      protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs args)
+      protected override void OnPreviewKeyDown (PreviewKeyDownEventArgs args)
       {
-        base.OnPreviewKeyDown(args);
+        base.OnPreviewKeyDown (args);
         if (/*Args.KeyCode == Keys.Tab || */args.KeyCode == Keys.Escape)
         {
           if ((!args.Alt) && (!args.Control))
@@ -782,33 +787,33 @@ namespace FreeLibSet.Forms
         }
       }
 
-      protected override void OnKeyDown(KeyEventArgs args)
+      protected override void OnKeyDown (KeyEventArgs args)
       {
         try
         {
           switch (args.KeyCode)
           {
-            case Keys.Return:
-              Owner.DateRange = new DateRange(SelectionStart);
+          case Keys.Return:
+            Owner.DateRange = new DateRange (SelectionStart);
               //Owner.MainControl.SelectAll();
-              FindForm().Hide();
-              args.Handled = true;
-              return;
-            //case Keys.Tab:
-            //  FindForm().Hide();
-            //  Args.Handled = true;
-            //  Owner.Control.FindForm().SelectNextControl(Owner.Control, !Args.Shift, true, true, true);
-            //  return;
-            case Keys.Escape:
-              FindForm().Hide();
-              return;
+            FindForm ().Hide ();
+            args.Handled = true;
+            return;
+          //case Keys.Tab:
+          //  FindForm().Hide();
+          //  Args.Handled = true;
+          //  Owner.Control.FindForm().SelectNextControl(Owner.Control, !Args.Shift, true, true, true);
+          //  return;
+          case Keys.Escape:
+            FindForm ().Hide ();
+            return;
           }
         }
         catch (Exception e)
         {
-          MessageBox.Show(e.Message, "Ошибка вызова OnDateSelected");
+          MessageBox.Show (e.Message, "Ошибка вызова OnDateSelected");
         }
-        base.OnKeyDown(args);
+        base.OnKeyDown (args);
       }
     }
 
@@ -820,12 +825,12 @@ namespace FreeLibSet.Forms
     {
       #region Конструктор
 
-      public MyCalendarForm(EFPDateOrRangeBox owner)
+      public MyCalendarForm (EFPDateOrRangeBox owner)
       {
-        this.SuspendLayout();
+        this.SuspendLayout ();
         // Нужно для правильного масшабирования кнопки
         // Календарик и так всегда правильный
-        this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+        this.AutoScaleDimensions = new System.Drawing.SizeF (6F, 13F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 
         FormBorderStyle = FormBorderStyle.None;
@@ -836,7 +841,7 @@ namespace FreeLibSet.Forms
         //TopMost = false;
         //TopLevel = false;
         //base.Owner = Owner.FindForm();
-        FormButtonStub.AssignCancel(this);
+        FormButtonStub.AssignCancel (this);
 
         base.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         base.AutoSize = true;
@@ -845,39 +850,39 @@ namespace FreeLibSet.Forms
         // Если используется тема Windows-98, то MonthCalendar не содержит никакой рамки
         // и получается некрасиво
         // Пусть лучше будет лишняя рамка
-        TableLayoutPanel pan = new TableLayoutPanel();
-        pan.SuspendLayout();
+        TableLayoutPanel pan = new TableLayoutPanel ();
+        pan.SuspendLayout ();
         pan.BorderStyle = BorderStyle.Fixed3D;
-        pan.Padding = new Padding(0);
-        pan.Margin = new Padding(0);
-        pan.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        pan.Padding = new Padding (0);
+        pan.Margin = new Padding (0);
+        pan.RowStyles.Add (new RowStyle (SizeType.AutoSize));
         //pan.RowStyles.Add(new RowStyle(SizeType.Absolute, 24 + pan.Margin.Vertical));
-        pan.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        pan.RowStyles.Add (new RowStyle (SizeType.AutoSize));
         pan.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         pan.AutoSize = true;
 
-        Calendar = new MyCalendar();
+        Calendar = new MyCalendar ();
         Calendar.Owner = owner;
         Calendar.MaxSelectionCount = 1;
-        Calendar.Margin = new Padding(3);
+        Calendar.Margin = new Padding (3);
         //Calendar.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-        Calendar.SizeChanged += new EventHandler(Calendar_SizeChanged);
+        Calendar.SizeChanged += new EventHandler (Calendar_SizeChanged);
 
-        _ToRangeButton = new Button();
-        _ToRangeButton.Size = new Size(Calendar.Width, 24);
+        _ToRangeButton = new Button ();
+        _ToRangeButton.Size = new Size (Calendar.Width, 24);
         _ToRangeButton.Text = "Диапазон";
-        _ToRangeButton.Image = EFPApp.MainImages.Images["DateRange"];
+        _ToRangeButton.Image = EFPApp.MainImages.Images ["DateRange"];
         _ToRangeButton.ImageAlign = ContentAlignment.MiddleLeft;
         //ToRangeButton.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
         _ToRangeButton.Margin = Calendar.Margin; // для красоты
-        _ToRangeButton.Click += new EventHandler(ToRangeButton_Click);
+        _ToRangeButton.Click += new EventHandler (ToRangeButton_Click);
 
-        pan.Controls.Add(Calendar, 0, 0);
-        pan.Controls.Add(_ToRangeButton, 0, 1);
+        pan.Controls.Add (Calendar, 0, 0);
+        pan.Controls.Add (_ToRangeButton, 0, 1);
 
-        this.Controls.Add(pan);
-        pan.ResumeLayout();
-        this.ResumeLayout();
+        this.Controls.Add (pan);
+        pan.ResumeLayout ();
+        this.ResumeLayout ();
       }
 
       #endregion
@@ -897,15 +902,15 @@ namespace FreeLibSet.Forms
         get { return false; }
       }
 
-      protected override void OnDeactivate(EventArgs args)
+      protected override void OnDeactivate (EventArgs args)
       {
-        base.OnDeactivate(args);
+        base.OnDeactivate (args);
 
         // Закрытие формы при попытке щелкнуть мимо
         try
         {
           if (Visible)
-            Hide();
+            Hide ();
         }
         catch /*(Exception e)*/
         {
@@ -913,13 +918,13 @@ namespace FreeLibSet.Forms
         }
       }
 
-      void ToRangeButton_Click(object sender, EventArgs args)
+      void ToRangeButton_Click (object sender, EventArgs args)
       {
-        Hide();
-        Calendar.Owner.ShowRangeDialog(); // показываем окно выбора диапазона
+        Hide ();
+        Calendar.Owner.ShowRangeDialog (); // показываем окно выбора диапазона
       }
 
-      private void Calendar_SizeChanged(object sender, EventArgs args)
+      private void Calendar_SizeChanged (object sender, EventArgs args)
       {
         _ToRangeButton.Width = Calendar.Width;
       }
@@ -937,18 +942,18 @@ namespace FreeLibSet.Forms
     /// </summary>
     private MyCalendarForm _CalendarForm;
 
-    private void ShowDateDialog()
+    private void ShowDateDialog ()
     {
       try
       {
-        if (WinFormsTools.IsNullOrDisposed(_CalendarForm))
+        if (WinFormsTools.IsNullOrDisposed (_CalendarForm))
         {
-          _CalendarForm = new MyCalendarForm(this);
-          Control.Disposed += new EventHandler(Control_Disposed);
+          _CalendarForm = new MyCalendarForm (this);
+          Control.Disposed += new EventHandler (Control_Disposed);
         }
 
-        Point pt = new Point(3, Control.Height);
-        pt = Control.PointToScreen(pt);
+        Point pt = new Point (3, Control.Height);
+        pt = Control.PointToScreen (pt);
         _CalendarForm.Location = pt;
         if (!DateRange.IsEmpty)
         {
@@ -961,21 +966,21 @@ namespace FreeLibSet.Forms
           _CalendarForm.Calendar.SelectionStart = DateTime.Today;
         _CalendarForm.Calendar.SelectionEnd = _CalendarForm.Calendar.SelectionStart;
 
-        _CalendarForm.Show();
+        _CalendarForm.Show ();
       }
       catch (Exception e)
       {
-        MessageBox.Show(e.Message, "Ошибка вызова календаря");
+        MessageBox.Show (e.Message, "Ошибка вызова календаря");
       }
     }
 
-    void Control_Disposed(object sender, EventArgs args)
+    void Control_Disposed (object sender, EventArgs args)
     {
       if (_CalendarForm != null)
       {
-        _CalendarForm.Dispose();
+        _CalendarForm.Dispose ();
         _CalendarForm = null;
-        Control.Disposed -= new EventHandler(Control_Disposed);
+        Control.Disposed -= new EventHandler (Control_Disposed);
       }
     }
 
@@ -983,9 +988,9 @@ namespace FreeLibSet.Forms
 
     #region Для диапазона дат
 
-    private void ShowRangeDialog()
+    private void ShowRangeDialog ()
     {
-      DateRangeDialog dlg = new DateRangeDialog();
+      DateRangeDialog dlg = new DateRangeDialog ();
       dlg.Title = DisplayName;
       dlg.CanBeEmpty = CanBeEmpty;
       dlg.Prompt = "Диапазон значений";
@@ -997,21 +1002,21 @@ namespace FreeLibSet.Forms
       }
       dlg.Minimum = Minimum;
       dlg.Maximum = Maximum;
-      dlg.Validators.AddError(new DepEqual<bool>(DepTools.IsNotEmptyEx<DateTime>(dlg.NFirstDateEx),
-        DepTools.IsNotEmptyEx(dlg.NLastDateEx)),
+      dlg.Validators.AddError (new DepEqual<bool> (DepTools.IsNotEmptyEx<DateTime> (dlg.NFirstDateEx),
+        DepTools.IsNotEmptyEx (dlg.NLastDateEx)),
         "Полуоткрытые интервалы не допускаются");
 
-      if (dlg.ShowDialog() != DialogResult.OK)
+      if (dlg.ShowDialog () != DialogResult.OK)
         return;
       if (dlg.NFirstDate.HasValue && dlg.NLastDate.HasValue)
-        DateRange = new DateRange(dlg.NFirstDate.Value, dlg.NLastDate.Value);
+        DateRange = new DateRange (dlg.NFirstDate.Value, dlg.NLastDate.Value);
       else
         DateRange = DateRange.Empty;
     }
 
     #endregion
 
-    void Control_ClearClick(object sender, EventArgs args)
+    void Control_ClearClick (object sender, EventArgs args)
     {
       DateRange = DateRange.Empty;
     }
@@ -1031,20 +1036,20 @@ namespace FreeLibSet.Forms
       set
       {
         _DateRange = value;
-        if (_FirstDateEx != null)
-          _FirstDateEx.Value = FirstDate;
-        if (_LastDateEx != null)
-          _LastDateEx.Value = LastDate;
-        if (_NFirstDateEx != null)
-          _NFirstDateEx.Value = NFirstDate;
-        if (_NLastDateEx != null)
-          _NLastDateEx.Value = NLastDate;
         if (!_InsideValueChanged)
         {
           _InsideValueChanged = true;
           try
           {
-            InitText();
+            if (_FirstDateEx != null)
+              _FirstDateEx.Value = FirstDate;
+            if (_LastDateEx != null)
+              _LastDateEx.Value = LastDate;
+            if (_NFirstDateEx != null)
+              _NFirstDateEx.Value = NFirstDate;
+            if (_NLastDateEx != null)
+              _NLastDateEx.Value = NLastDate;
+            InitText ();
           }
           finally
           {
@@ -1052,33 +1057,48 @@ namespace FreeLibSet.Forms
           }
         }
 
-        OnValueChanged();
+        OnValueChanged ();
       }
     }
+
     private DateRange _DateRange;
 
-    private void InitText()
+    private void InitText ()
     {
-      if (DateRange.IsEmpty)
+      bool currInsideValueChanged = _InsideValueChanged;
+
+      // 18.10.2023. В Mono, при установке свойства UserMaskedTextBox.Mask меняется свойство Text и генерируется событие TextChanged,
+      // что неожиданно меняет свойство DateRange.
+      // Проявляется только при установке ReadOnly=true.
+      // Предотвращаем изменение свойства.
+      _InsideValueChanged = true; 
+      try
       {
-        Control.Mask = EditableDateTimeFormatters.Date.EditMask;
-        Control.Text = String.Empty;
-        Control.ReadOnly = ReadOnly;
+        if (DateRange.IsEmpty)
+        {
+          Control.Mask = EditableDateTimeFormatters.Date.EditMask;
+          Control.Text = String.Empty;
+          Control.ReadOnly = ReadOnly;
+        }
+        else if (DateRange.FirstDate == DateRange.LastDate)
+        {
+          Control.Mask = EditableDateTimeFormatters.Date.EditMask;
+          Control.Text = EditableDateTimeFormatters.Date.ToString (DateRange.FirstDate); // 29.04.2021, 19.05.2021
+          Control.ReadOnly = ReadOnly;
+        }
+        else
+        {
+          Control.Mask = String.Empty;
+          Control.Text = Formatter.ToString (DateRange, false);
+          Control.ReadOnly = true;
+        }
+        Control.PopupButtonEnabled = !ReadOnly;
+        Control.ClearButtonEnabled = (!DateRange.IsEmpty) && (!ReadOnly);
       }
-      else if (DateRange.FirstDate == DateRange.LastDate)
+      finally
       {
-        Control.Mask = EditableDateTimeFormatters.Date.EditMask;
-        Control.Text = EditableDateTimeFormatters.Date.ToString(DateRange.FirstDate); // 29.04.2021, 19.05.2021
-        Control.ReadOnly = ReadOnly;
+        _InsideValueChanged = currInsideValueChanged;
       }
-      else
-      {
-        Control.Mask = String.Empty;
-        Control.Text = Formatter.ToString(DateRange, false);
-        Control.ReadOnly = true;
-      }
-      Control.PopupButtonEnabled = !ReadOnly;
-      Control.ClearButtonEnabled = (!DateRange.IsEmpty) && (!ReadOnly);
     }
 
     #endregion
@@ -1102,9 +1122,9 @@ namespace FreeLibSet.Forms
       set
       {
         if (DateRange.IsEmpty)
-          DateRange = new DateRange(value, value);
+          DateRange = new DateRange (value, value);
         else
-          DateRange = new DateRange(value, DataTools.Max(DateRange.LastDate, value.Date));
+          DateRange = new DateRange (value, DataTools.Max (DateRange.LastDate, value.Date));
       }
     }
 
@@ -1115,27 +1135,28 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitFirstDateEx();
+        InitFirstDateEx ();
         return _FirstDateEx;
       }
       set
       {
-        InitFirstDateEx();
+        InitFirstDateEx ();
         _FirstDateEx.Source = value;
       }
     }
+
     private DepInput<DateTime> _FirstDateEx;
 
-    private void InitFirstDateEx()
+    private void InitFirstDateEx ()
     {
       if (_FirstDateEx == null)
       {
-        _FirstDateEx = new DepInput<DateTime>(FirstDate, FirstDateEx_ValueChanged);
-        _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
+        _FirstDateEx = new DepInput<DateTime> (FirstDate, FirstDateEx_ValueChanged);
+        _FirstDateEx.OwnerInfo = new DepOwnerInfo (this, "FirstDateEx");
       }
     }
 
-    private void FirstDateEx_ValueChanged(object sender, EventArgs args)
+    private void FirstDateEx_ValueChanged (object sender, EventArgs args)
     {
       if (!_InsideValueChanged)
         FirstDate = _FirstDateEx.Value;
@@ -1162,9 +1183,9 @@ namespace FreeLibSet.Forms
       set
       {
         if (DateRange.IsEmpty)
-          DateRange = new DateRange(value, value);
+          DateRange = new DateRange (value, value);
         else
-          DateRange = new DateRange(DataTools.Min(DateRange.FirstDate, value.Date), value);
+          DateRange = new DateRange (DataTools.Min (DateRange.FirstDate, value.Date), value);
       }
     }
 
@@ -1175,28 +1196,29 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitLastDateEx();
+        InitLastDateEx ();
         return _LastDateEx;
       }
       set
       {
-        InitLastDateEx();
+        InitLastDateEx ();
         _LastDateEx.Source = value;
       }
     }
+
     private DepInput<DateTime> _LastDateEx;
 
 
-    private void InitLastDateEx()
+    private void InitLastDateEx ()
     {
       if (_LastDateEx == null)
       {
-        _LastDateEx = new DepInput<DateTime>(LastDate, LastDateEx_ValueChanged);
-        _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
+        _LastDateEx = new DepInput<DateTime> (LastDate, LastDateEx_ValueChanged);
+        _LastDateEx.OwnerInfo = new DepOwnerInfo (this, "LastDateEx");
       }
     }
 
-    private void LastDateEx_ValueChanged(object sender, EventArgs args)
+    private void LastDateEx_ValueChanged (object sender, EventArgs args)
     {
       if (!_InsideValueChanged)
         LastDate = _LastDateEx.Value;
@@ -1236,27 +1258,28 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitNFirstDateEx();
+        InitNFirstDateEx ();
         return _NFirstDateEx;
       }
       set
       {
-        InitNFirstDateEx();
+        InitNFirstDateEx ();
         _NFirstDateEx.Source = value;
       }
     }
+
     private DepInput<DateTime?> _NFirstDateEx;
 
-    private void InitNFirstDateEx()
+    private void InitNFirstDateEx ()
     {
       if (_NFirstDateEx == null)
       {
-        _NFirstDateEx = new DepInput<DateTime?>(NFirstDate, NFirstDateEx_ValueChanged);
-        _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+        _NFirstDateEx = new DepInput<DateTime?> (NFirstDate, NFirstDateEx_ValueChanged);
+        _NFirstDateEx.OwnerInfo = new DepOwnerInfo (this, "NFirstDateEx");
       }
     }
 
-    private void NFirstDateEx_ValueChanged(object sender, EventArgs args)
+    private void NFirstDateEx_ValueChanged (object sender, EventArgs args)
     {
       if (!_InsideValueChanged)
         NFirstDate = _NFirstDateEx.Value;
@@ -1296,28 +1319,29 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitNLastDateEx();
+        InitNLastDateEx ();
         return _NLastDateEx;
       }
       set
       {
-        InitNLastDateEx();
+        InitNLastDateEx ();
         _NLastDateEx.Source = value;
       }
     }
+
     private DepInput<DateTime?> _NLastDateEx;
 
 
-    private void InitNLastDateEx()
+    private void InitNLastDateEx ()
     {
       if (_NLastDateEx == null)
       {
-        _NLastDateEx = new DepInput<DateTime?>(NLastDate, NLastDateEx_ValueChanged);
-        _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+        _NLastDateEx = new DepInput<DateTime?> (NLastDate, NLastDateEx_ValueChanged);
+        _NLastDateEx.OwnerInfo = new DepOwnerInfo (this, "NLastDateEx");
       }
     }
 
-    private void NLastDateEx_ValueChanged(object sender, EventArgs args)
+    private void NLastDateEx_ValueChanged (object sender, EventArgs args)
     {
       if (!_InsideValueChanged)
         NLastDate = _NLastDateEx.Value;
@@ -1327,16 +1351,16 @@ namespace FreeLibSet.Forms
 
     #region OnValueChanged
 
-    void Control_TextChanged(object sender, EventArgs args)
+    void Control_TextChanged (object sender, EventArgs args)
     {
       if (_InsideValueChanged)
         return;
       _InsideValueChanged = true;
       try
       {
-        DateTime? dt = EditableDateTimeFormatters.Date.ToNValue(Control.Text, DefaultYear);
+        DateTime? dt = EditableDateTimeFormatters.Date.ToNValue (Control.Text, DefaultYear);
         if (dt.HasValue)
-          this.DateRange = new DateRange(dt.Value, dt.Value);
+          this.DateRange = new DateRange (dt.Value, dt.Value);
         else
           this.DateRange = DateRange.Empty;
       }
@@ -1352,7 +1376,7 @@ namespace FreeLibSet.Forms
     /// Метод вызывается при изменении значения в управляющем элементе.
     /// При переопределении обязательно должен вызываться базовый метод
     /// </summary>
-    protected virtual void OnValueChanged()
+    protected virtual void OnValueChanged ()
     {
 #if XXX
       if (_FirstValueEx != null)
@@ -1372,10 +1396,10 @@ namespace FreeLibSet.Forms
 #endif
       EFPDateOrRangeBoxCommandItems commandItems2 = CommandItemsIfAssigned as EFPDateOrRangeBoxCommandItems;
       if (commandItems2 != null)
-        commandItems2.InitCommandItemsState(); // 03.06.2019
+        commandItems2.InitCommandItemsState (); // 03.06.2019
 
-      Validate();
-      DoSyncValueChanged();
+      Validate ();
+      DoSyncValueChanged ();
     }
 
     #endregion
@@ -1383,7 +1407,8 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства FirstValueEx и LastValueEx
-#if XXX
+
+    #if XXX
     /// <summary>
     /// Управляемое значение для начальной даты диапазона Value.FirstDate.
     /// Управляемое свойство возвращает значение null, если интервал не задан.
@@ -1442,13 +1467,14 @@ namespace FreeLibSet.Forms
       get
       {
         if (_IsNotEmptyEx == null)
-          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmpty);
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?> (NFirstDateEx, NLastDateEx, CalcIsNotEmpty);
         return _IsNotEmptyEx;
       }
     }
+
     private DepValue<bool> _IsNotEmptyEx;
 
-    private static bool CalcIsNotEmpty(DateTime? firstDate, DateTime? lastDate)
+    private static bool CalcIsNotEmpty (DateTime? firstDate, DateTime? lastDate)
     {
       return firstDate.HasValue && lastDate.HasValue;
     }
@@ -1462,6 +1488,7 @@ namespace FreeLibSet.Forms
     /// По умолчанию - Error
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
+
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
@@ -1491,9 +1518,10 @@ namespace FreeLibSet.Forms
         _DefaultYear = value;
         if (_DefaultYearEx != null)
           _DefaultYearEx.Value = value;
-        Control_TextChanged(null, null);
+        Control_TextChanged (null, null);
       }
     }
+
     private int _DefaultYear;
 
     /// <summary>
@@ -1503,28 +1531,28 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitDefaultYearEx();
+        InitDefaultYearEx ();
         return _DefaultYearEx;
       }
       set
       {
-        InitDefaultYearEx();
+        InitDefaultYearEx ();
         _DefaultYearEx.Source = value;
       }
     }
 
     private DepInput<int> _DefaultYearEx;
 
-    private void InitDefaultYearEx()
+    private void InitDefaultYearEx ()
     {
       if (_DefaultYearEx == null)
       {
-        _DefaultYearEx = new DepInput<int>(DefaultYear, DefaultYearEx_ValueChanged);
-        _DefaultYearEx.OwnerInfo = new DepOwnerInfo(this, "DefaultYearEx");
+        _DefaultYearEx = new DepInput<int> (DefaultYear, DefaultYearEx_ValueChanged);
+        _DefaultYearEx.OwnerInfo = new DepOwnerInfo (this, "DefaultYearEx");
       }
     }
 
-    void DefaultYearEx_ValueChanged(object sender, EventArgs args)
+    void DefaultYearEx_ValueChanged (object sender, EventArgs args)
     {
       DefaultYear = DefaultYearEx.Value;
     }
@@ -1547,12 +1575,13 @@ namespace FreeLibSet.Forms
         if (value == _ReadOnly)
           return;
         _ReadOnly = value;
-        InitText(); // переключает Control.ReadOnly
+        InitText (); // переключает Control.ReadOnly
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-        UpdateEnabledState();
+        UpdateEnabledState ();
       }
     }
+
     private bool _ReadOnly;
 
     /// <summary>
@@ -1562,33 +1591,34 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        InitReadOnlyEx();
+        InitReadOnlyEx ();
         return _ReadOnlyEx;
       }
       set
       {
-        InitReadOnlyEx();
+        InitReadOnlyEx ();
         _ReadOnlyMain.Source = value;
       }
     }
 
-    private void InitReadOnlyEx()
+    private void InitReadOnlyEx ()
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>(false, ReadOnlyEx_ValueChanged);
-        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
+        _ReadOnlyEx = new DepInput<Boolean> (false, ReadOnlyEx_ValueChanged);
+        _ReadOnlyEx.OwnerInfo = new DepOwnerInfo (this, "ReadOnlyEx");
 
-        _ReadOnlyMain = new DepInput<bool>(false, null);
-        _ReadOnlyMain.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyMain");
+        _ReadOnlyMain = new DepInput<bool> (false, null);
+        _ReadOnlyMain.OwnerInfo = new DepOwnerInfo (this, "ReadOnlyMain");
 
-        _NotReadOnlySync = new DepInput<bool>(true, null);
-        _NotReadOnlySync.OwnerInfo = new DepOwnerInfo(this, "NotReadOnlySync");
+        _NotReadOnlySync = new DepInput<bool> (true, null);
+        _NotReadOnlySync.OwnerInfo = new DepOwnerInfo (this, "NotReadOnlySync");
 
-        DepOr readOnlyOr = new DepOr(_ReadOnlyMain, new DepNot(_NotReadOnlySync));
+        DepOr readOnlyOr = new DepOr (_ReadOnlyMain, new DepNot (_NotReadOnlySync));
         _ReadOnlyEx.Source = readOnlyOr;
       }
     }
+
     /// <summary>
     /// Выходная часть свойства ReadOnly
     /// </summary>
@@ -1602,7 +1632,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private DepInput<Boolean> _NotReadOnlySync;
 
-    private void ReadOnlyEx_ValueChanged(object sender, EventArgs args)
+    private void ReadOnlyEx_ValueChanged (object sender, EventArgs args)
     {
       ReadOnly = _ReadOnlyEx.Value;
     }
@@ -1622,6 +1652,7 @@ namespace FreeLibSet.Forms
       get { return _Minimum; }
       set { _Minimum = value; }
     }
+
     private DateTime? _Minimum;
 
     /// <summary>
@@ -1635,6 +1666,7 @@ namespace FreeLibSet.Forms
       get { return _Maximum; }
       set { _Maximum = value; }
     }
+
     private DateTime? _Maximum;
 
     #endregion
@@ -1659,6 +1691,7 @@ namespace FreeLibSet.Forms
         _Formatter = value;
       }
     }
+
     private DateRangeFormatter _Formatter;
 
     #endregion
@@ -1697,14 +1730,14 @@ namespace FreeLibSet.Forms
       set { Control.SelectedText = value; }
     }
 
-    void IEFPSimpleTextBox.Select(int start, int length)
+    void IEFPSimpleTextBox.Select (int start, int length)
     {
-      Control.Select(start, length);
+      Control.Select (start, length);
     }
 
-    void IEFPSimpleTextBox.SelectAll()
+    void IEFPSimpleTextBox.SelectAll ()
     {
-      Control.SelectAll();
+      Control.SelectAll ();
     }
 
     #endregion
@@ -1721,35 +1754,35 @@ namespace FreeLibSet.Forms
     /// Создает список команд
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
-    public EFPDateOrRangeBoxCommandItems(EFPDateOrRangeBox controlProvider)
-      : base(controlProvider, false, true)
+    public EFPDateOrRangeBoxCommandItems (EFPDateOrRangeBox controlProvider)
+      : base (controlProvider, false, true)
     {
-      ciToday = new EFPCommandItem("Edit", "Today");
+      ciToday = new EFPCommandItem ("Edit", "Today");
       ciToday.MenuText = "Сегодня";
       ciToday.ShortCut = Keys.Control | Keys.T;
       ciToday.Click += ciToday_Click;
-      Add(ciToday);
+      Add (ciToday);
 
-      ciMonth = new EFPCommandItem("Edit", "Month");
+      ciMonth = new EFPCommandItem ("Edit", "Month");
       ciMonth.MenuText = "Месяц";
       ciMonth.ShortCut = Keys.Control | Keys.M;
       ciMonth.Click += ciMonth_Click;
       ciMonth.GroupBegin = true;
-      Add(ciMonth);
+      Add (ciMonth);
 
-      ciQuarter = new EFPCommandItem("Edit", "Quarter");
+      ciQuarter = new EFPCommandItem ("Edit", "Quarter");
       ciQuarter.MenuText = "Квартал";
       ciQuarter.ShortCut = Keys.Control | Keys.Q;
       ciQuarter.Click += ciQuarter_Click;
-      Add(ciQuarter);
+      Add (ciQuarter);
 
-      ciYear = new EFPCommandItem("Edit", "Year");
+      ciYear = new EFPCommandItem ("Edit", "Year");
       ciYear.MenuText = "Год";
       ciYear.ShortCut = Keys.Control | Keys.Y;
       ciYear.Click += ciYear_Click;
-      Add(ciYear);
+      Add (ciYear);
 
-      InitCommandItemsState();
+      InitCommandItemsState ();
     }
 
     #endregion
@@ -1768,35 +1801,35 @@ namespace FreeLibSet.Forms
     EFPCommandItem ciToday;
     EFPCommandItem ciMonth, ciQuarter, ciYear;
 
-    private void ciToday_Click(object sender, EventArgs args)
+    private void ciToday_Click (object sender, EventArgs args)
     {
-      ControlProvider.DateRange = new DateRange(DateTime.Today);
+      ControlProvider.DateRange = new DateRange (DateTime.Today);
     }
 
 
-    private void ciMonth_Click(object sender, EventArgs args)
+    private void ciMonth_Click (object sender, EventArgs args)
     {
-      DoPeriod(1);
+      DoPeriod (1);
     }
 
-    private void ciQuarter_Click(object sender, EventArgs args)
+    private void ciQuarter_Click (object sender, EventArgs args)
     {
-      DoPeriod(2);
+      DoPeriod (2);
     }
 
-    private void ciYear_Click(object sender, EventArgs args)
+    private void ciYear_Click (object sender, EventArgs args)
     {
-      DoPeriod(3);
+      DoPeriod (3);
     }
 
-    private void DoPeriod(int mode)
+    private void DoPeriod (int mode)
     {
       DateTime firstDateValue, lastDateValue;
-      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
-      ControlProvider.DateRange = new DateRange(firstDateValue, lastDateValue);
+      GetPeriodValues (mode, out firstDateValue, out lastDateValue);
+      ControlProvider.DateRange = new DateRange (firstDateValue, lastDateValue);
     }
 
-    private void GetPeriodValues(int mode, out DateTime firstDateValue, out DateTime lastDateValue)
+    private void GetPeriodValues (int mode, out DateTime firstDateValue, out DateTime lastDateValue)
     {
       DateTime date;
       if (ControlProvider.DateRange.IsEmpty)
@@ -1809,22 +1842,22 @@ namespace FreeLibSet.Forms
 
       switch (mode)
       {
-        case 1:
+      case 1:
           // Для месяца ничего не делаем
-          break;
-        case 2:
+        break;
+      case 2:
           // Квартал
-          m1 = ((m1 - 1) / 3) * 3 + 1;
-          m2 = ((m2 + 2) / 3) * 3;
-          break;
-        case 3:
+        m1 = ((m1 - 1) / 3) * 3 + 1;
+        m2 = ((m2 + 2) / 3) * 3;
+        break;
+      case 3:
           // Год
-          m1 = 1;
-          m2 = 12;
-          break;
+        m1 = 1;
+        m2 = 12;
+        break;
       }
-      firstDateValue = new DateTime(date.Year, m1, 1);
-      lastDateValue = new DateTime(date.Year, m2, DateTime.DaysInMonth(date.Year, m2));
+      firstDateValue = new DateTime (date.Year, m1, 1);
+      lastDateValue = new DateTime (date.Year, m2, DateTime.DaysInMonth (date.Year, m2));
     }
 
     #endregion
@@ -1834,21 +1867,21 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация текста для команд
     /// </summary>
-    public void InitCommandItemsState()
+    public void InitCommandItemsState ()
     {
-      EFPDateRangeBoxCommandItems.SetMenuRightText(ciToday, ControlProvider.Formatter.ToString(DateTime.Today, false));
+      EFPDateRangeBoxCommandItems.SetMenuRightText (ciToday, ControlProvider.Formatter.ToString (DateTime.Today, false));
 
-      EFPDateRangeBoxCommandItems.SetMenuRightText(ciMonth, GetPeriodText(1));
-      EFPDateRangeBoxCommandItems.SetMenuRightText(ciQuarter, GetPeriodText(2));
-      EFPDateRangeBoxCommandItems.SetMenuRightText(ciYear, GetPeriodText(3));
+      EFPDateRangeBoxCommandItems.SetMenuRightText (ciMonth, GetPeriodText (1));
+      EFPDateRangeBoxCommandItems.SetMenuRightText (ciQuarter, GetPeriodText (2));
+      EFPDateRangeBoxCommandItems.SetMenuRightText (ciYear, GetPeriodText (3));
 
     }
 
-    private string GetPeriodText(int mode)
+    private string GetPeriodText (int mode)
     {
       DateTime firstDateValue, lastDateValue;
-      GetPeriodValues(mode, out firstDateValue, out lastDateValue);
-      return ControlProvider.Formatter.ToString(firstDateValue, lastDateValue, false);
+      GetPeriodValues (mode, out firstDateValue, out lastDateValue);
+      return ControlProvider.Formatter.ToString (firstDateValue, lastDateValue, false);
     }
 
     #endregion

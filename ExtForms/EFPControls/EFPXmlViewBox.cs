@@ -477,25 +477,25 @@ namespace FreeLibSet.Forms
     protected EFPWebBrowserCommandItems(EFPWebBrowser controlProvider, string fileExt)
       :base(controlProvider)
     {
-      ciPageSetup = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PageSetup);
-      ciPageSetup.Click += new EventHandler(ciPageSetup_Click);
-      ciPageSetup.GroupBegin = true;
-      Add(ciPageSetup);
-
-      ciPreview = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PrintPreview);
-      ciPreview.Click += new EventHandler(ciPreview_Click);
-      Add(ciPreview);
-
       ciPrint = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Print);
       ciPrint.Click += new EventHandler(ciPrint_Click);
       ciPrint.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
+      ciPrint.GroupBegin = true;
       Add(ciPrint);
 
       ciPrintDefault = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PrintDefault);
       ciPrintDefault.Click += new EventHandler(ciPrintDefault_Click);
       Add(ciPrintDefault);
 
-      AddSeparator();
+      ciPageSetup = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PageSetup);
+      ciPageSetup.Click += new EventHandler(ciPageSetup_Click);
+      Add(ciPageSetup);
+
+      ciPreview = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PrintPreview);
+      ciPreview.Click += new EventHandler(ciPreview_Click);
+      ciPreview.GroupEnd = true;
+      Add(ciPreview);
+
       _FileAssociationsHandler = new EFPFileAssociationsCommandItemsHandler(this, fileExt);
       _FileAssociationsHandler.FileNeeded += new System.ComponentModel.CancelEventHandler(FileAssociationsHandler_FileNeeded);
 

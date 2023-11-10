@@ -48,12 +48,12 @@ namespace FreeLibSet.Forms.Reporting
         "При альбомной ориентации принтер печатает \"боком\"";
       efpOrientation.SelectedIndexEx.ValueChanged += new EventHandler(OrientationChanged);
 
-      // TODO: grpDuplex.Visible = FForm.PageSetup.AllowDuplex;
-      efpDuplex = new EFPCheckBox(page.BaseProvider, cbDuplex);
-      efpDuplex.ToolTipText = "Режим двусторонней печати (если поддерживается принтером)." + Environment.NewLine +
-        "Некоторые драйверы принтера поддерживают эмуляцию двусторонней печати путем" + Environment.NewLine +
-        "выдачи приглашения перевернуть бумагу";
-      efpDuplex.CheckedEx.ValueChanged += new EventHandler(DuplexChanged);
+      //// TODO: grpDuplex.Visible = FForm.PageSetup.AllowDuplex;
+      //efpDuplex = new EFPCheckBox(page.BaseProvider, cbDuplex);
+      //efpDuplex.ToolTipText = "Режим двусторонней печати (если поддерживается принтером)." + Environment.NewLine +
+      //  "Некоторые драйверы принтера поддерживают эмуляцию двусторонней печати путем" + Environment.NewLine +
+      //  "выдачи приглашения перевернуть бумагу";
+      //efpDuplex.CheckedEx.ValueChanged += new EventHandler(DuplexChanged);
 
       //grpCenterPage.Visible = FForm.PageSetup.AllowCenterPage;
       efpCenterHorizontal = new EFPCheckBox(page.BaseProvider, cbCenterHorizontal);
@@ -195,8 +195,8 @@ namespace FreeLibSet.Forms.Reporting
 
     #endregion
 
-    #region Двусторонняя печать
-
+#region Двусторонняя печать
+#if XXX
     EFPCheckBox efpDuplex;
 
     /// <summary>
@@ -243,16 +243,17 @@ namespace FreeLibSet.Forms.Reporting
       FForm.PageSetup.Duplex = FForm.cbDuplex.Checked;
 #endif
     }
+#endif
 
-    #endregion
+#endregion
 
-    #region Центрирование
+#region Центрирование
 
     EFPCheckBox efpCenterHorizontal, efpCenterVertical;
 
-    #endregion
+#endregion
 
-    #region Ориентация бумаги
+#region Ориентация бумаги
 
     EFPRadioButtons efpOrientation;
 
@@ -275,18 +276,18 @@ namespace FreeLibSet.Forms.Reporting
       PaperWidthOrHeightChanged(null, null);
     }
 
-    #endregion
+#endregion
 
-    #region Обработчики SettingsDialogPage
+#region Обработчики SettingsDialogPage
 
     private void DataToControls(object sender, EventArgs args)
     {
       SettingsDialogPage page = (SettingsDialogPage)sender;
-      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSetup>();
+      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSettingsDataItem>().PageSetup;
       _InsidePaperSize = true;
       try
       {
-        efpOrientation.SelectedIndex = ps.Landscape ? 1 : 0;
+        efpOrientation.SelectedIndex = (int)(ps.Orientation);
         efpPaperHeight.Value = Math.Round(ps.PaperHeight / 100m, 2, MidpointRounding.AwayFromZero);
         efpPaperWidth.Value = Math.Round(ps.PaperWidth / 100m, 2, MidpointRounding.AwayFromZero);
       }
@@ -299,7 +300,7 @@ namespace FreeLibSet.Forms.Reporting
       efpCenterHorizontal.Checked = ps.CenterHorizontal;
       efpCenterVertical.Checked = ps.CenterVertical;
 
-      InitDuplexCheckBox();
+      //InitDuplexCheckBox();
 
 
       //if (efpDuplex.Editable)
@@ -309,15 +310,15 @@ namespace FreeLibSet.Forms.Reporting
     private void DataFromControls(object sender, EventArgs args)
     {
       SettingsDialogPage page = (SettingsDialogPage)sender;
-      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSetup>();
-      ps.Landscape = efpOrientation.SelectedIndex == 1;
+      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSettingsDataItem>().PageSetup;
+      ps.SetOrientation((BROrientation)(efpOrientation.SelectedIndex), true);
       ps.PaperHeight = (int)(Math.Round(efpPaperHeight.Value * 100m, 0, MidpointRounding.AwayFromZero));
       ps.PaperWidth = (int)(Math.Round(efpPaperWidth.Value * 100m, 0, MidpointRounding.AwayFromZero));
       ps.CenterHorizontal = efpCenterHorizontal.Checked;
       ps.CenterVertical = efpCenterVertical.Checked;
     }
 
-    #endregion
+#endregion
 
   }
 }

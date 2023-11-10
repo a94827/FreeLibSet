@@ -559,7 +559,7 @@ namespace FreeLibSet.Forms.Docs
         _GroupTreeView.SaveCurrentId = false;
         _GroupTreeView.BrowserGuid = _DocGridView.BrowserGuid; // одинаковый идентификатор просмотра
         _GroupTreeView.Control.SelectionChanged += new EventHandler(GroupTreeView_SelectionChanged);
-
+        _GroupTreeView.MenuOutItems.Clear(); // не стоит загромождать
 
         #endregion
 

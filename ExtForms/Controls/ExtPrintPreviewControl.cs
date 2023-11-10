@@ -336,5 +336,41 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    #region Свойство Rows
+
+    // 12.10.2023
+    // В Mono (версии 6.12.0) без Wine свойство PrintPreviewControl.Rows реализовано со сдвигом на 1.
+    // То есть, если задать Rows=1, то будет размещено две страницы по высоте
+
+    private static int _RowsErrorShift = (EnvironmentTools.IsMono && (!EnvironmentTools.IsWine)) ? 1 : 0;
+
+    /// <summary>
+    /// Gets or sets the number of pages displayed vertically down the screen.
+    /// </summary>
+    public new int Rows
+    {
+      get { return base.Rows + _RowsErrorShift; }
+      set
+      {
+        if (value == 1 && _RowsErrorShift==1)
+        {
+          try
+          {
+            base.Rows = 0;
+            return;
+          }
+          catch(Exception e)
+          {
+            _RowsErrorShift = 0;
+            EFPApp.ShowException(e, "Ошибка установки свойства PrintPreviewControl.Rows=0. Требуется исправление в ExtPrintPreviewControl");
+          }
+        }
+
+        base.Rows = value - _RowsErrorShift;
+      }
+    }
+
+    #endregion
   }
 }

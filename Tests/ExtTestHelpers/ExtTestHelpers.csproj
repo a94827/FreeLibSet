@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">
-      <Project>{e61b6cf2-a434-46f2-af4a-db5e4851d170}</Project>
+      <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
       <Name>ExtTools</Name>
     </ProjectReference>
   </ItemGroup>

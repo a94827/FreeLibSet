@@ -352,6 +352,8 @@ namespace FreeLibSet.Reporting
   /// </summary>
   public interface IBRMeasurer
   {
+    #region Методы
+
     /// <summary>
     /// Вычисляет желаемую высоту строки, исходя из содержимого текущей ячейки.
     /// Метод должен учесть размеры полей, задаваемых <see cref="BRCellStyle.LeftMargin"/>,<see cref="BRCellStyle.RightMargin"/> и <see cref="BRCellStyle.IndentLevel"/>,
@@ -364,14 +366,82 @@ namespace FreeLibSet.Reporting
 
     /// <summary>
     /// Измеряет строку <paramref name="s"/>. Строка не содержит символов переноса строки.
-    /// Из объекта <paramref name="sel"/> должны быть извлечены параметры шрифта, но не значение, и не отступы.
-    /// Должны вызываться размеры в единицах 0.1мм
+    /// Из объекта <paramref name="cellStyle"/> должны быть извлечены параметры шрифта, но не отступы.
+    /// Должны возвращаться размеры в единицах 0.1мм
     /// </summary>
-    /// <param name="sel"></param>
-    /// <param name="s"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    void MeasureString(BRSelector sel, string s, out int width, out int height);
+    /// <param name="s">Измеряемая строка</param>
+    /// <param name="cellStyle">Отсюда извлекаются параметры шрифта</param>
+    /// <param name="width">Сюда записывается высота</param>
+    /// <param name="height">Сюда записывается ширина</param>
+    void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height);
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Описание строки/столбца.
+  /// Содержит индекс и размеры
+  /// </summary>
+  public struct BRStripeItem
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="size"></param>
+    public BRStripeItem(int index, int size)
+    {
+#if DEBUG
+      if (index < 0)
+        throw new ArgumentOutOfRangeException("index");
+      if (size <= 0)
+        throw new ArgumentOutOfRangeException("size");
+#endif
+      _Index = index;
+      _Size = size;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Индекс строки/столбца
+    /// </summary>
+    public int Index { get { return _Index; } }
+    private readonly int _Index;
+
+    /// <summary>
+    /// Высота строки / ширина столбца в единицах 0.1мм
+    /// </summary>
+    public int Size { get { return _Size; } }
+    private readonly int _Size;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+      return "Index=" + _Index.ToString() + ", Size=" + _Size.ToString();
+    }
+
+    /// <summary>
+    /// Выполняет суммирование по свойству <see cref="Size"/>.
+    /// </summary>
+    /// <param name="a">Массив</param>
+    /// <returns>Общий размер</returns>
+    public static int GetTotalSize(BRStripeItem[] a)
+    {
+      int sz = 0;
+      for (int i = 0; i < a.Length; i++)
+        sz += a[i].Size;
+      return sz;
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -549,7 +619,7 @@ namespace FreeLibSet.Reporting
 
     #region Распределение столбцов
 
-    private List<BRBlockSize> GetColumnStripes(BRBand band)
+    private static List<BRBlockSize> GetColumnStripes(BRBand band)
     {
       int maxW = band.Section.PageSetup.PrintAreaWidth;
       if (maxW < BRReport.MinColumnWidth)
@@ -1407,7 +1477,7 @@ namespace FreeLibSet.Reporting
 
     #region Увеличение размеров строк и граф с признаком AutoGrow
 
-    private void PrepareColumnAutoGrow(BRBand band, BRBlockSize items, BRSelector sel)
+    private static void PrepareColumnAutoGrow(BRBand band, BRBlockSize items, BRSelector sel)
     {
       #region Ширина
 
@@ -1446,6 +1516,31 @@ namespace FreeLibSet.Reporting
       }
 
       #endregion
+    }
+
+    #endregion
+
+    #region Для Word/Writer
+
+    /// <summary>
+    /// Разбиение на вертикальные полосы для экспорта в Word/Writer.
+    /// Разбиение выполняется для одной таблицы.
+    /// В возвращаемом массиве первая размерность соответствует полосе (странице), а вторая задает столбцы для этой полосы.
+    /// Учитывается автоподбор размеров столбцов и повторяющиеся столбцы.
+    /// </summary>
+    /// <param name="band">Таблица</param>
+    /// <returns>Массив столбцов</returns>
+    public static BRStripeItem[][] PaginateBandColumns(BRBand band)
+    {
+      List<BRBlockSize> lst=GetColumnStripes(band);
+      BRStripeItem[][] a = new BRStripeItem[lst.Count][];
+      for (int i = 0; i < lst.Count; i++)
+      {
+        a[i] = new BRStripeItem[lst[i].Indexes.Count];
+        for (int j = 0; j < lst[i].Indexes.Count; j++)
+          a[i][j] = new BRStripeItem(lst[i].Indexes[j], lst[i].Sizes[j]);
+      }
+      return a;
     }
 
     #endregion

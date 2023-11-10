@@ -1,6 +1,8 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+//#define DEBUG_MARKERS
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -56,6 +58,7 @@ namespace FreeLibSet.Drawing
       _Strikeout = false;
       _DefaultFontWidth = 0;
       _DefaultLineHeight = 0;
+      _FontHeightScale = 0;
       _Color = Color.Black;
       _StringFormat = (StringFormat)(StringFormat.GenericTypographic.Clone());
       _StringFormat.FormatFlags &= ~StringFormatFlags.LineLimit;
@@ -113,6 +116,7 @@ namespace FreeLibSet.Drawing
         if (value == _Graphics)
           return;
         _Graphics = value;
+        ResetFont();
         if (_CurrentMatrix != null)
         {
           _CurrentMatrix.Dispose();
@@ -401,12 +405,33 @@ namespace FreeLibSet.Drawing
     }
     private Font _Font;
 
+    /// <summary>
+    /// 13.10.2023
+    /// В сочетании Mono+Wine высота шрифта <see cref="System.Drawing.Font.Size"/> почему-то задается не в пунктах, а в единицах
+    /// контекста устройства, то есть в миллиметрах. Это справедливо для PrintPreviewControl, на печать пока не проверял.
+    /// </summary>
+    private float FontHeightScale
+    {
+      get
+      {
+        if (_FontHeightScale == 0f)
+        {
+          _FontHeightScale = 1f;
+          if (Graphics!=null && EnvironmentTools.IsMono && EnvironmentTools.IsWine)
+            _FontHeightScale  = 25.4f / 72f;
+        }
+        return _FontHeightScale;
+      }
+    }
+
+    private float _FontHeightScale;
+
     [DebuggerStepThrough]
     private bool TryCreateFont(FontStyle st)
     {
       try
       {
-        _Font = new Font(_FontName, _FontHeight, st);
+        _Font = new Font(_FontName, _FontHeight * FontHeightScale, st);
         return true;
       }
       catch
@@ -421,12 +446,12 @@ namespace FreeLibSet.Drawing
       try
       {
         // Пытаемся обойтись без стиля
-        _Font = new Font(_FontName, _FontHeight);
+        _Font = new Font(_FontName, _FontHeight * FontHeightScale);
       }
       catch
       {
         // Используем стандартный шрифт
-        _Font = new Font(DefaultFontName, _FontHeight, st);
+        _Font = new Font(DefaultFontName, _FontHeight * FontHeightScale, st);
       }
     }
 
@@ -458,6 +483,7 @@ namespace FreeLibSet.Drawing
       }
       _DefaultFontWidth = 0;
       _DefaultLineHeight = 0;
+      _FontHeightScale = 0;
     }
 
     #endregion
@@ -471,7 +497,7 @@ namespace FreeLibSet.Drawing
     {
       get
       {
-        return Font.Size;
+        return Font.Size / FontHeightScale;
       }
     }
 
@@ -484,13 +510,8 @@ namespace FreeLibSet.Drawing
       {
         if (_DefaultFontWidth == 0)
         {
-          if (IsDisposed)
-            return _FontHeight / 2f; // заглушка
           // Вычисляем ширину шрифта по умолчанию
-          if (Graphics == null)
-            _DefaultFontWidth = CalcDefaultFontWidth(MeasureGraphics, Font);
-          else
-            _DefaultFontWidth = CalcDefaultFontWidth(Graphics, Font);
+          _DefaultFontWidth = CalcDefaultFontWidth(MeasureGraphics, Font);
         }
         return _DefaultFontWidth;
       }
@@ -505,11 +526,8 @@ namespace FreeLibSet.Drawing
       get
       {
         if (_DefaultLineHeight == 0)
-        {
-          if (IsDisposed)
-            return FontHeight * 1.5f;
-          _DefaultLineHeight = CalcDefaultLineHeight(MeasureGraphics, Font);
-        }
+          //_DefaultLineHeight = CalcDefaultLineHeight(MeasureGraphics, Font);
+          _DefaultLineHeight = Font.Height / FontHeightScale;
         return _DefaultLineHeight;
       }
     }
@@ -625,19 +643,35 @@ namespace FreeLibSet.Drawing
     public void DrawString(string text, RectangleF rc)
     {
       ReadyMatrix();
+      rc = BackTransform(rc);
+
       Matrix orgMatrix = _Graphics.Transform;
       _Graphics.Transform = _CurrentMatrix;
       try
       {
-        rc = BackTransform(rc);
-        try
+#if DEBUG_MARKERS
+        _Graphics.FillRectangle(Brushes.Aquamarine, rc);
+#endif
+        _Graphics.DrawString(text, Font, Brush, rc, StringFormat);
+
+#if DEBUG_MARKERS
+        SizeF markerSize = new SizeF(2f, 2f);
+        float markerX;
+        switch (StringFormat.Alignment)
         {
-          _Graphics.DrawString(text, Font, Brush, rc, StringFormat);
+          case StringAlignment.Near: markerX = rc.X;break;
+          case StringAlignment.Center: markerX = rc.X + (rc.Width - markerSize.Width) / 2f;break;
+          default: markerX = rc.Right - markerSize.Width;break;
         }
-        catch /*(Exception e)*/
+        float markerY;
+        switch (StringFormat.LineAlignment)
         {
+          case StringAlignment.Near: markerY = rc.Y; break;
+          case StringAlignment.Center: markerY = rc.Y + (rc.Height - markerSize.Height) / 2f; break;
+          default: markerY = rc.Bottom - markerSize.Height; break;
         }
-        //FGraphics.DrawString(Text, Font, Brush, rc.Left, rc.Top);
+        _Graphics.FillRectangle(Brushes.Red, new RectangleF(markerX, markerY, markerSize.Width, markerSize.Height));
+#endif
       }
       finally
       {
@@ -664,11 +698,12 @@ namespace FreeLibSet.Drawing
     public void DrawString(string text, PointF pt)
     {
       ReadyMatrix();
+      pt = BackTransform(pt);
+
       Matrix orgMatrix = _Graphics.Transform;
       _Graphics.Transform = _CurrentMatrix;
       try
       {
-        pt = BackTransform(pt);
         _Graphics.DrawString(text, Font, Brush, pt);
       }
       finally
@@ -789,6 +824,7 @@ namespace FreeLibSet.Drawing
     /// <returns></returns>
     private PointF PointsToPageUnits(PointF pt)
     {
+      //Trace.WriteLine("PageUnit:" + Graphics.PageUnit);
       // 28.08.2023:
       // Для стандартных единиц выполняем преобразование самостоятельно, для лучшей совместимости с Mono  
       switch (Graphics.PageUnit)
@@ -799,21 +835,21 @@ namespace FreeLibSet.Drawing
           return new PointF(pt.X / 72f, pt.Y / 72f);
         case GraphicsUnit.Millimeter:
           return new PointF(pt.X / 72f * 25.4f, pt.Y / 72f * 25.4f);
-        default:
-          _Point1Array[0] = pt;
-          GraphicsUnit oldPU = Graphics.PageUnit;
-          try
-          {
-            Graphics.PageUnit = GraphicsUnit.Point;
-            Graphics.TransformPoints(CoordinateSpace.Device, CoordinateSpace.Page, _Point1Array);
-          }
-          finally
-          {
-            Graphics.PageUnit = oldPU;
-          }
-          Graphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device, _Point1Array);
-          return _Point1Array[0];
       }
+
+      _Point1Array[0] = pt;
+      GraphicsUnit oldPU = Graphics.PageUnit;
+      try
+      {
+        Graphics.PageUnit = GraphicsUnit.Point;
+        Graphics.TransformPoints(CoordinateSpace.Device, CoordinateSpace.Page, _Point1Array);
+      }
+      finally
+      {
+        Graphics.PageUnit = oldPU;
+      }
+      Graphics.TransformPoints(CoordinateSpace.Page, CoordinateSpace.Device, _Point1Array);
+      return _Point1Array[0];
     }
 
     /// <summary>
@@ -837,7 +873,7 @@ namespace FreeLibSet.Drawing
     /// <summary>
     /// Статический контекст устройства для измерения строк
     /// </summary>
-    public static Graphics MeasureGraphics
+    public static Graphics DefaultMeasureGraphics
     {
       get
       {
@@ -854,6 +890,19 @@ namespace FreeLibSet.Drawing
     private static Graphics _MeasureGraphics;
 
     /// <summary>
+    /// Контекст, используемый для измерений
+    /// </summary>
+    public Graphics MeasureGraphics
+    {
+      get
+      {
+        if (IsDisposed)
+          return DefaultMeasureGraphics;
+        return Graphics ?? DefaultMeasureGraphics;
+      }
+    }
+
+    /// <summary>
     /// Измерение строки текста. 
     /// Перенос по словам игнорируется.
     /// </summary>
@@ -864,11 +913,8 @@ namespace FreeLibSet.Drawing
 #if DEBUG
       CheckNotDisposed();
 #endif
-      Graphics gr = Graphics;
-      if (gr == null)
-        gr = MeasureGraphics;
       text = DataTools.RemoveSoftHyphens(text);
-      return MeasureScale(gr.MeasureString(text, Font, new SizeF(float.MaxValue, float.MaxValue), CalcDefaultFontWidthStringFormat));
+      return MeasureScale(MeasureGraphics.MeasureString(text, Font, new SizeF(float.MaxValue, float.MaxValue), CalcDefaultFontWidthStringFormat));
     }
 
 
@@ -904,10 +950,7 @@ namespace FreeLibSet.Drawing
 #if DEBUG
       CheckNotDisposed();
 #endif
-      Graphics gr = Graphics;
-      if (gr == null)
-        gr = MeasureGraphics;
-      return MeasureScale(gr.MeasureString(text, Font, BackMeasureScale(sz), _StringFormat));
+      return MeasureScale(MeasureGraphics.MeasureString(text, Font, BackMeasureScale(sz), _StringFormat));
     }
 
     /// <summary>
@@ -1078,26 +1121,26 @@ namespace FreeLibSet.Drawing
     /// <summary>
     /// Вычисление ширины шрифта по умолчанию
     /// </summary>
-    /// <param name="Graphics">Контекст рисования</param>
-    /// <param name="Font">Шрифт</param>
+    /// <param name="graphics">Контекст рисования</param>
+    /// <param name="font">Шрифт</param>
     /// <returns>Ширина шрифта </returns>
-    public static float CalcDefaultFontWidth(Graphics Graphics, Font Font)
+    public static float CalcDefaultFontWidth(Graphics graphics, Font font)
     {
       const string TemplateStr = "XXXXXXXXXX0000000000XXXXXXXXXX0000000000";
       float res;
-      GraphicsUnit oldPU = Graphics.PageUnit;
+      GraphicsUnit oldPU = graphics.PageUnit;
       try
       {
-        Graphics.PageUnit = GraphicsUnit.Point;
-        SizeF sz = Graphics.MeasureString(TemplateStr, Font,
+        graphics.PageUnit = GraphicsUnit.Point;
+        SizeF sz = graphics.MeasureString(TemplateStr, font,
           new SizeF(float.MaxValue, float.MaxValue), CalcDefaultFontWidthStringFormat);
         if (sz.Width <= 0f)
-          return Font.Height / 2f; // 09.08.2023 - Заглушка на случай невозможности вычисления
+          return font.Height / 2f; // 09.08.2023 - Заглушка на случай невозможности вычисления
         res = sz.Width / (float)(TemplateStr.Length);
       }
       finally
       {
-        Graphics.PageUnit = oldPU;
+        graphics.PageUnit = oldPU;
       }
       return res;
     }
@@ -1135,12 +1178,12 @@ namespace FreeLibSet.Drawing
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="Graphics"></param>
-    /// <param name="Font"></param>
+    /// <param name="graphics"></param>
+    /// <param name="font"></param>
     /// <returns></returns>
-    public static float CalcDefaultLineHeight(Graphics Graphics, Font Font)
+    public static float CalcDefaultLineHeight(Graphics graphics, Font font)
     {
-      return Font.Height; // ???
+      return font.Height; // ???
       //float res = 0f;
       //GraphicsUnit oldPU = Graphics.PageUnit;
       //try

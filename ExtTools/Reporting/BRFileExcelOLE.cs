@@ -11,7 +11,7 @@ namespace FreeLibSet.Reporting
   /// Отправка отчета в Excel через OLE
   /// На компьютере должен быть установлен Excel 2000 или новее
   /// </summary>
-  public class BRReportOLEExcelSender
+  public class BRFileExcelOLE
   {
     #region Свойства
 
@@ -109,7 +109,7 @@ namespace FreeLibSet.Reporting
 
       #region Параметры страницы
 
-      sheet.PageSetup.SetOrientation(section.PageSetup.Landscape ? XlPageOrientation.xlLandscape : XlPageOrientation.xlPortrait);
+      sheet.PageSetup.SetOrientation(section.PageSetup.Orientation == BROrientation.Landscape ? XlPageOrientation.xlLandscape : XlPageOrientation.xlPortrait);
       sheet.PageSetup.SetPaperSize(GetPageSize(section.PageSetup));
       sheet.PageSetup.SetMarginsLM(section.PageSetup.LeftMargin, section.PageSetup.TopMargin, section.PageSetup.RightMargin, section.PageSetup.BottomMargin);
       sheet.PageSetup.SetCenterVertically(section.PageSetup.CenterVertical);
@@ -211,25 +211,23 @@ namespace FreeLibSet.Reporting
               if (value is String)
               {
                 string s = (string)value;
-                s = DataTools.ReplaceAny(s, BRReportWriterTools.BadValueChars, ' ');
+                s = DataTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
 
                 // Длинные строки будем передавать поштучно
                 // Excel 2003 [иногда] начинает глючить, если строка длинная.
                 // Дефект вылазеет, только если используется свойство Range.FormulaArray и отсутствует,
                 // если используется свойство Formula
-                if ((excelVersion < MicrosoftOfficeTools.MicrosoftOffice_2007))
+                if ((excelVersion < MicrosoftOfficeTools.MicrosoftOffice_2007 && s.Length > 255) ||
+                  s.IndexOf(Environment.NewLine) > 0)
                 {
-                  if (s.Length > 255)
-                  {
                     DelayedCellValue dcv = new DelayedCellValue();
-                    dcv.Row = currRow;
+                    dcv.Row = firstBlockRow+j2;
                     dcv.Column = leftCols[k];
                     dcv.Value = s;
                     if (dcvs == null)
                       dcvs = new List<DelayedCellValue>();
                     dcvs.Add(dcv);
                     continue;
-                  }
                 }
                 value = s;
               }
@@ -275,7 +273,7 @@ namespace FreeLibSet.Reporting
             {
               Range rSingle = sheet.Cells[dcvs[i].Row, dcvs[i].Column];
               //rSingle.Formula = DCVs[i].Value;
-              rSingle.Value = dcvs[i].Value;
+              rSingle.Value = dcvs[i].Value.Replace(Environment.NewLine, "\r");
             }
           }
 
@@ -442,7 +440,7 @@ namespace FreeLibSet.Reporting
     {
       int w = pageSetup.PaperWidth;
       int h = pageSetup.PaperHeight;
-      if (pageSetup.Landscape)
+      if (pageSetup.Orientation == BROrientation.Landscape)
         DataTools.Swap<int>(ref w, ref h);
 
       if (w <= 1480 && h <= 2100)

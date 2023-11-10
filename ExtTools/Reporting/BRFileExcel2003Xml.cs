@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
 using FreeLibSet.Core;
@@ -11,7 +12,7 @@ namespace FreeLibSet.Reporting
   /// <summary>
   /// Создание файла в формате XML для Excel-2003
   /// </summary>
-  public class BRReportExcel2003XmlWriter
+  public class BRFileExcel2003Xml
   {
     #region Управляющие свойства
 
@@ -24,6 +25,19 @@ namespace FreeLibSet.Reporting
 
     #region Создание файла
 
+    // 11.10.2023
+    // В формате Excel-2003 символ переноса на новую строку задается в тексте атрибута <Data> как LF ("\r").
+    // Символ должен быть задан явно, а не просто вставлен, например:
+    //    <Cell ss:StyleID="s63"><Data ss:Type="String">AAA&#10;BBB&#10;CCC</Data></Cell>
+    //
+    // Для этого есть свойство XmlWriterSettings.NewLineHandling, которое нужно установить в NewLineHandling.Entitize.
+    // К сожалению, свойство работает только с символом CR ("\n"). Не знаю, как это победить.
+    // 
+    // Поэтому, XML-документ создается в памяти. Для новой строки используется "&#xD;".
+    // Затем выполняется замена.
+    // Потом файл записывается.
+    // Фу!
+
     /// <summary>
     /// Создает xml-файл
     /// </summary>
@@ -32,23 +46,21 @@ namespace FreeLibSet.Reporting
     public void CreateFile(BRReport report, AbsPath filePath)
     {
       XmlDocument xmlDoc = CreateXml(report);
-      //XmlDoc.Save(FileName);
 
       XmlWriterSettings xmlSettings = new XmlWriterSettings();
-      if (DebugXml)
+      xmlSettings.NewLineHandling = NewLineHandling.Entitize;
+      //if (DebugXml)
+      xmlSettings.Indent = true;
+      StringBuilder sb = new StringBuilder();
+      using (XmlWriter wrt = XmlWriter.Create(sb, xmlSettings))
       {
-        xmlSettings.Encoding = Encoding.GetEncoding(1251);
-        xmlSettings.Indent = true;
-      }
-      XmlWriter wrt = XmlWriter.Create(filePath.Path, xmlSettings);
-      try
-      {
-        xmlDoc.WriteTo(wrt);
-      }
-      finally
-      {
+        xmlDoc.Save(wrt);
         wrt.Close();
       }
+
+      sb.Replace("&#xD;", "&#10;"); // в 16-ричном формате
+      sb.Replace("&#13;", "&#10;"); // в 10-тичном формате - на всякий случай
+      System.IO.File.WriteAllText(filePath.Path, sb.ToString(), Encoding.UTF8);
     }
 
     const string nmspcX = "urn:schemas-microsoft-com:office:excel";
@@ -61,28 +73,19 @@ namespace FreeLibSet.Reporting
 
       XmlDocument xmlDoc = new XmlDocument();
 
-      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", DebugXml ? "Windows-1251" : "UTF-8", "yes");
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", /*DebugXml ? "Windows-1251" : */"UTF-8", "yes");
       xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
 
       XmlProcessingInstruction xmlPI = xmlDoc.CreateProcessingInstruction("mso-application", "progid=\"Excel.Sheet\"");
       xmlDoc.AppendChild(xmlPI);
 
 
-      XmlAttribute attr;
       XmlElement elWholeDoc = xmlDoc.CreateElement("Workbook", nmspcSS);
       xmlDoc.AppendChild(elWholeDoc);
-      attr = xmlDoc.CreateAttribute("xmlns");  // без namespace
-      attr.Value = nmspcSS;
-      elWholeDoc.Attributes.Append(attr);
-      attr = xmlDoc.CreateAttribute("xmlns:o");
-      attr.Value = nmspcO;
-      elWholeDoc.Attributes.Append(attr);
-      attr = xmlDoc.CreateAttribute("xmlns:x");
-      attr.Value = nmspcX;
-      elWholeDoc.Attributes.Append(attr);
-      attr = xmlDoc.CreateAttribute("xmlns:ss");
-      attr.Value = nmspcSS;
-      elWholeDoc.Attributes.Append(attr);
+      SetAttr(elWholeDoc, "xmlns", nmspcSS, null);  // без namespace
+      SetAttr(elWholeDoc, "xmlns:o", nmspcO, null);
+      SetAttr(elWholeDoc, "xmlns:x", nmspcX, null);
+      SetAttr(elWholeDoc, "xmlns:ss", nmspcSS, null);
 
       #endregion
 
@@ -155,7 +158,7 @@ namespace FreeLibSet.Reporting
 
         XmlElement elLayout = xmlDoc.CreateElement("Layout", nmspcX);
         elPageSetup.AppendChild(elLayout);
-        SetAttr(elLayout, "x:Orientation", section.PageSetup.Landscape ? "Landscape" : "Portrait", nmspcX);
+        SetAttr(elLayout, "x:Orientation", section.PageSetup.Orientation == BROrientation.Landscape ? "Landscape" : "Portrait", nmspcX);
         if (section.PageSetup.CenterHorizontal)
           SetAttr(elLayout, "x:CenterHorizontal", "1", nmspcX);
         if (section.PageSetup.CenterVertical)
@@ -168,7 +171,7 @@ namespace FreeLibSet.Reporting
         SetAttr(elPageMargins, "x:Right", (section.PageSetup.RightMargin / 254.0).ToString("", StdConvert.NumberFormat), nmspcX);
         SetAttr(elPageMargins, "x:Bottom", (section.PageSetup.BottomMargin / 254.0).ToString("", StdConvert.NumberFormat), nmspcX);
 
-        OLE.Excel.XlPaperSize paperSize = BRReportOLEExcelSender.GetPageSize(section.PageSetup);
+        OLE.Excel.XlPaperSize paperSize = BRFileExcelOLE.GetPageSize(section.PageSetup);
         XmlElement elPrint = xmlDoc.CreateElement("Print", nmspcX);
         elWorksheetOptions.AppendChild(elPrint);
         XmlElement elPaperSizeIndex = xmlDoc.CreateElement("PaperSizeIndex", nmspcX);
@@ -243,19 +246,25 @@ namespace FreeLibSet.Reporting
                 string valueText, typeText, formatText;
                 GetCellValue(sel, out valueText, out typeText, out formatText);
 
+                bool hasNewLine = false;
                 if (typeText != null)
                 {
                   XmlElement elData = xmlDoc.CreateElement("Data", nmspcSS);
                   elCell.AppendChild(elData);
-                  XmlText txtData = xmlDoc.CreateTextNode(valueText);
-                  elData.AppendChild(txtData);
+                  //BRFileTools.AppendText(elData, valueText);
+                  XmlText textNode = xmlDoc.CreateTextNode(valueText);
+                  elData.AppendChild(textNode);
 
                   SetAttr(elData, "ss:Type", typeText, nmspcSS);
+                  if (valueText.IndexOf('\r') > 0)
+                    hasNewLine = true;
                 }
 
                 #region Форматирование
 
-                BRReportWriterTools.InitCellStyleKey(sb, sel);
+                BRFileTools.InitCellStyleKey(sb, sel, 0);
+                if (hasNewLine)
+                  sb.Append("|CR|");
 
                 int styleKeyNum;
                 if (!cellStyleDict.TryGetValue(sb.ToString(), out styleKeyNum))
@@ -290,7 +299,7 @@ namespace FreeLibSet.Reporting
                   elStyle.AppendChild(elAlign);
                   SetAttr(elAlign, "ss:Horizontal", ha, nmspcSS);
                   SetAttr(elAlign, "ss:Vertical", va, nmspcSS);
-                  if (sel.CellStyle.WrapMode != BRWrapMode.NoWrap)
+                  if (sel.CellStyle.WrapMode != BRWrapMode.NoWrap || hasNewLine)
                     SetAttr(elAlign, "ss:WrapText", "1", nmspcSS);
                   if (sel.CellStyle.IndentLevel > 0)
                     SetAttr(elAlign, "ss:Indent", StdConvert.ToString(sel.CellStyle.IndentLevel), nmspcSS);
@@ -397,7 +406,10 @@ namespace FreeLibSet.Reporting
           if (sel.Value.ToString().Trim().Length == 0)
             return;
           valueText = sel.Value.ToString();
-          valueText = DataTools.ReplaceAny(valueText, BRReportWriterTools.BadValueChars, ' ');
+          if (Environment.NewLine != "\r")
+            valueText = valueText.Replace(Environment.NewLine, "\r");
+          //valueText = DataTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
+          valueText = valueText.Replace(DataTools.SoftHyphenStr, String.Empty);
           typeText = "String";
           break;
         case "Boolean":
@@ -450,22 +462,24 @@ namespace FreeLibSet.Reporting
 
       SetAttr(elBorder, "ss:Position", pos, nmspcSS);
 
-      string line, weight;
+      string line;
       switch (border.Style)
       {
-        case BRLineStyle.Thin: line = "Continuous"; weight = "0.5"; break;
-        case BRLineStyle.Medium: line = "Continuous"; weight = "1"; break;
-        case BRLineStyle.Thick: line = "Continuous"; weight = "2"; break;
-        case BRLineStyle.Dot: line = "Dot"; weight = "0.5"; break;
-        case BRLineStyle.Dash: line = "Dash"; weight = "0.5"; break;
-        case BRLineStyle.DashDot: line = "DashDot"; weight = "0.5"; break;
-        case BRLineStyle.DashDotDot: line = "DashDotDot"; weight = "0.5"; break;
+        case BRLineStyle.Thin:
+        case BRLineStyle.Medium:
+        case BRLineStyle.Thick: line = "Continuous"; break;
+        case BRLineStyle.Dot: line = "Dot"; break;
+        case BRLineStyle.Dash: line = "Dash"; break;
+        case BRLineStyle.DashDot: line = "DashDot"; break;
+        case BRLineStyle.DashDotDot: line = "DashDotDot"; break;
         default:
           throw new BugException("BRLine.Style");
       }
 
+      double w = BRLine.GetLineWidthPt(border.Style);
+
       SetAttr(elBorder, "ss:LineStyle", line, nmspcSS);
-      SetAttr(elBorder, "ss:Weight", weight, nmspcSS);
+      SetAttr(elBorder, "ss:Weight", w.ToString("0.0", StdConvert.NumberFormat), nmspcSS);
     }
 
     private static string MyColorStr(BRColor c)

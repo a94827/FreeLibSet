@@ -182,7 +182,7 @@ namespace FreeLibSet.Forms.Reporting
     private void DataToControls(object sender, EventArgs args)
     {
       SettingsDialogPage page = (SettingsDialogPage)sender;
-      BRFontSettings fs = page.Owner.Data.GetItem<BRFontSettings>();
+      BRFontSettingsDataItem fs = page.Owner.Data.GetItem<BRFontSettingsDataItem>();
       efpFontName.Text = fs.FontName;
       efpFontHeight.Value = fs.FontHeightTwip / 20f;
       if (fs.FontWidthTwip == 0)
@@ -204,7 +204,7 @@ namespace FreeLibSet.Forms.Reporting
     private void DataFromControls(object sender, EventArgs args)
     {
       SettingsDialogPage page = (SettingsDialogPage)sender;
-      BRFontSettings fs = page.Owner.Data.GetItem<BRFontSettings>();
+      BRFontSettingsDataItem fs = page.Owner.Data.GetItem<BRFontSettingsDataItem>();
       fs.FontName = efpFontName.Text;
       fs.FontHeightTwip = (int)(efpFontHeight.Value * 20f);
       if (efpFontWidthMode.SelectedIndex == 0)
@@ -223,14 +223,16 @@ namespace FreeLibSet.Forms.Reporting
 
 namespace FreeLibSet.Reporting
 {
-  public class BRFontSettings : ISettingsDataItem
+  public class BRFontSettingsDataItem : SettingsDataItem, ICloneable
   {
     #region Конструктор
 
-    public BRFontSettings()
+    public BRFontSettingsDataItem()
     {
       _FontName = BRReport.DefaultFontName;
       _FontHeightTwip = BRReport.DefaultFontHeightTwip;
+      _FontWidthTwip = 0;
+      _LineHeightTwip = 0;
     }
 
     #endregion
@@ -253,9 +255,9 @@ namespace FreeLibSet.Reporting
 
     #region ISettingsDataItem
 
-    public SettingsPart UsedParts { get { return SettingsPart.User; } }
+    public override SettingsPart UsedParts { get { return SettingsPart.User; } }
 
-    public void WriteConfig(CfgPart cfg, SettingsPart part)
+    public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       cfg.SetString("FontName", FontName);
       cfg.SetSingle("FontHeight", FontHeightTwip / 20f);
@@ -263,15 +265,17 @@ namespace FreeLibSet.Reporting
       cfg.SetSingle("LineHeight", LineHeightTwip / 20f);
     }
 
-    public void ReadConfig(CfgPart cfg, SettingsPart part)
+    public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
-      FontName = cfg.GetStringDef("FontName", FontName);
-      FontHeightTwip = (int)(cfg.GetSingleDef("FontHeight", FontHeightTwip / 20f) * 20f);
-      FontWidthTwip = (int)(cfg.GetSingleDef("FontWidth", FontWidthTwip / 20f) * 20f);
-      LineHeightTwip = (int)(cfg.GetSingleDef("LineHeight", LineHeightTwip / 20f) * 20f);
+      FontName = cfg.GetStringDef("FontName", BRReport.DefaultFontName);
+      FontHeightTwip = (int)(cfg.GetSingleDef("FontHeight", BRReport.DefaultFontHeightTwip / 20f) * 20f);
+      FontWidthTwip = (int)(cfg.GetSingleDef("FontWidth", 0f) * 20f);
+      LineHeightTwip = (int)(cfg.GetSingleDef("LineHeight", 0f) * 20f);
     }
 
     #endregion
+
+    #region Инициализация BRCellStyle
 
     public void InitCellStyle(BRCellStyle cellStyle)
     {
@@ -280,6 +284,30 @@ namespace FreeLibSet.Reporting
       cellStyle.FontWidthTwip = FontWidthTwip;
       cellStyle.LineHeightTwip = LineHeightTwip;
     }
+
+    #endregion
+
+    #region Clone()
+
+    /// <summary>
+    /// Создает копию объекта
+    /// </summary>
+    /// <returns>Новый объект</returns>
+    public BRFontSettingsDataItem Clone()
+    {
+      BRFontSettingsDataItem res = new BRFontSettingsDataItem();
+      TempCfg cfg = new TempCfg();
+      this.WriteConfig(cfg, Config.SettingsPart.User);
+      res.ReadConfig(cfg, Config.SettingsPart.User);
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
+    }
+
+    #endregion
   }
 }
 

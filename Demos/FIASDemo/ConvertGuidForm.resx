@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="infoLabel1.Text" xml:space="preserve">
-    <value>В базе данных SQLite идентификаторы хранятся в виде BLOB-полей. При выполнении SQL-запросов требуется преобразовывать GUID'ы в двоичный формат. При этом порядок байт отличается от отображаемого представления GUID</value>
+    <value>Р’ Р±Р°Р·Рµ РґР°РЅРЅС‹С… SQLite РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ С…СЂР°РЅСЏС‚СЃСЏ РІ РІРёРґРµ BLOB-РїРѕР»РµР№. РџСЂРё РІС‹РїРѕР»РЅРµРЅРёРё SQL-Р·Р°РїСЂРѕСЃРѕРІ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРµРѕР±СЂР°Р·РѕРІС‹РІР°С‚СЊ GUID'С‹ РІ РґРІРѕРёС‡РЅС‹Р№ С„РѕСЂРјР°С‚. РџСЂРё СЌС‚РѕРј РїРѕСЂСЏРґРѕРє Р±Р°Р№С‚ РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ GUID</value>
   </data>
 </root>

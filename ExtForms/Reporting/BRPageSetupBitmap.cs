@@ -15,8 +15,7 @@ using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Reporting
 {
-
-  public partial class BRPageSetupBitmap : Form
+  internal partial class BRPageSetupBitmap : Form
   {
     #region Конструктор
 
@@ -24,17 +23,17 @@ namespace FreeLibSet.Forms.Reporting
     {
       InitializeComponent();
 
-      _BitmapSettings = dialog.Data.GetRequired<BRBitmapSettings>();
+      _BitmapSettings = dialog.Data.GetRequired<BRBitmapSettingsDataItem>();
       SettingsDialogPage page = dialog.Pages.Add(MainPanel);
 
       efpResolution = new EFPIntEditBox(page.BaseProvider, edResolution);
-      efpResolution.Minimum = BRBitmapSettings.MinResolution;
-      efpResolution.Maximum = BRBitmapSettings.MaxResolution;
-      efpResolution.Control.UpDownHandler = new NumArrayUpDownHandler<int>(BRBitmapSettings.RecommendedResolutions);
+      efpResolution.Minimum = BRBitmapSettingsDataItem.MinResolution;
+      efpResolution.Maximum = BRBitmapSettingsDataItem.MaxResolution;
+      efpResolution.Control.UpDownHandler = new NumArrayUpDownHandler<int>(BRBitmapSettingsDataItem.RecommendedResolutions);
 
-      cbColorFormat.Items.AddRange(BRBitmapSettings.ColorFormatNames);
+      cbColorFormat.Items.AddRange(BRBitmapSettingsDataItem.ColorFormatNames);
       efpColorFormat = new EFPListComboBox(page.BaseProvider, cbColorFormat);
-      efpColorFormat.Codes = BRBitmapSettings.ColorFormatCodes;
+      efpColorFormat.Codes = BRBitmapSettingsDataItem.ColorFormatCodes;
       efpColorFormat.CanBeEmpty = false;
 
       efpClipMargins = new EFPCheckBox(page.BaseProvider, cbClipMargins);
@@ -50,7 +49,7 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Поля
 
-    BRBitmapSettings _BitmapSettings;
+    BRBitmapSettingsDataItem _BitmapSettings;
 
     EFPIntEditBox efpResolution;
 
@@ -82,7 +81,7 @@ namespace FreeLibSet.Forms.Reporting
 
 namespace FreeLibSet.Reporting
 {
-  public class BRBitmapSettings : ISettingsDataItem
+  public class BRBitmapSettingsDataItem : SettingsDataItem, ICloneable
   {
     #region Константы
 
@@ -104,7 +103,7 @@ namespace FreeLibSet.Reporting
 
     #region Конструктор
 
-    public BRBitmapSettings()
+    public BRBitmapSettingsDataItem()
     {
       _Resolution = DefaultResolution;
       _ColorFormat = DefaultColorFormat;
@@ -158,11 +157,15 @@ namespace FreeLibSet.Reporting
 
     public bool ClipMargins { get { return _ClipMargins; } set { _ClipMargins = value; } }
 
-    public SettingsPart UsedParts { get { return SettingsPart.User; } }
-
     private bool _ClipMargins;
 
-    public void WriteConfig(CfgPart cfg, SettingsPart part)
+    #endregion
+
+    #region ISettingsDataItem
+
+    public override SettingsPart UsedParts { get { return SettingsPart.User; } }
+
+    public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       if (part == SettingsPart.User)
       {
@@ -172,14 +175,36 @@ namespace FreeLibSet.Reporting
       }
     }
 
-    public void ReadConfig(CfgPart cfg, SettingsPart part)
+    public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       if (part == SettingsPart.User)
       {
-        Resolution = cfg.GetIntDef("Resolution", Resolution);
-        ColorFormat = cfg.GetStringDef("ColorFormat", ColorFormat);
-        ClipMargins = cfg.GetBoolDef("ClipMargins", ClipMargins);
+        Resolution = cfg.GetIntDef("Resolution", DefaultResolution);
+        ColorFormat = cfg.GetStringDef("ColorFormat", DefaultColorFormat);
+        ClipMargins = cfg.GetBoolDef("ClipMargins", false);
       }
+    }
+
+    #endregion
+
+    #region Clone()
+
+    /// <summary>
+    /// Создает копию объекта
+    /// </summary>
+    /// <returns>Новый объект</returns>
+    public BRBitmapSettingsDataItem Clone()
+    {
+      BRBitmapSettingsDataItem res = new BRBitmapSettingsDataItem();
+      TempCfg cfg = new TempCfg();
+      this.WriteConfig(cfg, Config.SettingsPart.User);
+      res.ReadConfig(cfg, Config.SettingsPart.User);
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
     }
 
     #endregion

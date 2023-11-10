@@ -14,6 +14,7 @@ using System.IO;
 using FreeLibSet.OLE.Excel;
 using FreeLibSet.IO;
 using FreeLibSet.Shell;
+using FreeLibSet.Forms.Reporting;
 
 namespace FreeLibSet.Forms
 {
@@ -109,7 +110,7 @@ namespace FreeLibSet.Forms
       settings.ShowColumnHeaders = efpHeaders.Checked;
       settings.UseInterior = efpUseFill.Checked;
       settings.UseBorders = efpUseBorders.Checked;
-      settings.BoolMode = (EFPDataViewExpExcelBoolMode)(efpBoolMode.SelectedIndex);
+      settings.BoolMode = (BRDataViewBoolMode)(efpBoolMode.SelectedIndex);
     }
 
     #endregion

@@ -2808,6 +2808,40 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
+    /// Возвращает количество масок (не файлов), в которых задана рекурсия
+    /// </summary>
+    public int CountWithRecurse
+    {
+      get
+      {
+        int cnt = 0;
+        for (int i = 0; i < Count; i++)
+        {
+          if (this[i].Recurse)
+            cnt++;
+        }
+        return cnt;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает количество масок (не файлов), в которых не задана рекурсия
+    /// </summary>
+    public int CountWithoutRecurse
+    {
+      get
+      {
+        int cnt = 0;
+        for (int i = 0; i < Count; i++)
+        {
+          if (!this[i].Recurse)
+            cnt++;
+        }
+        return cnt;
+      }
+    }
+
+    /// <summary>
     /// Возвращает спиcок шаблонов через точку с запятой.
     /// </summary>
     /// <returns>Текстовое представление</returns>

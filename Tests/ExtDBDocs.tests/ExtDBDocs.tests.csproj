@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{147B60C0-CAE8-499C-83E5-11D6BBAA4E73}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -31,13 +29,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Others\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Others\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataRowDocValuesTests.cs" />
@@ -67,11 +64,11 @@
       <Name>ExtTools</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExtDB.tests\ExtDB.tests.csproj">
-      <Project>{a5e79e2a-eea5-4b9c-a62f-cf234bc4b325}</Project>
+      <Project>{A5E79E2A-EEA5-4B9C-A62F-CF234BC4B325}</Project>
       <Name>ExtDB.tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExtTestHelpers\ExtTestHelpers.csproj">
-      <Project>{a9f0ba9d-6b87-4b3d-808b-91c0de371480}</Project>
+      <Project>{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}</Project>
       <Name>ExtTestHelpers</Name>
     </ProjectReference>
   </ItemGroup>

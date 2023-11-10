@@ -10,7 +10,9 @@ using FreeLibSet.Data.SQLite;
 using FreeLibSet.Data.SqlClient;
 using FreeLibSet.Data.Npgsql;
 using Npgsql;
+#if !MONO
 using FreeLibSet.Data.OleDb;
+#endif
 using FreeLibSet.Tests;
 
 namespace ExtDB_tests.Data
@@ -1675,6 +1677,8 @@ namespace ExtDB_tests.Data_Npgsql
   }
 }
 
+#if !MONO
+
 namespace ExtDB_tests.Data_OleDB
 {
   //[Platform("Windows,X86")]
@@ -1729,3 +1733,5 @@ namespace ExtDB_tests.Data_OleDB
     #endregion
   }
 }
+
+#endif

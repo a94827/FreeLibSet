@@ -156,33 +156,68 @@ namespace FreeLibSet.Forms.Reporting
 
   #endregion
 
+  /// <summary>
+  /// Неабстрактная реализация объекта печати/экспорта с помощью <see cref="BRReport"/>.
+  /// </summary>
   public class BRMenuOutItem : EFPMenuOutItem
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает объект
+    /// </summary>
+    /// <param name="code">Код</param>
     public BRMenuOutItem(string code)
       : base(code)
     {
       _SettingsData = new SettingsDataList();
-      _SettingsData.Add(new BRPageSetup());
-      _SettingsData.Add(new BRBitmapSettings());
-      _SettingsData.Add(new BRExportSettings());
+      _SettingsData.Add(new BRPageSettingsDataItem());
+      _SettingsData.Add(new BRBitmapSettingsDataItem());
+
+      InitExportFileItems(ExportFileItems, false);
 
       InitSendToItems(SendToItems, false);
     }
 
-    private static void InitSendToItems(NamedList<EFPSendToItem> lst, bool isPreviewDlg)
+    internal static void InitExportFileItems(NamedList<EFPExportFileItem> lst, bool isPreviewDlg)
+    {
+      if (PdfFileTools.PdfLibAvailable)
+        lst.Add(new EFPExportFileItem("PDF", "Файлы PDF", "*.pdf"));
+      lst.Add(new EFPExportFileItem("TIFF", "Файлы TIFF", "*.tif"));
+      lst.Add(new EFPExportFileItem("HTML", "Файлы HTML", "*.html"));
+      lst.Add(new EFPExportFileItem("ExcelXML", "Microsoft Excel 2003 XML", "*.xml"));
+      lst.Add(new EFPExportFileItem("WordXML", "Microsoft Word 2003 XML", "*.xml"));
+      if (BRFileODFBase.IsSupported)
+      {
+        lst.Add(new EFPExportFileItem("ODS", "OpenOffice/LibreOffice Calc (ODS)", "*.ods"));
+        lst.Add(new EFPExportFileItem("ODT", "OpenOffice/LibreOffice Writer (ODT)", "*.odt"));
+      }
+    }
+
+    internal static void InitSendToItems(NamedList<EFPSendToItem> lst, bool isPreviewDlg)
     {
       EFPSendToItem item;
       if (EFPDataGridView.CanSendToMicrosoftExcel) // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!
       {
         item = new EFPSendToItem("Excel");
         item.MenuText = "Microsoft Excel";
-        item.Image = EFPApp.MainImages.Images["MicrosoftExcel"];
-        item.ToolTipText = "Оправить в " + MicrosoftOfficeTools.ExcelDisplayName;
+        item.Image = EFPApp.MicrosoftExcelImage;
+        item.ToolTipText = "Отправить в " + MicrosoftOfficeTools.ExcelDisplayName;
         lst.Add(item);
       }
-      if (BRReportODSWriter.IsSupported)
+      if (isPreviewDlg)
+      {
+        if (EFPApp.MicrosoftWordVersion.Major >= MicrosoftOfficeTools.MicrosoftOffice_2003) // или _XP?
+        {
+          item = new EFPSendToItem("Word");
+          item.MenuText = "Microsoft Word";
+          item.Image = EFPApp.MicrosoftWordImage;
+          item.ToolTipText = "Отправить в " + MicrosoftOfficeTools.WordDisplayName;
+          lst.Add(item);
+        }
+      }
+
+      if (BRFileODFBase.IsSupported)
       {
         OpenOfficeInfo[] offices = OpenOfficeTools.GetPartInstallations(OpenOfficePart.Calc);
         for (int i = 0; i < offices.Length; i++)
@@ -190,14 +225,30 @@ namespace FreeLibSet.Forms.Reporting
 
           OpenOfficeInfo info = offices[i];
           OpenOfficePartInfo calc = info.Parts[OpenOfficePart.Calc];
-          item = new EFPSendToItem("Calc", StdConvert.ToString(i));
-          item.MenuText = calc.DisplayName;
-          item.Tag = info;
-          FileAssociationItem fa = calc.FileAssociation;
-          item.Image = EFPApp.FileExtAssociations.GetIconImage(fa.IconPath, fa.IconIndex, true);
-          item.ToolTipText = "Оправить в " + calc.DisplayName;
-          item.SubMenuText = "Calc";
-          lst.Add(item);
+          if (calc != null)
+          {
+            item = new EFPSendToItem("Calc", StdConvert.ToString(i));
+            item.MenuText = calc.DisplayName;
+            item.Tag = info;
+            FileAssociationItem fa = calc.FileAssociation;
+            item.Image = EFPApp.FileExtAssociations.GetIconImage(fa.IconPath, fa.IconIndex, true);
+            item.ToolTipText = "Отправить в " + calc.DisplayName;
+            item.SubMenuText = "Calc";
+            lst.Add(item);
+          }
+
+          OpenOfficePartInfo writer = info.Parts[OpenOfficePart.Writer];
+          if (isPreviewDlg && writer != null)
+          {
+            item = new EFPSendToItem("Writer", StdConvert.ToString(i));
+            item.MenuText = writer.DisplayName;
+            item.Tag = info;
+            FileAssociationItem fa = writer.FileAssociation;
+            item.Image = EFPApp.FileExtAssociations.GetIconImage(fa.IconPath, fa.IconIndex, true);
+            item.ToolTipText = "Отправить в " + writer.DisplayName;
+            item.SubMenuText = "Writer";
+            lst.Add(item);
+          }
         }
       }
 
@@ -236,17 +287,6 @@ namespace FreeLibSet.Forms.Reporting
       }
     }
 
-    private static bool SendToCalcSupported
-    {
-      get
-      {
-        if (!BRReportODSWriter.IsSupported)
-          return false;
-
-        return false;
-      }
-    }
-
     #endregion
 
     #region Данные
@@ -264,33 +304,52 @@ namespace FreeLibSet.Forms.Reporting
     /// <summary>
     /// Список данных параметров страницы.
     /// Должен быть заполнен до вывода формы на экран.
-    /// При первом показе диалога параметров странице, печати, экспорте вызывается <see cref="SettingsDataList.ReadConfig(CfgPart, SettingsPart)"/>,
+    /// При первом показе диалога параметров странице, печати, экспорте вызывается <see cref="SettingsDataListBase.ReadConfig(CfgPart, SettingsPart)"/>,
     /// при условии, что свойство <see cref="ConfigSectionName"/> установлено.
     /// При повторных действиях чтение не выполняется.
-    /// После каждого показа диалога, включая повторные, вызывается <see cref="SettingsDataList.WriteConfig(CfgPart, SettingsPart)"/>.
+    /// После каждого показа диалога, включая повторные, вызывается <see cref="SettingsDataListBase.WriteConfig(CfgPart, SettingsPart)"/>.
     /// </summary>
     public SettingsDataList SettingsData { get { return _SettingsData; } }
     private readonly SettingsDataList _SettingsData;
 
+    //public BRPageSettingsDataItem PageSettings { get { return SettingsData.GetRequired<BRPageSettingsDataItem>(); } }
+
+    /// <summary>
+    /// Параметры страницы
+    /// </summary>
+    public BRPageSetup PageSetup { get { return SettingsData.GetRequired<BRPageSettingsDataItem>().PageSetup; } }
+
+    public BRPageSetup GetPageSetup(string defCfgName)
+    {
+      if (String.IsNullOrEmpty(defCfgName))
+        return PageSetup;
+
+      BRPageSettingsDataItem di = SettingsData.DefaultConfigs[defCfgName].GetItem<BRPageSettingsDataItem>();
+      if (di == null)
+      {
+        di = new BRPageSettingsDataItem(PageSetup.Clone());
+        SettingsData.DefaultConfigs[defCfgName].Add(di);
+      }
+      return di.PageSetup;
+    }
+
+    /// <summary>
+    /// Настройки для экспорта в формат TIFF
+    /// </summary>
+    public BRBitmapSettingsDataItem BitmapSettings { get { return SettingsData.GetRequired<BRBitmapSettingsDataItem>(); } }
+
     private bool _ReadConfigCalled;
 
-    private string UserConfigCategory { get { return "PageSetup"; } }
+    private string UserConfigCategory { get { return EFPConfigCategories.PageSetup; } }
 
-    private string MachineConfigCategory
-    {
-      get
-      {
-        if (EFPApp.ConfigManager.Persistence == EFPConfigPersistence.Network)
-          return "MachinePageSetup";
-        else
-          return "PageSetup";
-      }
-    }
+    private string MachineConfigCategory { get { return EFPConfigCategories.PageSetupFiles; } }
 
     private void CallReadConfig()
     {
       if (!_ReadConfigCalled)
       {
+        SettingsData.GetDefaultConfigDict(); // запоминаем значения по умолчанию. Сам словарь секций не нужен
+
         string name = GetConfigSectionName();
         if (name.Length > 0)
         {
@@ -367,7 +426,20 @@ namespace FreeLibSet.Forms.Reporting
 
     #region CreateReport Построение отчета
 
+    /// <summary>
+    /// Событие вызывается для создания отчета <see cref="BRReport"/>
+    /// </summary>
     public event BRMenuOutItemCreateReportEventHandler CreateReport;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="CreateReport"/>
+    /// </summary>
+    /// <param name="args"></param>
+    protected virtual void OnCreateReport(BRMenuOutItemCreateReportEventArgs args)
+    {
+      if (CreateReport != null)
+        CreateReport(this, args);
+    }
 
     internal BRReport PerformCreateReport(BROutAction action, BROutDestination destination, AbsPath filePath)
     {
@@ -380,8 +452,7 @@ namespace FreeLibSet.Forms.Reporting
         args.Action = action;
         args.Destination = destination;
         args.FilePath = filePath;
-        if (CreateReport != null)
-          CreateReport(this, args);
+        OnCreateReport(args);
       }
       finally
       {
@@ -394,17 +465,33 @@ namespace FreeLibSet.Forms.Reporting
 
     #region InitDialog
 
+    /// <summary>
+    /// Событие вызывается для инициализации диалога параметров.
+    /// Диалог параметров используется при выполнении команды "Параметры страницы", после выбора файла в режиме экспорта, и при выполнении команды "Отправить".
+    /// Обработчик события может добавить собственные вкладки в диалог.
+    /// Если в диалоге не будет ни одной вкладки, диалог не будет показан.
+    /// </summary>
     public event BRMenuOutItemInitDialogEventHandler InitDialog;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="InitDialog"/>
+    /// </summary>
+    /// <param name="args"></param>
+    protected virtual void OnInitDialog(BRMenuOutItemInitDialogEventArgs args)
+    {
+      if (InitDialog != null)
+        InitDialog(this, args);
+    }
 
     internal bool ShowDialog(SettingsDialog dialog, BROutAction action, BROutDestination destination, AbsPath filePath, BROutCommandSource commandSource, bool forceWriteConfig)
     {
-      CallReadConfig();
-
-      dialog.ConfigSectionName = String.Empty; // Сами читаем параметры
+      //CallReadConfig();
+      //dialog.ConfigSectionName = String.Empty; // Сами читаем параметры
+      dialog.ConfigSectionName = GetConfigSectionName();
       dialog.Data = this.SettingsData;
       if (action == BROutAction.Print)
       {
-        if (dialog.Data.GetItem<BRPageSetup>() != null)
+        if (dialog.Data.GetItem<BRPageSettingsDataItem>() != null)
         {
           new BRPageSetupPaper(dialog);
           new BRPageSetupMargins(dialog);
@@ -413,7 +500,7 @@ namespace FreeLibSet.Forms.Reporting
         //if (dialog.Data.GetItem<BRFontSettings>() != null)
         //  new BRPageSetupFont(dialog);
       }
-      if (destination == BROutDestination.TIFF && dialog.Data.GetItem<BRBitmapSettings>() != null)
+      if (destination == BROutDestination.TIFF && dialog.Data.GetItem<BRBitmapSettingsDataItem>() != null)
         new BRPageSetupBitmap(dialog);
 
       bool useEventHandler;
@@ -422,13 +509,13 @@ namespace FreeLibSet.Forms.Reporting
       else
         useEventHandler = (action == BROutAction.Print);
 
-      if (useEventHandler && InitDialog != null)
+      if (useEventHandler)
       {
         BRMenuOutItemInitDialogEventArgs args = new BRMenuOutItemInitDialogEventArgs(dialog);
         args.Action = action;
         args.Destination = destination;
         args.FilePath = filePath;
-        InitDialog(this, args);
+        OnInitDialog(args);
       }
 
       // Если нет ни одной страницы, диалог не показываем, но считаем, что пользователь нажал ОК
@@ -455,8 +542,16 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Печать
 
+    /// <summary>
+    /// Возвращает true
+    /// </summary>
     public override bool CanPrint { get { return true; } }
 
+    /// <summary>
+    /// Выполняет печать
+    /// </summary>
+    /// <param name="defaultPrinter">true-на принтере по умолчанию, false-показывается диалог выбора принтера</param>
+    /// <returns>true, если печать начата</returns>
     public override bool Print(bool defaultPrinter)
     {
       BRReport report = PerformCreateReport(BROutAction.Print, BROutDestination.Print, AbsPath.Empty);
@@ -510,9 +605,16 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Параметры страницы
 
+    /// <summary>
+    /// Возвращает true
+    /// </summary>
     public override bool CanPageSetup { get { return true; } }
 
-    public override bool PageSetup()
+    /// <summary>
+    /// Показывает диалог "Параметры страницы"
+    /// </summary>
+    /// <returns>true, если пользователь нажал "ОК"</returns>
+    public override bool ShowPageSetup()
     {
       CallReadConfig();
       SettingsDialog dlg = new SettingsDialog();
@@ -525,6 +627,9 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Предварительный просмотр
 
+    /// <summary>
+    /// Возвращает true
+    /// </summary>
     public override bool CanPrintPreview { get { return true; } }
 
     /// <summary>
@@ -532,7 +637,12 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     private bool _InsidePreviewDialog;
 
-    public override void PrintPreview()
+    /// <summary>
+    /// Показывает окно предварительного просмотра.
+    /// В окне просмотра используется собственный <see cref="EFPMenuOutHandler"/> с единственным <see cref="EFPMenuOutItem"/>.
+    /// Пользователь может менять параметры страницы, выполнять сохранение в файл и команду "Отправить".
+    /// </summary>
+    public override void ShowPrintPreview()
     {
       BRReport report = PerformCreateReport(BROutAction.Print, BROutDestination.Print, AbsPath.Empty);
       _InsidePreviewDialog = true;
@@ -549,11 +659,12 @@ namespace FreeLibSet.Forms.Reporting
         efpPreviewForm.ConfigSectionName = "PrintPreview";
 
         EFPControlWithToolBar<ExtPrintPreviewControl> cwt = new EFPControlWithToolBar<ExtPrintPreviewControl>(efpPreviewForm, previewForm);
-        EFPExtPrintPreviewControl efpPreview = new EFPExtPrintPreviewControl(cwt); 
+        EFPExtPrintPreviewControl efpPreview = new EFPExtPrintPreviewControl(cwt);
+        efpPreview.DisplayName = "PreviewControl";
         efpPreview.ConfigSectionName = efpPreviewForm.ConfigSectionName;
-        efpPreview.Control.Document = FreeLibSet.Drawing.Reporting.BRReportPainter.CreatePrintDocument(report);
+        CreateDocumentForPreview(efpPreview, report);
 
-        efpPreview.CommandItems.OutHandler.Items.Add(new PreviewOutItem(this, efpPreviewForm, efpPreview)); 
+        efpPreview.CommandItems.OutHandler.Items.Add(new BRPreviewOutItem(this, efpPreviewForm, efpPreview));
 
         EFPApp.ShowDialog(previewForm, true);
       }
@@ -563,141 +674,36 @@ namespace FreeLibSet.Forms.Reporting
       }
     }
 
-    #endregion
-
-    #region Команды печати в окне предварительного просмотра
-
-    private class PreviewOutItem : EFPMenuOutItem
+    internal void CreateDocumentForPreview(EFPExtPrintPreviewControl efpPreview, BRReport report)
     {
-      #region Конструктор
-
-      public PreviewOutItem(BRMenuOutItem owner, EFPFormProvider efpPreviewForm, EFPExtPrintPreviewControl efpPreview)
-        : base("Print")
-      {
-        _Owner = owner;
-        _efpPreviewForm = efpPreviewForm;
-        _efpPreview = efpPreview;
-
-        BRMenuOutItem.InitSendToItems(SendToItems, true);
-      }
-
-      private BRMenuOutItem _Owner;
-      EFPFormProvider _efpPreviewForm;
-      EFPExtPrintPreviewControl _efpPreview;
-
-      #endregion
-
-      #region Печать
-
-      public override bool CanPrint { get { return true; } }
-
-      public override bool Print(bool defaultPrinter)
-      {
-        bool res = _Owner.Print(defaultPrinter);
-        if (res)
-          _efpPreviewForm.CloseForm(DialogResult.Cancel);
-        return res;
-      }
-
-      #endregion
-
-      #region Параметры страницы
-
-      public override bool CanPageSetup { get { return true; } }
-
-      public override bool PageSetup()
-      {
-        if (!_Owner.PageSetup())
-          return false;
-        BRReport report = _Owner.PerformCreateReport(BROutAction.Print, BROutDestination.Print, AbsPath.Empty);
-        _efpPreview.Control.Document = FreeLibSet.Drawing.Reporting.BRReportPainter.CreatePrintDocument(report);
-        _efpPreview.Control.InvalidatePreview();
-        _efpPreview.Control.StartPage = 0;
-        return true;
-      }
-
-      #endregion
-
-      #region Сохранение в файл
-
-      public override bool CanExport { get { return true; } }
-
-      public override void Export()
-      {
-        _Owner.DoExport(BROutCommandSource.PrintPreview);
-      }
-
-      #endregion
-
-      #region Отправить
-
-      public override void SendTo(EFPSendToItem item)
-      {
-        _Owner.SendTo(item);
-      }
-
-      #endregion
+      BRPaginatorPageInfo[] pages;
+      efpPreview.Control.Document = FreeLibSet.Drawing.Reporting.BRReportPainter.CreatePrintDocument(report, out pages);
     }
 
     #endregion
 
     #region Сохранение в файл
 
-    public override bool CanExport { get { return true; } }
-
-    public override void Export()
+    public override void ExportFile(AbsPath filePath, EFPExportFileItem item)
     {
-      DoExport(BROutCommandSource.OutItem);
+      DoExportFile(BROutCommandSource.OutItem, filePath, item);
     }
-    internal void DoExport(BROutCommandSource commandSource)
+    internal void DoExportFile(BROutCommandSource commandSource, AbsPath filePath, EFPExportFileItem item)
     {
-      List<string> fileCodes = new List<string>();
-      List<string> filters = new List<string>();
-      if (PdfFileTools.PdfLibAvailable)
-      {
-        fileCodes.Add("PDF");
-        filters.Add("Файлы PDF|*.pdf");
-      }
-      fileCodes.Add("TIFF");
-      filters.Add("Файлы TIFF|*.tif");
-      fileCodes.Add("HTML");
-      filters.Add("Файлы HTML|*.html");
-      fileCodes.Add("ExcelXML");
-      filters.Add("Microsoft Excel 2003 XML|*.xml");
-      if (BRReportODSWriter.IsSupported)
-      {
-        fileCodes.Add("ODS");
-        filters.Add("OpenOffice/LibreOffice Calc (ODS)|*.ods");
-      }
-
-      BRExportSettings exportSettings = SettingsData.GetRequired<BRExportSettings>();
-
       CallReadConfig();
 
-      SaveFileDialog dlg1 = new SaveFileDialog();
-      dlg1.Filter = String.Join("|", filters.ToArray());
-      dlg1.FilterIndex = Array.IndexOf<string>(fileCodes.ToArray(), exportSettings.FileType) + 1; // FilterIndex нумеруется с 1
-      if (!exportSettings.ExportDir.IsEmpty)
-        dlg1.InitialDirectory = exportSettings.ExportDir.Path;
-      if (EFPApp.ShowDialog(dlg1) != DialogResult.OK)
-        return;
-
       BROutDestination destination;
-      string fileCode = fileCodes[dlg1.FilterIndex - 1];
-      switch (fileCode)
+      switch (item.Code)
       {
         case "PDF": destination = BROutDestination.PDF; break;
         case "TIFF": destination = BROutDestination.TIFF; break;
         case "HTML": destination = BROutDestination.HTML; break;
         case "ExcelXML": destination = BROutDestination.Excel; break;
+        case "WordXML": destination = BROutDestination.Word; break;
         case "ODS": destination = BROutDestination.Calc; break;
-        default: throw new BugException("fileCode=" + fileCode);
+        case "ODT": destination = BROutDestination.Writer; break;
+        default: throw new BugException("fileCode=" + item.Code);
       }
-
-      exportSettings.FileType = fileCodes[dlg1.FilterIndex - 1];
-
-      AbsPath filePath = new AbsPath(dlg1.FileName);
-      exportSettings.ExportDir = filePath.ParentDir;
 
       BRReport report;
       if (commandSource == BROutCommandSource.PrintPreview)
@@ -720,29 +726,44 @@ namespace FreeLibSet.Forms.Reporting
         switch (destination)
         {
           case BROutDestination.PDF:
-            BRPdfReportPainter.CreateFile(report, filePath);
+            BRFilePdf.CreateFile(report, filePath);
             break;
           case BROutDestination.TIFF:
-            BRReportPainter.CreateTIFFFile(report, filePath, _SettingsData.GetRequired<BRBitmapSettings>(), null);
+            BRReportPainter.CreateTIFFFile(report, filePath, _SettingsData.GetRequired<BRBitmapSettingsDataItem>(), null);
             break;
           case BROutDestination.HTML:
-            BRReportHtmlWriter htmlWriter = new BRReportHtmlWriter();
-            htmlWriter.CreateFile(report, filePath);
+            BRFileHtml fileHTML = new BRFileHtml();
+            fileHTML.CreateFile(report, filePath);
             break;
           case BROutDestination.Excel:
-            switch (fileCode)
+            switch (item.Code)
             {
               case "ExcelXML":
-                BRReportExcel2003XmlWriter excel2003Writer = new BRReportExcel2003XmlWriter();
-                excel2003Writer.CreateFile(report, filePath);
+                BRFileExcel2003Xml fileExcel2003 = new BRFileExcel2003Xml();
+                fileExcel2003.CreateFile(report, filePath);
+                break;
+              default:
+                throw new BugException();
+            }
+            break;
+          case BROutDestination.Word:
+            switch (item.Code)
+            {
+              case "WordXML":
+                BRFileWord2003Xml fileWord2003Xml = new BRFileWord2003Xml(BRMeasurer.Default);
+                fileWord2003Xml.CreateFile(report, filePath);
                 break;
               default:
                 throw new BugException();
             }
             break;
           case BROutDestination.Calc:
-            BRReportODSWriter odsWriter = new BRReportODSWriter();
-            odsWriter.CreateFile(report, filePath);
+            BRFileODS fileODS = new BRFileODS();
+            fileODS.CreateFile(report, filePath);
+            break;
+          case BROutDestination.Writer:
+            BRFileODT fileODT = new BRFileODT(BRMeasurer.Default);
+            fileODT.CreateFile(report, filePath);
             break;
           default:
             throw new BugException("destination=" + destination.ToString());
@@ -778,7 +799,9 @@ namespace FreeLibSet.Forms.Reporting
       switch (item.MainCode)
       {
         case "Excel": destination = BROutDestination.Excel; break;
+        case "Word": destination = BROutDestination.Word; break;
         case "Calc": destination = BROutDestination.Calc; break;
+        case "Writer": destination = BROutDestination.Writer; break;
         case "HTML": destination = BROutDestination.HTML; break;
         case "PDF": destination = BROutDestination.PDF; break;
         default:
@@ -801,31 +824,44 @@ namespace FreeLibSet.Forms.Reporting
       else
         report = PerformCreateReport(BROutAction.SendTo, destination, AbsPath.Empty);
 
+      OpenOfficeInfo officeInfo;
+
       switch (destination)
       {
         case BROutDestination.Excel:
           DoSendToExcel(report);
           break;
         case BROutDestination.Calc:
-          using (Splash spl = new Splash("Создание книги в Excel"))
+          officeInfo = (OpenOfficeInfo)(item.Tag);
+          using (Splash spl = new Splash("Создание книги в " + officeInfo.Parts[OpenOfficePart.Calc].DisplayName))
           {
             AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("ods");
-            BRReportODSWriter creator = new BRReportODSWriter();
+            BRFileODS creator = new BRFileODS();
             //creator.Splash = spl;
             creator.CreateFile(report, filePath);
 
-            OpenOfficeInfo officeInfo = (OpenOfficeInfo)(item.Tag);
             officeInfo.Parts[OpenOfficePart.Calc].OpenFile(filePath, true);
+          }
+          break;
+        case BROutDestination.Writer:
+          officeInfo = (OpenOfficeInfo)(item.Tag);
+          using (Splash spl = new Splash("Создание документа в " + officeInfo.Parts[OpenOfficePart.Writer].DisplayName))
+          {
+            AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("odt");
+            BRFileODT creator = new BRFileODT(BRMeasurer.Default);
+            //creator.Splash = spl;
+            creator.CreateFile(report, filePath);
+
+            officeInfo.Parts[OpenOfficePart.Writer].OpenFile(filePath, true);
           }
           break;
         case BROutDestination.HTML:
           using (Splash spl = new Splash("Создание HTML-файла"))
           {
             AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("html");
-            BRReportHtmlWriter writer = new BRReportHtmlWriter();
+            BRFileHtml writer = new BRFileHtml();
             //writer.Splash = spl;
             writer.CreateFile(report, filePath);
-            BRExportSettings exportSettings = SettingsData.GetRequired<BRExportSettings>();
             FileAssociationItem fa = (FileAssociationItem)(item.Tag);
             fa.Execute(filePath);
           }
@@ -834,9 +870,22 @@ namespace FreeLibSet.Forms.Reporting
           using (Splash spl = new Splash("Создание PDF-файла"))
           {
             AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("pdf");
-            BRPdfReportPainter.CreateFile(report, filePath);
+            BRFilePdf.CreateFile(report, filePath);
             FileAssociationItem fa = (FileAssociationItem)(item.Tag);
             fa.Execute(filePath);
+          }
+          break;
+        case BROutDestination.Word:
+          using (Splash spl = new Splash(new string[] {
+          "Создание файла",
+          "Запуск Microsoft Word"}))
+          {
+            BRFileWord2003Xml writer = new BRFileWord2003Xml(BRMeasurer.Default);
+            AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("xml");
+            writer.CreateFile(report, filePath);
+            spl.Complete();
+            MicrosoftOfficeTools.OpenWithWord(filePath, true);
+            spl.Complete();
           }
           break;
         default:
@@ -854,7 +903,7 @@ namespace FreeLibSet.Forms.Reporting
           "Создание файла",
           "Запуск Microsoft Excel"}))
           {
-            BRReportExcel2003XmlWriter writer = new BRReportExcel2003XmlWriter();
+            BRFileExcel2003Xml writer = new BRFileExcel2003Xml();
             AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("xml");
             writer.CreateFile(report, filePath);
             spl.Complete();
@@ -867,7 +916,7 @@ namespace FreeLibSet.Forms.Reporting
 
       using (Splash spl = new Splash("Создание книги в Excel"))
       {
-        BRReportOLEExcelSender creator = new BRReportOLEExcelSender();
+        BRFileExcelOLE creator = new BRFileExcelOLE();
         creator.Splash = spl;
         creator.Send(report);
       }
@@ -875,6 +924,81 @@ namespace FreeLibSet.Forms.Reporting
 
     #endregion
   }
+
+  /// <summary>
+  /// Команды печати в окне предварительного просмотра
+  /// </summary>
+  internal class BRPreviewOutItem : EFPMenuOutItem
+  {
+    #region Конструктор
+
+    public BRPreviewOutItem(BRMenuOutItem owner, EFPFormProvider efpPreviewForm, EFPExtPrintPreviewControl efpPreview)
+      : base("Print")
+    {
+      _Owner = owner;
+      _efpPreviewForm = efpPreviewForm;
+      _efpPreview = efpPreview;
+
+      BRMenuOutItem.InitExportFileItems(ExportFileItems, true);
+      BRMenuOutItem.InitSendToItems(SendToItems, true);
+    }
+
+    private BRMenuOutItem _Owner;
+    EFPFormProvider _efpPreviewForm;
+    EFPExtPrintPreviewControl _efpPreview;
+
+    #endregion
+
+    #region Печать
+
+    public override bool CanPrint { get { return true; } }
+
+    public override bool Print(bool defaultPrinter)
+    {
+      bool res = _Owner.Print(defaultPrinter);
+      if (res)
+        _efpPreviewForm.CloseForm(DialogResult.Cancel);
+      return res;
+    }
+
+    #endregion
+
+    #region Параметры страницы
+
+    public override bool CanPageSetup { get { return true; } }
+
+    public override bool ShowPageSetup()
+    {
+      if (!_Owner.ShowPageSetup())
+        return false;
+      BRReport report = _Owner.PerformCreateReport(BROutAction.Print, BROutDestination.Print, AbsPath.Empty);
+      _Owner.CreateDocumentForPreview(_efpPreview, report);
+      _efpPreview.Control.InvalidatePreview();
+      _efpPreview.Control.StartPage = 0;
+      return true;
+    }
+
+    #endregion
+
+    #region Сохранение в файл
+
+    public override void ExportFile(AbsPath filePath, EFPExportFileItem item)
+    {
+      _Owner.DoExportFile(BROutCommandSource.PrintPreview, filePath, item);
+    }
+
+    #endregion
+
+    #region Отправить
+
+    public override void SendTo(EFPSendToItem item)
+    {
+      _Owner.SendTo(item);
+    }
+
+    #endregion
+  }
+
 
   /// <summary>
   /// Диалог просмотра отчета <see cref="BRReport"/>
@@ -920,61 +1044,12 @@ namespace FreeLibSet.Forms.Reporting
         outItem.DisplayName = "Отчет";
       outItem.CreateReport += OutItem_CreateReport;
       outItem.ConfigSectionName = ConfigSectionName;
-      outItem.PrintPreview();
+      outItem.ShowPrintPreview();
     }
 
     private void OutItem_CreateReport(object sender, BRMenuOutItemCreateReportEventArgs args)
     {
       args.Report = this.Report;
-    }
-
-    #endregion
-  }
-
-  internal class BRExportSettings : ISettingsDataItem
-  {
-    #region Сохранение в файл
-
-    /// <summary>
-    /// Тип файла при экспорте ("PDF", "TIFF", ...)
-    /// </summary>
-    public string FileType;
-
-    /// <summary>
-    /// Каталог для экспорта
-    /// </summary>
-    public AbsPath ExportDir;
-
-    #endregion
-
-    #region ISettingsDataItem
-
-    public SettingsPart UsedParts { get { return SettingsPart.User | SettingsPart.Machine; } }
-
-    public void WriteConfig(CfgPart cfg, SettingsPart part)
-    {
-      switch (part)
-      {
-        case SettingsPart.User:
-          cfg.SetString("FileType", FileType);
-          break;
-        case SettingsPart.Machine:
-          cfg.SetString("ExportDir", ExportDir.Path);
-          break;
-      }
-    }
-
-    public void ReadConfig(CfgPart cfg, SettingsPart part)
-    {
-      switch (part)
-      {
-        case SettingsPart.User:
-          FileType = cfg.GetString("FileType");
-          break;
-        case SettingsPart.Machine:
-          ExportDir = new AbsPath(cfg.GetString("ExportDir"));
-          break;
-      }
     }
 
     #endregion

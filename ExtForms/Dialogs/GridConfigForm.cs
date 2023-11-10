@@ -380,7 +380,7 @@ namespace FreeLibSet.Forms
       {
         if (!oldItem.Code.StartsWith("User", StringComparison.Ordinal))
         {
-          EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы");
+          EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы. Введите название набора.");
           return;
         }
         if (EFPApp.MessageBox("Набор \"" + args.DisplayName + "\" уже существует. Вы хотите перезаписать его?",

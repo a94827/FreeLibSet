@@ -3999,7 +3999,7 @@ namespace FreeLibSet.Config
   /// <summary>
   /// Временное хранилище настроек в памяти без возможности сохранения
   /// </summary>
-  public class TempCfg : XmlCfgPart
+  public class TempCfg : XmlCfgPart, ICloneable
   {
     #region Конструкторы
 
@@ -4055,6 +4055,26 @@ namespace FreeLibSet.Config
         if (node2 != null)
           base.RootNode = node2;
       }
+    }
+
+    #endregion
+
+    #region ICloneable
+
+    /// <summary>
+    /// Создает копию временной секции конфигурации
+    /// </summary>
+    /// <returns>Новый объект, содержащий такие же данные</returns>
+    public TempCfg Clone()
+    {
+      TempCfg res = new TempCfg();
+      CopyTo(res);
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
     }
 
     #endregion

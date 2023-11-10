@@ -370,7 +370,7 @@ namespace FreeLibSet.Russian
       if (TryParse(s, out res, out errorText, autoCorrect))
         return res;
       else
-        throw new InvalidCastException("Строку \"" + s + "\" нельзя преобразовать в Ф.И.О." + errorText);
+        throw new InvalidCastException("Строку \"" + s + "\" нельзя преобразовать в Ф.И.О. " + errorText);
     }
 
     /// <summary>
@@ -524,9 +524,9 @@ namespace FreeLibSet.Russian
       // Убираем пробелы вокруг дефиса
       s = s.Replace(" -", "-");
       s = s.Replace("- ", "-");
-      s = s.Replace("--", "-");
+      s = DataTools.RemoveDoubleChars(s,'-');
       // Убираем двойные и концевые пробелы
-      s = s.Replace("  ", " ");
+      s = DataTools.RemoveDoubleChars(s, ' ');
       s = s.Trim();
       return s;
     }
@@ -650,8 +650,8 @@ namespace FreeLibSet.Russian
       else
       {
         string surname1 = Surname.ToUpperInvariant();
-        if (surname1.EndsWith("О", StringComparison.Ordinal) || 
-          surname1.EndsWith("ИХ", StringComparison.Ordinal) || 
+        if (surname1.EndsWith("О", StringComparison.Ordinal) ||
+          surname1.EndsWith("ИХ", StringComparison.Ordinal) ||
           surname1.EndsWith("ЫХ", StringComparison.Ordinal))
           // Фамилии на "О" не склоняются
           noCasesSurname = true;
@@ -900,16 +900,15 @@ namespace FreeLibSet.Russian
     /// <returns>true, если все компоненты корректны</returns>
     public bool IsValid(RusFullNameValidateOptions options, out string errorText)
     {
-      if (!IsValidSurname(Surname, options, out errorText))
+      if (!DoIsValidSurname(Surname, options, out errorText, 0))
         return false;
-      if (!IsValidName(Name, options, out errorText))
+      if (!DoIsValidName(Name, options, out errorText, Surname.Length + 1))
         return false;
-      if (!IsValidPatronymic(Patronymic, options, out errorText))
+      if (!DoIsValidPatronymic(Patronymic, options, out errorText, Surname.Length + Name.Length + 2))
         return false;
 
       if (!IsValidComplex(options, out errorText))
         return false;
-
 
       return true;
     }

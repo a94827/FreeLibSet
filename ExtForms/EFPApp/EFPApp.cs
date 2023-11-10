@@ -3058,7 +3058,7 @@ namespace FreeLibSet.Forms
           if (cis != null)
           {
             if (!cis.IsDisposed) // проверка добавлена 13.04.2018
-              cis.Active = false;
+              cis.SetActive(false);
           }
         }
 
@@ -3079,7 +3079,7 @@ namespace FreeLibSet.Forms
           if (cis != null)
           {
             if (!cis.IsDisposed) // проверка добавлена 13.04.2018
-              cis.Active = true;
+              cis.SetActive(true);
           }
         }
       }
@@ -3647,12 +3647,12 @@ namespace FreeLibSet.Forms
         case "Image":
           args.Value = EFPApp.GetFormIconImage(form);
           break;
-        //case "Order":
-        //  Args.Value = Args.RowIndex + 1;
-        //  break;
-        //case "Text":
-        //  Args.Value = Form.Text;
-        //  break;
+          //case "Order":
+          //  Args.Value = Args.RowIndex + 1;
+          //  break;
+          //case "Text":
+          //  Args.Value = Form.Text;
+          //  break;
       }
     }
 
@@ -4130,9 +4130,9 @@ namespace FreeLibSet.Forms
     /// <param name="title">Заголовок для выдачи сообщения</param>
     public static void ShowExceptionDelayed(Exception exception, string title)
     {
-      ShowExceptionDelayedInfo info=new ShowExceptionDelayedInfo();
-      info.Exception=exception;
-      info.Title=title;
+      ShowExceptionDelayedInfo info = new ShowExceptionDelayedInfo();
+      info.Exception = exception;
+      info.Title = title;
       IdleHandlers.AddSingleAction(info.ShowException);
     }
 
@@ -4471,6 +4471,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Возвращает true, если <see cref="WebBrowser"/> может отображать документы.
+    /// Не работает в Mono.
+    /// </summary>
+    internal static bool IsWebBrowserSupported { get { return !EnvironmentTools.IsMono; } }
+
+    /// <summary>
     /// Показать окно просмотра XML-документа.
     /// Модальный или немодальный режим зависит от текущего состояния программы 
     /// (наличия открытых блоков диалога).    
@@ -4506,29 +4512,31 @@ namespace FreeLibSet.Forms
     /// Файл не обязан реально существовать.</param>
     public static void ShowXmlView(XmlDocument xmlDoc, string title, bool isModal, string fileName)
     {
-      SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>();
-      try
+      if (IsWebBrowserSupported)
       {
-        frm.Text = title;
-        frm.Icon = EFPApp.MainImages.Icons["XML"];
-        // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
-        if (isModal) // 31.08.2016 
-          frm.WindowState = FormWindowState.Maximized;
+        using (SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>())
+        {
+          frm.Text = title;
+          frm.Icon = EFPApp.MainImages.Icons["XML"];
+          // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
+          if (isModal) // 31.08.2016 
+            frm.WindowState = FormWindowState.Maximized;
 
-        EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
+          EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
 
-        efpVB.XmlDocument = xmlDoc;
-        efpVB.FileName = fileName;
+          efpVB.XmlDocument = xmlDoc;
+          efpVB.FileName = fileName;
 
-        if (isModal)
-          ShowDialog(frm, true);
-        else
-          EFPApp.ShowFormOrDialog(frm);
+          if (isModal)
+            ShowDialog(frm, true);
+          else
+            EFPApp.ShowFormOrDialog(frm);
+        }
       }
-      catch
+      else // 09.11.2023
       {
-        frm.Dispose(); // 06.04.2018
-        throw;
+        string text = DataTools.XmlDocumentToString(xmlDoc);
+        ShowTextView(text, title, isModal /*,fileName*/);
       }
     }
 
@@ -4565,28 +4573,30 @@ namespace FreeLibSet.Forms
     /// Иначе режим зависит от текущего состояния программы (наличия открытых блоков диалога)</param>
     public static void ShowXmlView(AbsPath filePath, string title, bool isModal)
     {
-      SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>();
-      try
+      if (IsWebBrowserSupported)
       {
-        frm.Text = title;
-        frm.Icon = EFPApp.MainImages.Icons["XML"];
-        // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
-        if (isModal) // 31.08.2016 
-          frm.WindowState = FormWindowState.Maximized;
+        using (SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>())
+        {
+          frm.Text = title;
+          frm.Icon = EFPApp.MainImages.Icons["XML"];
+          // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
+          if (isModal) // 31.08.2016 
+            frm.WindowState = FormWindowState.Maximized;
 
-        EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
+          EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
 
-        efpVB.Control.XmlFilePath = filePath.Path;
+          efpVB.Control.XmlFilePath = filePath.Path;
 
-        if (isModal)
-          ShowDialog(frm, true);
-        else
-          EFPApp.ShowFormOrDialog(frm);
+          if (isModal)
+            ShowDialog(frm, true);
+          else
+            EFPApp.ShowFormOrDialog(frm);
+        }
       }
-      catch
+      else // 09.11.2023
       {
-        frm.Dispose(); // 06.04.2018
-        throw;
+        string text = System.IO.File.ReadAllText(filePath.Path);
+        ShowTextView(text, title, isModal /*, filePath */);
       }
     }
 
@@ -5449,6 +5459,66 @@ namespace FreeLibSet.Forms
       }
     }
     private static Version _MicrosoftExcelVersion;
+
+    /// <summary>
+    /// Значок для Microsoft Word.
+    /// Если приложение установлено, возвращается значок из exe-файла. Иначе возвращается стандартное изображение.
+    /// Возвращается изображение 16x16.
+    /// </summary>
+    public static Image MicrosoftWordImage
+    {
+      get
+      {
+        if (_MicrosoftWordImage == null)
+        {
+          try
+          {
+            if (!MicrosoftOfficeTools.WordPath.IsEmpty)
+            {
+              Icon ic = WinFormsTools.ExtractIcon(MicrosoftOfficeTools.WordPath, 0, true);
+              if (ic != null)
+                _MicrosoftWordImage = ic.ToBitmap();
+            }
+          }
+          catch { }
+
+          if (_MicrosoftWordImage == null)
+            _MicrosoftWordImage = MainImages.Images["MicrosoftWord"];
+        }
+        return _MicrosoftWordImage;
+      }
+    }
+    private static Image _MicrosoftWordImage;
+
+    /// <summary>
+    /// Значок для Microsoft Excel.
+    /// Если приложение установлено, возвращается значок из exe-файла. Иначе возвращается стандартное изображение.
+    /// Возвращается изображение 16x16.
+    /// </summary>
+    public static Image MicrosoftExcelImage
+    {
+      get
+      {
+        if (_MicrosoftExcelImage == null)
+        {
+          try
+          {
+            if (!MicrosoftOfficeTools.ExcelPath.IsEmpty)
+            {
+              Icon ic = WinFormsTools.ExtractIcon(MicrosoftOfficeTools.ExcelPath, 0, true);
+              if (ic != null)
+                _MicrosoftExcelImage = ic.ToBitmap();
+            }
+          }
+          catch { }
+
+          if (_MicrosoftExcelImage == null)
+            _MicrosoftExcelImage = MainImages.Images["MicrosoftExcel"];
+        }
+        return _MicrosoftExcelImage;
+      }
+    }
+    private static Image _MicrosoftExcelImage;
 
     #endregion
 

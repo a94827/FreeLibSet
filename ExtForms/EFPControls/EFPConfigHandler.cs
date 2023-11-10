@@ -13,12 +13,12 @@ namespace FreeLibSet.Forms
   #region Перечисление EFPConfigPurpose
 
   /// <summary>
-  /// Назначение действия, выполняемого EFPConfigHandler
+  /// Назначение действия, выполняемого <see cref="EFPConfigHandler"/>
   /// </summary>
   public enum EFPConfigPurpose
   {
     /// <summary>
-    /// Чтение/запись именной секции конфигурации с именем, заданным свойством ConfigSectionName
+    /// Чтение/запись именной секции конфигурации с именем, заданным свойством <see cref="EFPConfigHandler.ConfigSectionName"/>.
     /// </summary>
     Config,
 
@@ -36,7 +36,7 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Дополнительная информация, передаваемая методам интерфейса IEFPConfigurable.
+  /// Дополнительная информация, передаваемая методам интерфейса <see cref="IEFPConfigurable"/>.
   /// В текущей реализации содержит только назначение действия (чтение/запись именной секции конфигурации
   /// или композиции окон)
   /// </summary>
@@ -59,7 +59,7 @@ namespace FreeLibSet.Forms
     private EFPConfigPurpose _Purpose;
 
     /// <summary>
-    /// Возвращает Purpose
+    /// Возвращает <see cref="Purpose"/>
     /// </summary>
     /// <returns>Тестовое представление</returns>
     public override string ToString()
@@ -72,13 +72,13 @@ namespace FreeLibSet.Forms
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если объект был переведен в режим "только чтение" вызовом SetReadOnly().
+    /// Возвращает true, если объект был переведен в режим "только чтение" вызовом <see cref="SetReadOnly()"/>.
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Выбрасывает исключение, если IsReadOnly=true
+    /// Выбрасывает исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -88,7 +88,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Переводит объект в режим "только чтение".
-    /// Вызывается из EFPConfigHandler
+    /// Вызывается из <see cref="EFPConfigHandler"/>.
     /// </summary>
     public void SetReadOnly()
     {
@@ -99,8 +99,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Интерфейс, реализуемый EFPControlBase, EFPFormProvider и другими классами, использующими EFPControlHandler.
-  /// Определяет методы чтения / записи секций конфигурации и получения списка категорий
+  /// Интерфейс, реализуемый <see cref="EFPControlBase"/>, <see cref="EFPFormProvider"/> и другими классами, использующими <see cref="EFPConfigHandler"/>.
+  /// Определяет методы чтения / записи секций конфигурации и получения списка категорий.
   /// </summary>
   public interface IEFPConfigurable
   {
@@ -135,17 +135,17 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Содержит имя секции конфигурации, список категорий, флажки изменений и события чтения/записи. 
-  /// Используется в EFPFormProvider и EFPControlBase.
+  /// Используется в <see cref="EFPFormProvider"/> и <see cref="EFPControlBase"/>.
   /// Не применяется для сохранения истории и пользовательских наборов, т.к не содержит свойства UserSetName.
   /// 
-  /// Реализация интерфейса IEFPConfigurable выполняет опрос присоединенных источников
+  /// Реализация интерфейса <see cref="IEFPConfigurable"/> выполняет опрос присоединенных источников.
   /// </summary>
   public sealed class EFPConfigHandler : IEFPConfigurable
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает новый объект без установки ConfigSectionName.
+    /// Создает новый объект без установки свойства <see cref="ConfigSectionName"/>.
     /// Список категорий пустой.
     /// </summary>
     public EFPConfigHandler()
@@ -183,7 +183,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Список источников данных.
-    /// EFPControlBase и EFPFormProvider добавляют себя в этот список сразу после создания EFPConfigHandler
+    /// <see cref="EFPControlBase"/> и <see cref="EFPFormProvider"/> добавляют себя в этот список сразу после создания <see cref="EFPConfigHandler"/>.
     /// </summary>
     public IList<IEFPConfigurable> Sources { get { return _Sources; } }
     private List<IEFPConfigurable> _Sources;
@@ -194,7 +194,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Построение списка категорий.
-    /// Опрашивает все источники данных в списке Sources.
+    /// Опрашивает все источники данных в списке <see cref="Sources"/>.
     /// </summary>
     /// <param name="categories">Заполняемый список категорий</param>
     /// <param name="rwMode">Режим: Чтение или запись данных</param>
@@ -207,7 +207,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Записывает секцию конфигурации.
-    /// Вызывает методы всех объектов из списка Sources
+    /// Вызывает методы всех объектов из списка <see cref="Sources"/>.
     /// </summary>
     /// <param name="category">Категория</param>
     /// <param name="cfg">Записываемая секция конфигурации</param>
@@ -220,7 +220,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Считывает секцию конфигурации.
-    /// Вызывает методы всех объектов из списка Sources
+    /// Вызывает методы всех объектов из списка <see cref="Sources"/>.
     /// </summary>
     /// <param name="category">Категория</param>
     /// <param name="cfg">Считываемая секция конфигурации</param>
@@ -236,7 +236,7 @@ namespace FreeLibSet.Forms
     #region Флажки
 
     /// <summary>
-    /// Для эмуляции именного индексированного свойства Changed.
+    /// Для эмуляции именного индексированного свойства <see cref="EFPConfigHandler.Changed"/>.
     /// </summary>
     public sealed class ChangeFlags
     {
@@ -255,9 +255,9 @@ namespace FreeLibSet.Forms
       private EFPConfigHandler _Owner;
 
       /// <summary>
-      /// Коллекция установленных флажков
-      /// Ключ - категория
-      /// Значение - не используется
+      /// Коллекция установленных флажков.
+      /// Ключ - категория.
+      /// Значение - не используется.
       /// </summary>
       private Dictionary<string, object> _Flags;
 
@@ -265,12 +265,12 @@ namespace FreeLibSet.Forms
       /// Чтение или установка признака изменения для категории
       /// Это свойство устанавливается, например, после изменения фильтров.
       /// Через некоторое время, по таймеру будет вызван метод ReadConfig().
-      /// Если, например, поле CurrentId нужно записать в секцию "GridView" только при закрытии формы, 
+      /// Если, например, поле CurrentId нужно записать в секцию <see cref="EFPConfigCategories.GridView"/> только при закрытии формы, 
       /// следует установить флаг в обработчике OnHidden() перед вызовом метода базового класса.
       /// Флажки можно задавать и для несуществующих категорий. Они игнорируются.
       /// Нужно, т.к. внешний код может убрать категорию из списка, вызвав Remove().
       /// </summary>
-      /// <param name="category">Категория</param>
+      /// <param name="category">Категория (обычно из <see cref="EFPConfigCategories"/>)</param>
       /// <returns>Наличие изменений</returns>
       public bool this[string category]
       {
@@ -339,10 +339,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Записывает все данные, независимо от флажков.
     /// Флажки сбрасываются.
-    /// Если свойство ConfigSectionName не установлено, никаких действий не выполняется.
-    /// Перед использованием этого метода рекомендуется вызывать IEFPConfigManager.Preload()
+    /// Если свойство <see cref="ConfigSectionName"/> не установлено, никаких действий не выполняется.
+    /// Перед использованием этого метода рекомендуется вызывать <see cref="IEFPConfigManager.Preload(EFPConfigSectionInfo[], EFPConfigMode)"/>.
     /// </summary>
-    /// <param name="configManager">Менеджер секций конфигурации EFPApp.ConfigManager</param>
+    /// <param name="configManager">Менеджер секций конфигурации, обычно <see cref="EFPApp.ConfigManager"/></param>
     public void WriteConfig(IEFPConfigManager configManager)
     {
       if (configManager == null)
@@ -369,9 +369,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Записывает только измененные данные и сбрасывает флажки   
-    /// Если свойство ConfigSectionName не установлено, никаких действий не выполняется.
+    /// Если свойство <see cref="ConfigSectionName"/> не установлено, никаких действий не выполняется.
     /// </summary>
-    /// <param name="configManager">Менеджер секций конфигурации EFPApp.ConfigManager</param>
+    /// <param name="configManager">Менеджер секций конфигурации, обычно <see cref="EFPApp.ConfigManager"/></param>
     public void WriteConfigChanges(IEFPConfigManager configManager)
     {
       if (configManager == null)
@@ -405,10 +405,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Считывает данные для всех категорий, сбрасывает флажки
-    /// Если свойство ConfigSectionName не установлено, никаких действий не выполняется.
-    /// Перед использованием этого метода рекомендуется вызывать IEFPConfigManager.Preload()
+    /// Если свойство <see cref="ConfigSectionName"/> не установлено, никаких действий не выполняется.
+    /// Перед использованием этого метода рекомендуется вызывать <see cref="IEFPConfigManager.Preload(EFPConfigSectionInfo[], EFPConfigMode)"/>.
     /// </summary>
-    /// <param name="configManager">Менеджер секций конфигурации EFPApp.ConfigManager</param>
+    /// <param name="configManager">Менеджер секций конфигурации, обычно <see cref="EFPApp.ConfigManager"/></param>
     public void ReadConfig(IEFPConfigManager configManager)
     {
       if (configManager == null)
@@ -435,10 +435,10 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вызывает Write для всех категорий, несмотря на флажки. Флажки не сбрасываются.
+    /// Вызывает <see cref="WriteConfigPart(string, CfgPart, EFPConfigActionInfo)"/> для всех категорий, несмотря на флажки. Флажки не сбрасываются.
     /// Для каждой категории создается вложенная секция с именем, равным категории.
     /// Используется при сохранении композиции рабочего стола.
-    /// Работа метода не зависит от свойства ConfigSectionName.
+    /// Работа метода не зависит от свойства <see cref="ConfigSectionName"/>.
     /// </summary>
     /// <param name="cfg">Секция для создания дочерних элементов</param>
     public void WriteComposition(CfgPart cfg)
@@ -460,11 +460,10 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вызывает Read для всех категорий.
+    /// Вызывает <see cref="ReadConfigPart(string, CfgPart, EFPConfigActionInfo)"/> для всех категорий.
     /// Для каждой категории используется вложенная секция с именем, равным категории.
-    /// Если какой-либо секции нет, событие Read не вызывается
     /// Используется при восстановлении композиции рабочего стола. Флажки сбрасываются.
-    /// Работа метода не зависит от свойства ConfigSectionName.
+    /// Работа метода не зависит от свойства <see cref="ConfigSectionName"/>.
     /// </summary>
     /// <param name="cfg">Секция для создания дочерних элементов</param>
     public void ReadComposition(CfgPart cfg)
@@ -513,7 +512,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Подавляет чтение/запись секции конфигурации одной категории.
-  /// Этот объект может быть добавлен к списку EFPConfigHandler.Sources
+  /// Этот объект может быть добавлен к списку <see cref="EFPConfigHandler.Sources"/>.
   /// </summary>
   public sealed class EFPConfigCategorySuppressor : IEFPConfigurable
   {
@@ -554,7 +553,7 @@ namespace FreeLibSet.Forms
     #region IEFPConfigurable Members
 
     /// <summary>
-    /// Удаляет из списка категорию SuppressedCategory
+    /// Удаляет из списка категорию <see cref="SuppressedCategory"/>.
     /// </summary>
     /// <param name="categories">Заполняеымый список</param>
     /// <param name="rwMode">Игнорируется</param>

@@ -248,9 +248,10 @@ namespace FreeLibSet.Controls
       _InsideInitText = true;
       try
       {
-        MainControl.Text = "";
         if (_NValue.HasValue)
           MainControl.Text = _Formatter.ToString(_NValue.Value);
+        else
+          MainControl.Text = "";
 
         MainControl.SelectAll();
       }

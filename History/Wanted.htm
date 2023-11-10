@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+п»ї<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
-	<title>Что предстоит сделать</title>
+	<title>Р§С‚Рѕ РїСЂРµРґСЃС‚РѕРёС‚ СЃРґРµР»Р°С‚СЊ</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:09:37.104000000"/>
 	<meta name="changed" content="2022-11-08T16:54:52.307000000"/>
@@ -29,74 +29,74 @@
 	</style>
 </head>
 <body lang="ru-RU" dir="ltr">
-<h1 class="western">Что предстоит сделать в библиотеках <span lang="en-US">FreeLibSet</span>
+<h1 class="western">Р§С‚Рѕ РїСЂРµРґСЃС‚РѕРёС‚ СЃРґРµР»Р°С‚СЊ РІ Р±РёР±Р»РёРѕС‚РµРєР°С… <span lang="en-US">FreeLibSet</span>
 </h1>
 <h2 lang="en-US" class="western">ExtTools</h2>
 <table width="100%" cellpadding="2" cellspacing="0">
 	<col width="256*">
 	<tr>
 		<td width="100%" valign="top" style="border: 1.00pt solid #000000; padding: 0.05cm">
-			<p lang="en-US">Mono: <span lang="ru-RU">Метод
-			MemoryTools.CheckSufficientMemory() вызывает &laquo;проглатываемое&raquo;
-			исключение NotImplementedException и не работает правильно, так
-			как MemoryFailPoint не реализован в </span>Mono (20.06.2017). 
+			<p lang="en-US">Mono: <span lang="ru-RU">РњРµС‚РѕРґ
+			MemoryTools.CheckSufficientMemory() РІС‹Р·С‹РІР°РµС‚ &laquo;РїСЂРѕРіР»Р°С‚С‹РІР°РµРјРѕРµ&raquo;
+			РёСЃРєР»СЋС‡РµРЅРёРµ NotImplementedException Рё РЅРµ СЂР°Р±РѕС‚Р°РµС‚ РїСЂР°РІРёР»СЊРЅРѕ, С‚Р°Рє
+			РєР°Рє MemoryFailPoint РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅ РІ </span>Mono (20.06.2017). 
 			</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">Метод <span lang="en-US">Cache.GetItem()
-			</span><span lang="ru-RU">может вызвать зависание, в случае, если
-			для фабрики запрашиваемого объекта нужен второй объект, а для
-			второго - первый. При условии, что будет запущено два потока. См.
-			</span><span lang="en-US">TestCache, </span><span lang="ru-RU">вариант
-			</span><span lang="en-US">GetAndGet </span><span lang="ru-RU">в
-			режиме двух объектов. Если объект только один, то выбрасывается
-			</span><span lang="en-US">ReentranceException, </span><span lang="ru-RU">как
-			положено.</span></p>
+			<p style="margin-bottom: 0.5cm">РњРµС‚РѕРґ <span lang="en-US">Cache.GetItem()
+			</span><span lang="ru-RU">РјРѕР¶РµС‚ РІС‹Р·РІР°С‚СЊ Р·Р°РІРёСЃР°РЅРёРµ, РІ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё
+			РґР»СЏ С„Р°Р±СЂРёРєРё Р·Р°РїСЂР°С€РёРІР°РµРјРѕРіРѕ РѕР±СЉРµРєС‚Р° РЅСѓР¶РµРЅ РІС‚РѕСЂРѕР№ РѕР±СЉРµРєС‚, Р° РґР»СЏ
+			РІС‚РѕСЂРѕРіРѕ - РїРµСЂРІС‹Р№. РџСЂРё СѓСЃР»РѕРІРёРё, С‡С‚Рѕ Р±СѓРґРµС‚ Р·Р°РїСѓС‰РµРЅРѕ РґРІР° РїРѕС‚РѕРєР°. РЎРј.
+			</span><span lang="en-US">TestCache, </span><span lang="ru-RU">РІР°СЂРёР°РЅС‚
+			</span><span lang="en-US">GetAndGet </span><span lang="ru-RU">РІ
+			СЂРµР¶РёРјРµ РґРІСѓС… РѕР±СЉРµРєС‚РѕРІ. Р•СЃР»Рё РѕР±СЉРµРєС‚ С‚РѕР»СЊРєРѕ РѕРґРёРЅ, С‚Рѕ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ
+			</span><span lang="en-US">ReentranceException, </span><span lang="ru-RU">РєР°Рє
+			РїРѕР»РѕР¶РµРЅРѕ.</span></p>
 			<p>(17.09.2020)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US" style="margin-bottom: 0.5cm"><span lang="ru-RU">Методы
-			</span>FileTemplateList <span lang="ru-RU">не используют аргумент
+			<p lang="en-US" style="margin-bottom: 0.5cm"><span lang="ru-RU">РњРµС‚РѕРґС‹
+			</span>FileTemplateList <span lang="ru-RU">РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‚ Р°СЂРіСѓРјРµРЅС‚
 			</span>ISplash</p>
 			<p lang="en-US">(28.12.2020)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US" style="margin-bottom: 0.5cm">ZipFileCreator <span lang="ru-RU">должен
-			как-то устанавливать кодовую страницу. Свойство
+			<p lang="en-US" style="margin-bottom: 0.5cm">ZipFileCreator <span lang="ru-RU">РґРѕР»Р¶РµРЅ
+			РєР°Рє-С‚Рѕ СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ РєРѕРґРѕРІСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ. РЎРІРѕР№СЃС‚РІРѕ
 			ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage
-			инициализируется значением
+			РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ Р·РЅР°С‡РµРЅРёРµРј
 			Thread.CurrentThread.CurrentCulture.TextInfo.OEMCodePage</span>.
-			<span lang="ru-RU">Не работает под сборками </span>linux <span lang="ru-RU">без
-			кодовой страницы 866. Надо инициализировать значением
-			</span>Encoding.ASCII.CodePage <span lang="ru-RU">при создании
-			файлов </span>XLSX <span lang="ru-RU">и </span>ODS. <span lang="ru-RU">Но
-			это - статическое поле, надо возвращать обратно. Или найти не
-			</span>default-<span lang="ru-RU">поле</span>.</p>
+			<span lang="ru-RU">РќРµ СЂР°Р±РѕС‚Р°РµС‚ РїРѕРґ СЃР±РѕСЂРєР°РјРё </span>linux <span lang="ru-RU">Р±РµР·
+			РєРѕРґРѕРІРѕР№ СЃС‚СЂР°РЅРёС†С‹ 866. РќР°РґРѕ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ Р·РЅР°С‡РµРЅРёРµРј
+			</span>Encoding.ASCII.CodePage <span lang="ru-RU">РїСЂРё СЃРѕР·РґР°РЅРёРё
+			С„Р°Р№Р»РѕРІ </span>XLSX <span lang="ru-RU">Рё </span>ODS. <span lang="ru-RU">РќРѕ
+			СЌС‚Рѕ - СЃС‚Р°С‚РёС‡РµСЃРєРѕРµ РїРѕР»Рµ, РЅР°РґРѕ РІРѕР·РІСЂР°С‰Р°С‚СЊ РѕР±СЂР°С‚РЅРѕ. РР»Рё РЅР°Р№С‚Рё РЅРµ
+			</span>default-<span lang="ru-RU">РїРѕР»Рµ</span>.</p>
 			<p lang="en-US">(20.07.2022)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US" style="margin-bottom: 0.5cm">MathOpParser <span lang="ru-RU">не
-			умеет определять унарную операцию в правой части унарной в
-			выражении вида &quot;2* -3&quot;. См. например,
+			<p lang="en-US" style="margin-bottom: 0.5cm">MathOpParser <span lang="ru-RU">РЅРµ
+			СѓРјРµРµС‚ РѕРїСЂРµРґРµР»СЏС‚СЊ СѓРЅР°СЂРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ РІ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё СѓРЅР°СЂРЅРѕР№ РІ
+			РІС‹СЂР°Р¶РµРЅРёРё РІРёРґР° &quot;2* -3&quot;. РЎРј. РЅР°РїСЂРёРјРµСЂ,
 			</span>Demos\TestCalculator<span lang="ru-RU">.</span></p>
-			<p style="margin-bottom: 0.5cm">Объяснение. <span lang="en-US">MathOpParser
-			</span>при первом вызове для операции &quot;*&quot; вызывает
-			<span lang="en-US">CreateSubExpression() </span>для вычисления
-			выражения правой части, передавая ей в списке <span lang="en-US">endTokens
-			</span>&quot;запрещенные&quot; лексемы, среди которых есть и &quot;-&quot;.
-			Соответственно, для правой части не находится ни одной лексемы
-			(т.к. следующая, как раз и есть &quot;-&quot;). Возвращается
-			ошибка &quot;Не найден правый операнд для операции *&quot;. Нельзя
-			убрать его из <span lang="en-US">endTokens, </span>т.к. он нужен
-			для операций вида &quot;2*3-1&quot;.</p>
+			<p style="margin-bottom: 0.5cm">РћР±СЉСЏСЃРЅРµРЅРёРµ. <span lang="en-US">MathOpParser
+			</span>РїСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ РґР»СЏ РѕРїРµСЂР°С†РёРё &quot;*&quot; РІС‹Р·С‹РІР°РµС‚
+			<span lang="en-US">CreateSubExpression() </span>РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ
+			РІС‹СЂР°Р¶РµРЅРёСЏ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё, РїРµСЂРµРґР°РІР°СЏ РµР№ РІ СЃРїРёСЃРєРµ <span lang="en-US">endTokens
+			</span>&quot;Р·Р°РїСЂРµС‰РµРЅРЅС‹Рµ&quot; Р»РµРєСЃРµРјС‹, СЃСЂРµРґРё РєРѕС‚РѕСЂС‹С… РµСЃС‚СЊ Рё &quot;-&quot;.
+			РЎРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ, РґР»СЏ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅРё РѕРґРЅРѕР№ Р»РµРєСЃРµРјС‹
+			(С‚.Рє. СЃР»РµРґСѓСЋС‰Р°СЏ, РєР°Рє СЂР°Р· Рё РµСЃС‚СЊ &quot;-&quot;). Р’РѕР·РІСЂР°С‰Р°РµС‚СЃСЏ
+			РѕС€РёР±РєР° &quot;РќРµ РЅР°Р№РґРµРЅ РїСЂР°РІС‹Р№ РѕРїРµСЂР°РЅРґ РґР»СЏ РѕРїРµСЂР°С†РёРё *&quot;. РќРµР»СЊР·СЏ
+			СѓР±СЂР°С‚СЊ РµРіРѕ РёР· <span lang="en-US">endTokens, </span>С‚.Рє. РѕРЅ РЅСѓР¶РµРЅ
+			РґР»СЏ РѕРїРµСЂР°С†РёР№ РІРёРґР° &quot;2*3-1&quot;.</p>
 			<p>(08.11.2022)</p>
 		</td>
 	</tr>
@@ -106,70 +106,70 @@
 	<col width="256*">
 	<tr>
 		<td width="100%" valign="top" style="border: 1.00pt solid #000000; padding: 0.05cm">
-			<p>При использовании интерфейса меню в стиле &laquo; <span lang="en-US">Windows</span>-98&raquo;
-			состояние &laquo; <span lang="en-US">Checked</span>&raquo; для
-			команды меню не отображается, если есть изображение (например, не
-			виден выбранный порядок строк в справочнике). В текущей реализации
-			состояние &laquo;<span lang="en-US">Checked</span>&raquo;
-			отображается в тексте меню символами &laquo;[<span lang="en-US">v</span>]&raquo;
+			<p>РџСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё РёРЅС‚РµСЂС„РµР№СЃР° РјРµРЅСЋ РІ СЃС‚РёР»Рµ &laquo; <span lang="en-US">Windows</span>-98&raquo;
+			СЃРѕСЃС‚РѕСЏРЅРёРµ &laquo; <span lang="en-US">Checked</span>&raquo; РґР»СЏ
+			РєРѕРјР°РЅРґС‹ РјРµРЅСЋ РЅРµ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ, РµСЃР»Рё РµСЃС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ (РЅР°РїСЂРёРјРµСЂ, РЅРµ
+			РІРёРґРµРЅ РІС‹Р±СЂР°РЅРЅС‹Р№ РїРѕСЂСЏРґРѕРє СЃС‚СЂРѕРє РІ СЃРїСЂР°РІРѕС‡РЅРёРєРµ). Р’ С‚РµРєСѓС‰РµР№ СЂРµР°Р»РёР·Р°С†РёРё
+			СЃРѕСЃС‚РѕСЏРЅРёРµ &laquo;<span lang="en-US">Checked</span>&raquo;
+			РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РІ С‚РµРєСЃС‚Рµ РјРµРЅСЋ СЃРёРјРІРѕР»Р°РјРё &laquo;[<span lang="en-US">v</span>]&raquo;
 						</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p>Перед прорисовкой кнопки со стрелочкой
-			(ControlRightButton.OnPaint()) с помощью ComboBoxRenderer, фон
-			заполняет цветом Control. Однако элемент, на котором расположена
-			кнопка может быть раскрашен произвольным образом. Если не делать
-			заливку фона, то для некоторых тем оформления Windows (CodeOpus)
-			появляются козявки. Требуется сделать правильную прозрачную кнопку
+			<p>РџРµСЂРµРґ РїСЂРѕСЂРёСЃРѕРІРєРѕР№ РєРЅРѕРїРєРё СЃРѕ СЃС‚СЂРµР»РѕС‡РєРѕР№
+			(ControlRightButton.OnPaint()) СЃ РїРѕРјРѕС‰СЊСЋ ComboBoxRenderer, С„РѕРЅ
+			Р·Р°РїРѕР»РЅСЏРµС‚ С†РІРµС‚РѕРј Control. РћРґРЅР°РєРѕ СЌР»РµРјРµРЅС‚, РЅР° РєРѕС‚РѕСЂРѕРј СЂР°СЃРїРѕР»РѕР¶РµРЅР°
+			РєРЅРѕРїРєР° РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°СЃРєСЂР°С€РµРЅ РїСЂРѕРёР·РІРѕР»СЊРЅС‹Рј РѕР±СЂР°Р·РѕРј. Р•СЃР»Рё РЅРµ РґРµР»Р°С‚СЊ
+			Р·Р°Р»РёРІРєСѓ С„РѕРЅР°, С‚Рѕ РґР»СЏ РЅРµРєРѕС‚РѕСЂС‹С… С‚РµРј РѕС„РѕСЂРјР»РµРЅРёСЏ Windows (CodeOpus)
+			РїРѕСЏРІР»СЏСЋС‚СЃСЏ РєРѕР·СЏРІРєРё. РўСЂРµР±СѓРµС‚СЃСЏ СЃРґРµР»Р°С‚СЊ РїСЂР°РІРёР»СЊРЅСѓСЋ РїСЂРѕР·СЂР°С‡РЅСѓСЋ РєРЅРѕРїРєСѓ
 			(19.09.2013) 
 			</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US">Mono (<span lang="ru-RU">с </span>Wine <span lang="ru-RU">или
-			без</span>)<span lang="ru-RU">: Не работает просмотр данных в </span>XML.
-			<span lang="ru-RU">При установке свойства XmlViewBox.</span>XmlDocument
-			<span lang="ru-RU">возникает исключение </span>NullReferenceException
-			<span lang="ru-RU">в методе </span>WebBrowse.Navigate(). <span lang="ru-RU">Возможно,
-			не установлен какой-нибудь пакет </span>Mono, <span lang="ru-RU">тогда
-			нужно выдавать сообщение об ошибке (09.04.2018) </span>
+			<p lang="en-US">Mono (<span lang="ru-RU">СЃ </span>Wine <span lang="ru-RU">РёР»Рё
+			Р±РµР·</span>)<span lang="ru-RU">: РќРµ СЂР°Р±РѕС‚Р°РµС‚ РїСЂРѕСЃРјРѕС‚СЂ РґР°РЅРЅС‹С… РІ </span>XML.
+			<span lang="ru-RU">РџСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРІРѕР№СЃС‚РІР° XmlViewBox.</span>XmlDocument
+			<span lang="ru-RU">РІРѕР·РЅРёРєР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ </span>NullReferenceException
+			<span lang="ru-RU">РІ РјРµС‚РѕРґРµ </span>WebBrowse.Navigate(). <span lang="ru-RU">Р’РѕР·РјРѕР¶РЅРѕ,
+			РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РєР°РєРѕР№-РЅРёР±СѓРґСЊ РїР°РєРµС‚ </span>Mono, <span lang="ru-RU">С‚РѕРіРґР°
+			РЅСѓР¶РЅРѕ РІС‹РґР°РІР°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ (09.04.2018) </span>
 			</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US">Mono+Wine: Notepad.exe <span lang="ru-RU">не
-			находит </span>log<span lang="ru-RU">-файлы при нажатии кнопки
-			&laquo;Отчет&raquo; в </span>ShowExceptionForm. <span lang="ru-RU">Нажатие
-			кнопки &laquo;Просмотр каталога&raquo; работает. Возможно, дело в
-			расширении &laquo;.</span>log<span lang="ru-RU">&raquo;, так как
-			</span>Notepad.exe <span lang="ru-RU">открывает только файлы с
-			расширением &laquo;.</span>txt<span lang="ru-RU">&raquo;
+			<p lang="en-US">Mono+Wine: Notepad.exe <span lang="ru-RU">РЅРµ
+			РЅР°С…РѕРґРёС‚ </span>log<span lang="ru-RU">-С„Р°Р№Р»С‹ РїСЂРё РЅР°Р¶Р°С‚РёРё РєРЅРѕРїРєРё
+			&laquo;РћС‚С‡РµС‚&raquo; РІ </span>ShowExceptionForm. <span lang="ru-RU">РќР°Р¶Р°С‚РёРµ
+			РєРЅРѕРїРєРё &laquo;РџСЂРѕСЃРјРѕС‚СЂ РєР°С‚Р°Р»РѕРіР°&raquo; СЂР°Р±РѕС‚Р°РµС‚. Р’РѕР·РјРѕР¶РЅРѕ, РґРµР»Рѕ РІ
+			СЂР°СЃС€РёСЂРµРЅРёРё &laquo;.</span>log<span lang="ru-RU">&raquo;, С‚Р°Рє РєР°Рє
+			</span>Notepad.exe <span lang="ru-RU">РѕС‚РєСЂС‹РІР°РµС‚ С‚РѕР»СЊРєРѕ С„Р°Р№Р»С‹ СЃ
+			СЂР°СЃС€РёСЂРµРЅРёРµРј &laquo;.</span>txt<span lang="ru-RU">&raquo;
 			</span>(09.04.2018) 
 			</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US">Mono. <span lang="ru-RU">Для панели </span>BandPanel,
-			<span lang="ru-RU">используемой в удаленном интерфейсе,
-			автоматическое определение размеров приводит к исключению. </span><strike><span lang="ru-RU">Сделано
-			собственная реализация метода </span></strike><strike>GetPreferredSize(),
-			</strike><strike><span lang="ru-RU">но размер вычисляется неверно
-			(10.04.2018) </span></strike><span lang="ru-RU">. Исправление
-			отменено 13.04.2018, т.к. неправильно вычисляются размеры при
-			некоторых комбинациях элементов </span>
+			<p lang="en-US">Mono. <span lang="ru-RU">Р”Р»СЏ РїР°РЅРµР»Рё </span>BandPanel,
+			<span lang="ru-RU">РёСЃРїРѕР»СЊР·СѓРµРјРѕР№ РІ СѓРґР°Р»РµРЅРЅРѕРј РёРЅС‚РµСЂС„РµР№СЃРµ,
+			Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРµ РѕРїСЂРµРґРµР»РµРЅРёРµ СЂР°Р·РјРµСЂРѕРІ РїСЂРёРІРѕРґРёС‚ Рє РёСЃРєР»СЋС‡РµРЅРёСЋ. </span><strike><span lang="ru-RU">РЎРґРµР»Р°РЅРѕ
+			СЃРѕР±СЃС‚РІРµРЅРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ РјРµС‚РѕРґР° </span></strike><strike>GetPreferredSize(),
+			</strike><strike><span lang="ru-RU">РЅРѕ СЂР°Р·РјРµСЂ РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РЅРµРІРµСЂРЅРѕ
+			(10.04.2018) </span></strike><span lang="ru-RU">. РСЃРїСЂР°РІР»РµРЅРёРµ
+			РѕС‚РјРµРЅРµРЅРѕ 13.04.2018, С‚.Рє. РЅРµРїСЂР°РІРёР»СЊРЅРѕ РІС‹С‡РёСЃР»СЏСЋС‚СЃСЏ СЂР°Р·РјРµСЂС‹ РїСЂРё
+			РЅРµРєРѕС‚РѕСЂС‹С… РєРѕРјР±РёРЅР°С†РёСЏС… СЌР»РµРјРµРЅС‚РѕРІ </span>
 			</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US">Mono: <span lang="ru-RU">Сложные элементы
-			</span>YearMonthBox <span lang="ru-RU">и </span>YearMonthRangeBox
-			<span lang="ru-RU">рисуются с серым фоном (10.04.2018) </span>
+			<p lang="en-US">Mono: <span lang="ru-RU">РЎР»РѕР¶РЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
+			</span>YearMonthBox <span lang="ru-RU">Рё </span>YearMonthRangeBox
+			<span lang="ru-RU">СЂРёСЃСѓСЋС‚СЃСЏ СЃ СЃРµСЂС‹Рј С„РѕРЅРѕРј (10.04.2018) </span>
 			</p>
 		</td>
 	</tr>
@@ -177,89 +177,89 @@
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" style="margin-bottom: 0.5cm">EFPRadioButtons: 
 			</p>
-			<p lang="en-US" style="margin-bottom: 0.5cm">1. <span lang="ru-RU">Добавить
-			перегрузку конструктора с аргументом </span>AutoCheck (<span lang="ru-RU">в
-			существующих перегрузках аргумент равен </span>true). <span lang="ru-RU">Если
-			</span>true, <span lang="ru-RU">то для всех кнопок </span>AutoCheck
-			<span lang="ru-RU">отключается, а обработка события </span>Click
-			<span lang="ru-RU">выполняется </span>EFPRadioButtons <span lang="ru-RU">(п.2
-			и п.3) </span>
+			<p lang="en-US" style="margin-bottom: 0.5cm">1. <span lang="ru-RU">Р”РѕР±Р°РІРёС‚СЊ
+			РїРµСЂРµРіСЂСѓР·РєСѓ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° СЃ Р°СЂРіСѓРјРµРЅС‚РѕРј </span>AutoCheck (<span lang="ru-RU">РІ
+			СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РїРµСЂРµРіСЂСѓР·РєР°С… Р°СЂРіСѓРјРµРЅС‚ СЂР°РІРµРЅ </span>true). <span lang="ru-RU">Р•СЃР»Рё
+			</span>true, <span lang="ru-RU">С‚Рѕ РґР»СЏ РІСЃРµС… РєРЅРѕРїРѕРє </span>AutoCheck
+			<span lang="ru-RU">РѕС‚РєР»СЋС‡Р°РµС‚СЃСЏ, Р° РѕР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ </span>Click
+			<span lang="ru-RU">РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ </span>EFPRadioButtons <span lang="ru-RU">(Рї.2
+			Рё Рї.3) </span>
 			</p>
-			<p style="margin-bottom: 0.5cm">2. Возможность расположения кнопок
-			вперемешку с другими элементами 
+			<p style="margin-bottom: 0.5cm">2. Р’РѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЂР°СЃРїРѕР»РѕР¶РµРЅРёСЏ РєРЅРѕРїРѕРє
+			РІРїРµСЂРµРјРµС€РєСѓ СЃ РґСЂСѓРіРёРјРё СЌР»РµРјРµРЅС‚Р°РјРё 
 			</p>
-			<p style="margin-bottom: 0.5cm">3. Обработка ситуации, когда точка
-			находится на заблокированной кнопке. Табуляция должна переходить
-			на первую незаблокированную кнопку, но без переключения точки 
+			<p style="margin-bottom: 0.5cm">3. РћР±СЂР°Р±РѕС‚РєР° СЃРёС‚СѓР°С†РёРё, РєРѕРіРґР° С‚РѕС‡РєР°
+			РЅР°С…РѕРґРёС‚СЃСЏ РЅР° Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅРЅРѕР№ РєРЅРѕРїРєРµ. РўР°Р±СѓР»СЏС†РёСЏ РґРѕР»Р¶РЅР° РїРµСЂРµС…РѕРґРёС‚СЊ
+			РЅР° РїРµСЂРІСѓСЋ РЅРµР·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅРЅСѓСЋ РєРЅРѕРїРєСѓ, РЅРѕ Р±РµР· РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ С‚РѕС‡РєРё 
 			</p>
 			<p>(10.05.2018)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">Формат <span lang="en-US">CSV.</span></p>
-			<p style="margin-bottom: 0.5cm">При вставке из буфера обмена в
-			режиме &laquo;Специальная вставка&raquo; выводить дополнительный
-			диалог с запросом разделителей (запятая или точка с запятой). См.
-			<span lang="en-US">LibreOffice Calc v.6 </span>команда &laquo;Сохранить
-			как&raquo; в формате <span lang="en-US">CSV.</span></p>
+			<p style="margin-bottom: 0.5cm">Р¤РѕСЂРјР°С‚ <span lang="en-US">CSV.</span></p>
+			<p style="margin-bottom: 0.5cm">РџСЂРё РІСЃС‚Р°РІРєРµ РёР· Р±СѓС„РµСЂР° РѕР±РјРµРЅР° РІ
+			СЂРµР¶РёРјРµ &laquo;РЎРїРµС†РёР°Р»СЊРЅР°СЏ РІСЃС‚Р°РІРєР°&raquo; РІС‹РІРѕРґРёС‚СЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№
+			РґРёР°Р»РѕРі СЃ Р·Р°РїСЂРѕСЃРѕРј СЂР°Р·РґРµР»РёС‚РµР»РµР№ (Р·Р°РїСЏС‚Р°СЏ РёР»Рё С‚РѕС‡РєР° СЃ Р·Р°РїСЏС‚РѕР№). РЎРј.
+			<span lang="en-US">LibreOffice Calc v.6 </span>РєРѕРјР°РЅРґР° &laquo;РЎРѕС…СЂР°РЅРёС‚СЊ
+			РєР°Рє&raquo; РІ С„РѕСЂРјР°С‚Рµ <span lang="en-US">CSV.</span></p>
 			<p>(23.07.2020)</p>
-			<p>Вероятно, не удастся использовать существующий объект
-			EFPPasteTextMatrixFormat. В нем свойство <span lang="en-US">TextMatrix
-			</span>должно быть готово после вызова метода <span lang="en-US">OnTestFormat(),
-			</span>в котором нельзя запрашивать параметры вставки.
+			<p>Р’РµСЂРѕСЏС‚РЅРѕ, РЅРµ СѓРґР°СЃС‚СЃСЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РѕР±СЉРµРєС‚
+			EFPPasteTextMatrixFormat. Р’ РЅРµРј СЃРІРѕР№СЃС‚РІРѕ <span lang="en-US">TextMatrix
+			</span>РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РіРѕС‚РѕРІРѕ РїРѕСЃР»Рµ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° <span lang="en-US">OnTestFormat(),
+			</span>РІ РєРѕС‚РѕСЂРѕРј РЅРµР»СЊР·СЏ Р·Р°РїСЂР°С€РёРІР°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РІСЃС‚Р°РІРєРё.
 			(12.02.2021)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">Интерфейс <span lang="en-US">MDI </span><span lang="ru-RU">с
-			несколькими главными окнами:</span></p>
-			<p style="margin-bottom: 0.5cm"><strike>1. Если в каждом главном
-			окне открыты табличные просмотры, то иногда неправильно
-			отображаются панели статусной строки - не в своем окне. А иногда,
-			совсем не отображаются</strike>. Вроде бы исправлено 09.07.2021</p>
-			<p style="margin-bottom: 0.5cm"><strike><span lang="ru-RU">2. В
-			меню &quot;Окно&quot; для каждого окна надо отображать номер
-			главного окна &quot;</span><span lang="en-US">#1</span><span lang="ru-RU">&quot;</span><span lang="en-US">,
+			<p style="margin-bottom: 0.5cm">РРЅС‚РµСЂС„РµР№СЃ <span lang="en-US">MDI </span><span lang="ru-RU">СЃ
+			РЅРµСЃРєРѕР»СЊРєРёРјРё РіР»Р°РІРЅС‹РјРё РѕРєРЅР°РјРё:</span></p>
+			<p style="margin-bottom: 0.5cm"><strike>1. Р•СЃР»Рё РІ РєР°Р¶РґРѕРј РіР»Р°РІРЅРѕРј
+			РѕРєРЅРµ РѕС‚РєСЂС‹С‚С‹ С‚Р°Р±Р»РёС‡РЅС‹Рµ РїСЂРѕСЃРјРѕС‚СЂС‹, С‚Рѕ РёРЅРѕРіРґР° РЅРµРїСЂР°РІРёР»СЊРЅРѕ
+			РѕС‚РѕР±СЂР°Р¶Р°СЋС‚СЃСЏ РїР°РЅРµР»Рё СЃС‚Р°С‚СѓСЃРЅРѕР№ СЃС‚СЂРѕРєРё - РЅРµ РІ СЃРІРѕРµРј РѕРєРЅРµ. Рђ РёРЅРѕРіРґР°,
+			СЃРѕРІСЃРµРј РЅРµ РѕС‚РѕР±СЂР°Р¶Р°СЋС‚СЃСЏ</strike>. Р’СЂРѕРґРµ Р±С‹ РёСЃРїСЂР°РІР»РµРЅРѕ 09.07.2021</p>
+			<p style="margin-bottom: 0.5cm"><strike><span lang="ru-RU">2. Р’
+			РјРµРЅСЋ &quot;РћРєРЅРѕ&quot; РґР»СЏ РєР°Р¶РґРѕРіРѕ РѕРєРЅР° РЅР°РґРѕ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ РЅРѕРјРµСЂ
+			РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР° &quot;</span><span lang="en-US">#1</span><span lang="ru-RU">&quot;</span><span lang="en-US">,
 			</span><span lang="ru-RU">&quot;</span><span lang="en-US">#2</span><span lang="ru-RU">&quot;</span><span lang="en-US">,
 			...</span></strike></p>
-			<p><span lang="en-US">3. </span><span lang="ru-RU">Перенос
-			дочерних окон из одного главного окна в другое</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">РџРµСЂРµРЅРѕСЃ
+			РґРѕС‡РµСЂРЅРёС… РѕРєРѕРЅ РёР· РѕРґРЅРѕРіРѕ РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР° РІ РґСЂСѓРіРѕРµ</span></p>
 			<p lang="en-US">(09.06.2021)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">Методы работы с буфером обмена (в
-			классе <span lang="en-US">EFPAppCliboard) </span><span lang="ru-RU">вызывают
-			ошибку, если вызываются не из основного потока приложения.
-			Например, при нажатии кнопки копирования сообщения в окне
-			</span><span lang="en-US">splash-</span><span lang="ru-RU">заставки,
-			показываемой асинхронно. Возникает исключение </span><span lang="en-US">ThreadStateException
-			&quot;Текущий поток должен быть задан как поток однопоточного
-			контейнера (STA), чтобы вызовы OLE стали возможны. Проверьте, что
-			ваша функция Main помечена атрибутом STAThreadAttribute&quot;</span></p>
+			<p style="margin-bottom: 0.5cm">РњРµС‚РѕРґС‹ СЂР°Р±РѕС‚С‹ СЃ Р±СѓС„РµСЂРѕРј РѕР±РјРµРЅР° (РІ
+			РєР»Р°СЃСЃРµ <span lang="en-US">EFPAppCliboard) </span><span lang="ru-RU">РІС‹Р·С‹РІР°СЋС‚
+			РѕС€РёР±РєСѓ, РµСЃР»Рё РІС‹Р·С‹РІР°СЋС‚СЃСЏ РЅРµ РёР· РѕСЃРЅРѕРІРЅРѕРіРѕ РїРѕС‚РѕРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ.
+			РќР°РїСЂРёРјРµСЂ, РїСЂРё РЅР°Р¶Р°С‚РёРё РєРЅРѕРїРєРё РєРѕРїРёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ РІ РѕРєРЅРµ
+			</span><span lang="en-US">splash-</span><span lang="ru-RU">Р·Р°СЃС‚Р°РІРєРё,
+			РїРѕРєР°Р·С‹РІР°РµРјРѕР№ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ. Р’РѕР·РЅРёРєР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ </span><span lang="en-US">ThreadStateException
+			&quot;РўРµРєСѓС‰РёР№ РїРѕС‚РѕРє РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РґР°РЅ РєР°Рє РїРѕС‚РѕРє РѕРґРЅРѕРїРѕС‚РѕС‡РЅРѕРіРѕ
+			РєРѕРЅС‚РµР№РЅРµСЂР° (STA), С‡С‚РѕР±С‹ РІС‹Р·РѕРІС‹ OLE СЃС‚Р°Р»Рё РІРѕР·РјРѕР¶РЅС‹. РџСЂРѕРІРµСЂСЊС‚Рµ, С‡С‚Рѕ
+			РІР°С€Р° С„СѓРЅРєС†РёСЏ Main РїРѕРјРµС‡РµРЅР° Р°С‚СЂРёР±СѓС‚РѕРј STAThreadAttribute&quot;</span></p>
 			<p lang="en-US">(06.12.2021)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">Событие <span lang="en-US">FormClosing
-			</span><span lang="ru-RU">посылается форме дважды при закрытии
-			крестиком главного окна программы:</span></p>
-			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- Интерфейс </span><span lang="en-US">MDI</span></p>
-			<p style="margin-bottom: 0.5cm"><span lang="en-US">-</span> <span lang="ru-RU">Открыт
-			редактор документа в измененном состоянии</span></p>
-			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- Сначала
-			вызывается </span><span lang="en-US">FormClosing </span><span lang="ru-RU">для
-			окна редактора как дочернего окна. Пользователь в диалоге
-			&quot;Потерять изменения&quot; нажимает &quot;ОК&quot;, разрешая
-			закрытие</span></p>
-			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- Вызывается
-			</span><span lang="en-US">EFPApp.Exit(). </span><span lang="ru-RU">При
-			этом снова вызывается </span><span lang="en-US">FormClosing </span><span lang="ru-RU">и
-			сообщения появляется еще раз</span></p>
+			<p style="margin-bottom: 0.5cm">РЎРѕР±С‹С‚РёРµ <span lang="en-US">FormClosing
+			</span><span lang="ru-RU">РїРѕСЃС‹Р»Р°РµС‚СЃСЏ С„РѕСЂРјРµ РґРІР°Р¶РґС‹ РїСЂРё Р·Р°РєСЂС‹С‚РёРё
+			РєСЂРµСЃС‚РёРєРѕРј РіР»Р°РІРЅРѕРіРѕ РѕРєРЅР° РїСЂРѕРіСЂР°РјРјС‹:</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- РРЅС‚РµСЂС„РµР№СЃ </span><span lang="en-US">MDI</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="en-US">-</span> <span lang="ru-RU">РћС‚РєСЂС‹С‚
+			СЂРµРґР°РєС‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° РІ РёР·РјРµРЅРµРЅРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- РЎРЅР°С‡Р°Р»Р°
+			РІС‹Р·С‹РІР°РµС‚СЃСЏ </span><span lang="en-US">FormClosing </span><span lang="ru-RU">РґР»СЏ
+			РѕРєРЅР° СЂРµРґР°РєС‚РѕСЂР° РєР°Рє РґРѕС‡РµСЂРЅРµРіРѕ РѕРєРЅР°. РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІ РґРёР°Р»РѕРіРµ
+			&quot;РџРѕС‚РµСЂСЏС‚СЊ РёР·РјРµРЅРµРЅРёСЏ&quot; РЅР°Р¶РёРјР°РµС‚ &quot;РћРљ&quot;, СЂР°Р·СЂРµС€Р°СЏ
+			Р·Р°РєСЂС‹С‚РёРµ</span></p>
+			<p style="margin-bottom: 0.5cm"><span lang="ru-RU">- Р’С‹Р·С‹РІР°РµС‚СЃСЏ
+			</span><span lang="en-US">EFPApp.Exit(). </span><span lang="ru-RU">РџСЂРё
+			СЌС‚РѕРј СЃРЅРѕРІР° РІС‹Р·С‹РІР°РµС‚СЃСЏ </span><span lang="en-US">FormClosing </span><span lang="ru-RU">Рё
+			СЃРѕРѕР±С‰РµРЅРёСЏ РїРѕСЏРІР»СЏРµС‚СЃСЏ РµС‰Рµ СЂР°Р·</span></p>
 			<p>(20.06.2022)</p>
 		</td>
 	</tr>
@@ -268,24 +268,24 @@
 <br/>
 
 </p>
-<p>Полезный рецепт.</p>
-<p>Чтобы составной компонент, производный от <span lang="en-US">UserControl,
-</span>масштабировался правильно на <span lang="en-US">120dpi </span>и
-больше, требуется, чтобы свойство <span lang="en-US">AutoScaleMode=Inherit,
-</span>а <span lang="en-US">AutoScaleDimensions </span>не
-устанавливалось:</p>
+<p>РџРѕР»РµР·РЅС‹Р№ СЂРµС†РµРїС‚.</p>
+<p>Р§С‚РѕР±С‹ СЃРѕСЃС‚Р°РІРЅРѕР№ РєРѕРјРїРѕРЅРµРЅС‚, РїСЂРѕРёР·РІРѕРґРЅС‹Р№ РѕС‚ <span lang="en-US">UserControl,
+</span>РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°Р»СЃСЏ РїСЂР°РІРёР»СЊРЅРѕ РЅР° <span lang="en-US">120dpi </span>Рё
+Р±РѕР»СЊС€Рµ, С‚СЂРµР±СѓРµС‚СЃСЏ, С‡С‚РѕР±С‹ СЃРІРѕР№СЃС‚РІРѕ <span lang="en-US">AutoScaleMode=Inherit,
+</span>Р° <span lang="en-US">AutoScaleDimensions </span>РЅРµ
+СѓСЃС‚Р°РЅР°РІР»РёРІР°Р»РѕСЃСЊ:</p>
 <p style="margin-bottom: 0cm; line-height: 100%; background: transparent">
 <font color="#0000ff"><font face="Courier New, serif"><font size="3" style="font-size: 13pt">this</font></font></font><font color="#000000"><font face="Courier New, serif"><font size="3" style="font-size: 13pt">.AutoScaleMode
 = System.Windows.Forms.</font></font></font><font color="#2b91af"><font face="Courier New, serif"><font size="3" style="font-size: 13pt">AutoScaleMode</font></font></font><font color="#000000"><font face="Courier New, serif"><font size="3" style="font-size: 13pt">.Inherit;</font></font></font></p>
 <p style="margin-bottom: 0cm; line-height: 100%; background: transparent">
-По умолчанию дизайнер <span lang="en-US">VisualStudio</span>
-устанавливает значение &quot;<span lang="en-US">Font</span>&quot;<span lang="en-US">.</span>
-После установки значения &quot;<span lang="en-US">Inherit</span>&quot;<span lang="en-US">,</span>
-свойство <span lang="en-US">AutoScaleDimensions</span> исчезает из
-файла &quot;*<span lang="en-US">.designer.cs</span>&quot;.</p>
+РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґРёР·Р°Р№РЅРµСЂ <span lang="en-US">VisualStudio</span>
+СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ &quot;<span lang="en-US">Font</span>&quot;<span lang="en-US">.</span>
+РџРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё Р·РЅР°С‡РµРЅРёСЏ &quot;<span lang="en-US">Inherit</span>&quot;<span lang="en-US">,</span>
+СЃРІРѕР№СЃС‚РІРѕ <span lang="en-US">AutoScaleDimensions</span> РёСЃС‡РµР·Р°РµС‚ РёР·
+С„Р°Р№Р»Р° &quot;*<span lang="en-US">.designer.cs</span>&quot;.</p>
 <p style="margin-bottom: 0cm; line-height: 100%; background: transparent">
-Однако, это полезно не для всех компонентов. Если компонент основан
-на <span lang="en-US">TableLayoutPanel, </span>то не надо.</p>
+РћРґРЅР°РєРѕ, СЌС‚Рѕ РїРѕР»РµР·РЅРѕ РЅРµ РґР»СЏ РІСЃРµС… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ. Р•СЃР»Рё РєРѕРјРїРѕРЅРµРЅС‚ РѕСЃРЅРѕРІР°РЅ
+РЅР° <span lang="en-US">TableLayoutPanel, </span>С‚Рѕ РЅРµ РЅР°РґРѕ.</p>
 <p style="margin-bottom: 0cm; line-height: 100%; background: transparent">
 (16.12.2020)</p>
 <h2 lang="en-US" class="western">ExtDB</h2>
@@ -293,13 +293,13 @@
 	<col width="256*">
 	<tr>
 		<td width="100%" valign="top" style="border: 1.00pt solid #000000; padding: 0.05cm">
-			<p style="margin-bottom: 0.5cm">Блокировка в
+			<p style="margin-bottom: 0.5cm">Р‘Р»РѕРєРёСЂРѕРІРєР° РІ
 			DBxCon.FindOrAddRecord(). 
 			</p>
-			<p>В пределах таблицы, можно одновременно выполнять параллельно
-			несколько A<span lang="en-US">ddRecord</span>() (кроме <span lang="en-US">Jet
-			</span>OLED <span lang="en-US">B Provider</span>?), но только один
-			FindOrAddRecord() (или учитывать ключ) 
+			<p>Р’ РїСЂРµРґРµР»Р°С… С‚Р°Р±Р»РёС†С‹, РјРѕР¶РЅРѕ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊ РїР°СЂР°Р»Р»РµР»СЊРЅРѕ
+			РЅРµСЃРєРѕР»СЊРєРѕ A<span lang="en-US">ddRecord</span>() (РєСЂРѕРјРµ <span lang="en-US">Jet
+			</span>OLED <span lang="en-US">B Provider</span>?), РЅРѕ С‚РѕР»СЊРєРѕ РѕРґРёРЅ
+			FindOrAddRecord() (РёР»Рё СѓС‡РёС‚С‹РІР°С‚СЊ РєР»СЋС‡) 
 			</p>
 		</td>
 	</tr>
@@ -310,37 +310,37 @@
 	<col width="256*">
 	<tr>
 		<td width="100%" valign="top" style="border: 1.00pt solid #000000; padding: 0.05cm">
-			<p>Установка свойств<span lang="ru-RU">а</span>
-			<span lang="en-US">EFPReportDocGridPage.DataSource, </span><span lang="ru-RU">в
-			отличие от </span><span lang="en-US">FixedDocIds, </span><span lang="ru-RU">вероятно,
-			несовместима с возможностью произвольной настройки просмотра
-			пользователем (06.07.2021)</span></p>
+			<p>РЈСЃС‚Р°РЅРѕРІРєР° СЃРІРѕР№СЃС‚РІ<span lang="ru-RU">Р°</span>
+			<span lang="en-US">EFPReportDocGridPage.DataSource, </span><span lang="ru-RU">РІ
+			РѕС‚Р»РёС‡РёРµ РѕС‚ </span><span lang="en-US">FixedDocIds, </span><span lang="ru-RU">РІРµСЂРѕСЏС‚РЅРѕ,
+			РЅРµСЃРѕРІРјРµСЃС‚РёРјР° СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё РїСЂРѕСЃРјРѕС‚СЂР°
+			РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј (06.07.2021)</span></p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p style="margin-bottom: 0.5cm">После записи документа, в строке
-			табличного просмотра не обновляются поля <span lang="en-US">CreateUserId,
-			CreateTime, ChangeUserId, ChangeTime (</span><span lang="ru-RU">в
-			EFPDocGridView.IntDocumentViewHandler.ApplyСhanges</span><span lang="en-US">(),
-			</span><span lang="ru-RU">вызов DataTools.CopyRowValues()</span><span lang="en-US">).
-			</span><span lang="ru-RU">Этих полей нет в таблице документа</span><span lang="en-US">.</span></p>
-			<p>Ошибка является &quot;плавающей&quot;. В некоторых случаях
-			сервер успевает очистить внутренний кэш. Когда клиент перечитывает
-			строку для измененного документа, обновление может быть получено
-			или нет (06.07.2021)</p>
+			<p style="margin-bottom: 0.5cm">РџРѕСЃР»Рµ Р·Р°РїРёСЃРё РґРѕРєСѓРјРµРЅС‚Р°, РІ СЃС‚СЂРѕРєРµ
+			С‚Р°Р±Р»РёС‡РЅРѕРіРѕ РїСЂРѕСЃРјРѕС‚СЂР° РЅРµ РѕР±РЅРѕРІР»СЏСЋС‚СЃСЏ РїРѕР»СЏ <span lang="en-US">CreateUserId,
+			CreateTime, ChangeUserId, ChangeTime (</span><span lang="ru-RU">РІ
+			EFPDocGridView.IntDocumentViewHandler.ApplyРЎhanges</span><span lang="en-US">(),
+			</span><span lang="ru-RU">РІС‹Р·РѕРІ DataTools.CopyRowValues()</span><span lang="en-US">).
+			</span><span lang="ru-RU">Р­С‚РёС… РїРѕР»РµР№ РЅРµС‚ РІ С‚Р°Р±Р»РёС†Рµ РґРѕРєСѓРјРµРЅС‚Р°</span><span lang="en-US">.</span></p>
+			<p>РћС€РёР±РєР° СЏРІР»СЏРµС‚СЃСЏ &quot;РїР»Р°РІР°СЋС‰РµР№&quot;. Р’ РЅРµРєРѕС‚РѕСЂС‹С… СЃР»СѓС‡Р°СЏС…
+			СЃРµСЂРІРµСЂ СѓСЃРїРµРІР°РµС‚ РѕС‡РёСЃС‚РёС‚СЊ РІРЅСѓС‚СЂРµРЅРЅРёР№ РєСЌС€. РљРѕРіРґР° РєР»РёРµРЅС‚ РїРµСЂРµС‡РёС‚С‹РІР°РµС‚
+			СЃС‚СЂРѕРєСѓ РґР»СЏ РёР·РјРµРЅРµРЅРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°, РѕР±РЅРѕРІР»РµРЅРёРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕР»СѓС‡РµРЅРѕ
+			РёР»Рё РЅРµС‚ (06.07.2021)</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%" valign="top" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p>Форма, открываемая <span lang="en-US">DocTypeUI.ShowOrOpen() </span><span lang="ru-RU">с
-			аргументом </span><span lang="en-US">externalFilters </span><span lang="ru-RU">не
-			может быть восстановлена с композицией рабочего стола. Внешние
-			фильтры создаются в пользовательском коде и не могут быть
-			воссозданы. Требуется, чтобы внешние фильтры создавались в
-			конструкторе класса-наследника </span><span lang="en-US">DBUI</span><span lang="ru-RU">.
-			Метод </span><span lang="en-US">ShowOrOpen() </span><span lang="ru-RU">должен
-			быть изменен в части аргумента </span><span lang="en-US">externalFilters</span>
+			<p>Р¤РѕСЂРјР°, РѕС‚РєСЂС‹РІР°РµРјР°СЏ <span lang="en-US">DocTypeUI.ShowOrOpen() </span><span lang="ru-RU">СЃ
+			Р°СЂРіСѓРјРµРЅС‚РѕРј </span><span lang="en-US">externalFilters </span><span lang="ru-RU">РЅРµ
+			РјРѕР¶РµС‚ Р±С‹С‚СЊ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅР° СЃ РєРѕРјРїРѕР·РёС†РёРµР№ СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р°. Р’РЅРµС€РЅРёРµ
+			С„РёР»СЊС‚СЂС‹ СЃРѕР·РґР°СЋС‚СЃСЏ РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РєРѕРґРµ Рё РЅРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ
+			РІРѕСЃСЃРѕР·РґР°РЅС‹. РўСЂРµР±СѓРµС‚СЃСЏ, С‡С‚РѕР±С‹ РІРЅРµС€РЅРёРµ С„РёР»СЊС‚СЂС‹ СЃРѕР·РґР°РІР°Р»РёСЃСЊ РІ
+			РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РєР»Р°СЃСЃР°-РЅР°СЃР»РµРґРЅРёРєР° </span><span lang="en-US">DBUI</span><span lang="ru-RU">.
+			РњРµС‚РѕРґ </span><span lang="en-US">ShowOrOpen() </span><span lang="ru-RU">РґРѕР»Р¶РµРЅ
+			Р±С‹С‚СЊ РёР·РјРµРЅРµРЅ РІ С‡Р°СЃС‚Рё Р°СЂРіСѓРјРµРЅС‚Р° </span><span lang="en-US">externalFilters</span>
 			<span lang="ru-RU">(24.10.2022).</span></p>
 		</td>
 	</tr>

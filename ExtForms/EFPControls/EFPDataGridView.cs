@@ -20,6 +20,7 @@ using FreeLibSet.Shell;
 using FreeLibSet.Logging;
 using FreeLibSet.UICore;
 using FreeLibSet.Reporting;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.Forms
 {
@@ -1187,7 +1188,7 @@ namespace FreeLibSet.Forms
             if (ColorType != EFPDataGridViewColorType.Error)
               ColorType = EFPDataGridViewColorType.Warning;
             break;
-          // Для Info цвет не меняем
+            // Для Info цвет не меняем
         }
 
         if (rowArgs.Reason == EFPDataGridViewAttributesReason.ToolTip)
@@ -1552,6 +1553,12 @@ namespace FreeLibSet.Forms
   public interface IEFPDataView : IEFPControl
   {
     /// <summary>
+    /// Если true, то разрешается выбор для нескольких строк.
+    /// См. также <see cref="CanMultiEdit"/>.
+    /// </summary>
+    bool MultiSelect { get; set; }
+
+    /// <summary>
     /// true, если просмотр предназначен только для просмотра, а не для редактирования данных
     /// </summary>
     bool ReadOnly { get; set; }
@@ -1597,8 +1604,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// true, если допускается групповое редактирование и просмотр записей.
     /// false, если допускается редактирование / просмотр только одной записи за раз.
-    /// Действует, если <see cref="ReadOnly"/>=false или <see cref="CanView"/>=true.
-    /// Не влияет на возможность удаления нескольких записей
+    /// Действует, если <see cref="MultiSelect"/>=true и <see cref="ReadOnly"/>=false или <see cref="CanView"/>=true.
+    /// Не влияет на возможность удаления нескольких записей.
     /// </summary>
     bool CanMultiEdit { get; set; }
 
@@ -1801,6 +1808,12 @@ namespace FreeLibSet.Forms
     /// Получить сводку документа при экспорте.
     /// </summary>
     BRDocumentProperties DocumentProperties { get; }
+
+    /// <summary>
+    /// Список объектов для печати/вывода в файл/отправки.
+    /// По умолчанию список содержит единственный элемент с кодом "Control"
+    /// </summary>
+    NamedList<EFPMenuOutItem> MenuOutItems { get; }
   }
 
   #endregion
@@ -2483,6 +2496,7 @@ namespace FreeLibSet.Forms
 
     #region Управление поведением просмотра
 
+
     #region ReadOnly
 
     /// <summary>
@@ -2774,6 +2788,8 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    bool IEFPDataView.MultiSelect { get { return Control.MultiSelect; } set { Control.MultiSelect = value; } }
 
     /// <summary>
     /// true, если разрешено редактирование и просмотр одновременно 
@@ -6625,6 +6641,34 @@ namespace FreeLibSet.Forms
       //CommandItems.AddClickHandler(ResetCurrentIncSearchColumn);
     }
 
+    /// <summary>
+    /// Возвращает список для добавления пользовательских вариантов печати/экспорта
+    /// </summary>
+    public NamedList<EFPMenuOutItem> MenuOutItems
+    {
+      get
+      {
+#if OLD_OUT
+        throw new NotImplementedException();
+#else
+        return CommandItems.OutHandler.Items;
+#endif
+      }
+    }
+
+#if !OLD_OUT
+
+    /// <summary>
+    /// Параметры печати/экспорта табличного просмотра.
+    /// Может возвращать null, если в <see cref="EFPDataGridViewCommandItems.OutHandler"/> был удален вариант "Control"
+    /// </summary>
+    public Reporting.EFPDataGridViewMenuOutItem DefaultOutItem
+    {
+      get { return MenuOutItems["Control"] as Reporting.EFPDataGridViewMenuOutItem; }
+    }
+
+#endif
+
     #endregion
 
     #region Поддержка Inline-редактирования
@@ -7444,7 +7488,7 @@ namespace FreeLibSet.Forms
           {
             Control.CurrentCell = Control[oldCell.ColumnIndex, Control.RowCount - 1];
             //if (bl!=null)
-              //bl.res
+            //bl.res
           }
           else
             Control.CurrentCell = oldCell;
@@ -7755,7 +7799,7 @@ namespace FreeLibSet.Forms
         if (pt.X < 0 || pt.Y < 0)
           return new EFPDialogPosition();
         Rectangle rc = Control.GetCellDisplayRectangle(pt.X, pt.Y, true);
-        if (rc.Width<=0||rc.Height<=0)
+        if (rc.Width <= 0 || rc.Height <= 0)
           return new EFPDialogPosition();
         EFPDialogPosition res = new EFPDialogPosition();
         res.PopupOwnerBounds = Control.RectangleToScreen(rc);

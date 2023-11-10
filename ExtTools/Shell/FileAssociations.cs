@@ -688,13 +688,20 @@ namespace FreeLibSet.Shell
           return null;
 
         fileName = Environment.ExpandEnvironmentVariables(fileName);
-        AbsPath path = AbsPath.Create(fileName);
+        AbsPath path;
+        if (fileName.IndexOf('\\') >= 0)
+          path = AbsPath.Create(fileName);
+        else
+          path = FileTools.FindExecutableFilePath(fileName); // 11.05.2023
         if (path.IsEmpty)
           return null; // 25.01.2019
         if (!System.IO.File.Exists(path.Path))
           return null;
 
         string displayName = String.Empty;
+
+        AbsPath iconPath = path;
+        int iconIndex = 0;
 
         if (path.FileName.ToLowerInvariant() == "rundll32.exe")
         {
@@ -707,12 +714,12 @@ namespace FreeLibSet.Shell
             fileName2 = Environment.ExpandEnvironmentVariables(fileName2);
             AbsPath path2 = AbsPath.Create(fileName2);
             if (!path2.IsEmpty)
+            {
               displayName = FileAssociationItem.GetDisplayName(path2);
+              iconPath = path2;
+            }
           }
         }
-
-        AbsPath iconPath = AbsPath.Empty;
-        int iconIndex = 0;
 
         // Убрано 21.09.2023
         //RegistryKey2 keyDefIcon = tree[keyProgId.Name + @"\DefaultIcon"];
@@ -742,16 +749,10 @@ namespace FreeLibSet.Shell
             {
               string defIcon = tree.GetString(@"HKEY_CLASSES_ROOT\CLSID\" + clsId + @"\DefaultIcon", String.Empty);
               //Console.WriteLine("defIcon==" + defIcon);
-              ParseIconInfo(defIcon, out iconPath, out iconIndex);
+              ParseIconInfo(defIcon, ref iconPath, ref iconIndex);
               //Console.WriteLine("IconPath=\"" + iconPath+"\", IconIndex="+iconIndex);
             }
           }
-        }
-
-        if (iconPath.IsEmpty)
-        {
-          iconPath = path;
-          iconIndex = 0;
         }
 
         return new FileAssociationItem(progId, path, arguments, displayName, iconPath, iconIndex, false,
@@ -783,7 +784,8 @@ namespace FreeLibSet.Shell
         {
           // Имя файла без кавычек.
           // Возвращаем все до первого пробела
-          int p = arguments.IndexOf(' ');
+          // 11.10.2023 - или запятой
+          int p = arguments.IndexOfAny(new char[] { ' ', ',' });
           if (p >= 0)
             return arguments.Substring(0, p);
           else
@@ -844,10 +846,8 @@ namespace FreeLibSet.Shell
         }
       }
 
-      private static void ParseIconInfo(string iconInfo, out AbsPath iconPath, out int iconIndex)
+      private static void ParseIconInfo(string iconInfo, ref AbsPath iconPath, ref int iconIndex)
       {
-        iconPath = AbsPath.Empty;
-        iconIndex = 0;
         if (String.IsNullOrEmpty(iconInfo))
           return;
 
@@ -872,7 +872,7 @@ namespace FreeLibSet.Shell
           //if (!System.IO.File.Exists(IconPath.Path))
           //  IconPath = FileTools.FindExecutableFilePath(FileName); 
         }
-        if (iconPath.IsEmpty)
+        else
           iconPath = AbsPath.Create(fileName);
       }
 
@@ -942,10 +942,12 @@ namespace FreeLibSet.Shell
 
       private static bool SplitFileNameAndArgs(string commandLine, out string fileName, out string arguments)
       {
-        fileName = String.Empty;
-        arguments = String.Empty;
         if (String.IsNullOrEmpty(commandLine))
+        {
+          fileName = String.Empty;
+          arguments = String.Empty;
           return false;
+        }
 
         if (commandLine[0] == '\"')
         {
@@ -974,41 +976,52 @@ namespace FreeLibSet.Shell
           }
           fileName = sb.ToString();
           if (pEndQuota < 0)
+          {
+            arguments = String.Empty;
             return false;
+          }
 
           if (pEndQuota < (commandLine.Length - 1))
             arguments = commandLine.Substring(pEndQuota + 1).TrimStart(' ');
+          else
+            arguments = String.Empty;
           return true;
         }
         else
         {
           // Имя программы от аргументов отделяется пробелом
-          // 15.09.2023
-          // Может быть командная строка без кавычек, например: C:\Program Files\AlterOffice\program\atext.exe -o "%1"
-
-          int p1 = commandLine.LastIndexOf('\\');
-          if (p1 >= 0)
+          // 15.09.2023: Может быть командная строка без кавычек, например: C:\Program Files\AlterOffice\program\atext.exe -o "%1"
+          // 11.10.2023: Может быть командная строка без пути: rundll32.exe C:\WINDOWS\system32\shimgvw.dll,ImageView_Fullscreen %1
+          // 17.10.2023: Может быть командная строка с путем: C:\Windows\System32\rundll32.exe "C:\Program Files (x86)\Windows Photo Viewer\PhotoViewer.dll", ImageView_Fullscreen %1
+          // Чтобы не делать сложную логику, пытаемся выполнить разбиение по всем пробелам подряд
+          int p1 = -1;
+          while (true)
           {
             int p2 = commandLine.IndexOf(' ', p1 + 1);
-            if (p2 >= 0)
+            if (p2 < 0)
+              break;
+
+            fileName = commandLine.Substring(0, p2);
+            arguments = commandLine.Substring(p2 + 1);
+            p1 = p2 + 1;
+            if (fileName.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0)
+              break;
+            AbsPath path;
+            try
             {
-              fileName = commandLine.Substring(0, p2);
-              arguments = commandLine.Substring(p2 + 1);
-              return true;
+              path = new AbsPath(fileName);
             }
+            catch
+            {
+              continue;
+            }
+            if (path.ContainsExtension(".exe") || path.ContainsExtension(".dll"))
+              return true;
           }
 
-          int p3 = commandLine.IndexOf(' ');
-          if (p3 >= 0)
-          {
-            fileName = commandLine.Substring(0, p3);
-            arguments = commandLine.Substring(p3 + 1);
-          }
-          else
-          {
-            // нет пробела
-            fileName = commandLine;
-          }
+          // нет пробела или неправильное имя
+          fileName = commandLine;
+          arguments = String.Empty;
           return true;
         }
       }

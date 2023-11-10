@@ -459,14 +459,27 @@ namespace FreeLibSet.Forms
             _OwnStatusBar = GetDefaultOwnStatusBar(); // фиксация значения свойства
           if (OwnStatusBar && _StatusStripControl == null)
             InitOwnStatusBar(/*AdjustFormSize*/ true); // должно быть до вызова Form.Activate(), иначе первый элемент не инициализирует статусную строку
-          if (_StatusStripControl != null)
-            _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl);
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка инициализации статусной строки формы");
+          EFPApp.ShowException(e, "Ошибка инициализации статусной строки формы #1");
         }
+      }
 
+      try
+      {
+        // 12.10.2023. Вынесено из условия HasBeenShown.
+        // Не работало, если форма показывается повторно, например, если форма сворачивается в tray.
+        if (_StatusStripControl != null && _StatusBarHandler == null)
+        _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl, true);
+      }
+      catch (Exception e)
+      {
+        EFPApp.ShowException(e, "Ошибка инициализации статусной строки формы #2");
+      }
+
+      if (!HasBeenShown) // 24.09.2018
+      { 
         OnShown();
 
         if (!Modal)
@@ -706,7 +719,6 @@ namespace FreeLibSet.Forms
 
     #region Свойство IsActive
 
-
     void Form_Activated(object sender, EventArgs args)
     {
       // Перенесено сюда 21.05.2021
@@ -747,13 +759,13 @@ namespace FreeLibSet.Forms
     {
       if (!CommandItems.IsReadOnly)
         CommandItems.SetReadOnly();
-      CommandItems.Active = true;
+      CommandItems.SetActive(true);
       UpdateCommandItemsActive(); // 02.05.2022
     }
 
     private void OnSetFormInactive()
     {
-      CommandItems.Active = false;
+      CommandItems.SetActive(false);
       UpdateCommandItemsActive(); // 02.05.2022
     }
 

@@ -16,7 +16,8 @@ namespace FreeLibSet.Forms
 
     internal EFPContextCommandItems()
     {
-      _Active = false;
+      _HasFocus = false;
+      _HasStatus = false;
     }
 
     #endregion
@@ -30,57 +31,65 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство устанавливается в true, когда управляющий элемент получает фокус ввода,
     /// и в false, когда теряет фокус.
-    /// В прикладном коде не следует устанавливать свойство, т.к. это может нарушить работу меню
-    /// и статусной строки
     /// </summary>
-    public bool Active
+    internal bool HasFocus { get { return _HasFocus; } }
+    private bool _HasFocus;
+
+    internal void SetHasFocus(bool value)
     {
-      get
+      if (value == _HasFocus)
+        return;
+
+      // Модальность формы проверяем только при активации меню, при дезактивации
+      // используем предыдущее значение
+      if (value)
       {
-        return _Active;
+        if (!IsReadOnly)
+          throw new InvalidOperationException("Не было вызова SetReadOnly()");
+
+        _IsModalForm = GetIsModalForm();
       }
-      set
+
+      _HasFocus = value;
+      foreach (EFPCommandItem item in this)
       {
-        if (value == _Active)
-          return;
+        if (_IsModalForm && (item.Master != null) && item.Master.IsGlobalItem)
+          continue;
+        item.MasterActive = value;
+      }
+      if (value)
+        AddFocus();
+      else
+        RemoveFocus();
+    }
 
-        // Модальность формы проверяем только при активации меню, при дезактивации
-        // используем предыдущее значение
+    internal bool HasStatus { get { return _HasStatus; } }
+    private bool _HasStatus;
+
+    internal void SetHasStatus(bool value)
+    {
+      if (value == _HasStatus)
+        return;
+      _HasStatus = value;
+
+      if (StatusBarPanels != null)
+      {
         if (value)
-        {
-          if (!IsReadOnly)
-            throw new InvalidOperationException("Не было вызова SetReadOnly()");
-
-          _IsModalForm = GetIsModalForm();
-        }
-
-        _Active = value;
-        foreach (EFPCommandItem item in this)
-        {
-          if (_IsModalForm && (item.Master != null) && item.Master.IsGlobalItem)
-            continue;
-          item.MasterActive = value;
-        }
-        if (value)
-          AddFocus();
+          StatusBarPanels.Attach();
         else
-          RemoveFocus();
-        if (StatusBarPanels != null)
-        {
-          if (value)
-            StatusBarPanels.Attach();
-          else
-            StatusBarPanels.Detach();
-        }
-
+          StatusBarPanels.Detach();
       }
     }
-    private bool _Active;
 
-    #endregion
-
-    #region Свойство IsModalForm
-
+    /// <summary>
+    /// Комбинированная установка свойств
+    /// </summary>
+    /// <param name="value"></param>
+    internal void SetActive(bool value)
+    {
+      SetHasFocus(value);
+      SetHasStatus(value);
+    }
 
     #endregion
 

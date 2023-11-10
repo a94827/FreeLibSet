@@ -107,6 +107,11 @@ namespace FreeLibSet.Reporting
     public int B { get { return _Value & 0xFF; } }
 
     /// <summary>
+    /// Возвращает true для автоматически определяемого цвета
+    /// </summary>
+    public bool IsAuto { get { return _Value == 0; } }
+
+    /// <summary>
     /// Для отладки
     /// </summary>
     /// <returns>Текстовое представление</returns>
@@ -518,6 +523,89 @@ namespace FreeLibSet.Reporting
     /// Описание "Толстая линия с автоматически определяемым цветом"
     /// </summary>
     public static BRLine Thick { get { return new BRLine(BRLineStyle.Thick); } }
+
+    #endregion
+
+    #region Толщина линий
+
+    /// <summary>
+    /// Толщина пера для тонких линий в единицах 0.1 мм
+    /// </summary>
+    public const double ThinLineWidth01mm = 2.0;
+
+    /// <summary>
+    /// Толщина пера для средних линий в единицах 0.1 мм
+    /// </summary>
+    public const double MediumLineWidth01mm = 5.0;
+
+    /// <summary>
+    /// Толщина пера для толстых линий в единицах 0.1 мм
+    /// </summary>
+    public const double ThickLineWidth01mm = 10.0;
+
+    /// <summary>
+    /// Толщина пера для тонких линий в единицах 1/20 пункта
+    /// </summary>
+    public const int ThinLineWidthTwip = 11;
+
+    /// <summary>
+    /// Толщина пера для средних линий в единицах 1/20 пункта
+    /// </summary>
+    public const int MediumLineWidthTwip = 28;
+
+    /// <summary>
+    /// Толщина пера для толстых линий в единицах 1/20 пункта
+    /// </summary>
+    public const int ThickLineWidthTwip = 57;
+
+
+    /// <summary>
+    /// Толщина пера для тонких линий в пунктах
+    /// </summary>
+    public const double ThinLineWidthPt = ThinLineWidthTwip / 20.0;
+
+    /// <summary>
+    /// Толщина пера для средних линий в пунктах
+    /// </summary>
+    public const double MediumLineWidthPt = MediumLineWidthTwip / 20.0;
+
+    /// <summary>
+    /// Толщина пера для толстых линий в пунктах
+    /// </summary>
+    public const double ThickLineWidthPt = ThickLineWidthTwip / 20.0;
+
+
+    /// <summary>
+    /// Возвращает желаемую толщину линии в пунктах
+    /// </summary>
+    /// <param name="lineStyle">Стиль линии</param>
+    /// <returns>Толщина</returns>
+    public static double GetLineWidthPt(BRLineStyle lineStyle)
+    {
+      switch (lineStyle)
+      {
+        case BRLineStyle.None: return 0;
+        case BRLineStyle.Medium: return MediumLineWidthPt;
+        case BRLineStyle.Thick: return ThickLineWidthPt;
+        default: return ThinLineWidthPt;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает желаемую толщину линии в единицах 0.1мм
+    /// </summary>
+    /// <param name="lineStyle">Стиль линии</param>
+    /// <returns>Толщина</returns>
+    public static double GetLineWidthPt01mm(BRLineStyle lineStyle)
+    {
+      switch (lineStyle)
+      {
+        case BRLineStyle.None: return 0;
+        case BRLineStyle.Medium: return MediumLineWidth01mm;
+        case BRLineStyle.Thick: return ThickLineWidth01mm;
+        default: return ThinLineWidth01mm;
+      }
+    }
 
     #endregion
   }

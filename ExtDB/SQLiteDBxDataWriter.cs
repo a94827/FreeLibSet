@@ -15,7 +15,7 @@ namespace FreeLibSet.Data.SQLite
   /// </summary>
   internal class SQLiteDBxDataWriter : DBxDataWriter
   {
-    #region Конструктор и Dispose
+#region Конструктор и Dispose
 
     public SQLiteDBxDataWriter(SQLiteDBxCon con, DBxDataWriterInfo writerInfo)
       : base(con, writerInfo)
@@ -36,9 +36,9 @@ namespace FreeLibSet.Data.SQLite
       base.Dispose(disposing);
     }
 
-    #endregion
+#endregion
 
-    #region Подготовленная команда
+#region Подготовленная команда
 
     private SQLiteCommand _Command;
 
@@ -145,9 +145,9 @@ namespace FreeLibSet.Data.SQLite
       }
     }
 
-    #endregion
+#endregion
 
-    #region OnWrite
+#region OnWrite
 
     protected override void OnWrite()
     {
@@ -163,6 +163,6 @@ namespace FreeLibSet.Data.SQLite
       Con.SQLExecuteNonQuery(_Command);
     }
 
-    #endregion
+#endregion
   }
 }

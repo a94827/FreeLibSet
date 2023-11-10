@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +17,7 @@ namespace FreeLibSet.Forms
 {
   internal partial class SettingsDialogForm : Form, IEFPConfigParamSetHandler, IEFPConfigParamSetAuxTextHandler
   {
-    #region Конструктор формы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ С„РѕСЂРјС‹
 
     public SettingsDialogForm(SettingsDialog owner)
     {
@@ -31,9 +31,10 @@ namespace FreeLibSet.Forms
       efpForm = new EFPFormProvider(this);
       efpForm.AddFormCheck(FormValidating);
 
-      #region Просмотр с вкладками
+      #region РџСЂРѕСЃРјРѕС‚СЂ СЃ РІРєР»Р°РґРєР°РјРё
 
       efpTabControl = new EFPTabControl(efpForm, TheTabControl);
+      int selIndex = 0;
       for (int i = 0; i < owner.Pages.Count; i++)
       {
         EFPTabPage efpTab = efpTabControl.TabPages.Add("??");
@@ -41,14 +42,17 @@ namespace FreeLibSet.Forms
         owner.Pages[i].BaseProvider.Parent = efpTab.BaseProvider;
         owner.Pages[i].TabPage = efpTab;
         owner.Pages[i].CallDataToControls();
+
+        if (String.Equals(owner.Pages[i].Text, _LastActivePageText, StringComparison.Ordinal))
+          selIndex = i;
       }
-      efpTabControl.SelectedIndex = 0;
+      efpTabControl.SelectedIndex = selIndex;
       efpTabControl.SelectedIndexEx.ValueChanged += SelectedIndexEx_ValueChanged;
-      SelectedIndexEx_ValueChanged(null, null); // Первый вызов сразу
+      SelectedIndexEx_ValueChanged(null, null); // РџРµСЂРІС‹Р№ РІС‹Р·РѕРІ СЃСЂР°Р·Сѓ
 
       #endregion
 
-      #region Готовые наборы
+      #region Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹
 
       _UseHistory = ((!String.IsNullOrEmpty(owner.ConfigSectionName)) &&
          EFPConfigTools.IsPersist(owner.ConfigManager.Persistence));
@@ -60,9 +64,22 @@ namespace FreeLibSet.Forms
         efpParamSet.ParamsCategory = owner.UserCategory; // ??
         efpParamSet.HistoryCategory = owner.HistoryCategory;
 
-        //!!!!!!!!!!!!!!!!!!
-        //EFPConfigParamSetComboBox.DefaultSet DefSet = new EFPConfigParamSetComboBox.DefaultSet(cfgDefault);
-        //efpParamSet.DefaultSets.Add(DefSet);
+        Dictionary<string, TempCfg> defSectDict = owner.Data.GetDefaultConfigDict();
+        string[] codes = owner.Data.DefaultConfigs.GetCodes();
+        if (codes.Length == 0)
+        {
+          EFPConfigParamDefaultSet defSet = new EFPConfigParamDefaultSet(defSectDict[String.Empty]);
+          efpParamSet.DefaultSets.Add(defSet);
+        }
+        else
+        {
+          foreach (string code in codes)
+          {
+            DefaultSettingsDataList ds = owner.Data.DefaultConfigs[code];
+            EFPConfigParamDefaultSet defSet = new EFPConfigParamDefaultSet(defSectDict[code], "РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - " + ds.DisplayName);
+            efpParamSet.DefaultSets.Add(defSet);
+          }
+        }
 
         efpParamSet.AuxTextHandler = this;
       }
@@ -77,7 +94,12 @@ namespace FreeLibSet.Forms
     int _PrevActivePageIndex = -1;
 
     /// <summary>
-    /// Обрабатываем событие изменения индекса, а не PageSelected, т.к. сначала нужно выгрузить данные для предыдущей активной страницы
+    /// Р—Р°РїРѕРјРёРЅР°РµРј С‚РµРєСѓС‰СѓСЋ СЃС‚СЂР°РЅРёС†Сѓ РјРµР¶РґСѓ СЃРµР°РЅСЃР°РјРё СЂР°Р±РѕС‚С‹
+    /// </summary>
+    private static string _LastActivePageText = String.Empty;
+
+    /// <summary>
+    /// РћР±СЂР°Р±Р°С‚С‹РІР°РµРј СЃРѕР±С‹С‚РёРµ РёР·РјРµРЅРµРЅРёСЏ РёРЅРґРµРєСЃР°, Р° РЅРµ PageSelected, С‚.Рє. СЃРЅР°С‡Р°Р»Р° РЅСѓР¶РЅРѕ РІС‹РіСЂСѓР·РёС‚СЊ РґР°РЅРЅС‹Рµ РґР»СЏ РїСЂРµРґС‹РґСѓС‰РµР№ Р°РєС‚РёРІРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
     /// </summary>
     private void SelectedIndexEx_ValueChanged(object sender, EventArgs args)
     {
@@ -87,23 +109,25 @@ namespace FreeLibSet.Forms
       }
       _PrevActivePageIndex = efpTabControl.SelectedIndex;
       _Owner.Pages[_PrevActivePageIndex].CallPageShow();
+      _Owner.Pages[_PrevActivePageIndex].CallDataToControls();
+      _LastActivePageText = efpTabControl.SelectedTab.Text;
     }
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     SettingsDialog _Owner;
 
     private EFPTabControl efpTabControl;
 
     /// <summary>
-    /// Используются ли готовые наборы
+    /// РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ Р»Рё РіРѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹
     /// </summary>
     private bool _UseHistory;
 
     /// <summary>
-    /// Готовые наборы
+    /// Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹
     /// </summary>
     private EFPConfigParamSetComboBox efpParamSet;
 
@@ -153,7 +177,7 @@ namespace FreeLibSet.Forms
       //Filters.ClearAllFilters();
       //Filters.ReadConfig(cfg);
       //if (Filters.IsEmpty)
-      //  return "Фильтры не установлены";
+      //  return "Р¤РёР»СЊС‚СЂС‹ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅС‹";
 
       StringBuilder sb = new StringBuilder();
       //for (int i = 0; i < Filters.Count; i++)
@@ -182,7 +206,7 @@ namespace FreeLibSet.Forms
 
   public class SettingsDialog
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public SettingsDialog()
     {
@@ -191,10 +215,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     /// <summary>
-    /// Заголовок формы
+    /// Р—Р°РіРѕР»РѕРІРѕРє С„РѕСЂРјС‹
     /// </summary>
     public string Title
     {
@@ -204,8 +228,8 @@ namespace FreeLibSet.Forms
     private string _Title;
 
     /// <summary>
-    /// Изображение для значка формы, извлекаемое из коллекции EFPApp.MainImages.
-    /// По умолчанию - нет значка
+    /// РР·РѕР±СЂР°Р¶РµРЅРёРµ РґР»СЏ Р·РЅР°С‡РєР° С„РѕСЂРјС‹, РёР·РІР»РµРєР°РµРјРѕРµ РёР· РєРѕР»Р»РµРєС†РёРё EFPApp.MainImages.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ - РЅРµС‚ Р·РЅР°С‡РєР°
     /// </summary>
     public string ImageKey
     {
@@ -267,14 +291,14 @@ namespace FreeLibSet.Forms
     private string _HistoryCategory;
 
     /// <summary>
-    /// Контекст справки, вызываемой по F1
+    /// РљРѕРЅС‚РµРєСЃС‚ СЃРїСЂР°РІРєРё, РІС‹Р·С‹РІР°РµРјРѕР№ РїРѕ F1
     /// </summary>
     public string HelpContext { get { return _HelpContext ?? String.Empty; } set { _HelpContext = value; } }
     private string _HelpContext;
 
     /// <summary>
-    /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
+    /// РџРѕР·РёС†РёСЏ Р±Р»РѕРєР° РґРёР°Р»РѕРіР° РЅР° СЌРєСЂР°РЅРµ.
+    /// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ Р±Р»РѕРє РґРёР°Р»РѕРіР° С†РµРЅС‚СЂРёСЂСѓРµС‚СЃСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ EFPApp.DefaultScreen.
     /// </summary>
     public EFPDialogPosition DialogPosition
     {
@@ -291,10 +315,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Набор данных
+    #region РќР°Р±РѕСЂ РґР°РЅРЅС‹С…
 
     /// <summary>
-    /// Основное свойство - редактируемые данные.
+    /// РћСЃРЅРѕРІРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ - СЂРµРґР°РєС‚РёСЂСѓРµРјС‹Рµ РґР°РЅРЅС‹Рµ.
     /// </summary>
     public SettingsDataList Data
     {
@@ -374,7 +398,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Список страниц
+    #region РЎРїРёСЃРѕРє СЃС‚СЂР°РЅРёС†
 
     public sealed class PageCollection : List<SettingsDialogPage>
     {
@@ -398,18 +422,21 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Показ диалога
+    #region РџРѕРєР°Р· РґРёР°Р»РѕРіР°
 
     public DialogResult ShowDialog()
     {
       if (_Pages.Count == 0)
       {
-        EFPApp.ErrorMessageBox("Нет ни одной страницы", Title);
+        EFPApp.ErrorMessageBox("РќРµС‚ РЅРё РѕРґРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹", Title);
         return DialogResult.Cancel;
       }
 
-      // Чтение данных
+      // Р§С‚РµРЅРёРµ РґР°РЅРЅС‹С…
       ReadValues();
+
+      TempCfg orgCfg = new TempCfg();
+      Data.WriteConfig(orgCfg); // РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ РѕС‚РјРµРЅС‹
 
       DialogResult res;
       using (SettingsDialogForm form = new SettingsDialogForm(this))
@@ -417,6 +444,8 @@ namespace FreeLibSet.Forms
         res = EFPApp.ShowDialog(form, false, DialogPosition);
         if (res == DialogResult.OK)
           WriteValues();
+        else
+          Data.ReadConfig(orgCfg);
       }
       return res;
     }
@@ -426,13 +455,13 @@ namespace FreeLibSet.Forms
 
   public sealed class SettingsDialogPage : IEFPTabPageControl
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
     /// </summary>
     /// <param name="owner"></param>
-    /// <param name="control">Обычно панель с управляющими элементами (<see cref="Panel"/>), но может быть и другим контейнером, например, <see cref="GroupBox"/>.
-    /// Не может быть объектом <see cref="TabPage"/></param>
+    /// <param name="control">РћР±С‹С‡РЅРѕ РїР°РЅРµР»СЊ СЃ СѓРїСЂР°РІР»СЏСЋС‰РёРјРё СЌР»РµРјРµРЅС‚Р°РјРё (<see cref="Panel"/>), РЅРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ Рё РґСЂСѓРіРёРј РєРѕРЅС‚РµР№РЅРµСЂРѕРј, РЅР°РїСЂРёРјРµСЂ, <see cref="GroupBox"/>.
+    /// РќРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±СЉРµРєС‚РѕРј <see cref="TabPage"/></param>
     public SettingsDialogPage(SettingsDialog owner, Control control)
     {
       if (owner == null)
@@ -440,11 +469,11 @@ namespace FreeLibSet.Forms
       if (control == null)
         throw new ArgumentNullException("control");
       if (control.IsDisposed)
-        throw new ObjectDisposedException(control.ToString(), "Панель шага мастера уже разрушена");
+        throw new ObjectDisposedException(control.ToString(), "РџР°РЅРµР»СЊ С€Р°РіР° РјР°СЃС‚РµСЂР° СѓР¶Рµ СЂР°Р·СЂСѓС€РµРЅР°");
       if (control is Form)
-        throw new ArgumentException("Управляющий элемент не может быть Form. Если используется форма-шаблон, то добавьте панель с элементами и передавайте Panel в конструктор SettingsDialogPage");
+        throw new ArgumentException("РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Form. Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С„РѕСЂРјР°-С€Р°Р±Р»РѕРЅ, С‚Рѕ РґРѕР±Р°РІСЊС‚Рµ РїР°РЅРµР»СЊ СЃ СЌР»РµРјРµРЅС‚Р°РјРё Рё РїРµСЂРµРґР°РІР°Р№С‚Рµ Panel РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ SettingsDialogPage");
       if (control is TabPage)
-        throw new ArgumentException("Управляющий элемент не может быть TabPage. Если используется форма-шаблон, то добавьте на TabPage объект Panel с элементами и передавайте Panel в конструктор SettingsDialogPage");
+        throw new ArgumentException("РЈРїСЂР°РІР»СЏСЋС‰РёР№ СЌР»РµРјРµРЅС‚ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ TabPage. Р•СЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С„РѕСЂРјР°-С€Р°Р±Р»РѕРЅ, С‚Рѕ РґРѕР±Р°РІСЊС‚Рµ РЅР° TabPage РѕР±СЉРµРєС‚ Panel СЃ СЌР»РµРјРµРЅС‚Р°РјРё Рё РїРµСЂРµРґР°РІР°Р№С‚Рµ Panel РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ SettingsDialogPage");
 
       _Owner = owner;
       control.Dock = DockStyle.Fill;
@@ -454,7 +483,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    #region РЎРІРѕР№СЃС‚РІР°
 
     public SettingsDialog Owner { get { return _Owner; } }
     private readonly SettingsDialog _Owner;
@@ -467,7 +496,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region События
+    #region РЎРѕР±С‹С‚РёСЏ
 
     public event EventHandler DataToControls;
 

@@ -1291,7 +1291,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Контекст справки для данного шага мастера.
-    /// Если свойство не установлено, используется общий контекст справки <see cref="Wizard.HelpContext"/>.
+    /// Если свойство не установлено, используется общий контекст справки <see cref="FreeLibSet.Forms.Wizard.HelpContext"/>.
     /// </summary>
     public string HelpContext
     {

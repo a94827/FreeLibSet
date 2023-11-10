@@ -39,20 +39,20 @@ namespace FreeLibSet.Drawing.Reporting
 
       lock (_Renderer)
       {
-        InitRenderer(_Renderer, sel);
+        InitRenderer(_Renderer, sel.CellStyle);
         return GetWantedHeight(_Renderer, sel, columnWidth);
       }
 
     }
 
-    public void MeasureString(BRSelector sel, string s, out int width, out int height)
+    public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
     {
       if (_Renderer == null)
         _Renderer = new PdfTextRenderer();
 
       lock (_Renderer)
       {
-        InitRenderer(_Renderer, sel);
+        InitRenderer(_Renderer, cellStyle);
         Size sz = _Renderer.MeasureStringLM(s);
         width = sz.Width;
         height = sz.Height;
@@ -60,27 +60,27 @@ namespace FreeLibSet.Drawing.Reporting
     }
 
 
-    internal static void InitRenderer(PdfTextRenderer renderer, BRSelector sel)
+    internal static void InitRenderer(PdfTextRenderer renderer, BRCellStyle cellStyle)
     {
-      renderer.FontName = sel.CellStyle.FontName;
-      renderer.FontHeight = sel.CellStyle.FontHeightPt;
-      if (sel.CellStyle.LineHeightTwip > 0)
-        renderer.LineHeight = sel.CellStyle.LineHeightPt;
-      if (sel.CellStyle.FontWidthPt > 0)
-        renderer.FontWidth = sel.CellStyle.FontWidthPt;
-      else if (sel.CellStyle.FontWidthPercent > 0 && sel.CellStyle.FontWidthPercent != 100)
-        renderer.FontWidth = renderer.DefaultFontWidth * sel.CellStyle.FontWidthPercent / 100f;
-      renderer.Bold = sel.CellStyle.Bold;
-      renderer.Italic = sel.CellStyle.Italic;
-      renderer.Underline = sel.CellStyle.Underline;
-      renderer.Strikeout = sel.CellStyle.Strikeout;
+      renderer.FontName = cellStyle.FontName;
+      renderer.FontHeight = cellStyle.FontHeightPt;
+      if (cellStyle.LineHeightTwip > 0)
+        renderer.LineHeight = cellStyle.LineHeightPt;
+      if (cellStyle.FontWidthPt > 0)
+        renderer.FontWidth = cellStyle.FontWidthPt;
+      else if (cellStyle.FontWidthPercent > 0 && cellStyle.FontWidthPercent != 100)
+        renderer.FontWidth = renderer.DefaultFontWidth * cellStyle.FontWidthPercent / 100f;
+      renderer.Bold = cellStyle.Bold;
+      renderer.Italic = cellStyle.Italic;
+      renderer.Underline = cellStyle.Underline;
+      renderer.Strikeout = cellStyle.Strikeout;
 
-      renderer.WordWrap = sel.CellStyle.WrapMode == BRWrapMode.WordWrap;
-      if (sel.CellStyle.WrapMode == BRWrapMode.WordWrap)
+      renderer.WordWrap = cellStyle.WrapMode == BRWrapMode.WordWrap;
+      if (cellStyle.WrapMode == BRWrapMode.WordWrap)
       { 
       }
 
-      BRColor clr = sel.CellStyle.ForeColor;
+      BRColor clr = cellStyle.ForeColor;
       if (clr != BRColor.Auto)
         renderer.Color = XColor.FromArgb(clr.R, clr.G, clr.B);
     }
@@ -171,11 +171,11 @@ namespace FreeLibSet.Drawing.Reporting
     #endregion
   }
 
-  public class BRPdfReportPainter
+  public class BRFilePdf
   {
     #region Конструктор
 
-    public BRPdfReportPainter()
+    public BRFilePdf()
     {
       //Scale = 0.1f;
       Scale = 72f/254f;
@@ -233,7 +233,7 @@ namespace FreeLibSet.Drawing.Reporting
       {
         renderer = new PdfTextRenderer();
         renderer.Graphics = graphics;
-        BRPdfMeasurer.InitRenderer(renderer, sel);
+        BRPdfMeasurer.InitRenderer(renderer, sel.CellStyle);
 
         _FontRenderers.Add(key, renderer);
       }
@@ -686,41 +686,33 @@ namespace FreeLibSet.Drawing.Reporting
 
     private void MyInitBorderPen(BRLine line)
     {
-      float w;
       switch (line.Style)
       {
         case BRLineStyle.Thin:
           BorderPen.DashStyle = XDashStyle.Solid;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.Medium:
           BorderPen.DashStyle = XDashStyle.Solid;
-          w = MediumLineWidth01mm;
           break;
         case BRLineStyle.Thick:
           BorderPen.DashStyle = XDashStyle.Solid;
-          w = ThickLineWidth01mm;
           break;
         case BRLineStyle.Dot:
           BorderPen.DashStyle = XDashStyle.Dot;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.Dash:
           BorderPen.DashStyle = XDashStyle.Dash;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.DashDot:
           BorderPen.DashStyle = XDashStyle.DashDot;
-          w = ThinLineWidth01mm;
           break;
         case BRLineStyle.DashDotDot:
           BorderPen.DashStyle = XDashStyle.DashDotDot;
-          w = ThinLineWidth01mm;
           break;
         default:
           throw new Exception("Неправильная толщина линии");
       }
-      BorderPen.Width = w * Scale;
+      BorderPen.Width = BRLine.GetLineWidthPt01mm(line.Style) * Scale;
       if (line.Color == BRColor.Auto)
         BorderPen.Color = XColor.FromArgb(0, 0, 0);
       else
@@ -733,7 +725,7 @@ namespace FreeLibSet.Drawing.Reporting
 
     public static void CreateFile(BRReport report, AbsPath filePath)
     {
-      BRPdfReportPainter creator = new BRPdfReportPainter();
+      BRFilePdf creator = new BRFilePdf();
       // Создаем документ
       PdfDocument pdfDoc = new PdfDocument();
       pdfDoc.Options.CompressContentStreams = true;
@@ -763,7 +755,7 @@ namespace FreeLibSet.Drawing.Reporting
         {
           BRPageSetup ps = pages[i].Section.PageSetup;
           PdfPage PdfPage = pdfDoc.AddPage();
-          if (ps.Landscape)
+          if (ps.Orientation == BROrientation.Landscape)
           {
             PdfPage.Width = LMToXUnit(ps.PaperHeight);
             PdfPage.Height = LMToXUnit(ps.PaperWidth);
@@ -880,7 +872,7 @@ namespace FreeLibSet.Drawing.Reporting
 
     /// <summary>
     /// Возвращает true, если библиотека PdfSharp.dll загружена
-    /// и можно создавать объекты <see cref="BRPdfReportPainter"/>.
+    /// и можно создавать объекты <see cref="BRFilePdf"/>.
     /// </summary>
     public static bool PdfLibAvailable
     {
@@ -924,6 +916,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// <summary>
     /// Это должно быть в отдельном методе, т.к. оно может не запускаться
     /// </summary>
+    [DebuggerStepThrough]
     private static void TryTestPdfLibFile()
     {
       Type dummy = typeof(PdfDocument);

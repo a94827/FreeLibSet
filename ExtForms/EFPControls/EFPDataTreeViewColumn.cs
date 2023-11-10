@@ -15,6 +15,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Collections;
 using System.Collections;
 using FreeLibSet.Forms.Diagnostics;
+using FreeLibSet.Forms.Reporting;
 
 /*
  * Дополнительные описания для стоблцов TreeViewAdv
@@ -100,7 +101,7 @@ namespace FreeLibSet.Forms
     /// Объект - владелец
     /// </summary>
     public EFPDataTreeView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataTreeView _ControlProvider;
+    private readonly EFPDataTreeView _ControlProvider;
 
     IEFPDataView IEFPDataViewColumn.ControlProvider { get { return ControlProvider; } }
 
@@ -108,19 +109,24 @@ namespace FreeLibSet.Forms
     /// Столбец древовидного просмотра <see cref="TreeViewAdv"/>
     /// </summary>
     public TreeColumn TreeColumn { get { return _TreeColumn; } }
-    private TreeColumn _TreeColumn;
+    private readonly TreeColumn _TreeColumn;
 
     /// <summary>
     /// Объект работы с ячейками столбца
     /// </summary>
     public NodeControl NodeControl { get { return _NodeControl; } }
-    private NodeControl _NodeControl;
+    private readonly NodeControl _NodeControl;
+
+    /// <summary>
+    /// Индекс столбца в <see cref="EFPDataTreeViewColumns"/> 
+    /// </summary>
+    public int Index { get { return _ControlProvider.Columns.IndexOf(_Name); } } // TODO: Надо переделать
 
     /// <summary>
     /// Имя столбца. Всегда определено
     /// </summary>
     public string Name { get { return _Name; } }
-    private string _Name;
+    private readonly string _Name;
 
     /// <summary>
     /// Пользовательские данные 
@@ -139,7 +145,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя столбца, отображаемое в диалоге параметров страницы.
-    /// Если не задано в явном виде, возвращает свойство <see cref="TreeColumn.Header"/> или <see cref="Name"/>
+    /// Если не задано в явном виде, возвращает свойство <see cref="FreeLibSet.Controls.TreeColumn.Header"/> или <see cref="Name"/>
     /// </summary>
     public string DisplayName
     {
@@ -329,7 +335,7 @@ namespace FreeLibSet.Forms
     #region Ширина столбца
 
     /// <summary>
-    /// Ширина столбца в пикселях (дублирование <see cref="TreeColumn.Width"/>)
+    /// Ширина столбца в пикселях (дублирование <see cref="FreeLibSet.Controls.TreeColumn.Width"/>)
     /// </summary>
     public int Width
     {
@@ -354,6 +360,17 @@ namespace FreeLibSet.Forms
       get { return ControlProvider.Measures.GetColumnWidthChars(TreeColumn.Width); }
       set { TreeColumn.Width = ControlProvider.Measures.GetTextColumnWidth(value); }
     }
+
+    /// <summary>
+    /// Минимальная ширина столбца в текстовых единицах (условная)
+    /// </summary>
+    public double MinTextWidth
+    {
+      get { return ControlProvider.Measures.GetColumnWidthChars(TreeColumn.MinColumnWidth); }
+      set { TreeColumn.MinColumnWidth = ControlProvider.Measures.GetTextColumnWidth(value); }
+    }
+
+    bool IEFPDataViewColumn.AutoGrow { get { return Index==0; } } // ??
 
     #endregion
 
@@ -485,7 +502,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Многострочные заголовки при печати таблицы.
-    /// Если свойство не установлено (свойство возвращает null), то используется <see cref="TreeColumn.Header"/>.
+    /// Если свойство не установлено (свойство возвращает null), то используется <see cref="FreeLibSet.Controls.TreeColumn.Header"/>.
     /// </summary>
     public string[] PrintHeaders { get { return _PrintHeaders; } set { _PrintHeaders = value; } }
     private string[] _PrintHeaders;
@@ -501,6 +518,137 @@ namespace FreeLibSet.Forms
     {
       get { return DataTools.StrFromSpecCharsArray(PrintHeaders); }
       set { PrintHeaders = DataTools.StrToSpecCharsArray(value); }
+    }
+
+    /// <summary>
+    /// Устанавливает признак печати столбца.
+    /// Если <see cref="Printable"/>=false, то никаких действий не выполняется.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">Признак печати</param>
+    public void SetPrinted(string defCfgCode, bool value)
+    {
+      GetSettings(defCfgCode).View.SetColumnPrinted(this, value);
+    }
+
+    /// <summary>
+    /// Возвращает признак печати столбца.
+    /// Если <see cref="Printable"/>=false, то возвращает false.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>true, если столбец должен быть напечатан</returns>
+    public bool GetPrinted(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnPrinted(this);
+    }
+
+    /// <summary>
+    /// Признак печати столбца в настройках по умолчанию.
+    /// </summary>
+    public bool Printed
+    {
+      get { return GetPrinted(String.Empty); }
+      set { SetPrinted(String.Empty, value); }
+    }
+
+    /// <summary>
+    /// Установить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="SizeGroup"/>, то ширина будет установлена для всех столбцов данной группы.
+    /// Нулевое значение задает размер по умолчанию, исходя из параметров шрифта и ширины колонки в просмотре.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то задает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">Ширина</param>
+    public void SetPrintWidth(string defCfgCode, int value)
+    {
+      GetSettings(defCfgCode).View.SetColumnWidth(this, value);
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает нулевое значение.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>Ширина или 0</returns>
+    public int GetPrintWidth(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnWidth(this);
+    }
+
+    /// <summary>
+    /// Ширину столбца при печати в единицах 0.1мм в настройках по умолчанию.
+    /// Если ширина не была явно установлена, возвращает нулевое значение, при этом размер столбца будет определен автоматически, исходя из
+    /// ширины столбца в просмотре и параметров шрифта, заданных для печати.
+    /// </summary>
+    public int PrintWidth
+    {
+      get { return GetPrintWidth(String.Empty); }
+      set { SetPrintWidth(String.Empty, value); }
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает значение, определяемое из ширины столбца на экране и параметров шрифта при печати.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>Ширина</returns>
+    public int GetRealPrintWidth(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetRealColumnWidth(this, GetSettings(defCfgCode).Font);
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм в настройке по умолчанию.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает значение, определяемое из ширины столбца на экране и параметров шрифта при печати.
+    /// </summary>
+    public int RealPrintWidth { get { return GetRealPrintWidth(String.Empty); } }
+
+    /// <summary>
+    /// Задать признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
+    /// Если true, то <see cref="SetPrintWidth(string, int)"/> задает минимальную ширину столбца.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">true, если столбец должен участвовать в заполнении листа при печати</param>
+    public void SetPrintAutoGrow(string defCfgCode, bool value)
+    {
+      GetSettings(defCfgCode).View.SetColumnAutoGrow(this, value);
+    }
+
+    /// <summary>
+    /// Получить признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
+    /// Если true, то <see cref="SetPrintWidth(string, int)"/> задает минимальную ширину столбца.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>true, если столбец должен участвовать в заполнении листа при печати</returns>
+    public bool GetPrintAutoGrow(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnAutoGrow(this);
+    }
+
+    /// <summary>
+    /// Признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца в настройках по умолчанию.
+    /// Если true, то <see cref="PrintWidth"/> задает минимальную ширину столбца.
+    /// По умолчанию свойство возвращает true для первого столбца в списке.
+    /// </summary>
+    public bool PrintAutoGrow
+    {
+      get { return GetPrintAutoGrow(String.Empty); }
+      set { SetPrintAutoGrow(String.Empty, value); }
+    }
+
+    private EFPDataViewMenuOutSettings GetSettings(string defCfgCode)
+    {
+      EFPDataTreeViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
+      if (outItem == null)
+        throw new InvalidOperationException("Стандартный вариант печати иерархического просмотра был удален");
+      return outItem[defCfgCode];
     }
 
     #endregion

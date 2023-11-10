@@ -139,6 +139,7 @@ namespace ExtDB_tests.Data
       Assert.Catch<ArgumentException>(delegate () { tester.TestReplaceDBItem(oldItem, oldName, newName); });
     }
 
+    [Platform("Win")]
     [TestCase(@"C:\TEMP\db.mdf", "db", "xxx", @"C:\TEMP\xxx.mdf")]
     [TestCase(@"C:\TEMP\db.db", "db", "xxx", @"C:\TEMP\xxx.db", Description ="replace filename, not the extension")]
     [TestCase(@"C:\TEMP\ddb.db", "db", "xxx", @"C:\TEMP\dxxx.db")]
@@ -149,18 +150,48 @@ namespace ExtDB_tests.Data
     [TestCase(@"C:\TEMP\ddbb.db", "DB", "xxx", @"C:\TEMP\dxxxb.db", Description ="Ignore case")]
     [TestCase("", "db", "xxx", "", Description ="oldItem is empty; returns empty string")]
     [TestCase(@"C:\TEMP\db.db", "", "xxx", @"C:\TEMP\xxx.db", Description = "file name missing")]
-    public void ReplaceFileItem(string oldItem, string oldName, string newName, string wantedRes)
+    public void ReplaceFileItem_Windows(string oldItem, string oldName, string newName, string wantedRes)
     {
       TestManager tester = new TestManager();
       string res = tester.TestReplaceFileItem(oldItem, oldName, newName);
       Assert.AreEqual(wantedRes, res);
     }
 
+    [Platform("Linux")]
+    [TestCase(@"~/test/db.mdf", "db", "xxx", @"~/test/xxx.mdf")]
+    [TestCase(@"~/test/db.db", "db", "xxx", @"~/test/xxx.db", Description ="replace filename, not the extension")]
+    [TestCase(@"~/test/ddb.db", "db", "xxx", @"~/test/dxxx.db")]
+    [TestCase(@"~/test/dbb.db", "db", "xxx", @"~/test/xxxb.db")]
+    [TestCase(@"~/test/ddbb.db", "db", "xxx", @"~/test/dxxxb.db")]
+    [TestCase(@"~/test/ddbb.db", "db", "x", @"~/test/dxb.db")]
+    [TestCase(@"~/db/db.db", "db", "xxx", @"~/db/xxx.db", Description = "replace filename, not the path")]
+    [TestCase(@"~/test/ddbb.db", "DB", "xxx", @"~/test/dxxxb.db", Description ="Ignore case")]
+    [TestCase("", "db", "xxx", "", Description ="oldItem is empty; returns empty string")]
+    [TestCase(@"~/test/db.db", "", "xxx", @"~/test/xxx.db", Description = "file name missing")]
+    public void ReplaceFileItem_Linux(string oldItem, string oldName, string newName, string wantedRes)
+    {
+      TestManager tester = new TestManager();
+      string res = tester.TestReplaceFileItem(oldItem, oldName, newName);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [Platform("Win")]
     [TestCase(@"C:\TEMP\db.mdf", "db", "", Description ="newName is empty")]
     [TestCase(@"C:\TEMP\db.mdf", "TEMP", "xxx", Description = "no fragment found")]
     [TestCase(@"C:\TEMP\db.mdf", "mdf", "xxx", Description = "no fragment found")]
     [TestCase(@"C:\TEMP\db>.mdf", "db", "xxx", Description = "invalid char in oldItem")]
-    public void ReplaceFileItem_exceptions(string oldItem, string oldName, string newName)
+    public void ReplaceFileItem_exceptions_Windows(string oldItem, string oldName, string newName)
+    {
+      TestManager tester = new TestManager();
+      Assert.Catch<ArgumentException>(delegate () { tester.TestReplaceFileItem(oldItem, oldName, newName); });
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"~/test/db.mdf", "db", "", Description ="newName is empty")]
+    [TestCase(@"~/test/db.mdf", "TEMP", "xxx", Description = "no fragment found")]
+    [TestCase(@"~/test/db.mdf", "mdf", "xxx", Description = "no fragment found")]
+    //[TestCase(@"~/test/db>.mdf", "db", "xxx", Description = "invalid char in oldItem")]
+    public void ReplaceFileItem_exceptions_Linux(string oldItem, string oldName, string newName)
     {
       TestManager tester = new TestManager();
       Assert.Catch<ArgumentException>(delegate () { tester.TestReplaceFileItem(oldItem, oldName, newName); });

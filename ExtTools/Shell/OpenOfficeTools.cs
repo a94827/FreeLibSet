@@ -148,11 +148,23 @@ namespace FreeLibSet.Shell
 
     private static OpenOfficeKind GetOfficeKind(FileAssociationItem fa)
     {
-      if (fa.ProgId.IndexOf ("OpenOffice", StringComparison.OrdinalIgnoreCase) >= 0)
+      OpenOfficeKind res = DoGetOfficeKind(fa.ProgId);
+      if (res != OpenOfficeKind.Unknown)
+        return res;
+      res = DoGetOfficeKind(fa.DisplayName); // 11.10.2023
+      return res;
+    }
+
+    private static OpenOfficeKind DoGetOfficeKind(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return OpenOfficeKind.Unknown;
+
+      if (s.IndexOf("OpenOffice", StringComparison.OrdinalIgnoreCase) >= 0)
         return OpenOfficeKind.OpenOffice;
-      if (fa.ProgId.IndexOf ("LibreOffice", StringComparison.OrdinalIgnoreCase) >= 0)
+      if (s.IndexOf("LibreOffice", StringComparison.OrdinalIgnoreCase) >= 0)
         return OpenOfficeKind.LibreOffice;
-      if (fa.ProgId.IndexOf ("AlterOffice", StringComparison.OrdinalIgnoreCase) >= 0)
+      if (s.IndexOf("AlterOffice", StringComparison.OrdinalIgnoreCase) >= 0)
         return OpenOfficeKind.AlterOffice;
       return OpenOfficeKind.Unknown;
     }

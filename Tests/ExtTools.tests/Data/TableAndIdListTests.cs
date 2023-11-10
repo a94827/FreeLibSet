@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
@@ -12,7 +12,7 @@ namespace ExtTools_tests.Data
   [TestFixture]
   public class TableAndIdListTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_simple()
@@ -22,7 +22,7 @@ namespace ExtTools_tests.Data
       Assert.IsTrue(sut.IsEmpty, "IsEmpty");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
 
-      // должно быть последним
+      // РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕСЃР»РµРґРЅРёРј
       DoTestCaseSensitivity(sut, false);
     }
 
@@ -35,7 +35,7 @@ namespace ExtTools_tests.Data
       Assert.IsTrue(sut.IsEmpty, "IsEmpty");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
 
-      // должно быть последним
+      // РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕСЃР»РµРґРЅРёРј
       DoTestCaseSensitivity(sut, ignoreCase);
     }
 
@@ -64,9 +64,9 @@ namespace ExtTools_tests.Data
       sut["BBB"].Add(2);
 
       Assert.IsTrue(new IdList(new Int32[] { 1 }) == sut["AAA"], "AAA");
-      Assert.IsTrue(new IdList(new Int32[] { 1, 2 }) == sut["BBB"], "BBB"); // проверяем, что возвращается та же самая коллекция
+      Assert.IsTrue(new IdList(new Int32[] { 1, 2 }) == sut["BBB"], "BBB"); // РїСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ С‚Р° Р¶Рµ СЃР°РјР°СЏ РєРѕР»Р»РµРєС†РёСЏ
       Assert.AreEqual(0, sut["CCC"].Count, "CCC");
-      Assert.AreEqual(0, sut["DDD"].Count, "DDD"); // с ней ничего не делали
+      Assert.AreEqual(0, sut["DDD"].Count, "DDD"); // СЃ РЅРµР№ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°Р»Рё
 
       sut["BBB"].Remove(1);
       Assert.AreEqual(2, sut.Count);
@@ -129,7 +129,7 @@ namespace ExtTools_tests.Data
     [Test]
     public void Item_IdList_set_not_readonly()
     {
-      // Проверяем, что присоединение списка не переводит в режим ReadOnly
+      // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ СЃРїРёСЃРєР° РЅРµ РїРµСЂРµРІРѕРґРёС‚ РІ СЂРµР¶РёРј ReadOnly
 
       TableAndIdList sut = new TableAndIdList();
       sut["AAA"].Add(1);
@@ -244,8 +244,8 @@ namespace ExtTools_tests.Data
       TableAndIdList sut = new TableAndIdList();
       sut["AAA"].Add(1);
       sut["BBB"].Add(1);
-      sut["BBB"].Remove(1); // пустой
-      sut["CCC"].Clear(); // пустой
+      sut["BBB"].Remove(1); // РїСѓСЃС‚РѕР№
+      sut["CCC"].Clear(); // РїСѓСЃС‚РѕР№
 
       bool res = sut.Contains(tableName);
 
@@ -287,7 +287,7 @@ namespace ExtTools_tests.Data
     public void GetTableNames_caseSensitive()
     {
       TableAndIdList sut = new TableAndIdList(false);
-      // Порядок возвращаемых таблиц не гарантируется
+      // РџРѕСЂСЏРґРѕРє РІРѕР·РІСЂР°С‰Р°РµРјС‹С… С‚Р°Р±Р»РёС† РЅРµ РіР°СЂР°РЅС‚РёСЂСѓРµС‚СЃСЏ
       CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetTableNames(), "#1");
 
       sut["AAA"].Add(1);
@@ -299,7 +299,7 @@ namespace ExtTools_tests.Data
       sut["AAA"].Remove(2);
       CollectionAssert.AreEquivalent(new string[] { "aaa" }, sut.GetTableNames(), "#3");
 
-      sut["DDD", 4] = false; // ничего не поменялось
+      sut["DDD", 4] = false; // РЅРёС‡РµРіРѕ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
       CollectionAssert.AreEquivalent(new string[] { "aaa" }, sut.GetTableNames(), "#4");
     }
 
@@ -389,7 +389,7 @@ namespace ExtTools_tests.Data
       TableAndIdList sut = new TableAndIdList();
       sut["AAA"].Add(1);
       sut["BBB"].Add(2);
-      sut["BBB"].Remove(2); // пустой
+      sut["BBB"].Remove(2); // РїСѓСЃС‚РѕР№
       sut["CCC"] = IdList.Empty;
 
       bool res = sut.Remove("BBB");
@@ -456,7 +456,7 @@ namespace ExtTools_tests.Data
 
     #endregion
 
-    #region Сравнение
+    #region РЎСЂР°РІРЅРµРЅРёРµ
 
     [TestCase("EQ", true)]
     [TestCase("DIFF", false)]
@@ -508,7 +508,7 @@ namespace ExtTools_tests.Data
 
     #endregion
 
-    #region Операторы сложения и вычитания
+    #region РћРїРµСЂР°С‚РѕСЂС‹ СЃР»РѕР¶РµРЅРёСЏ Рё РІС‹С‡РёС‚Р°РЅРёСЏ
 
     [Test]
     public void Operator_Plus_Or()
@@ -596,7 +596,7 @@ namespace ExtTools_tests.Data
 
     #endregion
 
-    #region Перечисление
+    #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ
 
     [Test]
     public void GetEnumerator()
@@ -604,8 +604,8 @@ namespace ExtTools_tests.Data
       TableAndIdList sut = new TableAndIdList();
       sut["AAA"].Add(1);
       sut["BBB"].Add(1);
-      sut["BBB"].Remove(1); // пустой
-      sut["CCC"].Clear(); // пустой
+      sut["BBB"].Remove(1); // РїСѓСЃС‚РѕР№
+      sut["CCC"].Clear(); // РїСѓСЃС‚РѕР№
       sut["DDD"] = new IdList(new Int32[] { 1, 2, 3 });
 
       Dictionary<string, IdList> dict = new Dictionary<string, IdList>();
@@ -651,7 +651,7 @@ namespace ExtTools_tests.Data
       Assert.Catch(delegate() { sut.Remove(TableAndIdList.Empty); }, "Remove(TableAndIdList)");
       Assert.Catch(delegate() { sut.Clear(); }, "Clear()");
 
-      Assert.AreEqual(2, sut.Count, "Count"); // ничего не испортилось
+      Assert.AreEqual(2, sut.Count, "Count"); // РЅРёС‡РµРіРѕ РЅРµ РёСЃРїРѕСЂС‚РёР»РѕСЃСЊ
     }
 
     #endregion

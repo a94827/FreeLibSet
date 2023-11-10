@@ -278,7 +278,8 @@ namespace FreeLibSet.Forms
     /// Создает новый обработчик для управляющего элемента статусной строки
     /// </summary>
     /// <param name="statusStripControl">Управляющий элемент</param>
-    public EFPStatusBarHandler(StatusStrip statusStripControl)
+    /// <param name="isFormOwned"></param>
+    public EFPStatusBarHandler(StatusStrip statusStripControl, bool isFormOwned)
     {
       if (statusStripControl == null)
         throw new ArgumentNullException("statusStripControl");
@@ -286,6 +287,7 @@ namespace FreeLibSet.Forms
         throw new ObjectDisposedException("statusStripControl");
       _StatusStripControl = statusStripControl;
 
+      _IsFormOwned = isFormOwned;
       _Panels = new SingleScopeList<EFPStatusBarPanels>();
       _ShownPanels = new EFPStatusBarPanels[0];
 
@@ -334,6 +336,12 @@ namespace FreeLibSet.Forms
 
       base.Dispose(disposing);
     }
+
+    /// <summary>
+    /// Возвращает true, если обработчик относится к конкретной форме
+    /// </summary>
+    public bool IsFormOwned { get { return _IsFormOwned; } }
+    private readonly bool _IsFormOwned;
 
     #endregion
 
@@ -624,7 +632,7 @@ namespace FreeLibSet.Forms
         if (_StatusStripControl != null)
         {
           _StatusStripControl.Visible = Visible;
-          _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl);
+          _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl, false);
           _StatusBarHandler.UpdateIfModified();
         }
       }

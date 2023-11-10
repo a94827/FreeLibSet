@@ -210,7 +210,7 @@ namespace FreeLibSet.OLE
     /// </summary>
     /// <param name="obj">Объект</param>
     /// <param name="name">Имя метода</param>
-    /// <returns>Значение, возвращаемое метода</returns>
+    /// <returns>Значение, возвращаемое методом</returns>
     public object Call(object obj, string name)
     {
 #if DEBUG
@@ -226,7 +226,7 @@ namespace FreeLibSet.OLE
     /// <param name="obj">Объект</param>
     /// <param name="name">Имя метода</param>
     /// <param name="arg1">Аргумент</param>
-    /// <returns>Значение, возвращаемое метода</returns>
+    /// <returns>Значение, возвращаемое методом</returns>
     public object Call(object obj, string name, object arg1)
     {
 #if DEBUG
@@ -244,7 +244,7 @@ namespace FreeLibSet.OLE
     /// <param name="name">Имя метода</param>
     /// <param name="arg1">Первый аргумент</param>
     /// <param name="arg2">Второй аргумент</param>
-    /// <returns>Значение, возвращаемое метода</returns>
+    /// <returns>Значение, возвращаемое методом</returns>
     public object Call(object obj, string name, object arg1, object arg2)
     {
 #if DEBUG
@@ -264,7 +264,7 @@ namespace FreeLibSet.OLE
     /// <param name="arg1">Первый аргумент</param>
     /// <param name="arg2">Второй аргумент</param>
     /// <param name="arg3">Третий аргумент</param>
-    /// <returns>Значение, возвращаемое метода</returns>
+    /// <returns>Значение, возвращаемое методом</returns>
     public object Call(object obj, string name, object arg1, object arg2, object arg3)
     {
 #if DEBUG
@@ -286,7 +286,7 @@ namespace FreeLibSet.OLE
     /// <param name="arg2">Второй аргумент</param>
     /// <param name="arg3">Третий аргумент</param>
     /// <param name="arg4">Четвертый аргумент</param>
-    /// <returns>Значение, возвращаемое метода</returns>
+    /// <returns>Значение, возвращаемое методом</returns>
     public object Call(object obj, string name, object arg1, object arg2, object arg3, object arg4)
     {
 #if DEBUG
@@ -306,7 +306,7 @@ namespace FreeLibSet.OLE
     /// <param name="obj">Объект</param>
     /// <param name="name">Имя метода</param>
     /// <param name="args">Аргументы</param>
-    /// <returns>Значение, возвращаемое метода</returns>
+    /// <returns>Значение, возвращаемое методом</returns>
     public object CallWithArgs(object obj, string name, object[] args)
     {
 #if DEBUG
@@ -315,6 +315,23 @@ namespace FreeLibSet.OLE
 
       return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, args, CultureInfo);
     }
+
+    /// <summary>
+    /// Вызвать метод с именем <paramref name="name"/> для объекта <paramref name="obj"/> с произвольным количеством аргументов
+    /// </summary>
+    /// <param name="obj">Объект</param>
+    /// <param name="name">Имя метода</param>
+    /// <param name="args">Аргументы</param>
+    /// <returns>Значение, возвращаемое методом</returns>
+    public object CallWithArgs0409(object obj, string name, object[] args)
+    {
+#if DEBUG
+      CheckNotDisposed();
+#endif
+
+      return obj.GetType().InvokeMember(name, BindingFlags.InvokeMethod, null, obj, args, _CultureInfo0409);
+    }
+
     #endregion
 
     #region Установка свойств для LCID 0409

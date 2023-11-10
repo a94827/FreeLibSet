@@ -21,20 +21,24 @@ namespace FreeLibSet.Forms.Reporting
       InitializeComponent();
 
       _ControlProvider = controlProvider;
-      _PageSetup = dialog.Data.GetRequired<BRPageSetup>();
-      _ViewData = dialog.Data.GetRequired<BRDataViewData>();
+      _PageSetup = dialog.Data.GetRequired<BRPageSettingsDataItem>().PageSetup;
+      _ViewData = dialog.Data.GetRequired<BRDataViewSettingsDataItem>();
+      _FontData = dialog.Data.GetRequired<BRFontSettingsDataItem>();
 
       SettingsDialogPage page = dialog.Pages.Add(MainPanel);
 
       ghColumns = new EFPDataGridView(page.BaseProvider, grColumns);
-      ghColumns.Columns.AddBool("Flag", false, String.Empty);
+      ghColumns.Columns.AddBool("Flag", false, "П.");
+      ghColumns.Columns.LastAdded.GridColumn.ToolTipText = "Печатать столбец";
       ghColumns.Columns.AddTextFill("Name", false, "Столбец", 100, 15);
       ghColumns.Columns.AddFixedPoint("Width", false, "Ширина, см", 10, 2, null);
+      ghColumns.Columns.AddBool("AutoGrow", false, "Р.");
 
       grColumns.Columns[0].ToolTipText = "Установите флажки для тех столбцов," + Environment.NewLine +
         "которые должны быть напечатаны";
       grColumns.Columns[1].ToolTipText = "Название столбца";
       grColumns.Columns[2].ToolTipText = "Ширина области, отведенной для печати столбца (в сантиметрах)";
+      grColumns.Columns[3].ToolTipText = "Расширять столбец для заполнения листа";
       grColumns.Columns[1].ReadOnly = true;
       ghColumns.Columns[1].CanIncSearch = true;
       ghColumns.DisableOrdering();
@@ -45,6 +49,7 @@ namespace FreeLibSet.Forms.Reporting
       grColumns.VirtualMode = false;
       ghColumns.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ghColumns_GetCellAttributes);
       grColumns.CellValueChanged += GrColumns_CellValueChanged;
+      ghColumns.MenuOutItems.Clear(); // иначе будут параметры страницы в параметрах страницы :)
       ghColumns.ToolBarPanel = panSpbColumns;
 
       EFPLabel efpWholeWidthValueText = new EFPLabel(page.BaseProvider, lblWholeWidthValueText);
@@ -80,7 +85,8 @@ namespace FreeLibSet.Forms.Reporting
 
     private IEFPDataView _ControlProvider;
     private BRPageSetup _PageSetup;
-    private BRDataViewData _ViewData;
+    private BRDataViewSettingsDataItem _ViewData;
+    private BRFontSettingsDataItem _FontData;
 
     #endregion
 
@@ -90,22 +96,68 @@ namespace FreeLibSet.Forms.Reporting
 
     void ghColumns_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
-      if (args.ColumnIndex == 2)
+      IEFPDataViewColumn column = args.GetGridRow().Tag as IEFPDataViewColumn;
+
+      switch (args.ColumnIndex)
       {
-        bool flag = DataTools.GetBool(grColumns.Rows[args.RowIndex].Cells[0].Value);
-        if (!flag)
-        {
-          args.Grayed = true;
-          //Args.ContentVisible = false;
-          args.ReadOnly = true;
-          args.ReadOnlyMessage = "Нельзя задавать ширину столбца, который не печатается";
-        }
+        case 0:
+          if (!column.Printable)
+          {
+            args.ContentVisible = false;
+            args.ReadOnly = true;
+          }
+          break;
+
+        case 2:
+          if (column.Printable)
+          {
+            bool flag = DataTools.GetBool(grColumns.Rows[args.RowIndex].Cells[0].Value);
+            if (!flag)
+            {
+              args.Grayed = true;
+              //Args.ContentVisible = false;
+              args.ReadOnly = true;
+              args.ReadOnlyMessage = "Нельзя задавать ширину столбца, который не печатается";
+            }
+          }
+          else
+          {
+            args.ContentVisible = false;
+            args.ReadOnly = true;
+          }
+          break;
       }
     }
 
     private void GrColumns_CellValueChanged(object sender, DataGridViewCellEventArgs args)
     {
-      CalculateWholeWidth();
+      if (_InsideInitColumns)
+        return;
+
+      _InsideInitColumns = true;
+      try
+      {
+        DataGridViewRow gridRow = grColumns.Rows[args.RowIndex];
+        IEFPDataViewColumn column = (IEFPDataViewColumn)(gridRow.Tag);
+        switch (args.ColumnIndex)
+        {
+          case 0:
+            _ViewData.SetColumnPrinted(column, DataTools.GetBool(gridRow.Cells[0].Value));
+            break;
+          case 2:
+            _ViewData.SetColumnWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
+            break;
+          case 3:
+            _ViewData.SetColumnAutoGrow(column, DataTools.GetBool(gridRow.Cells[3].Value));
+            break;
+        }
+        InitColumnWidths();
+        CalculateWholeWidth();
+      }
+      finally
+      {
+        _InsideInitColumns = false;
+      }
     }
 
     #endregion
@@ -141,42 +193,72 @@ namespace FreeLibSet.Forms.Reporting
 
     #region SettingsDialogPage
 
+    private bool _InsideInitColumns;
+
     private void Page_DataToControls(object sender, EventArgs args)
     {
-      IEFPDataViewColumn[] columns = _ControlProvider.VisibleColumns;
-      grColumns.RowCount = columns.Length;
-      for (int i = 0; i < columns.Length; i++)
+      _InsideInitColumns = true;
+      try
       {
-        IEFPDataViewColumn column = columns[i];
-        DataGridViewRow gridRow = grColumns.Rows[i];
+        IEFPDataViewColumn[] columns = _ControlProvider.VisibleColumns;
+        grColumns.RowCount = columns.Length;
+        for (int i = 0; i < columns.Length; i++)
+        {
+          IEFPDataViewColumn column = columns[i];
+          DataGridViewRow gridRow = grColumns.Rows[i];
+          gridRow.Tag = column;
 
-        gridRow.Cells[0].Value = _ViewData.GetColumnPrint(column);
-        gridRow.Cells[1].Value = columns[i].DisplayName;
-        gridRow.Cells[2].Value = _ViewData.GetColumnWidth(column) / 100.0;
+          gridRow.Cells[0].Value = _ViewData.GetColumnPrinted(column);
+          gridRow.Cells[1].Value = columns[i].DisplayName;
+          gridRow.Cells[3].Value = _ViewData.GetColumnAutoGrow(column);
+        }
+        InitColumnWidths();
+        CalculateWholeWidth();
       }
-
+      finally
+      {
+        _InsideInitColumns = false;
+      }
       efpRepeatedColumns.Value = _ViewData.RepeatedColumnCount;
       efpColumnSubHeaderNumbers.SelectedIndex = (int)_ViewData.ColumnSubHeaderNumbers;
     }
 
+    private void InitColumnWidths()
+    {
+      foreach (DataGridViewRow gridRow in grColumns.Rows)
+      {
+        IEFPDataViewColumn column = (IEFPDataViewColumn)(gridRow.Tag);
+        gridRow.Cells[2].Value = _ViewData.GetRealColumnWidth(column, _FontData) / 100.0;
+      }
+    }
+
     private void Page_DataFromControls(object sender, EventArgs args)
     {
+      // Хотя параметры столбцы переносятся динамически в процессе редактирования таблички,
+      // надо передавать значения еще раз.
+      // Иначе, если был выбран готовый набор, то параметры попали в табличку, но не попадут в сохраняемый набор параметров
       IEFPDataViewColumn[] columns = _ControlProvider.VisibleColumns;
       for (int i = 0; i < columns.Length; i++)
       {
         IEFPDataViewColumn column = columns[i];
         DataGridViewRow gridRow = grColumns.Rows[i];
 
-        _ViewData.SetColumnPrint(column, DataTools.GetBool(gridRow.Cells[0].Value));
+        _ViewData.SetColumnAutoGrow(column, DataTools.GetBool(gridRow.Cells[3].Value));
         _ViewData.SetColumnWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
+        _ViewData.SetColumnPrinted(column, DataTools.GetBool(gridRow.Cells[0].Value));
       }
+
       _ViewData.RepeatedColumnCount = efpRepeatedColumns.Value;
-      _ViewData.ColumnSubHeaderNumbers = (ColumnSubHeaderNumbersMode)(efpColumnSubHeaderNumbers.SelectedIndex);
+      _ViewData.ColumnSubHeaderNumbers = (BRDataViewColumnSubHeaderNumbersMode)(efpColumnSubHeaderNumbers.SelectedIndex);
     }
 
     private void Page_PageShow(object sender, EventArgs args)
     {
-      CalculateWholeWidth();
+      if (grColumns.RowCount > 0)
+      {
+        InitColumnWidths();
+        CalculateWholeWidth();
+      }
     }
 
     #endregion

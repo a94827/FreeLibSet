@@ -244,7 +244,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить секцию конфигурации для чтения или записи.
     /// Значение, полученное после вызова метода должно быть удалено по завершении чтения или записи
-    /// вызовом метода Dispose() для полученного результата метода (не аргумента <paramref name="cfg"/>!).
+    /// вызовом метода <see cref="IDisposable.Dispose()"/> для полученного результата метода (не аргумента <paramref name="cfg"/>!).
     /// Удобно использовать конструкцию using.
     /// </summary>
     /// <param name="configInfo">Данные секции конфигурации. Обязательный параметр</param>
@@ -290,50 +290,50 @@ namespace FreeLibSet.Forms
     #region Константы
 
     /// <summary>
-    /// Используется EFPConfigurableDataGridView и EFPDataTreeViewWithFilters для хранения текущего фильтра 
+    /// Используется <see cref="EFPConfigurableDataGridView"/> и <see cref="EFPConfigurableDataTreeView"/> для хранения текущего фильтра 
     /// установленного пользователем (при условии, что пользователь имеет права на установку фильтров).
-    /// Содержит по одной дочерней CfgPart для каждого фильтра, включая пустые.
-    /// Также используется для хранения истории фильтров (если предусмотрено) с использованием UserSetName
+    /// Содержит по одной дочерней <see cref="CfgPart"/> для каждого фильтра, включая пустые.
+    /// Также используется для хранения истории фильтров (если предусмотрено) с использованием UserSetName.
     /// </summary>
     public const string Filters = "Filters";
 
     /// <summary>
-    /// Используется EFPConfigurableDataGridView для хранения списка истории фильтров
+    /// Используется <see cref="EFPConfigurableDataGridView"/> для хранения списка истории фильтров
     /// </summary>
     public const string FiltersHistory = "FiltersHistory";
 
     /// <summary>
-    /// Используется EFPDataGridViewWithOrders для хранения выбранного порядка сортировки (строкое значение "Order")
+    /// Используется <see cref="EFPConfigurableDataGridView"/> для хранения выбранного порядка сортировки (строкое значение "Order")
     /// и выбранной настройки табличного просмотра (строковое значение "GridConfig")
-    /// Для хранения текущих настроек фильтра используется отдельная секция Filters, а для 
-    /// хранения размеров столбцов и их наличия - GridConfigs
+    /// Для хранения текущих настроек фильтра используется отдельная секция <see cref="Filters"/>, а для 
+    /// хранения размеров столбцов и их наличия - <see cref="GridConfig"/>.
     /// </summary>
     public const string GridView = "GridView";
 
     /// <summary>
-    /// Используется в классах, производных от EFPTreeViewAdv для хранения выбранной настройки просмотра (строковое значение "GridConfig")
-    /// Для хранения размеров столбцов и их наличия используется отдельная секция GridConfigs
+    /// Используется в классах, производных от <see cref="EFPTreeViewAdv"/> для хранения выбранной настройки просмотра (строковое значение "GridConfig")
+    /// Для хранения размеров столбцов и их наличия используется отдельная секция <see cref="GridConfig"/>.
     /// </summary>
     public const string TreeView = "TreeView";
 
     /// <summary>
-    /// Используется для хранения пользовательских "именных" настроек табличного (или древовидного) просмотра (объектов EFPDataGridViewConfig)
+    /// Используется для хранения пользовательских "именных" настроек табличного (или древовидного) просмотра (объектов <see cref="EFPDataGridViewConfig"/>)
     /// Имя настройки задается как UserSetName.
     /// Настройки могут относиться к таблицам EFPDBxGridView и EFPDBxTreeView
-    /// Текущая выбранная настройка хранится как поле "GridConfig" в отдельной секции GridView или TreeView
+    /// Текущая выбранная настройка хранится как поле "GridConfig" в отдельной секции <see cref="GridView"/> или <see cref="TreeView"/>.
     /// </summary>
     public const string GridConfig = "GridConfig";
 
     /// <summary>
-    /// Используется EFPConfigurableDataGridView для хранения списка истории настроек
+    /// Используется <see cref="EFPConfigurableDataGridView"/> для хранения списка истории настроек
     /// </summary>
     public const string GridConfigHistory = "GridConfigHistory";
 
-    /// <summary>
-    /// Используется EFPConfigurableDataGridView для хранения настроек отправки в Excel и OpenOffice.
-    /// Кроме секции с именем, задаваемым свойством ConfigSectionName, используется секция с именем "Default"
-    /// </summary>
-    public const string SendToExcel = "SendToExcel";
+    ///// <summary>
+    ///// Используется EFPConfigurableDataGridView для хранения настроек отправки в Excel и OpenOffice.
+    ///// Кроме секции с именем, задаваемым свойством ConfigSectionName, используется секция с именем "Default"
+    ///// </summary>
+    //public const string SendToExcel = "SendToExcel";
 
     /// <summary>
     /// Хранение параметров отчета.
@@ -342,18 +342,18 @@ namespace FreeLibSet.Forms
     /// Секции с UserSetName используются для хранения истории и "именных" настроек, сохраненным пользователем
     /// Секция без указанного UserSetName задает также режим отображения отчета (поле "Maximized").
     /// 
-    /// При использовании EFPReportExtParams эта секция используется для параметров 
-    /// EFPReportExtParamsPart.User и EFPReportExtParamsPart.NoHistory.
+    /// При использовании <see cref="EFPReportExtParams"/> эта секция используется для параметров 
+    /// <see cref="SettingsPart.User"/> и <see cref="SettingsPart.NoHistory"/>.
     /// </summary>
     public const string ReportParams = "ReportParams";
 
     /// <summary>
-    /// Используется для хранения истории параметров отчета EFPReportExtParams.
+    /// Используется для хранения истории параметров отчета <see cref="EFPReportExtParams"/>.
     /// </summary>
     public const string ReportHistory = "ReportHistory";
 
     /// <summary>
-    /// Используется для хранения параметров отчета EFPReportExtParams для режима EFPReportExtParamsPart.Files.
+    /// Используется для хранения параметров отчета <see cref="EFPReportExtParams"/>  для режима <see cref="SettingsPart.Machine"/>.
     /// Менеджер хранения конфигураций для сетевого приложения может обрабатывать секции этой категории
     /// особым образом, чтобы данные привязывались не только к пользователю, но и компьютеру
     /// </summary>
@@ -361,13 +361,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Хранение произвольных пользовательских параметров.
-    /// Используется по умолчанию в EFPConfigParamSetComboBox
+    /// Используется по умолчанию в <see cref="EFPConfigParamSetComboBox"/>
     /// </summary>
     public const string UserParams = "UserParams";
 
     /// <summary>
     /// Хранение истории произвольных пользовательских параметров.
-    /// Используется по умолчанию в EFPConfigParamSetComboBox
+    /// Используется по умолчанию в <see cref="EFPConfigParamSetComboBox"/>
     /// </summary>
     public const string UserHistory = "UserHistory";
 
@@ -393,8 +393,8 @@ namespace FreeLibSet.Forms
     /// Композиция рабочего стола.
     /// Используется единственное имя секции конфигурации: "Composition".
     /// В сетевой программе эти настройки должны быть привязаны к компьютеру.
-    /// В отличие от других настроек с историей, "именные" настройки хранятся в секциях отдельной категории "UIUser".
-    /// Изображение для предварительного просмотра в окне выбора композиции хранится в секции с категорией "UISnapshot".
+    /// В отличие от других настроек с историей, "именные" настройки хранятся в секциях отдельной категории <see cref="UIUser"/>.
+    /// Изображение для предварительного просмотра в окне выбора композиции хранится в секции с категорией <see cref="UISnapshot"/>.
     /// </summary>
     public const string UI = "UI";
 
@@ -402,7 +402,7 @@ namespace FreeLibSet.Forms
     /// Хранение списка истории композиций рабочего стола
     /// Используется единственное имя секции конфигурации: "Composition".
     /// В сетевой программе эти настройки должны быть привязаны к компьютеру.
-    /// В отличие от других настроек с историей, список "именных" настроек пользователя хранится в секции отдельной категории "UIUserHistory".
+    /// В отличие от других настроек с историей, список "именных" настроек пользователя хранится в секции отдельной категории <see cref="UIUserHistory"/>.
     /// </summary>
     public const string UIHistory = "UIHistory";
 
@@ -410,12 +410,12 @@ namespace FreeLibSet.Forms
     /// Пользовательские именные композиции рабочего стола.
     /// Используется единственное имя секции конфигурации: "Composition".
     /// В сетевой программе эти настройки относятся к пользователю в-целом, без привязки к компьютеру.
-    /// Изображение для предварительного просмотра в окне выбора композиции хранится в секции с категорией "UIUserSnapshot".
+    /// Изображение для предварительного просмотра в окне выбора композиции хранится в секции с категорией <see cref="UIUserSnapshot"/>.
     /// </summary>
     public const string UIUser = "UIUser";
 
     /// <summary>
-    /// Список именных композиций рабочего стола. Сами композиции хранятся в секциях категории "UIUser"
+    /// Список именных композиций рабочего стола. Сами композиции хранятся в секциях категории <see cref="UIUser"/>.
     /// Используется единственное имя секции конфигурации: "Composition".
     /// В сетевой программе эти настройки относятся к пользователю в-целом, без привязки к компьютеру
     /// </summary>
@@ -434,10 +434,25 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Хранение изображения интерфейса.
-    /// Используется в паре с секцией "UIUser".
+    /// Используется в паре с секцией <see cref="UIUser"/>.
     /// В сетевой программе эти настройки относятся к пользователю в-целом, без привязки к компьютеру
     /// </summary>
     public const string UIUserSnapshot = "UIUserSnapshot";
+
+    ///// <summary>
+    ///// Параметры окна предварительного просмотра
+    ///// </summary>
+    //public const string PrintPreview = "PrintPreview";
+
+    /// <summary>
+    /// Параметры страницы, экспорта файлов, команды "Отправить", относящиеся к пользователю
+    /// </summary>
+    public const string PageSetup = "PageSetup";
+
+    /// <summary>
+    /// Параметры страницы, экспорта файлов, команды "Отправить", с привязкой к компьютеру.
+    /// </summary>
+    public const string PageSetupFiles = "PageSetupFiles";
 
     #endregion
 
@@ -460,6 +475,7 @@ namespace FreeLibSet.Forms
         case UIHistory:
         case UISnapshot:
         case FormBounds:
+        case PageSetupFiles:
           return true;
         default:
           return false;
@@ -495,7 +511,7 @@ namespace FreeLibSet.Forms
     /// Возвращает None
     /// </summary>
     public EFPConfigPersistence Persistence { get { return EFPConfigPersistence.None; } }
-       
+
     /// <summary>
     /// Ничего не делает
     /// </summary>
@@ -641,7 +657,7 @@ namespace FreeLibSet.Forms
     public static bool IsPersist(EFPConfigPersistence persistence)
     {
       switch (persistence)
-      { 
+      {
         case EFPConfigPersistence.Machine:
         case EFPConfigPersistence.Network:
           return true;

@@ -1151,8 +1151,9 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Отправить"
+#region "Отправить"
 
+#if OLD_OUT
     /// <summary>
     /// Переопределение команды "Отправить"-"Microsoft Excel"
     /// с сохранением параметров между вызовами в секции конфигурации.
@@ -1256,8 +1257,9 @@ namespace FreeLibSet.Forms
         settings.WriteConfig(cfg);
       }
     }
+#endif
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -1267,7 +1269,7 @@ namespace FreeLibSet.Forms
   [Serializable]
   public class FilterClipboardInfo
   {
-    #region Конструктор
+#region Конструктор
 
     /// <summary>
     /// Создает заполненный объект.
@@ -1293,9 +1295,9 @@ namespace FreeLibSet.Forms
       _XmlText = xmlText;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Идентификатор набора данных
@@ -1320,6 +1322,6 @@ namespace FreeLibSet.Forms
     public string XmlText { get { return _XmlText; } }
     private string _XmlText;
 
-    #endregion
+#endregion
   }
 }

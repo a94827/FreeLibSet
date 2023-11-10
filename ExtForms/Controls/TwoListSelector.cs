@@ -203,6 +203,7 @@ namespace FreeLibSet.Forms
       _AvailableGridViewProvider.Control.ReadOnly = true;
       _AvailableGridViewProvider.CanView = false;
       _AvailableGridViewProvider.Control.MultiSelect = true;
+      _AvailableGridViewProvider.MenuOutItems.Clear();
 
       _AddButtonProvider.Enabled = false;
       _AddButtonProvider.Click += new EventHandler(AddButtonProvider_Click);
@@ -227,6 +228,7 @@ namespace FreeLibSet.Forms
       _SelectedGridViewProvider.Control.MultiSelect = true;
       _SelectedGridViewProvider.ManualOrderRows = true;
       _SelectedGridViewProvider.ManualOrderChanged += new EventHandler(SelectedGridViewProvider_ManualOrderChanged);
+      _SelectedGridViewProvider.MenuOutItems.Clear();
 
       // Убираем все лишние кнопки из панели инструментов
       foreach (EFPCommandItem ci in _SelectedGridViewProvider.CommandItems)

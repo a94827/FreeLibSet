@@ -1,6 +1,6 @@
 ﻿namespace FreeLibSet.Forms.Reporting
 {
-  partial class BRDataViewPageSetupExport
+  partial class BRDataViewPageSetupSendTo
   {
     /// <summary>
     /// Required designer variable.
@@ -29,6 +29,7 @@
     private void InitializeComponent()
     {
       this.MainPanel = new System.Windows.Forms.Panel();
+      this.lblInfo = new FreeLibSet.Controls.InfoLabel();
       this.grpArea = new System.Windows.Forms.GroupBox();
       this.cbExpHeaders = new System.Windows.Forms.CheckBox();
       this.panel1 = new System.Windows.Forms.Panel();
@@ -41,24 +42,31 @@
       // 
       // MainPanel
       // 
+      this.MainPanel.Controls.Add(this.lblInfo);
       this.MainPanel.Controls.Add(this.grpArea);
       this.MainPanel.Location = new System.Drawing.Point(0, 0);
-      this.MainPanel.Margin = new System.Windows.Forms.Padding(4);
       this.MainPanel.Name = "MainPanel";
-      this.MainPanel.Size = new System.Drawing.Size(571, 164);
+      this.MainPanel.Size = new System.Drawing.Size(434, 226);
       this.MainPanel.TabIndex = 0;
+      // 
+      // lblInfo
+      // 
+      this.lblInfo.AutoSize = true;
+      this.lblInfo.Dock = System.Windows.Forms.DockStyle.Top;
+      this.lblInfo.Location = new System.Drawing.Point(0, 95);
+      this.lblInfo.Name = "lblInfo";
+      this.lblInfo.Size = new System.Drawing.Size(434, 13);
+      this.lblInfo.TabIndex = 1;
+      this.lblInfo.Text = "???";
       // 
       // grpArea
       // 
-      this.grpArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
       this.grpArea.Controls.Add(this.cbExpHeaders);
       this.grpArea.Controls.Add(this.panel1);
-      this.grpArea.Location = new System.Drawing.Point(16, 15);
-      this.grpArea.Margin = new System.Windows.Forms.Padding(4);
+      this.grpArea.Dock = System.Windows.Forms.DockStyle.Top;
+      this.grpArea.Location = new System.Drawing.Point(0, 0);
       this.grpArea.Name = "grpArea";
-      this.grpArea.Padding = new System.Windows.Forms.Padding(4);
-      this.grpArea.Size = new System.Drawing.Size(537, 117);
+      this.grpArea.Size = new System.Drawing.Size(434, 95);
       this.grpArea.TabIndex = 0;
       this.grpArea.TabStop = false;
       this.grpArea.Text = "Область";
@@ -66,31 +74,30 @@
       // cbExpHeaders
       // 
       this.cbExpHeaders.AutoSize = true;
-      this.cbExpHeaders.Location = new System.Drawing.Point(23, 86);
-      this.cbExpHeaders.Margin = new System.Windows.Forms.Padding(4);
+      this.cbExpHeaders.Location = new System.Drawing.Point(17, 70);
       this.cbExpHeaders.Name = "cbExpHeaders";
-      this.cbExpHeaders.Size = new System.Drawing.Size(163, 21);
+      this.cbExpHeaders.Size = new System.Drawing.Size(130, 17);
       this.cbExpHeaders.TabIndex = 1;
       this.cbExpHeaders.Text = "Заголовки столбцов";
       this.cbExpHeaders.UseVisualStyleBackColor = true;
       // 
       // panel1
       // 
+      this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panel1.Controls.Add(this.rbAll);
       this.panel1.Controls.Add(this.rbSelected);
-      this.panel1.Location = new System.Drawing.Point(19, 23);
-      this.panel1.Margin = new System.Windows.Forms.Padding(4);
+      this.panel1.Location = new System.Drawing.Point(14, 19);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(267, 53);
+      this.panel1.Size = new System.Drawing.Size(414, 43);
       this.panel1.TabIndex = 0;
       // 
       // rbAll
       // 
       this.rbAll.AutoSize = true;
-      this.rbAll.Location = new System.Drawing.Point(4, 0);
-      this.rbAll.Margin = new System.Windows.Forms.Padding(4);
+      this.rbAll.Location = new System.Drawing.Point(3, 0);
       this.rbAll.Name = "rbAll";
-      this.rbAll.Size = new System.Drawing.Size(112, 21);
+      this.rbAll.Size = new System.Drawing.Size(88, 17);
       this.rbAll.TabIndex = 0;
       this.rbAll.TabStop = true;
       this.rbAll.Text = "Вся таблица";
@@ -99,10 +106,9 @@
       // rbSelected
       // 
       this.rbSelected.AutoSize = true;
-      this.rbSelected.Location = new System.Drawing.Point(4, 28);
-      this.rbSelected.Margin = new System.Windows.Forms.Padding(4);
+      this.rbSelected.Location = new System.Drawing.Point(3, 23);
       this.rbSelected.Name = "rbSelected";
-      this.rbSelected.Size = new System.Drawing.Size(157, 21);
+      this.rbSelected.Size = new System.Drawing.Size(122, 17);
       this.rbSelected.TabIndex = 1;
       this.rbSelected.TabStop = true;
       this.rbSelected.Text = "Выбранные ячейки";
@@ -110,14 +116,14 @@
       // 
       // BRDataViewPageSetupExport
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(595, 293);
+      this.ClientSize = new System.Drawing.Size(446, 238);
       this.Controls.Add(this.MainPanel);
-      this.Margin = new System.Windows.Forms.Padding(4);
       this.Name = "BRDataViewPageSetupExport";
       this.Text = "BRDataViewPageSetupExport";
       this.MainPanel.ResumeLayout(false);
+      this.MainPanel.PerformLayout();
       this.grpArea.ResumeLayout(false);
       this.grpArea.PerformLayout();
       this.panel1.ResumeLayout(false);
@@ -134,5 +140,6 @@
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.RadioButton rbAll;
     private System.Windows.Forms.RadioButton rbSelected;
+    private Controls.InfoLabel lblInfo;
   }
 }

@@ -418,7 +418,7 @@ namespace FreeLibSet.Forms
     private string _OutOfRangeImageKey;
 
     /// <summary>
-    /// Если установить в true, то при значении <see cref="Control.Enabled"/>=false, рисование будет выполняться в полноцветном режиме.
+    /// Если установить в true, то при значении <see cref="System.Windows.Forms.Control.Enabled"/>=false, рисование будет выполняться в полноцветном режиме.
     /// По умолчанию - false - картинка делается серой
     /// </summary>
     public bool IgnoreDisabledState
@@ -568,7 +568,7 @@ namespace FreeLibSet.Forms
     /// Используется основной цвет текста элемента Control.ForeColor</param>
     /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
-    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="System.Windows.Forms.Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, UIValidateState? validateState, int leftMargin, bool ignoreDisabledState)
     {
       Image image;
@@ -628,7 +628,7 @@ namespace FreeLibSet.Forms
     /// <param name="colors">Цвета для элемента. Если null, то используются стандартные цвета</param>
     /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
-    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="System.Windows.Forms.Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, string imageKey, ListItemColors colors, int leftMargin, bool ignoreDisabledState)
     {
       Image image;
@@ -711,7 +711,7 @@ namespace FreeLibSet.Forms
     /// Используется основной цвет текста элемента Control.ForeColor</param>
     /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
-    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="System.Windows.Forms.Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, UIValidateState? validateState, int leftMargin, bool ignoreDisabledState)
     {
       ListItemColors colors;
@@ -767,7 +767,7 @@ namespace FreeLibSet.Forms
     /// <param name="colors">Цвета для элемента. Если null, то используются стандартные цвета</param>
     /// <param name="leftMargin">Отступ от левого края области, где рисуется элемент списка,
     /// до значка. Используется для рисования иерархического списка с отступами.</param>
-    /// <param name="ignoreDisabledState">Если true, то при <see cref="Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
+    /// <param name="ignoreDisabledState">Если true, то при <see cref="System.Windows.Forms.Control.Enabled"/>=false рисование будет выполняться в полноцветном режиме</param>
     public static void PerformDrawItem(Control control, DrawItemEventArgs args, string text, Image image, ListItemColors colors, int leftMargin, bool ignoreDisabledState)
     {
       #region Определяем цвета для рисования

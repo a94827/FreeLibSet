@@ -20,9 +20,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает список команд
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
-    public EFPTreeViewAdvCommandItems(EFPTreeViewAdv owner)
-      : base(owner)
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    public EFPTreeViewAdvCommandItems(EFPTreeViewAdv controlProvider)
+      : base(controlProvider)
     {
       base.CopyFormats = EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV;
       // TODO: base.CopyFormats = EFPDataViewCopyFormats.All;

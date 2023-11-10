@@ -61,7 +61,7 @@ namespace FreeLibSet.Forms
         efpParamSet.ParamsCategory = EFPConfigCategories.Filters;
         efpParamSet.HistoryCategory = EFPConfigCategories.FiltersHistory;
 
-        EFPConfigParamSetComboBox.DefaultSet defSet = new EFPConfigParamSetComboBox.DefaultSet(cfgDefault);
+        EFPConfigParamDefaultSet defSet = new EFPConfigParamDefaultSet(cfgDefault);
         efpParamSet.DefaultSets.Add(defSet);
 
         efpParamSet.AuxTextHandler = this;

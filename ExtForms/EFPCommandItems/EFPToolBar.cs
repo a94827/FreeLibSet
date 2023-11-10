@@ -88,9 +88,10 @@ namespace FreeLibSet.Forms
       if (item.HasChildren || (item.Usage & EFPCommandItemUsage.ToolBarDropDown) == EFPCommandItemUsage.ToolBarDropDown)
       {
         ToolStripDropDownButton tdd = new ToolStripDropDownButton();
+        tdd.Tag = item;
 
         EFPDropDownMenu cddm = new EFPDropDownMenu();
-        cddm.Name = "DropDownForPanel_" + Name;
+        cddm.Name = "DropDownForPanel_" + item.Name;
         for (int i = 0; i < item.Children.Count; i++)
         {
           if (item.Children[i].MenuUsage)
@@ -174,6 +175,31 @@ namespace FreeLibSet.Forms
     /// </summary>
     public ToolStrip Bar { get { return _Bar; } }
     private ToolStrip _Bar;
+
+#if DEBUG
+
+    /// <summary>
+    /// Для отладки
+    /// </summary>
+    internal string[] DebugCommandCodes
+    {
+      get
+      {
+        if (_Bar == null)
+          return DataTools.EmptyStrings;
+
+        string[] a = new string[_Bar.Items.Count];
+        for (int i = 0; i < _Bar.Items.Count; i++)
+        {
+          EFPCommandItem ci = _Bar.Items[i].Tag as EFPCommandItem;
+          if (ci != null)
+            a[i] = ((IObjectWithCode)ci).Code;
+        }
+        return a;
+      }
+    }
+
+#endif
 
     private void AddSeparator()
     {

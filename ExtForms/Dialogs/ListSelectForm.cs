@@ -500,7 +500,7 @@ namespace FreeLibSet.Forms
   #region Перечисление ListSelectDialogClipboardMode
 
   /// <summary>
-  /// Режимы использования буфера обмена в диалоге ListSelectDialog
+  /// Режимы использования буфера обмена в диалоге <see cref="ListSelectDialog"/>
   /// </summary>
   public enum ListSelectDialogClipboardMode
   {
@@ -510,10 +510,10 @@ namespace FreeLibSet.Forms
     None = 0,
 
     /// <summary>
-    /// Если MultiSelect=true, в буфер обмена копируются отмеченные флажками элементы, разделенные запятыми, в виде одной строки текста.
-    /// Дополнительные пробелы не добавляются. В режиме MultiSelect=false копируется текущий элемент.
-    /// Дополнительный столбец SubItems не копируется, даже если он есть.
-    /// Режим можно использовать, только если в списке ListSelectDialog.Items гарантированно нет запятых.
+    /// Если <see cref="ListSelectDialog.MultiSelect"/>=true, в буфер обмена копируются отмеченные флажками элементы, разделенные запятыми, в виде одной строки текста.
+    /// Дополнительные пробелы не добавляются. В режиме <see cref="ListSelectDialog.MultiSelect"/>=false копируется текущий элемент.
+    /// Дополнительный столбец <see cref="ListSelectDialog.SubItems"/> не копируется, даже если он есть.
+    /// Режим можно использовать, только если в списке <see cref="ListSelectDialog.Items"/> гарантированно нет запятых.
     /// </summary>
     CommaCodes = 1,
   }
@@ -601,7 +601,7 @@ namespace FreeLibSet.Forms
     private bool _MultiSelect;
 
     /// <summary>
-    /// Флажки выбора в режиме MultiSelect
+    /// Флажки выбора в режиме <see cref="MultiSelect"/> 
     /// </summary>
     public bool[] Selections
     {
@@ -616,7 +616,7 @@ namespace FreeLibSet.Forms
     private bool[] _Selections;
 
     /// <summary>
-    /// Текущая позиция при отключенном MultiSelect
+    /// Текущая позиция при отключенном <see cref="MultiSelect"/> 
     /// </summary>
     public int SelectedIndex
     {
@@ -627,7 +627,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Установка и получение выбранной позиции как строки.
-    /// Выполняет поиск в списке Items
+    /// Выполняет поиск в списке <see cref="Items"/>
     /// </summary>
     public string SelectedItem
     {
@@ -656,8 +656,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// True, если пользователь может нажимать "ОК", если нет выбранной позиции в списке (при MultiSelect=false)
-    /// или не отмечено ни одного флажка (при MultiSelect=true).
+    /// True, если пользователь может нажимать "ОК", если нет выбранной позиции в списке (при <see cref="MultiSelect"/>=false)
+    /// или не отмечено ни одного флажка (при <see cref="MultiSelect"/>=true).
     /// По умолчанию - false.
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
@@ -665,23 +665,45 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя изображения (одного на все элементы). 
-    /// Изображения извлекаются из списка EFPApp.MainImages.
-    /// Может перекрываться с помощью ImageKeys
+    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
+    /// Может перекрываться с помощью массива <see cref="ImageKeys"/> для задания отдельных изображений.
     /// Также определяет значок формы.
+    /// Можно использовать произвольное изображение <see cref="Image"/>, для значка диалога, но при этом в списке будут отображаться значки "Item" или заданные в <see cref="ImageKeys"/>, так как <see cref="ListView"/> может работать только с <see cref="ImageList"/>, но не отдельными изображениями.
+    /// Свойства <see cref="Image"/> и <see cref="ImageKey"/> являются взаимоисключающими
     /// </summary>
     public string ImageKey
     {
-      get { return _ImageKey; }
-      set { _ImageKey = value; }
+      get { return _ImageKey??String.Empty; }
+      set
+      {
+        _Image = null;
+        _ImageKey = value;
+      }
     }
     private string _ImageKey;
 
     /// <summary>
+    /// Произвольное изображение, использумое для значка окна.
+    /// Оно не будет использоваться в списке. 
+    /// </summary>
+    public Image Image
+    {
+      get { return _Image; }
+      set
+      {
+        _ImageKey = null;
+        _Image = value;
+      }
+    }
+    private Image _Image;
+
+    /// <summary>
     /// Имена индивидуальных изображений для каждого элемента списка.
-    /// Изображения извлекаются из списка EFPApp.MainImages.
-    /// Свойство действительно и может устанавливаться только после установки свойства Items.
-    /// Длина массива совпадает с Items.
-    /// Для пустых строк массива используется изображение, задаваемое свойством ImageKey.
+    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
+    /// Свойство действительно и может устанавливаться только после установки свойства <see cref="Items"/>.
+    /// Длина массива совпадает с <see cref="Items"/>.
+    /// Для пустых строк массива используется изображение, задаваемое свойством <see cref="ImageKey"/>.
+    /// Нельзя использовать произвольные пользовательские изображения <see cref="Image"/>, так как <see cref="ListView"/> может работать только с <see cref="ImageList"/>, но не отдельными изображениями.
     /// </summary>
     public string[] ImageKeys
     {
@@ -732,13 +754,13 @@ namespace FreeLibSet.Forms
     private string _ListTitle;
 
     /// <summary>
-    /// Контекст справки, вызываемой по F1
+    /// Контекст справки, вызываемой по нажатию клавиши F1
     /// </summary>
     public string HelpContext { get { return _HelpContext; } set { _HelpContext = value; } }
     private string _HelpContext;
 
     /// <summary>
-    /// В режиме MultiSelect возвращает true, если в Selected установлены все флажки
+    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> установлены все флажки
     /// </summary>
     public bool AreAllSelected
     {
@@ -756,7 +778,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// В режиме MultiSelect возвращает true, если в Selected сброшены все флажки
+    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> сброшены все флажки
     /// </summary>
     public bool AreAllUnselected
     {
@@ -775,8 +797,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Индексы выбранных строк в режиме MultiSelect.
-    /// Если MultiSelect=false значение содержит один или ноль элементов
+    /// Индексы выбранных строк в режиме <see cref="MultiSelect"/>.
+    /// Если <see cref="MultiSelect"/>=false значение содержит один или ноль элементов.
     /// </summary>
     public int[] SelectedIndices
     {
@@ -833,8 +855,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
-    /// Можно либо модифицировать свойства существующего объекта, либо присвоить свойству ссылку на новый объект EFPDialogPosition.
+    /// По умолчанию блок диалога центрируется относительно <see cref="EFPApp.DefaultScreen"/>.
+    /// Можно либо модифицировать свойства существующего объекта, либо присвоить свойству ссылку на новый объект <see cref="EFPDialogPosition"/>.
     /// </summary>
     public EFPDialogPosition DialogPosition 
     { 
@@ -858,7 +880,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя секции конфигурации.
-    /// Если задано, то будет сохраняться размер, положение (при пустом DialogPosition) и состояние (обычный размер/на весь экран)
+    /// Если задано, то будет сохраняться размер, положение (при пустом <see cref="DialogPosition"/>) и состояние (обычный размер/на весь экран)
     /// блока диалога между сеансами работы программы.
     /// По умолчанию - пустая строка - расположение не сохраняется.
     /// </summary>
@@ -921,7 +943,10 @@ namespace FreeLibSet.Forms
         string thisImageKey;
         if (EFPApp.ShowListImages)
         {
-          thisImageKey = ImageKey;
+          if (Image == null)
+            thisImageKey = ImageKey;
+          else
+            thisImageKey = "Item";
           if (_ImageKeys != null)
           {
             if (!String.IsNullOrEmpty(_ImageKeys[i]))
@@ -938,7 +963,10 @@ namespace FreeLibSet.Forms
       }
 
       // Значок формы
-      EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
+      if (Image == null)
+        EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
+      else
+        WinFormsTools.InitIcon(form, Image);
 
       #region Активация элемента списка
 
@@ -1027,9 +1055,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Задать выбранные элементы с помощью списка строк.
-    /// Для строк Items, которые будут найдены в переданном аргументе, будет 
+    /// Для строк <see cref="Items"/>, которые будут найдены в переданном аргументе, будет 
     /// установлена отметка. Для остальных строк отметка будет снята.
-    /// Если в массиве <paramref name="selectedItems"/> есть строки, которых нет в списке Items,
+    /// Если в массиве <paramref name="selectedItems"/> есть строки, которых нет в списке <see cref="Items"/>,
     /// элемент пропускается без возникновения ошибки
     /// </summary>
     /// <param name="selectedItems">Значения, которые нужно выбрать</param>
@@ -1054,7 +1082,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить список отмеченных строк из массива Items
+    /// Получить список отмеченных строк из массива <see cref="Items"/>
     /// </summary>
     /// <returns></returns>
     public string[] GetSelectedItems()
@@ -1147,7 +1175,7 @@ namespace FreeLibSet.Forms
     private string[] _Codes;
 
     /// <summary>
-    /// Названия тем, соответствующих кодам AllCodes
+    /// Названия тем, соответствующих кодам <see cref="Codes"/> 
     /// </summary>
     public string[] Items { get { return _Items; } set { _Items = value; } }
     private string[] _Items;
@@ -1173,7 +1201,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя изображения (одного на все элементы). Может перекрываться с помощью
-    /// ImageKeys
+    /// <see cref="ImageKeys"/>.
     /// Также определяет значок формы
     /// </summary>
     public string ImageKey
@@ -1210,14 +1238,14 @@ namespace FreeLibSet.Forms
     private string _ListTitle;
 
     /// <summary>
-    /// Контекст справки, вызываемой по F1
+    /// Контекст справки, вызываемой по нажатию клавиши F1
     /// </summary>
     public string HelpContext { get { return _HelpContext; } set { _HelpContext = value; } }
     private string _HelpContext;
 
     /// <summary>
     /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
+    /// По умолчанию блок диалога центрируется относительно <see cref="EFPApp.DefaultScreen"/>.
     /// </summary>
     public EFPDialogPosition DialogPosition 
     { 

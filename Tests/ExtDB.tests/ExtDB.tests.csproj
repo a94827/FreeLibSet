@@ -3,15 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A5E79E2A-EEA5-4B9C-A62F-CF234BC4B325}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExtDB_tests</RootNamespace>
     <AssemblyName>ExtDB.tests</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,25 +28,32 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\DebugMono</OutputPath>
+    <DefineConstants>DEBUG;TRACE;MONO</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Others\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Npgsql">
       <HintPath>..\..\Others\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Others\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.106.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Xml" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Others\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Others\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
       <HintPath>..\..\Others\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\Others\Mono.Security.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateRangeCrossFilterTests.cs" />
@@ -112,19 +117,9 @@
       <Name>ExtTools</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExtTestHelpers\ExtTestHelpers.csproj">
-      <Project>{a9f0ba9d-6b87-4b3d-808b-91c0de371480}</Project>
+      <Project>{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}</Project>
       <Name>ExtTestHelpers</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Others\x64\SQLite.Interop.dll">
-      <Link>x64\SQLite.Interop.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\Others\x86\SQLite.Interop.dll">
-      <Link>x86\SQLite.Interop.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -137,6 +132,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TestTables\SqlTestOleDB.mdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Others\x64\sqlite3.dll">
+      <Link>x64\sqlite3.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Others\x86\sqlite3.dll">
+      <Link>x86\sqlite3.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -28,9 +28,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает список команд
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
-    public EFPDataTreeViewCommandItems(EFPDataTreeView owner)
-      : base(owner)
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    public EFPDataTreeViewCommandItems(EFPDataTreeView controlProvider)
+      : base(controlProvider)
     {
       #region Начальные значения свойств
 
@@ -139,14 +139,7 @@ namespace FreeLibSet.Forms
       #region Отправить
 
       _OutHandler = new EFPMenuOutHandler(this);
-      BRMenuOutItem outItem = new BRMenuOutItem("Control");
-      outItem.DisplayName = "Иерархический просмотр";
-      outItem.SettingsData.Add(new BRFontSettings());
-      outItem.SettingsData.Add(new BRDataViewData());
-      outItem.Prepare += OutItem_Prepare;
-      outItem.InitDialog += OutItem_InitDialog;
-      outItem.CreateReport += OutItem_CreateReport;
-      _OutHandler.Items.Add(outItem);
+      _OutHandler.Items.Add(new EFPDataTreeViewMenuOutItem("Control", controlProvider));
 
 #if XXX
       _MenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);
@@ -166,48 +159,6 @@ namespace FreeLibSet.Forms
       #endregion
 
       #endregion
-    }
-
-    private void OutItem_Prepare(object sender, EventArgs args)
-    {
-      BRMenuOutItem outItem = (BRMenuOutItem)sender;
-      outItem.SettingsData.GetRequired<BRDataViewData>().UseExpColumnHeaders = ControlProvider.Control.UseColumns;
-      outItem.SettingsData.GetRequired<BRDataViewData>().UseColorStyle = false;
-
-      bool hasBoolColumns = false;
-      foreach (NodeControl nc in ControlProvider.Control.NodeControls)
-      {
-        if (nc is NodeCheckBox)
-        {
-          hasBoolColumns = true;
-          break;
-        }
-      }
-      outItem.SettingsData.GetRequired<BRDataViewData>().UseBoolMode = hasBoolColumns;
-    }
-
-    private void OutItem_InitDialog(object sender, BRMenuOutItemInitDialogEventArgs args)
-    {
-      if (args.Action == BROutAction.Print)
-      {
-        args.AddFontPage();
-        if (ControlProvider.Control.UseColumns)
-          new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
-        new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
-      }
-      if (args.Action == BROutAction.SendTo)
-        new BRDataViewPageSetupExport(args.Dialog, ControlProvider);
-    }
-
-    private void OutItem_CreateReport(object sender, BRMenuOutItemCreateReportEventArgs args)
-    {
-      BRMenuOutItem outItem = (BRMenuOutItem)sender;
-      BRFontSettings fontSettings = outItem.SettingsData.GetRequired<BRFontSettings>();
-      fontSettings.InitCellStyle(args.Report.DefaultCellStyle);
-      args.Report.DocumentProperties = ControlProvider.DocumentProperties.Clone();
-      BRSection sect = args.Report.Sections.Add();
-      sect.PageSetup = outItem.SettingsData.GetItem<BRPageSetup>();
-      sect.Bands.Add(new BRDataTreeViewTable(sect, ControlProvider, outItem.SettingsData, args.Action == BROutAction.SendTo));
     }
 
     #endregion

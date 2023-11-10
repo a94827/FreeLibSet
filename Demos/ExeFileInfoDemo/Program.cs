@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using FreeLibSet.Forms;
@@ -27,14 +27,14 @@ namespace ExeFileInfoDemo
       try
       {
         FolderBrowserDialog dlg = new FolderBrowserDialog();
-        dlg.Description = "Каталог с файлами *.exe и *.dll";
+        dlg.Description = "РљР°С‚Р°Р»РѕРі СЃ С„Р°Р№Р»Р°РјРё *.exe Рё *.dll";
         dlg.ShowNewFolderButton = false;
         if (EFPApp.ShowDialog(dlg) != DialogResult.OK)
           return;
 
         List<MyFileInfo> lst = new List<MyFileInfo>();
 
-        using (Splash spl = new Splash("Просмотр файлов"))
+        using (Splash spl = new Splash("РџСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»РѕРІ"))
         {
           string[] aFiles1 = System.IO.Directory.GetFiles(dlg.SelectedPath, "*.exe", SearchOption.TopDirectoryOnly);
           string[] aFiles2 = System.IO.Directory.GetFiles(dlg.SelectedPath, "*.dll", SearchOption.TopDirectoryOnly);
@@ -70,7 +70,7 @@ namespace ExeFileInfoDemo
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e, "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° РїСЂРѕРіСЂР°РјРјС‹");
       }
     }
 
@@ -83,14 +83,14 @@ namespace ExeFileInfoDemo
       MyFileInfo fi = efpGrid.CurrentGridRow.DataBoundItem as MyFileInfo;
       if (fi == null)
       {
-        EFPApp.ErrorMessageBox("Упс!");
+        EFPApp.ErrorMessageBox("РЈРїСЃ!");
         return;
       }
       ShowSingleFileInfo(fi.FilePath);
     }
 
     /// <summary>
-    /// Показ информации об одном файле
+    /// РџРѕРєР°Р· РёРЅС„РѕСЂРјР°С†РёРё РѕР± РѕРґРЅРѕРј С„Р°Р№Р»Рµ
     /// </summary>
     /// <param name="filePath"></param>
     private static void ShowSingleFileInfo(AbsPath filePath)
@@ -101,7 +101,7 @@ namespace ExeFileInfoDemo
       EFPFormProvider efpForm = new EFPFormProvider(form);
       EFPTabControl efpTC = new EFPTabControl(efpForm);
 
-      #region Вкладка "Resource"
+      #region Р’РєР»Р°РґРєР° "Resource"
 
       EFPTabPage efpTPRes = efpTC.TabPages.Add("Resources");
       EFPControlWithToolBar<TreeView> cwtRes = new EFPControlWithToolBar<TreeView>(efpTPRes);
@@ -110,7 +110,7 @@ namespace ExeFileInfoDemo
 
       #endregion
 
-      #region Вкладка "Icons"
+      #region Р’РєР»Р°РґРєР° "Icons"
 
       EFPTabPage efpTPIcons = efpTC.TabPages.Add("Icons");
       EFPControlWithToolBar<DataGridView> cwtIcons = new EFPControlWithToolBar<DataGridView>(efpTPIcons);
@@ -124,7 +124,7 @@ namespace ExeFileInfoDemo
 
       #endregion
 
-      #region Вкладка "ExtractIcon"
+      #region Р’РєР»Р°РґРєР° "ExtractIcon"
 
       EFPTabPage efpTPExtIcons = efpTC.TabPages.Add("ExtractIcon");
       EFPControlWithToolBar<DataGridView> cwtExtIcons = new EFPControlWithToolBar<DataGridView>(efpTPExtIcons);
@@ -232,16 +232,16 @@ namespace ExeFileInfoDemo
         }
         sb.Append(Environment.NewLine);
       }
-      EFPApp.ShowTextView(sb.ToString(), "Просмотр");
+      EFPApp.ShowTextView(sb.ToString(), "РџСЂРѕСЃРјРѕС‚СЂ");
     }
   }
 
   /// <summary>
-  /// Отображаемая информация в списке файлов
+  /// РћС‚РѕР±СЂР°Р¶Р°РµРјР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РІ СЃРїРёСЃРєРµ С„Р°Р№Р»РѕРІ
   /// </summary>
   public class MyFileInfo
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     public MyFileInfo(AbsPath filePath)
     {
@@ -253,7 +253,7 @@ namespace ExeFileInfoDemo
         {
           if (fi.PE == null)
           {
-            _Description = "Не является PE-файлом";
+            _Description = "РќРµ СЏРІР»СЏРµС‚СЃСЏ PE-С„Р°Р№Р»РѕРј";
             return;
           }
 
@@ -286,13 +286,13 @@ namespace ExeFileInfoDemo
       }
       catch (Exception e)
       {
-        _Description = "*** Ошибка ***." + e.Message;
+        _Description = "*** РћС€РёР±РєР° ***." + e.Message;
       }
     }
 
     #endregion
 
-    #region Отображаемые Свойства
+    #region РћС‚РѕР±СЂР°Р¶Р°РµРјС‹Рµ РЎРІРѕР№СЃС‚РІР°
 
     public string FileName { get { return _FilePath.FileName; } }
 
@@ -319,7 +319,7 @@ namespace ExeFileInfoDemo
 
     #endregion
 
-    #region Прочие свойства
+    #region РџСЂРѕС‡РёРµ СЃРІРѕР№СЃС‚РІР°
 
     internal AbsPath FilePath { get { return _FilePath; } }
     private AbsPath _FilePath;

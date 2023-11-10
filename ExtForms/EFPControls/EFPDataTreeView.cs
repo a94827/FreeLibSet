@@ -14,6 +14,7 @@ using FreeLibSet.Data;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Reporting;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.Forms
 {
@@ -1322,6 +1323,12 @@ namespace FreeLibSet.Forms
     {
       if (CommandItems != null)
         CommandItems.PerformRefreshItems();
+    }
+
+    bool IEFPDataView.MultiSelect
+    {
+      get { return Control.SelectionMode != TreeViewAdvSelectionMode.Single; }
+      set { Control.SelectionMode = value ? TreeViewAdvSelectionMode.Multi : TreeViewAdvSelectionMode.Single; }
     }
 
     #endregion
@@ -3407,6 +3414,25 @@ return true;                          */
     protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPDataTreeViewCommandItems(this);
+    }
+
+    /// <summary>
+    /// Возвращает список для добавления пользовательских вариантов печати/экспорта
+    /// </summary>
+    public NamedList<EFPMenuOutItem> MenuOutItems
+    {
+      get
+      {
+        return CommandItems.OutHandler.Items;
+      }
+    }
+    /// <summary>
+    /// Параметры печати/экспорта табличного просмотра.
+    /// Может возвращать null, если в <see cref="EFPDataGridViewCommandItems.OutHandler"/> был удален вариант "Control"
+    /// </summary>
+    public Reporting.EFPDataTreeViewMenuOutItem DefaultOutItem
+    {
+      get { return MenuOutItems["Control"] as Reporting.EFPDataTreeViewMenuOutItem; }
     }
 
     #endregion

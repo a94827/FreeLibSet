@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DBD17DB7-A65F-4659-9604-B2ACB1BA35A2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -17,20 +15,16 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <TargetFrameworkProfile />
-    <ApplicationIcon>
-    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\ExtForms.XML</DocumentationFile>
-    <NoWarn>
-    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,17 +37,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
-    <Reference Include="PdfSharp, Version=1.31.1789.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Others\PdfSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="PdfSharp">
+      <HintPath>..\Others\PdfSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
@@ -328,7 +321,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Reporting\BRDataGridViewTable.cs" />
     <Compile Include="Reporting\BRDataTreeViewTable.cs" />
+    <Compile Include="Reporting\BRDataViewSettingsDataItem.cs" />
     <Compile Include="Reporting\BRDataViewPageSetupAppearance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -347,11 +342,11 @@
     <Compile Include="Reporting\BRDataViewPageSetupColumns.Designer.cs">
       <DependentUpon>BRDataViewPageSetupColumns.cs</DependentUpon>
     </Compile>
-    <Compile Include="Reporting\BRDataViewPageSetupExport.cs">
+    <Compile Include="Reporting\BRDataViewPageSetupSendTo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Reporting\BRDataViewPageSetupExport.Designer.cs">
-      <DependentUpon>BRDataViewPageSetupExport.cs</DependentUpon>
+    <Compile Include="Reporting\BRDataViewPageSetupSendTo.Designer.cs">
+      <DependentUpon>BRDataViewPageSetupSendTo.cs</DependentUpon>
     </Compile>
     <Compile Include="Reporting\BRMenuOutItem.cs" />
     <Compile Include="Reporting\BRPageSetupBitmap.cs">
@@ -385,7 +380,7 @@
       <DependentUpon>BRPageSetupPrinter.cs</DependentUpon>
     </Compile>
     <Compile Include="Reporting\BRReportPainter.cs" />
-    <Compile Include="Reporting\BRPdfReportPainter.cs" />
+    <Compile Include="Reporting\BRFilePdf.cs" />
     <Compile Include="Reporting\PdfTextRenderer.cs" />
     <Compile Include="SplashImagesResource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -667,8 +662,8 @@
     <EmbeddedResource Include="Reporting\BRDataViewPageSetupColumns.resx">
       <DependentUpon>BRDataViewPageSetupColumns.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reporting\BRDataViewPageSetupExport.resx">
-      <DependentUpon>BRDataViewPageSetupExport.cs</DependentUpon>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupSendTo.resx">
+      <DependentUpon>BRDataViewPageSetupSendTo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRPageSetupBitmap.resx">
       <DependentUpon>BRPageSetupBitmap.cs</DependentUpon>

@@ -286,6 +286,14 @@ namespace FreeLibSet.OLE.Word
     wdAlertsNone = 0,
   }
 
+  public enum WdOrganizerObject
+  {
+    wdOrganizerObjectStyles = 0,
+    wdOrganizerObjectAutoText = 1,
+    wdOrganizerObjectCommandBars = 2,
+    wdOrganizerObjectProjectItems = 3
+  }
+
   #endregion
 
   #region Основной объект
@@ -495,6 +503,19 @@ namespace FreeLibSet.OLE.Word
 
 #endif
 
+    /// <summary>
+    /// Копирование стилей и других элементов из одного документа в другой
+    /// </summary>
+    /// <param name="source">Исходный документ (свойство <see cref="Document.FullName"/>)</param>
+    /// <param name="destination">Конечный документ (свойство <see cref="Document.FullName"/>)</param>
+    /// <param name="name">Имя стиля</param>
+    /// <param name="obj">Тип объекта</param>
+    public void OrganizerCopy(string source, string destination, string name, WdOrganizerObject obj)
+    {
+      Base.Helper.Call(Base.Obj, "[DispID=318]", source, destination, name, (int)obj);
+      //Base.Helper.CallWithArgs0409(Base.Obj, "[DispID=318]", new object[4] { source, destination, name, (int)obj });
+    }
+
     #endregion
   }
 
@@ -517,9 +538,38 @@ namespace FreeLibSet.OLE.Word
     public ObjBase Base { get { return _Base; } }
     private ObjBase _Base;
 
+    public Application Application
+    {
+      // Для разных объектов свойство Application имеет разный DispId
+
+      get { return new Application(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=1]"), Base.Helper)); }
+    }
+
     #endregion
 
     #region Сохранение документа
+
+    /// <summary>
+    /// Имя документа без пути
+    /// </summary>
+    public string Name
+    {
+      get
+      {
+        return (string)(Base.Helper.GetProp(Base.Obj, "[DispID=0]"));
+      }
+    }
+
+    /// <summary>
+    /// Имя документа с путем, если файл был сохранен
+    /// </summary>
+    public string FullName
+    {
+      get
+      {
+        return (string)(Base.Helper.GetProp(Base.Obj, "[DispID=29]"));
+      }
+    }
 
     public void Save()
     {
@@ -649,6 +699,34 @@ namespace FreeLibSet.OLE.Word
       }
     }
     private Bookmarks _Bookmarks;
+
+    #endregion
+
+    #region Стили
+
+    public Styles Styles
+    {
+      get { return new Styles(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=22]"), Base.Helper)); }
+    }
+
+    /// <summary>
+    /// Копирует все действующие стили из исходного документа в текущий
+    /// </summary>
+    /// <param name="source"></param>
+    public void CopyAllStylesFrom(Document source)
+    {
+      Application app = this.Application;
+      Styles srcStyles = source.Styles;
+      int n = srcStyles.Count;
+      string srcName = source.FullName;
+      string dstName = this.FullName;
+      for (int i = 1; i <= n; i++)
+      {
+        Style srcStyle = srcStyles[i];
+        if (srcStyle.InUse)
+          app.OrganizerCopy(srcName, dstName, srcStyle.NameLocal, WdOrganizerObject.wdOrganizerObjectStyles);
+      }
+    }
 
     #endregion
   }
@@ -1060,6 +1138,15 @@ namespace FreeLibSet.OLE.Word
     public void InsertFile(string fileName)
     {
       Base.Helper.Call(Base.Obj, "[DispID=123]", fileName);
+    }
+
+    #endregion
+
+    #region Параметры страницы
+
+    public PageSetup PageSetup
+    {
+      get { return new PageSetup(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=1101]"), Base.Helper)); }
     }
 
     #endregion
@@ -2910,6 +2997,24 @@ namespace FreeLibSet.OLE.Word
     }
 
     #endregion
+
+    #region Копирование
+
+    public void CopyTo(PageSetup dest)
+    {
+      dest.SetOrientation(Orientation);
+      if (PaperSize == WdPaperSize.wdPaperCustom)
+      {
+        dest.SetPageHeight(PageHeight);
+        dest.SetPageWidth(PageWidth);
+      }
+      dest.SetLeftMargin(LeftMargin);
+      dest.SetTopMargin(TopMargin);
+      dest.SetRightMargin(RightMargin);
+      dest.SetBottomMargin(BottomMargin);
+    }
+
+    #endregion
   }
 
   #endregion
@@ -3509,6 +3614,76 @@ namespace FreeLibSet.OLE.Word
 
     #endregion
   }
+
+  #endregion
+
+  #region Стили
+
+  public struct Style
+  {
+    #region Конструктор
+
+    public Style(ObjBase theBase)
+    {
+      _Base = theBase;
+    }
+
+    public ObjBase Base { get { return _Base; } }
+    private ObjBase _Base;
+
+    #endregion
+
+    #region Свойства
+
+    public bool InUse
+    {
+      get
+      {
+        return (bool)(Base.Helper.GetProp(Base.Obj, "[DispID=6]"));
+      }
+    }
+
+    public string NameLocal
+    {
+      get
+      {
+        return (string)(Base.Helper.GetProp(Base.Obj, "[DispID=0]"));
+      }
+    }
+
+    #endregion
+  }
+
+
+  public struct Styles
+  {
+    #region Конструктор
+
+    public Styles(ObjBase theBase)
+    {
+      _Base = theBase;
+    }
+
+    public ObjBase Base { get { return _Base; } }
+    private ObjBase _Base;
+
+    #endregion
+
+    #region Свойства
+
+    public int Count { get { return (int)(Base.Helper.GetProp(Base.Obj, "[DispID=1]")); } }
+
+    public Style this[int index]
+    {
+      get
+      {
+        return new Style(new ObjBase(Base.Helper.Call(Base.Obj, "[DispID=0]", index), Base.Helper));
+      }
+    }
+
+    #endregion
+  }
+
 
   #endregion
 }

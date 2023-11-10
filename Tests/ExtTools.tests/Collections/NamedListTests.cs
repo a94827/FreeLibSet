@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace ExtTools_tests.Collections
   [TestFixture]
   public class NamedListTests
   {
-    #region Конструкторы
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 
     [Test]
     public void Constructor_Simple()
@@ -118,15 +118,15 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Тестовый объект
+    #region РўРµСЃС‚РѕРІС‹Р№ РѕР±СЉРµРєС‚
 
     /// <summary>
-    /// Можно было бы использовать класс ObjectWithCode, но он не разрешает пустые значения Code
+    /// РњРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєР»Р°СЃСЃ ObjectWithCode, РЅРѕ РѕРЅ РЅРµ СЂР°Р·СЂРµС€Р°РµС‚ РїСѓСЃС‚С‹Рµ Р·РЅР°С‡РµРЅРёСЏ Code
     /// </summary>
     [Serializable]
     private class TestObj : IObjectWithCode
     {
-      #region Конструктор
+      #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
       public TestObj(string code)
       {
@@ -135,7 +135,7 @@ namespace ExtTools_tests.Collections
 
       #endregion
 
-      #region Свойства
+      #region РЎРІРѕР№СЃС‚РІР°
 
       public string Code { get { return _Code; } }
       private string _Code;
@@ -414,7 +414,7 @@ namespace ExtTools_tests.Collections
       TestList sut = CreateTestObject(ignoreCase);
       Assert.Catch(delegate() { sut.AddRange(a); });
 
-      // Количество элементов не определено, т.к. метод мог выполниться частично
+      // РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ, С‚.Рє. РјРµС‚РѕРґ РјРѕРі РІС‹РїРѕР»РЅРёС‚СЊСЃСЏ С‡Р°СЃС‚РёС‡РЅРѕ
       // Assert.AreEqual(3, sut.Count, "Count");
     }
 
@@ -509,7 +509,7 @@ namespace ExtTools_tests.Collections
     public void GetEnumerator([Values(false, true)]bool ignoreCase)
     {
       TestList sut = CreateTestObject(ignoreCase);
-      sut.Insert(1, new TestObj("DDD")); // чтобы проверить порядок вывода
+      sut.Insert(1, new TestObj("DDD")); // С‡С‚РѕР±С‹ РїСЂРѕРІРµСЂРёС‚СЊ РїРѕСЂСЏРґРѕРє РІС‹РІРѕРґР°
       List<string> lst = new List<string>();
       foreach (TestObj item in sut)
         lst.Add(item.Code);
@@ -632,7 +632,7 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Сериализация
+    #region РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ
 
     [Test]
     public void Serialization([Values(false, true)]bool ignoreCase, [Values(false, true)]bool isReadOnly)
@@ -653,12 +653,12 @@ namespace ExtTools_tests.Collections
 
     #endregion
 
-    #region Тестирование восстановления внутреннего словаря
+    #region РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ СЃР»РѕРІР°СЂСЏ
 
     private static TestList CreateTestObjectWithInvalidDict()
     {
       TestList sut = CreateTestObject(true);
-      sut.Insert(0, new TestObj("DDD")); // Устанавливает поле "_DictIsValid=false
+      sut.Insert(0, new TestObj("DDD")); // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРѕР»Рµ "_DictIsValid=false
       return sut;
     }
 
@@ -717,7 +717,7 @@ namespace ExtTools_tests.Collections
       Assert.AreEqual(wantedRes, sut.IndexOf(code));
     }
 
-    // Нужен отдельный тест для Contains(), чтобы проверить восстановление словаря
+    // РќСѓР¶РµРЅ РѕС‚РґРµР»СЊРЅС‹Р№ С‚РµСЃС‚ РґР»СЏ Contains(), С‡С‚РѕР±С‹ РїСЂРѕРІРµСЂРёС‚СЊ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ СЃР»РѕРІР°СЂСЏ
     [TestCase("AAA", true)]
     [TestCase("CCC", true)]
     [TestCase("DDD", true)]

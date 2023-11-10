@@ -54,7 +54,7 @@ namespace FreeLibSet.Forms.Reporting
     private void DataToControls(object sender, EventArgs args)
     {
       SettingsDialogPage page = (SettingsDialogPage)sender;
-      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSetup>();
+      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSettingsDataItem>().PageSetup;
       efpLeftMargin.Value = (decimal)(ps.LeftMargin) / 100m;
       efpTopMargin.Value = (decimal)(ps.TopMargin) / 100m;
       efpRightMargin.Value = (decimal)(ps.RightMargin) / 100m;
@@ -64,7 +64,7 @@ namespace FreeLibSet.Forms.Reporting
     private void DataFromControls(object sender, EventArgs args)
     {
       SettingsDialogPage page = (SettingsDialogPage)sender;
-      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSetup>();
+      BRPageSetup ps = page.Owner.Data.GetItem<BRPageSettingsDataItem>().PageSetup;
       ps.LeftMargin = (int)(Math.Round(efpLeftMargin.Value * 100m, 0, MidpointRounding.AwayFromZero));
       ps.TopMargin = (int)(Math.Round(efpTopMargin.Value * 100m, 0, MidpointRounding.AwayFromZero));
       ps.RightMargin = (int)(Math.Round(efpRightMargin.Value * 100m, 0, MidpointRounding.AwayFromZero));

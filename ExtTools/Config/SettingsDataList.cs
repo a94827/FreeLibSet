@@ -1,36 +1,37 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Config
 {
-  #region Перечисление SettingsPart
+  #region РџРµСЂРµС‡РёСЃР»РµРЅРёРµ SettingsPart
 
   /// <summary>
-  /// Секции конфигурации для хранения параметров
+  /// РЎРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ
   /// </summary>
   [Flags]
   public enum SettingsPart
   {
     /// <summary>
-    /// Основная секция данных, привязанная к пользователю
+    /// РћСЃРЅРѕРІРЅР°СЏ СЃРµРєС†РёСЏ РґР°РЅРЅС‹С…, РїСЂРёРІСЏР·Р°РЅРЅР°СЏ Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
     /// </summary>
     User = 0x1,
 
     /// <summary>
-    /// Здесь должна храниться дата или период, за который строится отчет.
-    /// Такие данные не хранятся в наборах истории или пользовательских наборах,
-    /// а сохраняется всегда последнее значение
+    /// Р—РґРµСЃСЊ РґРѕР»Р¶РЅР° С…СЂР°РЅРёС‚СЊСЃСЏ РґР°С‚Р° РёР»Рё РїРµСЂРёРѕРґ, Р·Р° РєРѕС‚РѕСЂС‹Р№ СЃС‚СЂРѕРёС‚СЃСЏ РѕС‚С‡РµС‚.
+    /// РўР°РєРёРµ РґР°РЅРЅС‹Рµ РЅРµ С…СЂР°РЅСЏС‚СЃСЏ РІ РЅР°Р±РѕСЂР°С… РёСЃС‚РѕСЂРёРё РёР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… РЅР°Р±РѕСЂР°С…,
+    /// Р° СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ РІСЃРµРіРґР° РїРѕСЃР»РµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ
     /// </summary>
     NoHistory = 0x2,
 
     /// <summary>
-    /// Здесь должны храниться ссылки на файлы и каталоги, размещенные на компьютере пользователя.
-    /// Такие данные привязываются к пользователю и компьюьеру. Для приложений, работающих локально
-    /// использование этой секции не имеет смысла. Для сетевых приложений это важно, если пользователь
-    /// может входить с разных компьютеров, а настройки пользователя хранятся в базе данных
+    /// Р—РґРµСЃСЊ РґРѕР»Р¶РЅС‹ С…СЂР°РЅРёС‚СЊСЃСЏ СЃСЃС‹Р»РєРё РЅР° С„Р°Р№Р»С‹ Рё РєР°С‚Р°Р»РѕРіРё, СЂР°Р·РјРµС‰РµРЅРЅС‹Рµ РЅР° РєРѕРјРїСЊСЋС‚РµСЂРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+    /// РўР°РєРёРµ РґР°РЅРЅС‹Рµ РїСЂРёРІСЏР·С‹РІР°СЋС‚СЃСЏ Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ Рё РєРѕРјРїСЊСЋСЊРµСЂСѓ. Р”Р»СЏ РїСЂРёР»РѕР¶РµРЅРёР№, СЂР°Р±РѕС‚Р°СЋС‰РёС… Р»РѕРєР°Р»СЊРЅРѕ
+    /// РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЌС‚РѕР№ СЃРµРєС†РёРё РЅРµ РёРјРµРµС‚ СЃРјС‹СЃР»Р°. Р”Р»СЏ СЃРµС‚РµРІС‹С… РїСЂРёР»РѕР¶РµРЅРёР№ СЌС‚Рѕ РІР°Р¶РЅРѕ, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+    /// РјРѕР¶РµС‚ РІС…РѕРґРёС‚СЊ СЃ СЂР°Р·РЅС‹С… РєРѕРјРїСЊСЋС‚РµСЂРѕРІ, Р° РЅР°СЃС‚СЂРѕР№РєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ С…СЂР°РЅСЏС‚СЃСЏ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     /// </summary>
     Machine = 0x4,
   }
@@ -38,72 +39,68 @@ namespace FreeLibSet.Config
   #endregion
 
   /// <summary>
-  /// Интерфейс объекта, выступающего в качестве хранилиза данных, которые можно записать и прочитать из секции конфигурации
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РѕР±СЉРµРєС‚Р°, РІС‹СЃС‚СѓРїР°СЋС‰РµРіРѕ РІ РєР°С‡РµСЃС‚РІРµ С…СЂР°РЅРёР»РёС‰Р° РґР°РЅРЅС‹С…, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р·Р°РїРёСЃР°С‚СЊ Рё РїСЂРѕС‡РёС‚Р°С‚СЊ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+  /// РћР±СЉРµРєС‚С‹ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РєР°Рє РґР»СЏ С…СЂР°РЅРµРЅРёСЏ С‚РµРєСѓС‰РёС… РЅР°СЃС‚СЂРѕРµРє РІ СЃРѕСЃС‚Р°РІРµ <see cref="SettingsDataList"/>, С‚Р°Рє Рё РІ РЅР°Р±РѕСЂРµ РёРјРµРЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ <see cref="DefaultSettingsDataList"/>
   /// </summary>
-  public interface ISettingsDataItem /*: IObjectWithCode*/
-  {
-    // Нет смысла использовать коды и NamedList, так как не может быть двух однотипных объектов в одном SettingsDataList
-
-    /// <summary>
-    /// Возвращает флаги мест хранения данных, используемых этим набором.
-    /// Может быть возвращена комбинация из нескольких флагов.
-    /// </summary>
-    SettingsPart UsedParts { get; }
-
-    /// <summary>
-    /// Записать данные в секцию конфигурации.
-    /// Метод вызыывается только для флагов, возвращаемых <see cref="UsedParts"/>.
-    /// </summary>
-    /// <param name="cfg">Записываемая секция</param>
-    /// <param name="part">Вариант хранения данных. За один вызов может быть задан только один флаг.</param>
-    void WriteConfig(CfgPart cfg, SettingsPart part);
-
-    /// <summary>
-    /// Прочитать данные из секции конфигурации.
-    /// Метод вызыывается только для флагов, возвращаемых <see cref="UsedParts"/>.
-    /// </summary>
-    /// <param name="cfg">Секция с данными</param>
-    /// <param name="part">Вариант хранения данных. За один вызов может быть задан только один флаг.</param>
-    void ReadConfig(CfgPart cfg, SettingsPart part);
-  }
-
-  /// <summary>
-  /// Абстрактная реализация интерфейса <see cref="ISettingsDataItem"/>
-  /// </summary>
-  public abstract class SettingsDataItem : ISettingsDataItem
+  public abstract class SettingsDataItem
   {
     /// <summary>
-    /// Непереопределенное свойство возвращает <see cref="SettingsPart.User"/>
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С„Р»Р°РіРё РјРµСЃС‚ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…, РёСЃРїРѕР»СЊР·СѓРµРјС‹С… СЌС‚РёРј РЅР°Р±РѕСЂРѕРј.
+    /// РњРѕР¶РµС‚ Р±С‹С‚СЊ РІРѕР·РІСЂР°С‰РµРЅР° РєРѕРјР±РёРЅР°С†РёСЏ РёР· РЅРµСЃРєРѕР»СЊРєРёС… С„Р»Р°РіРѕРІ.
+    /// РќРµРїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ <see cref="SettingsPart.User"/>
     /// </summary>
     public virtual SettingsPart UsedParts { get { return SettingsPart.User; } }
 
     /// <summary>
-    /// 
+    /// Р—Р°РїРёСЃР°С‚СЊ РґР°РЅРЅС‹Рµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ С„Р»Р°РіРѕРІ, РІРѕР·РІСЂР°С‰Р°РµРјС‹С… <see cref="UsedParts"/>.
     /// </summary>
-    /// <param name="cfg"></param>
-    /// <param name="part"></param>
-    public abstract void ReadConfig(CfgPart cfg, SettingsPart part);
+    /// <param name="cfg">Р—Р°РїРёСЃС‹РІР°РµРјР°СЏ СЃРµРєС†РёСЏ</param>
+    /// <param name="part">Р’Р°СЂРёР°РЅС‚ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…. Р—Р° РѕРґРёРЅ РІС‹Р·РѕРІ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РґР°РЅ С‚РѕР»СЊРєРѕ РѕРґРёРЅ С„Р»Р°Рі.</param>
+    public abstract void WriteConfig(CfgPart cfg, SettingsPart part);
 
     /// <summary>
-    /// 
+    /// РџСЂРѕС‡РёС‚Р°С‚СЊ РґР°РЅРЅС‹Рµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё.
+    /// РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ С„Р»Р°РіРѕРІ, РІРѕР·РІСЂР°С‰Р°РµРјС‹С… <see cref="UsedParts"/>.
     /// </summary>
-    /// <param name="cfg"></param>
-    /// <param name="part"></param>
-    public abstract void WriteConfig(CfgPart cfg, SettingsPart part);
+    /// <param name="cfg">РЎРµРєС†РёСЏ СЃ РґР°РЅРЅС‹РјРё</param>
+    /// <param name="part">Р’Р°СЂРёР°РЅС‚ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…. Р—Р° РѕРґРёРЅ РІС‹Р·РѕРІ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РґР°РЅ С‚РѕР»СЊРєРѕ РѕРґРёРЅ С„Р»Р°Рі.</param>
+    public abstract void ReadConfig(CfgPart cfg, SettingsPart part);
+
+    internal static readonly SettingsPart[] AllParts = new SettingsPart[] { SettingsPart.User, SettingsPart.Machine, SettingsPart.NoHistory };
+    internal const SettingsPart AllPartValue = SettingsPart.User | SettingsPart.Machine | SettingsPart.NoHistory;
+
+    internal void WriteConfig(CfgPart cfg)
+    {
+      for (int j = 0; j < AllParts.Length; j++)
+      {
+        if ((UsedParts & AllParts[j]) != 0)
+          WriteConfig(cfg, AllParts[j]);
+      }
+    }
+
+    internal void ReadConfig(CfgPart cfg)
+    {
+      for (int j = 0; j < AllParts.Length; j++)
+      {
+        if ((UsedParts & AllParts[j]) != 0)
+          ReadConfig(cfg, AllParts[j]);
+      }
+    }
   }
 
   /// <summary>
-  /// Объект-заглушка для реализации интерфейса <see cref="ISettingsDataItem"/>
+  /// РћР±СЉРµРєС‚-Р·Р°РіР»СѓС€РєР° СЂРµР°Р»РёР·Р°С†РёРё <see cref="SettingsDataItem"/>, РєРѕС‚РѕСЂР°СЏ РЅРµ С…СЂР°РЅРёС‚ РЅРёРєР°РєРёС… РґР°РЅРЅС‹С…
   /// </summary>
   public sealed class DummySettingsDataItem : SettingsDataItem
   {
     /// <summary>
-    /// Возвращает 0
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ 0
     /// </summary>
     public override SettingsPart UsedParts { get { return (SettingsPart)0; } }
 
     /// <summary>
-    /// Ничего не делает
+    /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
     /// </summary>
     /// <param name="cfg"></param>
     /// <param name="part"></param>
@@ -112,7 +109,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Ничего не делает
+    /// РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚
     /// </summary>
     /// <param name="cfg"></param>
     /// <param name="part"></param>
@@ -122,97 +119,96 @@ namespace FreeLibSet.Config
   }
 
   /// <summary>
-  /// Коллекция наборов данных <see cref="ISettingsDataItem"/>.
-  /// В коллекции могут присутствовать только объекты разных классов.
+  /// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ <see cref="SettingsDataList"/> Рё <see cref="DefaultSettingsDataList"/>
   /// </summary>
-  public class SettingsDataList : ICollection<ISettingsDataItem>
+  public abstract class SettingsDataListBase : ICollection<SettingsDataItem>
   {
-    #region Конструктор
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
     /// <summary>
-    /// Создает пустой список
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє
     /// </summary>
-    public SettingsDataList()
+    public SettingsDataListBase()
     {
-      _Items = new List<ISettingsDataItem>();
+      _Items = new List<SettingsDataItem>();
     }
 
     #endregion
 
     #region ICollection
 
-    private List<ISettingsDataItem> _Items;
+    private readonly List<SettingsDataItem> _Items;
 
     /// <summary>
-    /// Возвращает количество элементов
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
     /// </summary>
     public int Count { get { return _Items.Count; } }
 
     /// <summary>
-    /// Добавляет объект в список.
+    /// Р”РѕР±Р°РІР»СЏРµС‚ РѕР±СЉРµРєС‚ РІ СЃРїРёСЃРѕРє.
     /// </summary>
-    /// <param name="item">Добавляемый объект</param>
-    public void Add(ISettingsDataItem item)
+    /// <param name="item">Р”РѕР±Р°РІР»СЏРµРјС‹Р№ РѕР±СЉРµРєС‚</param>
+    public void Add(SettingsDataItem item)
     {
       if (item == null)
         throw new ArgumentNullException();
-      foreach (ISettingsDataItem item2 in _Items)
+      foreach (SettingsDataItem item2 in _Items)
       {
         if (item2.GetType() == item.GetType())
-          throw new ArgumentException("В списке уже есть данные такого типа");
+          throw new ArgumentException("Р’ СЃРїРёСЃРєРµ СѓР¶Рµ РµСЃС‚СЊ РґР°РЅРЅС‹Рµ С‚Р°РєРѕРіРѕ С‚РёРїР°");
       }
       _Items.Add(item);
     }
 
     /// <summary>
-    /// Очищает список
+    /// РћС‡РёС‰Р°РµС‚ СЃРїРёСЃРѕРє
     /// </summary>
     public void Clear()
     {
       _Items.Clear();
     }
 
-    bool ICollection<ISettingsDataItem>.Contains(ISettingsDataItem item)
+    bool ICollection<SettingsDataItem>.Contains(SettingsDataItem item)
     {
       return _Items.Contains(item);
     }
 
     /// <summary>
-    /// Копирует список в массив
+    /// РљРѕРїРёСЂСѓРµС‚ СЃРїРёСЃРѕРє РІ РјР°СЃСЃРёРІ
     /// </summary>
-    /// <param name="array">Заполняемый массив</param>
-    /// <param name="arrayIndex">Индекс в <paramref name="array"/></param>
-    public void CopyTo(ISettingsDataItem[] array, int arrayIndex)
+    /// <param name="array">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РјР°СЃСЃРёРІ</param>
+    /// <param name="arrayIndex">РРЅРґРµРєСЃ РІ <paramref name="array"/></param>
+    public void CopyTo(SettingsDataItem[] array, int arrayIndex)
     {
       _Items.CopyTo(array, arrayIndex);
     }
 
     /// <summary>
-    /// Создает массив со всеми объектами
+    /// РЎРѕР·РґР°РµС‚ РјР°СЃСЃРёРІ СЃРѕ РІСЃРµРјРё РѕР±СЉРµРєС‚Р°РјРё
     /// </summary>
-    /// <returns>Новый массив</returns>
-    public ISettingsDataItem[] ToArray()
+    /// <returns>РќРѕРІС‹Р№ РјР°СЃСЃРёРІ</returns>
+    public SettingsDataItem[] ToArray()
     {
-      ISettingsDataItem[] a = new ISettingsDataItem[_Items.Count];
+      SettingsDataItem[] a = new SettingsDataItem[_Items.Count];
       _Items.CopyTo(a, 0);
       return a;
     }
 
-    bool ICollection<ISettingsDataItem>.Remove(ISettingsDataItem item)
+    bool ICollection<SettingsDataItem>.Remove(SettingsDataItem item)
     {
       return _Items.Remove(item);
     }
 
     /// <summary>
-    /// Создает перечислитель по всем элементам списка
+    /// РЎРѕР·РґР°РµС‚ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РїРѕ РІСЃРµРј СЌР»РµРјРµРЅС‚Р°Рј СЃРїРёСЃРєР°
     /// </summary>
     /// <returns></returns>
-    public List<ISettingsDataItem>.Enumerator GetEnumerator()
+    public List<SettingsDataItem>.Enumerator GetEnumerator()
     {
       return _Items.GetEnumerator();
     }
 
-    IEnumerator<ISettingsDataItem> IEnumerable<ISettingsDataItem>.GetEnumerator()
+    IEnumerator<SettingsDataItem> IEnumerable<SettingsDataItem>.GetEnumerator()
     {
       return GetEnumerator();
     }
@@ -222,7 +218,7 @@ namespace FreeLibSet.Config
       return GetEnumerator();
     }
 
-    bool ICollection<ISettingsDataItem>.IsReadOnly
+    bool ICollection<SettingsDataItem>.IsReadOnly
     {
       get
       {
@@ -231,10 +227,10 @@ namespace FreeLibSet.Config
     }
     #endregion
 
-    #region Методы
+    #region РњРµС‚РѕРґС‹
 
     /// <summary>
-    /// Возвращает все флаги мест размещения данных, используемых хранящимися объектами
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІСЃРµ С„Р»Р°РіРё РјРµСЃС‚ СЂР°Р·РјРµС‰РµРЅРёСЏ РґР°РЅРЅС‹С…, РёСЃРїРѕР»СЊР·СѓРµРјС‹С… С…СЂР°РЅСЏС‰РёРјРёСЃСЏ РѕР±СЉРµРєС‚Р°РјРё
     /// </summary>
     public SettingsPart UsedParts
     {
@@ -247,71 +243,68 @@ namespace FreeLibSet.Config
       }
     }
 
-    private static readonly SettingsPart[] _AllParts = new SettingsPart[] { SettingsPart.User, SettingsPart.Machine, SettingsPart.NoHistory };
-    private const SettingsPart AllPartValue = SettingsPart.User | SettingsPart.Machine | SettingsPart.NoHistory;
-
     /// <summary>
-    /// Записывает данные в секцию конфигурации
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Записываемая секция</param>
-    /// <param name="part">Места хранения данных. В отличие от <see cref="ISettingsDataItem.WriteConfig(CfgPart, SettingsPart)"/>,
-    /// допускается задавать комбинацию из нескольких флагов.</param>
+    /// <param name="cfg">Р—Р°РїРёСЃС‹РІР°РµРјР°СЏ СЃРµРєС†РёСЏ</param>
+    /// <param name="part">РњРµСЃС‚Р° С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…. Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ <see cref="SettingsDataItem.WriteConfig(CfgPart, SettingsPart)"/>,
+    /// РґРѕРїСѓСЃРєР°РµС‚СЃСЏ Р·Р°РґР°РІР°С‚СЊ РєРѕРјР±РёРЅР°С†РёСЋ РёР· РЅРµСЃРєРѕР»СЊРєРёС… С„Р»Р°РіРѕРІ.</param>
     public void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       for (int i = 0; i < _Items.Count; i++)
       {
-        for (int j = 0; j < _AllParts.Length; j++)
+        for (int j = 0; j < SettingsDataItem.AllParts.Length; j++)
         {
-          if ((part & _AllParts[j]) != 0 && (_Items[i].UsedParts & _AllParts[j]) != 0)
-            _Items[i].WriteConfig(cfg, _AllParts[j]);
+          if ((part & SettingsDataItem.AllParts[j]) != 0 && (_Items[i].UsedParts & SettingsDataItem.AllParts[j]) != 0)
+            _Items[i].WriteConfig(cfg, SettingsDataItem.AllParts[j]);
         }
       }
     }
 
     /// <summary>
-    /// Читает данные из секции конфигурации
+    /// Р§РёС‚Р°РµС‚ РґР°РЅРЅС‹Рµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
     /// </summary>
-    /// <param name="cfg">Секция для чтения</param>
-    /// <param name="part">Места хранения данных. В отличие от <see cref="ISettingsDataItem.WriteConfig(CfgPart, SettingsPart)"/>,
-    /// допускается задавать комбинацию из нескольких флагов.</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РґР»СЏ С‡С‚РµРЅРёСЏ</param>
+    /// <param name="part">РњРµСЃС‚Р° С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…. Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ <see cref="SettingsDataItem.WriteConfig(CfgPart, SettingsPart)"/>,
+    /// РґРѕРїСѓСЃРєР°РµС‚СЃСЏ Р·Р°РґР°РІР°С‚СЊ РєРѕРјР±РёРЅР°С†РёСЋ РёР· РЅРµСЃРєРѕР»СЊРєРёС… С„Р»Р°РіРѕРІ.</param>
     public void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       for (int i = 0; i < _Items.Count; i++)
       {
-        for (int j = 0; j < _AllParts.Length; j++)
+        for (int j = 0; j < SettingsDataItem.AllParts.Length; j++)
         {
-          if ((part & _AllParts[j]) != 0 && (_Items[i].UsedParts & _AllParts[j]) != 0)
-            _Items[i].ReadConfig(cfg, _AllParts[j]);
+          if ((part & SettingsDataItem.AllParts[j]) != 0 && (_Items[i].UsedParts & SettingsDataItem.AllParts[j]) != 0)
+            _Items[i].ReadConfig(cfg, SettingsDataItem.AllParts[j]);
         }
       }
     }
 
     /// <summary>
-    /// Записывает данные в секцию конфигурации без разделения на части
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РґР°РЅРЅС‹Рµ РІ СЃРµРєС†РёСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёРё Р±РµР· СЂР°Р·РґРµР»РµРЅРёСЏ РЅР° С‡Р°СЃС‚Рё
     /// </summary>
-    /// <param name="cfg">Записываемая секция</param>
+    /// <param name="cfg">Р—Р°РїРёСЃС‹РІР°РµРјР°СЏ СЃРµРєС†РёСЏ</param>
     public void WriteConfig(CfgPart cfg)
     {
-      WriteConfig(cfg, AllPartValue);
+      WriteConfig(cfg, SettingsDataItem.AllPartValue);
     }
 
     /// <summary>
-    /// Читает данные из секции конфигурации без разбиения на части
+    /// Р§РёС‚Р°РµС‚ РґР°РЅРЅС‹Рµ РёР· СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё Р±РµР· СЂР°Р·Р±РёРµРЅРёСЏ РЅР° С‡Р°СЃС‚Рё
     /// </summary>
-    /// <param name="cfg">Секция для чтения</param>
+    /// <param name="cfg">РЎРµРєС†РёСЏ РґР»СЏ С‡С‚РµРЅРёСЏ</param>
     public void ReadConfig(CfgPart cfg)
     {
-      ReadConfig(cfg, AllPartValue);
+      ReadConfig(cfg, SettingsDataItem.AllPartValue);
     }
 
     /// <summary>
-    /// Возвращает из списка объект заданного типа.
-    /// Возвращает null, если объект не найден
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёР· СЃРїРёСЃРєР° РѕР±СЉРµРєС‚ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР°.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ null, РµСЃР»Рё РѕР±СЉРµРєС‚ РЅРµ РЅР°Р№РґРµРЅ
     /// </summary>
-    /// <typeparam name="T">Тип объекта в списке</typeparam>
-    /// <returns>Объект</returns>
+    /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р° РІ СЃРїРёСЃРєРµ</typeparam>
+    /// <returns>РћР±СЉРµРєС‚</returns>
     public T GetItem<T>()
-      where T : class, ISettingsDataItem
+      where T : SettingsDataItem
     {
       for (int i = 0; i < _Items.Count; i++)
       {
@@ -323,33 +316,297 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Возвращает из списка объект заданного типа.
-    /// Выбрасывает исключение, если объект не найден
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёР· СЃРїРёСЃРєР° РѕР±СЉРµРєС‚ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР°.
+    /// Р’С‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РѕР±СЉРµРєС‚ РЅРµ РЅР°Р№РґРµРЅ Рё РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃРѕР·РґР°РЅ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
     /// </summary>
-    /// <typeparam name="T">Тип объекта в списке</typeparam>
-    /// <returns>Объект</returns>
-    public T GetRequired<T>()
-      where T : class, ISettingsDataItem
-    {
-      T res = GetItem<T>();
-      if (res == null)
-        throw new InvalidOperationException("Набор данных не содержит объекта класса " + typeof(T).Name);
-      return res;
-    }
+    /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р° РІ СЃРїРёСЃРєРµ</typeparam>
+    /// <returns>РћР±СЉРµРєС‚</returns>
+    public abstract T GetRequired<T>() where T : SettingsDataItem;
 
     /// <summary>
-    /// Удаляет из списка объект заданного типа
+    /// РЈРґР°Р»СЏРµС‚ РёР· СЃРїРёСЃРєР° РѕР±СЉРµРєС‚ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР°
     /// </summary>
-    /// <typeparam name="T">Тип удаляемого объекта</typeparam>
-    /// <returns>True, если объект найден и удален</returns>
+    /// <typeparam name="T">РўРёРї СѓРґР°Р»СЏРµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°</typeparam>
+    /// <returns>True, РµСЃР»Рё РѕР±СЉРµРєС‚ РЅР°Р№РґРµРЅ Рё СѓРґР°Р»РµРЅ</returns>
     public bool Remove<T>()
-      where T : class, ISettingsDataItem
+      where T : SettingsDataItem
     {
       T item = GetItem<T>();
       if (item == null)
         return false;
       else
-        return _Items.Remove(item); // должно вернуть true
+        return _Items.Remove(item); // РґРѕР»Р¶РЅРѕ РІРµСЂРЅСѓС‚СЊ true
+    }
+
+    internal void CopyTo(SettingsDataListBase dest)
+    {
+      if (dest == null)
+        throw new ArgumentNullException("dest");
+
+      foreach (SettingsDataItem srcItem in this)
+      {
+        foreach (SettingsDataItem destItem in dest)
+        {
+          if (destItem.GetType() == srcItem.GetType())
+          {
+            TempCfg cfg = new TempCfg();
+            srcItem.WriteConfig(cfg);
+            destItem.ReadConfig(cfg);
+            break;
+          }
+        }
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// РљРѕР»Р»РµРєС†РёСЏ РЅР°Р±РѕСЂРѕРІ РґР°РЅРЅС‹С… <see cref="SettingsDataItem"/>.
+  /// Р’ РєРѕР»Р»РµРєС†РёРё РјРѕРіСѓС‚ РїСЂРёСЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ РѕР±СЉРµРєС‚С‹ СЂР°Р·РЅС‹С… РєР»Р°СЃСЃРѕРІ.
+  /// РљСЂРѕРјРµ РѕСЃРЅРѕРІРЅС‹С… РЅР°СЃС‚СЂРѕРµРє, СЃРїРёСЃРѕРє РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РЅР°Р±РѕСЂС‹ РёРјРµРЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+  /// </summary>
+  public sealed class SettingsDataList : SettingsDataListBase
+  {
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+
+    /// <summary>
+    /// РЎРѕР·РґР°РµС‚ РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ
+    /// </summary>
+    public SettingsDataList()
+    {
+      _DefaultConfigs = new DefaultConfigCollection(this);
+    }
+
+    #endregion
+
+    #region РРјРµРЅРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
+
+    /// <summary>
+    /// Р РµР°Р»РёР·Р°С†РёСЏ СЃРІРѕР№СЃС‚РІР° <see cref="DefaultConfigs"/>
+    /// </summary>
+    public sealed class DefaultConfigCollection
+    {
+      #region Р—Р°С‰РёС‰РµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+
+      internal DefaultConfigCollection(SettingsDataList owner)
+      {
+        _Owner = owner;
+      }
+
+      private SettingsDataList _Owner;
+
+      #endregion
+
+      #region Р”РѕСЃС‚СѓРї Рє РёРјРµРЅРЅС‹Рј РЅР°СЃС‚СЂРѕР№РєР°Рј
+
+      private NamedList<DefaultSettingsDataList> _Items;
+
+      /// <summary>
+      /// РџРѕР»СѓС‡РёС‚СЊ РёР»Рё СЃРѕР·РґР°С‚СЊ РЅР°Р±РѕСЂ РЅР°СЃС‚СЂРѕРµРє СЃ Р·Р°РґР°РЅРЅС‹Рј РєРѕРґРѕРј
+      /// </summary>
+      /// <param name="code">РљРѕРґ РЅР°Р±РѕСЂР° РЅР°СЃС‚СЂРѕРµРє</param>
+      /// <returns>РҐСЂР°РЅРёР»РёС‰Рµ РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</returns>
+      public DefaultSettingsDataList this[string code]
+      {
+        get
+        {
+          if (String.IsNullOrEmpty(code))
+            throw new ArgumentNullException("code");
+
+          if (_Items == null)
+            _Items = new NamedList<DefaultSettingsDataList>();
+          DefaultSettingsDataList res;
+          if (!_Items.TryGetValue(code, out res))
+          {
+            res = new DefaultSettingsDataList(_Owner, code);
+            _Items.Add(res);
+          }
+          return res;
+        }
+      }
+
+      /// <summary>
+      /// РЎРїРёСЃРѕРє РєРѕРґРѕРІ РёРјРµРЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє
+      /// </summary>
+      /// <returns></returns>
+      public string[] GetCodes()
+      {
+        if (_Items == null)
+          return DataTools.EmptyStrings;
+
+        List<string> lst = null;
+        foreach (DefaultSettingsDataList item in _Items)
+        {
+          if (item.IsEmpty)
+            continue;
+          if (lst == null)
+            lst = new List<string>();
+          lst.Add(item.Code);
+        }
+        if (lst == null)
+          return DataTools.EmptyStrings;
+        return lst.ToArray();
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// РќР°Р±РѕСЂС‹ РёРјРµРЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+    /// </summary>
+    public DefaultConfigCollection DefaultConfigs { get { return _DefaultConfigs; } }
+    private readonly DefaultConfigCollection _DefaultConfigs;
+
+    #endregion
+
+    #region GetDefaultConfigDict()
+
+    private TempCfg _DefaultCfg;
+
+    /// <summary>
+    /// РџРѕР»СѓС‡РёС‚СЊ СЃРµРєС†РёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// Р•СЃР»Рё РµСЃС‚СЊ РёРјРµРЅРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё РІ <see cref="DefaultConfigs"/>, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃР»РѕРІР°СЂСЊ, РєР»СЋС‡РѕРј РєРѕС‚РѕСЂРѕРіРѕ СЏРІР»СЏРµС‚СЃСЏ РєРѕРґ РЅР°Р±РѕСЂР° РЅР°СЃС‚СЂРѕРµРє, Р° Р·РЅР°С‡РµРЅРёРµРј - СЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ.
+    /// Р•СЃР»Рё РЅРµС‚ РёРјРµРЅРЅС‹С… РЅР°СЃС‚СЂРѕРµРє, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃР»РѕРІР°СЂСЊ СЃ РµРґРёРЅСЃС‚РІРµРЅРЅРѕР№ Р·Р°РїРёСЃСЊСЋ: РєР»СЋС‡ - РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, Р·РЅР°С‡РµРЅРёРµ - СЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РІС‹Р±РѕСЂР° РіРѕС‚РѕРІС‹С… РЅР°Р±РѕСЂРѕРІ РІ РґРёР°Р»РѕРіРµ РЅР°СЃС‚СЂРѕР№РєРё РїР°СЂР°РјРµС‚СЂРѕРІ.
+    /// РџСЂРё РїРµСЂРІРѕРј РІС‹Р·РѕРІРµ РјРµС‚РѕРґР° СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ С‚РµРєСѓС‰РёРµ РЅР°СЃС‚СЂРѕР№РєРё РЅР°Р±РѕСЂР° РєР°Рє РЅР°Р±РѕСЂ Р·РЅР°С‡РµРЅРёР№ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ. РџРѕСЌС‚РѕРјСѓ РјРµС‚РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РІР°РЅ РїРµСЂРµРґ Р·Р°РіСЂСѓР·РєРѕР№ СЃРѕС…СЂР°РЅРµРЅРЅС‹С… РґР°РЅРЅС‹С…, РµСЃР»Рё РѕРЅР° РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РёР· РїСЂРёРєР»Р°РґРЅРѕРіРѕ РєРѕРґР°, Р° РЅРµ РґРёР°Р»РѕРіР° РїР°СЂР°РјРµС‚СЂРѕРІ.
+    /// </summary>
+    /// <returns>РЎР»РѕРІР°СЂСЊ РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.</returns>
+    public Dictionary<string, TempCfg> GetDefaultConfigDict()
+    {
+      bool isFirstCall = (_DefaultCfg == null);
+      if (isFirstCall)
+      {
+        _DefaultCfg = new TempCfg();
+        WriteConfig(_DefaultCfg);
+      }
+
+      string[] codes = DefaultConfigs.GetCodes();
+      Dictionary<string, TempCfg> dict = new Dictionary<string, TempCfg>(codes.Length == 0 ? 1 : codes.Length);
+      if (codes.Length == 0)
+        dict.Add(String.Empty, _DefaultCfg.Clone());
+      else
+      {
+        foreach (string code in codes)
+        {
+          DefaultSettingsDataList ds = DefaultConfigs[code];
+          TempCfg cfg = _DefaultCfg.Clone();
+          ds.WriteConfig(cfg);
+          if (isFirstCall)
+            ds.ReadConfig(cfg);
+          dict.Add(code, cfg);
+        }
+      }
+      return dict;
+    }
+
+    #endregion
+
+    #region РџСЂРѕС‡РµРµ
+
+    /// <summary>
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёР· СЃРїРёСЃРєР° РѕР±СЉРµРєС‚ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР°.
+    /// Р’С‹Р±СЂР°СЃС‹РІР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РѕР±СЉРµРєС‚ РЅРµ РЅР°Р№РґРµРЅ
+    /// </summary>
+    /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р° РІ СЃРїРёСЃРєРµ</typeparam>
+    /// <returns>РћР±СЉРµРєС‚</returns>
+    public override T GetRequired<T>()
+      /*where T : SettingsDataItem*/
+    {
+      T res = GetItem<T>();
+      if (res == null)
+        throw new InvalidOperationException("РќР°Р±РѕСЂ РґР°РЅРЅС‹С… РЅРµ СЃРѕРґРµСЂР¶РёС‚ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃР° " + typeof(T).Name);
+      return res;
+    }
+
+    /// <summary>
+    /// РљРѕРїРёСЂСѓРµС‚ РЅР°СЃС‚СЂРѕР№РєРё РІ РґСЂСѓРіРѕР№ РЅР°Р±РѕСЂ, РІРєР»СЋС‡Р°СЏ РЅР°Р±РѕСЂС‹ РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+    /// </summary>
+    /// <param name="dest">Р—Р°РїРѕР»РЅСЏРµРјС‹Р№ РЅР°Р±РѕСЂ</param>
+    public void CopyTo(SettingsDataList dest)
+    {
+      base.CopyTo(dest);
+      foreach (string code in DefaultConfigs.GetCodes())
+      {
+        DefaultSettingsDataList srcDS = DefaultConfigs[code];
+        if (srcDS.Count == 0)
+          continue;
+        DefaultSettingsDataList destDS = dest.DefaultConfigs[code];
+        srcDS.CopyTo(destDS);
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// РРјРµРЅРЅРѕР№ РЅР°Р±РѕСЂ РЅР°СЃС‚СЂРѕРµРє РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+  /// </summary>
+  public sealed class DefaultSettingsDataList : SettingsDataListBase, IObjectWithCode
+  {
+    #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+
+    internal DefaultSettingsDataList(SettingsDataList owner, string code)
+    {
+      _Owner = owner;
+      if (String.IsNullOrEmpty(code))
+        throw new ArgumentNullException("code");
+      _Code = code;
+    }
+
+    #endregion
+
+    #region IObjectWithCode
+
+    private readonly SettingsDataList _Owner;
+
+    /// <summary>
+    /// РљРѕРґ РёРјРµРЅРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё. Р—Р°РґР°РµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
+    /// </summary>
+    public string Code { get { return _Code; } }
+    private readonly string _Code;
+
+    /// <summary>
+    /// РћС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РёРјСЏ РґР»СЏ СЃРїРёСЃРєР° "Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹".
+    /// Р•СЃР»Рё РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІ СЏРІРЅРѕРј РІРёРґРµ, РІРѕР·РІСЂР°С‰Р°РµС‚ <see cref="Code"/>.
+    /// </summary>
+    public string DisplayName
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_DisplayName))
+          return Code;
+        else
+          return _DisplayName;
+      }
+      set { _DisplayName = value; }
+    }
+    private string _DisplayName;
+
+    /// <summary>
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РЅР°Р±РѕСЂ РЅР°СЃС‚СЂРѕРµРє СЏРІР»СЏРµС‚СЃСЏ РїСѓСЃС‚С‹Рј
+    /// </summary>
+    public bool IsEmpty { get { return Count == 0 && String.IsNullOrEmpty(DisplayName); } }
+
+    /// <summary>
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёР· СЃРїРёСЃРєР° РѕР±СЉРµРєС‚ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР° РґР»СЏ Р·Р°РґР°РЅРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+    /// Р•СЃР»Рё РѕР±СЉРµРєС‚ РЅРµ Р±С‹Р» РґРѕР±Р°РІР»РµРЅ РІ СЏРІРЅРѕРј РІРёРґРµ, РЅРѕ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РєР»РѕРЅРёСЂРѕРІР°РЅРёРµ, СЃРѕР·РґР°РµС‚СЃСЏ РєРѕРїРёСЏ
+    /// </summary>
+    /// <typeparam name="T">РўРёРї РѕР±СЉРµРєС‚Р° <see cref="SettingsDataItem"/></typeparam>
+    /// <returns>РћР±СЉРµРєС‚ РґР»СЏ РёРјРµРЅРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё</returns>
+    public override T GetRequired<T>()
+      /*where T : SettingsDataItem*/
+    {
+      T res = base.GetItem<T>();
+      if (res == null)
+      {
+        ICloneable mainObj = _Owner.GetRequired<T>() as ICloneable;
+        if (mainObj == null)
+          throw new InvalidOperationException("РўРёРї " + typeof(T).ToString() + " РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РєР»РѕРЅРёСЂРѕРІР°РЅРёРµ РѕР±СЉРµРєС‚РѕРІ");
+        res = (T)(mainObj.Clone());
+        base.Add(res);
+      }
+      return res;
     }
 
     #endregion

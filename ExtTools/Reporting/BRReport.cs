@@ -1340,10 +1340,26 @@ namespace FreeLibSet.Reporting
   }
 
   /// <summary>
+  /// Ориентация бумаги
+  /// </summary>
+  public enum BROrientation
+  {
+    /// <summary>
+    /// Портретная
+    /// </summary>
+    Portrait = 0,
+
+    /// <summary>
+    /// Альбомная
+    /// </summary>
+    Landscape = 1
+  }
+
+  /// <summary>
   /// Параметры страницы для секции <see cref="BRSection"/>.
   /// Также класс реализует чтение/запись значений в секцию конфигурации.
   /// </summary>
-  public sealed class BRPageSetup : ICloneable, ISettingsDataItem
+  public sealed class BRPageSetup : ICloneable
   {
     #region Конструкторы
 
@@ -1355,7 +1371,7 @@ namespace FreeLibSet.Reporting
     {
       _PaperWidth = 2100;
       _PaperHeight = 2970;
-      _Landscape = false;
+      _Orientation = BROrientation.Portrait;
       _CenterVertical = false;
       _CenterHorizontal = false;
       _LeftMargin = 200;
@@ -1377,7 +1393,7 @@ namespace FreeLibSet.Reporting
     {
       _PaperWidth = src.PaperWidth;
       _PaperHeight = src.PaperHeight;
-      _Landscape = src.Landscape;
+      _Orientation = src.Orientation;
       _CenterHorizontal = src.CenterHorizontal;
       _CenterVertical = src.CenterVertical;
       _LeftMargin = src.LeftMargin;
@@ -1404,44 +1420,66 @@ namespace FreeLibSet.Reporting
     private int _PaperHeight;
 
     /// <summary>
-    /// true - альбомная ориентация, false - книжная.
-    /// Установка свойства также меняет размер бумаги и поля
+    /// Ориентация - книжная или альбомная.
+    /// Установка свойства не меняет размер бумаги и полей.
+    /// Используйте методы <see cref="InvertOrientation()"/> или <see cref="SetOrientation(BROrientation, bool)"/>, чтобы переключить поля.
+    /// По умолчанию - книжная
     /// </summary>
-    public bool Landscape
+    public BROrientation Orientation
     {
-      get
+      get { return _Orientation; }
+      set { _Orientation = value; }
+    }
+    private BROrientation _Orientation;
+
+    /// <summary>
+    /// Установить альбомную или портретную ориентацию
+    /// </summary>
+    /// <param name="value">Ориентация</param>
+    /// <param name="changeSizes">Нужно ли обменять местами размеры бумаги и полей</param>
+    public void SetOrientation(BROrientation value, bool changeSizes)
+    {
+      if (changeSizes)
       {
-        return _Landscape;
+        if (value != Orientation)
+          InvertOrientation();
       }
-      set
+      else
+        this.Orientation = value;
+    }
+
+    /// <summary>
+    /// Меняет ориентацию бумаги с портретной на альбомную, синхронно меняя размер бумаги и поля
+    /// </summary>
+    public void InvertOrientation()
+    {
+      if (Orientation == BROrientation.Portrait)
+        Orientation = BROrientation.Landscape;
+      else
+        Orientation = BROrientation.Portrait;
+      int tmp = _PaperWidth;
+      _PaperWidth = _PaperHeight;
+      _PaperHeight = tmp;
+
+      if (_Orientation == BROrientation.Landscape)
       {
-        if (value == _Landscape)
-          return;
-        _Landscape = value;
-        int tmp = _PaperWidth;
-        _PaperWidth = _PaperHeight;
-        _PaperHeight = tmp;
-        if (value)
-        {
-          // по часовой стрелке
-          tmp = _TopMargin;
-          _TopMargin = _LeftMargin;
-          _LeftMargin = _BottomMargin;
-          _BottomMargin = _RightMargin;
-          _RightMargin = tmp;
-        }
-        else
-        {
-          // против часовой стрелки
-          tmp = _TopMargin;
-          _TopMargin = _RightMargin;
-          _RightMargin = _BottomMargin;
-          _BottomMargin = _LeftMargin;
-          _LeftMargin = tmp;
-        }
+        // по часовой стрелке
+        tmp = _TopMargin;
+        _TopMargin = _LeftMargin;
+        _LeftMargin = _BottomMargin;
+        _BottomMargin = _RightMargin;
+        _RightMargin = tmp;
+      }
+      else
+      {
+        // против часовой стрелки
+        tmp = _TopMargin;
+        _TopMargin = _RightMargin;
+        _RightMargin = _BottomMargin;
+        _BottomMargin = _LeftMargin;
+        _LeftMargin = tmp;
       }
     }
-    private bool _Landscape;
 
     ///// <summary>
     ///// Формат бумаги (только для чтения)
@@ -1554,33 +1592,68 @@ namespace FreeLibSet.Reporting
     }
 
     #endregion
+  }
+
+  /// <summary>
+  /// Реализация набора хранимых данных <see cref="SettingsDataItem"/> для параметров страницы отчета <see cref="BRPageSetup"/>
+  /// </summary>
+  public sealed class BRPageSettingsDataItem : SettingsDataItem, ICloneable
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект для заданного внешнего <see cref="BRPageSetup"/> 
+    /// </summary>
+    /// <param name="pageSetup">Параметры страницы</param>
+    public BRPageSettingsDataItem(BRPageSetup pageSetup)
+    {
+      if (pageSetup == null)
+        throw new ArgumentNullException("pageSetup");
+      _PageSetup = pageSetup;
+    }
+
+    /// <summary>
+    /// Создает объект и новый экземпляр <see cref="BRPageSetup"/>.
+    /// </summary>
+    public BRPageSettingsDataItem()
+      : this(new BRPageSetup())
+    {
+    }
+
+    /// <summary>
+    /// Параметры страницы, в которых хранятся значения
+    /// </summary>
+    public BRPageSetup PageSetup { get { return _PageSetup; } }
+    private readonly BRPageSetup _PageSetup;
+
+    #endregion
 
     #region ISettingsDataItem
 
     /// <summary>
     /// Возвращает <see cref="SettingsPart.User"/>
     /// </summary>
-    public SettingsPart UsedParts { get { return SettingsPart.User; } }
+    public override SettingsPart UsedParts { get { return SettingsPart.User; } }
 
     /// <summary>
     /// Запись значений в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Заполняемая секция</param>
     /// <param name="part">Должно быть <see cref="SettingsPart.User"/></param>
-    public void WriteConfig(CfgPart cfg, SettingsPart part)
+    public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       if (part == SettingsPart.User)
       {
-        cfg.SetInt("PaperWidth", PaperWidth);
-        cfg.SetInt("PaperHeight", PaperHeight);
-        cfg.SetBool("Landscape", Landscape);
-        cfg.SetBool("CenterVertical", CenterVertical);
-        cfg.SetBool("CenterHorizontal", CenterHorizontal);
-        cfg.SetInt("LeftMargin", LeftMargin);
-        cfg.SetInt("TopMargin", TopMargin);
-        cfg.SetInt("RightMargin", RightMargin);
-        cfg.SetInt("BottomMargin", BottomMargin);
-        cfg.SetBool("DuplexNewPage", DuplexNewPage);
+        cfg.SetBool("Landscape", _PageSetup.Orientation == BROrientation.Landscape);
+        cfg.SetInt("PaperWidth", _PageSetup.PaperWidth);
+        cfg.SetInt("PaperHeight", _PageSetup.PaperHeight);
+        cfg.SetBool("CenterVertical", _PageSetup.CenterVertical);
+        cfg.SetBool("CenterHorizontal", _PageSetup.CenterHorizontal);
+        cfg.SetInt("LeftMargin", _PageSetup.LeftMargin);
+        cfg.SetInt("TopMargin", _PageSetup.TopMargin);
+        cfg.SetInt("RightMargin", _PageSetup.RightMargin);
+        cfg.SetInt("BottomMargin", _PageSetup.BottomMargin);
+        cfg.SetBool("DuplexNewPage", _PageSetup.DuplexNewPage);
       }
     }
 
@@ -1589,21 +1662,40 @@ namespace FreeLibSet.Reporting
     /// </summary>
     /// <param name="cfg">Секция для чтения</param>
     /// <param name="part">Должно быть <see cref="SettingsPart.User"/></param>
-    public void ReadConfig(CfgPart cfg, SettingsPart part)
+    public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       if (part == SettingsPart.User)
       {
-        PaperWidth = cfg.GetIntDef("PaperWidth", PaperWidth);
-        PaperHeight = cfg.GetIntDef("PaperHeight", PaperHeight);
-        Landscape = cfg.GetBoolDef("Landscape", Landscape);
-        CenterVertical = cfg.GetBoolDef("CenterVertical", CenterVertical);
-        CenterHorizontal = cfg.GetBoolDef("CenterHorizontal", CenterHorizontal);
-        LeftMargin = cfg.GetIntDef("LeftMargin", LeftMargin);
-        TopMargin = cfg.GetIntDef("TopMargin", TopMargin);
-        RightMargin = cfg.GetIntDef("RightMargin", RightMargin);
-        BottomMargin = cfg.GetIntDef("BottomMargin", BottomMargin);
-        DuplexNewPage = cfg.GetBoolDef("DuplexNewPage", DuplexNewPage);
+        _PageSetup.Orientation = cfg.GetBoolDef("Landscape", BRReport.AppDefaultPageSetup.Orientation == BROrientation.Landscape) ? BROrientation.Landscape : BROrientation.Portrait;
+        _PageSetup.PaperWidth = cfg.GetIntDef("PaperWidth", BRReport.AppDefaultPageSetup.PaperWidth);
+        _PageSetup.PaperHeight = cfg.GetIntDef("PaperHeight", BRReport.AppDefaultPageSetup.PaperHeight);
+        _PageSetup.CenterVertical = cfg.GetBoolDef("CenterVertical", BRReport.AppDefaultPageSetup.CenterVertical);
+        _PageSetup.CenterHorizontal = cfg.GetBoolDef("CenterHorizontal", BRReport.AppDefaultPageSetup.CenterHorizontal);
+        _PageSetup.LeftMargin = cfg.GetIntDef("LeftMargin", BRReport.AppDefaultPageSetup.LeftMargin);
+        _PageSetup.TopMargin = cfg.GetIntDef("TopMargin", BRReport.AppDefaultPageSetup.TopMargin);
+        _PageSetup.RightMargin = cfg.GetIntDef("RightMargin", BRReport.AppDefaultPageSetup.RightMargin);
+        _PageSetup.BottomMargin = cfg.GetIntDef("BottomMargin", BRReport.AppDefaultPageSetup.BottomMargin);
+        _PageSetup.DuplexNewPage = cfg.GetBoolDef("DuplexNewPage", BRReport.AppDefaultPageSetup.DuplexNewPage);
       }
+    }
+
+    #endregion
+
+    #region Clone()
+
+    /// <summary>
+    /// Создает копию объекта
+    /// </summary>
+    /// <returns>Новый объект</returns>
+    public BRPageSettingsDataItem Clone()
+    {
+      BRPageSettingsDataItem res = new BRPageSettingsDataItem(this.PageSetup.Clone());
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
     }
 
     #endregion

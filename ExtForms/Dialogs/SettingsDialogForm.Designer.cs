@@ -1,4 +1,4 @@
-namespace FreeLibSet.Forms
+п»їnamespace FreeLibSet.Forms
 {
   partial class SettingsDialogForm
   {
@@ -89,7 +89,7 @@ namespace FreeLibSet.Forms
       this.grpSets.Size = new System.Drawing.Size(373, 48);
       this.grpSets.TabIndex = 3;
       this.grpSets.TabStop = false;
-      this.grpSets.Text = "Готовые наборы";
+      this.grpSets.Text = "Р“РѕС‚РѕРІС‹Рµ РЅР°Р±РѕСЂС‹";
       // 
       // SetComboBox
       // 
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "Рћ&Рљ";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "РћС‚РјРµРЅР°";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // SettingsDialogForm

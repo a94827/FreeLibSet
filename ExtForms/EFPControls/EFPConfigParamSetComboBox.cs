@@ -57,6 +57,95 @@ namespace FreeLibSet.Forms
     void EndGetAuxText();
   }
 
+
+  /// <summary>
+  /// Описание одной строчки в списке для значения "По умолчанию"
+  /// </summary>
+  public sealed class EFPConfigParamDefaultSet
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает объект
+    /// </summary>
+    /// <param name="config">Набор параметров для значения "по умолчанию"</param>
+    /// <param name="displayName">Отображаемое имя (без скобок)</param>
+    /// <param name="imageKey">Значок в списке EFPApp.MainImages</param>
+    public EFPConfigParamDefaultSet(TempCfg config, string displayName, string imageKey)
+    {
+      if (config == null)
+        throw new ArgumentNullException("config");
+      if (String.IsNullOrEmpty(displayName))
+        throw new ArgumentNullException("displayName");
+      if (String.IsNullOrEmpty(imageKey))
+        throw new ArgumentNullException("imageKey");
+
+      _Config = config;
+      _DisplayName = displayName;
+      _ImageKey = imageKey;
+
+      _MD5Sum = config.MD5Sum();
+    }
+
+    /// <summary>
+    /// Создает объект со значком по умолчанию "No"
+    /// </summary>
+    /// <param name="config">Набор параметров для значения "по умолчанию"</param>
+    /// <param name="displayName">Отображаемое имя (без скобок)</param>
+    public EFPConfigParamDefaultSet(TempCfg config, string displayName)
+      : this(config, displayName, "No")
+    {
+    }
+
+    /// <summary>
+    /// Создает объект с текстом "По умолчанию" со значком по умолчанию "No"
+    /// </summary>
+    /// <param name="config">Набор параметров для значения "по умолчанию"</param>
+    public EFPConfigParamDefaultSet(TempCfg config)
+      : this(config, "По умолчанию", "No")
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Набор параметров для значения "по умолчанию"
+    /// </summary>
+    public TempCfg Config { get { return _Config; } }
+    private readonly TempCfg _Config;
+
+    /// <summary>
+    /// Отображаемое имя (без скобок)
+    /// </summary>
+    public string DisplayName { get { return _DisplayName; } }
+    private readonly string _DisplayName;
+
+    /// <summary>
+    /// Значок в списке EFPApp.MainImages
+    /// </summary>
+    public string ImageKey { get { return _ImageKey; } }
+    private readonly string _ImageKey;
+
+    /// <summary>
+    /// Контрольная сумма для секции конфигурации
+    /// </summary>
+    public string MD5Sum { get { return _MD5Sum; } }
+    private readonly string _MD5Sum;
+
+    /// <summary>
+    /// Возвращает свойство DisplayName
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return DisplayName;
+    }
+
+    #endregion
+  }
+
   /// <summary>
   /// Провайдер управляющего элемента "Набор параметров", состоящего из
   /// комбоблока, кнопок "+" и "-".
@@ -88,6 +177,22 @@ namespace FreeLibSet.Forms
       efpSelCB.DisplayName = "Готовые наборы";
       efpSelCB.CanBeEmpty = true;
 
+      if (DebugCommands)
+      {
+        EFPCommandItem ci;
+        ci = new EFPCommandItem("Debug", "CurrentSettingsXML");
+        ci.MenuText = "Текущие настройки диалога (XML)";
+        ci.Click += DebugCurrentSettings_Click;
+        ci.GroupBegin = true;
+        efpSelCB.CommandItems.Add(ci);
+
+        ci = new EFPCommandItem("Debug", "SavedSettingsXML");
+        ci.MenuText = "Сохраненные настройки набора (XML)";
+        ci.Click += DebugSavedSettings_Click;
+        ci.GroupEnd = true;
+        efpSelCB.CommandItems.Add(ci);
+      }
+
       efpSaveButton = new EFPButton(baseProvider, control.SaveButton);
       efpSaveButton.DisplayName = "Сохранить набор";
       efpSaveButton.ToolTipText = "Сохранить установленные значения как новый пользовательский набор" + Environment.NewLine +
@@ -100,7 +205,7 @@ namespace FreeLibSet.Forms
       _ParamsCategory = EFPConfigCategories.UserParams;
       _HistoryCategory = EFPConfigCategories.UserHistory;
 
-      _DefaultSets = new DefaultSetList(this);
+      _DefaultSets = new DefaultSetCollection(this);
 
       control.ShowImages = EFPApp.ShowListImages;
 
@@ -163,101 +268,13 @@ namespace FreeLibSet.Forms
     #region Стандартные наборы
 
     /// <summary>
-    /// Описание одной строчки в списке для значения "По умолчанию"
-    /// </summary>
-    public sealed class DefaultSet
-    {
-      #region Конструкторы
-
-      /// <summary>
-      /// Создает объект
-      /// </summary>
-      /// <param name="config">Набор параметров для значения "по умолчанию"</param>
-      /// <param name="displayName">Отображаемое имя (без скобок)</param>
-      /// <param name="imageKey">Значок в списке EFPApp.MainImages</param>
-      public DefaultSet(TempCfg config, string displayName, string imageKey)
-      {
-        if (config == null)
-          throw new ArgumentNullException("config");
-        if (String.IsNullOrEmpty(displayName))
-          throw new ArgumentNullException("displayName");
-        if (String.IsNullOrEmpty(imageKey))
-          throw new ArgumentNullException("imageKey");
-
-        _Config = config;
-        _DisplayName = displayName;
-        _ImageKey = imageKey;
-
-        _MD5Sum = config.MD5Sum();
-      }
-
-      /// <summary>
-      /// Создает объект со значком по умолчанию "No"
-      /// </summary>
-      /// <param name="config">Набор параметров для значения "по умолчанию"</param>
-      /// <param name="displayName">Отображаемое имя (без скобок)</param>
-      public DefaultSet(TempCfg config, string displayName)
-        : this(config, displayName, "No")
-      {
-      }
-
-      /// <summary>
-      /// Создает объект с текстом "По умолчанию" со значком по умолчанию "No"
-      /// </summary>
-      /// <param name="config">Набор параметров для значения "по умолчанию"</param>
-      public DefaultSet(TempCfg config)
-        : this(config, "По умолчанию", "No")
-      {
-      }
-
-      #endregion
-
-      #region Свойства
-
-      /// <summary>
-      /// Набор параметров для значения "по умолчанию"
-      /// </summary>
-      public TempCfg Config { get { return _Config; } }
-      private readonly TempCfg _Config;
-
-      /// <summary>
-      /// Отображаемое имя (без скобок)
-      /// </summary>
-      public string DisplayName { get { return _DisplayName; } }
-      private readonly string _DisplayName;
-
-      /// <summary>
-      /// Значок в списке EFPApp.MainImages
-      /// </summary>
-      public string ImageKey { get { return _ImageKey; } }
-      private readonly string _ImageKey;
-
-      /// <summary>
-      /// Контрольная сумма для секции конфигурации
-      /// </summary>
-      public string MD5Sum { get { return _MD5Sum; } }
-      private readonly string _MD5Sum;
-
-      /// <summary>
-      /// Возвращает свойство DisplayName
-      /// </summary>
-      /// <returns>Текстовое представление</returns>
-      public override string ToString()
-      {
-        return DisplayName;
-      }
-
-      #endregion
-    }
-
-    /// <summary>
     /// Реализация свойства DefaultSets
     /// </summary>
-    public sealed class DefaultSetList : ListWithReadOnly<DefaultSet>
+    public sealed class DefaultSetCollection : ListWithReadOnly<EFPConfigParamDefaultSet>
     {
       #region Защищенный конструктор
 
-      internal DefaultSetList(EFPConfigParamSetComboBox owner)
+      internal DefaultSetCollection(EFPConfigParamSetComboBox owner)
       {
         _Owner = owner;
       }
@@ -275,7 +292,7 @@ namespace FreeLibSet.Forms
       /// <param name="imageKey"></param>
       public void Add(string displayName, string imageKey)
       {
-        base.Add(new DefaultSet(GetCurrentCfg(), displayName, imageKey));
+        base.Add(new EFPConfigParamDefaultSet(GetCurrentCfg(), displayName, imageKey));
       }
 
       /// <summary>
@@ -284,7 +301,7 @@ namespace FreeLibSet.Forms
       /// <param name="displayName"></param>
       public void Add(string displayName)
       {
-        base.Add(new DefaultSet(GetCurrentCfg(), displayName));
+        base.Add(new EFPConfigParamDefaultSet(GetCurrentCfg(), displayName));
       }
 
       /// <summary>
@@ -292,7 +309,7 @@ namespace FreeLibSet.Forms
       /// </summary>
       public void Add()
       {
-        base.Add(new DefaultSet(GetCurrentCfg()));
+        base.Add(new EFPConfigParamDefaultSet(GetCurrentCfg()));
       }
 
       private TempCfg GetCurrentCfg()
@@ -318,8 +335,8 @@ namespace FreeLibSet.Forms
     /// Список наборов "по умолчанию".
     /// Список может заполняться только до вывода формы на экран
     /// </summary>
-    public DefaultSetList DefaultSets { get { return _DefaultSets; } }
-    private DefaultSetList _DefaultSets;
+    public DefaultSetCollection DefaultSets { get { return _DefaultSets; } }
+    private DefaultSetCollection _DefaultSets;
 
     #endregion
 
@@ -725,7 +742,7 @@ namespace FreeLibSet.Forms
       {
         if (!oldItem.Code.StartsWith("User", StringComparison.Ordinal))
         {
-          EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы");
+          EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы. Введите название набора.");
           return;
         }
         if (EFPApp.MessageBox("Набор \"" + args.DisplayName + "\" уже существует. Вы хотите перезаписать его?",
@@ -906,6 +923,55 @@ namespace FreeLibSet.Forms
 
         SaveSetsTables();
       }
+    }
+
+    #endregion
+
+    #region Отладочные средства
+
+    /// <summary>
+    /// Показывать отладочные команды в локальном меню?
+    /// </summary>
+    public static bool DebugCommands { get { return _DebugCommands; } set { _DebugCommands = value; } }
+    private static bool _DebugCommands = false;
+
+    private void DebugCurrentSettings_Click(object sender, EventArgs args)
+    {
+      TempCfg cfg = new TempCfg();
+      ConfigFromControls(cfg);
+      EFPApp.ShowXmlView(cfg.Document, "Текущие настройки диалога");
+    }
+
+    private void DebugSavedSettings_Click(object sender, EventArgs args)
+    {
+      ParamSetComboBoxItem item = Control.Items.FindDisplayName(efpSelCB.Text);
+      if (item == null)
+      {
+        EFPApp.ShowTempMessage("Нет выбранного готового набора");
+        return;
+      }
+
+      TempCfg cfg;
+      if (item.Group == GroupDefault)
+      {
+        int defIndex = int.Parse(item.Code);
+        // Выбран набор по умолчанию
+        cfg=DefaultSets[defIndex].Config;
+      }
+      else
+      {
+        string userSetName = item.Code;
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
+          ParamsCategory, userSetName);
+        CfgPart cfgData;
+        using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Read, out cfgData))
+        {
+          cfg = new TempCfg();
+          cfgData.CopyTo(cfg);
+        }
+      }
+
+      EFPApp.ShowXmlView(cfg.Document, item.DisplayName);
     }
 
     #endregion

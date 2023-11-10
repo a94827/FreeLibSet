@@ -1200,7 +1200,11 @@ namespace FreeLibSet.Shell
           {
             if (asTemplate)
             {
+              OLE.Word.Document srcDoc = helper.Application.Documents.Open(fileName.Path);
               OLE.Word.Document doc = helper.Application.Documents.Add();
+              doc.CopyAllStylesFrom(srcDoc);
+              srcDoc.StartDoc().PageSetup.CopyTo(doc.PageSetup);
+              srcDoc.Close();
               doc.Range().InsertFile(fileName.Path);
               doc.Saved = true;
             }

@@ -14,424 +14,128 @@ using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms.Reporting
 {
-  #region Перечисления
-
   /// <summary>
-  /// Оформление границ таблицы при печати
+  /// Объект для печати/экспорта иерархического просмотра
   /// </summary>
-  internal enum PrintGridBorderStyle
+  public class EFPDataTreeViewMenuOutItem : BRMenuOutItem
   {
-    /// <summary>
-    /// Нет линий
-    /// </summary>
-    NoBorders,
-
-    /// <summary>
-    /// Заголовки столбцов обведены рамкой, других линий нет
-    /// </summary>
-    OnlyHeaders,
-
-    /// <summary>
-    /// Столбцы разделены вертикальными линиями, между строками линий нет
-    /// </summary>
-    Vertical,
-
-    /// <summary>
-    /// Сетка. Рисуются линии между строками и столбцами
-    /// </summary>
-    All
-  }
-
-  /// <summary>
-  /// Режим вывода нумерации колонок под заголовками столбцов
-  /// (свойство GridPageSetup.ColumnSubHeaderNumbers)
-  /// </summary>
-  internal enum ColumnSubHeaderNumbersMode
-  {
-    /// <summary>
-    /// Нумерация колонок не используется (по умолчанию)
-    /// </summary>
-    None,
-
-    /// <summary>
-    /// Нумерация колонок выводится на каждой странице под заголовками столбцов
-    /// </summary>
-    All,
-
-    /// <summary>
-    /// На первой странице выводятся заголовки столбцов и нумерация колонок, на
-    /// второй странице и дальше выводятся номера столбцов без заголовков
-    /// </summary>
-    Replace
-  }
-
-  /// <summary>
-  /// Способ раскраски ячеек таблицы
-  /// </summary>
-  internal enum PrintGridColorStyle
-  {
-    /// <summary>
-    /// При печати раскраска не используется (весь фон - белый)
-    /// </summary>
-    NoColors,
-
-    /// <summary>
-    /// При печати используются те же цвета, что и на экране
-    /// </summary>
-    Screen,
-
-    /// <summary>
-    /// Испольлзуются серые цвета для выделения строк
-    /// </summary>
-    Gray
-  }
-
-  ///// <summary>
-  ///// Межстрочный интервал
-  ///// </summary>
-  //internal enum PrintGridRowSpacing
-  //{
-  //  /// <summary>
-  //  /// Не сжатый (определяется метрикой выбранного шрифта)
-  //  /// </summary>
-  //  Lead100,
-
-
-  //  /// <summary>
-  //  /// Частично сжатый (оставлено 3/4 Lead space)
-  //  /// </summary>
-  //  Lead75,
-
-  //  /// <summary>
-  //  /// Половинный (половина интервала, определенного метрикой выбранного шрифта)
-  //  /// </summary>
-  //  Lead50,
-
-  //  /// <summary>
-  //  /// Сжатый на 3/4 (оставлена четверть Lead space)
-  //  /// </summary>
-  //  Lead25,
-
-  //  /// <summary>
-  //  /// Сжатый (межстрочный интервал равен высоте шрифта без Lead space)
-  //  /// </summary>
-  //  Lead0,
-  //}
-
-  #endregion
-
-  /// <summary>
-  /// Данные параметров страницы для печати EFPDataGridView и EFPDataTreeView.
-  /// Содержит список выбранных столбцов для печати, их размеры и параметры для оформления.
-  /// Дополняет параметры страницы BRPageSetup и параметры шрифта BRFontSettings
-  /// </summary>
-  internal class BRDataViewData : SettingsDataItem
-  {
-    // Есть в Windows-10
-    // Нет символов в Linux
-    public const char CheckBoxUncheckedChar = '\u2610';
-    public const char CheckBoxCheckedChar = '\u2611';
-    public const string CheckBoxUncheckedStr = "\u2610";
-    public const string CheckBoxCheckedStr = "\u2611";
-
     #region Конструктор
 
-    public BRDataViewData()
+    public EFPDataTreeViewMenuOutItem(string code, EFPDataTreeView controlProvider)
+      :base(code)
     {
-      _ColumnDict = new Dictionary<string, ColumnInfo>();
-      _ColumnSubHeaderNumbers = ColumnSubHeaderNumbersMode.None;
-      _RepeatedColumnCount = 0;
-      _ExpRange = EFPDataViewExpRange.All;
-      _UseExpColumnHeaders = true;
-      _ExpColumnHeaders = true;
-      _UseColorStyle = true;
-      _UseBoolMode = true;
-      _BoolMode = EFPDataViewExpExcelBoolMode.Boolean;
+      if (controlProvider == null)
+        throw new ArgumentNullException("controlProvider");
+      _ControlProvider = controlProvider;
 
-      _CellLeftMargin = BRReport.AppDefaultCellStyle.LeftMargin;
-      _CellTopMargin = BRReport.AppDefaultCellStyle.TopMargin;
-      _CellRightMargin = BRReport.AppDefaultCellStyle.RightMargin;
-      _CellBottomMargin = BRReport.AppDefaultCellStyle.BottomMargin;
+      DisplayName = "Иерархический просмотр";
+      SettingsData.Add(new BRFontSettingsDataItem());
+      SettingsData.Add(new BRDataViewSettingsDataItem());
+      SettingsData.GetRequired<BRDataViewSettingsDataItem>().AutoTitle = true;
     }
 
     #endregion
 
-    #region Вложенные классы
+    #region Свойства
 
-    private class ColumnInfo
-    {
-      #region Поля
-
-      public bool Print;
-
-      public int Width;
-
-      #endregion
-    }
-
-    #endregion
-
-    #region Вкладка "Столбцы"
+    public EFPDataTreeView ControlProvider { get { return _ControlProvider; } }
+    private readonly EFPDataTreeView _ControlProvider;
+    
+    /// <summary>
+    /// Доступ к настройкам печати просмотра по умолчанию
+    /// </summary>
+    public EFPDataViewMenuOutSettings Default { get { return new EFPDataViewMenuOutSettings(SettingsData); } }
 
     /// <summary>
-    /// Данные столбцов
+    /// Доступ к именным настройкам печати просмотра.
     /// </summary>
-    private readonly Dictionary<string, ColumnInfo> _ColumnDict;
-
-    /// <summary>
-    /// Получить флажок печати столбца
-    /// </summary>
-    /// <param name="column"></param>
-    /// <returns></returns>
-    public bool GetColumnPrint(IEFPDataViewColumn column)
+    /// <param name="defCfgCode">Код для именной настройки</param>
+    /// <returns>Объект для доступа к настройкам</returns>
+    public EFPDataViewMenuOutSettings this[string defCfgCode]
     {
-      if (!column.Printable)
-        return false;
-      ColumnInfo ci;
-      if (_ColumnDict.TryGetValue(column.Name, out ci))
-        return ci.Print;
-      else
-        return true;
-    }
-
-    /// <summary>
-    /// Установить флажок печати флажка
-    /// </summary>
-    /// <param name="column"></param>
-    /// <param name="value"></param>
-    public void SetColumnPrint(IEFPDataViewColumn column, bool value)
-    {
-      if (!column.Printable)
-        return;
-
-      ColumnInfo ci;
-      if (!_ColumnDict.TryGetValue(column.Name, out ci))
+      get
       {
-        ci = new ColumnInfo();
-        ci.Print = true;
-        ci.Width = GetWidth(column);
-        _ColumnDict.Add(column.Name, ci);
+        if (String.IsNullOrEmpty(defCfgCode))
+          return Default;
+        else
+          return new EFPDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
       }
-      ci.Print = value;
     }
 
     /// <summary>
-    /// Получить ширину столбца в единицах 0.1мм
+    /// Добавление именной настройки печати просмотра
     /// </summary>
-    /// <param name="column"></param>
-    /// <returns></returns>
-    public int GetColumnWidth(IEFPDataViewColumn column)
+    /// <param name="defCfgCode">Код для именной настройки</param>
+    /// <param name="displayName">Отображаемое название настройки</param>
+    /// <returns>Объект для доступа к настройкам</returns>
+    public EFPDataViewMenuOutSettings Add(string defCfgCode, string displayName)
     {
-      if (!column.Printable)
-        return 0;
-      ColumnInfo ci;
-      if (_ColumnDict.TryGetValue(column.Name, out ci))
-        return ci.Width;
-      else
-        return GetWidth(column);
+      if (String.IsNullOrEmpty(defCfgCode))
+        throw new ArgumentNullException("defCfgCode");
+      SettingsData.DefaultConfigs[defCfgCode].DisplayName = displayName;
+      return new EFPDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
     }
 
-    /// <summary>
-    /// Установить ширину столбца в единицах 0.1мм
-    /// </summary>
-    /// <param name="column"></param>
-    /// <param name="value"></param>
-    public void SetColumnWidth(IEFPDataViewColumn column, int value)
-    {
-      if (!column.Printable)
-        return;
+    #endregion
 
-      ColumnInfo ci;
-      if (!_ColumnDict.TryGetValue(column.Name, out ci))
+    #region Обработчики событий
+
+    protected override void OnPrepare()
+    {
+      SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpColumnHeaders = ControlProvider.Control.UseColumns;
+      SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseColorStyle = false;
+
+      bool hasBoolColumns = false;
+      foreach (NodeControl nc in ControlProvider.Control.NodeControls)
       {
-        ci = new ColumnInfo();
-        ci.Print = true;
-        ci.Width = GetWidth(column);
-        _ColumnDict.Add(column.Name, ci);
-      }
-      ci.Width = value;
-    }
-
-    private static int GetWidth(IEFPDataViewColumn column)
-    {
-      return (int)Math.Round(column.WidthPt / 72.0 * 254.0, 0, MidpointRounding.AwayFromZero);
-    }
-
-    /// <summary>
-    /// Количество повторяемых в начале каждой полосы столбцов
-    /// </summary>
-    public int RepeatedColumnCount { get { return _RepeatedColumnCount; } set { _RepeatedColumnCount = value; } }
-    private int _RepeatedColumnCount;
-
-    /// <summary>
-    /// Нумерация колонок под заголовками столбцов
-    /// (по умолчанию - None)
-    /// </summary>
-    public ColumnSubHeaderNumbersMode ColumnSubHeaderNumbers
-    {
-      get { return _ColumnSubHeaderNumbers; }
-      set { _ColumnSubHeaderNumbers = value; }
-    }
-    private ColumnSubHeaderNumbersMode _ColumnSubHeaderNumbers;
-
-
-    #endregion
-
-    #region Вкладка "Оформление"
-
-    #region Управляющие свойства
-
-    /// <summary>
-    /// Наличие свойства <see cref="ColorStyle"/> (только для <see cref="EFPDataGridView"/>)
-    /// </summary>
-    public bool UseColorStyle { get { return _UseColorStyle; } set { _UseColorStyle = value; } }
-    private bool _UseColorStyle;
-
-    /// <summary>
-    /// Наличие логических значений в просмотре
-    /// </summary>
-    public bool UseBoolMode { get { return _UseBoolMode; } set { _UseBoolMode = value; } }
-    private bool _UseBoolMode;
-
-    #endregion
-
-    /// <summary>
-    /// Стиль оформления рамок при печати табличного просмотра
-    /// </summary>
-    public PrintGridBorderStyle BorderStyle { get { return _BorderStyle; } set { _BorderStyle = value; } }
-    private PrintGridBorderStyle _BorderStyle;
-
-    /// <summary>
-    /// Стиль оформления цвета ячеек и текста при печати
-    /// </summary>
-    public PrintGridColorStyle ColorStyle { get { return _ColorStyle; } set { _ColorStyle = value; } }
-    private PrintGridColorStyle _ColorStyle;
-
-    ///// <summary>
-    ///// Межстрочный интервал
-    ///// </summary>
-    //public PrintGridRowSpacing RowSpacing { get { return _RowSpacing; } set { _RowSpacing = value; } }
-    //private PrintGridRowSpacing _RowSpacing;
-
-    /// <summary>
-    /// Режим вывода логических значений
-    /// </summary>
-    public EFPDataViewExpExcelBoolMode BoolMode { get { return _BoolMode; } set { _BoolMode = value; } }
-    private EFPDataViewExpExcelBoolMode _BoolMode;
-
-    public int CellLeftMargin { get { return _CellLeftMargin; } set { _CellLeftMargin = value; } }
-    private int _CellLeftMargin;
-
-    public int CellTopMargin { get { return _CellTopMargin; } set { _CellTopMargin = value; } }
-    private int _CellTopMargin;
-
-    public int CellRightMargin { get { return _CellRightMargin; } set { _CellRightMargin = value; } }
-    private int _CellRightMargin;
-
-    public int CellBottomMargin { get { return _CellBottomMargin; } set { _CellBottomMargin = value; } }
-    private int _CellBottomMargin;
-
-    #endregion
-
-    #region Вкладка "Экспорт"
-
-    #region Управляющие свойства
-
-    /// <summary>
-    /// Наличие свойства <see cref="ExpColumnHeaders"/>.
-    /// Устанавливается в true, если просмотр содержит заголовки столбцов
-    /// </summary>
-    public bool UseExpColumnHeaders { get { return _UseExpColumnHeaders; } set { _UseExpColumnHeaders = value; } }
-    private bool _UseExpColumnHeaders;
-
-    #endregion
-
-    /// <summary>
-    /// При экспорте в текстовые форматы: какой диапазон использовать: весь просмотр (по умолчанию) или только выбранные ячейки
-    /// </summary>
-    public EFPDataViewExpRange ExpRange { get { return _ExpRange; } set { _ExpRange = value; } }
-    private EFPDataViewExpRange _ExpRange;
-
-    /// <summary>
-    /// При экпорте в текстовые форматы: true (по умолчанию) - выводить заголовки столбцов
-    /// </summary>
-    public bool ExpColumnHeaders { get { return _ExpColumnHeaders; } set { _ExpColumnHeaders = value; } }
-    private bool _ExpColumnHeaders;
-
-    #endregion
-
-    #region ISettingsDataItem
-
-    public override void WriteConfig(CfgPart cfg, SettingsPart part)
-    {
-      CfgPart cfg2 = cfg.GetChild("Columns", true);
-      cfg2.Clear();
-      foreach (KeyValuePair<string, ColumnInfo> pair in _ColumnDict)
-      {
-        CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
-        cfg3.SetBool("Print", pair.Value.Print);
-        cfg3.SetInt("Width", pair.Value.Width);
-      }
-      cfg.SetInt("RepeatedColumnCount", RepeatedColumnCount);
-      cfg.SetEnum<ColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers", ColumnSubHeaderNumbers);
-
-      cfg.SetEnum<PrintGridBorderStyle>("BorderStyle", BorderStyle);
-      if (UseColorStyle)
-        cfg.SetEnum<PrintGridColorStyle>("ColorStyle", ColorStyle);
-      //cfg.SetEnum<PrintGridRowSpacing>("RowSpacing", RowSpacing);
-      if (UseBoolMode)
-        cfg.SetEnum<EFPDataViewExpExcelBoolMode>("BoolMode", BoolMode);
-      cfg.SetInt("CellLeftMargin", CellLeftMargin);
-      cfg.SetInt("CellTopMargin", CellTopMargin);
-      cfg.SetInt("CellRightMargin", CellRightMargin);
-      cfg.SetInt("CellBottomMargin", CellBottomMargin);
-
-      cfg.SetEnum<EFPDataViewExpRange>("ExpRange", ExpRange);
-      cfg.SetBool("ExpColumnHeaders", ExpColumnHeaders);
-    }
-
-    public override void ReadConfig(CfgPart cfg, SettingsPart part)
-    {
-      _ColumnDict.Clear();
-      CfgPart cfg2 = cfg.GetChild("Columns", false);
-      if (cfg2 != null)
-      {
-        foreach (string colName in cfg2.GetChildNames())
+        if (nc is NodeCheckBox)
         {
-          CfgPart cfg3 = cfg2.GetChild(colName, false);
-          ColumnInfo ci = new ColumnInfo();
-          ci.Print = cfg3.GetBoolDef("Print", true);
-          ci.Width = cfg3.GetInt("Width");
-          _ColumnDict.Add(colName, ci);
+          hasBoolColumns = true;
+          break;
         }
       }
-      RepeatedColumnCount = cfg.GetInt("RepeatedColumnCount");
-      ColumnSubHeaderNumbers = cfg.GetEnum<ColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers");
+      SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseBoolMode = hasBoolColumns;
+      base.OnPrepare();
+    }
 
-      BorderStyle = cfg.GetEnumDef<PrintGridBorderStyle>("BorderStyle", BorderStyle);
-      if (UseColorStyle)
-        ColorStyle = cfg.GetEnumDef<PrintGridColorStyle>("ColorStyle", ColorStyle);
-      //RowSpacing = cfg.GetEnumDef<PrintGridRowSpacing>("RowSpacing", RowSpacing);
-      if (UseBoolMode)
-        BoolMode = cfg.GetEnumDef<EFPDataViewExpExcelBoolMode>("BoolMode", BoolMode);
-      CellLeftMargin = cfg.GetIntDef("CellLeftMargin", CellLeftMargin);
-      CellTopMargin = cfg.GetIntDef("CellTopMargin", CellTopMargin);
-      CellRightMargin = cfg.GetIntDef("CellRightMargin", CellRightMargin);
-      CellBottomMargin = cfg.GetIntDef("CellBottomMargin", CellBottomMargin);
+    protected override void OnInitDialog(BRMenuOutItemInitDialogEventArgs args)
+    {
+      if (args.Action == BROutAction.Print)
+      {
+        args.AddFontPage();
+        if (ControlProvider.Control.UseColumns)
+          new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
+        new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
+      }
+      if (args.Action == BROutAction.SendTo)
+        new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
 
-      ExpRange = cfg.GetEnumDef<EFPDataViewExpRange>("ExpRange", EFPDataViewExpRange.All);
-      ExpColumnHeaders = cfg.GetBoolDef("ExpColumnHeaders", ExpColumnHeaders);
+      base.OnInitDialog(args);
+    }
+
+    protected override void OnCreateReport(BRMenuOutItemCreateReportEventArgs args)
+    {
+      BRFontSettingsDataItem fontSettings = SettingsData.GetRequired<BRFontSettingsDataItem>();
+      fontSettings.InitCellStyle(args.Report.DefaultCellStyle);
+      args.Report.DocumentProperties = ControlProvider.DocumentProperties.Clone();
+      BRSection sect = args.Report.Sections.Add();
+      sect.PageSetup = SettingsData.GetItem<BRPageSettingsDataItem>().PageSetup;
+      EFPDataGridViewMenuOutItem.AddTitleBand(sect, SettingsData.GetRequired<BRDataViewSettingsDataItem>(), ControlProvider);
+      sect.Bands.Add(new BRDataTreeViewTable(sect, ControlProvider, SettingsData, args.Action == BROutAction.SendTo));
+
+      base.OnCreateReport(args);
     }
 
     #endregion
   }
+
 
   /// <summary>
   /// Виртуальная таблица для иерархического просмотра
   /// </summary>
   public class BRDataTreeViewTable : BRVirtualTable
   {
-    #region Конструктор
+    #region Вложенные классы
 
     /// <summary>
     /// Описатель печатаемого столбца
@@ -461,6 +165,8 @@ namespace FreeLibSet.Forms.Reporting
       /// Ширина столбца в единицах 0.1мм
       /// </summary>
       public int Width;
+
+      public bool AutoGrow;
 
       /// <summary>
       /// True для первого NodeControl в столбце
@@ -495,7 +201,7 @@ namespace FreeLibSet.Forms.Reporting
     }
 
     /// <summary>
-    /// Класс нужен для вызова базового конструктора BRVirtualTable, чтобы передать количество строк и столбцов
+    /// Класс нужен для вызова базового конструктора <see cref="BRVirtualTable"/>, чтобы передать количество строк и столбцов
     /// </summary>
     private class InternalInfo
     {
@@ -508,17 +214,18 @@ namespace FreeLibSet.Forms.Reporting
         if (settingsData == null)
           throw new ArgumentNullException("settingsData");
         _ControlProvider = controlProvider;
-        _ViewData = settingsData.GetRequired<BRDataViewData>();
-        BRPageSetup pageSetup = settingsData.GetRequired<BRPageSetup>();
+        _ViewData = settingsData.GetRequired<BRDataViewSettingsDataItem>();
+        BRPageSetup pageSetup = settingsData.GetRequired<BRPageSettingsDataItem>().PageSetup;
+        BRFontSettingsDataItem fontData= settingsData.GetRequired<BRFontSettingsDataItem>();
 
         InitRows(useExport);
 
-        InitColumns(useExport, pageSetup);
+        InitColumns(useExport, pageSetup, fontData);
 
         _FirstDataRow = _Headers.RowCount;
 
         _SubHeaderNumberRowIndex = -1;
-        if (controlProvider.Control.UseColumns && _ViewData.ColumnSubHeaderNumbers != ColumnSubHeaderNumbersMode.None && _Headers2.RowCount == 1)
+        if (controlProvider.Control.UseColumns && _ViewData.ColumnSubHeaderNumbers != BRDataViewColumnSubHeaderNumbersMode.None && _Headers2.RowCount == 1)
         {
           _SubHeaderNumberRowIndex = _FirstDataRow;
           _FirstDataRow++;
@@ -571,7 +278,7 @@ namespace FreeLibSet.Forms.Reporting
       }
 
 
-      private void InitColumns(bool useExport, BRPageSetup pageSetup)
+      private void InitColumns(bool useExport, BRPageSetup pageSetup, BRFontSettingsDataItem fontData)
       {
         if (_ControlProvider.GetFirstNodeControl<InteractiveControl>() == null)
           throw new InvalidOperationException("Просмотр не содержит объектов InteractiveControl");
@@ -595,10 +302,10 @@ namespace FreeLibSet.Forms.Reporting
             if (!efpCol.Printable)
               continue;
 
-            if (!_ViewData.GetColumnPrint(efpCol))
+            if (!_ViewData.GetColumnPrinted(efpCol))
               continue;
 
-            int w = _ViewData.GetColumnWidth(efpCol);
+            int w = _ViewData.GetRealColumnWidth(efpCol, fontData);
             InteractiveControl[] ctrs = ControlProvider.GetNodeControls<InteractiveControl>(efpCol.TreeColumn);
             for (int i = 0; i < ctrs.Length; i++)
             {
@@ -606,6 +313,7 @@ namespace FreeLibSet.Forms.Reporting
               ci.EFPColumn = efpCol;
               ci.NodeControl = ctrs[i];
               ci.Width = w / ctrs.Length; // TODO: Распределение ширины
+              ci.AutoGrow = _ViewData.GetColumnAutoGrow(efpCol);
               ci.FirstInColumn = (i == 0);
               ci.LastInColumn = (i == (ctrs.Length - 1));
               if (ctrs[i] is BaseTextControl && useIndent)
@@ -677,8 +385,8 @@ namespace FreeLibSet.Forms.Reporting
       public EFPDataTreeView ControlProvider { get { return _ControlProvider; } }
       private EFPDataTreeView _ControlProvider;
 
-      public BRDataViewData ViewData { get { return _ViewData; } }
-      private BRDataViewData _ViewData;
+      public BRDataViewSettingsDataItem ViewData { get { return _ViewData; } }
+      private BRDataViewSettingsDataItem _ViewData;
 
       public TreeNodeAdv[] RowNodes { get { return _RowNodes; } }
       private TreeNodeAdv[] _RowNodes;
@@ -712,6 +420,10 @@ namespace FreeLibSet.Forms.Reporting
 
       #endregion
     }
+
+    #endregion
+
+    #region Конструктор
 
     public BRDataTreeViewTable(BRSection section, EFPDataTreeView controlProvider, SettingsDataList settingsData, bool useExport)
       : this(section, new InternalInfo(controlProvider, settingsData, useExport))
@@ -793,13 +505,13 @@ namespace FreeLibSet.Forms.Reporting
       {
         switch (_Info.ViewData.BoolMode)
         {
-          case EFPDataViewExpExcelBoolMode.Boolean:
+          case BRDataViewBoolMode.Boolean:
             break;
-          case EFPDataViewExpExcelBoolMode.Brackets:
-            //v = (bool)v ? "[X]" : "[ ]";
-            v = (bool)v ? BRDataViewData.CheckBoxCheckedStr : BRDataViewData.CheckBoxUncheckedStr;
+          case BRDataViewBoolMode.Text:
+            //v = (bool)v ? BRDataViewData.CheckBoxCheckedStr : BRDataViewData.CheckBoxUncheckedStr;
+            v = (bool)v ? _Info.ViewData.BoolTextTrue : _Info.ViewData.BoolTextFalse;
             break;
-          case EFPDataViewExpExcelBoolMode.Digit:
+          case BRDataViewBoolMode.Integer:
             v = (bool)v ? 1 : 0;
             break;
           default:
@@ -820,13 +532,13 @@ namespace FreeLibSet.Forms.Reporting
       {
         #region Область данных
 
-        if (_Info.ViewData.BorderStyle == PrintGridBorderStyle.All)
+        if (_Info.ViewData.BorderStyle == BRDataViewBorderStyle.All)
         {
           style.TopBorder = BRLine.Thin;
           style.BottomBorder = BRLine.Thin;
         }
 
-        if (_Info.ViewData.BorderStyle == PrintGridBorderStyle.All || _Info.ViewData.BorderStyle == PrintGridBorderStyle.Vertical)
+        if (_Info.ViewData.BorderStyle == BRDataViewBorderStyle.All || _Info.ViewData.BorderStyle == BRDataViewBorderStyle.Vertical)
         {
           if (_Info.Columns[columnIndex].FirstInColumn)
           {
@@ -895,7 +607,7 @@ namespace FreeLibSet.Forms.Reporting
         #region Заголовки
 
         style.HAlign = BRHAlign.Center;
-        if (_Info.ViewData.BorderStyle != PrintGridBorderStyle.NoBorders)
+        if (_Info.ViewData.BorderStyle != BRDataViewBorderStyle.NoBorders)
           style.AllBorders = BRLine.Thin;
         style.WrapMode = BRWrapMode.WordWrap;
 
@@ -906,7 +618,7 @@ namespace FreeLibSet.Forms.Reporting
         #region Нумерация столбцов
 
         style.HAlign = BRHAlign.Center;
-        if (_Info.ViewData.BorderStyle != PrintGridBorderStyle.NoBorders)
+        if (_Info.ViewData.BorderStyle != BRDataViewBorderStyle.NoBorders)
           style.AllBorders = BRLine.Thin;
 
         #endregion
@@ -918,7 +630,7 @@ namespace FreeLibSet.Forms.Reporting
     protected override void FillColumnInfo(int columnIndex, BRColumnInfo columnInfo)
     {
       if (_Info.Columns[columnIndex].Width > 0)
-        columnInfo.SetWidth(_Info.Columns[columnIndex].Width, false);
+        columnInfo.SetWidth(_Info.Columns[columnIndex].Width, _Info.Columns[columnIndex].AutoGrow);
       columnInfo.Repeatable = _Info.Columns[columnIndex].Repeatable;
     }
 
@@ -927,7 +639,7 @@ namespace FreeLibSet.Forms.Reporting
       if (rowIndex < _Info.Headers.RowCount)
       {
         rowInfo.KeepWithNext = true;
-        if (_Info.ViewData.ColumnSubHeaderNumbers != ColumnSubHeaderNumbersMode.Replace)
+        if (_Info.ViewData.ColumnSubHeaderNumbers != BRDataViewColumnSubHeaderNumbersMode.Replace)
           rowInfo.Repeatable = true;
       }
       else if (rowIndex == _Info.SubHeaderNumberRowIndex)
@@ -935,7 +647,7 @@ namespace FreeLibSet.Forms.Reporting
         rowInfo.KeepWithNext = true;
         rowInfo.Repeatable = true;
       }
-      else if (rowIndex == (_Info.RowNodes.Length - 1))
+      else if (rowIndex == (_Info.RowNodes.Length - 1 + _Info.FirstDataRow))
         rowInfo.KeepWithPrev = true;
     }
 

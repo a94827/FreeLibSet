@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Config;
 using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 #pragma warning disable 0414
 
@@ -41,8 +43,14 @@ namespace FreeLibSet.Forms
 
     private void Init()
     {
+      Control.Rows = 1;
+      Control.Columns = 1;
+      Control.AutoZoom = false;
+      Control.Zoom = 1.0;
       Control.DocumentChanged += Control_DocumentChanged;
       _PageCount = -1;
+
+      base.InitConfigHandler();
     }
 
 
@@ -132,6 +140,77 @@ namespace FreeLibSet.Forms
     private int _PageCount;
 
     private int _RealPageCount;
+
+    #endregion
+
+    #region Сохранение настроек
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="categories"></param>
+    /// <param name="rwMode"></param>
+    /// <param name="actionInfo"></param>
+    public override void GetConfigCategories(ICollection<string> categories, EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
+    {
+      base.GetConfigCategories(categories, rwMode, actionInfo);
+
+      categories.Add(EFPConfigCategories.PageSetup);
+    }
+
+    /// <summary>
+    /// Сохраняет масштаб и количество отображаемых страниц
+    /// </summary>
+    /// <param name="category"></param>
+    /// <param name="cfg"></param>
+    /// <param name="actionInfo"></param>
+    public override void WriteConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo)
+    {
+      base.WriteConfigPart(category, cfg, actionInfo);
+      if (category == EFPConfigCategories.PageSetup)
+      {
+        cfg.SetInt("PreviewPageRows", Control.Rows);
+        cfg.SetInt("PreviewPageColumns", Control.Columns);
+        if (Control.AutoZoom)
+          cfg.SetInt("PreviewZoom", 0);
+        else
+          cfg.SetInt("PreviewZoom", (int)(Control.Zoom * 100));
+      }
+    }
+
+    /// <summary>
+    /// Восстанавливает масштаб и количество отображаемых страниц
+    /// </summary>
+    /// <param name="category"></param>
+    /// <param name="cfg"></param>
+    /// <param name="actionInfo"></param>
+    public override void ReadConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo)
+    {
+      base.ReadConfigPart(category, cfg, actionInfo);
+
+      try
+      {
+        Control.Rows = cfg.GetIntDef("PreviewPageRows", 1);
+        Control.Columns = cfg.GetIntDef("PreviewPageColumns", 1);
+        int zoom = cfg.GetIntDef("PreviewZoom", 100);
+        if (zoom == 0)
+          Control.AutoZoom = true;
+        else
+        {
+          Control.AutoZoom = false;
+          Control.Zoom = zoom / 100.0;
+        }
+      }
+      catch { }
+    }
+
+    /// <summary>
+    /// Вызывается при изменении масштаба или количества отображаемых страниц
+    /// </summary>
+    internal protected void OnZoomChanged()
+    {
+      ConfigHandler.Changed[EFPConfigCategories.PageSetup] = true;
+    }
 
     #endregion
 
@@ -547,33 +626,35 @@ namespace FreeLibSet.Forms
       ControlProvider.Control.Columns = 1;
       ControlProvider.Control.AutoZoom = false;
       ControlProvider.Control.Zoom = v;
+      ControlProvider.OnZoomChanged();
       InitEnabled();
     }
 
     void OnePageClick(object sender, EventArgs args)
     {
-      ControlProvider.Control.AutoZoom = true;
-      ControlProvider.Control.Rows = 1;
-      ControlProvider.Control.Columns = 1;
-      InitEnabled();
+      SetPages(1, 1);
     }
 
     void TwoPagesClick(object sender, EventArgs args)
     {
-      ControlProvider.Control.AutoZoom = true;
-      ControlProvider.Control.Rows = 1;
-      ControlProvider.Control.Columns = 2;
-      InitEnabled();
+      SetPages(1, 2);
     }
 
     void AllPagesClick(object sender, EventArgs args)
     {
-      ControlProvider.Control.AutoZoom = true;
       int n = (int)(Math.Ceiling(Math.Sqrt((double)(ControlProvider.PageCount))));
       int m = (int)(Math.Ceiling((double)(ControlProvider.PageCount) / (double)n));
-      ControlProvider.Control.Rows = m;
-      ControlProvider.Control.Columns = n;
+      SetPages(n, m);
+
       ControlProvider.Control.StartPage = 0;
+    }
+
+    private void SetPages(int n, int m)
+    {
+      ControlProvider.Control.Rows = n;
+      ControlProvider.Control.Columns = m;
+      ControlProvider.Control.AutoZoom = true;
+      ControlProvider.OnZoomChanged();
       InitEnabled();
     }
 
@@ -921,10 +1002,12 @@ namespace FreeLibSet.Forms
       string ScaleStatusText = "Масштаб " + prc.ToString() + " %";
       ciSetScale.StatusBarText = ScaleStatusText;
 
-      ciScale50.Checked = (prc == 50);
-      ciScale100.Checked = (prc == 100);
-      ciScale200.Checked = (prc == 200);
-      ciScale500.Checked = (prc == 500);
+      bool isPrc = !ControlProvider.Control.AutoZoom; // В Mono свойство Zoom остается установленным при AutoZoom=true. Если не проверять, то будут одновременно помечены и кнопки масштаба, и количества страниц
+
+      ciScale50.Checked = isPrc && (prc == 50);
+      ciScale100.Checked = isPrc && (prc == 100);
+      ciScale200.Checked = isPrc && (prc == 200);
+      ciScale500.Checked = isPrc && (prc == 500);
 
       ciTwoPages.Enabled = ControlProvider.PageCount > 1;
       ciAllPages.Enabled = ControlProvider.PageCount > 1;

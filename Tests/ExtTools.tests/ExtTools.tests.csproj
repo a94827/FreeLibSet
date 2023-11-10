@@ -32,6 +32,9 @@
     <Reference Include="nunit.framework">
       <HintPath>..\..\Others\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="SevenZipSharp">
+      <HintPath>..\..\Others\SevenZipSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -43,6 +46,7 @@
     <Compile Include="Formatting\FormatStringToolsTests.cs" />
     <Compile Include="Formatting\SimpleDigitalMaskProviderTests.cs" />
     <Compile Include="Formatting\StdMaskProviderTests.cs" />
+    <Compile Include="IO\FileCompressorTests.cs" />
     <Compile Include="IO\IniFileTests.cs" />
     <Compile Include="IO\PathEnumerableTests.cs" />
     <Compile Include="Calendar\YearMonthRangeTests.cs" />
@@ -156,7 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">
-      <Project>{e61b6cf2-a434-46f2-af4a-db5e4851d170}</Project>
+      <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
       <Name>ExtTools</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExtTestHelpers\ExtTestHelpers.csproj">
@@ -182,6 +186,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Others\7z.dll">
+      <Link>7z.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Others\7z64.dll">
+      <Link>7z64.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -265,16 +265,16 @@ namespace FreeLibSet.Forms
     ICollection<EFPUpdateByTimeHandler> UpdateByTimeHandlers { get; }
 
     /// <summary>
-    /// Событие вызывается из обработчика события <see cref="Control.Enter"/> перед выполнением стандартных действий.
+    /// Событие вызывается из обработчика события <see cref="System.Windows.Forms.Control.Enter"/> перед выполнением стандартных действий.
     /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
-    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Enter"/>.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="System.Windows.Forms.Control.Enter"/>.
     /// </summary>
     event EventHandler Enter;
 
     /// <summary>
-    /// Событие вызывается из обработчика события <see cref="Control.Leave"/> перед выполнением стандартных действий.
+    /// Событие вызывается из обработчика события <see cref="System.Windows.Forms.Control.Leave"/> перед выполнением стандартных действий.
     /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
-    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Leave"/>.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="System.Windows.Forms.Control.Leave"/>.
     /// </summary>
     event EventHandler Leave;
 
@@ -1529,10 +1529,8 @@ namespace FreeLibSet.Forms
     // добавления команд к определенным типам управляющих элементов
 
     /// <summary>
-    /// Доступ к свойству создает не-Shared список команд, к которому можно добавить команды
-    /// Свойство Control не устанавливается
-    /// Допускается установка списка команд "снаружи". Она должна выполняться
-    /// до любого обращения к свойству
+    /// Доступ к свойству создает предопределенный или пустой список команд локального меню, к которому можно добавить собственные команды.
+    /// Допускается установка списка команд "снаружи". Она должна выполняться до любого обращения к свойству.
     /// </summary>
     public EFPControlCommandItems CommandItems
     {
@@ -1630,18 +1628,39 @@ namespace FreeLibSet.Forms
       Control.Focus();
     }
 
+    /// <summary>
+    /// Возвращает true, если <see cref="EFPStatusBarHandler.IsFormOwned"/>=true
+    /// </summary>
+    private bool StatusBarHandlerIsFormOwned
+    {
+      get
+      {
+        if (BaseProvider.FormProvider == null)
+          return false;
+        if (BaseProvider.FormProvider.StatusBarHandler == null)
+          return false;
+        return BaseProvider.FormProvider.StatusBarHandler.IsFormOwned;
+      }
+    }
 
     internal void UpdateCommandItemsActive()
     {
-      bool wantsActive = ProviderState == EFPControlProviderState.Attached &&
+      bool wantsHasFocus = ProviderState == EFPControlProviderState.Attached &&
         //Control.ContainsFocus && // нельзя полагаться на это свойство из обработчика Control.Leave
         _ControlHasFocus &&
         BaseProvider.FormProvider.Active;
 
-      if (wantsActive)
+      bool wantHasStatus = wantsHasFocus;
+      if (StatusBarHandlerIsFormOwned)
+        wantHasStatus = (ProviderState == EFPControlProviderState.Attached) && _ControlHasFocus; // 12.10.2023
+
+      if (wantsHasFocus)
         PrepareContextMenu();
       if (_CommandItems != null)
-        _CommandItems.Active = wantsActive;
+      {
+        _CommandItems.SetHasFocus(wantsHasFocus);
+        _CommandItems.SetHasStatus(wantHasStatus);
+      }
     }
 
 
@@ -1673,9 +1692,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Событие вызывается из обработчика события <see cref="Control.Enter"/> перед выполнением стандартных действий.
+    /// Событие вызывается из обработчика события <see cref="System.Windows.Forms.Control.Enter"/> перед выполнением стандартных действий.
     /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
-    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Enter"/>.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="System.Windows.Forms.Control.Enter"/>.
     /// </summary>
     public event EventHandler Enter;
 
@@ -1693,9 +1712,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Событие вызывается из обработчика события <see cref="Control.Leave"/> перед выполнением стандартных действий.
+    /// Событие вызывается из обработчика события <see cref="System.Windows.Forms.Control.Leave"/> перед выполнением стандартных действий.
     /// Обработчик может, например, изменить текущее значение элемента до выполнения проверки.
-    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="Control.Leave"/>.
+    /// Если требуется присоединить обработчик, вызываемый после выполнения проверки, используйте оригинальное событие <see cref="System.Windows.Forms.Control.Leave"/>.
     /// </summary>
     public event EventHandler Leave;
 
@@ -1703,7 +1722,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обеспечивает готовность локального меню.
-    /// После вызова метода устанавливается свойство Control.ContextMenuStrip, если оно не было установлено ранее.
+    /// После вызова метода устанавливается свойство <see cref="System.Windows.Forms.Control.ContextMenuStrip"/>, если оно не было установлено ранее.
     /// Перед присоединеием вызывается PrepareCommandItems().
     /// Повторные вызовы метода игнорируются.
     /// </summary>
@@ -2716,10 +2735,10 @@ namespace FreeLibSet.Forms
     /// Выполнить чтение одной секции конфигурации.
     /// Непереопределенный метод не выполняет никаких действий.
     /// </summary>
-    /// <param name="Category">Категория считываемой секции</param>
+    /// <param name="category">Категория считываемой секции</param>
     /// <param name="cfg">Объект для чтения значений</param>
     /// <param name="actionInfo">Информация о выполняемом действии</param>
-    public virtual void ReadConfigPart(string Category, CfgPart cfg, EFPConfigActionInfo actionInfo)
+    public virtual void ReadConfigPart(string category, CfgPart cfg, EFPConfigActionInfo actionInfo)
     {
     }
 

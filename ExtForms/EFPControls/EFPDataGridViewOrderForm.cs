@@ -50,6 +50,7 @@ namespace FreeLibSet.Forms
         efpFixed.Control.ReadOnly = true;
         efpFixed.CanView = false;
         efpFixed.CommandItems.EnterAsOk = true;
+        efpFixed.MenuOutItems.Clear();
         grFixed.MultiSelect = false;
         grFixed.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
       }

@@ -4,21 +4,22 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Data.SQLite;
 using System.Data;
-using FreeLibSet.IO;
-using System.Data.Common;
 using System.Diagnostics;
+using System.Data.Common;
+using System.Data.SQLite;
+using FreeLibSet.IO;
 using FreeLibSet.Logging;
 using FreeLibSet.Core;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 // Провайдер для доступа к базе данных SQLite
 
 namespace FreeLibSet.Data.SQLite
 {
   /// <summary>
-  /// База данных PostGreSQL через провайдер Npgsql.
-  /// Для использования должны быть подключены сборки Npgsql.dll и Mono.Security из подкаталога FreeLibSet/Others
+  /// База данных SQLite.
   /// </summary>
   public class SQLiteDBx : DBx
   {
@@ -41,7 +42,6 @@ namespace FreeLibSet.Data.SQLite
       bool firstCall = false;
       if (System.Threading.Interlocked.Exchange(ref _FirstFlagValue, 1) == 0) // могут быть асинхронные вызовы конструктора
       {
-        LoadDLLs();
         LogoutTools.LogoutInfoNeeded += new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded);
         firstCall = true;
       }
@@ -60,7 +60,6 @@ namespace FreeLibSet.Data.SQLite
       _TimeFormat = @"HH\:mm\:ss";
       SetFormatter(new
         SQLiteDBxSqlFormatter(this));
-
       connectionStringBuilder.FailIfMissing = false; // всегда автоматически создаем базу данных
 
       if (InMemory)
@@ -111,8 +110,9 @@ namespace FreeLibSet.Data.SQLite
     /// Эта версия конструктора предназначена для создания базы данных в памяти
     /// </summary>
     public SQLiteDBx()
-      : this("Data Source=" + MemoryFileName +
-      ";foreign keys=true") // 02.02.2022
+      : this("Data Source=" + MemoryFileName
+          + ";foreign keys=true" // 02.02.2022
+          )
     {
     }
 
@@ -124,14 +124,26 @@ namespace FreeLibSet.Data.SQLite
     {
       if (disposing)
       {
-        if (MainConnection != null)
+        try
         {
-          MainConnection.Dispose();
-          MainConnection = null;
+          // 16.10.2023.
+          // Выделено в отдельный метод, на случай, если в конструкторе не удалось загрузить сборку System.Data.SQLite.dll.
+          // Было бы плохо пытаться загрузить ее в деструкторе и получить исключение
+          DisposeMainConnection();
         }
+        catch { }
       }
 
       base.Dispose(disposing);
+    }
+
+    private void DisposeMainConnection()
+    {
+      if (MainConnection != null)
+      {
+        MainConnection.Dispose();
+        MainConnection = null;
+      }
     }
 
     #endregion
@@ -345,7 +357,6 @@ namespace FreeLibSet.Data.SQLite
         return false;
 
       SQLiteConnection.ClearAllPools();
-
       System.IO.File.Delete(FileName.Path);
 
       return true;
@@ -363,24 +374,6 @@ namespace FreeLibSet.Data.SQLite
     /// Обрезка текстовых полей не требуется для SQLite
     /// </summary>
     public override bool UseTrimEnd { get { return false; } }
-
-    #endregion
-
-    #region Загрузка библиотек доступа к SQLite
-
-    /// <summary>
-    /// Загружает библиотеки, необходимые для работы с SQLite.
-    /// Повторные вызовы игнорируются
-    /// </summary>
-    public static void LoadDLLs()
-    {
-      //if (IntPtr.Size == 8)
-      //  System.Reflection.Assembly.Load("SQLite.Interop.x64");
-      //else
-      //  System.Reflection.Assembly.Load("SQLite.Interop.x86");
-
-      System.Reflection.Assembly.Load("System.Data.SQLite"); // обязательно после SQLite.Interop.dll
-    }
 
     #endregion
 
@@ -425,7 +418,7 @@ namespace FreeLibSet.Data.SQLite
       //CollationCaseInsensitive.RegisterFunction(typeof(CollationCaseInsensitive));
     }
 
-    [SQLiteFunction(Name = "UPPER", Arguments = 1, FuncType = FunctionType.Scalar)]
+    [SQLiteFunctionAttribute(Name = "UPPER", Arguments = 1, FuncType = FunctionType.Scalar)]
     private class UPPERFunction : SQLiteFunction
     {
       public override object Invoke(object[] args)
@@ -434,7 +427,7 @@ namespace FreeLibSet.Data.SQLite
       }
     }
 
-    [SQLiteFunction(Name = "LOWER", Arguments = 1, FuncType = FunctionType.Scalar)]
+    [SQLiteFunctionAttribute(Name = "LOWER", Arguments = 1, FuncType = FunctionType.Scalar)]
     private class LOWERFunction : SQLiteFunction
     {
       public override object Invoke(object[] args)
@@ -1133,13 +1126,13 @@ namespace FreeLibSet.Data.SQLite
 
         if ((!colDef.Nullable) && (!drv.Row.IsNull("column_default")))
         {
-          try 
+          try
           {
             // 09.06.2023
             string sDefault = DataTools.GetString(drv.Row, "column_default");
             colDef.DefaultValue = DBxTools.Convert(sDefault, colDef.ColumnType);
           }
-          catch(Exception e)
+          catch (Exception e)
           {
             e.Data["DB"] = DB.ToString();
             e.Data["Table"] = tableName;
@@ -2078,7 +2071,10 @@ namespace FreeLibSet.Data.SQLite
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {
-      get { return SQLiteFactory.Instance; }
+      get
+      {
+        return SQLiteFactory.Instance;
+      }
     }
 
     public override DbConnectionStringBuilder CreateConnectionStringBuilder(string connectionString)

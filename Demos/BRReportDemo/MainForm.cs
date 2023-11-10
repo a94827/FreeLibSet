@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Core;
+using FreeLibSet.DependedValues;
 using FreeLibSet.Forms;
 using FreeLibSet.Forms.Reporting;
 
@@ -25,6 +26,9 @@ namespace BRReportDemo
       efpTest = new EFPRadioButtons(efpForm, rbTest1);
       efpTest.SelectedIndex = 0;
 
+      efpConfigSectionName = new EFPTextBox(efpForm, edConfigSectionName);
+      efpConfigSectionName.CanBeEmpty = true;
+
       efpFormatProvider = new EFPListComboBox(efpForm, cbFormatProvider);
       efpFormatProvider.EnabledEx = efpTest[0].CheckedEx;
       _Cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
@@ -34,6 +38,18 @@ namespace BRReportDemo
         cultNames[i + 1] = _Cultures[i].ToString();
       efpFormatProvider.Control.Items.AddRange(cultNames);
       efpFormatProvider.Control.SelectedIndex = 0;
+
+      efpRemoveOutItem = new EFPCheckBox(efpForm, cbRemoveOutItem);
+      efpRemoveOutItem.EnabledEx = new DepInArray<int>(efpTest.SelectedIndexEx, new int[] { 1, 2, 3 });
+      efpAddOutItem = new EFPCheckBox(efpForm, cbAddOutItem);
+      efpAddOutItem.EnabledEx = new DepInArray<int>(efpTest.SelectedIndexEx, new int[] { 1, 2, 3 });
+      efpMultiSelect = new EFPCheckBox(efpForm, cbMultiSelect);
+      efpMultiSelect.EnabledEx = new DepInArray<int>(efpTest.SelectedIndexEx, new int[] { 1, 2, 3 });
+
+      efpDefaultConfigs = new EFPListComboBox(efpForm, cbDefaultConfigs);
+      efpDefaultConfigs.SelectedIndex = 0;
+      efpDefaultConfigs.EnabledEx = new DepAnd(new DepInArray<int>(efpTest.SelectedIndexEx, new int[] { 1, 2, 3 }),
+        new DepNot(efpRemoveOutItem.CheckedEx));
 
       efpConfig = new EFPRadioButtons(efpForm, rbRegistryConfigManager);
       efpConfig.SelectedIndex = 0;
@@ -66,7 +82,10 @@ namespace BRReportDemo
     #region Поля
 
     EFPRadioButtons efpTest, efpConfig;
+    EFPTextBox efpConfigSectionName;
     EFPListComboBox efpFormatProvider;
+    EFPCheckBox efpRemoveOutItem, efpAddOutItem, efpMultiSelect;
+    EFPListComboBox efpDefaultConfigs;
     EFPCheckBox efpOLEPreferred;
 
     private CultureInfo[] _Cultures;
@@ -91,16 +110,16 @@ namespace BRReportDemo
           IFormatProvider formatProvider = null;
           if (efpFormatProvider.SelectedIndex > 0)
             formatProvider = _Cultures[efpFormatProvider.SelectedIndex - 1];
-            Tester.TestBRReport(formatProvider);
+          Tester.TestBRReport(efpConfigSectionName.Text, formatProvider);
           break;
         case 1:
-          Tester.TestTreeView(true, false);
+          Tester.TestTreeView(true, efpConfigSectionName.Text, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
           break;
         case 2:
-          Tester.TestTreeView(false, false);
+          Tester.TestTreeView(false, efpConfigSectionName.Text, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
           break;
         case 3:
-          Tester.TestTreeView(false, true);
+          Tester.TestGridView(efpConfigSectionName.Text, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
           break;
       }
     }

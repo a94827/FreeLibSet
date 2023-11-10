@@ -5,11 +5,80 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
-
-#pragma warning disable 1591
+using FreeLibSet.IO;
 
 namespace FreeLibSet.Forms
 {
+  /// <summary>
+  /// Описание одного формата файла для команды "Экспорт в файл" для <see cref="EFPMenuOutItem "/>
+  /// </summary>
+  public sealed class EFPExportFileItem : ObjectWithCode
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает описание
+    /// </summary>
+    /// <param name="code">Код формата</param>
+    /// <param name="filterText">Описание фильтра для диалога сохранения файла</param>
+    /// <param name="fileMask">Маска для выбора файлов</param>
+    public EFPExportFileItem(string code, string filterText, string fileMask)
+      : base(code)
+    {
+      if (String.IsNullOrEmpty(filterText))
+        throw new ArgumentNullException("filterText");
+      if (filterText.IndexOf('|') >= 0)
+        throw new ArgumentException("Недопустимые символы", "filterText");
+      _FilterText = filterText;
+
+      if (String.IsNullOrEmpty(fileMask))
+        throw new ArgumentNullException("fileMask");
+      if (fileMask.IndexOf('|') >= 0)
+        throw new ArgumentException("Недопустимые символы", "fileMask");
+      _FileMask = fileMask;
+    }
+
+    #endregion
+
+    #region Свойства 
+
+    /// <summary>
+    /// Условный код формата, например, "PDF".
+    /// Для одного <see cref="EFPMenuOutItem"/> все коды должны быть разными.
+    /// Код чувствителен к регистру.
+    /// </summary>
+    public new string Code { get { return base.Code; } }
+
+    /// <summary>
+    /// Текст фильтра для блока диалога, например, "Файлы PDF"
+    /// </summary>
+    public string FilterText { get { return _FilterText; } }
+    private readonly string _FilterText;
+
+    /// <summary>
+    /// Маска для диалога выбора файла, например, "*.pdf"
+    /// </summary>
+    public string FileMask { get { return _FileMask; } }
+    private readonly string _FileMask;
+
+    /// <summary>
+    /// Текстовое представление
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+      return Code;
+    }
+
+    /// <summary>
+    /// Используется для передачи дополнительных данных в обработчик
+    /// </summary>
+    public object Tag { get { return _Tag; } set { _Tag = value; } }
+    private object _Tag;
+
+    #endregion
+  }
+
   /// <summary>
   /// Описание одной команды "Отправить" для <see cref="EFPMenuOutItem "/>
   /// </summary>
@@ -17,6 +86,11 @@ namespace FreeLibSet.Forms
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает описание
+    /// </summary>
+    /// <param name="mainCode">Основной код</param>
+    /// <param name="auxCode">Дополнительный код или пустая строка</param>
     public EFPSendToItem(string mainCode, string auxCode)
     {
       if (String.IsNullOrEmpty(mainCode))
@@ -25,19 +99,23 @@ namespace FreeLibSet.Forms
       _AuxCode = auxCode ?? String.Empty;
     }
 
+    /// <summary>
+    /// Создает описание
+    /// </summary>
+    /// <param name="mainCode">Основной код</param>
     public EFPSendToItem(string mainCode)
-      :this(mainCode, String.Empty)
+      : this(mainCode, String.Empty)
     {
     }
 
     #endregion
 
-      #region Код команды
+    #region Код команды
 
-      /// <summary>
-      /// Основной код команды, например, "HTML".
-      /// Задается в конструкторе, не может быть пустой строкой
-      /// </summary>
+    /// <summary>
+    /// Основной код команды, например, "HTML".
+    /// Задается в конструкторе, не может быть пустой строкой
+    /// </summary>
     public string MainCode { get { return _MainCode; } }
     private readonly string _MainCode;
 
@@ -96,7 +174,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public Image Image
     {
-      get { return _Image??EFPApp.MainImages.Images["UnknownState"]; }
+      get { return _Image ?? EFPApp.MainImages.Images["UnknownState"]; }
       set { _Image = value; }
     }
     private Image _Image;
@@ -141,15 +219,26 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
+  /// <summary>
+  /// Базовый класс для выполнения печати/экспорта.
+  /// Если управляющий элемент содержит <see cref="EFPMenuOutHandler"/>, то к обработчику может быть добавлено несколько объектов.
+  /// Для использования отчетов <see cref="FreeLibSet.Reporting.BRReport"/> используйте реализацию <see cref="FreeLibSet.Forms.Reporting.BRMenuOutItem"/>.
+  /// Для печати табличного просмотра используется <see cref="FreeLibSet.Forms.Reporting.EFPDataGridViewMenuOutItem"/>, а для иерахического - <see cref="FreeLibSet.Forms.Reporting.EFPDataTreeViewMenuOutItem"/>
+  /// </summary>
   public abstract class EFPMenuOutItem : IObjectWithCode
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает пустой объект
+    /// </summary>
+    /// <param name="code">Код</param>
     public EFPMenuOutItem(string code)
     {
       if (String.IsNullOrEmpty(code))
         throw new ArgumentNullException("code");
       _Code = code;
+      _ExportFileItems = new NamedList<EFPExportFileItem>();
       _SendToItems = new NamedList<EFPSendToItem>();
     }
 
@@ -157,9 +246,15 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
+    /// <summary>
+    /// Код объекта, например, "Control" для обычной печати просмотра
+    /// </summary>
     public string Code { get { return _Code; } }
     private readonly string _Code;
 
+    /// <summary>
+    /// Отображаемое имя. Используется, когда <see cref="EFPMenuOutHandler"/> содержит несколько объектов и пользователю предлагается выбрать один из <see cref="EFPMenuOutItem"/>.
+    /// </summary>
     public virtual string DisplayName
     {
       get { return _DisplayName ?? Code; }
@@ -167,11 +262,26 @@ namespace FreeLibSet.Forms
     }
     private string _DisplayName;
 
+    /// <summary>
+    /// Возвращает true, если доступна команда "Печать"
+    /// </summary>
     public virtual bool CanPrint { get { return false; } }
 
+    /// <summary>
+    /// Возвращает true, если доступна команда "Параметры страницы"
+    /// </summary>
     public virtual bool CanPageSetup { get { return false; } }
+
+    /// <summary>
+    /// Возвращает true, если доступна команда "Предварительный просмотр"
+    /// </summary>
     public virtual bool CanPrintPreview { get { return false; } }
-    public virtual bool CanExport { get { return false; } }
+
+    /// <summary>
+    /// Список форматов файлов, для которых возможен экспорт.
+    /// </summary>
+    public NamedList<EFPExportFileItem> ExportFileItems { get { return _ExportFileItems; } }
+    private readonly NamedList<EFPExportFileItem> _ExportFileItems;
 
     /// <summary>
     /// Список команд "Отправить".
@@ -179,43 +289,69 @@ namespace FreeLibSet.Forms
     /// В этом случае в меню добавляется только одна команда, которая показывает диалог для выбора варианта отправки
     /// </summary>
     public NamedList<EFPSendToItem> SendToItems { get { return _SendToItems; } }
-    private NamedList<EFPSendToItem> _SendToItems;
+    private readonly NamedList<EFPSendToItem> _SendToItems;
 
     /// <summary>
     /// Произвольные пользовательские данные
     /// </summary>
-    public object Tag { get { return _Tag; }set { _Tag = value; } }
+    public object Tag { get { return _Tag; } set { _Tag = value; } }
     private object _Tag;
 
     #endregion
 
     #region Методы
 
+    /// <summary>
+    /// Выполняет печать.
+    /// </summary>
+    /// <param name="defaultPrinter">true - печать на принтере по умолчанию, false - требуется выести диалог выбора принтера</param>
+    /// <returns></returns>
     public virtual bool Print(bool defaultPrinter)
     {
       throw new NotImplementedException();
     }
 
-    public virtual bool PageSetup()
+    /// <summary>
+    /// Показывает диалог "Параметры страницы"
+    /// </summary>
+    /// <returns>true, если пользователь нажал кнопку "ОК"</returns>
+    public virtual bool ShowPageSetup()
     {
       throw new NotImplementedException();
     }
 
-    public virtual void PrintPreview()
+    /// <summary>
+    /// Выводит окно предварительного просмотра
+    /// </summary>
+    public virtual void ShowPrintPreview()
     {
       throw new NotImplementedException();
     }
 
-    public virtual void Export()
+    /// <summary>
+    /// Выполняет экспорт в файл.
+    /// На момент вызова уже был показан диалог сохранения файла
+    /// </summary>
+    /// <param name="filePath">Путь к файлу</param>
+    /// <param name="item">Описание формата файла</param>
+    public virtual void ExportFile(AbsPath filePath, EFPExportFileItem item)
     {
       throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Выполняет команду "Отправить"
+    /// </summary>
+    /// <param name="item">Описание режима отправки</param>
     public virtual void SendTo(EFPSendToItem item)
     {
       throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Возвращает <see cref="DisplayName"/>
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return DisplayName;
@@ -251,10 +387,14 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Обработчик команд локального меню "Печать", "Параметры страницы", "Предварительный просмотр", "Экспорт в файл" и "Отправить"
   /// </summary>
-  public class EFPMenuOutHandler
+  public sealed class EFPMenuOutHandler
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает обработчик для заданного локального меню
+    /// </summary>
+    /// <param name="commandItems">Описания команд локального меню</param>
     public EFPMenuOutHandler(EFPContextCommandItems commandItems)
     {
       ciPrintDefault = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PrintDefault);
@@ -274,37 +414,38 @@ namespace FreeLibSet.Forms
       ciPrintPreview.Click += PrintPreview_Click;
       commandItems.Add(ciPrintPreview);
 
-      ciExport = new EFPCommandItem("File", "Export");
-      ciExport.MenuText = "Экспорт в файл...";
-      ciExport.Click += Export_Click;
-      commandItems.Add(ciExport);
+      ciExportFile = new EFPCommandItem("File", "ExportFile");
+      ciExportFile.MenuText = "Экспорт в файл...";
+      ciExportFile.Click += ExportFile_Click;
+      commandItems.Add(ciExportFile);
 
       _MenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);
       _MenuSendTo.Usage = EFPCommandItemUsage.Menu;
       commandItems.Add(_MenuSendTo);
       // Заполнение подменю выполняется в обработчике Prepare. Прикладной код может добавлять свои команды "Отправить", не связанные с отчетом
+      _SendToCommands = new List<EFPCommandItem>();
 
       _Items = new NamedList<EFPMenuOutItem>();
       _Enabled = true;
       commandItems.Prepare += CommandItems_Prepare;
     }
 
-    private class SendToGroupInfo
-    {
-      #region Поля
+    //private class SendToGroupInfo
+    //{
+    //  #region Поля
 
-      public EFPSendToItem FirstSendToItem;
+    //  public EFPSendToItem FirstSendToItem;
 
-      public EFPCommandItem FirstCommandInMenu;
+    //  public EFPCommandItem FirstCommandInMenu;
 
-      public EFPCommandItem FirstCommandInToolBar;
+    //  public EFPCommandItem FirstCommandInToolBar;
 
-      public EFPCommandItem SubMenu;
+    //  public EFPCommandItem SubMenu;
 
-      public EFPCommandItem SubToolBar;
+    //  public EFPCommandItem SubToolBar;
 
-      #endregion
-    }
+    //  #endregion
+    //}
 
     private void CommandItems_Prepare(object sender, EventArgs args)
     {
@@ -315,116 +456,121 @@ namespace FreeLibSet.Forms
       bool canPrintPreview = false;
       bool canExport = false;
 
-      // Ключ - свойство EFPSendToItem.MainCode
+      // На первом проходе только собираем команды для меню SendTo
       // Значение созданные команды меню
-      Dictionary<string, SendToGroupInfo> dictSendTo = new Dictionary<string, SendToGroupInfo>();
-      
+      OrderSortedList<string, List<EFPSendToItem>> lstSendTo = new OrderSortedList<string, List<EFPSendToItem>>();
+
       foreach (EFPMenuOutItem item in Items)
       {
         canPrint |= item.CanPrint;
         canPageSetup |= item.CanPageSetup;
         canPrintPreview |= item.CanPrintPreview;
-        canExport |= item.CanExport;
-
-        SendToGroupInfo firstGroup = null;
+        canExport |= (item.ExportFileItems.Count > 0);
 
         foreach (EFPSendToItem sendToItem in item.SendToItems)
         {
-          if (commandItems.Contains("SendTo", sendToItem.Code))
-            continue;
+          List<EFPSendToItem> lst;
+          if (!lstSendTo.TryGetValue(sendToItem.MainCode, out lst))
+          {
+            lst = new List<EFPSendToItem>();
+            lstSendTo.Add(sendToItem.MainCode, lst);
+          }
+          lst.Add(sendToItem);
 
-          // Создаем две команды: одну для меню (ci1), вторую - для панели инструментов
+        } // SendToItems
+      }
 
-          EFPCommandItem ci1 = new EFPCommandItem("SendTo", sendToItem.Code);
-          ci1.MenuText = sendToItem.MenuText;
+      // На втором проходе создаем команды для SendTo
+      // Создаем две команды: одну для меню (ci1), вторую - для панели инструментов (ci2)
+      foreach (KeyValuePair<string, List<EFPSendToItem>> pair in lstSendTo)
+      {
+        #region Команды локального меню
+
+        // Если есть несколько команд с одинаковым основным кодом, то в меню "Отправить" создается подменю, куда добавляются команды.
+        // Если есть только одна команда, то она добавляется непосредственно в меню "Отправить".
+
+        EFPCommandItem subMenu1 = null;
+        if (pair.Value.Count > 1)
+        {
+          subMenu1 = new EFPCommandItem("SendTo", pair.Key + "_SubMenu");
+          subMenu1.MenuText = pair.Value[0].SubMenuText;
+          subMenu1.Parent = MenuSendTo;
+          subMenu1.Usage = EFPCommandItemUsage.Menu;
+          commandItems.Add(subMenu1);
+        }
+
+        for (int i = 0; i < pair.Value.Count; i++)
+        {
+          EFPSendToItem sendToItem = pair.Value[i];
+
+          EFPCommandItem ci1 = new EFPCommandItem("SendTo", sendToItem.Code + (i==0?String.Empty: StdConvert.ToString(i+1)));
+          if (pair.Value.Count == 1)
+          {
+            // При запуске в Wine+Mono многие типы файлов открываются с помощью приложения winebrowser.exe, а других подходящих приложений нет.
+            // Надо добавить в текст меню тип файла, иначе будет несколько команд с одинаковыми именами
+            ci1.MenuText = sendToItem.SubMenuText + " -> " + sendToItem.MenuText;
+            ci1.Parent = MenuSendTo;
+          }
+          else
+          {
+            ci1.MenuText = sendToItem.MenuText;
+            if (i==0)
+              ci1.GroupEnd = true;
+            ci1.Parent = subMenu1;
+          }
+
           ci1.Image = sendToItem.Image;
           ci1.ToolTipText = sendToItem.ToolTipText;
           ci1.Usage = EFPCommandItemUsage.Menu;
           ci1.Tag = sendToItem.Code;
           ci1.Click += ciSendTo_Click;
-          //_SendToItems.Add(ci);
+          ci1.Enabled = Enabled;
+          _SendToCommands.Add(ci1);
+          commandItems.Add(ci1);
+        }
 
-          EFPCommandItem ci2 = new EFPCommandItem("SendTo", sendToItem.Code+"_TB");
+        #endregion
+
+        #region Кнопки панели инструментов
+
+        // Первая ("основная") команда добавляется как обычная кнопка.
+        // Если есть еще команды, то создается "уголочек", куда добавляются остальные команды
+
+        EFPCommandItem subMenu2 = null;
+        for (int i = 0; i < pair.Value.Count; i++)
+        {
+          if (i == 1)
+          {
+            subMenu2 = new EFPCommandItem("SendTo", pair.Key + "_SubTB");
+            subMenu2.Parent = MenuSendTo;
+            subMenu2.Usage = EFPCommandItemUsage.ToolBarDropDown;
+            commandItems.Add(subMenu2);
+          }
+
+          EFPSendToItem sendToItem = pair.Value[i];
+
+          EFPCommandItem ci2 = new EFPCommandItem("SendTo", sendToItem.Code + "_TB" + (i == 0 ? String.Empty : StdConvert.ToString(i + 1)));
           ci2.MenuText = sendToItem.MenuText;
           ci2.Image = sendToItem.Image;
-          ci2.Usage = EFPCommandItemUsage.ToolBar;
           ci2.ToolTipText = sendToItem.ToolTipText;
+          if (subMenu2 == null)
+          {
+            ci2.Parent = MenuSendTo;
+            ci2.Usage = EFPCommandItemUsage.ToolBar;
+          }
+          else
+          {
+            ci2.Parent = subMenu2;
+            ci2.Usage = EFPCommandItemUsage.Menu;
+          }
           ci2.Tag = sendToItem.Code;
           ci2.Click += ciSendTo_Click;
-          //_SendToItems.Add(ci);
-
-          SendToGroupInfo groupInfo;
-          if (!dictSendTo.TryGetValue(sendToItem.MainCode, out groupInfo))
-          {
-            // Первая команда для заданного вида
-            ci1.Parent = MenuSendTo;
-            ci2.Parent = MenuSendTo; // чтобы кнопки были по порядку
-
-            groupInfo = new SendToGroupInfo();
-            groupInfo.FirstSendToItem = sendToItem;
-            groupInfo.FirstCommandInMenu = ci1; // ее потребуется переместить
-            groupInfo.FirstCommandInToolBar = ci2; 
-            dictSendTo.Add(sendToItem.MainCode, groupInfo);
-
-            if (firstGroup == null)
-              firstGroup = groupInfo;
-          }
-          else
-          {
-            if (groupInfo.SubMenu == null)
-            {
-              // Вторая команда для заданного вида
-              groupInfo.SubMenu = new EFPCommandItem("SendTo", sendToItem.MainCode+"_SubMenu");
-              groupInfo.SubMenu.MenuText = sendToItem.SubMenuText; 
-              groupInfo.SubMenu.Parent = MenuSendTo;
-              groupInfo.SubMenu.Usage = EFPCommandItemUsage.Menu;
-              commandItems.Add(groupInfo.SubMenu);
-              // Меняем родителя у первой команды
-              groupInfo.FirstCommandInMenu.Parent = groupInfo.SubMenu;
-              groupInfo.FirstCommandInMenu.GroupEnd = true;
-
-              groupInfo.SubToolBar = new EFPCommandItem("SendTo", sendToItem.MainCode + "_SubTB");
-              //groupInfo.SubToolBar.MenuText = sendToItem.SubMenuText; 
-              groupInfo.SubToolBar.Parent = MenuSendTo;
-              groupInfo.SubToolBar.Usage = EFPCommandItemUsage.ToolBarDropDown;
-              //groupInfo.SubToolBar.ImageKey = "UnknownState";
-              commandItems.Add(groupInfo.SubToolBar);
-              // У первой команды панели инструментов родителя не меняем
-            }
-
-            ci1.MenuText = sendToItem.MenuText;
-            ci1.Parent = groupInfo.SubMenu;
-            ci2.Parent = groupInfo.SubToolBar;
-            ci2.Usage = EFPCommandItemUsage.Menu; // было ToolBar
-          }
-          commandItems.Add(ci1);
+          ci2.Enabled = Enabled;
+          _SendToCommands.Add(ci2);
           commandItems.Add(ci2);
-        } // SendToItems
-
-        // При запуске в Wine+Mono многие типы файлов открываются с помощью приложения winebrowser.exe, а других подходящих приложений нет.
-        // Надо добавить в текст меню тип файла, иначе будет несколько команд с одинаковыми именами
-        foreach (KeyValuePair<string, SendToGroupInfo> pair in dictSendTo)
-        {
-          if (pair.Value.SubMenu == null)
-          {
-            pair.Value.FirstCommandInMenu.MenuText = pair.Value.FirstSendToItem.SubMenuText + " -> " + pair.Value.FirstCommandInMenu.MenuText;
-          }
         }
 
-
-        if (firstGroup != null)
-        {
-          if (firstGroup.SubMenu == null)
-          {
-            firstGroup.FirstCommandInMenu.GroupBegin = true;
-            firstGroup.FirstCommandInToolBar.GroupBegin = true;
-          }
-          else
-          {
-            firstGroup.SubMenu.GroupBegin = true;
-            firstGroup.SubToolBar.GroupBegin = true;
-          }
-        }
+        #endregion
       }
 
       if (!canPrint)
@@ -437,8 +583,8 @@ namespace FreeLibSet.Forms
       if (!canPrintPreview)
         ciPrintPreview.Usage = EFPCommandItemUsage.None;
       if (!canExport)
-        ciExport.Usage = EFPCommandItemUsage.None;
-      if (_MenuSendTo.Children.Count==0)
+        ciExportFile.Usage = EFPCommandItemUsage.None;
+      if (_MenuSendTo.Children.Count == 0)
         _MenuSendTo.Usage = EFPCommandItemUsage.None;
     }
 
@@ -446,8 +592,20 @@ namespace FreeLibSet.Forms
 
     #region Список
 
+    /// <summary>
+    /// Список объектов, которые выполняют печать/экспорт.
+    /// Обычно список состоит из одного объекта, предназначенного для печати просмотра. 
+    /// </summary>
     public NamedList<EFPMenuOutItem> Items { get { return _Items; } }
+    private readonly NamedList<EFPMenuOutItem> _Items;
 
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Блокирование всех команд локального меню
+    /// </summary>
     public bool Enabled
     {
       get { return _Enabled; }
@@ -458,19 +616,25 @@ namespace FreeLibSet.Forms
         ciPrint.Enabled = value;
         ciPageSetup.Enabled = value;
         ciPrintPreview.Enabled = value;
-        ciExport.Enabled = value;
+        ciExportFile.Enabled = value;
+        foreach (EFPCommandItem ci in _SendToCommands)
+          ci.Enabled = value;
       }
     }
     private bool _Enabled;
-
-    private readonly NamedList<EFPMenuOutItem> _Items;
 
     #endregion
 
     #region Команды
 
     private readonly EFPCommandItem ciPrintDefault, ciPrint, ciPageSetup, ciPrintPreview;
-    private readonly EFPCommandItem ciExport;
+    private readonly EFPCommandItem ciExportFile;
+    private readonly List<EFPCommandItem> _SendToCommands;
+
+    /// <summary>
+    /// Подменю "Отправить".
+    /// Может использоваться для добавления команд, не связанных с <see cref="EFPMenuOutHandler"/>.
+    /// </summary>
     public EFPCommandItem MenuSendTo { get { return _MenuSendTo; } }
     private readonly EFPCommandItem _MenuSendTo;
 
@@ -478,56 +642,104 @@ namespace FreeLibSet.Forms
 
     private void PrintDefault_Click(object sender, EventArgs args)
     {
-      EFPMenuOutItem item = SelectItem("Печать", ciPrint.ImageKey, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
-      if (item != null)
-        item.Print(true);
+      EFPMenuOutItem outItem = SelectItem("Печать", ciPrint.ImageKey, null, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
+      if (outItem != null)
+        outItem.Print(true);
     }
 
     private void Print_Click(object sender, EventArgs args)
     {
-      EFPMenuOutItem item = SelectItem("Печать", ciPrint.ImageKey, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
-      if (item != null)
-        item.Print(false);
+      EFPMenuOutItem outItem = SelectItem("Печать", ciPrint.ImageKey, null, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
+      if (outItem != null)
+        outItem.Print(false);
     }
 
     private void PageSetup_Click(object sender, EventArgs args)
     {
-      EFPMenuOutItem item = SelectItem(ciPageSetup.MenuTextWithoutMnemonic, ciPageSetup.ImageKey, delegate (EFPMenuOutItem item2) { return item2.CanPageSetup; });
-      if (item != null)
-        item.PageSetup();
+      EFPMenuOutItem outItem = SelectItem(ciPageSetup.MenuTextWithoutMnemonic, ciPageSetup.ImageKey, null, delegate (EFPMenuOutItem item2) { return item2.CanPageSetup; });
+      if (outItem != null)
+        outItem.ShowPageSetup();
     }
 
     private void PrintPreview_Click(object sender, EventArgs args)
     {
-      EFPMenuOutItem item = SelectItem(ciPrintPreview.MenuTextWithoutMnemonic, ciPrintPreview.ImageKey, delegate (EFPMenuOutItem item2) { return item2.CanPrintPreview; });
-      if (item != null)
-        item.PrintPreview();
+      EFPMenuOutItem outItem = SelectItem(ciPrintPreview.MenuTextWithoutMnemonic, ciPrintPreview.ImageKey, null, delegate (EFPMenuOutItem item2) { return item2.CanPrintPreview; });
+      if (outItem != null)
+        outItem.ShowPrintPreview();
     }
 
-    private void Export_Click(object sender, EventArgs args)
+    private static string LastExportFileCode = String.Empty;
+    private static AbsPath LastExportFileDir = AbsPath.Empty;
+
+    private void ExportFile_Click(object sender, EventArgs args)
     {
-      EFPMenuOutItem item = SelectItem(ciExport.MenuTextWithoutMnemonic, "Save", delegate (EFPMenuOutItem item2) { return item2.CanExport; });
-      if (item != null)
-        item.Export();
+      EFPCommandItem ci = (EFPCommandItem)sender;
+      EFPMenuOutItem outItem = SelectItem(ciExportFile.MenuTextWithoutMnemonic, "Save", null, delegate (EFPMenuOutItem item2) { return item2.ExportFileItems.Count > 0; });
+      if (outItem == null)
+        return;
+
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < outItem.ExportFileItems.Count; i++)
+      {
+        if (i > 0)
+          sb.Append('|');
+        sb.Append(outItem.ExportFileItems[i].FilterText);
+        sb.Append('|');
+        sb.Append(outItem.ExportFileItems[i].FileMask);
+      }
+
+      SaveFileDialog dlg = new SaveFileDialog();
+      dlg.Title = ci.MenuTextWithoutMnemonic;
+      dlg.Filter = sb.ToString();
+      dlg.FilterIndex = Array.IndexOf<string>(outItem.ExportFileItems.GetCodes(), LastExportFileCode) + 1; // FilterIndex нумеруется с 1
+      if (!LastExportFileDir.IsEmpty)
+        dlg.InitialDirectory = LastExportFileDir.Path;
+      if (EFPApp.ShowDialog(dlg) != DialogResult.OK)
+        return;
+
+      LastExportFileCode = outItem.ExportFileItems.GetCodes()[dlg.FilterIndex - 1];
+
+      AbsPath filePath = new AbsPath(dlg.FileName);
+      LastExportFileDir = filePath.ParentDir;
+
+      EFPApp.BeginWait("Экспорт в файл " + filePath.FileName, "Save");
+      try
+      {
+        FileTools.ForceDirs(filePath.ParentDir);
+        outItem.ExportFile(filePath, outItem.ExportFileItems[dlg.FilterIndex - 1]);
+      }
+      finally
+      {
+        EFPApp.EndWait();
+      }
     }
 
     private void ciSendTo_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
       string sendToCode = (string)(ci.Tag);
-      EFPMenuOutItem item = SelectItem("Отправить в " + ci.MenuTextWithoutMnemonic, ci.ImageKey,
+      EFPMenuOutItem item = SelectItem("Отправить в " + ci.MenuTextWithoutMnemonic, ci.ImageKey, ci.Image,
         delegate (EFPMenuOutItem item2) { return item2.SendToItems.Contains(sendToCode); });
       if (item == null)
         return;
 
       EFPSendToItem sendToItem = item.SendToItems.GetRequired(sendToCode);
-      item.SendTo(sendToItem);
+      EFPApp.BeginWait("Отправка в " + sendToItem.MenuText, "Play");
+      try
+      {
+        item.SendTo(sendToItem);
+      }
+      finally
+      {
+        EFPApp.EndWait();
+      }
     }
 
-    private static string _LastSelectedItemCode=String.Empty;
+    private static string _LastSelectedItemCode = String.Empty;
 
     private delegate bool ItemTester(EFPMenuOutItem item);
-    private EFPMenuOutItem SelectItem(string title, string imageKey, ItemTester tester)
+
+    private EFPMenuOutItem SelectItem(string title, string imageKey, Image image, ItemTester tester)
     {
       NamedList<EFPMenuOutItem> list2 = new NamedList<EFPMenuOutItem>();
       foreach (EFPMenuOutItem item in Items)
@@ -557,7 +769,10 @@ namespace FreeLibSet.Forms
       }
       dlg.Items = a;
       dlg.Title = title;
-      dlg.ImageKey = imageKey;
+      if (String.IsNullOrEmpty(imageKey))
+        dlg.Image = image;
+      else
+        dlg.ImageKey = imageKey;
       dlg.SelectedIndex = selIndex;
       if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
       {

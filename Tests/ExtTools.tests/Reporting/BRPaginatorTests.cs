@@ -17,7 +17,7 @@ namespace ExtTools_tests.Reporting
         throw new NotImplementedException();
       }
 
-      public void MeasureString(BRSelector sel, string s, out int width, out int height)
+      public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
       {
         throw new NotImplementedException();
       }
