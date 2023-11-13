@@ -524,7 +524,7 @@ namespace BRReportDemo
       #region Большая таблица
 
       sect = report.Sections.Add();
-      sect.PageSetup.Orientation = BROrientation.Landscape;
+      sect.PageSetup.SetOrientation(BROrientation.Landscape, true);
 
       table = sect.Bands.Add(1, 1);
       table.Cells.Value = "Большая таблица";
@@ -574,36 +574,67 @@ namespace BRReportDemo
 
     public enum DefConfigMode { NotSet, Default, Named }
 
-    public static void TestTreeView(bool useColumns, string configSectionName, bool removeOutItem, bool addOutItem, bool multiSelect, DefConfigMode configMode)
+    public static void TestTreeView(bool useColumns, string configSectionName, bool useGridProducer, bool removeOutItem, bool addOutItem, bool multiSelect, DefConfigMode configMode)
     {
       DataTable table = CreateTestTableTree();
       DataTableTreeModel model = new DataTableTreeModel(table, "Id", "ParentId");
 
       SimpleForm<TreeViewAdv> form = new SimpleForm<TreeViewAdv>();
-      EFPDataTreeView efpTree = new EFPDataTreeView(form.ControlWithToolBar);
+      EFPConfigurableDataTreeView efpTree = new EFPConfigurableDataTreeView(form.ControlWithToolBar);
       efpTree.Control.UseColumns = useColumns;
 
       // Вызывать методы EFPDataTreeViewColumns.AddXXX() можно, даже если useColumns=false.
       // При этом создается NodeControl, но не создается TreeColumn
 
-      efpTree.Columns.AddText("Name", true, "Название", 50, 10);
-      efpTree.Columns.AddDate("Date1", true, "Начало");
-      efpTree.Columns.AddDate("Date2", true, "Окончание");
-      efpTree.Columns.AddInt("Id", true, "Id", 3);
-      efpTree.Columns.AddInt("ParentId", true, "ParentId", 3);
-      efpTree.Columns.AddBool("Flag", true, "Flag");
-      if (useColumns)
+      if (useColumns && useGridProducer)
+        efpTree.GridProducer = CreateGridProducer(true, configMode);
+      else
       {
-        efpTree.Columns["Id"].SizeGroup = "Id";
-        efpTree.Columns["ParentId"].SizeGroup = "Id";
+        efpTree.Columns.AddText("Name", true, "Название", 50, 10);
+        efpTree.Columns.AddDate("Date1", true, "Начало");
+        efpTree.Columns.AddDate("Date2", true, "Окончание");
+        efpTree.Columns.AddInt("Id", true, "Id", 3);
+        efpTree.Columns.AddInt("ParentId", true, "ParentId", 3);
+        efpTree.Columns.AddBool("Flag", true, "Flag");
+        if (useColumns)
+        {
+          efpTree.Columns["Id"].SizeGroup = "Id";
+          efpTree.Columns["ParentId"].SizeGroup = "Id";
+          efpTree.Columns["Id"].ColorType = EFPDataGridViewColorType.Total1;
 
-        efpTree.Columns["Date1"].PrintHeadersSpec = "Период|Начало";
-        efpTree.Columns["Date2"].PrintHeadersSpec = "Период|Окончание";
+          efpTree.Columns["Date1"].PrintHeadersSpec = "Период|Начало";
+          efpTree.Columns["Date2"].PrintHeadersSpec = "Период|Окончание";
 
-        efpTree.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
-        efpTree.Columns["ParentId"].PrintHeadersSpec = "Идентификатор|ParentId";
-        efpTree.Columns["Id"].DisplayName = "Идентификатор узла";
-        efpTree.Columns["ParentId"].DisplayName = "Идентификатор родительского узла";
+          efpTree.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
+          efpTree.Columns["ParentId"].PrintHeadersSpec = "Идентификатор|ParentId";
+          efpTree.Columns["Id"].DisplayName = "Идентификатор узла";
+          efpTree.Columns["ParentId"].DisplayName = "Идентификатор родительского узла";
+        }
+
+        if (!removeOutItem)
+        {
+          if (configMode != DefConfigMode.NotSet)
+          {
+            //efpGrid.DefaultOutItem.Default.View.BorderStyle = BRDataViewBorderStyle.All;
+
+            if (useColumns)
+            {
+              //efpGrid.Columns["Name"].PrintWidth = 600;
+              //efpGrid.Columns["Name"].PrintAutoGrow = true;
+              efpTree.Columns["Date1"].PrintWidth = 250;
+              efpTree.Columns["Date2"].PrintWidth = 250;
+              efpTree.Columns["Id"].PrintWidth = 200;
+              efpTree.Columns["ParentId"].PrintWidth = 200;
+              efpTree.Columns["Flag"].PrintWidth = 150;
+            }
+            if (configMode == DefConfigMode.Named)
+            {
+              efpTree.DefaultOutItem.Add("A4", "A4 portrait");
+              efpTree.DefaultOutItem.Add("A4L", "A4 landscape");
+              efpTree.DefaultOutItem["A4L"].PageSetup.InvertOrientation();
+            }
+          }
+        }
       }
 
       efpTree.ReadOnly = true;
@@ -620,30 +651,6 @@ namespace BRReportDemo
       efpTree.DocumentProperties.Company = "Free software";
 
       efpTree.ConfigSectionName = configSectionName;
-      if (!removeOutItem)
-      {
-        if (configMode != DefConfigMode.NotSet)
-        {
-          //efpGrid.DefaultOutItem.Default.View.BorderStyle = BRDataViewBorderStyle.All;
-
-          if (useColumns)
-          {
-            //efpGrid.Columns["Name"].PrintWidth = 600;
-            //efpGrid.Columns["Name"].PrintAutoGrow = true;
-            efpTree.Columns["Date1"].PrintWidth = 250;
-            efpTree.Columns["Date2"].PrintWidth = 250;
-            efpTree.Columns["Id"].PrintWidth = 200;
-            efpTree.Columns["ParentId"].PrintWidth = 200;
-            efpTree.Columns["Flag"].PrintWidth = 150;
-          }
-          if (configMode == DefConfigMode.Named)
-          {
-            efpTree.DefaultOutItem.Add("A4", "A4 portrait");
-            efpTree.DefaultOutItem.Add("A4L", "A4 landscape");
-            efpTree.DefaultOutItem["A4L"].PageSetup.InvertOrientation();
-          }
-        }
-      }
 
       if (removeOutItem)
         efpTree.CommandItems.OutHandler.Items.Clear();
@@ -684,47 +691,52 @@ namespace BRReportDemo
 
     #region Тестирование EFPDataGridView
 
-    public static void TestGridView(string configSectionName, bool removeOutItem, bool addOutItem, bool multiSelect, DefConfigMode configMode)
+    public static void TestGridView(string configSectionName, bool useGridProducer, bool removeOutItem, bool addOutItem, bool multiSelect, DefConfigMode configMode)
     {
       DataTable table = CreateTestTableGrid();
       SimpleGridForm form = new SimpleGridForm();
-      EFPDataGridView efpGrid = new EFPDataGridView(form.ControlWithToolBar);
+      EFPConfigurableDataGridView efpGrid = new EFPConfigurableDataGridView(form.ControlWithToolBar);
       efpGrid.Control.AutoGenerateColumns = false;
-      efpGrid.Columns.AddTextFill("Name", true, "Название", 50, 10);
-      efpGrid.Columns.AddDate("Date1", true, "Начало");
-      efpGrid.Columns.AddDate("Date2", true, "Окончание");
-      efpGrid.Columns.AddInt("Id", true, "Id", 3);
-      efpGrid.Columns.LastAdded.SizeGroup = "Id";
-      efpGrid.Columns.AddBool("Flag", true, "Flag");
-      efpGrid.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
-      efpGrid.Columns["Id"].DisplayName = "Идентификатор узла";
-      efpGrid.Columns.LastAdded.ColorType = EFPDataGridViewColorType.Total1;
-
       efpGrid.ConfigSectionName = configSectionName;
 
-      if (!removeOutItem)
+      if (useGridProducer)
+        efpGrid.GridProducer = CreateGridProducer(false, configMode);
+      else
       {
-        if (configMode != DefConfigMode.NotSet)
+        efpGrid.Columns.AddTextFill("Name", true, "Название", 50, 10);
+        efpGrid.Columns.AddDate("Date1", true, "Начало");
+        efpGrid.Columns.AddDate("Date2", true, "Окончание");
+        efpGrid.Columns.AddInt("Id", true, "Id", 3);
+        efpGrid.Columns.LastAdded.SizeGroup = "Id";
+        efpGrid.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
+        efpGrid.Columns["Id"].DisplayName = "Идентификатор узла";
+        efpGrid.Columns.LastAdded.ColorType = EFPDataGridViewColorType.Total1;
+        efpGrid.Columns.AddBool("Flag", true, "Flag");
+
+        if (!removeOutItem)
         {
-          //efpGrid.DefaultOutItem.Default.View.BorderStyle = BRDataViewBorderStyle.All;
-
-          //efpGrid.Columns["Name"].PrintWidth = 600;
-          //efpGrid.Columns["Name"].PrintAutoGrow = true;
-          efpGrid.Columns["Date1"].PrintWidth = 250;
-          efpGrid.Columns["Date2"].PrintWidth = 250;
-          efpGrid.Columns["Id"].PrintWidth = 200;
-          efpGrid.Columns["Flag"].PrintWidth = 150;
-
-          if (configMode == DefConfigMode.Named)
+          if (configMode != DefConfigMode.NotSet)
           {
-            efpGrid.DefaultOutItem.Add("A4", "A4 portrait");
-            efpGrid.DefaultOutItem.Add("A4L", "A4 landscape");
-            efpGrid.DefaultOutItem["A4L"].PageSetup.InvertOrientation();
+            //efpGrid.DefaultOutItem.Default.View.BorderStyle = BRDataViewBorderStyle.All;
+
+            //efpGrid.Columns["Name"].PrintWidth = 600;
+            //efpGrid.Columns["Name"].PrintAutoGrow = true;
+            efpGrid.Columns["Date1"].PrintWidth = 250;
+            efpGrid.Columns["Date2"].PrintWidth = 250;
+            efpGrid.Columns["Id"].PrintWidth = 200;
+            efpGrid.Columns["Flag"].PrintWidth = 150;
+
+            if (configMode == DefConfigMode.Named)
+            {
+              efpGrid.DefaultOutItem.Add("A4", "A4 portrait");
+              efpGrid.DefaultOutItem.Add("A4L", "A4 landscape");
+              efpGrid.DefaultOutItem["A4L"].PageSetup.InvertOrientation();
+            }
           }
         }
+        efpGrid.DisableOrdering();
       }
 
-      efpGrid.DisableOrdering();
       efpGrid.GetRowAttributes += EfpGrid_GetRowAttributes;
       efpGrid.GetCellAttributes += EfpGrid_GetCellAttributes;
       efpGrid.Control.MultiSelect = multiSelect;
@@ -845,6 +857,46 @@ namespace BRReportDemo
 
       DataTools.SetPrimaryKey(table, "Id");
       return table;
+    }
+    private static EFPGridProducer CreateGridProducer(bool isTree, DefConfigMode configMode)
+    {
+      EFPGridProducer producer = new EFPGridProducer();
+      producer.Columns.AddText("Name", "Название", 50, 10);
+      producer.Columns.AddDate("Date1", "Начало");
+      producer.Columns.AddDate("Date2", "Окончание");
+      producer.Columns.AddInt("Id", "Id", 3);
+      producer.Columns.LastAdded.SizeGroup = "Id";
+      producer.Columns.LastAdded.ColorType = EFPDataGridViewColorType.Total1;
+      producer.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
+      producer.Columns["Id"].DisplayName = "Идентификатор узла";
+      if (isTree)
+      {
+        producer.Columns.AddInt("ParentId", "ParentId", 3);
+        producer.Columns.LastAdded.SizeGroup = "Id";
+        producer.Columns["ParentId"].DisplayName = "Идентификатор родительского узла";
+      }
+      producer.Columns.AddBool("Flag", "Flag");
+
+      if (configMode != DefConfigMode.NotSet)
+      {
+        //efpGrid.DefaultOutItem.Default.View.BorderStyle = BRDataViewBorderStyle.All;
+
+        //efpGrid.Columns["Name"].PrintWidth = 600;
+        //efpGrid.Columns["Name"].PrintAutoGrow = true;
+        producer.Columns["Date1"].PrintWidth = 250;
+        producer.Columns["Date2"].PrintWidth = 250;
+        producer.Columns["Id"].PrintWidth = 200;
+        producer.Columns["Flag"].PrintWidth = 150;
+
+        if (configMode == DefConfigMode.Named)
+        {
+          producer.OutItem.Add("A4", "A4 portrait");
+          producer.OutItem.Add("A4L", "A4 landscape");
+          producer.OutItem["A4L"].PageSetup.InvertOrientation();
+        }
+      }
+
+      return producer;
     }
 
     #endregion

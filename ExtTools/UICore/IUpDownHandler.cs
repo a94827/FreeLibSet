@@ -627,7 +627,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает объект прокрутки на основании массива значений.
     /// Объект использует ссылку на переданный массив, а не создает копию. Конструктор может выполнить сортировку массива.
-    /// Для сравнения элементов используется компаратор по умолчанию <see cref="Comparer{T}.Default"/>.
+    /// Для сравнения элементов используется компаратор по умолчанию <see cref="System.Collections.Generic.Comparer{T}.Default"/>.
     /// </summary>
     /// <param name="items">Массив значений</param>
     /// <param name="performSort">Нужно ли выполнять сортировку массива (true), или массив уже отсортирован (false)</param>
@@ -659,7 +659,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает объект прокрутки на перечислимого списка значений.
     /// Создается внутренний отсортированный массив элементов.
-    /// Для сравнения элементов используется компаратор по умолчанию <see cref="Comparer{T}.Default"/>.
+    /// Для сравнения элементов используется компаратор по умолчанию <see cref="System.Collections.Generic.Comparer{T}.Default"/>.
     /// </summary>
     /// <param name="items">Массив значений</param>
     public NumArrayUpDownHandler(IEnumerable<T> items)
@@ -697,7 +697,7 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Компаратор для сравнения элементов.
-    /// Если не был задан в конструкторе в явном виде, возвращает <see cref="Comparer{T}.Default"/>.
+    /// Если не был задан в конструкторе в явном виде, возвращает <see cref="System.Collections.Generic.Comparer{T}.Default"/>.
     /// </summary>
     public IComparer<T> Comparer
     {

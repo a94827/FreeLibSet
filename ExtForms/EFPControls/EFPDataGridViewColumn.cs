@@ -99,17 +99,10 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Общая часть описаний для <see cref="EFPDataGridViewColumn"/> и <see cref="EFPDataTreeViewColumn"/>
+  /// Базовая часть интерфейса <see cref="IEFPDataViewColumn"/>, которая реализуется в <see cref="EFPGridProducerColumn"/>
   /// </summary>
-  public interface IEFPDataViewColumn
+  public interface IEFPDataViewColumnBase
   {
-    #region Свойства
-
-    /// <summary>
-    /// Объект - владелец
-    /// </summary>
-    IEFPDataView ControlProvider { get; }
-
     /// <summary>
     /// Условное имя столбца
     /// </summary>
@@ -119,33 +112,6 @@ namespace FreeLibSet.Forms
     /// Отображаемое имя столбца. Используется в диалоге параметров страницы
     /// </summary>
     string DisplayName { get; }
-
-    /// <summary>
-    /// Если столбец был создан с помощью <see cref="EFPGridProducer"/>, то ссылка на генератор столбца,
-    /// иначе - null.
-    /// </summary>
-    IEFPGridProducerColumn ColumnProducer { get; }
-
-
-    /// <summary>
-    /// Индекс столбца в списке <see cref="IEFPDataViewColumns"/>
-    /// </summary>
-    int Index { get; }
-
-    /// <summary>
-    /// Возвращает true, если столбец является видимым (актуально только для <see cref="EFPDataGridViewColumn"/> 
-    /// </summary>
-    bool Visible { get; }
-
-    /// <summary>
-    /// Ширина столбца в пикселях
-    /// </summary>
-    int Width { get; }
-
-    /// <summary>
-    /// Ширина столбца в пунктах, в зависимости от разрешения экрана
-    /// </summary>
-    int WidthPt { get; }
 
     /// <summary>
     /// Ширина столбца в текстовых единицах (условная)
@@ -173,6 +139,46 @@ namespace FreeLibSet.Forms
     /// Возвращает true (обычно), если столбец может быть выведен в отчет
     /// </summary>
     bool Printable { get; }
+  }
+
+  /// <summary>
+  /// Общая часть описаний для <see cref="EFPDataGridViewColumn"/> и <see cref="EFPDataTreeViewColumn"/>
+  /// </summary>
+  public interface IEFPDataViewColumn: IEFPDataViewColumnBase
+  {
+    #region Свойства
+
+    /// <summary>
+    /// Объект - владелец
+    /// </summary>
+    IEFPDataView ControlProvider { get; }
+
+
+    /// <summary>
+    /// Если столбец был создан с помощью <see cref="EFPGridProducer"/>, то ссылка на генератор столбца,
+    /// иначе - null.
+    /// </summary>
+    IEFPGridProducerColumn ColumnProducer { get; }
+
+    /// <summary>
+    /// Индекс столбца в списке <see cref="IEFPDataViewColumns"/>
+    /// </summary>
+    int Index { get; }
+
+    /// <summary>
+    /// Возвращает true, если столбец является видимым (актуально только для <see cref="EFPDataGridViewColumn"/> 
+    /// </summary>
+    bool Visible { get; }
+
+    /// <summary>
+    /// Ширина столбца в пикселях
+    /// </summary>
+    int Width { get; }
+
+    /// <summary>
+    /// Ширина столбца в пунктах, в зависимости от разрешения экрана
+    /// </summary>
+    int WidthPt { get; }
 
     #endregion
   }
@@ -198,7 +204,7 @@ namespace FreeLibSet.Forms
     /// Доступ по имени столбца
     /// Если просмотр не содержит столбца с таким именем, возвращается null
     /// </summary>
-    /// <param name="name">Имя столбца <see cref="IEFPDataViewColumn.Name"/></param>
+    /// <param name="name">Имя столбца <see cref="IEFPDataViewColumnBase.Name"/></param>
     /// <returns>Столбец </returns>
     IEFPDataViewColumn this[string name] { get; }
 
@@ -213,7 +219,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Поиск столбца в табличном просмотре по имени
     /// </summary>
-    /// <param name="name">Имя столбца <see cref="IEFPDataViewColumn.Name"/></param>
+    /// <param name="name">Имя столбца <see cref="IEFPDataViewColumnBase.Name"/></param>
     /// <returns>Индекс столбца или (-1), если столбец не найден</returns>
     int IndexOf(string name);
   }
@@ -588,7 +594,7 @@ namespace FreeLibSet.Forms
       set { GridColumn.MinimumWidth = ControlProvider.Measures.GetTextColumnWidth(value); }
     }
 
-    bool IEFPDataViewColumn.AutoGrow { get { return GridColumn.InheritedAutoSizeMode == DataGridViewAutoSizeColumnMode.Fill; } }
+    bool IEFPDataViewColumnBase.AutoGrow { get { return GridColumn.InheritedAutoSizeMode == DataGridViewAutoSizeColumnMode.Fill; } }
 
     #endregion
 
@@ -881,9 +887,9 @@ namespace FreeLibSet.Forms
       set { SetPrintAutoGrow(String.Empty, value); }
     }
 
-    private EFPDataViewMenuOutSettings GetSettings(string defCfgCode)
+    private BRDataViewMenuOutSettings GetSettings(string defCfgCode)
     {
-      EFPDataGridViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
+      BRDataGridViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
       if (outItem == null)
         throw new InvalidOperationException("Стандартный вариант печати табличного просмотра был удален");
       return outItem[defCfgCode];

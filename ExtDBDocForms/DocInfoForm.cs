@@ -118,11 +118,16 @@ namespace FreeLibSet.Forms.Docs
       #region История изменений
 
       EFPGridProducer producer = new EFPGridProducer();
+
+      producer.OutItem.Default.PageSetup.SetOrientation(FreeLibSet.Reporting.BROrientation.Landscape, true);
+
       producer.Columns.AddUserImage("Image", "Action", ImageColumnValueNeeded, String.Empty);
       producer.Columns.LastAdded.DisplayName = "Значок действия (создание, изменение, удаление)";
       producer.Columns.AddInt("Version", "Версия документа", 3);
       producer.Columns.AddDateTime("UserActionId.StartTime", "Время начала редактирования");
+      producer.Columns.LastAdded.Printed = false;
       producer.Columns.AddDateTime("UserActionId.ActionTime", "Время первого сохранения");
+      producer.Columns.LastAdded.Printed = false;
       producer.Columns.AddInt("UserActionId.ApplyChangesCount", "Кол-во сохранений", 4);
       producer.Columns.AddDateTime("UserActionId.ApplyChangesTime", "Время последнего сохранения");
       producer.Columns.AddUserText("EditTime", "UserActionId.StartTime,UserActionId.ApplyChangesTime",
@@ -501,6 +506,7 @@ namespace FreeLibSet.Forms.Docs
     /// Текущий вид документа, который выбран в таблице "Статистика".
     /// Может быть null
     /// </summary>
+    public DBxDocType CurrFromDocType { get { return _CurrFromDocType; } }
     private DBxDocType _CurrFromDocType;
 
     private DBxDocType GetCurrFromDocType()
@@ -514,7 +520,7 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-    EFPDBxGridView efpRefDet;
+    public EFPDBxGridView efpRefDet;
 
     private void InitRefDetTable()
     {
@@ -716,6 +722,7 @@ namespace FreeLibSet.Forms.Docs
       _MainPage.Control = _ReportForm.Panel1;
       _ReportForm.InitMainPage(_MainPage.BaseProvider);
       _MainPage.DataQuery += new EventHandler(MainPage_DataQuery);
+      _ReportForm.efpHist.DefaultOutItem.TitleNeeded += MainPage_DefaultOutItem_TitleNeeded;
       Pages.Add(_MainPage);
 
       _RefPage = new EFPReportControlPage();
@@ -724,6 +731,8 @@ namespace FreeLibSet.Forms.Docs
       _RefPage.Control = _ReportForm.Panel2;
       _ReportForm.InitRefPage(_RefPage.BaseProvider);
       _RefPage.DataQuery += new EventHandler(RefPage_DataQuery);
+      _ReportForm.efpRefStat.MenuOutItems.Clear();
+      _ReportForm.efpRefDet.DefaultOutItem.TitleNeeded+=new EventHandler(RefDet_DefaultOutItem_TitleNeeded);
       Pages.Add(_RefPage);
     }
 
@@ -841,6 +850,14 @@ namespace FreeLibSet.Forms.Docs
         return ui.TextHandlers.GetTextValue(ui.DocProvider.DocTypes.UsersTableName, userId);
     }
 
+    private void MainPage_DefaultOutItem_TitleNeeded(object sender, EventArgs args)
+    {
+      Reporting.BRDataGridViewMenuOutItem outItem = (Reporting.BRDataGridViewMenuOutItem)sender;
+      outItem.Title = "Информация о документе \"" + Params.DocTypeUI.DocType.SingularTitle + "\", DocId=" + Params.DocId.ToString();
+      outItem.FilterInfo.Clear();
+      outItem.FilterInfo.Add("Документ", UI.TextHandlers.GetTextValue(Params.DocTypeName, Params.DocId));
+    }
+
     #endregion
 
     #region Вкладка "Ссылки"
@@ -854,6 +871,18 @@ namespace FreeLibSet.Forms.Docs
       _ReportForm.lblUserDocsInfo.Visible = (Params.DocTypeName == UI.DocProvider.DocTypes.UsersTableName);
 
       _ReportForm.InitRefPage();
+    }
+
+    private void RefDet_DefaultOutItem_TitleNeeded(object sender, EventArgs args)
+    {
+      Reporting.BRDataGridViewMenuOutItem outItem = (Reporting.BRDataGridViewMenuOutItem)sender;
+      outItem.Title = "Ссылки на документ \"" + Params.DocTypeUI.DocType.SingularTitle + "\", DocId=" + Params.DocId.ToString();
+      outItem.FilterInfo.Clear();
+      outItem.FilterInfo.Add("Документ", UI.TextHandlers.GetTextValue(Params.DocTypeName, Params.DocId));
+      string fromTypeText = "Документы всех типов";
+      if (_ReportForm.CurrFromDocType != null)
+        fromTypeText = _ReportForm.CurrFromDocType.PluralTitle;
+      outItem.FilterInfo.Add("Ссылки из документов", fromTypeText);
     }
 
     #endregion

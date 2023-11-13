@@ -6662,9 +6662,9 @@ namespace FreeLibSet.Forms
     /// Параметры печати/экспорта табличного просмотра.
     /// Может возвращать null, если в <see cref="EFPDataGridViewCommandItems.OutHandler"/> был удален вариант "Control"
     /// </summary>
-    public Reporting.EFPDataGridViewMenuOutItem DefaultOutItem
+    public Reporting.BRDataGridViewMenuOutItem DefaultOutItem
     {
-      get { return MenuOutItems["Control"] as Reporting.EFPDataGridViewMenuOutItem; }
+      get { return MenuOutItems["Control"] as Reporting.BRDataGridViewMenuOutItem; }
     }
 
 #endif

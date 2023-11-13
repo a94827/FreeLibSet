@@ -11,58 +11,50 @@ using FreeLibSet.Reporting;
 namespace FreeLibSet.Forms.Reporting
 {
   /// <summary>
-  /// Объект для печати/экспорта иерархического просмотра
+  /// Базовый класс для <see cref="BRDataGridViewMenuOutItem"/> и <see cref="BRDataTreeViewMenuOutItem"/>
   /// </summary>
-  public sealed class EFPDataGridViewMenuOutItem : BRMenuOutItem
+  public abstract class BRDataViewMenuOutItemBase : BRMenuOutItem
   {
     #region Конструктор
 
-    /// <summary>
-    /// Создание объекта для вывода табличного просмотра
-    /// </summary>
-    /// <param name="code">Код объекта. Обычно, "Control"</param>
-    /// <param name="controlProvider">Провайдер табличного просмотра</param>
-    public EFPDataGridViewMenuOutItem(string code, EFPDataGridView controlProvider)
+    internal BRDataViewMenuOutItemBase(string code, IEFPDataView controlProvider)
       : base(code)
     {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
       _ControlProvider = controlProvider;
-
-      DisplayName = "Табличный просмотр";
       SettingsData.Add(new BRFontSettingsDataItem());
       SettingsData.Add(new BRDataViewSettingsDataItem());
-      SettingsData.GetRequired<BRDataViewSettingsDataItem>().AutoTitle = true;
     }
 
     #endregion
 
-    #region Свойства
+    #region Основные свойства
 
     /// <summary>
     /// Провайдер табличного просмотра
     /// </summary>
-    public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
-    private readonly EFPDataGridView _ControlProvider;
+    public IEFPDataView ControlProvider { get { return _ControlProvider; } }
+    private readonly IEFPDataView _ControlProvider;
 
     /// <summary>
     /// Доступ к настройкам печати просмотра по умолчанию
     /// </summary>
-    public EFPDataViewMenuOutSettings Default { get { return new EFPDataViewMenuOutSettings(SettingsData); } }
+    public BRDataViewMenuOutSettings Default { get { return new BRDataViewMenuOutSettings(SettingsData); } }
 
     /// <summary>
     /// Доступ к именным настройкам печати просмотра.
     /// </summary>
     /// <param name="defCfgCode">Код для именной настройки</param>
     /// <returns>Объект для доступа к настройкам</returns>
-    public EFPDataViewMenuOutSettings this[string defCfgCode]
+    public BRDataViewMenuOutSettings this[string defCfgCode]
     {
       get
       {
         if (String.IsNullOrEmpty(defCfgCode))
           return Default;
         else
-          return new EFPDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
+          return new BRDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
       }
     }
 
@@ -72,13 +64,215 @@ namespace FreeLibSet.Forms.Reporting
     /// <param name="defCfgCode">Код для именной настройки</param>
     /// <param name="displayName">Отображаемое название настройки</param>
     /// <returns>Объект для доступа к настройкам</returns>
-    public EFPDataViewMenuOutSettings Add(string defCfgCode, string displayName)
+    public BRDataViewMenuOutSettings Add(string defCfgCode, string displayName)
     {
       if (String.IsNullOrEmpty(defCfgCode))
         throw new ArgumentNullException("defCfgCode");
       SettingsData.DefaultConfigs[defCfgCode].DisplayName = displayName;
-      return new EFPDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
+      return new BRDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
     }
+
+    #endregion
+
+    #region Заголовок и табличка фильтров
+
+    /// <summary>
+    /// Заголовок отчета.
+    /// Свойство может устанавливаться из прикладного кода или обработчика события <see cref="TitleNeeded"/>. 
+    /// Установка из прикладного кода отключает вызов события <see cref="TitleNeeded"/>.
+    /// </summary>
+    public string Title
+    {
+      get { return _Title ?? String.Empty; }
+      set
+      {
+        _Title = value;
+        _TitleHasBeenSet = true;
+      }
+    }
+    private string _Title;
+
+    private bool _TitleHasBeenSet;
+
+    /// <summary>
+    /// Фильтры отчета
+    /// Список может заполняться из прикладного кода или обработчика события <see cref="TitleNeeded"/>. 
+    /// Заполлнение из прикладного кода отключает вызов события <see cref="TitleNeeded"/>.
+    /// </summary>
+    public EFPReportFilterItems FilterInfo
+    {
+      get
+      {
+        if (_FilterInfo == null)
+          _FilterInfo = new EFPReportFilterItems();
+        return _FilterInfo;
+      }
+    }
+    private EFPReportFilterItems _FilterInfo;
+
+    /// <summary>
+    /// Событие вызывается при формировании отчета в <see cref="BRMenuOutItem.OnCreateReport(BRMenuOutItemCreateReportEventArgs)"/>.
+    /// Обработчик события может установить свойство <see cref="Title"/> и заполнить табличку фильтров <see cref="FilterInfo"/>.
+    /// Установка этих свойств из прикладного кода предотвращает вызов обработчика события
+    /// </summary>
+    public event EventHandler TitleNeeded;
+
+    /// <summary>
+    /// Если свойства <see cref="Title"/> и <see cref="FilterInfo"/> не были установлены из прикладного кода до первого вызова этого метода,
+    /// вызывает обработчик события <see cref="TitleNeeded"/>. 
+    /// В противном случае никаких действий не выполняется.
+    /// </summary>
+    private void InitTitle()
+    {
+      if (!_InitTitleCalled)
+      {
+        _InitTitleCalled = true;
+        if ((!_TitleHasBeenSet) && FilterInfo.Count == 0)
+          _UseTitleNeeded = true;
+      }
+
+      if (_UseTitleNeeded)
+      {
+        Title = GetAutoTitle(this.ControlProvider);
+        FilterInfo.Clear();
+
+        if (TitleNeeded != null)
+          TitleNeeded(this, EventArgs.Empty);
+      }
+    }
+
+    private bool _InitTitleCalled;
+
+    private bool _UseTitleNeeded;
+
+
+
+    /// <summary>
+    /// Возвращает текст для заголовка
+    /// </summary>
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    /// <returns>Текст автоматически определяемого заголовка</returns>
+    private static string GetAutoTitle(IEFPDataView controlProvider)
+    {
+      if (!String.IsNullOrEmpty(controlProvider.DocumentProperties.Title))
+        return controlProvider.DocumentProperties.Title;
+
+      Form frm = controlProvider.Control.FindForm();
+      if (frm != null)
+      {
+        if (!String.IsNullOrEmpty(frm.Text))
+          return frm.Text;
+      }
+      return controlProvider.DisplayName;
+    }
+
+
+    internal void AddTitleAndFilterBands(BRSection sect)
+    {
+      InitTitle();
+
+      #region Заголовок
+
+      if (!String.IsNullOrEmpty(Title))
+      {
+        BRTable table = sect.Bands.Add(1, 1);
+        table.Cells.Value = Title;
+        table.Cells.CellStyle.Bold = true;
+        table.Cells.CellStyle.HAlign = BRHAlign.Center;
+        table.Cells.CellStyle.WrapMode = BRWrapMode.WordWrap;
+      }
+
+      #endregion
+
+      #region Табличка фильтров
+
+      if (FilterInfo.Count > 0)
+      {
+        int wantedW = 0;
+        for (int i = 0; i < FilterInfo.Count; i++)
+        {
+          int w, h;
+
+          Drawing.Reporting.BRMeasurer.Default.MeasureString(FilterInfo[i].DisplayName, sect.Report.DefaultCellStyle, out w, out h);
+          wantedW = Math.Max(wantedW, w);
+        }
+        wantedW += sect.Report.DefaultCellStyle.LeftMargin + sect.Report.DefaultCellStyle.LeftMargin;
+        wantedW = Math.Min(wantedW, sect.PageSetup.PrintAreaWidth / 2);
+
+        BRTable table = sect.Bands.Add(FilterInfo.Count, 3);
+        table.TopMargin = 20; // Отступ от заголовка
+        table.BottomMargin = 20; // Отступ от таблицы данных
+        table.DefaultCellStyle.HAlign = BRHAlign.Left;
+        table.DefaultCellStyle.WrapMode = BRWrapMode.WordWrap;
+        table.Cells.ColumnIndex = 0;
+        table.Cells.ColumnInfo.SetWidth(wantedW, false);
+        table.Cells.ColumnIndex = 1; // Зазор
+        table.Cells.ColumnInfo.SetWidth(50, false); 
+
+        table.Cells.ColumnIndex = 2;
+        table.Cells.ColumnCellStyle.BottomBorder = BRLine.Thin;
+
+        for (int i = 0; i < FilterInfo.Count; i++)
+        {
+          table.SetValue(i, 0, FilterInfo[i].DisplayName);
+          table.SetValue(i, 2, FilterInfo[i].Value);
+        }
+      }
+
+      #endregion
+    }
+
+    #endregion
+
+    #region Переопределенные методы
+
+    /// <summary>
+    /// Инициализация блока диалога параметров
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected override void OnInitDialog(BRMenuOutItemInitDialogEventArgs args)
+    {
+      if (args.Action == BROutAction.Print)
+      {
+        args.AddFontPage();
+        new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
+        new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
+      }
+      if (args.Action == BROutAction.SendTo)
+        new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
+
+      base.OnInitDialog(args);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Объект для печати/экспорта иерархического просмотра
+  /// </summary>
+  public sealed class BRDataGridViewMenuOutItem : BRDataViewMenuOutItemBase
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создание объекта для вывода табличного просмотра
+    /// </summary>
+    /// <param name="code">Код объекта. Обычно, "Control"</param>
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    public BRDataGridViewMenuOutItem(string code, EFPDataGridView controlProvider)
+      : base(code, controlProvider)
+    {
+      DisplayName = "Табличный просмотр";
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Провайдер табличного просмотра
+    /// </summary>
+    public new EFPDataGridView ControlProvider { get { return (EFPDataGridView)(base.ControlProvider); } }
 
     #endregion
 
@@ -107,24 +301,6 @@ namespace FreeLibSet.Forms.Reporting
     }
 
     /// <summary>
-    /// Инициализация блока диалога параметров
-    /// </summary>
-    /// <param name="args">Аргументы события</param>
-    protected override void OnInitDialog(BRMenuOutItemInitDialogEventArgs args)
-    {
-      if (args.Action == BROutAction.Print)
-      {
-        args.AddFontPage();
-        new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
-        new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
-      }
-      if (args.Action == BROutAction.SendTo)
-        new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
-
-      base.OnInitDialog(args);
-    }
-
-    /// <summary>
     /// Создание отчета из табличного просмотра
     /// </summary>
     /// <param name="args">Аргументы события</param>
@@ -135,26 +311,11 @@ namespace FreeLibSet.Forms.Reporting
       args.Report.DocumentProperties = ControlProvider.DocumentProperties.Clone();
       BRSection sect = args.Report.Sections.Add();
       sect.PageSetup = SettingsData.GetItem<BRPageSettingsDataItem>().PageSetup;
-      AddTitleBand(sect, SettingsData.GetRequired<BRDataViewSettingsDataItem>(), ControlProvider);
-      sect.Bands.Add(new BRDataGridViewTable(sect, ControlProvider, SettingsData, args.Action == BROutAction.SendTo));
+      AddTitleAndFilterBands(sect);
+      if (ControlProvider.Columns.Count > 0)
+        sect.Bands.Add(new BRDataGridViewTable(sect, ControlProvider, SettingsData, args.Action == BROutAction.SendTo));
 
       base.OnCreateReport(args);
-    }
-
-    internal static void AddTitleBand(BRSection sect, BRDataViewSettingsDataItem viewData, IEFPDataView controlProvider)
-    {
-      string title;
-      if (viewData.AutoTitle)
-        title = BRDataViewPageSetupAppearance.GetAutoTitle(controlProvider);
-      else
-        title = viewData.Title;
-      if (String.IsNullOrEmpty(title))
-        return;
-
-      BRTable table = sect.Bands.Add(1, 1);
-      table.Cells.Value = title;
-      table.Cells.CellStyle.Bold = true;
-      table.Cells.CellStyle.HAlign = BRHAlign.Left;
     }
 
     #endregion
@@ -163,9 +324,9 @@ namespace FreeLibSet.Forms.Reporting
   /// <summary>
   /// Доступ к именным настройкам печати/экспорта табличного или иерархического просмотра или настройкам по умолчанию.
   /// </summary>
-  public struct EFPDataViewMenuOutSettings
+  public struct BRDataViewMenuOutSettings
   {
-    internal EFPDataViewMenuOutSettings(SettingsDataListBase list)
+    internal BRDataViewMenuOutSettings(SettingsDataListBase list)
     {
       _List = list;
     }

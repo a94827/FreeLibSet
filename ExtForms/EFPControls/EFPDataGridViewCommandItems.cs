@@ -462,7 +462,7 @@ namespace FreeLibSet.Forms
       Add(ciSendToOpenOfficeCalc);
 #else
       _OutHandler = new EFPMenuOutHandler(this);
-      _OutHandler.Items.Add(new EFPDataGridViewMenuOutItem("Control", controlProvider));
+      _OutHandler.Items.Add(new BRDataGridViewMenuOutItem("Control", controlProvider));
 #endif
       #endregion
 

@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <returns>Признак печати</returns>
-    public bool GetColumnPrinted(IEFPDataViewColumn column)
+    public bool GetColumnPrinted(IEFPDataViewColumnBase column)
     {
       if (!column.Printable)
         return false;
@@ -228,7 +228,7 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <param name="value">true, если столбец должен быть напечатан</param>
-    public void SetColumnPrinted(IEFPDataViewColumn column, bool value)
+    public void SetColumnPrinted(IEFPDataViewColumnBase column, bool value)
     {
       if (!column.Printable)
         return;
@@ -251,7 +251,7 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <returns>Ширина или 0</returns>
-    public int GetColumnWidth(IEFPDataViewColumn column)
+    public int GetColumnWidth(IEFPDataViewColumnBase column)
     {
       if (!column.Printable)
         return 0;
@@ -273,7 +273,7 @@ namespace FreeLibSet.Forms.Reporting
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <param name="fontSettings">Настройки шрифта для печати</param>
     /// <returns>Ширина</returns>
-    public int GetRealColumnWidth(IEFPDataViewColumn column, BRFontSettingsDataItem fontSettings)
+    public int GetRealColumnWidth(IEFPDataViewColumnBase column, BRFontSettingsDataItem fontSettings)
     {
       int w = GetColumnWidth(column);
       if (w == AutoWidth)
@@ -289,7 +289,7 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <param name="value">Ширина или 0</param>
-    public void SetColumnWidth(IEFPDataViewColumn column, int value)
+    public void SetColumnWidth(IEFPDataViewColumnBase column, int value)
     {
       if (value < 0)
         throw new ArgumentOutOfRangeException("value");
@@ -307,7 +307,7 @@ namespace FreeLibSet.Forms.Reporting
         _GroupWidthDict[column.SizeGroup] = value;
     }
 
-    private int GetDefaultWidth(IEFPDataViewColumn column, BRFontSettingsDataItem fontSettings)
+    private int GetDefaultWidth(IEFPDataViewColumnBase column, BRFontSettingsDataItem fontSettings)
     {
       //return (int)Math.Round(column.WidthPt / 72.0 * 254.0, 0, MidpointRounding.AwayFromZero);
 
@@ -328,11 +328,11 @@ namespace FreeLibSet.Forms.Reporting
 
     /// <summary>
     /// Получить признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
-    /// Если true, то <see cref="SetColumnWidth(IEFPDataViewColumn, int)"/> задает минимальную ширину столбца.
+    /// Если true, то <see cref="SetColumnWidth(IEFPDataViewColumnBase, int)"/> задает минимальную ширину столбца.
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <returns>Признак автоматического увеличения ширины</returns>
-    public bool GetColumnAutoGrow(IEFPDataViewColumn column)
+    public bool GetColumnAutoGrow(IEFPDataViewColumnBase column)
     {
       if (!GetColumnPrinted(column))
         return false;
@@ -351,11 +351,11 @@ namespace FreeLibSet.Forms.Reporting
 
     /// <summary>
     /// Установить признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
-    /// Если true, то <see cref="SetColumnWidth(IEFPDataViewColumn, int)"/> задает минимальную ширину столбца.
+    /// Если true, то <see cref="SetColumnWidth(IEFPDataViewColumnBase, int)"/> задает минимальную ширину столбца.
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <param name="value">Признак автоматического увеличения ширины</param>
-    public void SetColumnAutoGrow(IEFPDataViewColumn column, bool value)
+    public void SetColumnAutoGrow(IEFPDataViewColumnBase column, bool value)
     {
       if (!GetColumnPrinted(column))
         return;
@@ -477,20 +477,6 @@ namespace FreeLibSet.Forms.Reporting
     public int CellBottomMargin { get { return _CellBottomMargin; } set { _CellBottomMargin = value; } }
     private int _CellBottomMargin;
 
-    /// <summary>
-    /// Если true, то заголовок будет добавлен исходя из свойств окна, в котором находится табличный просмотр, или от свойства <see cref="BRDocumentProperties.Subject"/>.
-    /// Если false, то заговок задается свойством <see cref="Title"/> (в том числе, может быть пустым).
-    /// По умолчанию - true, заголовок определяется автоматически.
-    /// </summary>
-    public bool AutoTitle { get { return _AutoTitle; } set { _AutoTitle = value; } }
-    private bool _AutoTitle;
-
-    /// <summary>
-    /// Заголовок, задаваемый вручную, при <see cref="AutoTitle"/>=false.
-    /// </summary>
-    public string Title { get { return _Title ?? String.Empty; } set { _Title = value; } }
-    private string _Title;
-
     #endregion
 
     #region Диалог "Отправить"
@@ -594,9 +580,6 @@ namespace FreeLibSet.Forms.Reporting
       cfg.SetInt("CellRightMargin", CellRightMargin);
       cfg.SetInt("CellBottomMargin", CellBottomMargin);
 
-      cfg.SetBool("AutoTitle", AutoTitle);
-      cfg.SetString("Title", Title);
-
       #endregion
 
       #region Отправить
@@ -668,9 +651,6 @@ namespace FreeLibSet.Forms.Reporting
       CellTopMargin = cfg.GetIntDef("CellTopMargin", BRReport.AppDefaultCellStyle.TopMargin);
       CellRightMargin = cfg.GetIntDef("CellRightMargin", BRReport.AppDefaultCellStyle.RightMargin);
       CellBottomMargin = cfg.GetIntDef("CellBottomMargin", BRReport.AppDefaultCellStyle.BottomMargin);
-
-      AutoTitle = cfg.GetBoolDef("AutoTitle", true);
-      Title = cfg.GetString("Title");
 
       #endregion
 

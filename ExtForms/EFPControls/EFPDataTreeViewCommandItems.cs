@@ -139,7 +139,7 @@ namespace FreeLibSet.Forms
       #region Отправить
 
       _OutHandler = new EFPMenuOutHandler(this);
-      _OutHandler.Items.Add(new EFPDataTreeViewMenuOutItem("Control", controlProvider));
+      _OutHandler.Items.Add(new BRDataTreeViewMenuOutItem("Control", controlProvider));
 
 #if XXX
       _MenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);

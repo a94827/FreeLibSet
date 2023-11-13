@@ -40,6 +40,8 @@
       this.rbTest2 = new System.Windows.Forms.RadioButton();
       this.rbTest1 = new System.Windows.Forms.RadioButton();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.edConfigSectionName = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
       this.cbDefaultConfigs = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.cbMultiSelect = new System.Windows.Forms.CheckBox();
@@ -51,8 +53,7 @@
       this.lblOSVersion = new System.Windows.Forms.Label();
       this.btnAbout = new System.Windows.Forms.Button();
       this.btnOk = new System.Windows.Forms.Button();
-      this.label3 = new System.Windows.Forms.Label();
-      this.edConfigSectionName = new System.Windows.Forms.TextBox();
+      this.cbGridProducer = new System.Windows.Forms.CheckBox();
       this.tableLayoutPanel1.SuspendLayout();
       this.groupBox4.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -81,7 +82,7 @@
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(621, 399);
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(621, 435);
       this.tableLayoutPanel1.TabIndex = 0;
       // 
       // groupBox4
@@ -94,7 +95,7 @@
       this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.groupBox4.Name = "groupBox4";
       this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-      this.groupBox4.Size = new System.Drawing.Size(243, 203);
+      this.groupBox4.Size = new System.Drawing.Size(243, 239);
       this.groupBox4.TabIndex = 3;
       this.groupBox4.TabStop = false;
       this.groupBox4.Text = "Отладка";
@@ -221,6 +222,7 @@
       this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox2.Controls.Add(this.cbGridProducer);
       this.groupBox2.Controls.Add(this.edConfigSectionName);
       this.groupBox2.Controls.Add(this.label3);
       this.groupBox2.Controls.Add(this.cbDefaultConfigs);
@@ -234,10 +236,28 @@
       this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.groupBox2.Name = "groupBox2";
       this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-      this.groupBox2.Size = new System.Drawing.Size(366, 203);
+      this.groupBox2.Size = new System.Drawing.Size(366, 239);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Параметры теста";
+      // 
+      // edConfigSectionName
+      // 
+      this.edConfigSectionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.edConfigSectionName.Location = new System.Drawing.Point(154, 28);
+      this.edConfigSectionName.Name = "edConfigSectionName";
+      this.edConfigSectionName.Size = new System.Drawing.Size(206, 22);
+      this.edConfigSectionName.TabIndex = 1;
+      // 
+      // label3
+      // 
+      this.label3.Location = new System.Drawing.Point(9, 28);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(139, 23);
+      this.label3.TabIndex = 0;
+      this.label3.Text = "ConfigSectionName";
+      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbDefaultConfigs
       // 
@@ -249,51 +269,51 @@
             "Not set",
             "Default config",
             "A4 & A4 landscape"});
-      this.cbDefaultConfigs.Location = new System.Drawing.Point(129, 167);
+      this.cbDefaultConfigs.Location = new System.Drawing.Point(129, 199);
       this.cbDefaultConfigs.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbDefaultConfigs.Name = "cbDefaultConfigs";
       this.cbDefaultConfigs.Size = new System.Drawing.Size(231, 24);
-      this.cbDefaultConfigs.TabIndex = 8;
+      this.cbDefaultConfigs.TabIndex = 9;
       // 
       // label2
       // 
-      this.label2.Location = new System.Drawing.Point(9, 167);
+      this.label2.Location = new System.Drawing.Point(9, 199);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(114, 26);
-      this.label2.TabIndex = 7;
+      this.label2.TabIndex = 8;
       this.label2.Text = "DefaultConfigs";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbMultiSelect
       // 
       this.cbMultiSelect.AutoSize = true;
-      this.cbMultiSelect.Location = new System.Drawing.Point(19, 139);
+      this.cbMultiSelect.Location = new System.Drawing.Point(19, 171);
       this.cbMultiSelect.Margin = new System.Windows.Forms.Padding(4);
       this.cbMultiSelect.Name = "cbMultiSelect";
       this.cbMultiSelect.Size = new System.Drawing.Size(98, 21);
-      this.cbMultiSelect.TabIndex = 6;
+      this.cbMultiSelect.TabIndex = 7;
       this.cbMultiSelect.Text = "MultiSelect";
       this.cbMultiSelect.UseVisualStyleBackColor = true;
       // 
       // cbAddOutItem
       // 
       this.cbAddOutItem.AutoSize = true;
-      this.cbAddOutItem.Location = new System.Drawing.Point(19, 112);
+      this.cbAddOutItem.Location = new System.Drawing.Point(19, 144);
       this.cbAddOutItem.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbAddOutItem.Name = "cbAddOutItem";
       this.cbAddOutItem.Size = new System.Drawing.Size(252, 21);
-      this.cbAddOutItem.TabIndex = 5;
+      this.cbAddOutItem.TabIndex = 6;
       this.cbAddOutItem.Text = "Дополнительные BRMenuOutItem";
       this.cbAddOutItem.UseVisualStyleBackColor = true;
       // 
       // cbRemoveOutItem
       // 
       this.cbRemoveOutItem.AutoSize = true;
-      this.cbRemoveOutItem.Location = new System.Drawing.Point(19, 87);
+      this.cbRemoveOutItem.Location = new System.Drawing.Point(19, 119);
       this.cbRemoveOutItem.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbRemoveOutItem.Name = "cbRemoveOutItem";
       this.cbRemoveOutItem.Size = new System.Drawing.Size(283, 21);
-      this.cbRemoveOutItem.TabIndex = 4;
+      this.cbRemoveOutItem.TabIndex = 5;
       this.cbRemoveOutItem.Text = "Удалить стандартный BRMenuOutItem";
       this.cbRemoveOutItem.UseVisualStyleBackColor = true;
       // 
@@ -327,7 +347,7 @@
       this.panel1.Controls.Add(this.lblOSVersion);
       this.panel1.Controls.Add(this.btnAbout);
       this.panel1.Controls.Add(this.btnOk);
-      this.panel1.Location = new System.Drawing.Point(3, 355);
+      this.panel1.Location = new System.Drawing.Point(3, 391);
       this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(615, 42);
@@ -366,30 +386,22 @@
       this.btnOk.Text = "Тест";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
-      // label3
+      // cbGridProducer
       // 
-      this.label3.Location = new System.Drawing.Point(9, 28);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(139, 23);
-      this.label3.TabIndex = 0;
-      this.label3.Text = "ConfigSectionName";
-      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // edConfigSectionName
-      // 
-      this.edConfigSectionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.edConfigSectionName.Location = new System.Drawing.Point(154, 28);
-      this.edConfigSectionName.Name = "edConfigSectionName";
-      this.edConfigSectionName.Size = new System.Drawing.Size(206, 22);
-      this.edConfigSectionName.TabIndex = 1;
+      this.cbGridProducer.AutoSize = true;
+      this.cbGridProducer.Location = new System.Drawing.Point(19, 93);
+      this.cbGridProducer.Name = "cbGridProducer";
+      this.cbGridProducer.Size = new System.Drawing.Size(237, 21);
+      this.cbGridProducer.TabIndex = 4;
+      this.cbGridProducer.Text = "Использовать EFPGridProducer";
+      this.cbGridProducer.UseVisualStyleBackColor = true;
       // 
       // MainForm
       // 
       this.AcceptButton = this.btnOk;
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(621, 404);
+      this.ClientSize = new System.Drawing.Size(621, 439);
       this.Controls.Add(this.tableLayoutPanel1);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
       this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -438,5 +450,6 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox edConfigSectionName;
     private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.CheckBox cbGridProducer;
   }
 }

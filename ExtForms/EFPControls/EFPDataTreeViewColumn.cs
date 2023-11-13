@@ -370,7 +370,7 @@ namespace FreeLibSet.Forms
       set { TreeColumn.MinColumnWidth = ControlProvider.Measures.GetTextColumnWidth(value); }
     }
 
-    bool IEFPDataViewColumn.AutoGrow { get { return Index==0; } } // ??
+    bool IEFPDataViewColumnBase.AutoGrow { get { return Index==0; } } // ??
 
     #endregion
 
@@ -643,9 +643,9 @@ namespace FreeLibSet.Forms
       set { SetPrintAutoGrow(String.Empty, value); }
     }
 
-    private EFPDataViewMenuOutSettings GetSettings(string defCfgCode)
+    private BRDataViewMenuOutSettings GetSettings(string defCfgCode)
     {
-      EFPDataTreeViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
+      BRDataTreeViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
       if (outItem == null)
         throw new InvalidOperationException("Стандартный вариант печати иерархического просмотра был удален");
       return outItem[defCfgCode];

@@ -3430,9 +3430,9 @@ return true;                          */
     /// Параметры печати/экспорта табличного просмотра.
     /// Может возвращать null, если в <see cref="EFPDataGridViewCommandItems.OutHandler"/> был удален вариант "Control"
     /// </summary>
-    public Reporting.EFPDataTreeViewMenuOutItem DefaultOutItem
+    public Reporting.BRDataTreeViewMenuOutItem DefaultOutItem
     {
-      get { return MenuOutItems["Control"] as Reporting.EFPDataTreeViewMenuOutItem; }
+      get { return MenuOutItems["Control"] as Reporting.BRDataTreeViewMenuOutItem; }
     }
 
     #endregion

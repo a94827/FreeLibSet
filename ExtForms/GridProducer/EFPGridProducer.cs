@@ -10,6 +10,7 @@ using System.Data;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
 using FreeLibSet.Controls;
+using FreeLibSet.Config;
 
 namespace FreeLibSet.Forms
 {
@@ -134,6 +135,8 @@ namespace FreeLibSet.Forms
     public EFPGridProducer()
     {
       _FixedColumns = new SingleScopeList<string>();
+
+      _OutItem = new Reporting.BRGridProducerMenuOutItem();
     }
 
     #endregion
@@ -148,7 +151,9 @@ namespace FreeLibSet.Forms
       get
       {
         if (_Columns == null)
+        {
           _Columns = CreateColumns();
+        }
         return _Columns;
       }
     }
@@ -158,7 +163,7 @@ namespace FreeLibSet.Forms
     /// Производный класс может создать объект производного класса для списка столбцов
     /// </summary>
     /// <returns>Коллекция</returns>
-    protected virtual EFPGridProducerColumns CreateColumns() { return new EFPGridProducerColumns(); }
+    protected virtual EFPGridProducerColumns CreateColumns() { return new EFPGridProducerColumns(this); }
 
     /// <summary>
     /// Возвращает количество столбцов, которые добавлены в коллекцию Columns
@@ -469,6 +474,10 @@ namespace FreeLibSet.Forms
       } // ControlProvider.UseGridProducerOrders
 
       #endregion
+
+      // Параметры печати
+      if ((!reInit) && controlProvider.DefaultOutItem != null)
+        OutItem.SettingsData.CopyTo(controlProvider.DefaultOutItem.SettingsData);
     }
 
     private void EFPDataGridView_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
@@ -776,6 +785,10 @@ namespace FreeLibSet.Forms
       if (ReInit)
         ControlProvider.CommandItems.RefreshOrderItems();
 #endif
+
+      // Параметры печати
+      if ((!reInit) && controlProvider.DefaultOutItem != null)
+        OutItem.SettingsData.CopyTo(controlProvider.DefaultOutItem.SettingsData);
     }
 
     #endregion
@@ -1192,6 +1205,16 @@ namespace FreeLibSet.Forms
 
 
     #endregion
+
+    #region Параметры печати
+
+    /// <summary>
+    /// Параметры печати для столбцов табличного просмотра
+    /// </summary>
+    public Reporting.BRGridProducerMenuOutItem OutItem { get { return _OutItem; } }
+    private readonly Reporting.BRGridProducerMenuOutItem _OutItem;
+
+    #endregion
   }
 
   /// <summary>
@@ -1231,5 +1254,69 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+  }
+}
+
+namespace FreeLibSet.Forms.Reporting
+{
+  /// <summary>
+  /// Реализация свойства <see cref="EFPGridProducer.OutItem"/>
+  /// </summary>
+  public sealed class BRGridProducerMenuOutItem
+  {
+    #region Защищенный конструктор
+
+    internal BRGridProducerMenuOutItem()
+    {
+      _SettingsData = new SettingsDataList();
+      _SettingsData.Add(new FreeLibSet.Reporting.BRPageSettingsDataItem());
+      _SettingsData.Add(new FreeLibSet.Reporting.BRFontSettingsDataItem());
+      _SettingsData.Add(new Reporting.BRDataViewSettingsDataItem());
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Список данных для печати просмотра с возможностью именных настроек.
+    /// Содержит данные параметров страницы, шрифта, столбцов и настроек просмотра.
+    /// При инициализации <see cref="EFPDataGridView"/> и <see cref="EFPDataTreeView"/> настройки копируются в набор печати по умолчанию
+    /// </summary>
+    public SettingsDataList SettingsData { get { return _SettingsData; } }
+    private readonly SettingsDataList _SettingsData;
+
+    /// <summary>
+    /// Доступ к настройкам печати просмотра по умолчанию
+    /// </summary>
+    public BRDataViewMenuOutSettings Default { get { return new Reporting.BRDataViewMenuOutSettings(SettingsData); } }
+
+    /// <summary>
+    /// Доступ к именным настройкам печати просмотра.
+    /// </summary>
+    /// <param name="defCfgCode">Код для именной настройки</param>
+    /// <returns>Объект для доступа к настройкам</returns>
+    public BRDataViewMenuOutSettings this[string defCfgCode]
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(defCfgCode))
+          return Default;
+        else
+          return new BRDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
+      }
+    }
+
+    /// <summary>
+    /// Добавление именной настройки печати просмотра
+    /// </summary>
+    /// <param name="defCfgCode">Код для именной настройки</param>
+    /// <param name="displayName">Отображаемое название настройки</param>
+    /// <returns>Объект для доступа к настройкам</returns>
+    public BRDataViewMenuOutSettings Add(string defCfgCode, string displayName)
+    {
+      if (String.IsNullOrEmpty(defCfgCode))
+        throw new ArgumentNullException("defCfgCode");
+      SettingsData.DefaultConfigs[defCfgCode].DisplayName = displayName;
+      return new Reporting.BRDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
+    }
   }
 }

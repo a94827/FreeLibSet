@@ -240,6 +240,27 @@ CommandItems.PerformRefreshItems();
     {
       return new EFPConfigurableDataTreeViewCommandItems(this);
     }
+    /// <summary>
+    /// Добавляет обработчик события для формирования таблички фильтров при печати
+    /// </summary>
+    protected override void OnCommandItemsCreated()
+    {
+      base.OnCommandItemsCreated();
+      DefaultOutItem.TitleNeeded += DefaultOutItem_TitleNeeded;
+    }
+
+    private void DefaultOutItem_TitleNeeded(object sender, EventArgs args)
+    {
+      Reporting.BRDataTreeViewMenuOutItem outItem = (Reporting.BRDataTreeViewMenuOutItem)sender;
+      if (HasFilters)
+      {
+        foreach (IEFPGridFilter filter in Filters)
+        {
+          if (!filter.IsEmpty)
+            outItem.FilterInfo.Add(filter.DisplayName, filter.FilterText);
+        }
+      }
+    }
 
     #endregion
 

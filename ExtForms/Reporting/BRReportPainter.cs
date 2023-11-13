@@ -183,7 +183,7 @@ namespace FreeLibSet.Drawing.Reporting
 
     public BRReportPainter()
     {
-      Scale = 0.1f;
+      _Scale = 0.1f;
       //CellFrames = false;
       //ShowHiddenCells = false;
       //ShowSampleValues = true;
@@ -193,8 +193,8 @@ namespace FreeLibSet.Drawing.Reporting
       _BackBrushes = new DisposableDictionary<BRColor, Brush>();
       //_BackBrushes.DisposeOnDestuction = true;
 
-      BorderPen = new Pen(Color.Black);
-      LeaderPen = new Pen(Color.Black);
+      _BorderPen = new Pen(Color.Black);
+      _LeaderPen = new Pen(Color.Black);
 
       _SB = new StringBuilder();
     }
@@ -203,8 +203,8 @@ namespace FreeLibSet.Drawing.Reporting
     {
       DataTools.Dispose(ref _FontRenderers);
       DataTools.Dispose<DisposableDictionary<BRColor, Brush>>(ref _BackBrushes);
-      DataTools.Dispose<Pen>(ref BorderPen);
-      DataTools.Dispose<Pen>(ref LeaderPen);
+      DataTools.Dispose<Pen>(ref _BorderPen);
+      DataTools.Dispose<Pen>(ref _LeaderPen);
       base.Dispose(Disposing);
     }
 
@@ -288,7 +288,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// <summary>
     /// Масштаб
     /// </summary>
-    private float Scale;
+    private readonly float _Scale;
 
     ///// <summary>
     ///// True, если нужно рисовать скрытые строки и столбцы
@@ -357,21 +357,21 @@ namespace FreeLibSet.Drawing.Reporting
     {
       // Вычисляем координаты ячеек в контексте вывода
       float[] xx = new float[blockInfo.ColumnIndexes.Length + 1];
-      xx[0] = (blockInfo.Band.Section.PageSetup.LeftMargin + blockInfo.LeftOffset) * Scale;
+      xx[0] = (blockInfo.Band.Section.PageSetup.LeftMargin + blockInfo.LeftOffset) * _Scale;
       for (int i = 1; i < xx.Length; i++)
       {
         //if (ShowHiddenCells || Frame.Columns[i - 1].Visible)
-        xx[i] = xx[i - 1] + blockInfo.ColumnWidths[i - 1] * Scale;
+        xx[i] = xx[i - 1] + blockInfo.ColumnWidths[i - 1] * _Scale;
         //else
         //  xx[i] = xx[i - 1];
       }
 
       float[] yy = new float[blockInfo.RowIndexes.Length + 1];
-      yy[0] = (blockInfo.Band.Section.PageSetup.TopMargin + blockInfo.TopOffset) * Scale;
+      yy[0] = (blockInfo.Band.Section.PageSetup.TopMargin + blockInfo.TopOffset) * _Scale;
       for (int j = 1; j < yy.Length; j++)
       {
         //if (ShowHiddenCells || Frame.Rows[j - 1].Visible)
-        yy[j] = yy[j - 1] + blockInfo.RowHeights[j - 1] * Scale;
+        yy[j] = yy[j - 1] + blockInfo.RowHeights[j - 1] * _Scale;
         //else
         //  yy[j] = yy[j - 1];
       }
@@ -467,7 +467,7 @@ namespace FreeLibSet.Drawing.Reporting
       string[] lines;
       try
       {
-        lines = BRMeasurer.GetLines(renderer, sel, (int)(rc.Width / Scale));
+        lines = BRMeasurer.GetLines(renderer, sel, (int)(rc.Width / _Scale));
       }
       catch (Exception e)
       {
@@ -480,13 +480,13 @@ namespace FreeLibSet.Drawing.Reporting
 
       // Область для текста с учетом отступов
       renderer.Graphics = graphics;
-      rc.X += sel.CellStyle.LeftMargin * Scale;
-      rc.Y += sel.CellStyle.TopMargin * Scale;
-      rc.Width -= (sel.CellStyle.LeftMargin + sel.CellStyle.RightMargin) * Scale;
-      rc.Height -= (sel.CellStyle.TopMargin + sel.CellStyle.BottomMargin) * Scale;
+      rc.X += sel.CellStyle.LeftMargin * _Scale;
+      rc.Y += sel.CellStyle.TopMargin * _Scale;
+      rc.Width -= (sel.CellStyle.LeftMargin + sel.CellStyle.RightMargin) * _Scale;
+      rc.Height -= (sel.CellStyle.TopMargin + sel.CellStyle.BottomMargin) * _Scale;
       if (sel.CellStyle.IndentLevel > 0)
       {
-        float off = (float)(renderer.FontWidth / 72f * 254f * sel.CellStyle.IndentLevel) * Scale;
+        float off = (float)(renderer.FontWidth / 72f * 254f * sel.CellStyle.IndentLevel) * _Scale;
         switch (sel.CellStyle.HAlign)
         {
           case BRHAlign.Left:
@@ -621,7 +621,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// Толщина линии фиксированная
     /// Цвет задается перед рисованием
     /// </summary>
-    private Pen LeaderPen;
+    private Pen _LeaderPen;
 
     /// <summary>
     /// Рисование заполнителя
@@ -633,17 +633,17 @@ namespace FreeLibSet.Drawing.Reporting
       if (rc.Height <= 0f || rc.Width <= 0f)
         return;
 
-      LeaderPen.Color = renderer.Color; // прочерк всегда имеет цвет текста
+      _LeaderPen.Color = renderer.Color; // прочерк всегда имеет цвет текста
       if (sel.CellStyle.TextLeader == BRTextLeader.TwoLines)
       {
         // Перо
-        LeaderPen.Width = (float)BRLine.ThinLineWidth01mm * Scale; // Тонкая линия
+        _LeaderPen.Width = (float)BRLine.ThinLineWidth01mm * _Scale; // Тонкая линия
         // Расстояние между двумя линиями
-        float dh = (sel.CellStyle.FontHeightPt / 72f * 254f) * 0.25f * Scale; // !!!
-        renderer.Graphics.DrawLine(LeaderPen,
+        float dh = (sel.CellStyle.FontHeightPt / 72f * 254f) * 0.25f * _Scale; // !!!
+        renderer.Graphics.DrawLine(_LeaderPen,
           rc.X, rc.Y + (rc.Height - dh) / 2f,
           rc.Right, rc.Y + (rc.Height - dh) / 2f);
-        renderer.Graphics.DrawLine(LeaderPen,
+        renderer.Graphics.DrawLine(_LeaderPen,
           rc.X, rc.Y + (rc.Height + dh) / 2f,
           rc.Right, rc.Y + (rc.Height + dh) / 2f);
       }
@@ -659,8 +659,8 @@ namespace FreeLibSet.Drawing.Reporting
           default: return;
         }
         // Перо
-        LeaderPen.Width = (float)w * Scale; // Тонкая линия
-        renderer.Graphics.DrawLine(LeaderPen,
+        _LeaderPen.Width = (float)w * _Scale; // Тонкая линия
+        renderer.Graphics.DrawLine(_LeaderPen,
           rc.X, rc.Y + rc.Height / 2f,
           rc.Right, rc.Y + rc.Height / 2f);
       }
@@ -674,7 +674,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// Перо для рисования рамок
     /// Толщина линии задается перед рисованием
     /// </summary>
-    private Pen BorderPen;
+    private Pen _BorderPen;
 
     public void DrawBorders(BRSelector sel, Graphics graphics, RectangleF rc)
     {
@@ -691,7 +691,7 @@ namespace FreeLibSet.Drawing.Reporting
       if (line.Style == BRLineStyle.None)
         return;
       MyInitBorderPen(line);
-      graphics.DrawLine(BorderPen, x1, y1, x2, y2);
+      graphics.DrawLine(_BorderPen, x1, y1, x2, y2);
     }
 
     public void DrawBorder(BRLine line, Graphics graphics, int x1,
@@ -700,7 +700,7 @@ namespace FreeLibSet.Drawing.Reporting
       if (line.Style == BRLineStyle.None)
         return;
       MyInitBorderPen(line);
-      graphics.DrawLine(BorderPen, x1, y1, x2, y2);
+      graphics.DrawLine(_BorderPen, x1, y1, x2, y2);
     }
 
     private void MyInitBorderPen(BRLine line)
@@ -708,34 +708,34 @@ namespace FreeLibSet.Drawing.Reporting
       switch (line.Style)
       {
         case BRLineStyle.Thin:
-          BorderPen.DashStyle = DashStyle.Solid;
+          _BorderPen.DashStyle = DashStyle.Solid;
           break;
         case BRLineStyle.Medium:
-          BorderPen.DashStyle = DashStyle.Solid;
+          _BorderPen.DashStyle = DashStyle.Solid;
           break;
         case BRLineStyle.Thick:
-          BorderPen.DashStyle = DashStyle.Solid;
+          _BorderPen.DashStyle = DashStyle.Solid;
           break;
         case BRLineStyle.Dot:
-          BorderPen.DashStyle = DashStyle.Dot;
+          _BorderPen.DashStyle = DashStyle.Dot;
           break;
         case BRLineStyle.Dash:
-          BorderPen.DashStyle = DashStyle.Dash;
+          _BorderPen.DashStyle = DashStyle.Dash;
           break;
         case BRLineStyle.DashDot:
-          BorderPen.DashStyle = DashStyle.DashDot;
+          _BorderPen.DashStyle = DashStyle.DashDot;
           break;
         case BRLineStyle.DashDotDot:
-          BorderPen.DashStyle = DashStyle.DashDotDot;
+          _BorderPen.DashStyle = DashStyle.DashDotDot;
           break;
         default:
           throw new Exception("Неправильная толщина линии");
       }
-      BorderPen.Width = (float)BRLine.GetLineWidthPt01mm(line.Style) * Scale;
+      _BorderPen.Width = (float)BRLine.GetLineWidthPt01mm(line.Style) * _Scale;
       if (line.Color == BRColor.Auto)
-        BorderPen.Color = Color.Black;
+        _BorderPen.Color = Color.Black;
       else
-        BorderPen.Color = Color.FromArgb(line.Color.R, line.Color.G, line.Color.B);
+        _BorderPen.Color = Color.FromArgb(line.Color.R, line.Color.G, line.Color.B);
     }
 
     #endregion

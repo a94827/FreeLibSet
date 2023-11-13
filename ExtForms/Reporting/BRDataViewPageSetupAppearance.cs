@@ -101,14 +101,6 @@ namespace FreeLibSet.Forms.Reporting
       EFPButton efpCellParams = new EFPButton(page.BaseProvider, btnCellParams);
       efpCellParams.Click += EfpCellParams_Click;
 
-      efpTitleMode = new EFPRadioButtons(page.BaseProvider, rbTitleManual);
-
-      efpTitleText = new EFPTextBox(page.BaseProvider, edTitleText);
-      efpTitleText.CanBeEmpty = true;
-      efpTitleText.EnabledEx = efpTitleMode[0].CheckedEx;
-      efpTitleText.AllowDisabledText = true;
-      efpTitleText.DisabledText = GetAutoTitle(controlProvider);
-
       page.DataToControls += Page_DataToControls;
       page.DataFromControls += Page_DataFromControls;
     }
@@ -200,33 +192,6 @@ namespace FreeLibSet.Forms.Reporting
 
     #endregion
 
-    #region Заголовок
-
-
-    public EFPRadioButtons efpTitleMode;
-    public EFPTextBox efpTitleText;
-
-    /// <summary>
-    /// Возвращает текст для заголовка
-    /// </summary>
-    /// <param name="controlProvider">Провайдер табличного просмотра</param>
-    /// <returns>Текст автоматически определяемого заголовка</returns>
-    public static string GetAutoTitle(IEFPDataView controlProvider)
-    {
-      if (!String.IsNullOrEmpty(controlProvider.DocumentProperties.Title))
-        return controlProvider.DocumentProperties.Title;
-
-      Form frm = controlProvider.Control.FindForm();
-      if (frm != null)
-      {
-        if (!String.IsNullOrEmpty(frm.Text))
-          return frm.Text;
-      }
-      return controlProvider.DisplayName;
-    }
-
-    #endregion
-
     #region Чтение и запись значений
 
     private void Page_DataToControls(object sender, EventArgs args)
@@ -250,9 +215,6 @@ namespace FreeLibSet.Forms.Reporting
       _CellRightMargin = _ViewData.CellRightMargin;
       _CellBottomMargin = _ViewData.CellBottomMargin;
 
-      efpTitleText.Text = _ViewData.Title;
-      efpTitleMode.SelectedIndex = _ViewData.AutoTitle ? 1 : 0;
-
       UpdateCellParamsLabel();
     }
 
@@ -272,10 +234,6 @@ namespace FreeLibSet.Forms.Reporting
       _ViewData.CellTopMargin = _CellTopMargin;
       _ViewData.CellRightMargin = _CellRightMargin;
       _ViewData.CellBottomMargin = _CellBottomMargin;
-
-      _ViewData.AutoTitle = (efpTitleMode.SelectedIndex == 1);
-      if (efpTitleMode.SelectedIndex == 0)
-        _ViewData.Title = efpTitleText.Text;
     }
 
     #endregion

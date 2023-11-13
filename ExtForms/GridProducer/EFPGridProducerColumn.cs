@@ -23,7 +23,28 @@ namespace FreeLibSet.Forms
   /// </summary>
   public class EFPGridProducerColumns : NamedList<EFPGridProducerColumn>
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает список столбцов
+    /// </summary>
+    /// <param name="gridProducer">Объект-вл</param>
+    public EFPGridProducerColumns(EFPGridProducer gridProducer)
+    {
+      if (gridProducer == null)
+        throw new ArgumentNullException("gridProducer");
+      _GridProducer = gridProducer;
+    }
+
+    #endregion
+
     #region Свойства
+
+    /// <summary>
+    /// Объект-владелец.
+    /// </summary>
+    public EFPGridProducer GridProducer { get { return _GridProducer; } }
+    private readonly EFPGridProducer _GridProducer;
 
     /// <summary>
     /// Возвращает последний добавленный столбнц
@@ -42,6 +63,45 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Методы добавления столбцов
+
+    #region Переопределенные методы
+
+    /// <summary>
+    /// Добавляет элемент в конец списка.
+    /// Если в списке уже есть элемент с таким кодом, генерируется исключение
+    /// </summary>
+    /// <param name="item">Добавляемый элемент</param>
+    public new void Add(EFPGridProducerColumn item)
+    {
+#if DEBUG
+      if (item == null)
+        throw new ArgumentNullException("item");
+#endif
+      if (item.GridProducer != null && item.GridProducer != _GridProducer)
+        throw new InvalidOperationException("Повторное добавление столбца не допускается");
+      item.GridProducer = _GridProducer;
+      base.Add(item);
+    }
+
+    /// <summary>
+    /// Добавляет элемент в заданную позицию списка.
+    /// Если в списке уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение
+    /// </summary>
+    /// <param name="index">Позиция для добавления</param>
+    /// <param name="item">Добавляемый объект</param>
+    public new void Insert(int index, EFPGridProducerColumn item)
+    {
+#if DEBUG
+      if (item == null)
+        throw new ArgumentNullException("item");
+#endif
+      if (item.GridProducer != null && item.GridProducer!=_GridProducer)
+        throw new InvalidOperationException("Повторное добавление столбца не допускается");
+      item.GridProducer = _GridProducer;
+      base.Insert(index, item);
+    }
+
+    #endregion
 
     #region Текстовые столбцы
 
@@ -1029,7 +1089,7 @@ namespace FreeLibSet.Forms
   /// Описание одного возможного столбца.
   /// Данные извлекаются из источника данных или столбец может быть вычисляемыми.
   /// </summary>
-  public class EFPGridProducerColumn : EFPGridProducerItemBase, IEFPGridProducerColumn
+  public class EFPGridProducerColumn : EFPGridProducerItemBase, IEFPGridProducerColumn, IEFPDataViewColumnBase
   {
     #region Конструкторы
 
@@ -1069,6 +1129,16 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Общие свойства столбца
+
+    /// <summary>
+    /// Объект-владелец
+    /// </summary>
+    public EFPGridProducer GridProducer
+    {
+      get { return _GridProducer; }
+      internal set { _GridProducer = value; }
+    }
+    private EFPGridProducer _GridProducer;
 
     /// <summary>
     /// Заголовок столбца в табличном просмотре
@@ -1136,6 +1206,8 @@ namespace FreeLibSet.Forms
     }
     private int _TextWidth;
 
+    double IEFPDataViewColumnBase.TextWidth { get { return TextWidth; } }
+
     /// <summary>
     /// Минимальная ширина столбца в символах
     /// </summary>
@@ -1150,6 +1222,8 @@ namespace FreeLibSet.Forms
       }
     }
     private int _MinTextWidth;
+
+    double IEFPDataViewColumnBase.MinTextWidth { get { return MinTextWidth; } }
 
     private const string NonResizableSizeGroup = "-";
 
@@ -1171,7 +1245,7 @@ namespace FreeLibSet.Forms
     private string _SizeGroup;
 
     /// <summary>
-    /// Если true (по умолчанию), то пользователь может менять гирину столбца.
+    /// Если true (по умолчанию), то пользователь может менять ширину столбца.
     /// </summary>
     public bool Resizable
     {
@@ -1185,6 +1259,14 @@ namespace FreeLibSet.Forms
         }
         else
           _SizeGroup = NonResizableSizeGroup;
+      }
+    }
+
+    bool IEFPDataViewColumnBase.AutoGrow
+    {
+      get
+      {
+        return DataType == typeof(string) && Resizable; // ??
       }
     }
 
@@ -1329,7 +1411,7 @@ namespace FreeLibSet.Forms
     /// Применить настроенную конфигурацию табличного просмотра к столбцу Windows Forms.
     /// Устанавливает свойства DataGridViewColumn.AutoSizeMode, Width, FillWeight и, возможно, другие. 
     /// </summary>
-    /// <param name="column">Столбец Windows Forms, </param>
+    /// <param name="column">Столбец Windows Forms</param>
     /// <param name="config">Конфигурация столбца</param>
     /// <param name="controlProvider">Провайдер табличного просмотра</param>
     public virtual void ApplyConfig(DataGridViewColumn column, EFPDataGridViewConfigColumn config, EFPDataGridView controlProvider)
@@ -1598,6 +1680,143 @@ namespace FreeLibSet.Forms
       set { PrintHeaders = DataTools.StrToSpecCharsArray(value); }
     }
 
+    /// <summary>
+    /// Возвращает true, если в принципе столбец может быть напечатан.
+    /// Столбцы с изображениями не могут быть напечатаны
+    /// </summary>
+    public virtual bool Printable { get { return true; } }
+
+    /// <summary>
+    /// Устанавливает признак печати столбца.
+    /// Если <see cref="Printable"/>=false, то никаких действий не выполняется.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">Признак печати</param>
+    public void SetPrinted(string defCfgCode, bool value)
+    {
+      GetSettings(defCfgCode).View.SetColumnPrinted(this, value);
+    }
+
+    /// <summary>
+    /// Возвращает признак печати столбца.
+    /// Если <see cref="Printable"/>=false, то возвращает false.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>true, если столбец должен быть напечатан</returns>
+    public bool GetPrinted(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnPrinted(this);
+    }
+
+    /// <summary>
+    /// Признак печати столбца в настройках по умолчанию.
+    /// </summary>
+    public bool Printed
+    {
+      get { return GetPrinted(String.Empty); }
+      set { SetPrinted(String.Empty, value); }
+    }
+
+    /// <summary>
+    /// Установить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="SizeGroup"/>, то ширина будет установлена для всех столбцов данной группы.
+    /// Нулевое значение задает размер по умолчанию, исходя из параметров шрифта и ширины колонки в просмотре.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то задает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">Ширина</param>
+    public void SetPrintWidth(string defCfgCode, int value)
+    {
+      GetSettings(defCfgCode).View.SetColumnWidth(this, value);
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает нулевое значение.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>Ширина или 0</returns>
+    public int GetPrintWidth(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnWidth(this);
+    }
+
+    /// <summary>
+    /// Ширину столбца при печати в единицах 0.1мм в настройках по умолчанию.
+    /// Если ширина не была явно установлена, возвращает нулевое значение, при этом размер столбца будет определен автоматически, исходя из
+    /// ширины столбца в просмотре и параметров шрифта, заданных для печати.
+    /// </summary>
+    public int PrintWidth
+    {
+      get { return GetPrintWidth(String.Empty); }
+      set { SetPrintWidth(String.Empty, value); }
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает значение, определяемое из ширины столбца на экране и параметров шрифта при печати.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>Ширина</returns>
+    public int GetRealPrintWidth(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetRealColumnWidth(this, GetSettings(defCfgCode).Font);
+    }
+
+    /// <summary>
+    /// Получить ширину столбца при печати в единицах 0.1мм в настройке по умолчанию.
+    /// Если установлено свойство <see cref="PrintAutoGrow"/> или вызван метод <see cref="SetPrintAutoGrow(string, bool)"/>,
+    /// то возвращает минимальную ширину столбца, которая может быть увеличена для заполнения области печати.
+    /// Если ширина не была явно установлена, возвращает значение, определяемое из ширины столбца на экране и параметров шрифта при печати.
+    /// </summary>
+    public int RealPrintWidth { get { return GetRealPrintWidth(String.Empty); } }
+
+    /// <summary>
+    /// Задать признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
+    /// Если true, то <see cref="SetPrintWidth(string, int)"/> задает минимальную ширину столбца.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <param name="value">true, если столбец должен участвовать в заполнении листа при печати</param>
+    public void SetPrintAutoGrow(string defCfgCode, bool value)
+    {
+      GetSettings(defCfgCode).View.SetColumnAutoGrow(this, value);
+    }
+
+    /// <summary>
+    /// Получить признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
+    /// Если true, то <see cref="SetPrintWidth(string, int)"/> задает минимальную ширину столбца.
+    /// </summary>
+    /// <param name="defCfgCode">Имя набора настроек по умолчанию. Пустая строка - основная настройка</param>
+    /// <returns>true, если столбец должен участвовать в заполнении листа при печати</returns>
+    public bool GetPrintAutoGrow(string defCfgCode)
+    {
+      return GetSettings(defCfgCode).View.GetColumnAutoGrow(this);
+    }
+
+    /// <summary>
+    /// Признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца в настройках по умолчанию.
+    /// Если true, то <see cref="PrintWidth"/> задает минимальную ширину столбца.
+    /// По умолчанию свойство возвращает true, если <see cref="DataGridViewColumn.AutoSizeMode"/>=<see cref="DataGridViewAutoSizeColumnMode.Fill"/>, 
+    /// например, если столбец был создан с помощью <see cref="EFPDataGridViewColumns.AddTextFill(string)"/>.
+    /// </summary>
+    public bool PrintAutoGrow
+    {
+      get { return GetPrintAutoGrow(String.Empty); }
+      set { SetPrintAutoGrow(String.Empty, value); }
+    }
+
+    private Reporting.BRDataViewMenuOutSettings GetSettings(string defCfgCode)
+    {
+      if (GridProducer == null)
+        throw new InvalidOperationException("Столбец должен быть присоединен к EFPGridProducer");
+      return GridProducer.OutItem[defCfgCode];
+    }
+
     #endregion
 
     #region Вспомогательные методы
@@ -1752,6 +1971,11 @@ namespace FreeLibSet.Forms
       return measures.ImageColumnWidth;
     }
 
+    /// <summary>
+    /// Возвращает false
+    /// </summary>
+    public override bool Printable { get { return false; } }
+
     #endregion
   }
 
@@ -1771,7 +1995,7 @@ namespace FreeLibSet.Forms
     /// <param name="sourceColumnName">Имя числового столбца в таблице данных</param>
     /// <param name="textValues">Список текстовых значений</param>
     public EFPGridProducerEnumColumn(string sourceColumnName, string[] textValues)
-      : this(sourceColumnName + "_Text", new string [] { sourceColumnName }, textValues)
+      : this(sourceColumnName + "_Text", new string[] { sourceColumnName }, textValues)
     {
     }
 
@@ -1862,7 +2086,7 @@ namespace FreeLibSet.Forms
     /// <param name="sourceColumnName">Имя числового столбца, содержащего перечислимое значение</param>
     /// <param name="imageKeys">Список тегов изображений в EFPApp.ImageKeys</param>
     public EFPGridProducerEnumImageColumn(string sourceColumnName, string[] imageKeys)
-      : this(sourceColumnName + "_Image", new string [] { sourceColumnName }, imageKeys)
+      : this(sourceColumnName + "_Image", new string[] { sourceColumnName }, imageKeys)
     {
     }
 
@@ -2019,7 +2243,7 @@ namespace FreeLibSet.Forms
     /// Создает вычисляемый столбец c заданным именем. Нумеруются все строки
     /// </summary>
     public EFPGridProducerRowOrderColumn(string name)
-      : this( name, String.Empty, 0)
+      : this(name, String.Empty, 0)
     {
     }
 

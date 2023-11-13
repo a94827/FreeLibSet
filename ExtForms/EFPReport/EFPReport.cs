@@ -158,8 +158,8 @@ namespace FreeLibSet.Forms
     private EFPReportShowMode _ShowMode;
 
     /// <summary>
-    /// Если установить значение true, то TabControl будет всегда созлаваться,
-    /// даже если отчет содержит только одну страницу
+    /// Если установить значение true, то TabControl будет всегда создаваться,
+    /// даже если отчет содержит только одну страницу.
     /// Свойство можно устанавливать в начале работы с отчетом.
     /// Установка в true также гарантирует вывод формы отчета на экран, если нет ни основных, ни
     /// дополнительных вкладок отчета.
@@ -2631,6 +2631,30 @@ namespace FreeLibSet.Forms
     {
       get { return Title; }
       set { Title = value; }
+    }
+
+    #endregion
+
+    #region Печать страницы
+
+    /// <summary>
+    /// Инициализация заголовка и таблички фильтров для печати страницы отчета
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
+    protected void DefaultOutItem_TitleNeeded(object sender, EventArgs args)
+    {
+      Reporting.BRDataViewMenuOutItemBase outItem = (Reporting.BRDataViewMenuOutItemBase)sender;
+
+      outItem.Title = OwnerReport.ReportParams.Title;
+      if (OwnerReport.Pages.Count > 1 || OwnerReport.AlwaysShowPages)
+        outItem.Title += " - " + this.Title;
+
+      outItem.FilterInfo.Clear();
+      foreach (EFPReportFilterItem filter in OwnerReport.ReportParams.FilterInfo)
+        outItem.FilterInfo.Add(filter.DisplayName, filter.Value);
+      foreach (EFPReportFilterItem filter in this.FilterInfo)
+        outItem.FilterInfo.Add(filter.DisplayName, filter.Value);
     }
 
     #endregion

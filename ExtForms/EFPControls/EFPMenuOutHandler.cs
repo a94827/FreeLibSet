@@ -223,7 +223,7 @@ namespace FreeLibSet.Forms
   /// Базовый класс для выполнения печати/экспорта.
   /// Если управляющий элемент содержит <see cref="EFPMenuOutHandler"/>, то к обработчику может быть добавлено несколько объектов.
   /// Для использования отчетов <see cref="FreeLibSet.Reporting.BRReport"/> используйте реализацию <see cref="FreeLibSet.Forms.Reporting.BRMenuOutItem"/>.
-  /// Для печати табличного просмотра используется <see cref="FreeLibSet.Forms.Reporting.EFPDataGridViewMenuOutItem"/>, а для иерахического - <see cref="FreeLibSet.Forms.Reporting.EFPDataTreeViewMenuOutItem"/>
+  /// Для печати табличного просмотра используется <see cref="FreeLibSet.Forms.Reporting.BRDataGridViewMenuOutItem"/>, а для иерахического - <see cref="FreeLibSet.Forms.Reporting.BRDataTreeViewMenuOutItem"/>
   /// </summary>
   public abstract class EFPMenuOutItem : IObjectWithCode
   {

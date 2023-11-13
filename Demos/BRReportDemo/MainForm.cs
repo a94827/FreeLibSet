@@ -39,6 +39,9 @@ namespace BRReportDemo
       efpFormatProvider.Control.Items.AddRange(cultNames);
       efpFormatProvider.Control.SelectedIndex = 0;
 
+      efpGridProducer = new EFPCheckBox(efpForm, cbGridProducer);
+      efpGridProducer.EnabledEx = new DepInArray<int>(efpTest.SelectedIndexEx, new int[] { 1, 3 });
+
       efpRemoveOutItem = new EFPCheckBox(efpForm, cbRemoveOutItem);
       efpRemoveOutItem.EnabledEx = new DepInArray<int>(efpTest.SelectedIndexEx, new int[] { 1, 2, 3 });
       efpAddOutItem = new EFPCheckBox(efpForm, cbAddOutItem);
@@ -84,7 +87,7 @@ namespace BRReportDemo
     EFPRadioButtons efpTest, efpConfig;
     EFPTextBox efpConfigSectionName;
     EFPListComboBox efpFormatProvider;
-    EFPCheckBox efpRemoveOutItem, efpAddOutItem, efpMultiSelect;
+    EFPCheckBox efpGridProducer, efpRemoveOutItem, efpAddOutItem, efpMultiSelect;
     EFPListComboBox efpDefaultConfigs;
     EFPCheckBox efpOLEPreferred;
 
@@ -113,13 +116,13 @@ namespace BRReportDemo
           Tester.TestBRReport(efpConfigSectionName.Text, formatProvider);
           break;
         case 1:
-          Tester.TestTreeView(true, efpConfigSectionName.Text, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
+          Tester.TestTreeView(true, efpConfigSectionName.Text, efpGridProducer.Checked, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
           break;
         case 2:
-          Tester.TestTreeView(false, efpConfigSectionName.Text, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
+          Tester.TestTreeView(false, efpConfigSectionName.Text, efpGridProducer.Checked, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
           break;
         case 3:
-          Tester.TestGridView(efpConfigSectionName.Text, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
+          Tester.TestGridView(efpConfigSectionName.Text, efpGridProducer.Checked, efpRemoveOutItem.Checked, efpAddOutItem.Checked, efpMultiSelect.Checked, (Tester.DefConfigMode)(efpDefaultConfigs.SelectedIndex));
           break;
       }
     }

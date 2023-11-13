@@ -352,6 +352,9 @@ namespace FreeLibSet.Forms
       //PageSetup.DocumentName = Title;
       _ControlProvider.DisplayName = Title;
 
+      if (_ControlProvider.DefaultOutItem!=null)
+        _ControlProvider.DefaultOutItem.TitleNeeded += DefaultOutItem_TitleNeeded;
+
       OnInitGrid();
 
       if (_MainPanel.ToolBarPanel != null)
@@ -805,6 +808,9 @@ namespace FreeLibSet.Forms
         {
           _ControlProvider.Control.DataBindingComplete -= new DataGridViewBindingCompleteEventHandler(Grid_DataBindingComplete);
           _ControlProvider.BaseProvider.Parent = null;
+
+          if (_ControlProvider.DefaultOutItem != null)
+            _ControlProvider.DefaultOutItem.TitleNeeded += DefaultOutItem_TitleNeeded;
         }
 
         _ControlProvider = value;
@@ -1533,6 +1539,9 @@ namespace FreeLibSet.Forms
       // 31.08.2016. Необходимо вернуть EnterAsOk в исходное состояние принудительно.
       // EFPErrorDataGridView почему-то не выставляет свойство при установке EditHandler (выше)
       _ControlProvider.CommandItems.EnterAsOk = false;
+
+      if (_ControlProvider.DefaultOutItem != null)
+        _ControlProvider.DefaultOutItem.TitleNeeded += DefaultOutItem_TitleNeeded;
 
       //FControlProvider.GridPageSetup.BeforePrinting += new CancelEventHandler(GridPageSetup_BeforePrinting);
       if (_ErrorMessages != null)

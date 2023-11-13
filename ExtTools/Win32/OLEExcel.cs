@@ -1865,7 +1865,6 @@ namespace FreeLibSet.OLE.Excel
     /// Устанавливаются внешние и внутренние границы.
     /// Диагональные линии не устанавливаются.
     /// </summary>
-    /// <param name="value">Стиль линии</param>
     public XlBorderWeight Weight
     {
       get

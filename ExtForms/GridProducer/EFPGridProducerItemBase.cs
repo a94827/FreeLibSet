@@ -567,7 +567,7 @@ namespace FreeLibSet.Forms
 
           // 21.05.2021
           if (String.Equals(name, sourceColumnNames[i], StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("Элемент в SourceColumnNames совпадает с именем вычисляемого столбца/подсказки \""+name+"\"", "sourceColumnNames");
+            throw new ArgumentException("Элемент в SourceColumnNames совпадает с именем вычисляемого столбца/подсказки \"" + name + "\"", "sourceColumnNames");
 
           for (int j = 0; j < i; j++)
           {

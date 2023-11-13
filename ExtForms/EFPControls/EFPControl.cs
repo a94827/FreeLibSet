@@ -1553,12 +1553,15 @@ namespace FreeLibSet.Forms
 
           if (_CommandItems == null)
             _CommandItems = CreateCommandItems();
+
+          OnCommandItemsCreated();
         }
         return _CommandItems;
       }
       set
       {
         _CommandItems = value;
+        OnCommandItemsCreated();
       }
     }
     private EFPControlCommandItems _CommandItems;
@@ -1583,6 +1586,13 @@ namespace FreeLibSet.Forms
     protected virtual EFPControlCommandItems CreateCommandItems()
     {
       return new EFPControlCommandItems(this);
+    }
+
+    /// <summary>
+    /// Этот метод однократно вызывается после инициализации свойства <see cref="CommandItems"/>.
+    /// </summary>
+    protected virtual void OnCommandItemsCreated()
+    {
     }
 
     /// <summary>

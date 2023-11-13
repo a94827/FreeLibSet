@@ -9,7 +9,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Reporting;
 
-#pragma warning disable 1591
+//#pragma warning disable 1591
 
 
 namespace FreeLibSet.Forms.Reporting
@@ -17,69 +17,40 @@ namespace FreeLibSet.Forms.Reporting
   /// <summary>
   /// Объект для печати/экспорта иерархического просмотра
   /// </summary>
-  public class EFPDataTreeViewMenuOutItem : BRMenuOutItem
+  public class BRDataTreeViewMenuOutItem : BRDataViewMenuOutItemBase
   {
     #region Конструктор
 
-    public EFPDataTreeViewMenuOutItem(string code, EFPDataTreeView controlProvider)
-      :base(code)
+    /// <summary>
+    /// Создание объекта для вывода иерархического просмотра
+    /// </summary>
+    /// <param name="code">Код объекта. Обычно, "Control"</param>
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    public BRDataTreeViewMenuOutItem(string code, EFPDataTreeView controlProvider)
+      :base(code, controlProvider)
     {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
-      _ControlProvider = controlProvider;
 
       DisplayName = "Иерархический просмотр";
-      SettingsData.Add(new BRFontSettingsDataItem());
-      SettingsData.Add(new BRDataViewSettingsDataItem());
-      SettingsData.GetRequired<BRDataViewSettingsDataItem>().AutoTitle = true;
     }
 
     #endregion
 
     #region Свойства
 
-    public EFPDataTreeView ControlProvider { get { return _ControlProvider; } }
-    private readonly EFPDataTreeView _ControlProvider;
-    
     /// <summary>
-    /// Доступ к настройкам печати просмотра по умолчанию
+    /// Провайдер иерахического просмотра. Задается в конструкторе
     /// </summary>
-    public EFPDataViewMenuOutSettings Default { get { return new EFPDataViewMenuOutSettings(SettingsData); } }
-
-    /// <summary>
-    /// Доступ к именным настройкам печати просмотра.
-    /// </summary>
-    /// <param name="defCfgCode">Код для именной настройки</param>
-    /// <returns>Объект для доступа к настройкам</returns>
-    public EFPDataViewMenuOutSettings this[string defCfgCode]
-    {
-      get
-      {
-        if (String.IsNullOrEmpty(defCfgCode))
-          return Default;
-        else
-          return new EFPDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
-      }
-    }
-
-    /// <summary>
-    /// Добавление именной настройки печати просмотра
-    /// </summary>
-    /// <param name="defCfgCode">Код для именной настройки</param>
-    /// <param name="displayName">Отображаемое название настройки</param>
-    /// <returns>Объект для доступа к настройкам</returns>
-    public EFPDataViewMenuOutSettings Add(string defCfgCode, string displayName)
-    {
-      if (String.IsNullOrEmpty(defCfgCode))
-        throw new ArgumentNullException("defCfgCode");
-      SettingsData.DefaultConfigs[defCfgCode].DisplayName = displayName;
-      return new EFPDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
-    }
+    public new EFPDataTreeView ControlProvider { get { return (EFPDataTreeView)(base.ControlProvider); } }
 
     #endregion
 
     #region Обработчики событий
 
+    /// <summary>
+    /// Подготовка к выполнению действий
+    /// </summary>
     protected override void OnPrepare()
     {
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpColumnHeaders = ControlProvider.Control.UseColumns;
@@ -98,21 +69,10 @@ namespace FreeLibSet.Forms.Reporting
       base.OnPrepare();
     }
 
-    protected override void OnInitDialog(BRMenuOutItemInitDialogEventArgs args)
-    {
-      if (args.Action == BROutAction.Print)
-      {
-        args.AddFontPage();
-        if (ControlProvider.Control.UseColumns)
-          new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
-        new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
-      }
-      if (args.Action == BROutAction.SendTo)
-        new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
-
-      base.OnInitDialog(args);
-    }
-
+    /// <summary>
+    /// Создание отчета из табличного просмотра
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
     protected override void OnCreateReport(BRMenuOutItemCreateReportEventArgs args)
     {
       BRFontSettingsDataItem fontSettings = SettingsData.GetRequired<BRFontSettingsDataItem>();
@@ -120,7 +80,7 @@ namespace FreeLibSet.Forms.Reporting
       args.Report.DocumentProperties = ControlProvider.DocumentProperties.Clone();
       BRSection sect = args.Report.Sections.Add();
       sect.PageSetup = SettingsData.GetItem<BRPageSettingsDataItem>().PageSetup;
-      EFPDataGridViewMenuOutItem.AddTitleBand(sect, SettingsData.GetRequired<BRDataViewSettingsDataItem>(), ControlProvider);
+      AddTitleAndFilterBands(sect);
       sect.Bands.Add(new BRDataTreeViewTable(sect, ControlProvider, SettingsData, args.Action == BROutAction.SendTo));
 
       base.OnCreateReport(args);
@@ -133,7 +93,7 @@ namespace FreeLibSet.Forms.Reporting
   /// <summary>
   /// Виртуальная таблица для иерархического просмотра
   /// </summary>
-  public class BRDataTreeViewTable : BRVirtualTable
+  internal class BRDataTreeViewTable : BRVirtualTable
   {
     #region Вложенные классы
 

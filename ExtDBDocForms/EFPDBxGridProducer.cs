@@ -385,10 +385,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="gridProducer">Объект-владелец</param>
     public EFPDBxGridProducerColumns(EFPDBxGridProducer gridProducer)
+      :base(gridProducer)
     {
-      if (gridProducer == null)
-        throw new ArgumentNullException("gridProducer");
-      _GridProducer = gridProducer;
     }
 
     #endregion
@@ -398,8 +396,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Объект-владелец
     /// </summary>
-    public EFPDBxGridProducer GridProducer { get { return _GridProducer; } }
-    private EFPDBxGridProducer _GridProducer;
+    public new EFPDBxGridProducer GridProducer { get { return (EFPDBxGridProducer)(base.GridProducer); } }
 
     #endregion
 
@@ -456,7 +453,7 @@ namespace FreeLibSet.Forms.Docs
     {
       Int32 yableId = args.GetInt(0);
       Int32 docId = args.GetInt(1);
-      args.Value = _GridProducer.UI.TextHandlers.GetTextValue(yableId, docId);
+      args.Value = GridProducer.UI.TextHandlers.GetTextValue(yableId, docId);
     }
 
     #endregion
@@ -560,12 +557,12 @@ namespace FreeLibSet.Forms.Docs
       switch (args.Reason)
       {
         case EFPGridProducerValueReason.Value:
-          string imageKey = _GridProducer.UI.ImageHandlers.GetImageKey(tableId, docId);
+          string imageKey = GridProducer.UI.ImageHandlers.GetImageKey(tableId, docId);
           args.Value = EFPApp.MainImages.Images[imageKey];
           break;
         case EFPGridProducerValueReason.ToolTipText:
-          //args.ToolTipText = _GridProducer.UI.ImageHandlers.GetToolTipText(TableId, DocId);
-          args.ToolTipText = _GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
+          //args.ToolTipText = GridProducer.UI.ImageHandlers.GetToolTipText(TableId, DocId);
+          args.ToolTipText = GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
           break;
       }
     }
