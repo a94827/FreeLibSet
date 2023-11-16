@@ -71,6 +71,8 @@ namespace ExtTools_tests.Calendar
 
     [TestCase("0503-0701", "0702-0502")]
     [TestCase("0702-0502", "0503-0701")]
+    [TestCase("0101-1231", "0101-1231")]
+    [TestCase("", "")]
     public void Complement(string sSUT, string sWanted)
     {
       MonthDayRange sut = Creators.MonthDayRange(sSUT);

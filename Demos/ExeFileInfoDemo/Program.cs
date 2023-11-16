@@ -101,6 +101,20 @@ namespace ExeFileInfoDemo
       EFPFormProvider efpForm = new EFPFormProvider(form);
       EFPTabControl efpTC = new EFPTabControl(efpForm);
 
+      #region Вкладка "Info"
+
+      EFPTabPage efpTPInfo = efpTC.TabPages.Add("Info");
+      efpTPInfo.ImageKey = "Information";
+      EFPControlWithToolBar<TextBox> cwtInfo = new EFPControlWithToolBar<TextBox>(efpTPInfo);
+      cwtInfo.Control.Multiline = true;
+      cwtInfo.Control.ReadOnly = true;
+      cwtInfo.Control.ScrollBars = ScrollBars.Both;
+      cwtInfo.Control.Font = EFPApp.CreateMonospaceFont();
+      cwtInfo.Control.WordWrap = false;
+      EFPTextBox efpInfo = new EFPTextBox(cwtInfo);
+
+      #endregion
+
       #region Вкладка "Resource"
 
       EFPTabPage efpTPRes = efpTC.TabPages.Add("Resources");
@@ -144,6 +158,19 @@ namespace ExeFileInfoDemo
 
       using (ExeFileInfo fi = new ExeFileInfo(filePath))
       {
+        List<string> lstInfo = new List<string>();
+        try
+        {
+          lstInfo.Add(filePath.Path);
+          GetFileInfo(lstInfo, fi);
+        }
+        catch (Exception e)
+        {
+          lstInfo.Add("*** Exception " + e.GetType().ToString() + " ***");
+          lstInfo.Add(e.Message);
+        }
+        efpInfo.Control.Lines = lstInfo.ToArray();
+
         foreach (KeyValuePair<ResourceID, ResourceTable.TypeInfo> pair in fi.Resources.Types)
         {
           TreeNode tNode = efpRes.Control.Nodes.Add(pair.Value.ToString());
@@ -234,6 +261,69 @@ namespace ExeFileInfoDemo
       }
       EFPApp.ShowTextView(sb.ToString(), "Просмотр");
     }
+
+    #region Получение текстовой информации
+
+    private static void GetFileInfo(List<string> lstInfo, ExeFileInfo fi)
+    {
+      StringBuilder sb = new StringBuilder();
+      if (fi.PE != null)
+      {
+        lstInfo.Add("");
+        lstInfo.Add("PE Header");
+        AddPair(lstInfo, "Machine", fi.PE.Machine.ToString(), 1);
+        AddPair(lstInfo, "Creation Time", fi.PE.CreationTime.ToString(), 1);
+        AddPair(lstInfo, "Characteristics", fi.PE.Characteristics.ToString(), 1);
+        AddPair(lstInfo, "Sections", DataTools.ToStringJoin(", ", fi.PE.Sections), 1);
+
+        if (fi.PE.OptionalHeader != null)
+        {
+          lstInfo.Add("");
+          lstInfo.Add("Optional Header");
+          AddPair(lstInfo, "Kind", fi.PE.OptionalHeader.Kind.ToString(), 1);
+          AddPair(lstInfo, "LinkerVersion", fi.PE.OptionalHeader.LinkerVersion.ToString(), 1);
+          AddPair(lstInfo, "HasEntryPoint", fi.PE.OptionalHeader.HasEntryPoint.ToString()+(fi.PE.OptionalHeader.HasEntryPoint? " (Executable file)":" (Library)"), 1);
+          AddPair(lstInfo, "ImageBase", "0x"+fi.PE.OptionalHeader.ImageBase.ToString("x8"), 1);
+          AddPair(lstInfo, "OSVersion", fi.PE.OptionalHeader.OSVersion.ToString(), 1);
+          AddPair(lstInfo, "ImageVersion", fi.PE.OptionalHeader.ImageVersion.ToString(), 1);
+          AddPair(lstInfo, "Subsystem", fi.PE.OptionalHeader.Subsystem.ToString(), 1);
+          AddPair(lstInfo, "SubsystemVersion", fi.PE.OptionalHeader.SubsystemVersion.ToString(), 1);
+          AddPair(lstInfo, "DllCharacteristics", fi.PE.OptionalHeader.DllCharacteristics.ToString(), 1);
+          sb.Length = 0;
+          foreach (ExeFileInfo.PEDataDirectoryKind dirKind in Enum.GetValues(typeof(ExeFileInfo.PEDataDirectoryKind)))
+          {
+            if (fi.PE.OptionalHeader.HasTable(dirKind))
+            {
+              if (sb.Length > 0)
+                sb.Append(", ");
+              sb.Append(dirKind.ToString());
+            }
+          }
+          AddPair(lstInfo, "Directories", sb.ToString(), 1);
+        }
+
+        if (fi.CLR != null)
+        {
+          lstInfo.Add("");
+          lstInfo.Add("CLR");
+          AddPair(lstInfo, "ProcessorArchitecture", fi.CLR.ProcessorArchitecture.ToString(), 0);
+          lstInfo.Add("CLR Header");
+          AddPair(lstInfo, "RuntimeVersion", fi.CLR.Header.RuntimeVersion.ToString(), 1);
+          AddPair(lstInfo, "Flags", fi.CLR.Header.Flags.ToString(), 1);
+        }
+      }
+    }
+
+    private static void AddPair(List<string> lstInfo, string name, string value, int offset)
+    {
+      string s = name;
+      if (offset > 0)
+        s = new string(' ', 2 * offset) + s;
+      s = s.PadLeft(25);
+      lstInfo.Add(s + ": " + value);
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -282,6 +372,8 @@ namespace ExeFileInfoDemo
             Icon ic = new Icon(ms);
             _IconImage = ic.ToBitmap();
           }
+          else
+            _IconImage = EFPApp.MainImages.Images["EmptyImage"];
         }
       }
       catch (Exception e)

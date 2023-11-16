@@ -136,7 +136,7 @@ namespace FreeLibSet.Win32
       internal ExeFileInfo _Owner;
 
       /// <summary>
-      /// Начало данных заголовка (без сингнатуры) в потоке
+      /// Начало данных заголовка (без сигнатуры) в потоке
       /// </summary>
       internal long _StartPos;
 
@@ -253,7 +253,7 @@ namespace FreeLibSet.Win32
             _Owner._Stream.Seek(rt._StartPos + (eName & OtherBitMask), SeekOrigin.Begin);
             // Чтение структуры IMAGE_RESOURCE_DIR_STRING_U
             int nChars = _Owner._Reader.ReadUInt16();
-            byte[] buf = _Owner._Reader.ReadBytes(nChars*2);
+            byte[] buf = _Owner._Reader.ReadBytes(nChars * 2);
             res._Entries[i]._ID = new ResourceID(Encoding.Unicode.GetString(buf));
           }
           else
@@ -272,12 +272,12 @@ namespace FreeLibSet.Win32
 
             // Чтение структуры IMAGE_RESOURCE_DATA_ENTRY 
             uint dVA = _Owner._Reader.ReadUInt32(); // Виртуальный адрес, из него нужно вычесть начало таблицы
-            uint dOffset = dVA - OptionalHeader._DataDirectories[(int)PEDataDirectotyKind.ResourceTable].Address;
+            uint dOffset = dVA - OptionalHeader._DataDirectories[(int)PEDataDirectoryKind.ResourceTable].Address;
             res._Entries[i]._DataStartPos = rt._StartPos + dOffset;
             if (res._Entries[i]._DataStartPos < 0 || res._Entries[i]._DataStartPos >= _Owner._Stream.Length)
               throw new BugException("Начальная позиция ресурса выходит за пределы файла");
             res._Entries[i]._DataSize = (int)_Owner._Reader.ReadUInt32();
-            if ((res._Entries[i]._DataStartPos + res._Entries[i]._DataSize)> _Owner._Stream.Length)
+            if ((res._Entries[i]._DataStartPos + res._Entries[i]._DataSize) > _Owner._Stream.Length)
               throw new BugException("Конец ресурса выходит за пределы файла");
             res._Entries[i]._CodePage = (int)_Owner._Reader.ReadUInt32();
             _Owner._Reader.ReadUInt32(); // Reserved
@@ -310,7 +310,7 @@ namespace FreeLibSet.Win32
 
 #pragma warning disable 1591
 
-    public enum PEDataDirectotyKind
+    public enum PEDataDirectoryKind
     {
       ExportTable = 0,
       ImportTable = 1,
@@ -320,15 +320,91 @@ namespace FreeLibSet.Win32
       BaseRelocationTable = 5,
       Debug = 6,
       Architecture = 7,
-      Reserved1 = 8,
-      GlobalPtr = 9,
-      TLSTable = 10,
-      LoadConfigTable = 11,
-      BoundImport = 12,
-      IAT = 13,
-      DelayImportDescriptor = 14,
-      CLRRuntimeHeader = 15,
-      Reserved2 = 16
+      GlobalPtr = 8,
+      TLSTable = 9,
+      LoadConfigTable = 10,
+      BoundImport = 11,
+      IAT = 12,
+      DelayImportDescriptor = 13,
+      CLRRuntimeHeader = 14,
+      Reserved2 = 15
+    }
+
+    public enum PEWindowsSubsystem
+    {
+      IMAGE_SUBSYSTEM_UNKNOWN = 0,
+      IMAGE_SUBSYSTEM_NATIVE = 1,
+      IMAGE_SUBSYSTEM_WINDOWS_GUI = 2,
+      IMAGE_SUBSYSTEM_WINDOWS_CUI = 3,
+      IMAGE_SUBSYSTEM_OS2_CUI = 5,
+      IMAGE_SUBSYSTEM_POSIX_CUI = 7,
+      IMAGE_SUBSYSTEM_NATIVE_WINDOWS = 8,
+      IMAGE_SUBSYSTEM_WINDOWS_CE_GUI = 9,
+      IMAGE_SUBSYSTEM_EFI_APPLICATION = 10,
+      IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER = 11,
+      IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER = 12,
+      IMAGE_SUBSYSTEM_EFI_ROM = 13,
+      IMAGE_SUBSYSTEM_XBOX = 14,
+      IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION = 16,
+    }
+
+    [Flags]
+    public enum ImageDllCharacteristics
+    {
+      /// <summary>
+      /// Image can handle a high entropy 64-bit virtual address space.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_HIGH_ENTROPY_VA = 0x0020,
+
+      /// <summary>
+      /// DLL can be relocated at load time.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE = 0x0040,
+
+      /// <summary>
+      /// Code Integrity checks are enforced.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY = 0x0080,
+
+      /// <summary>
+      /// Image is NX compatible.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_NX_COMPAT = 0x0100,
+
+      /// <summary>
+      /// Isolation aware, but do not isolate the image.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_NO_ISOLATION = 0x0200,
+
+      /// <summary>
+      /// Does not use structured exception (SE) handling.No SE handler may be called in this image.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_NO_SEH = 0x0400,
+
+      /// <summary>
+      /// Do not bind the image.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_NO_BIND = 0x0800,
+
+      /// <summary>
+      /// Image must execute in an AppContainer.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_APPCONTAINER = 0x1000,
+
+      /// <summary>
+      /// A WDM driver.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_WDM_DRIVER = 0x2000,
+
+      /// <summary>
+      /// Image supports Control Flow Guard.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_GUARD_CF = 0x4000,
+
+      /// <summary>
+      /// Terminal Server aware.
+      /// </summary>
+      IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE = 0x8000,
     }
 
 #pragma warning restore 1591
@@ -352,6 +428,24 @@ namespace FreeLibSet.Win32
       internal Version _LinkerVersion;
 
       /// <summary>
+      /// 
+      /// </summary>
+      public uint SizeOfCode { get { return _SizeOfCode; } }
+      internal uint _SizeOfCode;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public uint SizeOfInitializedData { get { return _SizeOfInitializedData; } }
+      internal uint _SizeOfInitializedData;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public uint SizeOfUninitializedData { get { return _SizeOfUninitializedData; } }
+      internal uint _SizeOfUninitializedData;
+
+      /// <summary>
       /// Наличие точки запуска
       /// </summary>
       public bool HasEntryPoint { get { return _HasEntryPoint; } }
@@ -360,8 +454,88 @@ namespace FreeLibSet.Win32
       /// <summary>
       /// 
       /// </summary>
-      public IntPtr BaseOfCode { get { return new IntPtr((long)_BaseOfCode); } }
+      public uint BaseOfCode { get { return _BaseOfCode; } }
       internal uint _BaseOfCode;
+
+      /// <summary>
+      /// Только для заголовка PE32, но не PE32+
+      /// </summary>
+      public uint BaseOfData { get { return _BaseOfData; } }
+      internal uint _BaseOfData;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public ulong ImageBase { get { return _ImageBase; } }
+      internal ulong _ImageBase;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public int SectionAlignment { get { return _SectionAlignment; } }
+      internal int _SectionAlignment;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public int FileAlignment { get { return _FileAlignment; } }
+      internal int _FileAlignment;
+
+      /// <summary>
+      /// Требуемая операционная система
+      /// </summary>
+      public Version OSVersion { get { return _OSVersion; } }
+      internal Version _OSVersion;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public Version ImageVersion { get { return _ImageVersion; } }
+      internal Version _ImageVersion;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public Version SubsystemVersion { get { return _SubsystemVersion; } }
+      internal Version _SubsystemVersion;
+
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public uint Win32VersionValue { get { return _Win32VersionValue; } }
+      internal uint _Win32VersionValue;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public uint SizeOfImage { get { return _SizeOfImage; } }
+      internal uint _SizeOfImage;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public uint SizeOfHeaders { get { return _SizeOfHeaders; } }
+      internal uint _SizeOfHeaders;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public uint CheckSum { get { return _CheckSum; } }
+      internal uint _CheckSum;
+
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public PEWindowsSubsystem Subsystem { get { return _Subsystem; } }
+      internal PEWindowsSubsystem _Subsystem;
+
+      /// <summary>
+      /// 
+      /// </summary>
+      public ImageDllCharacteristics DllCharacteristics { get { return _DllCharacteristics; } }
+      internal ImageDllCharacteristics _DllCharacteristics;
 
       internal IMAGE_DATA_DIRECTORY[] _DataDirectories;
 
@@ -370,10 +544,193 @@ namespace FreeLibSet.Win32
       /// </summary>
       /// <param name="kind"></param>
       /// <returns></returns>
-      public bool HasTable(PEDataDirectotyKind kind)
+      public bool HasTable(PEDataDirectoryKind kind)
       {
         return _DataDirectories[(int)kind].Address != 0L;
       }
+    }
+
+    /// <summary>
+    /// Флаги для секции
+    /// </summary>
+    [Flags]
+    public enum PESectionFlags
+    {
+      /// <summary>
+      /// The section should not be padded to the next boundary. This flag is obsolete and is replaced by IMAGE_SCN_ALIGN_1BYTES. This is valid only for object files.
+      /// </summary>
+      IMAGE_SCN_TYPE_NO_PAD = 0x00000008,
+
+      /// <summary>
+      /// The section contains executable code.
+      /// </summary>
+      IMAGE_SCN_CNT_CODE = 0x00000020,
+
+      /// <summary>
+      /// The section contains initialized data.
+      /// </summary>
+      IMAGE_SCN_CNT_INITIALIZED_DATA = 0x00000040,
+
+      /// <summary>
+      /// The section contains uninitialized data.
+      /// </summary>
+      IMAGE_SCN_CNT_UNINITIALIZED_DATA = 0x00000080,
+
+      /// <summary>
+      /// Reserved for future use.
+      /// </summary>
+      IMAGE_SCN_LNK_OTHER = 0x00000100,
+
+      /// <summary>
+      /// The section contains comments or other information.The.drectve section has this type.This is valid for object files only.
+      /// </summary>
+      IMAGE_SCN_LNK_INFO = 0x00000200,
+
+      /// <summary>
+      /// The section will not become part of the image.This is valid only for object files.
+      /// </summary>
+      IMAGE_SCN_LNK_REMOVE = 0x00000800,
+
+      /// <summary>
+      /// The section contains COMDAT data.For more information, see COMDAT Sections (Object Only). This is valid only for object files.
+      /// </summary>
+      IMAGE_SCN_LNK_COMDAT = 0x00001000,
+
+      /// <summary>
+      /// The section contains data referenced through the global pointer (GP).
+      /// </summary>
+      IMAGE_SCN_GPREL = 0x00008000,
+
+      /// <summary>
+      /// Reserved for future use.
+      /// </summary>
+      IMAGE_SCN_MEM_PURGEABLE = 0x00020000,
+
+      /// <summary>
+      /// Reserved for future use.
+      /// </summary>
+      IMAGE_SCN_MEM_16BIT = 0x00020000,
+
+      /// <summary>
+      /// Reserved for future use.
+      /// </summary>
+      IMAGE_SCN_MEM_LOCKED = 0x00040000,
+
+      /// <summary>
+      /// Reserved for future use.
+      /// </summary>
+      IMAGE_SCN_MEM_PRELOAD = 0x00080000,
+
+      /// <summary>
+      /// Align data on a 1-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_1BYTES = 0x00100000,
+
+      /// <summary>
+      /// Align data on a 2-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_2BYTES = 0x00200000,
+
+      /// <summary>
+      /// Align data on a 4-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_4BYTES = 0x00300000,
+
+      /// <summary>
+      /// Align data on an 8-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_8BYTES = 0x00400000,
+
+      /// <summary>
+      /// Align data on a 16-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_16BYTES = 0x00500000,
+
+      /// <summary>
+      /// Align data on a 32-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_32BYTES = 0x00600000,
+
+      /// <summary>
+      /// Align data on a 64-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_64BYTES = 0x00700000,
+
+      /// <summary>
+      /// Align data on a 128-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_128BYTES = 0x00800000,
+
+      /// <summary>
+      /// Align data on a 256-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_256BYTES = 0x00900000,
+
+      /// <summary>
+      /// Align data on a 512-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_512BYTES = 0x00A00000,
+
+      /// <summary>
+      /// Align data on a 1024-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_1024BYTES = 0x00B00000,
+
+      /// <summary>
+      /// Align data on a 2048-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_2048BYTES = 0x00C00000,
+
+      /// <summary>
+      /// Align data on a 4096-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_4096BYTES = 0x00D00000,
+
+      /// <summary>
+      /// Align data on an 8192-byte boundary. Valid only for object files.
+      /// </summary>
+      IMAGE_SCN_ALIGN_8192BYTES = 0x00E00000,
+
+      /// <summary>
+      /// The section contains extended relocations.
+      /// </summary>
+      IMAGE_SCN_LNK_NRELOC_OVFL = 0x01000000,
+
+      /// <summary>
+      /// The section can be discarded as needed.
+      /// </summary>
+      IMAGE_SCN_MEM_DISCARDABLE = 0x02000000,
+
+      /// <summary>
+      /// The section cannot be cached.
+      /// </summary>
+      IMAGE_SCN_MEM_NOT_CACHED = 0x04000000,
+
+      /// <summary>
+      /// The section is not pageable.
+      /// </summary>
+      IMAGE_SCN_MEM_NOT_PAGED = 0x08000000,
+
+      /// <summary>
+      /// The section can be shared in memory.
+      /// </summary>
+      IMAGE_SCN_MEM_SHARED = 0x10000000,
+
+      /// <summary>
+      /// The section can be executed as code.
+      /// </summary>
+      IMAGE_SCN_MEM_EXECUTE = 0x20000000,
+
+      /// <summary>
+      /// The section can be read.
+      /// </summary>
+      IMAGE_SCN_MEM_READ = 0x40000000,
+
+      /// <summary>
+      /// The section can be written to.
+      /// </summary>
+      IMAGE_SCN_MEM_WRITE = unchecked((int)0x80000000),
+
     }
 
     /// <summary>
@@ -388,16 +745,43 @@ namespace FreeLibSet.Win32
       internal string _Name;
 
       /// <summary>
-      /// 
+      /// Размер в памяти
+      /// </summary>
+      public uint VirtualSize { get { return _VirtualSize; } }
+      internal uint _VirtualSize;
+
+      /// <summary>
+      /// RVA
+      /// </summary>
+      public uint VirtualAddress { get { return _VirtualAddress; } }
+      internal uint _VirtualAddress;
+
+      /// <summary>
+      /// Размер в файле
       /// </summary>
       public uint SizeOfRawData { get { return _SizeOfRawData; } }
       internal uint _SizeOfRawData;
 
       /// <summary>
-      /// 
+      /// Смещение от начала exe-файла
       /// </summary>
       public uint PointerToRawData { get { return _PointerToRawData; } }
       internal uint _PointerToRawData;
+
+      /// <summary>
+      /// Флаги секции
+      /// </summary>
+      public PESectionFlags Flags { get { return _Flags; } }
+      internal PESectionFlags _Flags;
+
+      /// <summary>
+      /// Выводит свойство <see cref="Name"/>
+      /// </summary>
+      /// <returns>Текстовое представление</returns>
+      public override string ToString()
+      {
+        return Name;
+      }
     }
 
     /// <summary>
@@ -446,7 +830,7 @@ namespace FreeLibSet.Win32
       _Reader.ReadUInt32(); // PointerToSymbolTable
       _Reader.ReadUInt32(); // NumberOfSymbols
       int szOptionalHeader = _Reader.ReadUInt16(); // SizeOfOptionalHeader
-      _PE._Characteristics = (PECharacteristics)(_Reader.ReadUInt16());
+      _PE._Characteristics = (PECharacteristics)(int)(_Reader.ReadUInt16());
 
       #endregion
 
@@ -457,7 +841,7 @@ namespace FreeLibSet.Win32
         PEOptionalHeader optHead = new PEOptionalHeader();
         _PE._OptionalHeader = optHead;
 
-        optHead._Kind = (PEOptionalHeaderKind)(_Reader.ReadUInt16());
+        optHead._Kind = (PEOptionalHeaderKind)(int)(_Reader.ReadUInt16());
         switch (optHead._Kind)
         {
           case PEOptionalHeaderKind.PE32:
@@ -469,23 +853,46 @@ namespace FreeLibSet.Win32
         int lvMajor = _Reader.ReadByte();
         int lvMinor = _Reader.ReadByte();
         optHead._LinkerVersion = new Version(lvMajor, lvMinor);
-        _Reader.ReadUInt32(); // SizeOfCode
-        _Reader.ReadUInt32(); // SizeOfInitializedData
-        _Reader.ReadUInt32(); // SizeOfUninitializedData
+        optHead._SizeOfCode = _Reader.ReadUInt32(); 
+        optHead._SizeOfInitializedData = _Reader.ReadUInt32(); 
+        optHead._SizeOfUninitializedData = _Reader.ReadUInt32(); 
         long addrEP = _Reader.ReadUInt32(); // AddressOfEntryPoint
         optHead._HasEntryPoint = (addrEP != 0L);
         optHead._BaseOfCode = _Reader.ReadUInt32();
 
         if (optHead._Kind == PEOptionalHeaderKind.PE32)
         {
-          _Reader.ReadUInt32(); // BaseOfData
+          optHead._BaseOfData = _Reader.ReadUInt32();
         }
 
         // Windows-specific data
-        _Reader.ReadBytes((optHead.Kind == PEOptionalHeaderKind.PE32 ? 68 : 88) - 4);
+        if (optHead.Kind == PEOptionalHeaderKind.PE32Plus)
+          optHead._ImageBase = _Reader.ReadUInt64();
+        else
+          optHead._ImageBase = _Reader.ReadUInt32();
+        optHead._SectionAlignment = _Reader.ReadInt32();
+        optHead._FileAlignment = _Reader.ReadInt32();
+        int osverMajor = _Reader.ReadInt16();
+        int osverMinor = _Reader.ReadInt16();
+        optHead._OSVersion = new Version(osverMajor, osverMinor);
+        int imgverMajor = _Reader.ReadInt16();
+        int imgverMinor = _Reader.ReadInt16();
+        optHead._ImageVersion = new Version(imgverMajor, imgverMinor);
+        int ssverMajor = _Reader.ReadInt16();
+        int ssverMinor = _Reader.ReadInt16();
+        optHead._SubsystemVersion = new Version(ssverMajor, ssverMinor);
+        optHead._Win32VersionValue = _Reader.ReadUInt32(); 
+        optHead._SizeOfImage = _Reader.ReadUInt32(); 
+        optHead._SizeOfHeaders = _Reader.ReadUInt32(); 
+        optHead._CheckSum = _Reader.ReadUInt32();
+        optHead._Subsystem = (PEWindowsSubsystem)(int)(_Reader.ReadUInt16());
+        optHead._DllCharacteristics = (ImageDllCharacteristics)(int)(_Reader.ReadUInt16());
+
+        _Reader.ReadBytes((optHead.Kind == PEOptionalHeaderKind.PE32 ? 16 : 32));
+        _Reader.ReadInt32(); // LoaderFlags
         int numberOfRvaAndSizes = (int)_Reader.ReadUInt32(); // количество входов
 
-        optHead._DataDirectories = new IMAGE_DATA_DIRECTORY[(int)PEDataDirectotyKind.Reserved2 + 1];
+        optHead._DataDirectories = new IMAGE_DATA_DIRECTORY[(int)PEDataDirectoryKind.Reserved2 + 1];
         int n = Math.Min(optHead._DataDirectories.Length, numberOfRvaAndSizes);
         for (int i = 0; i < n; i++)
         {
@@ -507,15 +914,184 @@ namespace FreeLibSet.Win32
         byte[] bName = _Reader.ReadBytes(8);
         sect._Name = GetSectionName(bName);
 
-        _Reader.ReadUInt32(); // PhysicalAddress
-        _Reader.ReadUInt32(); // VirtualAddress
+        sect._VirtualSize = _Reader.ReadUInt32();
+        sect._VirtualAddress = _Reader.ReadUInt32();
         sect._SizeOfRawData = _Reader.ReadUInt32();
         sect._PointerToRawData = _Reader.ReadUInt32();
         _Reader.ReadUInt32(); // PointerToRelocations
         _Reader.ReadUInt32(); // PointerToLinenumbers
         _Reader.ReadUInt16(); // NumberOfRelocations
         _Reader.ReadUInt16(); // NumberOfLinenumbers
-        _Reader.ReadUInt32(); // Characteristics
+        sect._Flags = (PESectionFlags)(int)(_Reader.ReadUInt32()); // Characteristics
+      }
+
+      #endregion
+
+      #region Заголовок CLR
+
+      InitCLR();
+
+      #endregion
+    }
+
+    #region Преобразование адресов RVA->RAW
+
+    // Источник: https://habr.com/ru/articles/129241/
+
+    private struct Aligner
+    {
+      public const uint FORCED_FILE_ALIGNMENT = 0x200;
+      public const uint MIN_SECTION_ALIGNMENT = 0x1000;
+
+      public Aligner(uint fileAlignment, uint sectionAlignement)
+      {
+        _FileAlignment = fileAlignment;
+        _SectionAlignement = sectionAlignement;
+      }
+
+      private uint _FileAlignment;
+      private uint _SectionAlignement;
+
+      public uint GetVirtualSize(uint size)
+      {
+        return NeedAlign(_SectionAlignement) ?
+            AlignUp(size, _SectionAlignement) :
+            size;
+      }
+
+      public uint GetVirtualAddress(uint address)
+      {
+        return NeedAlign(_SectionAlignement) ?
+            AlignDown(address, _SectionAlignement) :
+            address;
+      }
+
+      public uint GetFileOffset(uint offset)
+      {
+        return NeedAlign(_SectionAlignement) ?
+            AlignDown(offset, FORCED_FILE_ALIGNMENT) :
+            offset;
+      }
+
+      public uint GetSectionSize(PESection sect)
+      {
+        uint fileSize = sect.SizeOfRawData;
+        uint virtualSize = sect.VirtualSize;
+        if (NeedAlign(_SectionAlignement))
+        {
+          fileSize = AlignUp(fileSize, _FileAlignment);
+          virtualSize = AlignUp(virtualSize, _SectionAlignement);
+        }
+        return Math.Min(fileSize, virtualSize);
+      }
+
+      private static bool NeedAlign(uint sectionAlignement)
+      {
+        return sectionAlignement >= MIN_SECTION_ALIGNMENT;
+      }
+
+      private static uint AlignDown(uint value, uint factor)
+      {
+        return value & ~(factor - 1);
+      }
+
+      private static uint AlignUp(uint value, uint factor)
+      {
+        return AlignDown(value - 1, factor) + factor;
+      }
+    }
+
+    const uint INVALID_RAW = uint.MaxValue;
+
+    private uint RvaToRaw(uint rva)
+    {
+      uint result = INVALID_RAW;
+
+      if (_PE.OptionalHeader == null)
+        throw new BugException("No PE optional header");
+
+
+      if (rva < _PE.OptionalHeader.SizeOfHeaders)
+        return rva;
+
+      Aligner aligner = new Aligner((uint)(_PE.OptionalHeader.FileAlignment), (uint)(_PE.OptionalHeader.SectionAlignment));
+
+      //ulong imageBase = _PE.OptionalHeader.ImageBase;
+
+      if (_PE.Sections.Length > 0)
+      {
+        foreach (PESection section in _PE.Sections)
+        {
+          if (section.PointerToRawData == 0)
+            continue;
+
+          ulong sectionStart = /*imageBase +*/  aligner.GetVirtualAddress(section.VirtualAddress);
+          uint sectionSize = aligner.GetSectionSize(section);
+          ulong sectionEnd = sectionStart + sectionSize;
+
+          if (sectionStart <= rva && rva < sectionEnd)
+          {
+            ulong sectionOffset = aligner.GetFileOffset(section.PointerToRawData);
+            checked
+            {
+              sectionOffset += (ulong)rva - sectionStart;
+            }
+            if ((long)sectionOffset < _Stream.Length)
+            {
+              result = (uint)sectionOffset;
+              break; // Агеев
+            }
+          }
+        } // for
+      }
+      else if (rva < aligner.GetVirtualSize(_PE.OptionalHeader.SizeOfImage))
+      {
+        result = rva;
+      }
+      return result;
+    }
+
+    #endregion
+
+    private void InitCLR()
+    {
+      if (_PE._OptionalHeader == null)
+        return;
+      if (!_PE.OptionalHeader.HasTable(PEDataDirectoryKind.CLRRuntimeHeader))
+        return;
+
+      uint pos = RvaToRaw(_PE.OptionalHeader._DataDirectories[(int)PEDataDirectoryKind.CLRRuntimeHeader].Address);
+      if (pos ==INVALID_RAW)
+        return;
+      _Stream.Position = pos;
+      uint headSize = _Reader.ReadUInt32();
+      if (headSize < 64)
+        return;
+
+      // Есть корректный заголовок CLR
+      _CLR = new CLRInfo();
+
+      int rtMajor = _Reader.ReadUInt16();
+      int rtMinor = _Reader.ReadUInt16();
+      _CLR.Header._RuntimeVersion = new Version(rtMajor, rtMinor);
+      _Reader.ReadUInt32(); // RVA of the physical metadata
+      _Reader.ReadUInt32(); // size of the physical metadata
+      _CLR.Header._Flags = (CLRRuntimeFlags)(_Reader.ReadInt32());
+
+      // Остальные поля
+
+      #region Архитектура
+
+      bool is32bit = (_PE.Characteristics & PECharacteristics.IMAGE_FILE_32BIT_MACHINE) != 0;
+      switch (_PE.OptionalHeader.Kind)
+      {
+        case PEOptionalHeaderKind.PE32:
+          _CLR._ProcessorArchitecture = is32bit ? System.Reflection.ProcessorArchitecture.X86 : System.Reflection.ProcessorArchitecture.MSIL;
+          break;
+        case PEOptionalHeaderKind.PE32Plus:
+          if (!is32bit)
+            _CLR._ProcessorArchitecture = System.Reflection.ProcessorArchitecture.Amd64;
+          break;
       }
 
       #endregion
@@ -536,6 +1112,88 @@ namespace FreeLibSet.Win32
 
     private PEFileHeader _PE;
     private bool _PEDefined;
+
+    #endregion
+
+    #region Информация CLR (NetFramework)
+
+    /// <summary>
+    /// Флаги заголовка CLR.
+    /// ECMA-335, II.25.3.3.1
+    /// </summary>
+    [Flags]
+    public enum CLRRuntimeFlags
+    {
+      /// <summary>
+      ///  Shall be 1
+      /// </summary>
+      COMIMAGE_FLAGS_ILONLY = 0x00000001,
+
+      /// <summary>
+      ///  Image can only be loaded into a 32-bit process, for instance if there are 32-bit vtablefixups, or
+      /// casts from native integers to int32. 
+      /// CLI implementations that have 64-bit native integers shall refuse loading binaries with this  flag set.
+      /// </summary>
+      COMIMAGE_FLAGS_32BITREQUIRED = 0x00000002,
+
+      /// <summary>
+      /// Image has a strong name signature.
+      /// </summary>
+      COMIMAGE_FLAGS_STRONGNAMESIGNED = 0x00000008,
+
+      /// <summary>
+      /// Shall be 0.
+      /// </summary>
+      COMIMAGE_FLAGS_NATIVE_ENTRYPOINT = 0x00000010,
+
+      /// <summary>
+      ///  Should be 0
+      /// </summary>
+      COMIMAGE_FLAGS_TRACKDEBUGDATA = 0x00010000,
+    }
+
+    /// <summary>
+    /// Заголовок CLR.
+    /// ECMA-335, II.25.3.3
+    /// </summary>
+    public struct CLRHeader
+    {
+      /// <summary>
+      /// Минимальная версия среды времени выполнения
+      /// </summary>
+      public Version RuntimeVersion { get { return _RuntimeVersion; } }
+      internal Version _RuntimeVersion;
+
+      /// <summary>
+      /// Flags describing this runtime image
+      /// </summary>
+      public CLRRuntimeFlags Flags { get { return _Flags; } }
+      internal CLRRuntimeFlags _Flags;
+    }
+
+    /// <summary>
+    /// Описание CLR
+    /// </summary>
+    public sealed class CLRInfo
+    {
+      /// <summary>
+      /// Архитектура процессора (вычисляется из флагов PE)
+      /// </summary>
+      public System.Reflection.ProcessorArchitecture ProcessorArchitecture { get { return _ProcessorArchitecture; } }
+      internal System.Reflection.ProcessorArchitecture _ProcessorArchitecture;
+
+      /// <summary>
+      /// Заголовок CLR
+      /// </summary>
+      public CLRHeader Header;
+    }
+
+    /// <summary>
+    /// Информация CLR (Net Framework).
+    /// Если exe-файл не относится к CLR, то ссылка содержит null.
+    /// </summary>
+    public CLRInfo CLR { get { return _CLR; } }
+    private CLRInfo _CLR;
 
     #endregion
 

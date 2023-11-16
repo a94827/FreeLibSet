@@ -111,8 +111,8 @@ namespace FreeLibSet.Collections
 
 
   /// <summary>
-  /// Список пар "Код"-"Значение", отсортированный не по ключу, как SortedList, а по порядку добавления элементов
-  /// Порядок пар, возвращаемых GetEnumerator(), также соответствует порядку добавления
+  /// Список пар "Код"-"Значение", отсортированный не по ключу, как <see cref="SortedList{TKey, TValue}"/>, а по порядку добавления элементов.
+  /// Порядок пар, возвращаемых GetEnumerator(), также соответствует порядку добавления.
   /// </summary>                                                
   /// <typeparam name="TKey">Тип ключа</typeparam>
   /// <typeparam name="TValue">Тип значения</typeparam>
@@ -122,7 +122,7 @@ namespace FreeLibSet.Collections
     #region Конструкторы
 
     /// <summary>
-    /// Создает пустую коллекцию с параметрами по умолчанию
+    /// Создает пустую коллекцию с параметрами по умолчанию.
     /// </summary>
     public OrderSortedList()
     {
@@ -133,7 +133,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создает пустую коллекцию с заданным объектом сравнения
+    /// Создает пустую коллекцию с заданным объектом сравнения.
     /// </summary>
     public OrderSortedList(IEqualityComparer<TKey> comparer)
     {
@@ -146,7 +146,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает коллекцию с заданной начальной емкостью.
-    /// Используйте эту версию конструктора, если заранее известно число элементов
+    /// Используйте эту версию конструктора, если заранее известно число элементов.
     /// </summary>
     /// <param name="capacity">Начальная емкость в коллекции</param>
     public OrderSortedList(int capacity)
@@ -224,8 +224,8 @@ namespace FreeLibSet.Collections
       /// Если такого ключа нет, возвращает (-1).
       /// Быстродействие метода: O(1)
       /// </summary>
-      /// <param name="item"></param>
-      /// <returns></returns>
+      /// <param name="item">Ключ</param>
+      /// <returns>Индекс</returns>
       public int IndexOf(TKey item)
       {
         if (_Owner.Count > 20)
@@ -234,7 +234,7 @@ namespace FreeLibSet.Collections
             return -1;
         }
 
-        if (_Owner._Comparer == null)
+        if (Object.ReferenceEquals(_Owner._Comparer, null))
           return _Owner._List.IndexOf(item);
         else // 22.04.2022
         {
@@ -260,7 +260,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Возвращает ключ в заданной позиции.
-      /// Индекс должен быть в диапазоне от 0 до Count-1
+      /// Индекс должен быть в диапазоне от 0 до <see cref="Count"/>-1.
       /// </summary>
       /// <param name="index">Индекс ключа</param>
       /// <returns>Ключ</returns>
@@ -297,7 +297,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Возвращает true, если указанный ключ существует.
-      /// При поиске используется индексированный просмотр, поэтому использование этого метода предпочтительнее, чем IndexOf()
+      /// При поиске используется индексированный просмотр, поэтому использование этого метода предпочтительнее, чем <see cref="IndexOf(TKey)"/>.
       /// </summary>
       /// <param name="item">Искомый ключ</param>
       /// <returns>true, если ключ существует</returns>
@@ -446,7 +446,6 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Выполняет медленный поиск значения.
-      /// Если требуется только проверить наличие элемента, используйте метод Contains().
       /// </summary>
       /// <param name="item">Значение для поиска</param>
       /// <returns>Индекс элемента в списке или (-1), если значение не найдено</returns>
@@ -734,13 +733,13 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Компратор для сравнения ключей.
-    /// Если не был задан в явном виде в конструкторе объекта, возвращается EqualityComparer.Default
+    /// Если не был задан в явном виде в конструкторе объекта, возвращается <see cref="System.Collections.Generic.EqualityComparer{TKey}.Default"/> 
     /// </summary>
     public IEqualityComparer<TKey> Comparer
     {
       get
       {
-        if (_Comparer == null)
+        if (Object.ReferenceEquals(_Comparer, null))
           return EqualityComparer<TKey>.Default;
         else
           return _Comparer;
@@ -1124,9 +1123,9 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает перечислитель по KeyValuePair,
-    /// Порядок перебора соответствует порядку добавления элементов в список методом Add(), 
-    /// а не порядку ключей
+    /// Возвращает перечислитель по <see cref="KeyValuePair{TKey, TValue}"/>.
+    /// Порядок перебора соответствует порядку добавления элементов в список методом <see cref="Add(TKey, TValue)"/>, 
+    /// а не порядку ключей.
     /// </summary>
     /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
@@ -1320,7 +1319,7 @@ namespace FreeLibSet.Collections
     /// <param name="isReadOnly">Если true, то обертка будет сразу переведена в режим "Только чтение"</param>
     public DisposableDictionary(IDictionary<TKey, TValue> source, bool isReadOnly)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException("source");
       _Dict = source;
       _IsReadOnly = isReadOnly;
@@ -1342,7 +1341,7 @@ namespace FreeLibSet.Collections
     protected override void Dispose(bool disposing)
     {
       //if (disposing || DisposeOnDestuction)
-        DoClear();
+      DoClear();
 
       base.Dispose(disposing);
     }
@@ -1632,7 +1631,7 @@ namespace FreeLibSet.Collections
     /// <param name="source"></param>
     public SyncCollection(ICollection<T> source)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException("source");
       _Source = source;
     }
@@ -1740,7 +1739,7 @@ namespace FreeLibSet.Collections
     /// <returns></returns>
     protected T[] GetCopyArray()
     {
-      if (_CopyArray == null)
+      if (Object.ReferenceEquals(_CopyArray, null))
       {
         // ReSharper disable once InconsistentlySynchronizedField
         _CopyArray = new T[_Source.Count];
@@ -1948,7 +1947,7 @@ namespace FreeLibSet.Collections
     /// <param name="source">Основная (несинхронизированная) коллекция</param>
     public SyncDictionary(IDictionary<TKey, TValue> source)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException("source");
       _Source = source;
     }
@@ -2063,7 +2062,7 @@ namespace FreeLibSet.Collections
     /// <returns></returns>
     protected Dictionary<TKey, TValue> GetCopyDictionary()
     {
-      if (_CopyDict == null)
+      if (Object.ReferenceEquals(_CopyDict, null))
       {
         // ReSharper disable once InconsistentlySynchronizedField
         _CopyDict = new Dictionary<TKey, TValue>(_Source.Count);
@@ -2448,7 +2447,7 @@ namespace FreeLibSet.Collections
     /// <param name="source">Основная (непотокобезопасная) очередь</param>
     public SyncQueue(Queue<T> source)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException("source");
       _Source = source;
     }
@@ -2727,7 +2726,7 @@ namespace FreeLibSet.Collections
     /// <param name="source">Базовый несиннхронизированный объект стека</param>
     public SyncStack(Stack<T> source)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException("source");
       _Source = source;
     }
@@ -2996,7 +2995,7 @@ namespace FreeLibSet.Collections
     /// <param name="source">Исходная коллекция. Не может быть null</param>
     public ReadOnlyCollectionWrapper(ICollection<T> source)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException("source");
 
       _Source = source;
@@ -3107,7 +3106,7 @@ namespace FreeLibSet.Collections
       get
       {
         ICollection src2 = _Source as ICollection;
-        if (src2 == null)
+        if (Object.ReferenceEquals(src2, null))
           return false;
         else
           return src2.IsSynchronized;
@@ -3119,7 +3118,7 @@ namespace FreeLibSet.Collections
       get
       {
         ICollection src2 = _Source as ICollection;
-        if (src2 == null)
+        if (Object.ReferenceEquals(src2, null))
           return _Source;
         else
           return src2.SyncRoot;
@@ -3405,7 +3404,7 @@ namespace FreeLibSet.Collections
     /// <param name="isReadOnly">Если true, то обертка сразу переводится в режим "только чтение"</param>
     public ListWithReadOnly(IList<T> source, bool isReadOnly)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException();
 
       _Source = source;
@@ -3806,7 +3805,7 @@ namespace FreeLibSet.Collections
       get
       {
         ICollection src2 = _Source as ICollection;
-        if (src2 == null)
+        if (Object.ReferenceEquals(src2, null))
           return false;
         else
           return src2.IsSynchronized;
@@ -3818,7 +3817,7 @@ namespace FreeLibSet.Collections
       get
       {
         ICollection src2 = _Source as ICollection;
-        if (src2 == null)
+        if (Object.ReferenceEquals(src2, null))
           return _Source;
         else
           return src2.SyncRoot;
@@ -3847,7 +3846,7 @@ namespace FreeLibSet.Collections
     /// <param name="isReadOnly">true, если созданная обертка сразу переводится в режим "только чтение"</param>
     public DictionaryWithReadOnly(IDictionary<TKey, TValue> source, bool isReadOnly)
     {
-      if (source == null)
+      if (Object.ReferenceEquals(source, null))
         throw new ArgumentNullException();
 
       _Source = source;
@@ -4195,7 +4194,7 @@ namespace FreeLibSet.Collections
       get
       {
         ICollection src2 = _Source as ICollection;
-        if (src2 == null)
+        if (Object.ReferenceEquals(src2, null))
           return false;
         else
           return src2.IsSynchronized;
@@ -4207,7 +4206,7 @@ namespace FreeLibSet.Collections
       get
       {
         ICollection src2 = _Source as ICollection;
-        if (src2 == null)
+        if (Object.ReferenceEquals(src2, null))
           return _Source;
         else
           return src2.SyncRoot;
@@ -4347,7 +4346,7 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        if (_Comparer == null)
+        if (Object.ReferenceEquals(_Comparer, null))
           return EqualityComparer<T>.Default;
         else
           return _Comparer;
@@ -4427,7 +4426,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вызов исключения ObjectReadOnlyException, если IsReadOnly=true
+    /// Вызов исключения <see cref="ObjectReadOnlyException"/>, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -4483,9 +4482,9 @@ namespace FreeLibSet.Collections
       }
 
       // 21.04.2022
-      // Требуется перебор с помощью компаратора
+      // Требуется перебор с помощью компаратора.
 
-      if (_Comparer == null)
+      if (Object.ReferenceEquals(_Comparer, null))
         return _List.IndexOf(item);
 
 
@@ -4661,7 +4660,7 @@ namespace FreeLibSet.Collections
 
       IComparer<T> comparer = _Comparer as IComparer<T>;
 
-      if (comparer == null)
+      if (Object.ReferenceEquals(comparer, null))
         _List.Sort();
       else
         _List.Sort(comparer);
@@ -5198,7 +5197,7 @@ namespace FreeLibSet.Collections
     /// <returns>Результат проверки</returns>
     public bool ContainsAny(IEnumerable<T> collection)
     {
-      if (collection == null)
+      if (Object.ReferenceEquals(collection, null))
         return false;
       foreach (T x in collection)
       {
@@ -5215,7 +5214,7 @@ namespace FreeLibSet.Collections
     /// <returns>Результат проверки</returns>
     public bool ContainsAll(IEnumerable<T> collection)
     {
-      if (collection == null)
+      if (Object.ReferenceEquals(collection, null))
         return true;
       foreach (T x in collection)
       {
@@ -5233,7 +5232,7 @@ namespace FreeLibSet.Collections
     /// <returns>Результат проверки</returns>
     public bool ContainsSame(IEnumerable<T> collection)
     {
-      if (collection == null)
+      if (Object.ReferenceEquals(collection, null))
         return _List.Count == 0;
 
       int cnt = 0;
@@ -5457,8 +5456,8 @@ namespace FreeLibSet.Collections
 
   /// <summary>
   /// Реализация типизированной Hashtable с возможностью перевода в режим просмотра
-  /// Простая надстройка над словарем Dictionary с переопределенным доступом по ключу
-  /// После перевода в режим ReadOnly, коллекция становится потокобезопасной
+  /// Простая надстройка над словарем <see cref="System.Collections.Generic.Dictionary{TKey, TValue}"/> с переопределенным доступом по ключу.
+  /// После перевода в режим ReadOnly, коллекция становится потокобезопасной.
   /// </summary>
   /// <typeparam name="TKey">Ключ</typeparam>
   /// <typeparam name="TValue">Значение</typeparam>
@@ -5529,11 +5528,11 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="dictionary">Исходный словарь</param>
     /// <param name="comparer">Cравниватель</param>
-    /// <param name="IsReadOnly">Позволяет сразу перевести таблицу в режим "только чтение"</param>
-    public Hashtable(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer, bool IsReadOnly)
+    /// <param name="isReadOnly">Позволяет сразу перевести таблицу в режим "только чтение"</param>
+    public Hashtable(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer, bool isReadOnly)
     {
       _Items = new Dictionary<TKey, TValue>(dictionary, comparer);
-      _IsReadOnly = IsReadOnly;
+      _IsReadOnly = isReadOnly;
     }
 
     /// <summary>
@@ -5949,7 +5948,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавить элемент в коллекцию.
-    /// И ключ и значение должны быть уникальными и не могут быть null.
+    /// И ключ и значение должны быть уникальными и не могут быть null/пустыми значениями.
     /// </summary>
     /// <param name="key">Ключ</param>
     /// <param name="value">Значение</param>
@@ -6012,7 +6011,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Поиск ключа в коллекции.
-    /// Если ключ найден, возвращается значение, соответствующее ключу
+    /// Если ключ найден, возвращается значение, соответствующее ключу.
     /// </summary>
     /// <param name="key">Ключ</param>
     /// <param name="value">Сюда записывается найденное значение или значение default соответствующего типа</param>
@@ -6118,7 +6117,7 @@ namespace FreeLibSet.Collections
     #region IEnumerable<KeyValuePair<TKey,TValue>> Members
 
     /// <summary>
-    /// Возвращает перечислитель для объектов KeyValuePair.
+    /// Возвращает перечислитель для объектов <see cref="System.Collections.Generic.KeyValuePair{TKey, TValue}"/>.
     /// 
     /// Тип возвращаемого значения может измениться в будущем, 
     /// гарантируется только реализация интерфейса перечислителя.
@@ -6148,7 +6147,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Обратная коллекция.
-    /// Создается только по необходимости
+    /// Создается только по необходимости.
     /// </summary>
     [NonSerialized]
     private Dictionary<TValue, TKey> _ReversedDict;
@@ -6165,7 +6164,7 @@ namespace FreeLibSet.Collections
     {
       get
       {
-        if (_ValueComparer == null)
+        if (Object.ReferenceEquals(_ValueComparer, null))
           return EqualityComparer<TValue>.Default;
         else
           return _ValueComparer;
@@ -6175,11 +6174,11 @@ namespace FreeLibSet.Collections
 
     private void PrepareReversed()
     {
-      if (_ReversedDict != null)
+      if (!Object.ReferenceEquals(_ReversedDict, null))
         return;
 
       Dictionary<TValue, TKey> r2;
-      if (_ValueComparer == null)
+      if (Object.ReferenceEquals(_ValueComparer, null))
         r2 = new Dictionary<TValue, TKey>(_MainDict.Count);
       else
         r2 = new Dictionary<TValue, TKey>(_MainDict.Count, _ValueComparer); // 28.08.2019
@@ -6668,7 +6667,7 @@ namespace FreeLibSet.Collections
   /// Кольцевой буфер.
   /// Класс не является потокобезопасным.
   /// Буфер может содержать от 0 до Capacity элементов. 
-  /// При добавлении "лишних" элементов, удаляются элемент из начала списка
+  /// При добавлении "лишних" элементов, удаляются элемент из начала списка.
   /// </summary>
   /// <typeparam name="T">Тип хранимых значений</typeparam>
   [Serializable]
@@ -6691,7 +6690,8 @@ namespace FreeLibSet.Collections
     #region Методы добавления
 
     /// <summary>
-    /// Добавляет элемент
+    /// Добавляет элемент.
+    /// Если текущий объект уже содержит Capacity элементов, то самый старый элемент будет удален.
     /// </summary>
     /// <param name="item">Элемент для добавления</param>
     public new void Add(T item)
@@ -6704,7 +6704,8 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавить несколько элементов.
-    /// Если коллекция содержит больше элементов, чем Capacity, будут добавлены только последние элементы
+    /// Если текущий объект уже содержит много элементов, то самые старые элемент будет удалены.
+    /// Если добаляемая коллекция <paramref name="collection"/> содержит больше элементов, чем Capacity, будут добавлены только последние элементы.
     /// </summary>
     /// <param name="collection">Коллекция для добавления</param>
     public new void AddRange(IEnumerable<T> collection)
@@ -6835,7 +6836,7 @@ namespace FreeLibSet.Collections
         {
           for (int i = _Refs.Count - 1; i >= 0; i--)
           {
-            if (_Refs[i].Target == null)
+            if (Object.ReferenceEquals(_Refs[i].Target, null))
               _Refs.RemoveAt(i);
           }
           _AddCount = 0;
@@ -6876,7 +6877,7 @@ namespace FreeLibSet.Collections
         for (int i = 0; i < _Refs.Count; i++)
         {
           object x = _Refs[i].Target;
-          if (object.ReferenceEquals(x, item))
+          if (Object.ReferenceEquals(x, item))
             return true;
         }
         return false;
@@ -7017,7 +7018,7 @@ namespace FreeLibSet.Collections
             //_Refs.RemoveAt(i); // 27.01.2021
             // 18.11.2021
             // Так нельзя. Будет пропущена позиция. Удалять можно только в обратном порядке перебора. Делаем это позже
-            if (nullRefIndices == null)
+            if (Object.ReferenceEquals(nullRefIndices, null))
               nullRefIndices = new List<int>();
             nullRefIndices.Add(i);
           }
@@ -7025,7 +7026,7 @@ namespace FreeLibSet.Collections
             lst.Add(x);
         }
 
-        if (nullRefIndices != null)
+        if (!Object.ReferenceEquals(nullRefIndices, null))
         {
           // Обязательно в обратном порядке
           for (int i = nullRefIndices.Count - 1; i >= 0; i--)
@@ -7102,7 +7103,7 @@ namespace FreeLibSet.Collections
     /// <param name="collection">Индексируемый массив. Не может быть null</param>
     public ArrayIndexer(T[] collection)
     {
-      if (collection == null)
+      if (Object.ReferenceEquals(collection, null))
         throw new ArgumentNullException("collection");
 
       _Dict = new Dictionary<T, int>(collection.Length);
@@ -7117,7 +7118,7 @@ namespace FreeLibSet.Collections
     /// <param name="comparer">Интерфейс для сравнения элементов</param>
     public ArrayIndexer(T[] collection, IEqualityComparer<T> comparer)
     {
-      if (collection == null)
+      if (Object.ReferenceEquals(collection, null))
         throw new ArgumentNullException("collection");
 
       _Dict = new Dictionary<T, int>(collection.Length, comparer);
@@ -7131,7 +7132,7 @@ namespace FreeLibSet.Collections
     /// <param name="collection">Индексируемая коллекция</param>
     public ArrayIndexer(ICollection<T> collection)
     {
-      if (collection == null)
+      if (Object.ReferenceEquals(collection, null))
         throw new ArgumentNullException("collection");
 
       _Dict = new Dictionary<T, int>(collection.Count);
@@ -7150,7 +7151,7 @@ namespace FreeLibSet.Collections
     /// <param name="comparer">Интерфейс для сравнения элементов</param>
     public ArrayIndexer(ICollection<T> collection, IEqualityComparer<T> comparer)
     {
-      if (collection == null)
+      if (Object.ReferenceEquals(collection, null))
         throw new ArgumentNullException("collection");
 
       _Dict = new Dictionary<T, int>(collection.Count, comparer);
@@ -7188,7 +7189,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает индекс элемента в массиве.
-    /// В отличие от Array.IndexOf(), выполняется быстро
+    /// В отличие от <see cref="Array.IndexOf{T}(T[], T)"/>, выполняется быстро.
     /// </summary>
     /// <param name="item">Элемент, который требуется найти</param>
     /// <returns>Индекс элемента</returns>
@@ -7295,10 +7296,10 @@ namespace FreeLibSet.Collections
       if (px < 0 && py < 0)
       {
         IComparable<T> intf1 = x as IComparable<T>;
-        if (intf1 != null)
+        if (!Object.ReferenceEquals(intf1, null))
           return intf1.CompareTo(y);
         IComparable intf2 = x as IComparable;
-        if (intf2 != null)
+        if (Object.ReferenceEquals(intf2, null))
           return intf2.CompareTo(y);
       }
 

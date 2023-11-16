@@ -22,8 +22,8 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Получение текста даты.
-    /// Непереопределенная версия метода в DateRangeFormatter использует DateTime.ToShortDateString() и
-    /// DateTime.ToLongDateString()
+    /// Непереопределенная версия метода в <see cref="DateRangeFormatter"/> использует <see cref="DateTime.ToShortDateString()"/> и
+    /// <see cref="DateTime.ToLongDateString()"/>
     /// </summary>
     /// <param name="date">Преобразуемая дата</param>
     /// <param name="longFormat">Нужно ли использовать длинный формат данных (true) или краткий (false)</param>
@@ -55,7 +55,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Получение текста для диапазона дат.
     /// Диапазон может быть закрытым, полуоткрытым или полностью открытым
-    /// Версия метода в DateRangeFormatter использует для вывода дат вызов ToString() для даты.
+    /// Версия метода в <see cref="DateRangeFormatter"/> использует для вывода дат вызов <see cref="DateTime.ToString()"/> для даты.
     /// Переопределенный метод может реализовать более интеллектуальное представление, например,
     /// объединяя даты в пределах месяца: "01-31 июля 2017 года"
     /// </summary>
@@ -88,8 +88,8 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Получение текста для диапазона месяцев.
-    /// Диапазон может быть закрытым, полуоткрытым или полностью открытым (используется YearMonth.Empty).
-    /// Версия метода в DateRangeFormatter использует для вывода дат вызов DateTime.ToString("y") для даты.
+    /// Диапазон может быть закрытым, полуоткрытым или полностью открытым (<see cref="YearMonth.IsEmpty"/>=true).
+    /// Версия метода в <see cref="DateRangeFormatter"/> использует для вывода дат вызов <see cref="DateTime"/>.ToString("y") для даты.
     /// </summary>
     /// <param name="firstYM">Начальный месяц диапазона</param>
     /// <param name="lastYM">Конечный месяц диапазона</param>
@@ -119,7 +119,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает true, если идет сначала месяц, потом день.
-    /// ВОзвращает false, если сначала должен быть день, потом месяц
+    /// Возвращает false, если сначала должен быть день, потом месяц.
     /// </summary>
     private static bool IsMDOrder
     {
@@ -207,7 +207,7 @@ namespace FreeLibSet.Calendar
     #region DateRange
 
     /// <summary>
-    /// Возвращает максимальное количество символов, которое возвращает методом ToString() для объекта DateRange при Long=true
+    /// Возвращает максимальное количество символов, которое возвращает методом <see cref="ToString(DateRange, bool)"/> для объекта <see cref="DateRange"/> при long=true
     /// </summary>
     public virtual int DateRangeLongTextLength
     {
@@ -236,7 +236,7 @@ namespace FreeLibSet.Calendar
 
 
     /// <summary>
-    /// Возвращает максимальное количество символов, которое возвращает методом ToString() для объекта DateRange при Long=false
+    /// Возвращает максимальное количество символов, которое возвращает методом <see cref="ToString(DateRange, bool)"/> для объекта <see cref="DateRange"/> при Long=false
     /// Обычно это 11 символов
     /// </summary>
     public virtual int DateRangeShortTextLength
@@ -264,7 +264,7 @@ namespace FreeLibSet.Calendar
     #region MonthDay
 
     /// <summary>
-    /// Возвращает максимальное количество символов, которое возвращает методом ToString() для объекта MonthDay при Long=true
+    /// Возвращает максимальное количество символов, которое возвращает методом <see cref="ToString(MonthDay, bool)"/> для объекта <see cref="MonthDay"/> при long=true
     /// </summary>
     public virtual int MonthDayLongTextLength
     {
@@ -291,7 +291,7 @@ namespace FreeLibSet.Calendar
 
 
     /// <summary>
-    /// Возвращает максимальное количество символов, которое возвращает методом ToString() для объекта MonthDay при Long=false
+    /// Возвращает максимальное количество символов, которое возвращает методом <see cref="ToString(MonthDay, bool)"/> для объекта <see cref="MonthDay"/> при long=false
     /// Обычно это 5 символов ("ДД.ММ")
     /// </summary>
     public virtual int MonthDayShortTextLength
@@ -316,7 +316,7 @@ namespace FreeLibSet.Calendar
     #region MonthDayRange
 
     /// <summary>
-    /// Возвращает максимальное количество символов, которое возвращает методом ToString() для объекта MonthDayRange при Long=true
+    /// Возвращает максимальное количество символов, которое возвращает методом <see cref="ToString(MonthDayRange, bool)"/> для объекта <see cref="MonthDayRange"/> при long=true
     /// </summary>
     public virtual int MonthDayRangeLongTextLength
     {
@@ -344,7 +344,7 @@ namespace FreeLibSet.Calendar
 
 
     /// <summary>
-    /// Возвращает максимальное количество символов, которое возвращает методом ToString() для объекта MonthDayRange при Long=false
+    /// Возвращает максимальное количество символов, которое возвращает методом <see cref="ToString(MonthDayRange, bool)"/> для объекта <see cref="MonthDayRange"/> при long=false
     /// Обычно это 11 символов ("ДД.ММ-ДД.ММ")
     /// </summary>
     public virtual int MonthDayRangeShortTextLength
@@ -371,7 +371,8 @@ namespace FreeLibSet.Calendar
     #region Статический экземпляр
 
     /// <summary>
-    /// Форматировщик, используемый по умолчанию
+    /// Форматировщик, используемый по умолчанию.
+    /// Если свойство не устанавлено в явном виде, возвращает экземпляр непереопределенного класса <see cref="DateRangeFormatter"/>
     /// </summary>
     public static DateRangeFormatter Default
     {

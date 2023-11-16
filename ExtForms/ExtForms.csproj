@@ -579,9 +579,7 @@
       <DependentUpon>WizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WizardSteps2.cs" />
-    <Compile Include="EFPControls\XmlEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="EFPControls\XmlEditor.cs" />
     <Compile Include="Controls\XmlViewBox.cs">
       <SubType>Component</SubType>
     </Compile>

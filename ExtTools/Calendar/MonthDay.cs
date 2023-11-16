@@ -14,7 +14,7 @@ namespace FreeLibSet.Calendar
   /// Хранит номер дня в году как число от 1 до 365 (29 февраля отсутствует).
   /// </summary>
   [Serializable]
-  public struct MonthDay : IEquatable<MonthDay>, IComparable<MonthDay>
+  public struct MonthDay : IEquatable<MonthDay>, IComparable<MonthDay>, IFormattable
   {
     #region Конструктор
 
@@ -35,7 +35,7 @@ namespace FreeLibSet.Calendar
     /// Эта версия конструктора не позволяет инициализировать пустую структуру
     /// </summary>
     /// <param name="month">Месяц в диапазоне от 1 до 12</param>
-    /// <param name="day">День в диапазоне от 1 до 28,30 или 31, в зависимости от месяца. 29 февраля не допускается.</param>
+    /// <param name="day">День в диапазоне от 1 до 28, 30 или 31, в зависимости от месяца. 29 февраля не допускается.</param>
     public MonthDay(int month, int day)
     {
       DateTime dt = new DateTime(2001, month, day);
@@ -43,7 +43,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Заполняет структуру из DateTime.
+    /// Заполняет структуру из <see cref="DateTime"/>.
     /// 29 февраля, которое может быть в високосном году, заменяется на 28 февраля.
     /// </summary>
     /// <param name="date">Отсюда берется месяц и день</param>
@@ -74,20 +74,20 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает номер дня в году о 1 до 365.
-    /// Для Empty возвращает 0.
+    /// Для <see cref="IsEmpty"/>=true возвращает 0.
     /// </summary>
     public int DayOfYear { get { return _DayOfYear; } }
     private readonly short _DayOfYear;
 
     /// <summary>
-    /// Дата, от которой отсчитывается DayOfYear.
+    /// Дата, от которой отсчитывается <see cref="DayOfYear"/>.
     /// Используется для получения свойств Month и Day
     /// </summary>
     private static readonly DateTime _BaseDate = new DateTime(2000, 12, 31);
 
     /// <summary>
     /// Месяц в диапазоне от 1 до 12.
-    /// Для пустого значения Empty возвращает 0.
+    /// Для пустого значения <see cref="IsEmpty"/>=true возвращает 0.
     /// </summary>
     public int Month
     {
@@ -101,8 +101,8 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// День в диапазоне от 1 до 28,30 или 31 (в зависимости от месяца)
-    /// Для пустого значения Empty возвращает 0.
+    /// День в диапазоне от 1 до 28,30 или 31 (в зависимости от месяца).
+    /// Для пустого значения <see cref="IsEmpty"/>=true возвращает 0.
     /// </summary>
     public int Day
     {
@@ -204,7 +204,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Следующий день (29 февраля не бывает).
-    /// Для пустой структуры Empty возвращает ее же.
+    /// Для пустой структуры <see cref="IsEmpty"/>=true возвращает ее же.
     /// </summary>
     public MonthDay NextDay
     {
@@ -218,8 +218,8 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Предыдущий день (29 февраля не бывает)/
-    /// Для пустой структуры Empty возвращает ее же.
+    /// Предыдущий день (29 февраля не бывает).
+    /// Для пустой структуры <see cref="IsEmpty"/>=true возвращает ее же.
     /// </summary>
     public MonthDay PrevDay
     {
@@ -233,8 +233,8 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Добавляет к значению MonthDay заданное количество дней.
-    /// Предполагается, что в году 365 дней
+    /// Добавляет к значению <see cref="MonthDay"/> заданное количество дней.
+    /// Предполагается, что в году 365 дней.
     /// </summary>
     /// <param name="monthDay">Текущее значение. Не может быть пустой структурой</param>
     /// <param name="days">Количество добавляемых дней. Значение может быть положительным и отрицательным</param>
@@ -255,7 +255,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Вычитает из MonthDay заданное количество дней.
+    /// Вычитает из <see cref="MonthDay"/> заданное количество дней.
     /// Предполагается, что в году 365 дней.
     /// </summary>
     /// <param name="monthDay">Текущее значение. Не может быть пустой структурой</param>
@@ -402,7 +402,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает true, если текущий объект равен <paramref name="other"/>.
-    /// Также поддерживает сравнение с DateTime.
+    /// Также поддерживает сравнение с <see cref="DateTime"/>.
     /// </summary>
     /// <param name="other">Второй объект</param>
     /// <returns>Результат сравнения</returns>
@@ -514,8 +514,8 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Получить число дней в месяце (для невисокосного года)
     /// </summary>
-    /// <param name="month">Номер месяцв (1-12)</param>
-    /// <returns></returns>
+    /// <param name="month">Номер месяца (1-12)</param>
+    /// <returns>Дни</returns>
     public static int DaysInMonth(int month)
     {
       return DateTime.DaysInMonth(2001, month);
@@ -527,7 +527,7 @@ namespace FreeLibSet.Calendar
     /// </summary>
     /// <param name="month">Месяц. Может быть в диапазоне от 0 до 12</param>
     /// <param name="day">День, может быть от 0 до 31</param>
-    /// <returns>Заполненная или пустая структура</returns>
+    /// <returns>Заполненная или пустая структура <see cref="IsEmpty"/>=true</returns>
     public static MonthDay FromMonthDay(int month, int day)
     {
       if (month == 0 || day == 0)
@@ -541,10 +541,10 @@ namespace FreeLibSet.Calendar
 
   /// <summary>
   /// Диапазон дней.
-  /// В отличие от DateRange, эта структура предполагает годовую цикличность.
+  /// В отличие от <see cref="DateRange"/>, эта структура предполагает годовую цикличность.
   /// Поэтому свойство First может быть и больше Last.
   /// Если First.IsEmpty и Last.IsEmpty, то структура считается неинициализированной (IsEmpty=true). Не путать с полным периодом (IsWholeYear=true)
-  /// Структура также содержит поле Tag, которое может хранить произвольные пользовательские данные
+  /// Структура также содержит поле Tag, которое может хранить произвольные пользовательские данные.
   /// </summary>
   [Serializable]
   public struct MonthDayRange : IEnumerable<MonthDay>
@@ -553,9 +553,9 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Создает структуру.
-    /// Первый и последний день диапазона должны быть оба заполнены или оба равны MonthDay.Empty для создания пустой структуры.
-    /// Не может задаваться половинчатый диапазон, когда First.IsEmpty не равно Last.IsEmpty.
-    /// Свойство Tag будет иметь значение null.
+    /// Первый и последний день диапазона должны быть оба заполнены или оба равны <see cref="MonthDay.Empty"/> для создания пустой структуры.
+    /// Не может задаваться половинчатый диапазон, когда <paramref name="first"/>.IsEmpty не равно <paramref name="last"/>.IsEmpty.
+    /// Свойство <see cref="Tag"/> будет иметь значение null.
     /// </summary>
     /// <param name="first">Первый день диапазона</param>
     /// <param name="last">Последний день диапазона</param>
@@ -566,8 +566,8 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Создает структуру.
-    /// Первый и последний день диапазона должны быть оба заполнены или оба равны MonthDay.Empty для создания пустой структуры.
-    /// Не может задаваться половинчатый диапазон, когда First.IsEmpty не равно Last.IsEmpty
+    /// Первый и последний день диапазона должны быть оба заполнены или оба равны <see cref="MonthDay.Empty"/> для создания пустой структуры.
+    /// Не может задаваться половинчатый диапазон, когда <paramref name="first"/>.IsEmpty не равно <paramref name="last"/>.IsEmpty.
     /// </summary>
     /// <param name="first">Первый день диапазона</param>
     /// <param name="last">Последний день диапазона</param>
@@ -589,7 +589,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Создает период из одного дня.
-    /// Свойство Tag будет иметь значение null.
+    /// Свойство <see cref="Tag"/> будет иметь значение null.
     /// </summary>
     /// <param name="day">Начало и конец диапазона</param>
     public MonthDayRange(MonthDay day)
@@ -600,9 +600,9 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Создает структуру для заданного диапазона дат.
     /// Если диапазон <paramref name="range"/> охватывает больше одного года (например, 05.07.2019-05.07.2020),
-    /// то создается полный диапазон IsWholeYear=true, и даты из аргумента не используются.
+    /// то создается полный диапазон <see cref="IsWholeYear"/>=true, и даты из аргумента не используются.
     /// Если <paramref name="range"/>.IsEmpty=true, то создается пустой диапазон.
-    /// Свойство Tag берется из DateRange.Tag
+    /// Свойство <see cref="Tag"/> берется из <see cref="DateRange.Tag"/>.
     /// </summary>
     /// <param name="range">Диапазон дат</param>
     public MonthDayRange(DateRange range)
@@ -642,10 +642,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Создает копию диапазона, устанавливая новое значение свойства Tag
+    /// Создает копию диапазона, устанавливая новое значение свойства <see cref="Tag"/>
     /// </summary>
     /// <param name="source">Исходный объект</param>
-    /// <param name="tag">Значение свойства Tag</param>
+    /// <param name="tag">Значение свойства <see cref="Tag"/></param>
     public MonthDayRange(MonthDayRange source, object tag)
     {
       _First = source._First;
@@ -691,7 +691,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Возвращает количество дней в диапазоне без учета високосного года.
     /// Для непустого периода возвращает число от 1 до 365. 365 означает полный год
-    /// Для пустого периода (IsEmpty=true) возвращает 0.
+    /// Для пустого периода (<see cref="IsEmpty"/>=true) возвращает 0.
     /// </summary>
     public int Days
     {
@@ -716,8 +716,9 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Получить комплементарный интервал дат. Например, для периода "10 октября-15 мая"
     /// возвращается интервал "16 мая-09 октября".
-    /// Свойство Tag дублируется в создаваемый интервал.
-    /// Если IsEmpty=true, возвращается пустой интервал
+    /// Свойство <see cref="Tag"/> дублируется в создаваемый интервал.
+    /// Если <see cref="IsEmpty"/>=true, возвращается пустой интервал.
+    /// Для полного интервала <see cref="IsWholeYear"/> возвращается полный интервал.
     /// </summary>
     public MonthDayRange Complement
     {
@@ -736,7 +737,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает попадание дня в текущий интервал.
-    /// Если <paramref name="day"/>.IsEmpty=true или текущая структура не заполнена (IsEmpty=true), возвращает false
+    /// Если <paramref name="day"/>.IsEmpty=true или текущая структура не заполнена (<see cref="IsEmpty"/>=true), возвращает false.
     /// </summary>
     /// <param name="day">Проверяемый день</param>
     /// <returns>Признак попадания</returns>
@@ -751,7 +752,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Попадает ли заданная дата в интервал
+    /// Попадает ли заданная дата в интервал.
     /// </summary>
     /// <param name="date">Проверяемая дата</param>
     /// <returns>true, если дата попадает в диапазон</returns>
@@ -766,11 +767,11 @@ namespace FreeLibSet.Calendar
     #region Пересечение
 
     /// <summary>
-    /// Возвращает пересечение двух интервалов. Поле Tag берется из первого интервала.
+    /// Возвращает пересечение двух интервалов. Поле <see cref="Tag"/> берется из первого интервала.
     /// Метод возвращает пустой массив, если интервалы не пересекаются, например [01.02-31.03]-[01.04-30.04]
-    /// Возвращается массив из одного элемента, когда есть одно пересечение. Например, для [01.02-31.05]-[01.03-30.06] возвращается [01.03-31.05]
+    /// Возвращается массив из одного элемента, когда есть одно пересечение. Например, для [01.02-31.05]-[01.03-30.06] возвращается [01.03-31.05].
     /// Возвращается пересечение из двух интервалов для двух пересечений. Например, для [01.02-30.09]-[01.08-31.03] возвращается [01.02-31.03] и [01.08-30.09].
-    /// При наличии двух пересечений интервалы сортируются по возрастанию начальной даты
+    /// При наличии двух пересечений интервалы сортируются по возрастанию начальной даты.
     /// Если интервалы не пересекаются, или один из интервалов пустой, возвращается пустой интервал с Tag=null.
     /// Если обменять местами аргументы, то результат должен быть тот же самый, за исключением свойства Tag.
     /// </summary>
@@ -916,19 +917,18 @@ namespace FreeLibSet.Calendar
 #endif
     }
 
-
     #endregion
 
     #region Прочие методы
 
     /// <summary>
     /// Возвращает диапазон дат для заданного года, соответствующий текущему диапазону.
-    /// При этом даты полученного диапазона будут относится к одному году, если Last больше или равно First и к разным годам,
-    /// когда First больше Last.
-    /// Если последний день текущего диапазона Last задает 28 февраля и год конечной даты является високосным, конечная дата заменяется на 29 февраля.
+    /// При этом даты полученного диапазона будут относится к одному году, если <see cref="Last"/> больше или равно <see cref="First"/> и к разным годам,
+    /// когда <see cref="First"/> больше <see cref="Last"/>.
+    /// Если последний день текущего диапазона <see cref="Last"/> задает 28 февраля и год конечной даты является високосным, конечная дата заменяется на 29 февраля.
     /// Для начальной даты такая замена не выполняется.
-    /// DateRange.Tag берется из текущего объекта.
-    /// Если IsEmpty=true, то возвращается DateRange.Empty с пустым Tag.
+    /// <see cref="DateRange.Tag"/> берется из текущего объекта (свойство <see cref="Tag"/>).
+    /// Если <see cref="IsEmpty"/>=true, то возвращается <see cref="DateRange.Empty"/> с пустым <see cref="DateRange.Tag"/>.
     /// </summary>
     /// <param name="year">Год</param>
     /// <param name="yearIsForLastDay">Если false, то год <paramref name="year"/> будет применен к первому дню. При этом конечная дата диапазона может оказаться
@@ -962,11 +962,11 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает диапазон дат для заданного года, соответствующий текущему диапазону.
-    /// При этом даты полученного диапазона будут относится к одному году, если Last больше или равно First и к разным годам,
-    /// когда First больше Last.
-    /// Если последний день текущего диапазона Last задает 28 февраля и год конечной даты является високосным, конечная дата заменяется на 29 февраля.
+    /// При этом даты полученного диапазона будут относится к одному году, если <see cref="Last"/> больше или равно <see cref="First"/> и к разным годам,
+    /// когда <see cref="First"/> больше <see cref="Last"/>.
+    /// Если последний день текущего диапазона <see cref="Last"/> задает 28 февраля и год конечной даты является високосным, конечная дата заменяется на 29 февраля.
     /// Для начальной даты такая замена не выполняется.
-    /// Если IsEmpty=true, то возвращается DateRange.Empty.
+    /// Если <see cref="IsEmpty"/>=true, то возвращается <see cref="DateRange.Empty"/>.
     /// </summary>
     /// <param name="year">Год для начальной даты диапазона</param>
     /// <returns>Диапазон дат</returns>
@@ -977,7 +977,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Сдвигает диапазон на указанное число дней. Високосные года не учитываются.
-    /// Если IsEmpty=true, возвращается также пустая структура
+    /// Если <see cref="IsEmpty"/>=true, возвращается также пустая структура.
     /// </summary>
     /// <param name="days">Сдвиг в днях</param>
     /// <returns>Новый диапазон</returns>
@@ -990,7 +990,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает текстовое представление интервала дат и поля Tag, если оно задано
+    /// Возвращает текстовое представление интервала дат и поля <see cref="Tag"/>, если оно задано.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -1022,7 +1022,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает true, если периоды одинаковы.
-    /// Если оба периода задают целый год, периоды также считаются одинаковыми
+    /// Если оба периода задают целый год, периоды также считаются одинаковыми.
     /// </summary>
     /// <param name="a">Первый сравниваемый период</param>
     /// <param name="b">Второй сравниваемый период</param>
@@ -1038,7 +1038,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает false, если периоды одинаковы.
-    /// Если оба периода задают целый год, периоды также считаются одинаковыми
+    /// Если оба периода задают целый год, периоды также считаются одинаковыми.
     /// </summary>
     /// <param name="a">Первый сравниваемый период</param>
     /// <param name="b">Второй сравниваемый период</param>
@@ -1114,7 +1114,7 @@ namespace FreeLibSet.Calendar
       #region IEnumerator<MonthDay> Members
 
       /// <summary>
-      /// Текущий месяц
+      /// Текущий день
       /// </summary>
       public MonthDay Current { get { return _First.AddDays(_Count); } }
 
@@ -1126,9 +1126,9 @@ namespace FreeLibSet.Calendar
       object System.Collections.IEnumerator.Current { get { return Current; } }
 
       /// <summary>
-      /// Переход к следующему месяцу
+      /// Переход к следующему дню
       /// </summary>
-      /// <returns></returns>
+      /// <returns>false, если перечисление закончено</returns>
       public bool MoveNext()
       {
         _Count++;
@@ -1147,9 +1147,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает перечислитель, который перебирает все дни в диапазоне, как структуры MonthDay.
+    /// Возвращает перечислитель, который перебирает все дни в диапазоне, как структуры <see cref="MonthDay"/>.
+    /// Если требуется перечислять объекты <see cref="DateTime"/>, используйте метод <see cref="GetDateRange(int, bool)"/> и выполняйте перечисление для <see cref="DateRange"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
     {
       return new Enumerator(this);

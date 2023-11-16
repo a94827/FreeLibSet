@@ -180,7 +180,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Сравнение с другим YearMonth
+    /// Сравнение с другим <see cref="YearMonth"/>.
     /// </summary>
     /// <param name="other">Второй сравниваемый объект</param>
     /// <returns>Результат сравнения</returns>
@@ -190,7 +190,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Сравнение с другим YearMonth
+    /// Сравнение с другим <see cref="YearMonth"/>.
     /// </summary>
     /// <param name="other">Второй сравниваемый объект</param>
     /// <returns>Результат сравнения</returns>
@@ -210,7 +210,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает true, если текущее значение находится в указанном диапазоне.
-    /// Учитываются полуоткрытые диапазоны, когда граница задана как YearMonth.Empty
+    /// Учитываются полуоткрытые диапазоны, когда граница задана как <see cref="YearMonth.IsEmpty"/>=true.
     /// </summary>
     /// <param name="minimum">Начальный месяц/год диапазлна</param>
     /// <param name="maximum">Последний месяц/год диапазлна</param>
@@ -237,11 +237,11 @@ namespace FreeLibSet.Calendar
     #region Операторы
 
     /// <summary>
-    /// Прибавляет к объекту YearMonth заданное число месяцев.
+    /// Прибавляет к объекту <see cref="YearMonth"/> заданное число месяцев.
     /// </summary>
-    /// <param name="value1">Объект YearMonth</param>
+    /// <param name="value1">Объект <see cref="YearMonth"/></param>
     /// <param name="months">Количество добавляемых месяцев. Допускаются отрицательные значения</param>
-    /// <returns>Новый объект YearMonth</returns>
+    /// <returns>Новый объект <see cref="YearMonth"/></returns>
     public static YearMonth operator +(YearMonth value1, int months)
     {
 #if DEBUG
@@ -251,11 +251,11 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Вычитает из объекта YearMonth заданное число месяцев.
+    /// Вычитает из объекта <see cref="YearMonth"/> заданное число месяцев.
     /// </summary>
-    /// <param name="value2">Объект YearMonth</param>
+    /// <param name="value2">Объект <see cref="YearMonth"/></param>
     /// <param name="months">Количество вычитаемых месяцев. Допускаются отрицательные значения</param>
-    /// <returns>Новый объект YearMonth</returns>
+    /// <returns>Новый объект <see cref="YearMonth"/></returns>
     public static YearMonth operator -(YearMonth value2, int months)
     {
 #if DEBUG
@@ -265,10 +265,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Вычитает из одного YearMonth другой и возвращает разность между ними как число месяцев
+    /// Вычитает из одного <see cref="YearMonth"/> другой и возвращает разность между ними как число месяцев
     /// </summary>
-    /// <param name="value1">Первый объект YearMonth</param>
-    /// <param name="value2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект <see cref="YearMonth"/></param>
+    /// <param name="value2">Второй объект <see cref="YearMonth"/></param>
     /// <returns>Количество месяцев</returns>
     public static int operator -(YearMonth value1, YearMonth value2)
     {
@@ -310,10 +310,10 @@ namespace FreeLibSet.Calendar
 #endif
 
     /// <summary>
-    /// Проверяет два объекта YearMonth на равенство
+    /// Проверяет два объекта <see cref="YearMonth"/> на равенство
     /// </summary>
-    /// <param name="value1">Первый объект YearMonth</param>
-    /// <param name="value2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект <see cref="YearMonth"/></param>
+    /// <param name="value2">Второй объект <see cref="YearMonth"/></param>
     /// <returns>true, если значения одинаковы</returns>
     public static bool operator ==(YearMonth value1, YearMonth value2)
     {
@@ -321,10 +321,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Проверяет два объекта YearMonth на неравенство
+    /// Проверяет два объекта <see cref="YearMonth"/> на неравенство
     /// </summary>
-    /// <param name="value1">Первый объект YearMonth</param>
-    /// <param name="value2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект <see cref="YearMonth"/></param>
+    /// <param name="value2">Второй объект <see cref="YearMonth"/></param>
     /// <returns>false, если значения одинаковы</returns>
     public static bool operator !=(YearMonth value1, YearMonth value2)
     {
@@ -332,10 +332,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Сравнивает два объекта YearMonth 
+    /// Сравнивает два объекта <see cref="YearMonth"/> 
     /// </summary>
-    /// <param name="value1">Первый объект YearMonth</param>
-    /// <param name="value2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект <see cref="YearMonth"/></param>
+    /// <param name="value2">Второй объект <see cref="YearMonth"/></param>
     /// <returns>true, первый объект меньше второго</returns>
     public static bool operator <(YearMonth value1, YearMonth value2)
     {
@@ -343,10 +343,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Сравнивает два объекта YearMonth 
+    /// Сравнивает два объекта <see cref="YearMonth"/> 
     /// </summary>
-    /// <param name="value1">Первый объект YearMonth</param>
-    /// <param name="value2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект <see cref="YearMonth"/></param>
+    /// <param name="value2">Второй объект <see cref="YearMonth"/></param>
     /// <returns>true, первый объект больше второго</returns>
     public static bool operator >(YearMonth value1, YearMonth value2)
     {
@@ -365,10 +365,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Сравнивает два объекта YearMonth 
+    /// Сравнивает два объекта <see cref="YearMonth"/> 
     /// </summary>
-    /// <param name="value1">Первый объект YearMonth</param>
-    /// <param name="value2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект <see cref="YearMonth"/></param>
+    /// <param name="value2">Второй объект <see cref="YearMonth"/></param>
     /// <returns>true, первый объект больше или равен второму</returns>
     public static bool operator >=(YearMonth value1, YearMonth value2)
     {
@@ -440,7 +440,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Создает диапазон, извлекая год и месяц из <see cref="DateTime"/>.
     /// Значение поля "День" игнорируется.
-    /// Год <see cref="DateTime.Year"/> у обеих дат должен быть в допустимом диапазоне <see cref="YearMonth"/>.MinYear - MaxYear.
+    /// Год <see cref="DateTime.Year"/> у обеих дат должен быть в допустимом диапазоне <see cref="YearMonth.MinYear"/> - <see cref="YearMonth.MaxYear"/>.
     /// </summary>
     /// <param name="firstDate">Начало диапазона</param>
     /// <param name="lastDate">Конец диапазона</param>
@@ -469,7 +469,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Создает диапазон мечяцев в пределах одного года 
+    /// Создает диапазон месяцев в пределах одного года 
     /// </summary>
     /// <param name="year">Год</param>
     /// <param name="firstMonth">Первый месяц (1-12)</param>
@@ -510,7 +510,7 @@ namespace FreeLibSet.Calendar
     public bool IsEmpty { get { return _FirstYM.IsEmpty; } }
 
     /// <summary>
-    /// Число месяцев в диапазоне (не может быть меньше 1, если IsEmpty=false)
+    /// Число месяцев в диапазоне (не может быть меньше 1, если <see cref="IsEmpty"/>=false)
     /// </summary>
     public int MonthCount
     {
@@ -526,7 +526,7 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Возвращает месяц в диапазоне по индексу
     /// </summary>
-    /// <param name="index">Индекс в диапазоне от 0 до MonthCount-1</param>
+    /// <param name="index">Индекс в диапазоне от 0 до <see cref="MonthCount"/>-1</param>
     /// <returns>Месяц и год</returns>
     public YearMonth this[int index]
     {
@@ -541,7 +541,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает интервал дат.
-    /// Если IsEmpty=true, возвращается пустой интервал дат
+    /// Если <see cref="IsEmpty"/>=true, возвращается пустой интервал дат.
     /// </summary>
     public DateRange DateRange
     {
@@ -568,7 +568,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Создает массив структур YearMonth.
+    /// Создает массив структур <see cref="YearMonth"/>.
     /// Длина массива совпадает с числом месяцев в диапазоне.
     /// Если <see cref="IsEmpty"/>=true, возвращает пустой массив.
     /// Обычно не следует использовать этот метод. Используйте перечислитель.
@@ -591,9 +591,9 @@ namespace FreeLibSet.Calendar
     #region Объединение и пересечение периодов
 
     /// <summary>
-    /// Возвращает интервал, включающие в себя и r1 и r2 (расширение интервалов)
-    /// Операция применима к любым двум интервалам
-    /// Интервалы r1 и r2 равноправны
+    /// Возвращает интервал, включающие в себя и <paramref name="r1"/> и <paramref name="r2"/> (расширение интервалов).
+    /// Операция применима к любым двум интервалам.
+    /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. 
     /// </summary>
     /// <param name="r1">Первый интервал</param>
     /// <param name="r2">Второй интервал</param>
@@ -611,8 +611,8 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает интервал, в который входит пересечение интервалов  r1 и r2
-    /// Если интервалы не пересекаются, или один из интервалов пустой, вызывается исключение InvalidOperationException.
+    /// Возвращает интервал, в который входит пересечение интервалов <paramref name="r1"/> и <paramref name="r2"/>.
+    /// Если интервалы не пересекаются, или один из интервалов пустой, вызывается исключение <see cref="InvalidOperationException"/>.
     /// Интервалы <paramref name="r1"/> и <paramref name="r2"/> равноправны. 
     /// </summary>
     /// <param name="r1">Первый интервал</param>
@@ -754,8 +754,9 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Возвращает перечислитель по структурам YearMonth.
+    /// Возвращает перечислитель по структурам <see cref="YearMonth"/>.
     /// Перечислитель последовательно возвращает каждый месяц в диапазоне.
+    /// Если требуется перечислить дни в диапазоне, то используйте свойство <see cref="DateRange"/> и используйте перечислитель объекта <see cref="FreeLibSet.Calendar.DateRange"/> по объектам <see cref="System.DateTime"/>.
     /// </summary>
     /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
