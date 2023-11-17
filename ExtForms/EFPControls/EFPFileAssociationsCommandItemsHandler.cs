@@ -76,7 +76,7 @@ namespace FreeLibSet.Forms
           }
           else
           {
-            ci.ToolTipText = "Возикла ошибка при получении файловых ассоциаций. " + faItems.Exception.Message;
+            ci.ToolTipText = "Возникла ошибка при получении файловых ассоциаций. " + faItems.Exception.Message;
             ci.ImageKey = "Error";
           }
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;

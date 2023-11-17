@@ -148,14 +148,18 @@
     <Compile Include="Tests\PropertyAssertTests.cs" />
     <Compile Include="IO\TempDirectoryTests.cs" />
     <Compile Include="Collections\WeakReferenceCollectionTests.cs" />
+    <Compile Include="Text\TabTextConvertTests.cs" />
     <Compile Include="Text\TextWithRowsTests.cs" />
     <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />
     <Compile Include="UICore\DataTableReorderHelperTests.cs" />
     <Compile Include="UICore\NumArrayUpDownHandlerTests.cs" />
     <Compile Include="UICore\UISelRCColumnTests.cs" />
     <Compile Include="UICore\UISelRCGridDataTests.cs" />
+    <Compile Include="UICore\UISimpleValidableObjectTests.cs" />
     <Compile Include="UICore\UIToolsTests.cs" />
     <Compile Include="UICore\IncrementUpDownHandlerTests.cs" />
+    <Compile Include="UICore\UIValidateResultTests.cs" />
+    <Compile Include="UICore\UIValidatorListTests.cs" />
     <Compile Include="Win32\ResourceIDTests.cs" />
   </ItemGroup>
   <ItemGroup>

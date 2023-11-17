@@ -79,7 +79,7 @@ namespace ExtTools_tests.Reporting
     /// <param name="ps"></param>
     private static void InitTestPageSetup(BRPageSetup ps)
     {
-      ps.Landscape = false;
+      ps.Orientation = BROrientation.Portrait;
       ps.PaperHeight = 2970;
       ps.PaperWidth = 2100;
       ps.LeftMargin = 200;

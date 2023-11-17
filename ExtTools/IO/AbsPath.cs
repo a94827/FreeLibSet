@@ -874,6 +874,48 @@ namespace FreeLibSet.IO
 
     #endregion
 
+    #region Прочее
+
+    /// <summary>
+    /// Получение общей части для двух путей. Например, если <paramref name="path1"/>="C:\AAA\BBB\CCC", а <paramref name="path2"/>="C:\AAA\BBB\DDD",
+    /// то возвращается "C:\AAA\BBB".
+    /// Если нет общей части пути, то возвращается <see cref="AbsPath.Empty"/>.
+    /// Если один или оба пути не заданы, то возвращается <see cref="AbsPath.Empty"/>.
+    /// Порядок аргументов не имеет значения.
+    /// </summary>
+    /// <param name="path1">Первый путь</param>
+    /// <param name="path2">Второй путь</param>
+    /// <returns>Общий путь</returns>
+    public static AbsPath operator &(AbsPath path1, AbsPath path2)
+    {
+      if (path1.IsEmpty || path2.IsEmpty)
+        return AbsPath.Empty;
+
+      if (path1 == path2)
+        return path1;
+
+      string[] a1 = path1.Split();
+      string[] a2 = path2.Split();
+      int n = Math.Min(a1.Length, a2.Length);
+      int cntCommon = 0;
+      for (int i = 0; i < n; i++)
+      {
+        if (String.Equals(a1[i], a2[i], ComparisonType))
+          cntCommon++;
+        else
+          break;
+      }
+
+      if (cntCommon == 0)
+        return AbsPath.Empty;
+
+      string[] aRes = new string[cntCommon];
+      Array.Copy(a1, 0, aRes, 0, cntCommon);
+      return Join(aRes);
+    }
+
+    #endregion
+
     #region Статические экземпляры
 
     /// <summary>

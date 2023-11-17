@@ -20,14 +20,14 @@ namespace FreeLibSet.IO
   #region Перечисление TestPathMode
 
   /// <summary>
-  /// Режимы проверки для методов FileTools.TestFilePath() и TestDirSlashedPath()
+  /// Режимы проверки для методов <see cref="FileTools.TestFilePath(string, TestPathMode, out string)"/> и <see cref="FileTools.TestDirSlashedPath(string, out string)"/>.
   /// </summary>
   public enum TestPathMode
   {
     /// <summary>
     /// Тестирование не выполняется.
     /// Этот режим используется в управляющих элементах, если они должны допускать ввод произвольного текста.
-    /// Методы класса FileTools ничего не делают в этом режиме.
+    /// Методы класса <see cref="FileTools"/> ничего не делают в этом режиме.
     /// </summary>
     None,
 
@@ -41,7 +41,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Проверяется существование корневого каталога. Будет выдана ошибка, если задана буква несуществующего диска
     /// или недействительный сетевой путь. При этом проверяется наличие диска в дисководе.
-    /// Этот режим используется, если программа создаст недостающие каталоги, например, с помощью FileTools.ForceDirs()
+    /// Этот режим используется, если программа создаст недостающие каталоги, например, с помощью <see cref="FileTools.ForceDirs(AbsPath)"/>.
     /// </summary>
     RootExists,
 
@@ -55,7 +55,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Проверяется существование файла.
     /// Обычно используется, если планируется выполнить чтение файла.
-    /// Этот режим можно использовать только с FileTools.TestFileExists().
+    /// Этот режим можно использовать только с <see cref="FileTools.TestFilePath(string, TestPathMode, out string)"/>.
     /// </summary>
     FileExists
   }
@@ -506,7 +506,7 @@ namespace FreeLibSet.IO
 
     #region Проверка имени файла и каталога
 
-    // Эти методы используют аргументы String, а не AbsPath, т.к. их целью является проверка наличия символов backslash в конце пути
+    // Эти методы используют аргументы String, а не AbsPath, т.к. их целью, в том числе, является проверка наличия символов backslash в конце пути
 
     #region Режим FormatOnly
 
@@ -621,6 +621,10 @@ namespace FreeLibSet.IO
             if (!TestWindowsChars(name, out errorText))
               return false;
             break;
+        case PlatformID.Unix:
+          if (!TestLinuxChars(name, out errorText))
+            return false;
+          break;
         }
       }
 
@@ -687,6 +691,19 @@ namespace FreeLibSet.IO
       return true;
     }
 
+    private static bool TestLinuxChars(string name, out string errorText)
+    {
+      int p = name.IndexOf("//", StringComparison.Ordinal);
+      if (p >= 0)
+      {
+        errorText = "Не может быть два символа \"//\" подряд";
+        return false;
+      }
+      errorText = null;
+      return true;
+    }
+
+
     #endregion
 
     #region Проверка с доступом к файловой системе
@@ -718,13 +735,14 @@ namespace FreeLibSet.IO
         case TestPathMode.RootExists:
           try
           {
+            AbsPath dir=new AbsPath(dirName).RootDir;
             if (Environment.OSVersion.Platform == PlatformID.Unix && String.Equals(dirName, "/", StringComparison.Ordinal))
               return true; // 10.07.2022. В Mono функция Directory.Exists не возвращает факт наличия корневого каталога
-            if (Directory.Exists(new AbsPath(dirName).RootDir.Path))
+            if (Directory.Exists(dir.Path))
               return true;
             else
             {
-              errorText = "Не найден корневой каталог \"" + new AbsPath(dirName).RootDir.Path + "\"";
+              errorText = "Не найден корневой каталог \"" + dir.Path + "\"";
               return false;
             }
           }
@@ -736,14 +754,15 @@ namespace FreeLibSet.IO
         case TestPathMode.DirectoryExists:
           try
           {
-            if (Directory.Exists(new AbsPath(dirName).Path))
+            AbsPath dir=new AbsPath(dirName);
+            if (Directory.Exists(dir.Path))
               return true;
             else
             {
-              if (File.Exists(new AbsPath(dirName).Path))
-                errorText = "\"" + new AbsPath(dirName).Path + "\" является файлом, а не каталогом"; // 17.07.2023
+              if (File.Exists(dir.Path))
+                errorText = "\"" + dir.Path + "\" является файлом, а не каталогом"; // 17.07.2023
               else
-                errorText = "Не найден каталог \"" + new AbsPath(dirName).Path + "\"";
+                errorText = "Не найден каталог \"" + dir.Path + "\"";
               return false;
             }
           }
@@ -935,7 +954,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Создать каталог, если его не существует, затем удалить все файлы, и 
     /// вложенные каталоги, которые в нем есть.
-    /// Если очистка не удалась, вызывается исключения
+    /// Если очистка не удалась, вызывается исключения.
     /// </summary>
     /// <param name="dirPath">Имя создаваемого каталога</param>
     public static void ForceDirsAndClear(AbsPath dirPath)
@@ -971,7 +990,7 @@ namespace FreeLibSet.IO
     /// Очищает каталог от файлов и вложенных каталогов, насколько это возможно
     /// Сам каталог <paramref name="dirPath"/> не удаляется
     /// В отличие от методов рекурсивного удаления <see cref="Directory.Delete(string, bool)"/>, невозможность удаления одного из файлов не прекращает процесс.
-    /// Предупреждение. Неверное применение метода может привести к разрушительным последствиям
+    /// Предупреждение. Неверное применение метода может привести к разрушительным последствиям.
     /// </summary>
     /// <param name="dirPath">Очищаемый каталог</param>
     /// <returns>true, если очистка успешно выполнена</returns>
@@ -1385,11 +1404,11 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает true, если поток, начиная с текущей позиции, содержит указанные байты.
     /// После вызова метода текущая позиция восстанавливается.
-    /// Поток должен поддерживать позиционирование, так как используется свойство Position. В противном случае будет сгенерировано NotSupportedException
+    /// Поток должен поддерживать позиционирование, так как используется свойство <see cref="Stream.Position"/>. В противном случае будет сгенерировано <see cref="NotSupportedException"/>
     /// </summary>
     /// <param name="testStream">Поток, открытый на чтение</param>
     /// <param name="bytes">Проверяемая последовательность байтов</param>
-    /// <returns></returns>
+    /// <returns>Признак совпадения содержимого потока</returns>
     public static bool StartsWith(Stream testStream, byte[] bytes)
     {
       if (testStream == null)
@@ -1432,7 +1451,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает кодировку для текстовых файлов, чтобы их можно было открывать средствами ОС (блокнотом).
     /// Для Windows-NT, Linux возвращает UTF-8.
-    /// Для Windows-98/Me возвращает Encoding.Default
+    /// Для Windows-98/Me возвращает <see cref="Encoding.Default"/>.
     /// </summary>
     public static Encoding TextFileEncoding
     {
@@ -1457,8 +1476,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Запись XML-документа в текстовый файл.
-    /// Используется кодировка, заданная в декларации XML-документа или unicode,
-    /// если декларации нет.
+    /// Используется кодировка, заданная в декларации XML-документа или unicode, если декларации нет.
     /// Выполняется красивое форматирование документа.
     /// </summary>
     /// <param name="filePath">Имя файла для записи</param>
@@ -1781,12 +1799,12 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Попытка преобразовать строковый номер версии в объект Version.
-    /// В отличие от просто конструктора объекта Version, сначала убираются
+    /// Попытка преобразовать строковый номер версии в объект <see cref="Version"/>.
+    /// В отличие от просто конструктора объекта <see cref="Version"/>, сначала убираются
     /// плохие символы из строки. 
     /// Если попытка преобразования заканчивается неудачно, возвращается null
     /// (если <paramref name="versionStr"/> - null или пустая строка, или начинается с нечисловых символов,
-    /// или первое число превышает Int32.MaxValue)
+    /// или первое число превышает <see cref="Int32.MaxValue"/>)
     /// </summary>
     /// <param name="versionStr">Версия в виде строки текста</param>
     /// <returns>Оьъект версии или null</returns>
@@ -1952,7 +1970,7 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Получить список имен компьютеров в сетевом окружении
+    /// Получить список имен компьютеров в сетевом окружении.
     /// Не совместимо с Windows-98.
     /// </summary>
     /// <returns>Список машин в сети</returns>
@@ -2248,7 +2266,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Раскрывает символическую ссылку Linux.
-    /// Для Windows возвращает <paramref name="path"/> без изменений
+    /// Для Windows возвращает <paramref name="path"/> без изменений.
     /// </summary>
     /// <param name="path">Путь к файлу или символической ссылке</param>
     /// <returns>Путь к файлу</returns>
@@ -2367,7 +2385,6 @@ namespace FreeLibSet.IO
       return new AbsPath(Path.GetTempPath()) + appName;
     }
 
-
     #endregion
 
     #region Конструктор и Dispose
@@ -2455,7 +2472,7 @@ namespace FreeLibSet.IO
   /// В отличие от <see cref="TempDirectory"/>, имя каталога не является уникальным. Несколько копий программы будут
   /// использовать один и тот же каталог. Каталог не создается в конструкторе; вместо этого создание выполняется
   /// при запросе временного файла.
-  /// Может применяться, например, для реализации команды "Файл-Передать" в Microsoft Word
+  /// Может применяться, например, для реализации команды "Файл-Передать" в Microsoft Word.
   /// Все методы, кроме Dispose(), являются потокобезопасными.
   /// Так как вызов Dispose() выполняет очистку каталога, рекомендуется создать объект <see cref="SharedTempDirectory"/>
   /// при запуске программы и удалять при завершении.
@@ -2481,7 +2498,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Создает временный каталог по пути "TempDirectory.RootDir\Shared".
-    /// Выполняется попытка очистить каталог
+    /// Выполняется попытка очистить каталог.
     /// </summary>
     public SharedTempDirectory()
       : this(GetDefaultDir())
@@ -2520,7 +2537,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает путь к каталогу, если не было вызова Dispose()
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       if (_Dir.IsEmpty)
@@ -2671,8 +2688,13 @@ namespace FreeLibSet.IO
     #region Методы
 
     /// <summary>
+    /// Нормализация шаблона.
     /// Если шаблон <see cref="Template"/> содержит подкаталоги (<see cref="HasSubDir"/>=true), то возвращается путь, 
     /// к которому добавляются подкаталоги, и шаблон без подкаталогов.
+    /// Например, если <see cref="Template"/>="123\456\*.txt", а <paramref name="rootDir"/>="C:\Temp\XXX", то будут возвращены значения:
+    /// <paramref name="newRootDir"/>="C:\Temp\XXX\123\456", <paramref name="newTemplate"/>="*.txt".
+    /// Если шаблон не содержит подкаталогов, то в <paramref name="newRootDir"/> будет скорован без изменений аргумент <paramref name="rootDir"/>,
+    /// а в <paramref name="newTemplate"/> - значение свойства <see cref="Template"/>.
     /// </summary>
     /// <param name="rootDir"></param>
     /// <param name="newRootDir"></param>
@@ -2693,31 +2715,31 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает true, если в каталоге <paramref name="root"/> существует хотя бы один файл, удовлетворяющий шаблону.
+    /// Возвращает true, если в каталоге <paramref name="rootDir"/> существует хотя бы один файл, удовлетворяющий шаблону.
     /// Проверяется только наличие файлов, но не каталогов.
-    /// Если каталог <paramref name="root"/> не существует, возвращается false.
+    /// Если каталог <paramref name="rootDir"/> не существует, возвращается false.
     /// </summary>
-    /// <param name="root">Проверяемый каталог</param>
+    /// <param name="rootDir">Проверяемый каталог</param>
     /// <returns>Наличие файла</returns>
-    public bool IsAnyFileExist(AbsPath root)
+    public bool IsAnyFileExist(AbsPath rootDir)
     {
-      if (root.IsEmpty)
+      if (rootDir.IsEmpty)
         return false;
 
-      if (!Directory.Exists(root.Path))
+      if (!Directory.Exists(rootDir.Path))
         return false;
 
-      return DoIsAnyFileExist(root);
+      return DoIsAnyFileExist(rootDir);
     }
 
-    internal bool DoIsAnyFileExist(AbsPath root)
+    internal bool DoIsAnyFileExist(AbsPath rootDir)
     {
-      if (Directory.GetFiles(root.Path, Template, SearchOption.TopDirectoryOnly).Length > 0)
+      if (Directory.GetFiles(rootDir.Path, Template, SearchOption.TopDirectoryOnly).Length > 0)
         return true;
 
       if (Recurse)
       {
-        string[] subDirs = Directory.GetDirectories(root.Path);
+        string[] subDirs = Directory.GetDirectories(rootDir.Path);
         for (int i = 0; i < subDirs.Length; i++)
         {
           if (Directory.GetFiles(subDirs[i], Template, SearchOption.TopDirectoryOnly).Length > 0)
@@ -3003,23 +3025,23 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Возвращает true, если в каталоге <paramref name="root"/> существует хотя бы один файл, удовлетворяющий любому из шаблонов в списке.
+    /// Возвращает true, если в каталоге <paramref name="rootDir"/> существует хотя бы один файл, удовлетворяющий любому из шаблонов в списке.
     /// Проверяется только наличие файлов, но не каталогов.
-    /// Если каталог <paramref name="root"/> не существует, возвращается false.
+    /// Если каталог <paramref name="rootDir"/> не существует, возвращается false.
     /// </summary>
-    /// <param name="root">Проверяемый каталог</param>
+    /// <param name="rootDir">Проверяемый каталог</param>
     /// <returns>Наличие файла</returns>
-    public bool IsAnyFileExist(AbsPath root)
+    public bool IsAnyFileExist(AbsPath rootDir)
     {
-      if (root.IsEmpty)
+      if (rootDir.IsEmpty)
         return false;
 
-      if (!Directory.Exists(root.Path))
+      if (!Directory.Exists(rootDir.Path))
         return false;
 
       for (int i = 0; i < Count; i++)
       {
-        if (this[i].DoIsAnyFileExist(root))
+        if (this[i].DoIsAnyFileExist(rootDir))
           return true;
       }
 

@@ -726,6 +726,57 @@ namespace ExtTools_tests.IO
 
     #endregion
 
+    #region Operator &
+
+    [Platform("Win")]
+    [TestCase(@"C:\AAA\BBB\CCC", @"C:\AAA\bbb\DDD", @"C:\AAA\BBB")]
+    [TestCase(@"C:\AAA\BBB\CCC", @"C:\AAA\BBB\CCC", @"C:\AAA\BBB\CCC")]
+    [TestCase(@"C:\AAA\BBB\CCC", @"C:\AAA\BBB\CC", @"C:\AAA\BBB")]
+    [TestCase(@"C:\AAA\BBB\CCC", @"C:\AAA\BBB\CCC.txt", @"C:\AAA\BBB")]
+    [TestCase(@"C:\AAA\BBB\CCC", @"C:\AAA\BBB\CCC\DDD", @"C:\AAA\BBB\CCC")]
+    [TestCase(@"C:\AAA\BBB\CCC", @"D:\AAA\BBB\CCC", @"")]
+    [TestCase(@"C:\AAA", @"C:\BBB", @"C:\")]
+    [TestCase(@"C:\AAA", @"", @"")]
+    [TestCase(@"", @"", @"")]
+    [TestCase(@"\\Server1\Share1\123.txt", @"\\Server1\Share1\456.txt", @"\\Server1\Share1")]
+    [TestCase(@"\\Server1\Share1\123.txt", @"\\Server1\Share2\123.txt", @"")]
+    public void Operator_And_windows(string sPath1, string sPath2, string sWantedRes)
+    {
+      AbsPath path1 = new AbsPath(sPath1);
+      AbsPath path2 = new AbsPath(sPath2);
+      AbsPath wantedRes = new AbsPath(sWantedRes);
+
+      AbsPath res1 = path1 & path2;
+      Assert.AreEqual(wantedRes, res1, "#1");
+      AbsPath res2 = path2 & path1;
+      Assert.AreEqual(wantedRes, res2, "#2");
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/AAA/BBB/CCC", @"/AAA/BBB/DDD", @"/AAA/BBB")]
+    [TestCase(@"/AAA/BBB/CCC", @"/AAA/bbb/DDD", @"/AAA")]
+    [TestCase(@"/AAA/BBB/CCC", @"/AAA/BBB/CCC", @"/AAA/BBB/CCC")]
+    [TestCase(@"/AAA/BBB/CCC", @"/AAA/BBB/CC", @"/AAA/BBB")]
+    [TestCase(@"/AAA/BBB/CCC", @"/AAA/BBB/CCC.txt", @"/AAA/BBB")]
+    [TestCase(@"/AAA/BBB/CCC", @"/AAA/BBB/CCC/DDD", @"/AAA/BBB/CCC")]
+    [TestCase(@"/AAA", @"/BBB", @"/")]
+    [TestCase(@"/AAA/BBB/CCC", @"DDD/BBB/CCC", @"/")]
+    [TestCase(@"/AAA", @"", @"")]
+    [TestCase(@"", @"", @"")]
+    public void Operator_And_linux(string sPath1, string sPath2, string sWantedRes)
+    {
+      AbsPath path1 = new AbsPath(sPath1);
+      AbsPath path2 = new AbsPath(sPath2);
+      AbsPath wantedRes = new AbsPath(sWantedRes);
+
+      AbsPath res1 = path1 & path2;
+      Assert.AreEqual(wantedRes, res1, "#1");
+      AbsPath res2 = path2 & path1;
+      Assert.AreEqual(wantedRes, res2, "#2");
+    }
+
+    #endregion
+
     #region Empty
 
     [Test]

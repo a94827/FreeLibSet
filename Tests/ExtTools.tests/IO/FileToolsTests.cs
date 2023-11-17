@@ -113,12 +113,38 @@ namespace ExtTools_tests.IO
     #region Тестирование имен
 
     [Platform("Win")]
-    [TestCase("c:/", true)]
-    [TestCase("c:/123/", true)]
-    [TestCase("c:/123", false)]
-    [TestCase("//192.168.0.1/xxx/", true)]
-    [TestCase("", false)]
-    public void TestDirSlashedPath_2args(string dirName, bool wantedRes)
+    [TestCase(@"c:\", true)]
+    [TestCase(@"c:\123\", true)]
+    [TestCase(@"c:\123", false)]
+    [TestCase(@"\\192.168.0.1\xxx\", true)]
+    [TestCase(@".\123\", true)]
+    [TestCase(@"123\", true)]
+    [TestCase(@"123\456\", true)]
+    [TestCase(@"123\\456\", false)]
+    [TestCase(@"..\123\", true)]
+    [TestCase(@"", false)]
+    public void TestDirSlashedPath_2args_windows(string dirName, bool wantedRes)
+    {
+      dirName = dirName.Replace('/', System.IO.Path.DirectorySeparatorChar);
+      string errorText;
+      bool res = FileTools.TestDirSlashedPath(dirName, out errorText);
+      Assert.AreEqual(wantedRes, res, "Result");
+      Assert.AreEqual(wantedRes, String.IsNullOrEmpty(errorText), "ErrorText");
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/", true)]
+    [TestCase(@"/123/", true)]
+    [TestCase(@"/123", false)]
+    [TestCase(@"//123", false)]
+    [TestCase(@"./123/", true)]
+    [TestCase(@"123/", true)]
+    [TestCase(@"/123/456/", true)]
+    [TestCase(@"/123//456/", false)]
+    [TestCase(@"../123/", true)]
+    [TestCase(@"~/123/", true)]
+    [TestCase(@"", false)]
+    public void TestDirSlashedPath_2args_linux(string dirName, bool wantedRes)
     {
       dirName = dirName.Replace('/', System.IO.Path.DirectorySeparatorChar);
       string errorText;
@@ -138,25 +164,25 @@ namespace ExtTools_tests.IO
         AbsPath dirName3 = new AbsPath(dir.Dir, "3");
         System.IO.File.WriteAllBytes(dirName3.Path, DataTools.EmptyBytes); // файл вместо каталога
 
-        Console.WriteLine ("dirName1=" + dirName1.Path);
-        Console.WriteLine ("dirName1.RootDir=" + dirName1.RootDir.Path);
+        Console.WriteLine("dirName1=" + dirName1.Path);
+        Console.WriteLine("dirName1.RootDir=" + dirName1.RootDir.Path);
 
-        string errorText=null;
+        string errorText = null;
         try
         {
-        Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 1");
-        Assert.IsFalse(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 2");
-        Assert.IsFalse(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 3");
-        Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.RootExists, out errorText), "RootExists 1");
-        Assert.IsTrue(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.RootExists, out errorText), "RootExists 2");
-        Assert.IsTrue(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.RootExists, out errorText), "RootExists 3");
-        Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 1");
-        Assert.IsTrue(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 2");
-        Assert.IsTrue(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 3");
+          Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 1");
+          Assert.IsFalse(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 2");
+          Assert.IsFalse(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.DirectoryExists, out errorText), "DirectoryExists 3");
+          Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.RootExists, out errorText), "RootExists 1");
+          Assert.IsTrue(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.RootExists, out errorText), "RootExists 2");
+          Assert.IsTrue(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.RootExists, out errorText), "RootExists 3");
+          Assert.IsTrue(FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 1");
+          Assert.IsTrue(FileTools.TestDirSlashedPath(dirName2.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 2");
+          Assert.IsTrue(FileTools.TestDirSlashedPath(dirName3.SlashedPath, TestPathMode.FormatOnly, out errorText), "FormatOnly 3");
         }
-        catch 
+        catch
         {
-          Console.WriteLine ("ErrorText=" + errorText);
+          Console.WriteLine("ErrorText=" + errorText);
           throw;
         }
         Assert.Catch<ArgumentException>(delegate () { FileTools.TestDirSlashedPath(dirName1.SlashedPath, TestPathMode.FileExists, out errorText); }, "#7");
@@ -172,16 +198,41 @@ namespace ExtTools_tests.IO
     }
 
     [Platform("Win")]
-    [TestCase("c:/", false)]
-    [TestCase("c:/123.txt", true)]
-    [TestCase("c:/123", true)]
-    [TestCase("c:/123/", false)]
-    [TestCase("//192.168.0.1/xxx/1.txt", true)]
-    [TestCase("//192.168.0.1/xxx/", false)]
-    [TestCase("", false)]
-    public void TestFilePath_2args(string fileName, bool wantedRes)
+    [TestCase(@"c:\", false)]
+    [TestCase(@"c:\123.txt", true)]
+    [TestCase(@"c:\123", true)]
+    [TestCase(@"c:\123\", false)]
+    [TestCase(@"\\192.168.0.1\xxx\1.txt", true)]
+    [TestCase(@"\\192.168.0.1\xxx\", false)]
+    [TestCase(@"123.txt", true)]
+    [TestCase(@"\123.txt", true)]
+    [TestCase(@".\123.txt", true)]
+    [TestCase(@"..\123.txt", true)]
+    [TestCase(@"..\..\123\456.txt", true)]
+    [TestCase(@"", false)]
+    public void TestFilePath_2args_windows(string fileName, bool wantedRes)
     {
-      fileName = fileName.Replace('/', System.IO.Path.DirectorySeparatorChar);
+      string errorText;
+      bool res = FileTools.TestFilePath(fileName, out errorText);
+      Assert.AreEqual(wantedRes, res, "Result");
+      Assert.AreEqual(wantedRes, String.IsNullOrEmpty(errorText), "ErrorText");
+    }
+
+    [Platform("Linux")]
+    [TestCase(@"/", false, Description="Root is not a file anyway")]
+    [TestCase(@"//", false)]
+    [TestCase(@"/123.txt", true)]
+    [TestCase(@"/123", true)]
+    [TestCase(@"/123/", false)]
+    [TestCase(@"123.txt", true)]
+    [TestCase(@"./123.txt", true)]
+    [TestCase(@"../123.txt", true)]
+    [TestCase(@"123/456.txt", true)]
+    [TestCase(@"123//456.txt", false)]
+    [TestCase(@"../../123/456.txt", true)]
+    [TestCase("", false)]
+    public void TestFilePath_2args_linux(string fileName, bool wantedRes)
+    {
       string errorText;
       bool res = FileTools.TestFilePath(fileName, out errorText);
       Assert.AreEqual(wantedRes, res, "Result");
@@ -273,9 +324,9 @@ namespace ExtTools_tests.IO
 
     #region IsAnyFileExist()
 
-    [TestCase("aaa*", true, Description ="File in the directory")]
+    [TestCase("aaa*", true, Description = "File in the directory")]
     [TestCase("bbb*", false, Description = "Directory")]
-    [TestCase("ccc*", false, Description ="File in sub dir")]
+    [TestCase("ccc*", false, Description = "File in sub dir")]
     public void IsAnyFileExist(string template, bool wantedRes)
     {
       using (TempDirectory dir = new TempDirectory())
@@ -460,7 +511,7 @@ namespace ExtTools_tests.IO
     }
 
     private void DoClearDirAsPossible(bool lockFile1, bool lockFile2)
-    { 
+    {
       using (TempDirectory dir = new TempDirectory())
       {
         AbsPath dir1 = new AbsPath(dir.Dir, "1");
@@ -939,11 +990,11 @@ namespace ExtTools_tests.IO
             case 37:
               continue;
           }
-		    // 03.09.2023: Пропускаем все кодировки EBCDIC и IBB. Под Linux тесты не проходят
-	      if (ei.CodePage >= 20000 && ei.CodePage <= 29999)
-		      continue;
-		    if (ei.CodePage >= 1140 && ei.CodePage <= 1149)
-		      continue;
+          // 03.09.2023: Пропускаем все кодировки EBCDIC и IBB. Под Linux тесты не проходят
+          if (ei.CodePage >= 20000 && ei.CodePage <= 29999)
+            continue;
+          if (ei.CodePage >= 1140 && ei.CodePage <= 1149)
+            continue;
 
 
           lst.Add(new EncodingInfo2(ei));
@@ -1023,7 +1074,6 @@ namespace ExtTools_tests.IO
     #region GetFileVersion()
 
     [Test]
-    [Platform("Win")]
     public void GetFileVersion_file_ok()
     {
       System.Reflection.Assembly asm = typeof(FileTools).Assembly;
@@ -1039,7 +1089,6 @@ namespace ExtTools_tests.IO
     }
 
     [Test]
-    [Platform("Win")]
     public void GetFileVersion_file_doesnotexist()
     {
       AbsPath path = new AbsPath("xxx.dll");
@@ -1049,7 +1098,6 @@ namespace ExtTools_tests.IO
     }
 
     [Test]
-    [Platform("Win")]
     public void GetFileVersion_file_empty()
     {
       AbsPath path = AbsPath.Empty;
@@ -1058,7 +1106,6 @@ namespace ExtTools_tests.IO
     }
 
     [Test]
-    [Platform("Win")]
     public void GetFileVersion_FileVersionInfo_ok()
     {
       System.Reflection.Assembly asm = typeof(FileTools).Assembly;
@@ -1075,7 +1122,6 @@ namespace ExtTools_tests.IO
     }
 
     [Test]
-    [Platform("Win")]
     public void GetFileVersion_FileVersionInfo_null()
     {
       System.Diagnostics.FileVersionInfo fvi = null;
@@ -1212,11 +1258,21 @@ namespace ExtTools_tests.IO
 
     [Test]
     [Platform("Win32NT")]
-    public void FindExecutableFilePath_fileName()
+    public void FindExecutableFilePath_fileName_windows()
     {
       AbsPath res = FileTools.FindExecutableFilePath("kernel32.dll");
       Assert.IsFalse(res.IsEmpty, "IsEmpty");
       StringAssert.AreEqualIgnoringCase("kernel32.dll", res.FileName, "FileName");
+      Assert.IsTrue(System.IO.File.Exists(res.Path), "FileExists");
+    }
+
+    [Test]
+    [Platform("linux")]
+    public void FindExecutableFilePath_fileName_linux()
+    {
+      AbsPath res = FileTools.FindExecutableFilePath("mono");
+      Assert.IsFalse(res.IsEmpty, "IsEmpty");
+      Assert.AreEqual("mono", res.FileName, "FileName");
       Assert.IsTrue(System.IO.File.Exists(res.Path), "FileExists");
     }
 

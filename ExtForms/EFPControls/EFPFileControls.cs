@@ -196,7 +196,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки по умолчанию, используемый, если свойство <see cref="PathValidateMode"/> не установлено в явном виде.
-    /// Провайдеры кнопки "Обзор" <see cref="EFPFileDialogButton"/> и <see cref="EFPFolderBrowserButton"/> и  устанавливают это свойство, в зависимости
+    /// Провайдеры кнопки "Обзор" <see cref="EFPFileDialogButton"/> и <see cref="EFPFolderBrowserButton"/> и устанавливают это свойство, в зависимости
     /// от текущих значений других свойств.
     /// </summary>
     public TestPathMode AmbientPathValidateMode

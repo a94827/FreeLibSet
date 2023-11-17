@@ -7,7 +7,7 @@ using FreeLibSet.Text;
 namespace ExtTools_tests.Text
 {
   [TestFixture]
-  class TextWithRowsTests
+  public class TextWithRowsTests
   {
     #region Конструкторы
 
