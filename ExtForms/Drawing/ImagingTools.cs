@@ -194,7 +194,7 @@ namespace FreeLibSet.Drawing
     }
      * */
 
-    internal static void SetAlphaChanelValue(Bitmap image, byte value)
+    internal static void SetAlphaChannelValue(Bitmap image, byte value)
     {
       if (image == null)
         throw new ArgumentNullException("image");
@@ -236,6 +236,21 @@ namespace FreeLibSet.Drawing
 #endif
       image.UnlockBits(bitmapData);
     }
+
+    /// <summary>
+    /// Получить данные растра из объекта <see cref="Bitmap"/> в виде массива байт
+    /// </summary>
+    /// <param name="image">Изображение</param>
+    /// <returns>Данные растра</returns>
+    internal static byte[] GetImageRasterBytes(Bitmap image)
+    {
+      BitmapData bmpdata = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
+      byte[] bits = new byte[bmpdata.Stride * bmpdata.Height];
+      System.Runtime.InteropServices.Marshal.Copy(bmpdata.Scan0, bits, 0, bits.Length);
+      image.UnlockBits(bmpdata);
+      return bits;
+    }
+
 
     #endregion
 

@@ -243,6 +243,9 @@ namespace FreeLibSet.IO
         ERROR_INVALID_HANDLE_STATE = 1609,
         ERROR_NO_BROWSER_SERVERS_FOUND = 6118,
       }
+
+      [DllImport("shell32.dll")]
+      public static extern int SHGetFolderPath(IntPtr hwndOwner, int nFolder, IntPtr hToken, uint dwFlags, [Out] StringBuilder pszPath);
     }
 
     #endregion
@@ -621,10 +624,10 @@ namespace FreeLibSet.IO
             if (!TestWindowsChars(name, out errorText))
               return false;
             break;
-        case PlatformID.Unix:
-          if (!TestLinuxChars(name, out errorText))
-            return false;
-          break;
+          case PlatformID.Unix:
+            if (!TestLinuxChars(name, out errorText))
+              return false;
+            break;
         }
       }
 
@@ -735,7 +738,7 @@ namespace FreeLibSet.IO
         case TestPathMode.RootExists:
           try
           {
-            AbsPath dir=new AbsPath(dirName).RootDir;
+            AbsPath dir = new AbsPath(dirName).RootDir;
             if (Environment.OSVersion.Platform == PlatformID.Unix && String.Equals(dirName, "/", StringComparison.Ordinal))
               return true; // 10.07.2022. В Mono функция Directory.Exists не возвращает факт наличия корневого каталога
             if (Directory.Exists(dir.Path))
@@ -754,7 +757,7 @@ namespace FreeLibSet.IO
         case TestPathMode.DirectoryExists:
           try
           {
-            AbsPath dir=new AbsPath(dirName);
+            AbsPath dir = new AbsPath(dirName);
             if (Directory.Exists(dir.Path))
               return true;
             else
@@ -2262,6 +2265,47 @@ namespace FreeLibSet.IO
 
     #endregion
 
+    #region Другие специальные папки
+
+    /// <summary>
+    /// Путь к папке профиля пользователя.
+    /// Под Windows возвращает "C:\Users\ИмяПользователя", под Linux - путь к папке "~".
+    /// </summary>
+    public static AbsPath UserProfileDir { get { return _UserProfileDir; } }
+    private static AbsPath _UserProfileDir = GetUserProfileDir();
+
+    private static AbsPath GetUserProfileDir()
+    {
+      // Объявлено в Net Framework 4
+      const System.Environment.SpecialFolder UserProfileSpecialFolder = (System.Environment.SpecialFolder)0x28;
+
+      if (EnvironmentTools.IsMono)
+        return new AbsPath(System.Environment.GetFolderPath(UserProfileSpecialFolder));
+      else
+      {
+        try
+        {
+          return new AbsPath(GetSpecialFolder_Windows((int)UserProfileSpecialFolder));
+        }
+        catch
+        {
+          return AbsPath.Empty;
+        }
+      }
+    }
+
+    private static string GetSpecialFolder_Windows(int csidl)
+    {
+      // Нельзя использовать Environment.GetFolderPath(), так как там проверяется значение перечисления
+
+      const int MaxPath = 260;
+      StringBuilder sb = new StringBuilder(MaxPath);
+      WindowsNative.SHGetFolderPath(IntPtr.Zero, csidl, IntPtr.Zero, 0x0000, sb);
+      return sb.ToString();
+    }
+
+    #endregion
+
     #region Раскрытие символических ссылок
 
     /// <summary>
@@ -2297,7 +2341,6 @@ namespace FreeLibSet.IO
     #endregion
 
     #region Вычисление ХЭШ-сумм
-
 
     /// <summary>
     /// Получение хэш-суммы данных из потока по алгоритму MD5.

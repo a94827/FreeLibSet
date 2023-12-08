@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms.Reporting
     /// <summary>
     /// Подготовка к выполнению действий
     /// </summary>
-    protected override void OnPrepare()
+    protected override void OnPrepareAction(EventArgs args)
     {
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpColumnHeaders = ControlProvider.Control.UseColumns;
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseColorStyle = false;
@@ -66,7 +66,7 @@ namespace FreeLibSet.Forms.Reporting
         }
       }
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseBoolMode = hasBoolColumns;
-      base.OnPrepare();
+      base.OnPrepareAction(args);
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ namespace FreeLibSet.Forms.Reporting
       BRSection sect = args.Report.Sections.Add();
       sect.PageSetup = SettingsData.GetItem<BRPageSettingsDataItem>().PageSetup;
       AddTitleAndFilterBands(sect);
-      sect.Bands.Add(new BRDataTreeViewTable(sect, ControlProvider, SettingsData, args.Action == BROutAction.SendTo));
+      sect.Bands.Add(new BRDataTreeViewTable(sect, ControlProvider, SettingsData, args.ActionInfo.Action == BRAction.SendTo));
 
       base.OnCreateReport(args);
     }

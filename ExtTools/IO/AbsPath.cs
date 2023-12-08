@@ -29,22 +29,26 @@ namespace FreeLibSet.IO
 
     static AbsPath()
     {
+      // Объявлено в Net Framework 4
+      const System.Environment.SpecialFolder UserProfileSpecialFolder = (System.Environment.SpecialFolder)0x28;
+
       switch (Environment.OSVersion.Platform)
       {
-      case PlatformID.Win32NT:
-      case PlatformID.Win32Windows:
-      case PlatformID.Win32S:
-      case PlatformID.WinCE:
-        ComparisonType = StringComparison.OrdinalIgnoreCase;
-        Comparer = StringComparer.OrdinalIgnoreCase;
-        IsWindows = true;
-        UnixHomePath = String.Empty;
+        case PlatformID.Win32NT:
+        case PlatformID.Win32Windows:
+        case PlatformID.Win32S:
+        case PlatformID.WinCE:
+          ComparisonType = StringComparison.OrdinalIgnoreCase;
+          Comparer = StringComparer.OrdinalIgnoreCase;
+          IsWindows = true;
+          UnixHomePath = String.Empty;
           break;
-      default:
-        ComparisonType = StringComparison.Ordinal;
-        Comparer = StringComparer.Ordinal;
-        IsWindows = false;
-        UnixHomePath = Environment.GetEnvironmentVariable ("HOME");
+        default:
+          ComparisonType = StringComparison.Ordinal;
+          Comparer = StringComparer.Ordinal;
+          IsWindows = false;
+          //UnixHomePath = Environment.GetEnvironmentVariable("HOME");
+          UnixHomePath = Environment.GetFolderPath(UserProfileSpecialFolder); // 21.11.2023
           break;
       }
 
@@ -53,7 +57,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Создает объект, содержащий абсолютный путь к файлу или каталогу.
     /// Если аргумент заканчивается на слэш, то он удаляется.
-    /// Допускается задание пути в Uri-формате "file:///"
+    /// Допускается задание пути в Uri-формате "file:///".
+    /// Если в Linux путь начинается на "~", то символ заменяется на путь к домашней папке.
     /// </summary>
     /// <param name="s">Путь, который нужно преобразовать</param>
     public AbsPath(string s)
@@ -93,7 +98,7 @@ namespace FreeLibSet.IO
             _Path = s2;
           else
           {
-            if (s2[0]=='~' && UnixHomePath.Length>0)
+            if (s2[0] == '~' && UnixHomePath.Length > 0)
               s2 = UnixHomePath + s2.Substring(1);
             string s3 = System.IO.Path.GetFullPath(s2);
             _Path = s3;
@@ -600,7 +605,8 @@ namespace FreeLibSet.IO
     internal static readonly StringComparer Comparer;
 
     /// <summary>
-    /// Под Linux содержит путь к папке "~" без завершающего символа "/"
+    /// Под Linux содержит путь к папке "~" без завершающего символа "/".
+    /// Для других ОС - пустая строка
     /// </summary>
     internal static readonly string UnixHomePath;
 
@@ -930,6 +936,9 @@ namespace FreeLibSet.IO
   /// Относительный или абсолютный путь к файлу или каталогу.
   /// Реализует методы для манипуляции с путями, заявленные в <see cref="System.IO.Path"/>.
   /// Не выполняет никаких действий с реальными файлами и каталогами.
+  /// В Linux поддерживаются пути, начинающиеся с символа домашней папки "~". Так как такие пути не поддерживаются файловыми функциями
+  /// (этот символ распознается только командной оболочкой), для открытия файлов и других действий следует использовать преобразование
+  /// в <see cref="AbsPath"/> и передавать функциям полный путь к файлу.
   /// </summary>
   [Serializable]
   public struct RelPath
@@ -1001,17 +1010,69 @@ namespace FreeLibSet.IO
       _Path = p1._Path;
     }
 
+    /// <summary>
+    /// Создает объект <see cref="RelPath"/>.
+    /// Если задана пустая строка или возникает ошибка преобразования, возвращается <see cref="RelPath.Empty"/>.
+    /// См. описание соответствующего конструктора <see cref="RelPath"/>.
+    /// </summary>
+    /// <param name="s">Путь, который нужно преобразовать</param>
+    /// <returns>Объект <see cref="RelPath"/></returns>
+    [DebuggerStepThrough]
+    public static RelPath Create(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return RelPath.Empty;
+      try
+      {
+        return new RelPath(s);
+      }
+      catch
+      {
+        return RelPath.Empty;
+      }
+    }
+
+
+    /// <summary>
+    /// Создает объект <see cref="RelPath"/>. 
+    /// Если <paramref name="basePath"/>.IsEmpty=true или возникает ошибка преобразования,
+    /// возвращается <see cref="RelPath.Empty"/>.
+    /// См. описание соответствующего конструктора <see cref="RelPath"/>.
+    /// </summary>
+    /// <param name="basePath">Базовый каталог</param>
+    /// <param name="subNames">Дочерние подкаталоги</param>
+    /// <returns>Объект <see cref="RelPath"/></returns>
+    [DebuggerStepThrough]
+    public static RelPath Create(RelPath basePath, params string[] subNames)
+    {
+      if (basePath.IsEmpty)
+        return RelPath.Empty;
+      try
+      {
+        return new RelPath(basePath, subNames);
+      }
+      catch
+      {
+        return RelPath.Empty;
+      }
+    }
+
     #endregion
 
     #region Свойства
 
     /// <summary>
     /// Путь к каталогу или файлу.
-    /// Путь хранится в форме, пригодной для использования методами классов в System.IO.
     /// Задается в конструкторе.
+    /// 
     /// </summary>
     public string Path { get { return _Path ?? String.Empty; } }
     private readonly string _Path;
+
+    /// <summary>
+    /// Пустой путь
+    /// </summary>
+    public static readonly RelPath Empty = new RelPath();
 
     /// <summary>
     /// Возвращает true, если путь не задан
@@ -1021,6 +1082,9 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Возвращает true, если путь является абсолютным.
     /// Вызывает <see cref="System.IO.Path.IsPathRooted(string)"/>.
+    ///
+    /// В Linux считает путь "~" или начинающийся с него относительным.
+    /// Вызов <see cref="ToAbsolute(AbsPath)"/> или преобразование к типу <see cref="AbsPath"/> заменяет "~" на путь к домашней папке.
     /// </summary>
     public bool IsAbsPath
     {
@@ -1053,7 +1117,7 @@ namespace FreeLibSet.IO
         if (_Path[_Path.Length - 1] == System.IO.Path.DirectorySeparatorChar)
           return _Path;
         else
-          return _Path + System.IO.Path.DirectorySeparatorChar; // Исправлена бяка 17.03.2017
+          return _Path + System.IO.Path.DirectorySeparatorChar; 
       }
     }
 
@@ -1077,14 +1141,67 @@ namespace FreeLibSet.IO
     #region Преобразование
 
     /// <summary>
-    /// Преобразует в абсолютный путь, используя, при необходимости, текущий каталог в качестве базового.
-    /// Если <paramref name="relPath"/> - пустой, то возвращается пустой путь, а не текущий рабочий каталог
+    /// Преобразует в абсолютный путь, используя, при необходимости, текущий каталог <see cref="Environment.CurrentDirectory"/> в качестве базового.
+    /// Если <paramref name="relPath"/> - пустой, то возвращается пустой путь, а не текущий рабочий каталог.
+    /// Требуется явное преобразование (explicit), так в нем неявно участвует текущий каталог.
     /// </summary>
     /// <param name="relPath">Относительный путь</param>
     /// <returns>Абсолютный путь</returns>
-    public static implicit operator AbsPath(RelPath relPath)
+    public static explicit operator AbsPath(RelPath relPath)
     {
       return new AbsPath(relPath.Path);
+    }
+
+    /// <summary>
+    /// Преобразует абсолютный путь в объект <see cref="RelPath"/>. При этом сам путь не преобразуется и сохраняется как абсолютный,
+    /// то есть будет возвращаться <see cref="RelPath.IsAbsPath"/>=true.
+    /// Если <paramref name="absPath"/> - пустой, то возвращается пустой путь <see cref="RelPath.Empty"/>.
+    /// Преобразование объявлено явным, так как обычно требуется получение относительного пути как разности двух объектов <see cref="AbsPath"/>,
+    /// а не просто преобразование.
+    /// </summary>
+    /// <param name="absPath">Абсолютный путь</param>
+    /// <returns>Объект <see cref="RelPath"/></returns>
+    public static explicit operator RelPath(AbsPath absPath)
+    {
+      return new RelPath(absPath.Path);
+    }
+
+    /// <summary>
+    /// Преобразует в форму абсолютного пути.
+    /// Если <see cref="IsAbsPath"/>=true, возвращает текущий объект без изменений, а <paramref name="basePath"/> игнорируется.
+    /// Если <see cref="IsEmpty"/>=true, возвращается пустой объект <see cref="Empty"/>, а не <paramref name="basePath"/>.
+    /// Если текущий объект задает относительный путь, а <paramref name="basePath"/> не задан, то в качестве базового каталога используется текущий каталог <see cref="Environment.CurrentDirectory"/>.
+    /// </summary>
+    /// <param name="basePath">Базовый каталог, используемый для преобразования относительного пути</param>
+    /// <returns>Путь с <see cref="IsAbsPath"/>=true</returns>
+    public RelPath ToAbsolute(AbsPath basePath)
+    {
+      if (IsEmpty || IsAbsPath)
+        return this;
+      else
+        return (RelPath)(basePath + this);
+    }
+
+    /// <summary>
+    /// Преобразует в форму относительного пути.
+    /// Если <see cref="IsAbsPath"/>=false, возвращает текущий объект без изменений, а <paramref name="basePath"/> игнорируется.
+    /// Если <see cref="IsEmpty"/>=true, возвращается пустой объект <see cref="Empty"/>, а не <paramref name="basePath"/>.
+    /// Если текуший объект совпадает с <paramref name="basePath"/>, то возвращается каталог ".".
+    /// Если <see cref="IsAbsPath"/>=true, то вычисляется разностный каталог, если это возможно. См. описания оператора вычитания.
+    /// Если текущий объект задает абсолютный путь, а <paramref name="basePath"/> не задан, то в качестве базового каталога используется текущий каталог <see cref="Environment.CurrentDirectory"/>.
+    /// </summary>
+    /// <param name="basePath">Базовый каталог, используемый для вычитания из текущего объекта</param>
+    /// <returns></returns>
+    public RelPath ToRelative(AbsPath basePath)
+    {
+      if (IsAbsPath)
+      {
+        if (basePath.IsEmpty)
+          basePath = new AbsPath(Environment.CurrentDirectory);
+        return (AbsPath)this - basePath;
+      }
+      else
+        return this;
     }
 
     #endregion
@@ -1136,6 +1253,7 @@ namespace FreeLibSet.IO
     /// Присоединение относительного пути к абсолютному.
     /// Если <paramref name="subPath"/> задает абсолютный путь, а не относительный,
     /// он возвращается, а <paramref name="basePath"/> игнорируется.
+    /// Если <paramref name="subPath"/> задает относительный путь, а <paramref name="basePath"/> не задан, то в качестве базового каталога используется текущий каталог <see cref="Environment.CurrentDirectory"/>.
     /// </summary>
     /// <param name="basePath">Абсолютный базовый путь</param>
     /// <param name="subPath">Относительный путь</param>
@@ -1145,6 +1263,10 @@ namespace FreeLibSet.IO
       if (subPath.IsEmpty)
         return basePath;
       if (subPath.IsAbsPath)
+        return new AbsPath(subPath.Path);
+      if (AbsPath.UnixHomePath.Length>0 && subPath.Path[0]=='~')
+        return new AbsPath(subPath.Path); // 21.11.2023
+      else if (basePath.IsEmpty)
         return new AbsPath(subPath.Path);
       else
         return new AbsPath(basePath, subPath.Path);

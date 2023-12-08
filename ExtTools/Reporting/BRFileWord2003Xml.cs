@@ -11,7 +11,7 @@ namespace FreeLibSet.Reporting
   /// <summary>
   /// Создание файла в формате XML для Word-2003
   /// </summary>
-  public class BRFileWord2003Xml
+  public class BRFileWord2003Xml: BRFileCreator
   {
     #region Константы
 
@@ -53,10 +53,8 @@ namespace FreeLibSet.Reporting
     /// </summary>
     /// <param name="report"></param>
     /// <param name="filePath"></param>
-    public void CreateFile(BRReport report, AbsPath filePath)
+    protected override void DoCreateFile(BRReport report, AbsPath filePath)
     {
-      DebugXml = true;
-
       XmlDocument xmlDoc = CreateXml(report);
       //XmlDoc.Save(FileName);
 
@@ -590,7 +588,7 @@ namespace FreeLibSet.Reporting
           WritePPr(elP, sel, columnWidth, isSimpleBand, keepWithNext);
         }
 
-        if (sel.CellStyle.TextLeader != BRTextLeader.None)
+        if (sel.CellStyle.TextFiller != BRTextFiller.None)
         {
           if (sel.ActualHAlign == BRHAlign.Center || sel.ActualHAlign == BRHAlign.Right)
           {
@@ -640,7 +638,7 @@ namespace FreeLibSet.Reporting
       XmlText text = elT.OwnerDocument.CreateTextNode(s);
       elT.AppendChild(text);
 
-      if (sel.CellStyle.TextLeader != BRTextLeader.None)
+      if (sel.CellStyle.TextFiller != BRTextFiller.None)
       {
         if (sel.ActualHAlign == BRHAlign.Center || sel.ActualHAlign == BRHAlign.Left)
         {
@@ -691,7 +689,7 @@ namespace FreeLibSet.Reporting
 
       #region Горизонтальное выравнивание
 
-      if (sel.ActualHAlign != BRHAlign.Left && sel.CellStyle.TextLeader == BRTextLeader.None)
+      if (sel.ActualHAlign != BRHAlign.Left && sel.CellStyle.TextFiller == BRTextFiller.None)
       {
         // Горизонтальное выравнивание не применяется при наличии позиций табуляции
         {
@@ -723,9 +721,9 @@ namespace FreeLibSet.Reporting
 
       #endregion
 
-      #region Табуляции для Leader
+      #region Табуляции для TextFiller
 
-      if (sel.CellStyle.TextLeader != BRTextLeader.None)
+      if (sel.CellStyle.TextFiller != BRTextFiller.None)
       {
         XmlElement elTabs = xmlDoc.CreateElement("w:tabs", nmspcW);
         elPPr.AppendChild(elTabs);
@@ -877,7 +875,7 @@ namespace FreeLibSet.Reporting
       //if (!sel.CellStyle.BackColor.IsAuto)
       //  return false; // цвет задается в ячейке, а не в абзаце
 
-      if (sel.CellStyle.TextLeader != BRTextLeader.None)
+      if (sel.CellStyle.TextFiller != BRTextFiller.None)
         return false;
 
       return

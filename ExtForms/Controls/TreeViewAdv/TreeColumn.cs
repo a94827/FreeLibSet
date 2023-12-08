@@ -322,7 +322,7 @@ namespace FreeLibSet.Controls
       Graphics gr = Graphics.FromImage(b);
       gr.FillRectangle(SystemBrushes.ControlDark, bounds);
       DrawContent(gr, bounds, font);
-      ImagingTools.SetAlphaChanelValue(b, 150);
+      ImagingTools.SetAlphaChannelValue(b, 150);
       return b;
     }
 

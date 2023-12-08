@@ -58,7 +58,8 @@ namespace FreeLibSet.Drawing
       _Strikeout = false;
       _DefaultFontWidth = 0;
       _DefaultLineHeight = 0;
-      _FontHeightScale = 0;
+      _FontHeightScaleInt = 0;
+      _FontHeightScale = 1;
       _Color = Color.Black;
       _StringFormat = (StringFormat)(StringFormat.GenericTypographic.Clone());
       _StringFormat.FormatFlags &= ~StringFormatFlags.LineLimit;
@@ -410,20 +411,37 @@ namespace FreeLibSet.Drawing
     /// В сочетании Mono+Wine высота шрифта <see cref="System.Drawing.Font.Size"/> почему-то задается не в пунктах, а в единицах
     /// контекста устройства, то есть в миллиметрах. Это справедливо для PrintPreviewControl, на печать пока не проверял.
     /// </summary>
-    private float FontHeightScale
+    private float RealFontHeightScale
+    {
+      get{ return FontHeightScaleInt * FontHeightScale;}
+    }
+
+    private float FontHeightScaleInt
     {
       get
       {
-        if (_FontHeightScale == 0f)
+        if (_FontHeightScaleInt == 0f)
         {
-          _FontHeightScale = 1f;
+          _FontHeightScaleInt = 1f;
           if (Graphics!=null && EnvironmentTools.IsMono && EnvironmentTools.IsWine)
-            _FontHeightScale  = 25.4f / 72f;
+            _FontHeightScaleInt  = 25.4f / 72f;
         }
-        return _FontHeightScale;
+        return _FontHeightScaleInt;
       }
     }
+    private float _FontHeightScaleInt;
 
+    public float FontHeightScale
+    {
+      get{ return _FontHeightScale;}
+      set
+      { 
+        if (value < 0f)
+          throw new ArgumentOutOfRangeException ();
+        _FontHeightScale = value;
+        ResetFont ();
+      }
+    }
     private float _FontHeightScale;
 
     [DebuggerStepThrough]
@@ -431,7 +449,7 @@ namespace FreeLibSet.Drawing
     {
       try
       {
-        _Font = new Font(_FontName, _FontHeight * FontHeightScale, st);
+        _Font = new Font(_FontName, _FontHeight * RealFontHeightScale, st);
         return true;
       }
       catch
@@ -446,12 +464,12 @@ namespace FreeLibSet.Drawing
       try
       {
         // Пытаемся обойтись без стиля
-        _Font = new Font(_FontName, _FontHeight * FontHeightScale);
+        _Font = new Font(_FontName, _FontHeight * RealFontHeightScale);
       }
       catch
       {
         // Используем стандартный шрифт
-        _Font = new Font(DefaultFontName, _FontHeight * FontHeightScale, st);
+        _Font = new Font(DefaultFontName, _FontHeight * RealFontHeightScale, st);
       }
     }
 
@@ -483,7 +501,7 @@ namespace FreeLibSet.Drawing
       }
       _DefaultFontWidth = 0;
       _DefaultLineHeight = 0;
-      _FontHeightScale = 0;
+      _FontHeightScaleInt = 0;
     }
 
     #endregion
@@ -497,7 +515,7 @@ namespace FreeLibSet.Drawing
     {
       get
       {
-        return Font.Size / FontHeightScale;
+        return Font.Size / RealFontHeightScale;
       }
     }
 
@@ -527,7 +545,7 @@ namespace FreeLibSet.Drawing
       {
         if (_DefaultLineHeight == 0)
           //_DefaultLineHeight = CalcDefaultLineHeight(MeasureGraphics, Font);
-          _DefaultLineHeight = Font.Height / FontHeightScale;
+          _DefaultLineHeight = Font.Height / RealFontHeightScale;
         return _DefaultLineHeight;
       }
     }

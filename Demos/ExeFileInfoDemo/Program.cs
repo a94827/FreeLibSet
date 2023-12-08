@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define USE_CFG // Если определено, то используется диалог выбора каталога с историей
+
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using FreeLibSet.Forms;
@@ -10,11 +12,14 @@ using FreeLibSet.Core;
 using System.Drawing.Imaging;
 using FreeLibSet.Controls;
 using System.Text;
+using FreeLibSet.Config;
 
 namespace ExeFileInfoDemo
 {
   static class Program
   {
+    const string ConfigRegKey = @"HKEY_CURRENT_USER\Software\FreeLibSet\ExeFileInfoDemo";
+
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
@@ -26,18 +31,48 @@ namespace ExeFileInfoDemo
       EFPApp.InitApp();
       try
       {
+        AbsPath dir;
+
+#if USE_CFG
+        EFPApp.ConfigManager = new EFPRegistryConfigManager(ConfigRegKey);
+
+        HistFolderBrowserDialog dlg = new HistFolderBrowserDialog();
+        dlg.Title = "Каталог с файлами *.exe и *.dll";
+        dlg.ShowSubFoldersButton = false;
+
+        CfgPart cfg;
+        EFPConfigSectionInfo cfgInfo = new EFPConfigSectionInfo("Params", EFPConfigCategories.UserParams);
+
+        using (EFPApp.ConfigManager.GetConfig(cfgInfo, EFPConfigMode.Read, out cfg))
+        {
+          dlg.HistList = cfg.GetHist("Directory");
+        }
+        if (dlg.ShowDialog() != DialogResult.OK)
+          return;
+
+        using (EFPApp.ConfigManager.GetConfig(cfgInfo, EFPConfigMode.Write, out cfg))
+        {
+          cfg.SetHist("Directory", dlg.HistList);
+        }
+
+        dir = new AbsPath(dlg.SelectedPath);
+
+#else
         FolderBrowserDialog dlg = new FolderBrowserDialog();
         dlg.Description = "Каталог с файлами *.exe и *.dll";
         dlg.ShowNewFolderButton = false;
         if (EFPApp.ShowDialog(dlg) != DialogResult.OK)
           return;
 
+        dir = new AbsPath(dlg.SelectedPath);
+#endif
+        //MessageBox.Show(dir.Path, "Selected path");
         List<MyFileInfo> lst = new List<MyFileInfo>();
 
         using (Splash spl = new Splash("Просмотр файлов"))
         {
-          string[] aFiles1 = System.IO.Directory.GetFiles(dlg.SelectedPath, "*.exe", SearchOption.TopDirectoryOnly);
-          string[] aFiles2 = System.IO.Directory.GetFiles(dlg.SelectedPath, "*.dll", SearchOption.TopDirectoryOnly);
+          string[] aFiles1 = System.IO.Directory.GetFiles(dir.Path, "*.exe", SearchOption.TopDirectoryOnly);
+          string[] aFiles2 = System.IO.Directory.GetFiles(dir.Path, "*.dll", SearchOption.TopDirectoryOnly);
           string[] aFiles = DataTools.MergeArrays<string>(aFiles1, aFiles2);
           Array.Sort<string>(aFiles);
           spl.PercentMax = aFiles.Length;
@@ -52,7 +87,7 @@ namespace ExeFileInfoDemo
         }
 
         SimpleGridForm form = new SimpleGridForm();
-        form.Text = dlg.SelectedPath;
+        form.Text = dir.Path;
         form.StartPosition = FormStartPosition.WindowsDefaultBounds;
         EFPDataGridView efpGrid = new EFPDataGridView(form.ControlWithToolBar);
         efpGrid.Control.AutoGenerateColumns = true;
@@ -282,8 +317,8 @@ namespace ExeFileInfoDemo
           lstInfo.Add("Optional Header");
           AddPair(lstInfo, "Kind", fi.PE.OptionalHeader.Kind.ToString(), 1);
           AddPair(lstInfo, "LinkerVersion", fi.PE.OptionalHeader.LinkerVersion.ToString(), 1);
-          AddPair(lstInfo, "HasEntryPoint", fi.PE.OptionalHeader.HasEntryPoint.ToString()+(fi.PE.OptionalHeader.HasEntryPoint? " (Executable file)":" (Library)"), 1);
-          AddPair(lstInfo, "ImageBase", "0x"+fi.PE.OptionalHeader.ImageBase.ToString("x8"), 1);
+          AddPair(lstInfo, "HasEntryPoint", fi.PE.OptionalHeader.HasEntryPoint.ToString() /*+ (fi.PE.OptionalHeader.HasEntryPoint ? " (Executable file)" : " (Library)")*/, 1);
+          AddPair(lstInfo, "ImageBase", "0x" + fi.PE.OptionalHeader.ImageBase.ToString("x8"), 1);
           AddPair(lstInfo, "OSVersion", fi.PE.OptionalHeader.OSVersion.ToString(), 1);
           AddPair(lstInfo, "ImageVersion", fi.PE.OptionalHeader.ImageVersion.ToString(), 1);
           AddPair(lstInfo, "Subsystem", fi.PE.OptionalHeader.Subsystem.ToString(), 1);

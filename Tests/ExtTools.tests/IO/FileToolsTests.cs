@@ -1294,6 +1294,17 @@ namespace ExtTools_tests.IO
 
     #endregion
 
+    #region UserProfileDir
+
+    [Test]
+    public void UserProfileDir()
+    {
+      Assert.IsFalse(FileTools.UserProfileDir.IsEmpty, "IsEmpty");
+      Assert.IsTrue(System.IO.Directory.Exists(FileTools.UserProfileDir.Path), "DirectoryExists");
+    }
+
+    #endregion
+
     #region MD5Sum()
 
     public void MD5Sum([Values(0, 100, 123456)]int len)

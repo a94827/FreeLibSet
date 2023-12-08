@@ -30,7 +30,11 @@ namespace ExtTools_tests.IO
     [Platform("Linux")]
     [TestCase(@"/", @"/", true, Description = "Root dir")]
     [TestCase(@"/tmp", @"/tmp", true, Description = "Abs dir")]
-    public void Constructor_string_abs_linux(string s, string wantedPath, bool wantedIsAbsPath)
+    [TestCase(@"abc/def/ghi/", @"abc/def/ghi", false, Description = "Relative dir")]
+    [TestCase(@"../abc.txt", @"../abc.txt", false, Description = "Relative file")]
+    [TestCase(@"~", @"~", false, Description = "UserProfile")]
+    [TestCase(@"~/hello.txt", @"~/hello.txt", false, Description = "File in UserProfile")]
+    public void Constructor_string_linux(string s, string wantedPath, bool wantedIsAbsPath)
     {
       RelPath sut = new RelPath(s);
       Assert.AreEqual(wantedPath, sut.Path, "Path");
@@ -104,6 +108,8 @@ namespace ExtTools_tests.IO
     [TestCase(@"", @"")]
     [TestCase(@"..", @"../")]
     [TestCase(@"aaa/bbb", @"aaa/bbb/")]
+    [TestCase(@"~", @"~/")]
+    [TestCase(@"~/123", @"~/123/")]
     public void SlashedPath_linux(string s, string wantedRes)
     {
       RelPath sut = new RelPath(s);
@@ -125,33 +131,218 @@ namespace ExtTools_tests.IO
 
     #region Пребразования
 
+    /// <summary>
+    /// Используем CurDir в формате AbsPath, чтобы не думать о слэшах при добавлении подкаталога.
+    /// Сам текущий каталог нужен, в основном, так как он точно существует.
+    /// </summary>
+    private static AbsPath CurDir { get { return new AbsPath(Environment.CurrentDirectory); } }
+
     [Test]
-    public void Operator_AbsPath_rel()
+    public void Operator_RelPath_to_AbsPath_rel()
     {
       RelPath sut = new RelPath(".." + Path.DirectorySeparatorChar + "aaa");
-      AbsPath res = sut;
+      AbsPath res = (AbsPath)sut;
 
-      AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
+      AbsPath basePath = CurDir;
       AbsPath wantedRes = new AbsPath(basePath.ParentDir, "aaa");
       Assert.AreEqual(wantedRes, res);
     }
 
     [Test]
-    public void Operator_AbsPath_abs()
+    public void Operator_RelPath_to_AbsPath_abs()
     {
       AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
       RelPath sut = new RelPath(basePath.Path);
-      AbsPath res = sut;
+      AbsPath res = (AbsPath)sut;
 
       Assert.AreEqual(basePath, res);
     }
 
     [Test]
-    public void Operator_AbsPath_empty()
+    public void Operator_RelPath_to_AbsPath_empty()
     {
-      RelPath sut = new RelPath("");
-      AbsPath res = sut;
+      RelPath sut = RelPath.Empty;
+      AbsPath res = (AbsPath)sut;
 
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    [Test]
+    public void Operator_AbsPath_to_RelPath_ok()
+    {
+      string path = new AbsPath(CurDir,"aaa").Path;
+      AbsPath sut = new AbsPath(path);
+      RelPath res = (RelPath)sut;
+
+      Assert.AreEqual(path, res.Path, "Path");
+      Assert.IsTrue(res.IsAbsPath, "IsAbsPath");
+    }
+
+    [Test]
+    public void Operator_AbsPath_to_RelPath_empty()
+    {
+      AbsPath sut = AbsPath.Empty;
+      RelPath res = (RelPath)sut;
+
+      Assert.IsTrue(res.IsEmpty, "IsEmpty");
+    }
+
+    #endregion
+
+    #region Empty
+
+    [Test]
+    public void Empty()
+    {
+      Assert.IsTrue(RelPath.Empty.IsEmpty, "IsEmpty");
+      Assert.IsFalse(RelPath.Empty.IsAbsPath, "IsAbsPath");
+      Assert.AreEqual("", RelPath.Empty.Path, "Path");
+      Assert.AreEqual("", RelPath.Empty.SlashedPath, "SlashedPath");
+      Assert.AreEqual("", RelPath.Empty.QuotedPath, "QuotedPath");
+    }
+
+    #endregion
+
+    #region ToAbsolute()
+
+    [Test]
+    public void ToAbsolute_rel_abs_1()
+    {
+      RelPath sut = new RelPath("bbb");
+      AbsPath baseDir = new AbsPath(CurDir, "aaa");
+      RelPath res = sut.ToAbsolute(baseDir);
+      Assert.AreEqual(baseDir.SlashedPath + "bbb", res.Path);
+    }
+
+    public void ToAbsolute_rel_abs_2()
+    {
+      RelPath sut = new RelPath(".."+ Path.DirectorySeparatorChar + "bbb");
+      AbsPath baseDir = new AbsPath(CurDir, "aaa");
+      RelPath res = sut.ToAbsolute(baseDir);
+      Assert.AreEqual(baseDir.ParentDir.SlashedPath + "bbb", res.Path);
+    }
+
+    [Test]
+    public void ToAbsolute_rel_empty()
+    {
+      RelPath sut = new RelPath("bbb");
+      RelPath res = sut.ToAbsolute(AbsPath.Empty);
+      Assert.AreEqual(new AbsPath(CurDir, "bbb").Path, res.Path);
+    }
+
+    [Test]
+    public void ToAbsolute_abs_abs()
+    {
+      RelPath sut = new RelPath(new AbsPath(CurDir, "bbb").Path);
+      AbsPath baseDir = new AbsPath(CurDir, "aaa");
+      RelPath res = sut.ToAbsolute(baseDir);
+      Assert.AreEqual(sut.Path, res.Path);
+    }
+
+    [Test]
+    [Platform("Linux")]
+    public void ToAbsolute_linuxhome_abs()
+    {
+      RelPath sut = new RelPath("~/hello.txt");
+      AbsPath baseDir = new AbsPath(CurDir, "aaa"); // no matter
+      RelPath res = sut.ToAbsolute(baseDir);
+      Assert.AreEqual(FileTools.UserProfileDir.SlashedPath+"hello.txt", res.Path);
+    }
+
+    [Test]
+    public void ToAbsolute_abs_empty()
+    {
+      RelPath sut = new RelPath(new AbsPath(CurDir, "bbb").Path);
+      RelPath res = sut.ToAbsolute(AbsPath.Empty);
+      Assert.AreEqual(sut.Path, res.Path);
+    }
+
+    [Test]
+    public void ToAbsolute_empty_abs()
+    {
+      AbsPath baseDir = new AbsPath(CurDir, "aaa");
+      RelPath res = RelPath.Empty.ToAbsolute(baseDir);
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    [Test]
+    public void ToAbsolute_empty_empty()
+    {
+      RelPath res = RelPath.Empty.ToAbsolute(AbsPath.Empty);
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    #endregion
+
+    #region ToRelative()
+
+    [Test]
+    public void ToRelative_rel_abs()
+    {
+      RelPath sut = new RelPath("bbb");
+      AbsPath baseDir = new AbsPath(CurDir, "aaa");
+      RelPath res = sut.ToRelative(baseDir);
+      Assert.AreEqual("bbb", res.Path);
+    }
+
+    [Test]
+    public void ToRelative_rel_empty()
+    {
+      RelPath sut = new RelPath("bbb");
+      RelPath res = sut.ToRelative(AbsPath.Empty);
+      Assert.AreEqual("bbb", res.Path);
+    }
+
+    [Test]
+    public void ToRelative_abs_abs()
+    {
+      RelPath sut = new RelPath(new AbsPath(CurDir, "bbb").Path);
+      AbsPath baseDir = new AbsPath(CurDir, "aaa");
+      RelPath res = sut.ToRelative(baseDir);
+      Assert.AreEqual(".."+Path.DirectorySeparatorChar+"bbb", res.Path);
+    }
+
+    // Такое преобразование не выполняется
+    //[Platform("Linux")]
+    //[Test]
+    //public void ToRelative_abslinuxhome_abs()
+    //{
+    //  RelPath sut = new RelPath(new AbsPath(FileTools.UserProfileDir, "bbb").Path);
+    //  AbsPath baseDir = new AbsPath("/usr/bin"); // no matter
+    //  RelPath res = sut.ToRelative(baseDir);
+    //  Assert.AreEqual("~/bbb", res.Path);
+    //}
+
+    [Platform("Linux")]
+    [Test]
+    public void ToRelative_linuxhome_abs()
+    {
+      RelPath sut = new RelPath("~/bbb");
+      AbsPath baseDir = new AbsPath("/usr/bin"); // no matter
+      RelPath res = sut.ToRelative(baseDir);
+      Assert.AreEqual("~/bbb", res.Path); // unchanged
+    }
+
+    [Test]
+    public void ToRelative_abs_empty()
+    {
+      RelPath sut = new RelPath(new AbsPath(CurDir, "bbb").Path);
+      RelPath res = sut.ToRelative(AbsPath.Empty);
+      Assert.AreEqual("bbb", res.Path);
+    }
+
+    [Test]
+    public void ToRelative_empty_abs()
+    {
+      AbsPath baseDir = new AbsPath(CurDir, "aaa");
+      RelPath res = RelPath.Empty.ToRelative(baseDir);
+      Assert.IsTrue(res.IsEmpty);
+    }
+
+    [Test]
+    public void ToRelative_empty_empty()
+    {
+      RelPath res = RelPath.Empty.ToRelative(AbsPath.Empty);
       Assert.IsTrue(res.IsEmpty);
     }
 
@@ -227,7 +418,7 @@ namespace ExtTools_tests.IO
     public void Operator_Add_RPrel_RPempty()
     {
       RelPath arg1 = new RelPath(".." + Path.DirectorySeparatorChar + "aaa");
-      RelPath arg2 = new RelPath("");
+      RelPath arg2 = RelPath.Empty;
       RelPath res = arg1 + arg2;
 
       Assert.AreEqual(arg1.Path, res.Path);
@@ -237,7 +428,7 @@ namespace ExtTools_tests.IO
     [Test]
     public void Operator_Add_RPempty_RPrel()
     {
-      RelPath arg1 = new RelPath("");
+      RelPath arg1 = RelPath.Empty;
       RelPath arg2 = new RelPath(".." + Path.DirectorySeparatorChar + "bbb");
       RelPath res = arg1 + arg2;
 
@@ -247,8 +438,8 @@ namespace ExtTools_tests.IO
     [Test]
     public void Operator_Add_RPempty_RPempty()
     {
-      RelPath arg1 = new RelPath("");
-      RelPath arg2 = new RelPath("");
+      RelPath arg1 = RelPath.Empty; 
+      RelPath arg2 = RelPath.Empty; 
       RelPath res = arg1 + arg2;
 
       Assert.IsTrue(res.IsEmpty);
@@ -258,7 +449,7 @@ namespace ExtTools_tests.IO
     #region Добавление к абсолютному пути
 
     [Test]
-    public void Operator_Add_AbsPath_RelPath_rel()
+    public void Operator_Add_AbsPath_RelPath_abs_rel()
     {
       AbsPath arg1 = new AbsPath(".");
       RelPath arg2 = new RelPath(".." + Path.DirectorySeparatorChar + "aaa");
@@ -269,9 +460,8 @@ namespace ExtTools_tests.IO
       Assert.AreEqual(wantedRes, res);
     }
 
-
     [Test]
-    public void Operator_Add_AbsPath_RelPath_abs()
+    public void Operator_Add_AbsPath_RelPath_abs_abs()
     {
       AbsPath arg1 = new AbsPath(Environment.SystemDirectory);
       AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
@@ -281,12 +471,43 @@ namespace ExtTools_tests.IO
       Assert.AreEqual(basePath, res);
     }
 
-
     [Test]
-    public void Operator_Add_AbsPath_RelPath_empty()
+    public void Operator_Add_AbsPath_RelPath_abs_empty()
     {
       AbsPath arg1 = new AbsPath(Environment.CurrentDirectory);
-      RelPath arg2 = new RelPath("");
+      RelPath arg2 = RelPath.Empty;
+      AbsPath res = arg1 + arg2;
+
+      Assert.AreEqual(arg1, res);
+    }
+    [Test]
+    public void Operator_Add_AbsPath_RelPath_empty_rel()
+    {
+      AbsPath arg1 = AbsPath.Empty;
+      RelPath arg2 = new RelPath(".." + Path.DirectorySeparatorChar + "aaa");
+      AbsPath res = arg1 + arg2;
+
+      AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
+      AbsPath wantedRes = new AbsPath(basePath.ParentDir, "aaa");
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [Test]
+    public void Operator_Add_AbsPath_RelPath_empty_abs()
+    {
+      AbsPath arg1 = AbsPath.Empty;
+      AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
+      RelPath arg2 = new RelPath(basePath.Path);
+      AbsPath res = arg1 + arg2; // arg1 полностью теряется
+
+      Assert.AreEqual(basePath, res);
+    }
+
+    [Test]
+    public void Operator_Add_AbsPath_RelPath_empty_empty()
+    {
+      AbsPath arg1 = AbsPath.Empty;
+      RelPath arg2 = RelPath.Empty;
       AbsPath res = arg1 + arg2;
 
       Assert.AreEqual(arg1, res);

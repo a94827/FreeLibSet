@@ -171,12 +171,14 @@ namespace FreeLibSet.Drawing.Reporting
     #endregion
   }
 
-  public class BRFilePdf
+  public class BRFilePdf: BRFileCreator
   {
     #region Конструктор
 
     public BRFilePdf()
     {
+      CompressContentStreams = true;
+
       //Scale = 0.1f;
       Scale = 72f/254f;
       //CellFrames = false;
@@ -187,10 +189,20 @@ namespace FreeLibSet.Drawing.Reporting
       _BackBrushes = new Dictionary<BRColor, XBrush>();
 
       BorderPen = new XPen(Color.Black);
-      LeaderPen = new XPen(Color.Black);
+      TextFillerPen = new XPen(Color.Black);
 
       _SB = new StringBuilder();
     }
+
+    #endregion
+
+    #region Управляющие свойства
+
+    /// <summary>
+    /// Если установлено в true (по умолчанию), то будут сжиматься потоки внутри pdf-файла
+    /// Можно установить в false для отладочных целей
+    /// </summary>
+    public bool CompressContentStreams;
 
     #endregion
 
@@ -255,6 +267,85 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private StringBuilder _SB;
 
+
+    #endregion
+
+    #region Основной метод
+
+    protected override void DoCreateFile(BRReport report, AbsPath filePath)
+    {
+      // Создаем документ
+      PdfDocument pdfDoc = new PdfDocument();
+      pdfDoc.Options.CompressContentStreams = true;
+
+      #region Сводка
+
+      // Проблема с русской кодировкой
+      // Сводка должна записываться не в кодировке Unicode, а в Encoding.BigEndianUnicode
+      // Переставляем местами байты
+      if (!String.IsNullOrEmpty(report.DocumentProperties.Title))
+        pdfDoc.Info.Elements["/Title"] = new PdfString(ConvertSummaryString(report.DocumentProperties.Title), PdfStringEncoding.Unicode);
+      if (!String.IsNullOrEmpty(report.DocumentProperties.Author))
+        pdfDoc.Info.Elements["/Author"] = new PdfString(ConvertSummaryString(report.DocumentProperties.Author), PdfStringEncoding.Unicode);
+      if (!String.IsNullOrEmpty(report.DocumentProperties.Subject))
+        pdfDoc.Info.Elements["/Subject"] = new PdfString(ConvertSummaryString(report.DocumentProperties.Subject), PdfStringEncoding.Unicode);
+
+      pdfDoc.Info.Creator = CreatorString;
+
+      #endregion
+
+      using (BRReportPainter painter = new BRReportPainter())
+      {
+        BRPaginator paginator = new BRPaginator(painter);
+        BRPaginatorPageInfo[] pages = paginator.CreatePages(report);
+
+        for (int i = 0; i < pages.Length; i++)
+        {
+          BRPageSetup ps = pages[i].Section.PageSetup;
+          PdfPage PdfPage = pdfDoc.AddPage();
+          if (ps.Orientation == BROrientation.Landscape)
+          {
+            PdfPage.Width = LMToXUnit(ps.PaperHeight);
+            PdfPage.Height = LMToXUnit(ps.PaperWidth);
+            PdfPage.Orientation = PdfSharp.PageOrientation.Landscape;
+          }
+          else
+          {
+            PdfPage.Width = LMToXUnit(ps.PaperWidth);
+            PdfPage.Height = LMToXUnit(ps.PaperHeight);
+            PdfPage.Orientation = PdfSharp.PageOrientation.Portrait;
+          }
+
+          using (XGraphics gfx = XGraphics.FromPdfPage(PdfPage))
+          {
+            // Увы, использовать XGraphics.Graphics нельзя, рисует на рабочем столе :)
+            //painter.Paint(pages[i], gfx.Graphics);
+
+            int x0, y0;
+            object x = gfx.PageUnit;
+            //if (Doc.Pages[i].PageSetup.CenterPage)
+            //{
+            //  int w1 = Doc.Pages[i].Columns.VisibleWidth;
+            //  int h1 = Doc.Pages[i].Rows.VisibleHeight;
+            //  int w2 = Doc.Pages[i].PageSetup.PrintAreaWidth;
+            //  int h2 = Doc.Pages[i].PageSetup.PrintAreaHeight;
+            //  x0 = Doc.Pages[i].PageSetup.LeftMargin + (w2 - w1) / 2;
+            //  y0 = Doc.Pages[i].PageSetup.TopMargin + (h2 - h1) / 2;
+            //}
+            //else
+            //{
+            x0 = ps.LeftMargin;
+            y0 = ps.TopMargin;
+            //}
+
+            Paint(pages[i], gfx);
+          }
+        }
+      }
+
+      // Сохраняем документ
+      pdfDoc.Save(filePath.Path);
+    }
 
     #endregion
 
@@ -396,7 +487,7 @@ namespace FreeLibSet.Drawing.Reporting
         lines = new string[] { "Ошибка получения текста", e.Message };
       }
 
-      if (lines.Length == 0 && sel.CellStyle.TextLeader == BRTextLeader.None)
+      if (lines.Length == 0 && sel.CellStyle.TextFiller == BRTextFiller.None)
         return;
 
       // Область для текста с учетом отступов
@@ -427,7 +518,7 @@ namespace FreeLibSet.Drawing.Reporting
         double textW = 0f;
         for (int i = 0; i < lines.Length; i++)
           textW = Math.Max(textW, renderer.MeasureString(lines[i]).Width);
-        // Здесь, в отличии от Leader'а, при измерении прямоугольник не задается,
+        // Здесь, в отличии от TextFiller'а, при измерении прямоугольник не задается,
         // т.к. нас интересует абстрактный размер без возможных дополнительных
         // уменьшений, которые будут при рисовании
         if (textW < rc.Width && textW > 0.0)
@@ -459,40 +550,40 @@ namespace FreeLibSet.Drawing.Reporting
         renderer.FontWidth = orgFontWidth;
 
       // Прорисовка заполнителя
-      if (sel.CellStyle.TextLeader != BRTextLeader.None)
+      if (sel.CellStyle.TextFiller != BRTextFiller.None)
       {
         // Реальная ширина текста (для самой длинной строки)
         double textW = 0f;
         for (int i = 0; i < lines.Length; i++)
           textW = Math.Max(textW, renderer.MeasureString(lines[i], new XSize(rc.Width, rc.Height)).Width);
 
-        XRect LeaderRC1 = rc; // слева от текста
-        XRect LeaderRC2 = rc; // справа от текста
+        XRect fillerRC1 = rc; // слева от текста
+        XRect fillerRC2 = rc; // справа от текста
 
         switch (sel.ActualHAlign)
         {
           case BRHAlign.Left:
             // Заполнитель справа
-            LeaderRC2.X += textW;
-            LeaderRC2.Width -= textW;
-            DrawLeader(renderer, sel, LeaderRC2);
+            fillerRC2.X += textW;
+            fillerRC2.Width -= textW;
+            DrawTextFiller(renderer, sel, fillerRC2);
             break;
           case BRHAlign.Right:
             // Заполнитель слева
-            LeaderRC1.Width -= textW;
-            DrawLeader(renderer, sel, LeaderRC1);
+            fillerRC1.Width -= textW;
+            DrawTextFiller(renderer, sel, fillerRC1);
             break;
           case BRHAlign.Center:
             // Заполнитель слева
-            LeaderRC1.Width -= textW;
-            LeaderRC1.Width /= 2;
-            DrawLeader(renderer, sel, LeaderRC1);
+            fillerRC1.Width -= textW;
+            fillerRC1.Width /= 2;
+            DrawTextFiller(renderer, sel, fillerRC1);
             // Заполнитель справа
-            LeaderRC2.Width -= textW;
-            LeaderRC2.Width /= 2;
-            LeaderRC2.X += (float)textW;
-            LeaderRC2.X += LeaderRC2.Width;
-            DrawLeader(renderer, sel, LeaderRC2);
+            fillerRC2.Width -= textW;
+            fillerRC2.Width /= 2;
+            fillerRC2.X += (float)textW;
+            fillerRC2.X += fillerRC2.Width;
+            DrawTextFiller(renderer, sel, fillerRC2);
             break;
         }
       }
@@ -533,36 +624,36 @@ namespace FreeLibSet.Drawing.Reporting
 
     #endregion
 
-    #region Рисование TextLeader
+    #region Рисование TextFiiler
 
     /// <summary>
     /// Перо для рисования ячеек с прочеркиванием
     /// Толщина линии фиксированная
     /// Цвет задается перед рисованием
     /// </summary>
-    private XPen LeaderPen;
+    private XPen TextFillerPen;
 
     /// <summary>
     /// Рисование заполнителя
     /// </summary>
-    private void DrawLeader(PdfTextRenderer renderer, BRSelector sel, XRect rc)
+    private void DrawTextFiller(PdfTextRenderer renderer, BRSelector sel, XRect rc)
     {
-      if (sel.CellStyle.TextLeader == BRTextLeader.None)
+      if (sel.CellStyle.TextFiller == BRTextFiller.None)
         return;
       if (rc.Height <= 0f || rc.Width <= 0f)
         return;
 
-      LeaderPen.Color = renderer.Color; // прочерк всегда имеет цвет текста
-      if (sel.CellStyle.TextLeader == BRTextLeader.TwoLines)
+      TextFillerPen.Color = renderer.Color; // прочерк всегда имеет цвет текста
+      if (sel.CellStyle.TextFiller == BRTextFiller.TwoLines)
       {
         // Перо
-        LeaderPen.Width = ThinLineWidth01mm * Scale; // Тонкая линия
+        TextFillerPen.Width = ThinLineWidth01mm * Scale; // Тонкая линия
         // Расстояние между двумя линиями
         float dh = (sel.CellStyle.FontHeightPt / 72f * 254f) * 0.25f * Scale; // !!!
-        renderer.Graphics.DrawLine(LeaderPen,
+        renderer.Graphics.DrawLine(TextFillerPen,
           rc.X, rc.Y + (rc.Height - dh) / 2f,
           rc.Right, rc.Y + (rc.Height - dh) / 2f);
-        renderer.Graphics.DrawLine(LeaderPen,
+        renderer.Graphics.DrawLine(TextFillerPen,
           rc.X, rc.Y + (rc.Height + dh) / 2f,
           rc.Right, rc.Y + (rc.Height + dh) / 2f);
       }
@@ -570,16 +661,16 @@ namespace FreeLibSet.Drawing.Reporting
       {
         float w;
 
-        switch (sel.CellStyle.TextLeader)
+        switch (sel.CellStyle.TextFiller)
         {
-          case BRTextLeader.Thin: w = ThinLineWidth01mm; break;
-          case BRTextLeader.Medium: w = MediumLineWidth01mm; break;
-          case BRTextLeader.Thick: w = ThickLineWidth01mm; break;
+          case BRTextFiller.Thin: w = ThinLineWidth01mm; break;
+          case BRTextFiller.Medium: w = MediumLineWidth01mm; break;
+          case BRTextFiller.Thick: w = ThickLineWidth01mm; break;
           default: return;
         }
         // Перо
-        LeaderPen.Width = w * Scale; // Тонкая линия
-        renderer.Graphics.DrawLine(LeaderPen,
+        TextFillerPen.Width = w * Scale; // Тонкая линия
+        renderer.Graphics.DrawLine(TextFillerPen,
           rc.X, rc.Y + rc.Height / 2f,
           rc.Right, rc.Y + rc.Height / 2f);
       }
@@ -689,11 +780,7 @@ namespace FreeLibSet.Drawing.Reporting
       switch (line.Style)
       {
         case BRLineStyle.Thin:
-          BorderPen.DashStyle = XDashStyle.Solid;
-          break;
         case BRLineStyle.Medium:
-          BorderPen.DashStyle = XDashStyle.Solid;
-          break;
         case BRLineStyle.Thick:
           BorderPen.DashStyle = XDashStyle.Solid;
           break;
@@ -717,86 +804,6 @@ namespace FreeLibSet.Drawing.Reporting
         BorderPen.Color = XColor.FromArgb(0, 0, 0);
       else
         BorderPen.Color = XColor.FromArgb(line.Color.R, line.Color.G, line.Color.B);
-    }
-
-    #endregion
-
-    #region Статический метод
-
-    public static void CreateFile(BRReport report, AbsPath filePath)
-    {
-      BRFilePdf creator = new BRFilePdf();
-      // Создаем документ
-      PdfDocument pdfDoc = new PdfDocument();
-      pdfDoc.Options.CompressContentStreams = true;
-
-      #region Сводка
-
-      // Проблема с русской кодировкой
-      // Сводка должна записываться не в кодировке Unicode, а в Encoding.BigEndianUnicode
-      // Переставляем местами байты
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Title))
-        pdfDoc.Info.Elements["/Title"] = new PdfString(ConvertSummaryString(report.DocumentProperties.Title), PdfStringEncoding.Unicode);
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Author))
-        pdfDoc.Info.Elements["/Author"] = new PdfString(ConvertSummaryString(report.DocumentProperties.Author), PdfStringEncoding.Unicode);
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Subject))
-        pdfDoc.Info.Elements["/Subject"] = new PdfString(ConvertSummaryString(report.DocumentProperties.Subject), PdfStringEncoding.Unicode);
-
-      pdfDoc.Info.Creator = CreatorString;
-
-      #endregion
-
-      using(BRReportPainter painter = new BRReportPainter())
-      {
-        BRPaginator paginator = new BRPaginator(painter);
-        BRPaginatorPageInfo[] pages = paginator.CreatePages(report);
-
-        for (int i = 0; i < pages.Length; i++)
-        {
-          BRPageSetup ps = pages[i].Section.PageSetup;
-          PdfPage PdfPage = pdfDoc.AddPage();
-          if (ps.Orientation == BROrientation.Landscape)
-          {
-            PdfPage.Width = LMToXUnit(ps.PaperHeight);
-            PdfPage.Height = LMToXUnit(ps.PaperWidth);
-            PdfPage.Orientation = PdfSharp.PageOrientation.Landscape;
-          }
-          else
-          {
-            PdfPage.Width = LMToXUnit(ps.PaperWidth);
-            PdfPage.Height = LMToXUnit(ps.PaperHeight);
-            PdfPage.Orientation = PdfSharp.PageOrientation.Portrait;
-          }
-
-          using (XGraphics gfx = XGraphics.FromPdfPage(PdfPage))
-          {
-            // Увы, использовать XGraphics.Graphics нельзя, рисует на рабочем столе :)
-            //painter.Paint(pages[i], gfx.Graphics);
-
-            int x0, y0;
-            object x=gfx.PageUnit;
-            //if (Doc.Pages[i].PageSetup.CenterPage)
-            //{
-            //  int w1 = Doc.Pages[i].Columns.VisibleWidth;
-            //  int h1 = Doc.Pages[i].Rows.VisibleHeight;
-            //  int w2 = Doc.Pages[i].PageSetup.PrintAreaWidth;
-            //  int h2 = Doc.Pages[i].PageSetup.PrintAreaHeight;
-            //  x0 = Doc.Pages[i].PageSetup.LeftMargin + (w2 - w1) / 2;
-            //  y0 = Doc.Pages[i].PageSetup.TopMargin + (h2 - h1) / 2;
-            //}
-            //else
-            //{
-            x0 = ps.LeftMargin;
-            y0 = ps.TopMargin;
-            //}
-
-            creator.Paint(pages[i], gfx);
-          }
-        }
-      }
-
-      // Сохраняем документ
-      pdfDoc.Save(filePath.Path);
     }
 
     #endregion
@@ -928,10 +935,9 @@ namespace FreeLibSet.Drawing.Reporting
     public static void CheckPdfLibAvailable()
     {
       if (!PdfLibAvailable)
-        throw new DllNotFoundException("Не удалось загрузить библиотеку PdfSharp.dll. Без нее невозможно создание сжатых pdf-файлов");
+        throw new DllNotFoundException("Не удалось загрузить библиотеку PdfSharp.dll. Без нее невозможно создание pdf-файлов");
     }
 
     #endregion
-
   }
 }

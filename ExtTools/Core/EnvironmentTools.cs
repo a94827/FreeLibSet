@@ -51,20 +51,68 @@ namespace FreeLibSet.Core
   /// </summary>
   public static class EnvironmentTools
   {
+    #region p/Invoke
+
+    private static class NativeMethods_Windows
+    {
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+      internal static extern bool GetVersionEx([In, Out] OSVERSIONINFOEX lposvi);
+
+      /// <summary>
+      /// The WTSGetActiveConsoleSessionId function retrieves the Remote Desktop Services session that
+      /// is currently attached to the physical console. The physical console is the monitor, keyboard, and mouse.
+      /// Note that it is not necessary that Remote Desktop Services be running for this function to succeed.
+      /// </summary>
+      /// <returns>The session identifier of the session that is attached to the physical console. If there is no
+      /// session attached to the physical console, (for example, if the physical console session is in the process
+      /// of being attached or detached), this function returns 0xFFFFFFFF.</returns>
+      [DllImport("kernel32.dll")]
+      internal static extern Int32 WTSGetActiveConsoleSessionId();
+
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+      [ResourceExposure(ResourceScope.Process)]
+      internal static extern IntPtr GetModuleHandle(string modName);
+
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+      [ResourceExposure(ResourceScope.Machine)]
+      internal static extern IntPtr LoadLibrary(string libname);
+
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+      [ResourceExposure(ResourceScope.None)]
+      internal static extern bool FreeLibrary(HandleRef hModule);
+
+      [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Ansi)]
+      [ResourceExposure(ResourceScope.Process)]
+      internal static extern IntPtr GetProcAddress(HandleRef hModule, string lpProcName);
+    }
+
+    // Эта функция есть в Wine
+    private static class NativeMethods_Wine
+    {
+      [DllImport("ntdll.dll", EntryPoint = "wine_get_version", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+      internal static extern string GetWineVersion();
+    }
+
+    #endregion
+
     #region Статический конструктор
 
     static EnvironmentTools()
     {
+      _VersionZero = new Version();
+
       // 26.03.2018
       // Используем статический конструктор, чтобы поля инициализировались в правильном порядке,
       // а не как придется
       _Is64BitOperatingSystem = GetIs64BitOperatingSystem();
-      _IsWine = GetIsWine();
+      _WineVersion = GetWineVersion();
       _MonoVersion = GetMonoVersion();
 
       _WinNTProductType = GetWinNTProductType();
       _OSVersionText = GetOSVersionText();
     }
+
+    private static readonly Version _VersionZero;
 
     #endregion
 
@@ -139,14 +187,10 @@ namespace FreeLibSet.Core
     {
       get
       {
-        if (_MonoVersion == null)
-          return new Version();
-        else
-          return _MonoVersion;
+        return _MonoVersion ?? _VersionZero;
       }
     }
     private static Version _MonoVersion;
-
 
     private static Version GetMonoVersion()
     {
@@ -158,10 +202,10 @@ namespace FreeLibSet.Core
       {
         MethodInfo displayName = type.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
         if (displayName == null)
-          return new Version();
+          return _VersionZero;
         string s = (string)(displayName.Invoke(null, null).ToString());
         if (String.IsNullOrEmpty(s))
-          return new Version();
+          return _VersionZero;
         int p = s.IndexOf(' ');
         if (p >= 0)
           s = s.Substring(0, p);
@@ -169,7 +213,7 @@ namespace FreeLibSet.Core
       }
       catch
       {
-        return new Version();
+        return _VersionZero;
       }
     }
 
@@ -208,7 +252,12 @@ namespace FreeLibSet.Core
         s += EnvironmentTools.Is64BitOperatingSystem ? " (64 bit)" : " (32 bit)";
 
       if (IsWine) // 11.03.2017
-        s = "Wine: " + s;
+      {
+        if (_WineVersion == _VersionZero)
+          s = "Wine: " + s;
+        else
+          s = "Wine " + _WineVersion.ToString() + ": " + s;
+      }
 
       return s;
     }
@@ -241,8 +290,6 @@ namespace FreeLibSet.Core
       internal byte Reserved = 0;
     }
 
-    [DllImport("KERNEL32", CharSet = CharSet.Auto)]
-    internal static extern bool GetVersionEx([In, Out] OSVERSIONINFOEX lposvi);
 
     #endregion
 
@@ -260,7 +307,7 @@ namespace FreeLibSet.Core
         if (System.Environment.OSVersion.Platform == PlatformID.Win32NT)
         {
           OSVERSIONINFOEX osVer = new OSVERSIONINFOEX();
-          if (GetVersionEx(osVer))
+          if (NativeMethods_Windows.GetVersionEx(osVer))
             return (WinNTProductType)(osVer.ProductType);
           else
             return WinNTProductType.Unknown;
@@ -536,7 +583,7 @@ namespace FreeLibSet.Core
           {
             case PlatformID.Win32NT:
               if (Environment.OSVersion.Version.Major >= 5) // Windows 2000
-                return WTSGetActiveConsoleSessionId();
+                return NativeMethods_Windows.WTSGetActiveConsoleSessionId();
               else
                 return NoSessionId;
             default:
@@ -550,60 +597,44 @@ namespace FreeLibSet.Core
       }
     }
 
-    /// <summary>
-    /// The WTSGetActiveConsoleSessionId function retrieves the Remote Desktop Services session that
-    /// is currently attached to the physical console. The physical console is the monitor, keyboard, and mouse.
-    /// Note that it is not necessary that Remote Desktop Services be running for this function to succeed.
-    /// </summary>
-    /// <returns>The session identifier of the session that is attached to the physical console. If there is no
-    /// session attached to the physical console, (for example, if the physical console session is in the process
-    /// of being attached or detached), this function returns 0xFFFFFFFF.</returns>
-    [DllImport("kernel32.dll")]
-    private static extern Int32 WTSGetActiveConsoleSessionId();
 
     #endregion
 
     #region Wine
 
     /// <summary>
-    /// Возвращает true, если приложение запущено под Wine (https://www.winehq.org)
+    /// Возвращает true, если приложение запущено под Wine (https://www.winehq.org).
+    /// Предупреждение: в настройках Wine можно запретить обнаружение Wine программами.
     /// </summary>
-    public static bool IsWine { get { return _IsWine; } }
-    private static bool _IsWine;
+    public static bool IsWine { get { return _WineVersion != null; } }
 
-    private static bool GetIsWine()
+    /// <summary>
+    /// Возвращает версию Wine, если приложение запущено под Wine (https://www.winehq.org).
+    /// Если приложение загружено не из Wine, возвращается версия 0.0.
+    /// Предупреждение: в настройках Wine можно запретить обнаружение Wine программами.
+    /// </summary>
+    public static Version WineVersion
+    {
+      get
+      {
+        return _WineVersion ?? new Version();
+      }
+    }
+    private static Version _WineVersion; // хранит null, если не из wine
+
+    private static Version GetWineVersion()
     {
       if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-        return false;
+        return null;
       try
       {
-        return DoGetWine();
+        return DoGetWineVersion();
       }
       catch
       {
-        return false;
+        return null;
       }
     }
-
-    #region P/Invoke
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-    [ResourceExposure(ResourceScope.Process)]
-    private static extern IntPtr GetModuleHandle(string modName);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    [ResourceExposure(ResourceScope.Machine)]
-    private static extern IntPtr LoadLibrary(string libname);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    [ResourceExposure(ResourceScope.None)]
-    private static extern bool FreeLibrary(HandleRef hModule);
-
-    [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Ansi)]
-    [ResourceExposure(ResourceScope.Process)]
-    private static extern IntPtr GetProcAddress(HandleRef hModule, string lpProcName);
-
-    #endregion
 
     /// <summary>
     /// В этом методе используется P/Invoke.
@@ -611,32 +642,51 @@ namespace FreeLibSet.Core
     /// (с изменениями)
     /// </summary>
     /// <returns></returns>
-    private static bool DoGetWine()
+    private static Version DoGetWineVersion()
     {
-      IntPtr hModule = GetModuleHandle("ntdll.dll");
+      IntPtr hModule = NativeMethods_Windows.GetModuleHandle("ntdll.dll");
       if (hModule != IntPtr.Zero)
-      {
-        IntPtr pFunc = GetProcAddress(new HandleRef(null, hModule), "wine_get_version");
-        return (pFunc != IntPtr.Zero);
-      }
+        return DoGetWineVersion2(hModule);
       else
       {
         // Загружаем библиотеку, если ее вдруг нет
-        hModule = LoadLibrary("ntdll.dll");
+        hModule = NativeMethods_Windows.LoadLibrary("ntdll.dll");
         if (hModule != IntPtr.Zero)
         {
           try
           {
-            IntPtr pFunc = GetProcAddress(new HandleRef(null, hModule), "wine_get_version");
-            return (pFunc != IntPtr.Zero);
+            return DoGetWineVersion2(hModule);
           }
           finally
           {
-            FreeLibrary(new HandleRef(null, hModule));
+            NativeMethods_Windows.FreeLibrary(new HandleRef(null, hModule));
           }
         }
       }
-      return false;
+      return null;
+    }
+
+    private static Version DoGetWineVersion2(IntPtr hModule)
+    {
+      IntPtr pFunc = NativeMethods_Windows.GetProcAddress(new HandleRef(null, hModule), "wine_get_version");
+      if (pFunc == IntPtr.Zero)
+        return null;
+
+      // Если функция есть, можно ее вызвать обычным образом через pInvoke
+      try
+      {
+        string s = NativeMethods_Wine.GetWineVersion();
+        if (String.IsNullOrEmpty(s))
+          return _VersionZero;
+        int p = s.IndexOf(' '); // пока нет посторонних символов, но вдруг появятся
+        if (p >= 0)
+          s = s.Substring(0, p);
+        return new Version(s);
+      }
+      catch
+      {
+        return _VersionZero;
+      }
     }
 
     #endregion

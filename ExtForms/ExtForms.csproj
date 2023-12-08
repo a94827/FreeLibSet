@@ -37,6 +37,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="BitMiracle.LibTiff.NET">
+      <HintPath>..\Others\BitMiracle.LibTiff.NET.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -227,9 +231,7 @@
     <Compile Include="EFPControls\EFPXmlViewBox.cs" />
     <Compile Include="EFPControls\EFPYearMonthBox.cs" />
     <Compile Include="Controls\ExtDataGridViewCheckBoxColumn.cs" />
-    <Compile Include="Controls\ExtPrintPreviewControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Controls\ExtPrintPreviewControl.cs" />
     <Compile Include="Drawing\ExtTextRenderer.cs" />
     <Compile Include="Dialogs\FileBrowseForm.cs">
       <SubType>Form</SubType>
@@ -348,6 +350,7 @@
     <Compile Include="Reporting\BRDataViewPageSetupSendTo.Designer.cs">
       <DependentUpon>BRDataViewPageSetupSendTo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reporting\BRFileTiff.cs" />
     <Compile Include="Reporting\BRMenuOutItem.cs" />
     <Compile Include="Reporting\BRPageSetupBitmap.cs">
       <SubType>Form</SubType>
@@ -579,9 +582,7 @@
       <DependentUpon>WizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WizardSteps2.cs" />
-    <Compile Include="EFPControls\XmlEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="EFPControls\XmlEditor.cs" />
     <Compile Include="Controls\XmlViewBox.cs">
       <SubType>Component</SubType>
     </Compile>

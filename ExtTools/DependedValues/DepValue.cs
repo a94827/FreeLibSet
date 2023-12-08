@@ -15,8 +15,8 @@ namespace FreeLibSet.DependedValues
 
   /// <summary>
   /// Информация об объекте-владельце и реализуемом свойстве.
-  /// Хранится в DepValuе и используется для отладочных целей.
-  /// Структура не является сериализуемой
+  /// Хранится в <see cref="DepValue{T}"/> и используется для отладочных целей.
+  /// Структура не является сериализуемой.
   /// </summary>
   public struct DepOwnerInfo
   {
@@ -50,9 +50,9 @@ namespace FreeLibSet.DependedValues
     private string _Property;
 
     /// <summary>
-    /// Выводит Owner.ToString() и Property
+    /// Выводит <see cref="Owner"/>.ToString() и <see cref="Property"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       if (_Owner == null)
@@ -70,7 +70,7 @@ namespace FreeLibSet.DependedValues
   }
 
   /// <summary>
-  /// Нетипизированный интерфейс, реализуемый шаблонным классом DepValue. Нет других классов, реализующих этот интерфейс.
+  /// Нетипизированный интерфейс, реализуемый шаблонным классом <see cref="DepValue{T}"/>. Нет других классов, реализующих этот интерфейс.
   /// </summary>
   public interface IDepValue
   {
@@ -87,25 +87,25 @@ namespace FreeLibSet.DependedValues
     object Value { get; }
 
     /// <summary>
-    /// Возвращает тип данных, который имеет значение Value
+    /// Возвращает тип данных, который имеет значение <see cref="Value"/>
     /// </summary>
     Type ValueType { get; }
 
     /// <summary>
-    /// Возвращает true для DepInput, если он подключен к внешнему источнику данных.
-    /// Непереопределенный метод возвращает false.
+    /// Возвращает true для <see cref="DepInput{T}"/>, если он подключен к внешнему источнику данных.
+    /// Для других реализаций <see cref="DepValue{T}"/> возвращает false.
     /// </summary>
     bool HasSource { get; }
 
     /// <summary>
     /// Возвращает true, если текущий объект соединен с другими,
-    /// то есть имеет имеет источник (HasSource=true) или есть объекты, подключенные к текущему (HasOutputs=true)
+    /// то есть имеет имеет источник (<see cref="HasSource"/>=true) или есть объекты, подключенные к текущему (<see cref="Outputs"/>.Length!=0).
     /// </summary>
     bool IsConnected { get; }
 
 
     /// <summary>
-    /// Возвращает true, если текущий объект является константой
+    /// Возвращает true, если текущий объект является константой <see cref="DepConst{T}"/>
     /// </summary>
     bool IsConst { get; }
 
@@ -115,7 +115,7 @@ namespace FreeLibSet.DependedValues
     bool InsideSetValue { get; }
 
     /// <summary>
-    /// Извещение посылается при изменении значения свойства Value
+    /// Извещение посылается при изменении значения свойства <see cref="Value"/>
     /// </summary>
     event EventHandler ValueChanged;
 
@@ -125,16 +125,15 @@ namespace FreeLibSet.DependedValues
     IDepInput[] Outputs { get; }
 
     /// <summary>
-    /// Возвращает массив объектов-выражений (включая DepAnd, DepOr, DepNot), зависящих от данного.
+    /// Возвращает массив объектов-выражений (включая <see cref="DepAnd"/>, <see cref="DepOr"/>, <see cref="DepNot"/>), зависящих от данного.
     /// Если нет зависимых выражений, возвращается пустой массив.
-    /// Метод не работает, если IsConst=true, т.к. зависимые выражения не присоединяют обработчики ValueChanged.
-    /// Выбрасывается исключение.
+    /// Метод не работает, если <see cref="IsConst"/>=true, т.к. зависимые выражения не присоединяют обработчики <see cref="ValueChanged"/>, выбрасывается исключение.
     ///
-    /// Этот метод не следует использовать в прикладном коде
+    /// Этот метод не следует использовать в прикладном коде.
     /// </summary>
     /// <param name="recursive">Если true, то будут возвращены и все вложенные выражения.
     /// Если false, то будут возвращены только выражения, входом которого является текуший объект.</param>
-    /// <returns></returns>
+    /// <returns>Массив объектов</returns>
     IDepExpr[] GetChildExpressions(bool recursive);
 
     #endregion
@@ -143,7 +142,6 @@ namespace FreeLibSet.DependedValues
   /// <summary>
   /// Абстрактный базовый класс для типизированного доступа к значению.
   /// Свойства объектов объявляются с этим типом.
-  /// Неабстрактные реализации - классы DepInput, DepOutput, DepExprX и DepConst.
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
@@ -154,8 +152,8 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Информация об объекте-владельце и реализуемом свойстве. Может быть не инициализировано
     /// Используется в отладочных целях и некоторых методах поиска, например,
-    /// DepNot.NotOutput().
-    /// Также используется в ToString()
+    /// <see cref="DepNot.NotOutput(DepValue{bool})"/>.
+    /// Также используется в ToString().
     /// Это свойство не передается при сериализации.
     /// </summary>
     public DepOwnerInfo OwnerInfo { get { return _OwnerInfo; } set { _OwnerInfo = value; } }
@@ -168,14 +166,14 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Текущее значение.
-    /// Переопределяется в DepInputDelayed
+    /// Переопределяется в <see cref="DepInput{T}"/>
     /// </summary>
     public T Value { get { return GetValue(); } }
     private T _Value;
 
     /// <summary>
     /// Текущее значение.
-    /// Переопределяется в DepInputDelayed
+    /// Переопределяется в <see cref="DepInput{T}"/>
     /// </summary>
     protected virtual T GetValue()
     {
@@ -186,8 +184,8 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Защищенный метод установки значения.
-    /// Устанавливает поле и вызывает событие ValueChanged. После этого вызывается DepInput.SetValueChanged() для всех входов, подключенных к этому элементу
-    /// На время вызова события и SetValueChanged() устанавливается свойство InseideSetValue.
+    /// Устанавливает поле и вызывает событие <see cref="ValueChanged"/>. После этого вызывается <see cref="DepInput{T}.SetValueChanged()"/> для всех входов, подключенных к этому элементу.
+    /// На время вызова события и <see cref="DepInput{T}.SetValueChanged()"/> устанавливается свойство <see cref="InsideSetValue"/>.
     /// Реентрантные вызовы ничего не делают.
     /// Если <paramref name="value"/> совпадает с текущим значением, никаих действий не выполняется.
     /// </summary>
@@ -227,18 +225,18 @@ namespace FreeLibSet.DependedValues
     #region Событие
 
     /// <summary>
-    /// Извещение посылается при изменении значения свойства ValueEx
+    /// Извещение посылается при изменении значения свойства <see cref="Value"/>
     /// </summary>
     public event EventHandler ValueChanged;
 
     /// <summary>
-    /// Возвращает true, если есть присоединенный обработчик события ValueChanged
+    /// Возвращает true, если есть присоединенный обработчик события <see cref="ValueChanged"/>.
     /// </summary>
     public bool HasValueChanged { get { return ValueChanged != null; } }
 
     /// <summary>
-    /// Вызов события ValueChanged.
-    /// Затем извещаются объекты DepInput, подключенные к текущему объекту
+    /// Вызов события <see cref="ValueChanged"/>.
+    /// Затем извещаются объекты <see cref="DepInput{T}"/>, подключенные к текущему объекту
     /// </summary>
     public virtual void OnValueChanged()
     {
@@ -258,14 +256,14 @@ namespace FreeLibSet.DependedValues
     #region Вспомогательные свойства
 
     /// <summary>
-    /// Возвращает true для DepInput, если он подключен к внешнему источнику данных.
+    /// Возвращает true для <see cref="DepInput{T}"/>, если он подключен к внешнему источнику данных.
     /// Непереопределенный метод возвращает false.
     /// </summary>
     public virtual bool HasSource { get { return false; } }
 
     /// <summary>
     /// Возвращает true, если текущий объект соединен с другими,
-    /// то есть имеет имеет источник (HasSource=true) или есть объекты, подключенные к текущему (HasOutputs=true)
+    /// то есть имеет имеет источник (<see cref="HasSource"/>=true) или есть объекты, подключенные к текущему (<see cref="HasOutputs"/>=true)
     /// </summary>
     public bool IsConnected { get { return HasOutputs || HasSource || HasValueChanged; } }
 
@@ -379,13 +377,13 @@ namespace FreeLibSet.DependedValues
 #endif
 
     /// <summary>
-    /// Свойство возвращает true, если к данному DepValue подключены один или несколько выходов.
+    /// Свойство возвращает true, если к данному <see cref="DepValue{T}"/> подключены один или несколько выходов.
     /// Свойство предназначено для отладочных целей.
     /// </summary>
     public bool HasOutputs { get { return FirstOutput != null; } }
 
     /// <summary>
-    /// Возвращает массив зависимых объектов, присоединенных к данному DepValue.
+    /// Возвращает массив зависимых объектов, присоединенных к данному <see cref="DepValue{T}"/>.
     /// Свойство предназначено для отладочных целей.
     /// </summary>
     /// <returns>Массив выходов</returns>
@@ -474,9 +472,9 @@ namespace FreeLibSet.DependedValues
     #region Отладочные средства
 
     /// <summary>
-    /// Текстовое представление содержит OwnerInfo и текущее значение Value
+    /// Текстовое представление для отладочных целей содержит <see cref="OwnerInfo"/> и текущее значение <see cref="Value"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return _OwnerInfo.ToString() + ", Value=" + Value.ToString();
@@ -490,8 +488,8 @@ namespace FreeLibSet.DependedValues
   #region DepOutput
 
   /// <summary>
-  /// Нетипизированный интерфейс, реализуемый DepOutput.
-  /// Для создания экземпляра DepOutput можно использовать метод DepTools.CreateDepOutput().
+  /// Нетипизированный интерфейс, реализуемый <see cref="DepOutput{T}"/>.
+  /// Для создания экземпляра <see cref="DepOutput{T}"/> можно использовать метод <see cref="DepTools.CreateOutput(Type)"/>().
   /// </summary>
   public interface IDepOutput : IDepValue
   {
@@ -504,7 +502,7 @@ namespace FreeLibSet.DependedValues
   }
 
   /// <summary>
-  /// Неабстрактная реализация DepValue.
+  /// Неабстрактная реализация <see cref="DepValue{T}"/>.
   /// Используется для "выходных" свойств, предназначенных только для чтения, но не для изменения внешним кодом
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
@@ -561,7 +559,7 @@ namespace FreeLibSet.DependedValues
   #region Делегат для события DepValueDelayed.ValueNeeded
 
   /// <summary>
-  /// Аргумент события DepValueDelayed.ValueNeeded
+  /// Аргумент делегата конструктора <see cref="DepDelayedValue{T}"/>
   /// </summary>
   /// <typeparam name="T">Тип значения</typeparam>
   public class DepValueNeededEventArgs<T> : EventArgs
@@ -574,7 +572,7 @@ namespace FreeLibSet.DependedValues
   }
 
   /// <summary>
-  /// Делегат события DepValueDelayed.ValueNeeded
+  /// Аргумент конструктора <see cref="DepDelayedValue{T}"/> 
   /// </summary>
   /// <typeparam name="T">Тип значения</typeparam>
   /// <param name="sender">Источник события</param>
@@ -584,8 +582,8 @@ namespace FreeLibSet.DependedValues
   #endregion
 
   /// <summary>
-  /// Реализация DepInput, обеспечивающая отложенное получение значения, когда внешний источник Source не установлен.
-  /// Этот класс не является сериализуемым
+  /// Реализация <see cref="DepValue{T}"/>, обеспечивающая отложенное получение значения.
+  /// Этот класс не является сериализуемым.
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   public class DepDelayedValue<T> : DepValue<T>
@@ -609,9 +607,9 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Получение текущего значения.
-    /// Вызывает GetDelayedValue(), если был вызов SetDelayed().
+    /// Вызывает <see cref="GetDelayedValue()"/>, если был вызов <see cref="SetDelayed()"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Значение</returns>
     protected override T GetValue()
     {
       if (_Delayed)
@@ -623,15 +621,15 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Признак того, что значение будет получено позже, если понадобится
+    /// Признак того, что значение будет получено позже, если понадобится.
     /// </summary>
     private bool _Delayed;
 
     /// <summary>
     /// Уставливает признак отложенной установки в true.
-    /// Посылает событие ValueChanged текущему объекту и зависимым объектам.
-    /// Если зависимым объектам потребуется текущее значение, они запросят свойство Value,
-    /// при этом будет вызван метод ValueNeeded.
+    /// Посылает событие <see cref="DepValue{T}.ValueChanged"/> текущему объекту и зависимым объектам.
+    /// Если зависимым объектам потребуется текущее значение, они запросят свойство <see cref="DepValue{T}.Value"/>,
+    /// при этом будет вызван обработчик, переданный конструктору.
     /// Если нет подключенных зависимых объектов, получение текущего значения откладывается.
     /// </summary>
     public void SetDelayed()
@@ -655,7 +653,7 @@ namespace FreeLibSet.DependedValues
     private DepValueNeededEventArgs<T> _ValueNeededArgs;
 
     /// <summary>
-    /// Вызывает событие ValueNeeded
+    /// Вызывает событие получения значения
     /// </summary>
     /// <returns></returns>
     private T GetDelayedValue()
@@ -699,7 +697,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Текстовое представление "Константа XXX"
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return "Константа " + Value.ToString();
@@ -737,8 +735,8 @@ namespace FreeLibSet.DependedValues
   #region DepInput
 
   /// <summary>
-  /// Нетипизированный интерфейс, реализуемый шаблонным классом DepValue.
-  /// Для создания экземпляра DepInput можно использовать метод DepTools.CreateDepInput().
+  /// Нетипизированный интерфейс, реализуемый шаблонным классом <see cref="DepInput{T}"/>.
+  /// Для создания экземпляра <see cref="DepInput{T}"/> можно также использовать метод <see cref="DepTools.CreateInput(Type)"/>.
   /// </summary>
   public interface IDepInput : IDepValue
   {
@@ -755,8 +753,8 @@ namespace FreeLibSet.DependedValues
   }
 
   /// <summary>
-  /// Реализация DepValue, позволяющая устанавливать значения "снаружи" вручную,
-  /// или с помощью источника данных Source
+  /// Реализация <see cref="DepValue{T}"/>, позволяющая устанавливать значения "снаружи" вручную,
+  /// или с помощью источника данных Source.
   /// </summary>
   /// <typeparam name="T">Тип хранимого значения</typeparam>
   [Serializable]
@@ -769,7 +767,7 @@ namespace FreeLibSet.DependedValues
     /// </summary>
     /// <param name="value">Начальное значение</param>
     /// <param name="valueChangedMainHandler">Обработчик, который будет вызываться при изменении значения.
-    /// Этот обработчик не входит в цепочку обработчиков события ValueChanged и не учитывается в HasValueChanged</param>
+    /// Этот обработчик не входит в цепочку обработчиков события <see cref="DepValue{T}.ValueChanged"/> и не учитывается в <see cref="DepValue{T}.HasValueChanged"/></param>
     public DepInput(T value, EventHandler valueChangedMainHandler)
     {
       // Может быть null для IsNotEmptyEx
@@ -784,7 +782,7 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Создает объект без обработчика, который вызывается при изменении значения.
-    /// Начальным значением Value является default(<typeparamref name="T"/>).
+    /// Начальным значением <see cref="DepValue{T}.Value"/> является default(<typeparamref name="T"/>).
     /// </summary>
     public DepInput()
     { 
@@ -817,10 +815,10 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Установка текущего значения.
-    /// Вызывает обработчик события CheckValue, если он установлен.
+    /// Вызывает обработчик события <see cref="CheckValue"/>, если он установлен.
     /// Обработчик события может изменить устанавливаемое значение или совсем отменить установку.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">Новое значение</param>
     private void SetValue(T value)
     {
       // 11.11.2021
@@ -895,7 +893,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Источник данных.
     /// Установка свойства приводит к "отцеплению" объекта от текущего источника, если он был, 
-    /// и присоединению к новому источнику, если задано значение, отличное от null
+    /// и присоединению к новому источнику, если задано значение, отличное от null.
     /// </summary>
     public DepValue<T> Source
     {
@@ -920,7 +918,7 @@ namespace FreeLibSet.DependedValues
     internal DepInput<T> NextOutput;
 
     /// <summary>
-    /// Возвращает true, если текущий объект подключен к источнику данных (Source!=null)
+    /// Возвращает true, если текущий объект подключен к источнику данных (<see cref="Source"/>!=null)
     /// </summary>
     public override bool HasSource { get { return _Source != null; } }
 
@@ -936,7 +934,7 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Событие вызывается при установке значения.
-    /// Пользовательский обработчик может изменить значение NewValue
+    /// Пользовательский обработчик может изменить значение <see cref="DepInputCheckEventArgs{T}.NewValue"/>.
     /// </summary>
     public event DepInputCheckEventHandler<T> CheckValue;
 
@@ -962,16 +960,16 @@ namespace FreeLibSet.DependedValues
   #region DepInputCheckEventHandler
 
   /// <summary>
-  /// Аргументы события DepInput.CheckValue
+  /// Аргументы события <see cref="DepInput{T}.CheckValue"/>
   /// </summary>
-  /// <typeparam name="T"></typeparam>
+  /// <typeparam name="T">Тип хранимого значения</typeparam>
   public class DepInputCheckEventArgs<T> : CancelEventArgs
   {
     #region Конструктор
 
     /// <summary>
     /// Создает новый аргумент.
-    /// Вызывается из DepInput
+    /// Вызывается из <see cref="DepInput{T}"/>
     /// </summary>
     /// <param name="owner">Владелец</param>
     public DepInputCheckEventArgs(DepValue<T> owner)
@@ -985,7 +983,7 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Значение которое будет установлено. Обработчик может изменить это значение.
-    /// Если установить его равным CurrValue, то значения устанавливаться не будет
+    /// Если установить его равным <see cref="CurrValue"/>, то значения устанавливаться не будет.
     /// </summary>
     public T NewValue { get { return _NewValue; } set { _NewValue = value; } }
     private T _NewValue;
@@ -996,8 +994,8 @@ namespace FreeLibSet.DependedValues
     public T CurrValue { get { return _Owner.Value; } }
 
     /// <summary>
-    /// Если установить в true, то будет выполнена принудительная установка значения без предварительной проверки
-    /// на равенство. Используется в реализации свойства ValueEx, когда есть связанное свойство NValue, новое значение равно 0 при существующем NValue=null.
+    /// Если установить в true, то будет выполнена принудительная установка значения без предварительной проверки на равенство.
+    /// Используется в реализации свойства ValueEx, когда есть связанное свойство NValue, новое значение равно 0 при существующем NValue=null.
     /// </summary>
     public bool Forced { get { return _Forced; } set { _Forced = value; } }
     private bool _Forced;
@@ -1008,9 +1006,9 @@ namespace FreeLibSet.DependedValues
   }
 
   /// <summary>
-  /// Делегат события DepInput.CheckValue
+  /// Делегат события <see cref="DepInput{T}.CheckValue"/>
   /// </summary>
-  /// <typeparam name="T">Тип значения</typeparam>
+  /// <typeparam name="T">Тип хранимого значения</typeparam>
   /// <param name="sender">Источник события</param>
   /// <param name="args">Аргументы события</param>
   public delegate void DepInputCheckEventHandler<T>(object sender,

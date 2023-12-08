@@ -92,17 +92,17 @@ namespace FreeLibSet.Reporting
     private readonly Int32 _Value;
 
     /// <summary>
-    /// Красный компонент
+    /// Красный компонент (0-255)
     /// </summary>
     public int R { get { return (_Value >> 16) & 0xFF; } }
 
     /// <summary>
-    /// Зеленый компонент
+    /// Зеленый компонент (0-255)
     /// </summary>
     public int G { get { return (_Value >> 8) & 0xFF; } }
 
     /// <summary>
-    /// Синий компонент
+    /// Синий компонент (0-255)
     /// </summary>
     public int B { get { return _Value & 0xFF; } }
 
@@ -259,12 +259,12 @@ namespace FreeLibSet.Reporting
 
   #endregion
 
-  #region Перечисление BRTextLeader
+  #region Перечисление BRTextFiller
 
   /// <summary>
   /// Заполнитель свободного от текста пространства ячейки
   /// </summary>
-  public enum BRTextLeader
+  public enum BRTextFiller
   {
     /// <summary>
     /// Нет заполнения (по умолчанию)
@@ -277,7 +277,7 @@ namespace FreeLibSet.Reporting
     Thin,
 
     /// <summary>
-    /// Одинарная линия среднй толщины
+    /// Одинарная линия средней толщины
     /// </summary>
     Medium,
 
@@ -646,7 +646,7 @@ namespace FreeLibSet.Reporting
     const int Index_DiagonalDown = 21;
     const int Index_Format = 22;
     const int Index_FormatProvider = 23;
-    const int Index_TextLeader = 24;
+    const int Index_TextFiller = 24;
     internal const int Index_ParentStyleName = 25;
     internal const int Array_Size = 26;
 
@@ -1147,10 +1147,10 @@ namespace FreeLibSet.Reporting
     /// Заполнение свободного от текста пространства ячейки.
     /// Используется для организации "прочеркивания".
     /// </summary>
-    public BRTextLeader TextLeader
+    public BRTextFiller TextFiller
     {
-      get { return (BRTextLeader)GetValue(this, Index_TextLeader); }
-      set { SetValue(Index_TextLeader, value); }
+      get { return (BRTextFiller)GetValue(this, Index_TextFiller); }
+      set { SetValue(Index_TextFiller, value); }
     }
 
     #endregion
@@ -1334,7 +1334,7 @@ namespace FreeLibSet.Reporting
 
     private static readonly object IntObject_0 = 0;
 
-    private static readonly object NoTextLeaderObject = BRTextLeader.None;
+    private static readonly object NoTextFillerObject = BRTextFiller.None;
 
     #endregion
 
@@ -1376,8 +1376,8 @@ namespace FreeLibSet.Reporting
         case Index_DiagonalUp:
         case Index_DiagonalDown:
           return BorderNoneObject;
-        case Index_TextLeader:
-          return NoTextLeaderObject;
+        case Index_TextFiller:
+          return NoTextFillerObject;
         case Index_ParentStyleName:
           return String.Empty;
         default:

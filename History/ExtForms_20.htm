@@ -45,6 +45,25 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">349</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">21.11.2023-08.12.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+                        <p>1. EFPFolderBrowserButton и EFPFileDialogButton используют UIPathInputHandler. Новые свойства RelPath и BaseDir. Можно вводить относительные пути</p>
+                        <p>2. Дополнена проверка наличия данных в формате DataFormats.FileDrop при вставке путей из буфера обмена в EFPFolderBrowserButton и EFPFileDialogButton (v.347 п.8)</p>
+                        <p>3. BRFilePdf выведен из BRFileCreator. Выделен класс BRFileTiff</p>
+                        <p>4. Событие EFPMenuOutItem.Prepare переименовано в PrepareAction, так как вызывается перед выполнением любого действия. Новое событие Prepare, вызываемое однократно, предоставляет доступ к управляющему элементу.</p>
+                        <p>5. Возможность добавления собственных форматов экспорта для BRMenuOutItem в событии Prepare или, глобально, в статическом событии PrepareDefaults или в статический список BRMenuOutItem.AppDefaultExportFileItems</p>
+                        <p>6. Изменения в перечислениях и аргументах событий для BRMenuOutItem. Структура BRActionInfo. Классы описаний BRExportFileItem и BRSendToItem, в которых задается обработчик для выполнения действия. Команды "Отправить" используют для создания временного файла соответствующий объект BRExportFileItem</p>
+                        <p>7. Коды форматов файлов и команд "Отправить" вынесены как константы в статические классы BRExportFileItemCodes и BRSendToItemCodes</p>
+                        <p>8. Список шрифтов EFPAppFonts.FontNames в Mono содержал повторы и был неотсортирован</p>
+                        <p>9. При экспорте отчета в файл TIFF в Mono без Wine используется библиотека BitMiracle.LibTiff.NET.dll. В Mono без Wine не поддерживается вызов Image.SaveAdd() для создания многостраничного TIFF</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">348</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">

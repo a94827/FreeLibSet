@@ -2157,6 +2157,8 @@ namespace FreeLibSet.Logging
         }
         args.WritePair(sf.ToString(), s);
       }
+
+      args.WritePair("FileTools.UserProfileDir", FileTools.UserProfileDir.Path);
       args.IndentLevel--;
       args.WriteLine();
 

@@ -10,9 +10,6 @@ using FreeLibSet.Core;
 using FreeLibSet.Drawing;
 using FreeLibSet.Reporting;
 
-#pragma warning disable 1591
-
-
 namespace FreeLibSet.Forms.Reporting
 {
   internal partial class BRPageSetupFont : Form
@@ -223,10 +220,16 @@ namespace FreeLibSet.Forms.Reporting
 
 namespace FreeLibSet.Reporting
 {
+  /// <summary>
+  /// Параметры шрифта, используемого в отчете.
+  /// </summary>
   public class BRFontSettingsDataItem : SettingsDataItem, ICloneable
   {
     #region Конструктор
 
+    /// <summary>
+    /// Инициализирует параметры значениями по умолчанию
+    /// </summary>
     public BRFontSettingsDataItem()
     {
       _FontName = BRReport.DefaultFontName;
@@ -239,15 +242,30 @@ namespace FreeLibSet.Reporting
 
     #region Свойства
 
+    /// <summary>
+    /// Имя шрифта. По умолчанию используется значение из <see cref="BRReport.DefaultFontName"/>.
+    /// </summary>
     public string FontName { get { return _FontName; } set { _FontName = value; } }
     private string _FontName;
 
+    /// <summary>
+    /// Высота шрифта в единицах 1/20 дюйма. По умолчанию используется значение из <see cref="BRReport.DefaultFontHeightTwip"/>.
+    /// </summary>
     public int FontHeightTwip { get { return _FontHeightTwip; } set { _FontHeightTwip = value; } }
     private int _FontHeightTwip;
 
+    /// <summary>
+    /// Высота строки в единицах 1/20 дюйма с учетом межстрочного интервала.
+    /// По умолчанию - 0 - использовать межстрочный интервал, определенный в шрифте.
+    /// </summary>
     public int LineHeightTwip { get { return _LineHeightTwip; } set { _LineHeightTwip = value; } }
     private int _LineHeightTwip;
 
+    /// <summary>
+    /// Ширина символов в единицах 1/20 дюйма.
+    /// По умолчанию - 0 - использовать ширину символов, определяемую гарнитурой шрифта.
+    /// Для шрифтов с переменной шириной символов задает среднюю ширину символов, а не делает шрифт моноширинным.
+    /// </summary>
     public int FontWidthTwip { get { return _FontWidthTwip; } set { _FontWidthTwip = value; } }
     private int _FontWidthTwip;
 
@@ -255,8 +273,11 @@ namespace FreeLibSet.Reporting
 
     #region ISettingsDataItem
 
-    public override SettingsPart UsedParts { get { return SettingsPart.User; } }
-
+    /// <summary>
+    /// Запись значений
+    /// </summary>
+    /// <param name="cfg"></param>
+    /// <param name="part"></param>
     public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       cfg.SetString("FontName", FontName);
@@ -265,6 +286,11 @@ namespace FreeLibSet.Reporting
       cfg.SetSingle("LineHeight", LineHeightTwip / 20f);
     }
 
+    /// <summary>
+    /// Чтение значений
+    /// </summary>
+    /// <param name="cfg"></param>
+    /// <param name="part"></param>
     public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       FontName = cfg.GetStringDef("FontName", BRReport.DefaultFontName);
@@ -277,6 +303,10 @@ namespace FreeLibSet.Reporting
 
     #region Инициализация BRCellStyle
 
+    /// <summary>
+    /// Инициализирует некоторые свойства объекта <see cref="BRCellStyle"/> значениями из текущего объекта.
+    /// </summary>
+    /// <param name="cellStyle">Формат ячейки отчета</param>
     public void InitCellStyle(BRCellStyle cellStyle)
     {
       cellStyle.FontName = FontName;

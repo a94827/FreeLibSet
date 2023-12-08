@@ -21,8 +21,6 @@ namespace FreeLibSet.UICore
   [Serializable]
   public enum UIValidateState
   {
-    // Числовые значения совпадают с UIValidateState в ExtForms.dll
-
     /// <summary>
     /// Ошибок не найдено
     /// </summary>

@@ -10,7 +10,7 @@ using FreeLibSet.IO;
 
 namespace FreeLibSet.Reporting
 {
-  public class BRFileHtml
+  public class BRFileHtml: BRFileCreator
   {
     #region Конструктор
 
@@ -30,10 +30,8 @@ namespace FreeLibSet.Reporting
 
     #region Запись
 
-    public void CreateFile(BRReport report, AbsPath filePath)
+    protected override void DoCreateFile(BRReport report, AbsPath filePath)
     {
-      if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
       using (FileStream fs = new FileStream(filePath.Path, FileMode.Create))
       {
         Write(report, fs, false);

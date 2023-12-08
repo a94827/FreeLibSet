@@ -207,7 +207,7 @@ namespace FreeLibSet.Forms.Reporting
         table.Cells.ColumnIndex = 0;
         table.Cells.ColumnInfo.SetWidth(wantedW, false);
         table.Cells.ColumnIndex = 1; // Зазор
-        table.Cells.ColumnInfo.SetWidth(50, false); 
+        table.Cells.ColumnInfo.SetWidth(50, false);
 
         table.Cells.ColumnIndex = 2;
         table.Cells.ColumnCellStyle.BottomBorder = BRLine.Thin;
@@ -232,15 +232,17 @@ namespace FreeLibSet.Forms.Reporting
     /// <param name="args">Аргументы события</param>
     protected override void OnInitDialog(BRMenuOutItemInitDialogEventArgs args)
     {
-      if (args.Action == BROutAction.Print)
+      switch (args.DialogKind)
       {
-        args.AddFontPage();
-        new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
-        new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
+        case BRDialogKind.PageSetup:
+          args.AddFontPage();
+          new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
+          new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
+          break;
+        case BRDialogKind.ControlSendTo:
+          new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
+          break;
       }
-      if (args.Action == BROutAction.SendTo)
-        new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
-
       base.OnInitDialog(args);
     }
 
@@ -281,7 +283,7 @@ namespace FreeLibSet.Forms.Reporting
     /// <summary>
     /// Подготовка к выполнению действий
     /// </summary>
-    protected override void OnPrepare()
+    protected override void OnPrepareAction(EventArgs args)
     {
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpColumnHeaders = true;
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseColorStyle = true;
@@ -297,7 +299,7 @@ namespace FreeLibSet.Forms.Reporting
       }
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseBoolMode = hasBoolColumns;
 
-      base.OnPrepare();
+      base.OnPrepareAction(args);
     }
 
     /// <summary>
@@ -313,7 +315,7 @@ namespace FreeLibSet.Forms.Reporting
       sect.PageSetup = SettingsData.GetItem<BRPageSettingsDataItem>().PageSetup;
       AddTitleAndFilterBands(sect);
       if (ControlProvider.Columns.Count > 0)
-        sect.Bands.Add(new BRDataGridViewTable(sect, ControlProvider, SettingsData, args.Action == BROutAction.SendTo));
+        sect.Bands.Add(new BRDataGridViewTable(sect, ControlProvider, SettingsData, args.ActionInfo.Action == BRAction.SendTo));
 
       base.OnCreateReport(args);
     }

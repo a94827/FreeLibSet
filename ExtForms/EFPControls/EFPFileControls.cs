@@ -11,6 +11,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using System.ComponentModel;
 
 namespace FreeLibSet.Forms
 {
@@ -499,6 +500,9 @@ namespace FreeLibSet.Forms
       EnabledEx = mainProvider.EnabledEx;
       base.ToolTipText = "Выбор папки с помощью стандартного блока диалога Windows";
 
+      _PathHandler = new UIPathInputHandler(mainProvider.TextEx);
+      _PathHandler.UseSlashedPath = true;
+
       _PathValidator = new EFPFolderPathValidator(mainProvider);
       _PathValidator.AmbientPathValidateMode = TestPathMode.DirectoryExists;
 
@@ -518,22 +522,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство Path
+    #region Обработчик путей
+
+    private readonly UIPathInputHandler _PathHandler;
 
     /// <summary>
-    /// Текущий выбранный каталог.
+    /// Текущий выбранный каталог (абсолютный путь).
     /// Если свойство <see cref="MainProvider"/>.Text не определяет корректный путь (с учетом возможного добавления символа <see cref="System.IO.Path.DirectorySeparatorChar"/> в конце строки), свойство возвращает <see cref="AbsPath.Empty"/>.
     /// Свойство <see cref="PathValidateMode"/> не влияет на это свойство.
     /// </summary>
     public AbsPath Path
     {
-      get { return new AbsPath(MainProvider.Text); }
-      set
-      {
-        MainProvider.Text = value.SlashedPath;
-        if (_PathEx != null)
-          _PathEx.Value = value;
-      }
+      get { return _PathHandler.Path; }
+      set { _PathHandler.Path = value; }
     }
 
     /// <summary>
@@ -541,80 +542,37 @@ namespace FreeLibSet.Forms
     /// </summary>
     public DepValue<AbsPath> PathEx
     {
-      get
-      {
-        InitPathEx();
-        return _PathEx;
-      }
-      set
-      {
-        InitPathEx();
-        _PathEx.Source = value;
-      }
+      get { return _PathHandler.PathEx; }
+      set { _PathHandler.PathEx = value; }
     }
-    private DepInput<AbsPath> _PathEx;
 
-    private void InitPathEx()
-    {
-      if (_PathEx == null)
-      {
-        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
-        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
-        MainProvider.TextEx.ValueChanged += MainProvider_TextChanged;
-      }
-    }
 
     /// <summary>
-    /// При изменениях свойства Text, свойство Path может оставаться без изменений (Empty).
-    /// Обратная установка свойства Text приводила бы пользователя в замешательство.
+    /// Текущий выбранный каталог как объект <see cref="FreeLibSet.IO.RelPath"/>.
+    /// Если свойство <see cref="MainProvider"/>.Text не определяет корректный путь (с учетом возможного добавления символа <see cref="System.IO.Path.DirectorySeparatorChar"/> в конце строки), свойство возвращает <see cref="AbsPath.Empty"/>.
+    /// Свойство <see cref="PathValidateMode"/> не влияет на это свойство.
     /// </summary>
-    private bool _InsideTextChanged;
-
-    private void MainProvider_TextChanged(object sender, EventArgs args)
+    public RelPath RelPath
     {
-      _InsideTextChanged = true;
-      try
-      {
-        _PathEx.Value = Path;
-      }
-      finally
-      {
-        _InsideTextChanged = false;
-      }
+      get { return _PathHandler.RelPath; }
+      set { _PathHandler.RelPath = value; }
     }
-
-    private void PathEx_ValueChanged(object sender, EventArgs args)
-    {
-      if (!_InsideTextChanged)
-        Path = _PathEx.Value; // Свойство изменено из прикладного кода.
-    }
-
-    #endregion
-
-    #region Свойство IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, которое возвращает true, если <see cref="Path"/>.IsEmpty=false.
+    /// Управляемое свойство для <see cref="RelPath"/>
+    /// </summary>
+    public DepValue<RelPath> RelPathEx
+    {
+      get { return _PathHandler.RelPathEx; }
+      set { _PathHandler.RelPathEx = value; }
+    }
+
+
+    /// <summary>
+    /// Управляемое свойство, которое возвращает true, если <see cref="RelPath"/>.IsEmpty=false.
     /// В отличие от <see cref="MainProvider"/>.IsEmpty, свойство будет возвращать false, если задан неправильный путь.
     /// </summary>
-    public DepValue<bool> IsNotEmptyEx
-    {
-      get
-      {
-        if (_IsNotEmptyEx == null)
-        {
-          _IsNotEmptyEx = new DepExpr1<bool, AbsPath>(PathEx, CalcIsNotEmpty);
-          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
-        }
-        return _IsNotEmptyEx;
-      }
-    }
-    private DepValue<bool> _IsNotEmptyEx;
-
-    private static bool CalcIsNotEmpty(AbsPath path)
-    {
-      return !path.IsEmpty;
-    }
+    public DepValue<bool> IsNotEmptyEx { get { return _PathHandler.IsNotEmptyEx; } }
 
     #endregion
 
@@ -647,6 +605,16 @@ namespace FreeLibSet.Forms
       }
     }
     private bool _ShowNewFolderButton;
+
+    /// <summary>
+    /// Базовый каталог, который используется при вводе относительных путей, для получения свойства <see cref="Path"/> из введенного текста.
+    /// По умолчанию является текущим рабочим каталогом.
+    /// </summary>
+    public AbsPath BasePath
+    {
+      get { return _PathHandler.BasePath; }
+      set { _PathHandler.BasePath = value; }
+    }
 
     #endregion
 
@@ -695,8 +663,8 @@ namespace FreeLibSet.Forms
         dlg.SelectedPath = dir.Path;
         if (EFPApp.ShowDialog(dlg) == DialogResult.OK)
         {
-          AbsPath Path = new AbsPath(dlg.SelectedPath);
-          MainProvider.Text = Path.SlashedPath;
+          AbsPath path = new AbsPath(dlg.SelectedPath);
+          MainProvider.Text = path.SlashedPath;
           base.OnClick();
         }
       }
@@ -767,7 +735,8 @@ namespace FreeLibSet.Forms
     private void FmtFileDrop_TestFormat(object sender, EFPTestDataObjectEventArgs args)
     {
       args.DataImageKey = "WindowsExplorer";
-      args.Appliable = true;
+      //args.Appliable = true;
+      args.Appliable = args.Data.GetDataPresent(DataFormats.FileDrop, false); // 04.12.2023
     }
 
     private void FmtFileDrop_Paste(object sender, EFPPasteDataObjectEventArgs args)
@@ -826,6 +795,9 @@ namespace FreeLibSet.Forms
       EnabledEx = mainProvider.EnabledEx;
       base.ToolTipText = "Выбор файла с помощью стандартного блока диалога Windows";
 
+      _PathHandler = new UIPathInputHandler(mainProvider.TextEx);
+      _PathHandler.UseSlashedPath = false;
+
       _PathValidator = new EFPFilePathValidator(mainProvider);
       Mode = FileDialogMode.Read;
 
@@ -845,22 +817,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойство Path
+    #region Обработка путей
+
+    private readonly UIPathInputHandler _PathHandler;
 
     /// <summary>
-    /// Текущий выбранный файл.
+    /// Текущий выбранный файл (абсолютный путь).
     /// Если свойство <see cref="MainProvider"/>.Text не определяет корректный путь, свойство возвращает <see cref="AbsPath.Empty"/>.
     /// Свойство <see cref="PathValidateMode"/> не влияет на это свойство.
     /// </summary>
     public AbsPath Path
     {
-      get { return new AbsPath(MainProvider.Text); }
-      set
-      {
-        MainProvider.Text = value.SlashedPath;
-        if (_PathEx != null)
-          _PathEx.Value = value;
-      }
+      get { return _PathHandler.Path; }
+      set { _PathHandler.Path = value; }
     }
 
     /// <summary>
@@ -868,80 +837,36 @@ namespace FreeLibSet.Forms
     /// </summary>
     public DepValue<AbsPath> PathEx
     {
-      get
-      {
-        InitPathEx();
-        return _PathEx;
-      }
-      set
-      {
-        InitPathEx();
-        _PathEx.Source = value;
-      }
+      get { return _PathHandler.PathEx; }
+      set { _PathHandler.PathEx = value; }
     }
-    private DepInput<AbsPath> _PathEx;
 
-    private void InitPathEx()
+
+    /// <summary>
+    /// Текущий выбранный файл как объект <see cref="FreeLibSet.IO.RelPath"/>.
+    /// Если свойство <see cref="MainProvider"/>.Text не определяет корректный путь, свойство возвращает <see cref="AbsPath.Empty"/>.
+    /// Свойство <see cref="PathValidateMode"/> не влияет на это свойство.
+    /// </summary>
+    public RelPath RelPath
     {
-      if (_PathEx == null)
-      {
-        _PathEx = new DepInput<AbsPath>(Path, PathEx_ValueChanged);
-        _PathEx.OwnerInfo = new DepOwnerInfo(this, "PathEx");
-        MainProvider.TextEx.ValueChanged += MainProvider_TextChanged;
-      }
+      get { return _PathHandler.RelPath; }
+      set { _PathHandler.RelPath = value; }
     }
 
     /// <summary>
-    /// При изменениях свойства Text, свойство Path может оставаться без изменений (Empty).
-    /// Обратная установка свойства Text приводила бы пользователя в замешательство.
+    /// Управляемое свойство для <see cref="RelPath"/>
     /// </summary>
-    private bool _InsideTextChanged;
-
-    private void MainProvider_TextChanged(object sender, EventArgs args)
+    public DepValue<RelPath> RelPathEx
     {
-      _InsideTextChanged = true;
-      try
-      {
-        _PathEx.Value = Path;
-      }
-      finally
-      {
-        _InsideTextChanged = false;
-      }
+      get { return _PathHandler.RelPathEx; }
+      set { _PathHandler.RelPathEx = value; }
     }
-
-    private void PathEx_ValueChanged(object sender, EventArgs args)
-    {
-      if (!_InsideTextChanged)
-        Path = _PathEx.Value; // Свойство изменено из прикладного кода.
-    }
-
-    #endregion
-
-    #region Свойство IsNotEmptyEx
 
     /// <summary>
     /// Управляемое свойство, которое возвращает true, если <see cref="Path"/>.IsEmpty=false.
     /// В отличие от <see cref="MainProvider"/>.IsEmpty, свойство будет возвращать false, если введенный текст задает путь в неправильном формате.
     /// </summary>
-    public DepValue<bool> IsNotEmptyEx
-    {
-      get
-      {
-        if (_IsNotEmptyEx == null)
-        {
-          _IsNotEmptyEx = new DepExpr1<bool, AbsPath>(PathEx, CalcIsNotEmpty);
-          _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
-        }
-        return _IsNotEmptyEx;
-      }
-    }
-    private DepValue<bool> _IsNotEmptyEx;
-
-    private static bool CalcIsNotEmpty(AbsPath path)
-    {
-      return !path.IsEmpty;
-    }
+    public DepValue<bool> IsNotEmptyEx { get { return _PathHandler.IsNotEmptyEx; } }
 
     #endregion
 
@@ -964,7 +889,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Значение для свойства Filter (с разделителями "|")
     /// </summary>
-    public string Filter { get { return _Filter??String.Empty; } set { _Filter = value; } }
+    public string Filter { get { return _Filter ?? String.Empty; } set { _Filter = value; } }
     private string _Filter;
 
     /// <summary>
@@ -986,6 +911,7 @@ namespace FreeLibSet.Forms
     /// При открытии диалога используется в качестве свойства <see cref="FileDialog.InitialDirectory"/>,
     /// если в поле ввода не задано имя файла.
     /// После того, как файл выбран в диалоге, содержит каталог, соответствующий файлу <see cref="FileDialog.FileName"/>.
+    /// Если путь к файлу введен вручную, свойство не обновляется.
     /// </summary>
     public AbsPath Directory
     {
@@ -993,6 +919,16 @@ namespace FreeLibSet.Forms
       set { _Directory = value; }
     }
     private AbsPath _Directory;
+
+    /// <summary>
+    /// Базовый каталог, который используется при вводе относительных путей, для получения свойства <see cref="Path"/> из введенного текста.
+    /// По умолчанию является текущим рабочим каталогом.
+    /// </summary>
+    public AbsPath BasePath
+    {
+      get { return _PathHandler.BasePath; }
+      set { _PathHandler.BasePath = value; }
+    }
 
     #endregion
 
@@ -1137,6 +1073,7 @@ namespace FreeLibSet.Forms
     private void FmtFileDrop_TestFormat(object sender, EFPTestDataObjectEventArgs args)
     {
       args.DataImageKey = "WindowsExplorer";
+      args.Appliable = args.Data.GetDataPresent(DataFormats.FileDrop, false); // 04.12.2023
     }
 
     private void FmtFileDrop_Paste(object sender, EFPPasteDataObjectEventArgs args)

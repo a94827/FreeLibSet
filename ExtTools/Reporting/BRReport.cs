@@ -44,7 +44,20 @@ namespace FreeLibSet.Reporting
     /// <summary>
     /// Имя шрифта по умолчанию
     /// </summary>
-    public const string DefaultFontName = "Arial";
+    public static string DefaultFontName
+    {
+      // TODO: Определять из системных настроек
+      get
+      { 
+        switch (Environment.OSVersion.Platform)
+        {
+          case PlatformID.Unix:
+            return "Liberation Sans";
+          default:
+            return "Arial";
+        }
+      }
+    }
 
     /// <summary>
     /// Высота шрифта по умолчанию (10пт)

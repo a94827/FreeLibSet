@@ -674,7 +674,8 @@ namespace FreeLibSet.Win32
         if (height < 0)
           throw new ArgumentOutOfRangeException("height");
         if (Array.IndexOf<int>(ValidBPPs, bpp) < 0)
-          throw new ArgumentOutOfRangeException("bpp");
+          throw new ArgumentOutOfRangeException("bpp", bpp, "Неправильное значение BPP. Допустимые значения: "+
+            DataTools.ToStringJoin<int>(", ", ValidBPPs));
 
         _Width = width;
         _Height = height;
@@ -816,10 +817,10 @@ namespace FreeLibSet.Win32
       {
         int width = rdr.ReadByte();
         int height = rdr.ReadByte();
-        rdr.ReadByte(); // colorCount
+        int colorCount = rdr.ReadByte(); // colorCount
         rdr.ReadByte(); // reserved
         rdr.ReadUInt16(); // Planes
-        int bpp = rdr.ReadUInt16(); // Planes
+        int bpp = rdr.ReadUInt16(); 
         rdr.ReadUInt32(); // BytesInRes
         int iconId = rdr.ReadUInt16();
 
@@ -827,6 +828,19 @@ namespace FreeLibSet.Win32
           width = 256;
         if (height == 0)
           height = 256;
+
+        if (bpp == 0)
+        {
+          // 04.12.2023
+          // Может быть задано количество цветов, а не количество bpp
+
+          switch (colorCount)
+          {
+            case 2:bpp = 1;break;
+            case 16: bpp = 4;break;
+            default: throw new InvalidOperationException("Для значка не задан BPP и задан недопустимый ColorCount="+colorCount.ToString());            
+          }
+        }
 
         IconInfo ii = new IconInfo(width, height, bpp);
 

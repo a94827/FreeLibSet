@@ -524,7 +524,7 @@ namespace FreeLibSet.Controls
             _dragBitmap = new Bitmap(maxWidth, y, PixelFormat.Format32bppArgb);
             using (Graphics tgr = Graphics.FromImage(_dragBitmap))
               tgr.DrawImage(bitmap, Point.Empty);
-            ImagingTools.SetAlphaChanelValue(_dragBitmap, 150);
+            ImagingTools.SetAlphaChannelValue(_dragBitmap, 150);
           }
           else
             _dragBitmap = null;

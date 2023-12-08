@@ -12,7 +12,7 @@ namespace FreeLibSet.Reporting
   /// <summary>
   /// Создание файла в формате XML для Excel-2003
   /// </summary>
-  public class BRFileExcel2003Xml
+  public class BRFileExcel2003Xml : BRFileCreator
   {
     #region Управляющие свойства
 
@@ -43,14 +43,14 @@ namespace FreeLibSet.Reporting
     /// </summary>
     /// <param name="report"></param>
     /// <param name="filePath"></param>
-    public void CreateFile(BRReport report, AbsPath filePath)
+    protected override void DoCreateFile(BRReport report, AbsPath filePath)
     {
       XmlDocument xmlDoc = CreateXml(report);
 
       XmlWriterSettings xmlSettings = new XmlWriterSettings();
       xmlSettings.NewLineHandling = NewLineHandling.Entitize;
-      //if (DebugXml)
-      xmlSettings.Indent = true;
+      if (DebugXml)
+        xmlSettings.Indent = true;
       StringBuilder sb = new StringBuilder();
       using (XmlWriter wrt = XmlWriter.Create(sb, xmlSettings))
       {
@@ -124,12 +124,18 @@ namespace FreeLibSet.Reporting
       #endregion
 
       // Таблица стилей нужна обязательно. 
-      // Первый стиль "ColHdr" используется для заголовков,
-      // Остальные стили добавляются в таблицу по мере необходимости, чтобы
-      // не делать для каждой ячейки отдельный стили
       XmlElement elStyles = xmlDoc.CreateElement("Styles", nmspcSS);
       elWholeDoc.AppendChild(elStyles);
-      // М.б. нужен стиль "Default"?
+
+      XmlElement elStyleDef = xmlDoc.CreateElement("Style", nmspcSS);
+      elStyles.AppendChild(elStyleDef);
+      SetAttr(elStyleDef, "ss:ID", "Default", nmspcSS);
+      SetAttr(elStyleDef, "ss:Name", "Normal", nmspcSS);
+
+      XmlElement elFontDef = xmlDoc.CreateElement("Font", nmspcSS);
+      elStyleDef.AppendChild(elFontDef);
+      SetAttr(elFontDef, "ss:FontName", report.DefaultCellStyle.FontName, nmspcSS);
+      SetAttr(elFontDef, "ss:Size", report.DefaultCellStyle.FontHeightPt.ToString(StdConvert.NumberFormat), nmspcSS);
 
       StringBuilder sb = new StringBuilder();
       Dictionary<string, int> cellStyleDict = new Dictionary<string, int>(); // ключ-описание стиля, значение N для стиля с именем "sN"
@@ -319,6 +325,10 @@ namespace FreeLibSet.Reporting
 
                   XmlElement elFont = xmlDoc.CreateElement("Font", nmspcSS);
                   elStyle.AppendChild(elFont);
+                  //if (sel.CellStyle.FontName != report.DefaultCellStyle.FontName)
+                    SetAttr(elFont, "ss:FontName", sel.CellStyle.FontName, nmspcSS);
+                  //if (sel.CellStyle.FontHeightPt!=report.DefaultCellStyle.FontHeightPt)
+                    SetAttr(elFont, "ss:Size", sel.CellStyle.FontHeightPt.ToString(StdConvert.NumberFormat), nmspcSS);
 
                   if (sel.CellStyle.ForeColor != BRColor.Auto)
                     SetAttr(elFont, "ss:Color", MyColorStr(sel.CellStyle.ForeColor), nmspcSS);

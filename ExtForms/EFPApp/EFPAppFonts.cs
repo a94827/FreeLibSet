@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using System.Collections;
 using System.Windows.Forms;
 using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.Forms
 {
@@ -91,9 +92,13 @@ namespace FreeLibSet.Forms
             // 27.12.2020 Добавлен "using"
             using (System.Drawing.Text.InstalledFontCollection fc = new System.Drawing.Text.InstalledFontCollection())
             {
-              _FontNames = new string[fc.Families.Length];
-              for (int i = 0; i < _FontNames.Length; i++)
-                _FontNames[i] = fc.Families[i].Name;
+              SingleScopeList<string> lst = new SingleScopeList<string>(); // 27.11.2023. В Mono могут быть повторы
+
+              foreach (System.Drawing.FontFamily family in fc.Families)
+                lst.Add(family.Name);
+
+              lst.Sort(); // 27.11.2023. В Mono список не отсортирован
+              _FontNames = lst.ToArray();
             }
           }
           finally

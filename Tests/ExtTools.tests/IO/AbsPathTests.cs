@@ -55,13 +55,60 @@ namespace ExtTools_tests.IO
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
+    [Platform("Linux")]
+    [TestCase("~")]
+    [TestCase("~/123/456.txt")]
+    public void Constructor_string_linuxhome(string s)
+    {
+      string wantedPath = s.Replace ("~", FileTools.UserProfileDir.Path);
+      AbsPath sut = new AbsPath(s);
+      Assert.AreEqual (wantedPath, sut.Path);
+    }
+
+    [Platform("Linux")]
+    [Test]
+    public void Constructor_string_tilda_inside_linux()
+    {
+      AbsPath sut = new AbsPath("./~");
+      string wantedPath = new AbsPath (Environment.CurrentDirectory).SlashedPath + "~";
+      Assert.AreEqual (wantedPath, sut.Path);
+    }
+
+    [Platform("Linux")]
+    [Test]
+    public void Constructor_string_tilda_tilda_linux()
+    {
+      AbsPath sut = new AbsPath("~/~");
+      string wantedPath = FileTools.UserProfileDir.SlashedPath + "~";
+      Assert.AreEqual (wantedPath, sut.Path);
+    }
+
+    [Platform("Linux")]
+    [Test]
+    public void Constructor_string_backslash_linux()
+    {
+      AbsPath sut = new AbsPath(@"/\");
+      string wantedPath = @"/\";
+      Assert.AreEqual (wantedPath, sut.Path);
+    }
+
     [Platform("Win")]
     [Test]
-    public void Constructor_string_Uri()
+    public void Constructor_string_Uri_windows()
     {
       string s = "file:///D:/123/456/789.txt";
       AbsPath sut = new AbsPath(s);
       Assert.AreEqual(@"D:\123\456\789.txt", sut.Path, "Path");
+      Assert.IsFalse(sut.IsEmpty, "IsEmpty");
+    }
+
+    [Platform("Linux")]
+    [Test]
+    public void Constructor_string_Uri_linux()
+    {
+      string s = "file:///123/456/789.txt";
+      AbsPath sut = new AbsPath(s);
+      Assert.AreEqual(@"/123/456/789.txt", sut.Path, "Path");
       Assert.IsFalse(sut.IsEmpty, "IsEmpty");
     }
 
@@ -784,6 +831,8 @@ namespace ExtTools_tests.IO
     {
       Assert.IsTrue(AbsPath.Empty.IsEmpty, "IsEmpty");
       Assert.AreEqual(String.Empty, AbsPath.Empty.Path, "Path");
+      Assert.AreEqual("", AbsPath.Empty.SlashedPath, "SlashedPath");
+      Assert.AreEqual("", AbsPath.Empty.QuotedPath, "QuotedPath");
     }
 
     #endregion

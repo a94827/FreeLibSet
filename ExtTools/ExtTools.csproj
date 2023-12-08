@@ -91,6 +91,7 @@
     <Compile Include="Reporting\BRFileExcelOLE.cs" />
     <Compile Include="Reporting\BRFileTools.cs" />
     <Compile Include="Shell\OpenOfficeInfo.cs" />
+    <Compile Include="UICore\UIPathInputHandler.cs" />
     <Compile Include="Win32\ExeFileInfo.cs" />
     <Compile Include="Models\Tree\DataTableTreeModel.cs" />
     <Compile Include="Models\Tree\ITreeModel.cs" />

@@ -184,6 +184,7 @@ namespace FreeLibSet.Drawing.Reporting
     public BRReportPainter()
     {
       _Scale = 0.1f;
+      FontHeightScale = 1f;
       //CellFrames = false;
       //ShowHiddenCells = false;
       //ShowSampleValues = true;
@@ -194,7 +195,7 @@ namespace FreeLibSet.Drawing.Reporting
       //_BackBrushes.DisposeOnDestuction = true;
 
       _BorderPen = new Pen(Color.Black);
-      _LeaderPen = new Pen(Color.Black);
+      _TextFillerPen = new Pen(Color.Black);
 
       _SB = new StringBuilder();
     }
@@ -204,7 +205,7 @@ namespace FreeLibSet.Drawing.Reporting
       DataTools.Dispose(ref _FontRenderers);
       DataTools.Dispose<DisposableDictionary<BRColor, Brush>>(ref _BackBrushes);
       DataTools.Dispose<Pen>(ref _BorderPen);
-      DataTools.Dispose<Pen>(ref _LeaderPen);
+      DataTools.Dispose<Pen>(ref _TextFillerPen);
       base.Dispose(Disposing);
     }
 
@@ -226,13 +227,18 @@ namespace FreeLibSet.Drawing.Reporting
     #region Шрифты
 
     /// <summary>
+    /// Дополнительное масштабирование для шрифтов
+    /// </summary>
+    internal float FontHeightScale;
+
+    /// <summary>
     /// Шрифты
     /// Ключ - кодированное описание шрифта
     /// Значение - объект для рисования
     /// </summary>
     private DisposableDictionary<string, ExtTextRenderer> _FontRenderers;
 
-    private ExtTextRenderer GetTextRenderer(BRCellStyle cellStyle)
+    private ExtTextRenderer GetTextRenderer(BRCellStyle cellStyle, bool forPaint)
     {
       _SB.Length = 0;
       _SB.Append(cellStyle.FontName);
@@ -253,12 +259,16 @@ namespace FreeLibSet.Drawing.Reporting
       _SB.Append((int)(cellStyle.WrapMode));
       _SB.Append('|');
       _SB.Append(cellStyle.ForeColor.IntValue);
+      _SB.Append('|');
+      _SB.Append(forPaint ? '1' : '0');
 
       string key = _SB.ToString();
       ExtTextRenderer renderer;
       if (!_FontRenderers.TryGetValue(key, out renderer))
       {
         renderer = new ExtTextRenderer();
+        if (FontHeightScale!=1f && forPaint) // при измерении не надо увеличивать
+          renderer.FontHeightScale = FontHeightScale;
         BRMeasurer.InitRenderer(renderer, cellStyle);
 
         _FontRenderers.Add(key, renderer);
@@ -461,7 +471,7 @@ namespace FreeLibSet.Drawing.Reporting
         graphics.FillRectangle(br, rc);
       }
 
-      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle);
+      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle, true);
       PrepareRendererAlign(sel, renderer);
 
       string[] lines;
@@ -475,7 +485,7 @@ namespace FreeLibSet.Drawing.Reporting
         lines = new string[] { "Ошибка получения текста", e.Message };
       }
 
-      if (lines.Length == 0 && sel.CellStyle.TextLeader == BRTextLeader.None)
+      if (lines.Length == 0 && sel.CellStyle.TextFiller == BRTextFiller.None)
         return;
 
       // Область для текста с учетом отступов
@@ -508,7 +518,7 @@ namespace FreeLibSet.Drawing.Reporting
         float textW = 0f;
         for (int i = 0; i < lines.Length; i++)
           textW = Math.Max(textW, renderer.MeasureString(lines[i]).Width);
-        // Здесь, в отличии от Leader'а, при измерении прямоугольник не задается,
+        // Здесь, в отличии от TextFiller'а, при измерении прямоугольник не задается,
         // т.к. нас интересует абстрактный размер без возможных дополнительных
         // уменьшений, которые будут при рисовании
         if (textW < rc.Width && textW > 0f)
@@ -541,40 +551,40 @@ namespace FreeLibSet.Drawing.Reporting
       renderer.FontWidth = orgFontWidth;
 
       // Прорисовка заполнителя
-      if (sel.CellStyle.TextLeader != BRTextLeader.None)
+      if (sel.CellStyle.TextFiller != BRTextFiller.None)
       {
         // Реальная ширина текста (для самой длинной строки)
         float textW = 0f;
         for (int i = 0; i < lines.Length; i++)
           textW = Math.Max(textW, renderer.MeasureString(lines[i], new SizeF(rc.Width, rc.Height)).Width);
 
-        RectangleF LeaderRC1 = rc; // слева от текста
-        RectangleF LeaderRC2 = rc; // справа от текста
+        RectangleF fillerRC1 = rc; // слева от текста
+        RectangleF fillerRC2 = rc; // справа от текста
 
         switch (sel.ActualHAlign)
         {
           case BRHAlign.Left:
             // Заполнитель справа
-            LeaderRC2.X += textW;
-            LeaderRC2.Width -= textW;
-            DrawLeader(renderer, sel, LeaderRC2);
+            fillerRC2.X += textW;
+            fillerRC2.Width -= textW;
+            DrawTextFiller(renderer, sel, fillerRC2);
             break;
           case BRHAlign.Right:
             // Заполнитель слева
-            LeaderRC1.Width -= textW;
-            DrawLeader(renderer, sel, LeaderRC1);
+            fillerRC1.Width -= textW;
+            DrawTextFiller(renderer, sel, fillerRC1);
             break;
           case BRHAlign.Center:
             // Заполнитель слева
-            LeaderRC1.Width -= textW;
-            LeaderRC1.Width /= 2;
-            DrawLeader(renderer, sel, LeaderRC1);
+            fillerRC1.Width -= textW;
+            fillerRC1.Width /= 2;
+            DrawTextFiller(renderer, sel, fillerRC1);
             // Заполнитель справа
-            LeaderRC2.Width -= textW;
-            LeaderRC2.Width /= 2;
-            LeaderRC2.X += textW;
-            LeaderRC2.X += LeaderRC2.Width;
-            DrawLeader(renderer, sel, LeaderRC2);
+            fillerRC2.Width -= textW;
+            fillerRC2.Width /= 2;
+            fillerRC2.X += textW;
+            fillerRC2.X += fillerRC2.Width;
+            DrawTextFiller(renderer, sel, fillerRC2);
             break;
         }
       }
@@ -614,36 +624,36 @@ namespace FreeLibSet.Drawing.Reporting
 
     #endregion
 
-    #region Рисование TextLeader
+    #region Рисование TextFiller
 
     /// <summary>
     /// Перо для рисования ячеек с прочеркиванием
     /// Толщина линии фиксированная
     /// Цвет задается перед рисованием
     /// </summary>
-    private Pen _LeaderPen;
+    private Pen _TextFillerPen;
 
     /// <summary>
     /// Рисование заполнителя
     /// </summary>
-    private void DrawLeader(ExtTextRenderer renderer, BRSelector sel, RectangleF rc)
+    private void DrawTextFiller(ExtTextRenderer renderer, BRSelector sel, RectangleF rc)
     {
-      if (sel.CellStyle.TextLeader == BRTextLeader.None)
-        return;
+      //if (sel.CellStyle.TextFiller == BRTextFiller.None)
+      //  return;
       if (rc.Height <= 0f || rc.Width <= 0f)
         return;
 
-      _LeaderPen.Color = renderer.Color; // прочерк всегда имеет цвет текста
-      if (sel.CellStyle.TextLeader == BRTextLeader.TwoLines)
+      _TextFillerPen.Color = renderer.Color; // прочерк всегда имеет цвет текста
+      if (sel.CellStyle.TextFiller == BRTextFiller.TwoLines)
       {
         // Перо
-        _LeaderPen.Width = (float)BRLine.ThinLineWidth01mm * _Scale; // Тонкая линия
+        _TextFillerPen.Width = (float)BRLine.ThinLineWidth01mm * _Scale; // Тонкая линия
         // Расстояние между двумя линиями
         float dh = (sel.CellStyle.FontHeightPt / 72f * 254f) * 0.25f * _Scale; // !!!
-        renderer.Graphics.DrawLine(_LeaderPen,
+        renderer.Graphics.DrawLine(_TextFillerPen,
           rc.X, rc.Y + (rc.Height - dh) / 2f,
           rc.Right, rc.Y + (rc.Height - dh) / 2f);
-        renderer.Graphics.DrawLine(_LeaderPen,
+        renderer.Graphics.DrawLine(_TextFillerPen,
           rc.X, rc.Y + (rc.Height + dh) / 2f,
           rc.Right, rc.Y + (rc.Height + dh) / 2f);
       }
@@ -651,16 +661,16 @@ namespace FreeLibSet.Drawing.Reporting
       {
         double w;
 
-        switch (sel.CellStyle.TextLeader)
+        switch (sel.CellStyle.TextFiller)
         {
-          case BRTextLeader.Thin: w = BRLine.ThinLineWidth01mm; break;
-          case BRTextLeader.Medium: w = BRLine.MediumLineWidth01mm; break;
-          case BRTextLeader.Thick: w = BRLine.ThickLineWidth01mm; break;
+          case BRTextFiller.Thin: w = BRLine.ThinLineWidth01mm; break;
+          case BRTextFiller.Medium: w = BRLine.MediumLineWidth01mm; break;
+          case BRTextFiller.Thick: w = BRLine.ThickLineWidth01mm; break;
           default: return;
         }
         // Перо
-        _LeaderPen.Width = (float)w * _Scale; // Тонкая линия
-        renderer.Graphics.DrawLine(_LeaderPen,
+        _TextFillerPen.Width = (float)w * _Scale; // Тонкая линия
+        renderer.Graphics.DrawLine(_TextFillerPen,
           rc.X, rc.Y + rc.Height / 2f,
           rc.Right, rc.Y + rc.Height / 2f);
       }
@@ -708,11 +718,7 @@ namespace FreeLibSet.Drawing.Reporting
       switch (line.Style)
       {
         case BRLineStyle.Thin:
-          _BorderPen.DashStyle = DashStyle.Solid;
-          break;
         case BRLineStyle.Medium:
-          _BorderPen.DashStyle = DashStyle.Solid;
-          break;
         case BRLineStyle.Thick:
           _BorderPen.DashStyle = DashStyle.Solid;
           break;
@@ -883,12 +889,13 @@ namespace FreeLibSet.Drawing.Reporting
 
     int IBRMeasurer.GetWantedHeight(BRSelector sel, int columnWidth)
     {
-      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle);
+      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle, false);
       return BRMeasurer.GetWantedHeight(renderer, sel, columnWidth);
     }
+
     public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
     {
-      ExtTextRenderer renderer = GetTextRenderer(cellStyle);
+      ExtTextRenderer renderer = GetTextRenderer(cellStyle, false);
       Size sz = renderer.MeasureStringLM(s);
       width = sz.Width;
       height = sz.Height;
@@ -898,76 +905,7 @@ namespace FreeLibSet.Drawing.Reporting
 
     #region Создание графических файлов
 
-    public static void CreateTIFFFile(BRReport report, AbsPath filePath, BRBitmapSettingsDataItem bitmapSettings, ISplash spl)
-    {
-      if (report == null)
-        throw new ArgumentNullException("report");
-      if (filePath.IsEmpty)
-        throw new ArgumentNullException("filepath");
-
-      if (spl == null)
-        spl = new DummySplash();
-
-      using (BRReportPainter painter = new BRReportPainter())
-      {
-        BRPaginator paginator = new BRPaginator(painter);
-        BRPaginatorPageInfo[] pages = paginator.CreatePages(report);
-
-        Bitmap firstBmp = null;
-        System.Drawing.Imaging.Encoder encSaveFlag = System.Drawing.Imaging.Encoder.SaveFlag;
-        EncoderParameters pars = new EncoderParameters(1);
-        ImageCodecInfo ici = ImagingTools.GetImageCodecInfo(ImageFormat.Tiff);
-        if (ici == null)
-          throw new InvalidOperationException("В GDI+ не установлен кодировщик для записи файлов TIFF");
-
-        for (int i = 0; i < pages.Length; i++)
-        {
-          spl.PhaseText = "Прорисовка страницы " + (i + 1).ToString();
-
-          Bitmap bmp = painter.CreateBitmap(pages[i], bitmapSettings);
-
-          try
-          {
-            SaveEXIFMetadata(bmp, report);
-          }
-          catch { }
-
-          spl.PhaseText = "Запись страницы " + (i + 1).ToString();
-
-          if (i == 0)
-          {
-            // Первая страница
-            firstBmp = bmp;
-            EncoderParameter encPar = new EncoderParameter(encSaveFlag, (long)EncoderValue.MultiFrame);
-            pars.Param[0] = encPar;
-            firstBmp.Save(filePath.Path, ici, pars);
-          }
-          else
-          {
-            EncoderParameter encPar = new EncoderParameter(encSaveFlag, (long)EncoderValue.FrameDimensionPage);
-            pars.Param[0] = encPar;
-            firstBmp.SaveAdd(bmp, pars);
-            bmp.Dispose();
-          }
-
-          spl.IncPercent();
-        }
-        spl.Complete();
-
-        if (firstBmp != null)
-        {
-          // Закрываем многостраничный TIFF
-          EncoderParameter encPar = new EncoderParameter(encSaveFlag, (long)EncoderValue.Flush);
-          pars.Param[0] = encPar;
-          firstBmp.SaveAdd(pars);
-
-          firstBmp.Dispose();
-          spl.Complete();
-        }
-      }
-    }
-
-    private Bitmap CreateBitmap(BRPaginatorPageInfo page, BRBitmapSettingsDataItem bitmapSettings)
+    public Bitmap CreateBitmap(BRPaginatorPageInfo page, BRBitmapSettingsDataItem bitmapSettings)
     {
       PixelFormat format = bitmapSettings.PixelFormat;
 
@@ -1043,67 +981,6 @@ namespace FreeLibSet.Drawing.Reporting
       }
 
       return bmp;
-    }
-
-    public static void SaveEXIFMetadata(Image img, BRReport report)
-    {
-      #region Эти константы приведены в справке для свойства PropertyItem.Id
-
-      //const int PropertyTagDocumentName = 0x010D;
-      const int PropertyTagImageDescription = 0x010E;
-      //const int PropertyTagImageTitle = 0x0320;
-      const int PropertyTagArtist = 0x013B;
-      //const int PropertyTagExifUserComment = 0x9286;
-
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Title))
-        SaveEXIFMetadataProperty(img, PropertyTagImageDescription, report.DocumentProperties.Title, Encoding.UTF8); // дублируется и в название, и в тему
-      //if (!String.IsNullOrEmpty(TheDoc.Subject))
-      //  SaveEXIFMetadataProperty(img, PropertyTagExifUserComment, TheDoc.Subject); не работает
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Author))
-        SaveEXIFMetadataProperty(img, PropertyTagArtist, report.DocumentProperties.Author, Encoding.UTF8);
-
-      #endregion
-
-      #region Эти константы не документированы
-
-      // Выяснено опытным путем
-      // Свойства записываются в формате Unicode, а не UTF-8
-
-      const int PropertyUnknownTitle = 40091;
-      const int PropertyUnknownAuthor = 40093;
-      const int PropertyUnknownSubject = 40095;
-
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Title))
-        SaveEXIFMetadataProperty(img, PropertyUnknownTitle, report.DocumentProperties.Title, Encoding.Unicode);
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Author))
-        SaveEXIFMetadataProperty(img, PropertyUnknownAuthor, report.DocumentProperties.Author, Encoding.Unicode);
-      if (!String.IsNullOrEmpty(report.DocumentProperties.Subject))
-        SaveEXIFMetadataProperty(img, PropertyUnknownSubject, report.DocumentProperties.Subject, Encoding.Unicode);
-
-      #endregion
-    }
-
-    private static void SaveEXIFMetadataProperty(Image img, int propertyId, string value, Encoding encoding)
-    {
-      PropertyItem Item = CreatePropertyItem();
-
-      Item.Id = (int)propertyId;
-      // Type=1 means Array of Bytes. 
-      Item.Type = 2; // строка ASCII
-      byte[] b = encoding.GetBytes(value + "\0");
-      Item.Len = b.Length;
-      Item.Value = b;
-      img.SetPropertyItem(Item);
-      // img.Save(filepath);
-    }
-
-
-    private static PropertyItem CreatePropertyItem()
-    {
-      System.Reflection.ConstructorInfo ci = typeof(PropertyItem).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public,
-        null, new Type[] { }, null);
-
-      return (PropertyItem)ci.Invoke(null);
     }
 
     #endregion

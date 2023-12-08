@@ -12,7 +12,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Описание одного формата файла для команды "Экспорт в файл" для <see cref="EFPMenuOutItem "/>
   /// </summary>
-  public sealed class EFPExportFileItem : ObjectWithCode
+  public class EFPExportFileItem : IObjectWithCode
   {
     #region Конструктор
 
@@ -23,8 +23,11 @@ namespace FreeLibSet.Forms
     /// <param name="filterText">Описание фильтра для диалога сохранения файла</param>
     /// <param name="fileMask">Маска для выбора файлов</param>
     public EFPExportFileItem(string code, string filterText, string fileMask)
-      : base(code)
     {
+      if (String.IsNullOrEmpty(code))
+        throw new ArgumentNullException("code");
+      _Code = code;
+
       if (String.IsNullOrEmpty(filterText))
         throw new ArgumentNullException("filterText");
       if (filterText.IndexOf('|') >= 0)
@@ -47,7 +50,8 @@ namespace FreeLibSet.Forms
     /// Для одного <see cref="EFPMenuOutItem"/> все коды должны быть разными.
     /// Код чувствителен к регистру.
     /// </summary>
-    public new string Code { get { return base.Code; } }
+    public string Code { get { return _Code; } }
+    private readonly string _Code;
 
     /// <summary>
     /// Текст фильтра для блока диалога, например, "Файлы PDF"
@@ -82,7 +86,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Описание одной команды "Отправить" для <see cref="EFPMenuOutItem "/>
   /// </summary>
-  public sealed class EFPSendToItem : IObjectWithCode
+  public class EFPSendToItem : IObjectWithCode
   {
     #region Конструктор
 
@@ -218,6 +222,89 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
+
+  #region EFPMenuOutItemPrepareEventHandler
+
+  /// <summary>
+  /// Аргументы события <see cref="EFPMenuOutItem.Prepare"/>
+  /// </summary>
+  public class EFPMenuOutItemPrepareEventArgs : EventArgs
+  {
+    #region Конструктор
+
+    internal EFPMenuOutItemPrepareEventArgs(EFPMenuOutItem outItem, EFPContextCommandItems commandItems)
+    {
+#if DEBUG
+      if (outItem == null)
+        throw new ArgumentNullException("outItem");
+//      if (commandItems == null)
+//        throw new ArgumentNullException("commandItems");
+#endif
+      _OutItem = outItem;
+      _CommandItems = commandItems;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Объект, для которого вызвано событие
+    /// </summary>
+    public EFPMenuOutItem OutItem { get { return _OutItem; } }
+    private readonly EFPMenuOutItem _OutItem;
+
+    /// <summary>
+    /// Список команд локального меню, к которому присоединен объект <see cref="EFPMenuOutHandler"/>
+    /// </summary>
+    public EFPContextCommandItems CommandItems { get { return _CommandItems; } }
+    private readonly EFPContextCommandItems _CommandItems;
+
+    /// <summary>
+    /// Провайдер управляющего элемента, к которому относится локальное меню.
+    /// Если команды относятся к форме в-целом, возвращается null.
+    /// </summary>
+    public EFPControlBase ControlProvider
+    {
+      get
+      {
+        EFPControlCommandItems ccis = _CommandItems as EFPControlCommandItems;
+        if (ccis != null)
+          return ccis.ControlProvider;
+        return null;
+      }
+    }
+
+    /// <summary>
+    /// Провайдер формы, к которой относится локальное меню.
+    /// Если команды относятся к управляющему элементу, который еще не присоединен к форме, возвращается null.
+    /// </summary>
+    public EFPFormProvider FormProvider
+    {
+      get
+      {
+        EFPFormCommandItems fcis = _CommandItems as EFPFormCommandItems;
+        if (fcis != null)
+          return fcis.FormProvider;
+
+        EFPControlCommandItems ccis = _CommandItems as EFPControlCommandItems;
+        if (ccis != null)
+          return ccis.ControlProvider.BaseProvider.FormProvider;
+        return null;
+      }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Делегат события <see cref="EFPMenuOutItem.Prepare"/>
+  /// </summary>
+  /// <param name="sender">Ссылка на <see cref="EFPMenuOutItem"/></param>
+  /// <param name="args">Аргументы события</param>
+  public delegate void EFPMenuOutItemPrepareEventHandler(object sender, EFPMenuOutItemPrepareEventArgs args);
+
+  #endregion
 
   /// <summary>
   /// Базовый класс для выполнения печати/экспорта.
@@ -359,26 +446,60 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Событие Prepare
+    #region События Prepare и PrepareAction
 
-    internal void PerformPrepare()
+    internal void PerformPrepareAlone()
     {
-      OnPrepare();
+      EFPMenuOutItemPrepareEventArgs args = new EFPMenuOutItemPrepareEventArgs(this, null);
+      PerformPrepare(args);
     }
 
     /// <summary>
-    /// Событие вызывается однократно при подготовке списка команд меню к использованию.
-    /// На этот момент еще не сформированы окончательно списки команд для <see cref="EFPMenuOutHandler"/>.
+    /// Предотвращение повторного вызова
     /// </summary>
-    public event EventHandler Prepare;
+    private bool _Prepared;
+
+    internal void PerformPrepare(EFPMenuOutItemPrepareEventArgs args)
+    {
+      if (_Prepared)
+        return;
+      _Prepared = true;
+      OnPrepare(args);
+    }
+
+    /// <summary>
+    /// Событие вызывается однакратно при инициализации списка команд локального меню
+    /// </summary>
+    public event EFPMenuOutItemPrepareEventHandler Prepare;
 
     /// <summary>
     /// Вызывает событие <see cref="Prepare"/>
     /// </summary>
-    protected virtual void OnPrepare()
+    /// <param name="args"></param>
+    protected virtual void OnPrepare(EFPMenuOutItemPrepareEventArgs args)
     {
       if (Prepare != null)
-        Prepare(this, EventArgs.Empty);
+        Prepare(this, args);
+    }
+
+    internal void PerformPrepareAction()
+    {
+      OnPrepareAction(EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Событие вызывается при подготовке списка команд меню к использованию.
+    /// Событие может вызываться многократно.
+    /// </summary>
+    public event EventHandler PrepareAction;
+
+    /// <summary>
+    /// Вызывает событие <see cref="PrepareAction"/>
+    /// </summary>
+    protected virtual void OnPrepareAction(EventArgs args)
+    {
+      if (PrepareAction != null)
+        PrepareAction(this, args);
     }
 
     #endregion
@@ -449,7 +570,7 @@ namespace FreeLibSet.Forms
 
     private void CommandItems_Prepare(object sender, EventArgs args)
     {
-      EFPCommandItems commandItems = (EFPCommandItems)sender;
+      EFPContextCommandItems commandItems = (EFPContextCommandItems)sender;
 
       bool canPrint = false;
       bool canPageSetup = false;
@@ -462,6 +583,9 @@ namespace FreeLibSet.Forms
 
       foreach (EFPMenuOutItem item in Items)
       {
+        EFPMenuOutItemPrepareEventArgs prepareEventArgs = new EFPMenuOutItemPrepareEventArgs(item, commandItems);
+        item.PerformPrepare(prepareEventArgs);
+
         canPrint |= item.CanPrint;
         canPageSetup |= item.CanPageSetup;
         canPrintPreview |= item.CanPrintPreview;
@@ -503,7 +627,7 @@ namespace FreeLibSet.Forms
         {
           EFPSendToItem sendToItem = pair.Value[i];
 
-          EFPCommandItem ci1 = new EFPCommandItem("SendTo", sendToItem.Code + (i==0?String.Empty: StdConvert.ToString(i+1)));
+          EFPCommandItem ci1 = new EFPCommandItem("SendTo", sendToItem.Code + (i == 0 ? String.Empty : StdConvert.ToString(i + 1)));
           if (pair.Value.Count == 1)
           {
             // При запуске в Wine+Mono многие типы файлов открываются с помощью приложения winebrowser.exe, а других подходящих приложений нет.
@@ -514,7 +638,7 @@ namespace FreeLibSet.Forms
           else
           {
             ci1.MenuText = sendToItem.MenuText;
-            if (i==0)
+            if (i == 0)
               ci1.GroupEnd = true;
             ci1.Parent = subMenu1;
           }
@@ -744,7 +868,7 @@ namespace FreeLibSet.Forms
       NamedList<EFPMenuOutItem> list2 = new NamedList<EFPMenuOutItem>();
       foreach (EFPMenuOutItem item in Items)
       {
-        item.PerformPrepare();
+        item.PerformPrepareAction();
 
         if (tester(item))
           list2.Add(item);

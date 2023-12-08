@@ -69,7 +69,7 @@ namespace FreeLibSet.Reporting
       sb.Append(sel.CellStyle.Strikeout);
       sb.Append("|");
 
-      sb.Append(sel.CellStyle.TextLeader);
+      sb.Append(sel.CellStyle.TextFiller);
       sb.Append("|");
 
       sb.Append(sel.CellStyle.LeftBorder.Style.ToString());
@@ -112,7 +112,7 @@ namespace FreeLibSet.Reporting
 
     #endregion
 
-#region XML
+    #region XML
 
 #if !XXX
     /// <summary>
@@ -184,16 +184,16 @@ namespace FreeLibSet.Reporting
     }
 #endif
 
-#endregion
+    #endregion
 
-      #region Отступы
+    #region Отступы
 
-      /// <summary>
-      /// Возвращает true, если отличаются отступы
-      /// </summary>
-      /// <param name="style1"></param>
-      /// <param name="style2"></param>
-      /// <returns></returns>
+    /// <summary>
+    /// Возвращает true, если отличаются отступы
+    /// </summary>
+    /// <param name="style1"></param>
+    /// <param name="style2"></param>
+    /// <returns></returns>
     internal static bool AreMarginsDifferent(BRCellStyle style1, BRCellStyle style2)
     {
       return !(style1.LeftMargin == style2.LeftMargin &&
@@ -202,20 +202,22 @@ namespace FreeLibSet.Reporting
         style1.BottomMargin == style2.BottomMargin);
     }
 
-#endregion
+    #endregion
 
-#region TextLeader
+    #region TextFiller
 
-    public const string TextLeaderMedium = "\x2500"; // горизонтальная линия псевдографики
+    public const string TextFillerStrThin = "-"; 
 
-    public const string TextLeaderThick = "\x25AC"; // "Black Rectangle"
+    public const string TextFillerStrMedium = "\x2500"; // горизонтальная линия псевдографики
+
+    public const string TextFillerStrThick = "\x25AC"; // "Black Rectangle"
                                                     // "\x2584"; // "Lower Block"
 
-    public const string TextLeaderTwoLines = "\x2550"; // двойная горизонтальная линия псевдографики
+    public const string TextFillerStrTwoLines = "\x2550"; // двойная горизонтальная линия псевдографики
 
-#endregion
+    #endregion
 
-#region Проведение дополнительных измерений
+    #region Проведение дополнительных измерений
 
     /// <summary>
     /// Псевдоотчет из одной ячейки для выполнения измерений
@@ -338,6 +340,54 @@ namespace FreeLibSet.Reporting
       return w * cellStyle.IndentLevel;
     }
 
-#endregion
+    #endregion
+  }
+
+  /// <summary>
+  /// Базовый класс для создания файлов из отчета <see cref="BRReport"/>
+  /// </summary>
+  public abstract class BRFileCreator
+  {
+    /// <summary>
+    /// Создает файл из отчета.
+    /// Создан каталог <paramref name="filePath"/>.ParentDir, в котором будет создан файл, а затем вызывает
+    /// абстрактный метод <see cref="DoCreateFile(BRReport, FreeLibSet.IO.AbsPath)"/>, который выполняет создание файла
+    /// </summary>
+    /// <param name="report">Созданный отчет</param>
+    /// <param name="filePath">Путь к записываемому файлу</param>
+    public void CreateFile(BRReport report, FreeLibSet.IO.AbsPath filePath)
+    {
+      if (report == null)
+        throw new ArgumentNullException("report");
+      if (filePath.IsEmpty)
+        throw new ArgumentException("Не задан путь к файлу");
+      FreeLibSet.IO.FileTools.ForceDirs(filePath.ParentDir);
+      DoCreateFile(report, filePath);
+    }
+
+    /// <summary>
+    /// Этот метод отвечает за создание файлов
+    /// </summary>
+    /// <param name="report"></param>
+    /// <param name="filePath"></param>
+    protected abstract void DoCreateFile(BRReport report, FreeLibSet.IO.AbsPath filePath);
+
+    /// <summary>
+    /// Интерфейс управления заставкой. В частности, позволяет прерывать процесс создания файла.
+    /// Устанавливается вызывающим кодом на время вызова <see cref="CreateFile(BRReport, FreeLibSet.IO.AbsPath)"/>.
+    /// Если свойство не будет установлено, используется заглушка.
+    /// Реализация метода создания файла может игнорировать это свойство.
+    /// </summary>
+    public ISimpleSplash Splash
+    {
+      get
+      {
+        if (_Splash == null)
+          _Splash = new DummySimpleSplash();
+        return _Splash;
+      }
+      set { _Splash = value; }
+    }
+    private ISimpleSplash _Splash;
   }
 }

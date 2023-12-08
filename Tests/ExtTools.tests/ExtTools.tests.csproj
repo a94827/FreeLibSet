@@ -153,6 +153,7 @@
     <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />
     <Compile Include="UICore\DataTableReorderHelperTests.cs" />
     <Compile Include="UICore\NumArrayUpDownHandlerTests.cs" />
+    <Compile Include="UICore\UIPathInputHandlerTests.cs" />
     <Compile Include="UICore\UISelRCColumnTests.cs" />
     <Compile Include="UICore\UISelRCGridDataTests.cs" />
     <Compile Include="UICore\UISimpleValidableObjectTests.cs" />

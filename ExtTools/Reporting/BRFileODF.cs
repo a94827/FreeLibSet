@@ -14,7 +14,7 @@ namespace FreeLibSet.Reporting
   /// <summary>
   /// Базовый класс для создание файла ODS и ODT
   /// </summary>
-  public abstract class BRFileODFBase
+  public abstract class BRFileODFBase: BRFileCreator
   {
     #region Статическое свойство
 
@@ -33,7 +33,7 @@ namespace FreeLibSet.Reporting
     /// </summary>
     /// <param name="report"></param>
     /// <param name="filePath"></param>
-    public void CreateFile(BRReport report, AbsPath filePath)
+    protected override void DoCreateFile(BRReport report, AbsPath filePath)
     {
       if (filePath.IsEmpty)
         throw new ArgumentNullException("filePath");
@@ -1170,7 +1170,7 @@ namespace FreeLibSet.Reporting
       //if (!sel.CellStyle.BackColor.IsAuto)
       //  return false; // цвет задается в ячейке, а не в абзаце
 
-      if (sel.CellStyle.TextLeader != BRTextLeader.None)
+      if (sel.CellStyle.TextFiller != BRTextFiller.None)
         return false;
 
       return
@@ -1383,7 +1383,7 @@ namespace FreeLibSet.Reporting
         if (!sel.CellStyle.BackColor.IsAuto)
           SetAttr(elTextProps, "fo:background-color", MyColorStr(sel.CellStyle.BackColor), nmspcFo); // дублируется для свойств ячейки
 
-        if (sel.CellStyle.TextLeader != BRTextLeader.None)
+        if (sel.CellStyle.TextFiller != BRTextFiller.None)
         {
           // Open Office Writer не понимает атрибуты "style:leader-type" и
           // "style:leader-width". Придется заполнять их с помощью текста
@@ -1391,20 +1391,23 @@ namespace FreeLibSet.Reporting
           //string LdrType = "single";
           string leaderStyle = "solid";
           //string LdrWidth = "thin";
-          string leaderChar = "-";
-          switch (sel.CellStyle.TextLeader)
+          string fillStr;
+          switch (sel.CellStyle.TextFiller)
           {
-            case BRTextLeader.Medium:
+            case BRTextFiller.Medium:
               //  LdrWidth = "medium";
-              leaderChar = BRFileTools.TextLeaderMedium;
+              fillStr = BRFileTools.TextFillerStrMedium;
               break;
-            case BRTextLeader.Thick:
+            case BRTextFiller.Thick:
               //  LdrWidth = "thick";
-              leaderChar = BRFileTools.TextLeaderThick;
+              fillStr = BRFileTools.TextFillerStrThick;
               break;
-            case BRTextLeader.TwoLines:
+            case BRTextFiller.TwoLines:
               //LdrType = "double";
-              leaderChar = BRFileTools.TextLeaderTwoLines;
+              fillStr = BRFileTools.TextFillerStrTwoLines;
+              break;
+            default:
+              fillStr = BRFileTools.TextFillerStrThin;
               break;
           }
           // Если выравнивание по центру, то используется две позиции табуляции
@@ -1421,7 +1424,7 @@ namespace FreeLibSet.Reporting
             //SetAttr(elTabStop1, "style:leader-type", LdrType, nmspcStyle);
             SetAttr(elTabStop1, "style:leader-style", leaderStyle, nmspcStyle);
             //SetAttr(elTabStop1, "style:leader-width", LdrWidth, nmspcStyle);
-            SetAttr(elTabStop1, "style:leader-text", leaderChar, nmspcStyle);
+            SetAttr(elTabStop1, "style:leader-text", fillStr, nmspcStyle);
           }
 
           XmlElement elTabStop2 = elTabStops.OwnerDocument.CreateElement("style:tab-stop", nmspcStyle);
@@ -1431,12 +1434,12 @@ namespace FreeLibSet.Reporting
           //SetAttr(elTabStop2, "style:leader-type", LdrType, nmspcStyle);
           SetAttr(elTabStop2, "style:leader-style", leaderStyle, nmspcStyle);
           //SetAttr(elTabStop2, "style:leader-width", LdrWidth, nmspcStyle);
-          SetAttr(elTabStop2, "style:leader-text", leaderChar, nmspcStyle);
+          SetAttr(elTabStop2, "style:leader-text", fillStr, nmspcStyle);
         }
       }
       SetAttr(elP, "text:style-name", styleName, nmspcText);
 
-      if (sel.CellStyle.TextLeader != BRTextLeader.None)
+      if (sel.CellStyle.TextFiller != BRTextFiller.None)
       {
         if (sel.ActualHAlign == BRHAlign.Center || sel.ActualHAlign == BRHAlign.Right)
         {
