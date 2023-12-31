@@ -10,8 +10,6 @@ using FreeLibSet.Reporting;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Drawing.Reporting
 {
   internal sealed class BRPdfMeasurer : IBRMeasurer
@@ -171,10 +169,16 @@ namespace FreeLibSet.Drawing.Reporting
     #endregion
   }
 
+  /// <summary>
+  /// Создание pdf-файла с помощью библиотеки PdfSharp
+  /// </summary>
   public class BRFilePdf: BRFileCreator
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает пустой объект
+    /// </summary>
     public BRFilePdf()
     {
       CompressContentStreams = true;
@@ -267,11 +271,15 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private StringBuilder _SB;
 
-
     #endregion
 
     #region Основной метод
 
+    /// <summary>
+    /// Создает файл
+    /// </summary>
+    /// <param name="report">Отчет</param>
+    /// <param name="filePath">Путь к файлу</param>
     protected override void DoCreateFile(BRReport report, AbsPath filePath)
     {
       // Создаем документ
@@ -748,15 +756,15 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private XPen BorderPen;
 
-    public void DrawBorders(BRSelector sel, XGraphics graphics, XRect rc)
-    {
-      DrawBorder(sel.CellStyle.TopBorder, graphics, rc.Left, rc.Top, rc.Right, rc.Top);
-      DrawBorder(sel.CellStyle.BottomBorder, graphics, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
-      DrawBorder(sel.CellStyle.LeftBorder, graphics, rc.Left, rc.Top, rc.Left, rc.Bottom);
-      DrawBorder(sel.CellStyle.RightBorder, graphics, rc.Right, rc.Top, rc.Right, rc.Bottom);
-    }
+    //public void DrawBorders(BRSelector sel, XGraphics graphics, XRect rc)
+    //{
+    //  DrawBorder(sel.CellStyle.TopBorder, graphics, rc.Left, rc.Top, rc.Right, rc.Top);
+    //  DrawBorder(sel.CellStyle.BottomBorder, graphics, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
+    //  DrawBorder(sel.CellStyle.LeftBorder, graphics, rc.Left, rc.Top, rc.Left, rc.Bottom);
+    //  DrawBorder(sel.CellStyle.RightBorder, graphics, rc.Right, rc.Top, rc.Right, rc.Bottom);
+    //}
 
-    public void DrawBorder(BRLine line, XGraphics graphics, double x1,
+    private void DrawBorder(BRLine line, XGraphics graphics, double x1,
       double y1, double x2, double y2)
     {
 
@@ -766,14 +774,14 @@ namespace FreeLibSet.Drawing.Reporting
       graphics.DrawLine(BorderPen, x1, y1, x2, y2);
     }
 
-    public void DrawBorder(BRLine line, XGraphics graphics, int x1,
-      int y1, int x2, int y2)
-    {
-      if (line.Style == BRLineStyle.None)
-        return;
-      MyInitBorderPen(line);
-      graphics.DrawLine(BorderPen, x1, y1, x2, y2);
-    }
+    //public void DrawBorder(BRLine line, XGraphics graphics, int x1,
+    //  int y1, int x2, int y2)
+    //{
+    //  if (line.Style == BRLineStyle.None)
+    //    return;
+    //  MyInitBorderPen(line);
+    //  graphics.DrawLine(BorderPen, x1, y1, x2, y2);
+    //}
 
     private void MyInitBorderPen(BRLine line)
     {
@@ -869,8 +877,11 @@ namespace FreeLibSet.Drawing.Reporting
     }
 
     #endregion
-  }
+  } 
 
+  /// <summary>
+  /// Статические методы для работы с библиотекой PdfSharp
+  /// </summary>
   public static class PdfFileTools
   {
     #region Наличие библиотеки SharpZipLib

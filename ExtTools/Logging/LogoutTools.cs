@@ -1995,6 +1995,7 @@ namespace FreeLibSet.Logging
       args.WritePair("Computer Name", Environment.MachineName);
       args.WritePair("OS Version", EnvironmentTools.OSVersionText);
       args.WritePair(".NET Version", EnvironmentTools.NetVersionText);
+      // не информативно args.WritePair("GetSystemVersion()", RuntimeEnvironment.GetSystemVersion());
       args.WritePair("Processor Count", Environment.ProcessorCount.ToString());
       args.WritePair("Command Line", Environment.CommandLine);
       args.WritePair("Current Dir", Environment.CurrentDirectory);
@@ -2158,6 +2159,8 @@ namespace FreeLibSet.Logging
         args.WritePair(sf.ToString(), s);
       }
 
+      args.WritePair("RuntimeEnvironment.GetRuntimeDirectory()", RuntimeEnvironment.GetRuntimeDirectory());
+      args.WritePair("Path.GetTempPath()", System.IO.Path.GetTempPath());
       args.WritePair("FileTools.UserProfileDir", FileTools.UserProfileDir.Path);
       args.IndentLevel--;
       args.WriteLine();

@@ -23,6 +23,7 @@ namespace BRReportDemo
       BRPrintPreviewDialog dlg = new BRPrintPreviewDialog();
       dlg.Report = DemoReport.Create(formatProvider);
       dlg.ConfigSectionName = configSectionName;
+      dlg.CloseWhenPrinting = false;
       dlg.ShowDialog();
     }
 

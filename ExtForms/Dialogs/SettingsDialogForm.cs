@@ -9,7 +9,6 @@ using FreeLibSet.Config;
 using FreeLibSet.Collections;
 using FreeLibSet.UICore;
 
-#pragma warning disable 1591
 #pragma warning disable 414
 #pragma warning disable 0169
 
@@ -204,10 +203,16 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
+  /// <summary>
+  /// Диалог для настройки пользовательских параметров, использующих <see cref="SettingsDataList"/>
+  /// </summary>
   public class SettingsDialog
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает пустой диалог
+    /// </summary>
     public SettingsDialog()
     {
       _Pages = new PageCollection(this);
@@ -228,7 +233,7 @@ namespace FreeLibSet.Forms
     private string _Title;
 
     /// <summary>
-    /// Изображение для значка формы, извлекаемое из коллекции EFPApp.MainImages.
+    /// Изображение для значка формы, извлекаемое из коллекции <see cref="EFPApp.MainImages"/>.
     /// По умолчанию - нет значка
     /// </summary>
     public string ImageKey
@@ -242,6 +247,9 @@ namespace FreeLibSet.Forms
     }
     private string _ImageKey;
 
+    /// <summary>
+    /// Задание произвольного изображения в качестве значка формы. Альтернатива свойству <see cref="ImageKey"/>.
+    /// </summary>
     public Image Image
     {
       get { return _Image; }
@@ -252,6 +260,11 @@ namespace FreeLibSet.Forms
       }
     }
     private Image _Image;
+
+    /// <summary>
+    /// Менеджер доступа к секциям конфигурации.
+    /// По умолчанию используется <see cref="EFPApp.ConfigManager"/>
+    /// </summary>
     public IEFPConfigManager ConfigManager
     {
       get { return _ConfigManager ?? EFPApp.ConfigManager; }
@@ -259,9 +272,17 @@ namespace FreeLibSet.Forms
     }
     private IEFPConfigManager _ConfigManager;
 
+    /// <summary>
+    /// Имя секции конфигурации для хранения параметров
+    /// </summary>
     public string ConfigSectionName { get { return _ConfigSectionName ?? String.Empty; } set { _ConfigSectionName = value; } }
     private string _ConfigSectionName;
 
+    /// <summary>
+    /// Категория секции конфигурации для хранения параметров, относящихся к пользователю.
+    /// Для приложений "Клиент-Сервер" - без привязки к компьютеру пользователя.
+    /// По умолчанию используется <see cref="EFPConfigCategories.UserParams"/>.
+    /// </summary>
     public string UserCategory
     {
       get { return _UserCategory ?? EFPConfigCategories.UserParams; }
@@ -269,6 +290,11 @@ namespace FreeLibSet.Forms
     }
     private string _UserCategory;
 
+    /// <summary>
+    /// Категория секции конфигурации для хранения параметров, относящихся к компьютеру.
+    /// Для приложений "Клиент-Сервер" - с привязкой к компьютеру пользователя.
+    /// По умолчанию совпадает с <see cref="UserCategory"/>.
+    /// </summary>
     public string MachineCategory
     {
       get { return _MachineCategory ?? UserCategory; }
@@ -276,6 +302,10 @@ namespace FreeLibSet.Forms
     }
     private string _MachineCategory;
 
+    /// <summary>
+    /// Категория секции конфигурации для хранения параметров, зависящих от даты.
+    /// По умолчанию совпадает с <see cref="UserCategory"/>.
+    /// </summary>
     public string NoHistoryCategory
     {
       get { return _NoHistoryCategory ?? UserCategory; }
@@ -283,6 +313,10 @@ namespace FreeLibSet.Forms
     }
     private string _NoHistoryCategory;
 
+    /// <summary>
+    /// Категория секции конфигурации для хранения списка истории и пользовательских наборов.
+    /// По умолчанию используется <see cref="EFPConfigCategories.UserHistory"/>.
+    /// </summary>
     public string HistoryCategory
     {
       get { return _HistoryCategory ?? EFPConfigCategories.UserHistory; }
@@ -335,6 +369,9 @@ namespace FreeLibSet.Forms
     }
     private SettingsDataList _Data;
 
+    /// <summary>
+    /// Выполняет чтение данных из секций конфигурации
+    /// </summary>
     public void ReadValues()
     {
       if (String.IsNullOrEmpty(ConfigSectionName))
@@ -365,6 +402,9 @@ namespace FreeLibSet.Forms
       }
     }
 
+    /// <summary>
+    /// Выполняет запись в секции конфигурации
+    /// </summary>
     public void WriteValues()
     {
       if (String.IsNullOrEmpty(ConfigSectionName))
@@ -400,6 +440,9 @@ namespace FreeLibSet.Forms
 
     #region Список страниц
 
+    /// <summary>
+    /// Реализация свойства <see cref="Pages"/> 
+    /// </summary>
     public sealed class PageCollection : List<SettingsDialogPage>
     {
       internal PageCollection(SettingsDialog owner)
@@ -409,6 +452,11 @@ namespace FreeLibSet.Forms
 
       private SettingsDialog _Owner;
 
+      /// <summary>
+      /// Добавляет страницу к диалогу
+      /// </summary>
+      /// <param name="control">Управляюший элемент (контейнер), добавляемый к форме в качестве вкладки</param>
+      /// <returns>Интерфейс управления</returns>
       public SettingsDialogPage Add(Control control)
       {
         SettingsDialogPage page = new SettingsDialogPage(_Owner, control);
@@ -417,6 +465,9 @@ namespace FreeLibSet.Forms
       }
     }
 
+    /// <summary>
+    /// Список страниц диалога
+    /// </summary>
     public PageCollection Pages { get { return _Pages; } }
     private readonly PageCollection _Pages;
 
@@ -424,6 +475,10 @@ namespace FreeLibSet.Forms
 
     #region Показ диалога
 
+    /// <summary>
+    /// Вывод блока диалога
+    /// </summary>
+    /// <returns>Результат выполнения (OK или Отмена)</returns>
     public DialogResult ShowDialog()
     {
       if (_Pages.Count == 0)
@@ -453,6 +508,10 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
+  /// <summary>
+  /// Интерфейс управления страницей диалога <see cref="SettingsDialog"/>.
+  /// Создается методом <see cref="SettingsDialog.PageCollection.Add(Control)"/>.
+  /// </summary>
   public sealed class SettingsDialogPage : IEFPTabPageControl
   {
     #region Конструктор
@@ -462,7 +521,7 @@ namespace FreeLibSet.Forms
     /// <param name="owner"></param>
     /// <param name="control">Обычно панель с управляющими элементами (<see cref="Panel"/>), но может быть и другим контейнером, например, <see cref="GroupBox"/>.
     /// Не может быть объектом <see cref="TabPage"/></param>
-    public SettingsDialogPage(SettingsDialog owner, Control control)
+    internal SettingsDialogPage(SettingsDialog owner, Control control)
     {
       if (owner == null)
         throw new ArgumentNullException("owner");
@@ -485,12 +544,21 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
+    /// <summary>
+    /// Объект диалога-владельца страницы
+    /// </summary>
     public SettingsDialog Owner { get { return _Owner; } }
     private readonly SettingsDialog _Owner;
 
+    /// <summary>
+    /// Провайдер страницы для присоединения провайдеров управляющих элементов
+    /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
     private readonly EFPBaseProvider _BaseProvider;
 
+    /// <summary>
+    /// Управляющий элемент-контейнер
+    /// </summary>
     public Control Control { get { return _Control; } }
     private readonly Control _Control;
 
@@ -498,10 +566,19 @@ namespace FreeLibSet.Forms
 
     #region События
 
+    /// <summary>
+    /// Сюда должен быть присоединен обработчик, который копирует значения из <see cref="SettingsDialog.Data"/> в поля управляющих элементов
+    /// </summary>
     public event EventHandler DataToControls;
 
+    /// <summary>
+    /// Сюда должен быть присоединен обработчик, который копирует значения из полей управляющих элементов в <see cref="SettingsDialog.Data"/>.
+    /// </summary>
     public event EventHandler DataFromControls;
 
+    /// <summary>
+    /// Событие вызывается при переключении на эту вкладку диалога
+    /// </summary>
     public event EventHandler PageShow;
 
     internal void CallDataToControls()
@@ -509,11 +586,13 @@ namespace FreeLibSet.Forms
       if (DataToControls != null)
         DataToControls(this, EventArgs.Empty);
     }
+
     internal void CallDataFromControls()
     {
       if (DataFromControls != null)
         DataFromControls(this, EventArgs.Empty);
     }
+
     internal void CallPageShow()
     {
       if (PageShow != null)
@@ -524,6 +603,9 @@ namespace FreeLibSet.Forms
 
     #region IEFPTabPageControl
 
+    /// <summary>
+    /// Управление заголовком вкладки
+    /// </summary>
     public string Text
     {
       get { return _Text; }
@@ -535,6 +617,9 @@ namespace FreeLibSet.Forms
     }
     private string _Text;
 
+    /// <summary>
+    /// Управление значком вкладки
+    /// </summary>
     public string ImageKey
     {
       get { return _ImageKey; }
@@ -546,6 +631,9 @@ namespace FreeLibSet.Forms
     }
     private string _ImageKey;
 
+    /// <summary>
+    /// Управление всплывающей подсказкой
+    /// </summary>
     public string ToolTipText
     {
       get { return _ToolTipText; }

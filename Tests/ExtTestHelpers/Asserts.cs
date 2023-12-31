@@ -317,6 +317,78 @@ namespace FreeLibSet.Tests
     }
   }
 
+
+  /// <summary>
+  /// Обход предупреждения Obsolete для методов <see cref="NUnit.Framework.Assert.IsNullOrEmpty(string)"/> и<see cref="NUnit.Framework.Assert.IsNotNullOrEmpty(string)"/>.
+  /// </summary>
+  public static class ExtStringAssert
+  {
+#pragma warning disable 0618
+
+    /// <summary>
+    /// Assert that a string is not null or empty
+    /// </summary>
+    /// <param name="aString">The string to be tested</param>
+    public static void IsNotNullOrEmpty(string aString)
+    {
+      Assert.IsNotNullOrEmpty(aString);
+    }
+
+    public static void IsNotNullOrEmpty(string aString, string message)
+    {
+      Assert.IsNotNullOrEmpty(aString, message);
+    }
+
+    /// <summary>
+    /// Assert that a string is not null or empty
+    /// </summary>
+    /// <param name="aString">The string to be tested</param>
+    /// <param name="message">The message to display in case of failure</param>
+    /// <param name="args">Array of objects to be used in formatting the message</param>
+    public static void IsNotNullOrEmpty(string aString, string message, params object[] args)
+    {
+      Assert.IsNotNullOrEmpty(aString, message, args);
+    }
+    //
+    // Summary:
+    //     /// Assert that a string is either null or equal to string.Empty ///
+    //
+    // Parameters:
+    //   aString:
+    //     The string to be tested
+    /// <summary>
+    /// Assert that a string is either null or equal to <see cref="String.Empty"/>
+    /// </summary>
+    /// <param name="aString">The string to be tested</param>
+    public static void IsNullOrEmpty(string aString)
+    {
+      Assert.IsNullOrEmpty(aString);
+    }
+
+    /// <summary>
+    /// Assert that a string is either null or equal to <see cref="String.Empty"/>
+    /// </summary>
+    /// <param name="aString">The string to be tested</param>
+    /// <param name="message">The message to display in case of failure</param>
+    public static void IsNullOrEmpty(string aString, string message)
+    {
+      Assert.IsNullOrEmpty(aString, message);
+    }
+
+    /// <summary>
+    /// Assert that a string is either null or equal to <see cref="String.Empty"/>
+    /// </summary>
+    /// <param name="aString">The string to be tested</param>
+    /// <param name="message">The message to display in case of failure</param>
+    /// <param name="args">Array of objects to be used in formatting the message</param>
+    public static void IsNullOrEmpty(string aString, string message, params object[] args)
+    {
+      Assert.IsNullOrEmpty(aString, message, args);
+    }
+
+#pragma warning restore 0618
+  }
+
 #if XXX // Не знаю, нужно ли. Одного делегата мало. Хочется еще, например, использовать объект Random, а он нужен для каждого потока
 
   /// <summary>
@@ -478,8 +550,8 @@ namespace FreeLibSet.Tests
 
 #endif
 
-    //public abstract class ThreadTester
-    //{
-    //  abstract void Test;
-    //}
-  }
+  //public abstract class ThreadTester
+  //{
+  //  abstract void Test;
+  //}
+}

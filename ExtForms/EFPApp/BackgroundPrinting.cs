@@ -50,7 +50,8 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// true, если фоновая печать разрешена
+    /// true, если фоновая печать разрешена.
+    /// По умолчанию - false.
     /// </summary>
     public bool Enabled
     {

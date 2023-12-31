@@ -190,7 +190,7 @@ namespace FreeLibSet.Core
         return _MonoVersion ?? _VersionZero;
       }
     }
-    private static Version _MonoVersion;
+    private static readonly Version _MonoVersion;
 
     private static Version GetMonoVersion()
     {
@@ -240,7 +240,7 @@ namespace FreeLibSet.Core
     /// Текстовое представление для версии ОС <see cref="Environment.OSVersion"/>, дополненное разрядностью (32 bit, 64 bit)
     /// </summary>
     public static string OSVersionText { get { return _OSVersionText; } }
-    private static string _OSVersionText;
+    private static readonly string _OSVersionText;
 
     private static string GetOSVersionText()
     {
@@ -248,8 +248,13 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(s))
         s = Environment.OSVersion.ToString();
 
-      if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-        s += EnvironmentTools.Is64BitOperatingSystem ? " (64 bit)" : " (32 bit)";
+      switch (Environment.OSVersion.Platform)
+      {
+        case PlatformID.Win32NT:
+        case PlatformID.Unix:
+          s += EnvironmentTools.Is64BitOperatingSystem ? " (64 bit)" : " (32 bit)";
+          break;
+      }
 
       if (IsWine) // 11.03.2017
       {
@@ -298,7 +303,7 @@ namespace FreeLibSet.Core
     /// Значение действительно только, если <see cref="System.Environment.OSVersion"/>.Platform = Win32NT
     /// </summary>
     public static WinNTProductType WinNTProductType { get { return _WinNTProductType; } }
-    private static WinNTProductType _WinNTProductType;
+    private static readonly WinNTProductType _WinNTProductType;
 
     private static WinNTProductType GetWinNTProductType()
     {
@@ -327,18 +332,25 @@ namespace FreeLibSet.Core
     /// <returns></returns>
     private static string GetSpecialOSVersion()
     {
-      bool addSP, addVer;
-      string s = DoGetSpecialOSVersion(out addSP, out addVer);
-      if (String.IsNullOrEmpty(s))
-        return String.Empty; // 26.03.2018
-      if (addSP)
+      try
       {
-        if (!String.IsNullOrEmpty(Environment.OSVersion.ServicePack))
-          s += " " + Environment.OSVersion.ServicePack;
+        bool addSP, addVer;
+        string s = DoGetSpecialOSVersion(out addSP, out addVer);
+        if (String.IsNullOrEmpty(s))
+          return String.Empty; // 26.03.2018
+        if (addSP)
+        {
+          if (!String.IsNullOrEmpty(Environment.OSVersion.ServicePack))
+            s += " " + Environment.OSVersion.ServicePack;
+        }
+        if (addVer)
+          s += " (" + Environment.OSVersion.Version.ToString() + ")";
+        return s;
       }
-      if (addVer)
-        s += " (" + Environment.OSVersion.Version.ToString() + ")";
-      return s;
+      catch
+      {
+        return String.Empty;
+      }
     }
 
     private static string DoGetSpecialOSVersion(out bool addSP, out bool addVer)
@@ -455,6 +467,10 @@ namespace FreeLibSet.Core
           }
           break;
 
+        case PlatformID.Unix:
+          addSP = false;
+          addVer = true;
+          return DoGetSpecialOSVersionLinux();
       }
 
       return String.Empty;
@@ -520,7 +536,7 @@ namespace FreeLibSet.Core
     /// В Net Framework 4 есть аналогичное свойство в классе <see cref="Environment"/>.
     /// </summary>
     public static bool Is64BitOperatingSystem { get { return _Is64BitOperatingSystem; } }
-    private static bool _Is64BitOperatingSystem;
+    private static readonly bool _Is64BitOperatingSystem;
 
     private static bool GetIs64BitOperatingSystem()
     {
@@ -537,6 +553,34 @@ namespace FreeLibSet.Core
 
       //return false;
       return IntPtr.Size == 8; // 28.06.2023
+    }
+
+    private static string DoGetSpecialOSVersionLinux()
+    {
+      const string filePath = "/etc/os-release";
+      if (System.IO.File.Exists(filePath))
+      {
+        string[] a = System.IO.File.ReadAllLines(filePath);
+        foreach (string s in a)
+        {
+          int p = s.IndexOf('=');
+          if (p < 0)
+            continue;
+          string key = s.Substring(0, p).Trim();
+          if (String.Equals(key, "PRETTY_NAME", StringComparison.Ordinal))
+          {
+            string value = s.Substring(p + 1).Trim();
+            if (value.Length >= 2)
+            {
+              if (value [0] == '"' && value [value.Length - 1] == '"')
+                value = value.Substring (1, value.Length - 2);
+            }
+            return value;
+          }
+        }
+      }
+
+      return String.Empty;
     }
 
     #endregion

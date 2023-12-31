@@ -193,7 +193,7 @@ namespace FreeLibSet.Forms.Reporting
         {
           int w, h;
 
-          Drawing.Reporting.BRMeasurer.Default.MeasureString(FilterInfo[i].DisplayName, sect.Report.DefaultCellStyle, out w, out h);
+          Drawing.Reporting.BRMeasurer.Default.MeasureString(BRPaginator.PrepareStringForMeasure(FilterInfo[i].DisplayName), sect.Report.DefaultCellStyle, out w, out h);
           wantedW = Math.Max(wantedW, w);
         }
         wantedW += sect.Report.DefaultCellStyle.LeftMargin + sect.Report.DefaultCellStyle.LeftMargin;

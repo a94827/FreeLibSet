@@ -131,7 +131,7 @@ namespace FreeLibSet.Reporting
   }
 
   /// <summary>
-  /// Расширенны селектор для <see cref="BRTable"/>.
+  /// Расширенный селектор для <see cref="BRTable"/>.
   /// Реализует методы для установки значений свойств, а не только для чтения
   /// </summary>
   public sealed class BRTableCellSelector : BRSelector
@@ -602,11 +602,11 @@ namespace FreeLibSet.Reporting
     internal protected abstract object GetValue(int rowIndex, int columnIndex);
 
     /// <summary>
-    /// Этот метод вызывается из <see cref="BRVirtualSelector"/> для получения стилей текущей ячекйи
+    /// Этот метод вызывается из <see cref="BRVirtualSelector"/> для получения стилей текущей ячейки
     /// </summary>
     /// <param name="rowIndex">Индекс строки</param>
     /// <param name="columnIndex">Индекс столбца</param>
-    /// <param name="style">Заполняемые стили</param>
+    /// <param name="style">Заполняемый стиль ячейки</param>
     internal protected abstract void FillCellStyle(int rowIndex, int columnIndex, BRCellStyle style);
 
     /// <summary>

@@ -43,5 +43,11 @@ namespace BRReportDemo
         EFPApp.ShowException(e, "Ошибка запуска программы");
       }
     }
+
+    private static void Pd_PrintPage(object sender, PrintPageEventArgs args)
+    {
+      args.Graphics.DrawLine(Pens.Black, 0, 0, 300, 300);
+      args.HasMorePages = false;
+    }
   }
 }

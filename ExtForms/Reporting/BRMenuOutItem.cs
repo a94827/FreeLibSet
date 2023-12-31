@@ -692,6 +692,7 @@ namespace FreeLibSet.Forms.Reporting
       _SettingsData.Add(new BRPageSettingsDataItem());
       _SettingsData.Add(new BRBitmapSettingsDataItem());
 
+      _ClosePreviewWhenPrinting = true;
     }
 
     #endregion
@@ -1222,6 +1223,7 @@ namespace FreeLibSet.Forms.Reporting
     {
       BRPaginatorPageInfo[] pages;
       PrintDocument pd = FreeLibSet.Drawing.Reporting.BRReportPainter.CreatePrintDocument(report, out pages);
+      //PrintController prcontr = pd.PrintController;
 
       if (!defaultPrinter)
       {
@@ -1247,14 +1249,20 @@ namespace FreeLibSet.Forms.Reporting
           EFPApp.BackgroundPrinting.Add(pd);
         else
         {
+          PrintController oldPD = pd.PrintController;
           EFPApp.BeginWait("Идет печать документа", "Print");
           try
           {
+            //MessageBox.Show("PrintController.IsPreview:" + pd.PrintController.IsPreview.ToString(), pd.DocumentName);
+            ////if (pd.PrintController.IsPreview)
+            //pd.PrintController = prcontr; // 13.11.2023
             pd.Print();
+            //MessageBox.Show("Печать выполнена");
           }
           finally
           {
             EFPApp.EndWait();
+            pd.PrintController = oldPD;
           }
         }
         return true;
@@ -1294,6 +1302,12 @@ namespace FreeLibSet.Forms.Reporting
     /// Возвращает true
     /// </summary>
     public override bool CanPrintPreview { get { return true; } }
+
+    /// <summary>
+    /// Если true (по умолчанию), то окно предварительного просмотра закрывается при выполнении команды "Печать".
+    /// </summary>
+    public bool ClosePreviewWhenPrinting { get { return _ClosePreviewWhenPrinting; } set { _ClosePreviewWhenPrinting = value; } }
+    private bool _ClosePreviewWhenPrinting;
 
     /// <summary>
     /// Показывает окно предварительного просмотра.
@@ -1590,7 +1604,7 @@ namespace FreeLibSet.Forms.Reporting
     public override bool Print(bool defaultPrinter)
     {
       bool res = _Owner.DoPrint(defaultPrinter, _Report);
-      if (res)
+      if (res && _Owner.ClosePreviewWhenPrinting)
         _efpPreviewForm.CloseForm(DialogResult.Cancel);
       return res;
     }
@@ -1688,6 +1702,7 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     public BRPrintPreviewDialog()
     {
+      _CloseWhenPrinting = true;
     }
 
     #endregion
@@ -1710,6 +1725,12 @@ namespace FreeLibSet.Forms.Reporting
     }
     private string _ConfigSectionName;
 
+    /// <summary>
+    /// Если true (по умолчанию), то окно предварительного просмотра закрывается при выполнении команды "Печать".
+    /// </summary>
+    public bool CloseWhenPrinting { get { return _CloseWhenPrinting; } set { _CloseWhenPrinting = value; } }
+    private bool _CloseWhenPrinting;
+
     #endregion
 
     #region Показ диалога
@@ -1729,6 +1750,7 @@ namespace FreeLibSet.Forms.Reporting
         outItem.DisplayName = "Отчет";
       outItem.CreateReport += OutItem_CreateReport;
       outItem.ConfigSectionName = ConfigSectionName;
+      outItem.ClosePreviewWhenPrinting = CloseWhenPrinting;
       outItem.ShowPrintPreview();
     }
 

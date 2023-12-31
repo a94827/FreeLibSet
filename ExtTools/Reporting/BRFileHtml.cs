@@ -5,15 +5,20 @@ using System.Text;
 using FreeLibSet.Core;
 using FreeLibSet.IO;
 
-#pragma warning disable 1591
 #pragma warning disable 0219
 
 namespace FreeLibSet.Reporting
 {
+  /// <summary>
+  /// Объект для создания файла отчета <see cref="BRReport"/> в формате HTML
+  /// </summary>
   public class BRFileHtml: BRFileCreator
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает объект
+    /// </summary>
     public BRFileHtml()
     {
       _Encoding = Encoding.UTF8;
@@ -23,6 +28,9 @@ namespace FreeLibSet.Reporting
 
     #region Свойства
 
+    /// <summary>
+    /// Используемая кодировка. По умолчанию - UTF8.
+    /// </summary>
     public Encoding Encoding { get { return _Encoding; } set { _Encoding = value; } }
     private Encoding _Encoding;
 
@@ -30,6 +38,11 @@ namespace FreeLibSet.Reporting
 
     #region Запись
 
+    /// <summary>
+    /// Создает файл
+    /// </summary>
+    /// <param name="report">Отчет</param>
+    /// <param name="filePath">Путь к файлу</param>
     protected override void DoCreateFile(BRReport report, AbsPath filePath)
     {
       using (FileStream fs = new FileStream(filePath.Path, FileMode.Create))
@@ -39,6 +52,13 @@ namespace FreeLibSet.Reporting
       }
     }
 
+    /// <summary>
+    /// Запись отчета в поток.
+    /// Поток должен поддерживать позиционирование
+    /// </summary>
+    /// <param name="report">Отчет</param>
+    /// <param name="stream">Записываемый поток</param>
+    /// <param name="useFragment">true - использовать формат "фрагмент"</param>
     public void Write(BRReport report, Stream stream, bool useFragment)
     {
       StreamWriter wrt = new StreamWriter(stream, Encoding);

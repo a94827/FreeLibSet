@@ -319,7 +319,7 @@ namespace FreeLibSet.Reporting
       for (int i = 0; i < a.Length; i++)
       {
         int w1, h1;
-        measurer.MeasureString(a[i], sel.CellStyle, out w1, out h1);
+        measurer.MeasureString(BRPaginator.PrepareStringForMeasure(a[i]), sel.CellStyle, out w1, out h1);
         w = Math.Max(w, w1);
         h += h1;
       }

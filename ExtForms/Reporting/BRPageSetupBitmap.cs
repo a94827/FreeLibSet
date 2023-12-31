@@ -11,8 +11,6 @@ using FreeLibSet.Core;
 using FreeLibSet.Reporting;
 using FreeLibSet.UICore;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Forms.Reporting
 {
   internal partial class BRPageSetupBitmap : Form
@@ -81,17 +79,46 @@ namespace FreeLibSet.Forms.Reporting
 
 namespace FreeLibSet.Reporting
 {
+  /// <summary>
+  /// Хранилище параметров преобразования отчета в файл TIFF.
+  /// Содержит разрешение и цветность.
+  /// </summary>
   public class BRBitmapSettingsDataItem : SettingsDataItem, ICloneable
   {
     #region Константы
 
+    /// <summary>
+    /// Разрешение по умолчанию, точек на дюйм
+    /// </summary>
     public const int DefaultResolution = 300;
+
+    /// <summary>
+    /// Минимально допусимое разрешение, точек на дюйм
+    /// </summary>
     public const int MinResolution = 72;
+    /// <summary>
+    /// Максимально допусимое разрешение, точек на дюйм
+    /// </summary>
     public const int MaxResolution = 1200;
+
+    /// <summary>
+    /// Массив рекомендуемых разрешений, точек на дюйм
+    /// </summary>
     public static readonly int[] RecommendedResolutions = new int[] { 72, 100, 144, 150, 200, 300, 600, 1200 };
 
+    /// <summary>
+    /// Цветовой формат, используемый по умолчанию
+    /// </summary>
     public const string DefaultColorFormat = "C24";
+
+    /// <summary>
+    /// Допустимые коды цветовых форматов
+    /// </summary>
     public static string[] ColorFormatCodes = new string[] { "BW", "C4", "C8", /*"C16",*/ "C24" };
+
+    /// <summary>
+    /// ИменаЮ соответствующие <see cref="ColorFormatCodes"/>
+    /// </summary>
     public static string[] ColorFormatNames = new string[] {
         "Черно-белый",
         "4-битный цвет",
@@ -103,6 +130,9 @@ namespace FreeLibSet.Reporting
 
     #region Конструктор
 
+    /// <summary>
+    /// Создает настройки по умолчанию
+    /// </summary>
     public BRBitmapSettingsDataItem()
     {
       _Resolution = DefaultResolution;
@@ -114,6 +144,11 @@ namespace FreeLibSet.Reporting
 
     #region Свойства
 
+    /// <summary>
+    /// Разрешение, точек на дюйм.
+    /// По умолчанию - <see cref="DefaultResolution"/>.
+    /// Значение должно быть в диапазоне от <see cref="MinResolution"/> до <see cref="MaxResolution"/>.
+    /// </summary>
     public int Resolution
     {
       get { return _Resolution; }
@@ -126,6 +161,10 @@ namespace FreeLibSet.Reporting
     }
     private int _Resolution;
 
+    /// <summary>
+    /// Цветовой формат. По умолчанию - <see cref="DefaultColorFormat"/>.
+    /// Допускаются значения из списка <see cref="ColorFormatCodes"/>.
+    /// </summary>
     public string ColorFormat
     {
       get { return _ColorFormat; }
@@ -138,6 +177,9 @@ namespace FreeLibSet.Reporting
     }
     private string _ColorFormat;
 
+    /// <summary>
+    /// Значение <see cref="ColorFormat"/> как перечисление <see cref="System.Drawing.Imaging.PixelFormat"/>.
+    /// </summary>
     public PixelFormat PixelFormat
     {
       get
@@ -155,16 +197,27 @@ namespace FreeLibSet.Reporting
       }
     }
 
+    /// <summary>
+    /// True, если поля страницы не будут сохраняться как часть изображения.
+    /// По умолчанию - false - поля входят в изображение.
+    /// </summary>
     public bool ClipMargins { get { return _ClipMargins; } set { _ClipMargins = value; } }
-
     private bool _ClipMargins;
 
     #endregion
 
     #region ISettingsDataItem
 
+    /// <summary>
+    /// Возвращает <see cref="SettingsPart.User"/>.
+    /// </summary>
     public override SettingsPart UsedParts { get { return SettingsPart.User; } }
 
+    /// <summary>
+    /// Запись значений в секцию конфигурации.
+    /// </summary>
+    /// <param name="cfg">Секция</param>
+    /// <param name="part">Записываемая часть</param>
     public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       if (part == SettingsPart.User)
@@ -175,6 +228,11 @@ namespace FreeLibSet.Reporting
       }
     }
 
+    /// <summary>
+    /// Чтение значений из секции конфигурации.
+    /// </summary>
+    /// <param name="cfg">Секция</param>
+    /// <param name="part">Считываемая часть</param>
     public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       if (part == SettingsPart.User)

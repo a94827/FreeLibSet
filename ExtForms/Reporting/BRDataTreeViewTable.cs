@@ -9,9 +9,6 @@ using FreeLibSet.Core;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Reporting;
 
-//#pragma warning disable 1591
-
-
 namespace FreeLibSet.Forms.Reporting
 {
   /// <summary>

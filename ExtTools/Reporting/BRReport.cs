@@ -48,7 +48,7 @@ namespace FreeLibSet.Reporting
     {
       // TODO: Определять из системных настроек
       get
-      { 
+      {
         switch (Environment.OSVersion.Platform)
         {
           case PlatformID.Unix:
@@ -843,6 +843,15 @@ namespace FreeLibSet.Reporting
       { _Name = value; }
     }
     private string _Name;
+
+    /// <summary>
+    /// Возвращает свойство <see cref="Name"/> и количество полос
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return Name + " (BandCount=" + Bands.Count.ToString() + ")";
+    }
 
     #endregion
   }

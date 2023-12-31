@@ -11,11 +11,12 @@ using FreeLibSet.Core;
 using FreeLibSet.IO;
 using FreeLibSet.Reporting;
 
-#pragma warning disable 1591
-
-
 namespace FreeLibSet.Drawing.Reporting
 {
+  /// <summary>
+  /// Измеритель размера текста, использующий <see cref="System.Drawing.Graphics"/>.
+  /// Существует единственный экземпляр объекта.
+  /// </summary>
   public sealed class BRMeasurer : IBRMeasurer
   {
     #region Защищенный конструктор
@@ -33,6 +34,14 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private ExtTextRenderer _Renderer;
 
+    /// <summary>
+    /// Вычисляет желаемую высоту строки, исходя из содержимого текущей ячейки.
+    /// Метод должен учесть размеры полей, задаваемых <see cref="BRCellStyle.LeftMargin"/>,<see cref="BRCellStyle.RightMargin"/> и <see cref="BRCellStyle.IndentLevel"/>,
+    /// но использовать ширину <paramref name="columnWidth"/>, а не <see cref="BRColumnInfo.Width"/>.
+    /// </summary>
+    /// <param name="sel">Селектор с выбранной ячейкой</param>
+    /// <param name="columnWidth">Ширина столбца в единицах 0.1мм</param>
+    /// <returns>Желаемая высота строки в единицах 0.1мм</returns>
     public int GetWantedHeight(BRSelector sel, int columnWidth)
     {
 
@@ -47,6 +56,15 @@ namespace FreeLibSet.Drawing.Reporting
 
     }
 
+    /// <summary>
+    /// Измеряет строку <paramref name="s"/>. Строка не содержит символов переноса строки.
+    /// Из объекта <paramref name="cellStyle"/> должны быть извлечены параметры шрифта, но не отступы.
+    /// Должны возвращаться размеры в единицах 0.1мм
+    /// </summary>
+    /// <param name="s">Измеряемая строка</param>
+    /// <param name="cellStyle">Отсюда извлекаются параметры шрифта</param>
+    /// <param name="width">Сюда записывается высота</param>
+    /// <param name="height">Сюда записывается ширина</param>
     public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
     {
       if (_Renderer == null)
@@ -171,20 +189,40 @@ namespace FreeLibSet.Drawing.Reporting
 
     #region Статический экземпляр
 
+    /// <summary>
+    /// Единственный экземпляр объекта.
+    /// Доступ является потокобезопасным.
+    /// </summary>
     public static readonly BRMeasurer Default = new BRMeasurer();
 
     #endregion
   }
 
-
+  /// <summary>
+  /// Объект для рисования отчета <see cref="BRReport"/> с помощью <see cref="System.Drawing.Graphics"/>.
+  /// Этот класс не используется в прикладном коде.
+  /// Реализует интефрейс <see cref="IDisposable"/>.
+  /// </summary>
   public class BRReportPainter : DisposableObject, IBRMeasurer
   {
     #region Конструктор и Disposing
 
+    /// <summary>
+    /// Создает объект для рисования в окне или печати документа
+    /// </summary>
     public BRReportPainter()
+      :this(false)
+    {
+    }
+
+    /// <summary>
+    /// Создает объект.
+    /// </summary>
+    /// <param name="isBitmap">True, если рисование выполняется на объекте <see cref="System.Drawing.Bitmap"/></param>
+    public BRReportPainter(bool isBitmap)
     {
       _Scale = 0.1f;
-      FontHeightScale = 1f;
+      _IsBitmap = isBitmap;
       //CellFrames = false;
       //ShowHiddenCells = false;
       //ShowSampleValues = true;
@@ -200,6 +238,10 @@ namespace FreeLibSet.Drawing.Reporting
       _SB = new StringBuilder();
     }
 
+    /// <summary>
+    /// Удаляет связанные объекты
+    /// </summary>
+    /// <param name="Disposing">true, если вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected override void Dispose(bool Disposing)
     {
       DataTools.Dispose(ref _FontRenderers);
@@ -209,17 +251,6 @@ namespace FreeLibSet.Drawing.Reporting
       base.Dispose(Disposing);
     }
 
-    /// <summary>
-    /// Сброс внутренних графических объектов в исходное состояние.
-    /// Метод должен вызываться, если объект ParerDoc изменился в процессе
-    /// использования данного объекта (в редакторе)
-    /// </summary>
-    public void Reset()
-    {
-      _FontRenderers.Clear();
-      _BackBrushes.Clear();
-    }
-
     #endregion
 
     #region Внутренние графические объекты для рисования
@@ -227,19 +258,23 @@ namespace FreeLibSet.Drawing.Reporting
     #region Шрифты
 
     /// <summary>
-    /// Дополнительное масштабирование для шрифтов
+    /// Дополнительное масштабирование для шрифтов.
+    /// Устанавливается в tru
     /// </summary>
-    internal float FontHeightScale;
+    public bool IsBitmap { get { return _IsBitmap; } }
+    private readonly bool _IsBitmap;
 
     /// <summary>
-    /// Шрифты
+    /// Шрифты для измерения и рисования
     /// Ключ - кодированное описание шрифта
     /// Значение - объект для рисования
     /// </summary>
     private DisposableDictionary<string, ExtTextRenderer> _FontRenderers;
 
-    private ExtTextRenderer GetTextRenderer(BRCellStyle cellStyle, bool forPaint)
+
+    private ExtTextRenderer GetTextRenderer(BRCellStyle cellStyle, Graphics graphics)
     {
+      bool isForPaint = (graphics != null);
       _SB.Length = 0;
       _SB.Append(cellStyle.FontName);
       _SB.Append('|');
@@ -260,15 +295,14 @@ namespace FreeLibSet.Drawing.Reporting
       _SB.Append('|');
       _SB.Append(cellStyle.ForeColor.IntValue);
       _SB.Append('|');
-      _SB.Append(forPaint ? '1' : '0');
+      _SB.Append(isForPaint ? '1' : '0');
 
       string key = _SB.ToString();
+
       ExtTextRenderer renderer;
       if (!_FontRenderers.TryGetValue(key, out renderer))
       {
-        renderer = new ExtTextRenderer();
-        if (FontHeightScale!=1f && forPaint) // при измерении не надо увеличивать
-          renderer.FontHeightScale = FontHeightScale;
+        renderer = new ExtTextRenderer(graphics, IsBitmap);
         BRMeasurer.InitRenderer(renderer, cellStyle);
 
         _FontRenderers.Add(key, renderer);
@@ -290,7 +324,6 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private StringBuilder _SB;
 
-
     #endregion
 
     #region Опции рисования
@@ -300,46 +333,35 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private readonly float _Scale;
 
-    ///// <summary>
-    ///// True, если нужно рисовать скрытые строки и столбцы
-    ///// </summary>
-    //public bool ShowHiddenCells;
-
-    ///// <summary>
-    ///// True, если нужно выводить значения ячеек с ValueKind=Sample
-    ///// </summary>
-    //public bool ShowSampleValues;
-
-    ///// <summary>
-    ///// True, если требуется рисовать цветные рамки вокруг ячеек
-    ///// </summary>
-    //public bool CellFrames;
-
-    ///// <summary>
-    ///// Если true, то фон не рисуется, а текст рисуется белым шрифтом
-    ///// </summary>
-    //public bool SelectedCell;
-
     #endregion
 
     #region Рисование страницы
 
+    ///// <summary>
+    ///// Рисование одной страницы.
+    ///// Предполагается, что разбиение на страницы уже было выполнено.
+    ///// </summary>
+    ///// <param name="pageInfo">Информация о странице, полученная в процессе разбиения</param>
+    ///// <param name="graphics">Контекст для рисования</param>
+    //public void Paint(BRPaginatorPageInfo pageInfo, Graphics graphics)
+    //{
+    //  DoPaint(pageInfo, graphics, 0f, 0f);
+    //}
+
     /// <summary>
     /// Рисование одной страницы.
-    /// Предполагается, что рисование уже было выполнено
+    /// Предполагается, что разбиение на страницы уже было выполнено.
     /// </summary>
     /// <param name="pageInfo">Информация о странице, полученная в процессе разбиения</param>
     /// <param name="graphics">Контекст для рисования</param>
-    public void Paint(BRPaginatorPageInfo pageInfo, Graphics graphics)
-    {
-      DoPaint(pageInfo, graphics, 0f, 0f);
-    }
+    /// <param name="pageSettings">Параметры страницы</param>
     public void Paint(BRPaginatorPageInfo pageInfo, Graphics graphics, PageSettings pageSettings)
     {
       float dx = pageSettings.HardMarginX / 100f * 25.4f;
       float dy = pageSettings.HardMarginY / 100f * 25.4f;
       DoPaint(pageInfo, graphics, dx, dy);
     }
+
     private void DoPaint(BRPaginatorPageInfo pageInfo, Graphics graphics, float dx, float dy)
     {
       GraphicsState oldState = graphics.Save();
@@ -355,11 +377,12 @@ namespace FreeLibSet.Drawing.Reporting
 
         for (int i = 0; i < pageInfo.Blocks.Length; i++)
           Paint(pageInfo.Blocks[i], graphics);
+
       }
       finally
       {
         graphics.Restore(oldState);
-        _FontRenderers.Clear(); // можно было бы установить свойство Graphics=null
+        _FontRenderers.Clear();
       }
     }
 
@@ -458,6 +481,11 @@ namespace FreeLibSet.Drawing.Reporting
 
     private void PaintCellContext(Graphics graphics, RectangleF rc, BRSelector sel)
     {
+#if DEBUG
+      if (graphics == null)
+        throw new ArgumentNullException("graphics");
+#endif
+
       if (sel.CellStyle.BackColor != BRColor.Auto)
       {
         Brush br;
@@ -471,7 +499,12 @@ namespace FreeLibSet.Drawing.Reporting
         graphics.FillRectangle(br, rc);
       }
 
-      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle, true);
+      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle, graphics);
+#if DEBUG
+      if (!renderer.IsForPaint)
+        throw new BugException("IsForPaint=false");
+#endif
+
       PrepareRendererAlign(sel, renderer);
 
       string[] lines;
@@ -489,7 +522,6 @@ namespace FreeLibSet.Drawing.Reporting
         return;
 
       // Область для текста с учетом отступов
-      renderer.Graphics = graphics;
       rc.X += sel.CellStyle.LeftMargin * _Scale;
       rc.Y += sel.CellStyle.TopMargin * _Scale;
       rc.Width -= (sel.CellStyle.LeftMargin + sel.CellStyle.RightMargin) * _Scale;
@@ -509,8 +541,8 @@ namespace FreeLibSet.Drawing.Reporting
         }
       }
 
-      float orgFontHeight = renderer.FontHeight;
-      float orgFontWidth = renderer.FontWidth; // Если потребуется поменять ширину шрифта, то здесь ее запомним
+      //float orgFontHeight = renderer.FontHeight;
+      float orgFontWidth = 0f; // Если потребуется поменять ширину шрифта, то здесь ее запомним
       if (sel.CellStyle.MaxEnlargePercent > 100)
       {
         // Разрешено увеличение размеров шрифта
@@ -536,6 +568,7 @@ namespace FreeLibSet.Drawing.Reporting
 
           if (enPrc > 100)
           {
+            orgFontWidth = renderer.FontWidth; 
             renderer.FontWidth = orgFontWidth * enPrc / 100f;
             //float TextW2 = 0f;
             //for (int i = 0; i < lines.Length; i++)
@@ -547,8 +580,6 @@ namespace FreeLibSet.Drawing.Reporting
       // Рисование текстовых строк
       //System.Windows.Forms.MessageBox.Show(rc.ToString());
       renderer.DrawLines(lines, rc);
-      renderer.FontHeight = orgFontHeight;
-      renderer.FontWidth = orgFontWidth;
 
       // Прорисовка заполнителя
       if (sel.CellStyle.TextFiller != BRTextFiller.None)
@@ -590,6 +621,7 @@ namespace FreeLibSet.Drawing.Reporting
       }
 
       // Теперь уменьшаем размер
+      //renderer.FontHeight = orgFontHeight;
       if (orgFontWidth >= 0)
         renderer.FontWidth = orgFontWidth;
     }
@@ -686,15 +718,15 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     private Pen _BorderPen;
 
-    public void DrawBorders(BRSelector sel, Graphics graphics, RectangleF rc)
-    {
-      DrawBorder(sel.CellStyle.TopBorder, graphics, rc.Left, rc.Top, rc.Right, rc.Top);
-      DrawBorder(sel.CellStyle.BottomBorder, graphics, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
-      DrawBorder(sel.CellStyle.LeftBorder, graphics, rc.Left, rc.Top, rc.Left, rc.Bottom);
-      DrawBorder(sel.CellStyle.RightBorder, graphics, rc.Right, rc.Top, rc.Right, rc.Bottom);
-    }
+    //private void DrawBorders(BRSelector sel, Graphics graphics, RectangleF rc)
+    //{
+    //  DrawBorder(sel.CellStyle.TopBorder, graphics, rc.Left, rc.Top, rc.Right, rc.Top);
+    //  DrawBorder(sel.CellStyle.BottomBorder, graphics, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
+    //  DrawBorder(sel.CellStyle.LeftBorder, graphics, rc.Left, rc.Top, rc.Left, rc.Bottom);
+    //  DrawBorder(sel.CellStyle.RightBorder, graphics, rc.Right, rc.Top, rc.Right, rc.Bottom);
+    //}
 
-    public void DrawBorder(BRLine line, Graphics graphics, float x1,
+    private void DrawBorder(BRLine line, Graphics graphics, float x1,
       float y1, float x2, float y2)
     {
 
@@ -704,7 +736,7 @@ namespace FreeLibSet.Drawing.Reporting
       graphics.DrawLine(_BorderPen, x1, y1, x2, y2);
     }
 
-    public void DrawBorder(BRLine line, Graphics graphics, int x1,
+    private void DrawBorder(BRLine line, Graphics graphics, int x1,
       int y1, int x2, int y2)
     {
       if (line.Style == BRLineStyle.None)
@@ -777,18 +809,26 @@ namespace FreeLibSet.Drawing.Reporting
 
       internal void PrintPage(object sender, PrintPageEventArgs args)
       {
-        int lastPageNum = Pages.Length;
-        if (args.PageSettings.PrinterSettings.PrintRange == PrintRange.SomePages)
+        try
         {
-          if (pageCount == 0)
-            pageCount = args.PageSettings.PrinterSettings.FromPage - 1;
-          lastPageNum = args.PageSettings.PrinterSettings.ToPage;
-        }
+          int lastPageNum = Pages.Length;
+          if (args.PageSettings.PrinterSettings.PrintRange == PrintRange.SomePages)
+          {
+            if (pageCount == 0)
+              pageCount = args.PageSettings.PrinterSettings.FromPage - 1;
+            lastPageNum = args.PageSettings.PrinterSettings.ToPage;
+          }
 
-        if (pageCount < lastPageNum)
-          _Painter.Paint(Pages[pageCount], args.Graphics, args.PageSettings);
-        pageCount++;
-        args.HasMorePages = pageCount < lastPageNum;
+          if (pageCount < lastPageNum)
+            _Painter.Paint(Pages[pageCount], args.Graphics, args.PageSettings);
+          pageCount++;
+          args.HasMorePages = pageCount < lastPageNum;
+        }
+        catch (Exception e)
+        {
+          Forms.EFPApp.ShowException(e, "Ошибка при печати");
+          args.HasMorePages = false;
+        }
       }
 
       internal void QueryPageSettings(object sender, QueryPageSettingsEventArgs args)
@@ -820,12 +860,23 @@ namespace FreeLibSet.Drawing.Reporting
       }
     }
 
+    /// <summary>
+    /// Создает документ для печати <see cref="System.Drawing.Printing.PrintDocument"/> из отчета
+    /// </summary>
+    /// <param name="report">Отчет</param>
+    /// <returns>Документ для печати</returns>
     public static PrintDocument CreatePrintDocument(BRReport report)
     {
       BRPaginatorPageInfo[] pages;
       return CreatePrintDocument(report, out pages);
     }
 
+    /// <summary>
+    /// Создает документ для печати <see cref="System.Drawing.Printing.PrintDocument"/> из отчета
+    /// </summary>
+    /// <param name="report">Отчет</param>
+    /// <param name="pages">Сюда записывается ссылка на результаты разбиения на страницы</param>
+    /// <returns>Документ для печати</returns>
     public static PrintDocument CreatePrintDocument(BRReport report, out BRPaginatorPageInfo[] pages)
     {
       PrintDocumentHelper helper = new PrintDocumentHelper();
@@ -835,14 +886,26 @@ namespace FreeLibSet.Drawing.Reporting
       helper.Pages = pages;
 
       PrintDocument pd = new PrintDocument();
+      if (pages.Length > 0)
+      { 
+        // 13.12.2023
+        BRPageSetup ps = pages[0].Section.PageSetup;
+        BRReportPainter.CopyPageSettings(ps, pd.DefaultPageSettings);
+      }
       pd.QueryPageSettings += new QueryPageSettingsEventHandler(helper.QueryPageSettings);
       pd.BeginPrint += new PrintEventHandler(helper.BeginPrint);
       pd.PrintPage += new PrintPageEventHandler(helper.PrintPage);
       pd.EndPrint += new PrintEventHandler(helper.EndPrint);
-      pd.OriginAtMargins = false;
+      //pd.OriginAtMargins = false;
+      pd.DocumentName = report.DocumentProperties.Title; // 13.12.2023
       return pd;
     }
 
+    /// <summary>
+    /// Копирует параметры страницы отчета в параметры страницы печатного документа
+    /// </summary>
+    /// <param name="src">Параметры страницы отчета </param>
+    /// <param name="res">Параметры страницы печатного документа</param>
     public static void CopyPageSettings(BRPageSetup src, PageSettings res)
     {
       res.Landscape = src.Orientation == BROrientation.Landscape;
@@ -882,20 +945,27 @@ namespace FreeLibSet.Drawing.Reporting
       return (int)(Math.Round((double)sz01mm / 2.54));
     }
 
-
     #endregion
 
     #region IBRMeasurer
 
     int IBRMeasurer.GetWantedHeight(BRSelector sel, int columnWidth)
     {
-      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle, false);
+      ExtTextRenderer renderer = GetTextRenderer(sel.CellStyle, null);
       return BRMeasurer.GetWantedHeight(renderer, sel, columnWidth);
     }
 
+    /// <summary>
+    /// Измерение размеров строки с использованием параметров ячейки <see cref="BRCellStyle"/>.
+    /// Результаты в единицах 0.1мм
+    /// </summary>
+    /// <param name="s">Измеряемая строка</param>
+    /// <param name="cellStyle">Параметры ячейки</param>
+    /// <param name="width">Сюда записывается ширина текста</param>
+    /// <param name="height">Сюда записывается высота текста</param>
     public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
     {
-      ExtTextRenderer renderer = GetTextRenderer(cellStyle, false);
+      ExtTextRenderer renderer = GetTextRenderer(cellStyle, null);
       Size sz = renderer.MeasureStringLM(s);
       width = sz.Width;
       height = sz.Height;
@@ -905,6 +975,12 @@ namespace FreeLibSet.Drawing.Reporting
 
     #region Создание графических файлов
 
+    /// <summary>
+    /// Создает изображение <see cref="System.Drawing.Bitmap"/> для одной страницы отчета
+    /// </summary>
+    /// <param name="page">Описание результатов разбиения отчета на страницы</param>
+    /// <param name="bitmapSettings">Параметры преобразования, задаваемые в настройках пользователя (разрешение и цветность)</param>
+    /// <returns>Изображение</returns>
     public Bitmap CreateBitmap(BRPaginatorPageInfo page, BRBitmapSettingsDataItem bitmapSettings)
     {
       PixelFormat format = bitmapSettings.PixelFormat;

@@ -50,11 +50,8 @@ namespace FreeLibSet.Drawing.Reporting
       bool useLibTiff = EnvironmentTools.IsMono && (!EnvironmentTools.IsWine);
       //useLibTiff = true;
 
-      using (BRReportPainter painter = new BRReportPainter())
+      using (BRReportPainter painter = new BRReportPainter(true))
       {
-        if (EnvironmentTools.IsMono)
-          painter.FontHeightScale = 2.5f; //72f / 25.4f; // 08.12.2023
-        
         BRPaginator paginator = new BRPaginator(painter);
         BRPaginatorPageInfo[] pages = paginator.CreatePages(report);
 

@@ -766,7 +766,7 @@ namespace FreeLibSet.Reporting
           return this;
         if (widthTwips < BRReport.MinFontWidthTwip || widthTwips > BRReport.MaxFontWidthTwip)
           throw new ArgumentOutOfRangeException();
-        return new BRFontSize(this.HeightTwip, this.LineHeightTwip, widthTwips, 0, this.MaxEnlargePercent, this.AlwaysEnlarge);
+        return new BRFontSize(this.HeightTwip, this.LineHeightTwip, widthTwips, 100 /* 25.12.2023 */, this.MaxEnlargePercent, this.AlwaysEnlarge);
       }
 
       public BRFontSize SetWidthPercent(int widthPercent)
@@ -1106,6 +1106,7 @@ namespace FreeLibSet.Reporting
     /// <summary>
     /// Формат ячейки.
     /// Способы форматирования определяются типом значения ячейки в соответствии с <see cref="IFormattable.ToString(string, IFormatProvider)"/>.
+    /// По умолчанию - пустая строка.
     /// </summary>
     public string Format
     {
@@ -1116,11 +1117,17 @@ namespace FreeLibSet.Reporting
     /// <summary>
     /// Провайдер для форматирования ячейки.
     /// Используется при вызове <see cref="IFormattable.ToString(string, IFormatProvider)"/>.
+    /// По умолчанию - <see cref="System.Globalization.CultureInfo.CurrentCulture"/>.
     /// </summary>
     public IFormatProvider FormatProvider
     {
       get { return (IFormatProvider)GetValue(this, Index_FormatProvider); }
-      set { SetValue(Index_FormatProvider, value); }
+      set
+      {
+        if (value == null)
+          value = System.Globalization.CultureInfo.CurrentCulture;
+        SetValue(Index_FormatProvider, value);
+      }
     }
 
     /// <summary>
@@ -1197,7 +1204,7 @@ namespace FreeLibSet.Reporting
     /// <summary>
     /// Одновременная установка четырех границ ячейки.
     /// Если свойства <see cref="LeftBorder"/>, <see cref="TopBorder"/>, <see cref="RightBorder"/> и <see cref="BottomBorder"/> имеют
-    /// разные значения, возвращается условный результат объединения стилей.
+    /// разные значения, возвращается условный результат объединения стилей (самая толстая линия).
     /// Свойства <see cref="DiagonalUp"/> и <see cref="DiagonalDown"/> не используются.
     /// </summary>
     public BRLine AllBorders
@@ -1441,7 +1448,8 @@ namespace FreeLibSet.Reporting
       get
       {
         if (_Parent == null)
-          throw new NullReferenceException("Свойство Parent не установлено");
+          //throw new NullReferenceException("Свойство Parent не установлено");
+          return null; // 25.12.2023
         else
           return _Parent.Report;
       }

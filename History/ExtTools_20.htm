@@ -50,7 +50,7 @@
 			<p lang="en-US" align="center">349</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p align="center">20.11.2023-04.12.2023</p>
+			<p align="center">20.11.2023-26.12.2023</p>
 		</td>
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p>1. Измеренения в AbsPath и RelPath:</p>
@@ -61,8 +61,10 @@
                         <p>3. ResourceTable.GetGroupIconInfo() (v.348 п.25) допускает, что у значка не задан параметр BPP, а задан ColorCount</p>
                         <p>4. Класс UIPathInputHandler</p>
                         <p>5. Свойство EnvironmentTools.WineVersion в дополнение к IsWine. Свойство OSVersionText дополнительно показывает версию Wine</p>
-                        <p>6. Из классов BRFileXXX выделен базовый класс BRFileCreator</p>
-                        <p>7. При выгрузке отчета в формате Excel 2003 XML (BRFileExcel2003Xml) не передавалась гарнитура и размер шрифта</p>
+                        <p>6. EnvironmentTools.OSVersionText в linux получает название ОС из файла /etc/os-release</p>
+                        <p>7. Из классов BRFileXXX выделен базовый класс BRFileCreator</p>
+                        <p>8. При выгрузке отчета в формате Excel 2003 XML (BRFileExcel2003Xml) не передавалась гарнитура и размер шрифта</p>
+                        <p>9. Установка свойств BRCellStyle.FontWidthTwip и FontWidthPt сбрасывало значение FontWidthPercent в 0, а не в 100</p>
 		</td>
 	</tr>
 	<tr valign="top">

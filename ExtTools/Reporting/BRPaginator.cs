@@ -92,7 +92,7 @@ namespace FreeLibSet.Reporting
     #endregion
 
     #region Свойства
-    
+
     /// <summary>
     /// Полоса
     /// </summary>
@@ -292,7 +292,7 @@ namespace FreeLibSet.Reporting
     /// <returns>Тектовое представление</returns>
     public override string ToString()
     {
-      return "Blocks=" + _Blocks.Length.ToString();
+      return "Section=" + _Section.Name + ", Blocks=" + _Blocks.Length.ToString();
     }
 
     #endregion
@@ -316,7 +316,7 @@ namespace FreeLibSet.Reporting
     private BRPaginatorPageInfo _Page;
 
     /// <summary>
-    /// True, если страница - первая для секции
+    /// True, если страница - первая в процессе разбиения
     /// </summary>
     public bool IsFirstPage
     {
@@ -326,7 +326,7 @@ namespace FreeLibSet.Reporting
     private bool _IsFirstPage;
 
     /// <summary>
-    /// True, если страница - последняя для секции
+    /// True, если страница - последняя в процессе разбиения
     /// </summary>
     public bool IsLastPage
     {
@@ -601,15 +601,15 @@ namespace FreeLibSet.Reporting
         foreach (BRPaginatiorBlockInfo blk in blks)
           maxW = Math.Max(maxW, DataTools.SumInt(blk.ColumnWidths));
 
-        int leftOffset = (section.PageSetup.PrintAreaWidth - maxW)/2;
+        int leftOffset = (section.PageSetup.PrintAreaWidth - maxW) / 2;
         foreach (BRPaginatiorBlockInfo blk in blks)
-          blk.LeftOffset = leftOffset;           
+          blk.LeftOffset = leftOffset;
       }
       if (section.PageSetup.CenterVertical)
       {
         BRPaginatiorBlockInfo lastBlk = blks[blks.Count - 1];
         int totalH = lastBlk.TopOffset + DataTools.SumInt(lastBlk.RowHeights);
-        int topOffset = (section.PageSetup.PrintAreaHeight - totalH)/2;
+        int topOffset = (section.PageSetup.PrintAreaHeight - totalH) / 2;
         foreach (BRPaginatiorBlockInfo blk in blks)
           blk.TopOffset += topOffset;
       }
@@ -883,7 +883,7 @@ namespace FreeLibSet.Reporting
             _RowHeightArrays[i][j] = h;
           } // цикл по строкам
           if (lstRRI.Count == 0)
-            _RowRepeatableIndexes[i] = DataTools.EmptyInts; 
+            _RowRepeatableIndexes[i] = DataTools.EmptyInts;
           else
             _RowRepeatableIndexes[i] = lstRRI.ToArray();
         } // цикл по Band
@@ -1216,8 +1216,8 @@ namespace FreeLibSet.Reporting
         {
           if (lst[i].BR.BandIndex != prevBandIndex)
           {
-            BRBand prevBand = _Section.Bands[lst[i-1].BR.BandIndex];
-            BRBand nextBand= _Section.Bands[lst[i].BR.BandIndex];
+            BRBand prevBand = _Section.Bands[lst[i - 1].BR.BandIndex];
+            BRBand nextBand = _Section.Bands[lst[i].BR.BandIndex];
             if (prevBand.KeepWithNext || nextBand.KeepWithPrev)
               flags[i - 1] = true;
           }
@@ -1227,7 +1227,7 @@ namespace FreeLibSet.Reporting
 
       private void MarkRowsRowKeepWith(List<PageRowInfo> lst, bool[] flags)
       {
-        BRSelector sel=null;
+        BRSelector sel = null;
         for (int i = 0; i < lst.Count; i++)
         {
           if (IsFirstRowInBand(lst, i))
@@ -1296,7 +1296,7 @@ namespace FreeLibSet.Reporting
         public int Gap;
         public override string ToString()
         {
-          string s= BR.ToString();
+          string s = BR.ToString();
           if (Gap != 0)
             s += ", Gap=" + Gap;
           return s;
@@ -1431,7 +1431,7 @@ namespace FreeLibSet.Reporting
           continue;
 
         int w = realColWidthArray[iCol];
-        for(int iCol2=iCol+1; iCol2<=r.LastColumnIndex; iCol2++)
+        for (int iCol2 = iCol + 1; iCol2 <= r.LastColumnIndex; iCol2++)
           w += realColWidthArray[iCol];
 
         int h1 = _Measurer.GetWantedHeight(sel, w);
@@ -1532,7 +1532,7 @@ namespace FreeLibSet.Reporting
     /// <returns>Массив столбцов</returns>
     public static BRStripeItem[][] PaginateBandColumns(BRBand band)
     {
-      List<BRBlockSize> lst=GetColumnStripes(band);
+      List<BRBlockSize> lst = GetColumnStripes(band);
       BRStripeItem[][] a = new BRStripeItem[lst.Count][];
       for (int i = 0; i < lst.Count; i++)
       {
@@ -1541,6 +1541,23 @@ namespace FreeLibSet.Reporting
           a[i][j] = new BRStripeItem(lst[i].Indexes[j], lst[i].Sizes[j]);
       }
       return a;
+    }
+
+    #endregion
+
+    #region Статические методы
+
+    /// <summary>
+    /// Подготовка строки к вызову метода <see cref="IBRMeasurer.MeasureString(string, BRCellStyle, out int, out int)"/>.
+    /// Убирает из строки символы мягкого переноса и заменяет символы неразрывного пробела на обычные пробелы
+    /// </summary>
+    /// <param name="s">Строка, которая будет измерена</param>
+    /// <returns>Строка для передачи в <see cref="IBRMeasurer.MeasureString(string, BRCellStyle, out int, out int)"/></returns>
+    public static string PrepareStringForMeasure(string s)
+    {
+      s = s.Replace(DataTools.NonBreakSpaceChar, ' ');
+      s = s.Replace(DataTools.SoftHyphenStr, "");
+      return s;
     }
 
     #endregion

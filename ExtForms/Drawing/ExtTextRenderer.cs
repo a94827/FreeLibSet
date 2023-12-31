@@ -32,8 +32,8 @@ using System.Diagnostics;
 namespace FreeLibSet.Drawing
 {
   /// <summary>
-  /// Расширенный класс рисования текста. Пригоден как для рисования в форме, так 
-  /// и для печати на принтере
+  /// Расширенный класс рисования текста. 
+  /// Пригоден как для рисования в форме, так и для печати на принтере
   /// </summary>
   public class ExtTextRenderer : SimpleDisposableObject
   {
@@ -42,14 +42,29 @@ namespace FreeLibSet.Drawing
 
     #region Конструктор и Dispose
 
-    private const string DefaultFontName = "Arial";
+    private static string _DefaultFontName { get { return FontFamily.GenericSansSerif.Name; } } // "Arial";
+
 
     /// <summary>
-    /// Создает объект и инициализирует его шрифтом Arial 10пт.
+    /// Создает объект для рисования и инициализирует его шрифтом Arial 10пт.
     /// </summary>
-    public ExtTextRenderer()
+    /// <param name="graphics">Контекст устройства для рисования. Если null, то объект предназначен только для масштабирования</param>
+    /// <param name="isBitmap">Если true - то рисование выполняется на изображении, если false - то в контексте устройства</param>
+    public ExtTextRenderer(Graphics graphics, bool isBitmap)
     {
-      _FontName = DefaultFontName;
+      if (graphics == null)
+      {
+        _Graphics = DefaultMeasureGraphics;
+        _IsForPaint = false;
+        isBitmap = true;
+      }
+      else
+      {
+        _Graphics = graphics;
+        _IsForPaint = true;
+      }
+
+      _FontName = _DefaultFontName;
       _FontHeight = 10;
       _FontWidth = 0; // признак необходимости вычислить ширину
       _Bold = false;
@@ -58,11 +73,28 @@ namespace FreeLibSet.Drawing
       _Strikeout = false;
       _DefaultFontWidth = 0;
       _DefaultLineHeight = 0;
-      _FontHeightScaleInt = 0;
-      _FontHeightScale = 1;
+
+      _FontScale = 1f;
+
+      // 11.12.2023
+      // Константы масштабирования получены методом тыка
+      if (graphics != null && isBitmap && EnvironmentTools.IsMono && (!EnvironmentTools.IsWine))
+        _FontScale = graphics.DpiY / GetDefaultDpi().Height;
+
       _Color = Color.Black;
       _StringFormat = (StringFormat)(StringFormat.GenericTypographic.Clone());
       _StringFormat.FormatFlags &= ~StringFormatFlags.LineLimit;
+
+      _Point1Array = new PointF[1];
+      _Point2Array = new PointF[2];
+    }
+
+    /// <summary>
+    /// Создает объект, предназначенный только для измерения, но не для рисования
+    /// </summary>
+    public ExtTextRenderer()
+      : this(null, true)
+    {
     }
 
     /// <summary>
@@ -96,52 +128,43 @@ namespace FreeLibSet.Drawing
 
     #endregion
 
+    #region Разрешение экрана
+
+    internal static SizeF GetDefaultDpi()
+    {
+      using (Bitmap bmp = new Bitmap(1, 1))
+      {
+        using (Graphics g = Graphics.FromImage(bmp))
+        {
+          return new SizeF(g.DpiX, g.DpiY);
+        }
+      }
+    }
+
+    #endregion
+
     #region Свойства
 
     #region Контекст устройства для рисования
 
     /// <summary>
-    /// Контекст для рисования
+    /// Контекст для рисования и измеренения
     /// </summary>
-    public Graphics Graphics
-    {
-      get
-      {
-        return _Graphics;
-      }
-      set
-      {
-#if DEBUG
-        CheckNotDisposed();
-#endif
-        if (value == _Graphics)
-          return;
-        _Graphics = value;
-        ResetFont();
-        if (_CurrentMatrix != null)
-        {
-          _CurrentMatrix.Dispose();
-          _CurrentMatrix = null;
-        }
-      }
-    }
-    private Graphics _Graphics;
+    public Graphics Graphics { get { return _Graphics; } }
+    private readonly Graphics _Graphics;
 
     /// <summary>
-    /// Генерирует исключение, если Graphics=null.
+    /// Возвращает true, если объект предназначен для рисования
     /// </summary>
-    protected void CheckGraphics()
-    {
-      if (_Graphics == null)
-        throw new NullReferenceException("Свойство Graphics не было установлено");
-    }
+    public bool IsForPaint { get { return _IsForPaint; } }
+    private readonly bool _IsForPaint;
 
     #endregion
 
     #region Свойства шрифта
 
     /// <summary>
-    /// Имя гарниутры шрифта
+    /// Имя гарнитуры шрифта
     /// </summary>
     public string FontName
     {
@@ -172,7 +195,7 @@ namespace FreeLibSet.Drawing
 #if DEBUG
         CheckNotDisposed();
         if (value < 0.1f)
-          throw new ArgumentException("Слишком маленький шрифт", "value");
+          throw new ArgumentException("Слишком маленький шрифт");
 #endif
         if (value == _FontHeight)
           return;
@@ -180,12 +203,11 @@ namespace FreeLibSet.Drawing
         ResetFont();
       }
     }
-
     private float _FontHeight;
 
     /// <summary>
     /// Требуемая ширина шрифта в пунктах.
-    /// Установка свойства в 0 задает ширину шрифта по умолчанию
+    /// Установка свойства в 0 задает ширину шрифта по умолчанию.
     /// </summary>
     public float FontWidth
     {
@@ -219,10 +241,10 @@ namespace FreeLibSet.Drawing
 
     /// <summary>
     /// Расстояние между двумя строками в пунктах. Превышает высоту шрифта
-    /// FontHeight на величину дополнительного расстояния между строками
-    /// По умолчанию совпадает с DefaultLineHeight. Установка значения в 0 сбрасывает
-    /// интервал в DefaultLineHeight. Задание значения LineHeight=FontHeight устанавливает
-    /// запись вывод строк вплотную, без дополнительных интервалов
+    /// <see cref="FontHeight"/> на величину дополнительного расстояния между строками
+    /// По умолчанию совпадает с <see cref="DefaultLineHeight"/>. Установка значения в 0 сбрасывает
+    /// интервал в <see cref="DefaultLineHeight"/>. Задание значения LineHeight=<see cref="FontHeight"/> устанавливает
+    /// запись вывод строк вплотную, без дополнительных интервалов.
     /// </summary>
     public float LineHeight
     {
@@ -247,8 +269,8 @@ namespace FreeLibSet.Drawing
     private float _LineHeight;
 
     /// <summary>
-    /// Альтернативное чтение или установка свойства LineHeight.
-    /// Значение 1 устанавливает междстрочный интервал по умолчанию (DefaultLineHeight),
+    /// Альтернативное чтение или установка свойства <see cref="LineHeight"/>.
+    /// Значение 1 устанавливает междстрочный интервал по умолчанию (<see cref="DefaultLineHeight"/>),
     /// значение 0 задает запись строк вплотную, значения от 0 до 1 задают уплотненное
     /// расположение строк, больше 1 - разреженное
     /// </summary>
@@ -345,9 +367,16 @@ namespace FreeLibSet.Drawing
     #region Объект шрифта
 
     /// <summary>
-    /// Возвращает текущий шрифт, созданный на основе свойств FontName, FontHeight,
-    /// Bold, Italic, Underline, Strikeout. Так как конкретный шрифт может не поддерживать
+    /// 13.12.2023
+    /// При рисовании на Bitmap в Mono без Wine требуется дополнительное масштабирования размера шрифта
+    /// </summary>
+    private readonly float _FontScale;
+
+    /// <summary>
+    /// Возвращает текущий шрифт, созданный на основе свойств <see cref="FontName"/>, <see cref="FontHeight"/>,
+    /// <see cref="Bold"/>, <see cref="Italic"/>, <see cref="Underline"/>, <see cref="Strikeout"/>. Так как конкретный шрифт может не поддерживать
     /// заданный набор стилей, возможно будет создан шрифт с другими стилями.
+    /// Также размер шрифта может не совпадать с <see cref="FontHeight"/>, если используется дополнительное масштабирование (при рисовании на <see cref="Bitmap"/> в Mono без Wine).
     /// </summary>
     public Font Font
     {
@@ -406,50 +435,13 @@ namespace FreeLibSet.Drawing
     }
     private Font _Font;
 
-    /// <summary>
-    /// 13.10.2023
-    /// В сочетании Mono+Wine высота шрифта <see cref="System.Drawing.Font.Size"/> почему-то задается не в пунктах, а в единицах
-    /// контекста устройства, то есть в миллиметрах. Это справедливо для PrintPreviewControl, на печать пока не проверял.
-    /// </summary>
-    private float RealFontHeightScale
-    {
-      get{ return FontHeightScaleInt * FontHeightScale;}
-    }
-
-    private float FontHeightScaleInt
-    {
-      get
-      {
-        if (_FontHeightScaleInt == 0f)
-        {
-          _FontHeightScaleInt = 1f;
-          if (Graphics!=null && EnvironmentTools.IsMono && EnvironmentTools.IsWine)
-            _FontHeightScaleInt  = 25.4f / 72f;
-        }
-        return _FontHeightScaleInt;
-      }
-    }
-    private float _FontHeightScaleInt;
-
-    public float FontHeightScale
-    {
-      get{ return _FontHeightScale;}
-      set
-      { 
-        if (value < 0f)
-          throw new ArgumentOutOfRangeException ();
-        _FontHeightScale = value;
-        ResetFont ();
-      }
-    }
-    private float _FontHeightScale;
 
     [DebuggerStepThrough]
     private bool TryCreateFont(FontStyle st)
     {
       try
       {
-        _Font = new Font(_FontName, _FontHeight * RealFontHeightScale, st);
+        _Font = new Font(_FontName, _FontHeight * _FontScale, st);
         return true;
       }
       catch
@@ -464,12 +456,12 @@ namespace FreeLibSet.Drawing
       try
       {
         // Пытаемся обойтись без стиля
-        _Font = new Font(_FontName, _FontHeight * RealFontHeightScale);
+        _Font = new Font(_FontName, _FontHeight * _FontScale);
       }
       catch
       {
         // Используем стандартный шрифт
-        _Font = new Font(DefaultFontName, _FontHeight * RealFontHeightScale, st);
+        _Font = new Font(_DefaultFontName, _FontHeight * _FontScale, st);
       }
     }
 
@@ -501,21 +493,19 @@ namespace FreeLibSet.Drawing
       }
       _DefaultFontWidth = 0;
       _DefaultLineHeight = 0;
-      _FontHeightScaleInt = 0;
     }
 
     #endregion
 
     /// <summary>
-    /// Реальная высота шрифта в пунктах. В отличие от свойства FontHeight, которое
-    /// может принимать любое значение, после создания шрифта его размеры не могут
-    /// быть произвольными
+    /// Реальная высота шрифта в пунктах. В отличие от свойства <see cref="FontHeight"/>, которое
+    /// может принимать любое значение, после создания шрифта его размеры не могут быть произвольными
     /// </summary>
     public float DefaultFontHeight
     {
       get
       {
-        return Font.Size / RealFontHeightScale;
+        return Font.Size / _FontScale;
       }
     }
 
@@ -529,7 +519,7 @@ namespace FreeLibSet.Drawing
         if (_DefaultFontWidth == 0)
         {
           // Вычисляем ширину шрифта по умолчанию
-          _DefaultFontWidth = CalcDefaultFontWidth(MeasureGraphics, Font);
+          _DefaultFontWidth = CalcDefaultFontWidth(Graphics, Font);
         }
         return _DefaultFontWidth;
       }
@@ -544,8 +534,7 @@ namespace FreeLibSet.Drawing
       get
       {
         if (_DefaultLineHeight == 0)
-          //_DefaultLineHeight = CalcDefaultLineHeight(MeasureGraphics, Font);
-          _DefaultLineHeight = Font.Height / RealFontHeightScale;
+          _DefaultLineHeight = Font.Height / _FontScale;
         return _DefaultLineHeight;
       }
     }
@@ -557,10 +546,7 @@ namespace FreeLibSet.Drawing
     /// </summary>
     public int Angle
     {
-      get
-      {
-        return _Angle;
-      }
+      get { return _Angle; }
       set
       {
 #if DEBUG
@@ -653,6 +639,12 @@ namespace FreeLibSet.Drawing
 
     #region Методы рисования
 
+    private void CheckIsForPaint()
+    {
+      if (!IsForPaint)
+        throw new InvalidOperationException("Объект предназначен только для измерения");
+    }
+
     /// <summary>
     /// Выводит строку в заданной области
     /// </summary>
@@ -660,6 +652,8 @@ namespace FreeLibSet.Drawing
     /// <param name="rc">Область</param>
     public void DrawString(string text, RectangleF rc)
     {
+      CheckIsForPaint();
+
       ReadyMatrix();
       rc = BackTransform(rc);
 
@@ -715,6 +709,8 @@ namespace FreeLibSet.Drawing
     /// <param name="pt">Начальная позиция</param>
     public void DrawString(string text, PointF pt)
     {
+      CheckIsForPaint();
+
       ReadyMatrix();
       pt = BackTransform(pt);
 
@@ -737,6 +733,8 @@ namespace FreeLibSet.Drawing
     /// <param name="rc">Область</param>
     public void DrawLines(string[] lines, RectangleF rc)
     {
+      CheckIsForPaint();
+
       if (lines.Length == 0)
         return;
       if (rc.Width <= 0f || rc.Height <= 0f)
@@ -833,7 +831,7 @@ namespace FreeLibSet.Drawing
       return sz2;
     }
 
-    private PointF[] _Point1Array = new PointF[1];
+    private PointF[] _Point1Array;
 
     /// <summary>
     /// Преобразование координат из пунктов в текущие единицы PageUnit
@@ -871,11 +869,11 @@ namespace FreeLibSet.Drawing
     }
 
     /// <summary>
-    /// Рисование текста со вписыванием в прямоугольник
-    /// Разбиение на строки должно быть выполнено заранее с разделителем \r\n
+    /// Рисование текста со вписыванием в прямоугольник.
+    /// Разбиение на строки должно быть выполнено заранее с разделителем <see cref="Environment.NewLine"/>
     /// </summary>
-    /// <param name="lines"></param>
-    /// <param name="rc"></param>
+    /// <param name="lines">Строки</param>
+    /// <param name="rc">Прямоугольник в координатах <see cref="Graphics.PageUnit"/></param>
     public void DrawLines(string lines, RectangleF rc)
     {
       if (String.IsNullOrEmpty(lines))
@@ -907,32 +905,20 @@ namespace FreeLibSet.Drawing
     private static Bitmap _MeasureImage;
     private static Graphics _MeasureGraphics;
 
-    /// <summary>
-    /// Контекст, используемый для измерений
-    /// </summary>
-    public Graphics MeasureGraphics
-    {
-      get
-      {
-        if (IsDisposed)
-          return DefaultMeasureGraphics;
-        return Graphics ?? DefaultMeasureGraphics;
-      }
-    }
 
     /// <summary>
     /// Измерение строки текста. 
     /// Перенос по словам игнорируется.
     /// </summary>
     /// <param name="text">Строка текста</param>
-    /// <returns>Размеры в единицах, установленных в Graphics</returns>
+    /// <returns>Размеры в единицах, установленных в <see cref="Graphics"/></returns>
     public SizeF MeasureString(string text)
     {
 #if DEBUG
       CheckNotDisposed();
 #endif
       text = DataTools.RemoveSoftHyphens(text);
-      return MeasureScale(MeasureGraphics.MeasureString(text, Font, new SizeF(float.MaxValue, float.MaxValue), CalcDefaultFontWidthStringFormat));
+      return MeasureScale(Graphics.MeasureString(text, Font, new SizeF(float.MaxValue, float.MaxValue), CalcDefaultFontWidthStringFormat));
     }
 
 
@@ -961,14 +947,14 @@ namespace FreeLibSet.Drawing
     /// </summary>
     /// <param name="text">Текст</param>
     /// <param name="sz">Размер области для предполагаемого размещения текста.
-    /// См. описание System.Drawing.Graphics.MeasureString()</param>
+    /// См. описание <see cref="System.Drawing.Graphics.MeasureString(string, Font, SizeF)"/></param>
     /// <returns>Размер требуемой области</returns>
     public SizeF MeasureString(string text, SizeF sz)
     {
 #if DEBUG
       CheckNotDisposed();
 #endif
-      return MeasureScale(MeasureGraphics.MeasureString(text, Font, BackMeasureScale(sz), _StringFormat));
+      return MeasureScale(Graphics.MeasureString(text, Font, BackMeasureScale(sz), _StringFormat));
     }
 
     /// <summary>
@@ -978,14 +964,14 @@ namespace FreeLibSet.Drawing
     /// <returns>Размер с учетом масштабирования</returns>
     private SizeF MeasureScale(SizeF sz)
     {
-      return new SizeF(sz.Width * FontWidth / DefaultFontWidth,
-        sz.Height * FontHeight / DefaultFontHeight);
+      return new SizeF(sz.Width * FontWidth / DefaultFontWidth / _FontScale,
+        sz.Height * FontHeight / DefaultFontHeight / _FontScale);
     }
 
     private SizeF BackMeasureScale(SizeF sz)
     {
-      return new SizeF(sz.Width * DefaultFontWidth / FontWidth,
-        sz.Height * DefaultFontHeight / FontHeight);
+      return new SizeF(sz.Width * DefaultFontWidth * _FontScale / FontWidth,
+        sz.Height * DefaultFontHeight * _FontScale / FontHeight);
     }
 
     /// <summary>
@@ -1042,9 +1028,9 @@ namespace FreeLibSet.Drawing
       if (_CurrentMatrix != null)
         return;
 
-#if DEBUG
-      CheckGraphics();
-#endif
+      //#if DEBUG
+      //      CheckGraphics();
+      //#endif
       float scaleX = FontWidth / DefaultFontWidth;
       float scaleY = FontHeight / DefaultFontHeight;
 
@@ -1056,25 +1042,25 @@ namespace FreeLibSet.Drawing
       _CoordMatrix.Scale(1.0f / scaleX, 1.0f / scaleY);
     }
 
-    private PointF[] _TrPoint = new PointF[2]; // чтобы не создавать каждый раз
+    private PointF[] _Point2Array; // чтобы не создавать каждый раз
 
     private RectangleF BackTransform(RectangleF rc)
     {
-      _TrPoint[0].X = rc.Left;
-      _TrPoint[0].Y = rc.Top;
-      _TrPoint[1].X = rc.Right;
-      _TrPoint[1].Y = rc.Bottom;
-      _CoordMatrix.TransformPoints(_TrPoint);
-      return new RectangleF(_TrPoint[0].X, _TrPoint[0].Y,
-        _TrPoint[1].X - _TrPoint[0].X, _TrPoint[1].Y - _TrPoint[0].Y);
+      _Point2Array[0].X = rc.Left;
+      _Point2Array[0].Y = rc.Top;
+      _Point2Array[1].X = rc.Right;
+      _Point2Array[1].Y = rc.Bottom;
+      _CoordMatrix.TransformPoints(_Point2Array);
+      return new RectangleF(_Point2Array[0].X, _Point2Array[0].Y,
+        _Point2Array[1].X - _Point2Array[0].X, _Point2Array[1].Y - _Point2Array[0].Y);
     }
 
     private PointF BackTransform(PointF pt)
     {
-      _TrPoint[0] = pt;
-      _TrPoint[1] = pt; // на всякий случай
-      _CoordMatrix.TransformPoints(_TrPoint);
-      return _TrPoint[0];
+      _Point2Array[0] = pt;
+      _Point2Array[1] = pt; // на всякий случай
+      _CoordMatrix.TransformPoints(_Point2Array);
+      return _Point2Array[0];
     }
 
     //private RectangleF CurrentTransform(RectangleF rc)
@@ -1141,7 +1127,7 @@ namespace FreeLibSet.Drawing
     /// </summary>
     /// <param name="graphics">Контекст рисования</param>
     /// <param name="font">Шрифт</param>
-    /// <returns>Ширина шрифта </returns>
+    /// <returns>Ширина шрифта в пунктах</returns>
     public static float CalcDefaultFontWidth(Graphics graphics, Font font)
     {
       const string TemplateStr = "XXXXXXXXXX0000000000XXXXXXXXXX0000000000";
@@ -1163,58 +1149,28 @@ namespace FreeLibSet.Drawing
       return res;
     }
 
-    //public static float CalcDefaultFontWidth(Font Font)
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="graphics"></param>
+    ///// <param name="font"></param>
+    ///// <returns></returns>
+    //public static float CalcDefaultLineHeight(Graphics graphics, Font font)
     //{
-    //  float res = 0;
-    //  Graphics gr = Graphics.FromHwnd(new IntPtr(0));
-    //  try
-    //  {
-    //    res=CalcDefaultFontWidth(gr, Font);
-    //  }
-    //  finally
-    //  {
-    //    gr.Dispose();
-    //  }
-    //  return res;
+    //  return font.Height; // ???
+    //  //float res = 0f;
+    //  //GraphicsUnit oldPU = Graphics.PageUnit;
+    //  //try
+    //  //{
+    //  //  Graphics.PageUnit = GraphicsUnit.Point;
+    //  //  res = Font.GetHeight(Graphics);
+    //  //}
+    //  //finally
+    //  //{
+    //  //  Graphics.PageUnit = oldPU;
+    //  //}
+    //  //return res;
     //}
-
-    //public static float CalcDefaultFontWidth(string FontName, float emSize)
-    //{
-    //  float res = 0;
-    //  Font fnt = new Font(FontName, emSize);
-    //  try
-    //  {
-    //    res=CalcDefaultFontWidth(fnt);
-    //  }
-    //  finally
-    //  {
-    //    fnt.Dispose();
-    //  }
-    //  return res;
-    //}
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="graphics"></param>
-    /// <param name="font"></param>
-    /// <returns></returns>
-    public static float CalcDefaultLineHeight(Graphics graphics, Font font)
-    {
-      return font.Height; // ???
-      //float res = 0f;
-      //GraphicsUnit oldPU = Graphics.PageUnit;
-      //try
-      //{
-      //  Graphics.PageUnit = GraphicsUnit.Point;
-      //  res = Font.GetHeight(Graphics);
-      //}
-      //finally
-      //{
-      //  Graphics.PageUnit = oldPU;
-      //}
-      //return res;
-    }
 
     #endregion
   }

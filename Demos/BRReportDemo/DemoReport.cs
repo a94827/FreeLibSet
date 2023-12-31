@@ -144,22 +144,47 @@ namespace BRReportDemo
 
       //string[] a = EFPApp.Fonts.FontNames;
       //string[] a = new string[] {"Gabriola" };
-      string[] aFontNames;
-      if (Environment.OSVersion.Platform==PlatformID.Unix)
-        aFontNames = new string[] { "Liberation Sans", "Droid serif", "Noto Serif", "Liberation Mono" };
-      else
-        aFontNames = new string[] { "Arial", "Times New Roman", "Microsoft Sans Serif", "Courier New" };
-      table = sect.Bands.Add(aFontNames.Length, 2);
+      //string[] aFontNames;
+      //if (Environment.OSVersion.Platform==PlatformID.Unix)
+      //  aFontNames = new string[] { "Liberation Sans", "Droid serif", "Noto Serif", "Liberation Mono" };
+      //else
+      //  aFontNames = new string[] { "Arial", "Times New Roman", "Microsoft Sans Serif", "Courier New" };
+
+      List<string> lstFontDescrs = new List<string>();
+      List<string> lstFontNames = new List<string>();
+      lstFontDescrs.Add("BRReport.DefaultCellStyle");
+      lstFontNames.Add(report.DefaultCellStyle.FontName);
+
+      lstFontDescrs.Add("FontFamily.GenericSerif");
+      lstFontNames.Add(System.Drawing.FontFamily.GenericSerif.Name);
+      lstFontDescrs.Add("FontFamily.GenericSansSerif");
+      lstFontNames.Add(System.Drawing.FontFamily.GenericSansSerif.Name);
+      lstFontDescrs.Add("FontFamily.GenericMonospace");
+      lstFontNames.Add(System.Drawing.FontFamily.GenericMonospace.Name);
+
+      lstFontDescrs.Add("SystemFonts.DefaultFont");
+      lstFontNames.Add(System.Drawing.SystemFonts.DefaultFont.Name);
+
+      lstFontDescrs.Add("Подстановка");
+      lstFontNames.Add("Tms Rmn");
+
+      table = sect.Bands.Add(lstFontNames.Count, 2);
       table.DefaultCellStyle.AllBorders = BRLine.Thin;
 
-      for (int i = 0; i < aFontNames.Length; i++)
+      for (int i = 0; i < lstFontNames.Count; i++)
       {
         table.Cells.RowIndex = i;
         table.Cells.ColumnIndex = 0;
-        table.Cells.Value = aFontNames[i];
+        table.Cells.Value = lstFontDescrs[i];
         table.Cells.ColumnIndex = 1;
-        table.Cells.Value = aFontNames[i];
-        table.Cells.CellStyle.FontName = aFontNames[i];
+        using (System.Drawing.Font font = new System.Drawing.Font(lstFontNames[i], 10))
+        {
+          string s = lstFontNames[i];
+          if (!String.Equals(font.Name, lstFontNames[i], StringComparison.Ordinal))
+            s += " -> " + font.Name;
+          table.Cells.Value = s;
+          table.Cells.CellStyle.FontName = font.Name;
+        }
       }
 
       #endregion
@@ -545,7 +570,7 @@ namespace BRReportDemo
       return report;
     }
 
-    private static string MakeLongString(string s)
+    public static string MakeLongString(string s)
     {
       string[] a = new string[20];
       DataTools.FillArray<string>(a, s);

@@ -395,7 +395,7 @@ namespace FreeLibSet.Win32
     /// Возвращает true, если Remote Desktop Services поддерживаются операционной системой
     /// </summary>
     public static bool IsSupported { get { return _IsSupported; } }
-    private static bool _IsSupported;
+    private static readonly bool _IsSupported;
 
     private static void CheckIsSupported()
     {

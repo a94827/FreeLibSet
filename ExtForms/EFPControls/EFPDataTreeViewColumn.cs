@@ -1174,8 +1174,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-#pragma warning disable 1591
-
     #region Методы добавления столбцов
 
     #region Обобщенный метод AddControl()
@@ -1266,21 +1264,68 @@ namespace FreeLibSet.Forms
       return nodeControl;
     }
 
+    /// <summary>
+    /// Создает элемент <see cref="NodeTextBox"/> для отображения текста и добавляет его в коллекцию. Если <see cref="TreeViewAdv.UseColumns"/>=true, то также создается столбец <see cref="TreeColumn"/>.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// Для столбца (при <see cref="TreeViewAdv.UseColumns"/>=true) используется выравнивание по левому краю.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
+    /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах</param>
+    /// <returns>Созданный элемент</returns>
     public NodeTextBox AddText(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth)
     {
       return AddText(columnName, isDataColumn, headerText, textWidth, minTextWidth, HorizontalAlignment.Left);
     }
 
+    /// <summary>
+    /// Создает элемент <see cref="NodeTextBox"/> для отображения текста и добавляет его в коллекцию. Если <see cref="TreeViewAdv.UseColumns"/>=true, то также создается столбец <see cref="TreeColumn"/>.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// Для столбца (при <see cref="TreeViewAdv.UseColumns"/>=true) используется выравнивание по левому краю.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
+    /// <returns>Созданный элемент</returns>
     public NodeTextBox AddText(string columnName, bool isDataColumn, string headerText, int textWidth)
     {
       return AddText(columnName, isDataColumn, headerText, textWidth, Math.Min(textWidth, 5));
     }
 
+    /// <summary>
+    /// Создает элемент <see cref="NodeTextBox"/> для отображения текста и добавляет его в коллекцию. Если <see cref="TreeViewAdv.UseColumns"/>=true, то также создается столбец <see cref="TreeColumn"/>.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// Для столбца (при <see cref="TreeViewAdv.UseColumns"/>=true) используется выравнивание по левому краю и ширина в 10 символов.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <returns>Созданный элемент</returns>
     public NodeTextBox AddText(string columnName, bool isDataColumn, string headerText)
     {
       return AddText(columnName, isDataColumn, headerText, 10);
     }
 
+    /// <summary>
+    /// Создает элемент <see cref="NodeTextBox"/> для отображения текста и добавляет его в коллекцию. Если <see cref="TreeViewAdv.UseColumns"/>=true, то также создается столбец <see cref="TreeColumn"/>.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// Для столбца (при <see cref="TreeViewAdv.UseColumns"/>=true) используется выравнивание по левому краю и ширина в 10 символов.
+    /// Заголовок столбца совпадает с именем поля.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>.</param>
+    /// <returns>Созданный элемент</returns>
     public NodeTextBox AddText(string columnName)
     {
       return AddText(columnName, true, columnName, 10);
@@ -1319,6 +1364,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет столбец <see cref="NodeDateTimeBox"/> для отображения даты без времени.
+    /// Используется формат отображения <see cref="EditableDateTimeFormatterKind.Date"/>.
     /// </summary>
     /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
     /// <param name="isDataColumn">True, если столбец будет привязан к данным.
@@ -1332,6 +1378,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет столбец <see cref="NodeDateTimeBox"/> для отображения даты без времени.
+    /// Используется формат отображения <see cref="EditableDateTimeFormatterKind.Date"/>.
     /// Столбец привязывается к полю данных <paramref name="columnName"/>.
     /// Заголовок столбца совпадает с именем поля.
     /// </summary>
@@ -1343,10 +1390,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn для отображения даты и времени.
+    /// Добавляет столбец <see cref="NodeDateTimeBox"/> для отображения даты и времени.
+    /// Используется формат отображения <see cref="EditableDateTimeFormatterKind.DateTime"/>.
     /// </summary>
     /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным.
     /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Объект <see cref="NodeControl"/></returns>
@@ -1356,7 +1404,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn для отображения даты и времени.
+    /// Добавляет столбец <see cref="NodeDateTimeBox"/> для отображения даты и времени.
+    /// Используется формат отображения <see cref="EditableDateTimeFormatterKind.DateTime"/>.
     /// Столбец привязывается к полю данных <paramref name="columnName"/>.
     /// Заголовок столбца совпадает с именем поля.
     /// </summary>
@@ -1368,10 +1417,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn для отображения даты и/или времени.
+    /// Добавляет столбец <see cref="NodeDateTimeBox"/> для отображения даты и/или времени.
     /// </summary>
     /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным.
     /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="kind">Тип даты и/или времени</param>
@@ -1392,6 +1441,17 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    /// <summary>
+    /// Добавляет столбец <see cref="NodeDecimalEditBox"/> для просмотра числовых значений
+    /// </summary>
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным.
+    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="textWidth">Ширина в текстовых единицах (включая десятичную точку)</param>
+    /// <param name="decimalPlaces">Количество знаков после запятой</param>
+    /// <param name="sizeGroup">Имя группы для синхронного изменения размеров столбцов</param>
+    /// <returns>Созданный объект</returns>
     public NodeDecimalEditBox AddDecimal(string columnName, bool isDataColumn, string headerText, int textWidth, int decimalPlaces, string sizeGroup)
     {
       NodeDecimalEditBox nodeControl = new NodeDecimalEditBox();
@@ -1405,6 +1465,17 @@ namespace FreeLibSet.Forms
       return nodeControl;
     }
 
+    /// <summary>
+    /// Добавляет столбец <see cref="NodeDoubleEditBox"/> для просмотра числовых значений
+    /// </summary>
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным.
+    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="textWidth">Ширина в текстовых единицах (включая десятичную точку)</param>
+    /// <param name="decimalPlaces">Количество знаков после запятой</param>
+    /// <param name="sizeGroup">Имя группы для синхронного изменения размеров столбцов</param>
+    /// <returns>Созданный объект</returns>
     public NodeDoubleEditBox AddDouble(string columnName, bool isDataColumn, string headerText, int textWidth, int decimalPlaces, string sizeGroup)
     {
       NodeDoubleEditBox nodeControl = new NodeDoubleEditBox();
@@ -1418,6 +1489,17 @@ namespace FreeLibSet.Forms
       return nodeControl;
     }
 
+    /// <summary>
+    /// Добавляет столбец <see cref="NodeSingleEditBox"/> для просмотра числовых значений
+    /// </summary>
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным.
+    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="textWidth">Ширина в текстовых единицах (включая десятичную точку)</param>
+    /// <param name="decimalPlaces">Количество знаков после запятой</param>
+    /// <param name="sizeGroup">Имя группы для синхронного изменения размеров столбцов</param>
+    /// <returns>Созданный объект</returns>
     public NodeSingleEditBox AddSingle(string columnName, bool isDataColumn, string headerText, int textWidth, int decimalPlaces, string sizeGroup)
     {
       NodeSingleEditBox nodeControl = new NodeSingleEditBox();
@@ -1431,7 +1513,15 @@ namespace FreeLibSet.Forms
       return nodeControl;
     }
 
-
+    /// <summary>
+    /// Добавляет столбец <see cref="NodeIntEditBox"/> для просмотра числовых значений
+    /// </summary>
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным.
+    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="textWidth">Ширина в текстовых единицах (включая десятичную точку)</param>
+    /// <returns>Созданный объект</returns>
     public NodeIntEditBox AddInt(string columnName, bool isDataColumn, string headerText, int textWidth)
     {
       NodeIntEditBox nodeControl = new NodeIntEditBox();
@@ -1442,11 +1532,25 @@ namespace FreeLibSet.Forms
       return nodeControl;
     }
 
+    /// <summary>
+    /// Добавляет столбец <see cref="NodeIntEditBox"/> для просмотра числовых значений.
+    /// Столбец привязывается к данным.
+    /// </summary>
+    /// <param name="columnName">Имя столбца</param>
+    /// <returns>Созданный объект</returns>
     public NodeIntEditBox AddInt(string columnName)
     {
       return AddInt(columnName, true, columnName, 5);
     }
 
+    /// <summary>
+    /// Добавляет столбец-флажок <see cref="NodeCheckBox"/> для просмотра логических значений.
+    /// </summary>
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным.
+    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <returns>Созданный объект</returns>
     public NodeCheckBox AddBool(string columnName, bool isDataColumn, string headerText)
     {
       NodeCheckBox nodeControl = new NodeCheckBox();
@@ -1463,11 +1567,23 @@ namespace FreeLibSet.Forms
       return nodeControl;
     }
 
+    /// <summary>
+    /// Добавляет столбец-флажок <see cref="NodeCheckBox"/> для просмотра логических значений.
+    /// Столбец привязывается к данным.
+    /// </summary>
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
+    /// <returns>Созданный объект</returns>
     public NodeCheckBox AddBool(string columnName)
     {
       return AddBool(columnName, true, columnName);
     }
 
+    /// <summary>
+    /// Добавляет столбец-изображение <see cref="NodeIcon"/> для просмотра значков.
+    /// Столбец привязывается к данным.
+    /// </summary>
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
+    /// <returns>Созданный объект</returns>
     public NodeIcon AddImage(string columnName)
     {
       NodeIcon nodeControl = new NodeIcon();

@@ -1130,9 +1130,9 @@ namespace FreeLibSet.Win32
       COMIMAGE_FLAGS_ILONLY = 0x00000001,
 
       /// <summary>
-      ///  Image can only be loaded into a 32-bit process, for instance if there are 32-bit vtablefixups, or
+      /// Image can only be loaded into a 32-bit process, for instance if there are 32-bit vtablefixups, or
       /// casts from native integers to int32. 
-      /// CLI implementations that have 64-bit native integers shall refuse loading binaries with this  flag set.
+      /// CLI implementations that have 64-bit native integers shall refuse loading binaries with this flag set.
       /// </summary>
       COMIMAGE_FLAGS_32BITREQUIRED = 0x00000002,
 

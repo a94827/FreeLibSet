@@ -51,7 +51,7 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Отключает подавление, если оно было включено.
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (_Active)

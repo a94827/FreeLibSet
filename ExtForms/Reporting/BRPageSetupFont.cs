@@ -111,10 +111,9 @@ namespace FreeLibSet.Forms.Reporting
     {
       try
       {
-        using (ExtTextRenderer rdr = new ExtTextRenderer())
+        using (ExtTextRenderer rdr = new ExtTextRenderer(args.Graphics, false))
           try
           {
-            rdr.Graphics = args.Graphics;
             InitRenderer(rdr);
 
             float dy = rdr.Font.GetHeight(args.Graphics);

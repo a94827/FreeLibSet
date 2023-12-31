@@ -484,7 +484,7 @@ namespace FreeLibSet.Win32
       /// Имя (идентификатор) ресурса
       /// </summary>
       public ResourceID Name { get { return _Name; } }
-      private ResourceID _Name;
+      private readonly ResourceID _Name;
 
       /// <summary>
       /// Объект-владелец
@@ -974,65 +974,6 @@ namespace FreeLibSet.Win32
 
       return ms.GetBuffer();
     }
-
-#if XXX
-    public byte[] GetIconBytes(IconInfo wanted, ResourceID groupIconId)
-    {
-      GroupIconInfo grp = GetGroupIconInfo(groupIconId);
-
-      // При подборе размер значка более важен, чем количество цветов.
-      // Меньший размер лучше, чем больший
-
-      int diff = int.MaxValue;
-      CPInfo best = null;
-      IconInfo bestInfo = new IconInfo(); // для отладки
-
-      foreach (KeyValuePair<IconInfo, CPInfo> pair in grp)
-      {
-        int dWidth = wanted.Width - pair.Key.Width;
-        if (dWidth < 0)
-          dWidth = -dWidth + 1;
-        int dHeight = wanted.Height - pair.Key.Height;
-        if (dHeight < 0)
-          dHeight = -dHeight + 1;
-        int dBPP = Math.Abs(pair.Key.BPP - wanted.BPP);
-
-        int d = (dWidth + dHeight) * 1000 + dBPP;
-        if (d < diff)
-        {
-          diff = d;
-          best = pair.Value;
-          bestInfo = pair.Key;
-          if (diff == 0)
-            break;
-        }
-      }
-
-      if (best == null)
-        return null;
-      else
-        return GetSingleImageIconBytes(best);
-    }
-
-    public byte[] GetIconBytes(IconInfo wanted)
-    {
-      try
-      {
-        if (Types[ResourceType.GroupIcon].Count > 0)
-        {
-          ResourceID groupIconId = Types[ResourceType.GroupIcon][0].Name;
-          return GetIconBytes(wanted, groupIconId);
-        }
-      }
-      catch { }
-
-      // Берем первый попавшийся значок
-      if (Types[ResourceType.Icon].Count > 0)
-        return GetSingleImageIconBytes(Types[ResourceType.Icon][0].Name);
-      else
-        return null;
-    }
-#endif
 
     /// <summary>
     /// Возвращает данные для значка.

@@ -70,7 +70,11 @@ namespace FreeLibSet.Config
     internal static readonly SettingsPart[] AllParts = new SettingsPart[] { SettingsPart.User, SettingsPart.Machine, SettingsPart.NoHistory };
     internal const SettingsPart AllPartValue = SettingsPart.User | SettingsPart.Machine | SettingsPart.NoHistory;
 
-    internal void WriteConfig(CfgPart cfg)
+    /// <summary>
+    /// Записывает данные для всех частей, возвращаемых свойством <see cref="UsedParts"/>, в одну секцию конфигурации <paramref name="cfg"/>.
+    /// </summary>
+    /// <param name="cfg">Записываемая секция</param>
+    public void WriteConfig(CfgPart cfg)
     {
       for (int j = 0; j < AllParts.Length; j++)
       {
@@ -79,7 +83,11 @@ namespace FreeLibSet.Config
       }
     }
 
-    internal void ReadConfig(CfgPart cfg)
+    /// <summary>
+    /// Записывает данные для всех частей, возвращаемых свойством <see cref="UsedParts"/>, в одну секцию конфигурации <paramref name="cfg"/>.
+    /// </summary>
+    /// <param name="cfg">Секция с данными</param>
+    public void ReadConfig(CfgPart cfg)
     {
       for (int j = 0; j < AllParts.Length; j++)
       {
