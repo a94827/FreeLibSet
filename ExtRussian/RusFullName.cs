@@ -471,17 +471,20 @@ namespace FreeLibSet.Russian
     #region Нормализация
 
     /// <summary>
-    /// Преобразование регистров Ф.И.О., удаление точек и лишних пробелов
-    /// Буква "Ё" сохраняется
+    /// Преобразование регистров Ф.И.О., удаление точек и лишних символов.
+    /// Буква "Ё" сохраняется.
+    /// Пробелы заменяются на "-", кроме окончаний "Кызы", "Гызы" и "Оглы"
     /// </summary>
     public RusFullName Normalized
     {
       get
       {
-        return new RusFullName(
-          GetNormailizedPart(Surname, true),
-          GetNormailizedPart(Name, true),
-          GetNormailizedPart(Patronymic, true));
+        string s = GetNormailizedPart(Surname, true);
+        s = s.Replace(' ', '-');
+        string n = GetNormailizedPart(Name, true);
+        n = n.Replace(' ', '-');
+        string p = GetNormailizedPart(Patronymic, true);
+        return new RusFullName(s, n, p);
       }
     }
 
@@ -506,7 +509,21 @@ namespace FreeLibSet.Russian
         return String.Empty;
 
       if (replace)
+      {
         s = CorrectText(s);
+
+        // 21.02.2024
+        s = s.Replace(' ', '-');
+        if (s.IndexOf('-') >= 0)
+        {
+          if (s.EndsWith("-КЫЗЫ", StringComparison.OrdinalIgnoreCase) ||
+            s.EndsWith("-ГЫЗЫ", StringComparison.OrdinalIgnoreCase) ||
+            s.EndsWith("-ОГЛЫ", StringComparison.OrdinalIgnoreCase))
+          {
+            s = s.Substring(0, s.Length - 5) + ' ' + s.Substring(s.Length - 4);
+          }
+        }
+      }
       // Исправляем регистр
       return DataTools.ToUpperWordsInvariant(s);
     }
@@ -524,7 +541,7 @@ namespace FreeLibSet.Russian
       // Убираем пробелы вокруг дефиса
       s = s.Replace(" -", "-");
       s = s.Replace("- ", "-");
-      s = DataTools.RemoveDoubleChars(s,'-');
+      s = DataTools.RemoveDoubleChars(s, '-');
       // Убираем двойные и концевые пробелы
       s = DataTools.RemoveDoubleChars(s, ' ');
       s = s.Trim();
@@ -624,17 +641,17 @@ namespace FreeLibSet.Russian
         // Пытаемся определить пол
         sex = this.Sex;
 
-      RusGender Gender;
+      RusGender gender;
       switch (sex)
       {
         case SexOfPerson.Male:
-          Gender = RusGender.Masculine;
+          gender = RusGender.Masculine;
           break;
         case SexOfPerson.Female:
-          Gender = RusGender.Feminine;
+          gender = RusGender.Feminine;
           break;
         default:
-          Gender = RusGender.Undefined;
+          gender = RusGender.Undefined;
           break;
       }
 
@@ -658,7 +675,7 @@ namespace FreeLibSet.Russian
 
         // 20.09.2011
         // Женские фамилии, не имеющие суффиксов, не склоняются
-        if (Gender == RusGender.Feminine)
+        if (gender == RusGender.Feminine)
         {
           if ("БВГДЕЖЗИЙКЛМНПРСТУФХЦШЫЬЭЮ".IndexOf(surname1[surname1.Length - 1]) >= 0)
             noCasesSurname = true;
@@ -667,10 +684,10 @@ namespace FreeLibSet.Russian
       if (noCasesSurname)
         surnames.Fill(Surname);
       else
-        surnames.GetCases(Surname, Gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which);
+        surnames.GetCases(Surname, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which);
 
-      names.GetCases(Name, Gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name);
-      patronymics.GetCases(Patronymic, Gender, RusFormArrayGetCasesOptions.NoPlural);
+      names.GetCases(Name, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name);
+      patronymics.GetCases(Patronymic, gender, RusFormArrayGetCasesOptions.NoPlural);
 
       string[] surnameItems = surnames.Items;
       string[] nameItems = names.Items;
@@ -810,6 +827,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Сравнивает два Ф.И.О.
     /// Регистр символов игнорируется.
+    /// Буквы "Е" и "Ё" считаются одинаковыми.
     /// Считаются одинаковыми Ф.И.О., если в одном объекте имя и отчество заданы полностью, а в другом - только сокращение.
     /// Например, "Иванов Иван Иванович"=="Иванов И.И."
     /// </summary>
@@ -831,9 +849,8 @@ namespace FreeLibSet.Russian
         s1 = String.Empty;
       if (s2 == null)
         s2 = String.Empty;
-
-      s1 = s1.Replace('Ё', 'Е').Replace(' ', '-');
-      s2 = s2.Replace('Ё', 'Е').Replace(' ', '-');
+      s1 = s1.Replace('Ё', 'Е').Replace('ё', 'е').Replace(' ', '-'); // 20.02.2024. Замена ё на е в нижнем регистре.
+      s2 = s2.Replace('Ё', 'Е').Replace('ё', 'е').Replace(' ', '-');
 
       // Точное сравнение
       if (String.Equals(s1, s2, StringComparison.OrdinalIgnoreCase))
@@ -893,7 +910,8 @@ namespace FreeLibSet.Russian
     #region Проверка Ф.И.О. в-целом
 
     /// <summary>
-    /// Выполнить проверку фамилии, имени и отчества
+    /// Выполнить проверку фамилии, имени и отчества.
+    /// Требуется, чтобы фамилия и имя были заданы. Пустой объект (<see cref="IsEmpty"/>=true) считается неправильным.
     /// </summary>
     /// <param name="options">Опции проверки</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
@@ -934,6 +952,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Проверка корректности строки, содержащей фамилию, имени и отчество, или содержащей фамилию с инициалами
     /// (в зависимости от параметра <paramref name="options"/>).
+    /// Требуется, чтобы фамилия и имя были заданы. Пустая строка считается неправильной.
     /// </summary>
     /// <param name="s">Проверяемая строка</param>
     /// <param name="options">Режимы проверки</param>
@@ -1083,6 +1102,7 @@ namespace FreeLibSet.Russian
         return false;
       return DoIsValidName(name, options, out errorText, 0);
     }
+
     private static bool DoIsValidName(string name, RusFullNameValidateOptions options, out string errorText, int charOff)
     {
       if (String.IsNullOrEmpty(name))

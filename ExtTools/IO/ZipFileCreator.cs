@@ -241,6 +241,7 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Это должно быть в отдельном методе, т.к. оно может не запускаться
     /// </summary>
+    [DebuggerStepThrough]
     private static void TryTestZipFile()
     {
       Type dummy = typeof(ICSharpCode.SharpZipLib.Zip.ZipFile);

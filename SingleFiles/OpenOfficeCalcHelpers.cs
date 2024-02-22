@@ -940,7 +940,7 @@ namespace FreeLibSet.OpenOffice.Calc
   /// <summary>
   /// Лист книги Calc.
   /// Хранит интерфейс XSpreadsheet.
-  /// Также храиит ссылку на интерфейс XSpreadsheetDocument, потому что ее нельзя получить
+  /// Также хранит ссылку на интерфейс XSpreadsheetDocument, потому что ее нельзя получить
   /// </summary>
   public struct Worksheet
   {

@@ -17,7 +17,7 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Controls
 {
   /// <summary>
-  /// Источник данных XML-документа (свойство XmlViewBox.SourceKind)
+  /// Источник данных XML-документа (свойство <see cref="XmlViewBox.SourceKind"/>)
   /// </summary>
   public enum XmlViewBoxSourceKind
   {
@@ -27,17 +27,17 @@ namespace FreeLibSet.Controls
     None,
 
     /// <summary>
-    /// Был указан путь к файлу (свойство XmlFilePath)
+    /// Был указан путь к файлу (свойство <see cref="XmlViewBox.XmlFilePath"/>)
     /// </summary>
     File,
 
     /// <summary>
-    /// Был задан массив данных (свойство XmlBytes)
+    /// Был задан массив данных (свойство <see cref="XmlViewBox.XmlBytes"/>)
     /// </summary>
     Bytes,
 
     /// <summary>
-    /// Был присоединен документ в памяти (свойство XmlDocument)
+    /// Был присоединен документ в памяти (свойство <see cref="XmlViewBox.XmlDocument"/>)
     /// </summary>
     XmlDocument
   }
@@ -46,7 +46,7 @@ namespace FreeLibSet.Controls
   /// Объект для просмотра XML-документов
   /// </summary>
   [Description("Просмотр XML-документов")]
-  [ToolboxBitmap(typeof(UserMaskedComboBox), "UserMaskedComboBox.bmp")]
+  [ToolboxBitmap(typeof(XmlViewBox), "XmlViewBox.bmp")]
   [ToolboxItem(true)]
   public class XmlViewBox : WebBrowser
   {
@@ -286,7 +286,7 @@ namespace FreeLibSet.Controls
     }
 
     /// <summary>
-    /// Событие вызывается после присоединения данных (установки одного из свойств XmlFilePath, XmlDocument, XmlBytes или XmlText)
+    /// Событие вызывается после присоединения данных (установки одного из свойств <see cref="XmlFilePath"/>, <see cref="XmlDocument"/>, <see cref="XmlBytes"/> или <see cref="XmlText"/>)
     /// </summary>
     [Description("Событие вызывается после присоединения данных")]
     [Category("Property Changed")]

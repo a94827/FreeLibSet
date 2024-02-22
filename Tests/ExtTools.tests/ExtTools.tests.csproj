@@ -124,6 +124,7 @@
     <Compile Include="Reporting\BRPaginatorTests.cs" />
     <Compile Include="Reporting\BRReportTests.cs" />
     <Compile Include="Reporting\BRSectionTests.cs" />
+    <Compile Include="Reporting\BRTableTests.cs" />
     <Compile Include="Tests\DateTimeAssertTests.cs" />
     <Compile Include="Text\CsvTextConvertTests.cs" />
     <Compile Include="DependedValues\DepConstTests.cs" />

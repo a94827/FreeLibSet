@@ -4,6 +4,7 @@
     <assembly path="ExtTools.tests\bin\Debug\ExtTools.tests.dll" />
     <assembly path="ExtDB.tests\bin\Debug\ExtDB.tests.dll" />
     <assembly path="ExtDBDocs.tests\bin\Debug\ExtDBDocs.tests.dll" />
+    <assembly path="ExtRussian.tests\bin\Debug\ExtRussian.tests.dll" />
   </Config>
   <Config name="Release" binpathtype="Auto" />
 </NUnitProject>

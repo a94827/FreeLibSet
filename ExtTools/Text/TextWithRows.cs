@@ -10,12 +10,12 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Text
 {
   /// <summary>
-  /// Специальные значения сепараторов для конструктора TextWithRows 
+  /// Специальные значения сепараторов для конструктора класса <see cref="TextWithRows"/>
   /// </summary>
   public enum TextWithRowsLineSeparators
-  { 
+  {
     /// <summary>
-    /// Значение по умолчанию - единственный сепаратор, задаваемый Environment.NewLine
+    /// Значение по умолчанию - единственный сепаратор, задаваемый <see cref="Environment.NewLine"/>
     /// </summary>
     Default,
 
@@ -26,17 +26,17 @@ namespace FreeLibSet.Text
   }
 
   /// <summary>
-  /// Хранение текста, содержащего строки
-  /// Позволяет выполнить преобразование из абсолютной позиции в номер строки / столбца и обратно
+  /// Хранение текста, содержащего строки.
+  /// Позволяет выполнить преобразование из абсолютной позиции в номер строки / столбца и обратно.
   /// Потокобезопасный класс "однократной записи" (все значение устанавливаются в конструкторе)
-  /// Класс реализует перечислитель по строкам
+  /// Класс реализует перечислитель по строкам.
   /// </summary>
   public sealed class TextWithRows : IEnumerable<string>
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создание объекта с использованием разделителя по умолчанию Environment.NewLine 
+    /// Создание объекта с использованием разделителя по умолчанию <see cref="Environment.NewLine"/>.
     /// </summary>
     /// <param name="text">Текст</param>
     public TextWithRows(string text)
@@ -47,10 +47,10 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Создание объекта с использованием заданного разделителя. 
     /// </summary>
-    /// <param name="Text">Текст</param>
+    /// <param name="text">Текст</param>
     /// <param name="lineSeparators">Разделитель строк</param>
-    public TextWithRows(string Text, TextWithRowsLineSeparators lineSeparators)
-      : this(Text, GetLineSeparators(lineSeparators))
+    public TextWithRows(string text, TextWithRowsLineSeparators lineSeparators)
+      : this(text, GetLineSeparators(lineSeparators))
     {
     }
 
@@ -68,8 +68,8 @@ namespace FreeLibSet.Text
     }
 
     /// <summary>
-    /// Создание объекта с использованием указанных разделителей
-    /// При этом "сложные" разделители должны идти перед простыми, то есть правильным будет порядок
+    /// Создание объекта с использованием указанных разделителей.
+    /// При этом "сложные" разделители должны идти перед простыми, то есть правильным будет порядок.
     /// { "\r\n", "\r\n", "\r", "\n" }
     /// </summary>
     /// <param name="text">Текст</param>
@@ -150,14 +150,14 @@ namespace FreeLibSet.Text
 
     /// <summary>
     /// Текст в исходном виде.
-    /// Преобразование сепараторов не учитывается, даже если оно выполнялось в конструкторе
+    /// Преобразование сепараторов не учитывается, даже если оно выполнялось в конструкторе.
     /// </summary>
     public string Text { get { return _Text; } }
-    private string _Text;
+    private readonly string _Text;
 
     /// <summary>
-    /// Возвращает свойство Text
-    /// Преобразование сепараторов не учитывается, даже если оно выполнялось в конструкторе
+    /// Возвращает свойство <see cref="Text"/>.
+    /// Преобразование сепараторов не учитывается, даже если оно выполнялось в конструкторе.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -169,7 +169,7 @@ namespace FreeLibSet.Text
     /// Возвращает массив отдельных строк.
     /// Если в конструкторе была задана замена сепараторов, то она учитывается при разбиении на строки
     /// </summary>
-    /// <returns>Массив строк, содержащий RowCount элементов</returns>
+    /// <returns>Массив строк, содержащий <see cref="RowCount"/> элементов</returns>
     public string[] ToArray()
     {
       string[] a = new string[RowCount];
@@ -184,13 +184,13 @@ namespace FreeLibSet.Text
 
     /// <summary>
     /// Массив позиций начала каждой строки.
-    /// Первый элемент массива содержит 0
+    /// Первый элемент массива содержит 0.
     /// </summary>
     private List<int> _RowStarts;
 
     /// <summary>
-    /// Массив, содержащий длину каждой строки
-    /// В длину строки не входят символы перхода на новую строку
+    /// Массив, содержащий длину каждой строки.
+    /// В длину строки не входят символы перхода на новую строку.
     /// </summary>
     private List<int> _RowLengths;
 
@@ -200,7 +200,7 @@ namespace FreeLibSet.Text
     public int RowCount { get { return _RowStarts.Count; } }
 
     /// <summary>
-    /// Получить строку с заданным индексом от 0 до RowCount-1
+    /// Получить строку с заданным индексом от 0 до (<see cref="RowCount"/>-1)
     /// </summary>
     /// <param name="rowIndex">Индекс строки</param>
     /// <returns>Строка</returns>
@@ -222,11 +222,11 @@ namespace FreeLibSet.Text
     // "Index" - индекс в строке Text
 
     /// <summary>
-    /// Получить номер строки и столбца, соответствующего заданному смещению в строке Text.
-    /// <paramref name="index"/> должен быть в диапазоне от 0 до Text.Length-1.
-    /// Если смещение указывает на символы конца строки, то возвращается номер столбца, больший, чем длина строки
+    /// Получить номер строки и столбца, соответствующего заданному смещению в строке <see cref="Text"/>.
+    /// <paramref name="index"/> должен быть в диапазоне от 0 до (<see cref="Text"/>.Length-1).
+    /// Если смещение указывает на символы конца строки, то возвращается номер столбца, больший, чем длина строки.
     /// </summary>
-    /// <param name="index">Смещение в строке Text</param>
+    /// <param name="index">Смещение в строке <see cref="Text"/></param>
     /// <returns>Позиция символа (индекс строки и столбца)</returns>
     public TextPosition GetPosition(int index)
     {
@@ -236,13 +236,13 @@ namespace FreeLibSet.Text
     }
 
     /// <summary>
-    /// Получить номер строки, соответствующий заданному смещению в строке Text.
-    /// <paramref name="index"/> должен быть в диапазоне от 0 до Text.Length-1.
-    /// Если Index указывает на символ-разделитель строк, то возвращается индекс предыдущей строки.
-    /// Для получения номера столбца следует использовать метод GetPosition() или вычислить смещение, используя
-    /// GetRowStartIndex()
+    /// Получить номер строки, соответствующий заданному смещению в строке <see cref="Text"/>.
+    /// <paramref name="index"/> должен быть в диапазоне от 0 до (<see cref="Text"/>.Length-1).
+    /// Если <paramref name="index"/> указывает на символ-разделитель строк, то возвращается индекс предыдущей строки.
+    /// Для получения номера столбца следует использовать метод <see cref="GetPosition(int)"/> или вычислить смещение, используя
+    /// <see cref="GetRowStartIndex(int)"/>.
     /// </summary>
-    /// <param name="index">Смещение в строке Text</param>
+    /// <param name="index">Смещение в строке <see cref="Text"/></param>
     /// <returns>Индекс строки</returns>
     public int GetRow(int index)
     {
@@ -257,8 +257,8 @@ namespace FreeLibSet.Text
     }
 
     /// <summary>
-    /// Возвращает индекс первой позиции в строке Text для строки с заданным номером.
-    /// Номер строки <paramref name="row"/> должен быть в диапазоне от 0 до RowCount-1
+    /// Возвращает индекс первой позиции в строке <see cref="Text"/> для строки с заданным номером.
+    /// Номер строки <paramref name="row"/> должен быть в диапазоне от 0 до (<see cref="RowCount"/>-1).
     /// </summary>
     /// <param name="row">Номер строки (нумерация начинается с 0)</param>
     /// <returns>Индекс в строке Text</returns>
@@ -271,8 +271,8 @@ namespace FreeLibSet.Text
 
     /// <summary>
     /// Возвращает длину строки с заданным номером.
-    /// Номер строки <paramref name="row"/> должен быть в диапазоне от 0 до RowCount-1.
-    /// В длину не входят символы новой строки
+    /// Номер строки <paramref name="row"/> должен быть в диапазоне от 0 до (<see cref="RowCount"/>-1).
+    /// В длину не входят символы новой строки.
     /// </summary>
     /// <param name="row">Номер строки (нумерация начинается с 0)</param>
     /// <returns>Количество символов в строке</returns>
@@ -284,13 +284,12 @@ namespace FreeLibSet.Text
     }
 
     /// <summary>
-    /// Получить смещение в массиве Text, соответствующее заданному номеру строки и столбца
+    /// Получить смещение в <see cref="Text"/>, соответствующее заданному номеру строки и столбца.
     /// Если номер строки в <paramref name="position"/> выходит за пределы допустимого значения,
-    /// выбрасывается ArgumentOutOfRangeException. 
-    /// Если номер столбца больше, чем длина строки, возвращается индекс, на один больший, чем длина строки
+    /// выбрасывается <see cref="ArgumentOutOfRangeException"/>. 
+    /// Если номер столбца больше, чем длина строки, возвращается индекс, на один больший, чем длина строки.
     /// Если строка не является последней, возвращается позиция разделителя строки. Для последней строки
-    /// возвращается либо позиция разделителя, либо значение Text.Length, если последняя строка не содержит
-    /// разделителя
+    /// возвращается либо позиция разделителя, либо значение <see cref="Text"/>.Length, если последняя строка не содержит разделителя.
     /// </summary>
     /// <param name="position">Позиция символа (индекс строки и символоа в строке)</param>
     /// <returns>Индекс в строке Text</returns>
@@ -404,8 +403,8 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Инициализирует структуру
     /// </summary>
-    /// <param name="row">Индекс строки</param>
-    /// <param name="column">Индекс столбца</param>
+    /// <param name="row">Индекс строки. Нумерация начинается с 0</param>
+    /// <param name="column">Индекс столбца. Нумерация начинается с 0</param>
     public TextPosition(int row, int column)
     {
       if (row < 0)
@@ -425,13 +424,13 @@ namespace FreeLibSet.Text
     /// Номер строки. Нумерация начинается с 0
     /// </summary>
     public int Row { get { return _Row; } }
-    private int _Row;
+    private readonly int _Row;
 
     /// <summary>
-    /// Номер столбца. Нумерация начинаяется с 0
+    /// Номер столбца. Нумерация начинается с 0
     /// </summary>
     public int Column { get { return _Column; } }
-    private int _Column;
+    private readonly int _Column;
 
     #endregion
 

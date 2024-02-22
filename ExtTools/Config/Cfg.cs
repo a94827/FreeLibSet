@@ -2721,6 +2721,7 @@ namespace FreeLibSet.Config
     {
       _Converter = converter;
       _Document = new XmlDocument();
+      _Document.XmlResolver = null; // 16.01.2024
 
       _RootNode = _Document.CreateElement("Config");
       _Document.AppendChild(_RootNode);

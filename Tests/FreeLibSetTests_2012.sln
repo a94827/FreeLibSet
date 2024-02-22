@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtDBDocs.tests", "ExtDBDoc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtTestHelpers", "ExtTestHelpers\ExtTestHelpers.csproj", "{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtRussian", "..\ExtRussian\ExtRussian.csproj", "{98F68490-6102-4888-AD7B-5649ECC01ADC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtRussian.tests", "ExtRussian.tests\ExtRussian.tests.csproj", "{7761E6C6-DD91-4197-9DE2-12DAE3DD7A96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F68490-6102-4888-AD7B-5649ECC01ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F68490-6102-4888-AD7B-5649ECC01ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F68490-6102-4888-AD7B-5649ECC01ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F68490-6102-4888-AD7B-5649ECC01ADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7761E6C6-DD91-4197-9DE2-12DAE3DD7A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7761E6C6-DD91-4197-9DE2-12DAE3DD7A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7761E6C6-DD91-4197-9DE2-12DAE3DD7A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7761E6C6-DD91-4197-9DE2-12DAE3DD7A96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

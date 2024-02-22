@@ -997,7 +997,7 @@ namespace FreeLibSet.Reporting
     /// <returns>Новый селектор</returns>
     public abstract BRSelector CreateSelector();
 
-    #region Дополнительные методы
+    #region Дополнительные методы и свойства
 
     /// <summary>
     /// Возвращает true, если у всех ячеек границы <see cref="BRCellStyle.LeftBorder"/>, <see cref="BRCellStyle.TopBorder"/>,

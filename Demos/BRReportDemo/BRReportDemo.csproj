@@ -11,6 +11,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,6 +41,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -48,6 +52,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BitMiracle.LibTiff.NET">
@@ -103,11 +108,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtForms\ExtForms.csproj">
-      <Project>{dbd17db7-a65f-4659-9604-b2acb1ba35a2}</Project>
+      <Project>{DBD17DB7-A65F-4659-9604-B2ACB1BA35A2}</Project>
       <Name>ExtForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ExtTools\ExtTools.csproj">
-      <Project>{e61b6cf2-a434-46f2-af4a-db5e4851d170}</Project>
+      <Project>{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}</Project>
       <Name>ExtTools</Name>
     </ProjectReference>
   </ItemGroup>

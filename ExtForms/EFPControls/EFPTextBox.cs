@@ -22,8 +22,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс провайдера управляющего элемента, содержащего текст, который может вводиться пользователем.
-  /// Реализуется такими элементами, как EFPDateBox. 
-  /// "Настоящие" поля текстового ввода реализуют расширенный интерфейс IEFPTextBox
+  /// Реализуется такими элементами, как <see cref="EFPDateTimeBox"/>. 
+  /// "Настоящие" поля текстового ввода реализуют расширенный интерфейс <see cref="IEFPTextBox"/>.
   /// </summary>
   public interface IEFPSimpleTextBox : IEFPControl
   {
@@ -38,7 +38,7 @@ namespace FreeLibSet.Forms
     int TextLength { get; }
 
     /// <summary>
-    /// Начальная позиция выделенного текста или положение курсора при SelectionLength=0
+    /// Начальная позиция выделенного текста или положение курсора при <see cref="SelectionLength"/>=0
     /// </summary>
     int SelectionStart { get; set; }
 
@@ -55,7 +55,7 @@ namespace FreeLibSet.Forms
     string SelectedText { get; set; }
 
     /// <summary>
-    /// Одновременная установка свойств SelectionStart и SelectionLength
+    /// Одновременная установка свойств <see cref="SelectionStart"/> и <see cref="SelectionLength"/>
     /// </summary>
     /// <param name="start">Начальная позиция выделения</param>
     /// <param name="length">Длина выделенного фрагмента</param>
@@ -68,24 +68,24 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Интерфейс, объявляющий свойства Text, CanBeEmpty и MaxLength.
-  /// Применяется вместо EFPTextBoxAnyControl там, где шаблоны неудобны
+  /// Интерфейс, объявляющий свойства TextEx, CanBeEmpty и MaxLength.
+  /// Применяется вместо <see cref="EFPTextBoxAnyControl{T}"/> там, где шаблоны неудобны
   /// </summary>
   public interface IEFPTextBox : IEFPSimpleTextBox
   {
     /// <summary>
-    /// Управляемое свойство Text
+    /// Управляемое свойство <see cref="IEFPSimpleTextBox.Text"/>
     /// </summary>
     DepValue<string> TextEx { get; set; }
 
     /// <summary>
-    /// Основное свойство для проверки пустых значений. По умолчанию равно Error - пустые значения не допускаются
+    /// Основное свойство для проверки пустых значений. По умолчанию равно <see cref="UIValidateState.Error"/> - пустые значения не допускаются.
     /// </summary>
     UIValidateState CanBeEmptyMode { get; set; }
 
     /// <summary>
     /// true, если элемент может содержать пустой текст.
-    /// Дублирует CanBeEmptyMode
+    /// Дублирует <see cref="CanBeEmptyMode"/>.
     /// </summary>
     bool CanBeEmpty { get; set; }
 
@@ -110,7 +110,7 @@ namespace FreeLibSet.Forms
     string DisabledText { get; set; }
 
     /// <summary>
-    /// Управляемое свойство DisabledText
+    /// Управляемое свойство <see cref="DisabledText"/>
     /// </summary>
     DepValue<string> DisabledTextEx { get; set; }
 
@@ -120,7 +120,8 @@ namespace FreeLibSet.Forms
     IEFPTextSearchContext TextSearchContext { get; }
 
     /// <summary>
-    /// Возвращает true для TextBox и RichTextBox
+    /// Возвращает true для управляющих элементов <see cref="TextBox"/> и <see cref="RichTextBox"/>.
+    /// Для определения реального использования многострочного режима есть свойстов <see cref="IsMultiLine"/>.
     /// </summary>
     bool MultiLineSupported { get; }
 
@@ -131,12 +132,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если управляющий элемент использует клавишу Enter для вставки новой строки.
-    /// Для EFPTextBox возвращает свойство Control.AcceptReturns. Для остальных элементов возвращает false
+    /// Для <see cref="EFPTextBox"/> возвращает свойство Control.AcceptReturns. Для остальных элементов возвращает false.
     /// </summary>
     bool AcceptsReturn { get; }
 
     /// <summary>
-    /// Для EFPTextBox возвращает признак ввода звездочек.
+    /// Для <see cref="EFPTextBox"/> возвращает признак ввода звездочек.
     /// Для остальных элементов возвращает false
     /// </summary>
     bool IsPasswordInput { get; }
@@ -233,7 +234,7 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Базовый класс для ComboBox с DropDownStyle=DropDown, TextBox и MaskedTextBox
+  /// Базовый класс для <see cref="ComboBox"/> с DropDownStyle=DropDown, <see cref="TextBox"/> и <see cref="MaskedTextBox"/>
   /// </summary>
   public abstract class EFPTextBoxAnyControl<T> : EFPSyncControl<T>, IEFPTextBox
     where T : Control
@@ -277,7 +278,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверка корректности значения.
-    /// Используется свойство CanBeEmptyMode
+    /// Используется свойство <see cref="CanBeEmptyMode"/>
     /// </summary>
     protected override void OnValidate()
     {
@@ -300,7 +301,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Синхронизированное значение (дублирует свойство Text)
+    /// Синхронизированное значение (дублирует свойство <see cref="Text"/>)
     /// </summary>
     public override object SyncValue
     {
@@ -375,7 +376,7 @@ namespace FreeLibSet.Forms
     #region Свойство Text
 
     /// <summary>
-    /// Введенный текст (свойство Control.Text)
+    /// Введенный текст (свойство <see cref="Control.Text"/>)
     /// </summary>
     public string Text
     {
@@ -392,7 +393,7 @@ namespace FreeLibSet.Forms
     private bool _HasSavedText;
 
     /// <summary>
-    /// Установка свойства ControlText
+    /// Установка свойства <see cref="ControlText"/>
     /// </summary>
     protected void InitControlText()
     {
@@ -413,7 +414,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство TextEx
+    /// Управляемое свойство для <see cref="Text"/>
     /// </summary>
     public DepValue<string> TextEx
     {
@@ -468,14 +469,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если в настоящий момент обрабатывается событие Control.TextChanged.
+    /// Возвращает true, если в настоящий момент обрабатывается событие <see cref="Control.TextChanged"/>.
     /// </summary>
     protected bool InsideTextChanged { get { return _InsideTextChanged; } }
     private bool _InsideTextChanged;
 
     /// <summary>
     /// Метод вызывается при изменении текста в управляющем элементе.
-    /// Переопределенный метод может, например, установить свойство ValueToolTipText.
+    /// Переопределенный метод может, например, установить свойство <see cref="EFPControlBase.ValueToolTipText"/>.
     /// Обязательно должен вызываться базовый метод
     /// </summary>
     protected virtual void OnTextChanged()
@@ -492,7 +493,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получение текста от управляющего элемента.
-    /// Этот метод переопределен для MaskedTextBox
+    /// Этот свойство переопределено для <see cref="MaskedTextBox"/>
     /// </summary>
     /// <returns></returns>
     protected virtual string ControlText
@@ -502,7 +503,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Объект содержит true, если есть введенная строка
+    /// Управляемое свойство возвращает true, если есть непустая введенная строка.
+    /// Используется в валидаторах управляющего элемента.
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -525,8 +527,8 @@ namespace FreeLibSet.Forms
     #region Свойство DisabledText
 
     /// <summary>
-    /// Этот текст замещает свойство Text, когда Enabled=false или ReadOnly=true (для управляющих элементов, у которых есть это свойство).
-    /// Свойство действует при установленном свойстве AllowDisabledText.
+    /// Этот текст замещает свойство <see cref="Text"/>, когда <see cref="Control.Enabled"/>=false или ReadOnly=true (для управляющих элементов, у которых есть это свойство).
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledText"/>.
     /// По умолчанию - пустая строка.
     /// </summary>
     public string DisabledText
@@ -545,8 +547,8 @@ namespace FreeLibSet.Forms
     private string _DisabledText;
 
     /// <summary>
-    /// Этот текст замещает свойство Text, когда Enabled=false или ReadOnly=true (для управляющих элементов, у которых есть это свойство).
-    /// Свойство действует при установленном свойстве AllowDisabledText.
+    /// Этот текст замещает свойство <see cref="Text"/>, когда <see cref="Control.Enabled"/>=false или ReadOnly=true (для управляющих элементов, у которых есть это свойство).
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledText"/>.
     /// По умолчанию - пустая строка.
     /// Управляемое свойство для DisabledText.
     /// </summary>
@@ -583,7 +585,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Разрешает использование свойства DisabledText
+    /// Разрешает использование свойства <see cref="DisabledText"/>
     /// </summary>
     public bool AllowDisabledText
     {
@@ -623,7 +625,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// True, если ли элемент может содержать пустой текст.
-    /// Дублирует CanBeEmptyMode
+    /// Дублирует <see cref="CanBeEmptyMode"/>.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -657,7 +659,7 @@ namespace FreeLibSet.Forms
     public abstract void SelectAll();
 
     /// <summary>
-    /// Одновременная установка свойств SelectionStart и SelectionLength.
+    /// Одновременная установка свойств <see cref="SelectionStart"/> и <see cref="SelectionLength"/>.
     /// </summary>
     /// <param name="start">Начальная позиция выделения</param>
     /// <param name="length">Длина выделенного фрагмента текста</param>
@@ -687,10 +689,10 @@ namespace FreeLibSet.Forms
     private IEFPTextSearchContext _TextSearchContext;
 
     /// <summary>
-    /// Вызывается при первом обращении к свойству TextSearchContext.
-    /// Непереопределенный метод создает и возвращает объект EFPTextSearchContext
+    /// Вызывается при первом обращении к свойству <see cref="TextSearchContext"/>.
+    /// Непереопределенный метод создает и возвращает объект <see cref="EFPTextBoxSearchContext"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект</returns>
     protected virtual IEFPTextSearchContext CreateTextSearchContext()
     {
       return new EFPTextBoxSearchContext(this);
@@ -698,9 +700,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если true, то доступна команда "Найти" (Ctrl-F).
-    /// Если false, то свойство TextSearchContext возвращает null и поиск недоступен.
+    /// Если false, то свойство <see cref="TextSearchContext"/> возвращает null и поиск недоступен.
     /// Свойство имеет по умолчанию значение true, если поле предназначено для ввода многострочного
-    /// текста и false - если для однострочного
+    /// текста и false - если для однострочного.
     /// Свойство можно устанавливать только до вывода поля на экран.
     /// </summary>
     public bool TextSearchEnabled
@@ -731,43 +733,44 @@ namespace FreeLibSet.Forms
     #region IEFPTextBox Members
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Свойство должно быть переопределено.
     /// </summary>
     public virtual bool MultiLineSupported { get { return false; } }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
+    /// Для однострочных управляющих элементов возращает false.
     /// Свойство должно быть переопределено.
     /// </summary>
     public virtual bool IsMultiLine { get { return false; } }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Свойство должно быть переопределено.
     /// </summary>
     public virtual bool AcceptsReturn { get { return false; } }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Свойство должно быть переопределено.
     /// </summary>
     public virtual bool IsPasswordInput { get { return false; } }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Свойство должно быть переопределено.
     /// </summary>
     public virtual bool UndoSupported { get { return false; } }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Свойство должно быть переопределено.
     /// </summary>
     public virtual bool CanUndo { get { return false; } }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Метод должен быть переопределен.
     /// </summary>
     public virtual void Undo()
@@ -776,7 +779,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Метод может быть переопределен, если управляющий элемент имеет собственную реализацию метода Cut().
     /// </summary>
     public virtual void Cut()
@@ -791,7 +794,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Метод может быть переопределен, если управляющий элемент имеет собственную реализацию метода Copy().
     /// </summary>
     public virtual void Copy()
@@ -803,7 +806,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Реализация интерфейса IEFPTextBox.
+    /// Реализация интерфейса <see cref="IEFPTextBox"/>.
     /// Метод может быть переопределен, если управляющий элемент имеет собственную реализацию метода Paste().
     /// </summary>
     public virtual void Paste()
@@ -824,7 +827,7 @@ namespace FreeLibSet.Forms
     #region IEFPSimpleTextBox Members
 
     /// <summary>
-    /// IEFPSimpleTextBox
+    /// Возвращает длину текста, введенного пользователем в настоящий момент
     /// </summary>
     public virtual int TextLength
     {
@@ -874,7 +877,7 @@ namespace FreeLibSet.Forms
     #region Переопределяемые методы
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
+    /// Возвращает true, если установлены свойства <see cref="EFPControlBase.Enabled"/>=true и <see cref="ReadOnly"/>=false.
     /// </summary>
     public override bool EnabledState
     {
@@ -882,8 +885,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Блокировка при синхронизации выполняется не через свойство EnabledEx, как
-    /// у других управляющих элементов, а через свойство ReadOnly
+    /// Блокировка при синхронизации выполняется не через свойство <see cref="EFPControlBase.Enabled"/>, как
+    /// у других управляющих элементов, а через свойство <see cref="ReadOnly"/>.
     /// </summary>
     /// <param name="value">True-выключить блокировку, false-включить</param>
     public override void SyncMasterState(bool value)
@@ -899,7 +902,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Режим работы текстового поля для просмотра без возможности редактирования.
     /// По умолчанию - false - пользователь может редактировать текст
-    /// В отличие от установки свойства Enabled=false, при RedaOnly=true пользователь может выделять текст и копировать его в буфер обмена.
+    /// В отличие от установки свойства <see cref="EFPControlBase.Enabled"/>=false, при ReadOnly=true пользователь может выделять текст и копировать его в буфер обмена.
     /// Контроль введенного значения не выполняется при ReadOnly=true.
     /// </summary>
     public bool ReadOnly
@@ -923,7 +926,7 @@ namespace FreeLibSet.Forms
     protected abstract bool ControlReadOnly { get; set; }
 
     /// <summary>
-    /// Управляемое свойство ReadOnly
+    /// Управляемое свойство <see cref="ReadOnly"/>
     /// </summary>
     public DepValue<Boolean> ReadOnlyEx
     {
@@ -996,6 +999,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Конструктор провайдера.
+    /// Устанавливает свойство <see cref="TextBox.Multiline"/>=true.
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент со статусной строкой</param>
     public EFPTextBox(IEFPControlWithToolBar<TextBox> controlWithToolBar)
@@ -1009,7 +1013,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные свойства
 
     /// <summary>
-    /// Свойство TextBox.ReadOnly
+    /// Свойство <see cref="TextBoxBase.ReadOnly"/>
     /// </summary>
     protected override bool ControlReadOnly
     {
@@ -1018,7 +1022,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство TextBox.MaxLength
+    /// Свойство <see cref="TextBoxBase.MaxLength"/>
     /// </summary>
     protected override int ControlMaxLength
     {
@@ -1027,7 +1031,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если установлено свойство TextBox.PasswordChar или UseSystemPasswordChar
+    /// Возвращает true, если установлено свойство <see cref="TextBox.PasswordChar"/> или <see cref="TextBox.UseSystemPasswordChar"/>.
     /// </summary>
     public override bool IsPasswordInput
     {
@@ -1069,7 +1073,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызов Control.Select() и ScrollToCaret()
+    /// Вызов <see cref="TextBoxBase.Select(int, int)"/>() и <see cref="TextBoxBase.ScrollToCaret()"/>.
     /// </summary>
     /// <param name="start">Начало выделенного фрагмента текста</param>
     /// <param name="length">Длина выделенного фрагмента</param>
@@ -1092,7 +1096,7 @@ namespace FreeLibSet.Forms
     #region IEFPTextBox
 
     /// <summary>
-    /// Возвращает Control.TextLength
+    /// Возвращает <see cref="TextBoxBase.TextLength"/>.
     /// </summary>
     public override int TextLength { get { return Control.TextLength; } }
 
@@ -1120,12 +1124,12 @@ namespace FreeLibSet.Forms
     public override bool MultiLineSupported { get { return true; } }
 
     /// <summary>
-    /// Возвращает Control.Multiline
+    /// Возвращает <see cref="TextBox.Multiline"/>
     /// </summary>
     public override bool IsMultiLine { get { return Control.Multiline; } }
 
     /// <summary>
-    /// Возвращает Control.AcceptReturns
+    /// Возвращает <see cref="TextBox.AcceptsReturn"/>
     /// </summary>
     public override bool AcceptsReturn { get { return Control.AcceptsReturn; } }
 
@@ -1204,7 +1208,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер текстового поля для ввода текста с маской MaskedTextBox.
+  /// Провайдер текстового поля для ввода текста с маской <see cref="MaskedTextBox"/>.
   /// </summary>
   public class EFPMaskedTextBox : EFPTextBoxControlWithReadOnly<MaskedTextBox>, IEFPTextBoxWithStatusBar
   {
@@ -1226,9 +1230,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверка корректности введенного значения.
-    /// Кроме проверки на пустое значение, выполняется проверка ImaskProvider.Test(),
+    /// Кроме проверки на пустое значение, выполняется проверка <see cref="IMaskProvider.Test(string, out string)"/>,
     /// если свойство MaskProvider установлено. Иначе выполняется проверка с использованием
-    /// объекта MaskedTextProvider, заданным в управляющем элементе.
+    /// объекта <see cref="MaskedTextProvider"/>, заданным в управляющем элементе.
     /// </summary>
     protected override void OnValidate()
     {
@@ -1260,8 +1264,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получение текста от управляющего элемента
-    /// Когда не заполнено ни одного символа по маске, свойство MaskedTextBox.Text
-    /// иногда возвращает пустую строку, а иногда - маску с пробелами вместо знаков
+    /// Когда не заполнено ни одного символа по маске, свойство <see cref="MaskedTextBox.Text"/>
+    /// иногда возвращает пустую строку, а иногда - маску с пробелами вместо знаков.
     /// </summary>
     protected override string ControlText
     {
@@ -1296,7 +1300,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство MaskedTextBox.ReadOnly
+    /// Дублирует свойство <see cref="MaskedTextBox.ReadOnly"/>
     /// </summary>
     protected override bool ControlReadOnly
     {
@@ -1305,7 +1309,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство MaskedTextBox.MaxLength
+    /// Дублирует свойство <see cref="MaskedTextBox.MaxLength"/>
     /// </summary>
     protected override int ControlMaxLength
     {
@@ -1322,10 +1326,10 @@ namespace FreeLibSet.Forms
     #region Свойство Mask
 
     /// <summary>
-    /// Дублирует свойство MaskedTextBox.Mask.
+    /// Дублирует свойство <see cref="MaskedTextBox.Mask"/>.
     /// По умолчанию - пустая строка.
     /// Следует использовать это свойство, а не оригинальное, так как иначе не будет работать
-    /// управляемое свойство MaskEx.
+    /// управляемое свойство <see cref="MaskEx"/>.
     /// </summary>
     public string Mask
     {
@@ -1342,7 +1346,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство Mask
+    /// Управляемое свойство <see cref="Mask"/>.
     /// </summary>
     public DepValue<string> MaskEx
     {
@@ -1380,7 +1384,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер обработки маски.
     /// Позволяет использовать нестандартные маски.
-    /// Установка свойства также устанавливает свойство Mask, используя IMaskProvider.EditMask.
+    /// Установка свойства также устанавливает свойство <see cref="Mask"/>, используя <see cref="IMaskProvider.EditMask"/>.
     /// </summary>
     public IMaskProvider MaskProvider
     {
@@ -1408,8 +1412,9 @@ namespace FreeLibSet.Forms
     #region Свойство MaskCanBePartial
 
     /// <summary>
-    /// Доступ к MaskCanBePartialEx.ValueEx без принудительного создания объекта
-    /// По умолчанию - false
+    /// Если true, то частично введенное значение (с некомплектной маской <see cref="MaskedTextBox.MaskCompleted"/>=false) считается корректным.
+    /// При этом выдается ошибка, если введены не все символы маски. Однако, полностью пустое значение проверяется с помощью свойства <see cref="EFPTextBoxAnyControl{T}.CanBeEmpty"/>.
+    /// По умолчанию - false.
     /// </summary>
     public bool MaskCanBePartial
     {
@@ -1427,9 +1432,7 @@ namespace FreeLibSet.Forms
     private bool _MaskCanBePartial;
 
     /// <summary>
-    /// Свойство, разрешающее частичное заполнение маски. По умолчанию - false.
-    /// При этом выдается ошибка, если введены не все символы маски. Однако, 
-    /// полностью пустое значение проверяется с помощью свойства EmptyCheck
+    /// Управляемое свойство для <see cref="MaskCanBePartial"/>.
     /// </summary>
     public DepValue<bool> MaskCanBePartialEx
     {
@@ -1465,7 +1468,7 @@ namespace FreeLibSet.Forms
     #region Свойства для выделения текста
 
     /// <summary>
-    /// Дублирует MaskedTextBox.SelectionStart
+    /// Дублирует <see cref="TextBoxBase.SelectionStart"/>.
     /// </summary>
     public override int SelectionStart
     {
@@ -1474,7 +1477,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует MaskedTextBox.SelectionLength
+    /// Дублирует <see cref="TextBoxBase.SelectionLength"/>.
     /// </summary>
     public override int SelectionLength
     {
@@ -1483,7 +1486,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует MaskedTextBox.SelectedText
+    /// Дублирует <see cref="TextBoxBase.SelectedText"/>
     /// </summary>
     public override string SelectedText
     {
@@ -1492,10 +1495,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует MaskedTextBox.Select()
+    /// Дублирует <see cref="TextBoxBase.Select(int, int)"/>
     /// </summary>
-    /// <param name="start"></param>
-    /// <param name="length"></param>
+    /// <param name="start">Начальная позиция</param>
+    /// <param name="length">Длина выделения</param>
     public override void Select(int start, int length)
     {
       Control.Select(start, length);
@@ -1503,7 +1506,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует MaskedTextBox.SelectAll()
+    /// Дублирует <see cref="TextBoxBase.SelectAll()"/>.
     /// </summary>
     public override void SelectAll()
     {
@@ -1515,7 +1518,7 @@ namespace FreeLibSet.Forms
     #region IEFPTextBox
 
     /// <summary>
-    /// Возвращает Control.TextLength
+    /// Возвращает <see cref="TextBoxBase.TextLength"/>
     /// </summary>
     public override int TextLength { get { return Control.TextLength; } }
 
@@ -1559,7 +1562,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер управляющего элемента Rich Text Box
+  /// Провайдер управляющего элемента <see cref="RichTextBox"/>
   /// </summary>
   public class EFPRichTextBox : EFPTextBoxControlWithReadOnly<RichTextBox>, IEFPTextBoxWithStatusBar
   {
@@ -1589,7 +1592,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные свойства
 
     /// <summary>
-    /// Дублирует свойство RichTextBox.ReadOnly
+    /// Дублирует свойство <see cref="TextBoxBase.ReadOnly"/>
     /// </summary>
     protected override bool ControlReadOnly
     {
@@ -1598,7 +1601,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство RichTextBox.MaxLength
+    /// Дублирует свойство <see cref="TextBoxBase.MaxLength"/>
     /// </summary>
     protected override int ControlMaxLength
     {
@@ -1611,7 +1614,7 @@ namespace FreeLibSet.Forms
     #region Свойства для выделения текста
 
     /// <summary>
-    /// Дублирует свойство в RichTextBox
+    /// Дублирует свойство <see cref="TextBoxBase.SelectionStart"/>
     /// </summary>
     public override int SelectionStart
     {
@@ -1620,7 +1623,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство в RichTextBox
+    /// Дублирует свойство <see cref="TextBoxBase.SelectionLength"/>
     /// </summary>
     public override int SelectionLength
     {
@@ -1629,7 +1632,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство в RichTextBox
+    /// Дублирует свойство <see cref="TextBoxBase.SelectedText"/>
     /// </summary>
     public override string SelectedText
     {
@@ -1638,10 +1641,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует метод в RichTextBox
+    /// Дублирует метод <see cref="TextBoxBase.Select(int, int)"/>
     /// </summary>
-    /// <param name="start"></param>
-    /// <param name="length"></param>
+    /// <param name="start">Начало выделения</param>
+    /// <param name="length">Длина выделения</param>
     public override void Select(int start, int length)
     {
       Control.Select(start, length);
@@ -1649,7 +1652,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует метод в RichTextBox
+    /// Дублирует метод <see cref="TextBoxBase.SelectAll()"/>
     /// </summary>
     public override void SelectAll()
     {
@@ -1661,7 +1664,7 @@ namespace FreeLibSet.Forms
     #region IEFPTextBox
 
     /// <summary>
-    /// Возвращает Control.TextLength
+    /// Возвращает <see cref="TextBoxBase.TextLength"/>
     /// </summary>
     public override int TextLength { get { return Control.TextLength; } }
 
@@ -1689,7 +1692,7 @@ namespace FreeLibSet.Forms
     public override bool MultiLineSupported { get { return true; } }
 
     /// <summary>
-    /// Возвращает Control.Multiline
+    /// Возвращает <see cref="TextBoxBase.Multiline"/>
     /// </summary>
     public override bool IsMultiLine { get { return Control.Multiline; } }
 
@@ -1739,7 +1742,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Поле ввода одного или нескольких кодов, разделенных запятыми.
+  /// Однострочное поле ввода <see cref="TextBox"/> одного или нескольких кодов, разделенных запятыми.
+  /// У пользователя нет возможности выбрать коды из списка.
+  /// Обычно следует использовать <see cref="EFPCsvCodesComboBox"/> с выпаджающим списком кодов.
   /// </summary>
   public class EFPCsvCodesTextBox : EFPTextBox
   {
@@ -1790,7 +1795,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое значение для SelectedCodes.
+    /// Управляемое значение для <see cref="SelectedCodes"/>.
     /// </summary>
     public DepValue<string[]> SelectedCodesEx
     {
@@ -1808,7 +1813,7 @@ namespace FreeLibSet.Forms
     private DepInput<string[]> _SelectedCodesEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства SelectedCodesEx инициализирован.
+    /// Возвращает true, если обработчик свойства <see cref="SelectedCodesEx"/> инициализирован.
     /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     public bool HasSelectedCodesExProperty { get { return _SelectedCodesEx != null; } }
@@ -1833,7 +1838,7 @@ namespace FreeLibSet.Forms
     #region Локальное меню
 
     /// <summary>
-    /// Установка свойства EFPTextBoxCommandItems.UseConvert=false
+    /// Установка свойства <see cref="EFPTextBoxCommandItems.UseConvert"/>=false
     /// </summary>
     protected override void OnBeforePrepareCommandItems()
     {
@@ -1847,7 +1852,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то между кодами после запятых будет добавляться по одному пробелу.
-    /// Если false, то дополнительные пробелы не добавляются
+    /// Если false, то дополнительные пробелы не добавляются.
     /// </summary>
     public bool UseSpace
     {
@@ -1868,7 +1873,7 @@ namespace FreeLibSet.Forms
     #region Проверка элемента
 
     /// <summary>
-    /// Обработка SelectedCodesEx.
+    /// Обработка свойства <see cref="SelectedCodesEx"/>.
     /// </summary>
     protected override void OnTextChanged()
     {
@@ -1942,10 +1947,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Список объектов-валидаторов для проверки корректности значения выбранных кодов.
-    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве ValidatingCodeEx
+    /// Используйте в качестве проверочного выражение какую-либо вычисляемую функцию, основанную на управляемом свойстве <see cref="SelectedCodesEx"/>
     /// (и на других управляемых свойствах, в том числе, других элементов формы).
     /// В основном, предназначено для проверки в удаленном интерфейсе.
-    /// В обычных приложениях удобнее использовать обработчик события CodeValidating.
+    /// В обычных приложениях удобнее использовать обработчик события <see cref="CodeValidating"/>.
     /// </summary>
     public UIValueValidatorList<string> CodeValidators
     {
@@ -1959,8 +1964,8 @@ namespace FreeLibSet.Forms
     private UIValueValidatorList<string> _CodeValidators;
 
     /// <summary>
-    /// Возвращает true, если список CodeValidators не пустой.
-    /// Используется для оптимизации, вместо обращения к CodeValidators.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
+    /// Возвращает true, если список <see cref="CodeValidators"/> не пустой.
+    /// Используется для оптимизации, вместо обращения к <see cref="CodeValidators"/>.Count, позволяя обойтись без создания объекта списка, когда у управляющего элемента нет валидаторов.
     /// </summary>
     public bool HasCodeValidators
     {
@@ -1974,8 +1979,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Блокирует список CodeValidators от изменений.
-    /// Присоединяет 
+    /// Блокирует список <see cref="CodeValidators"/> от изменений.
+    /// Присоединяет обработчики событий к <see cref="UIValidator.ResultEx"/> и <see cref="UIValidator.PreconditionEx"/>, чтобы обновить состояние ошибки в поле ввода.
     /// </summary>
     protected override void OnAttached()
     {
@@ -1996,8 +2001,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверка кода в списке.
-    /// Непереопределенный метод сначала выполняет проверку с помощью валидаторов CodeValidators(), если они есть, 
-    /// затем вызывает обработчик события CodeValidating, если он установлен.
+    /// Непереопределенный метод сначала выполняет проверку с помощью валидаторов <see cref="CodeValidators"/>, если они есть, 
+    /// затем вызывает обработчик события <see cref="CodeValidating"/>, если он установлен.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnCodeValidating(EFPCodeValidatingEventArgs args)
@@ -2244,13 +2249,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Провайдер управляющего элемента.
-    /// Он должен реализовывать интерфейс IEFPSimpleTextBox, может также реализовывать IEFPTextBox и IEFPTextBoxWithStatusBar
+    /// Он должен реализовывать интерфейс <see cref="IEFPSimpleTextBox"/>, может также реализовывать <see cref="IEFPTextBox"/> и <see cref="IEFPTextBoxWithStatusBar"/>.
     /// </summary>
     public IEFPSimpleTextBox Owner { get { return _Owner; } }
-    private IEFPSimpleTextBox _Owner;
+    private readonly IEFPSimpleTextBox _Owner;
 
     /// <summary>
-    /// Установка свойств EFPCommandItem.Usage
+    /// Установка свойств <see cref="EFPCommandItem.Usage"/>
     /// </summary>
     protected override void OnPrepare()
     {
@@ -2301,7 +2306,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Обработчик для команды "Вставить".
     /// Если элемент предназначен исключительно только для чтения, свойство возвращает null.
-    /// По умолчанию поддерживается только вставка текста
+    /// По умолчанию поддерживается только вставка текста.
     /// </summary>
     public EFPPasteHandler PasteHandler { get { return _PasteHandler; } }
     private EFPPasteHandler _PasteHandler;
@@ -2349,8 +2354,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация видимости команд меню.
     /// Вызывается при любом изменении текста.
-    /// Если пользовательский код устанавливает свойства TextBox.UseSystemPasswordChar или
-    /// PasswordChar (которые не имеют связанных событий) в процессе показа окна
+    /// Если пользовательский код устанавливает свойства <see cref="TextBox.UseSystemPasswordChar"/> или
+    /// <see cref="TextBox.PasswordChar"/> (которые не имеют связанных событий) в процессе показа окна
     /// (обычно нажатие кнопки "Показать введенные символы"), то этот метод
     /// следует вызывать в явном виде.
     /// </summary>
@@ -2520,9 +2525,9 @@ namespace FreeLibSet.Forms
       Owner.SelectedText = Environment.NewLine;
     }
 
-#endregion
+    #endregion
 
-#region Команды поиска
+    #region Команды поиска
 
     EFPCommandItem ciFind, ciFindNext;
 
@@ -2547,14 +2552,14 @@ namespace FreeLibSet.Forms
       ciFindNext.Enabled = owner2.TextSearchContext.ContinueEnabled;
     }
 
-#endregion
+    #endregion
 
-#region Команды "Преобразовать"
+    #region Команды "Преобразовать"
 
     /// <summary>
     /// Доступность команд "Преобразовать".
     /// По умолчанию - true.
-    /// Свойство имеет смысл только для элементов, производных от EFPTextBoxAnyControl
+    /// Свойство имеет смысл только для элементов, производных от <see cref="EFPTextBoxAnyControl{T}"/>
     /// </summary>
     public bool UseConvert
     {
@@ -2629,9 +2634,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-#endregion
+    #endregion
 
-#region Команды "Открыть" и "Открыть с помощью"
+    #region Команды "Открыть" и "Открыть с помощью"
 
     /// <summary>
     /// Обработчик команд "Открыть" и "Открыть с помощью"
@@ -2663,9 +2668,9 @@ namespace FreeLibSet.Forms
         Owner.Text, enc);
     }
 
-#endregion
+    #endregion
 
-#region Команды "Отправить"
+    #region Команды "Отправить"
 #if XXX
     private EFPCommandItem ciMenuSendTo;
     private EFPCommandItem ciSendToMicrosoftWord, ciSendToOpenOfficeWriter;
@@ -2709,16 +2714,16 @@ namespace FreeLibSet.Forms
     }
 
 #endif
-#endregion
+    #endregion
 
-#region Статусная строка
+    #region Статусная строка
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то в статусной строке выводятся панельки "Строка"
     /// и "Столбец" для отображения текущей позиции.
     /// Свойство может быть сброшено в false для отключения панелек только после конструктора управляющего 
     /// элемента. Динамическая установка свойства недоступна.
-    /// Свойство недействительно для управляющих элементов, не реализующих интерфейс IEFPTextBoxWithStatusBar
+    /// Свойство действительно только для управляющих элементов, реализующих интерфейс <see cref="IEFPTextBoxWithStatusBar"/>.
     /// </summary>
     public bool UseStatusBarRC { get { return _UseStatusBarRC; } set { _UseStatusBarRC = value; } }
     private bool _UseStatusBarRC;
@@ -2739,6 +2744,6 @@ namespace FreeLibSet.Forms
       ciStatusColumn.StatusBarText = "Столбец " + currCol.ToString();
     }
 
-#endregion
+    #endregion
   }
 }

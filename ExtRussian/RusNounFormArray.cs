@@ -288,7 +288,7 @@ namespace FreeLibSet.Russian
       List<Boolean> aFlags;
 
 
-      MyBreakWord(baseForm, out aParts, out aFlags);
+      DoBreakWord(baseForm, out aParts, out aFlags);
       int i, j;
       bool lRes = true;
 
@@ -315,7 +315,7 @@ namespace FreeLibSet.Russian
       return lRes;
     }
 
-    private void MyBreakWord(string baseForm, out List<string> aParts, out List<bool> aFlags)
+    private void DoBreakWord(string baseForm, out List<string> aParts, out List<bool> aFlags)
     {
       aParts = new List<string>();
       aFlags = new List<bool>();
@@ -396,7 +396,7 @@ namespace FreeLibSet.Russian
       // Разбиение слова на части
       string cBase; // Приставка+корень+суффикс
       string[] aEnds; // Окончания (12 форм)
-      MyGetCases(baseForm, upperForm, declen, options, out cBase, out aEnds);
+      DoGetCases(baseForm, upperForm, declen, options, out cBase, out aEnds);
 
 
       if (aEnds != null)
@@ -413,7 +413,7 @@ namespace FreeLibSet.Russian
       return true;
     }
 
-    private static void MyGetCases(string baseForm, string upperForm, RusDeclension declension,
+    private static void DoGetCases(string baseForm, string upperForm, RusDeclension declension,
       RusFormArrayGetCasesOptions options,
       out string cBase, out string[] aEnds)
     {
@@ -508,10 +508,13 @@ namespace FreeLibSet.Russian
                                    "вки","вок","вкам","вки","вками","вках"};
             return;
           }
+
+#pragma warning disable 0162 // Unreachable code detected
+
           if (upperForm.EndsWith("А", StringComparison.Ordinal))
           {
-            if (upperForm.Length > 3 && upperForm[upperForm.Length - 3] == 'Ь' &&
-                 "БВГДЖЗКЛМНПРСТФХЦЧШЩ".IndexOf(upperForm[upperForm.Length - 2]) >= 0)
+            if (false /*21.02.2024*/ /*upperForm.Length > 3 && upperForm[upperForm.Length - 3] == 'Ь' &&
+                 "БВГДЖЗКЛМНПРСТФХЦЧШЩ".IndexOf(upperForm[upperForm.Length - 2]) >= 0*/)
             {
               // ??? сомнительное правило
               // в отличие от других слов на "а" изменены родительный и
@@ -536,6 +539,9 @@ namespace FreeLibSet.Russian
             }
             return;
           }
+
+#pragma warning restore 0162 
+
           if (upperForm.EndsWith("Ы", StringComparison.Ordinal)) // "ножницы"
           {
             cBase = baseForm.Substring(0, baseForm.Length - 1);// Отбросили "ы"
@@ -746,7 +752,7 @@ namespace FreeLibSet.Russian
 
       if (gender == RusGender.Undefined)
         // Если род слова не задан
-        gender = MyGetGender(c);
+        gender = DoGetGender(c);
 
       // Род слова определен - определяем склонение
       switch (gender)
@@ -770,7 +776,7 @@ namespace FreeLibSet.Russian
       return RusDeclension.Undefined;
     }
 
-    private static RusGender MyGetGender(char c)
+    private static RusGender DoGetGender(char c)
     {
       if ("БВГДЖЗЙКЛМНПРСТФХЧШЩ".IndexOf(c) >= 0)
         return RusGender.Masculine;

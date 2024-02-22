@@ -758,12 +758,11 @@ namespace FreeLibSet.Forms.Reporting
     private static NamedList<BRExportFileItem> CreateAppDefaultExportFileItems()
     {
       NamedList<BRExportFileItem> lst = new NamedList<BRExportFileItem>();
-      BRExportFileItem item1;
       if (PdfFileTools.PdfLibAvailable)
         lst.Add(new BRExportFileItem(BRExportFileItemCodes.PDF, "Файлы PDF", "*.pdf", ExportFilePdf));
       if (BRFileTiff.IsSupported)
       {
-        item1 = new BRExportFileItem(BRExportFileItemCodes.TIFF, "Файлы TIFF", "*.tif", ExportFileTiff);
+        BRExportFileItem item1 = new BRExportFileItem(BRExportFileItemCodes.TIFF, "Файлы TIFF", "*.tif", ExportFileTiff);
         item1.InitDialog += ExportFileTiff_InitDialog;
         lst.Add(item1);
       }

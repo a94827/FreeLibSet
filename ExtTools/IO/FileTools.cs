@@ -1556,6 +1556,7 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("filePath");
 
       XmlDocument xmlDoc = new XmlDocument();
+      xmlDoc.XmlResolver = null; // 16.01.2024
       xmlDoc.Load(filePath.Path);
       return xmlDoc;
     }
@@ -1572,6 +1573,7 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("inStream");
 
       XmlDocument xmlDoc = new XmlDocument();
+      xmlDoc.XmlResolver = null; // 16.01.2024
       xmlDoc.Load(inStream);
       return xmlDoc;
     }

@@ -186,6 +186,7 @@ namespace FreeLibSet.Core
         return null;
 
       XmlDocument xmlDoc = new XmlDocument();
+      xmlDoc.XmlResolver = null; // 16.01.2024
       xmlDoc.LoadXml(str);
       return xmlDoc;
     }

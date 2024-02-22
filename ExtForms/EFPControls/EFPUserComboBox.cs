@@ -384,8 +384,6 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-
-
   /// <summary>
   /// Комбоблок выбора одного или нескольких перечислимых значений.
   /// Выбор осуществляется с помощью ListSelectDialog

@@ -9,14 +9,16 @@ using System.Globalization;
 namespace FreeLibSet.Russian
 {
   /// <summary>
-  /// Получение рублей и копеек из суммы
+  /// Получение рублей и копеек из суммы.
+  /// Используется в методах <see cref="RusNumberConvert.MoneyStr(RoublesAndCopecks, RusNumberConvert.CopecksFormat, RusCase, bool)"/>.
+  /// Обычно нет причин использовать структуру в прикладном коде, так как есть перегрузки <see cref="RusNumberConvert.MoneyStr(StringBuilder, decimal, RusNumberConvert.CopecksFormat, RusCase, bool)"/> 
   /// </summary>
   public struct RoublesAndCopecks
   {
     #region Конструктор
 
     /// <summary>
-    /// Инициализирует структуру заданным значением в рублях
+    /// Инициализирует структуру заданным значением в рублях с копейками
     /// </summary>
     /// <param name="value">Числовое значение в рублях</param>
     public RoublesAndCopecks(decimal value)
@@ -38,19 +40,19 @@ namespace FreeLibSet.Russian
     /// True, если значение меньше нуля
     /// </summary>
     public bool Negative { get { return _Negative; } }
-    private bool _Negative;
+    private readonly bool _Negative;
 
     /// <summary>
     /// Рубли (целое число без знака)
     /// </summary>
     public ulong Roubles { get { return _Roubles; } }
-    private ulong _Roubles;
+    private readonly ulong _Roubles;
 
     /// <summary>
     /// Копейки (от 0 до 99)
     /// </summary>
     public uint Copecks { get { return _Copecks; } }
-    private uint _Copecks;
+    private readonly uint _Copecks;
 
     #endregion
 
@@ -155,8 +157,6 @@ namespace FreeLibSet.Russian
       None,
     }
 
-    const string NonBreakSpace = "\xA0";
-
     #endregion
 
     #region Денежная сумма
@@ -176,6 +176,7 @@ namespace FreeLibSet.Russian
     /// Получение денежной суммы прописью в именительном падеже.
     /// Копейки выводятся как две цифры.
     /// Специальные символы не используются.
+    /// Первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="value">Денежная сумма</param>
     /// <returns>Текстовое представление суммы</returns>
@@ -188,6 +189,7 @@ namespace FreeLibSet.Russian
     /// Получение денежной суммы прописью в именительном падеже.
     /// Копейки выводятся как две цифры.
     /// Специальные символы не используются.
+    /// Первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="value">Денежная сумма (в рублях)</param>
@@ -199,6 +201,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Получение денежной суммы прописью в именительном падеже.
     /// Специальные символы не используются.
+    /// Первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="value">Денежная сумма</param>
     /// <param name="copecksFormat">Формат отображения копеек</param>
@@ -211,6 +214,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Получение денежной суммы прописью в именительном падеже.
     /// Специальные символы не используются.
+    /// Первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="value">Денежная сумма (в рублях)</param>
@@ -223,6 +227,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Получение денежной суммы прописью.
     /// Специальные символы не используются.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="value">Денежная сумма</param>
     /// <param name="copecksFormat">Формат отображения копеек</param>
@@ -235,6 +240,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Получение денежной суммы прописью.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="value">Денежная сумма (в рублях)</param>
     /// <param name="copecksFormat">Формат отображения копеек</param>
@@ -252,6 +258,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Получение денежной суммы прописью.
     /// Специальные символы не используются.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="value">Денежная сумма (в рублях)</param>
@@ -264,6 +271,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Получение денежной суммы прописью.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="value">Денежная сумма (в рублях)</param>
@@ -280,6 +288,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Получение денежной суммы прописью.
     /// Специальные символы не используются.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="value">Денежная сумма</param>
     /// <param name="copecksFormat">Формат отображения копеек</param>
@@ -292,6 +301,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Получение денежной суммы прописью.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="value">Денежная сумма</param>
     /// <param name="copecksFormat">Формат отображения копеек</param>
@@ -309,6 +319,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Получение денежной суммы прописью.
     /// Специальные символы не используются.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="value">Денежная сумма</param>
@@ -321,6 +332,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Получение денежной суммы прописью.
+    /// В именительном падеже (<paramref name="theCase"/>=<see cref="RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="value">Денежная сумма</param>
@@ -332,9 +344,9 @@ namespace FreeLibSet.Russian
     {
       // Число рублей прописью
 
+      int startPos = sb.Length; // перенесено 21.02.2024
       if (value.Negative)
         SpecAppend(sb, "ми-нус ", specChars);
-      int startPos = sb.Length;
       ToString(sb, value.Roubles, RusGender.Masculine, theCase, specChars);
       sb.Append(specChars ? NonBreakSpaceChar : ' ');
       SpecAppend(sb, _RoublesForms[GetCF12(value.Roubles, theCase)], specChars);
@@ -352,13 +364,13 @@ namespace FreeLibSet.Russian
         case CopecksFormat.Digits:
           sb.Append(" ");
           sb.Append(value.Copecks.ToString("00"));
-          sb.Append(NonBreakSpace);
+          sb.Append(specChars ? NonBreakSpaceChar : ' '); // 21.02.2024
           SpecAppend(sb, _CopecksForms[GetCF12(value.Copecks, theCase)], specChars);
           break;
         case CopecksFormat.String:
           sb.Append(" ");
           ToString(sb, value.Copecks, RusGender.Feminine, theCase);
-          sb.Append(NonBreakSpace);
+          sb.Append(specChars ? NonBreakSpaceChar : ' '); // 21.02.2024
           SpecAppend(sb, _CopecksForms[GetCF12(value.Copecks, theCase)], specChars);
           break;
       }
@@ -390,6 +402,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Преобразование целого числа в строку прописью.
     /// Специальные символы не используются.
+    /// Возвращается строка в нижнем регистре.
     /// </summary>
     /// <param name="x">Преобразуемое значение</param>
     /// <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
@@ -402,6 +415,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Преобразование целого числа в строку прописью.
+    /// Возвращается строка в нижнем регистре.
     /// </summary>
     /// <param name="x">Преобразуемое значение</param>
     /// <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
@@ -419,6 +433,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Преобразование целого числа в строку прописью.
     /// Специальные символы не используются.
+    /// Записывается строка в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="x">Преобразуемое значение</param>
@@ -431,6 +446,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Преобразование целого числа в строку прописью.
+    /// Записывается строка в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="x">Преобразуемое значение</param>
@@ -458,6 +474,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Преобразование целого числа в строку прописью.
     /// Специальные символы не используются.
+    /// Возвращается строка в нижнем регистре.
     /// </summary>
     /// <param name="x">Преобразуемое значение</param>
     /// <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
@@ -470,6 +487,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Преобразование целого числа в строку прописью.
+    /// Возвращается строка в нижнем регистре.
     /// </summary>
     /// <param name="x">Преобразуемое значение</param>
     /// <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
@@ -487,6 +505,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Преобразование целого числа в строку прописью.
     /// Специальные символы не используются.
+    /// Записывается строка в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="x">Преобразуемое значение</param>
@@ -499,6 +518,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Преобразование целого числа в строку прописью.
+    /// Записывается строка в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="x">Преобразуемое значение</param>
@@ -595,10 +615,12 @@ namespace FreeLibSet.Russian
       "ноль","но-ля","но-лю","ноль","но-лем","но-ле" };
 
     private static string[] _GreatestForms = new string[]{
-      "ты-ся-ча", "ты-ся-чи","ты-ся-че","ты-ся-чу","ты-ся-чей","ты-ся-чи",
+      "ты-ся-ча", "ты-ся-чи","ты-ся-че","ты-ся-чу","ты-ся-чей","ты-ся-че" /* исп. 21.02.2024 */,
       "ты-ся-чи","ты-сяч","ты-ся-чам","ты-ся-чи","ты-ся-ча-ми","ты-ся-чах",
+
       "мил-ли-он","мил-ли-о-на","мил-ли-о-ну","мил-ли-он","мил-ли-о-ном","мил-ли-о-не",
       "мил-ли-о-ны","мил-ли-о-нов","мил-ли-о-нам","мил-ли-о-ны","мил-ли-о-на-ми","мил-ли-о-нах",
+
       "мил-ли-ард","мил-ли-ар-да","мил-ли-ар-ду","мил-ли-ард","мил-ли-ар-дом","мил-ли-ар-де",
       "мил-ли-ар-ды","мил-ли-ар-дов","мил-ли-ар-дам","мил-ли-ар-ды","мил-ли-ар-да-ми","мил-ли-ар-дах" };
 
@@ -890,6 +912,7 @@ namespace FreeLibSet.Russian
     /// <summary>
     /// Преобразование числа с плавающей точкой в строку в именительном падеже.
     /// Количество действующих десятичных разрядов определяется автоматически.
+    /// Возвращается строка в нижнем регистре.
     /// </summary>
     /// <param name="x">Преобразуемое число</param>
     /// <returns>Текстовое представление</returns>
@@ -902,6 +925,7 @@ namespace FreeLibSet.Russian
     /// Преобразование числа в строку прописью с указанием всех параметров.
     /// Первая буква не делается прописной.
     /// Выводится оптимальное количество знаков после запятой, но не более 11.
+    /// Записывается строка в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="x">Преобразуемое число</param>
@@ -914,6 +938,7 @@ namespace FreeLibSet.Russian
     /// Преобразование числа в строку прописью.
     /// Первая буква не делается прописной.
     /// Выводится оптимальное количество знаков после запятой, но не более 11.
+    /// Возвращается строка в нижнем регистре.
     /// </summary>
     /// <param name="x">Преобразуемое число</param>
     /// <param name="gender">Род существительного, согласуемого с числительным</param>
@@ -927,6 +952,7 @@ namespace FreeLibSet.Russian
     /// Преобразование числа в строку прописью.
     /// Первая буква не делается прописной.
     /// Выводится оптимальное количество знаков после запятой, но не более 11.
+    /// Записывается строка в нижнем регистре.
     /// </summary>
     /// <param name="sb">Буфер для заполнения</param>
     /// <param name="x">Преобразуемое число</param>
@@ -1264,7 +1290,7 @@ namespace FreeLibSet.Russian
         case CountForm.Count0:
           return genitivePlural;
       }
-      throw new Exception("Неправильнапя форма числа");
+      throw new Exception("Неправильная форма числа");
     }
 
     #endregion

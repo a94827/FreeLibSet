@@ -793,6 +793,19 @@ namespace FreeLibSet.Forms
       Dispose();
     }
 
+    /// <summary>
+    /// Свойство возвращает true, если в данный момент окно мастера выведено на экран
+    /// </summary>
+    public bool IsExecuting
+    {
+      get
+      {
+        if (TheForm == null || IsDisposed)
+          return false;
+        return TheForm.efpForm.Visible;
+      }
+    }
+
     #endregion
 
     #region Временные страницы
@@ -1772,7 +1785,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Обертка для вызовов методов <see cref="Wizard.BeginTempPage(string[])"/> и <see cref="Wizard.EndTempPage()"/>,
-  /// которую можно использовать в конструкции using
+  /// которую можно использовать в конструкции using.
+  /// Также возможно использование, когда нет созданного объекта <see cref="Wizard"/> или когда мастер еще или уже не выполняется (<see cref="Wizard.IsExecuting"/>=false).
   /// </summary>
   public struct WizardSplashHelper:IDisposable
   {
@@ -1785,8 +1799,11 @@ namespace FreeLibSet.Forms
     /// <param name="items">Заголовки для заставки</param>
     public WizardSplashHelper(Wizard wizard, string[] items)
     {
-      _Splash = wizard.BeginTempPage(items);
-      _Wizard = wizard;
+      _Wizard = GetWizard(wizard);
+      if (_Wizard == null)
+        _Splash = new Splash(items); // 16.01.2024
+      else
+        _Splash = wizard.BeginTempPage(items);
     }
 
     /// <summary>
@@ -1796,8 +1813,21 @@ namespace FreeLibSet.Forms
     /// <param name="item">Заголовок для заставки</param>
     public WizardSplashHelper(Wizard wizard, string item)
     {
-      _Splash = wizard.BeginTempPage(item);
-      _Wizard = wizard;
+      _Wizard = GetWizard(wizard);
+      if (_Wizard == null)
+        _Splash = new Splash(item); // 16.01.2024
+      else
+        _Splash = wizard.BeginTempPage(item);
+    }
+
+    private static Wizard GetWizard(Wizard wizard)
+    {
+      if (wizard == null)
+        return null;
+      if (wizard.IsExecuting)
+        return wizard;
+      else
+        return null;
     }
 
     /// <summary>
@@ -1805,11 +1835,13 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void Dispose()
     {
-      if (_Wizard != null)
+      if (_Splash != null)
       {
+        if (_Wizard == null)
+          ((Splash)(_Splash)).Close(); // 16.01.2024
+        else
+          _Wizard.EndTempPage();
         _Splash = null;
-        _Wizard.EndTempPage();
-        _Wizard = null;
       }
     }
 
@@ -1817,7 +1849,7 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private Wizard _Wizard;
+    private readonly Wizard _Wizard;
 
     /// <summary>
     /// Интерфейс для управления заставкой
