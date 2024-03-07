@@ -86,6 +86,7 @@
     <Compile Include="Core\EnvironmentTools.cs" />
     <Compile Include="Core\ErrorMessageList.cs" />
     <Compile Include="IO\FileCompressor.cs" />
+    <Compile Include="Reporting\BRFileOffice2007.cs" />
     <Compile Include="Reporting\BRFileWord2003Xml.cs" />
     <Compile Include="Reporting\BRFileExcel2003Xml.cs" />
     <Compile Include="Reporting\BRFileHtml.cs" />

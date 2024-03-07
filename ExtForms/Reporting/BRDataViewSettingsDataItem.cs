@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Collections;
 using FreeLibSet.Config;
+using FreeLibSet.Core;
 using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms.Reporting
@@ -139,9 +140,9 @@ namespace FreeLibSet.Forms.Reporting
   #endregion
 
   /// <summary>
-  /// Данные параметров страницы для печати EFPDataGridView и EFPDataTreeView.
+  /// Данные параметров страницы для печати/отправки/экспорта в файл просмотров <see cref="EFPDataGridView"/> и <see cref="EFPDataTreeView"/>.
   /// Содержит список выбранных столбцов для печати, их размеры и параметры для оформления.
-  /// Дополняет параметры страницы BRPageSetup и параметры шрифта BRFontSettings
+  /// Дополняет параметры страницы <see cref="BRPageSetup"/> и параметры шрифта <see cref="BRFontSettingsDataItem"/>
   /// </summary>
   public class BRDataViewSettingsDataItem : SettingsDataItem, ICloneable
   {
@@ -154,8 +155,8 @@ namespace FreeLibSet.Forms.Reporting
     {
       #region Столбцы
 
-      _ColumnWidthDict = new Dictionary<string, int>();
-      _GroupWidthDict = new Dictionary<string, int>();
+      _ColumnDict = new Dictionary<string, ColumnInfo>();
+      _SizeGroupDict = new Dictionary<string, SizeGroupInfo>();
       _ColumnSubHeaderNumbers = BRDataViewColumnSubHeaderNumbersMode.None;
       _RepeatedColumnCount = 0;
 
@@ -186,27 +187,148 @@ namespace FreeLibSet.Forms.Reporting
       _ExpColumnHeaders = true;
 
       #endregion
+
+      #region Экспорт в текстовый файл
+
+      _CodePage = Encoding.UTF8.CodePage;
+      //_NewLine = Environment.NewLine;
+      _FieldDelimiter = ',';
+      _Quote = '\"';
+      _SingleLineField = true;
+      _RemoveDoubleSpaces = false;
+
+      #endregion
+
+      #region Экспорт в DBF
+
+      _DbfCodePage = Encoding.Default.CodePage;
+
+      #endregion
     }
 
     #endregion
 
     #region Вкладка "Столбцы"
 
+    #region Внутренние словари
+
     const int AutoWidth = 0;
 
-    const int NotPrintedWidth = Int32.MinValue;
+    private class ColumnInfo
+    {
+      #region Печать
+
+      /// <summary>
+      /// True (по умолчанию), если столбец печатается
+      /// False вместо константы NonPrintWidth 
+      /// </summary>
+      public bool Print;
+
+      /// <summary>
+      /// Ширина при печати в единицах 0.1мм
+      /// Значение AutoWidth=0, если ширина определяется автоматически.
+      /// </summary>
+      public int PrintWidth;
+
+      /// <summary>
+      /// Признак автоматического увеличения ширины столбца при печати для заполнения страницы.
+      /// По умолчанию - false
+      /// </summary>
+      public bool AutoGrow;
+
+      #endregion
+
+      #region DBF
+
+      /// <summary>
+      /// Если true (по умолчанию), то столбец выгружается в DBF. 
+      /// </summary>
+      public bool DbfExported;
+
+      /// <summary>
+      /// Имя DBF поля – заданное вручную или полученное автоматически при вызове GetRealDbfColumnNames()
+      /// </summary>
+      public string DbfFieldName;
+
+      /// <summary>
+      /// True, если имя поля было присвоено пользователем вручную (вызов SetDbfFieldName()), false, если имя присвоено автоматически
+      /// </summary>
+      public bool IsManualDbfName;
+
+      #endregion
+    }
 
     /// <summary>
-    /// Ширина столбцов или константы AutoWidth и NonPrintWidth
-    /// Ключом является имя столбца.
+    /// Информация о столбцах.
+    /// Ключом является имя столбца <see cref="IEFPDataViewColumnBase.Name"/>.
     /// </summary>
-    private readonly Dictionary<string, int> _ColumnWidthDict;
+    private readonly Dictionary<string, ColumnInfo> _ColumnDict;
+
+    private class SizeGroupInfo
+    {
+      #region Печать
+
+      /// <summary>
+      /// Ширина при печати в единицах 0.1мм
+      /// Значение AutoWidth=0, если ширина определяется автоматически.
+      /// </summary>
+      public int PrintWidth;
+
+      /// <summary>
+      /// Признак автоматического увеличения ширины столбца при печати для заполнения страницы.
+      /// По умолчанию - false
+      /// </summary>
+      public bool AutoGrow;
+
+      #endregion
+    }
 
     /// <summary>
-    /// Ширина для SizeGroup.
-    /// Ключ - код группы. Значение - ширина или константа AutoWidth
+    /// Размеры столбцов с заданной размерной группой.
+    /// Ключ - свойство <see cref="IEFPDataViewColumnBase.SizeGroup"/>.
     /// </summary>
-    private readonly Dictionary<string, int> _GroupWidthDict;
+    private readonly Dictionary<string, SizeGroupInfo> _SizeGroupDict;
+
+    private ColumnInfo GetColumnInfo(IEFPDataViewColumnBase column)
+    {
+#if DEBUG
+      if (column == null)
+        throw new ArgumentNullException("column");
+#endif
+      ColumnInfo ci;
+      if (!_ColumnDict.TryGetValue(column.Name, out ci))
+      {
+        ci = new ColumnInfo();
+        ci.Print = true;
+        ci.AutoGrow = column.AutoGrow;
+        ci.DbfExported = true;
+        ci.DbfFieldName = String.Empty;
+
+        _ColumnDict.Add(column.Name, ci);
+      }
+
+      // Размерной группы может не быть в секции конфигурации
+      if (!String.IsNullOrEmpty(column.SizeGroup))
+      {
+        SizeGroupInfo sgi;
+        if (!_SizeGroupDict.TryGetValue(column.SizeGroup, out sgi))
+        {
+          sgi = new SizeGroupInfo();
+          sgi.PrintWidth = ci.PrintWidth;
+          sgi.AutoGrow = ci.AutoGrow;
+          _SizeGroupDict.Add(column.SizeGroup, sgi);
+        }
+        else
+        {
+          ci.PrintWidth = sgi.PrintWidth;
+          ci.AutoGrow = sgi.AutoGrow;
+        }
+      }
+
+      return ci;
+    }
+
+    #endregion
 
     /// <summary>
     /// Получить флажок печати столбца
@@ -218,9 +340,7 @@ namespace FreeLibSet.Forms.Reporting
       if (!column.Printable)
         return false;
 
-      int w;
-      _ColumnWidthDict.TryGetValue(column.Name, out w);
-      return w != NotPrintedWidth;
+      return GetColumnInfo(column).Print;
     }
 
     /// <summary>
@@ -233,16 +353,7 @@ namespace FreeLibSet.Forms.Reporting
       if (!column.Printable)
         return;
 
-      if (value)
-      {
-        int w;
-        _ColumnWidthDict.TryGetValue(column.Name, out w);
-        if (w == NotPrintedWidth)
-          w = AutoWidth;
-        _ColumnWidthDict[column.Name] = w;
-      }
-      else
-        _ColumnWidthDict[column.Name] = NotPrintedWidth;
+      GetColumnInfo(column).Print = value;
     }
 
     /// <summary>
@@ -251,19 +362,16 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <returns>Ширина или 0</returns>
-    public int GetColumnWidth(IEFPDataViewColumnBase column)
+    public int GetColumnPrintWidth(IEFPDataViewColumnBase column)
     {
       if (!column.Printable)
         return 0;
-      int w;
-      if (String.IsNullOrEmpty(column.SizeGroup))
-        _ColumnWidthDict.TryGetValue(column.Name, out w);
-      else
-        _GroupWidthDict.TryGetValue(column.SizeGroup, out w);
 
-      if (w == NotPrintedWidth)
-        w = AutoWidth;
-      return Math.Abs(w);
+      ColumnInfo ci = GetColumnInfo(column); // заодно создает SizeGroupInfo
+      if (String.IsNullOrEmpty(column.SizeGroup))
+        return ci.PrintWidth;
+      else
+        return _SizeGroupDict[column.SizeGroup].PrintWidth;
     }
 
     /// <summary>
@@ -275,7 +383,7 @@ namespace FreeLibSet.Forms.Reporting
     /// <returns>Ширина</returns>
     public int GetRealColumnWidth(IEFPDataViewColumnBase column, BRFontSettingsDataItem fontSettings)
     {
-      int w = GetColumnWidth(column);
+      int w = GetColumnPrintWidth(column);
       if (w == AutoWidth)
         return GetDefaultWidth(column, fontSettings);
       else
@@ -289,22 +397,17 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <param name="value">Ширина или 0</param>
-    public void SetColumnWidth(IEFPDataViewColumnBase column, int value)
+    public void SetColumnPrintWidth(IEFPDataViewColumnBase column, int value)
     {
       if (value < 0)
         throw new ArgumentOutOfRangeException("value");
       if (!column.Printable)
         return;
 
-      bool isAutoGrow = GetColumnAutoGrow(column);
-
-      if (isAutoGrow)
-        value = -value;
-
-      if (String.IsNullOrEmpty(column.SizeGroup))
-        _ColumnWidthDict[column.Name] = value;
-      else
-        _GroupWidthDict[column.SizeGroup] = value;
+      ColumnInfo ci = GetColumnInfo(column); // заодно создает SizeGroupInfo
+      ci.PrintWidth = value;
+      if (!String.IsNullOrEmpty(column.SizeGroup))
+        _SizeGroupDict[column.SizeGroup].PrintWidth = value;
     }
 
     private int GetDefaultWidth(IEFPDataViewColumnBase column, BRFontSettingsDataItem fontSettings)
@@ -328,7 +431,7 @@ namespace FreeLibSet.Forms.Reporting
 
     /// <summary>
     /// Получить признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
-    /// Если true, то <see cref="SetColumnWidth(IEFPDataViewColumnBase, int)"/> задает минимальную ширину столбца.
+    /// Если true, то <see cref="SetColumnPrintWidth(IEFPDataViewColumnBase, int)"/> задает минимальную ширину столбца.
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <returns>Признак автоматического увеличения ширины</returns>
@@ -336,22 +439,16 @@ namespace FreeLibSet.Forms.Reporting
     {
       if (!GetColumnPrinted(column))
         return false;
-      int w;
-      bool res;
+      ColumnInfo ci = GetColumnInfo(column); // заодно создает SizeGroupInfo
       if (String.IsNullOrEmpty(column.SizeGroup))
-        res = _ColumnWidthDict.TryGetValue(column.Name, out w);
+        return ci.AutoGrow;
       else
-        res = _GroupWidthDict.TryGetValue(column.SizeGroup, out w);
-
-      if (res)
-        return w < 0;
-      else
-        return column.AutoGrow;
+        return _SizeGroupDict[column.SizeGroup].AutoGrow;
     }
 
     /// <summary>
     /// Установить признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца.
-    /// Если true, то <see cref="SetColumnWidth(IEFPDataViewColumnBase, int)"/> задает минимальную ширину столбца.
+    /// Если true, то <see cref="SetColumnPrintWidth(IEFPDataViewColumnBase, int)"/> задает минимальную ширину столбца.
     /// </summary>
     /// <param name="column">Столбец провайдера табличного или иерархического просмотра (<see cref="EFPDataGridViewColumn"/> или <see cref="EFPDataTreeViewColumn"/>)</param>
     /// <param name="value">Признак автоматического увеличения ширины</param>
@@ -359,15 +456,11 @@ namespace FreeLibSet.Forms.Reporting
     {
       if (!GetColumnPrinted(column))
         return;
-      int w = GetColumnWidth(column);
 
-      if (value)
-        w = -w;
-
-      if (String.IsNullOrEmpty(column.SizeGroup))
-        _ColumnWidthDict[column.Name] = w;
-      else
-        _GroupWidthDict[column.SizeGroup] = w;
+      ColumnInfo ci = GetColumnInfo(column); // заодно создает SizeGroupInfo
+      ci.AutoGrow = value;
+      if (!String.IsNullOrEmpty(column.SizeGroup))
+        _SizeGroupDict[column.SizeGroup].AutoGrow = value;
     }
 
     /// <summary>
@@ -450,6 +543,27 @@ namespace FreeLibSet.Forms.Reporting
     private string _BoolTextFalse;
 
     /// <summary>
+    /// Возвращает преобразованное логическое значение в соответствии со значением свойства <see cref="BoolMode"/>
+    /// </summary>
+    /// <param name="value">Значение в таблице данных</param>
+    /// <returns>Преобразованное значение</returns>
+    public object GetBoolValue(bool value)
+    {
+      switch (BoolMode)
+      {
+        case BRDataViewBoolMode.Boolean:
+          return value;
+        case BRDataViewBoolMode.Text:
+          return value ? BoolTextTrue : BoolTextFalse;
+        case BRDataViewBoolMode.Integer:
+          return value ? 1 : 0;
+        default:
+          throw new BugException("BoolMode=" + BoolMode.ToString());
+      }
+    }
+
+
+    /// <summary>
     /// Отступ от левого края ячейки в единицах 0.1мм.
     /// По умолчанию используется значение из <see cref="BRReport.AppDefaultCellStyle"/>.
     /// </summary>
@@ -493,16 +607,134 @@ namespace FreeLibSet.Forms.Reporting
     #endregion
 
     /// <summary>
-    /// При экспорте в текстовые форматы: какой диапазон использовать: весь просмотр (по умолчанию) или только выбранные ячейки
+    /// При выполнении команды "Отправить": какой диапазон использовать: весь просмотр (по умолчанию) или только выбранные ячейки
     /// </summary>
     public EFPDataViewExpRange ExpRange { get { return _ExpRange; } set { _ExpRange = value; } }
     private EFPDataViewExpRange _ExpRange;
 
     /// <summary>
-    /// При экпорте в текстовые форматы: true (по умолчанию) - выводить заголовки столбцов
+    /// При выполнении команды "Отправить": true (по умолчанию) - выводить заголовки столбцов.
+    /// Эта же настройка используется для экспорта в форматы txt и csv.
+    /// Редактируется в двух вкладках диалога параметров
     /// </summary>
     public bool ExpColumnHeaders { get { return _ExpColumnHeaders; } set { _ExpColumnHeaders = value; } }
     private bool _ExpColumnHeaders;
+
+    #endregion
+
+    #region Экспорт в текстовый файл
+
+    /// <summary>
+    /// Кодировка при экспорте в форматы TXT и CSV.
+    /// По умолчанию - UTF8.
+    /// Для DBF-формата используется отдельное свойство <see cref="DbfCodePage"/>.
+    /// </summary>
+    public int CodePage { get { return _CodePage; } set { _CodePage = value; } }
+    private int _CodePage;
+
+    ///// <summary>
+    ///// Разделитель строк. По умолчанию - <see cref="Environment.NewLine"/>.
+    ///// Внимание! В RFC 4180 используется разделитель CR+LF. Для соответствия стандарту на не-Windows платформах
+    ///// следует установить свойство вручную.
+    ///// </summary>
+    //public string NewLine
+    //{
+    //  get { return _NewLine; }
+    //  set
+    //  {
+    //    _NewLine = value;
+    //  }
+    //}
+    //private string _NewLine;
+
+    /// <summary>
+    /// Символ-разделитель полей в пределах строки.
+    /// По умолчанию - запятая.
+    /// Используется только для формата CSV.
+    /// </summary>
+    public char FieldDelimiter
+    {
+      get { return _FieldDelimiter; }
+      set { _FieldDelimiter = value; }
+    }
+    private char _FieldDelimiter;
+
+    private string FieldDelimiterStr
+    {
+      get { return new string(FieldDelimiter, 1); }
+      set { FieldDelimiter = value[0]; }
+    }
+
+    /// <summary>
+    /// Символ кавычки.
+    /// Используется только для формата CSV.
+    /// </summary>
+    public char Quote
+    {
+      get { return _Quote; }
+      set { _Quote = value; }
+    }
+    private char _Quote;
+
+    private string QuoteStr
+    {
+      get { return new string(Quote, 1); }
+      set { Quote = value[0]; }
+    }
+
+
+
+    /// <summary>
+    /// Замена в полях символов перевода строки на пробелы. По умолчанию - true.
+    /// Используется только для формата CSV. В tabbed-формате всегда выполняется замена
+    /// </summary>
+    public bool SingleLineField { get { return _SingleLineField; } set { _SingleLineField = value; } }
+    private bool _SingleLineField;
+
+    /// <summary>
+    /// Если true, то выполняется удаление двойных пробелов и пробелов в начале/конце текста.
+    /// По умолчанию - false.
+    /// </summary>
+    public bool RemoveDoubleSpaces { get { return _RemoveDoubleSpaces; } set { _RemoveDoubleSpaces = value; } }
+    private bool _RemoveDoubleSpaces;
+
+    #endregion
+
+    #region Экспорт в DBF
+
+    /// <summary>
+    /// Кодировка при экспорте в формат DBF.
+    /// По умолчанию - кодировка операционной системы по умолчанию.
+    /// </summary>
+    public int DbfCodePage { get { return _DbfCodePage; } set { _DbfCodePage = value; } }
+    private int _DbfCodePage;
+
+    /**
+
+    /// <summary>
+    /// Устанавливает для столбца признак экспорта в DBF-формат
+    /// </summary>
+    /// <param name="column">Столбец просмотра</param>
+    /// <param name="value">Признак экспорта</param>
+    public void SetDbfExported(IEFPDataViewColumn column, bool value)
+    {
+      GetColumnInfo(column).DbfExported = value;
+    }
+
+    public bool GetDbfExported(IEFPDataViewColumn column)
+    {
+      return GetColumnInfo(column).DbfExported;
+    }
+
+    public void SetDbfFieldName(IEFPDataViewColumn column, string name)
+    {
+    }
+
+    public string GetDbfFieldName(IEFPDataViewColumn column)
+    {
+    }
+
+    **/
 
     #endregion
 
@@ -528,34 +760,38 @@ namespace FreeLibSet.Forms.Reporting
       CfgPart cfg2 = cfg.GetChild("Columns", true);
       // Нельзя чистить, так как затрутся данные из родительской настройки
       // cfg2.Clear();
-      foreach (KeyValuePair<string, int> pair in _ColumnWidthDict)
+      foreach (KeyValuePair<string, ColumnInfo> pair in _ColumnDict)
       {
         CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
         cfg3.Clear();
-        if (pair.Value == NotPrintedWidth)
+        if (!pair.Value.Print)
           cfg3.SetBool("Print", false);
-        else if (pair.Value > 0)
-          cfg3.SetInt("Width", pair.Value);
-        else if (pair.Value < 0)
+        else
         {
-          cfg3.SetInt("Width", -pair.Value);
-          cfg3.SetBool("AutoGrow", true);
+          cfg3.SetInt("Width", pair.Value.PrintWidth);
+          if (pair.Value.AutoGrow)
+            cfg3.SetBool("AutoGrow", true);
         }
-      }
-      if (_GroupWidthDict.Count > 0)
+
+        if (pair.Value.DbfExported)
+        {
+          if (!String.IsNullOrEmpty(pair.Value.DbfFieldName))
+            cfg.SetString(pair.Value.IsManualDbfName ? "DbfName" : "AutoDbfName", pair.Value.DbfFieldName);
+        }
+        else
+          cfg3.SetBool("Dbf", false);
+}
+
+      if (_SizeGroupDict.Count > 0)
       {
         cfg2 = cfg.GetChild("ColumnSizeGroups", true);
-        foreach (KeyValuePair<string, int> pair in _GroupWidthDict)
+        foreach (KeyValuePair<string, SizeGroupInfo> pair in _SizeGroupDict)
         {
           CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
           cfg3.Clear();
-          if (pair.Value > 0)
-            cfg3.SetInt("Width", pair.Value);
-          else if (pair.Value < 0)
-          {
-            cfg3.SetInt("Width", -pair.Value);
+          cfg3.SetInt("Width", pair.Value.PrintWidth);
+          if (pair.Value.AutoGrow)
             cfg3.SetBool("AutoGrow", true);
-          }
         }
       }
       cfg.SetInt("RepeatedColumnCount", RepeatedColumnCount);
@@ -588,6 +824,23 @@ namespace FreeLibSet.Forms.Reporting
       cfg.SetBool("ExpColumnHeaders", ExpColumnHeaders);
 
       #endregion
+
+      #region Экспорт в текстовый файл
+
+      cfg.SetInt("CodePage", CodePage);
+      cfg.SetString("FieldDelimiter", FieldDelimiterStr);
+      cfg.SetString("Quote", QuoteStr);
+      cfg.SetBool("SingleLineField", SingleLineField);
+      cfg.SetBool("RemoveDoubleSpaces", RemoveDoubleSpaces);
+
+      #endregion
+
+      #region Экспорт в DBF
+
+      cfg.SetInt("DbfCodePage", DbfCodePage);
+      // Остальные параметры относятся к столбцам
+
+      #endregion
     }
 
     /// <summary>
@@ -599,37 +852,37 @@ namespace FreeLibSet.Forms.Reporting
     {
       #region Столбцы
 
-      _ColumnWidthDict.Clear();
+      _ColumnDict.Clear();
       CfgPart cfg2 = cfg.GetChild("Columns", false);
       if (cfg2 != null)
       {
         foreach (string colName in cfg2.GetChildNames())
         {
           CfgPart cfg3 = cfg2.GetChild(colName, false);
-          if (cfg3.GetBoolDef("Print", true))
+          ColumnInfo ci = new ColumnInfo();
+          ci.Print = cfg3.GetBoolDef("Print", true);
+          if (ci.Print)
           {
-            if (cfg3.GetBool("AutoGrow"))
-              _ColumnWidthDict.Add(colName, -cfg3.GetInt("Width"));
-            else
-              _ColumnWidthDict.Add(colName, cfg3.GetInt("Width"));
+            ci.PrintWidth = cfg3.GetInt("Width");
+            ci.AutoGrow = cfg3.GetBool("AutoGrow");
           }
-          else
-            _ColumnWidthDict.Add(colName, NotPrintedWidth);
+          _ColumnDict.Add(colName, ci);
         }
       }
-      _GroupWidthDict.Clear();
+
+      _SizeGroupDict.Clear();
       cfg2 = cfg.GetChild("ColumnSizeGroups", false);
       if (cfg2 != null)
       {
         foreach (string grpName in cfg2.GetChildNames())
         {
           CfgPart cfg3 = cfg2.GetChild(grpName, false);
-          if (cfg3.GetBool("AutoGrow"))
-            _GroupWidthDict.Add(grpName, -cfg3.GetInt("Width"));
-          else
-            _GroupWidthDict.Add(grpName, cfg3.GetInt("Width"));
+          SizeGroupInfo szi = new SizeGroupInfo();
+          szi.PrintWidth = cfg3.GetInt("Width");
+          szi.AutoGrow = cfg3.GetBool("AutoGrow");
         }
       }
+
       RepeatedColumnCount = cfg.GetInt("RepeatedColumnCount");
       ColumnSubHeaderNumbers = cfg.GetEnum<BRDataViewColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers");
 
@@ -658,6 +911,23 @@ namespace FreeLibSet.Forms.Reporting
 
       ExpRange = cfg.GetEnumDef<EFPDataViewExpRange>("ExpRange", EFPDataViewExpRange.All);
       ExpColumnHeaders = cfg.GetBoolDef("ExpColumnHeaders", true);
+
+      #endregion
+
+      #region Экспорт в текстовый файл
+
+      CodePage = cfg.GetIntDef("CodePage", Encoding.UTF8.CodePage);
+      FieldDelimiterStr = cfg.GetStringDef("FieldDelimiter", ",");
+      QuoteStr = cfg.GetStringDef("Quote", "\"");
+      SingleLineField = cfg.GetBoolDef("SingleLineField", true);
+      RemoveDoubleSpaces = cfg.GetBoolDef("RemoveDoubleSpaces", false);
+
+      #endregion
+
+      #region Экспорт в DBF
+
+      DbfCodePage = cfg.GetIntDef("DbfCodePage", Encoding.Default.CodePage);
+      // Остальные параметры относятся к столбцам
 
       #endregion
     }

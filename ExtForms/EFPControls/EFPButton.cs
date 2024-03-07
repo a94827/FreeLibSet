@@ -35,16 +35,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установить в true, то будет предотвращено закрытие формы, пока выполняется обработчик
-    /// события EFPButton.Click. Также предотвращается нажатие других кнопок, для которых это свойство
+    /// события <see cref="EFPButton.Click"/>. Также предотвращается нажатие других кнопок, для которых это свойство
     /// установлено.
     /// По умолчанию свойство не установлено, т.к. обработчик может, в общем случае, выполнить закрытие
     /// формы.
-    /// Свойство не может устанавливаться из самого обработчика события Click.
+    /// Свойство не может устанавливаться из самого обработчика события <see cref="Click"/>.
+    /// Свойство не влияет на вызов стандартного обработчика <see cref="Control.Click"/>.
+    /// Вложенный вызов события <see cref="EFPButton.Click"/> для той же кнопки предотвращается всегда.
     /// </summary>
-    /// <remarks>
-    /// Свойство не влияет на вызов стандартного обработчика Button.Click.
-    /// Вложенный вызов события EFPButton.Click для той же кнопки предотвращается всегда.
-    /// </remarks>
     public bool PreventFormClosing
     {
       get { return _PreventFormClosing; }
@@ -62,11 +60,11 @@ namespace FreeLibSet.Forms
     #region SetImage
 
     /// <summary>
-    /// Присваивает кнопке изображение из списка EFPApp.MainImages.
-    /// Устанавливает свойство Button.ImageAlign для выравнивания по левому краю, если у кнопки есть текст
+    /// Присваивает кнопке изображение из списка <see cref="EFPApp.MainImages"/>.
+    /// Устанавливает свойство <see cref="ButtonBase.ImageAlign"/> для выравнивания по левому краю, если у кнопки есть текст
     /// и по центру, если кнопка содержит только значок без текста
     /// </summary>
-    /// <param name="imageKey">Имя изображения из списка EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя изображения из списка <see cref="EFPApp.MainImages"/></param>
     public void SetMainImageKey(string imageKey)
     {
       if (String.IsNullOrEmpty(imageKey))
@@ -87,9 +85,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при нажатии кнопки.
-    /// В отличие от оригинального события Button.Click, при возникновении исключения
+    /// В отличие от оригинального события <see cref="Control.Click"/>, при возникновении исключения
     /// в обработчике выводится окно сообщения об ошибке, а не происходит аварийное
-    /// завершение программы
+    /// завершение программы.
     /// </summary>
     public event EventHandler Click;
 
@@ -146,7 +144,8 @@ namespace FreeLibSet.Forms
     private bool _InsideClick = false;
 
     /// <summary>
-    /// Вызывает обработчик события Click, если он присоединен
+    /// Вызывает обработчик события <see cref="Click"/>, если он присоединен.
+    /// Иначе, если установлено свойство <see cref="Button.DialogResult"/>, выполняет закрытие формы.
     /// </summary>
     protected virtual void OnClick()
     {
@@ -170,9 +169,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Кнопка с выпадающим меню, открывающимся при нажатии кнопки
+  /// Кнопка с выпадающим меню, открывающимся при нажатии кнопки.
   /// Для добавления команд меню можно использовать свойство CommandItems.
-  /// Иначе предполагается, что инициализировано свойство ContextMenuStrip или ContextMenu
+  /// Иначе предполагается, что инициализировано свойство <see cref="Control.ContextMenuStrip"/> или <see cref="Control.ContextMenu"/>
   /// </summary>
   public class EFPButtonWithMenu : EFPButton
   {
@@ -205,7 +204,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Показывает выпадаюшее меню рядом с кнопкой.
-    /// Обработчик события EFPButton.Click не вызывается, если есть локальное меню, которое можно показать.
+    /// Обработчик события <see cref="EFPButton.Click"/> не вызывается, если есть локальное меню, которое можно показать.
     /// </summary>
     protected override void OnClick()
     {
@@ -222,7 +221,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Кнопка для отображения списка ошибок ErrorMessageList с помощью EFPApp.ShowErrorMessageListDialog
+  /// Кнопка для отображения списка ошибок <see cref="ErrorMessageList"/> с помощью <see cref="EFPApp.ShowErrorMessageListDialog(ErrorMessageList, string)"/>
   /// </summary>
   public class EFPErrorMessageListButton : EFPButton
   {
@@ -269,7 +268,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Задает ширину столбца "Код" в символах. См.свойство EFPDataGridViewColumn.TextWidth.
+    /// Задает ширину столбца "Код" в символах. См.свойство <see cref="EFPDataGridViewColumn.TextWidth"/>.
     /// Нулевое значение (по умолчанию) задает скрытый столбец.
     /// </summary>
     public int CodeWidth
@@ -293,12 +292,12 @@ namespace FreeLibSet.Forms
     /// Делегат обработчика редактирования строки с ошибкой.
     /// Вызывается, когда пользователь выполняет команду "Редактировать" для строки таблицы.
     /// Групповое редактирование нескольких строк не поддерживается.
-    /// Обработчик получает одно сообщение из списка ErrorMessages, к которому относится текущая
+    /// Обработчик получает одно сообщение из списка <see cref="ErrorMessages"/>, к которому относится текущая
     /// строка табличного просмотра.
     /// Обработчик может показать детальное сообщение об ошибке, либо перейти к объекту, к которому
     /// относится сообщение.
     /// Свойство не должно устанавливаться, если "редактирование" не имеет смысла. При этом
-    /// команды редактирования не будут доступны, если не установлен обработчик события EditData.
+    /// команды редактирования не будут доступны, если не установлен обработчик события.
     /// 
     /// Если "редактирование" имеет смысл только для некоторых сообщений об ошибке (может быть 
     /// выполнен переход к ошибочному объекту), а для остальных - нет, то присоединяемый обработчик
@@ -318,8 +317,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то текст кнопки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство Button.Text вручную, сначала следует задать AutoText=false.
-    /// Начальное значение свойста устанавливается в true, если Button.Text задает непустой текст.
+    /// свойство <see cref="Control.Text"/> вручную, сначала следует задать AutoText=false.
+    /// Начальное значение свойста устанавливается в true, если <see cref="Control.Text"/> задает непустой текст.
     /// Если у кнопки нет текста, то свойство получает значение false.
     /// Свойство может устанавливаться только до вывода кнопки на экран.
     /// </summary>
@@ -337,7 +336,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то значок кнопки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство ImageKey вручную, сначала следует задать AutoImageKey=false.
+    /// свойство <see cref="ButtonBase.ImageKey"/> вручную, сначала следует задать AutoImageKey=false.
     /// Свойство может устанавливаться только до вывода кнопки на экран.
     /// </summary>
     public bool AutoImageKey
@@ -354,7 +353,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то всплывающие подсказки заголовка закладки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство ToolTipText вручную, сначала следует задать AutoToolTipText=false.
+    /// свойство <see cref="EFPControlBase.ToolTipText"/> вручную, сначала следует задать AutoToolTipText=false.
     /// Свойство может устанавливаться только до вывода кнопки на экран.
     /// </summary>
     public bool AutoToolTipText
@@ -371,7 +370,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то кнопка будет автоматически блокироваться, 
     /// если список ошибок не присоединен или не содержит сообщений. Чтобы установливать 
-    /// свойство Enabled вручную, или использовать EnabledEx, сначала следует задать AutoEnabled=false.
+    /// свойство <see cref="EFPControlBase.Enabled"/> вручную, или использовать <see cref="EFPControlBase.EnabledEx"/>, сначала следует задать AutoEnabled=false.
     /// Свойство может устанавливаться только до вывода кнопки на экран.
     /// </summary>
     public bool AutoEnabled
@@ -387,8 +386,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то при наличии в списке ошибок или предупреждений будет устанавливаться соответствующее значение
-    /// свойства ValidateState. При наличии ошибок, например, нельзя будет нажать кнопку "ОК".
-    /// Если сбросить свойство в false, то ValidateState будет оставаться равным Ok, независимо от списка ошибок
+    /// свойства <see cref="EFPControlBase.ValidateState"/>. При наличии ошибок, например, нельзя будет нажать кнопку "ОК".
+    /// Если сбросить свойство в false, то <see cref="EFPControlBase.ValidateState"/> будет оставаться равным Ok, независимо от списка ошибок.
     /// </summary>
     public bool AutoValidate
     {
@@ -438,7 +437,7 @@ namespace FreeLibSet.Forms
     #region Нажатие кнопки
 
     /// <summary>
-    /// При нажатии кнопки вызывается EFPApp.ShowErrorMessageListDialog()
+    /// При нажатии кнопки вызывается <see cref="EFPApp.ShowErrorMessageListDialog(ErrorMessageList, string, int, ErrorMessageItemEventHandler)"/>
     /// </summary>
     protected override void OnClick()
     {
@@ -451,7 +450,7 @@ namespace FreeLibSet.Forms
     #region OnValidate()
 
     /// <summary>
-    /// Выполняет проверку при установленном свойстве AutoValidate
+    /// Выполняет проверку при установленном свойстве <see cref="AutoValidate"/>=true.
     /// </summary>
     protected override void OnValidate()
     {

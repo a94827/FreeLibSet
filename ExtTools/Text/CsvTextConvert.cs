@@ -6,6 +6,8 @@ using FreeLibSet.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Collections;
 
 namespace FreeLibSet.Text
 {
@@ -16,7 +18,7 @@ namespace FreeLibSet.Text
   /// Исключение: свойство NewLine
   /// Класс не является потокобезопасным, т.к. может использовать внутренние поля в процессе преобразования
   /// </summary>
-  public class CsvTextConvert
+  public class CsvTextConvert: ITextConvert
   {
     #region Конструктор
 
@@ -52,9 +54,9 @@ namespace FreeLibSet.Text
     private char _FieldDelimiter;
 
     /// <summary>
-    /// Разделитель строк. По умолчанию - Environment.NewLine.
+    /// Разделитель строк. По умолчанию - <see cref="Environment.NewLine"/>.
     /// Внимание! В RFC 4180 используется разделитель CR+LF. Для соответствия стандарту на не-Windows платформах
-    /// следует установить свойство вручную
+    /// следует установить свойство вручную.
     /// </summary>
     public string NewLine
     {
@@ -69,8 +71,8 @@ namespace FreeLibSet.Text
 
     /// <summary>
     /// Нужно ли автоматически определять символы новой строки при преобразовании строки CSV в двумерный массив.
-    /// По умолчанию - false - используется текущее значение свойства NewLine.
-    /// Если установить в true, то свойство NewLine получит новое значение при вызове ToArray2().
+    /// По умолчанию - false - используется текущее значение свойства <see cref="NewLine"/>.
+    /// Если установить в true, то свойство <see cref="NewLine"/> получит новое значение при вызове <see cref="ToArray2Internal(string[], bool)"/>.
     /// </summary>
     public bool AutoDetectNewLine
     {
@@ -96,7 +98,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Если true, то поля будут всегда заключаться в кавычки, включая пустые поля.
     /// По умолчанию - false, кавычки ставятся только при необходимости: при наличии в поле запятых, кавычек или переноса строк.
-    /// Влияет только на методы ToString(). При разборе CSV-текста свойство не учитывается.
+    /// Влияет только на методы <see cref="ToString(string[])"/>. При разборе CSV-текста свойство не учитывается.
     /// </summary>
     public bool AlwaysQuote
     {
@@ -134,11 +136,11 @@ namespace FreeLibSet.Text
     }
 
     /// <summary>
-    /// Преобразование одномерного массива строк в строку с указанным разделителем.
+    /// Преобразование одномерного массива строк в строку с указанным разделителем <see cref="FieldDelimiter"/>.
     /// Если <paramref name="a"/>=null или пустой, возвращается пустая строка.
     /// Если в элементе массива есть символ-разделитель или кавычка, элемент заключается в кавычки,
     /// а внутренние кавычки удваиваются.
-    /// Эта версия использует StringBuilder для построения строки.
+    /// Эта версия использует <see cref="StringBuilder"/> для построения строки.
     /// </summary>
     /// <param name="sb">Сюда записывается CSV-строка</param>
     /// <param name="a">Массив полей для преобразования в строку</param>
@@ -238,7 +240,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Записывает строку в формате CSV для двумерного массива.
     /// </summary>
-    /// <param name="sb">Заполняемый StringBuilder</param>
+    /// <param name="sb">Заполняемый <see cref="StringBuilder"/></param>
     /// <param name="a">Массив исходных значений</param>
     public void ToString(StringBuilder sb, string[,] a)
     {
@@ -286,7 +288,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Преобразование строки, содержащей значения, разделенные запятыми или другим разделителем, например, табуляцией.
     /// Строка не должна содержать символов переноса строки (вне поля в кавычках). Если строка может
-    /// содержать несколько строк, используйте ToArray2() для преобразования в двумерный массив.
+    /// содержать несколько строк, используйте <see cref="ToArray2(string)"/> для преобразования в двумерный массив.
     /// Концевые пробелы отбрасываются. Также отбрасываются пробелы слева и справа
     /// от каждого разделителя (если они не внутри кавычек). 
     /// Если строка пустая или не содержит ничего, кроме пробелов, то возвращается null.
@@ -436,9 +438,10 @@ namespace FreeLibSet.Text
 
     /// <summary>
     /// Преобразование строки CSV в двумерный массив строк. Строки разделяются
-    /// символами CR+LF, а столбцы - указанным разделителем.
-    /// Если массив не прямоугольный, то выбрасывается исключение
+    /// символами <see cref="NewLine"/> (если <see cref="AutoDetectNewLine"/>=true, то разделитель строк определяется автоматически и записывается в свойство <see cref="NewLine"/>), а столбцы - указанным разделителем <see cref="FieldDelimiter"/>.
+    /// Если массив не прямоугольный, то выбрасывается исключение.
     /// Если строка пустая, возвращается null.
+    /// Наличие символов перевода строки внутри текстовых полей не поддерживается, будет возвращен некорректный результат или сгенерировано исключение.
     /// </summary>
     /// <param name="s">Строка в формате CSV</param>
     /// <returns>Двумерный массив строк</returns>
@@ -504,4 +507,311 @@ namespace FreeLibSet.Text
 
     #endregion
   }
+
+#if XXX // Не реализовано
+
+  public struct CsvTextFieldData
+  {
+    #region Конструктор
+
+    public CsvTextFieldData(string value, string separator)
+    {
+      _Value = value;
+      _Separator = separator;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Значение очередного поля
+    /// </summary>
+    public string Value { get { return _Value; } }
+    private readonly string _Value;
+
+
+    /// <summary>
+    /// Разделитель, идущий после поля.
+    /// Это может быть запятая или символ конца строки (CR, LF или CR+LF).
+    /// </summary>
+    public string Separator { get { return _Separator; } }
+    private readonly string _Separator;
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Потоковый разбор файла CSV с перечислением по отдельным полям.
+  /// За один шаг перечисления возвращается очередное поле и разделитель после этого поля.
+  /// 
+  /// </summary>
+  public sealed class CsvTextFieldEnumerable : IEnumerable<CsvTextFieldData>
+  {
+    #region Конструктор
+
+    public CsvTextFieldEnumerable(TextReader reader)
+    {
+      if (reader == null)
+        throw new ArgumentNullException("reader");
+      _Reader = reader;
+      _FieldDelimiter = ',';
+      _Quote = '\"';
+    }
+
+    private TextReader _Reader;
+
+    private bool _EnumeratorCalled;
+
+    #endregion
+
+    #region Управляющие свойства
+
+    /// <summary>
+    /// Символ-разделитель полей в пределах строки.
+    /// По умолчанию - запятая
+    /// </summary>
+    public char FieldDelimiter
+    {
+      get { return _FieldDelimiter; }
+      set
+      {
+        _FieldDelimiter = value;
+      }
+    }
+    private char _FieldDelimiter;
+
+    /// <summary>
+    /// Символ кавычки
+    /// </summary>
+    public char Quote
+    {
+      get { return _Quote; }
+      set
+      {
+        _Quote = value;
+      }
+    }
+    private char _Quote;
+
+    #endregion
+
+    #region Перечислитель
+
+    public struct Enumerator : IEnumerator<CsvTextFieldData>
+    {
+      #region Защишенный конструктор
+
+      internal Enumerator(CsvTextFieldEnumerable owner)
+      {
+        _Owner = owner;
+        _Buffer = new char[512];
+        _CurrPos = 0;
+        _BufferLength = _Owner._Reader.ReadBlock(_Buffer, 0, _Buffer.Length);
+        _SB = new StringBuilder();
+      }
+
+      private CsvTextFieldEnumerable _Owner;
+
+      #endregion
+
+      #region Внутренний буфер
+
+      private char[] _Buffer;
+      private int _CurrPos;
+      private int _BufferLength;
+
+      /// <summary>
+      /// Посмотреть следующий символ
+      /// </summary>
+      /// <param name="ch">Следующий символ</param>
+      /// <returns>true, если символ существует. false, если поток закончился</returns>
+      private bool PeekChar(out char ch)
+      {
+        if (_CurrPos >= _BufferLength)
+        {
+          _CurrPos = 0;
+          _BufferLength = _Owner._Reader.ReadBlock(_Buffer, 0, _Buffer.Length);
+          if (_BufferLength == 0)
+          {
+            ch = '\0';
+            return false;
+          }
+        }
+        ch = _Buffer[_CurrPos];
+        return true;
+      }
+
+      /// <summary>
+      /// Перейти к следующему символу
+      /// </summary>
+      private void AcceptChar()
+      {
+        _CurrPos++;
+      }
+
+      #endregion
+
+      /// <summary>
+      /// Текущее поле и сепаратор
+      /// </summary>
+      public CsvTextFieldData Current { get { return _Current; } }
+      private CsvTextFieldData _Current;
+
+      object IEnumerator.Current { get { return _Current; } }
+
+      /// <summary>
+      /// Не выполняет никаких действий
+      /// </summary>
+      public void Dispose()
+      {
+      }
+
+      /// <summary>
+      /// Сборка значений полей и разделителей
+      /// </summary>
+      private StringBuilder _SB;
+      
+      /// <summary>
+      /// Выполняет чтение очередного поля и сепаратора
+      /// </summary>
+      /// <returns>Наличие поля и/или сепаратора</returns>
+      public bool MoveNext()
+      {
+        char ch;
+        if (!PeekChar(out ch))
+        {
+          // Нормальное окончание потока
+          _Current = new CsvTextFieldData();
+          return false;
+        }
+
+
+        #region Чтение поля
+
+        _SB.Length = 0;
+
+        while (true)
+        {
+          if PeekChar(out ch);
+            
+        }
+
+        #endregion
+      }
+
+      void IEnumerator.Reset()
+      {
+        throw new InvalidOperationException("Допускается только однократное перечисление");
+      }
+    }
+
+    /// <summary>
+    /// Возвращает перечислитель
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public Enumerator GetEnumerator()
+    {
+      if (_EnumeratorCalled)
+        throw new InvalidOperationException("Повторный вызов метода GetEnumerator() не допускается");
+
+      _EnumeratorCalled = true;
+      return new Enumerator(this);
+    }
+
+    IEnumerator<CsvTextFieldData> IEnumerable<CsvTextFieldData>.GetEnumerator()
+    {
+      return GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return GetEnumerator();
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Потоковый разбор файла CSV с перечислением по строкам.
+  /// Для каждой строки возвращается массив значений полей в виде массива строк.
+  /// Не гарантируется, что для каждой строки будет возвращено одинаковое количество полей.
+  /// Класс разрешает только один проход по файлу. Повторные вызовы метода GetEnumerator() не допускаются, как и вызов <see cref="System.Collections.IEnumerator.Reset()"/>.
+  /// В отличие от методов <see cref="CsvTextConvert.ToArray2(string)"/>, поддерживается наличие символов новой строки внутри полей.
+  /// Эти символы не преобразуются 
+  /// </summary>
+  public sealed class CsvTextLineEnumerable : IEnumerable<string[]>
+  {
+    #region Конструктор
+
+    public CsvTextLineEnumerable(TextReader reader)
+    {
+      if (reader == null)
+        throw new ArgumentNullException("reader");
+      _Reader = reader;
+    }
+
+    private TextReader _Reader;
+
+    #endregion
+
+    #region Управляющие свойства
+
+    /// <summary>
+    /// Символ-разделитель полей в пределах строки.
+    /// По умолчанию - запятая
+    /// </summary>
+    public char FieldDelimiter
+    {
+      get { return _FieldDelimiter; }
+      set
+      {
+        _FieldDelimiter = value;
+      }
+    }
+    private char _FieldDelimiter;
+
+    /// <summary>
+    /// Разделитель строк. По умолчанию - <see cref="Environment.NewLine"/>.
+    /// Внимание! В RFC 4180 используется разделитель CR+LF. Для соответствия стандарту на не-Windows платформах
+    /// следует установить свойство вручную.
+    /// </summary>
+    public string NewLine
+    {
+      get { return _NewLine; }
+      set
+      {
+        _NewLine = value;
+      }
+    }
+    private string _NewLine;
+
+    /// <summary>
+    /// Нужно ли автоматически определять символы новой строки.
+    /// По умолчанию - false - используется текущее значение свойства <see cref="NewLine"/>.
+    /// </summary>
+    public bool AutoDetectNewLine
+    {
+      get { return _AutoDetectNewLine; }
+      set { _AutoDetectNewLine = value; }
+    }
+    private bool _AutoDetectNewLine;
+
+    /// <summary>
+    /// Символ кавычки
+    /// </summary>
+    public char Quote
+    {
+      get { return _Quote; }
+      set
+      {
+        _Quote = value;
+      }
+    }
+    private char _Quote;
+
+    #endregion
+  }
+
+#endif
 }

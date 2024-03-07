@@ -508,6 +508,16 @@ namespace FreeLibSet.Forms.Reporting
     public const string WordXML = "WordXML";
 
     /// <summary>
+    /// Формат XLSX для Microsoft Excel 2007+
+    /// </summary>
+    public const string XLSX = "XLSX";
+
+    /// <summary>
+    /// Формат DOCX для Microsoft Word 2007+
+    /// </summary>
+    public const string DOCX = "DOCX";
+
+    /// <summary>
     /// Формат zip-xml для OpenOffice/LibreOffice Calc
     /// </summary>
     public const string ODS = "ODS";
@@ -769,6 +779,11 @@ namespace FreeLibSet.Forms.Reporting
       lst.Add(new BRExportFileItem(BRExportFileItemCodes.HTML, "Файлы HTML", "*.html", ExportFileHtml));
       lst.Add(new BRExportFileItem(BRExportFileItemCodes.ExcelXML, "Microsoft Excel 2003 XML", "*.xml", ExportFileExcelXml));
       lst.Add(new BRExportFileItem(BRExportFileItemCodes.WordXML, "Microsoft Word 2003 XML", "*.xml", ExportFileWordXml));
+      if (BRFileOffice2007Base.IsSupported)
+      {
+        lst.Add(new BRExportFileItem(BRExportFileItemCodes.XLSX, "Microsoft Excel 2007", "*.xlsx", ExportFileExcel2007));
+        lst.Add(new BRExportFileItem(BRExportFileItemCodes.DOCX, "Microsoft Word 2007", "*.docx", ExportFileWord2007));
+      }
       if (BRFileODFBase.IsSupported)
       {
         lst.Add(new BRExportFileItem(BRExportFileItemCodes.ODS, "OpenOffice/LibreOffice Calc (ODS)", "*.ods", ExportFileOds));
@@ -794,8 +809,11 @@ namespace FreeLibSet.Forms.Reporting
       #region Офисные приложения
 
       BRSendToItem item2;
-      if (EFPDataGridView.CanSendToMicrosoftExcel) // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!
+      if (EFPApp.MicrosoftExcelVersion.Major >= MicrosoftOfficeTools.MicrosoftOffice_2000) 
       {
+        // Для MS Office XP и новее выполняется создание файла в XML-формате,
+        // Для MS Office 2000 выполняется прямое манипулирование OLE-объектом
+
         item2 = new BRSendToItem(BRSendToItemCodes.Excel, String.Empty, SendToExcel);
         item2.MenuText = "Microsoft Excel";
         item2.Image = EFPApp.MicrosoftExcelImage;
@@ -903,14 +921,17 @@ namespace FreeLibSet.Forms.Reporting
       List<int> removedIndexes = null;
       for (int i = 0; i < main.Count; i++)
       {
-        IBRActionItem item = (IBRActionItem)main[i]; // если пользователь добавил постороннее, то возникнет исключение
-        if (item.UseWithPreview)
-          preview.Add(item);
-        if (!item.UseWithControl)
+        IBRActionItem item = main[i] as IBRActionItem;
+        if (item != null) // пользовательские форматы оставляем в основном элементе, а в PrintPreview они не нужны
         {
-          if (removedIndexes == null)
-            removedIndexes = new List<int>();
-          removedIndexes.Add(i);
+          if (item.UseWithPreview)
+            preview.Add(item);
+          if (!item.UseWithControl)
+          {
+            if (removedIndexes == null)
+              removedIndexes = new List<int>();
+            removedIndexes.Add(i);
+          }
         }
       }
 
@@ -978,7 +999,10 @@ namespace FreeLibSet.Forms.Reporting
 
     private string MachineConfigCategory { get { return EFPConfigCategories.PageSetupFiles; } }
 
-    private void CallReadConfig()
+    /// <summary>
+    /// Выполняет однократную загрузку настроек из секции конфигурации в <see cref="SettingsData"/>
+    /// </summary>
+    protected void CallReadConfig()
     {
       if (!_ReadConfigCalled)
       {
@@ -1016,7 +1040,11 @@ namespace FreeLibSet.Forms.Reporting
       }
     }
 
-    private void CallWriteConfig()
+    /// <summary>
+    /// Запись измененных данных <see cref="SettingsData"/> в секции конфигурации.
+    /// Метод вызывается после показа диалога настроек параметров.
+    /// </summary>
+    protected void CallWriteConfig()
     {
       string name = GetConfigSectionName();
       if (name.Length > 0)
@@ -1048,7 +1076,11 @@ namespace FreeLibSet.Forms.Reporting
       }
     }
 
-    private string GetConfigSectionName()
+    /// <summary>
+    /// Возвращает <see cref="ConfigSectionName"/> или имя секции конфигурации по умолчанию.
+    /// </summary>
+    /// <returns>Имя секции конфигурации</returns>
+    protected virtual string GetConfigSectionName()
     {
       if (String.IsNullOrEmpty(ConfigSectionName))
         return "Default";
@@ -1413,6 +1445,16 @@ namespace FreeLibSet.Forms.Reporting
     private static void ExportFileWordXml(object sender, BRActionItemPerformEventArgs args)
     {
       args.CreateFile(new BRFileWord2003Xml(BRMeasurer.Default));
+    }
+
+    private static void ExportFileExcel2007(object sender, BRActionItemPerformEventArgs args)
+    {
+      args.CreateFile(new BRFileXLSX(BRMeasurer.Default));
+    }
+
+    private static void ExportFileWord2007(object sender, BRActionItemPerformEventArgs args)
+    {
+      args.CreateFile(new BRFileDOCX(BRMeasurer.Default));
     }
 
     private static void ExportFileOds(object sender, BRActionItemPerformEventArgs args)

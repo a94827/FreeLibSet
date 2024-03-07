@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using FreeLibSet.Config;
 using FreeLibSet.Core;
 using FreeLibSet.Forms;
+using FreeLibSet.IO;
 using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms.Reporting
@@ -227,6 +228,34 @@ namespace FreeLibSet.Forms.Reporting
     #region Переопределенные методы
 
     /// <summary>
+    /// Если свойство <see cref="BRMenuOutItem.ConfigSectionName"/> не установлено и <see cref="EFPMenuOutItem.Code"/>="Control", 
+    /// то возвращается <see cref="IEFPControl.ConfigSectionName"/>, а не "Default".
+    /// </summary>
+    /// <returns></returns>
+    protected override string GetConfigSectionName()
+    {
+      if (String.IsNullOrEmpty(ConfigSectionName) &&
+        String.Equals(Code, "Control", StringComparison.Ordinal) &&
+        (!String.IsNullOrEmpty(ControlProvider.ConfigSectionName)))
+        return ControlProvider.ConfigSectionName; // 07.03.2024
+
+      return base.GetConfigSectionName();
+    }
+
+    /// <summary>
+    /// Добавляет форматы экспорта в текстовые форматы, не связанные с <see cref="BRReport"/>
+    /// </summary>
+    /// <param name="args"></param>
+    protected override void OnPrepare(EFPMenuOutItemPrepareEventArgs args)
+    {
+      base.OnPrepare(args);
+
+      // Пусть эти форматы будут в конце
+      base.ExportFileItems.Add(new EFPExportFileItem("TXT", "Текст (разделитель - табуляция) ", "*.txt"));
+      base.ExportFileItems.Add(new EFPExportFileItem("CSV", "Текст CSV", "*.csv"));
+    }
+
+    /// <summary>
     /// Инициализация блока диалога параметров
     /// </summary>
     /// <param name="args">Аргументы события</param>
@@ -237,13 +266,61 @@ namespace FreeLibSet.Forms.Reporting
         case BRDialogKind.PageSetup:
           args.AddFontPage();
           new BRDataViewPageSetupColumns(args.Dialog, ControlProvider);
-          new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider);
+          new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider, false);
           break;
         case BRDialogKind.ControlSendTo:
           new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
           break;
       }
       base.OnInitDialog(args);
+    }
+
+    /// <summary>
+    /// Обработка текстовых форматов экспорта
+    /// </summary>
+    /// <param name="filePath">Путь к файлу</param>
+    /// <param name="item">Описание формата экспорта</param>
+    public override void ExportFile(AbsPath filePath, EFPExportFileItem item)
+    {
+      if (item.Code == "CSV" || item.Code == "TXT")
+      {
+        if (ShowExportFileDialog(filePath, item))
+        {
+          BRDataViewFileText fileCreator = new BRDataViewFileText(this.SettingsData.GetRequired<BRDataViewSettingsDataItem>());
+          fileCreator.CreateFile(ControlProvider, filePath, item.Code == "CSV");
+        }
+        return;
+      }
+
+      base.ExportFile(filePath, item);
+    }
+
+    private bool ShowExportFileDialog(AbsPath filePath, EFPExportFileItem item)
+    {
+      #region Создание SettingsDialog 
+
+      CallReadConfig();
+      SettingsDialog dialog = new SettingsDialog();
+      dialog.ConfigSectionName = GetConfigSectionName();
+      dialog.Data = this.SettingsData;
+      dialog.Title = "Экспорт в " + filePath.FileName;
+      dialog.ImageKey = "Save";
+
+      new BRDataViewPageSetupText(dialog, ControlProvider, item.Code == "CSV");
+      if (dialog.Data.GetRequired<BRDataViewSettingsDataItem>().UseBoolMode)
+        new BRDataViewPageSetupAppearance(dialog, ControlProvider, true);
+
+      #endregion
+
+      #region Показ диалога
+
+      if (dialog.ShowDialog() != DialogResult.OK)
+        return false;
+
+      CallWriteConfig();
+      return true;
+
+      #endregion
     }
 
     #endregion
@@ -640,22 +717,7 @@ namespace FreeLibSet.Forms.Reporting
 
       object v = _CellArgs.Value;
       if (v is Boolean)
-      {
-        switch (_Info.ViewData.BoolMode)
-        {
-          case BRDataViewBoolMode.Boolean:
-            break;
-          case BRDataViewBoolMode.Text:
-            //v = (bool)v ? BRDataViewData.CheckBoxCheckedStr : BRDataViewData.CheckBoxUncheckedStr;
-            v = (bool)v ? _Info.ViewData.BoolTextTrue : _Info.ViewData.BoolTextFalse;
-            break;
-          case BRDataViewBoolMode.Integer:
-            v = (bool)v ? 1 : 0;
-            break;
-          default:
-            throw new BugException("BoolMode=" + _Info.ViewData.BoolMode.ToString());
-        }
-      }
+        v = _Info.ViewData.GetBoolValue((bool)v);
       return v;
     }
 

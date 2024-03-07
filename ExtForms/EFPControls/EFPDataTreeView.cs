@@ -1373,7 +1373,6 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        // Для TreeVuewAdv п
         List<EFPDataTreeViewColumn> lst = new List<EFPDataTreeViewColumn>();
         for (int i = 0; i < Columns.Count; i++)
         {

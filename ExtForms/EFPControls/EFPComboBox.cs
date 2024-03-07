@@ -48,7 +48,7 @@ namespace FreeLibSet.Forms
     #region Свойство Text
 
     /// <summary>
-    /// Свойство ComboBox.Text.
+    /// Свойство <see cref="Control.Text"/>.
     /// </summary>
     protected override string ControlText
     {
@@ -79,7 +79,7 @@ namespace FreeLibSet.Forms
     #region Свойство ControlMaxLength
 
     /// <summary>
-    /// Свойство ComboBox.MaxLength.
+    /// Свойство <see cref="ComboBox.MaxLength"/>.
     /// </summary>
     protected override int ControlMaxLength
     {
@@ -99,7 +99,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Автоматическое преобразование регистра символов к верхнему или нижнему регистру.
-    /// По умолчанию преобразование не выполняется (CharacterCasing.Normal).
+    /// По умолчанию преобразование не выполняется (<see cref="CharacterCasing.Normal"/>).
     /// </summary>
     public CharacterCasing CharacterCasing
     {
@@ -150,7 +150,6 @@ namespace FreeLibSet.Forms
         args.KeyChar = s[0];
     }
 
-
     private void Control_TextChanged(object sender, EventArgs args)
     {
       try
@@ -196,7 +195,7 @@ namespace FreeLibSet.Forms
     #region Свойства для выделения текста
 
     /// <summary>
-    /// Свойство ComboBox.SelectionStart.
+    /// Свойство <see cref="ComboBox.SelectionStart"/>.
     /// </summary>
     public override int SelectionStart
     {
@@ -205,7 +204,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство ComboBox.SelectionLength.
+    /// Свойство <see cref="ComboBox.SelectionLength"/>.
     /// </summary>
     public override int SelectionLength
     {
@@ -214,7 +213,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство ComboBox.SelectedText.
+    /// Свойство <see cref="ComboBox.SelectedText"/>.
     /// </summary>
     public override string SelectedText
     {
@@ -256,7 +255,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Обработчик комбоблока для ввода текста и списком, хранящим историю изменений
   /// (например, список последних открытых файлов).
-  /// Расширяет класс EFPTextComboBox массивом строк HistList
+  /// Расширяет класс <see cref="EFPTextComboBox"/> массивом строк <see cref="HistoryList"/>
   /// </summary>
   public class EFPHistComboBox : EFPTextComboBox
   {
@@ -281,7 +280,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Максимальная длина списка истории.
     /// Возможные значения: от 2 до 100. По умолчанию: 10.
-    /// Свойство должно устанавливаться до записи/чтения свойства HistList.
+    /// Свойство должно устанавливаться до записи/чтения свойства <see cref="HistList"/>.
     /// </summary>
     public int MaxHistLength
     {
@@ -299,11 +298,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Список истории. Более новые значения идут в начале списка, а более старые 
     /// - в конце. Таким образом, первый элемент массива содержит текущее значение.
-    /// При записи свойства заполняется выпадающий список, а свойство Text получает
-    /// значение первой строки (если массив не пустой). Если массив длиннее MaxHistLength,
+    /// При записи свойства заполняется выпадающий список, а свойство <see cref="ComboBox.Text"/> получает
+    /// значение первой строки (если массив не пустой). Если массив длиннее <see cref="MaxHistLength"/>,
     /// то лишние элементы отбрасываются.
     /// При чтении свойства первому элементу массива присваивается текущее значение
-    /// (свойство Text), остальные элементы сдвигаются. Если в списке истории 
+    /// (свойство <see cref="ComboBox.Text"/>), остальные элементы сдвигаются. Если в списке истории 
     /// присутствует такое значение, то оно пропускается (то есть строки переставляются).
     /// Если значение не введено (пустое поле), то оно будет включено.
     /// Если требуется корректировка вводимого значения (например, добавление "\" к
@@ -317,7 +316,7 @@ namespace FreeLibSet.Forms
 
         // 07.09.2015
         // Добавляем в том числе и пустое значение.
-        // Иначе при вводе пользователем пустого значения в поле, оно не будет получено 
+        // Иначе при вводе пользователем пустого значения в поле, оно не будет получено. 
         // if (!String.IsNullOrEmpty(Text))
         lst.Add(Text);
 
@@ -358,9 +357,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Дополнительные строки по умолчанию. По умолчанию - нет дополнительных строк (пустой массив).
-    /// Свойство должно устанавливаться ПОСЛЕ HistList. При этом внизу списка 
-    /// добавляются дополнительные строкм, если они отсутствуют в основном списке.
-    /// При чтении свойства HistList дополнительные строки не попадают в список.
+    /// Свойство должно устанавливаться ПОСЛЕ <see cref="HistList"/>. При этом внизу списка 
+    /// добавляются дополнительные строки, если они отсутствуют в основном списке.
+    /// При чтении свойства <see cref="HistList"/> дополнительные строки не попадают в список.
     /// </summary>
     public string[] DefaultItems
     {
@@ -428,7 +427,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство Control.ReadOnly
+    /// Свойство <see cref="UserTextComboBoxBase.ReadOnly"/>
     /// </summary>
     protected override bool ControlReadOnly
     {
@@ -437,7 +436,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка видимости кнопки очистки [x] (свойство UserComboBoxBase.ClearButton).
+    /// Установка видимости кнопки очистки [x] (свойство <see cref="UserComboBoxBase.ClearButton"/>).
     /// </summary>
     public override UIValidateState CanBeEmptyMode
     {
@@ -481,8 +480,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получение текста от управляющего элемента
-    /// Когда не заполнено ни одного символа по маске, свойство MaskedTextBox.Text
+    /// Получение текста от управляющего элемента.
+    /// Когда не заполнено ни одного символа по маске, свойство <see cref="Control.Text"/> .
     /// иногда возвращает пустую строку, а иногда - маску с пробелами вместо знаков.
     /// </summary>
     /// <returns></returns>
@@ -511,7 +510,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Маска.
-    /// По умолчанию - пустая строка
+    /// По умолчанию - пустая строка.
     /// </summary>
     public string Mask
     {
@@ -528,7 +527,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство Mask
+    /// Управляемое свойство <see cref="Mask"/>.
     /// </summary>
     public DepValue<string> MaskEx
     {
@@ -565,7 +564,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Провайдер для работы маски.
-    /// Установка свойства автоматически устанавливает свойство Mask.
+    /// Установка свойства автоматически устанавливает свойство <see cref="Mask"/>.
     /// </summary>
     public IMaskProvider MaskProvider
     {
@@ -595,7 +594,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство, разрешающее частичное заполнение маски. По умолчанию - false.
     /// При этом выдается ошибка, если введены не все символы маски. Однако, 
-    /// полностью пустое значение проверяется с помощью свойства CanBeEmpty.
+    /// полностью пустое значение проверяется с помощью свойства <see cref="CanBeEmptyMode"/>.
     /// </summary>
     public bool MaskCanBePartial
     {
@@ -615,7 +614,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство, разрешающее частичное заполнение маски. По умолчанию - false.
     /// При этом выдается ошибка, если введены не все символы маски. Однако, 
-    /// полностью пустое значение проверяется с помощью свойства CanBeEmpty.
+    /// полностью пустое значение проверяется с помощью свойства <see cref="CanBeEmptyMode"/>.
     /// Управляемое свойство.
     /// </summary>
     public DepValue<bool> MaskCanBePartialEx
@@ -652,7 +651,7 @@ namespace FreeLibSet.Forms
     #region Свойства для выделения текста
 
     /// <summary>
-    /// Дублирует свойство объекта UserMaskedComboBox 
+    /// Дублирует свойство объекта <see cref="UserMaskedComboBox"/>
     /// </summary>
     public override int SelectionStart
     {
@@ -661,7 +660,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство объекта UserMaskedComboBox 
+    /// Дублирует свойство объекта <see cref="UserMaskedComboBox"/>
     /// </summary>
     public override int SelectionLength
     {
@@ -670,7 +669,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство объекта UserMaskedComboBox 
+    /// Дублирует свойство объекта <see cref="UserMaskedComboBox"/> 
     /// </summary>
     public override string SelectedText
     {
@@ -679,7 +678,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует метод объекта UserMaskedComboBox 
+    /// Дублирует метод объекта <see cref="UserMaskedComboBox"/>
     /// </summary>
     /// <param name="start"></param>
     /// <param name="length"></param>
@@ -689,7 +688,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует метод объекта UserMaskedComboBox 
+    /// Дублирует метод объекта <see cref="UserMaskedComboBox"/>
     /// </summary>
     public override void SelectAll()
     {
@@ -735,11 +734,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущий выбранный цвет.
-    /// Допускаются обычные цвета, заданные в RGB-формате (например, Color.Red) или
-    /// пустой цвет (Color.Empty)
-    /// Системные цвета (например, SystemColors.Window) не поддерживаются
+    /// Допускаются обычные цвета, заданные в RGB-формате (например, <see cref="System.Drawing.Color.Red"/>) или
+    /// пустой цвет (<see cref="System.Drawing.Color.Empty"/>).
+    /// Системные цвета (например, <see cref="System.Drawing.SystemColors.Window"/>) не поддерживаются.
     /// 
-    /// Значение по умолчанию - Color.Empty
+    /// Значение по умолчанию - <see cref="System.Drawing.Color.Empty"/>
     /// </summary>
     public Color Color
     {
@@ -761,7 +760,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метод вызывается при изменении выбора в управляющем элементе.
-    /// При переопределении обязательно должен вызываться базовый метод
+    /// При переопределении обязательно должен вызываться базовый метод.
     /// </summary>
     protected virtual void OnColorChanged()
     {
@@ -770,8 +769,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Текущий выбранный цвет.
-    /// По умолчанию - нет выбранного цвета (Color.Empty)
+    /// Текущий выбранный цвет. Управляемое свойство <see cref="Color"/>.
+    /// По умолчанию - нет выбранного цвета (<see cref="System.Drawing.Color.Empty"/>).
     /// </summary>
     public DepValue<Color> ColorEx
     {
@@ -809,7 +808,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Провайдер комбоблока, который рисуется в пользовательском коде.
-  /// При нажатии уголочка вызывается пользовательский код, который должен показать блок диалога
+  /// При нажатии уголочка вызывается пользовательский код, который должен показать блок диалога.
   /// </summary>
   public class EFPOwnerDrawUserSelComboBox : EFPControl<ComboBox>
   {
@@ -844,7 +843,7 @@ namespace FreeLibSet.Forms
     public event EventHandler Popup;
 
     /// <summary>
-    /// Вызывает событие Popup
+    /// Вызывает событие <see cref="Popup"/>.
     /// </summary>
     /// <param name="args">Фиктивные аргументы</param>
     protected virtual void OnPopup(EventArgs args)
@@ -859,7 +858,7 @@ namespace FreeLibSet.Forms
     public event DrawItemEventHandler DrawItem;
 
     /// <summary>
-    /// Вызывает событие DrawItem
+    /// Вызывает событие <see cref="DrawItem"/>.
     /// </summary>
     /// <param name="args">Аргумент события</param>
     protected virtual void OnDrawItem(DrawItemEventArgs args)
@@ -887,7 +886,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывает по таймеру.
-    /// Реализует вызов OnPopup() с задержкой
+    /// Реализует вызов <see cref="OnPopup(EventArgs)"/> с задержкой.
     /// </summary>
     public override void HandleIdle()
     {
@@ -906,7 +905,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Комбоблок с редактированием для ввода целых чисел. Также поддерживаются 
   /// специальные текстовые значения, которые могут быть выбраны из выпадающего
-  /// списка или введены вручную. Каждому такому значению соответствует числовой код
+  /// списка или введены вручную. Каждому такому значению соответствует числовой код.
   /// Текущим значением является целочисленное свойство Value.
   /// </summary>
   public class EFPIntEditComboBox : EFPControl<ComboBox>
@@ -949,22 +948,22 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Коды подстановки.
-    /// Свойство устанавливается вызовом AssignSubsts()
+    /// Свойство устанавливается вызовом <see cref="AssignSubsts(int[], string[])"/>.
     /// </summary>
     public int[] SubstCodes { get { return _SubstCodes; } }
     private int[] _SubstCodes;
 
     /// <summary>
-    /// Текстовые значения в выпадающем списке
-    /// Свойство устанавливается вызовом AssignSubsts()
+    /// Текстовые значения в выпадающем списке.
+    /// Свойство устанавливается вызовом <see cref="AssignSubsts(int[], string[])"/>.
     /// </summary>
     public string[] SubstValues { get { return _SubstValues; } }
     private string[] _SubstValues;
 
     /// <summary>
     /// Присвоение кодов подстановки и соответствующих текстовых значений.
-    /// Элементы SubstValues добавляются в комбоблок сразу или когда он будет 
-    /// присоединен
+    /// Элементы <see cref="SubstValues"/> добавляются в комбоблок сразу или когда он будет 
+    /// присоединен.
     /// </summary>
     /// <param name="codes">Числовые коды подстановок</param>
     /// <param name="values">Текстовые представления для выпадающего списка</param>
@@ -987,8 +986,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Преобразование числового значения в текстовое значение из SubstValues.
-    /// Если в SubstCodes нет такого значения, возвращается <paramref name="value"/>.ToString().
+    /// Преобразование числового значения в текстовое значение из <see cref="SubstValues"/>.
+    /// Если в <see cref="SubstCodes"/> нет такого значения, возвращается <paramref name="value"/>.ToString().
     /// </summary>
     /// <param name="value">Значение</param>
     /// <returns>Текст</returns>
@@ -1005,9 +1004,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Преобразование строки в числовое значение с учетом подстановок SubstValues.
+    /// Преобразование строки в числовое значение с учетом подстановок <see cref="SubstValues"/>.
     /// Пустая строка считается равной 0.
-    /// Если <paramref name="text"/> содержит некорректное значение, то возникает исключение
+    /// Если <paramref name="text"/> содержит некорректное значение, то возникает исключение.
     /// </summary>
     /// <param name="text">Преобразуемая текстовая строка</param>
     /// <returns>Числовое значение</returns>
@@ -1020,7 +1019,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Преобразование строки в числовое значение с учетом подстановок SubstValues.
+    /// Преобразование строки в числовое значение с учетом подстановок <see cref="SubstValues"/>.
     /// Пустая строка считается равной 0.
     /// </summary>
     /// <param name="text">Преобразуемая текстовая строка</param>
@@ -1099,7 +1098,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метод вызывается при изменении текста в управляющем элементе.
-    /// При переопределении обязательно должен вызываться базовый метод
+    /// При переопределении обязательно должен вызываться базовый метод.
     /// </summary>
     protected virtual void OnValueChanged()
     {
@@ -1113,7 +1112,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Текущий числовое значение. Управляемое свойство для Value
+    /// Текущий числовое значение. Управляемое свойство для <see cref="Value"/>.
     /// </summary>
     public DepValue<int> ValueEx
     {

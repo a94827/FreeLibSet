@@ -751,8 +751,8 @@ namespace FreeLibSet.Reporting
   {
     #region Константы
 
-    private int MinFontWidthPercent = 1;
-    private int MaxFontWidthPercent = 999;
+    private const int MinFontWidthPercent = 1;
+    private const int MaxFontWidthPercent = 999;
 
     #endregion
 

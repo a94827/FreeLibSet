@@ -56,9 +56,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> справа до нужной длины <paramref name="length"/> символом <paramref name="paddingChar"/>.
-    /// В отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
+    /// В отличие от <see cref="String.PadRight(int, char)"/>, выполняет обрезание строки, если она длиннее,
     /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
-    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
+    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
@@ -80,9 +80,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> справа до нужной длины <paramref name="length"/> пробелами.
-    /// В отличие от String.PadRight(), выполняет обрезание строки, если она длиннее,
+    /// В отличие от <see cref="String.PadRight(int)"/>, выполняет обрезание строки, если она длиннее,
     /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
-    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
+    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
@@ -95,9 +95,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> слева до нужной длины <paramref name="length"/> символом <paramref name="paddingChar"/>.
-    /// В отличие от String.PadLeft(), выполняет обрезание строки, если она длиннее,
+    /// В отличие от <see cref="String.PadLeft(int, char)"/>, выполняет обрезание строки, если она длиннее,
     /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
-    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
+    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
@@ -119,9 +119,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Дополнение строки <paramref name="s"/> слева до нужной длины <paramref name="length"/> пробелами.
-    /// В отличие от String.PadLeft(), выполняет обрезание строки, если она длиннее,
+    /// В отличие от <see cref="String.PadLeft(int)"/>, выполняет обрезание строки, если она длиннее,
     /// чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
-    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
+    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
@@ -136,7 +136,7 @@ namespace FreeLibSet.Core
     /// Дополнение строки <paramref name="s"/> слева и справа до нужной длины <paramref name="length"/> символом <paramref name="paddingChar"/>.
     /// Выполняет обрезание начальных и конечных символов строки,
     /// если она длиннее, чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
-    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
+    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
@@ -165,7 +165,7 @@ namespace FreeLibSet.Core
     /// Дополнение строки <paramref name="s"/> слева и справа до нужной длины <paramref name="length"/> пробелами.
     /// Выполняет обрезание начальных и конечных символов строки,
     /// если она длиннее, чем <paramref name="length"/>. Также правильно обрабатывается <paramref name="s"/>=null.
-    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на String.Empty.
+    /// Возвращаемая строка всегда имеет длину ровно <paramref name="length"/> символов. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
@@ -184,12 +184,12 @@ namespace FreeLibSet.Core
     /// Возвращает первые <paramref name="length"/> символов из строки <paramref name="s"/>.
     /// Аналог Clipper-функции LEFT()
     /// Строка может быть пустой, null или короче <paramref name="length"/>. В этом случае возвращается
-    /// строка меньшей длины или String.Empty. Значение null заменяется на String.Empty.
+    /// строка меньшей длины или <see cref="String.Empty"/>. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
     /// то будет возвращена пустая строка</param>
-    /// <returns>Строка длиной не более Length символов</returns>
+    /// <returns>Строка длиной не более <paramref name="length"/> символов</returns>
     public static string StrLeft(string s, int length)
     {
       if (String.IsNullOrEmpty(s))
@@ -203,7 +203,7 @@ namespace FreeLibSet.Core
     /// Возвращает последние <paramref name="length"/> символов из строки <paramref name="s"/>.
     /// Аналог Clipper-функции RIGHT()
     /// Строка может быть пустой, null или короче <paramref name="length"/>. В этом случае возвращается
-    /// строка меньшей длины или String.Empty. Значение null заменяется на String.Empty.
+    /// строка меньшей длины или <see cref="String.Empty"/>. Значение null заменяется на <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Может быть null</param>
     /// <param name="length">Требуемая длина строки. Если меньше или равно 0,
@@ -230,7 +230,7 @@ namespace FreeLibSet.Core
     /// Преобразование первого символа строки к верхнему регистру, а остальных - к нижнему
     /// </summary>
     /// <param name="s">Исходная строка</param>
-    /// <param name="culture">Культура, используемая при вызове методов String.ToUpper() и ToLower()</param>
+    /// <param name="culture">Культура, используемая при вызове методов <see cref="String.ToUpper(CultureInfo)"/> и <see cref="string.ToLower(CultureInfo)"/></param>
     /// <returns>Строка с измененным регистром символов</returns>
     public static string ToUpperFirst(string s, CultureInfo culture)
     {
@@ -260,10 +260,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Заменяет буквы верхнего регистра на буквы нижнего регистра и наоборот.
     /// Например, "Hello, world!" будет заменено на "hELLO, wORLD!".
-    /// <param name="culture">Культура, используемая при вызове методов String.ToUpper() и ToLower()</param>
+    /// <param name="culture">Культура, используемая при вызове методов <see cref="String.ToUpper(CultureInfo)"/> и <see cref="string.ToLower(CultureInfo)"/></param>
     /// </summary>
     /// <param name="s">Исходная строка</param>
-    /// <returns>Строка с измененым регистром</returns>
+    /// <returns>Строка с измененным регистром</returns>
     public static string ChangeUpperLower(string s, CultureInfo culture)
     {
       if (String.IsNullOrEmpty(s))
@@ -288,7 +288,7 @@ namespace FreeLibSet.Core
     /// Например, "Hello, world!" будет заменено на "hELLO, wORLD!".
     /// </summary>
     /// <param name="s">Исходная строка</param>
-    /// <returns>Строка с измененым регистром</returns>
+    /// <returns>Строка с измененным регистром</returns>
     public static string ChangeUpperLowerInvariant(string s)
     {
       if (String.IsNullOrEmpty(s))
@@ -314,10 +314,10 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразует первые символы каждого слова к верхнему регистру, а остальные - к нижнему.
-    /// Границей слова является любой небуквенный символ, для которого Char.IsLetter() возвращает false.
+    /// Границей слова является любой небуквенный символ, для которого <see cref="Char.IsLetter(char)"/> возвращает false.
     /// </summary>
     /// <param name="s">Исходная строка</param>
-    /// <param name="culture">Культура, используемая при вызове методов String.ToUpper() и ToLower()</param>
+    /// <param name="culture">Культура, используемая при вызове методов <see cref="Char.ToUpper(char, CultureInfo)"/> и <see cref="Char.ToLower(char, CultureInfo)"/></param>
     /// <returns>Преобразованный текст</returns>
     public static string ToUpperWords(string s, CultureInfo culture)
     {
@@ -354,7 +354,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразует первые символы каждого слова к верхнему регистру, а остальные - к нижнему.
-    /// Границей слова является любой небуквенный символ, для которого Char.IsLetter() возвращает false
+    /// Границей слова является любой небуквенный символ, для которого <see cref="Char.IsLetter(char)"/> возвращает false.
     /// </summary>
     /// <param name="s">Исходная строка</param>
     /// <returns>Преобразованный текст</returns>
@@ -491,7 +491,7 @@ namespace FreeLibSet.Core
     /// Перед <paramref name="addedStr"/> добавляется сепаратор <paramref name="separator"/>. 
     /// Если <paramref name="addedStr"/> - пустая строка, то <paramref name="resStr"/> остается без изменений. 
     /// Сепаратор не добавляется, если <paramref name="resStr"/> - пустая строка.
-    /// Рекомендуется использовать версию для StringBuilder.
+    /// Рекомендуется использовать версию для <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="resStr">Собираемая строка (по ссылке)</param>
     /// <param name="addedStr">Добавляемая строка</param>
@@ -516,7 +516,7 @@ namespace FreeLibSet.Core
     /// Перед <paramref name="addedStr"/> добавляется сепаратор <paramref name="separator"/>. 
     /// Если <paramref name="addedStr"/> - пустая строка, то <paramref name="resStr"/> остается без изменений. 
     /// Сепаратор не добавляется, если <paramref name="resStr"/> - пустая строка.
-    /// Версия для StringBuilder.
+    /// Версия для <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="resStr">Собираемая строка (по ссылке)</param>
     /// <param name="addedStr">Добавляемая строка</param>
@@ -633,7 +633,7 @@ namespace FreeLibSet.Core
     #region IndexOfAny
 
     /// <summary>
-    /// Возвращает true, если метод поиска символов выгодно реализовать с использование CharArrayIndexer
+    /// Возвращает true, если метод поиска символов выгодно реализовать с использованием <see cref="CharArrayIndexer"/>.
     /// </summary>
     /// <param name="str"></param>
     /// <param name="searchChars"></param>
@@ -645,15 +645,15 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Версия стандартого метода String.IndexOfAny(), которая, в отличие от оригинала,
-    /// проверяемые символы берет из строки, а не из массива
+    /// Версия стандартого метода <see cref="String.IndexOfAny(char[])"/>, которая, в отличие от оригинала,
+    /// проверяемые символы берет из строки, а не из массива.
     /// Функция возвращает индекс первого символа из строки <paramref name="str"/>, который присутствует
     /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
     /// которых нет в строке <paramref name="searchChars"/>, то возвращается (-1)
     /// Поиск является культуро-независимым, все символы сравниваются по их кодам
     /// отдельно друг от друга.
     /// Если требуется многократный вызов с одним и тем же набором символов <paramref name="searchChars"/>,
-    /// создайте CharArrayIndexer и используйте другую перегрузку метода.
+    /// создайте <see cref="CharArrayIndexer"/> и используйте другую перегрузку метода.
     /// </summary>
     /// <param name="str">Проверяемая строка</param>
     /// <param name="searchChars">Искомые символы</param>
@@ -677,8 +677,8 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Версия стандартого метода String.IndexOfAny(), которая, в отличие от оригинала,
-    /// проверяемые символы берет из строки, а не из массива
+    /// Версия стандартого метода <see cref="String.IndexOfAny(char[])"/>, которая, в отличие от оригинала,
+    /// проверяемые символы берет из строки, а не из массива.
     /// Функция возвращает индекс первого символа из строки <paramref name="str"/>, который присутствует
     /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
     /// которых нет в строке <paramref name="searchChars"/>, то возвращается (-1).
@@ -703,19 +703,19 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Функция, обратная к IndexOfAny().
+    /// Функция, обратная к <see cref="IndexOfAny(string, string)"/>.
     /// Функция возвращает индекс первого символа из строки <paramref name="str"/>, который отсутствует
     /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
     /// которых входящих в строку <paramref name="searchChars"/>, то возвращается (-1).
     /// Поиск является культуро-независимым, все символы сравниваются по их кодам
-    /// отдельно друг от друга
+    /// отдельно друг от друга.
     /// Если строка <paramref name="str"/> непустая, а <paramref name="searchChars"/> - пустая, то возвращается значение 0, т.к.
     /// первый жн символ не входит в список
     /// Функция полезна для проверки правильности имен и других подобных случаев. 
     /// В качестве строки <paramref name="searchChars"/> следует передавать список всех допустимых символов и
     /// сообщать об ошибке, если функция вернула значение, большее или равное 0.
     /// Если требуется многократный вызов с одним и тем же набором символов <paramref name="searchChars"/>,
-    /// создайте CharArrayIndexer и используйте другую перегрузку метода.
+    /// создайте <see cref="CharArrayIndexer"/> и используйте другую перегрузку метода.
     /// </summary>
     /// <param name="str">Проверяемая строка</param>
     /// <param name="searchChars">Искомые символы</param>
@@ -740,12 +740,12 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Функция, обратная к IndexOfAny().
+    /// Функция, обратная к <see cref="IndexOfAnyOther(string, CharArrayIndexer)"/>.
     /// Функция возвращает индекс первого символа из строки <paramref name="str"/>, который отсутствует
     /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
     /// которых входящих в строку <paramref name="searchChars"/>, то возвращается (-1)
     /// Поиск является культуро-независимым, все символы сравниваются по их кодам
-    /// отдельно друг от друга
+    /// отдельно друг от друга.
     /// Если строка <paramref name="str"/> непустая, а <paramref name="searchChars"/> - пустая, то возвращается значение 0, т.к.
     /// первый жн символ не входит в список
     /// Функция полезна для проверки правильности имен и других подобных случаев. 
@@ -900,7 +900,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Замена символов.
     /// При многократных вызовах рекомендуется использовать перегрузку метода, принимающую аргумент
-    /// типа Dictionary.
+    /// типа <see cref="Dictionary{Char, Char}"/>.
     /// </summary>
     /// <param name="str">Строка, в которой производится замена</param>
     /// <param name="searchChars">Заменяемые символы</param>
@@ -925,8 +925,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Замена диапазона символов в строке на заданный символ
-    /// Диапазон символов определяется их кодами в таблице Unicode
+    /// Замена диапазона символов в строке на заданный символ.
+    /// Диапазон символов определяется их кодами в таблице Unicode.
     /// </summary>
     /// <param name="str">Строка, в которой производится замена</param>
     /// <param name="firstChar">Первый символ заменяемого диапазона</param>
@@ -958,7 +958,7 @@ namespace FreeLibSet.Core
     /// Выполняет замену любого из заданных символов <paramref name="searchChars"/> в строке <paramref name="str"/> на символ <paramref name="replaceChar"/>
     /// Все символы заменяются на один и тот же символ.
     /// Если требуется многократный вызов с одним и тем же набором символов <paramref name="searchChars"/>,
-    /// создайте CharArrayIndexer и используйте другую перегрузку метода.
+    /// создайте <see cref="CharArrayIndexer"/> и используйте другую перегрузку метода.
     /// </summary>
     /// <param name="str">Строка, в которой осуществляется поиск</param>
     /// <param name="searchChars">Символы, подлежащие замене</param>
@@ -993,7 +993,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Выполняет замену любого из заданных символов <paramref name="searchChars"/> в строке <paramref name="str"/> на символ <paramref name="replaceChar"/>
-    /// Все символы заменяются на один и тот же символ
+    /// Все символы заменяются на один и тот же символ.
     /// </summary>
     /// <param name="str">Строка, в которой осуществляется поиск</param>
     /// <param name="searchChars">Символы, подлежащие замене</param>
@@ -1028,7 +1028,7 @@ namespace FreeLibSet.Core
     /// на символ <paramref name="replaceChar"/>.
     /// Все символы заменяются на один и тот же символ.
     /// Если требуется многократный вызов с одним и тем же набором символов <paramref name="searchChars"/>,
-    /// создайте CharArrayIndexer и используйте другую перегрузку метода.
+    /// создайте <see cref="CharArrayIndexer"/> и используйте другую перегрузку метода.
     /// </summary>
     /// <param name="str">Строка, в которой осуществляется поиск</param>
     /// <param name="searchChars">Символы, которые должны остаться в строке</param>
@@ -1101,7 +1101,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Удаляет из строки <paramref name="str"/> все символы, входящие в список <paramref name="removedChars"/>.
     /// Если метод должен многократно вызываться для одного и того же набора символов <paramref name="removedChars"/>,
-    /// рекомендуется однократно создать CharArrayIndexer и использовать другую перегрузку метода
+    /// рекомендуется однократно создать <see cref="CharArrayIndexer"/> и использовать другую перегрузку метода.
     /// </summary>
     /// <param name="str">Исходная строка</param>
     /// <param name="removedChars">Cимволы, которые могут оставаться в строке</param>
@@ -1192,7 +1192,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Удаляет из строки <paramref name="str"/> все символы, кроме входящих в список <paramref name="validChars"/>.
     /// Если метод должен многократно вызываться для одного и того же набора символов <paramref name="validChars"/>,
-    /// рекомендуется однократно создать CharArrayIndexer и использовать другую перегрузку метода
+    /// рекомендуется однократно создать <see cref="CharArrayIndexer"/> и использовать другую перегрузку метода.
     /// </summary>
     /// <param name="str">Исходная строка</param>
     /// <param name="validChars">Cимволы, которые могут оставаться в строке</param>
@@ -1290,7 +1290,7 @@ namespace FreeLibSet.Core
     /// Выполняет поиск в строке двойных и более вхождений символов <paramref name="searchChar"/> в строку <paramref name="str"/>.
     /// Такие последовательности заменяются на один символ.
     /// Если двойных символов не найдено, возвращается исходная строка.
-    /// В отличие от стандартного метода String.Replace(), заменяются последовательности из трех и символов и длиннее.
+    /// В отличие от стандартного метода <see cref="String.Replace(string, string)"/>, заменяются последовательности из трех и символов и длиннее.
     /// </summary>
     /// <param name="str">Строка для поиска</param>
     /// <param name="searchChar">Символ для поиска. Чаще всего - пробел</param>
@@ -1326,7 +1326,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Поиск строки в массиве с возможностью игнорировать верхний / нижний регистр.
-    /// Для сравнения используется функция String.Equals()
+    /// Для сравнения используется функция <see cref="String.Equals(string, string, StringComparison)"/>.
     /// </summary>
     /// <param name="a">Массив, в котором выполняется поиск</param>
     /// <param name="searchStr">Искомая строка</param>
@@ -1389,7 +1389,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получение подстроки.
-    /// В отличие от стандартного метода String.Substring(), не выбрасывается исключение, если заданы неправильные аргументы.
+    /// В отличие от стандартного метода <see cref="String.Substring(int, int)"/>, не выбрасывается исключение, если заданы неправильные аргументы.
     /// При этом возвращаемая подстрока может оказаться короче, чем <paramref name="length"/>.
     /// </summary>
     /// <param name="s">Исходная строка. Если null, то возвращается пустая строка</param>
@@ -1420,7 +1420,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает true, если строка <paramref name="s"/> содержит подстроку <paramref name="substring"/>,
     /// начиная с позиции <paramref name="startPos"/>.
-    /// В отличие от String.Compare(), не выбрасывает исключение, если запрошенная позиция подстроки 
+    /// В отличие от <see cref="String.Compare(string, int, string, int, int, StringComparison)"/>, не выбрасывает исключение, если запрошенная позиция подстроки 
     /// выходит за пределы строки <paramref name="s"/>. 
     /// </summary>
     /// <param name="s">Проверяемая строка</param>
@@ -1474,21 +1474,21 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Массив из одной строки, содержащей пару символов CR+LF, независимо от операционной системы.
-    /// Для использования в методе String.Split()
+    /// Для использования в методе <see cref="String.Split(string[], StringSplitOptions)"/>.
     /// </summary>
     public static readonly string[] CRLFSeparators = new string[] { "\r\n" };
 
     /// <summary>
     /// Массив из одной строки, содержащей пару символов CR+LF, или другие символы, в зависимости от операционной системы.
-    /// Строка содержит символы из Environment.NewLine
-    /// Для использования в методе String.Split().
+    /// Строка содержит символы из <see cref="Environment.NewLine"/>.
+    /// Для использования в методе <see cref="String.Split(string[], StringSplitOptions)"/>.
     /// </summary>
     public static readonly string[] NewLineSeparators = new string[] { Environment.NewLine };
 
     /// <summary>
     /// Массив из четырех строк, содержащий возможные комбинации символов CR и LF.
-    /// Двусимвольные комбинации идут перед односимвольными
-    /// Для использования в методе String.Split().
+    /// Двусимвольные комбинации идут перед односимвольными.
+    /// Для использования в методе <see cref="String.Split(string[], StringSplitOptions)"/>.
     /// </summary>
     public static readonly string[] AllPossibleLineSeparators = new string[] { "\r\n", "\n\r", "\r", "\n" };
 
@@ -1498,9 +1498,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Определение символов, которые используются для перевода строки.
-    /// Возвращает одну из строк в AllPossibleLineSeparators.
+    /// Возвращает одну из строк в <see cref="AllPossibleLineSeparators"/>.
     /// Если строка пустая или не содержит символа перевода строк, то возвращается пустая строка.
-    /// В этом случае обычно следует предполагать Environment.NewLine
+    /// В этом случае обычно следует предполагать <see cref="Environment.NewLine"/>.
     /// </summary>
     /// <param name="s">Проверяемая строка</param>
     /// <returns>Символы перевода строки</returns>
@@ -1523,7 +1523,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Если строка начинается с символов конца строки, то они удаляются.
-    /// Символами конца строки считаются любые комбинации из AllPossibleLineSeparators (пары или одиночные символы).
+    /// Символами конца строки считаются любые комбинации из <see cref="AllPossibleLineSeparators"/> (пары или одиночные символы).
     /// </summary>
     /// <param name="s">Исходная строка</param>
     /// <param name="trimAll">Если true, то удаляются все пары символов в начале строки, иначе удаляется не более одной пары</param>
@@ -1555,7 +1555,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="s">Исходная строка</param>
     /// <param name="trimAll">Если true, то удаляются все пары символов в начале строки, иначе удаляется не более одной пары</param>
-    /// <param name="newLine">Удаляемая комбинация символов. Используйте Environment.NewLine. Не может быть пустой строкой</param>
+    /// <param name="newLine">Удаляемая комбинация символов. Используйте <see cref="Environment.NewLine"/>. Не может быть пустой строкой</param>
     /// <returns>Укороченная или исходная строка</returns>
     public static string TrimStartNewLineSeparators(string s, bool trimAll, string newLine)
     {
@@ -1581,7 +1581,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Если строка заканчивается символами конца строки, то они удаляются.
-    /// Символами конца строки считаются любые комбинации из AllPossibleLineSeparators (пары или одиночные символы).
+    /// Символами конца строки считаются любые комбинации из <see cref="AllPossibleLineSeparators"/> (пары или одиночные символы).
     /// </summary>
     /// <param name="s">Исходная строка</param>
     /// <param name="trimAll">Если true, то удаляются все пары символов в конце строки, иначе удаляется не более одной пары</param>
@@ -1614,7 +1614,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="s">Исходная строка</param>
     /// <param name="trimAll">Если true, то удаляются все пары символов в конце строки, иначе удаляется не более одной пары</param>
-    /// <param name="newLine">Удаляемая комбинация символов. Используйте Environment.NewLine. Не может быть пустой строкой</param>
+    /// <param name="newLine">Удаляемая комбинация символов. Используйте <see cref="Environment.NewLine"/>. Не может быть пустой строкой</param>
     /// <returns>Укороченная или исходная строка</returns>
     public static string TrimEndNewLineSeparators(string s, bool trimAll, string newLine)
     {
@@ -1667,8 +1667,8 @@ namespace FreeLibSet.Core
     #region JoinNotEmptyStrings()
 
     /// <summary>
-    /// Вызывает String.Join() для непустых строк в массиве <paramref name="values"/>.
-    /// Если массив пустой или не содержит непустых строк, возвращается String.Empty
+    /// Вызывает <see cref="String.Join(string, string[])"/> для непустых строк в массиве <paramref name="values"/>.
+    /// Если массив пустой или не содержит непустых строк, возвращается <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="separator">Разделитель</param>
     /// <param name="values">Объединяемые значения</param>
@@ -1702,8 +1702,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Вызывает String.Join() для непустых строк в списке <paramref name="values"/>.
-    /// Если список пустой или не содержит непустых строк, возвращается String.Empty
+    /// Вызывает <see cref="String.Join(string, string[])"/> для непустых строк в списке <paramref name="values"/>.
+    /// Если список пустой или не содержит непустых строк, возвращается <see cref="String.Empty"/>
     /// </summary>
     /// <param name="separator">Разделитель</param>
     /// <param name="values">Объединяемые значения</param>
@@ -1741,8 +1741,8 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Вызывает String.Join() для непустых строк в списке <paramref name="values"/>.
-    /// Если список пустой или не содержит непустых строк, возвращается String.Empty.
+    /// Вызывает <see cref="String.Join(string, string[])"/> для непустых строк в списке <paramref name="values"/>.
+    /// Если список пустой или не содержит непустых строк, возвращается <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="separator">Разделитель</param>
     /// <param name="values">Объединяемые значения</param>
@@ -1775,7 +1775,7 @@ namespace FreeLibSet.Core
     #region ToStringArray()
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Полученные строки возвращаются в виде массива.
     /// Если <paramtyperef name="T"/> является классом, а не значимым типом, то массив не может содержать значения null.
     /// </summary>
@@ -1791,7 +1791,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Полученные строки возвращаются в виде массива.
     /// Если <paramtyperef name="T"/> является классом, а не значимым типом, то список не может содержать значения null.
     /// </summary>
@@ -1807,7 +1807,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Полученные строки возвращаются в виде массива.
     /// Если <paramtyperef name="T"/> является классом, а не значимым типом, то список не может содержать значения null.
     /// </summary>
@@ -1831,7 +1831,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Полученные строки возвращаются в виде массива.
     /// Список не может содержать значения null.
     /// </summary>
@@ -1849,7 +1849,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Полученные строки возвращаются в виде массива.
     /// Список не может содержать значения null.
     /// </summary>
@@ -1876,13 +1876,13 @@ namespace FreeLibSet.Core
     #region ToStringJoin()
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Возвращается объединенная строка с заданными разделителями <paramref name="separator"/>.
     /// Эквивалентно вызову String.Join(<paramref name="separator"/>, ToStringArray(<paramref name="a"/>)), но является более экономичным.
     /// Если <paramtyperef name="T"/> является классом, а не значимым типом, то массив не может содержать значения null.
     /// </summary>
     /// <typeparam name="T">Тип перебираемых элементов</typeparam>
-    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе String.Join())</param>
+    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе <see cref="String.Join(string, string[])"/>)</param>
     /// <param name="a">Массив для перечисления</param>
     /// <returns>Объединенная строка</returns>
     public static string ToStringJoin<T>(string separator, T[] a)
@@ -1898,13 +1898,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Возвращается объединенная строка с заданными разделителями <paramref name="separator"/>.
     /// Эквивалентно вызову String.Join(<paramref name="separator"/>, ToStringArray(<paramref name="lst"/>)), но является более экономичным.
     /// Если <paramtyperef name="T"/> является классом, а не значимым типом, то список не может содержать значения null.
     /// </summary>
     /// <typeparam name="T">Тип перебираемых элементов</typeparam>
-    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе String.Join())</param>
+    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе <see cref="String.Join(string, string[])"/>)</param>
     /// <param name="lst">Список для перечисления</param>
     /// <returns>Объединенная строка</returns>
     public static string ToStringJoin<T>(string separator, IList<T> lst)
@@ -1920,13 +1920,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Возвращается объединенная строка с заданными разделителями <paramref name="separator"/>.
     /// Эквивалентно вызову String.Join(<paramref name="separator"/>, ToStringArray(<paramref name="en"/>)), но является более экономичным.
     /// Если <paramtyperef name="T"/> является классом, а не значимым типом, то список не может содержать значения null.
     /// </summary>
     /// <typeparam name="T">Тип перебираемых элементов</typeparam>
-    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе String.Join())</param>
+    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе <see cref="String.Join(string, string[])"/>)</param>
     /// <param name="en">Перечислимый объект</param>
     /// <returns>Объединенная строка</returns>
     public static string ToStringJoin<T>(string separator, IEnumerable<T> en)
@@ -1949,12 +1949,12 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Возвращается объединенная строка с заданными разделителями <paramref name="separator"/>.
     /// Эквивалентно вызову String.Join(<paramref name="separator"/>, ToStringArray(<paramref name="lst"/>)), но является более экономичным.
     /// Список не может содержать значения null.
     /// </summary>
-    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе String.Join())</param>
+    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе <see cref="String.Join(string, string[])"/>)</param>
     /// <param name="lst">Список для перечисления</param>
     /// <returns>Объединенная строка</returns>
     public static string ToStringJoin(string separator, IList lst)
@@ -1970,12 +1970,12 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет перечисление элементов и для каждого из них вызывается метод ToString().
+    /// Выполняет перечисление элементов и для каждого из них вызывается метод <see cref="Object.ToString()"/>.
     /// Возвращается объединенная строка с заданными разделителями <paramref name="separator"/>.
     /// Эквивалентно вызову String.Join(<paramref name="separator"/>, ToStringArray(<paramref name="en"/>)), но является более экономичным.
     /// Список не может содержать значения null.
     /// </summary>
-    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе String.Join())</param>
+    /// <param name="separator">Разделитель между элементами (аналогично применяемому в методе <see cref="String.Join(string, string[])"/>)</param>
     /// <param name="en">Перечислимый объект</param>
     /// <returns>Объединенная строка</returns>
     public static string ToStringJoin(string separator, IEnumerable en)
@@ -2132,7 +2132,7 @@ namespace FreeLibSet.Core
     /// Возвращается массив, число строк и столбцов в котором может быть меньше.
     /// Если исходный массив не содержит ни одного значения, возвращается null.
     /// Если пустых строк и столбцов нет, то возвращается исходный массив.
-    /// Эквивалентно последовательному вызову RemoveEmptuyColumns(RemoveEmptyRows())
+    /// Эквивалентно последовательному вызову RemoveEmptyColumns(RemoveEmptyRows())
     /// </summary>
     /// <param name="a">Исходный двумерный массив строк</param>
     /// <returns>Преобразованный массив</returns>

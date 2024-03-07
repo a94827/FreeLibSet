@@ -11,35 +11,14 @@ using System.Runtime.InteropServices;
 using FreeLibSet.Core;
 using FreeLibSet.Reporting;
 
+// TODO: Используется в EFPDataGridViewCommandItems.PerformCopy() для сборки HTML-формата
+
 namespace FreeLibSet.Forms
 {
-  #region Перечисление EFPDataViewExpRange
-
-  /// <summary>
-  /// Диапазон ячеек табличного просмотра для экспорта
-  /// </summary>
-  public enum EFPDataViewExpRange
-  {
-    // Члены не переименовывать!
-    // Имена используются при сохранении конфигурации
-
-    /// <summary>
-    /// Все ячейки табличного просмотра (значение по умолчанию)
-    /// </summary>
-    All,
-
-    /// <summary>
-    /// Выбранные ячейки табличного просмотра
-    /// </summary>
-    Selected
-  }
-
-  #endregion
-
   /// <summary>
   /// Параметры для экспорта табличного просмотра в HTML-файл
   /// </summary>
-  public class EFPDataGridViewExpHtmlSettings
+  internal class EFPDataGridViewExpHtmlSettings
   {
     #region Конструктор
 

@@ -1,9 +1,6 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
-// Определяется для проекта ExtForms.dll
-// #define OLD_OUT // Если определено, то используется старый вариант экспорта в Excel, а не EFPMenuOutHandler
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -445,25 +442,9 @@ namespace FreeLibSet.Forms
 
       #region Отправить
 
-#if OLD_OUT
-
-      _MenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);
-      _MenuSendTo.Usage = EFPCommandItemUsage.Menu;
-      Add(_MenuSendTo);
-
-      ciSendToMicrosoftExcel = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.SendToMicrosoftExcel);
-      ciSendToMicrosoftExcel.Parent = MenuSendTo;
-      ciSendToMicrosoftExcel.Click += ciSendToMicrosoftExcel_Click;
-      Add(ciSendToMicrosoftExcel);
-
-      ciSendToOpenOfficeCalc = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.SendToOpenOfficeCalc);
-      ciSendToOpenOfficeCalc.Parent = MenuSendTo;
-      ciSendToOpenOfficeCalc.Click += ciSendToOpenOfficeCalc_Click;
-      Add(ciSendToOpenOfficeCalc);
-#else
       _OutHandler = new EFPMenuOutHandler(this);
       _OutHandler.Items.Add(new BRDataGridViewMenuOutItem("Control", controlProvider));
-#endif
+
       #endregion
 
       #region Окно суммы в статусной строке
@@ -717,17 +698,12 @@ namespace FreeLibSet.Forms
       ControlProvider.Control.MouseUp += new MouseEventHandler(Grid_MouseUp);
       ControlProvider.Control_VisibleChanged(null, null);
 
-#if OLD_OUT
-      ciSendToMicrosoftExcel.Visible = EFPDataGridView.CanSendToMicrosoftExcel;
-      ciSendToOpenOfficeCalc.Visible = EFPDataGridView.CanSendToOpenOfficeCalc;
-#endif
-
       PerformRefreshItems();
     }
 
-#endregion
+    #endregion
 
-#region Обновление состояния команд
+    #region Обновление состояния команд
 
     /// <summary>
     /// Вызывается при изменении текущей позиции в управляющем элементе или
@@ -952,9 +928,9 @@ namespace FreeLibSet.Forms
         ControlProvider.CurrentIncSearchColumn = null; // 28.01.2021
     }
 
-#endregion
+    #endregion
 
-#region Команды редактирования
+    #region Команды редактирования
 
     /// <summary>
     /// true, если нажатие клавиши Enter не обрабатывается, а передается
@@ -1156,9 +1132,9 @@ namespace FreeLibSet.Forms
         ControlProvider.Control.BeginEdit(false);
     }
 
-#endregion
+    #endregion
 
-#region Буфер обмена
+    #region Буфер обмена
 
     /// <summary>
     /// Нужно ли показывать кнопки "Вырезать", "Копировать" и "Вставить" в панели
@@ -1176,7 +1152,7 @@ namespace FreeLibSet.Forms
     }
     private bool _ClipboardInToolBar;
 
-#region Вырезать
+    #region Вырезать
 
     private EFPCommandItem ciCut;
 
@@ -1272,9 +1248,9 @@ namespace FreeLibSet.Forms
       return true;
     }
 
-#endregion
+    #endregion
 
-#region Копировать
+    #region Копировать
 
     private EFPCommandItem ciCopy;
 
@@ -1411,9 +1387,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-#endregion
+    #endregion
 
-#region Копировать подсказку
+    #region Копировать подсказку
 
     internal EFPCommandItem ciCopyToolTip;
 
@@ -1462,9 +1438,9 @@ namespace FreeLibSet.Forms
       EFPApp.Clipboard.SetText(text);
     }
 
-#endregion
+    #endregion
 
-#region Вставить
+    #region Вставить
 
     /// <summary>
     /// Обработчик для команд "Вставка" и "Специальная вставка"
@@ -1570,11 +1546,11 @@ namespace FreeLibSet.Forms
       PerformRefreshItems();
     }
 
-#endregion
+    #endregion
 
-#endregion
+    #endregion
 
-#region Команды установки отмеченных строк
+    #region Команды установки отмеченных строк
 
     EFPCommandItem MenuCheck, ciCheckSel, ciUncheckSel, ciInvertSel, ciCheckAll, ciUncheckAll;
 
@@ -1609,9 +1585,9 @@ namespace FreeLibSet.Forms
         EFPApp.ShowTempMessage("Нет изменившихся отметок строк");
     }
 
-#endregion
+    #endregion
 
-#region Команды поиска
+    #region Команды поиска
 
     EFPCommandItem ciIncSearch, ciFind, ciFindNext;
 
@@ -1657,13 +1633,13 @@ namespace FreeLibSet.Forms
           ControlProvider.CurrentIncSearchChars + "\"");
     }
 
-#endregion
+    #endregion
 
-#region Команды сортировки строк
+    #region Команды сортировки строк
 
     private EFPCommandItem _MenuSort;
 
-#region Сортировка путем выбора порядка сортировки
+    #region Сортировка путем выбора порядка сортировки
 
     /// <summary>
     /// Девять команд задания порядка сортировки строк (в том числе недействующие сейчас)
@@ -1782,9 +1758,9 @@ namespace FreeLibSet.Forms
       ControlProvider.ShowSelectOrderDialog();
     }
 
-#endregion
+    #endregion
 
-#region Ручная сортировка с помощью стрелочек
+    #region Ручная сортировка с помощью стрелочек
 
     internal EFPCommandItem ciSortMoveUp, ciSortMoveDown, ciSortRestore;
 
@@ -1803,11 +1779,11 @@ namespace FreeLibSet.Forms
       ControlProvider.RestoreManualOrder();
     }
 
-#endregion
+    #endregion
 
-#endregion
+    #endregion
 
-#region Команды перехода между ошибками
+    #region Команды перехода между ошибками
 
 
     /// <summary>
@@ -1895,9 +1871,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-#endregion
+    #endregion
 
-#region Построение списка сообщений об ошибках
+    #region Построение списка сообщений об ошибках
 
     /// <summary>
     /// Если установлено (по умолчанию), а также установлены свойства UseRowErrors
@@ -1984,71 +1960,9 @@ namespace FreeLibSet.Forms
         EFPApp.ShowTempMessage("Несуществующий номер строки");
     }
 
-#endregion
+    #endregion
 
-#region Отправить
-
-#if OLD_OUT
-
-    /// <summary>
-    /// Подменю "Отправить"
-    /// </summary>
-    public EFPCommandItem MenuSendTo { get { return _MenuSendTo; } }
-    private EFPCommandItem _MenuSendTo;
-
-    internal EFPCommandItem ciSendToMicrosoftExcel, ciSendToOpenOfficeCalc;
-
-    /// <summary>
-    /// Выбранные пользователем настройки экспорта в Excel / Calc
-    /// </summary>
-    internal static EFPDataGridViewExpExcelSettings SendToSettings = new EFPDataGridViewExpExcelSettings();
-
-    void ciSendToMicrosoftExcel_Click(object sender, EventArgs args)
-    {
-      OnSendToMicrosoftExcel();
-    }
-
-    /// <summary>
-    /// Выполнение команды "Отправить" - "Microsoft Excel"
-    /// </summary>
-    protected virtual void OnSendToMicrosoftExcel()
-    {
-      EFPDataGridViewExpExcelForm form = new EFPDataGridViewExpExcelForm();
-      form.Text = "Отправить в " + ciSendToMicrosoftExcel.MenuTextWithoutMnemonic;
-      form.Icon = EFPApp.MainImages.Icons[ciSendToMicrosoftExcel.ImageKey];
-      form.LoadValues(SendToSettings);
-      form.InitVisibility(ControlProvider);
-      if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
-        return;
-
-      form.SaveValues(SendToSettings);
-
-      ControlProvider.SendToMicrosoftExcel(SendToSettings);
-    }
-
-    void ciSendToOpenOfficeCalc_Click(object sender, EventArgs args)
-    {
-      OnSendToOpenOfficeCalc();
-    }
-
-    /// <summary>
-    /// Выполнение команды "Отправить" - "OpenOffice / LibreOffice Calc"
-    /// </summary>
-    protected virtual void OnSendToOpenOfficeCalc()
-    {
-      EFPDataGridViewExpExcelForm form = new EFPDataGridViewExpExcelForm();
-      form.Text = "Отправить в " + ciSendToOpenOfficeCalc.MenuTextWithoutMnemonic;
-      form.Icon = EFPApp.MainImages.Icons[ciSendToOpenOfficeCalc.ImageKey];
-      form.LoadValues(SendToSettings);
-      form.InitVisibility(ControlProvider);
-      if (EFPApp.ShowDialog(form, true) != DialogResult.OK)
-        return;
-
-      form.SaveValues(SendToSettings);
-
-      ControlProvider.SendToOpenOfficeCalc(SendToSettings);
-    }
-#else
+    #region Отправить
 
     /// <summary>
     /// Объект для печати/просмотра/экспорта/отправки
@@ -2061,11 +1975,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPCommandItem MenuSendTo { get { return _OutHandler.MenuSendTo; } }
 
-#endif
+    #endregion
 
-#endregion
-
-#region Окно суммы в статусной строке
+    #region Окно суммы в статусной строке
 
     private EFPCommandItem ciStatCount, ciStatSumma/*, ciStatSummaCopy*/;
 
@@ -2338,9 +2250,9 @@ namespace FreeLibSet.Forms
         EFPApp.Clipboard.SetText(s);
     }
 
-#endregion
+    #endregion
 
-#region Прочие команды
+    #region Прочие команды
 
     /// <summary>
     /// True, если есть команда "Обновить" (F5)
@@ -2384,6 +2296,6 @@ namespace FreeLibSet.Forms
       ControlProvider.PerformRefresh();
     }
 
-#endregion
+    #endregion
   }
 }

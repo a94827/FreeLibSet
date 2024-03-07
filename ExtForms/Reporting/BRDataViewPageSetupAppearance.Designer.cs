@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.MainPanel = new System.Windows.Forms.Panel();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.grpPageBreak = new System.Windows.Forms.GroupBox();
       this.cbIgnoreWith = new System.Windows.Forms.CheckBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -47,14 +47,14 @@
       this.cbBorderStyle = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
       this.MainPanel.SuspendLayout();
-      this.groupBox2.SuspendLayout();
+      this.grpPageBreak.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.tableLayoutPanel1.SuspendLayout();
       this.SuspendLayout();
       // 
       // MainPanel
       // 
-      this.MainPanel.Controls.Add(this.groupBox2);
+      this.MainPanel.Controls.Add(this.grpPageBreak);
       this.MainPanel.Controls.Add(this.groupBox1);
       this.MainPanel.Dock = System.Windows.Forms.DockStyle.Top;
       this.MainPanel.Location = new System.Drawing.Point(0, 0);
@@ -62,19 +62,19 @@
       this.MainPanel.Size = new System.Drawing.Size(544, 267);
       this.MainPanel.TabIndex = 7;
       // 
-      // groupBox2
+      // grpPageBreak
       // 
-      this.groupBox2.Controls.Add(this.cbIgnoreWith);
-      this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-      this.groupBox2.Location = new System.Drawing.Point(0, 207);
-      this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-      this.groupBox2.Size = new System.Drawing.Size(544, 53);
-      this.groupBox2.TabIndex = 1;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Разбиение на страницы";
-      this.groupBox2.Visible = false;
+      this.grpPageBreak.Controls.Add(this.cbIgnoreWith);
+      this.grpPageBreak.Dock = System.Windows.Forms.DockStyle.Top;
+      this.grpPageBreak.Location = new System.Drawing.Point(0, 207);
+      this.grpPageBreak.Margin = new System.Windows.Forms.Padding(4);
+      this.grpPageBreak.Name = "grpPageBreak";
+      this.grpPageBreak.Padding = new System.Windows.Forms.Padding(4);
+      this.grpPageBreak.Size = new System.Drawing.Size(544, 53);
+      this.grpPageBreak.TabIndex = 1;
+      this.grpPageBreak.TabStop = false;
+      this.grpPageBreak.Text = "Разбиение на страницы";
+      this.grpPageBreak.Visible = false;
       // 
       // cbIgnoreWith
       // 
@@ -290,8 +290,8 @@
       this.Name = "BRDataViewPageSetupAppearance";
       this.Text = "BRDataViewPageSetupAppearance";
       this.MainPanel.ResumeLayout(false);
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
+      this.grpPageBreak.ResumeLayout(false);
+      this.grpPageBreak.PerformLayout();
       this.groupBox1.ResumeLayout(false);
       this.tableLayoutPanel1.ResumeLayout(false);
       this.tableLayoutPanel1.PerformLayout();
@@ -302,7 +302,7 @@
     #endregion
 
     private System.Windows.Forms.Panel MainPanel;
-    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox grpPageBreak;
     private System.Windows.Forms.CheckBox cbIgnoreWith;
     public System.Windows.Forms.GroupBox groupBox1;
     public System.Windows.Forms.ComboBox cbColorStyle;

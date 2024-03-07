@@ -15,6 +15,29 @@ namespace FreeLibSet.Forms
    * RowOffset и ColumnOffset означают позиции в выбранной области
    */
 
+  #region Перечисление EFPDataViewExpRange
+
+  /// <summary>
+  /// Диапазон ячеек табличного просмотра для экспорта
+  /// </summary>
+  public enum EFPDataViewExpRange
+  {
+    // Члены не переименовывать!
+    // Имена используются при сохранении конфигурации
+
+    /// <summary>
+    /// Все ячейки табличного просмотра (значение по умолчанию)
+    /// </summary>
+    All,
+
+    /// <summary>
+    /// Выбранные ячейки табличного просмотра
+    /// </summary>
+    Selected
+  }
+
+  #endregion
+
   #region Перечисление EFPDataGridViewRectAreaCreation
 
   /// <summary>

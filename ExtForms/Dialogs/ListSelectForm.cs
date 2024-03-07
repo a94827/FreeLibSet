@@ -436,7 +436,7 @@ namespace FreeLibSet.Forms
             wrt.WriteLine("<TR>");
             for (int j = 0; j < a.GetLength(1); j++)
             {
-              string txt = EFPDataGridViewExpHtml.MakeHtmlSpc(a[i, j]);
+              string txt = MakeHtmlSpc(a[i, j]);
               wrt.WriteLine("<TD>" + txt + "</TD>");
             }
             wrt.WriteLine("</TR>");
@@ -463,6 +463,38 @@ namespace FreeLibSet.Forms
       return buffer;
     }
 
+
+    /// <summary>
+    /// Замена пробелов. 
+    /// Если в строке более одного пробела подряд, заменяем второй пробел на
+    /// код 160 (неразрывный пробел)
+    /// Также заменяем специальные символы "больше", "меньше" и "амперсанд"
+    /// </summary>
+    /// <param name="txt"></param>
+    /// <returns></returns>
+    internal static string MakeHtmlSpc(string txt)
+    {
+      if (String.IsNullOrEmpty(txt))
+        return txt;
+      StringBuilder sb = new StringBuilder(txt);
+      // Убираем гадкие символы (заменяем их на точки)
+      for (int i = 0; i < sb.Length; i++)
+      {
+        if (sb[i] < ' ' && sb[i] != '\r' && sb[i] != '\n')
+          sb[i] = '.';
+      }
+
+      // Замена второго и далее пробелов на неразрывный пробел
+      // ??? sb.Replace("  ", ???);
+      //txt:=STRTRAN(txt, '  ', CHR(32)+CHR(160))
+
+      // Заменяем плохие символы на комбинации
+      sb.Replace("&", "&amp;");
+      sb.Replace("<", "&lt;");
+      sb.Replace(">", "&gt;");
+
+      return sb.ToString();
+    }
 
     /// <summary>
     /// Запись значения смещения в указанную позицию файла

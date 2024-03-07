@@ -17,7 +17,7 @@ namespace FreeLibSet.Reporting
     #region Управляющие свойства
 
     /// <summary>
-    /// 
+    /// Если true, то в xml-файле будут использоваться отступы
     /// </summary>
     public bool DebugXml;
 

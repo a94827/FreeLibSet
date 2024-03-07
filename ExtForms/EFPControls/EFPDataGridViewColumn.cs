@@ -144,7 +144,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Общая часть описаний для <see cref="EFPDataGridViewColumn"/> и <see cref="EFPDataTreeViewColumn"/>
   /// </summary>
-  public interface IEFPDataViewColumn: IEFPDataViewColumnBase
+  public interface IEFPDataViewColumn : IEFPDataViewColumnBase
   {
     #region Свойства
 
@@ -179,7 +179,21 @@ namespace FreeLibSet.Forms
     /// Ширина столбца в пунктах, в зависимости от разрешения экрана
     /// </summary>
     int WidthPt { get; }
+    /**
+    /// <summary>
+    /// Возвращает true, если столбец может быть экспортирован в DBF-формат (все столбцы, кроме изображений).
+    /// Эта настройка не может задаваться в прикладном коде
+    /// </summary>
+    bool IsDbfSupported { get; }
 
+    /// <summary>
+    /// Имя и тип DBF-поля, заданные в прикладном коде.
+    /// Может возвращать пустую <see cref="DbfFieldInfo"/>, если значения должны быть определены автоматически.
+    /// Пустое значение не означает, что поле нельзя экспортировать.
+    /// Пользователь может переопределить имя поля в диалоге параметров.
+    /// </summary>
+    DbfFieldInfo DbfInfo { get; }
+    **/
     #endregion
   }
 
@@ -805,7 +819,7 @@ namespace FreeLibSet.Forms
     /// <param name="value">Ширина</param>
     public void SetPrintWidth(string defCfgCode, int value)
     {
-      GetSettings(defCfgCode).View.SetColumnWidth(this, value);
+      GetSettings(defCfgCode).View.SetColumnPrintWidth(this, value);
     }
 
     /// <summary>
@@ -818,7 +832,7 @@ namespace FreeLibSet.Forms
     /// <returns>Ширина или 0</returns>
     public int GetPrintWidth(string defCfgCode)
     {
-      return GetSettings(defCfgCode).View.GetColumnWidth(this);
+      return GetSettings(defCfgCode).View.GetColumnPrintWidth(this);
     }
 
     /// <summary>

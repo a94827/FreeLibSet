@@ -263,7 +263,7 @@ namespace FreeLibSet.Reporting
               elTblPr.AppendChild(elTblLayout);
               SetAttr(elTblLayout, "w:type", "Fixed", nmspcW);// с заглавной буквы
 
-              // Отсупы по умолчанию
+              // Отступы по умолчанию
               WriteMargins(elTblPr, true, report.DefaultCellStyle.LeftMargin, report.DefaultCellStyle.TopMargin, report.DefaultCellStyle.RightMargin, report.DefaultCellStyle.BottomMargin);
 
               XmlElement elTblGrid = xmlDoc.CreateElement("w:tblGrid", nmspcW);
@@ -513,7 +513,7 @@ namespace FreeLibSet.Reporting
     }
 
 
-    private void InitDefaultStyle(XmlElement elStyles, BRCellStyle cellStyle)
+    private static void InitDefaultStyle(XmlElement elStyles, BRCellStyle cellStyle)
     {
       XmlDocument xmlDoc = elStyles.OwnerDocument;
 
@@ -526,11 +526,6 @@ namespace FreeLibSet.Reporting
       XmlElement elName = xmlDoc.CreateElement("w:name", nmspcW);
       elStyle.AppendChild(elName);
       SetAttr(elName, "w:val", "Normal", nmspcW); // имя для выбора из списка
-
-      // Для совместимости с Word'ом
-      XmlElement elUIName = xmlDoc.CreateElement("wx:uiName", nmspcWx);
-      elStyle.AppendChild(elUIName);
-      SetAttr(elUIName, "wx:val", "Обычный", nmspcWx); // имя для выбора из списка
 
       XmlElement elPPr = xmlDoc.CreateElement("w:pPr", nmspcW);
       elStyle.AppendChild(elPPr);
@@ -561,7 +556,6 @@ namespace FreeLibSet.Reporting
       elRPr.AppendChild(elSz);
       SetAttr(elSz, "w:val", StdConvert.ToString((int)(cellStyle.FontHeightTwip / 10)), nmspcW); // в полупунктах
     }
-
 
     private static int GetColumnWidth(BRStripeItem[] aStripeCols, int firstColumn, int columnCount)
     {

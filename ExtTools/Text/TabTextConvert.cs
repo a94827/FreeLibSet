@@ -9,13 +9,76 @@ using System.Text;
 namespace FreeLibSet.Text
 {
   /// <summary>
+  /// Общие методы для <see cref="TabTextConvert"/> и <see cref="CsvTextConvert"/> 
+  /// </summary>
+  public interface ITextConvert
+  {
+    #region Одномерный массив
+
+    /// <summary>
+    /// Преобразование одномерного массива строк в строку.
+    /// Если <paramref name="a"/>=null или пустой, возвращается пустая строка.
+    /// </summary>
+    /// <param name="a">Массив полей для преобразования в строку</param>
+    /// <returns>CSV-строка</returns>
+    string ToString(string[] a);
+
+    /// <summary>
+    /// Преобразование одномерного массива строк в строку.
+    /// Если <paramref name="a"/>=null или пустой, возвращается пустая строка.
+    /// Эта версия использует <see cref="StringBuilder"/> для построения строки.
+    /// </summary>
+    /// <param name="sb">Сюда записывается строка</param>
+    /// <param name="a">Массив полей для преобразования в строку</param>
+    void ToString(StringBuilder sb, string[] a);
+
+    /// <summary>
+    /// Преобразование строки, содержащей значения.
+    /// Строка не должна содержать символов переноса строки. Если строка может
+    /// содержать несколько строк, используйте <see cref="ToArray2(string)"/> для преобразования в двумерный массив.
+    /// Если строка пустая, то возвращается null.
+    /// </summary>
+    /// <param name="s">Строка</param>
+    /// <returns>Массив строк-элементов</returns>
+    string[] ToArray(string s);
+
+    #endregion
+
+    #region Двумерный массив
+
+    /// <summary>
+    /// Преобразование двумерного массива в строку. 
+    /// </summary>
+    /// <param name="a">Исходный двумерный массив</param>
+    /// <returns>Форматированная строка</returns>
+    string ToString(string[,] a);
+
+    /// <summary>
+    /// Преобразование двумерного массива в строку. Версия для <see cref="StringBuilder"/>.
+    /// </summary>
+    /// <param name="sb">Сюда записывается форматированная строка</param>
+    /// <param name="a">Исходный двумерный массив</param>
+    void ToString(StringBuilder sb, string[,] a);
+
+    /// <summary>
+    /// Получить двумерный массив из строки.
+    /// Если строка пустая, то возращается null.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <returns>Двумерный массив</returns>
+    string[,] ToArray2(string s);
+
+    #endregion
+  }
+
+  /// <summary>
   /// Преобразование текста с разделителем-табуляцией в/из одномерного и двумерного массива строк.
   /// Класс не является потокобезопасным, т.к. может использовать внутренние поля в процессе преобразования.
   /// Формат имеет условное имя TSV (tab separated values), но в текущей реализации не поддерживаются Escape-последовательности.
   /// То есть, внутри полей не должно быть символов табуляции и новой строки.
   /// http://www.iana.org/assignments/media-types/text/tab-separated-values
   /// </summary>
-  public sealed class TabTextConvert
+  public sealed class TabTextConvert: ITextConvert
   {
     #region Конструктор
 
@@ -35,7 +98,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Разделитель строк. По умолчанию - <see cref="Environment.NewLine"/>.
     /// Внимание! В RFC 4180 используется разделитель CR+LF. Для соответствия стандарту на не-Windows платформах
-    /// следует установить свойство вручную
+    /// следует установить свойство вручную.
     /// </summary>
     public string NewLine
     {

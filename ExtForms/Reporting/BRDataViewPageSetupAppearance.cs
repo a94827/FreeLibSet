@@ -24,7 +24,7 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Конструктор
 
-    public BRDataViewPageSetupAppearance(SettingsDialog dialog, IEFPDataView controlProvider)
+    public BRDataViewPageSetupAppearance(SettingsDialog dialog, IEFPDataView controlProvider, bool textOnly)
     {
       InitializeComponent();
       _ControlProvider = controlProvider;
@@ -35,7 +35,6 @@ namespace FreeLibSet.Forms.Reporting
       page.Text = "Оформление";
       page.ToolTipText = "Выбор наличия границ, цветового оформления табличного просмотра";
       page.ImageKey = "CircleGreenYellowRed";
-
 
       efpBorderStyle = new EFPListComboBox(page.BaseProvider, cbBorderStyle);
 
@@ -94,6 +93,7 @@ namespace FreeLibSet.Forms.Reporting
       {
         efpTextTrue.Enabled = false;
         efpTextFalse.Enabled = false;
+        efpSelText.Enabled = false;
       }
 
       btnCellParams.Image = EFPApp.MainImages.Images["Table"];
@@ -101,12 +101,23 @@ namespace FreeLibSet.Forms.Reporting
       EFPButton efpCellParams = new EFPButton(page.BaseProvider, btnCellParams);
       efpCellParams.Click += EfpCellParams_Click;
 
+      _TextOnly = textOnly;
+      if (textOnly)
+      {
+        efpBorderStyle.Visible = false;
+        efpColorStyle.Visible = false;
+        efpCellParams.Visible = false;
+        lblCellParams.Visible = false;
+        grpPageBreak.Visible = false;
+      }
+
       page.DataToControls += Page_DataToControls;
       page.DataFromControls += Page_DataFromControls;
     }
 
     private IEFPDataView _ControlProvider;
     private BRDataViewSettingsDataItem _ViewData;
+    private bool _TextOnly;
 
     #endregion
 
@@ -198,9 +209,12 @@ namespace FreeLibSet.Forms.Reporting
     {
       try
       {
-        efpBorderStyle.SelectedIndex = (int)(_ViewData.BorderStyle);
-        if (_ViewData.UseColorStyle)
-          efpColorStyle.SelectedIndex = (int)(_ViewData.ColorStyle);
+        if (!_TextOnly)
+        {
+          efpBorderStyle.SelectedIndex = (int)(_ViewData.BorderStyle);
+          if (_ViewData.UseColorStyle)
+            efpColorStyle.SelectedIndex = (int)(_ViewData.ColorStyle);
+        }
         if (_ViewData.UseBoolMode)
         {
           efpBoolMode.SelectedIndex = (int)(_ViewData.BoolMode);
@@ -210,19 +224,25 @@ namespace FreeLibSet.Forms.Reporting
       }
       catch { }
 
-      _CellLeftMargin = _ViewData.CellLeftMargin;
-      _CellTopMargin = _ViewData.CellTopMargin;
-      _CellRightMargin = _ViewData.CellRightMargin;
-      _CellBottomMargin = _ViewData.CellBottomMargin;
+      if (!_TextOnly)
+      {
+        _CellLeftMargin = _ViewData.CellLeftMargin;
+        _CellTopMargin = _ViewData.CellTopMargin;
+        _CellRightMargin = _ViewData.CellRightMargin;
+        _CellBottomMargin = _ViewData.CellBottomMargin;
 
-      UpdateCellParamsLabel();
+        UpdateCellParamsLabel();
+      }
     }
 
     private void Page_DataFromControls(object sender, EventArgs args)
     {
-      _ViewData.BorderStyle = (BRDataViewBorderStyle)(efpBorderStyle.SelectedIndex);
-      if (_ViewData.UseColorStyle)
-        _ViewData.ColorStyle = (BRDataViewColorStyle)(efpColorStyle.SelectedIndex);
+      if (!_TextOnly)
+      {
+        _ViewData.BorderStyle = (BRDataViewBorderStyle)(efpBorderStyle.SelectedIndex);
+        if (_ViewData.UseColorStyle)
+          _ViewData.ColorStyle = (BRDataViewColorStyle)(efpColorStyle.SelectedIndex);
+      }
       if (_ViewData.UseBoolMode)
       {
         _ViewData.BoolMode = (BRDataViewBoolMode)(efpBoolMode.SelectedIndex);
@@ -230,10 +250,13 @@ namespace FreeLibSet.Forms.Reporting
         _ViewData.BoolTextFalse = efpTextFalse.Text;
       }
 
-      _ViewData.CellLeftMargin = _CellLeftMargin;
-      _ViewData.CellTopMargin = _CellTopMargin;
-      _ViewData.CellRightMargin = _CellRightMargin;
-      _ViewData.CellBottomMargin = _CellBottomMargin;
+      if (!_TextOnly)
+      {
+        _ViewData.CellLeftMargin = _CellLeftMargin;
+        _ViewData.CellTopMargin = _CellTopMargin;
+        _ViewData.CellRightMargin = _CellRightMargin;
+        _ViewData.CellBottomMargin = _CellBottomMargin;
+      }
     }
 
     #endregion

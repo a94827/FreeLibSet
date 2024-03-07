@@ -33,14 +33,18 @@ namespace FreeLibSet.Forms
         // Извлекаем характеристики один раз
         if (_IsValid)
         {
-          //_PaperSizes = new PaperSize[PrinterSettings.PaperSizes.Count];
-          //PrinterSettings.PaperSizes.CopyTo(_PaperSizes, 0);
-          // 28.08.2023. CopyTo() не реализован в Mono
-          List<PaperSize> lstPaperSize = new List<PaperSize>(PrinterSettings.PaperSizes.Count);
-          foreach (PaperSize ps in PrinterSettings.PaperSizes)
-            lstPaperSize.Add(ps);
-          _PaperSizes = lstPaperSize.ToArray();
-
+          if (PrinterSettings.PaperSizes == null) // 05.03.2024 Может быть в Mono
+            _PaperSizes = new PaperSize[0];
+          else
+          {
+            //_PaperSizes = new PaperSize[PrinterSettings.PaperSizes.Count];
+            //PrinterSettings.PaperSizes.CopyTo(_PaperSizes, 0);
+            // 28.08.2023. CopyTo() не реализован в Mono
+            List<PaperSize> lstPaperSize = new List<PaperSize>(PrinterSettings.PaperSizes.Count);
+            foreach (PaperSize ps in PrinterSettings.PaperSizes)
+              lstPaperSize.Add(ps);
+            _PaperSizes = lstPaperSize.ToArray();
+          }
           _CanDuplex = PrinterSettings.CanDuplex;
         }
         else

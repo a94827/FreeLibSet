@@ -6644,19 +6644,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает список для добавления пользовательских вариантов печати/экспорта
     /// </summary>
-    public NamedList<EFPMenuOutItem> MenuOutItems
-    {
-      get
-      {
-#if OLD_OUT
-        throw new NotImplementedException();
-#else
-        return CommandItems.OutHandler.Items;
-#endif
-      }
-    }
-
-#if !OLD_OUT
+    public NamedList<EFPMenuOutItem> MenuOutItems { get { return CommandItems.OutHandler.Items; } }
 
     /// <summary>
     /// Параметры печати/экспорта табличного просмотра.
@@ -6666,8 +6654,6 @@ namespace FreeLibSet.Forms
     {
       get { return MenuOutItems["Control"] as Reporting.BRDataGridViewMenuOutItem; }
     }
-
-#endif
 
     #endregion
 
@@ -10001,49 +9987,6 @@ namespace FreeLibSet.Forms
       return DoGetCellTextValue(CellArgs);
     }
 
-
-    /// <summary>
-    /// Запись файла в формате HTML
-    /// </summary>
-    /// <param name="fileName">Путь к файлу</param>
-    /// <param name="settings">Настройки экспорта</param>
-    public void SaveHtml(string fileName, EFPDataGridViewExpHtmlSettings settings)
-    {
-      EFPDataGridViewExpHtml.SaveFile(this, fileName, settings);
-    }
-
-    /// <summary>
-    /// Запись файла в формате Excel-2003 (XML)
-    /// </summary>
-    /// <param name="fileName">Путь к файлу</param>
-    /// <param name="settings">Настройки экспорта</param>
-    public void SaveExcel2003(string fileName, EFPDataGridViewExpExcelSettings settings)
-    {
-      EFPDataGridViewExpExcel2003.SaveFile(this, fileName, settings);
-    }
-
-    /// <summary>
-    /// Запись файла в формате Excel-2007/2010 (XLSX)
-    /// Вызов этого метода требует наличия сборки ICSharpCode.SharpZipLib.dll
-    /// </summary>
-    /// <param name="fileName">Путь к файлу</param>
-    /// <param name="settings">Настройки экспорта</param>
-    public void SaveExcel2007(string fileName, EFPDataGridViewExpExcelSettings settings)
-    {
-      EFPDataGridViewExpExcel2007.SaveFile(this, fileName, settings);
-    }
-
-    /// <summary>
-    /// Запись файла в формате Open Office Calc (ODS)
-    /// Вызов этого метода требует наличия сборки ICSharpCode.SharpZipLib.dll
-    /// </summary>
-    /// <param name="fileName">Путь к файлу</param>
-    /// <param name="settings">Настройки экспорта</param>
-    public void SaveOpenOfficeCalc(string fileName, EFPDataGridViewExpExcelSettings settings)
-    {
-      EFPDataGridViewExpOpenOfficeCalc.SaveFile(this, fileName, settings);
-    }
-
     /// <summary>
     /// Получить массив строк и столбцов для записи в файл
     /// </summary>
@@ -10141,52 +10084,6 @@ namespace FreeLibSet.Forms
       }
     }
     private BRDocumentProperties _DocumentProperties;
-
-    /// <summary>
-    /// Возвращает true, если есть установленная версия Microsoft Excel, в которую можно выполнить передачу данных табличного просмотра
-    /// </summary>
-    public static bool CanSendToMicrosoftExcel
-    {
-      get
-      {
-        // Для версии XP и новее выполняется создание файла в XML-формате,
-        // Для версии 2000 выполняется прямое манипулирование OLE-объектом
-        return EFPApp.MicrosoftExcelVersion.Major >= MicrosoftOfficeTools.MicrosoftOffice_2000;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если есть установленная версия Open Office или Libre Office Calc, в которую можно выполнить передачу данных табличного просмотра
-    /// </summary>
-    public static bool CanSendToOpenOfficeCalc
-    {
-      [DebuggerStepThrough] // подавление остановки в отладчике при возникновении исключения
-      get
-      {
-        return EFPApp.OpenOfficeCalcVersion.Major >= 3
-          && ZipFileTools.ZipLibAvailable; // 25.01.2014
-      }
-    }
-
-    /// <summary>
-    /// Передача данных табличного просмотра в Microsoft Excel.
-    /// Создается новая книга с одним листом, содержащим все или только выбранные ячейки табличного просмотра
-    /// </summary>
-    /// <param name="settings">Параметры передачи</param>
-    public void SendToMicrosoftExcel(EFPDataGridViewExpExcelSettings settings)
-    {
-      EFPDataGridViewSendToExcel.SendTable(this, settings);
-    }
-
-    /// <summary>
-    /// Передача данных табличного просмотра в Open Office Calc или Libre Office Calc.
-    /// Создается новая книга с одним листом, содержащим все или только выбранные ячейки табличного просмотра
-    /// </summary>
-    /// <param name="settings">Параметры передачи</param>
-    public void SendToOpenOfficeCalc(EFPDataGridViewExpExcelSettings settings)
-    {
-      EFPDataGridViewSendToOpenOfficeCalc.SendTable(this, settings);
-    }
 
     #endregion
 

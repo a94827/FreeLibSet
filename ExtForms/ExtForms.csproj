@@ -105,6 +105,13 @@
       <DependentUpon>EFPAppRemoteExitHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPApp\EFPAppTrayIcon.cs" />
+    <Compile Include="EFPControls\EFPDataGridViewExpHtml.cs" />
+    <Compile Include="Reporting\BRDataViewPageSetupText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\BRDataViewPageSetupText.Designer.cs">
+      <DependentUpon>BRDataViewPageSetupText.cs</DependentUpon>
+    </Compile>
     <Compile Include="EFPControls\EFPExtPrintPreviewControl.cs" />
     <Compile Include="EFPControls\EFPMenuOutHandler.cs" />
     <Compile Include="MainImagesResource.Designer.cs">
@@ -134,7 +141,6 @@
     </Compile>
     <Compile Include="EFPControls\EFPConfigManager.cs" />
     <Compile Include="EFPControls\EFPDataGridViewCommandItems.cs" />
-    <Compile Include="EFPControls\EFPDataGridViewExpExcel.cs" />
     <Compile Include="EFPControls\EFPConfigurableDataGridView.cs" />
     <Compile Include="EFPControls\EFPDataTreeView.cs" />
     <Compile Include="EFPControls\EFPDateRangeBox.cs" />
@@ -248,15 +254,8 @@
       <DependentUpon>FileCopier.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPApp\FileEditorFormHandler.cs" />
-    <Compile Include="EFPControls\EFPDataGridViewExpHtml.cs" />
     <Compile Include="EFPControls\EFPDataGridViewMeasures.cs" />
     <Compile Include="GridProducer\EFPDataViewOrder.cs" />
-    <Compile Include="EFPControls\EFPDataGridViewExpExcelForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EFPControls\EFPDataGridViewExpExcelForm.Designer.cs">
-      <DependentUpon>EFPDataGridViewExpExcelForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="EFPControls\EFPDataGridViewConfig.cs" />
     <Compile Include="Dialogs\GridConfigForm.cs">
       <SubType>Form</SubType>
@@ -608,6 +607,9 @@
       <DependentUpon>DateRangeForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupText.resx">
+      <DependentUpon>BRDataViewPageSetupText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EFPForm\EFPToolWindow.resx">
       <DependentUpon>EFPToolWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -618,10 +620,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FileBrowseForm.resx">
       <DependentUpon>FileBrowseForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="EFPControls\EFPDataGridViewExpExcelForm.resx">
-      <DependentUpon>EFPDataGridViewExpExcelForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FileCopier.resx">

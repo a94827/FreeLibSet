@@ -350,7 +350,7 @@ namespace FreeLibSet.Reporting
   {
     /// <summary>
     /// Создает файл из отчета.
-    /// Создан каталог <paramref name="filePath"/>.ParentDir, в котором будет создан файл, а затем вызывает
+    /// Создает каталог <paramref name="filePath"/>.ParentDir, в котором будет создан файл, а затем вызывает
     /// абстрактный метод <see cref="DoCreateFile(BRReport, FreeLibSet.IO.AbsPath)"/>, который выполняет создание файла
     /// </summary>
     /// <param name="report">Созданный отчет</param>

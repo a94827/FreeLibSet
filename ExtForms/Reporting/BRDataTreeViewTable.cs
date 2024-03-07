@@ -394,9 +394,9 @@ namespace FreeLibSet.Forms.Reporting
       _SB = new StringBuilder();
     }
 
-    private InternalInfo _Info;
+    private readonly InternalInfo _Info;
 
-    private StringBuilder _SB;
+    private readonly StringBuilder _SB;
 
     #endregion
 
@@ -459,22 +459,7 @@ namespace FreeLibSet.Forms.Reporting
     {
       object v = nc.GetValue(node);
       if (v is Boolean)
-      {
-        switch (_Info.ViewData.BoolMode)
-        {
-          case BRDataViewBoolMode.Boolean:
-            break;
-          case BRDataViewBoolMode.Text:
-            //v = (bool)v ? BRDataViewData.CheckBoxCheckedStr : BRDataViewData.CheckBoxUncheckedStr;
-            v = (bool)v ? _Info.ViewData.BoolTextTrue : _Info.ViewData.BoolTextFalse;
-            break;
-          case BRDataViewBoolMode.Integer:
-            v = (bool)v ? 1 : 0;
-            break;
-          default:
-            throw new BugException("BoolMode=" + _Info.ViewData.BoolMode.ToString());
-        }
-      }
+        v = _Info.ViewData.GetBoolValue((bool)v);
       return v;
     }
 

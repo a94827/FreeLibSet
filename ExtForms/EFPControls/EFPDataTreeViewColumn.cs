@@ -562,7 +562,7 @@ namespace FreeLibSet.Forms
     /// <param name="value">Ширина</param>
     public void SetPrintWidth(string defCfgCode, int value)
     {
-      GetSettings(defCfgCode).View.SetColumnWidth(this, value);
+      GetSettings(defCfgCode).View.SetColumnPrintWidth(this, value);
     }
 
     /// <summary>
@@ -575,7 +575,7 @@ namespace FreeLibSet.Forms
     /// <returns>Ширина или 0</returns>
     public int GetPrintWidth(string defCfgCode)
     {
-      return GetSettings(defCfgCode).View.GetColumnWidth(this);
+      return GetSettings(defCfgCode).View.GetColumnPrintWidth(this);
     }
 
     /// <summary>

@@ -28,7 +28,7 @@ namespace FreeLibSet.Text
   /// <summary>
   /// Хранение текста, содержащего строки.
   /// Позволяет выполнить преобразование из абсолютной позиции в номер строки / столбца и обратно.
-  /// Потокобезопасный класс "однократной записи" (все значение устанавливаются в конструкторе)
+  /// Потокобезопасный класс "однократной записи" (все значение устанавливаются в конструкторе).
   /// Класс реализует перечислитель по строкам.
   /// </summary>
   public sealed class TextWithRows : IEnumerable<string>
@@ -167,7 +167,7 @@ namespace FreeLibSet.Text
 
     /// <summary>
     /// Возвращает массив отдельных строк.
-    /// Если в конструкторе была задана замена сепараторов, то она учитывается при разбиении на строки
+    /// Если в конструкторе была задана замена сепараторов, то она учитывается при разбиении на строки.
     /// </summary>
     /// <returns>Массив строк, содержащий <see cref="RowCount"/> элементов</returns>
     public string[] ToArray()
@@ -261,7 +261,7 @@ namespace FreeLibSet.Text
     /// Номер строки <paramref name="row"/> должен быть в диапазоне от 0 до (<see cref="RowCount"/>-1).
     /// </summary>
     /// <param name="row">Номер строки (нумерация начинается с 0)</param>
-    /// <returns>Индекс в строке Text</returns>
+    /// <returns>Индекс в строке <see cref="Text"/></returns>
     public int GetRowStartIndex(int row)
     {
       if (row < 0 || row >= _RowStarts.Count)
@@ -292,7 +292,7 @@ namespace FreeLibSet.Text
     /// возвращается либо позиция разделителя, либо значение <see cref="Text"/>.Length, если последняя строка не содержит разделителя.
     /// </summary>
     /// <param name="position">Позиция символа (индекс строки и символоа в строке)</param>
-    /// <returns>Индекс в строке Text</returns>
+    /// <returns>Индекс в строке <see cref="Text"/></returns>
     public int GetCharIndex(TextPosition position)
     {
       int startIndex = GetRowStartIndex(position.Row); // там проверяется номер строки

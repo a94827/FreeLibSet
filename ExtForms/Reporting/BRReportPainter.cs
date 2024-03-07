@@ -211,7 +211,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// Создает объект для рисования в окне или печати документа
     /// </summary>
     public BRReportPainter()
-      :this(false)
+      : this(false)
     {
     }
 
@@ -568,7 +568,7 @@ namespace FreeLibSet.Drawing.Reporting
 
           if (enPrc > 100)
           {
-            orgFontWidth = renderer.FontWidth; 
+            orgFontWidth = renderer.FontWidth;
             renderer.FontWidth = orgFontWidth * enPrc / 100f;
             //float TextW2 = 0f;
             //for (int i = 0; i < lines.Length; i++)
@@ -887,7 +887,7 @@ namespace FreeLibSet.Drawing.Reporting
 
       PrintDocument pd = new PrintDocument();
       if (pages.Length > 0)
-      { 
+      {
         // 13.12.2023
         BRPageSetup ps = pages[0].Section.PageSetup;
         BRReportPainter.CopyPageSettings(ps, pd.DefaultPageSettings);
@@ -908,20 +908,37 @@ namespace FreeLibSet.Drawing.Reporting
     /// <param name="res">Параметры страницы печатного документа</param>
     public static void CopyPageSettings(BRPageSetup src, PageSettings res)
     {
+      if (src == null)
+        throw new ArgumentNullException("src");
+      if (res == null)
+        throw new ArgumentNullException("res");
+
       res.Landscape = src.Orientation == BROrientation.Landscape;
       int w = Inch100(src.PaperWidth);
       int h = Inch100(src.PaperHeight);
       if (src.Orientation == BROrientation.Landscape)
         DataTools.Swap<int>(ref w, ref h);
 
+#if DEBUG
+      if (res.PrinterSettings == null)
+        throw new NullReferenceException("PageSettings.PrinterSettings=null");
+#endif
+
       bool found = false;
-      foreach (PaperSize psz in res.PrinterSettings.PaperSizes)
+      if (res.PrinterSettings.PaperSizes != null) // 05.03.2024 
       {
-        if (Math.Abs(psz.Width - w) <= 2 && Math.Abs(psz.Height - h) <= 2) // с точностью плюс-минус 0.5мм
+        foreach (PaperSize psz in res.PrinterSettings.PaperSizes)
         {
-          res.PaperSize = psz;
-          found = true;
-          break;
+#if DEBUG
+          if (psz == null)
+            throw new NullReferenceException("One of enumerated PaperSize is null");
+#endif
+          if (Math.Abs(psz.Width - w) <= 2 && Math.Abs(psz.Height - h) <= 2) // с точностью плюс-минус 0.5мм
+          {
+            res.PaperSize = psz;
+            found = true;
+            break;
+          }
         }
       }
       if (!found)

@@ -145,7 +145,7 @@ namespace FreeLibSet.Forms.Reporting
             _ViewData.SetColumnPrinted(column, DataTools.GetBool(gridRow.Cells[0].Value));
             break;
           case 2:
-            _ViewData.SetColumnWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
+            _ViewData.SetColumnPrintWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
             break;
           case 3:
             _ViewData.SetColumnAutoGrow(column, DataTools.GetBool(gridRow.Cells[3].Value));
@@ -229,6 +229,7 @@ namespace FreeLibSet.Forms.Reporting
       {
         IEFPDataViewColumn column = (IEFPDataViewColumn)(gridRow.Tag);
         gridRow.Cells[2].Value = _ViewData.GetRealColumnWidth(column, _FontData) / 100.0;
+        gridRow.Cells[3].Value = _ViewData.GetColumnAutoGrow(column); // 07.03.2024
       }
     }
 
@@ -244,7 +245,7 @@ namespace FreeLibSet.Forms.Reporting
         DataGridViewRow gridRow = grColumns.Rows[i];
 
         _ViewData.SetColumnAutoGrow(column, DataTools.GetBool(gridRow.Cells[3].Value));
-        _ViewData.SetColumnWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
+        _ViewData.SetColumnPrintWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
         _ViewData.SetColumnPrinted(column, DataTools.GetBool(gridRow.Cells[0].Value));
       }
 

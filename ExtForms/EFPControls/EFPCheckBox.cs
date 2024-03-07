@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Обработчик для CheckBox.
+  /// Провайдер для <see cref="CheckBox"/>.
   /// Поддерживаются переключатели на два положения и на три положения (при CanBeEmpty=true)
   /// </summary>
   public class EFPCheckBox : EFPControl<CheckBox>
@@ -93,9 +93,9 @@ namespace FreeLibSet.Forms
     #region Свойство NChecked
 
     /// <summary>
-    /// Возвращает актуальное состояние элемента CheckBox.CheckState.
-    /// При установке свойства Control.CheckState не устанавливается, если Enabled=false
-    /// и AllowDisabledState=true. В этом случае значение запоминается и будет 
+    /// Возвращает актуальное состояние элемента <see cref="CheckBox.CheckState"/>.
+    /// При установке свойства <see cref="CheckBox.CheckState"/> не устанавливается, если <see cref="Control.Enabled"/>=false
+    /// и <see cref="AllowDisabledChecked"/>=true. В этом случае значение запоминается и будет 
     /// использовано при переходе в разрешенное состояние.
     /// </summary>
     public bool? NChecked
@@ -141,7 +141,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство NChecked
+    /// Управляемое свойство <see cref="NChecked"/>
     /// </summary>
     public DepValue<bool?> NCheckedEx
     {
@@ -195,7 +195,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метод вызывается при изменении состояния флажка в управляющем элементе.
-    /// При переопределении обязательно должен вызываться базовый метод
+    /// При переопределении обязательно должен вызываться базовый метод.
     /// </summary>
     protected virtual void OnCheckStateChanged()
     {
@@ -226,7 +226,7 @@ namespace FreeLibSet.Forms
     #region Свойство Checked
 
     /// <summary>
-    /// Наличие флажка
+    /// Наличие флажка.
     /// Для промежуточного состояния возвращает false.
     /// </summary>
     public bool Checked
@@ -239,7 +239,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство Checked
+    /// Управляемое свойство <see cref="Checked"/>
     /// </summary>
     public DepValue<Boolean> CheckedEx
     {
@@ -276,7 +276,7 @@ namespace FreeLibSet.Forms
     #region Свойство DisabledNChecked
 
     /// <summary>
-    /// Значение, используемое при Enabled=false
+    /// Значение, используемое при <see cref="Control.Enabled"/>=false
     /// </summary>
     public bool? DisabledNChecked
     {
@@ -296,8 +296,8 @@ namespace FreeLibSet.Forms
     private bool? _DisabledNChecked;
 
     /// <summary>
-    /// Управляемое свойство для DisabledNChecked
-    /// Свойство действует при установленном свойстве AllowDisabledCheckState
+    /// Управляемое свойство для <see cref="DisabledNChecked"/>.
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledChecked"/>.
     /// </summary>
     public DepValue<bool?> DisabledNCheckedEx
     {
@@ -332,7 +332,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Разрешает использование свойства DisabledChecked и DisabledNChecked
+    /// Разрешает использование свойства <see cref="DisabledChecked"/> и <see cref="DisabledNChecked"/>
     /// </summary>
     public bool AllowDisabledChecked
     {
@@ -352,8 +352,8 @@ namespace FreeLibSet.Forms
     #region Свойство DisabledChecked
 
     /// <summary>
-    /// Дублирует свойство DisabledNChecked
-    /// По умолчанию - false
+    /// Дублирует свойство <see cref="DisabledNChecked"/>.
+    /// По умолчанию - false.
     /// </summary>
     public bool DisabledChecked
     {
@@ -362,8 +362,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Этот текст замещает свойство CheckedEx, когда EnabledEx=false 
-    /// Свойство действует при установленном свойстве AllowDisabledChecked
+    /// Этот текст замещает свойство <see cref="CheckedEx"/>, когда <see cref="EFPControlBase.EnabledEx"/>=false.
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledChecked"/>.
     /// </summary>
     public DepValue<Boolean> DisabledCheckedEx
     {
@@ -402,7 +402,7 @@ namespace FreeLibSet.Forms
     #region Проверка
 
     /// <summary>
-    /// Проверка промежуточного состояния при CanBeEmptyMode=Warning
+    /// Проверка промежуточного состояния при <see cref="CanBeEmptyMode"/>=Warning
     /// </summary>
     protected override void OnValidate()
     {
@@ -455,8 +455,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет проверку, что хотя бы один из переключателей включен.
-    /// Все переключатели должны быть на 2 положения (CheckBox.ThreeState=false).
-    /// Свойства CheckBox.Visible и Enabled не учитываются
+    /// Все переключатели должны быть на 2 положения (<see cref="CheckBox.ThreeState"/>=false).
+    /// Свойства <see cref="Control.Visible"/> и <see cref="Control.Enabled"/> не учитываются.
     /// </summary>
     /// <param name="controlProviders">Список переключателей</param>
     public static void AddGroupAtLeastOneCheck(params EFPCheckBox[] controlProviders)
