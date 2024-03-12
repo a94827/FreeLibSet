@@ -9958,20 +9958,20 @@ namespace FreeLibSet.Forms
         DoGetRowAttributes(area.RowIndices[i], EFPDataGridViewAttributesReason.View);
         for (int j = 0; j < area.ColumnCount; j++)
         {
-          EFPDataGridViewCellAttributesEventArgs CellArgs = DoGetCellAttributes(area.ColumnIndices[j]);
-          a[i, j] = DoGetCellTextValue(CellArgs);
+          EFPDataGridViewCellAttributesEventArgs cellArgs = DoGetCellAttributes(area.ColumnIndices[j]);
+          a[i, j] = DoGetCellTextValue(cellArgs);
         }
       }
 
       return a;
     }
 
-    private string DoGetCellTextValue(EFPDataGridViewCellAttributesEventArgs CellArgs)
+    private string DoGetCellTextValue(EFPDataGridViewCellAttributesEventArgs cellArgs)
     {
-      if (CellArgs.FormattedValue == null)
+      if (cellArgs.FormattedValue == null)
         return String.Empty;
       else
-        return CellArgs.FormattedValue.ToString();
+        return cellArgs.FormattedValue.ToString();
     }
 
     /// <summary>
@@ -9983,8 +9983,8 @@ namespace FreeLibSet.Forms
     public string GetCellTextValue(int rowIndex, int columnIndex)
     {
       DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.View);
-      EFPDataGridViewCellAttributesEventArgs CellArgs = DoGetCellAttributes(columnIndex);
-      return DoGetCellTextValue(CellArgs);
+      EFPDataGridViewCellAttributesEventArgs cellArgs = DoGetCellAttributes(columnIndex);
+      return DoGetCellTextValue(cellArgs);
     }
 
     /// <summary>

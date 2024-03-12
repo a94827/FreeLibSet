@@ -157,6 +157,7 @@
     <Compile Include="Tests\PropertyAssertTests.cs" />
     <Compile Include="IO\TempDirectoryTests.cs" />
     <Compile Include="Collections\WeakReferenceCollectionTests.cs" />
+    <Compile Include="Text\SingleByteTranscoderTests.cs" />
     <Compile Include="Text\TabTextConvertTests.cs" />
     <Compile Include="Text\TextWithRowsTests.cs" />
     <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />

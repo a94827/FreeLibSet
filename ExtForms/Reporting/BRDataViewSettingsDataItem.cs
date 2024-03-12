@@ -709,8 +709,6 @@ namespace FreeLibSet.Forms.Reporting
     public int DbfCodePage { get { return _DbfCodePage; } set { _DbfCodePage = value; } }
     private int _DbfCodePage;
 
-    /**
-
     /// <summary>
     /// Устанавливает для столбца признак экспорта в DBF-формат
     /// </summary>
@@ -723,18 +721,109 @@ namespace FreeLibSet.Forms.Reporting
 
     public bool GetDbfExported(IEFPDataViewColumn column)
     {
+      if (column.DbfPreliminaryInfo == null)
+        return false;
       return GetColumnInfo(column).DbfExported;
     }
 
-    public void SetDbfFieldName(IEFPDataViewColumn column, string name)
+    public void SetDbfFieldName(IEFPDataViewColumn column, string value)
     {
+      GetColumnInfo(column).DbfFieldName = value;
+      GetColumnInfo(column).IsManualDbfName = true;
     }
 
     public string GetDbfFieldName(IEFPDataViewColumn column)
     {
+      return GetColumnInfo(column).DbfFieldName;
     }
 
-    **/
+    public string[] GetRealDbfFieldNames(IEFPDataViewColumn[] columns)
+    {
+      string[] aNames = new string[columns.Length];
+      SingleScopeStringList lstNames = new SingleScopeStringList(true);
+
+      #region 1. Имена из настроек пользователя
+
+      for (int i = 0; i < columns.Length; i++)
+      {
+        string nm = GetDbfFieldName(columns[i]);
+        if (!String.IsNullOrEmpty(nm))
+        {
+          if (!lstNames.Contains(nm))
+          {
+            aNames[i] = nm;
+            lstNames.Add(nm);
+          }
+        }
+      }
+
+      #endregion
+
+      #region 2. Имена из описания поля
+
+      for (int i = 0; i < columns.Length; i++)
+      {
+        if (aNames[i] == null)
+        {
+          string nm = columns[i].DbfInfo.Name;
+          if (String.IsNullOrEmpty(nm))
+            nm = GetValidDbfNamePart(columns[i].Name);
+
+          if (!lstNames.Contains(nm))
+          {
+            aNames[i] = nm;
+            lstNames.Add(nm);
+          }
+        }
+      }
+
+      #endregion
+
+      #region 3. Недостающие имена
+
+      int cntRnd = 0;
+
+      for (int i = 0; i < columns.Length; i++)
+      {
+        if (aNames[i] == null)
+        {
+          string nm = "F_0" + (i+1).ToString("0000000", StdConvert.NumberFormat);
+          while (lstNames.Contains(nm))
+          {
+            cntRnd++;
+            nm = "F_1" + cntRnd.ToString("0000000", StdConvert.NumberFormat);
+          }
+          aNames[i] = nm;
+          lstNames.Add(nm);
+        }
+      }
+      #endregion
+
+      return aNames;
+    }
+
+
+    private string GetValidDbfNamePart(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return String.Empty;
+
+      s = DataTools.Substring(s.ToUpperInvariant(), 0, 10);
+      if (s[0] < 'A' || s[0] > 'Z')
+        return String.Empty;
+
+      // Можно что-нибудь вернуть
+      const string validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+
+      StringBuilder sb = new StringBuilder();
+      sb.Append(s[0]);
+      for (int i = 1; i < s.Length; i++)
+      {
+        if (validChars.IndexOf(s[i]) >= 0)
+          sb.Append(s[i]);
+      }
+      return sb.ToString();
+    }
 
     #endregion
 
@@ -749,187 +838,201 @@ namespace FreeLibSet.Forms.Reporting
     // Для получения размеров используется имя SizeGroup, а для признака печати - имя столбца
 
     /// <summary>
-    /// 
+    /// Записать данные в секцию конфигурации.
     /// </summary>
-    /// <param name="cfg"></param>
-    /// <param name="part"></param>
+    /// <param name="cfg">Записываемая секция</param>
+    /// <param name="part">Вариант хранения данных</param>
     public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
-      #region Столбцы
-
-      CfgPart cfg2 = cfg.GetChild("Columns", true);
-      // Нельзя чистить, так как затрутся данные из родительской настройки
-      // cfg2.Clear();
-      foreach (KeyValuePair<string, ColumnInfo> pair in _ColumnDict)
+      if (part == SettingsPart.User)
       {
-        CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
-        cfg3.Clear();
-        if (!pair.Value.Print)
-          cfg3.SetBool("Print", false);
-        else
-        {
-          cfg3.SetInt("Width", pair.Value.PrintWidth);
-          if (pair.Value.AutoGrow)
-            cfg3.SetBool("AutoGrow", true);
-        }
+        #region Столбцы
 
-        if (pair.Value.DbfExported)
-        {
-          if (!String.IsNullOrEmpty(pair.Value.DbfFieldName))
-            cfg.SetString(pair.Value.IsManualDbfName ? "DbfName" : "AutoDbfName", pair.Value.DbfFieldName);
-        }
-        else
-          cfg3.SetBool("Dbf", false);
-}
-
-      if (_SizeGroupDict.Count > 0)
-      {
-        cfg2 = cfg.GetChild("ColumnSizeGroups", true);
-        foreach (KeyValuePair<string, SizeGroupInfo> pair in _SizeGroupDict)
+        CfgPart cfg2 = cfg.GetChild("Columns", true);
+        // Нельзя чистить, так как затрутся данные из родительской настройки
+        // cfg2.Clear();
+        foreach (KeyValuePair<string, ColumnInfo> pair in _ColumnDict)
         {
           CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
           cfg3.Clear();
-          cfg3.SetInt("Width", pair.Value.PrintWidth);
-          if (pair.Value.AutoGrow)
-            cfg3.SetBool("AutoGrow", true);
+          if (!pair.Value.Print)
+            cfg3.SetBool("Print", false);
+          else
+          {
+            cfg3.SetInt("Width", pair.Value.PrintWidth);
+            if (pair.Value.AutoGrow)
+              cfg3.SetBool("AutoGrow", true);
+          }
+
+          if (pair.Value.DbfExported)
+          {
+            if (!String.IsNullOrEmpty(pair.Value.DbfFieldName))
+              cfg3.SetString(pair.Value.IsManualDbfName ? "DbfName" : "AutoDbfName", pair.Value.DbfFieldName);
+          }
+          else
+            cfg3.SetBool("Dbf", false);
         }
+
+        if (_SizeGroupDict.Count > 0)
+        {
+          cfg2 = cfg.GetChild("ColumnSizeGroups", true);
+          foreach (KeyValuePair<string, SizeGroupInfo> pair in _SizeGroupDict)
+          {
+            CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
+            cfg3.Clear();
+            cfg3.SetInt("Width", pair.Value.PrintWidth);
+            if (pair.Value.AutoGrow)
+              cfg3.SetBool("AutoGrow", true);
+          }
+        }
+        cfg.SetInt("RepeatedColumnCount", RepeatedColumnCount);
+        cfg.SetEnum<BRDataViewColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers", ColumnSubHeaderNumbers);
+
+        #endregion
+
+        #region Оформление
+
+        cfg.SetEnum<BRDataViewBorderStyle>("BorderStyle", BorderStyle);
+        if (UseColorStyle)
+          cfg.SetEnum<BRDataViewColorStyle>("ColorStyle", ColorStyle);
+        //cfg.SetEnum<PrintGridRowSpacing>("RowSpacing", RowSpacing);
+        if (UseBoolMode)
+        {
+          cfg.SetEnum<BRDataViewBoolMode>("BoolMode", BoolMode);
+          cfg.SetString("BoolTextTrue", BoolTextTrue);
+          cfg.SetString("BoolTextFalse", BoolTextFalse);
+        }
+        cfg.SetInt("CellLeftMargin", CellLeftMargin);
+        cfg.SetInt("CellTopMargin", CellTopMargin);
+        cfg.SetInt("CellRightMargin", CellRightMargin);
+        cfg.SetInt("CellBottomMargin", CellBottomMargin);
+
+        #endregion
+
+        #region Отправить
+
+        cfg.SetEnum<EFPDataViewExpRange>("ExpRange", ExpRange);
+        cfg.SetBool("ExpColumnHeaders", ExpColumnHeaders);
+
+        #endregion
+
+        #region Экспорт в текстовый файл
+
+        cfg.SetInt("CodePage", CodePage);
+        cfg.SetString("FieldDelimiter", FieldDelimiterStr);
+        cfg.SetString("Quote", QuoteStr);
+        cfg.SetBool("SingleLineField", SingleLineField);
+        cfg.SetBool("RemoveDoubleSpaces", RemoveDoubleSpaces);
+
+        #endregion
+
+        #region Экспорт в DBF
+
+        cfg.SetInt("DbfCodePage", DbfCodePage);
+        // Остальные параметры относятся к столбцам
+
+        #endregion
       }
-      cfg.SetInt("RepeatedColumnCount", RepeatedColumnCount);
-      cfg.SetEnum<BRDataViewColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers", ColumnSubHeaderNumbers);
-
-      #endregion
-
-      #region Оформление
-
-      cfg.SetEnum<BRDataViewBorderStyle>("BorderStyle", BorderStyle);
-      if (UseColorStyle)
-        cfg.SetEnum<BRDataViewColorStyle>("ColorStyle", ColorStyle);
-      //cfg.SetEnum<PrintGridRowSpacing>("RowSpacing", RowSpacing);
-      if (UseBoolMode)
-      {
-        cfg.SetEnum<BRDataViewBoolMode>("BoolMode", BoolMode);
-        cfg.SetString("BoolTextTrue", BoolTextTrue);
-        cfg.SetString("BoolTextFalse", BoolTextFalse);
-      }
-      cfg.SetInt("CellLeftMargin", CellLeftMargin);
-      cfg.SetInt("CellTopMargin", CellTopMargin);
-      cfg.SetInt("CellRightMargin", CellRightMargin);
-      cfg.SetInt("CellBottomMargin", CellBottomMargin);
-
-      #endregion
-
-      #region Отправить
-
-      cfg.SetEnum<EFPDataViewExpRange>("ExpRange", ExpRange);
-      cfg.SetBool("ExpColumnHeaders", ExpColumnHeaders);
-
-      #endregion
-
-      #region Экспорт в текстовый файл
-
-      cfg.SetInt("CodePage", CodePage);
-      cfg.SetString("FieldDelimiter", FieldDelimiterStr);
-      cfg.SetString("Quote", QuoteStr);
-      cfg.SetBool("SingleLineField", SingleLineField);
-      cfg.SetBool("RemoveDoubleSpaces", RemoveDoubleSpaces);
-
-      #endregion
-
-      #region Экспорт в DBF
-
-      cfg.SetInt("DbfCodePage", DbfCodePage);
-      // Остальные параметры относятся к столбцам
-
-      #endregion
     }
 
     /// <summary>
-    /// 
+    /// Прочитать данные из секции конфигурации.
     /// </summary>
-    /// <param name="cfg"></param>
-    /// <param name="part"></param>
+    /// <param name="cfg">Секция с данными</param>
+    /// <param name="part">Вариант хранения данных</param>
     public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
-      #region Столбцы
-
-      _ColumnDict.Clear();
-      CfgPart cfg2 = cfg.GetChild("Columns", false);
-      if (cfg2 != null)
+      if (part == SettingsPart.User)
       {
-        foreach (string colName in cfg2.GetChildNames())
+        #region Столбцы
+
+        _ColumnDict.Clear();
+        CfgPart cfg2 = cfg.GetChild("Columns", false);
+        if (cfg2 != null)
         {
-          CfgPart cfg3 = cfg2.GetChild(colName, false);
-          ColumnInfo ci = new ColumnInfo();
-          ci.Print = cfg3.GetBoolDef("Print", true);
-          if (ci.Print)
+          foreach (string colName in cfg2.GetChildNames())
           {
-            ci.PrintWidth = cfg3.GetInt("Width");
-            ci.AutoGrow = cfg3.GetBool("AutoGrow");
+            CfgPart cfg3 = cfg2.GetChild(colName, false);
+            ColumnInfo ci = new ColumnInfo();
+            ci.Print = cfg3.GetBoolDef("Print", true);
+            if (ci.Print)
+            {
+              ci.PrintWidth = cfg3.GetInt("Width");
+              ci.AutoGrow = cfg3.GetBool("AutoGrow");
+            }
+
+            ci.DbfExported = cfg3.GetBoolDef("Dbf", true);
+            ci.DbfFieldName = cfg3.GetString("DbfName");
+            if (String.IsNullOrEmpty(ci.DbfFieldName))
+              ci.DbfFieldName = cfg3.GetString("AutoDbfName");
+            else
+              ci.IsManualDbfName = true;
+
+            _ColumnDict.Add(colName, ci);
           }
-          _ColumnDict.Add(colName, ci);
         }
-      }
 
-      _SizeGroupDict.Clear();
-      cfg2 = cfg.GetChild("ColumnSizeGroups", false);
-      if (cfg2 != null)
-      {
-        foreach (string grpName in cfg2.GetChildNames())
+        _SizeGroupDict.Clear();
+        cfg2 = cfg.GetChild("ColumnSizeGroups", false);
+        if (cfg2 != null)
         {
-          CfgPart cfg3 = cfg2.GetChild(grpName, false);
-          SizeGroupInfo szi = new SizeGroupInfo();
-          szi.PrintWidth = cfg3.GetInt("Width");
-          szi.AutoGrow = cfg3.GetBool("AutoGrow");
+          foreach (string grpName in cfg2.GetChildNames())
+          {
+            CfgPart cfg3 = cfg2.GetChild(grpName, false);
+            SizeGroupInfo szi = new SizeGroupInfo();
+            szi.PrintWidth = cfg3.GetInt("Width");
+            szi.AutoGrow = cfg3.GetBool("AutoGrow");
+          }
         }
+
+        RepeatedColumnCount = cfg.GetInt("RepeatedColumnCount");
+        ColumnSubHeaderNumbers = cfg.GetEnum<BRDataViewColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers");
+
+        #endregion
+
+        #region Оформление
+
+        BorderStyle = cfg.GetEnumDef<BRDataViewBorderStyle>("BorderStyle", BRDataViewBorderStyle.All);
+        if (UseColorStyle)
+          ColorStyle = cfg.GetEnumDef<BRDataViewColorStyle>("ColorStyle", BRDataViewColorStyle.NoColors);
+        //RowSpacing = cfg.GetEnum<PrintGridRowSpacing>("RowSpacing");
+        if (UseBoolMode)
+        {
+          BoolMode = cfg.GetEnumDef<BRDataViewBoolMode>("BoolMode", BRDataViewBoolMode.Text);
+          BoolTextTrue = cfg.GetStringDef("BoolTextTrue", "[X]");
+          BoolTextFalse = cfg.GetStringDef("BoolTextFalse", "[ ]");
+        }
+        CellLeftMargin = cfg.GetIntDef("CellLeftMargin", BRReport.AppDefaultCellStyle.LeftMargin);
+        CellTopMargin = cfg.GetIntDef("CellTopMargin", BRReport.AppDefaultCellStyle.TopMargin);
+        CellRightMargin = cfg.GetIntDef("CellRightMargin", BRReport.AppDefaultCellStyle.RightMargin);
+        CellBottomMargin = cfg.GetIntDef("CellBottomMargin", BRReport.AppDefaultCellStyle.BottomMargin);
+
+        #endregion
+
+        #region Отправить
+
+        ExpRange = cfg.GetEnumDef<EFPDataViewExpRange>("ExpRange", EFPDataViewExpRange.All);
+        ExpColumnHeaders = cfg.GetBoolDef("ExpColumnHeaders", true);
+
+        #endregion
+
+        #region Экспорт в текстовый файл
+
+        CodePage = cfg.GetIntDef("CodePage", Encoding.UTF8.CodePage);
+        FieldDelimiterStr = cfg.GetStringDef("FieldDelimiter", ",");
+        QuoteStr = cfg.GetStringDef("Quote", "\"");
+        SingleLineField = cfg.GetBoolDef("SingleLineField", true);
+        RemoveDoubleSpaces = cfg.GetBoolDef("RemoveDoubleSpaces", false);
+
+        #endregion
+
+        #region Экспорт в DBF
+
+        DbfCodePage = cfg.GetIntDef("DbfCodePage", Encoding.Default.CodePage);
+        // Остальные параметры относятся к столбцам
+
+        #endregion
       }
-
-      RepeatedColumnCount = cfg.GetInt("RepeatedColumnCount");
-      ColumnSubHeaderNumbers = cfg.GetEnum<BRDataViewColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers");
-
-      #endregion
-
-      #region Оформление
-
-      BorderStyle = cfg.GetEnumDef<BRDataViewBorderStyle>("BorderStyle", BRDataViewBorderStyle.All);
-      if (UseColorStyle)
-        ColorStyle = cfg.GetEnumDef<BRDataViewColorStyle>("ColorStyle", BRDataViewColorStyle.NoColors);
-      //RowSpacing = cfg.GetEnum<PrintGridRowSpacing>("RowSpacing");
-      if (UseBoolMode)
-      {
-        BoolMode = cfg.GetEnumDef<BRDataViewBoolMode>("BoolMode", BRDataViewBoolMode.Text);
-        BoolTextTrue = cfg.GetStringDef("BoolTextTrue", "[X]");
-        BoolTextFalse = cfg.GetStringDef("BoolTextFalse", "[ ]");
-      }
-      CellLeftMargin = cfg.GetIntDef("CellLeftMargin", BRReport.AppDefaultCellStyle.LeftMargin);
-      CellTopMargin = cfg.GetIntDef("CellTopMargin", BRReport.AppDefaultCellStyle.TopMargin);
-      CellRightMargin = cfg.GetIntDef("CellRightMargin", BRReport.AppDefaultCellStyle.RightMargin);
-      CellBottomMargin = cfg.GetIntDef("CellBottomMargin", BRReport.AppDefaultCellStyle.BottomMargin);
-
-      #endregion
-
-      #region Отправить
-
-      ExpRange = cfg.GetEnumDef<EFPDataViewExpRange>("ExpRange", EFPDataViewExpRange.All);
-      ExpColumnHeaders = cfg.GetBoolDef("ExpColumnHeaders", true);
-
-      #endregion
-
-      #region Экспорт в текстовый файл
-
-      CodePage = cfg.GetIntDef("CodePage", Encoding.UTF8.CodePage);
-      FieldDelimiterStr = cfg.GetStringDef("FieldDelimiter", ",");
-      QuoteStr = cfg.GetStringDef("Quote", "\"");
-      SingleLineField = cfg.GetBoolDef("SingleLineField", true);
-      RemoveDoubleSpaces = cfg.GetBoolDef("RemoveDoubleSpaces", false);
-
-      #endregion
-
-      #region Экспорт в DBF
-
-      DbfCodePage = cfg.GetIntDef("DbfCodePage", Encoding.Default.CodePage);
-      // Остальные параметры относятся к столбцам
-
-      #endregion
     }
 
     #endregion

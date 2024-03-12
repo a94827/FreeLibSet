@@ -253,6 +253,8 @@ namespace FreeLibSet.Forms.Reporting
       // Пусть эти форматы будут в конце
       base.ExportFileItems.Add(new EFPExportFileItem("TXT", "Текст (разделитель - табуляция) ", "*.txt"));
       base.ExportFileItems.Add(new EFPExportFileItem("CSV", "Текст CSV", "*.csv"));
+      if (ControlProvider.Columns.Count > 0) // Для TreeViewAdv без столбцов пока не реализовано
+        base.ExportFileItems.Add(new EFPExportFileItem("DBF3", "Файлы dBase III", "*.dbf"));
     }
 
     /// <summary>
@@ -282,20 +284,30 @@ namespace FreeLibSet.Forms.Reporting
     /// <param name="item">Описание формата экспорта</param>
     public override void ExportFile(AbsPath filePath, EFPExportFileItem item)
     {
-      if (item.Code == "CSV" || item.Code == "TXT")
+      switch (item.Code)
       {
-        if (ShowExportFileDialog(filePath, item))
-        {
-          BRDataViewFileText fileCreator = new BRDataViewFileText(this.SettingsData.GetRequired<BRDataViewSettingsDataItem>());
-          fileCreator.CreateFile(ControlProvider, filePath, item.Code == "CSV");
-        }
-        return;
+        case "CSV":
+        case "TXT":
+          if (ShowExportTextFileDialog(filePath, item))
+          {
+            BRDataViewFileText fileCreator = new BRDataViewFileText(this.SettingsData.GetRequired<BRDataViewSettingsDataItem>());
+            fileCreator.CreateFile(ControlProvider, filePath, item.Code == "CSV");
+          }
+          break;
+        case "DBF3":
+          if (ShowExportDbfFileDialog(filePath, item))
+          {
+            BRDataViewFileDbf fileCreator = new BRDataViewFileDbf(this.SettingsData.GetRequired<BRDataViewSettingsDataItem>());
+            fileCreator.CreateFile(ControlProvider, filePath);
+          }
+          break;
+        default:
+          base.ExportFile(filePath, item);
+          break;
       }
-
-      base.ExportFile(filePath, item);
     }
 
-    private bool ShowExportFileDialog(AbsPath filePath, EFPExportFileItem item)
+    private bool ShowExportTextFileDialog(AbsPath filePath, EFPExportFileItem item)
     {
       #region Создание SettingsDialog 
 
@@ -309,6 +321,33 @@ namespace FreeLibSet.Forms.Reporting
       new BRDataViewPageSetupText(dialog, ControlProvider, item.Code == "CSV");
       if (dialog.Data.GetRequired<BRDataViewSettingsDataItem>().UseBoolMode)
         new BRDataViewPageSetupAppearance(dialog, ControlProvider, true);
+
+      #endregion
+
+      #region Показ диалога
+
+      if (dialog.ShowDialog() != DialogResult.OK)
+        return false;
+
+      CallWriteConfig();
+      return true;
+
+      #endregion
+    }
+
+
+    private bool ShowExportDbfFileDialog(AbsPath filePath, EFPExportFileItem item)
+    {
+      #region Создание SettingsDialog 
+
+      CallReadConfig();
+      SettingsDialog dialog = new SettingsDialog();
+      dialog.ConfigSectionName = GetConfigSectionName();
+      dialog.Data = this.SettingsData;
+      dialog.Title = "Экспорт в " + filePath.FileName;
+      dialog.ImageKey = "Save";
+
+      new BRDataViewPageSetupDbf(dialog, ControlProvider);
 
       #endregion
 

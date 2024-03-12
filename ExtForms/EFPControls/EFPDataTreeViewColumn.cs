@@ -16,6 +16,7 @@ using FreeLibSet.Collections;
 using System.Collections;
 using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.Forms.Reporting;
+using FreeLibSet.Models.Tree;
 
 /*
  * Дополнительные описания для стоблцов TreeViewAdv
@@ -91,6 +92,9 @@ namespace FreeLibSet.Forms
       _ColorType = EFPDataGridViewColorType.Normal;
       _LeftBorder = EFPDataGridViewBorderStyle.Default;
       _RightBorder = EFPDataGridViewBorderStyle.Default;
+
+      if (nodeControl is InteractiveControl)
+        _DbfPreliminaryInfo = new DbfFieldTypePreliminaryInfo();
     }
 
     #endregion
@@ -370,7 +374,7 @@ namespace FreeLibSet.Forms
       set { TreeColumn.MinColumnWidth = ControlProvider.Measures.GetTextColumnWidth(value); }
     }
 
-    bool IEFPDataViewColumnBase.AutoGrow { get { return Index==0; } } // ??
+    bool IEFPDataViewColumnBase.AutoGrow { get { return Index == 0; } } // ??
 
     #endregion
 
@@ -700,140 +704,101 @@ namespace FreeLibSet.Forms
     private DbfFieldInfo _DbfInfo;
 
     /// <summary>
-    /// Имя DBF-поля для этого столбца по умолчанию
-    /// Текущее значение свойства <see cref="DbfInfo"/> не учитывается
+    /// Предварительная информация о типе данных, используемая при экспорте столбца в DBF-формат.
+    /// В отличие от <see cref="DbfInfo"/>, это свойство не может устанавливаться в прикладном коде.
+    /// Если столбец не может быть экспортирован, свойство возвращает null.
     /// </summary>
-    public string DefaultDbfName
+    public DbfFieldTypePreliminaryInfo DbfPreliminaryInfo { get { return _DbfPreliminaryInfo; } }
+    private DbfFieldTypePreliminaryInfo _DbfPreliminaryInfo;
+
+    #endregion
+
+    #region Перебор значений
+
+    private class ValueEnumerable : System.Collections.IEnumerable
     {
-      get
+      #region Конструктор
+
+      internal ValueEnumerable(EFPDataTreeViewColumn column)
       {
-        string nm = this.Name;
-        if (!String.IsNullOrEmpty(nm))
-        {
-          nm = nm.ToUpper();
-          if (DbfFieldInfo.IsValidFieldName(nm))
-            return nm;
-        }
-        return "FIELD" + (TreeColumn.Index + 1).ToString("00000");
+        _Column = column;
+        if (column.ControlProvider.Control.Model != null)
+          _ModelEnumerable = new TreePathEnumerable(column.ControlProvider.Control.Model);
       }
+
+      private EFPDataTreeViewColumn _Column;
+      private IEnumerable<TreePath> _ModelEnumerable;
+
+      #endregion
+
+      #region IEnumerable
+
+      public IEnumerator GetEnumerator()
+      {
+        IEnumerator<TreePath> modelEnumerator = null;
+        if (_ModelEnumerable != null)
+          modelEnumerator = _ModelEnumerable.GetEnumerator();
+        return new ValueEnumerator(_Column, modelEnumerator);
+      }
+
+      #endregion
     }
 
-#if XXX
-    /// <summary>
-    /// Описание поля по умолчанию
-    /// Не бывает значение null. При первой попытке чтения свойства анализирует
-    /// исходные данные для определения типа столбца
-    /// </summary>
-    public DbfFieldInfo DefaultDbfInfo
+
+    private class ValueEnumerator : IEnumerator
     {
-      get
-      {
-        if (FDefaultDbfInfo.IsEmpty)
-          FDefaultDbfInfo = CreateDefaultDbfInfo();
+      #region Конструктор
 
-        return FDefaultDbfInfo;
+      internal ValueEnumerator(EFPDataTreeViewColumn column, IEnumerator<TreePath> modelEnumerator)
+      {
+        this._Column = column;
+        _ModelEnumerator = modelEnumerator;
       }
-      //set
-      //{
-      //  FDefaultDbfInfo = value;
-      //}
-    }
-    private DbfFieldInfo FDefaultDbfInfo;
 
-    private DbfFieldInfo CreateDefaultDbfInfo()
-    {
-      if (GridColumn is DataGridViewCheckBoxColumn)
-        return DbfFieldInfo.CreateBool(DefaultDbfName);
+      private EFPDataTreeViewColumn _Column;
+      private IEnumerator<TreePath> _ModelEnumerator;
 
-      if (GridColumn is DataGridViewTextBoxColumn)
+      #endregion
+
+      #region IEnumerator
+
+      public object Current
       {
-        switch (SizeGroup)
-        { 
-          case "Date":
-            return DbfFieldInfo.CreateDate(DefaultDbfName);
-          case "DateTime":
-            return DbfFieldInfo.CreateString(DefaultDbfName, 19);
-        }
-
-        Type t = ((DataGridViewTextBoxColumn)GridColumn).ValueType;
-        if (t == null)
-          t = typeof(string);
-        switch (t.Name)
+        get
         {
-          case "Byte":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 3);
-          case "SByte":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 4);
-          case "Int16":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 6);
-          case "UInt16":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 5);
-          case "Int32":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 11);
-          case "UInt32":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 10);
-          case "Int64":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 22); // ???
-          case "UInt64":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 21);
-          case "Single":
-          case "Double":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 20, 8); // ???
-          case "Decimal":
-            return DbfFieldInfo.CreateNum(DefaultDbfName, 20, 2);
-        }
+          TreeNodeAdv node = _Column.ControlProvider.Control.FindNode(_ModelEnumerator.Current, true);
+          if (node == null)
+            throw new BugException("Не найден узел дерева");
 
-        if (!String.IsNullOrEmpty(GridColumn.DataPropertyName))
-        {
-          DataTable tbl = ControlProvider.SourceAsDataTable;
-          if (tbl != null)
-          {
-            int p = tbl.Columns.IndexOf(GridColumn.DataPropertyName);
-            if (p >= 0)
-            {
-              if (tbl.Columns[p].MaxLength > 0)
-              { 
-                if (tbl.Columns[p].MaxLength<=255 )
-                  return DbfFieldInfo.CreateString(DefaultDbfName, tbl.Columns[p].MaxLength);
-                else
-                  return DbfFieldInfo.CreateMemo(DefaultDbfName);
-              }
-            }
-          }
+          InteractiveControl nc = _Column.NodeControl as InteractiveControl;
+          if (nc == null)
+            return null;
+          else
+            return nc.GetValue(node);
         }
       }
 
-      // Возвращаем строковое поле
-
-      // Перебираем все значения, выискивая самое длинное
-      int w = 1;
-      EFPApp.BeginWait("Определение ширины столблца \"" + GridColumn.HeaderText + "\"");
-      try
+      public bool MoveNext()
       {
-        for (int i = 0; i < ControlProvider.Control.RowCount; i++)
-        {
-          ControlProvider.DoGetRowAttributes(i, EFPDataGridViewAttributesReason.View);
-          EFPDataGridViewCellAttributesEventArgs CellArgs = ControlProvider.DoGetCellAttributes(GridColumn.Index);
-          if (CellArgs.Value != null)
-          {
-            w = Math.Max(w, CellArgs.Value.ToString().Length);
-            if (w > 255)
-              break;
-          }
-        }
-      }
-      finally
-      {
-        EFPApp.EndWait();
+        if (_ModelEnumerator != null)
+          return _ModelEnumerator.MoveNext();
+        else
+          return false;
       }
 
-      if (w > 255)
-        return DbfFieldInfo.CreateMemo(DefaultDbfName);
-      else
-        return DbfFieldInfo.CreateString(DefaultDbfName, w);
+      void IEnumerator.Reset()
+      {
+        if (_ModelEnumerator != null)
+          _ModelEnumerator.Reset();
+      }
+
+      #endregion
     }
 
-#endif
+    IEnumerable IEFPDataViewColumn.ValueEnumerable
+    {
+      get { return new ValueEnumerable(this); }
+    }
 
     #endregion
   }
@@ -873,15 +838,9 @@ namespace FreeLibSet.Forms
     #region Свойства и методы доступа к элементам коллекции
 
     /// <summary>
-    /// 
+    /// Возвращает количество столбцов в просмотре
     /// </summary>
-    public int Count
-    {
-      get
-      {
-        return ControlProvider.Control.Columns.Count;
-      }
-    }
+    public int Count { get { return ControlProvider.Control.Columns.Count; } }
 
     /// <summary>
     /// Нет возможности хранить в TreeColumn ссылку на EFPDataTreeViewColumn.
@@ -1179,6 +1138,11 @@ namespace FreeLibSet.Forms
     #region Обобщенный метод AddControl()
 
     /// <summary>
+    /// После созданный столбец при вызове метода AddControl()
+    /// </summary>
+    private EFPDataTreeViewColumn _LastAddedColumn;
+
+    /// <summary>
     /// Добавляет <paramref name="nodeControl"/> в коллекцию элементов дерева <see cref="TreeViewAdv.NodeControls"/>.
     /// Создает столбец <see cref="TreeColumn"/>, инициализирует его свойства, и присоединяет к нему <paramref name="nodeControl"/>, устанавливая свойство <see cref="NodeControl.ParentColumn"/>.
     /// Если <see cref="TreeViewAdv.UseColumns"/>=false, то выполняется только добавление <paramref name="nodeControl"/>, а столбец не создается.
@@ -1195,6 +1159,8 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("nodeControl");
       if (nodeControl.Parent != null)
         throw new InvalidOperationException("Элемент уже добавлен");
+
+      _LastAddedColumn = null;
 
       //if (!ControlProvider.Control.UseColumns)
       //  throw new InvalidOperationException("Нельзя добавлять столбцы, когда UseColumns=false");
@@ -1229,6 +1195,7 @@ namespace FreeLibSet.Forms
       {
         EFPDataTreeViewColumn efpCol = new EFPDataTreeViewColumn(ControlProvider, treeCol, nodeControl, columnName);
         _ColumnDict.Add(treeCol, efpCol);
+        _LastAddedColumn = efpCol;
       }
     }
 
@@ -1260,6 +1227,11 @@ namespace FreeLibSet.Forms
         nodeControl.DataPropertyName = columnName;
 
       AddControl(nodeControl, columnName, headerText, textWidth, minTextWidth);
+      if (_LastAddedColumn != null)
+      {
+        _LastAddedColumn.DbfPreliminaryInfo.Type = 'C';
+        _LastAddedColumn.DbfPreliminaryInfo.Length = textWidth;
+      }
 
       return nodeControl;
     }
@@ -1433,8 +1405,18 @@ namespace FreeLibSet.Forms
         nodeControl.DataPropertyName = columnName;
 
       AddControl(nodeControl, columnName, headerText, nodeControl.Formatter.TextWidth, nodeControl.Formatter.TextWidth);
-      if (ControlProvider.Control.UseColumns)
-        LastAdded.SizeGroup = kind.ToString();
+
+      if (_LastAddedColumn != null)
+      {
+        _LastAddedColumn.SizeGroup = kind.ToString();
+        if (kind == EditableDateTimeFormatterKind.Date)
+          _LastAddedColumn.DbfPreliminaryInfo.Type = 'D';
+        else
+        {
+          _LastAddedColumn.DbfPreliminaryInfo.Type = 'C';
+          _LastAddedColumn.DbfPreliminaryInfo.Length = nodeControl.Formatter.TextWidth;
+        }
+      }
 
       return nodeControl;
     }
@@ -1460,8 +1442,14 @@ namespace FreeLibSet.Forms
         nodeControl.DataPropertyName = columnName;
 
       AddControl(nodeControl, columnName, headerText, textWidth, textWidth);
-      if (ControlProvider.Control.UseColumns)
-        LastAdded.SizeGroup = sizeGroup;
+      if (_LastAddedColumn != null)
+      {
+        _LastAddedColumn.SizeGroup = sizeGroup;
+        _LastAddedColumn.DbfPreliminaryInfo.Type = 'N';
+        _LastAddedColumn.DbfPreliminaryInfo.Length = textWidth;
+        _LastAddedColumn.DbfPreliminaryInfo.Precision = decimalPlaces;
+        _LastAddedColumn.DbfPreliminaryInfo.PrecisionIsDefined = true;
+      }
       return nodeControl;
     }
 
@@ -1484,8 +1472,14 @@ namespace FreeLibSet.Forms
         nodeControl.DataPropertyName = columnName;
 
       AddControl(nodeControl, columnName, headerText, textWidth, textWidth);
-      if (ControlProvider.Control.UseColumns)
-        LastAdded.SizeGroup = sizeGroup;
+      if (_LastAddedColumn != null)
+      {
+        _LastAddedColumn.SizeGroup = sizeGroup;
+        _LastAddedColumn.DbfPreliminaryInfo.Type = 'N';
+        _LastAddedColumn.DbfPreliminaryInfo.Length = textWidth;
+        _LastAddedColumn.DbfPreliminaryInfo.Precision = decimalPlaces;
+        _LastAddedColumn.DbfPreliminaryInfo.PrecisionIsDefined = true;
+      }
       return nodeControl;
     }
 
@@ -1508,8 +1502,14 @@ namespace FreeLibSet.Forms
         nodeControl.DataPropertyName = columnName;
 
       AddControl(nodeControl, columnName, headerText, textWidth, textWidth);
-      if (ControlProvider.Control.UseColumns)
-        LastAdded.SizeGroup = sizeGroup;
+      if (_LastAddedColumn != null)
+      {
+        _LastAddedColumn.SizeGroup = sizeGroup;
+        _LastAddedColumn.DbfPreliminaryInfo.Type = 'N';
+        _LastAddedColumn.DbfPreliminaryInfo.Length = textWidth;
+        _LastAddedColumn.DbfPreliminaryInfo.Precision = decimalPlaces;
+        _LastAddedColumn.DbfPreliminaryInfo.PrecisionIsDefined = true;
+      }
       return nodeControl;
     }
 
@@ -1529,6 +1529,13 @@ namespace FreeLibSet.Forms
         nodeControl.DataPropertyName = columnName;
 
       AddControl(nodeControl, columnName, headerText, textWidth, textWidth);
+      if (_LastAddedColumn != null)
+      {
+        _LastAddedColumn.DbfPreliminaryInfo.Type = 'N';
+        _LastAddedColumn.DbfPreliminaryInfo.Length = textWidth;
+        _LastAddedColumn.DbfPreliminaryInfo.Precision = 0;
+        _LastAddedColumn.DbfPreliminaryInfo.PrecisionIsDefined = true;
+      }
       return nodeControl;
     }
 
@@ -1558,11 +1565,13 @@ namespace FreeLibSet.Forms
         nodeControl.DataPropertyName = columnName;
 
       AddControl(nodeControl, columnName, headerText, 3, 3);
-      if (ControlProvider.Control.UseColumns)
+      if (_LastAddedColumn != null)
       {
-        LastAdded.TreeColumn.Width = ControlProvider.Measures.CheckBoxColumnWidth;
-        LastAdded.TreeColumn.MinColumnWidth = LastAdded.TreeColumn.Width;
-        LastAdded.SizeGroup = "CheckBox";
+        _LastAddedColumn.TreeColumn.Width = ControlProvider.Measures.CheckBoxColumnWidth;
+        _LastAddedColumn.TreeColumn.MinColumnWidth = LastAdded.TreeColumn.Width;
+        _LastAddedColumn.SizeGroup = "CheckBox";
+
+        _LastAddedColumn.DbfPreliminaryInfo.Type = 'L';
       }
       return nodeControl;
     }

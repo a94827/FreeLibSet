@@ -64,6 +64,7 @@
     <Compile Include="Core\DataTools.Arrays.cs" />
     <Compile Include="Core\DataTools.Math.cs" />
     <Compile Include="Data\DataEnumerators.cs" />
+    <Compile Include="DBF\DbfFieldTypeDetector.cs" />
     <Compile Include="DependedValues\DepFromArray.cs" />
     <Compile Include="IO\AbsPath.cs" />
     <Compile Include="Caching\Cache.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Reporting\BRFileExcelOLE.cs" />
     <Compile Include="Reporting\BRFileTools.cs" />
     <Compile Include="Shell\OpenOfficeInfo.cs" />
+    <Compile Include="Text\SingleByteTranscoder.cs" />
     <Compile Include="UICore\UIPathInputHandler.cs" />
     <Compile Include="Win32\ExeFileInfo.cs" />
     <Compile Include="Models\Tree\DataTableTreeModel.cs" />

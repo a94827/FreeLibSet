@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using FreeLibSet.IO;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
+using FreeLibSet.Text;
 
 namespace FreeLibSet.DBF
 {
@@ -1756,11 +1757,11 @@ namespace FreeLibSet.DBF
         throw new InvalidOperationException("Количество полей не должно превышать 32");
       for (int i = 0; i < DBStruct.Count; i++)
       {
-        byte[] bName = Encoding.GetBytes(DBStruct[i].Name);
+        byte[] bName = System.Text.Encoding.ASCII.GetBytes(DBStruct[i].Name);
         wrtDBF.Write(bName);
         WriteZeros(wrtDBF, 11 - bName.Length);
 
-        byte[] bType = Encoding.GetBytes(new char[1] { DBStruct[i].Type });
+        byte[] bType = System.Text.Encoding.ASCII.GetBytes(new char[1] { DBStruct[i].Type });
         wrtDBF.Write(bType);
         wrtDBF.Write((byte)(DBStruct[i].Length));
         wrtDBF.Write((UInt16)0); // смещение данных используется только в памяти, но не в файле
@@ -1814,11 +1815,11 @@ namespace FreeLibSet.DBF
       // Описания полей
       for (int i = 0; i < DBStruct.Count; i++)
       {
-        byte[] bName = Encoding.GetBytes(DBStruct[i].Name);
+        byte[] bName = System.Text.Encoding.ASCII.GetBytes(DBStruct[i].Name);
         wrtDBF.Write(bName);
         WriteZeros(wrtDBF, 11 - bName.Length);
 
-        byte[] bType = Encoding.GetBytes(new char[1] { DBStruct[i].Type });
+        byte[] bType = System.Text.Encoding.ASCII.GetBytes(new char[1] { DBStruct[i].Type });
         wrtDBF.Write(bType);
         wrtDBF.Write((UInt32)0); // пропуск 4 байта
 
@@ -1975,7 +1976,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Версия формата файла
     /// Определяется автоматически при открытии существующего файла.
-    /// Может быть задана в конструкторе при создании нового файла
+    /// Может быть задана в конструкторе при создании нового файла.
     /// </summary>
     public DbfFileFormat Format { get { return _Format; } }
     private DbfFileFormat _Format;
@@ -2371,7 +2372,12 @@ namespace FreeLibSet.DBF
         if (_RecordBuffer[_FieldOffsets[fieldIndex]] == '\0')
           return String.Empty;
 
-        string s = Encoding.GetString(_RecordBuffer, _FieldOffsets[fieldIndex], DBStruct[fieldIndex].Length);
+        string s;
+        if (DBStruct[fieldIndex].Type == 'C')
+          s = Encoding.GetString(_RecordBuffer, _FieldOffsets[fieldIndex], DBStruct[fieldIndex].Length);
+        else
+          s = System.Text.Encoding.ASCII.GetString(_RecordBuffer, _FieldOffsets[fieldIndex], DBStruct[fieldIndex].Length);// 11.03.2024
+
         s = s.TrimEnd(' ');
         return s;
       }
@@ -2386,7 +2392,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Используется для полей 'N', 'L', 'D', 'F'.
-    /// Для них не нужно использовать заданный Encoding
+    /// Для них не нужно использовать кодировку, заданную свойством <see cref="Encoding"/>.
     /// </summary>
     /// <param name="fieldIndex"></param>
     /// <returns></returns>
@@ -2427,9 +2433,10 @@ namespace FreeLibSet.DBF
         case 'N':
         case 'F':
         case 'C':
+        case 'M': // 11.03.2024
           try
           {
-            string s = GetAsciiString(fieldIndex);
+            string s = GetString(fieldIndex);
             int p = s.IndexOf('.');
             if (p >= 0)
               s = s.Substring(0, p); // 22.03.2023
@@ -2444,6 +2451,9 @@ namespace FreeLibSet.DBF
             else
               throw;
           }
+        case 'L': // 11.03.2024
+          bool vBool = GetBool(fieldIndex);
+          return vBool ? 1 : 0;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
       }
@@ -2476,9 +2486,10 @@ namespace FreeLibSet.DBF
         case 'N':
         case 'F':
         case 'C':
+        case 'M':
           try
           {
-            string s = GetAsciiString(fieldIndex);
+            string s = GetString(fieldIndex);
             int p = s.IndexOf('.');
             if (p >= 0)
               s = s.Substring(0, p); // 22.03.2023
@@ -2493,6 +2504,9 @@ namespace FreeLibSet.DBF
             else
               throw;
           }
+        case 'L': // 11.03.2024
+          bool vBool = GetBool(fieldIndex);
+          return vBool ? 1L : 0L;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
       }
@@ -2525,9 +2539,10 @@ namespace FreeLibSet.DBF
         case 'N':
         case 'F':
         case 'C':
+        case 'M': // 11.03.2024
           try
           {
-            string s = GetAsciiString(fieldIndex);
+            string s = GetString(fieldIndex);
             if (s.Length == 0)
               return 0f; // 21.03.2017
             return float.Parse(s, StdConvert.NumberFormat);
@@ -2539,6 +2554,10 @@ namespace FreeLibSet.DBF
             else
               throw;
           }
+
+        case 'L': // 11.03.2024
+          bool vBool = GetBool(fieldIndex);
+          return vBool ? 1f : 0f;
 
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
@@ -2572,9 +2591,10 @@ namespace FreeLibSet.DBF
         case 'N':
         case 'F':
         case 'C':
+        case 'M':
           try
           {
-            string s = GetAsciiString(fieldIndex);
+            string s = GetString(fieldIndex);
             if (s.Length == 0)
               return 0.0; // 21.03.2017
             return double.Parse(s, StdConvert.NumberFormat);
@@ -2586,6 +2606,9 @@ namespace FreeLibSet.DBF
             else
               throw;
           }
+        case 'L': // 11.03.2024
+          bool vBool = GetBool(fieldIndex);
+          return vBool ? 1.0 : 0.0;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
       }
@@ -2618,9 +2641,10 @@ namespace FreeLibSet.DBF
         case 'N':
         case 'F':
         case 'C':
+        case 'M':
           try
           {
-            string s = GetAsciiString(fieldIndex);
+            string s = GetString(fieldIndex);
             if (s.Length == 0)
               return 0m; // 21.03.2017
             return decimal.Parse(s, StdConvert.NumberFormat);
@@ -2632,6 +2656,9 @@ namespace FreeLibSet.DBF
             else
               throw;
           }
+        case 'L': // 11.03.2024
+          bool vBool = GetBool(fieldIndex);
+          return vBool ? 1m : 0m;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
       }
@@ -2665,12 +2692,31 @@ namespace FreeLibSet.DBF
           byte b = _RecordBuffer[_FieldOffsets[fieldIndex]];
           try
           {
-            return BoolFromByte(b) ?? false;
+            return BoolFromChar((char)b) ?? false;
           }
           catch (Exception e)
           {
             throw new DbfValueFormatException(RecNo, DBStruct[fieldIndex], GetString(fieldIndex), e);
           }
+        case 'N':
+        case 'F':
+          decimal mValue1 = GetDecimal(fieldIndex);
+          return mValue1 != 0m;
+        case 'C':
+        case 'M':
+          string value = GetString(fieldIndex);
+          if (value.Length == 0)
+            return false;
+          if ("1234567890+-".IndexOf(value[0]) >= 0)
+          {
+            decimal mValue2 = GetDecimal(fieldIndex);
+            return mValue2 != 0m;
+          }
+          else if (value.Length == 1)
+            return BoolFromChar(value[0]) ?? false;
+          else
+            throw new DbfValueFormatException(RecNo, DBStruct[fieldIndex], GetString(fieldIndex), null);
+
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
       }
@@ -2679,11 +2725,11 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Внутренний метод
     /// </summary>
-    /// <param name="b"></param>
+    /// <param name="ch">Символ из DBF-файла</param>
     /// <returns></returns>
-    internal static bool? BoolFromByte(byte b)
+    internal static bool? BoolFromChar(char ch)
     {
-      switch ((char)b)
+      switch (ch)
       {
         case 'T':
         case 't':
@@ -2700,7 +2746,7 @@ namespace FreeLibSet.DBF
         case '\0': // 18.03.2017
           return null;
         default:
-          throw new ArgumentException("Непреобразуемое значение \"" + (char)b + "\"");
+          throw new ArgumentException("Непреобразуемое значение \"" + ch + "\"");
       }
     }
 
@@ -2729,9 +2775,11 @@ namespace FreeLibSet.DBF
       switch (DBStruct[fieldIndex].Type)
       {
         case 'D':
+        case 'C': // 11.03.2024
+        case 'M': // 11.03.2024
           try
           {
-            string s = GetAsciiString(fieldIndex);
+            string s = GetString(fieldIndex);
             if (s.Length == 0)
               return null;
             else
@@ -2773,9 +2821,11 @@ namespace FreeLibSet.DBF
       switch (DBStruct[fieldIndex].Type)
       {
         case 'D':
+        case 'C': // 11.03.2024
+        case 'M': // 11.03.2024
           try
           {
-            string s = GetAsciiString(fieldIndex);
+            string s = GetString(fieldIndex);
             if (s.Length == 0)
               return DateTime.MinValue;
             else
@@ -3155,26 +3205,49 @@ namespace FreeLibSet.DBF
       CheckFieldIndex(fieldIndex);
 #endif
 
-      if (DBStruct[fieldIndex].Type == 'M')
+      int fieldLength = DBStruct[fieldIndex].Length;
+
+      switch (DBStruct[fieldIndex].Type)
       {
-        byte[] bytes = Encoding.GetBytes(value);
-        uint memoBlockEntry = WriteMemoValue(fieldIndex, bytes);
-        value = memoBlockEntry.ToString("d10", StdConvert.NumberFormat);
-        Encoding.GetBytes(value, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
-        _RecordModified = true;
-        _TableModified = true;
-        return;
+        case 'M':
+          byte[] bytes = this.Encoding.GetBytes(value);
+          uint memoBlockEntry = WriteMemoValue(fieldIndex, bytes);
+          value = memoBlockEntry.ToString("d10", StdConvert.NumberFormat);
+          System.Text.Encoding.ASCII.GetBytes(value, 0, fieldLength, _RecordBuffer, _FieldOffsets[fieldIndex]);
+          break;
+
+        case 'C':
+          int byteCount = Encoding.GetByteCount(value);
+          if (byteCount > fieldLength)
+          {
+            if (!trim)
+              throw new ArgumentOutOfRangeException(
+                "value", value,
+                "Строка имеет длину " + value.Length.ToString() + " и не может быть записана в поле \"" +
+                DBStruct[fieldIndex].Name + "\" длиной " + fieldLength.ToString());
+            // Нельзя сразу писать в буфер строки, так как затрутся поля справа.
+            byte[] b2 = this.Encoding.GetBytes(value);
+            Array.Copy(b2, 0, _RecordBuffer, _FieldOffsets[fieldIndex], fieldLength);
+          }
+          else
+          {
+            // Нельзя использовать PadRight() для дополнения пробелами до преобразования строки
+            this.Encoding.GetBytes(value, 0, value.Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
+            for (int i = byteCount; i < fieldLength; i++)
+              _RecordBuffer[_FieldOffsets[fieldIndex] + i] = 0x20;
+          }
+          break;
+        default:
+          if (value.Length > DBStruct[fieldIndex].Length && (!trim))
+            throw new ArgumentOutOfRangeException(
+              "value", value,
+              "Строка имеет длину " + value.Length.ToString() + " и не может быть записана в поле \"" +
+              DBStruct[fieldIndex].Name + "\" длиной " + DBStruct[fieldIndex].Length.ToString());
+          value = DataTools.PadRight(value, DBStruct[fieldIndex].Length);
+          System.Text.Encoding.ASCII.GetBytes(value, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
+          break;
       }
 
-      if (value.Length > DBStruct[fieldIndex].Length && (!trim))
-        throw new ArgumentOutOfRangeException(
-          "value", value,
-          "Строка имеет длину " + value.Length.ToString() + " и не может быть записана в поле \"" +
-          DBStruct[fieldIndex].Name + "\" длиной " + DBStruct[fieldIndex].Length.ToString());
-
-      value = DataTools.PadRight(value, DBStruct[fieldIndex].Length);
-
-      Encoding.GetBytes(value, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
       _RecordModified = true;
       _TableModified = true;
     }
@@ -3582,8 +3655,13 @@ namespace FreeLibSet.DBF
       switch (DBStruct[fieldIndex].Type)
       {
         case 'D':
-          string s = value.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
-          System.Text.Encoding.ASCII.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
+          string s1 = value.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+          System.Text.Encoding.ASCII.GetBytes(s1, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
+          break;
+        case 'C':
+        case 'M':
+          string s2 = value.ToString(value.TimeOfDay.Ticks==0L? @"yyyyMMdd": @"yyyyMMdd\-hhMMss", CultureInfo.InvariantCulture);
+          System.Text.Encoding.ASCII.GetBytes(s2, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
@@ -4190,7 +4268,7 @@ namespace FreeLibSet.DBF
     /// преобразование byte[]-byte[] или прямое копирование.
     /// Иначе требуется преобразование byte[]-string-byte[]
     /// </summary>
-    private SingleByteTranscoding _Transcoding;
+    private SingleByteTranscoder _Transcoding;
 
     #endregion
 
@@ -4303,8 +4381,8 @@ namespace FreeLibSet.DBF
       if (_DirectCopyList != null)
         return; // повторный вызов
 
-      if (SingleByteTranscoding.CanCreate(SrcFile.Encoding, ResFile.Encoding))
-        _Transcoding = new SingleByteTranscoding(SrcFile.Encoding, ResFile.Encoding);
+      if (SingleByteTranscoder.CanCreate(SrcFile.Encoding, ResFile.Encoding))
+        _Transcoding = new SingleByteTranscoder(SrcFile.Encoding, ResFile.Encoding);
 
       #region Заполнение списков
 
@@ -4575,148 +4653,6 @@ namespace FreeLibSet.DBF
       ResFile.RecordModified = true;
 
       #endregion
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Прямой перекодировщик byte[]-byte[] без промежуточного преобразования в строку.
-  /// Может быть применен только к однобайтным кодовым страницам
-  /// </summary>
-  public class SingleByteTranscoding
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает перекодировщик
-    /// </summary>
-    /// <param name="srcEncoding">Исходная кодировка</param>
-    /// <param name="resEncoding">Конечная кодировка</param>
-    public SingleByteTranscoding(Encoding srcEncoding, Encoding resEncoding)
-    {
-      if (srcEncoding == null)
-        throw new ArgumentNullException("srcEncoding");
-      if (resEncoding == null)
-        throw new ArgumentNullException("resEncoding");
-
-      if (!CanCreate(srcEncoding, resEncoding))
-        throw new ArgumentException("Нельзя выполнять прямое перекодирование из " + srcEncoding.ToString() + " в " + resEncoding.ToString());
-
-      _SrcEncoding = srcEncoding;
-      _ResEncoding = resEncoding;
-      _IsDirect = (resEncoding.CodePage == srcEncoding.CodePage);
-
-      if (!_IsDirect)
-      {
-        TranscodeTable = new byte[256];
-        for (int i = 0; i < 256; i++)
-          TranscodeTable[i] = (byte)i;
-
-        // Преобразуется только вторая половина таблицы
-        string s = srcEncoding.GetString(TranscodeTable, 128, 128);
-        resEncoding.GetBytes(s, 0, 128, TranscodeTable, 128);
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если можно создать перекодировщик для заданных кодировок
-    /// </summary>
-    /// <param name="srcEncoding">Исходная кодировка</param>
-    /// <param name="resEncoding">Конечная кодировка</param>
-    /// <returns>true, если обе кодировки являются однобайтными</returns>
-    public static bool CanCreate(Encoding srcEncoding, Encoding resEncoding)
-    {
-      return srcEncoding.IsSingleByte && resEncoding.IsSingleByte;
-    }
-
-    #endregion
-
-    #region Основные свойства
-
-    /// <summary>
-    /// Исходная кодировка
-    /// </summary>
-    public Encoding SrcEncoding { get { return _SrcEncoding; } }
-    private readonly Encoding _SrcEncoding;
-
-    /// <summary>
-    /// Конечная кодировка
-    /// </summary>
-    public Encoding ResEncoding { get { return _ResEncoding; } }
-    private readonly Encoding _ResEncoding;
-
-    /// <summary>
-    /// Возвращает true, если исходная и конечная кодировки совпадают и перекодирование не нужно.
-    /// Вместо него можно использовать прямое копирование
-    /// </summary>
-    public bool IsDirect { get { return _IsDirect; } }
-    private bool _IsDirect;
-
-    /// <summary>
-    /// Текстовое представление для отладки
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString()
-    {
-      return SrcEncoding.CodePage.ToString() + "->" + ResEncoding.CodePage.ToString();
-    }
-
-    #endregion
-
-    #region Перекодирование
-
-    /// <summary>
-    /// Таблица перекодирования размером 256 байт, если IsDirect=false
-    /// </summary>
-    private byte[] TranscodeTable;
-
-    /// <summary>
-    /// Выполнить преобразование byte[]-byte[] для части массива.
-    /// Если IsDirect=true, вызывается Array.Copy()
-    /// </summary>
-    /// <param name="srcArray">Исходный массив байт, задающий символы в кодировке SrcEncoding</param>
-    /// <param name="srcIndex">Начальная позиция в массиве <paramref name="srcArray"/></param>
-    /// <param name="resArray">Заполняемый массив байт, задающий символы в кодировке ResEncoding</param>
-    /// <param name="resIndex">Начальная позиция в массиве <paramref name="resArray"/></param>
-    /// <param name="length">Количество байт для перекодировки</param>
-    public void Transcode(byte[] srcArray, int srcIndex, byte[] resArray, int resIndex, int length)
-    {
-#if DEBUG
-      if (srcArray == null)
-        throw new ArgumentNullException("srcArray");
-      if (resArray == null)
-        throw new ArgumentNullException("resArray");
-
-      if (srcArray.Rank != 1)
-        throw new ArgumentException("Исходный массив должен быть одномерным", "srcArray");
-      if (resArray.Rank != 1)
-        throw new ArgumentException("Заполняемый массив должен быть одномерным", "resArray");
-#endif
-
-      if (_IsDirect)
-        Array.Copy(srcArray, srcIndex, resArray, resIndex, length);
-      else
-      {
-        for (int i = 0; i < length; i++)
-        {
-          int x = srcArray[srcIndex + i];
-          resArray[resIndex + i] = TranscodeTable[x];
-        }
-      }
-    }
-
-    /// <summary>
-    /// Выполнить преобразование byte[]-byte[] для целого массива.
-    /// Если IsDirect=true, вызывается Array.Copy()
-    /// </summary>
-    /// <param name="srcArray">Исходный массив байт, задающий символы в кодировке SrcEncoding</param>
-    /// <param name="resArray">Заполняемый массив байт, задающий символы в кодировке ResEncoding</param>
-    public void Transcode(byte[] srcArray, byte[] resArray)
-    {
-      if (resArray.Length != srcArray.Length)
-        throw new ArgumentException("Массивы должны быть одной длины");
-      Transcode(srcArray, 0, resArray, 0, srcArray.Length);
     }
 
     #endregion

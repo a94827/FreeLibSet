@@ -12,6 +12,7 @@ using FreeLibSet.Formatting;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
 using FreeLibSet.Forms.Reporting;
+using System.Collections;
 
 /*
  * Дополнительные описания для стоблцов табличного просмотра
@@ -153,7 +154,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     IEFPDataView ControlProvider { get; }
 
-
     /// <summary>
     /// Если столбец был создан с помощью <see cref="EFPGridProducer"/>, то ссылка на генератор столбца,
     /// иначе - null.
@@ -179,12 +179,12 @@ namespace FreeLibSet.Forms
     /// Ширина столбца в пунктах, в зависимости от разрешения экрана
     /// </summary>
     int WidthPt { get; }
-    /**
-    /// <summary>
-    /// Возвращает true, если столбец может быть экспортирован в DBF-формат (все столбцы, кроме изображений).
-    /// Эта настройка не может задаваться в прикладном коде
-    /// </summary>
-    bool IsDbfSupported { get; }
+
+    ///// <summary>
+    ///// Возвращает true, если столбец может быть экспортирован в DBF-формат (все столбцы, кроме изображений).
+    ///// Эта настройка не может задаваться в прикладном коде
+    ///// </summary>
+    //bool IsDbfSupported { get; }
 
     /// <summary>
     /// Имя и тип DBF-поля, заданные в прикладном коде.
@@ -193,7 +193,20 @@ namespace FreeLibSet.Forms
     /// Пользователь может переопределить имя поля в диалоге параметров.
     /// </summary>
     DbfFieldInfo DbfInfo { get; }
-    **/
+
+    /// <summary>
+    /// Предварительная информация о типе данных, используемая при экспорте столбца в DBF-формат.
+    /// В отличие от <see cref="DbfInfo"/>, это свойство не может устанавливаться в прикладном коде.
+    /// Если столбец не может быть экспортирован, свойство возвращает null.
+    /// </summary>
+    DbfFieldTypePreliminaryInfo DbfPreliminaryInfo { get; }
+
+    /// <summary>
+    /// Возвращает объект, реализуюший интерфейс перечислителя значений
+    /// </summary>
+    /// <returns>Объект IEnumerable</returns>
+    System.Collections.IEnumerable ValueEnumerable { get; }
+
     #endregion
   }
 
@@ -269,6 +282,10 @@ namespace FreeLibSet.Forms
       _RightBorder = EFPDataGridViewBorderStyle.Default;
 
       _CustomOrderColumnName = String.Empty;
+
+      if (!(gridColumn is DataGridViewImageColumn))
+        _DbfPreliminaryInfo = new DbfFieldTypePreliminaryInfo();
+
     }
 
     #endregion
@@ -960,6 +977,14 @@ namespace FreeLibSet.Forms
     private DbfFieldInfo _DbfInfo;
 
     /// <summary>
+    /// Предварительная информация о типе данных, используемая при экспорте столбца в DBF-формат.
+    /// В отличие от <see cref="DbfInfo"/>, это свойство не может устанавливаться в прикладном коде.
+    /// Если столбец не может быть экспортирован, свойство возвращает null.
+    /// </summary>
+    public DbfFieldTypePreliminaryInfo DbfPreliminaryInfo { get { return _DbfPreliminaryInfo; } }
+    private DbfFieldTypePreliminaryInfo _DbfPreliminaryInfo;
+
+    /// <summary>
     /// Имя DBF-поля для этого столбца по умолчанию
     /// Текущее значение свойства <see cref="DbfInfo"/> не учитывается
     /// </summary>
@@ -1094,6 +1119,83 @@ namespace FreeLibSet.Forms
         return DbfFieldInfo.CreateMemo(DefaultDbfName);
       else
         return DbfFieldInfo.CreateString(DefaultDbfName, w);
+    }
+
+    #endregion
+
+    #region Перебор значений
+
+    private class ValueEnumerable: System.Collections.IEnumerable
+    {
+      #region Конструктор
+
+      internal ValueEnumerable(EFPDataGridViewColumn column)
+      {
+        _Column = column;
+      }
+
+      private EFPDataGridViewColumn _Column;
+
+      #endregion
+
+      #region IEnumerable
+
+      public IEnumerator GetEnumerator()
+      {
+        return new ValueEnumerator(_Column);
+      }
+
+      #endregion
+    }
+
+    private class ValueEnumerator : IEnumerator
+    {
+      #region Конструктор
+
+      internal ValueEnumerator(EFPDataGridViewColumn column)
+      {
+        this._Column = column;
+        _CurrentRowIndex = -1;
+      }
+
+      private EFPDataGridViewColumn _Column;
+      private int _CurrentRowIndex;
+
+      #endregion
+
+      #region IEnumerator
+
+      public object Current
+      {
+        get
+        {
+          _Column.ControlProvider.DoGetRowAttributes(_CurrentRowIndex, EFPDataGridViewAttributesReason.View);
+          EFPDataGridViewCellAttributesEventArgs cellArgs= _Column.ControlProvider.DoGetCellAttributes(_Column.Index);
+          return cellArgs.Value; // ?
+        }
+      }
+
+      public bool MoveNext()
+      {
+        _CurrentRowIndex++;
+        return _CurrentRowIndex < _Column.ControlProvider.Control.RowCount;
+      }
+
+      void IEnumerator.Reset()
+      {
+        _CurrentRowIndex = -1;
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Возвращает объект, реализуюший интерфейс перечислителя значений
+    /// </summary>
+    /// <returns>Объект IEnumerable</returns>
+    System.Collections.IEnumerable IEFPDataViewColumn.ValueEnumerable
+    {
+      get { return new ValueEnumerable(this); }
     }
 
     #endregion
@@ -1326,6 +1428,7 @@ namespace FreeLibSet.Forms
 
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
       ghCol.CustomOrderAllowed = isDataColumn;
+      ghCol.DbfPreliminaryInfo.Type = 'C';
 
       return col;
     }
@@ -1540,6 +1643,14 @@ namespace FreeLibSet.Forms
       ghCol.MaskProvider = formatter.MaskProvider;
 
       //ghCol.CanIncSearch = true;
+      if (kind == EditableDateTimeFormatterKind.Date)
+        ghCol.DbfPreliminaryInfo.Type = 'D';
+      else
+      {
+        ghCol.DbfPreliminaryInfo.Type = 'C';
+        ghCol.DbfPreliminaryInfo.Length = formatter.TextWidth;
+        ghCol.DbfPreliminaryInfo.LengthIsDefined = true;
+      }
 
       return col;
     }
@@ -1574,7 +1685,11 @@ namespace FreeLibSet.Forms
         col.DefaultCellStyle.Format = "0";
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
       ghCol.SizeGroup = sizeGroup;
-      //ghCol.DefaultDbfInfo = DbfFieldInfo.CreateNum(ghCol.DefaultDbfName, TextWidth, DecimalPlaces); 
+      ghCol.DbfPreliminaryInfo.Type = 'N';
+      ghCol.DbfPreliminaryInfo.Length = textWidth;
+      ghCol.DbfPreliminaryInfo.Precision = decimalPlaces;
+      ghCol.DbfPreliminaryInfo.LengthIsDefined = false; // длина может быть больше
+      ghCol.DbfPreliminaryInfo.PrecisionIsDefined = true; 
       return col;
     }
 
@@ -1592,8 +1707,12 @@ namespace FreeLibSet.Forms
       DataGridViewTextBoxColumn col = AddText(columnName, isDataColumn, headerText, textWidth);
       col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
       //DocGridHandler.Columns[col].SizeGroup = "Int";
-      //EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
-      //ghCol.DefaultDbfInfo = DbfFieldInfo.CreateNum(ghCol.DefaultDbfName, TextWidth);
+      EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
+      ghCol.DbfPreliminaryInfo.Type = 'N';
+      ghCol.DbfPreliminaryInfo.Length = textWidth;
+      ghCol.DbfPreliminaryInfo.Precision = 0;
+      ghCol.DbfPreliminaryInfo.LengthIsDefined = false; // длина может быть больше
+      ghCol.DbfPreliminaryInfo.PrecisionIsDefined = true;
       return col;
     }
 
@@ -1636,8 +1755,9 @@ namespace FreeLibSet.Forms
       ControlProvider.Control.Columns.Add(col);
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
       ghCol.SizeGroup = "CheckBox";
-      //ghCol.DefaultDbfInfo = DbfFieldInfo.CreateBool(ghCol.DefaultDbfName);
       ghCol.CustomOrderAllowed = isDataColumn;
+
+      ghCol.DbfPreliminaryInfo.Type = 'L';
 
       return col;
     }
@@ -1737,7 +1857,7 @@ namespace FreeLibSet.Forms
 
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
       ghCol.CustomOrderAllowed = isDataColumn;
-
+      ghCol.DbfPreliminaryInfo.Type = 'C';
       return col;
     }
 

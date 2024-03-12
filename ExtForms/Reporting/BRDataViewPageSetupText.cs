@@ -74,7 +74,7 @@ namespace FreeLibSet.Forms.Reporting
       page.DataFromControls += Page_DataFromControls;
     }
 
-    private int EncodingSortComparision(EncodingInfo x, EncodingInfo y)
+    internal static int EncodingSortComparision(EncodingInfo x, EncodingInfo y)
     {
       if (EnvironmentTools.IsMono)
         return String.Compare(x.Name, y.Name, StringComparison.CurrentCultureIgnoreCase);

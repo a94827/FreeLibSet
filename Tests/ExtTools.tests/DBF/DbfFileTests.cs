@@ -97,7 +97,7 @@ namespace ExtTools_tests.DBF
         case DbfFileFormat.dBase3:
           ValidateFiles3(dbs, pathDbf, pathDbt, recordCount, memoCount);
           break;
-        // TODO: ValidateFiles4()
+          // TODO: ValidateFiles4()
       }
     }
 
@@ -480,7 +480,7 @@ namespace ExtTools_tests.DBF
         wrapper.SUT.RecNo = 0;
         Assert.AreEqual(0, wrapper.SUT.RecNo, "#0");
 
-        Assert.Catch(delegate() { wrapper.SUT.RecNo = 4; }, "#4");
+        Assert.Catch(delegate () { wrapper.SUT.RecNo = 4; }, "#4");
       }
     }
 
@@ -762,7 +762,7 @@ namespace ExtTools_tests.DBF
       {
         wrapper.SUT.AppendRecord();
         string value = new string('X', wrapper.SUT.DBStruct["F1"].Length + 1);
-        TestDelegate d = delegate() { wrapper.SUT.SetString("F1", value, trim); };
+        TestDelegate d = delegate () { wrapper.SUT.SetString("F1", value, trim); };
 
         if (trim)
           Assert.DoesNotThrow(d);
@@ -803,10 +803,10 @@ namespace ExtTools_tests.DBF
       {
         wrapper.SUT.AppendRecord();
         wrapper.SUT.SetInt64("F22", 2000000000L);
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.GetInt("F22"); }, "2000000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.GetInt("F22"); }, "2000000000");
 
         wrapper.SUT.SetInt64("F22", 3000000000L);
-        Assert.Catch(delegate() { wrapper.SUT.GetInt("F22"); }, "3000000000");
+        Assert.Catch(delegate () { wrapper.SUT.GetInt("F22"); }, "3000000000");
       }
     }
 
@@ -839,10 +839,10 @@ namespace ExtTools_tests.DBF
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3", true))
       {
         wrapper.SUT.AppendRecord();
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetInt("F21", 999); }, "999");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetInt("F21", 1000); }, "1000");
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetInt("F21", -99); }, "-99");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetInt("F21", -100); }, "-100");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt("F21", 999); }, "999");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt("F21", 1000); }, "1000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt("F21", -99); }, "-99");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt("F21", -100); }, "-100");
       }
     }
 
@@ -900,10 +900,10 @@ namespace ExtTools_tests.DBF
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3", true))
       {
         wrapper.SUT.AppendRecord();
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetInt64("F22", 9999999999L); }, "9999999999");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetInt64("F22", 10000000000L); }, "10000000000");
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetInt64("F22", -999999999L); }, "-999999999");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetInt64("F22", -1000000000L); }, "-1000000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt64("F22", 9999999999L); }, "9999999999");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt64("F22", 10000000000L); }, "10000000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt64("F22", -999999999L); }, "-999999999");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt64("F22", -1000000000L); }, "-1000000000");
       }
     }
 
@@ -962,10 +962,10 @@ namespace ExtTools_tests.DBF
       {
         wrapper.SUT.AppendRecord();
         // В отличие от Decimal, нельзя тестировать значение 999999999, т.к. может возникнуть внутренняя ошибка округления
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetSingle("F23", 900000000f); }, "900000000");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetSingle("F23", 1000000000f); }, "1000000000");
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetSingle("F23", -90000000f); }, "-90000000");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetSingle("F23", -100000000f); }, "-100000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetSingle("F23", 900000000f); }, "900000000");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetSingle("F23", 1000000000f); }, "1000000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetSingle("F23", -90000000f); }, "-90000000");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetSingle("F23", -100000000f); }, "-100000000");
       }
     }
 
@@ -1024,10 +1024,10 @@ namespace ExtTools_tests.DBF
       {
         wrapper.SUT.AppendRecord();
         // В отличие от Decimal, нельзя тестировать значение 999999999, т.к. может возникнуть внутренняя ошибка округления
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetDouble("F6", 900000000.0); }, "900000000");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetDouble("F6", 1000000000.0); }, "1000000000");
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetDouble("F6", -90000000.0); }, "-90000000");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetDouble("F6", -100000000.0); }, "-100000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetDouble("F6", 900000000.0); }, "900000000");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetDouble("F6", 1000000000.0); }, "1000000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetDouble("F6", -90000000.0); }, "-90000000");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetDouble("F6", -100000000.0); }, "-100000000");
       }
     }
 
@@ -1085,10 +1085,10 @@ namespace ExtTools_tests.DBF
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3", true))
       {
         wrapper.SUT.AppendRecord();
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetDecimal("F23", 999999999m); }, "999999999");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetDecimal("F23", 1000000000m); }, "1000000000");
-        Assert.DoesNotThrow(delegate() { wrapper.SUT.SetDecimal("F23", -99999999); }, "-99999999");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate() { wrapper.SUT.SetDecimal("F23", -100000000m); }, "-100000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetDecimal("F23", 999999999m); }, "999999999");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetDecimal("F23", 1000000000m); }, "1000000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetDecimal("F23", -99999999); }, "-99999999");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetDecimal("F23", -100000000m); }, "-100000000");
       }
     }
 
@@ -1606,9 +1606,11 @@ namespace ExtTools_tests.DBF
       get
       {
         List<EncodingTestData> lst = new List<EncodingTestData>();
+        AddEncodingTestData(lst, System.Text.Encoding.ASCII.CodePage, "Hello");
         AddEncodingTestData(lst, 1252, "Hello");
         AddEncodingTestData(lst, 866, "Привет");
         AddEncodingTestData(lst, 1251, "Привет");
+        AddEncodingTestData(lst, System.Text.Encoding.UTF8.CodePage, "Привет");
         return lst.ToArray();
       }
     }
@@ -1670,6 +1672,96 @@ namespace ExtTools_tests.DBF
     }
 
     [Test]
+    public void Encoding_UTF8()
+    {
+      // Проверяем, что записывается правильная последовательность байт, без лишних символов
+      DbfStruct dbs = new DbfStruct();
+      dbs.AddString("F1", 13); // удваивается количество символов плюс 1 пробел
+      dbs.AddNum("F2", 4, 2);
+      dbs.AddBool("F3");
+      dbs.AddDate("F4");
+      dbs.AddMemo("F5");
+
+      MemoryStream msDBF = new MemoryStream();
+      MemoryStream msDBT = new MemoryStream();
+      DbfFile dbf = new DbfFile(msDBF, msDBT, dbs, System.Text.Encoding.UTF8, DbfFileFormat.dBase3);
+
+      // Запись полей выполняем в обратном порядке, чтобы проверить затирания следующего поля
+      // Типизированная запись
+      dbf.AppendRecord();
+      dbf.SetString("F5", "Привет");
+      dbf.SetDate("F4", new DateTime(2024, 3, 31));
+      dbf.SetBool("F3", true);
+      dbf.SetDouble("F2", 1.23);
+      dbf.SetString("F1", "Привет");
+
+      // Запись строк
+      dbf.AppendRecord();
+      dbf.SetString("F5", "Привет");
+      dbf.SetString("F4", "20240331");
+      dbf.SetString("F3", "T");
+      dbf.SetString("F2", "1.23");
+      dbf.SetString("F1", "Привет");
+
+      // Чтение из DBF
+      for (int i = 1; i <= 2; i++)
+      {
+        dbf.RecNo = i;
+        string suffix = " (RecNo=" + dbf.RecNo.ToString() + ")";
+        // Типизированное
+        Assert.AreEqual("Привет", dbf.GetString("F1"), "F1" + suffix);
+        Assert.AreEqual(1.23, dbf.GetDouble("F2"), "F2 typed" + suffix);
+        Assert.AreEqual(true, dbf.GetBool("F3"), "F3 typed" + suffix);
+        Assert.AreEqual(new DateTime(2024, 3, 31), dbf.GetNullableDate("F4"), "F4 typed" + suffix);
+        Assert.AreEqual("Привет", dbf.GetString("F5"), "F5" + suffix);
+
+        // Нетипизированное
+        Assert.AreEqual("1.23", dbf.GetString("F2"), "F2 string" + suffix);
+        Assert.AreEqual("T", dbf.GetString("F3"), "F3 string" + suffix);
+        Assert.AreEqual("20240331", dbf.GetString("F4"), "F4 string" + suffix);
+      }
+
+      dbf.Dispose();
+
+      byte[] bDBF = msDBF.ToArray();
+      byte[] bDBT = msDBT.ToArray();
+
+      Assert.AreEqual(32 + dbs.Count * 32 + 1 + 2 * dbs.RecordSize + 1, bDBF.Length, "DBF Length");
+      Assert.GreaterOrEqual(bDBT.Length, 512 + 512 + 12 + 1 + 1, "DBT Length"); // дополнение последнего блока зависит от реализации
+
+
+      //byte[] wantedRecord = new byte[] {
+      //  0x20, // маркер записи
+      //  0xD0, 0x9F, 0xD1, 0x80, 0xD0, 0xB8, 0xD0, 0xB2, 0xD0, 0xB5, 0xD1, 0x82, // "Привет"
+      //  0x31, 0x2E, 0x
+      //};
+
+      byte[] wantedRecord = System.Text.Encoding.UTF8.GetBytes(" " + "Привет " + "1.23" + "T" + "20240331" + "0000000001");
+      Assert.AreEqual(dbs.RecordSize, wantedRecord.Length, "WantedRecord");
+
+      byte[] bRec = new byte[dbs.RecordSize];
+      msDBF.Seek(32 + dbs.Count * 32 + 1, SeekOrigin.Begin);
+      msDBF.Read(bRec, 0, bRec.Length);
+      CollectionAssert.AreEqual(wantedRecord, bRec, "Record #1");
+
+      wantedRecord[wantedRecord.Length - 1] = (byte)'2'; // Ссылка на следующее мемо-поле "0000000002"
+      msDBF.Read(bRec, 0, bRec.Length);
+      CollectionAssert.AreEqual(wantedRecord, bRec, "Record #2");
+
+      byte[] bWantedMemo = System.Text.Encoding.UTF8.GetBytes("Привет" + "\x1A");
+      Assert.AreEqual(2 * 6 + 1, bWantedMemo.Length, "WantedMemo");
+      bRec = new byte[bWantedMemo.Length];
+
+      msDBT.Seek(512, SeekOrigin.Begin);
+      msDBT.Read(bRec, 0, bRec.Length);
+      CollectionAssert.AreEqual(bWantedMemo, bRec, "Memo #1");
+
+      msDBT.Seek(1024, SeekOrigin.Begin);
+      msDBT.Read(bRec, 0, bRec.Length);
+      CollectionAssert.AreEqual(bWantedMemo, bRec, "Memo #2");
+    }
+
+    [Test]
     public void DefaultEncoding()
     {
       Assert.IsNotNull(DbfFile.DefaultEncoding); // больше нечего проверять
@@ -1696,8 +1788,8 @@ namespace ExtTools_tests.DBF
 
         Assert.AreEqual(wrapper.SUT.DBStruct.RecordSize, wantedValue, "RecordSize");
 
-        Assert.Catch(delegate() { wrapper.SUT.GetFieldOffset(-1); }, "(-1)");
-        Assert.Catch(delegate() { wrapper.SUT.GetFieldOffset(wrapper.SUT.DBStruct.Count); }, "(Count)");
+        Assert.Catch(delegate () { wrapper.SUT.GetFieldOffset(-1); }, "(-1)");
+        Assert.Catch(delegate () { wrapper.SUT.GetFieldOffset(wrapper.SUT.DBStruct.Count); }, "(Count)");
       }
     }
 
@@ -1731,11 +1823,11 @@ namespace ExtTools_tests.DBF
       {
         DbfStruct dbs = wrapper.SUT.DBStruct;
         int[] wantedValue = new int[]{0, // "F1"
-          dbs["F21"].Length, 
-          dbs["F22"].Length, 
+          dbs["F21"].Length,
+          dbs["F22"].Length,
           dbs["F23"].Length, 
           /*dbs["F3"].Length*/ 1, 
-          /*dbs["F4"].Length*/ 8, 
+          /*dbs["F4"].Length*/ 8,
           0}; // "F5"
         Assert.AreEqual(wantedValue, wrapper.SUT.GetMaxLengths(), "#0");
         wrapper.SUT.AppendRecord();
@@ -1777,24 +1869,24 @@ namespace ExtTools_tests.DBF
           Assert.IsTrue(sut.IsReadOnly, "IsReadOnly");
 
           sut.RecNo = 1;
-          Assert.Catch(delegate() { sut.SetValue("F1", "X"); }, "SetValue()");
-          Assert.Catch(delegate() { sut.SetString("F1", "X", true); }, "SetString()");
-          Assert.Catch(delegate() { sut.SetInt("F21", 1); }, "SetInt()");
-          Assert.Catch(delegate() { sut.SetInt64("F22", 1); }, "SetInt64()");
-          Assert.Catch(delegate() { sut.SetSingle("F23", 1f); }, "SetSingle()");
-          Assert.Catch(delegate() { sut.SetDouble("F23", 1.0); }, "SetDouble()");
-          Assert.Catch(delegate() { sut.SetDecimal("F23", 1m); }, "SetDecimal()");
-          Assert.Catch(delegate() { sut.SetBool("F3", true); }, "SetBool()");
-          Assert.Catch(delegate() { sut.SetNullableDate("F4", null); }, "SetNullableDate()");
-          Assert.Catch(delegate() { sut.SetDate("F4", new DateTime(2023, 3, 23)); }, "SetDate()");
-          Assert.Catch(delegate() { sut.SetNull("F11"); }, "SetNull()");
-          Assert.Catch(delegate() { sut.RecordDeleted = false; }, "RecordDeleted");
+          Assert.Catch(delegate () { sut.SetValue("F1", "X"); }, "SetValue()");
+          Assert.Catch(delegate () { sut.SetString("F1", "X", true); }, "SetString()");
+          Assert.Catch(delegate () { sut.SetInt("F21", 1); }, "SetInt()");
+          Assert.Catch(delegate () { sut.SetInt64("F22", 1); }, "SetInt64()");
+          Assert.Catch(delegate () { sut.SetSingle("F23", 1f); }, "SetSingle()");
+          Assert.Catch(delegate () { sut.SetDouble("F23", 1.0); }, "SetDouble()");
+          Assert.Catch(delegate () { sut.SetDecimal("F23", 1m); }, "SetDecimal()");
+          Assert.Catch(delegate () { sut.SetBool("F3", true); }, "SetBool()");
+          Assert.Catch(delegate () { sut.SetNullableDate("F4", null); }, "SetNullableDate()");
+          Assert.Catch(delegate () { sut.SetDate("F4", new DateTime(2023, 3, 23)); }, "SetDate()");
+          Assert.Catch(delegate () { sut.SetNull("F11"); }, "SetNull()");
+          Assert.Catch(delegate () { sut.RecordDeleted = false; }, "RecordDeleted");
 
-          Assert.Catch(delegate() { sut.AppendRecord(); }, "AppendRecord()");
+          Assert.Catch(delegate () { sut.AppendRecord(); }, "AppendRecord()");
 
           DataTable srcTable = new DataTable();
           srcTable.Columns.Add("F21", typeof(Int32));
-          Assert.Catch(delegate() { sut.Append(srcTable); }, "Append()");
+          Assert.Catch(delegate () { sut.Append(srcTable); }, "Append()");
 
           Assert.AreEqual(3, sut.RecordCount, "RecordCount");
         }
@@ -1834,7 +1926,7 @@ namespace ExtTools_tests.DBF
           Assert.AreEqual(111.11m, sut.GetValue("F23"), "F23 value");
           Assert.AreEqual(true, sut.GetValue("F3"), "F3 value");
           Assert.AreEqual(new DateTime(2023, 3, 18), sut.GetValue("F4"), "F4 value");
-          Assert.Catch<DbfMemoFileMissingException>(delegate() { sut.GetValue("F5"); }, "F5 value");
+          Assert.Catch<DbfMemoFileMissingException>(delegate () { sut.GetValue("F5"); }, "F5 value");
         }
       }
     }
@@ -1855,16 +1947,16 @@ namespace ExtTools_tests.DBF
           Assert.IsFalse(sut.IsReadOnly, "IsReadOnly #1");
 
           sut.RecNo = 1;
-          Assert.DoesNotThrow(delegate() { sut.SetString("F1", "XXX"); }, "Set F1 value");
-          Assert.Catch<DbfMemoFileMissingException>(delegate() { sut.SetString("F5", "XXX"); }, "Set F5 value");
+          Assert.DoesNotThrow(delegate () { sut.SetString("F1", "XXX"); }, "Set F1 value");
+          Assert.Catch<DbfMemoFileMissingException>(delegate () { sut.SetString("F5", "XXX"); }, "Set F5 value");
 
-          Assert.DoesNotThrow(delegate() { sut.Flush(); }, "Flush()");
+          Assert.DoesNotThrow(delegate () { sut.Flush(); }, "Flush()");
 
           sut.RecNo = 2;
-          Assert.DoesNotThrow(delegate() { sut.RecordDeleted = true; }, "Set RecordDeleted");
+          Assert.DoesNotThrow(delegate () { sut.RecordDeleted = true; }, "Set RecordDeleted");
 
-          Assert.DoesNotThrow(delegate() { sut.AppendRecord(); }, "AppendRecord()");
-          Assert.DoesNotThrow(delegate() { sut.SetString("F1", "YYY"); }, "Set F1 value");
+          Assert.DoesNotThrow(delegate () { sut.AppendRecord(); }, "AppendRecord()");
+          Assert.DoesNotThrow(delegate () { sut.SetString("F1", "YYY"); }, "Set F1 value");
         }
 
         using (DbfFile sut = new DbfFile(pathDbf, System.Text.Encoding.GetEncoding(1251), true))
