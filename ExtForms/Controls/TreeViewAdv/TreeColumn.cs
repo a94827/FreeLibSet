@@ -17,8 +17,6 @@ using System.Drawing.Imaging;
 using FreeLibSet.Drawing;
 using FreeLibSet.Controls.TreeViewAdvInternal;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Controls
 {
   /// <summary>
@@ -211,8 +209,6 @@ namespace FreeLibSet.Controls
     }
     private bool _visible = true;
 
-    private HorizontalAlignment _textAlign = HorizontalAlignment.Left;
-
     /// <summary>
     /// Горизонтальное выравнивание для заголовка столбца.
     /// Не влияет на выравнивание содержимого столбца, которое задается в <see cref="FreeLibSet.Controls.TreeViewAdvNodeControls.BaseTextControl.TextAlign"/>.
@@ -231,6 +227,7 @@ namespace FreeLibSet.Controls
         }
       }
     }
+    private HorizontalAlignment _textAlign = HorizontalAlignment.Left;
 
     /// <summary>
     /// Если true, то пользователь может сортировать столбец, нажимая на заголовок столбца.

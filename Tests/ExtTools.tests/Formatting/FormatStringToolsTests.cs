@@ -27,6 +27,10 @@ namespace ExtTools_tests.Formatting
     [TestCase("0.00##", 4)]
     [TestCase("", -1)]
     [TestCase("yyyy/MM/dd", -1)]
+    [TestCase("0.00;\"\"", 2)]
+    [TestCase("0.000;-0.000;0", 3)]
+    [TestCase("+0.000;-0.000;0", 3)]
+    [TestCase("#,##0.00", 2)]
     public void DecimalPlacesFromNumberFormat(string format, int wantedRes)
     {
       Assert.AreEqual(wantedRes, FormatStringTools.DecimalPlacesFromNumberFormat(format));
@@ -86,6 +90,50 @@ namespace ExtTools_tests.Formatting
       Assert.AreEqual(wantedDate, FormatStringTools.ContainsDate(format), "ContainsDate()");
 
       Assert.AreEqual(wantedTime, FormatStringTools.ContainsTime(format), "ContainsTime()");
+    }
+
+    #endregion
+
+    #region GetEditableDateTimeFormatterKind()
+
+    [TestCase("d/M/y", EditableDateTimeFormatterKind.Date)]
+    [TestCase("dd MMMMM yyyy", EditableDateTimeFormatterKind.Date)]
+    [TestCase("MMMMM yyyy", EditableDateTimeFormatterKind.Date)]
+    [TestCase("HH:mm", EditableDateTimeFormatterKind.ShortTime)]
+    [TestCase("hh:mm", EditableDateTimeFormatterKind.ShortTime)]
+    [TestCase("HH:mm:ss", EditableDateTimeFormatterKind.Time)]
+    [TestCase("dd/MM/yyyy HH:mm", EditableDateTimeFormatterKind.ShortDateTime)]
+    [TestCase("dd/MM/yyyy HH:mm:ss", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("0", EditableDateTimeFormatterKind.DateTime)]
+    // Односимвольные стандартные форматы
+    // Действительно для en-US, а в других культурах могут быть другие правила
+    [TestCase("d", EditableDateTimeFormatterKind.Date)]
+    [TestCase("D", EditableDateTimeFormatterKind.Date)]
+    [TestCase("f", EditableDateTimeFormatterKind.ShortDateTime)]
+    [TestCase("F", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("g", EditableDateTimeFormatterKind.ShortDateTime)]
+    [TestCase("G", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("m", EditableDateTimeFormatterKind.Date)]
+    [TestCase("M", EditableDateTimeFormatterKind.Date)]
+    [TestCase("o", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("O", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("r", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("R", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("s", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("t", EditableDateTimeFormatterKind.ShortTime)]
+    [TestCase("T", EditableDateTimeFormatterKind.Time)]
+    [TestCase("u", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("U", EditableDateTimeFormatterKind.DateTime)]
+    [TestCase("y", EditableDateTimeFormatterKind.Date)]
+    [TestCase("Y", EditableDateTimeFormatterKind.Date)]
+    public void GetEditableDateTimeFormatterKind(string format, EditableDateTimeFormatterKind wantedKind)
+    {
+      // Для определенности используем американский формат
+      DateTimeFormatInfo formatInfo = CultureInfo.GetCultureInfo("en-US").DateTimeFormat;
+      EditableDateTimeFormatterKind kind;
+      FormatStringTools.GetEditableDateTimeFormatterKind(format, out kind, formatInfo);
+      Assert.AreEqual(wantedKind, kind);
     }
 
     #endregion

@@ -1309,13 +1309,6 @@ namespace FreeLibSet.Forms.Docs
     public EFPDBxGridViewCommandItems(EFPDBxGridView controlProvider)
       : base(controlProvider)
     {
-      #region Исходные значения свойств
-
-      //???// Главное меню было инициализировано ?
-      //???bool HasMainMenu = (AccDepMainMenu.SelectAll != null);
-
-      #endregion
-
       #region Создание команд
 
 #if XXX

@@ -31,7 +31,7 @@ using FreeLibSet.Logging;
  * - Инициализация табличных просмотров данными выполняется при первом обращении к
  *   соответствующей закладке
  * 
- * Класс GridReport является абстрактным. Конкретные отчеты наследуются из него. 
+ * Класс EFPReport является абстрактным. Конкретные отчеты наследуются из него. 
  * Им все равно нужны отдельные классы для работы с сервером
  */
 
@@ -40,7 +40,7 @@ namespace FreeLibSet.Forms
   #region Перечисления
 
   /// <summary>
-  /// Значения свойства GridReport.ShowMode
+  /// Значения свойства <see cref="EFPReport.ShowMode"/>
   /// </summary>
   public enum EFPReportShowMode
   {
@@ -59,7 +59,7 @@ namespace FreeLibSet.Forms
     Modeless,
 
     /// <summary>
-    /// Отчет выводится в модальном режииме (как диалоговое окно)
+    /// Отчет выводится в модальном режиме (как диалоговое окно)
     /// </summary>
     Modal
   }
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Процедура построения табличного отчета
+  /// Объект табличного отчета
   /// </summary>
   public abstract class EFPReport : IEFPFormCreator, IEFPConfigurable
   {
@@ -101,9 +101,9 @@ namespace FreeLibSet.Forms
     #region Прочие свойства
 
     /// <summary>
-    /// Параметры отчета (создаются перед вызовом BuildReport с помощью метода CreateParams)
-    /// Также параметры могут быть созданы и присвоены свойству до вызова Run(),
-    /// в этом случае запрос параметров не выполняется, если AlwaysQueryParams=false
+    /// Параметры отчета (создаются перед вызовом <see cref="BuildReport()"/> с помощью метода <see cref="CreateParams()"/>).
+    /// Также параметры могут быть созданы и присвоены свойству до вызова <see cref="Run()"/>,
+    /// в этом случае запрос параметров не выполняется, если <see cref="AlwaysQueryParams"/>=false
     /// </summary>
     public EFPReportParams ReportParams
     {
@@ -119,8 +119,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если true, то вывод диалога параметров перед построением отчета выполняется,
-    /// даже если свойство ReportParams было установлено до запуска отчета. При этом
-    /// методы ReadConfig/WriteConfig также вызываются
+    /// даже если свойство <see cref="ReportParams"/> было установлено до запуска отчета. При этом
+    /// методы <see cref="ReadConfigPart(string, CfgPart, EFPConfigActionInfo)"/>/<see cref="WriteConfigPart(string, CfgPart, EFPConfigActionInfo)"/> также вызываются.
     /// </summary>
     public bool AlwaysQueryParams { get { return _AlwaysQueryParams; } set { _AlwaysQueryParams = value; } }
     private bool _AlwaysQueryParams;
@@ -132,7 +132,7 @@ namespace FreeLibSet.Forms
     private EFPReportCommandItems _ReportCommandItems;
 
     /// <summary>
-    /// Имя изображения в EFPApp.MainImages, которое будт использовано в качестве значка формы
+    /// Имя изображения в <see cref="EFPApp.MainImages"/>, которое будт использовано в качестве значка формы
     /// </summary>
     public string MainImageKey
     {
@@ -158,7 +158,7 @@ namespace FreeLibSet.Forms
     private EFPReportShowMode _ShowMode;
 
     /// <summary>
-    /// Если установить значение true, то TabControl будет всегда создаваться,
+    /// Если установить значение true, то <see cref="System.Windows.Forms.TabControl"/> будет всегда создаваться,
     /// даже если отчет содержит только одну страницу.
     /// Свойство можно устанавливать в начале работы с отчетом.
     /// Установка в true также гарантирует вывод формы отчета на экран, если нет ни основных, ни
@@ -173,7 +173,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Свойство возвращает true, если отчет был построен. Свойство может использоваться
-    /// внутри реализации BuildReport для определения факта вызова из RefreshReport()
+    /// внутри реализации <see cref="BuildReport()"/> для определения факта вызова из <see cref="RefreshReport()"/>
     /// (ReportCreated=true) или первичного построения отчета (ReportCreated=false)
     /// </summary>
     public bool ReportCreated { get { return _ReportCreated; } }
@@ -200,8 +200,8 @@ namespace FreeLibSet.Forms
     #region Страницы отчета
 
     /// <summary>
-    /// Коллекция закладок отчета для свойства EFPReport.Pages.
-    /// Основные вкладки обычно добавляются в конструкторе отчета, а дополнительные - в BuildReport().
+    /// Коллекция закладок отчета для свойства <see cref="EFPReport.Pages"/>.
+    /// Основные вкладки обычно добавляются в конструкторе отчета, а дополнительные - в <see cref="BuildReport()"/>.
     /// </summary>
     public sealed class PageCollection : IEFPReportPages
     {
@@ -570,7 +570,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region IEnumerable<GridReportPage> Members
+      #region IEnumerable<EFPReportPage> Members
 
       /// <summary>
       /// Возвращает перечислитель по объектам EFPReportPage основных и дополнительных страниц
@@ -605,8 +605,7 @@ namespace FreeLibSet.Forms
     /// Основные и дополнительные страницы отчета
     /// </summary>
     public PageCollection Pages { get { return _Pages; } }
-    private PageCollection _Pages;
-
+    private readonly PageCollection _Pages;
 
     /// <summary>
     /// Индекс текущей страницы отчета
@@ -634,7 +633,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущая выбранная страница отчета.
-    /// Учитываются только страницы верхнего уровня. Страницы в EFPReportTabControlPage не учитываются
+    /// Учитываются только страницы верхнего уровня. Страницы в <see cref="EFPReportTabControlPage"/> не учитываются
     /// </summary>
     public EFPReportPage SelectedPage
     {
@@ -660,12 +659,12 @@ namespace FreeLibSet.Forms
     /// Имя секции конфигурации для хранения настроек (задается при вызове конструктора)
     /// </summary>
     public string ConfigSectionName { get { return _ConfigSectionName; } }
-    private string _ConfigSectionName;
+    private readonly string _ConfigSectionName;
 
     /// <summary>
     /// Используемый для отчета менеджер конфигураций.
-    /// Если свойство не установлено в явном виде, то возвращается EFPApp.ConfigManager.
-    /// Обычно нет причин устанавливать это свойство
+    /// Если свойство не установлено в явном виде, то возвращается <see cref="EFPApp.ConfigManager"/>.
+    /// Обычно нет причин устанавливать это свойство.
     /// </summary>
     public IEFPConfigManager ConfigManager
     {
@@ -691,10 +690,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Основной метод выполнения отчета.
-    /// 1. Запрашивает параметры отчета, если свойство ReportParams не было установлено.
-    /// 2. Выполняет построение отчета BuildReport().
+    /// 1. Запрашивает параметры отчета, если свойство <see cref="ReportParams"/> не было установлено.
+    /// 2. Выполняет построение отчета <see cref="BuildReport()"/>.
     /// 3. Показывает форму отчета, если есть хотя бы одна вкладка (основная или дополнительная),
-    /// или установлено свойство AlwaysShowPages=true.
+    /// или установлено свойство <see cref="AlwaysShowPages"/>=true.
     /// </summary>
     public void Run()
     {
@@ -721,8 +720,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод не должен вызываться напрямую.
-    /// Для запуска отчета используйте метод Run(). 
-    /// Для перестроение уже открытого отчета используйте RefreshReport()
+    /// Для запуска отчета используйте метод <see cref="Run()"/>. 
+    /// Для перестроение уже открытого отчета используйте <see cref="RefreshReport()"/>.
     /// </summary>
     protected void OnExecute()
     {
@@ -908,7 +907,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод вызывается перед выводом диалога параметров на экран.
-    /// Чтение сохраненных настроек в объект ReportParams еше не выполнялось.
+    /// Чтение сохраненных настроек в объект <see cref="ReportParams"/> еше не выполнялось.
     /// Если отчет выводится без запроса параметров, метод не вызывается.
     /// </summary>
     protected virtual void OnBeforeQueryParams()
@@ -990,13 +989,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при попытке закрытия окна отчета.
-    /// Обычно следует переопределять метод OnReportFormClosing(), а не использовать событие.
+    /// Обычно следует переопределять метод <see cref="OnReportFormClosing(FormClosingEventArgs)"/>, а не использовать событие.
     /// </summary>
     public event FormClosingEventHandler ReportFormClosing;
 
     /// <summary>
     /// Вызывается при попытке закрытия окна отчета.
-    /// Вызывает событие ReportFormClosing.
+    /// Вызывает событие <see cref="ReportFormClosing"/>.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnReportFormClosing(FormClosingEventArgs args)
@@ -1013,14 +1012,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Событие вызывается после закрытия окна отчета
-    /// Обычно следует переопределять метод OnReportFormClosed(), а не использовать событие
+    /// Событие вызывается после закрытия окна отчета.
+    /// Обычно следует переопределять метод <see cref="OnReportFormClosed(FormClosedEventArgs)"/>, а не использовать событие.
     /// </summary>
     public event FormClosedEventHandler ReportFormClosed;
 
     /// <summary>
     /// Вызывается после закрытия окна отчета.
-    /// Вызывает событие ReportFormClosed.
+    /// Вызывает событие <see cref="ReportFormClosed"/>.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnReportFormClosed(FormClosedEventArgs args)
@@ -1043,7 +1042,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод вызывается перед закрытием отчета и должен запомнить текущие
-    /// состояния отчета и вкладок. Для каждой вкладки вызывается EFPReportPage.SaveViewConfig()
+    /// состояния отчета и вкладок. Для каждой вкладки вызывается <see cref="EFPReportPage.SaveViewConfig(CfgPart)"/>.
     /// </summary>
     /// <returns>Возвращает true, если настройки для всех вкладок были успешно сохранены.</returns>
     protected virtual bool SaveViewConfig()
@@ -1066,6 +1065,8 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Запуск отчета, встроенного в другую форму
+
+    // TODO: Тут что-то непонятное
 
     /// <summary>
     /// Запуск отчета, встроенного в другую форму.
@@ -1106,7 +1107,7 @@ namespace FreeLibSet.Forms
     /// Создать объект параметров с установками по умолчанию. Используется при
     /// запуске отчета и в случае, если загрузка сохраненной конфигурации вызвала
     /// исключение.
-    /// Непереопределенный метод вызывает исключение.
+    /// Непереопределенный метод выбрасывает исключение.
     /// </summary>
     /// <returns>Созданный объект параметров</returns>
     protected virtual EFPReportParams CreateParams()
@@ -1115,11 +1116,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вывод диалога для запроса параметров отчета. Метод берет параметры из свойства
-    /// ReportParams и туда же их записывает
-    /// Этот виртуальный метод не вызывается, если CreateParams() вернул расширенный
-    /// объект параметров GridReportExtParams. В последнем случае форма создается
-    /// и обрабатывется с помощью методов объекта расширенных параметров
+    /// Вывод диалога для запроса параметров отчета. Переопределенный в прикладном коде метод берет параметры из свойства
+    /// <see cref="ReportParams"/> и туда же их записывает.
+    /// Этот виртуальный метод не вызывается, если <see cref="CreateParams()"/> вернул расширенный
+    /// объект параметров <see cref="EFPReportExtParams"/>. В последнем случае форма создается
+    /// и обрабатывается с помощью методов объекта расширенных параметров.
     /// </summary>
     /// <returns>True, если параметры введены и можно строить отчет. 
     /// False, если пользователь нажал кнопку "Отмена"</returns>
@@ -1140,8 +1141,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обычный запрос (нерасширенных) параметров с использованием метода
-    /// QueryParams()
-    /// Пользователь не может хранить готовые наборы параметров
+    /// <see cref="QueryParams()"/>.
+    /// Пользователь не может хранить готовые наборы параметров.
     /// </summary>
     /// <returns></returns>
     private bool PerformQueryNormParams()
@@ -1221,8 +1222,8 @@ namespace FreeLibSet.Forms
     #region Методы управления отчетом
 
     /// <summary>
-    /// Возвращает true, если в данный момент выполняется метод BuildReport.
-    /// В отличие от IsExecuting, После построения отчета, когда форма выведена на экран, свойство возвращает false
+    /// Возвращает true, если в данный момент выполняется метод <see cref="BuildReport()"/>.
+    /// В отличие от свойства <see cref="IsExecuting"/>, после построения отчета, когда форма выведена на экран, свойство возвращает false.
     /// </summary>
     public bool InsideBuildReport { get { return _InsideBuildReport; } }
     private bool _InsideBuildReport;
@@ -1268,9 +1269,6 @@ namespace FreeLibSet.Forms
       // CheckNotDisposed();
 
       Pages.ClearExtraPages();
-
-      // Сбрасываем буферизацию документов
-      // TODO: AccDepClientExec.BufTables.Clear();
 
       // Очищаем признаки готовности данных
       for (int i = 0; i < Pages.Count; i++)
@@ -1321,9 +1319,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Закрыть окно отчета.
     /// Метод может использоваться в обработчиках кнопок или команд локального меню,
-    /// если требуется закрыть окно отчета и, например, построить другой отчет
-    /// Если отчет встроен в шаг мастера, выполняется закрытие всего мастера
-    /// Если отчет еще не открыт или уже закрыт, никаких действий не выполняется
+    /// если требуется закрыть окно отчета и, например, построить другой отчет.
+    /// Если отчет встроен в шаг мастера, выполняется закрытие всего мастера.
+    /// Если отчет еще не открыт или уже закрыт, никаких действий не выполняется.
     /// </summary>
     public void CloseReport()
     {
@@ -1333,7 +1331,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Выполняют рекурсивную инициализацию всех страниц отчета, для которых еше не был вызван метод SetPageCreated()
+    /// Выполняют рекурсивную инициализацию всех страниц отчета, для которых еше не был вызван метод <see cref="EFPReportPage.SetPageCreated()"/>.
     /// </summary>
     public void SetAllPagesCreated()
     {
@@ -1408,7 +1406,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Основная форма отчета.
-    /// null, если отчет запущен встроенным вдругое окно
+    /// null, если отчет запущен встроенным вдругое окно.
     /// </summary>
     private InternalReportForm _TheForm;
 
@@ -1440,7 +1438,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер формы создается вместе с формой.
     /// Этот провайдер используется как родительский при добавлении страниц и 
-    /// создается в конструкторе
+    /// создается в конструкторе.
     /// </summary>
     internal EFPReportRootProvider RootProvider { get { return _RootProvider; } }
     private EFPReportRootProvider _RootProvider;
@@ -1515,10 +1513,10 @@ namespace FreeLibSet.Forms
     #region Статические методы
 
     /// <summary>
-    /// Найти и активировать форму отчета выбранного типа (по имени типа)
+    /// Найти и активировать форму отчета выбранного типа (по имени секции конфигурации)
     /// </summary>
     /// <param name="configSectionName">Имя секции конфигурации</param>
-    /// <param name="refresh">Если True и отчет найден, то он будет перестроен вызовом PereformRefresh()</param>
+    /// <param name="refresh">Если True и отчет найден, то он будет перестроен вызовом <see cref="EFPReport.RefreshReport()"/></param>
     /// <returns>Объект отчета, если он был найден</returns>
     public static EFPReport FindAndActivate(string configSectionName, bool refresh)
     {
@@ -1533,16 +1531,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти и активировать форму отчета выбранного типа (по типу объекта GridReport)
+    /// Найти и активировать форму отчета выбранного типа (по типу объекта <see cref="EFPReport"/>)
     /// Тип должен быть указан точно с помощью typeof(). Если есть открытый отчет с
     /// классом, производным от искомого, то он активирован не будет
     /// </summary>
-    /// <param name="gridReportType">typeof(ТипОбъекта, производный от GridReport)</param>
+    /// <param name="reportType">typeof(ТипОбъекта, производный от <see cref="EFPReport"/>)</param>
     /// <param name="refresh">Надо обновить найденный объект отчета?</param>
     /// <returns>Объект отчета, если он был найден</returns>
-    public static EFPReport FindAndActivate(Type gridReportType, bool refresh)
+    public static EFPReport FindAndActivate(Type reportType, bool refresh)
     {
-      EFPReport report = FindReport(gridReportType);
+      EFPReport report = FindReport(reportType);
       if (report != null)
       {
         EFPApp.Activate(report._TheForm);
@@ -1553,7 +1551,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти отчет заданного типа
+    /// Найти отчет заданного типа по имени секции конфигурации
     /// </summary>
     /// <param name="configSectionName">Имя секции конфигурации для отчета</param>
     /// <returns>Найденный отчет или null</returns>
@@ -1574,9 +1572,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Найти отчет заданного типа
     /// </summary>
-    /// <param name="gridReportType">Тип отчета, производного от EFPReport</param>
+    /// <param name="reportType">Тип отчета, производного от <see cref="EFPReport"/></param>
     /// <returns>Найденный отчет или null</returns>
-    public static EFPReport FindReport(Type gridReportType)
+    public static EFPReport FindReport(Type reportType)
     {
       // Ищем уже существующую форму
       if (EFPApp.Interface == null)
@@ -1584,7 +1582,7 @@ namespace FreeLibSet.Forms
       InternalReportForm[] forms = EFPApp.Interface.FindChildForms<InternalReportForm>();
       for (int i = 0; i < forms.Length; i++)
       {
-        if (forms[i].Report.GetType() == gridReportType)
+        if (forms[i].Report.GetType() == reportType)
           return forms[i].Report;
       }
       return null;
@@ -1593,9 +1591,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Шаблонный статический метод, который можно вызывать из главного меню.
     /// Позволяет не реализовывать отдельные обработчики для запуска отчетов
-    /// Создает объект отчета EFPReport и вызывает его метод Run().
+    /// Создает объект отчета <see cref="EFPReport"/> и вызывает его метод <see cref="Run()"/>.
     /// </summary>
-    /// <typeparam name="T">Класс отчета, производного от EFPReport. Класс должен реализовывать конструктор по умолчанию</typeparam>
+    /// <typeparam name="T">Класс отчета, производного от <see cref="EFPReport"/>. Класс должен реализовывать конструктор по умолчанию</typeparam>
     /// <param name="sender">Не используется</param>
     /// <param name="args">Не используется</param>
     /// <remarks>
@@ -1619,7 +1617,7 @@ namespace FreeLibSet.Forms
     /// По умолчанию true - при восстановлении композиции отчет будет построен заново.
     /// Если у класса отчета нет конструктора без параметров или класс не имеет видимости public,
     /// значением по умолачнию является false.
-    /// Если DefaultStoreComposition=false, то значением по умолчанию также является false
+    /// Если <see cref="DefaultStoreComposition"/>=false, то значением по умолчанию также является false.
     /// </summary>
     public bool StoreComposition
     {
@@ -1653,7 +1651,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Надо ли сохранять композицию окон отчетов по умолчанию.
-    /// Действует только для тех отчетов, для которых это возможно
+    /// Действует только для тех отчетов, для которых это возможно.
     /// </summary>
     public static bool DefaultStoreComposition
     {
@@ -1698,8 +1696,8 @@ namespace FreeLibSet.Forms
     #region IEFPConfigurable Members
 
     /// <summary>
-    /// Добавление категорий при сохранении конфигурации для реализации интерфейса IEFPConfigurable.
-    /// Добавляет категорию "ReportParams", если выполняется сохранение композиции рабочего стола.
+    /// Добавление категорий при сохранении конфигурации для реализации интерфейса <see cref="IEFPConfigurable"/>.
+    /// Добавляет категорию <see cref="EFPConfigCategories.ReportParams"/>, если выполняется сохранение композиции рабочего стола.
     /// </summary>
     /// <param name="categories">Список для добавления категорий</param>
     /// <param name="rwMode">Чтение или запись</param>
@@ -1726,8 +1724,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Чтение секции конфигурации для реализации интерфейса IEFPConfigurable.
-    /// Ничего не делается, так как инициализация выполняется отдельно
+    /// Чтение секции конфигурации для реализации интерфейса <see cref="IEFPConfigurable"/>.
+    /// Ничего не делается, так как инициализация выполняется отдельно.
     /// </summary>
     /// <param name="category">Не используется</param>
     /// <param name="cfg">Не используется</param>
@@ -1745,8 +1743,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Базовый класс для хранения параметров отчета. 
-  /// Наследник должен обеспечивать преобразование в xml-формат для хранения и
-  /// копирования параметров
+  /// Наследник должен определить методы записи и чтения параметров.
   /// </summary>
   public abstract class EFPReportParams
   {
@@ -1754,11 +1751,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает объект набора параметров.
-    /// Инициализиует пустой список фильтров FilterInfo
+    /// Инициализиует пустой список фильтров <see cref="FilterInfo"/>.
     /// </summary>
     public EFPReportParams()
     {
-      _FilterInfo = new GridReportFilterItems2(this);
+      _FilterInfo = new EFPReportFilterItems2(this);
     }
 
     #endregion
@@ -1767,18 +1764,18 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Заголовок отчета.
-    /// Обычно свойство должно устанавливаться из переопределенного метода OnInitTitle() или обработчика
-    /// события TitleNeeded. Если заголовок не зависит от параметров отчета, то его можно установить
+    /// Обычно свойство должно устанавливаться из переопределенного метода <see cref="OnInitTitle()"/> или обработчика
+    /// события <see cref="TitleNeeded"/>. Если заголовок не зависит от параметров отчета, то его можно установить
     /// после создания объекта параметров.
     /// </summary>
     public string Title { get { return _Title; } set { _Title = value; } }
     private string _Title;
 
-    private class GridReportFilterItems2 : EFPReportFilterItems
+    private class EFPReportFilterItems2 : EFPReportFilterItems
     {
       #region Конструктор
 
-      public GridReportFilterItems2(EFPReportParams owner)
+      public EFPReportFilterItems2(EFPReportParams owner)
       {
         _Owner = owner;
       }
@@ -1805,10 +1802,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Фильтры отчета
-    /// Свойство заполняется при вызове InitTitle()
+    /// Свойство заполняется при вызове <see cref="InitTitle()"/>
     /// </summary>
     public EFPReportFilterItems FilterInfo { get { return _FilterInfo; } }
-    private EFPReportFilterItems _FilterInfo;
+    private readonly EFPReportFilterItems _FilterInfo;
 
     /// <summary>
     /// Флажок для отслеживания изменений в фильтрах отчета, если они выполняются в процессе построения отчета
@@ -1820,7 +1817,7 @@ namespace FreeLibSet.Forms
     #region Переопределяемые методы методы
 
     /// <summary>
-    /// Очищает список фильтров и вызывает виртуальный метод OnInitTitle()
+    /// Очищает список фильтров и вызывает виртуальный метод <see cref="OnInitTitle()"/>.
     /// </summary>
     public void InitTitle()
     {
@@ -1831,15 +1828,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Событие вызывается из InitTitle().
+    /// Событие вызывается из <see cref="InitTitle()"/>.
     /// </summary>
     public event EventHandler TitleNeeded;
 
     /// <summary>
-    /// Метод должен установить свойство Title и заполнить FilterInfo.
-    /// Вместо переопределения этого метода можно присоединить обработчик события TitleNeeded.
-    /// Если заголовок отчета не зависит от его параметров, свойство Title можно установить после создания объекта.
-    /// Непереопределенный метод не выполняет никаких действий
+    /// Метод должен установить свойство <see cref="Title"/> и заполнить <see cref="FilterInfo"/>.
+    /// Вместо переопределения этого метода можно присоединить обработчик события <see cref="TitleNeeded"/>.
+    /// Если заголовок отчета не зависит от его параметров, свойство <see cref="Title"/> можно установить после создания объекта.
+    /// Непереопределенный метод не выполняет никаких действий.
     /// </summary>
     protected virtual void OnInitTitle()
     {
@@ -1848,20 +1845,20 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Прочитать параметры из секции конфигурации
     /// </summary>
-    /// <param name="cfg"></param>
+    /// <param name="cfg">Секция конфигурации</param>
     public abstract void ReadConfig(CfgPart cfg);
 
     /// <summary>
     /// Записать параметры в секцию конфигурации
     /// </summary>
-    /// <param name="cfg"></param>
+    /// <param name="cfg">Секция конфигурации</param>
     public abstract void WriteConfig(CfgPart cfg);
 
     #endregion
   }
 
   /// <summary>
-  /// Неабстрактная реализация EFPReportParams для отчетов, не требующих параметров.
+  /// Неабстрактная реализация <see cref="EFPReportParams"/> для отчетов, не требующих параметров.
   /// Хранит заголовок отчета
   /// </summary>
   public sealed class EFPReportEmptyParams : EFPReportParams
@@ -1892,7 +1889,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Ничего не делает, так как нет сохраняемых параметров
     /// </summary>
-    /// <param name="cfg"></param>
+    /// <param name="cfg">Секция конфигурации</param>
     public override void ReadConfig(CfgPart cfg)
     {
       // нет
@@ -1901,7 +1898,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Ничего не делает, так как нет сохраняемых параметров
     /// </summary>
-    /// <param name="cfg"></param>
+    /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
     {
       // нет
@@ -1955,7 +1952,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Базовый провайдер для страницы отчета.
-    /// Используется (прямо или косвенно) при создании при вызове CreatePage()
+    /// Используется (прямо или косвенно) при создании при вызове <see cref="CreatePage(Panel)"/>.
     /// для создания провайдеров элементов управления на странице отчета.
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
@@ -2078,18 +2075,18 @@ namespace FreeLibSet.Forms
     private string _ImageKey;
 
     /// <summary>
-    /// Установка свойства ImageKey
+    /// Установка свойства <see cref="ImageKey"/>
     /// </summary>
-    /// <param name="kind"></param>
+    /// <param name="kind">Перечислимое состояние</param>
     public void InitStateImageKey(EFPDataGridViewImageKind kind)
     {
       ImageKey = EFPDataGridView.GetImageKey(kind, "Ok");
     }
 
     /// <summary>
-    /// Установка свойства ImageKey
+    /// Установка свойства <see cref="ImageKey"/>
     /// </summary>
-    /// <param name="kind"></param>
+    /// <param name="kind">Перечислимое состояние</param>
     public void InitStateImageKey(ErrorMessageKind kind)
     {
       ImageKey = EFPApp.GetErrorImageKey(kind);
@@ -2111,8 +2108,8 @@ namespace FreeLibSet.Forms
     private string _ToolTipText;
 
     /// <summary>
-    /// Установка свойства ToolTipText на основании свойства FilterItems
-    /// Свойство FilterInfo.ToolTipText
+    /// Установка свойства <see cref="ToolTipText"/> на основании свойства <see cref="FilterInfo"/>.
+    /// Возвращает свойство <see cref="EFPReportPageFilterItems.ToolTipText"/>.
     /// </summary>
     public void ToolTipTextFromFilters()
     {
@@ -2131,7 +2128,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Закладка страничного просмотра или null, если есть только одна страница 
-    /// просмотра
+    /// просмотра.
     /// </summary>
     internal TabPage TabPage
     {
@@ -2157,9 +2154,9 @@ namespace FreeLibSet.Forms
     private TabPage _TabPage;
 
     /// <summary>
-    /// Это событие вызывается каждый раз, когда страница отчета становится активной
+    /// Это событие вызывается каждый раз, когда страница отчета становится активной.
     /// Обработчик, например, может выполнить расчеты, которые зависят от других
-    /// страниц отчета
+    /// страниц отчета.
     /// </summary>
     public event EventHandler PageSelected;
 
@@ -2208,7 +2205,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Содержит ключ, если эта страница является дополнительной.
-    /// Чтобы добавить в отчет дополнительную страницу, следует установлить это свойство перед вызовом EFPReport.Pages.Add()
+    /// Чтобы добавить в отчет дополнительную страницу, следует установлить это свойство перед вызовом <see cref="EFPReport.PageCollection.Add(EFPReportPage)"/>.
     /// </summary>
     public string ExtraPageKey
     {
@@ -2226,16 +2223,15 @@ namespace FreeLibSet.Forms
     private string _ExtraPageKey;
 
     /// <summary>
-    /// Дополнительные фильтры, которые будут выведены вверху страницы отчета
-    /// Допускается динамическая установка массива
+    /// Дополнительные фильтры, которые будут выведены вверху страницы отчета.
     /// </summary>
     public EFPReportPageFilterItems FilterInfo { get { return _FilterInfo; } }
     private EFPReportPageFilterItems _FilterInfo;
 
     /// <summary>
-    /// Дополнительная панель в верхней части страницы отчета (ниже строк фильтров)
+    /// Дополнительная панель в верхней части страницы отчета (ниже строк фильтров).
     /// Чтобы панель появилась, необходимо присвоить значение до того, как 
-    /// страница отчета будет присоединена к отчету
+    /// страница отчета будет присоединена к отчету.
     /// </summary>
     public Control AuxTopPanel
     {
@@ -2251,9 +2247,9 @@ namespace FreeLibSet.Forms
     private Control _AuxTopPanel;
 
     /// <summary>
-    /// Дополнительная панель в нижней части отчета
+    /// Дополнительная панель в нижней части отчета.
     /// Чтобы панель появилась, необходимо присвоить значение до того, как 
-    /// страница отчета будет присоединена к отчету
+    /// страница отчета будет присоединена к отчету.
     /// </summary>
     public Control AuxBottomPanel
     {
@@ -2301,8 +2297,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Отчет - владелец.
-    /// Пока страница не присоединена к отчету (прямо или косвенно через GridReportTabControlPage),
-    /// возвращает null
+    /// Пока страница не присоединена к отчету (прямо или косвенно через <see cref="EFPReportTabControlPage"/>),
+    /// возвращает null.
     /// </summary>
     public EFPReport OwnerReport
     {
@@ -2334,7 +2330,7 @@ namespace FreeLibSet.Forms
     /// Если свойство не установлено в явном виде, для основных страниц отчета используются имена "Page1", "Page2", ...,
     /// а для дополнительных страниц композиция не сохраняется.
     /// Если в приложении предусмотрено восстановление интерфейса при загрузке программы, рекомендуется
-    /// устанавливать свойство. Это обеспечит правильную загрузку при обновлении программы, если в отчет
+    /// устанавливать это свойство. Это обеспечит правильную загрузку при обновлении программы, если в отчет
     /// добавляются новые страницы.
     /// </summary>
     public string Name
@@ -2354,12 +2350,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод вызывается внутри системы построения отчета и не должен вызываться
-    /// прикладными модулями
+    /// прикладными модулями.
     /// Запоминает родительский управляющий элемент (панель), на которой будет 
     /// создана страница отчета. Сама страница создается при первом обращении к
-    /// методу SetPageCreated().
+    /// методу <see cref="SetPageCreated()"/>.
     /// Метод может быть переопределен в классе-наследнике для немедленного создания
-    /// страницы (используется GridReportControlPage)
+    /// страницы (используется <see cref="EFPReportControlPage"/>).
     /// </summary>
     /// <param name="parentControl">Пустая панель, на которой будет расположена страница</param>
     public virtual void AssignParentControl(Panel parentControl)
@@ -2380,8 +2376,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство возвращает true, если страница отчета была создана.
     /// Однако, это не означает, что были присоединены данные. Для проверки данных
-    /// следует использовать свойство DataReady.
-    /// Для установки свойство можно использовать метод SetPageCreated()
+    /// следует использовать свойство <see cref="DataReady"/>.
+    /// Для установки свойство можно использовать метод <see cref="SetPageCreated()"/>.
     /// </summary>
     public bool PageCreated
     {
@@ -2400,8 +2396,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Этот метод вызывается внутри системы построения отчета и обычно не должен
     /// использоваться в прикладном модуле. Однако он может быть вызван, если
-    /// страница должна быть обязательно создана
-    /// Допускается вложенный вызов метода из обработчика события активации страницы
+    /// страница должна быть обязательно создана.
+    /// Допускается вложенный вызов метода из обработчика события активации страницы.
     /// </summary>
     public void SetPageCreated()
     {
@@ -2445,8 +2441,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Проверяет, что страница еще не была создана (PageCreated=false).
-    /// В противном случае выбрасывается исключение InvalidOperationException
+    /// Проверяет, что страница еще не была создана (<see cref="PageCreated"/>=false).
+    /// В противном случае выбрасывается исключение <see cref="InvalidOperationException"/>.
     /// </summary>
     protected void CheckPageNotCreated()
     {
@@ -2456,8 +2452,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Рекурсивная инициализация страниц отчета.
-    /// Для обычных страниц вызывает SetPageCreated().
-    /// Для страниц EFPReportTabControlPage() рекурсивно вызывает себя для каждой вложенной страницы отчета.
+    /// Для обычных страниц вызывает <see cref="SetPageCreated()"/>.
+    /// Для страниц <see cref="EFPReportTabControlPage"/> рекурсивно вызывает себя для каждой вложенной страницы отчета.
     /// Этот метод обычно не должен вызываться из пользовательского кода.
     /// </summary>
     public virtual void SetAllPagesCreated()
@@ -2475,8 +2471,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает свойство Control.Name для фиксированной страницы отчета.
-    /// Этот метод должен вызываться производным классом из CreatePage()
+    /// Устанавливает свойство <see cref="System.Windows.Forms.Control.Name"/> для фиксированной страницы отчета.
+    /// Этот метод должен вызываться производным классом из <see cref="CreatePage(Panel)"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента, добавляемого на страницу</param>
     /// <param name="nameSuffix">Суффикс имени управляющего элемента</param>
@@ -2526,7 +2522,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Готовность данных. Это свойство устанавливается в true, когда активируется
     /// страница отчета. Свойство сбрасывается в false, когда пользователь обновляет
-    /// отчет нажатием клавиши F5
+    /// отчет нажатием клавиши "F5"
     /// </summary>
     public bool DataReady
     {
@@ -2552,16 +2548,16 @@ namespace FreeLibSet.Forms
     private bool _DataReady;
 
     /// <summary>
-    /// Событие вызывается перед InitData(). Обработчик может инициализировать 
-    /// данные. Событие может вызываться несколько раз при выполнении Refresh
+    /// Событие вызывается перед <see cref="InitData()"/>. Обработчик может инициализировать 
+    /// данные. Событие может вызываться несколько раз при выполнении <see cref="EFPReport.RefreshReport()"/>.
     /// </summary>
     public event EventHandler DataQuery;
 
     /// <summary>
     /// Активация вкладки отчета.
-    /// Если страница расположена на GridReportTabControlPage, то выполняется
+    /// Если страница расположена на <see cref="EFPReportTabControlPage"/>, то выполняется
     /// рекурсивный вызов.
-    /// При необходимости, выполняется установка свойства DataReady
+    /// При необходимости, выполняется установка свойства <see cref="DataReady"/>=true.
     /// </summary>
     public void Select()
     {
@@ -2604,17 +2600,17 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Этот метод вызывается при обновлении отчета нажатием клавиши F5 при сбросе
-    /// свойства DataReady в false
+    /// Этот метод вызывается при обновлении отчета нажатием клавиши "F5" при сбросе
+    /// свойства <see cref="DataReady"/> в false.
     /// </summary>
     protected virtual void InvalidateData()
     {
     }
 
     /// <summary>
-    /// Запоминает конфигурацию табличного просмотра
+    /// Запоминает конфигурацию табличного просмотра.
     /// Метод должен вернуть true, если сохранение успешно выполнено и false,
-    /// если возникла ошибка и закрывать форму отчета нельзя
+    /// если возникла ошибка и закрывать форму отчета нельзя.
     /// </summary>
     /// <param name="cfg">Заполняемая секция конфигурации</param>
     /// <returns>Обычно следует возвращать true.</returns>
@@ -2663,9 +2659,9 @@ namespace FreeLibSet.Forms
   #region Интерфейс IEFPReportPages
 
   /// <summary>
-  /// Интерфейс для добавления страниц, общий для EFPReportPages и
-  /// EFPReportTabControlPage.
-  /// Дополняет обобщенный интерфейс ICollection некоторыми методами из класса List
+  /// Интерфейс для добавления страниц, общий для <see cref="EFPReport.PageCollection"/> и
+  /// <see cref="EFPReportTabControlPage.PageCollection"/>.
+  /// Дополняет обобщенный интерфейс <see cref="System.Collections.Generic.ICollection{EFPReportPage}"/> некоторыми методами из класса <see cref="System.Collections.Generic.List{EFPReportPage}"/>.
   /// </summary>
   public interface IEFPReportPages : ICollection<EFPReportPage>
   {
@@ -2673,13 +2669,13 @@ namespace FreeLibSet.Forms
     /// Доступ к странице по индексу
     /// </summary>
     /// <param name="index">Индекс страницы в пределах набора страниц отчета верхнего уровня
-    /// или дочерних страниц в EFPReportTabControlPage</param>
+    /// или дочерних страниц в <see cref="EFPReportTabControlPage"/>.</param>
     /// <returns></returns>
     EFPReportPage this[int index] { get; }
 
     /// <summary>
     /// Поиск страницы в группе.
-    /// Рекурсивный поиск не выполняется
+    /// Рекурсивный поиск не выполняется.
     /// </summary>
     /// <param name="page">Искомая страница</param>
     /// <returns>Индекс страницы или (-1)</returns>
@@ -2717,7 +2713,7 @@ namespace FreeLibSet.Forms
     #region Список страниц
 
     /// <summary>
-    /// Коллекция страниц в EFPReportTabControlPage
+    /// Коллекция страниц в <see cref="EFPReportTabControlPage.Pages"/>.
     /// </summary>
     public sealed class PageCollection : IEFPReportPages
     {
@@ -2736,7 +2732,7 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Доступ к странице по индексу
       /// </summary>
-      /// <param name="index">Индекс страницы в диапазоне от 0 до Count-1</param>
+      /// <param name="index">Индекс страницы в диапазоне от 0 до <see cref="Count"/>-1</param>
       /// <returns>Дочерняя страница</returns>
       public EFPReportPage this[int index] { get { return _Items[index]; } }
       private List<EFPReportPage> _Items;
@@ -2747,8 +2743,8 @@ namespace FreeLibSet.Forms
       public int Count { get { return _Items.Count; } }
 
       /// <summary>
-      /// Возвращает индекс дочерней страницы в диапазоне от 0 до Count-1.
-      /// Возвращает (-1), если страница не найдена
+      /// Возвращает индекс дочерней страницы в диапазоне от 0 до <see cref="Count"/>-1.
+      /// Возвращает (-1), если страница не найдена.
       /// </summary>
       /// <param name="page">Дочерняя страница для поиска</param>
       /// <returns>Индекс страницы</returns>
@@ -2761,15 +2757,15 @@ namespace FreeLibSet.Forms
       /// Возвращает true, если дочерняя страница принадлежит этой странице.
       /// Этот метод не является рекурсивным. Определяется только принадлежность к этой странице, а не к какой-либо из дочерних страниц
       /// </summary>
-      /// <param name="page"></param>
-      /// <returns></returns>
+      /// <param name="page">Дочерняя страница для поиска</param>
+      /// <returns>Наличие страницы</returns>
       public bool Contains(EFPReportPage page)
       {
         return _Items.Contains(page);
       }
 
       /// <summary>
-      /// Реализация метода интерфейса ICollection
+      /// Реализация метода интерфейса <see cref="System.Collections.Generic.ICollection{EFPReportPage}"/>
       /// </summary>
       /// <param name="array"></param>
       /// <param name="arrayIndex"></param>
@@ -2836,7 +2832,7 @@ namespace FreeLibSet.Forms
       }
 
       /// <summary>
-      /// Удалить все страницы, оставив только Count страниц
+      /// Удалить все страницы, оставив только <paramref name="count"/> страниц
       /// </summary>
       /// <param name="count">Количество страниц, которое должно остаться</param>
       public void RemoveAtEnd(int count)
@@ -2893,7 +2889,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      #region IEnumerable<GridReportPage> Members
+      #region IEnumerable<EFPReportPage> Members
 
       /// <summary>
       /// Возвращает нерекурсивный перечислитель по дочерним страницам.
@@ -2916,7 +2912,7 @@ namespace FreeLibSet.Forms
     /// Список страниц
     /// </summary>
     public PageCollection Pages { get { return _Pages; } }
-    private PageCollection _Pages;
+    private readonly PageCollection _Pages;
 
     #endregion
 
@@ -2987,7 +2983,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Создает элемент TabControl и добавляет ранее созданные вложенные страницы
+    /// Создает элемент <see cref="System.Windows.Forms.TabControl"/> и добавляет ранее созданные вложенные страницы
     /// </summary>
     /// <param name="parent">Панель для добавления TabControl</param>
     protected override void CreatePage(Panel parent)
@@ -3031,7 +3027,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для активной дочерней страницы свойство DataReady=true.
+    /// Устанавливает для активной дочерней страницы свойство <see cref="EFPReportPage.DataReady"/>=true.
     /// </summary>
     protected override void InitData()
     {
@@ -3041,7 +3037,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для всех дочерних страниц свойство DataReady=false.
+    /// Устанавливает для всех дочерних страниц свойство <see cref="EFPReportPage.DataReady"/>=false.
     /// </summary>
     protected override void InvalidateData()
     {
@@ -3052,7 +3048,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Запоминает конфигурацию табличного просмотра.
-    /// Вызывает SaveViewConfig() для всех дочерних страниц.
+    /// Вызывает <see cref="EFPReportPage.SaveViewConfig(CfgPart)"/> для всех дочерних страниц.
     /// Возвращает true, если все дочерние страницы успешно сохранили конфигурацию.
     /// </summary>
     /// <param name="cfg">Секция конфигурации для записи</param>
@@ -3088,16 +3084,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается, когда у любой из дочерних закладок устанавливается
-    /// свойство ImageKey или после добавления или удаления закладки
+    /// свойство <see cref="EFPReportPage.ImageKey"/> или после добавления или удаления закладки.
     /// </summary>
     public event EventHandler ChildImageKeyChanged;
 
     /// <summary>
     /// Метод вызывается, когда у любой из дочерних закладок устанавливается
-    /// свойство ImageKey или после добавления или удаления закладки.
-    /// Если свойство AutoInitStateImageKey установлено, то устанавливается свойство ImageKey
+    /// свойство <see cref="EFPReportPage.ImageKey"/> или после добавления или удаления закладки.
+    /// Если свойство <see cref="AutoInitStateImageKey"/> установлено, то устанавливается свойство <see cref="EFPReportPage.ImageKey"/>.
     /// для текущей вкладки отчета на основании значков дочерних вкладок.
-    /// Затем вызывается обработчик события ChildImageKeyChanged, если он установлен.
+    /// Затем вызывается обработчик события <see cref="ChildImageKeyChanged"/>, если он установлен.
     /// </summary>
     public virtual void OnChildImageKeyChanged()
     {
@@ -3135,16 +3131,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установлено, то выполняется автоматическое управление значком
-    /// вкладки (свойство ImageKey), в зависимости от наличия во вложенных вкладках
+    /// вкладки (свойство <see cref="EFPReportPage.ImageKey"/>), в зависимости от наличия во вложенных вкладках
     /// значков ошибкок и предупреждений. Выбирается максимально "серьзное" значение
-    /// свойства ImageKey во вложенных вкладках. Если вкладка имеет ImageKey, отличное
+    /// свойства <see cref="EFPReportPage.ImageKey"/> во вложенных вкладках. Если вкладка имеет <see cref="EFPReportPage.ImageKey"/>, отличное
     /// от "OK", "Инфо", "Предупреждение" или "Ошибка", считается, что данная страница
-    /// не имеет ошибок и не участвует в формировании значка 
+    /// не имеет ошибок и не участвует в формировании значка.
     /// Установка свойства заставляет отчет обеспечить готовность данных на вложенных 
     /// страницах немедленно после построения отчета, а не при первом обращении 
-    /// пользователя к странице, что может привести к замедлению построения
-    /// По умолчанию свойство не установлено
-    /// Если свойство установлено, то ручное задание свойства ImageKey не требуется
+    /// пользователя к странице, что может привести к замедлению построения.
+    /// По умолчанию свойство не установлено.
+    /// Если свойство установлено, то ручное задание свойства <see cref="EFPReportPage.ImageKey"/> не требуется.
     /// </summary>
     public bool AutoInitStateImageKey
     {

@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Config;
 using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -42,9 +44,12 @@ namespace FreeLibSet.Forms
     {
       //Control.ColumnWidthChanged += new DataGridViewColumnEventHandler(Grid_ColumnWidthChanged);
       //Control.ColumnDisplayIndexChanged += new DataGridViewColumnEventHandler(Grid_ColumnDisplayIndexChanged);
+      Control.ColumnWidthChanged += Control_ColumnWidthChanged;
+      Control.ColumnReordered += Control_ColumnReordered;
 
       base.InitConfigHandler();
     }
+
     /*
 protected override void OnCurrentCellChanged()
 {
@@ -54,25 +59,7 @@ base.OnCurrentCellChanged();
 CommandItems.PerformRefreshItems();
 }
 
-      */
-    #endregion
-
-    #region OnShown
-
-    //protected override void OnShown()
-    //{
-    //  base.OnShown();
-    //}
-
-
-    /// <summary>
-    /// Когда табличный просмотр первый раз выводится на экран, сохраняем сюда
-    /// настройки фильтров "по умолчанию", то есть те, которые выполнены прикладным
-    /// модулем. Например, для операций, могут быть по умолчанию установлен фильтр
-    /// по дате операции (текущий месяц) и по нашей организации
-    /// </summary>
-    private TempCfg _DefaultFilterCfg;
-
+ */
     #endregion
 
     #region Чтение и запись настроек (общая часть)
@@ -88,8 +75,8 @@ CommandItems.PerformRefreshItems();
     {
       base.GetConfigCategories(categories, rwMode, actionInfo);
 
-      // !!!if (WantsGridConfig(Mode, Info))
-      //  Categories.Add(EFPConfigCategories.GridConfig);
+      if (WantsGridConfig(rwMode, actionInfo))
+        categories.Add(EFPConfigCategories.GridConfig);
 
       if (WantsFiltersConfig(actionInfo))
         categories.Add(EFPConfigCategories.Filters);
@@ -101,19 +88,18 @@ CommandItems.PerformRefreshItems();
     
     private bool WantsGridConfig(EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
     {
-      /*  !!!!
-      if (Info.Purpose == EFPConfigPurpose.Composition)
+      if (actionInfo.Purpose == EFPConfigPurpose.Composition)
       {
         return HasConfigureViewHandler && (!AlwaysUseDefaultConfig);
       }
 
       if (UserConfigAutoSave)
       {
-        if (Mode == EFPConfigMode.Write)
+        if (rwMode == EFPConfigMode.Write)
           return true;
         else if (!AlwaysUseDefaultConfig)
           return true;
-      } */
+      } 
       return false;
     } 
 
@@ -121,8 +107,10 @@ CommandItems.PerformRefreshItems();
     {
       if (!SaveFiltersAllowed)
         return false;
-      if (!CommandItems.CanEditFilters)
-        return false;
+      // Убрано 02.11.2018
+      // Свойство SaveFiltersAllowed по умолчанию учитывает CommandItems.CanEditFilters
+      //if (!CommandItems.CanEditFilters)
+      //  return false;
       return (HasFilters || actionInfo.Purpose == EFPConfigPurpose.Preload || actionInfo.Purpose == EFPConfigPurpose.Composition);
     }
 
@@ -136,13 +124,13 @@ CommandItems.PerformRefreshItems();
     {
       switch (category)
       {
-        //case EFPConfigCategories.GridConfig:
-        //  if (WantsGridConfig(EFPConfigMode.Write, Info) && CurrentConfig != null)
-        //  {
-        //    EFPDataGridViewConfig GridConfig2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
-        //    GridConfig2.WriteConfig(Config);
-        //  }
-        //  break;
+        case EFPConfigCategories.GridConfig:
+          if (WantsGridConfig(EFPConfigMode.Write, actionInfo) && CurrentConfig != null)
+          {
+            EFPDataGridViewConfig GridConfig2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
+            GridConfig2.WriteConfig(cfg);
+          }
+          break;
 
         case EFPConfigCategories.Filters:
           if (WantsFiltersConfig(actionInfo))
@@ -167,10 +155,10 @@ CommandItems.PerformRefreshItems();
     {
       switch (category)
       {
-        //case EFPConfigCategories.GridConfig:
-        //  if (WantsGridConfig(EFPConfigMode.Read, Info))
-        //    ReadConfigPartGridConfig(Config);
-        //  break;
+        case EFPConfigCategories.GridConfig:
+          if (WantsGridConfig(EFPConfigMode.Read, actionInfo))
+            ReadConfigPartGridConfig(cfg);
+          break;
 
         case EFPConfigCategories.Filters:
           if (WantsFiltersConfig(actionInfo))
@@ -199,7 +187,7 @@ CommandItems.PerformRefreshItems();
     protected override void OnBeforeLoadConfig()
     {
       base.OnBeforeLoadConfig();
-      //!!!!!FUserConfigAutoSave = GetUserConfigAutoSave();
+      _UserConfigAutoSave = GetUserConfigAutoSave();
     }
 
     /// <summary>
@@ -218,9 +206,9 @@ CommandItems.PerformRefreshItems();
 
       base.OnLoadConfig();
 
-      //if (CurrentConfig == null && GridProducer != null)
-      //  //OnInitDefaultGridConfig();
-      //  InitDefaultGridConfig(); // 30.09.2018
+      if (CurrentConfig == null && GridProducer != null)
+        //OnInitDefaultGridConfig();
+        InitDefaultGridConfig(); // 30.09.2018
     }
 
     #endregion
@@ -266,35 +254,23 @@ CommandItems.PerformRefreshItems();
 
     #region GridProducer
 
-    /// <summary>
-    /// Генератор табличного просмотра.
-    /// Если реализует расширенный интерфейс IEFPConfigurableGridProducer и установлено свойство ConfigSectionName,
-    /// то поддерживается команда "Настройка просмотра", а конфигурация автоматически сохраняется и восстанавливается
-    /// при показе на экран
-    /// </summary>
-    public new IEFPGridProducer GridProducer
-    {
-      get { return base.GridProducer; }
-      set { base.GridProducer = value; }
-    }
 
-
-    /// <summary>
-    /// Если свойство установлено в true (по умолчанию), то используется порядок сортировки строк, заданный в 
-    /// GridProducer.
-    /// Если используется особая реализация просмотра, то можно отключить инициализацию порядка сортировки
-    /// строк, установив значение false. Установка допускается только до вывода просмотра на экран
-    /// </summary>
-    public bool UseGridProducerOrders
-    {
-      get { return _UseGridProducerOrders; }
-      set
-      {
-        CheckHasNotBeenCreated();
-        _UseGridProducerOrders = value;
-      }
-    }
-    private bool _UseGridProducerOrders;
+    ///// <summary>
+    ///// Если свойство установлено в true (по умолчанию), то используется порядок сортировки строк, заданный в 
+    ///// GridProducer.
+    ///// Если используется особая реализация просмотра, то можно отключить инициализацию порядка сортировки
+    ///// строк, установив значение false. Установка допускается только до вывода просмотра на экран
+    ///// </summary>
+    //public bool UseGridProducerOrders
+    //{
+    //  get { return _UseGridProducerOrders; }
+    //  set
+    //  {
+    //    CheckHasNotBeenCreated();
+    //    _UseGridProducerOrders = value;
+    //  }
+    //}
+    //private bool _UseGridProducerOrders;
 
     /// <summary>
     /// Имя фиксированной настройки табличного просмотра
@@ -312,6 +288,227 @@ CommandItems.PerformRefreshItems();
       }
     }
     private string _DefaultConfigName;
+
+    #endregion
+
+    #region Обработчики изменения столбцов в просмотре
+
+    private void Control_ColumnWidthChanged(object sender, TreeColumnEventArgs args)
+    {
+      try
+      {
+        if (true /*args.Column.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill*/)
+          ConfigHandler.Changed[EFPConfigCategories.GridConfig] = true;
+      }
+      catch (Exception e)
+      {
+        EFPApp.ShowException(e, "Control_ColumnWidthChanged");
+      }
+    }
+    private void Control_ColumnReordered(object sender, TreeColumnEventArgs args)
+    {
+      try
+      {
+        ConfigHandler.Changed[EFPConfigCategories.GridConfig] = true;
+      }
+      catch (Exception e)
+      {
+        EFPApp.ShowException(e, "Control_ColumnReordered");
+      }
+    }
+
+    #endregion
+
+    #region Настройка просмотра
+
+    // TODO: Может быть стоит сделать более сложное событие
+
+    /// <summary>
+    /// Событие вызывается при выполнении команды меню "Настройка просмотра".
+    /// Если обработчик не установлен, показывается диалог, использующий интерфейс <see cref="IEFPConfigurableGridProducer"/>.
+    /// Свойство <see cref="CancelEventArgs.Cancel"/> влияет на результат, возвращаемый методом <see cref="ShowConfigDialog()"/>.
+    /// </summary>
+    public event CancelEventHandler ConfigureView;
+
+    /// <summary>
+    /// Свойство возвращает true, если есть обработчик события <see cref="ConfigureView"/> или можно использовать интерфейс <see cref="IEFPConfigurableGridProducer"/>.
+    /// </summary>
+    public virtual bool HasConfigureViewHandler
+    {
+      get
+      {
+        if (ConfigureView != null)
+          return true;
+        return (!String.IsNullOrEmpty(ConfigSectionName)) &&
+          (GridProducer is IEFPConfigurableGridProducer);
+      }
+    }
+
+    /// <summary>
+    /// Открывает диалог настройки конфигурации табличного просмотра
+    /// </summary>
+    /// <returns>true, если конфигурация была изменена</returns>
+    public bool ShowConfigDialog()
+    {
+      if (ConfigureView != null)
+      {
+        CancelEventArgs args = new CancelEventArgs();
+        ConfigureView(this, args);
+        return !args.Cancel;
+      }
+
+      if (String.IsNullOrEmpty(ConfigSectionName))
+        return false;
+
+      IEFPConfigurableGridProducer gridProducer2 = GridProducer as IEFPConfigurableGridProducer;
+      if (gridProducer2 == null)
+        return false;
+
+      if (CurrentConfig == null)
+        return false; // ??
+
+      EFPDataGridViewConfigDialog dlg = new EFPDataGridViewConfigDialog();
+      dlg.CallerControlProvider = this;
+      dlg.GridProducer = gridProducer2;
+      dlg.ConfigCategory = EFPConfigCategories.GridConfig;
+      dlg.HistoryCategory = EFPConfigCategories.GridConfigHistory;
+      //dlg.Value = CurrentConfig;
+      dlg.Value = CurrentConfig.Clone(this); // 16.06.2021
+      if (dlg.ShowDialog() != DialogResult.OK)
+        return false;
+
+      try
+      {
+        CurrentConfig = dlg.Value;
+      }
+      catch (Exception e)
+      {
+        e.Data["EFPConfigurableGridView.DisplayName"] = DisplayName;
+        try
+        {
+          TempCfg cfg = new TempCfg();
+          dlg.Value.WriteConfig(cfg);
+          e.Data["EFPDataGridViewConfig.AsXmlText"] = cfg.AsXmlText;
+        }
+        catch { }
+        throw;
+      }
+      ConfigHandler.Changed[EFPConfigCategories.GridConfig] = true;
+
+      return true;
+    }
+
+    /// <summary>
+    /// Возвращает true, если при открытии / закрытии просмотра сохраняется последняя пользовательская 
+    /// конфигурация.
+    /// До показа просмотра на экране свойство возвращает значение, зависящее от других свойств.
+    /// При показе таблицы значение фиксируется
+    /// </summary>
+    public bool UserConfigAutoSave
+    {
+      get
+      {
+        if (LoadConfigCalled)
+          return _UserConfigAutoSave;
+        else
+          return GetUserConfigAutoSave();
+      }
+    }
+    private bool _UserConfigAutoSave;
+
+    private bool GetUserConfigAutoSave()
+    {
+      if (String.IsNullOrEmpty(ConfigSectionName))
+        return false;
+      if (CurrentConfig != null)
+        return false; // если конфигурация инициализирована в конструкторе производного класса, путь он и занимается ее сохранением
+
+      return GridProducer is IEFPConfigurableGridProducer;
+    }
+
+    private void InitDefaultGridConfig()
+    {
+      if (base.InsideSetCurrentConfig)
+        throw new ReenteranceException();
+      base.InsideSetCurrentConfig = true;
+      try
+      {
+        OnInitDefaultGridConfig();
+      }
+      finally
+      {
+        base.InsideSetCurrentConfig = false;
+      }
+    }
+
+    /// <summary>
+    /// Вызывается при показе просмотра, если предполагается загрузка последней пользовательской конфигурации просмотра,
+    /// но просмотр открывается впервые и нет сохраненной конфигурации.
+    /// Также метод вызывается в случае ошибки загрузки.
+    /// Метод должен установить свойство <see cref="EFPDataGridView.CurrentConfig"/>
+    /// </summary>
+    protected virtual void OnInitDefaultGridConfig()
+    {
+      if (GridProducer != null)
+      {
+        GridProducer.InitTreeView(this, false);
+        PerformGridProducerPostInit();
+      }
+    }
+
+    /// <summary>
+    /// Если свойство установлено в true, то при открытии просмотра будет всегда использоваться
+    /// настройка просмотра по умолчанию, а не последняя сохраненная конфигурация.
+    /// При этом сохранение настроек работает как обычно. Пользователь, в частности, может выбрать
+    /// последнюю сохраненную конфигурацию или любую другую из истории.
+    /// Свойство действует, если <see cref="UserConfigAutoSave"/> возвращает true.
+    /// Установка свойства разрешается только до показа просмотра на экране
+    /// </summary>
+    public bool AlwaysUseDefaultConfig
+    {
+      get { return _AlwaysUseDefaultConfig; }
+      set
+      {
+        CheckHasNotBeenCreated();
+        _AlwaysUseDefaultConfig = value;
+      }
+    }
+    private bool _AlwaysUseDefaultConfig;
+
+    private void ReadConfigPartGridConfig(CfgPart cfg)
+    {
+      if (cfg.IsEmpty)
+        InitDefaultGridConfig();
+      else
+      {
+        try
+        {
+          EFPDataGridViewConfig gridConfig = new EFPDataGridViewConfig();
+          gridConfig.ReadConfig(cfg);
+          gridConfig.SetReadOnly();
+          base.CurrentConfig = gridConfig;
+        }
+        catch (Exception e)
+        {
+          try
+          {
+            e.Data["CfgPart.ToString()"] = cfg.ToString();
+            e.Data["CfgPart.GetXmlText()"] = cfg.GetXmlText();
+          }
+          catch { }
+          EFPApp.ShowException(e, "Ошибка загрузки сохраненной конфигурации табличного просмотра");
+          InsideSetCurrentConfig = true; // 07.07.2017
+          try
+          {
+            OnInitDefaultGridConfig();
+          }
+          catch { }
+          InsideSetCurrentConfig = false;
+        }
+      }
+      if (base.CurrentConfig == null)
+        throw new BugException("Метод InitDefaultGridConfig() не установил свойство CurrentConfig");
+    }
 
     #endregion
 
@@ -512,6 +709,14 @@ CommandItems.PerformRefreshItems();
       }
     }
 
+    /// <summary>
+    /// Когда табличный просмотр первый раз выводится на экран, сохраняем сюда
+    /// настройки фильтров "по умолчанию", то есть те, которые выполнены прикладным
+    /// модулем. Например, для операций, могут быть по умолчанию установлен фильтр
+    /// по дате операции (текущий месяц) и по нашей организации
+    /// </summary>
+    private TempCfg _DefaultFilterCfg;
+
     #endregion
   }
 
@@ -526,9 +731,9 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Создает список команд
     /// </summary>
-    /// <param name="owner">Провайдер управляющего элемента</param>
-    public EFPConfigurableDataTreeViewCommandItems(EFPConfigurableDataTreeView owner)
-      : base(owner)
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    public EFPConfigurableDataTreeViewCommandItems(EFPConfigurableDataTreeView controlProvider)
+      : base(controlProvider)
     {
       #region Исходные значения свойств
 
@@ -537,6 +742,17 @@ CommandItems.PerformRefreshItems();
       #endregion
 
       #region Создание команд
+
+      #region Настройка просмотра
+
+      ciEditConfig = new EFPCommandItem("View", "GridConfig");
+      ciEditConfig.MenuText = "Настройка просмотра";
+      ciEditConfig.ImageKey = "EditGridConfig";
+      ciEditConfig.Click += new EventHandler(ciEditConfig_Click);
+      // пусть будет везде ciEditConfig.Usage = EFPCommandItemUsage.Menu;
+      Add(ciEditConfig);
+
+      #endregion
 
       #region Фильтр
 
@@ -589,7 +805,7 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new EFPConfigurableDataTreeView Owner { get { return (EFPConfigurableDataTreeView)(base.ControlProvider); } }
+    public new EFPConfigurableDataTreeView ControlProvider { get { return (EFPConfigurableDataTreeView)(base.ControlProvider); } }
 
     #endregion
 
@@ -610,11 +826,11 @@ CommandItems.PerformRefreshItems();
     {
       get
       {
-        if (Owner.HasFilters)
+        if (ControlProvider.HasFilters)
         {
-          for (int i = 0; i < Owner.Filters.Count; i++)
+          for (int i = 0; i < ControlProvider.Filters.Count; i++)
           {
-            if (Owner.Filters[i] is IEFPScrollableGridFilter)
+            if (ControlProvider.Filters[i] is IEFPScrollableGridFilter)
               return true;
           }
         }
@@ -631,13 +847,13 @@ CommandItems.PerformRefreshItems();
     {
       get
       {
-        if (Owner.HasFilters)
+        if (ControlProvider.HasFilters)
         {
-          for (int i = 0; i < Owner.Filters.Count; i++)
+          for (int i = 0; i < ControlProvider.Filters.Count; i++)
           {
-            if (Owner.Filters[i] is IEFPScrollableGridFilter)
+            if (ControlProvider.Filters[i] is IEFPScrollableGridFilter)
             {
-              IEFPScrollableGridFilter f = (IEFPScrollableGridFilter)(Owner.Filters[i]);
+              IEFPScrollableGridFilter f = (IEFPScrollableGridFilter)(ControlProvider.Filters[i]);
               if (f.CanScrollUp || f.CanScrollDown)
                 return f;
             }
@@ -661,6 +877,8 @@ CommandItems.PerformRefreshItems();
 
     #endregion
 
+    #region Обновление команд
+
     /// <summary>
     /// Инициализация свойство EFPCommandItem.Usage
     /// </summary>
@@ -668,7 +886,10 @@ CommandItems.PerformRefreshItems();
     {
       base.OnPrepare();
 
-      if (!Owner.HasFilters)
+      if (!ControlProvider.HasConfigureViewHandler)
+        ciEditConfig.Usage = EFPCommandItemUsage.None;
+
+      if (!ControlProvider.HasFilters)
       {
         ciSetFilter.Usage = EFPCommandItemUsage.None;
         if (_MenuFilter.MenuChildrenCount == 0)
@@ -711,6 +932,19 @@ CommandItems.PerformRefreshItems();
       }
     }
 
+    #endregion
+
+    #region Настройка просмотра
+
+    private EFPCommandItem ciEditConfig;
+
+    private void ciEditConfig_Click(object sender, EventArgs args)
+    {
+      ControlProvider.ShowConfigDialog();
+    }
+
+    #endregion
+
     #region Команды фильтра
 
     /// <summary>
@@ -725,7 +959,7 @@ CommandItems.PerformRefreshItems();
 
     void ciSetFilter_Click(object sender, EventArgs args)
     {
-      Owner.ShowFilterDialog();
+      ControlProvider.ShowFilterDialog();
     }
 
     void ciScrollFilterPrev_Click(object sender, EventArgs args)
@@ -753,7 +987,7 @@ CommandItems.PerformRefreshItems();
       else
         ActiveScrollableFilter.ScrollUp();
 
-      Owner.PerformFilterChanged();
+      ControlProvider.PerformFilterChanged();
     }
 
     #endregion

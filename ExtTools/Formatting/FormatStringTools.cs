@@ -69,6 +69,7 @@ namespace FreeLibSet.Formatting
     /// Получить количество десятичных разрядов из числового формата.
     /// Если значение <paramref name="format"/> не задано или формат не удается распознать как числовой, возвращается (-1).
     /// Текущая реализация является очень простой и распознает только форматы с нулями и "#": "0", "0.0", "0.0#", и т.п.
+    /// Если формат использует секции, разделенные точкой запятой, то берется только первая секция
     /// </summary>
     /// <param name="format">Числовой формат</param>
     /// <returns>Количество десятичных разрядов</returns>
@@ -79,7 +80,7 @@ namespace FreeLibSet.Formatting
       if (format.Length == 1) // один из стандартных форматов, например, "G"
       {
         char ch = format[0];
-        if (ch>='A' && ch<='Z')
+        if (ch >= 'A' && ch <= 'Z')
           return -1;
         if (ch >= 'a' && ch <= 'z')
           return -1;
@@ -88,10 +89,15 @@ namespace FreeLibSet.Formatting
         // Односимвольный формат может быть "0"
       }
 
+      int p;
+      p = format.IndexOf(';');
+      if (p >= 0)
+        format = format.Substring(0, p); // 13.03.2024
+
       if (format.IndexOfAny(new char[] { '0', '#' }) < 0)
         return -1;
 
-      int p = format.IndexOf('.');
+      p = format.IndexOf('.');
       if (p < 0)
         return 0;
 
@@ -323,6 +329,76 @@ namespace FreeLibSet.Formatting
       return ExpandDateTimeFormat(formatString, null);
     }
 
+    /// <summary>
+    /// Преобразует строку форматирования даты и/или времени в перечислимое значение <see cref="EditableDateTimeFormatterKind"/>.
+    /// В случае ошибки возвращается <see cref="EditableDateTimeFormatterKind.DateTime"/>.
+    /// Поддерживаются односимвольные форматы. При этом используется <see cref="CultureInfo.CurrentCulture"/> для преобразования в реальный формат.
+    /// </summary>
+    /// <param name="formatString">Строка форматирования</param>
+    /// <returns>Тип даты/времени</returns>
+    public static EditableDateTimeFormatterKind GetEditableDateTimeFormatterKind(string formatString)
+    {
+      EditableDateTimeFormatterKind kind;
+      GetEditableDateTimeFormatterKind(formatString, out kind, null);
+      return kind;
+    }
+
+    // 8 результатов для GetEditableDateTimeFormatterKind
+    // Биты: [2]-D, [1]-H, [2]-S
+    private static readonly EditableDateTimeFormatterKind[] _FormatterKindFlags = new EditableDateTimeFormatterKind[8] {
+      EditableDateTimeFormatterKind.DateTime, // 000 - неправильный
+      EditableDateTimeFormatterKind.Time, // 00S - неправильный
+      EditableDateTimeFormatterKind.ShortTime, // 0H0
+      EditableDateTimeFormatterKind.Time, // 0HS
+      EditableDateTimeFormatterKind.Date, // D00
+      EditableDateTimeFormatterKind.DateTime, // D0S - неправильный
+      EditableDateTimeFormatterKind.ShortDateTime, // DH0
+      EditableDateTimeFormatterKind.DateTime, // DHS
+    };
+
+    /// <summary>
+    /// Преобразует строку форматирования даты и/или времени в перечислимое значение <see cref="EditableDateTimeFormatterKind"/>.
+    /// В случае ошибки возвращается false и в <paramref name="kind"/> записывается <see cref="EditableDateTimeFormatterKind.DateTime"/>.
+    /// Поддерживаются односимвольные форматы. При этом используется <paramref name="formatInfo"/> (или <see cref="CultureInfo.CurrentCulture"/>, если null) для преобразования в реальный формат.
+    /// </summary>
+    /// <param name="formatString">Строка форматирования</param>
+    /// <param name="kind">Результат: тип редактируемого значения</param>
+    /// <param name="formatInfo">Используется для преобразования стандартных форматов или null</param>
+    /// <returns>True, если распознавание выполнено успешно</returns>
+    public static bool GetEditableDateTimeFormatterKind(string formatString, out EditableDateTimeFormatterKind kind, DateTimeFormatInfo formatInfo)
+    {
+      kind = EditableDateTimeFormatterKind.DateTime;
+      if (String.IsNullOrEmpty(formatString))
+        return false;
+      formatString = ExpandDateTimeFormat(formatString, formatInfo);
+
+      int index = 0;
+      for (int i = 0; i < formatString.Length; i++)
+      {
+        switch (formatString[i])
+        {
+          case 'y':
+          case 'M':
+          case 'd':
+            index |= 4;
+            break;
+          case 'H':
+          case 'h':
+          case 'm':
+            index |= 2;
+            break;
+          case 's':
+            index |= 1;
+            break;
+        }
+      }
+
+      if (index == 0)
+        return false;
+
+      kind = _FormatterKindFlags[index];
+      return true;
+    }
 
     /// <summary>
     /// Возвращает порядок следования дня, месяца и года в строке форматирования даты.
@@ -663,7 +739,7 @@ namespace FreeLibSet.Formatting
       s1 = s1.PadRight(ampmTextWidth);
       s2 = s2.PadRight(ampmTextWidth);
 
-      
+
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < ampmTextWidth; i++)
       {

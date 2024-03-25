@@ -139,6 +139,10 @@ namespace FreeLibSet.Forms
       _OutItem = new Reporting.BRGridProducerMenuOutItem();
     }
 
+#if DEBUG
+    private bool _InsideInitViewFlag;
+#endif
+
     #endregion
 
     #region Основные коллекции
@@ -314,6 +318,7 @@ namespace FreeLibSet.Forms
       InitGridView((EFPConfigurableDataGridView)controlProvider, reInit, controlProvider.CurrentConfig, dummyColumns);
     }
 
+
     /// <summary>
     /// Инициализация табличного просмотра
     /// </summary>
@@ -322,6 +327,24 @@ namespace FreeLibSet.Forms
     /// <param name="config">Конфигурация или null для использования конфигурации по умолчанию</param>
     /// <param name="usedColumns">Сюда добавляются имена полей, которые должны быть в наборе данных</param>
     public void InitGridView(EFPConfigurableDataGridView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
+    {
+#if DEBUG
+      if (_InsideInitViewFlag)
+        throw new ReenteranceException();
+      _InsideInitViewFlag = true;
+      try
+      {
+#endif
+        DoInitGridView(controlProvider, reInit, config, usedColumns);
+#if DEBUG
+      }
+      finally
+      {
+        _InsideInitViewFlag = false;
+      }
+#endif
+    }
+    private void DoInitGridView(EFPConfigurableDataGridView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
     {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
@@ -392,24 +415,11 @@ namespace FreeLibSet.Forms
         if (colDef == null)
           // Нет в с списке доступных столбцов
           continue;
-        DataGridViewColumn gridCol = colDef.CreateColumn();
-        colDef.ApplyConfig(gridCol, config.Columns[i], controlProvider);
-        controlProvider.Control.Columns.Add(gridCol);
+        EFPDataGridViewColumn column = colDef.CreateGridColumn(controlProvider);
+        colDef.ApplyConfig(column.GridColumn, config.Columns[i], controlProvider);
+
         // Запоминаем поля, которые нужны
         colDef.GetColumnNames(usedColumns);
-
-        EFPDataGridViewColumn col2 = controlProvider.Columns[gridCol];
-        col2.ColumnProducer = colDef;
-        col2.SizeGroup = colDef.SizeGroup;
-        col2.CanIncSearch = colDef.CanIncSearch;
-        col2.Summable = colDef.Summable;
-        col2.MaskProvider = colDef.MaskProvider;
-        col2.DbfInfo = colDef.DbfInfo;
-        col2.PrintHeaders = colDef.PrintHeaders;
-        col2.ColorType = colDef.ColorType;
-        col2.Grayed = colDef.Grayed;
-        col2.CustomOrderColumnName = colDef.CustomOrderSourceColumnName;
-        col2.DisplayName = colDef.DisplayName;
 
         maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
@@ -613,6 +623,24 @@ namespace FreeLibSet.Forms
     /// <param name="usedColumns">Сюда добавляются имена полей, которые должны быть в наборе данных</param>
     public void InitTreeView(EFPConfigurableDataTreeView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
     {
+#if DEBUG
+      if (_InsideInitViewFlag)
+        throw new ReenteranceException();
+      _InsideInitViewFlag = true;
+      try
+      {
+#endif
+        DoInitTreeView(controlProvider, reInit, config, usedColumns);
+#if DEBUG
+      }
+      finally
+      {
+        _InsideInitViewFlag = false;
+      }
+#endif
+    }
+    private void DoInitTreeView(EFPConfigurableDataTreeView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
+    {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
       if (reInit)
@@ -662,7 +690,7 @@ namespace FreeLibSet.Forms
       if (config != controlProvider.CurrentConfig)
       {
         controlProvider.CurrentConfig = config;
-        controlProvider.GridProducer = this;
+        //controlProvider.GridProducer = this;
       }
 
       controlProvider.Control.UseColumns = true;
@@ -678,33 +706,13 @@ namespace FreeLibSet.Forms
         if (colDef == null)
           // Нет в с списке доступных столбцов
           continue;
-        // Создаем объект TreeColumn
-        TreeColumn tc = colDef.CreateTreeColumn(config.Columns[i]);
-        controlProvider.Control.Columns.Add(tc);
 
-        // Создаем объект NodeControl
-        BindableControl bc = colDef.CreateNodeControl();
-        colDef.ApplyConfig(bc, config.Columns[i], controlProvider);
-        bc.VirtualMode = true;
-        bc.DataPropertyName = colDef.Name;
-        bc.ParentColumn = controlProvider.Control.Columns[controlProvider.Control.Columns.Count - 1];
-        controlProvider.Control.NodeControls.Add(bc);
-
+        EFPDataTreeViewColumn column = colDef.CreateTreeColumn(controlProvider);
+        colDef.ApplyConfig(column, config.Columns[i], controlProvider);
 
 
         // Запоминаем поля, которые нужны
         colDef.GetColumnNames(usedColumns);
-        
-        EFPDataTreeViewColumn col2 = controlProvider.Columns[tc];
-        col2.ColumnProducer = colDef;
-        col2.SizeGroup = colDef.SizeGroup;
-        col2.CanIncSearch = colDef.CanIncSearch;
-        col2.MaskProvider = colDef.MaskProvider;
-        col2.DbfInfo = colDef.DbfInfo;
-        col2.PrintHeaders = colDef.PrintHeaders;
-        col2.ColorType = colDef.ColorType;
-        col2.Grayed = colDef.Grayed;
-        col2.DisplayName = colDef.DisplayName;
 
         maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }

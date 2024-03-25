@@ -232,21 +232,24 @@ namespace FreeLibSet.Forms
       Columns.Clear();
       string visibleCols = cfg.GetString("VisibleColumns");
       string[] a = visibleCols.Split(',');
-      CfgPart cfg2 = cfg.GetChild("Columns", true);
+      CfgPart cfg2 = cfg.GetChild("Columns", false); // может быть null
       for (int i = 0; i < a.Length; i++)
       {
         string columnName = a[i].Trim();
         if (String.IsNullOrEmpty(columnName))
           continue;
         EFPDataGridViewConfigColumn col = new EFPDataGridViewConfigColumn(columnName);
-        CfgPart cfg3 = cfg2.GetChild(columnName, false);
-        if (cfg3 != null)
+        if (cfg2 != null)
         {
-          col.Width = cfg3.GetInt("Width");
-          col.FillMode = cfg3.GetBool("FillMode");
-          int x = cfg3.GetInt("FillWeight");
-          if (x > 0)
-            col.FillWeight = x;
+          CfgPart cfg3 = cfg2.GetChild(columnName, false);
+          if (cfg3 != null)
+          {
+            col.Width = cfg3.GetInt("Width");
+            col.FillMode = cfg3.GetBool("FillMode");
+            int x = cfg3.GetInt("FillWeight");
+            if (x > 0)
+              col.FillWeight = x;
+          }
         }
         Columns.Add(col);
       }

@@ -15,6 +15,7 @@ using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Reporting;
 using FreeLibSet.Collections;
+using System.ComponentModel;
 
 namespace FreeLibSet.Forms
 {
@@ -831,8 +832,8 @@ namespace FreeLibSet.Forms
   #region Режимы сохранения текущих строк
 
   /// <summary>
-  /// Возможные способы сохранения / восстановления текущей позиции в табличном 
-  /// просмотре (свойство EFPDataGridView.SelectedRowsMode)
+  /// Возможные способы сохранения / восстановления текущей позиции в древовидном 
+  /// просмотре (свойство <see cref="EFPDataTreeView.SelectedNodesMode"/>)
   /// </summary>
   public enum EFPDataTreeViewSelectedNodesMode
   {
@@ -849,23 +850,22 @@ namespace FreeLibSet.Forms
     Position,
 
     /// <summary>
-    /// Сохранение ссылок на объекты DataRow
-    /// Подходит для просмотров, связанных с IDataTableTreeModel при условии, что
-    /// обновление таблицы не приводит к замене строк. Зато таблица может не иметь
-    /// ключевого поля.
+    /// Сохранение ссылок на объекты <see cref="System.Data.DataRow"/>.
+    /// Подходит для просмотров, связанных с <see cref="IDataTableTreeModel"/> при условии, что
+    /// обновление таблицы не приводит к замене строк. Зато таблица может не иметь ключевого поля.
     /// </summary>
     DataRow,
 
     /// <summary>
-    /// Режим для просмотров, связанных с IDataTableTreeModel при условии, что таблица имеет первичный ключ
+    /// Режим для просмотров, связанных с <see cref="IDataTableTreeModel"/> при условии, что таблица имеет первичный ключ
     /// </summary>
     PrimaryKey,
   }
 
   /// <summary>
-  /// Класс для сохранения текущей позиции и выбранных строк/столбцов в таблчном просмотре
-  /// (свойство EFPDataGridView.Selection)
-  /// Не содержит открытых полей
+  /// Класс для сохранения текущей позиции и выбранных строк/столбцов в древовидном просмотре
+  /// (свойство <see cref="EFPDataTreeView.Selection"/>)
+  /// Не содержит открытых полей.
   /// </summary>
   public class EFPDataTreeViewSelection
   {
@@ -883,11 +883,6 @@ namespace FreeLibSet.Forms
     /// Режим "Выбраны все узлы". В этом случае выбранные узлы не запоминаются
     /// </summary>
     internal bool SelectAll;
-
-    /// <summary>
-    /// Номер текущего столбца
-    /// </summary>
-    internal int CurrentColumnIndex;
 
     /// <summary>
     /// true, если свойство TreeViewAdv.Model было установлено
@@ -937,33 +932,15 @@ namespace FreeLibSet.Forms
 
       if (!DesignMode)
       {
-        //Control.CurrentCellChanged += new EventHandler(Control_CurrentCellChanged);
         Control.VisibleChanged += new EventHandler(Control_VisibleChanged);
-        //Control.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(Control_DataBindingComplete);
         Control.KeyDown += new KeyEventHandler(Control_KeyDown);
         Control.MouseDown += new MouseEventHandler(Control_MouseDown);
-        //Control.RowPrePaint += new DataGridViewRowPrePaintEventHandler(Control_RowPrePaint);
-        //Control.CellPainting += new DataGridViewCellPaintingEventHandler(Control_CellPainting);
-        //Control.RowPostPaint += new DataGridViewRowPostPaintEventHandler(Control_RowPostPaint);
-        //Control.CellFormatting += new DataGridViewCellFormattingEventHandler(Control_CellFormatting);
-        //Control.Enter += new EventHandler(Control_Enter);
-        //Control.Leave += new EventHandler(Control_Leave);
-        //Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
         Control.KeyDown += new KeyEventHandler(Control_KeyDown);
-        //Control.CellClick += new DataGridViewCellEventHandler(Control_CellClick);
-        //Control.CellContentClick += new DataGridViewCellEventHandler(Control_CellContentClick);
-        //Control.CurrentCellDirtyStateChanged += new EventHandler(Control_CurrentCellDirtyStateChanged);
-        //Control.CellValueChanged += new DataGridViewCellEventHandler(Control_CellValueChanged);
-        //Control.CellParsing += new DataGridViewCellParsingEventHandler(Control_CellParsing);
-        //Control.CellValidating += new DataGridViewCellValidatingEventHandler(Control_CellValidating);
-        //Control.CellBeginEdit += new DataGridViewCellCancelEventHandler(Control_CellBeginEdit1);
-        //if (EFPApp.ShowToolTips)
-        //  Control.CellToolTipTextNeeded += new DataGridViewCellToolTipTextNeededEventHandler(Control_CellToolTipTextNeeded);
-        //Control.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(Control_ColumnHeaderMouseClick);
-        //Control.ReadOnlyChanged += Control_ReadOnlyChanged;
         Control.ModelChanged += Control_ModelChanged;
+        Control.SizeChanged += Control_SizeChanged;
       }
       Control.UseColumns = true;
+      UseIdle = true; // автоподбор размеров столбцов
     }
 
     #endregion
@@ -971,7 +948,7 @@ namespace FreeLibSet.Forms
     #region Изменения в ProviderState
 
     /// <summary>
-    /// Инициализирует свойство <see cref="BRDocumentProperties.Title"/>
+    /// Инициализирует свойство <see cref="BRDocumentProperties.Title"/> и устанавливает размеры столбцов с заполнением по ширине.
     /// </summary>
     protected override void OnAttached()
     {
@@ -979,10 +956,12 @@ namespace FreeLibSet.Forms
 
       if (String.IsNullOrEmpty(_DocumentProperties.Title))
         _DocumentProperties.Title = WinFormsTools.GetControlText(Control);
+
+      PerformAutoResizeColumns();
     }
 
     /// <summary>
-    /// Вызов ResetDataReorderHelper();
+    /// Вызов <see cref="ResetDataReorderHelper()"/>.
     /// </summary>
     protected override void OnDetached()
     {
@@ -991,7 +970,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызов ResetDataReorderHelper();
+    /// Вызов <see cref="ResetDataReorderHelper()"/>.
     /// </summary>
     protected override void OnDisposed()
     {
@@ -1066,31 +1045,10 @@ namespace FreeLibSet.Forms
 
     internal void Control_VisibleChanged(object sender, EventArgs args)
     {
-      // !!! Модификатор public нужен для EFPAppCommandItems
+      // !!! Модификатор internal нужен для EFPDataTreeViewCommandItems
 
       try
       {
-        if (Control.Visible)
-        {
-          CurrentColumnIndex = CurrentColumnIndex;
-          /*
-          if (Control.CurrentCell != null && Control.Height > 0 && Control.Width > 0)
-          {
-            if (!Control.CurrentCell.Displayed)
-            {
-              try
-              {
-                Control.FirstDisplayedCell = Control.CurrentCell;
-              }
-              catch
-              {
-                // Может быть InvalidOpertationException, если строки не помещаются
-              }
-            }
-          } */
-
-          //CommandItems.RefreshStatItems();
-        }
         _VisibleHasChanged = Control.Visible;
         _MouseOrKeyboardFlag = false;
       }
@@ -1138,6 +1096,7 @@ namespace FreeLibSet.Forms
         EFPApp.ShowException(e, "Control_MouseDown");
       }
     }
+
     void DoControl_MouseDown(MouseEventArgs args)
     {
       _MouseOrKeyboardFlag = true;
@@ -1256,9 +1215,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Блокировка сортировки для всех столбцов
-    /// Для столбцов, определенных в Orders, сортировка остается разрешенной
     /// </summary>
-    public void DisableOrdering()
+    internal void DisableOrdering() // Сделать public, если сортировка будет разрешена
     {
       for (int i = 0; i < Control.Columns.Count; i++)
         Control.Columns[i].Sortable = false;
@@ -1278,30 +1236,26 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установить свойство DataReadOnly для всех столбцов просмотра.
+    /// Установить свойство <see cref="InteractiveControl.EditEnabled"/> (инвертированное значение) для всех столбцов просмотра.
     /// Метод используется, когда требуется разрешить редактирование "по месту" 
-    /// только для некоторых столбцов, а большая часть столбцов не редактируется
-    /// Метод должен вызываться после установки общих свойств DataReadOnly табличного 
-    /// просмотра, иначе признак у столбцов может быть изменен неявно
+    /// только для некоторых столбцов, а большая часть столбцов не редактируется.
     /// </summary>
     /// <param name="value">Устанавливаемое значение</param>
     public void SetColumnsReadOnly(bool value)
     {
       for (int i = 0; i < Control.NodeControls.Count; i++)
       {
-        EditableControl ec = Control.NodeControls[i] as EditableControl;
-        if (ec != null)
-          ec.EditEnabled = !value; // 17.11.2017
+        InteractiveControl ic = Control.NodeControls[i] as InteractiveControl;
+        if (ic != null)
+          ic.EditEnabled = !value; // 17.11.2017
       }
     }
 
 
     /// <summary>
-    /// Установить свойство DataReadOnly для заданных столбцов просмотра.
+    /// Установить свойство <see cref="InteractiveControl.EditEnabled"/> (инвертированное значение) для заданных столбцов просмотра.
     /// Метод используется, когда требуется разрешить редактирование "по месту" 
-    /// только для некоторых столбцов, а большая часть столбцов не редактируется
-    /// Метод должен вызываться после установки общих свойств DataReadOnly табличного 
-    /// просмотра, иначе признак у столбцов может быть изменен неявно
+    /// только для некоторых столбцов, а большая часть столбцов не редактируется.
     /// </summary>
     /// <param name="columnNames">Список имен столбцов через запятую. Если столбец с заданным именем не найден, то ошибка не выдается</param>
     /// <param name="value">Устанавливаемое значение</param>
@@ -1310,11 +1264,11 @@ namespace FreeLibSet.Forms
       string[] a = columnNames.Split(',');
       for (int i = 0; i < Control.NodeControls.Count; i++)
       {
-        EditableControl ec = Control.NodeControls[i] as EditableControl;
-        if (ec != null)
+        InteractiveControl ic = Control.NodeControls[i] as InteractiveControl;
+        if (ic != null)
         {
-          if (Array.IndexOf<string>(a, ec.DataPropertyName) >= 0)
-            ec.EditEnabled = !ReadOnly;
+          if (Array.IndexOf<string>(a, ic.DataPropertyName) >= 0)
+            ic.EditEnabled = !ReadOnly;
         }
       }
     }
@@ -1353,7 +1307,7 @@ namespace FreeLibSet.Forms
     IEFPDataViewColumns IEFPDataView.Columns { get { return Columns; } }
 
     /// <summary>
-    /// Создает объект EFPDataTreeViewColumns
+    /// Создает объект <see cref="EFPDataTreeViewColumns"/>.
     /// </summary>
     /// <returns>Новый объект</returns>
     protected virtual EFPDataTreeViewColumns CreateColumns()
@@ -1387,7 +1341,212 @@ namespace FreeLibSet.Forms
 
     bool IEFPDataView.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
     {
-      throw new NotImplementedException();
+      EFPDataTreeViewColumn col = Columns[configColumn.ColumnName];
+      if (col == null)
+        return false;
+
+      configColumn.Width = col.TreeColumn.Width;
+      configColumn.FillMode = col.FillWeight > 0;
+      configColumn.FillWeight = col.FillWeight;
+
+      return true;
+    }
+
+    #endregion
+
+    #region Автоматический подбор размеров столбцов по ширине
+
+    /// <summary>
+    /// Установка флага означает необходимость определения размера столбцов в событии Idle.
+    /// </summary>
+    internal bool AutoResizeColumnsNeeded;
+
+    private void PerformAutoResizeColumns()
+    {
+      AutoResizeColumnsNeeded = false;
+
+      int fixWidth = 0; // Полная ширина всех столбцов без автоподбора.
+      int autoFillWeight = 0; // Полный процент ширины столбцов
+      for (int i = 0; i < Columns.Count; i++)
+      {
+        if (Columns[i].FillWeight == 0)
+          fixWidth += Columns[i].TreeColumn.Width;
+        else
+        {
+          int mw = Columns[i].TreeColumn.MinColumnWidth;
+          if (mw < 1)
+            mw = 1;
+          autoFillWeight += Columns[i].FillWeight;
+        }
+      }
+
+      if (autoFillWeight > 0)
+      {
+        int wantedAutoWidth = Control.ClientSize.Width - fixWidth;
+        if (wantedAutoWidth <= 0)
+          return; // ??
+
+        double k = (double)wantedAutoWidth / (double)autoFillWeight;
+
+        for (int i = 0; i < Columns.Count; i++)
+        {
+          if (Columns[i].FillWeight > 0)
+          {
+            int w = (int)(Columns[i].FillWeight * k);
+            if (w < 1)
+              w = 1;
+            if (w < Columns[i].TreeColumn.MinColumnWidth)
+              w = Columns[i].TreeColumn.MinColumnWidth;
+            if (Columns[i].TreeColumn.MaxColumnWidth > 0 && w > Columns[i].TreeColumn.MaxColumnWidth)
+              w = Columns[i].TreeColumn.MaxColumnWidth;
+            Columns[i].TreeColumn.Width = w;
+          }
+        }
+      }
+    }
+
+    /// <summary>
+    /// Автоматический подбор ширины столбцов
+    /// </summary>
+    public override void HandleIdle()
+    {
+      base.HandleIdle();
+      if (AutoResizeColumnsNeeded)
+        PerformAutoResizeColumns();
+    }
+
+    private void Control_SizeChanged(object sender, EventArgs args)
+    {
+      if (ProviderState == EFPControlProviderState.Attached)
+        AutoResizeColumnsNeeded = true;
+    }
+
+
+    #endregion
+
+    #region GridProducer
+
+    /// <summary>
+    /// Генератор столбцов таблицы. Если задан, то в локальном меню доступны
+    /// команды настройки столбцов таблицы, при условии, что также установлено свойство <see cref="EFPControlBase.ConfigSectionName"/>.
+    /// </summary>
+    public IEFPGridProducer GridProducer
+    {
+      get { return _GridProducer; }
+      set
+      {
+        if (value != null)
+          value.SetReadOnly();
+        CheckHasNotBeenCreated();
+
+        _GridProducer = value;
+      }
+    }
+    private IEFPGridProducer _GridProducer;
+
+    #endregion
+
+    #region Свойство CurrentGridConfig
+
+    /// <summary>
+    /// Выбранная настройка табличного просмотра.
+    /// Если свойство <see cref="GridProducer"/> не установлено, должен быть задан обработчик <see cref="CurrentConfigChanged"/>,
+    /// который выполнит реальную настройку просмотра.
+    /// </summary>
+    public EFPDataGridViewConfig CurrentConfig
+    {
+      get { return _CurrentConfig; }
+      set
+      {
+        if (value == _CurrentConfig)
+          return; // предотвращение рекурсивной установки
+
+        if (value != null)
+          value.SetReadOnly();
+        _CurrentConfig = value;
+
+        if (!InsideSetCurrentConfig)
+        {
+          InsideSetCurrentConfig = true;
+          try
+          {
+            CancelEventArgs args = new CancelEventArgs();
+            args.Cancel = false;
+            OnCurrentConfigChanged(args);
+            if ((!args.Cancel) && (GridProducer != null))
+            {
+              this.Columns.Clear();
+              //int nCols1 = Control.Columns.Count;
+              GridProducer.InitTreeView(this, CurrentConfigHasBeenSet);
+              //int nCols2 = Control.Columns.Count;
+              PerformGridProducerPostInit();
+
+            }
+          }
+          finally
+          {
+            InsideSetCurrentConfig = false;
+          }
+        }
+        _CurrentConfigHasBeenSet = true;
+      }
+    }
+    private EFPDataGridViewConfig _CurrentConfig;
+
+    /// <summary>
+    /// Флажок нахождения в пределах сеттера свойства <see cref="CurrentConfig"/>.
+    /// </summary>
+    protected bool InsideSetCurrentConfig = false;
+
+    /// <summary>
+    /// Признак того, что свойство <see cref="CurrentConfig"/> уже устанавливалось
+    /// </summary>
+    protected bool CurrentConfigHasBeenSet { get { return _CurrentConfigHasBeenSet; } }
+    private bool _CurrentConfigHasBeenSet = false;
+
+    /// <summary>
+    /// Вызывается при изменении свойства <see cref="CurrentConfig"/>.
+    /// Если аргумент <see cref="CancelEventArgs.Cancel"/> обработчиком установлен в true, то предполагается,
+    /// что инициализация просмотра выполнена в обработчике. В противном случае
+    /// (по умолчанию Cancel=false или при отстутствии обработчика) будет вызван
+    /// метод <see cref="IEFPGridProducer.InitGridView(EFPDataGridView, bool)"/>.
+    /// </summary>
+    public event CancelEventHandler CurrentConfigChanged;
+
+    /// <summary>
+    /// Вызывает событие <see cref="CurrentConfigChanged"/>.
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnCurrentConfigChanged(CancelEventArgs args)
+    {
+      if (CurrentConfigChanged != null)
+        CurrentConfigChanged(this, args);
+    }
+
+    /// <summary>
+    /// Это событие вызывается после того, как конфигурация табличного просмотра инициализирована
+    /// с помощью <see cref="IEFPGridProducer.InitGridView(EFPDataGridView, bool)"/>.
+    /// </summary>
+    public event EventHandler GridProducerPostInit;
+
+    /// <summary>
+    /// Вызывает событие <see cref="GridProducerPostInit"/>
+    /// </summary>
+    public void PerformGridProducerPostInit()
+    {
+      OnGridProducerPostInit();
+
+      if (ProviderState == EFPControlProviderState.Attached)
+        PerformAutoResizeColumns();
+    }
+
+    /// <summary>
+    /// Вызывает событие <see cref="GridProducerPostInit"/>
+    /// </summary>
+    protected virtual void OnGridProducerPostInit()
+    {
+      if (GridProducerPostInit != null)
+        GridProducerPostInit(this, EventArgs.Empty);
     }
 
     #endregion
@@ -1408,7 +1567,6 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вспомогательное свойство. Возвращает число выбранных строк в просмотре.
-    /// Оптимальнее, чем вызов SelectedRows.Length
     /// </summary>
     public int SelectedRowCount
     {
@@ -1501,6 +1659,7 @@ namespace FreeLibSet.Forms
     }
 #endif
 
+#if XXX // В TreeViewAdv всегда выбирается строка целиком, а не ячейка
     /*
     public int[] SelectedColumnIndices
     {
@@ -1577,6 +1736,7 @@ namespace FreeLibSet.Forms
       return Control.CurrentCellAddress.X == ColumnIndex && Control.CurrentCellAddress.Y == RowIndex;
        * */
     }
+#endif
 
     /// <summary>
     /// Вспомогательное свойство только для чтения. Возвращает true, если свойство
@@ -1587,79 +1747,16 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        return true;
-        /*
-        DataGridViewRow TheRow = CurrentGridRow; // самое простое свойство
-        if (TheRow == null)
-          return false; // нет текущей строки совсем
-
-        if ((Control.SelectionMode == DataGridViewSelectionMode.FullRowSelect) ||
-             Control.SelectionMode == DataGridViewSelectionMode.RowHeaderSelect)
-        {
-          // Проверяем наличие других выбранных строк
-          if (Control.SelectedRows.Count > 0)
-          {
-            for (int i = 0; i < Control.SelectedRows.Count; i++)
-            {
-              if (Control.SelectedRows[i] != TheRow)
-                return false; // Нашли другую строку
-            }
-          }
-        }
-
-        // Проверяем наличие выделенных ячеек от других строк
-        if (Control.SelectedCells.Count > 0)
-        {
-          for (int i = 0; i < Control.SelectedCells.Count; i++)
-          {
-            if (Control.SelectedCells[i].OwningRow != TheRow)
-              return false;
-          }
-        }
-
-        return true;
-         * */
+        return Control.SelectedNodes.Count == 1;
       }
     }
-
-    /// <summary>
-    /// Выбор прямоугольной области ячеек
-    /// Свойство возвращает/устанавливает выбранные строки и столбцы в виде 
-    /// координат прямоугольника
-    /// </summary>
-    public Rectangle SelectedRectAddress
-    {
-      get
-      {
-        throw new NotSupportedException();
-        /*
-        if (Control.AreAllCellsSelected(false))
-          return new Rectangle(0, 0, Control.ColumnCount, Control.RowCount);
-        int[] Rows = SelectedRowIndices;
-        int[] Cols = SelectedColumnIndices;
-        if (Rows.Length == 0 || Cols.Length == 0)
-          return Rectangle.Empty;
-
-        int x1 = Cols[0];
-        int x2 = Cols[Cols.Length - 1];
-        int y1 = Rows[0];
-        int y2 = Rows[Rows.Length - 1];
-        return new Rectangle(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
-         * */
-      }
-      set
-      {
-        throw new BugException("Не реализовано");
-      }
-    }
-
 
     /// <summary>
     /// Вспомогательный метод
-    /// Возвращает true, если в просмотре есть только одна выбранная (текущая) строка
+    /// Возвращает true, если в просмотре есть только одна выбранная (текущая) строка.
     /// Если в просмотре нет текущей строки или выбрано больше одной строки, то
-    /// выдается соответствующее сообщение с помошью EFPApp.ShowTempMessage().
-    /// Возвращаемое значение соответствует свойству IsCurrentRowSingleSelected
+    /// выдается соответствующее сообщение с помошью <see cref="EFPApp.ShowTempMessage(string)"/>.
+    /// Возвращаемое значение соответствует свойству <see cref="IsCurrentRowSingleSelected"/>.
     /// Используйте метод для упрощения реализации методов редактирования или команд
     /// локального меню, если они должны работать с единственной строкой. После
     /// вызова метода используйте одно из свойств CurrentXxxRow для доступа к строке
@@ -1686,7 +1783,7 @@ namespace FreeLibSet.Forms
     #region Доступ к выбранным ячейкам для источника данных DataView или DataTable
 
     /// <summary>
-    /// Если модель реализует интерфейс IDataTableTreeModel, то возвращается таблица модели.
+    /// Если модель реализует интерфейс <see cref="IDataTableTreeModel"/>, то возвращается таблица модели.
     /// Иначе возвращается null.
     /// </summary>
     public DataTable SourceAsDataTable
@@ -1702,7 +1799,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если модель реализует интерфейс IDataTableTreeModel, то возвращается DataView модели или Table.DefaultView.
+    /// Если модель реализует интерфейс <see cref="IDataTableTreeModel"/>, то возвращается <see cref="System.Data.DataView"/> модели или <see cref="System.Data.DataTable.DefaultView"/>.
     /// Иначе возвращается null.
     /// </summary>
     public DataView SourceAsDataView
@@ -1725,9 +1822,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает IDataTableTreeModel или выбрасывает исключение
+    /// Возвращает <see cref="TreeViewAdv.Model"/> как <see cref="IDataTableTreeModel"/> или выбрасывает исключение,
+    /// если модель не установлена или имеет неподходящий тип.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Модель, не может быть null</returns>
     protected IDataTableTreeModel GetDataTableModelWithCheck()
     {
       if (Control.Model == null)
@@ -1825,8 +1923,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить или установить выбранные строки в просмотре.
-    /// Расширяет реализацию свойства TreeViewAdv.SelectedNodes, преобразуя TreeNodeAdv.Tag
-    /// в строки таблицы данных DataRow.
+    /// Расширяет реализацию свойства <see cref="TreeViewAdv.SelectedNodes"/>, преобразуя <see cref="TreeNodeAdv.Tag"/>
+    /// в строки таблицы данных <see cref="System.Data.DataRow"/>.
     /// В возвращаемые строки не входят дочерние дочерние узлы, которые не были выбраны.
     /// </summary>
     public DataRow[] SelectedDataRows
@@ -1868,7 +1966,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить строки DataRow таблицы для выбранных узлов
+    /// Получить строки <see cref="System.Data.DataRow"/> таблицы для выбранных узлов
     /// </summary>
     /// <param name="mode">Режим включения дочерних строк</param>
     /// <returns>Массив строк</returns>
@@ -1888,9 +1986,9 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Расширение свойства CurrentRow (чтение и установка текущей строки).
-    /// В качестве значения используется строка таблицы данных (объект DataRow)
-    /// Просмотр должен быть присоединен к DataSource типа DataView
+    /// Расширение свойства <see cref="TreeViewAdv.SelectedNode"/> (чтение и установка текущей строки).
+    /// В качестве значения используется строка таблицы данных (объект <see cref="System.Data.DataRow"/>).
+    /// Просмотр должен быть присоединен к модели, реализующей интерфейс <see cref="IDataTableTreeModel"/>.
     /// </summary>
     public DataRow CurrentDataRow
     {
@@ -1917,13 +2015,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойств SelectedRows / SelectedDataRows
-    /// В качестве текущих позиций запоминаются значения ключевых полей в DataTable
+    /// Расширение свойств <see cref="TreeViewAdv.SelectedNodes"/> и <see cref="SelectedDataRows"/>.
+    /// В качестве текущих позиций запоминаются значения ключевых полей в <see cref="System.Data.DataTable"/>.
     /// Первый индекс двумерного массива соответствует количеству строк.
-    /// Второй индекс соответствует количеству полей в DataTable.PrimaryKey 
-    /// (обычно равно 1)
-    /// Свойство возвращает null, если таблица не присоединена к просмотру (напрямую или через DataView)
-    /// или не имеет первичного ключа
+    /// Второй индекс соответствует количеству полей в <see cref="System.Data.DataTable.PrimaryKey"/>.
+    /// (обычно равно 1).
+    /// Свойство возвращает null, если таблица не присоединена к модели, реализующей <see cref="IDataTableTreeModel"/>,
+    /// или таблица не имеет первичного ключа.
     /// </summary>
     public object[,] SelectedDataRowKeys
     {
@@ -1953,8 +2051,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойств CurrentRow / CurrentDataRow для получения / установки 
-    /// текущей строки с помощью значений ключевых полей в DataTable
+    /// Расширение свойств <see cref="TreeViewAdv.SelectedNodes"/> и <see cref="SelectedDataRows"/>.
+    /// текущей строки с помощью значений ключевых полей в <see cref="System.Data.DataTable"/>.
     /// </summary>
     public object[] CurrentDataRowKeys
     {
@@ -2081,8 +2179,8 @@ namespace FreeLibSet.Forms
     #region Сохранение / восстановление выбранных строк
 
     /// <summary>
-    /// Режим сохранения выбранных строк свойствами SelectedNodesObject и CurrentNodeObject.
-    /// В отличие от EFPDataGridView, значение свойства определяется исключительно присоединенной моделью.
+    /// Режим сохранения выбранных строк свойствами <see cref="SelectedNodesObject"/> и <see cref="CurrentNodeObject"/>.
+    /// В отличие от <see cref="EFPDataGridView"/>, значение свойства определяется исключительно присоединенной моделью.
     /// Свойство нельзя устанавливать.
     /// </summary>
     public EFPDataTreeViewSelectedNodesMode SelectedNodesMode
@@ -2106,7 +2204,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохранение и восстановление выбранных узлов просмотра в виде одного объекта,
-    /// в зависимости от свойства SelectedRowsMode
+    /// в зависимости от свойства <see cref="SelectedNodesMode"/>
     /// </summary>
     public virtual object SelectedNodesObject
     {
@@ -2150,7 +2248,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохранение и восстановление текущей (одной) строки просмотра.
-    /// Тип свойства зависит от режима SelectedRowsMode.
+    /// Тип свойства зависит от режима <see cref="SelectedNodesMode"/>.
     /// </summary>
     public virtual object CurrentNodeObject
     {
@@ -2194,10 +2292,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохранение и восстановление текущих строк и столбца табличного просмотра.
-    /// Режим сохранения строк определеятся свойство SelectedRowsMode
-    /// Значение включает в себя: признак AreAllCellsSelected, список выделенных
-    /// строк SelectedRowsObject, текущую строку CurrentRowObject и индекс
-    /// столбца с текущей ячейкой CurrentColumnIndex
+    /// Режим сохранения строк определяется свойством <see cref="SelectedNodesMode"/>.
+    /// Значение включает в себя: список выделенных
+    /// строк <see cref="SelectedNodesObject"/>, текущую строку <see cref="CurrentNodeObject"/>.
+    /// Не содержит информации о выбранном столбце, так как выбирается всегда строка целиком.
     /// </summary>
     public EFPDataTreeViewSelection Selection
     {
@@ -2210,7 +2308,6 @@ namespace FreeLibSet.Forms
         if (!res.SelectAll)
           res.SelectedNodes = SelectedNodesObject;
         res.CurrentNode = CurrentNodeObject;
-        res.CurrentColumnIndex = CurrentColumnIndex;
 
         return res;
       }
@@ -2219,7 +2316,6 @@ namespace FreeLibSet.Forms
         if (!value.ModelExists)
           return;
 
-        CurrentColumnIndex = value.CurrentColumnIndex;
         CurrentNodeObject = value.CurrentNode;
         if (value.SelectAll)
           Control.SelectAllNodes();
@@ -2268,94 +2364,12 @@ namespace FreeLibSet.Forms
 
     #region Текущий столбец
 
+    // TreeViewAdv не поддерживает понятие "Текущий столбец".
+    // Нажатие клавиши "F2" начинает редактирование первого попавшегося столбца
 
-    /// <summary>
-    /// Номер текущего столбца. Если выбрано несколько столбцов (например, строка целиком),
-    /// то (-1)
-    /// </summary>
-    public int CurrentColumnIndex
-    {
-      get
-      {
-        if (_CurrentColumnIndex < 0)
-        {
-          for (int i = 0; i < Control.Columns.Count; i++)
-          {
-            if (Control.Columns[i].IsVisible)
-              return i;
-          }
-          return -1;
-        }
-        return _CurrentColumnIndex;
-      }
-      set
-      {     /*
-        if (value < 0 || value >= Control.ColumnCount)
-          return;
-        if (!Control.Columns[value].IsVisible)
-          return;
-        int RowIndex = Control.CurrentCellAddress.Y;
-        if (Control.Visible && RowIndex >= 0 && RowIndex < Control.Rows.Count)
-        {
-          try
-          {
-            Control.CurrentCell = Control.Rows[RowIndex].Cells[value];
-          }
-          catch
-          {
-          } 
-        }     */
-        _CurrentColumnIndex = value;
-      }
-    }
+    int IEFPDataView.CurrentColumnIndex { get { return -1; } }
 
-    /// <summary>
-    /// Сохраняем установленный ColumnIndex, если потом произойдет пересоздание просмотра
-    /// </summary>
-    private int _CurrentColumnIndex = -1;
-
-    /*
-    /// <summary>
-    /// Текущий столбец. Если выбрано несколько столбцов (например, строка целиком),
-    /// то null
-    /// </summary>
-    public EFPDataTreeViewColumn CurrentColumn
-    {
-      get
-      {
-        if (CurrentColumnIndex < 0 || CurrentColumnIndex >= Control.ColumnCount)
-          return null;
-        else
-          return Columns[CurrentColumnIndex];
-      }
-      set
-      {
-        CurrentColumnIndex = value.GridColumn.Index;
-      }
-    } */
-
-    /// <summary>
-    /// Имя текущего столбца. Если выбрано несколько столбцов (например, строка целиком),
-    /// то пустая строка ("")
-    /// </summary>
-    public string CurrentColumnName
-    {
-      get
-      {
-        return string.Empty;
-        /*
-        if (CurrentColumnIndex < 0 || CurrentColumnIndex >= Control.ColumnCount)
-          return String.Empty;
-        else
-          return Columns[CurrentColumnIndex].Name;*/
-      }
-      set
-      {          /*
-        EFPDataTreeViewColumn Column = Columns[value];
-        if (Column != null)
-          CurrentColumnIndex = Column.GridColumn.Index;*/
-      }
-    }
+    string IEFPDataView.CurrentColumnName { get { return String.Empty; } }
 
     #endregion
 
@@ -2918,7 +2932,6 @@ namespace FreeLibSet.Forms
         return;
       } */
 
-      int oldColIdx = CurrentColumnIndex;
 
       bool changed;
       if (ManualOrderRows)
@@ -2929,7 +2942,6 @@ namespace FreeLibSet.Forms
       // 9. Обновляем табличный просмотр
       if (changed)
       {
-        CurrentColumnIndex = oldColIdx;
         OnManualOrderChanged(EventArgs.Empty);
       }
     }

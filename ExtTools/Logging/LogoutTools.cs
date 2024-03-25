@@ -1496,7 +1496,7 @@ namespace FreeLibSet.Logging
       }
     }
 
-    [DebuggerStepThrough]
+    //[DebuggerStepThrough]
     private static void DoLogoutObject2(LogoutInfoNeededEventArgs args, object obj, Stack objStack)
     {
       #region Вывод для строки

@@ -80,7 +80,7 @@ namespace FreeLibSet.Forms
   {
     #region Защищенный конструктор
 
-    internal EFPDataTreeViewColumn(EFPDataTreeView controlProvider, TreeColumn treeColumn, NodeControl nodeControl, string name)
+    internal EFPDataTreeViewColumn(EFPDataTreeView controlProvider, TreeColumn treeColumn, BindableControl nodeControl, string name)
     {
       _ControlProvider = controlProvider;
       _TreeColumn = treeColumn;
@@ -118,8 +118,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Объект работы с ячейками столбца
     /// </summary>
-    public NodeControl NodeControl { get { return _NodeControl; } }
-    private readonly NodeControl _NodeControl;
+    public BindableControl NodeControl { get { return _NodeControl; } }
+    private readonly BindableControl _NodeControl;
 
     /// <summary>
     /// Индекс столбца в <see cref="EFPDataTreeViewColumns"/> 
@@ -374,7 +374,25 @@ namespace FreeLibSet.Forms
       set { TreeColumn.MinColumnWidth = ControlProvider.Measures.GetTextColumnWidth(value); }
     }
 
-    bool IEFPDataViewColumnBase.AutoGrow { get { return Index == 0; } } // ??
+    /// <summary>
+    /// Относительная ширина столбца.
+    /// В отличие от <see cref="DataGridView"/>, элемент <see cref="TreeViewAdv"/> не поддерживает автоматический подбор размеров по ширине.
+    /// Это свойство реализует недостающую возможность.
+    /// Нулевое значение (по умолчанию) означает отсутствие автоматического расширения.
+    /// </summary>
+    public int FillWeight
+    {
+      get { return _FillWeight; }
+      set
+      {
+        if (value < 0)
+          throw new ArgumentOutOfRangeException();
+        _FillWeight = value;
+      }
+    }
+    private int _FillWeight;
+
+    bool IEFPDataViewColumnBase.AutoGrow { get { return _FillWeight!=0; } } 
 
     #endregion
 
@@ -692,6 +710,17 @@ namespace FreeLibSet.Forms
       return Name;
     }
 
+    /// <summary>
+    /// Получение значения для столбца, созданного с помощью <see cref="EFPGridProducerColumn"/>
+    /// </summary>
+    /// <param name="sender">Ссылка на <see cref="NodeControl"/></param>
+    /// <param name="args">Аргументы события</param>
+    internal void NodeControl_ValueNeeded(object sender, NodeControlValueEventArgs args)
+    {
+      EFPDataViewRowInfo rowInfo = ControlProvider.GetRowInfo(args.Node);
+      args.Value = ((EFPGridProducerColumn)ColumnProducer).GetValue(rowInfo);
+    }
+
     #endregion
 
     #region Для DBF-файлов
@@ -900,19 +929,23 @@ namespace FreeLibSet.Forms
             colName = "Noname_" + (treeCol.Index + 1).ToString() + "_" + cnt.ToString();
           }
 
-          NodeControl mainNC = null;
+          BindableControl mainNC = null;
           foreach (NodeControl nc in ControlProvider.Control.NodeControls)
           {
+            BindableControl bc = nc as BindableControl;
+            if (bc == null)
+              continue;
+
             if (nc.ParentColumn != treeCol)
               continue;
 
-            if (nc is InteractiveControl)
+            if (bc is InteractiveControl)
             {
-              mainNC = nc;
+              mainNC = bc;
               break;
             }
             if (mainNC == null)
-              mainNC = nc;
+              mainNC = bc;
           }
           EFPDataTreeViewColumn efpCol = new EFPDataTreeViewColumn(ControlProvider, treeCol, mainNC, colName);
           _ColumnDict.Add(treeCol, efpCol);
@@ -1153,7 +1186,7 @@ namespace FreeLibSet.Forms
     /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
     /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах</param>
-    public void AddControl(NodeControl nodeControl, string columnName, string headerText, int textWidth, int minTextWidth)
+    public void AddControl(BindableControl nodeControl, string columnName, string headerText, int textWidth, int minTextWidth)
     {
       if (nodeControl == null)
         throw new ArgumentNullException("nodeControl");
@@ -1303,32 +1336,61 @@ namespace FreeLibSet.Forms
       return AddText(columnName, true, columnName, 10);
     }
 
-#if XXX
-
-    public DataGridViewTextBoxColumn AddTextFill(string FieldName, bool DataColumn, string HeaderText, int FillWeight, int MinTextWidth)
+    /// <summary>
+    /// Создает элемент <see cref="NodeTextBox"/> для отображения текста, занимающий определенную часть свободного места просмотра.
+    /// Задает горизонтальное выравнивание по левому краю.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <param name="fillWeight">Процент свободного места, занимаемый столбцом.
+    /// Не обязательно, чтобы все столбцы занимали ровно 100%.
+    /// См. описание свойства <see cref="EFPDataTreeViewColumn.FillWeight"/>.</param>
+    /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах (количество символов средней ширины)</param>
+    /// <returns>Созданный элемент</returns>
+    public NodeTextBox AddTextFill(string columnName, bool isDataColumn, string headerText, int fillWeight, int minTextWidth)
     {
-      DataGridViewTextBoxColumn col = AddText(FieldName, DataColumn, HeaderText, MinTextWidth, MinTextWidth);
-      col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      col.FillWeight = FillWeight;
-      return col;
+      NodeTextBox nodeControl = AddText(columnName, isDataColumn, headerText, minTextWidth, minTextWidth);
+      if (_LastAddedColumn != null)
+        _LastAddedColumn.FillWeight = fillWeight;
+      return nodeControl;
     }
 
-    public DataGridViewTextBoxColumn AddTextFill(string FieldName, bool DataColumn, string HeaderText)
+    /// <summary>
+    /// Создает элемент <see cref="NodeTextBox"/> для отображения текста, занимающий определенную часть свободного места просмотра.
+    /// Устанавливается свойство <see cref="EFPDataTreeViewColumn.FillWeight"/>=100 и <see cref="EFPDataTreeViewColumn.MinTextWidth"/>=5.
+    /// Задает горизонтальное выравнивание по левому краю.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <returns>Созданный элемент</returns>
+    public NodeTextBox AddTextFill(string columnName, bool isDataColumn, string headerText)
     {
-      return AddTextFill(FieldName, DataColumn, HeaderText, 100, 5);
+      return AddTextFill(columnName, isDataColumn, headerText, 100, 5);
     }
 
-    public DataGridViewTextBoxColumn AddTextFill(string FieldName)
+    /// <summary>
+    /// Создает элемент <see cref="NodeTextBox"/> для отображения текста, занимающий определенную часть свободного места просмотра.
+    /// Устанавливается свойство <see cref="EFPDataTreeViewColumn.FillWeight"/>=100 и <see cref="EFPDataTreeViewColumn.MinTextWidth"/>=5.
+    /// Задает горизонтальное выравнивание по левому краю.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// См. перегрузку метода с аргументом isDataColumn=true.</param>
+    /// <returns>Созданный элемент</returns>
+    public NodeTextBox AddTextFill(string columnName)
     {
-      return AddTextFill(FieldName, true, FieldName, 100, 5);
+      return AddTextFill(columnName, true, columnName, 100, 5);
     }
-
-    public DataGridViewTextBoxColumn AddTextFill(string FieldName, int FillWeight)
-    {
-      return AddTextFill(FieldName, true, FieldName, FillWeight, 5);
-    }
-
-#endif
 
     #endregion
 
@@ -1680,6 +1742,33 @@ namespace FreeLibSet.Forms
           return null;
         else
           return this[Count - 1];
+      }
+    }
+
+    #endregion
+
+    #region Очистка столбцов
+
+    /// <summary>
+    /// Удаление всех столбцов табличного просмотра
+    /// Вызывает метод DataGridViewColumnCollection.Clear(), предварительно вызвав CancelEdit() и временно отключив присоединенный источник 
+    /// данных.
+    /// Метод предназначен, чтобы предотвратить появление ошибки NullReferenceException
+    /// </summary>
+    public virtual void Clear()
+    {
+      //ControlProvider.Control.CancelEdit();
+      ITreeModel oldModel = ControlProvider.Control.Model;
+      ControlProvider.Control.Model = null;
+      try
+      {
+        //ControlProvider.Control.CurrentCell = null;
+        ControlProvider.Control.Columns.Clear();
+        ControlProvider.Control.NodeControls.Clear();
+      }
+      finally
+      {
+        ControlProvider.Control.Model = oldModel;
       }
     }
 

@@ -1626,32 +1626,12 @@ namespace FreeLibSet.Forms.Docs
       if (controlProvider.MarkRowIds != null)
         controlProvider.AddMarkRowsColumn();
 
-      //GridProducer.InitGrid(controlProvider, reInit, controlProvider.CurrentConfig, columns);
       controlProvider.GridProducer.InitGridView(controlProvider, reInit, controlProvider.CurrentConfig, columns); // 25.03.2021
 
       controlProvider.FrozenColumns = controlProvider.CurrentConfig.FrozenColumns + (EFPApp.ShowListImages ? 1 : 0);
 
       if (!reInit)
-      {
-
-#if XXX
-        // Обработчик для печати (д.б. до вызова пользовательского блока инициализации)
-        ControlProvider.AddGridPrint().DocumentName = DocType.PluralTitle;
-        for (int i = 0; i < PrintTypes.Count; i++)
-        {
-          AccDepGridPrintDoc pd;
-          pd = new AccDepGridPrintDoc(PrintTypes[i], ControlProvider, this, false);
-          ControlProvider.PrintList.Add(pd);
-          // 24.11.2011 Не нужно. Есть печать из "Сервис" - "Бланки"
-          // pd = new AccDepGridPrintDoc(PrintTypes[i], GridHandler, this, true);
-          // GridHandler.PrintList.Add(pd);
-        }
-#endif
-
-        //string ControlName = ControlProvider.Control.Name;
-
         CallInitView(controlProvider, userInitData);
-      }
 
       columns.Add("Id");
       if (UI.DocProvider.DocTypes.UseDeleted)
@@ -1671,9 +1651,6 @@ namespace FreeLibSet.Forms.Docs
         //TODO:   ControlProvider.Columns.AddInt("GroupId");
         //TODO:   ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
         //TODO: }
-
-        // TODO: ControlProvider.Columns.AddInt("ImportId");
-        // TODO: ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
 
 #if XXX // Убрано 02.07.2021. Теперь есть произвольная сортировка
         if (controlProvider.UseGridProducerOrders) // 24.11.2015
@@ -2084,21 +2061,21 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="userInitData"></param>
     public void PerformInitTree(EFPDocTreeView controlProvider, bool reInit, DBxColumnList columns, object userInitData)
     {
-      if (!reInit)
+      if (reInit)
       {
-        //if (CanMultiEdit)
-        //  ControlProvider.CanMultiEdit = true;
-        if (CanInsertCopy)
-          controlProvider.CanInsertCopy = true;
+        try
+        {
+          controlProvider.Columns.Clear();
+        }
+        catch (Exception e)
+        {
+          EFPApp.ShowException(e, "Ошибка очистки списка столбцов");
+        }
       }
-      else
-        controlProvider.Control.Columns.Clear();
 
-      //GridProducer.InitTree(controlProvider, reInit, controlProvider.CurrentConfig, columns);
+
       controlProvider.GridProducer.InitTreeView(controlProvider, reInit, controlProvider.CurrentConfig, columns); // 25.03.2021
       TreeViewCachedValueAdapter.InitColumns(controlProvider, UI.TextHandlers.DBCache, GridProducer);
-
-      controlProvider.SetColumnsReadOnly(true);
 
       if (controlProvider.Control.Columns.Count > 0)
       {
@@ -2115,42 +2092,8 @@ namespace FreeLibSet.Forms.Docs
 
 
       if (!reInit)
-      {
-
-#if XXX
-        // Обработчик для печати (д.б. до вызова пользовательского блока инициализации)
-        ControlProvider.AddGridPrint().DocumentName = DocType.PluralTitle;
-        for (int i = 0; i < PrintTypes.Count; i++)
-        {
-          AccDepGridPrintDoc pd;
-          pd = new AccDepGridPrintDoc(PrintTypes[i], ControlProvider, this, false);
-          ControlProvider.PrintList.Add(pd);
-          // 24.11.2011 Не нужно. Есть печать из "Сервис" - "Бланки"
-          // pd = new AccDepGridPrintDoc(PrintTypes[i], GridHandler, this, true);
-          // GridHandler.PrintList.Add(pd);
-        }
-#endif
         CallInitView(controlProvider, userInitData);
-      }
-#if XXX
-      // Добавляем столбец с картинками
-      if (EFPApp.ShowListImages)
-      {
-        DataGridViewImageColumn ImgCol = new DataGridViewImageColumn();
-        ImgCol.Name = "Image";
-        ImgCol.HeaderText = String.Empty;
-        ImgCol.ToolTipText = "Значок документа \"" + DocType.SingularTitle + "\"";
-        ImgCol.Width = ControlProvider.Measures.ImageColumnWidth;
-        ImgCol.Resizable = DataGridViewTriState.False;
-        //string ImgName = SingleDocImageKey;
-        //ImgCol.Image = EFPApp.MainImages.Images[ImgName];
-        if (ControlProvider.Control.Columns.Count > 0 && ControlProvider.Control.Columns[0].Frozen)
-          ImgCol.Frozen = true;
-        ControlProvider.Control.Columns.Insert(0, ImgCol);
-        if (EFPApp.ShowToolTips)
-          ControlProvider.Columns[0].CellToopTextNeeded += new EFPDataGridViewCellToolTipTextNeededEventHandler(ImgCol_CellToopTextNeeded);
-      }
-#endif
+
       columns.Add("Id");
       if (UI.DocProvider.DocTypes.UseDeleted) // 16.05.2018
         columns.Add("Deleted"); //,CheckState,CheckTime";
@@ -2161,14 +2104,9 @@ namespace FreeLibSet.Forms.Docs
         (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
       {
         controlProvider.Columns.AddInt("Id", true, "Id", 6);
-        // пока нельзя сделать
-        // controlProvider.Columns.LastAdded.CanIncSearch = true;
+        controlProvider.Columns.LastAdded.TreeColumn.Sortable = false;
+        controlProvider.Columns.LastAdded.CanIncSearch = true;
       }
-      //TODO: if (UseHieView)
-      //TODO: {
-      //TODO:   ControlProvider.Columns.AddInt("GroupId");
-      //TODO:   ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-      //TODO: }
 
 #if XXX
       if (ControlProvider.UseGridProducerOrders) // 24.11.2015
@@ -2203,18 +2141,10 @@ namespace FreeLibSet.Forms.Docs
       }
 #endif
 
+      controlProvider.SetColumnsReadOnly(true);
+
       if (!reInit)
       {
-        //ControlProvider.Control.VirtualMode = true;
-        //ControlProvider.UseRowImages = true;
-        //ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ControlProvider_GetRowAttributes);
-        //if (CondFields != null)
-        //  ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(GridHandler_GetRowAttributesForCond);
-        //if (EFPApp.ShowListImages)
-        //  controlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ControlProvider_GetCellAttributes);
-        //DocGridHandler.MainGrid.CellPainting += new DataGridViewCellPaintingEventHandler(TheGrid_CellPainting);
-        //DocGridHandler.MainGrid.CellToolTipTextNeeded += new DataGridViewCellToolTipTextNeededEventHandler(TheGrid_CellToolTipTextNeeded);
-
         // Добавляем команды локального меню
         InitCommandItems(controlProvider);
         controlProvider.GetDocSel += new EFPDBxTreeViewDocSelEventHandler(DocTree_GetDocSel);
@@ -2225,6 +2155,7 @@ namespace FreeLibSet.Forms.Docs
       // После изменения конфигурации, возможно, выводятся другие всплывающие подсказки
       //      if (ReInit)
       //        FToolTipExtractor = null;
+      controlProvider.PerformGridProducerPostInit();
     }
 
     #endregion

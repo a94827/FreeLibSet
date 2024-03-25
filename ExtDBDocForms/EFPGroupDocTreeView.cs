@@ -23,7 +23,6 @@ namespace FreeLibSet.Forms.Docs
   {
     #region Конструкторы
 
-
     /// <summary>
     /// Создает провайдер
     /// </summary>
@@ -51,6 +50,7 @@ namespace FreeLibSet.Forms.Docs
     {
       Control.SelectionMode = TreeViewAdvSelectionMode.Single;
       _IncludeNested = true;
+      AlwaysUseDefaultConfig = true; // 25.03.2024
     }
 
     #endregion
@@ -116,7 +116,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Переопределенные методы
+    #region Переопределенные методы и свойства
 
     /// <summary>
     /// Обновление данных или первоначальная загрузка
@@ -197,6 +197,14 @@ namespace FreeLibSet.Forms.Docs
     protected override bool OnEditData(EventArgs args)
     {
       return DocTypeUI.PerformEditing(this.SelectedIds, State, Control.FindForm().Modal, ViewHandler);
+    }
+
+    /// <summary>
+    /// Возвращает false, так как не нужна команда настройки просмотра
+    /// </summary>
+    public override bool HasConfigureViewHandler
+    {
+      get { return false; } // 25.03.2024
     }
 
     #endregion

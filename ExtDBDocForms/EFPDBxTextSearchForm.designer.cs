@@ -48,7 +48,7 @@
       // 
       // EFPDBxTextSearchForm
       // 
-      this.Name = "EFPAccDepGridSearchForm";
+      this.Name = "EFPDBxTextSearchForm";
       this.ButtonsPanel.ResumeLayout(false);
       this.ResumeLayout(false);
     }

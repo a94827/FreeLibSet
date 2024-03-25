@@ -18,8 +18,8 @@ namespace FreeLibSet.Forms
   public interface IEFPControlWithFilters : IEFPControl
   {
     /// <summary>
-    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров
-    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню
+    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров.
+    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню.
     /// </summary>
     /// <param name="filterGridProvider">Обработчик таблицы фильтров</param>
     void InitGridFilterEditorGridView(EFPGridFilterEditorGridView filterGridProvider);
@@ -171,7 +171,7 @@ namespace FreeLibSet.Forms
     /// Разрешено ли просмотру сохранять текущий столбец в секции конфигурации "GridView"?
     /// По умолчанию - true - разрешено.
     /// Пользовательский код должен сбросить свойство в false, если сохранение нежелательно.
-    /// EFPGridProducer также может сбрасывать это свойство, если в настройках просмотра задан код столбца для активации.
+    /// <see cref="EFPGridProducer"/> также может сбрасывать это свойство, если в настройках просмотра задан код столбца для активации.
     /// </summary>
     public bool SaveCurrentColumnAllowed
     {
@@ -281,7 +281,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается при первой загрузке конфигурации элемента перед вызовом LoadConfig().
+    /// Вызывается при первой загрузке конфигурации элемента перед вызовом <see cref="EFPControlBase.LoadConfig()"/>.
     /// </summary>
     protected override void OnBeforeLoadConfig()
     {
@@ -320,9 +320,9 @@ namespace FreeLibSet.Forms
     public new EFPConfigurableDataGridViewCommandItems CommandItems { get { return (EFPConfigurableDataGridViewCommandItems)(base.CommandItems); } }
 
     /// <summary>
-    /// Создает объект EFPConfigurableDataGridViewCommandItems
+    /// Создает объект <see cref="EFPConfigurableDataGridViewCommandItems"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект</returns>
     protected override EFPControlCommandItems CreateCommandItems()
     {
       return new EFPConfigurableDataGridViewCommandItems(this);
@@ -356,10 +356,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя фиксированной настройки табличного просмотра. 
-    /// Используется EFPGridProducer.InitGridView(), когда свойство EFPDataGridView.CurrentConfig не установлено.
+    /// Используется <see cref="EFPGridProducer.InitGridView(EFPDataGridView, bool)"/>, когда свойство <see cref="EFPDataGridView.CurrentConfig"/> не установлено.
     /// 
     /// Именные настройки хранятся в EFPGridProducer.Configs. Обычно, когда свойство не установлено,
-    /// используется основная настройка EFPGridProducer.DefaultConfig.
+    /// используется основная настройка <see cref="EFPGridProducer.DefaultConfig"/>.
     /// </summary>
     public string DefaultConfigName
     {
@@ -375,7 +375,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики изменения столбцов в табличном просмотре
+    #region Обработчики изменения столбцов в просмотре
 
     void Control_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs args)
     {
@@ -404,23 +404,21 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Настройка просмотра GridConfig
-
+    #region Настройка просмотра
 
     // TODO: Может быть стоит сделать более сложное событие
 
     /// <summary>
     /// Событие вызывается при выполнении команды меню "Настройка просмотра".
-    /// Если обработчик не установлен, показывается диалог, использующий интерфейс IEFPConfigurableGridProducer.
-    /// Свойство Cancel влияет на результат, возвращаемый методом ShowConfigDialog()
+    /// Если обработчик не установлен, показывается диалог, использующий интерфейс <see cref="IEFPConfigurableGridProducer"/>.
+    /// Свойство <see cref="CancelEventArgs.Cancel"/> влияет на результат, возвращаемый методом <see cref="ShowConfigDialog()"/>.
     /// </summary>
     public event CancelEventHandler ConfigureView;
 
     /// <summary>
-    /// Свойство возвращает true, если есть обработчик события ConfigureView или можно использовать интерфейс IEFPConfigurableGridProducer.
-    /// Если переопределен метод OnConfigureView() должно быть переопределено и это свойство
+    /// Свойство возвращает true, если есть обработчик события <see cref="ConfigureView"/> или можно использовать интерфейс <see cref="IEFPConfigurableGridProducer"/>.
     /// </summary>
-    public bool HasConfigureViewHandler
+    public virtual bool HasConfigureViewHandler
     {
       get
       {
@@ -516,7 +514,7 @@ namespace FreeLibSet.Forms
     private void InitDefaultGridConfig()
     {
       if (base.InsideSetCurrentConfig)
-        throw new BugException();
+        throw new ReenteranceException();
       base.InsideSetCurrentConfig = true;
       try
       {
@@ -529,10 +527,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается из OnShown(), если предполагается загрузка последней пользовательской конфигурации просмотра,
+    /// Вызывается при показе просмотра, если предполагается загрузка последней пользовательской конфигурации просмотра,
     /// но просмотр открывается впервые и нет сохраненной конфигурации.
     /// Также метод вызывается в случае ошибки загрузки.
-    /// Метод должен установить свойство CurrentConfig
+    /// Метод должен установить свойство <see cref="EFPDataGridView.CurrentConfig"/>
     /// </summary>
     protected virtual void OnInitDefaultGridConfig()
     {
@@ -548,7 +546,7 @@ namespace FreeLibSet.Forms
     /// настройка просмотра по умолчанию, а не последняя сохраненная конфигурация.
     /// При этом сохранение настроек работает как обычно. Пользователь, в частности, может выбрать
     /// последнюю сохраненную конфигурацию или любую другую из истории.
-    /// Свойство действует, если UserConfigAutoSave возвращает true.
+    /// Свойство действует, если <see cref="UserConfigAutoSave"/> возвращает true.
     /// Установка свойства разрешается только до показа просмотра на экране
     /// </summary>
     public bool AlwaysUseDefaultConfig
@@ -605,9 +603,9 @@ namespace FreeLibSet.Forms
     /// Коллекция фильтров для табличного просмотра. Если есть хотя бы один фильтр,
     /// то в локальном меню появляется команда "Фильтр". После установки пользователем
     /// фильтра вызывается обновление просмотра. Ответственность за обработку
-    /// фильтров лежит на вызывающей программе
+    /// фильтров лежит на вызывающей программе.
     /// Чтобы проверить наличие возможных фильтров, следует использовать свойство
-    /// HasFilters, которое позволяет избежать создания лишних объектов
+    /// <see cref="HasFilters"/>, которое позволяет избежать создания лишних объектов.
     /// </summary>
     public IEFPGridFilters Filters
     {
@@ -630,7 +628,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает объект фильтров табличного просмотра.
-    /// Непереопределенный метод создает EFPDummyGridFilters.
+    /// Непереопределенный метод создает <see cref="EFPDummyGridFilters"/>.
     /// </summary>
     /// <returns></returns>
     protected virtual IEFPGridFilters CreateGridFilters()
@@ -640,7 +638,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Возвращает true, если Filter.Count больше 0. 
+    /// Возвращает true, если <see cref="Filters"/>.Count больше 0. 
     /// Не создает дополнительный объект.
     /// Имеется в виду наличие любых добавленных фильтров, а не только тех, которые реально установлены.
     /// </summary>
@@ -671,7 +669,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызов диалога установки фильтра и обновление просмотра по необходимости
     /// При показе таблицы фильтров активируется строка фильтра с заданным именем.
-    /// Если <paramref name="startFilter "/> не задан, активируется строка для первого непустого фильтра
+    /// Если <paramref name="startFilter"/> не задан, активируется строка для первого непустого фильтра
     /// </summary>
     /// <param name="startFilter">Активируемый фильтр</param>
     public bool ShowFilterDialog(string startFilter)
@@ -730,8 +728,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство возвращает true, если табличный просмотр выполняет чтение и запись фильтров в
     /// секцию конфигурации.
-    /// Если свойство не установлено в явном виде, то возвращается значение CommandItems.CanEditFilters
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// Если свойство не установлено в явном виде, то возвращается значение <see cref="EFPConfigurableDataGridViewCommandItems.CanEditFilters"/>.
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
     public bool SaveFiltersAllowed
     {
@@ -754,9 +752,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство возвращает true, если в данный момент вызывается метод OnFilterChanged.
-    /// Свойство может быть проанализировано в обработчике события RefreshData, чтобы определить
-    /// причину вызова
+    /// Свойство возвращает true, если в данный момент вызывается метод <see cref="OnFilterChanged"/>.
+    /// Свойство может быть проанализировано в обработчике события <see cref="EFPDataGridView.RefreshData"/>, чтобы определить
+    /// причину вызова.
     /// </summary>
     public bool InsideFilterChanged { get { return _InsideFilterChanged; } }
     private bool _InsideFilterChanged;
@@ -779,7 +777,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при изменении фильтров.
-    /// Непереопределенный метод вызывает событие AfterSetFilter и инициирует записбь
+    /// Непереопределенный метод вызывает событие <see cref="AfterSetFilter"/> и выполняет обновление данных просмотра.
     /// </summary>
     protected virtual void OnFilterChanged()
     {
@@ -810,7 +808,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается после установки нового значения свойства 
-    /// CurrentOrderIndex (или CurrentOrder / CurrentOrderName).
+    /// <see cref="EFPDataGridView.CurrentOrderIndex"/> (или <see cref="EFPDataGridView.CurrentOrder"/> / <see cref="EFPDataGridView.CurrentOrderName"/>).
     /// Переопределенный метод инициирует запись секции конфигурации категории "GridView"
     /// </summary>
     /// <param name="args">Не используется</param>
@@ -824,7 +822,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Режим выделения целых строк или столбцов
-
 
     private void WriteSelectionMode(CfgPart cfg)
     {
@@ -894,13 +891,12 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     #endregion
   }
 
   /// <summary>
-  /// Команды локального меню для табличного просмотра EFPConfigurableDataGridView.
-  /// Добавляет команды настройки табличного просмотра и подменю "Фильтр"
+  /// Команды локального меню для табличного просмотра <see cref="EFPConfigurableDataGridView"/>.
+  /// Добавляет команды настройки табличного просмотра и подменю "Фильтр".
   /// </summary>
   public class EFPConfigurableDataGridViewCommandItems : EFPDataGridViewCommandItems
   {
@@ -1018,8 +1014,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает активный прокручиваемый фильтр (с установленным значением, когда
-    /// фильтр можно прокручивать)
-    /// Если нет прокручиваемых фильтров или ни один из них не установлен, возвращается null
+    /// фильтр можно прокручивать).
+    /// Если нет прокручиваемых фильтров или ни один из них не установлен, возвращается null.
     /// </summary>
     public IEFPScrollableGridFilter ActiveScrollableFilter
     {
@@ -1058,7 +1054,7 @@ namespace FreeLibSet.Forms
     #region Обновление команд
 
     /// <summary>
-    /// Установка свойств EFPCommandItem.Usage
+    /// Установка свойств <see cref="EFPCommandItem.Usage"/>
     /// </summary>
     protected override void OnPrepare()
     {
@@ -1090,7 +1086,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка свойств EFPCommandItem.Enabled
+    /// Установка свойств <see cref="EFPCommandItem.Enabled"/>
     /// </summary>
     protected override void DoRefreshItems()
     {
@@ -1115,7 +1111,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region "Настройка просмотра"
+    #region Настройка просмотра
 
     private EFPCommandItem ciEditConfig;
 
@@ -1175,8 +1171,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Хранение информации об установленных фильтрах в буфере обмена
-  /// Объект содержит список фильтров (коды) и XML-строку с установленными значениями
+  /// Хранение информации об установленных фильтрах в буфере обмена.
+  /// Объект содержит список фильтров (коды) и XML-строку с установленными значениями.
   /// </summary>
   [Serializable]
   public class FilterClipboardInfo
@@ -1188,7 +1184,7 @@ namespace FreeLibSet.Forms
     /// Установленные свойства нельзя изменить в дальнейшем.
     /// </summary>
     /// <param name="dbIdentity">Идентификатор базы данных для предотвращения вставки 
-    /// в постороннюю программу. См. описание свойства IEFPGridFilters.DBIdentity.
+    /// в постороннюю программу. См. описание свойства <see cref="IEFPGridFilters.DBIdentity"/>.
     /// Может быть пустая строка, если фильтр не привязан к базе данных.
     /// </param>
     /// <param name="names">Список имен фильтров, которые входят в копируемый набор.
@@ -1214,7 +1210,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Идентификатор набора данных
     /// Может быть пустая строка, если фильтр не привязан к базе данных.
-    /// См. описание свойства IEFPGridFilters.DBIdentity.
+    /// См. описание свойства <see cref="IEFPGridFilters.DBIdentity"/>.
     /// </summary>
     public string DBIdentity { get { return _DBIdentity; } }
     private string _DBIdentity;

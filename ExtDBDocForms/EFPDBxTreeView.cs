@@ -1131,13 +1131,6 @@ namespace FreeLibSet.Forms.Docs
     public EFPDBxTreeViewCommandItems(EFPDBxTreeView controlProvider)
       : base(controlProvider)
     {
-      #region Исходные значения свойств
-
-      //???// Главное меню было инициализировано ?
-      //???bool HasMainMenu = (AccDepMainMenu.SelectAll != null);
-
-      #endregion
-
       #region Создание команд
 
       AddSeparator();

@@ -773,13 +773,6 @@ namespace FreeLibSet.Forms.Docs
       args.Cancel = true;
     }
 
-    /*
-    private new void Grid_VisibleChanged(object Sender, EventArgs Args)
-    {
-      if (Control.DataSource == null && WinFormsTools.AreControlAndFormVisible(Control))
-        MyRefresh(null, null);
-    } */
-
     #endregion
 
     #region Команды локального меню

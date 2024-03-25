@@ -19,7 +19,7 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация свойства EFPGridProducer.Columns
+  /// Реализация свойства <see cref="EFPGridProducer.Columns"/>
   /// </summary>
   public class EFPGridProducerColumns : NamedList<EFPGridProducerColumn>
   {
@@ -28,7 +28,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает список столбцов
     /// </summary>
-    /// <param name="gridProducer">Объект-вл</param>
+    /// <param name="gridProducer">Объект-владелец</param>
     public EFPGridProducerColumns(EFPGridProducer gridProducer)
     {
       if (gridProducer == null)
@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms
     private readonly EFPGridProducer _GridProducer;
 
     /// <summary>
-    /// Возвращает последний добавленный столбнц
+    /// Возвращает последний добавленный столбец.
     /// </summary>
     public EFPGridProducerColumn LastAdded
     {
@@ -68,7 +68,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет элемент в конец списка.
-    /// Если в списке уже есть элемент с таким кодом, генерируется исключение
+    /// Если в списке уже есть элемент с таким кодом, генерируется исключение.
     /// </summary>
     /// <param name="item">Добавляемый элемент</param>
     public new void Add(EFPGridProducerColumn item)
@@ -95,7 +95,7 @@ namespace FreeLibSet.Forms
       if (item == null)
         throw new ArgumentNullException("item");
 #endif
-      if (item.GridProducer != null && item.GridProducer!=_GridProducer)
+      if (item.GridProducer != null && item.GridProducer != _GridProducer)
         throw new InvalidOperationException("Повторное добавление столбца не допускается");
       item.GridProducer = _GridProducer;
       base.Insert(index, item);
@@ -121,6 +121,10 @@ namespace FreeLibSet.Forms
       item.TextWidth = textWidth;
       item.MinTextWidth = minTextWidth;
       item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+
       Add(item);
       return item;
     }
@@ -150,6 +154,9 @@ namespace FreeLibSet.Forms
       item.MinTextWidth = minTextWidth;
       item.ValueNeeded += valueNeeded;
       item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
 
       Add(item);
       return item;
@@ -172,6 +179,11 @@ namespace FreeLibSet.Forms
       item.MinTextWidth = 1;
       item.Format = "0";
       item.DataType = typeof(int);
+      item.DbfPreliminaryInfo.Type = 'N';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+      item.DbfPreliminaryInfo.Precision = 0;
+      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
       Add(item);
       return item;
     }
@@ -203,6 +215,11 @@ namespace FreeLibSet.Forms
       item.MinTextWidth = 1;
       item.Format = "0";
       item.DataType = typeof(int);
+      item.DbfPreliminaryInfo.Type = 'N';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+      item.DbfPreliminaryInfo.Precision = 0;
+      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
 
       Add(item);
       return item;
@@ -239,6 +256,11 @@ namespace FreeLibSet.Forms
       }
       item.SizeGroup = sizeGroup; // 25.12.2020
       item.DataType = typeof(double);
+      item.DbfPreliminaryInfo.Type = 'N';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+      item.DbfPreliminaryInfo.Precision = decimalPlaces;
+      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
       Add(item);
       return item;
     }
@@ -279,6 +301,11 @@ namespace FreeLibSet.Forms
         item.MinTextWidth = 1;
       }
       item.DataType = typeof(double);
+      item.DbfPreliminaryInfo.Type = 'N';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+      item.DbfPreliminaryInfo.Precision = decimalPlaces;
+      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
 
       Add(item);
       return item;
@@ -356,6 +383,14 @@ namespace FreeLibSet.Forms
       item.MaskProvider = formatter.MaskProvider;
       //Item.CanIncSearch = true;
       item.DataType = typeof(DateTime);
+      if (kind == EditableDateTimeFormatterKind.Date)
+        item.DbfPreliminaryInfo.Type = 'D';
+      else
+      {
+        item.DbfPreliminaryInfo.Type = 'C';
+        item.DbfPreliminaryInfo.Length = formatter.TextWidth;
+        item.DbfPreliminaryInfo.LengthIsDefined = false;
+      }
       Add(item);
       return item;
     }
@@ -420,6 +455,14 @@ namespace FreeLibSet.Forms
       item.MaskProvider = formatter.MaskProvider;
       //Item.CanIncSearch = true;
       item.DataType = typeof(DateTime);
+      if (kind == EditableDateTimeFormatterKind.Date)
+        item.DbfPreliminaryInfo.Type = 'D';
+      else
+      {
+        item.DbfPreliminaryInfo.Type = 'C';
+        item.DbfPreliminaryInfo.Length = formatter.TextWidth;
+        item.DbfPreliminaryInfo.LengthIsDefined = false;
+      }
 
       Add(item);
       return item;
@@ -459,6 +502,11 @@ namespace FreeLibSet.Forms
       item.SizeGroup = "Money";
       item.DataType = typeof(Decimal);
       item.Summable = true;
+      item.DbfPreliminaryInfo.Type = 'N';
+      item.DbfPreliminaryInfo.Length = 12;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+      item.DbfPreliminaryInfo.Precision = 2;
+      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
       Add(item);
       return item;
     }
@@ -522,13 +570,18 @@ namespace FreeLibSet.Forms
       item.ValueNeeded += valueNeeded;
       item.DataType = typeof(Decimal);
       item.Summable = true;
+      item.DbfPreliminaryInfo.Type = 'N';
+      item.DbfPreliminaryInfo.Length = 12;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+      item.DbfPreliminaryInfo.Precision = 2;
+      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
       Add(item);
       return item;
     }
 
     /// <summary>
     /// Добавить денежный столбец, являющийся суммой двух или более других столбцов
-    /// типа decimal. Если все столбцы в строке имеют значение DBNull, то значение
+    /// типа decimal. Если все столбцы в строке имеют значение <see cref="DBNull"/>, то значение
     /// не выводится
     /// </summary>
     /// <param name="name">Условное имя столбца</param>
@@ -547,6 +600,11 @@ namespace FreeLibSet.Forms
       item.SizeGroup = "Money";
       item.DataType = typeof(Decimal);
       item.Summable = true;
+      item.DbfPreliminaryInfo.Type = 'N';
+      item.DbfPreliminaryInfo.Length = 12;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+      item.DbfPreliminaryInfo.Precision = 2;
+      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
       Add(item);
       return item;
     }
@@ -560,7 +618,7 @@ namespace FreeLibSet.Forms
     /// вычисляется на основании числового поля.
     /// Перечислимые значения должны идти по порядку (0,1,2, ...).
     /// Добавляемый столбец имеет имя "<paramref name="sourceColumnName"/>_Text".
-    /// Для показа текста "нерегулярных" перечислений используйте AddUserText().
+    /// Для показа текста "нерегулярных" перечислений используйте <see cref="AddUserText(string, string, EFPGridProducerValueNeededEventHandler, string, int, int)"/>.
     /// </summary>
     /// <param name="sourceColumnName">Имя целочисленного столбца, содержащего исходное значение</param>
     /// <param name="textValues">Список текстовых значений, которые показываются в создаваемом
@@ -579,6 +637,9 @@ namespace FreeLibSet.Forms
       item.TextWidth = textWidth;
       item.MinTextWidth = minTextWidth;
       item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
 
       Add(item);
       return item;
@@ -589,10 +650,10 @@ namespace FreeLibSet.Forms
     /// вычисляется на основании числового поля.
     /// Перечислимые значения должны идти по порядку (0,1,2, ...).
     /// Добавляемый столбец имеет имя "<paramref name="sourceColumnName"/>_Image".
-    /// Для показа текста "нерегулярных" перечислений используйте AddUserImage().
+    /// Для показа текста "нерегулярных" перечислений используйте <see cref="AddUserImage(string, string, EFPGridProducerValueNeededEventHandler, string)"/>().
     /// </summary>
     /// <param name="sourceColumnName">Имя целочисленного столбца, содержащего исходное значение</param>
-    /// <param name="imageKeys">Список тегов в EFPApp.MainImages, которые показываются в создаваемом
+    /// <param name="imageKeys">Список тегов в <see cref="EFPApp.MainImages"/>, которые показываются в создаваемом
     /// столбце</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
@@ -612,11 +673,10 @@ namespace FreeLibSet.Forms
     /// вычисляется на основании числового поля.
     /// Перечислимые значения должны идти по порядку (0,1,2, ...).
     /// Добавляемый столбец имеет имя "<paramref name="sourceColumnName"/>_Image".
-    /// Для показа текста "нерегулярных" перечислений используйте AddUserImage().
+    /// Для показа текста "нерегулярных" перечислений используйте <see cref="AddUserImage(string, string, EFPGridProducerValueNeededEventHandler, string)"/>.
     /// </summary>
     /// <param name="sourceColumnName">Имя целочисленного столбца, содержащего исходное значение</param>
-    /// <param name="imageKeys">Список тегов в EFPApp.MainImages, которые показываются в создаваемом
-    /// столбце</param>
+    /// <param name="imageKeys">Список тегов в <see cref="EFPApp.MainImages"/>, которые показываются в создаваемом столбце</param>
     /// <returns>Описание столбца</returns>
     public EFPGridProducerEnumImageColumn AddEnumImage(string sourceColumnName,
       string[] imageKeys)
@@ -670,7 +730,7 @@ namespace FreeLibSet.Forms
     /// <param name="lastColumnName">Имя поля с конечной датой диапазона</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="longFormat">Использование длинного (true) или короткого (false) формата отображения.
-    /// См. класс DateRangeFormatter</param>
+    /// См. класс <see cref="DateRangeFormatter"/></param>
     /// <param name="textWidth">Ширина в текстовых единицах</param>
     /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
     /// <returns>Описание столбца</returns>
@@ -686,7 +746,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавить вычисляемый текстовый столбец для отображения интервала дат на основании двух
     /// полей с датой.
-    /// Для отображения текста используется DateRangeFormatter.
+    /// Для отображения текста используется <see cref="DateRangeFormatter"/>.
     /// Эта версия вычисляет ширину столбца автоматически.
     /// </summary>
     /// <param name="name">Условное имя вычисляемого столбца</param>
@@ -717,6 +777,9 @@ namespace FreeLibSet.Forms
 
       item.SizeGroup = longFormat ? "DateRangeLong" : "DateRangeShort";
       item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = item.TextWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
       Add(item);
       return item;
     }
@@ -741,7 +804,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает столбец для отображения столбца, содержащего номер дня в диапазоне от 1 до 365 как месяца и дня (структура MonthDay).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// Для текстового представления используется класс <see cref="DateRangeFormatter"/>.
     /// </summary>
     /// <param name="name">Условное имя вычисляемого столбца табличного просмотра</param>
     /// <param name="sourceColumnName">Имя числового столбца в базе данных</param>
@@ -784,6 +847,9 @@ namespace FreeLibSet.Forms
       item.MinTextWidth = item.TextWidth;
       item.SizeGroup = longFormat ? "MonthDayLong" : "MonthDayShort";
       item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = item.TextWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
       Add(item);
       return item;
     }
@@ -815,7 +881,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает столбец для отображения двух столбоц, содержащих номер дня в диапазоне от 1 до 365 как диапазона дней в году (структура MonthDayRange).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// Для текстового представления используется класс <see cref="DateRangeFormatter"/>.
     /// </summary>
     /// <param name="name">Условное имя вычисляемого столбца табличного просмотра</param>
     /// <param name="firstDayColumnName">Имя числового столбца в базе данных, задающего первый день диапазона</param>
@@ -835,7 +901,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает столбец для отображения двух столбоц, содержащих номер дня в диапазоне от 1 до 365 как диапазона дней в году (структура MonthDayRange).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// Для текстового представления используется класс <see cref="DateRangeFormatter"/>.
     /// Эта версия вычисляет ширину столбца автоматически.
     /// </summary>
     /// <param name="name">Условное имя вычисляемого столбца табличного просмотра</param>
@@ -859,6 +925,9 @@ namespace FreeLibSet.Forms
       item.MinTextWidth = item.TextWidth;
       item.SizeGroup = longFormat ? "MonthDayRangeLong" : "MonthDayRangeShort";
       item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = item.TextWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
       Add(item);
       return item;
     }
@@ -904,6 +973,7 @@ namespace FreeLibSet.Forms
       EFPGridProducerCheckBoxColumn item = new EFPGridProducerCheckBoxColumn(columnName);
       item.HeaderText = headerText;
       item.DataType = typeof(bool);
+      item.DbfPreliminaryInfo.Type = 'L';
       Add(item);
       return item;
     }
@@ -928,6 +998,7 @@ namespace FreeLibSet.Forms
       item.HeaderText = headerText;
       item.ValueNeeded += valueNeeded;
       item.DataType = typeof(bool);
+      item.DbfPreliminaryInfo.Type = 'L';
 
       Add(item);
       return item;
@@ -1023,7 +1094,7 @@ namespace FreeLibSet.Forms
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события EFPGridProducerColumn.CellClick
+  /// Аргументы события <see cref="EFPGridProducerColumn.CellClick"/> 
   /// </summary>
   public class EFPGridProducerCellClickEventArgs : EFPGridProducerBaseEventArgs
   {
@@ -1036,21 +1107,19 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-
     // Нет новых свойств
   }
 
   /// <summary>
-  /// Делегат события EFPGridProducerColumn.CellClick
+  /// Делегат события <see cref="EFPGridProducerColumn.CellClick"/>
   /// </summary>
-  /// <param name="sender">Объект EFPGridProducerColumn</param>
-  /// <param name="args"></param>
+  /// <param name="sender">Объект <see cref="EFPGridProducerColumn"/></param>
+  /// <param name="args">Аргументы события</param>
   public delegate void EFPGridProducerCellClickEventHandler(object sender,
     EFPGridProducerCellClickEventArgs args);
 
-
   /// <summary>
-  /// Аргументы события EFPGridProducerColumn.CellEdit
+  /// Аргументы события <see cref="EFPGridProducerColumn.CellEdit"/>
   /// </summary>
   public class EFPGridProducerCellEditEventArgs : EFPGridProducerBaseEventArgs
   {
@@ -1062,7 +1131,6 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
-
 
     /// <summary>
     /// Свойство должно быть установлено в true, если редактирование выполнено и дальнейшие действия не требуются
@@ -1076,9 +1144,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события EFPGridProducerColumn.CellEdit
+  /// Делегат события <see cref="EFPGridProducerColumn.CellEdit"/>
   /// </summary>
-  /// <param name="sender">Объект EFPGridProducerColumn</param>
+  /// <param name="sender">Объект <see cref="EFPGridProducerColumn"/></param>
   /// <param name="args"></param>
   public delegate void EFPGridProducerCellEditEventHandler(object sender,
     EFPGridProducerCellEditEventArgs args);
@@ -1095,7 +1163,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает описание столбца с заданным именем.
-    /// Данные будут извлекаться из источника данных 
+    /// Данные будут извлекаться из источника данных. 
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
     public EFPGridProducerColumn(string columnName)
@@ -1112,7 +1180,7 @@ namespace FreeLibSet.Forms
     /// <param name="sourceColumnNames">Имена столбцов, на основании которых производится вычисления.
     /// Если null, то столбец является обычным, а невычисляемым.
     /// Для создания вычисляемого столбца, не использующего данные других столбцов (например для нумерации строк),
-    /// задайте пустой массив DataTools.EmptyStrings</param>
+    /// задайте пустой массив <see cref="DataTools.EmptyStrings"/></param>
     public EFPGridProducerColumn(string name, string[] sourceColumnNames)
       : base(name, sourceColumnNames)
     {
@@ -1160,7 +1228,7 @@ namespace FreeLibSet.Forms
     private string _HeaderText;
 
     /// <summary>
-    /// Используется, когда свойство DisplayName не задано в явном виде
+    /// Используется, когда свойство <see cref="EFPGridProducerItemBase.DisplayName"/> не задано в явном виде
     /// </summary>
     /// <returns></returns>
     protected override string GetDefaultDisplayName()
@@ -1173,7 +1241,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Всплывающая подсказка при наведении курсора на заголок столбца.
-    /// Если свойство не установлено в явном виде, возвращает DisplayName
+    /// Если свойство не установлено в явном виде, возвращает <see cref="EFPGridProducerItemBase.DisplayName"/>.
     /// </summary>
     public string HeaderToolTipText
     {
@@ -1228,8 +1296,8 @@ namespace FreeLibSet.Forms
     private const string NonResizableSizeGroup = "-";
 
     /// <summary>
-    /// Имя группы для синхронного изменения размеров. См. EFPDataGridViewColumn.SizeGroup
-    /// Это свойство несовместимо со сбросом свойства Resizable=false
+    /// Имя группы для синхронного изменения размеров. См. <see cref="EFPDataGridViewColumn.SizeGroup"/>
+    /// Это свойство несовместимо со сбросом свойства <see cref="Resizable"/>=false.
     /// </summary>
     public string SizeGroup
     {
@@ -1279,22 +1347,22 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Число строк текста для отображения в ячейке.
     /// Значение по умолчанию: 1. Если задано значение, большее 1, то для столбца 
-    /// устанавливается свойство DataGridViewCellStyle.WrapMode=True, а высота
-    /// всех строк в просмотре будет увеличена
+    /// устанавливается свойство <see cref="DataGridViewCellStyle.WrapMode"/>=True, а высота
+    /// всех строк в просмотре будет увеличена.
     /// </summary>
     public int TextRowHeight { get { return _TextRowHeight; } set { _TextRowHeight = value; } }
     private int _TextRowHeight;
 
     /// <summary>
     /// Форматирование данных при отображении.
-    /// Используется для установки свойства DataGridViewCellStyle.Format.
+    /// Используется для установки свойства <see cref="DataGridViewCellStyle.Format"/>.
     /// </summary>
     public string Format { get { return _Format; } set { _Format = value; } }
     private string _Format;
 
     /// <summary>
     /// Форматизатор для столбца.
-    /// Используется для установки свойства DataGridViewCellStyle.FormatProvider.
+    /// Используется для установки свойства <see cref="DataGridViewCellStyle.FormatProvider"/>.
     /// </summary>
     public IFormatProvider FormatProvider { get { return _FormatProvider; } set { _FormatProvider = value; } }
     private IFormatProvider _FormatProvider;
@@ -1338,22 +1406,40 @@ namespace FreeLibSet.Forms
     private bool _Grayed;
 
     /// <summary>
-    /// Формат столбца при сохранении просмотра в DBF-формате
+    /// Формат столбца при сохранении просмотра в DBF-формате.
+    /// Если описание не задано, то имя столбца будет получено из свойства <see cref="IEFPDataViewColumnBase.Name"/>
+    /// или сгенерировано автоматически. Отсутствие описания не означает невозможность экспорта.
     /// </summary>
     public DbfFieldInfo DbfInfo { get { return _DbfInfo; } set { _DbfInfo = value; } }
     private DbfFieldInfo _DbfInfo;
 
 
     /// <summary>
+    /// Предварительная информация о типе данных, используемая при экспорте столбца в DBF-формат.
+    /// В отличие от <see cref="DbfInfo"/>, это свойство не может устанавливаться в прикладном коде.
+    /// Если столбец не может быть экспортирован, свойство возвращает null.
+    /// </summary>
+    public virtual DbfFieldTypePreliminaryInfo DbfPreliminaryInfo
+    {
+      get
+      {
+        if (_DbfPreliminaryInfo == null)
+          _DbfPreliminaryInfo = new DbfFieldTypePreliminaryInfo();
+        return _DbfPreliminaryInfo;
+      }
+    }
+    private DbfFieldTypePreliminaryInfo _DbfPreliminaryInfo;
+
+    /// <summary>
     /// Имя столбца, используемого для произвольной сортировки.
-    /// По умолчанию для невычисляемых столбцов устанавливается равным Name.
-    /// Для вычисляемых столбцов - пустая строка
+    /// По умолчанию для невычисляемых столбцов устанавливается равным <see cref="EFPGridProducerItemBase.Name"/>.
+    /// Для вычисляемых столбцов - пустая строка.
     /// </summary>
     public string CustomOrderSourceColumnName { get { return _CustomOrderSourceColumnName; } set { _CustomOrderSourceColumnName = value; } }
     private string _CustomOrderSourceColumnName;
 
     /// <summary>
-    /// Тип данных для столбца. Используется в таблице-повторителе EFPGridProducerDataTableRepeater
+    /// Тип данных для столбца. Используется в таблице-повторителе <see cref="EFPGridProducerDataTableRepeater"/>
     /// </summary>
     public Type DataType { get { return _DataType; } set { _DataType = value; } }
     private Type _DataType;
@@ -1363,60 +1449,77 @@ namespace FreeLibSet.Forms
     #region Создания столбца для табличного просмотра EFPDataGridView
 
     /// <summary>
-    /// Создает объект столбца для табличного просмотра Windows Forms.
-    /// Столбец не добавляется в просмотр.
+    /// Создает столбец <see cref="EFPDataGridViewColumn"/> и добавляет его в табличный просмотр.
     /// </summary>
-    /// <returns>Объект столбца, производный от DataGridViewColumn</returns>
-    public virtual DataGridViewColumn CreateColumn()
+    /// <param name="controlProvider">Провайдер заполняемого табличного просмотра</param>
+    /// <returns>Объект провайдера столбца, производный от <see cref="EFPDataGridViewColumn"/></returns>
+    public virtual EFPDataGridViewColumn CreateGridColumn(EFPDataGridView controlProvider)
     {
-      DataGridViewTextBoxColumn gridColumn = new DataGridViewTextBoxColumn();
-      InitColumn(gridColumn);
-      return gridColumn;
+      controlProvider.Columns.AddText(Name, false, HeaderText);
+      EFPDataGridViewColumn column = controlProvider.Columns.LastAdded;
+      InitGridColumn(column);
+
+      if (TextRowHeight > 1)
+        column.GridColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+      column.GridColumn.DefaultCellStyle.Format = Format;
+      if (FormatProvider != null)
+        column.GridColumn.DefaultCellStyle.FormatProvider = FormatProvider;
+
+      return column;
     }
 
     /// <summary>
-    /// Инициализирует свойства DataGridViewColumn.
-    /// Используется в методах CreateColumn()
+    /// Инициализирует общие свойства <see cref="EFPDataGridViewColumn"/>.
+    /// Используется в методах <see cref="CreateGridColumn(EFPDataGridView)"/>.
     /// </summary>
-    /// <param name="column"></param>
-    protected void InitColumn(DataGridViewColumn column)
+    /// <param name="column">Созданный столбец</param>
+    protected void InitGridColumn(EFPDataGridViewColumn column)
     {
-      column.Name = Name;
+      column.ColumnProducer = this;
+      column.SizeGroup = SizeGroup;
+      column.CanIncSearch = CanIncSearch;
+      column.Summable = Summable;
+      column.MaskProvider = MaskProvider;
+      if (DbfPreliminaryInfo != null)
+      {
+        DbfPreliminaryInfo.CopyTo(column.DbfPreliminaryInfo);
+        column.DbfInfo = DbfInfo;
+      }
+      column.PrintHeaders = PrintHeaders;
+      column.ColorType = ColorType;
+      column.Grayed = Grayed;
+      column.CustomOrderColumnName = CustomOrderSourceColumnName;
+      column.DisplayName = DisplayName;
+
       if (!IsCalculated)
-        column.DataPropertyName = Name;
-      column.HeaderText = HeaderText;
-      column.ToolTipText = HeaderToolTipText;
+        column.GridColumn.DataPropertyName = Name;
+      column.GridColumn.HeaderText = HeaderText;
+      column.GridColumn.ToolTipText = HeaderToolTipText;
       switch (TextAlign)
       {
         case HorizontalAlignment.Left:
-          column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+          column.GridColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
           break;
         case HorizontalAlignment.Center:
-          column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+          column.GridColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
           break;
         case HorizontalAlignment.Right:
-          column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+          column.GridColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
           break;
       }
-
-      if (TextRowHeight > 1)
-        column.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-
-      column.DefaultCellStyle.Format = Format;
-      if (FormatProvider != null)
-        column.DefaultCellStyle.FormatProvider = FormatProvider;
     }
 
     /// <summary>
-    /// Применить настроенную конфигурацию табличного просмотра к столбцу Windows Forms.
-    /// Устанавливает свойства DataGridViewColumn.AutoSizeMode, Width, FillWeight и, возможно, другие. 
+    /// Применить настроенную конфигурацию табличного просмотра к столбцу <see cref="DataGridView"/>.
+    /// Устанавливает свойства <see cref="DataGridViewColumn.AutoSizeMode"/>, <see cref="DataGridViewColumn.Width"/>, <see cref="DataGridViewColumn.FillWeight"/> и, возможно, другие. 
     /// </summary>
-    /// <param name="column">Столбец Windows Forms</param>
+    /// <param name="column">Столбец <see cref="DataGridViewColumn"/></param>
     /// <param name="config">Конфигурация столбца</param>
     /// <param name="controlProvider">Провайдер табличного просмотра</param>
     public virtual void ApplyConfig(DataGridViewColumn column, EFPDataGridViewConfigColumn config, EFPDataGridView controlProvider)
     {
-      bool IsImgColumn = column is DataGridViewImageColumn || column is DataGridViewCheckBoxColumn;
+      bool isImgColumn = column is DataGridViewImageColumn || column is DataGridViewCheckBoxColumn;
       if (config.FillMode)
       {
         column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -1431,7 +1534,7 @@ namespace FreeLibSet.Forms
           column.Width = config.Width;
         column.FillWeight = 1; // 08.02.2017
       }
-      if (IsImgColumn)
+      if (isImgColumn)
         column.MinimumWidth = column.Width;
       else
         column.MinimumWidth = controlProvider.Measures.GetTextColumnWidth(MinTextWidth);
@@ -1447,78 +1550,104 @@ namespace FreeLibSet.Forms
 
     #region Создание столбца иерархического просмотра EFPDataTreeView
 
+    ///// <summary>
+    ///// Создает присоединяемый элемент для столбца <see cref="TreeViewAdv"/>.
+    ///// Непереопределенный метод возвращает <see cref="NodeTextBox"/>.
+    ///// </summary>
+    ///// <returns>Присоединяемый элемент</returns>
     /// <summary>
-    /// Создает столбец для иерархического просмотра TreeViewAdv
+    /// Создает столбец <see cref="EFPDataGridViewColumn"/> и добавляет его в табличный просмотр.
     /// </summary>
-    /// <param name="config">Конфигурация столбца</param>
-    /// <returns>Столбец TreeViewAdv</returns>
-    public virtual TreeColumn CreateTreeColumn(EFPDataGridViewConfigColumn config)
+    /// <param name="controlProvider">Провайдер заполняемого табличного просмотра</param>
+    /// <returns>Объект провайдера столбца, производный от <see cref="EFPDataGridViewColumn"/></returns>
+    public virtual EFPDataTreeViewColumn CreateTreeColumn(EFPDataTreeView controlProvider)
     {
-      TreeColumn column = new TreeColumn(DisplayName, TextWidth * 10);
-      /*
-      if (Config.FillMode)
-      {
-        Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        Column.FillWeight = Config.FillWeight;
-      } */
-      column.TextAlign = this.TextAlign;
-      column.TooltipText = HeaderToolTipText;
+      if (DataType == typeof(Decimal))
+        controlProvider.Columns.AddDecimal(Name, false, HeaderText, TextWidth, FormatStringTools.DecimalPlacesFromNumberFormat(Format), SizeGroup);
+      else if (DataType == typeof(Double))
+        controlProvider.Columns.AddDouble(Name, false, HeaderText, TextWidth, FormatStringTools.DecimalPlacesFromNumberFormat(Format), SizeGroup);
+      else if (DataType == typeof(Single))
+        controlProvider.Columns.AddSingle(Name, false, HeaderText, TextWidth, FormatStringTools.DecimalPlacesFromNumberFormat(Format), SizeGroup);
+      else if (DataTools.IsIntegerType(DataType))
+        controlProvider.Columns.AddInt(Name, false, HeaderText, TextWidth);
+      else if (DataType == typeof(DateTime))
+        controlProvider.Columns.AddDateTime(Name, false, HeaderText, FormatStringTools.GetEditableDateTimeFormatterKind(Format));
+      else
+        controlProvider.Columns.AddText(Name, false, HeaderText, TextWidth, MinTextWidth);
 
+      EFPDataTreeViewColumn column = controlProvider.Columns.LastAdded;
+      InitTreeColumn(column);
       return column;
     }
 
     /// <summary>
-    /// Создает присоединяемый элемент для столбца TreeViewAdv.
-    /// Непереопределенный метод возвращает NodeTextBox
+    /// Инициализирует общие свойства <see cref="EFPDataTreeViewColumn"/>.
+    /// Используется в методах <see cref="CreateTreeColumn(EFPDataTreeView)"/>.
     /// </summary>
-    /// <returns>Присоединяемый элемент</returns>
-    public virtual BindableControl CreateNodeControl()
+    /// <param name="column">Созданный столбец</param>
+    protected void InitTreeColumn(EFPDataTreeViewColumn column)
     {
-      NodeTextBox tb = new NodeTextBox();
-      tb.EditEnabled = !ReadOnly;
-      tb.TextAlign = TextAlign; // 15.03.2019
-      return tb;
+      column.ColumnProducer = this;
+      column.SizeGroup = SizeGroup;
+      column.CanIncSearch = CanIncSearch;
+      column.MaskProvider = MaskProvider;
+      if (DbfPreliminaryInfo != null)
+        DbfPreliminaryInfo.CopyTo(column.DbfPreliminaryInfo);
+      column.DbfInfo = DbfInfo;
+      column.PrintHeaders = PrintHeaders;
+      column.ColorType = ColorType;
+      column.Grayed = Grayed;
+      column.DisplayName = DisplayName;
+
+      if (column.NodeControl != null)
+      {
+        // В отличие от DataGridViewColumn, установка свойства BindableControl.VirtualMode=true приводит к тому,
+        // что данные больше не запрашиваются с помощью DataPropertyName.
+        // На всякий случай, обработчик ValueNeeded добавляем всегда, вдруг свойство VirtualMode будет включено в прикладном коде
+        if (IsCalculated)
+          column.NodeControl.VirtualMode = true;
+        else
+          column.NodeControl.DataPropertyName = Name;
+        column.NodeControl.ValueNeeded += column.NodeControl_ValueNeeded;
+      }
+
+      column.TreeColumn.TextAlign = this.TextAlign;
+      column.TreeColumn.TooltipText = HeaderToolTipText;
     }
 
     /// <summary>
-    /// Ничего не делает
+    /// Применить настроенную конфигурацию табличного просмотра к столбцу <see cref="TreeViewAdv"/>.
+    /// Устанавливает свойство <see cref="TreeColumn.Width"/> и, возможно, другие. 
     /// </summary>
-    /// <param name="nodeControl"></param>
-    /// <param name="config"></param>
-    /// <param name="controlProvider"></param>
-    public virtual void ApplyConfig(BindableControl nodeControl, EFPDataGridViewConfigColumn config, EFPDataTreeView controlProvider)
+    /// <param name="column">Столбец <see cref="EFPDataTreeViewColumn"/></param>
+    /// <param name="config">Конфигурация столбца</param>
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    public virtual void ApplyConfig(EFPDataTreeViewColumn column, EFPDataGridViewConfigColumn config, EFPDataTreeView controlProvider)
     {
-      /*
-      bool IsImgColumn = Column is DataGridViewImageColumn || Column is DataGridViewCheckBoxColumn;
-      if (Config.FillMode)
+      bool isImgColumn = column.NodeControl is NodeIcon;
+      if (config.FillMode)
       {
-        Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        Column.FillWeight = Config.FillWeight;
+        // Эмуляция автоподбора ширины столбца
+        column.FillWeight = config.FillWeight;
       }
       else
       {
-        Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-        if (Config.Width == 0)
+        column.FillWeight = 0;
+
+        if (config.Width == 0)
         {
-          if (IsImgColumn)
-          {
-            if (Column is DataGridViewImageColumn)
-              Column.Width = ControlProvider.Measures.ImageColumnWidth;
-            else
-              Column.Width = ControlProvider.Measures.CheckBoxColumnWidth;
-          }
+          if (isImgColumn)
+            column.Width = controlProvider.Measures.CheckBoxColumnWidth;
           else
-            Column.Width = ControlProvider.Measures.GetTextColumnWidth(TextWidth);
+            column.Width = controlProvider.Measures.GetTextColumnWidth(TextWidth);
         }
         else
-          Column.Width = Config.Width;
+          column.Width = config.Width;
       }
-      if (IsImgColumn)
-        Column.MinimumWidth = Column.Width;
+      if (isImgColumn)
+        column.TreeColumn.MinColumnWidth = column.TreeColumn.Width;
       else
-        Column.MinimumWidth = ControlProvider.Measures.GetTextColumnWidth(MinTextWidth);
-        */
-
+        column.TreeColumn.MinColumnWidth = controlProvider.Measures.GetTextColumnWidth(MinTextWidth);
     }
 
     #endregion
@@ -1526,7 +1655,7 @@ namespace FreeLibSet.Forms
     #region Получение значения
 
     /// <summary>
-    /// Получение значение вычисляемого поля. Вызывает виртуальный метод OnValueNeeded().
+    /// Получение значение вычисляемого поля. Вызывает виртуальный метод <see cref="EFPGridProducerItemBase.OnValueNeeded(EFPGridProducerValueNeededEventArgs)"/>.
     /// Если столбец/подсказка не являются вычисляемым, возвращается значение <paramref name="rowInfo"/>.Values.GetValue(Name).
     /// </summary>
     /// <param name="rowInfo">Информация о строке</param>
@@ -1542,7 +1671,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при необходимости получения всплывающей подсказки для данной ячейки
-    /// при наведении курсора. Если возвращается пустая строка, то нет дополнительной подсказки для ячейки
+    /// при наведении курсора. Если возвращается пустая строка, то нет дополнительной подсказки для ячейки.
     /// </summary>
     /// <param name="rowInfo">Информация о строке</param>
     /// <param name="columnName">Игнорируется. Сделано для симметрии с остальными обработчиками</param>
@@ -1578,7 +1707,7 @@ namespace FreeLibSet.Forms
     //}
 
     /// <summary>
-    /// Вызов события GetCellAttributes из DocGridHandler
+    /// Вызов события <see cref="GetCellAttributes"/> из <see cref="EFPDataGridView"/>
     /// </summary>
     /// <param name="args">Аргументы, передаваемые обработчику</param>
     internal void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
@@ -1599,7 +1728,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при одинарном щелчке левой кнопки мыши по ячейке таблицы.
-    /// Вызывает обработчик события CellClick, если он установлен
+    /// Вызывает обработчик события <see cref="CellClick"/>, если он установлен
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnCellClick(EFPGridProducerCellClickEventArgs args)
@@ -1611,10 +1740,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызывается при одинарном щелчке левой кнопки мыши по ячейке таблицы.
     /// Используется для столбцов CheckBox.
-    /// Вызывает виртуальный метод OnCellClick()
+    /// Вызывает виртуальный метод <see cref="OnCellClick(EFPGridProducerCellClickEventArgs)"/>.
     /// </summary>
     /// <param name="rowInfo">Информация о строке</param>
-    /// <param name="columnName">Игнорируется, т.к. EFPGridProducerColumn и всегда относится к единственному столбцу просмотра</param>
+    /// <param name="columnName">Игнорируется, т.к. <see cref="EFPGridProducerColumn"/> всегда относится к единственному столбцу просмотра</param>
     public void PerformCellClick(EFPDataViewRowInfo rowInfo, string columnName)
     {
       EFPGridProducerCellClickEventArgs args = new EFPGridProducerCellClickEventArgs(this);
@@ -1628,7 +1757,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при попытке редактирования ячейки, связанной со столбцом.
-    /// Метод вызывается до стандартной обработки, например, посылки извещения EFPDataGridView.Editdata
+    /// Метод вызывается до стандартной обработки, например, посылки извещения <see cref="EFPDataGridView.EditData"/>
     /// </summary>
     public event EFPGridProducerCellEditEventHandler CellEdit;
 
@@ -1644,10 +1773,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при попытке редактирования ячейки, связанной со столбцом.
-    /// Метод вызывается до стандартной обработки, например, посылки извещения EFPDataGridView.Editdata
+    /// Метод вызывается до стандартной обработки, например, посылки извещения <see cref="EFPDataGridView.EditData"/>.
     /// </summary>
     /// <param name="rowInfo">Информация о строке просмотра</param>
-    /// <param name="columnName">Игнорируется, т.к. EFPGridProducerColumn и всегда относится к единственному столбцу просмотра</param>
+    /// <param name="columnName">Игнорируется, т.к. <see cref="EFPGridProducerColumn"/> всегда относится к единственному столбцу просмотра</param>
     /// <returns>true, если редактирование выполнено и дальнейшее редактирование не должно выполняться</returns>
     public bool PerformCellEdit(EFPDataViewRowInfo rowInfo, string columnName)
     {
@@ -1668,7 +1797,7 @@ namespace FreeLibSet.Forms
     private string[] _PrintHeaders;
 
     /// <summary>
-    /// Многострочные заголовки при печати таблицы (свойство PrintHeaders)
+    /// Многострочные заголовки при печати таблицы (свойство <see cref="PrintHeaders"/>)
     /// Версия для установки в виде одной строки с заменой символов:
     /// "|" - разделитель многострочного заголовка
     /// "^" - мягкий перенос
@@ -1823,9 +1952,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить имена полей, которые должны быть в наборе данных.
-    /// Если столбец является вычисляемым, в список добавляются имена исходных столбцов SourceColumnNames.
-    /// Иначе добавляется имя Name для невычисляемого столбца/подсказки/.
-    /// Также в список добавляется CustomOrderSourceColumnName.
+    /// Если столбец является вычисляемым, в список добавляются имена исходных столбцов <see cref="EFPGridProducerItemBase.SourceColumnNames"/>.
+    /// Иначе добавляется имя <see cref="EFPGridProducerItemBase.Name"/> для невычисляемого столбца/подсказки.
+    /// Также в список добавляется <see cref="CustomOrderSourceColumnName"/>.
     /// </summary>
     /// <param name="columns">Список для добавления имен полей</param>
     public override void GetColumnNames(IList<string> columns)
@@ -1837,8 +1966,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает желаемую ширину столбца в пикселях.
-    /// Непереопределенный метод вычисляет ширину исходя из свойства TextWidth.
-    /// Переопределяется для столбцов c CheckBox и значком
+    /// Непереопределенный метод вычисляет ширину исходя из свойства <see cref="TextWidth"/>.
+    /// Переопределяется для столбцов c CheckBox и значком.
     /// </summary>
     /// <param name="measures">Объект для вычисления размеров, присоединенный к табличному просмотру.</param>
     /// <returns>Ширина в пикселях</returns>
@@ -1898,14 +2027,27 @@ namespace FreeLibSet.Forms
     #region Переопределяемые методы
 
     /// <summary>
-    /// Создает объект столбца для табличного просмотра Windows Forms.
-    /// Столбец не добавляется в просмотр.
+    /// Создает столбец <see cref="EFPDataGridViewColumn"/> и добавляет его в табличный просмотр.
     /// </summary>
-    /// <returns>Объект столбца</returns>
-    public override DataGridViewColumn CreateColumn()
+    /// <returns>Объект провайдера столбца, производный от <see cref="EFPDataGridViewColumn"/></returns>
+    public override EFPDataGridViewColumn CreateGridColumn(EFPDataGridView controlProvider)
     {
-      ExtDataGridViewCheckBoxColumn column = new ExtDataGridViewCheckBoxColumn();
-      InitColumn(column);
+      controlProvider.Columns.AddBool(Name, false, HeaderText);
+      EFPDataGridViewColumn column = controlProvider.Columns.LastAdded;
+      InitGridColumn(column);
+      return column;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="controlProvider"></param>
+    /// <returns></returns>
+    public override EFPDataTreeViewColumn CreateTreeColumn(EFPDataTreeView controlProvider)
+    {
+      controlProvider.Columns.AddBool(Name, false, HeaderText);
+      EFPDataTreeViewColumn column = controlProvider.Columns.LastAdded;
+      InitTreeColumn(column);
       return column;
     }
 
@@ -1921,7 +2063,6 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
-
 
   /// <summary>
   /// Вычисляемый столбец с изображением
@@ -1950,15 +2091,30 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Создает объект столбца для табличного просмотра Windows Forms.
-    /// Столбец не добавляется в просмотр.
+    /// Создает столбец <see cref="EFPDataGridViewColumn"/> и добавляет его в табличный просмотр.
     /// </summary>
-    /// <returns>Объект столбца</returns>
-    public override DataGridViewColumn CreateColumn()
+    /// <returns>Объект провайдера столбца, производный от <see cref="EFPDataGridViewColumn"/></returns>
+    public override EFPDataGridViewColumn CreateGridColumn(EFPDataGridView controlProvider)
     {
-      DataGridViewImageColumn col = new DataGridViewImageColumn();
-      InitColumn(col);
-      return col;
+      controlProvider.Columns.AddImage(Name);
+      EFPDataGridViewColumn column = controlProvider.Columns.LastAdded;
+      InitGridColumn(column);
+      column.GridColumn.HeaderText = HeaderText;
+      return column;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="controlProvider"></param>
+    /// <returns></returns>
+    public override EFPDataTreeViewColumn CreateTreeColumn(EFPDataTreeView controlProvider)
+    {
+      controlProvider.Columns.AddImage(Name);
+      EFPDataTreeViewColumn column = controlProvider.Columns.LastAdded;
+      InitTreeColumn(column);
+      column.TreeColumn.Header = HeaderText;
+      return column;
     }
 
     /// <summary>
@@ -1975,6 +2131,11 @@ namespace FreeLibSet.Forms
     /// Возвращает false
     /// </summary>
     public override bool Printable { get { return false; } }
+
+    /// <summary>
+    /// Возвращает null
+    /// </summary>
+    public override DbfFieldTypePreliminaryInfo DbfPreliminaryInfo { get { return null; } }
 
     #endregion
   }
@@ -2027,7 +2188,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если true (по умолчанию), то значение поля NULL интерпретируется как 0.
-    /// Если false, то для значения NULL будет выводиться пустое значение
+    /// Если false, то для значения NULL будет выводиться пустое значение.
     /// </summary>
     public bool NullIsZero { get { return _NullIsZero; } set { _NullIsZero = value; } }
     private bool _NullIsZero;
@@ -2058,10 +2219,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает значение числового поля.
+    /// Возвращает значение поля.
     /// Непереопределенный метод возвращает значение исходного поля.
     /// </summary>
-    /// <param name="args">Аргументы события ValueNeeded</param>
+    /// <param name="args">Аргументы события <see cref="EFPGridProducerItemBase.ValueNeeded"/></param>
     /// <returns>Значение поля</returns>
     protected virtual object GetSourceValue(EFPGridProducerValueNeededEventArgs args)
     {
@@ -2072,7 +2233,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Столбец данных с изображениями из списка EFPApp.ImageKeys.
+  /// Столбец данных с изображениями из списка <see cref="EFPApp.MainImages"/>.
   /// Изображение берется на основании одного целочисленного столбца данных, содержащего перечислимое значение.
   /// </summary>
   public class EFPGridProducerEnumImageColumn : EFPGridProducerImageColumn
@@ -2084,7 +2245,7 @@ namespace FreeLibSet.Forms
     /// Столбец получает имя "<paramref name="sourceColumnName"/>_Image".
     /// </summary>
     /// <param name="sourceColumnName">Имя числового столбца, содержащего перечислимое значение</param>
-    /// <param name="imageKeys">Список тегов изображений в EFPApp.ImageKeys</param>
+    /// <param name="imageKeys">Список тегов изображений в <see cref="EFPApp.MainImages"/></param>
     public EFPGridProducerEnumImageColumn(string sourceColumnName, string[] imageKeys)
       : this(sourceColumnName + "_Image", new string[] { sourceColumnName }, imageKeys)
     {
@@ -2095,7 +2256,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="name">Условное имя этого столбца</param>
     /// <param name="sourceColumnNames">Исходные столбцы</param>
-    /// <param name="imageKeys">Список тегов изображений в EFPApp.ImageKeys</param>
+    /// <param name="imageKeys">Список тегов изображений в <see cref="EFPApp.MainImages"/></param>
     protected EFPGridProducerEnumImageColumn(string name, string[] sourceColumnNames, string[] imageKeys)
       : base(name, sourceColumnNames)
     {
@@ -2112,7 +2273,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Список тегов изображений в EFPApp.ImageKeys для перечисления.
+    /// Список тегов изображений в <see cref="EFPApp.MainImages"/> для перечисления.
     /// Задается в конструкторе
     /// </summary>
     public string[] ImageKeys { get { return _ImageKeys; } }
@@ -2126,14 +2287,14 @@ namespace FreeLibSet.Forms
     private bool _NullIsZero;
 
     /// <summary>
-    /// Изображение, используемое, если значение поля выходит за пределы списка ImageKeys.
+    /// Изображение, используемое, если значение поля выходит за пределы списка <see cref="ImageKeys"/>.
     /// По умолчанию - "Error".
     /// </summary>
     public string ErrorImageKey { get { return _ErrorImageKey; } set { _ErrorImageKey = value; } }
     private string _ErrorImageKey;
 
     /// <summary>
-    /// Тексты всплывающих подсказок, соответствующие массиву ImageKeys.
+    /// Тексты всплывающих подсказок, соответствующие массиву <see cref="ImageKeys"/>.
     /// </summary>
     public string[] ToolTipTexts
     {
@@ -2151,7 +2312,7 @@ namespace FreeLibSet.Forms
     private string[] _ToolTipTexts;
 
     /// <summary>
-    /// Сплывающая подсказка, соответствующая значению NULL, при NullIsZero=false.
+    /// Сплывающая подсказка, соответствующая значению NULL, при <see cref="NullIsZero"/>=false.
     /// По умолчанию - пустая строка
     /// </summary>
     public string EmptyToolTipText
@@ -2202,7 +2363,7 @@ namespace FreeLibSet.Forms
     /// Возвращает значение числового поля.
     /// Непереопределенный метод возвращает значение исходного поля.
     /// </summary>
-    /// <param name="args">Аргументы события ValueNeeded</param>
+    /// <param name="args">Аргументы события <see cref="EFPGridProducerItemBase.ValueNeeded"/></param>
     /// <returns>Значение поля</returns>
     protected virtual object GetSourceValue(EFPGridProducerValueNeededEventArgs args)
     {
@@ -2271,7 +2432,7 @@ namespace FreeLibSet.Forms
     private string _FilterColumnName;
 
     /// <summary>
-    /// Значение поля для фильтра, заданного FilterColumnName
+    /// Значение поля для фильтра, заданного <see cref="FilterColumnName"/>
     /// Задается в конструкторе
     /// </summary>
     public int FilterValue { get { return _FilterValue; } }
@@ -2546,7 +2707,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Столбец, содержащий сумму нескольких значений.
   /// Также можно вычислить минимальное, максимальное или среднее значение
-  /// Если все столбцы содержат DBNull, то возвращаемое значение также есть DBNull
+  /// Если все столбцы содержат <see cref="DBNull"/>, то возвращаемое значение также есть <see cref="DBNull"/>
   /// </summary>
   public class EFPGridProducerSumColumn : EFPGridProducerColumn
   {
@@ -2568,7 +2729,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Вычисляемая функция. По умолчанию - Sum
+    /// Вычисляемая функция. По умолчанию - <see cref="EFPGridProducerSumColumnMode.Sum"/>
     /// </summary>
     public EFPGridProducerSumColumnMode Mode { get { return _Mode; } set { _Mode = value; } }
     private EFPGridProducerSumColumnMode _Mode;

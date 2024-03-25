@@ -719,6 +719,12 @@ namespace FreeLibSet.Forms.Reporting
       GetColumnInfo(column).DbfExported = value;
     }
 
+    /// <summary>
+    /// Возвращает заданный пользователем признак экспорта в DBF-формат.
+    /// Если свойство <see cref="IEFPDataViewColumnBase.DbfPreliminaryInfo"/> возвращает null и столбец не может быть экспортирован, то возвращается false.
+    /// </summary>
+    /// <param name="column">Столбец просмотра</param>
+    /// <returns>Признак экспорта</returns>
     public bool GetDbfExported(IEFPDataViewColumn column)
     {
       if (column.DbfPreliminaryInfo == null)
@@ -726,17 +732,37 @@ namespace FreeLibSet.Forms.Reporting
       return GetColumnInfo(column).DbfExported;
     }
 
+    /// <summary>
+    /// Устанавливает имя поля при экспорте в DBF-формат.
+    /// </summary>
+    /// <param name="column">Столбец просмотра</param>
+    /// <param name="value">Имя поля</param>
     public void SetDbfFieldName(IEFPDataViewColumn column, string value)
     {
       GetColumnInfo(column).DbfFieldName = value;
       GetColumnInfo(column).IsManualDbfName = true;
     }
 
+    /// <summary>
+    /// Возращает имя поля для экспорта в DBF-формат.
+    /// Возвращается значение, установленное пользователем, или пустая строка.
+    /// Следует использовать метод <see cref="GetRealDbfFieldNames(IEFPDataViewColumn[])"/>, который также возвращает имена из свойств столбца и автоматически генерирует недостающие.
+    /// </summary>
+    /// <param name="column">Столбец просмотра</param>
+    /// <returns>Имя поля</returns>
     public string GetDbfFieldName(IEFPDataViewColumn column)
     {
       return GetColumnInfo(column).DbfFieldName;
     }
 
+    /// <summary>
+    /// Возвращает имена полей для экспорта в DBF-формат.
+    /// Учитываются настройки пользователя <see cref="GetDbfFieldName(IEFPDataViewColumn)"/>, имена из <see cref="IEFPDataViewColumnBase.DbfInfo"/> и <see cref="IEFPDataViewColumnBase.Name"/>.
+    /// Недостающие имена полей генерируются автоматически. Возвращает список, в котором все имена заполнены и нет повторов.
+    /// Признаки экспорта <see cref="GetDbfExported(IEFPDataViewColumn)"/> не учитываются.
+    /// </summary>
+    /// <param name="columns">Список столбцов для экспорта. Следует передавать полный список экспортируемых полей</param>
+    /// <returns>Заполненный массив имен</returns>
     public string[] GetRealDbfFieldNames(IEFPDataViewColumn[] columns)
     {
       string[] aNames = new string[columns.Length];
@@ -801,7 +827,6 @@ namespace FreeLibSet.Forms.Reporting
 
       return aNames;
     }
-
 
     private string GetValidDbfNamePart(string s)
     {

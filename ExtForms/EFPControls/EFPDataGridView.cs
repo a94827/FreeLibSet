@@ -9856,8 +9856,10 @@ namespace FreeLibSet.Forms
           for (int i = 0; i < selRows.Length; i++)
           {
             if (CheckMarkRow(selRows[i], columnIndex, action))
+            {
               cnt++;
-            Control.InvalidateCell(columnIndex, selRows[i]);
+              Control.InvalidateCell(columnIndex, selRows[i]);
+            }
           }
           break;
         case EFPDataGridViewCheckMarkRows.All:
@@ -9866,7 +9868,9 @@ namespace FreeLibSet.Forms
             if (CheckMarkRow(i, columnIndex, action))
               cnt++;
           }
-          Control.InvalidateColumn(columnIndex);
+          if (cnt>0)
+            Control.InvalidateColumn(columnIndex);
+
           break;
         default:
           throw new ArgumentException("Неивестный Rows=" + rows.ToString(), "rows");

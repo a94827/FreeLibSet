@@ -503,18 +503,6 @@ namespace FreeLibSet.Forms
       ciShowGrid.Click += new EventHandler(ShowGridClick);
       Add(ciShowGrid);
 
-      //FSaveTypes = new AccDepFileTypes();
-      //ciSave = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Save);
-      //ciSave.Click += new EventHandler(Save_Click);
-      //ciSave.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
-      //Add(ciSave);
-
-      //ciSaveAs = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.SaveAs);
-      //ciSaveAs.MenuText = null;
-      //ciSaveAs.Click += new EventHandler(SaveAs_Click);
-      //ciSaveAs.Usage = EFPCommandItemUsage.Menu;
-      //Add(ciSaveAs);
-
       ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
       ciCopy.Click += new EventHandler(Copy_Click);
       Add(ciCopy);
@@ -848,110 +836,6 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
-
-#if XXX
-    #region Команда "Файл-Сохранить"
-
-    /// <summary>
-    /// Если присоединить обработчик к этому событию, то он будет вызываться при
-    /// выполнении команд "Сохранить" и "Сохранить как". Он может выполнить 
-    /// собственные действия и установить свойство Cancel, чтобы не выполнять 
-    /// стандартные действия по сохранению данных таблицы
-    /// </summary>
-    public event AccDepPrintPreviewSpecialSaveEventHandler SpecialSave;
-
-    /// <summary>
-    /// Форматы для сохранения данных предварительного просмотра
-    /// </summary>
-    public AccDepFileTypes SaveTypes { get { return FSaveTypes; } }
-    private AccDepFileTypes FSaveTypes;
-
-    private EFPCommandItem ciSave, ciSaveAs;
-
-    void Save_Click(object Sender, EventArgs Args)
-    {
-      DoSave(Sender, false);
-    }
-    void SaveAs_Click(object Sender, EventArgs Args)
-    {
-      DoSave(Sender, true);
-    }
-    void DoSave(object Sender, bool SaveAs)
-    {
-      if (FOwner.PageSetup == null)
-      {
-        EFPApp.ShowTempMessage("Нет присоединенного документа");
-        return;
-      }
-
-      if (SpecialSave != null)
-      {
-        AccDepPrintPreviewSpecialSaveEventArgs SpecArgs = new AccDepPrintPreviewSpecialSaveEventArgs(FOwner, (EFPCommandItem)Sender, SaveAs);
-        SpecialSave(this, SpecArgs);
-        if (SpecArgs.Cancel)
-          return;
-      }
-
-      SaveTypes.PerformSave(Owner.PageSetup.ConfigSectionName);
-    }
-
-    #endregion
-
-    #region Команды SendTo
-
-    protected EFPCommandItem MenuSendTo;
-
-    /// <summary>
-    /// Добавление всех возможных команд в Send To
-    /// </summary>
-    internal void AddSendTo(bool ToPaperDocEditor)
-    {
-      if (MenuSendTo != null)
-        return;
-      MenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);
-      MenuSendTo.GroupBegin = true;
-      MenuSendTo.GroupEnd = true;
-      Add(MenuSendTo);
-
-      if (ToPaperDocEditor)
-        AddSendTo(AccDepMainMenu.SendToPaperDoc);
-      if (AccDepPaperDocPageSetupBase.CanSendToMicrosoftWord)
-        AddSendTo(EFPApp.CommandItems[EFPAppStdCommandItems.SendToMicrosoftWord]);
-      if (AccDepPaperDocPageSetupBase.CanSendToMicrosoftExcel)
-        AddSendTo(EFPApp.CommandItems[EFPAppStdCommandItems.SendToMicrosoftExcel]);
-      if (AccDepPaperDocPageSetupBase.CanSendToOpenOfficeWriter)
-        AddSendTo(EFPApp.CommandItems[EFPAppStdCommandItems.SendToOpenOfficeWriter]);
-      if (AccDepPaperDocPageSetupBase.CanSendToOpenOfficeCalc)
-        AddSendTo(EFPApp.CommandItems[EFPAppStdCommandItems.SendToOpenOfficeCalc]);
-      if (AccDepPaperDocPageSetupBase.CanSendToPdf)
-        AddSendTo(EFPApp.CommandItems["ФайлОтправить", "PDF"]);
-    }
-
-    private void AddSendTo(EFPCommandItem MainMenuItem)
-    {
-
-      EFPCommandItem ci = new EFPCommandItem(MainMenuItem);
-      ci.Parent = MenuSendTo;
-      ci.Tag = MainMenuItem.Name;
-      ci.Click += new EventHandler(SendTo_Click);
-      Add(ci);
-    }
-
-    private void SendTo_Click(object Sender, EventArgs Args)
-    {
-      EFPCommandItem ci = (EFPCommandItem)Sender;
-      string Name = (string)(ci.Tag);
-      if (Owner.PageSetup == null)
-      {
-        EFPApp.MessageBox("Нет просматриваемого документа", ci.DisplayName);
-        return;
-      }
-      Owner.PageSetup.PerformSendTo(Name);
-    }
-
-    #endregion
-
-#endif
 
     #region Прочие методы
 

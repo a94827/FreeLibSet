@@ -19,7 +19,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает строку фильтра.
-    /// Создаваемая строка должна быть добавлена в коллекцию EFPReportFilterItems
+    /// Создаваемая строка должна быть добавлена в коллекцию <see cref="EFPReportFilterItems"/>.
     /// </summary>
     /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
     public EFPReportFilterItem(string displayName)
@@ -47,14 +47,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Заголовок фильтра. Задается в конструкторе
+    /// Заголовок фильтра. Задается в конструкторе.
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
-    private string _DisplayName;
+    private readonly string _DisplayName;
 
     /// <summary>
     /// Значение фильтра.
-    /// Устанавливается динамически
+    /// Устанавливается динамически.
     /// </summary>
     public string Value 
     { 
@@ -69,7 +69,7 @@ namespace FreeLibSet.Forms
     private string _Value;
 
     /// <summary>
-    /// Имя значка для фильтра из списка EFPApp.ImageKey.
+    /// Имя значка для фильтра из списка <see cref="EFPApp.MainImages"/>.
     /// По умолчанию используется значок "Filter"
     /// </summary>
     public string ImageKey
@@ -198,8 +198,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Доступ к строке фильтра по индексу
     /// </summary>
-    /// <param name="index">Индекс в диапазоне от 0 до Count-1</param>
-    /// <returns>Объект EFPReportFilterItem</returns>
+    /// <param name="index">Индекс в диапазоне от 0 до <see cref="Count"/>-1</param>
+    /// <returns>Объект <see cref="EFPReportFilterItem"/></returns>
     public EFPReportFilterItem this[int index]
     {
       get { return _Items[index]; }
@@ -251,7 +251,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
     /// <param name="value">Значение фильтра. Может быть пустой строкой</param>
-    /// <param name="imageKey">Имя изображения в EFPApp.MainImages.
+    /// <param name="imageKey">Имя изображения в <see cref="EFPApp.MainImages"/>.
     /// Если задана пустая строка, будет использован стандартный значок фильтра</param>
     public EFPReportFilterItem Add(string displayName, string value, string imageKey)
     {
@@ -286,7 +286,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает последний добавленный объект EFPReportFilterItem или null, если нет ни одной строки фильтра
+    /// Возвращает последний добавленный объект <see cref="EFPReportFilterItem"/> или null, если нет ни одной строки фильтра
     /// </summary>
     public EFPReportFilterItem LastAdded
     {
@@ -317,11 +317,10 @@ namespace FreeLibSet.Forms
       OnChanged();
     }
 
-
     /// <summary>
     /// Замена списка фильтров.
-    /// Комбинация вызовов Clear() и AddRange(). Если <paramref name="items"/> равно 0, просто
-    /// очищается список строк
+    /// Комбинация вызовов <see cref="Clear()"/> и <see cref="AddRange(IEnumerable{EFPReportFilterItem})"/>. Если <paramref name="items"/> равно 0, просто
+    /// очищается список строк.
     /// </summary>
     /// <param name="items">Перечислимый список фильтров</param>
     public void Assign(IEnumerable<EFPReportFilterItem> items)
@@ -347,7 +346,6 @@ namespace FreeLibSet.Forms
         OnChanged();
       return res;
     }
-
 
     /// <summary>
     /// Удаление строки фильтра
@@ -382,7 +380,6 @@ namespace FreeLibSet.Forms
       return _Items.IndexOf(item);
     }
 
-
     /// <summary>
     /// Возвращает индекс строки фильтра с заданным наименованием.
     /// Если такого объекта нет, возвращается (-1).
@@ -409,12 +406,11 @@ namespace FreeLibSet.Forms
       return _Items.Contains(item);
     }
 
-
     /// <summary>
     /// Копирование в массив
     /// </summary>
-    /// <param name="array"></param>
-    /// <param name="arrayIndex"></param>
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="arrayIndex">Первый индекс в заполняемом массиве</param>
     public void CopyTo(EFPReportFilterItem[] array, int arrayIndex)
     {
       _Items.CopyTo(array, arrayIndex);
@@ -423,7 +419,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Копирование в массив
     /// </summary>
-    /// <param name="array"></param>
+    /// <param name="array">Заполняемый массив</param>
     public void CopyTo(EFPReportFilterItem[] array)
     {
       _Items.CopyTo(array);
@@ -432,7 +428,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Копирование в массив
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый массив</returns>
     public EFPReportFilterItem[] ToArray()
     {
       return _Items.ToArray();
@@ -443,7 +439,7 @@ namespace FreeLibSet.Forms
     #region Виртуальные методы
 
     /// <summary>
-    /// Вызывыается при всех изменениях в списке фильтров
+    /// Вызывается при всех изменениях в списке фильтров
     /// </summary>
     internal protected virtual void OnChanged()
     {
@@ -454,7 +450,7 @@ namespace FreeLibSet.Forms
     #region IEnumerable<GridReportFilterItem> Members
 
     /// <summary>
-    /// Возвращает перечислитель по объектам EFPReportFilterItem
+    /// Возвращает перечислитель по объектам <see cref="EFPReportFilterItem"/>
     /// </summary>
     /// <returns>Перечислитель</returns>
     public IEnumerator<EFPReportFilterItem> GetEnumerator()
@@ -480,7 +476,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Реализация списка фильтров для одной страницы отчета
+  /// Реализация списка фильтров для одной страницы отчета <see cref="EFPReportPage"/>.
   /// </summary>
   public class EFPReportPageFilterItems : EFPReportFilterItems
   {
@@ -500,12 +496,12 @@ namespace FreeLibSet.Forms
     /// Страница, к которой относится отчет
     /// </summary>
     public EFPReportPage Page { get { return _Page; } }
-    private EFPReportPage _Page;
+    private readonly EFPReportPage _Page;
 
     /// <summary>
     /// Возвращает всплывающую подсказку, собранную из строк фильтра в виде длинной строки,
     /// содержащей пары "DisplayName=Value".
-    /// Используется методом EFPReportPage.ToolTipTextFromFilters()
+    /// Используется методом <see cref="EFPReportPage.ToolTipTextFromFilters()"/>.
     /// </summary>
     public string ToolTipText
     {
@@ -529,7 +525,6 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     #endregion
 
     #region Методы
@@ -538,8 +533,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Начать обновление списка фильтров.
-    /// Подавляет последующие вызовы метода OnChanged().
-    /// Допускаются вложенные пары вызовов BeginUpdate() / EndUpdate()
+    /// Подавляет последующие вызовы метода <see cref="OnChanged()"/>.
+    /// Допускаются вложенные пары вызовов <see cref="BeginUpdate()"/> / <see cref="EndUpdate()"/>.
     /// </summary>
     public void BeginUpdate()
     {
@@ -548,8 +543,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Закончить обновление списка фильтров.
-    /// Допускаются вложенные пары вызовов BeginUpdate() / EndUpdate()
-    /// Вызывает OnChanged()
+    /// Допускаются вложенные пары вызовов <see cref="BeginUpdate()"/> / <see cref="EndUpdate()"/>.
+    /// Вызывает <see cref="OnChanged()"/>.
     /// </summary>
     public void EndUpdate()
     {
@@ -559,7 +554,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Инициализирует фильтры страницы, если нет незакрытых вызовов BeginUpdate()
+    /// Инициализирует фильтры страницы, если нет незакрытых вызовов <see cref="BeginUpdate()"/>.
     /// </summary>
     internal protected override void OnChanged()
     {

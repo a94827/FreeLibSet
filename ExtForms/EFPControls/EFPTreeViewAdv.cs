@@ -746,84 +746,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region GridProducer
-
-    /// <summary>
-    /// Генератор столбцов таблицы. Если задан, то в локальном меню доступны
-    /// команды настройки столбцов таблицы
-    /// </summary>
-    public IEFPGridProducer GridProducer
-    {
-      get { return _GridProducer; }
-      set
-      {
-        if (value != null)
-          value.SetReadOnly();
-
-        _GridProducer = value;
-      }
-    }
-    private IEFPGridProducer _GridProducer;
-
-    #endregion
-
-    #region Свойство CurrentGridConfig
-
-    /// <summary>
-    /// Выбранная настройка табличного просмотра.
-    /// Если свойство GridProducer не установлено, должен быть задан обработчик CurrentGridConfigChanged,
-    /// который выполнит реальную настройку просмотра
-    /// </summary>
-    public EFPDataGridViewConfig CurrentConfig
-    {
-      get { return _CurrentConfig; }
-      set
-      {
-        if (value != null)
-          value.SetReadOnly();
-        _CurrentConfig = value;
-
-        CancelEventArgs args = new CancelEventArgs();
-        args.Cancel = false;
-        OnCurrentGridConfigChanged(args);
-        if ((!args.Cancel) && (GridProducer != null))
-        {
-          Control.Columns.Clear(); // 21.01.2012
-          // TODO: GridProducer.InitGrid(this, CurrentConfigHasBeenSet);
-          //PerformGridProducerPostInit();
-        }
-        _CurrentConfigHasBeenSet = true;
-      }
-    }
-    private EFPDataGridViewConfig _CurrentConfig;
-
-    /// <summary>
-    /// Признак того, что свойство CurrentConfig уже устанавливалось
-    /// </summary>
-    protected bool CurrentConfigHasBeenSet { get { return _CurrentConfigHasBeenSet; } }
-    private bool _CurrentConfigHasBeenSet = false;
-
-    /// <summary>
-    /// Вызывается при изменении свойства CurrentGridConfig.
-    /// Если аргумент Cancel обработчиком установлен в true, то предполагается,
-    /// что инициализация просмотра выполнена в обработчике. В противном случае
-    /// (по умолчанию Cancel=false или при отстутствии обработчика) будет вызван
-    /// метод GridProducer.InitGrid()
-    /// </summary>
-    public event CancelEventHandler CurrentConfigChanged;
-
-    /// <summary>
-    /// Вызывает событие CurrentConfigChanged.
-    /// </summary>
-    /// <param name="args">Аргументы события</param>
-    protected virtual void OnCurrentGridConfigChanged(CancelEventArgs args)
-    {
-      if (CurrentConfigChanged != null)
-        CurrentConfigChanged(this, args);
-    }
-
-    #endregion
-
     #region Поиск текста
 
     /// <summary>
@@ -1262,9 +1184,14 @@ namespace FreeLibSet.Forms
       if (Control.Selection.Count == 0)
         return;
 
-      // 27.12.2020 лишнее if (Control.Selection.Count > 0)
-      Control.EnsureVisible(Control.Selection[Control.Selection.Count - 1]);
-      Control.EnsureVisible(Control.Selection[0]);
+      try
+      {
+        // 27.12.2020 лишнее if (Control.Selection.Count > 0)
+        Control.EnsureVisible(Control.Selection[Control.Selection.Count - 1]);
+        if (Control.Selection.Count > 1) // 25.03.2024
+          Control.EnsureVisible(Control.Selection[0]);
+      }
+      catch { } // 25.03.2024
     }
 
     #endregion

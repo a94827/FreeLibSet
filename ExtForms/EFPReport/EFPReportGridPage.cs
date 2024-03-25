@@ -18,8 +18,8 @@ namespace FreeLibSet.Forms
   /// Страничка отчета с табличным просмотром.
   /// Табличный просмотр присоединяется к набору данных, а колонки инициализируются
   /// один раз.
-  /// Создает EFPDataGridView, если не переопределено в производном классе.
-  /// Если требуется EFPConfigurableDataGridView, слнедует использовать EFPReportConfigurabeGridPage 
+  /// Создает <see cref="EFPDataGridView"/>, если не переопределено в производном классе.
+  /// Если требуется <see cref="EFPConfigurableDataGridView"/>, следует использовать <see cref="EFPReportConfigurableGridPage"/>.
   /// </summary>
   public class EFPReportGridPage : EFPReportPage
   {
@@ -40,7 +40,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Дополниельно устанавливает свойство EFPDataGridView.DisplayName
+    /// Дополниельно устанавливает свойство <see cref="EFPControlBase.DisplayName"/>
     /// </summary>
     public override string Title
     {
@@ -54,7 +54,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дополнительно выполняет инициализацию свойства ImageKey
+    /// Дополнительно выполняет инициализацию свойства <see cref="EFPReportPage.ImageKey"/>
     /// </summary>
     /// <param name="parentControl"></param>
     public override void AssignParentControl(Panel parentControl)
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает страницу отчета
     /// </summary>
-    /// <param name="parent"></param>
+    /// <param name="parent">Панель для размещения страницы</param>
     protected override void CreatePage(Panel parent)
     {
       // Табличный просмотр может быть не будет создан, поэтому запоминаем панель
@@ -76,7 +76,6 @@ namespace FreeLibSet.Forms
         return;
 
       CreateControlProvider();
-
 
       SetControlName(_ControlProvider, "Grid");
     }
@@ -104,7 +103,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает свойство EFPDataGridView.Control.DataSource равным DataSource.
+    /// Устанавливает свойство <see cref="DataGridView.DataSource"/> равным <see cref="DataSource"/>.
     /// Переопределяется в EFPReportStdConfigurableGridPage
     /// </summary>
     protected virtual void OnInitControlDataSource()
@@ -124,7 +123,7 @@ namespace FreeLibSet.Forms
     /// Запомнить информацию табличного просмотра
     /// </summary>
     /// <param name="cfg">Заполняемая секция конфигурации</param>
-    /// <returns>Обычно следует возвращать true.</returns>
+    /// <returns>Обычно следует возвращать true</returns>
     public override bool SaveViewConfig(CfgPart cfg)
     {
       if (!base.SaveViewConfig(cfg))
@@ -160,9 +159,9 @@ namespace FreeLibSet.Forms
     #region Свойство DataSource
 
     /// <summary>
-    /// Сюда должен быть помещен набор данных, который будет отображен
-    /// Если свойство AutoRecreateGrid установлено в true, то при присвоении
-    /// значения свойству будет [заново] создан новый табличный просмотр
+    /// Сюда должен быть помещен набор данных, который будет отображен.
+    /// Если свойство <see cref="AutoRecreateGrid"/> установлено в true, то при присвоении
+    /// значения свойству будет (заново) создан новый табличный просмотр.
     /// </summary>
     public DataView DataSource
     {
@@ -206,12 +205,12 @@ namespace FreeLibSet.Forms
     private DataView _DataSource;
 
     /// <summary>
-    /// Солбытие вызывается при установке свойства DataSource
+    /// Солбытие вызывается при установке свойства <see cref="DataSource"/>
     /// </summary>
     public event EventHandler DataSourceChanged;
 
     /// <summary>
-    /// Вызывает событие DataSourceChanged
+    /// Вызывает событие <see cref="DataSourceChanged"/>
     /// </summary>
     /// <param name="args">Фиктивный аргумент</param>
     protected virtual void OnDataSourceChanged(EventArgs args)
@@ -233,7 +232,7 @@ namespace FreeLibSet.Forms
     private EFPDataGridView _ControlProvider;
 
     /// <summary>
-    /// Если установить в true, то будет видна панель кнопок
+    /// Если установить в true, то будет видна панель кнопок.
     /// По умолчанию - false - без кнопок
     /// </summary>
     public bool ShowToolBar
@@ -249,25 +248,25 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установлено (по умолчанию), а при инициализации просмотра
-    /// было установлено свойство DocGridHandler.UseRowImages, то в верехней левой
+    /// было установлено свойство <see cref="EFPDataGridView.UseRowImages"/>, то в верехней левой
     /// ячейке просмотра будет выводиться подсказка о количестве ошибок и 
     /// предупреждений. Информация обновляется при присоединении источника данных
-    /// с помощью свойства DataSource.
+    /// с помощью свойства <see cref="DataSource"/>.
     /// Чтобы вручную устанавливать значение ячейки или вообще не выводить статистику,
-    /// свойство должно быть сброшено в false
+    /// свойство должно быть сброшено в false.
     /// </summary>
     public bool AutoInitTopLeftCellInfo { get { return _AutoInitTopLeftCellInfo; } set { _AutoInitTopLeftCellInfo = value; } }
     private bool _AutoInitTopLeftCellInfo;
 
     /// <summary>
     /// Если свойство установлено, то выполняется автоматическое управление значком
-    /// вкладки (свойство ImageKey), в зависимости от наличия в табличном просмотре
-    /// строк с ошибками и предупреждениями
+    /// вкладки (свойство <see cref="EFPReportPage.ImageKey"/>), в зависимости от наличия в табличном просмотре
+    /// строк с ошибками и предупреждениями.
     /// Установка свойства заставляет отчет обеспечить готовность данных на странице
     /// немедленно после построения отчета, а не при первом обращении пользователя 
-    /// к странице, что может привести к замедлению построения
-    /// По умолчанию свойство не установлено
-    /// Если свойство установлено, то ручное задание свойства ImageKey не требуется
+    /// к странице, что может привести к замедлению построения.
+    /// По умолчанию свойство не установлено.
+    /// Если свойство установлено, то ручное задание свойства <see cref="EFPReportPage.ImageKey"/> не требуется.
     /// </summary>
     public bool AutoInitStateImageKey
     {
@@ -283,11 +282,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// По умолчанию (false) табличный просмотр создается один раз при инициализации
-    /// страницы отчета. Событие InitGrid такжде вызывается один раз. Повторное
+    /// страницы отчета. Событие <see cref="InitGrid"/> также вызывается один раз. Повторное
     /// построение отчета не приводит к замене табличного просмотра.
     /// Установка свойства в true делает построение табличного просмотра многократным.
     /// Табличный просмотр заново создается при каждом перестроении отчета.
-    /// Свойство можно устанавливать только до присоединения к отчету
+    /// Свойство можно устанавливать только до присоединения к отчету.
     /// </summary>
     public bool AutoRecreateGrid
     {
@@ -306,7 +305,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Автоматическая загрузка и сохранение порядка сортировки строк в секции 
     /// конфигурации (по умолчанию - true), если есть установленные 
-    /// порядки сортировки EFPDataGridView.Orders или CustomnOrderAllowed=true. Если требуется, чтобы страница отчета при каждом
+    /// порядки сортировки <see cref="EFPDataGridView.Orders"/> или <see cref="EFPDataGridView.CustomOrderAllowed"/>=true. Если требуется, чтобы страница отчета при каждом
     /// построении имела определенный порядок строк, а не запомненный ранее,
     /// следует установить значение false до присоединения страницы к отчету.
     /// </summary>
@@ -323,9 +322,9 @@ namespace FreeLibSet.Forms
     private Control _ParentControl;
 
     /// <summary>
-    /// Создать провайдер управляющего элемента EFPDataGridView или производного класса.
-    /// Для реального создания вызывается DoCreateControlProvider().
-    /// Затем вызывается метод OnInitGrid()
+    /// Создать провайдер управляющего элемента <see cref="EFPDataGridView"/> или производного класса.
+    /// Для реального создания вызывается <see cref="DoCreateControlProvider(DataGridView)"/>.
+    /// Затем вызывается метод <see cref="OnInitGrid()"/>.
     /// </summary>
     protected virtual void CreateControlProvider()
     {
@@ -371,12 +370,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Непосредственное создание объекта EFPDataGridView.
-    /// Если не переопределено, создает простой табличный просмотр EFPDataGridView.
-    /// В переопределенном методе следует использовать свойство BaseProvider при вызове конструктора
+    /// Непосредственное создание объекта <see cref="EFPDataGridView"/> или производного класса.
+    /// Если не переопределено, создает простой табличный просмотр <see cref="EFPDataGridView"/>.
+    /// В переопределенном методе следует использовать свойство <see cref="EFPReportPage.BaseProvider"/> при вызове конструктора создаваемого объекта.
     /// </summary>
-    /// <param name="control">Управляющий элемент DataGridView</param>
-    /// <returns>Провайдер EFPDataGridView или производного класса</returns>
+    /// <param name="control">Управляющий элемент <see cref="DataGridView"/></param>
+    /// <returns>Провайдер <see cref="EFPDataGridView"/> или производного класса</returns>
     protected virtual EFPDataGridView DoCreateControlProvider(DataGridView control)
     {
       return new EFPDataGridView(BaseProvider, control);
@@ -386,8 +385,8 @@ namespace FreeLibSet.Forms
     /// Повторное создание табличного просмотра. Если на момент вызова просмотр
     /// еще не был создан, никаких действий не выполняется.
     /// Если просмотр существует, то он будет удален и создан заново (с повторынм
-    /// вызовом события InitGrid). Текущая позиция сохраняется, если источник
-    /// данных был присоединен
+    /// вызовом события <see cref="InitGrid"/>). Текущая позиция сохраняется, если источник
+    /// данных был присоединен.
     /// </summary>
     public void RecreateGrid()
     {
@@ -411,8 +410,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается из метода RecreateGrid() для удаления существующего просмотра.
-    /// Непереопределенный метод вызывает Control.ControlCollection.Remove()
+    /// Вызывается из метода <see cref="RecreateGrid()"/> для удаления существующего просмотра.
+    /// Непереопределенный метод вызывает <see cref="Control.ControlCollection.Remove(Control)"/>.
     /// </summary>
     protected virtual void RemoveGrid()
     {
@@ -424,14 +423,14 @@ namespace FreeLibSet.Forms
     #region Событие InitGrid
 
     /// <summary>
-    /// Событие вызывается после создания объекта EFPDataGridView
+    /// Событие вызывается после создания объекта <see cref="EFPDataGridView"/>.
     /// Обработчик должен добавить столбцы и установить другие свойства, используя свойство
-    /// ControlProvider для доступа к объекту
+    /// <see cref="ControlProvider"/> для доступа к объекту.
     /// </summary>
     public event EventHandler InitGrid;
 
     /// <summary>
-    /// Переопределяется в GridReportProducerGridPage
+    /// Вызывает событие <see cref="InitGrid"/>.
     /// </summary>
     protected virtual void OnInitGrid()
     {
@@ -449,7 +448,7 @@ namespace FreeLibSet.Forms
 
 
   /// <summary>
-  /// Страница отчета с табличным просмотром EFPConfigurableGridView
+  /// Страница отчета с табличным просмотром <see cref="EFPConfigurableDataGridView"/>
   /// </summary>
   public class EFPReportConfigurableGridPage : EFPReportGridPage
   {
@@ -467,10 +466,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает EFPConfigurableDataGridView
+    /// Создает <see cref="EFPConfigurableDataGridView"/>
     /// </summary>
-    /// <param name="control"></param>
-    /// <returns></returns>
+    /// <param name="control">Управляющий элемент</param>
+    /// <returns>Провайдер</returns>
     protected override EFPDataGridView DoCreateControlProvider(DataGridView control)
     {
       return new EFPConfigurableDataGridView(BaseProvider, control);
@@ -507,7 +506,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя секции конфигурации для хранения параметров.
-    /// Свойство синхронизировано с основным объектом EFPConfigurableDataGridView.
+    /// Свойство синхронизировано с основным объектом <see cref="EFPConfigurableDataGridView"/>.
     /// Допускается установка свойства до инициализации табличного просмотра.
     /// </summary>
     public string ConfigSectionName
@@ -549,9 +548,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализатор столбцов табличного просмотра.
-    /// Это свойство синхронизировано с одноименным свойством EFPConfigurableDataGridView.
+    /// Это свойство синхронизировано с одноименным свойством <see cref="EFPConfigurableDataGridView"/>.
     /// Если свойство установлено, то GridProducer будет использован для инициализации столбцов.
-    /// Свойство может быть установлено только до создания страниц
+    /// Свойство может быть установлено только до создания страниц.
     /// </summary>
     public IEFPGridProducer GridProducer
     {
@@ -574,17 +573,17 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Страница отчета с табличным просмотром EFPStdConfigurableGridView
+  /// Страница отчета с табличным просмотром <see cref="EFPStdConfigurableDataGridView"/>
   /// </summary>
   public class EFPReportStdConfigurableGridPage : EFPReportConfigurableGridPage
   {
     #region Переопределенные методы и свойства
 
     /// <summary>
-    /// Создает EFPConfigurableDataGridView
+    /// Создает <see cref="EFPStdConfigurableDataGridView"/>
     /// </summary>
-    /// <param name="control"></param>
-    /// <returns></returns>
+    /// <param name="control">Управляющий элемент</param>
+    /// <returns>Провайдер</returns>
     protected override EFPDataGridView DoCreateControlProvider(DataGridView control)
     {
       return new EFPStdConfigurableDataGridView(BaseProvider, control);
@@ -606,9 +605,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализатор столбцов табличного просмотра.
-    /// Это свойство синхронизировано с одноименным свойством EFPConfigurableDataGridView.
+    /// Это свойство синхронизировано с одноименным свойством <see cref="EFPConfigurableDataGridView"/>.
     /// Если свойство установлено, то GridProducer будет использован для инициализации столбцов.
-    /// Свойство может быть установлено только до создания страниц
+    /// Свойство может быть установлено только до создания страниц.
     /// </summary>
     public new EFPGridProducer GridProducer
     {
@@ -621,12 +620,12 @@ namespace FreeLibSet.Forms
     #region UseTableRepeater
 
     /// <summary>
-    /// Разрещено ли использовать таблицу-повторитель?
-    /// Если true, то при установке набора данных определяется наличие вычисляемых столбцов в EFPGridProducer 
+    /// Разрешено ли использовать таблицу-повторитель?
+    /// Если true, то при установке набора данных определяется наличие вычисляемых столбцов в <see cref="EFPGridProducer"/>
     /// и, при необходимости, создается таблица-повторитель. Это может потребоваться, если в отчете используется
-    /// произвольная сортировка (обработчик события InitGrid устанавливает EFPDataGridView.CustomOrderAllowed=true).
-    /// Используется свойство EFPStdConfigurableDataGridView.MasterDataView.
-    /// По умолчанию - false - источник данных DataSource используется напрямую, устанавливается свойство EFPDataGridView.SourceAsDataView.
+    /// произвольная сортировка (обработчик события <see cref="EFPReportGridPage.InitGrid"/> устанавливает <see cref="EFPDataGridView.CustomOrderAllowed"/>=true).
+    /// Используется свойство <see cref="EFPStdConfigurableDataGridView.MasterDataView"/>.
+    /// По умолчанию - false - источник данных <see cref="EFPReportGridPage.DataSource"/> используется напрямую, устанавливается свойство <see cref="EFPDataGridView.SourceAsDataView"/>.
     /// </summary>
     public bool UseTableRepeater
     {
@@ -640,7 +639,7 @@ namespace FreeLibSet.Forms
     private bool _UseTableRepeater;
 
     /// <summary>
-    /// Если установлено свойство UseTableRepeater, то вызывается InitTableRepeaterForGridProducer()
+    /// Если установлено свойство <see cref="UseTableRepeater"/>, то устанавливается <see cref="EFPDataGridView.MasterDataView"/>.
     /// </summary>
     protected override void OnInitControlDataSource()
     {
@@ -655,7 +654,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Страничка отчета с табличным просмотром.
-  /// Табличный просмотр создается в BuildReport и присоединяется к странице отчета
+  /// Табличный просмотр создается в <see cref="EFPReport.BuildReport"/> и присоединяется к странице отчета
   /// целиком. Это позволят менять колонки отчета при перестроении.
   /// </summary>
   public class EFPReportVarGridPage : EFPReportPage
@@ -675,7 +674,7 @@ namespace FreeLibSet.Forms
     #region Переопределяемые методы
 
     /// <summary>
-    /// Дополнительно устанавливает свойство EFPDataGridView.DisplayName.
+    /// Дополнительно устанавливает свойство <see cref="EFPControlBase.DisplayName"/>.
     /// </summary>
     public override string Title
     {
@@ -692,7 +691,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод только запоминает родительский элемент для размещения просмотра.
-    /// Отложенное создание страницы выполняется в InitData().
+    /// Отложенное создание страницы выполняется в <see cref="InitData()"/>.
     /// </summary>
     /// <param name="parent"></param>
     protected override void CreatePage(Panel parent)
@@ -742,9 +741,10 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// 
+    /// Этот метод вызывается внутри системы построения отчета и не должен вызываться
+    /// прикладными модулями.
     /// </summary>
-    /// <param name="parentControl"></param>
+    /// <param name="parentControl">Пустая панель, на которой будет расположена страница</param>
     public override void AssignParentControl(Panel parentControl)
     {
       base.AssignParentControl(parentControl);
@@ -754,8 +754,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Этот метод вызывается при обновлении отчета нажатием клавиши F5 при сбросе
-    /// свойства DataReady в false
+    /// Этот метод вызывается при обновлении отчета нажатием клавиши [F5] при сбросе
+    /// свойства <see cref="EFPReportPage.DataReady"/> в false
     /// </summary>
     protected override void InvalidateData()
     {
@@ -772,10 +772,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// "Скользящий" базовый провайдер.
-    /// Используется прикладным кодом для создания объекта EFPDataGridView.
-    /// После установки основного свойства ControlProvider, этот базовый првайдер заменяется на новый.
-    /// Старый экземпляр используется только с текущим ControlProvider. Когда отчет перестраивается,
-    /// старый провайдер отсоединяется от отчета, а новый - присоединяется
+    /// Используется прикладным кодом для создания объекта <see cref="EFPDataGridView"/>.
+    /// После установки основного свойства <see cref="ControlProvider"/>, этот базовый провайдер заменяется на новый.
+    /// Старый экземпляр используется только с текущим <see cref="ControlProvider"/>. Когда отчет перестраивается,
+    /// старый провайдер отсоединяется от отчета, а новый - присоединяется.
     /// </summary>
     public new EFPBaseProvider BaseProvider
     {
@@ -789,7 +789,7 @@ namespace FreeLibSet.Forms
     private EFPBaseProvider _BaseProvider;
 
     /// <summary>
-    /// Сюда должен быть помещен табличный просмотр при построении отчета
+    /// Сюда должен быть помещен табличный просмотр при построении отчета.
     /// </summary>
     public EFPDataGridView ControlProvider
     {
@@ -840,7 +840,7 @@ namespace FreeLibSet.Forms
     private Panel _ParentPanel;
 
     /// <summary>
-    /// Если установить в true, то будет видна панель кнопок
+    /// Если установить в true, то будет видна панель кнопок.
     /// По умолчанию - false - без кнопок
     /// </summary>
     public bool ShowToolBar
@@ -856,10 +856,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установлено (по умолчанию), а при инициализации просмотра
-    /// было установлено свойство DocGridHandler.UseRowImages, то в верехней левой
+    /// было установлено свойство <see cref="EFPDataGridView.UseRowImages"/>, то в верехней левой
     /// ячейке просмотра будет выводиться подсказка о количестве ошибок и 
     /// предупреждений. Информация обновляется при присоединении источника данных
-    /// с помощью свойства DataSource.
+    /// с помощью свойства <see cref="EFPReportGridPage.DataSource"/>.
     /// Чтобы вручную устанавливать значение ячейки или вообще не выводить статистику,
     /// свойство должно быть сброшено в false
     /// </summary>
@@ -876,13 +876,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство установлено, то выполняется автоматическое управление значком
-    /// вкладки (свойство ImageKey), в зависимости от наличия в табличном просмотре
+    /// вкладки (свойство <see cref="EFPReportPage.ImageKey"/>), в зависимости от наличия в табличном просмотре
     /// строк с ошибками и предупреждениями.
     /// Установка свойства заставляет отчет обеспечить готовность данных на странице
     /// немедленно после построения отчета, а не при первом обращении пользователя 
-    /// к странице, что может привести к замедлению построения
-    /// По умолчанию свойство не установлено
-    /// Если свойство установлено, то ручное задание свойства ImageKey не требуется
+    /// к странице, что может привести к замедлению построения.
+    /// По умолчанию свойство не установлено.
+    /// Если свойство установлено, то ручное задание свойства <see cref="EFPReportPage.ImageKey"/> не требуется.
     /// </summary>
     public bool AutoInitStateImageKey
     {
@@ -1406,7 +1406,7 @@ namespace FreeLibSet.Forms
 #endif
 
   /// <summary>
-  /// Закладка со списком ошибок
+  /// Закладка со списком ошибок <see cref="EFPErrorDataGridView"/>.
   /// </summary>
   public class EFPReportErrorMessageListPage : EFPReportPage
   {
@@ -1451,10 +1451,10 @@ namespace FreeLibSet.Forms
     private EFPErrorDataGridView _ControlProvider;
 
     /// <summary>
-    /// Ширина области для вывода кодов ошибок
+    /// Ширина области для вывода кодов ошибок в текстовых единицах.
     /// По умолчанию - 0 - коды не выводятся.
     /// Свойство должно устанавливаться после вызова конструктора до добавления
-    /// страницы к отчету
+    /// страницы к отчету.
     /// </summary>
     public int CodeWidth { get { return _CodeWidth; } set { _CodeWidth = value; } }
     private int _CodeWidth;
@@ -1462,7 +1462,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то значок закладки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство ImageKey вручную, сначала следует задать AutoImageKey=false
+    /// свойство <see cref="EFPReportPage.ImageKey"/> вручную, сначала следует задать AutoImageKey=false
     /// </summary>
     public bool AutoImageKey { get { return _AutoImageKey; } set { _AutoImageKey = value; } }
     private bool _AutoImageKey;
@@ -1470,7 +1470,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то заголовок закладки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство Title вручную, сначала следует задать AutoTitle=false
+    /// свойство <see cref="EFPReportPage.Title"/> вручную, сначала следует задать AutoTitle=false
     /// </summary>
     public bool AutoTitle { get { return _AutoTitle; } set { _AutoTitle = value; } }
     private bool _AutoTitle;
@@ -1478,7 +1478,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то всплывающие подсказки заголовка закладки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство ToolTipText вручную, сначала следует задать AutoToolTipText=false
+    /// свойство <see cref="EFPReportPage.ToolTipText"/> вручную, сначала следует задать AutoToolTipText=false
     /// </summary>
     public bool AutoToolTipText { get { return _AutoToolTipText; } set { _AutoToolTipText = value; } }
     private bool _AutoToolTipText;
@@ -1488,9 +1488,9 @@ namespace FreeLibSet.Forms
     #region События
 
     /// <summary>
-    /// Обработчик "редактирования" сообщения об ошибке
-    /// Если обработчик не присоединен, то пользователь не может "войти" в сообщение
-    /// Обработчик должен быть установлен до присоединения страницы к отчету
+    /// Обработчик "редактирования" сообщения об ошибке.
+    /// Если обработчик не присоединен, то пользователь не может "войти" в сообщение.
+    /// Обработчик должен быть установлен до присоединения страницы к отчету.
     /// </summary>
     public event ErrorMessageItemEventHandler EditMessage;
 
@@ -1552,10 +1552,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает объект EFPErrorDataGridView
+    /// Создает объект <see cref="EFPErrorDataGridView"/>
     /// </summary>
-    /// <param name="control"></param>
-    /// <returns></returns>
+    /// <param name="control">Управляющий элемент</param>
+    /// <returns>Провайдер</returns>
     protected virtual EFPErrorDataGridView CreateControlProvider(DataGridView control)
     {
       return new EFPErrorDataGridView(BaseProvider, control);
@@ -1576,7 +1576,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установить свойство ImageKey в соответствии с присоединенным списком ErrorMessages
+    /// Установить свойство <see cref="EFPReportPage.ImageKey"/> в соответствии с присоединенным списком <see cref="ErrorMessages"/>
     /// </summary>
     public void InitImageKey()
     {
@@ -1584,7 +1584,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установить свойство Title в соответствии с присоединенным списком ErrorMessages
+    /// Установить свойство <see cref="EFPReportPage.Title"/> в соответствии с присоединенным списком <see cref="ErrorMessages"/>
     /// </summary>
     public void InitTitle()
     {
@@ -1592,7 +1592,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установить свойство ToolTipText в соответствии с присоединенным списком ErrorMessages
+    /// Установить свойство <see cref="EFPReportPage.ToolTipText"/> в соответствии с присоединенным списком <see cref="ErrorMessages"/>
     /// </summary>
     public void InitToolTipText()
     {

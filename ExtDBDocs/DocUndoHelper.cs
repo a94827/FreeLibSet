@@ -213,7 +213,6 @@ namespace FreeLibSet.Data.Docs
         fieldPairs.Add("ActionInfo", ActionInfo);
         fieldPairs.Add("ApplyChangesCount", 1);
         fieldPairs.Add("ApplyChangesTime", ActionTime);
-        //FieldPairs.Add("AccDepBuild", FAccDepBuild);
         _UserActionId = UndoCon.AddRecordWithIdResult("UserActions", fieldPairs);
 
         #endregion
@@ -319,7 +318,6 @@ namespace FreeLibSet.Data.Docs
           fieldPairs.Add("UserId", fakeUserId);
           fieldPairs.Add("ActionTime", fakeTime);
           fieldPairs.Add("ActionInfo", "[ Автоматическое восстановление состояния с версии " + undoDocVersion.ToString() + " ]");
-          //FieldPairs.Add("AccDepBuild", FAccDepBuild);
           fakeUserActionId = _UndoCon.AddRecordWithIdResult("UserActions", fieldPairs);
         }
         else

@@ -52,6 +52,9 @@ namespace BRReportDemo
         efpTree.Columns.AddText("Name", true, "Название", 50, 10);
         efpTree.Columns.AddDate("Date1", true, "Начало");
         efpTree.Columns.AddDate("Date2", true, "Окончание");
+        FreeLibSet.Controls.TreeViewAdvNodeControls.NodeIntEditBox ncDays = efpTree.Columns.AddInt("Days", false, "Дни", 3); // вычисляемое поле
+        ncDays.VirtualMode = true;
+        ncDays.ValueNeeded += NcDays_ValueNeeded;
         efpTree.Columns.AddInt("Id", true, "Id", 3);
         efpTree.Columns.AddInt("ParentId", true, "ParentId", 3);
         efpTree.Columns.AddBool("Flag", true, "Flag");
@@ -124,6 +127,19 @@ namespace BRReportDemo
     {
       EFPDataTreeView efpTree = (EFPDataTreeView)sender;
       DebugTools.DebugCommandItems(efpTree.CommandItems, "efpTree.CommandItems");
+    }
+
+    /// <summary>
+    /// Вычисляемое поле для режима без EFPGridProducer
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
+    private static void NcDays_ValueNeeded(object sender, FreeLibSet.Controls.TreeViewAdvNodeControls.NodeControlValueEventArgs args)
+    {
+      DataRow row = (DataRow)(args.Node.Tag);
+      DateTime dt1 = DataTools.GetDateTime(row, "Date1");
+      DateTime dt2 = DataTools.GetDateTime(row, "Date2");
+      args.Value = (dt2 - dt1).Days + 1;
     }
 
     private static DataTable CreateTestTableTree()

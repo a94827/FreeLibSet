@@ -14,6 +14,7 @@ using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Remoting;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
+using System.ComponentModel;
 
 #pragma warning disable 0219 // TODO: Убрать лишние переменные
 
@@ -84,6 +85,7 @@ namespace FreeLibSet.Forms.Docs
       base.ReadOnly = docTypeUI.UI.DocProvider.DBPermissions.TableModes[DocType.Name] != DBxAccessMode.Full;
       base.CanView = true;
       base.CanMultiEdit = docTypeUI.CanMultiEdit;
+      base.CanInsertCopy = docTypeUI.CanInsertCopy;
       //Control.LabelEdit = false;
       Control.SelectionMode = TreeViewAdvSelectionMode.Multi; // Можно удалять несколько записей, но не всегда можно редактировать
 
@@ -360,7 +362,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Редактирование
+    #region Редактирование документов
 
     /// <summary>
     /// Внешний инициализатор для новых документов
@@ -390,6 +392,97 @@ namespace FreeLibSet.Forms.Docs
       Int32[] ids = (State == EFPDataGridViewState.Delete) ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
       DocTypeUI.PerformEditing(ids, State, Control.FindForm().Modal, ViewHandler);
       return true;
+    }
+
+    #endregion
+
+    #region Инициализация просмотра
+
+    /// <summary>
+    /// Вызывается из OnShown(), если предполагается загрузка последней пользовательской конфигурации просмотра,
+    /// но просмотр открывается впервые и нет сохраненной конфигурации.
+    /// Также метод вызывается в случае ошибки загрузки.
+    /// Метод должен установить свойство CurrentConfig
+    /// </summary>
+    protected override void OnInitDefaultGridConfig()
+    {
+      // не вызываем! base.InitDefaultGridConfig();
+
+      // Настройка просмотра для вида документов
+      Columns.Clear();
+      PerformInitGrid(true);
+      // PerformRefresh();
+    }
+
+
+    private bool _InisidePerformInitGrid;
+
+    /// <summary>
+    /// Инициализация колонок табличного просмотра.
+    /// После вызова становится доступным свойство UsedColumnNames.
+    /// Предотвращается реентрантный вызов.
+    /// Вызов DocTypeUI.PerformInitGrid() выполняется виртуальным методом OnInitGrid().
+    /// При первом вызове, в частности, вызывается обработчик события DocTypeUI.InitView, отвечающий за добавление фильтров.
+    /// <param name="forced">Если true, то инициализация будет выполнена обязательно. Используется при обработке события OnCurrentConfigChanged.
+    /// Если false, то инициализация выполняется только, если она еще не была выполнена ранее.</param>
+    /// </summary>
+    public void PerformInitGrid(bool forced)
+    {
+      if (_InisidePerformInitGrid)
+        return;
+      _InisidePerformInitGrid = true;
+      try
+      {
+        if (_UsedColumnNames == null || forced)
+        {
+          DBxColumnList usedColumnNameList = new DBxColumnList();
+          OnInitGrid(_UsedColumnNames != null, usedColumnNameList);
+          _UsedColumnNames = new DBxColumns(usedColumnNameList);
+        }
+      }
+      finally
+      {
+        _InisidePerformInitGrid = false;
+      }
+    }
+
+    /// <summary>
+    /// Инициализация табличного просмотра документов с помощью DocTypeUI.PerformInitGrid().
+    /// Переопределенный метод может, например, добавить порядки сортировки в список Orders.
+    /// </summary>
+    /// <param name="reInit">true при повторном вызове метода (после изменения конфигурации просмотра)
+    /// и false при первом вызове</param>
+    /// <param name="columns">Сюда помещается список имен полей, которые требуются для текущей конфигурации просмотра</param>
+    protected virtual void OnInitGrid(bool reInit, DBxColumnList columns)
+    {
+      DocTypeUI.PerformInitTree(this, reInit, columns, UserInitData);
+      base.Filters.GetColumnNames(columns);
+    }
+
+    /// <summary>             
+    /// Пользователь изменил настройку табличного просмотра
+    /// </summary>
+    protected override void OnCurrentConfigChanged(CancelEventArgs args)
+    {
+      base.OnCurrentConfigChanged(args);
+
+      if (HasBeenCreated &&
+        CommandItems.UseRefresh) // 16.09.2016
+      {
+        // 31.08.2018
+        // Если просмотр уже выведен, то отключаем источник данных
+        EFPDataTreeViewSelection oldSel = this.Selection;
+        Control.Model = null;
+
+        PerformInitGrid(true);
+        if (!EFPApp.InsideLoadComposition) // 30.05.2019
+          PerformRefresh();
+        this.Selection = oldSel;
+      }
+      else
+        PerformInitGrid(true);
+
+      args.Cancel = true;
     }
 
     #endregion
@@ -485,10 +578,7 @@ namespace FreeLibSet.Forms.Docs
       {
         get
         {
-          if (Owner == null)
-            return String.Empty;
-          else
-            return Owner.CurrentColumnName;
+          return String.Empty;
         }
       }
 
@@ -888,10 +978,6 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void OnCreated()
     {
-      DBxColumnList columns = new DBxColumnList();
-      DocTypeUI.PerformInitTree(this, false, columns, _UserInitData);
-      _UsedColumnNames = new DBxColumns(columns);
-
       base.OnCreated();
 
       if (SourceAsDataTable == null)
@@ -918,6 +1004,22 @@ namespace FreeLibSet.Forms.Docs
       _ViewHandler = CreateDocumentViewHandler();
       if (_ViewHandler != null)
         DocTypeUI.Browsers.Add(_ViewHandler);
+    }
+
+    /// <summary>
+    /// Вызывается при первой загрузке конфигурации элемента.
+    /// </summary>
+    protected override void OnLoadConfig()
+    {
+      //Columns.Clear();
+      PerformInitGrid(false); // фильтры должны быть инициализированы до загрузки конфигурации
+
+      base.OnLoadConfig();
+
+#if DEBUG
+      if (UsedColumnNames == null)
+        throw new NullReferenceException("Свойство UsedColumnNames не инициализировано");
+#endif
     }
 
     /// <summary>

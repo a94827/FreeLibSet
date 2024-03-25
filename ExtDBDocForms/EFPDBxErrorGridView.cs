@@ -369,7 +369,7 @@ namespace FreeLibSet.Forms.Docs
       base.OnPrepare();
 
 
-      if (ControlProvider.HasGetDocSelHandler /*&& AccDepMainMenu.MenuSendTo != null*/) // Есть обработчик
+      if (ControlProvider.HasGetDocSelHandler) // Есть обработчик
       {
         EFPCommandItem ci = new EFPCommandItem("Send", "DocSel");
         ci.MenuText = "Выборка документов";

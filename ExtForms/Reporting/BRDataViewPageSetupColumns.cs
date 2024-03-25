@@ -109,6 +109,7 @@ namespace FreeLibSet.Forms.Reporting
           break;
 
         case 2:
+        case 3:
           if (column.Printable)
           {
             bool flag = DataTools.GetBool(grColumns.Rows[args.RowIndex].Cells[0].Value);
@@ -153,6 +154,7 @@ namespace FreeLibSet.Forms.Reporting
         }
         InitColumnWidths();
         CalculateWholeWidth();
+        ghColumns.Control.InvalidateRow(args.RowIndex);
       }
       finally
       {

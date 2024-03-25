@@ -840,9 +840,6 @@ namespace FreeLibSet.Forms.Docs
           EFPApp.EndWait();
         }
 
-        //if (AccDepClientExec.ModalEditing)
-        //  FModal = true;
-
         if (Modal)
         {
           EFPApp.ShowDialog(_Form, true);

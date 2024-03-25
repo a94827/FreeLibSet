@@ -96,7 +96,8 @@ namespace FreeLibSet.DBF
     private int _Precision;
 
     /// <summary>
-    /// True, если длина поля определена
+    /// True, если длина поля точно определена.
+    /// False (по умолчанию), если задана минимальная длина
     /// </summary>
     public bool LengthIsDefined { get { return _LengthIsDefined; } set { _LengthIsDefined = value; } }
     private bool _LengthIsDefined;
@@ -111,20 +112,37 @@ namespace FreeLibSet.DBF
 
     #region ICloneable
 
+    /// <summary>
+    /// Создает копию объекта
+    /// </summary>
+    /// <returns>Новый объект</returns>
     public DbfFieldTypePreliminaryInfo Clone()
     {
       DbfFieldTypePreliminaryInfo res = new DbfFieldTypePreliminaryInfo();
-      res.Type = Type;
-      res.Length = Length;
-      res.Precision = Precision;
-      res.LengthIsDefined = LengthIsDefined;
-      res.PrecisionIsDefined = PrecisionIsDefined;
+      CopyTo(res);
       return res;
     }
 
     object ICloneable.Clone()
     {
       return Clone();
+    }
+
+    /// <summary>
+    /// Копирование значений в другой объект
+    /// </summary>
+    /// <param name="dest">Заполняемый объект</param>
+    public void CopyTo(DbfFieldTypePreliminaryInfo dest)
+    {
+#if DEBUG
+      if (dest == null)
+        throw new ArgumentNullException("dest");
+#endif
+      dest.Type = Type;
+      dest.Length = Length;
+      dest.Precision = Precision;
+      dest.LengthIsDefined = LengthIsDefined;
+      dest.PrecisionIsDefined = PrecisionIsDefined;
     }
 
     #endregion
@@ -284,7 +302,7 @@ namespace FreeLibSet.DBF
 
     #endregion
 
-    #region Определение
+    #region Определение типа и размера поля
 
     /// <summary>
     /// Текущий тип поля
@@ -363,8 +381,9 @@ namespace FreeLibSet.DBF
     }
 
 
-    // Определение типа
-    // Возвращает true, если тип и размер поля определен однозначно и (дальнейший) перебор строк не нужен
+    /// <summary>
+    /// Возвращает true, если тип и размер поля определен однозначно и (дальнейший) перебор строк не нужен
+    /// </summary>
     public bool IsCompleted
     {
       get
@@ -375,7 +394,10 @@ namespace FreeLibSet.DBF
     }
     private bool _IsCompleted;
 
-    // Возвращает непустой результат, независимо от того, определен тип данных или нет
+    /// <summary>
+    /// Возвращает текущее описание поля. Имя поля соответствует <see cref="ColumnName"/>.
+    /// Возвращает непустой результат, независимо от того, определен тип данных или нет.
+    /// </summary>
     public DbfFieldInfo Result
     {
       get
@@ -409,9 +431,9 @@ namespace FreeLibSet.DBF
     private string _NumberMask;
 
     /// <summary>
-    /// Пытается применить значение для увеличения размера поля
+    /// Пытается применить значение для увеличения размера поля.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">Очередное значение поля для будущей таблицы</param>
     public void ApplyValue(object value)
     {
       PrepareFirst();

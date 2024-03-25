@@ -26,6 +26,8 @@ namespace FreeLibSet.Forms
       this._GridProducer = gridProducer;
       this._TheControlProvider = controlProvider;
 
+      _IsTreeView = controlProvider.Control is FreeLibSet.Controls.TreeViewAdv;
+
       //efpForm.AddFormCheck(new EFPValidatingEventHandler(ValidateForm));
       TheTabControl.ImageList = EFPApp.MainImages.ImageList;
       tpColumns.ImageKey = "TableColumns";
@@ -64,7 +66,7 @@ namespace FreeLibSet.Forms
       // например, картинка
       //edFrozenColumns.ValueEx = TheHandler.FrozenColumns;
 
-      EFPIntEditBox efpFrozenColumns = new EFPIntEditBox(baseProvider, edFrozenColumns);
+      efpFrozenColumns = new EFPIntEditBox(baseProvider, edFrozenColumns);
 
 
       // Список выбора активного столбца
@@ -74,6 +76,12 @@ namespace FreeLibSet.Forms
       efpStartColumn = new EFPListComboBox(baseProvider, cbStartColumn);
       efpStartColumn.ToolTipText = "Если указан столбец, то он будет активироваться при каждом открытии табличного просмотра." + Environment.NewLine +
         "Если выбран вариант \"[ Нет ]\", то последний выбранный столбец запоминается между открытиями просмотра";
+
+      if (_IsTreeView)
+      {
+        efpFrozenColumns.Visible = false;
+        efpStartColumn.Visible = false;
+      }
 
       #region Таблица подсказок
 
@@ -114,6 +122,11 @@ namespace FreeLibSet.Forms
 
       #endregion
     }
+
+    /// <summary>
+    /// Если true, то не поддерживаются замороженные столбцы и активируемый столбец
+    /// </summary>
+    private bool _IsTreeView;
 
     #endregion
 
@@ -315,7 +328,35 @@ namespace FreeLibSet.Forms
 
     void ghColumns_CellFinished(object sender, EFPDataGridViewCellFinishedEventArgs args)
     {
+      // 25.03.2024
+      // Синхронизируем ширину столбцов с одинаковым SizeGroup
+      if (args.ColumnIndex >= 2) // ширина в пикселях или процент
+        SyncColumnSizes(args.RowIndex);
+
       InitStartColumnList();
+
+      ghColumns.Control.InvalidateRow(args.RowIndex);
+    }
+
+    private void SyncColumnSizes(int rowIndex)
+    {
+      DataGridViewRow row = ghColumns.Control.Rows[rowIndex];
+      EFPGridProducerColumn colDef = GetProducerColumn(row);
+      if (!String.IsNullOrEmpty(colDef.SizeGroup))
+      {
+        for (int i = 0; i < ghColumns.Control.RowCount; i++)
+        {
+          if (i == rowIndex)
+            continue;
+          DataGridViewRow thisRow = ghColumns.Control.Rows[i];
+          EFPGridProducerColumn thisColDef = GetProducerColumn(thisRow);
+          if (thisColDef.SizeGroup == colDef.SizeGroup)
+          {
+            thisRow.Cells[2].Value = row.Cells[2].Value;
+            thisRow.Cells[3].Value = row.Cells[3].Value;
+          }
+        }
+      }
     }
 
     void ghColumns_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
@@ -329,8 +370,13 @@ namespace FreeLibSet.Forms
           if (colProd == null)
             return;
 
-
-          if (!colProd.Resizable)
+          if (!DataTools.GetBool(row.Cells[0].Value))
+          {
+            args.Grayed = true;
+            args.ReadOnly = true;
+            args.ReadOnlyMessage = "Нельзя задавать ширину столбца, который не выводится на экран";
+          }
+          else if (!colProd.Resizable)
           {
             args.Grayed = true;
             args.ReadOnly = true;
@@ -339,6 +385,12 @@ namespace FreeLibSet.Forms
           break;
       }
     }
+
+    #endregion
+
+    #region Замороженные столбцы
+
+    EFPIntEditBox efpFrozenColumns;
 
     #endregion
 
@@ -584,9 +636,13 @@ namespace FreeLibSet.Forms
     public void WriteFormValues(EFPDataGridViewConfig config)
     {
       WriteFormColumns(config);
-      edFrozenColumns.Value = config.FrozenColumns;
-      InitStartColumnList();
-      efpStartColumn.SelectedCode = config.StartColumnName;
+
+      if (!_IsTreeView)
+      {
+        efpFrozenColumns.Value = config.FrozenColumns;
+        InitStartColumnList();
+        efpStartColumn.SelectedCode = config.StartColumnName;
+      }
 
       WriteFormToolTips(config);
     }
@@ -602,14 +658,17 @@ namespace FreeLibSet.Forms
       if (!ReadFormColumns(config, out errorText))
         return false;
 
-      config.FrozenColumns = (int)(edFrozenColumns.Value);
-      if (config.FrozenColumns < 0 || config.FrozenColumns >= config.Columns.Count)
+      if (!_IsTreeView)
       {
-        errorText = "Недопустимое число замороженных столбцов";
-        return false;
-      }
+        config.FrozenColumns = efpFrozenColumns.Value;
+        if (config.FrozenColumns < 0 || config.FrozenColumns >= config.Columns.Count)
+        {
+          errorText = "Недопустимое число замороженных столбцов";
+          return false;
+        }
 
-      config.StartColumnName = efpStartColumn.SelectedCode;
+        config.StartColumnName = efpStartColumn.SelectedCode;
+      }
 
       if (!ReadFormToolTips(config, out errorText))
         return false;
