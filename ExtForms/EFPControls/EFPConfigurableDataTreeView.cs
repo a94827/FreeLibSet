@@ -13,7 +13,7 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Расширение табличного просмотра для работы с фильтрами
+  /// Расширение иерархического просмотра для работы с фильтрами и возможностью настройки столбцов с помощью <see cref="EFPGridProducer"/>.
   /// </summary>
   public class EFPConfigurableDataTreeView : EFPDataTreeView, IEFPControlWithFilters
   {
@@ -66,7 +66,7 @@ CommandItems.PerformRefreshItems();
 
     /// <summary>
     /// Заполняет список категорий, для которых испольщуются секции конфигурации..
-    /// Добавляет категории "Filters" и "GridView", в зависимости от наличия фильтров и порядков сортировки
+    /// Добавляет категории <see cref="EFPConfigCategories.TreeView"/>, <see cref="EFPConfigCategories.TreeConfig"/> и <see cref="EFPConfigCategories.Filters"/>, в зависимости от наличия фильтров и возможности настройки столбцов
     /// </summary>
     /// <param name="categories">Список категорий для заполнения</param>
     /// <param name="rwMode">Режим чтения или записи</param>
@@ -75,8 +75,8 @@ CommandItems.PerformRefreshItems();
     {
       base.GetConfigCategories(categories, rwMode, actionInfo);
 
-      if (WantsGridConfig(rwMode, actionInfo))
-        categories.Add(EFPConfigCategories.GridConfig);
+      if (WantsTreeConfig(rwMode, actionInfo))
+        categories.Add(EFPConfigCategories.TreeConfig);
 
       if (WantsFiltersConfig(actionInfo))
         categories.Add(EFPConfigCategories.Filters);
@@ -86,7 +86,7 @@ CommandItems.PerformRefreshItems();
     }
 
     
-    private bool WantsGridConfig(EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
+    private bool WantsTreeConfig(EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
     {
       if (actionInfo.Purpose == EFPConfigPurpose.Composition)
       {
@@ -124,11 +124,11 @@ CommandItems.PerformRefreshItems();
     {
       switch (category)
       {
-        case EFPConfigCategories.GridConfig:
-          if (WantsGridConfig(EFPConfigMode.Write, actionInfo) && CurrentConfig != null)
+        case EFPConfigCategories.TreeConfig:
+          if (WantsTreeConfig(EFPConfigMode.Write, actionInfo) && CurrentConfig != null)
           {
-            EFPDataGridViewConfig GridConfig2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
-            GridConfig2.WriteConfig(cfg);
+            EFPDataGridViewConfig config2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
+            config2.WriteConfig(cfg);
           }
           break;
 
@@ -155,8 +155,8 @@ CommandItems.PerformRefreshItems();
     {
       switch (category)
       {
-        case EFPConfigCategories.GridConfig:
-          if (WantsGridConfig(EFPConfigMode.Read, actionInfo))
+        case EFPConfigCategories.TreeConfig:
+          if (WantsTreeConfig(EFPConfigMode.Read, actionInfo))
             ReadConfigPartGridConfig(cfg);
           break;
 
@@ -181,8 +181,8 @@ CommandItems.PerformRefreshItems();
 
     // ReSharper disable once RedundantOverriddenMember
     /// <summary>
-    /// Вызывается при первой загрузке конфигурации элемента перед вызовом LoadConfig().
-    /// Метод вызывается независимо от установки свойства ConfigHandler.
+    /// Вызывается при первой загрузке конфигурации элемента перед вызовом <see cref="EFPControlBase.LoadConfig"/>.
+    /// Метод вызывается независимо от установки свойства <see cref="EFPControlBase.ConfigHandler"/>.
     /// </summary>
     protected override void OnBeforeLoadConfig()
     {
@@ -221,7 +221,7 @@ CommandItems.PerformRefreshItems();
     public new EFPConfigurableDataTreeViewCommandItems CommandItems { get { return (EFPConfigurableDataTreeViewCommandItems)(base.CommandItems); } }
 
     /// <summary>
-    /// Создает объект EFPConfigurableDataTreeViewCommandItems.
+    /// Создает объект <see cref="EFPConfigurableDataTreeViewCommandItems"/>.
     /// </summary>
     /// <returns>Новый объект</returns>
     protected override EFPControlCommandItems CreateCommandItems()
@@ -274,8 +274,7 @@ CommandItems.PerformRefreshItems();
 
     /// <summary>
     /// Имя фиксированной настройки табличного просмотра
-    /// Если свойство не установлено и свойство CurrentCfgName не установлено, 
-    /// используется настройка по умолчанию: GridProducer.DefaultConfig
+    /// Если свойство не установлено, используется настройка по умолчанию: <see cref="EFPGridProducer.DefaultConfig"/>
     /// </summary>
     public string DefaultConfigName
     {
@@ -298,18 +297,19 @@ CommandItems.PerformRefreshItems();
       try
       {
         if (true /*args.Column.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill*/)
-          ConfigHandler.Changed[EFPConfigCategories.GridConfig] = true;
+          ConfigHandler.Changed[EFPConfigCategories.TreeConfig] = true;
       }
       catch (Exception e)
       {
         EFPApp.ShowException(e, "Control_ColumnWidthChanged");
       }
     }
+
     private void Control_ColumnReordered(object sender, TreeColumnEventArgs args)
     {
       try
       {
-        ConfigHandler.Changed[EFPConfigCategories.GridConfig] = true;
+        ConfigHandler.Changed[EFPConfigCategories.TreeConfig] = true;
       }
       catch (Exception e)
       {
@@ -370,8 +370,8 @@ CommandItems.PerformRefreshItems();
       EFPDataGridViewConfigDialog dlg = new EFPDataGridViewConfigDialog();
       dlg.CallerControlProvider = this;
       dlg.GridProducer = gridProducer2;
-      dlg.ConfigCategory = EFPConfigCategories.GridConfig;
-      dlg.HistoryCategory = EFPConfigCategories.GridConfigHistory;
+      dlg.ConfigCategory = EFPConfigCategories.TreeConfig; // 26.03.2024
+      dlg.HistoryCategory = EFPConfigCategories.TreeConfigHistory; // 26.03.2024
       //dlg.Value = CurrentConfig;
       dlg.Value = CurrentConfig.Clone(this); // 16.06.2021
       if (dlg.ShowDialog() != DialogResult.OK)
@@ -393,7 +393,7 @@ CommandItems.PerformRefreshItems();
         catch { }
         throw;
       }
-      ConfigHandler.Changed[EFPConfigCategories.GridConfig] = true;
+      ConfigHandler.Changed[EFPConfigCategories.TreeConfig] = true;
 
       return true;
     }
@@ -402,7 +402,7 @@ CommandItems.PerformRefreshItems();
     /// Возвращает true, если при открытии / закрытии просмотра сохраняется последняя пользовательская 
     /// конфигурация.
     /// До показа просмотра на экране свойство возвращает значение, зависящее от других свойств.
-    /// При показе таблицы значение фиксируется
+    /// При показе таблицы значение фиксируется.
     /// </summary>
     public bool UserConfigAutoSave
     {
@@ -462,7 +462,7 @@ CommandItems.PerformRefreshItems();
     /// При этом сохранение настроек работает как обычно. Пользователь, в частности, может выбрать
     /// последнюю сохраненную конфигурацию или любую другую из истории.
     /// Свойство действует, если <see cref="UserConfigAutoSave"/> возвращает true.
-    /// Установка свойства разрешается только до показа просмотра на экране
+    /// Установка свойства разрешается только до показа просмотра на экране.
     /// </summary>
     public bool AlwaysUseDefaultConfig
     {
@@ -518,9 +518,9 @@ CommandItems.PerformRefreshItems();
     /// Коллекция фильтров для табличного просмотра. Если есть хотя бы один фильтр,
     /// то в локальном меню появляется команда "Фильтр". После установки пользователем
     /// фильтра вызывается обновление просмотра. Ответственность за обработку
-    /// фильтров лежит на вызывающей программе
+    /// фильтров лежит на вызывающей программе.
     /// Чтобы проверить наличие возможных фильтров, следует использовать свойство
-    /// HasFilters, которое позволяет избежать создания лишних объектов
+    /// <see cref="HasFilters"/>, которое позволяет избежать создания лишних объектов.
     /// </summary>
     public IEFPGridFilters Filters
     {
@@ -542,7 +542,7 @@ CommandItems.PerformRefreshItems();
     private IEFPGridFilters _Filters;
 
     /// <summary>
-    /// Непереопределенный метод создает EFPDummyGridFilters.
+    /// Непереопределенный метод создает <see cref="EFPDummyGridFilters"/>.
     /// </summary>
     /// <returns>Созданный объект</returns>
     protected virtual IEFPGridFilters CreateGridFilters()
@@ -552,8 +552,9 @@ CommandItems.PerformRefreshItems();
 
 
     /// <summary>
-    /// Возвращает true, если Filter.Count больше 0. 
-    /// Не создает дополнительный объект
+    /// Возвращает true, если <see cref="Filters"/>.Count больше 0. 
+    /// Не создает дополнительный объект.
+    /// Не имеет значения, есть ли при этом активные фильтры.
     /// </summary>
     public bool HasFilters
     {
@@ -582,9 +583,9 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Вызов диалога установки фильтра и обновление просмотра по необходимости
     /// При показе таблицы фильтров активируется строка фильтра с заданным именем.
-    /// Если StartFilter не задан, активируется строка для первого непустого фильтра
+    /// Если <paramref name="startFilter"/> не задан, активируется строка для первого непустого фильтра.
     /// </summary>
-    /// <param name="startFilter"></param>
+    /// <param name="startFilter">Имя фильтра, который должен быть выбран в таблице</param>
     public bool ShowFilterDialog(string startFilter)
     {
       LoadConfig();
@@ -628,8 +629,8 @@ CommandItems.PerformRefreshItems();
     }
 
     /// <summary>
-    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров
-    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню
+    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров.
+    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню.
     /// </summary>
     /// <param name="filterGridProvider">Обработчик таблицы фильтров</param>
     public virtual void InitGridFilterEditorGridView(EFPGridFilterEditorGridView filterGridProvider)
@@ -640,8 +641,8 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Свойство возвращает true, если табличный просмотр выполняет чтение и запись фильтров в
     /// секцию конфигурации.
-    /// Если свойство не установлено в явном виде, то возвращается значение CommandItems.CanEditFilters
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// Если свойство не установлено в явном виде, то возвращается значение <see cref="EFPConfigurableDataTreeViewCommandItems.CanEditFilters"/>.
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
     public bool SaveFiltersAllowed
     {
@@ -656,7 +657,7 @@ CommandItems.PerformRefreshItems();
 
     /// <summary>
     /// Обновление просмотра при внешней установке значений фильтров. Идентично
-    /// PerformSetFilter(), но диалог не выводится
+    /// <see cref="ShowFilterDialog()"/>, но диалог не выводится.
     /// </summary>
     public void PerformFilterChanged()
     {
@@ -665,9 +666,9 @@ CommandItems.PerformRefreshItems();
 
 
     /// <summary>
-    /// Свойство возвращает true, если в данный момент вызывается метод OnFilterChanged.
-    /// Свойство может быть проанализировано в обработчике события RefreshData, чтобы определить
-    /// причину вызова
+    /// Свойство возвращает true, если в данный момент вызывается метод <see cref="OnFilterChanged()"/>.
+    /// Свойство может быть проанализировано в обработчике события <see cref="EFPTreeViewAdv.RefreshData"/>, чтобы определить
+    /// причину вызова.
     /// </summary>
     public bool InsideFilterChanged { get { return _InsideFilterChanged; } }
     private bool _InsideFilterChanged;
@@ -690,8 +691,8 @@ CommandItems.PerformRefreshItems();
 
     /// <summary>
     /// Обновление просмотра при установке значений фильтров.
-    /// Вызывает обработчик события AfterSetFilter, если он установлен.
-    /// Затем вызывается PerformRefresh()
+    /// Вызывает обработчик события <see cref="AfterSetFilter"/>, если он установлен.
+    /// Затем вызывается <see cref="EFPDataTreeView.PerformRefresh()"/>
     /// </summary>
     protected virtual void OnFilterChanged()
     {
@@ -712,8 +713,7 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Когда табличный просмотр первый раз выводится на экран, сохраняем сюда
     /// настройки фильтров "по умолчанию", то есть те, которые выполнены прикладным
-    /// модулем. Например, для операций, могут быть по умолчанию установлен фильтр
-    /// по дате операции (текущий месяц) и по нашей организации
+    /// модулем. 
     /// </summary>
     private TempCfg _DefaultFilterCfg;
 
@@ -721,8 +721,7 @@ CommandItems.PerformRefreshItems();
   }
 
   /// <summary>
-  /// Команды локального меню для древовидного просмотра с возможностью
-  /// фильтрации
+  /// Команды локального меню для древовидного просмотра <see cref="EFPConfigurableDataTreeView"/>
   /// </summary>
   public class EFPConfigurableDataTreeViewCommandItems : EFPDataTreeViewCommandItems
   {
@@ -840,7 +839,7 @@ CommandItems.PerformRefreshItems();
 
     /// <summary>
     /// Возвращает активный прокручиваемый фильтр (с установленным значением, когда
-    /// фильтр можно прокручивать)
+    /// фильтр можно прокручивать).
     /// Если нет прокручиваемых фильтров или ни один из них не установлен, возвращается null
     /// </summary>
     public IEFPScrollableGridFilter ActiveScrollableFilter
@@ -865,8 +864,8 @@ CommandItems.PerformRefreshItems();
 
     /// <summary>
     /// Фильтр по дате. Если свойство установлено, то в подменю "Фильтр"
-    /// обрабатываются клавиши Ctrl-СтрелкаВверх и Ctrl-СтрелкаВниз для переключаения
-    /// между периодами дат
+    /// обрабатываются клавиши Ctrl-СтрелкаВверх и Ctrl-СтрелкаВниз для переключения
+    /// между периодами дат.
     /// </summary>
     public IEFPScrollableGridFilter ScrollableFilter
     {
@@ -880,7 +879,7 @@ CommandItems.PerformRefreshItems();
     #region Обновление команд
 
     /// <summary>
-    /// Инициализация свойство EFPCommandItem.Usage
+    /// Инициализация видимости команд
     /// </summary>
     protected override void OnPrepare()
     {

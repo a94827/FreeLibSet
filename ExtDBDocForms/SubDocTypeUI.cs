@@ -871,6 +871,8 @@ namespace FreeLibSet.Forms.Docs
           //  ControlProvider.GetDocSel += new EFPDBxTreeViewDocSelEventHandler(SubDocTree_GetDocSelWithTable);
           //else
           controlProvider.GetDocSel += new EFPDBxTreeViewDocSelEventHandler(SubDocTree_GetDocSelWithIds);
+
+          controlProvider.ConfigHandler.Changed[EFPConfigCategories.TreeConfig] = false;
         }
 
         //??controlProvider.UserConfigModified = false;

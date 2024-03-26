@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Расширение табличного просмотра, поддерживающего индивидуальную настройку столбцов и фильтры
+  /// Расширение табличного просмотра, поддерживающего индивидуальную настройку столбцови возможностью настройки столбцов с помощью <see cref="EFPGridProducer"/> и фильтры
   /// </summary>
   public class EFPConfigurableDataGridView : EFPDataGridView, IEFPControlWithFilters
   {
@@ -155,7 +155,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает признак Changed для EFPConfigCategories.GridView
+    /// Устанавливает признак Changed для <see cref="EFPConfigCategories.GridView"/>
     /// </summary>
     protected override void OnSaveConfig()
     {
@@ -168,7 +168,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Разрешено ли просмотру сохранять текущий столбец в секции конфигурации "GridView"?
+    /// Разрешено ли просмотру сохранять текущий столбец в секции конфигурации <see cref="EFPConfigCategories.GridView"/>?
     /// По умолчанию - true - разрешено.
     /// Пользовательский код должен сбросить свойство в false, если сохранение нежелательно.
     /// <see cref="EFPGridProducer"/> также может сбрасывать это свойство, если в настройках просмотра задан код столбца для активации.
@@ -184,7 +184,6 @@ namespace FreeLibSet.Forms
     /// Запоминаем при открытии просмотра текущий столбец
     /// </summary>
     private string _SavedColumnName;
-
 
     /// <summary>
     /// Запись секции конфигурации
@@ -358,7 +357,7 @@ namespace FreeLibSet.Forms
     /// Имя фиксированной настройки табличного просмотра. 
     /// Используется <see cref="EFPGridProducer.InitGridView(EFPDataGridView, bool)"/>, когда свойство <see cref="EFPDataGridView.CurrentConfig"/> не установлено.
     /// 
-    /// Именные настройки хранятся в EFPGridProducer.Configs. Обычно, когда свойство не установлено,
+    /// Именные настройки хранятся в <see cref="EFPGridProducer.GetNamedConfigNames"/>. Обычно, когда свойство не установлено,
     /// используется основная настройка <see cref="EFPGridProducer.DefaultConfig"/>.
     /// </summary>
     public string DefaultConfigName
@@ -487,7 +486,7 @@ namespace FreeLibSet.Forms
     /// Возвращает true, если при открытии / закрытии просмотра сохраняется последняя пользовательская 
     /// конфигурация.
     /// До показа просмотра на экране свойство возвращает значение, зависящее от других свойств.
-    /// При показе таблицы значение фиксируется
+    /// При показе таблицы значение фиксируется.
     /// </summary>
     public bool UserConfigAutoSave
     {
@@ -547,7 +546,7 @@ namespace FreeLibSet.Forms
     /// При этом сохранение настроек работает как обычно. Пользователь, в частности, может выбрать
     /// последнюю сохраненную конфигурацию или любую другую из истории.
     /// Свойство действует, если <see cref="UserConfigAutoSave"/> возвращает true.
-    /// Установка свойства разрешается только до показа просмотра на экране
+    /// Установка свойства разрешается только до показа просмотра на экране.
     /// </summary>
     public bool AlwaysUseDefaultConfig
     {
@@ -717,8 +716,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров
-    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню
+    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров.
+    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню.
     /// </summary>
     /// <param name="filterGridProvider">Обработчик таблицы фильтров</param>
     public virtual void InitGridFilterEditorGridView(EFPGridFilterEditorGridView filterGridProvider)
@@ -744,7 +743,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обновление просмотра при внешней установке значений фильтров. Идентично
-    /// PerformSetFilter(), но диалог не выводится
+    /// <see cref="ShowFilterDialog()"/>, но диалог не выводится.
     /// </summary>
     public void PerformFilterChanged()
     {
@@ -809,7 +808,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызывается после установки нового значения свойства 
     /// <see cref="EFPDataGridView.CurrentOrderIndex"/> (или <see cref="EFPDataGridView.CurrentOrder"/> / <see cref="EFPDataGridView.CurrentOrderName"/>).
-    /// Переопределенный метод инициирует запись секции конфигурации категории "GridView"
+    /// Переопределенный метод инициирует запись секции конфигурации категории <see cref="EFPConfigCategories.GridView"/>.
     /// </summary>
     /// <param name="args">Не используется</param>
     protected override void OnCurrentOrderChanged(EventArgs args)
@@ -986,8 +985,8 @@ namespace FreeLibSet.Forms
     #region Управление наличием команд
 
     /// <summary>
-    /// True (по умолчанию), если пользователь может редактировать фильтры
-    /// False, если фильтры не могут быть изменены пользователем
+    /// True (по умолчанию), если пользователь может редактировать фильтры.
+    /// False, если фильтры не могут быть изменены пользователем.
     /// </summary>
     public bool CanEditFilters { get { return _CanEditFilters; } set { _CanEditFilters = value; } }
     private bool _CanEditFilters;
@@ -1188,7 +1187,7 @@ namespace FreeLibSet.Forms
     /// Может быть пустая строка, если фильтр не привязан к базе данных.
     /// </param>
     /// <param name="names">Список имен фильтров, которые входят в копируемый набор.
-    /// См. описание свойства IEFPGridFilter.Name</param>
+    /// См. описание свойства IEFPGridFilter.Code</param>
     /// <param name="xmlText">Данные фильтров в XML-формате</param>
     public FilterClipboardInfo(string dbIdentity, string[] names, string xmlText)
     {
@@ -1208,19 +1207,19 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Идентификатор набора данных
+    /// Идентификатор набора данных.
     /// Может быть пустая строка, если фильтр не привязан к базе данных.
     /// См. описание свойства <see cref="IEFPGridFilters.DBIdentity"/>.
     /// </summary>
     public string DBIdentity { get { return _DBIdentity; } }
-    private string _DBIdentity;
+    private readonly string _DBIdentity;
 
     /// <summary>
     /// Список имен фильтров, которые входят в копируемый набор.
-    /// См. описание свойства IEFPGridFilter.Name    
+    /// См. описание свойства IEFPGridFilter.Code.
     /// </summary>
     public string[] Names { get { return _Names; } }
-    private string[] _Names;
+    private readonly string[] _Names;
 
     /// <summary>
     /// Данные фильтров в XML-формате.
@@ -1228,7 +1227,7 @@ namespace FreeLibSet.Forms
     /// Затем секция записывается в XML-документ. XML-документ преобразуется в строку.
     /// </summary>
     public string XmlText { get { return _XmlText; } }
-    private string _XmlText;
+    private readonly string _XmlText;
 
     #endregion
   }

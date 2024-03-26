@@ -5,7 +5,7 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20240325;174110716000000">
+	<META NAME="CHANGED" CONTENT="20240326;104247904000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2023-11-17T22:37:54.315000000">
 	<STYLE TYPE="text/css">
@@ -51,7 +51,7 @@
 			<P LANG="en-US" ALIGN=CENTER>351</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>29.02.2024-25<SPAN LANG="ru-RU">.03.2024</SPAN></P>
+			<P LANG="en-US" ALIGN=CENTER>29.02.2024-26<SPAN LANG="ru-RU">.03.2024</SPAN></P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Экспорт
@@ -125,30 +125,33 @@
 			автоподбор ширины столбцов по ширине просмотра. Свойство
 			</SPAN>EFPDataTreeViewColumn.FillWeight. <SPAN LANG="ru-RU">Методы
 			</SPAN>EFPDataTreeViewColumns.AddTextFill().</P>
-			<P LANG="en-US">11. <SPAN LANG="ru-RU">Убраны свойства 
+			<P LANG="en-US">11. <SPAN LANG="ru-RU">Убраны свойства
 			</SPAN>EFPDataTreeView<SPAN LANG="ru-RU">.</SPAN>CurrentColumnIndex
 			<SPAN LANG="ru-RU">и </SPAN>CurrentColumnName, <SPAN LANG="ru-RU">так
 			как </SPAN>TreeViewAdv <SPAN LANG="ru-RU">не поддерживает понятия
 			&laquo;текущий столбец&raquo;.</SPAN></P>
-			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="en-US">2</SPAN><SPAN LANG="en-US">.
-			EFPConfigurableDataTreeView (<A HREF="ExtForms_11.htm#v100p2">v.100
+			<P><SPAN LANG="en-US">12. EFPConfigurableDataTreeView (<A HREF="ExtForms_11.htm#v100p2">v.100
 			</A></SPAN><A HREF="ExtForms_11.htm#v100p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)
 			</SPAN><SPAN LANG="ru-RU">обрабатывает события
 			</SPAN><SPAN LANG="en-US">TreeViewAdv.ColumnWidthChanged </SPAN><SPAN LANG="ru-RU">и
-			</SPAN><SPAN LANG="en-US">ColumnReordered</SPAN></P>
-			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="en-US">3</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">Свойства </SPAN><SPAN LANG="en-US">EFPConfigurableDataGridView,
+			</SPAN><SPAN LANG="en-US">ColumnReordered. </SPAN><SPAN LANG="ru-RU">В
+			диалоге &laquo;Настройки просмотра&raquo; используются новые
+			категории секции конфигурации </SPAN><SPAN LANG="en-US">EFPConfigCategories.TreeConfig
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">TreeConfigHistory,
+			</SPAN><SPAN LANG="ru-RU">вместо </SPAN><SPAN LANG="en-US">GridConfig
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">GridConfigHistory.</SPAN></P>
+			<P><SPAN LANG="en-US">13. </SPAN><SPAN LANG="ru-RU">Свойства
+			</SPAN><SPAN LANG="en-US">EFPConfigurableDataGridView,
 			EFPConfigurableDataTreeView.HasConfigureViewHandler </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v130p1"><SPAN LANG="en-US">v.130
 			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)
 			сделаны виртуальными.</SPAN></P>
-			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="en-US">4</SPAN><SPAN LANG="en-US">.
-			EFPTreeViewAdv.EnsureSelectionVisible() </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v110p3"><SPAN LANG="en-US">v.110
+			<P><SPAN LANG="en-US">14. EFPTreeViewAdv.EnsureSelectionVisible()
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v110p3"><SPAN LANG="en-US">v.110
 			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">)
 			перехватывает исключения.</SPAN></P>
-			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="en-US">5</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">В окне настройки табличного просмотра
-			(</SPAN><SPAN LANG="en-US">EFPGridProducerEditor, <A HREF="ExtForms_11.htm#v276p11">v.276
-			</A></SPAN><SPAN LANG="ru-RU"><A HREF="ExtForms_11.htm#v276p11">п.11</A>),
+			<P><SPAN LANG="en-US">15. </SPAN><SPAN LANG="ru-RU">В окне
+			настройки табличного просмотра (</SPAN><SPAN LANG="en-US">EFPGridProducerEditor,
+			<A HREF="ExtForms_11.htm#v276p11">v.276 </A></SPAN><SPAN LANG="ru-RU"><A HREF="ExtForms_11.htm#v276p11">п.11</A>),
 			на вкладке &laquo;Столбцы&raquo; синхронизируются размеры (ширина
 			и процент</SPAN><SPAN LANG="en-US">) </SPAN><SPAN LANG="ru-RU">для
 			столбцов с одинаковым </SPAN><SPAN LANG="en-US">SizeGroup</SPAN></P>

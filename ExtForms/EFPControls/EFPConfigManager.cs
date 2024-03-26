@@ -317,23 +317,32 @@ namespace FreeLibSet.Forms
     public const string TreeView = "TreeView";
 
     /// <summary>
-    /// Используется для хранения пользовательских "именных" настроек табличного (или древовидного) просмотра (объектов <see cref="EFPDataGridViewConfig"/>)
+    /// Используется для хранения пользовательских "именных" настроек табличного просмотра (объектов <see cref="EFPDataGridViewConfig"/>)
     /// Имя настройки задается как UserSetName.
-    /// Настройки могут относиться к таблицам EFPDBxGridView и EFPDBxTreeView
-    /// Текущая выбранная настройка хранится как поле "GridConfig" в отдельной секции <see cref="GridView"/> или <see cref="TreeView"/>.
+    /// Настройки применяются табличными просмотрами <see cref="EFPConfigurableDataGridView"/>.
+    /// Текущая выбранная настройка хранится как поле "GridConfig" в отдельной секции <see cref="GridView"/>.
+    /// Для табличных и иерархических просмотров используются разные категории.
     /// </summary>
     public const string GridConfig = "GridConfig";
 
     /// <summary>
-    /// Используется <see cref="EFPConfigurableDataGridView"/> для хранения списка истории настроек
+    /// Используется <see cref="EFPConfigurableDataGridView"/> для хранения списка истории настроек.
     /// </summary>
     public const string GridConfigHistory = "GridConfigHistory";
 
-    ///// <summary>
-    ///// Используется EFPConfigurableDataGridView для хранения настроек отправки в Excel и OpenOffice.
-    ///// Кроме секции с именем, задаваемым свойством ConfigSectionName, используется секция с именем "Default"
-    ///// </summary>
-    //public const string SendToExcel = "SendToExcel";
+    /// <summary>
+    /// Используется для хранения пользовательских "именных" настроек древовидного просмотра (объектов <see cref="EFPDataGridViewConfig"/>)
+    /// Имя настройки задается как UserSetName.
+    /// Настройки применяются древовидными просмотрами <see cref="EFPConfigurableDataTreeView"/>.
+    /// Текущая выбранная настройка хранится как поле "GridConfig" в отдельной секции <see cref="TreeView"/>.
+    /// Для табличных и иерархических просмотров используются разные категории.
+    /// </summary>
+    public const string TreeConfig = "TreeConfig";
+
+    /// <summary>
+    /// Используется <see cref="EFPConfigurableDataTreeView"/> для хранения списка истории настроек
+    /// </summary>
+    public const string TreeConfigHistory = "GridConfigHistory";
 
     /// <summary>
     /// Хранение параметров отчета.

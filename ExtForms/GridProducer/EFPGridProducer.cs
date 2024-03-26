@@ -17,8 +17,8 @@ namespace FreeLibSet.Forms
   #region IEFPGridProducer
 
   /// <summary>
-  /// Обобщенный интерфейс генератора табличного просмотра
-  /// Не уточняет способа, каким инициализируются столбцы табличного просмотра
+  /// Обобщенный интерфейс генератора табличного просмотра.
+  /// Не уточняет способа, каким инициализируются столбцы табличного просмотра.
   /// </summary>
   public interface IEFPGridProducer : IReadOnlyObject
   {
@@ -29,9 +29,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метод должен создать столбцы в табличном просмотре в соответствии с установленной конфигурацией
-    /// (установки свойства EFPDataGridView.CurrentConfig)
-    /// На момент вызова табличный просмотр не содержит столбцов
-    /// После вызова этого метода следует вызвать EFPDataGridView.PerformGridProducerPostInit()
+    /// (свойство <see cref="EFPDataGridView.CurrentConfig"/>).
+    /// На момент вызова табличный просмотр не содержит столбцов.
+    /// После вызова этого метода следует вызвать <see cref="EFPDataGridView.PerformGridProducerPostInit()"/>.
     /// </summary>
     /// <param name="controlProvider">Заполняемый просмотр</param>
     /// <param name="reInit">true, если инициализация выполняется повторно</param>
@@ -39,17 +39,17 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метод должен создать столбцы в иерархическом просмотре в соответствии с установленной конфигурацией
-    /// (установки свойства EFPDataTreeView.CurrentConfig)
-    /// На момент вызова табличный просмотр не содержит столбцов
-    /// После вызова этого метода следует вызвать EFPDataTreeView.PerformGridProducerPostInit()
+    /// (свойство <see cref="EFPDataTreeView.CurrentConfig"/>)
+    /// На момент вызова табличный просмотр не содержит столбцов.
+    /// После вызова этого метода следует вызвать <see cref="EFPDataTreeView.PerformGridProducerPostInit()"/>.
     /// </summary>
     /// <param name="controlProvider">Заполняемый просмотр</param>
     /// <param name="reInit">true, если инициализация выполняется повторно</param>
     void InitTreeView(EFPDataTreeView controlProvider, bool reInit);
 
     /// <summary>
-    /// Дополнение к интерфейсу IReadOnlyObject.
-    /// Вызывается при присоединении к табличному просмотру
+    /// Дополнение к интерфейсу <see cref="IReadOnlyObject"/>.
+    /// Вызывается при присоединении к табличному просмотру.
     /// </summary>
     void SetReadOnly();
   }
@@ -59,18 +59,18 @@ namespace FreeLibSet.Forms
   #region IEFPGridProducerColumn
 
   /// <summary>
-  /// Интерейс объекта, управляющего поведением столбца, созданного генератором табличного просмотра
-  /// Реализация IEFPGridProducer может не использовать этот интерфейс, или использовать его не для всех
-  /// столбцов, или использовать один объект для нескольких столбцов
+  /// Интерейс объекта, управляющего поведением столбца, созданного генератором табличного просмотра <see cref="IEFPConfigurableGridProducer"/>.
+  /// Реализация <see cref="IEFPGridProducer"/> может не использовать этот интерфейс, или использовать его не для всех
+  /// столбцов, или использовать один объект для нескольких столбцов.
   /// </summary>
   public interface IEFPGridProducerColumn
   {
     /// <summary>
     /// Выполнить редактирование для ячейки.
-    /// Вызывается из EFPDataGridView.PerformEditData()
+    /// Вызывается из <see cref="EFPDataGridView.PerformEditData(EFPDataGridViewState)"/>.
     /// Если метод выполнил действия, связанные с редактированием, следует вернуть true. В этом случае дальнейшая обработрка не выполняется
-    /// Если следует выполнить обычные действия по редактированию, в частности, вызвать событие EFPDataGridView.EditData,
-    /// следует вернуть false
+    /// Если следует выполнить обычные действия по редактированию, в частности, вызвать событие <see cref="EFPDataGridView.EditData"/>,
+    /// следует вернуть false.
     /// </summary>
     /// <param name="rowInfo">Информация о текущей строки в табличном просмотре</param>
     /// <param name="columnName">Имя столбца</param>
@@ -90,17 +90,17 @@ namespace FreeLibSet.Forms
   #region IEFPConfigurableGridProducer
 
   /// <summary>
-  /// Интерфейс настраиваемого генератора табличного просмотра.
-  /// В отличие от IEFPGridProducer, предполагает возможность пользователя настраивать индивидуальные столбцы
-  /// на уровне EFPDataGrifViewConfig
-  /// Интерфейс используется на уровне EFPDataGridViewWithFilters, а не EFPDataGridView.
+  /// Интерфейс настраиваемого генератора табличного просмотра Реализуется классом <see cref="EFPGridProducer"/>.
+  /// В отличие от <see cref="IEFPGridProducer"/>, предполагает возможность пользователя настраивать индивидуальные столбцы
+  /// на уровне <see cref="EFPDataGridViewConfig"/>.
+  /// Интерфейс используется на уровне <see cref="EFPConfigurableDataGridView"/> и <see cref="EFPConfigurableDataTreeView"/>, а не <see cref="EFPDataGridView"/>.
   /// </summary>
   public interface IEFPConfigurableGridProducer : IEFPGridProducer
   {
     /// <summary>
     /// Инициализация редактора настройки столбцов табличного просмотра.
     /// Метод должен добавить управляющие элементы в форму редактора и вернуть интерфейс управления.
-    /// Загружать начальные значения в редактор не следует
+    /// Загружать начальные значения в редактор не следует.
     /// </summary>
     /// <param name="parentControl">Панель в окне настройки формы для размещения элементов редактора</param>
     /// <param name="baseProvider">Базовый провайдер редактора настроек</param>
@@ -112,9 +112,10 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
+  /// Реализация <see cref="IEFPConfigurableGridProducer"/>.
   /// Описание всех возможных полей и настроек по умолчанию для
-  /// табличного просмотра EFPDataGridView или иерархического просмотра EFPDataTreeView. 
-  /// Класс не является потокобезопасным. Он должен вызываться только из основного потока приложения EFPApp.MainThread
+  /// табличного просмотра <see cref="EFPDataGridView"/> или иерархического просмотра <see cref="EFPDataTreeView"/>. 
+  /// Класс не является потокобезопасным. Он должен вызываться только из основного потока приложения <see cref="EFPApp.MainThread"/>.
   /// </summary>
   public partial class EFPGridProducer : IEFPConfigurableGridProducer
   {
@@ -134,8 +135,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPGridProducer()
     {
-      _FixedColumns = new SingleScopeList<string>();
-
       _OutItem = new Reporting.BRGridProducerMenuOutItem();
     }
 
@@ -204,7 +203,7 @@ namespace FreeLibSet.Forms
     protected virtual EFPGridProducerToolTips CreateToolTips() { return new EFPGridProducerToolTips(); }
 
     /// <summary>
-    /// Возвращает количество всплывающих подсказок, добавленных в коллекцию ToolTips
+    /// Возвращает количество всплывающих подсказок, добавленных в коллекцию <see cref="ToolTips"/>
     /// </summary>
     public int ToolTipCount
     {
@@ -238,7 +237,7 @@ namespace FreeLibSet.Forms
     protected virtual EFPDataViewOrders CreateOrders() { return new EFPDataViewOrders(); }
 
     /// <summary>
-    /// Количество записей в списке Orders
+    /// Количество записей в списке <see cref="Orders"/>
     /// </summary>
     public int OrderCount
     {
@@ -252,31 +251,42 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список имен "обязательных" полей, которые всегда добавляются в список
-    /// Columns при вызове InitGrid() (например, "RefId")
-    /// По умолчанию - список пуст
+    /// Список имен "обязательных" полей, которые всегда добавляются в список usedColumns
+    /// при вызове <see cref="InitGridView(EFPConfigurableDataGridView, bool, EFPDataGridViewConfig, IList{string})"/> и 
+    /// <see cref="InitTreeView(EFPConfigurableDataTreeView, bool, EFPDataGridViewConfig, IList{string})"/>.
+    /// По умолчанию - список пуст.
     /// </summary>
-    public IList<string> FixedColumns { get { return _FixedColumns; } }
+    public IList<string> FixedColumns
+    {
+      get
+      {
+        if (_FixedColumns == null)
+          _FixedColumns = new SingleScopeList<string>();
+        return _FixedColumns;
+      }
+    }
     private SingleScopeList<string> _FixedColumns;
 
     /// <summary>
-    /// Вовзаращает список имен "обязательных" полей, которые всегда добавляются в список, в виде массива
+    /// Вовзаращает список имен "обязательных" полей <see cref="FixedColumns"/>, которые всегда добавляются в список, в виде массива
     /// </summary>
     /// <returns>Массив имен</returns>
     public string[] GetFixedColumnArray()
     {
-      return _FixedColumns.ToArray();
+      if (_FixedColumns == null)
+        return DataTools.EmptyStrings;
+      else
+        return _FixedColumns.ToArray();
     }
-
 
     #endregion
 
     #region Конфигурации
 
     /// <summary>
-    /// Кофнигурация табличного просмотра по умолчанию.
+    /// Конфигурация табличного просмотра по умолчанию.
     /// Если конфигурация не была задана в явном виде, она создается автоматически при
-    /// каждом обращении к свойству
+    /// каждом обращении к свойству.
     /// </summary>
     public EFPDataGridViewConfig DefaultConfig
     {
@@ -308,7 +318,7 @@ namespace FreeLibSet.Forms
     /// Инициализация табличного просмотра
     /// </summary>
     /// <param name="controlProvider">Обработчик табличного просмотра</param>
-    /// <param name="reInit">При первом показе табличного просмотра получает значение False.
+    /// <param name="reInit">При первом показе табличного просмотра получает значение false.
     /// При повторных вызовах, когда табличный просмотр уже был инициализирован, получает значение true</param>
     public void InitGridView(EFPDataGridView controlProvider, bool reInit)
     {
@@ -400,8 +410,11 @@ namespace FreeLibSet.Forms
 
       #region Фиксированные поля
 
-      foreach (string fixedName in FixedColumns)
-        usedColumns.Add(fixedName);
+      if (_FixedColumns != null)
+      {
+        foreach (string fixedName in FixedColumns)
+          usedColumns.Add(fixedName);
+      }
 
       #endregion
 
@@ -603,8 +616,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация иерархического просмотра
     /// </summary>
-    /// <param name="controlProvider">Обработчик табличного просмотра</param>
-    /// <param name="reInit">При первом показе табличного просмотра получает значение False.
+    /// <param name="controlProvider">Обработчик просмотра</param>
+    /// <param name="reInit">При первом показе табличного просмотра получает значение false.
     /// При повторных вызовах, когда табличный просмотр уже был инициализирован, получает значение true</param>
     public void InitTreeView(EFPDataTreeView controlProvider, bool reInit)
     {
@@ -695,8 +708,11 @@ namespace FreeLibSet.Forms
 
       controlProvider.Control.UseColumns = true;
 
-      foreach (string fixedName in FixedColumns)
-        usedColumns.Add(fixedName);
+      if (_FixedColumns != null)
+      {
+        foreach (string fixedName in FixedColumns)
+          usedColumns.Add(fixedName);
+      }
 
       int maxTextRowHeight = 1;
       for (int i = 0; i < config.Columns.Count; i++)
@@ -717,21 +733,7 @@ namespace FreeLibSet.Forms
         maxTextRowHeight = Math.Max(maxTextRowHeight, colDef.TextRowHeight);
       }
 
-      //if (Config.FrozenColumns > 0 && Config.FrozenColumns < Config.Columns.Count && Config.FrozenColumns<controlProvider.Columns.Count)
-      //  ControlProvider.Control.Columns[Config.FrozenColumns - 1].Frozen = true;
-
       //ControlProvider.TextRowHeight = MaxTextRowHeight;
-      /*
-      int StartColumnIndex;
-      if (String.IsNullOrEmpty(Config.StartColumnName))
-        // Активируем первый столбец с автоинкрементом
-        StartColumnIndex = ControlProvider.FirstIncSearchColumnIndex;
-      else
-        StartColumnIndex = ControlProvider.Columns.IndexOf(Config.StartColumnName);
-      if (StartColumnIndex < 0)
-        StartColumnIndex = 0;
-      ControlProvider.CurrentColumnIndex = StartColumnIndex;
-       */
 
       /*
       for (int i = 0; i < Config.ToolTips.Count; i++)
@@ -804,11 +806,12 @@ namespace FreeLibSet.Forms
     #region Работа с настройками просмотра
 
     /// <summary>
-    /// Создает новый объект для DefaultConfig и опционально заполняет его всеми
-    /// имеющимися столбцами и ToolTip'ами
+    /// Создает новый объект для <see cref="DefaultConfig"/> и опционально заполняет его всеми
+    /// имеющимися столбцами <see cref="Columns"/> и подсказками <see cref="ToolTips"/>'.
+    /// Добавляются только столбцы и подсказки, которые существуют на момент вызова; затем могут быть добавлены столбцы и подсказки, которые не входят в конфигурацию по умолчанию.
     /// </summary>
-    /// <param name="addAll">Если true, то будут вызваны методы GridConfig.Columns.Add() и
-    /// ToolTips.Add() для имеющихся на текущий момент значениями</param>
+    /// <param name="addAll">Если true, то будут заполнены списки <see cref="EFPDataGridViewConfig.Columns"/> и <see cref="EFPDataGridViewConfig.ToolTips"/>.
+    /// Если false, то списки останутся пустыми</param>
     public void NewDefaultConfig(bool addAll)
     {
       DefaultConfig = new EFPDataGridViewConfig();
@@ -820,8 +823,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Создает объект конфигурации и устанавливает в ней отметки для всех столбцов и
-    /// всплывающих подсказок.
+    /// Создает новый объект конфигурации и заполняет списки <see cref="EFPDataGridViewConfig.Columns"/> и <see cref="EFPDataGridViewConfig.ToolTips"/>
+    /// вcеми существующими столбцами <see cref="Columns"/> и подсказками <see cref="ToolTips"/>.
     /// </summary>
     /// <returns>Новая конфигурация</returns>
     public EFPDataGridViewConfig CreateDefaultConfig()
@@ -835,7 +838,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создать настройку с фиксированным именем
+    /// Создать настройку с фиксированным именем.
+    /// Столбцы и подсказки не добавляются.
     /// </summary>
     /// <param name="fixedName">Имя настройки</param>
     /// <returns>Пустая конфигурация, которую нужно заполнить</returns>
@@ -855,7 +859,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить настройку с фиксированным именем.
-    /// Если настройка не была создана, генерируется исключение
+    /// Если настройка не была создана, генерируется исключение.
     /// </summary>
     /// <param name="fixedName">Имя настройки</param>
     /// <returns></returns>
@@ -877,9 +881,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает имена настроек, добавленных с помощью NewNamedConfig()
+    /// Возвращает имена настроек, добавленных с помощью <see cref="NewNamedConfig(string)"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Список имен</returns>
     public string[] GetNamedConfigNames()
     {
       if (_NamedConfigs == null)
@@ -894,8 +898,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Загрузить сохраненную ранее конфигурацию с заданным именем. Если имя не задано,
-    /// то возвращается DefaultConfig. Если имя неправильное, или настройка была удалена,
-    /// то возвращается null
+    /// то возвращается <see cref="DefaultConfig"/>. Если имя неправильное, или настройка была удалена,
+    /// то возвращается null.
     /// </summary>
     /// <param name="configSectionName">Имя секции конфигурации, используемое табличным просмотром</param>
     /// <param name="defaulConfigName">Имя фиксированной настройки или пустая строка, если используется настройка по умолчанию</param>
@@ -920,11 +924,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Загрузить сохраненную ранее конфигурацию, определив имя текущей конфигурации. 
     /// Если имя не было сохранено или неправильное, или настройка была удалена,
-    /// то возвращается DefaultConfig
+    /// то возвращается <see cref="DefaultConfig"/>.
     /// </summary>
     /// <param name="configSectionName">Имя секции конфигурации, используемое табличным просмотром</param>
     /// <param name="defaultConfigName">Имя фиксированной настройки или пустая строка, если используется настройка по умолчанию</param>
-    /// <returns>Загруженная секция или DefaultConfig</returns>
+    /// <returns>Загруженная секция или <see cref="DefaultConfig"/></returns>
     public EFPDataGridViewConfig LoadConfig(string configSectionName, string defaultConfigName)
     {
       string cfgName = GetCurrentConfigName(configSectionName);
@@ -954,7 +958,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить список полей, необходимых для заданной конфигурации
     /// </summary>
-    /// <param name="config">Конфигурация. Если null, то возвращается FixedColumns</param>
+    /// <param name="config">Конфигурация. Если null, то возвращается <see cref="FixedColumns"/>.</param>
     /// <param name="usedColumns">Сюда добавляются имена полей</param>
     public void GetColumnNames(EFPDataGridViewConfig config, IList<string> usedColumns)
     {
@@ -962,8 +966,11 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException();
       //usedColumns.CheckNotReadOnly();
 
-      foreach (string fixedName in FixedColumns)
-        usedColumns.Add(fixedName);
+      if (_FixedColumns != null)
+      {
+        foreach (string fixedName in FixedColumns)
+          usedColumns.Add(fixedName);
+      }
       if (config != null)
       {
         // Столбцы
@@ -1034,9 +1041,9 @@ namespace FreeLibSet.Forms
     /// <returns>Интерфейс объекта редактора</returns>
     public IEFPGridProducerEditor CreateEditor(Control parentControl, EFPBaseProvider baseProvider, IEFPDataView callerControlProvider)
     {
-      EFPGridProducerEditor form = new EFPGridProducerEditor(this, callerControlProvider, baseProvider);
-      parentControl.Controls.Add(form.TheTabControl);
-      return form;
+      EFPGridProducerEditor editor = new EFPGridProducerEditor(this, callerControlProvider, baseProvider);
+      parentControl.Controls.Add(editor.TheTabControl);
+      return editor;
     }
 
     #endregion
@@ -1044,8 +1051,8 @@ namespace FreeLibSet.Forms
     #region IReadOnlyObject
 
     /// <summary>
-    /// Возвращает true, если GridProducer был переведен в режим "Только чтение".
-    /// Переводится при первом присоединении к табличному просмотру или по окончании инициализации объекта DBUI в ExtDBDocForms.dll
+    /// Возвращает true, если <see cref="EFPGridProducer"/> был переведен в режим "Только чтение".
+    /// Переводится при первом присоединении к просмотру <see cref="EFPConfigurableDataGridView"/>, <see cref="EFPConfigurableDataTreeView"/> или по окончании инициализации объекта DBUI в ExtDBDocForms.dll
     /// </summary>
     public bool IsReadOnly
     {
@@ -1059,7 +1066,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Генерирует исключение, если GridProducer был переведен в режим "Только чтение".
+    /// Генерирует исключение, если <see cref="EFPGridProducer"/> был переведен в режим "Только чтение".
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1068,9 +1075,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Перевод GridProducer в режим "только чтение".
+    /// Перевод <see cref="EFPGridProducer"/> в режим "только чтение".
     /// При первом вызове выполняется проверка корректности данных.
-    /// Повторные вызовы игнорируются
+    /// Повторные вызовы игнорируются.
     /// </summary>
     public void SetReadOnly()
     {
@@ -1092,7 +1099,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверка корректности данных.
-    /// Вызывается однократно при первом вызове SetReadOnly()
+    /// Вызывается однократно при первом вызове <see cref="SetReadOnly()"/>
     /// </summary>
     protected virtual void Validate()
     {
@@ -1226,7 +1233,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Исключение, возникающее при переводе объекта EFPGridProducer в режим "только чтение", в процессе проверки корректности данных
+  /// Исключение, возникающее при переводе объекта <see cref="EFPGridProducer"/> в режим "только чтение", в процессе проверки корректности данных
   /// </summary>
   [Serializable]
   public class EFPGridProducerValidationException : ApplicationException

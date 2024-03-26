@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Заполняет таблицу столбцов из заданной конфигурации
     /// </summary>
-    /// <param name="config">Конфигурация, откуда берутся размеры столбоы</param>
+    /// <param name="config">Конфигурация, откуда берутся размеры столбцов</param>
     private void WriteFormColumns(EFPDataGridViewConfig config)
     {
       // Строки таблицы столбцов, соответствующие объявлениям в GridProducer

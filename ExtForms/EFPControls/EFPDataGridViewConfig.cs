@@ -598,7 +598,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Настройка для одной всплывающей подсказуи
+  /// Настройка для одной всплывающей подсказки
   /// В текущей реализации не содержит никаких настраиваемых параметров
   /// </summary>
   [Serializable]
@@ -771,7 +771,7 @@ namespace FreeLibSet.Forms
         throw new NullReferenceException("Свойство GridProducer должно быть установлено");
 
       if (Value == null)
-        Value = new EFPDataGridViewConfig(); // пустышка. Может
+        Value = new EFPDataGridViewConfig(); // пустышка. 
 
       GridConfigForm form = new GridConfigForm(CallerControlProvider, ConfigCategory, HistoryCategory);
       form.Editor = GridProducer.CreateEditor(form.MainPanel, form.FormProvider, CallerControlProvider);
