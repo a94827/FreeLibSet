@@ -15,18 +15,23 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Обработчик двоичных данных и файлов, хранящихся в базе данных.
-  /// Ссылка на объект хранится в DBxRealDocProviderGlobal.
-  /// Все методы объекта являются потокобезопасными после вызова SetReadOnly()
+  /// Обработчик двоичных данных и файлов, хранящихся в базе данных. Для баз данных ограниченного размера (например, MS SQL Server Express Edition)
+  /// можно использовать фрагментирование. При этом в основной базе данных хранится только таблица с идентификаторами и контрольными суммами, а сами данные хранятся в отдельных базах данных,
+  /// что позволяет преодолеть ограничение на размер.
+  /// Исключается дублирование одинаковыех блоков двоичных данных. Проверка уникальности использует контрольную сумму MD5.
+  /// Ссылка на объект хранится в <see cref="DBxRealDocProviderGlobal"/>.
+  /// Все методы объекта являются потокобезопасными после вызова <see cref="DBxBinDataHandler.SetReadOnly()"/>.
   /// </summary>
   /// <remarks>
   /// Порядок использования:
-  /// 1. Создать DBxBinDataHandler и установить управляющие свойства
-  /// 2. Инициализировать описания баз данных. Использовать DBxBinDataHandler.AddTableStructs() для
-  /// добавления описаний таблиц
-  /// 3. Создать/обновить базы данных
-  /// 4. Присоединить объекты DBxEntry к DBxBinDataHandler
-  /// 5. Создать DBxRealDocProviderGlobal. При этом DBxBinDataHandler.IsReadOnly примет значение true
+  /// <list type="bullet">
+  /// <item><description>1. Создать <see cref="DBxBinDataHandler"/> и установить управляющие свойства</description></item>
+  /// <item><description>2. Инициализировать описания баз данных. Использовать <see cref="DBxBinDataHandler.AddMainTableStructs(DBxStruct)"/> и 
+  /// <see cref="DBxBinDataHandler.AddSectionTableStructs(DBxStruct)"/>для добавления описаний таблиц</description></item>
+  /// <item><description>3. Создать/обновить базы данных</description></item>
+  /// <item><description>4. Присоединить объекты <see cref="DBxEntry"/> к <see cref="DBxBinDataHandler"/></description></item>
+  /// <item><description>5. Создать <see cref="DBxRealDocProviderGlobal"/>. При этом <see cref="DBxBinDataHandler.IsReadOnly"/> примет значение true</description></item>
+  /// </list>
   /// </remarks>
   public sealed class DBxBinDataHandler : IReadOnlyObject
   {
@@ -38,7 +43,7 @@ namespace FreeLibSet.Data.Docs
     public DBxBinDataHandler()
     {
       _SectionEntries = new List<DBxEntry>();
-      DBSizeLimitExceededHandlerEnabled = true;
+      _DBSizeLimitExceededHandlerEnabled = true;
 
       _BinDataCacheTableStruct = new DBxTableStruct("BinData");
       _BinDataCacheTableStruct.Columns.AddId();
@@ -68,7 +73,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Будут ли в базе данных храниться ссылки на двоичные данные?
-    /// По умолчанию - false
+    /// По умолчанию - false.
+    /// Должно быть установлено в true одно из двух или оба свойства <see cref="UseBinData"/> и <see cref="UseFiles"/>.
     /// </summary>
     public bool UseBinData
     {
@@ -84,7 +90,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Будут ли в базе данных храниться файлы?
-    /// По умолчанию - false
+    /// По умолчанию - false.
+    /// Должно быть установлено в true одно из двух или оба свойства <see cref="UseBinData"/> и <see cref="UseFiles"/>.
     /// </summary>
     public bool UseFiles
     {
@@ -103,7 +110,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Добавляет описания структур таблиц "BinData" и "FileNames".
-    /// Структура и наличие таблиц зависит от управляющих свойств UseXXX.
+    /// Структура и наличие таблиц зависит от управляющих свойств <see cref="UseFragmentation"/>, <see cref="UseBinData"/> и <see cref="UseFiles"/>.
     /// </summary>
     /// <param name="dbStruct">Описание базы данных, в которой будут созданы таблицы</param>
     public void AddMainTableStructs(DBxStruct dbStruct)
@@ -183,7 +190,7 @@ namespace FreeLibSet.Data.Docs
     #region Ссылки на базы данных
 
     /// <summary>
-    /// Точка доступа к основной базе данных, в которой объявлены таблицы BinData и FileNames.
+    /// Точка доступа к основной базе данных, в которой объявлены таблицы "BinData" и "FileNames".
     /// Это свойство должно быть установлено обязательно.
     /// </summary>
     public DBxEntry MainEntry
@@ -198,16 +205,16 @@ namespace FreeLibSet.Data.Docs
     private DBxEntry _MainEntry;
 
     /// <summary>
-    /// Событие вызывается при добавлении новой точки подключения, если используется фрагментация (UseFragmentation=true).
-    /// Для доступа к новому объекту DBxEntry используйте вызов GetSectionEntry(SectionEntryCount)
+    /// Событие вызывается при добавлении новой точки подключения, если используется фрагментация (<see cref="UseFragmentation"/>=true).
+    /// Для доступа к новому объекту <see cref="DBxEntry"/> используйте вызов <see cref="GetSectionEntry(int)"/> со значением <see cref="SectionEntryCount"/>.
     /// </summary>
     public event EventHandler SectionEntryAdded;
 
     /// <summary>
     /// Добавить точку входу для базы данных секции.
-    /// Если UseFragmentation=true, то должна быть добавлена хотя бы одна точка входа.
-    /// Если UseFragmentation=false, вызов метода не разрешается.
-    /// Секции могут добавляться после установки свойства IsReadOnly
+    /// Если <see cref="UseFragmentation"/>=true, то должна быть добавлена хотя бы одна точка входа.
+    /// Если <see cref="UseFragmentation"/>=false, вызов метода не разрешается.
+    /// Секции могут добавляться после установки свойства <see cref="IsReadOnly"/>=true.
     /// </summary>
     /// <param name="dbEntry">Точка входа в базу данных</param>
     public void AddSectionEntry(DBxEntry dbEntry)
@@ -234,7 +241,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Список точек входа в секционные базы данных.
     /// При добавлении новой строки двоичных данных всегда используется последняя секция.
-    /// На время работы списка требуется блокировка, так как новые точки могут добавляться динамически
+    /// На время работы списка требуется блокировка, так как новые точки могут добавляться динамически.
     /// </summary>
     private List<DBxEntry> _SectionEntries;
 
@@ -255,7 +262,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает все добавленные точки входа в секционные базы данных в виде массива
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив точек входа</returns>
     public DBxEntry[] GetSectionEntries()
     {
       lock (_SectionEntries)
@@ -287,7 +294,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Проверяет, что в списке SectionEntries есть достаточное количество баз данных, соответствующих секциям в таблице BinData
+    /// Проверяет, что в списке <see cref="GetSectionEntries()"/> есть достаточное количество баз данных, соответствующих секциям в таблице "BinData".
     /// </summary>
     public void CheckBinDataSections()
     {
@@ -308,8 +315,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Часть структуры таблицы BinData, разрешенная для буферизации.
-    /// Содержит поля Id, MD5 и Length
+    /// Часть структуры таблицы "BinData", разрешенная для буферизации.
+    /// Содержит поля "Id", "MD5" и "Length".
     /// </summary>
     public DBxTableStruct BinDataCacheTableStruct { get { return _BinDataCacheTableStruct; } }
     private DBxTableStruct _BinDataCacheTableStruct;
@@ -320,13 +327,13 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true, если нельзя задавать управляющие свойства.
-    /// Не имеет отношения к возможности записи самих двоичных данных
+    /// Не имеет отношения к возможности записи самих двоичных данных.
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение при IsReadOnly=true
+    /// Генерирует исключение при <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -337,7 +344,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Запрещает дальнейшую установку управляющих свойств.
     /// Повторные вызовы игнорируются.
-    /// Метод не предназначен для использования напрямую в пользовательском коде
+    /// Метод не предназначен для использования напрямую в пользовательском коде.
     /// </summary>
     public void SetReadOnly()
     {
@@ -370,8 +377,8 @@ namespace FreeLibSet.Data.Docs
     #region Двоичные данные
 
     /// <summary>
-    /// Выполняет поиск в таблице BinData для заданной суммы MD5.
-    /// Возвращает идентификатор найденной записи или 0, если таких данных еще нет
+    /// Выполняет поиск в таблице "BinData" для заданной суммы MD5.
+    /// Возвращает идентификатор найденной записи или 0, если таких данных еще нет.
     /// </summary>
     /// <param name="md5">Вычисленная заранее сумма блока</param>
     /// <returns>Идентификатор</returns>
@@ -387,13 +394,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Выполняет поиск в таблице BinData для заданной суммы MD5.
+    /// Выполняет поиск в таблице "BinData" для заданной суммы MD5.
     /// Возвращает идентификатор найденной записи или 0, если таких данных еще нет.
-    /// Выполняет дополнительную проверку длины
+    /// Выполняет дополнительную проверку длины.
+    /// Наличие блоков с одинаковой контрольной суммой но разной длиной не допускается. При обнаружении такого блока в базе данных выбрасывается исключение.
     /// </summary>
     /// <param name="md5">Вычисленная заранее сумма блока</param>
-    /// <param name="length">Длина блока данных, которая должна быть</param>
+    /// <param name="length">Ожидаемая длина блока данных в байтах</param>
     /// <returns>Идентификатор</returns>
+    /// <exception cref="DBxConsistencyException">Обнаружено наличие существующего блока с такой же контрольной суммой, но другой длиной</exception>
     public Int32 FindBinDataWithLenChecking(string md5, int length)
     {
       if (String.IsNullOrEmpty(md5))
@@ -417,13 +426,13 @@ namespace FreeLibSet.Data.Docs
     private static readonly DBxColumns _AppendBinDataColumns2 = new DBxColumns("MD5,Length,Section");
 
     /// <summary>
-    /// Объект, для которого выполняется блокирование на время добавления записи в таблицу BinData и BinDataStorage
-    /// Не стоит использовать FSectionEntries, так как тогда будут блокироваться параллельные операции чтения данных
+    /// Объект, для которого выполняется блокирование на время добавления записи в таблицу "BinData" и "BinDataStorage".
+    /// Не стоит использовать _SectionEntries, так как тогда будут блокироваться параллельные операции чтения данных.
     /// </summary>
     private object _AppendBinDataLockObj = new object();
 
     /// <summary>
-    /// Добавляет блок двоичных данных в таблицу BinData.
+    /// Добавляет блок двоичных данных в таблицу "BinData".
     /// Если такой блок уже есть, возвращается идентификатор существующей записи.
     /// </summary>
     /// <param name="contents">Данные для записи</param>
@@ -458,10 +467,10 @@ namespace FreeLibSet.Data.Docs
                   throw;
                 if (DBSizeLimitExceeded == null)
                   throw;
-                if (!DBSizeLimitExceededHandlerEnabled)
+                if (!_DBSizeLimitExceededHandlerEnabled)
                   throw;
 
-                DBSizeLimitExceededHandlerEnabled = false; // временно отключаем
+                _DBSizeLimitExceededHandlerEnabled = false; // временно отключаем
                 // Вызываем пользовательское событие
                 DBSizeLimitExceeded(this, EventArgs.Empty);
 
@@ -469,7 +478,7 @@ namespace FreeLibSet.Data.Docs
                 id = DoAppendBinDataWhenFragmentation(0, contents, md5, con);
 
                 // Получилось - включаем флажок обратно
-                DBSizeLimitExceededHandlerEnabled = true;
+                _DBSizeLimitExceededHandlerEnabled = true;
               }
             }
             else // Фрагментация не используется.
@@ -487,7 +496,10 @@ namespace FreeLibSet.Data.Docs
       return id;
     }
 
-
+    /// <summary>
+    /// Строка из 32 пробелов.
+    /// Это не сумма MD5 для пустой строки.
+    /// </summary>
     internal static readonly string EmptyMD5 = new string(' ', 32);
 
     private Int32 DoAppendBinDataWhenFragmentation(Int32 binDataId, byte[] contents, string md5, DBxCon con)
@@ -585,20 +597,20 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Это событие вызывается, когда используется фрагментирование баз данных для хранения двоичных данных и текущая база данных
     /// переполнилась.
-    /// Обработчик должен создать новую базу данных и вызвать AddSectionEntry()
+    /// Обработчик должен создать новую базу данных и вызвать <see cref="AddSectionEntry(DBxEntry)"/>
     /// </summary>
     public event EventHandler DBSizeLimitExceeded;
 
     /// <summary>
-    /// Можно ли вызывать обработчик события DBSizeLimitExceeded?
-    /// Если вызов обработчика не помог и возникло повторное исключение - плохая идея создавать третью, четвертую базу данных
+    /// Можно ли вызывать обработчик события <see cref="DBSizeLimitExceeded"/>?
+    /// Если вызов обработчика не помог и возникло повторное исключение - плохая идея создавать третью, четвертую базу данных.
     /// </summary>
-    private bool DBSizeLimitExceededHandlerEnabled;
+    private bool _DBSizeLimitExceededHandlerEnabled;
 
     /// <summary>
     /// Возвращает двоичные данные для заданного идентификатора
     /// </summary>
-    /// <param name="binDataId">Идентификатор в таблице BinData</param>
+    /// <param name="binDataId">Идентификатор в таблице "BinData"</param>
     /// <returns>Блок данных</returns>
     public byte[] GetBinData(Int32 binDataId)
     {
@@ -630,7 +642,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает общее количество блоков двоичных данных.
-    /// Метод предназначен для статистических целей
+    /// Метод предназначен для статистических целей.
     /// </summary>
     /// <returns></returns>
     public int GetBinDataCount()
@@ -935,10 +947,10 @@ namespace FreeLibSet.Data.Docs
             throw;
           if (DBSizeLimitExceeded == null)
             throw;
-          if (!DBSizeLimitExceededHandlerEnabled)
+          if (!_DBSizeLimitExceededHandlerEnabled)
             throw;
 
-          DBSizeLimitExceededHandlerEnabled = false; // временно отключаем
+          _DBSizeLimitExceededHandlerEnabled = false; // временно отключаем
           // Вызываем пользовательское событие
           System.Diagnostics.Trace.WriteLine("DBxBinDataHandler.DBSizeLimitExceeded event handler is calling ...");
           try
@@ -960,7 +972,7 @@ namespace FreeLibSet.Data.Docs
           DoAppendBinDataWhenFragmentation(binDataId, contents, md5, con);
 
           // Получилось - включаем флажок обратно
-          DBSizeLimitExceededHandlerEnabled = true;
+          _DBSizeLimitExceededHandlerEnabled = true;
         }
       }
       else // Фрагментация не используется.
@@ -988,7 +1000,8 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Выполняет проверку целостности двоичных данных
+  /// Выполняет проверку целостности двоичных данных, которые обрабатываются <see cref="DBxBinDataHandler"/>.
+  /// После настройки свойств должен быть вызван метод <see cref="DBxBinDataValidator.Validate()"/>.
   /// </summary>
   public sealed class DBxBinDataValidator
   {
@@ -997,7 +1010,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Инициализирует объект проверки
     /// </summary>
-    /// <param name="globalData">Глобальные данных для документов</param>
+    /// <param name="globalData">Глобальные данных для документов. Не может быть null. Должно быть установлено свойство <see cref="DBxRealDocProviderGlobal.BinDataHandler"/>.</param>
     public DBxBinDataValidator(DBxRealDocProviderGlobal globalData)
     {
 #if DEBUG
@@ -1021,16 +1034,16 @@ namespace FreeLibSet.Data.Docs
     #region Свойства
 
     /// <summary>
-    /// Ссылки на объекты баз данных и DBxBinDataHandler
+    /// Ссылки на объекты баз данных и <see cref="DBxBinDataHandler"/>.
     /// </summary>
     public DBxRealDocProviderGlobal GlobalData { get { return _GlobalData; } }
-    private DBxRealDocProviderGlobal _GlobalData;
+    private readonly DBxRealDocProviderGlobal _GlobalData;
 
     /// <summary>
     /// Сюда добавляются сообщения об ошибках
     /// </summary>
     public ErrorMessageList Errors { get { return _Errors; } }
-    private ErrorMessageList _Errors;
+    private readonly ErrorMessageList _Errors;
 
     /// <summary>
     /// Если установлено в true (по умолчанию), то будет проверяться ссылочная целостность для документов и поддокументов.
@@ -1333,7 +1346,7 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
 
-    #region Проверка повторов в BinData
+    #region Проверка повторов в таблице "BinData"
 
     private void ValidateBinDataRepeats(ISplash spl)
     {

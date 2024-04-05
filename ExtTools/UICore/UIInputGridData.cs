@@ -8,7 +8,7 @@ using System.Text;
 
 namespace FreeLibSet.UICore
 {
-  #region HorizontalAlignment
+  #region UIHorizontalAlignment
 
   /// <summary>
   /// Specifies how an object or text in a control is horizontally aligned relative
@@ -73,7 +73,7 @@ namespace FreeLibSet.UICore
 
     #region Основные свойства
 
-    private DataSet _DS;
+    private readonly DataSet _DS;
 
     /// <summary>
     /// Таблица данных. Задается в конструкторе.
@@ -81,7 +81,7 @@ namespace FreeLibSet.UICore
     /// </summary>
     public DataTable Table { get { return _DS.Tables[0]; } }
 
-    private TypedStringDictionary<ColumnInfo> _Dict;
+    private readonly TypedStringDictionary<ColumnInfo> _Dict;
 
     /// <summary>
     /// Дополнительные описания столбцов таблицы.
@@ -97,7 +97,7 @@ namespace FreeLibSet.UICore
     /// Могут ли поля быть пустыми.
     /// Значение по умолчанию - <see cref="UIValidateState.Error"/> - поля должны быть заполнены, иначе будет выдаваться ошибка.
     /// Установка свойства применяется ко всем полям таблицы.
-    /// Для задания индивидуальных органичений для столбцов используйте свойство <see cref="UIInputGridData.ColumnInfo.CanBeEmptyMode"/>.
+    /// Для задания индивидуальных ограничений для столбцов используйте свойство <see cref="UIInputGridData.ColumnInfo.CanBeEmptyMode"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -492,7 +492,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Реализация свойства Columns
+    /// Реализация свойства <see cref="Columns"/>
     /// </summary>
     public struct ColumnCollection
     {
@@ -507,7 +507,7 @@ namespace FreeLibSet.UICore
 
       #region Свойства
 
-      private UIInputGridData _Owner;
+      private readonly UIInputGridData _Owner;
 
       /// <summary>
       /// Доступ к свойствам столбца по имени.

@@ -17,7 +17,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Способ оборочивания имен таблиц, альясов и полей.
-    /// Обычно используются кавычки, но для DataView, MS SQL Server и Access должны использоваться квадратные скобки
+    /// Обычно используются кавычки, но для <see cref="System.Data.DataView"/>, MS SQL Server и Access должны использоваться квадратные скобки.
     /// </summary>
     protected enum EnvelopMode
     {
@@ -38,20 +38,20 @@ namespace FreeLibSet.Data
 
       /// <summary>
       /// Все методы реализуются производным классом самостоятельно.
-      /// BaseDBxSqlFormatter вызывает исключение
+      /// <see cref="BaseDBxSqlFormatter"/> вызывает исключение
       /// </summary>
       Unsupported
     }
 
     /// <summary>
     /// Правила обрамления имен таблиц, полей и индексов.
-    /// По умолчанию, имена заключаются в кавычки
+    /// По умолчанию, имена заключаются в кавычки.
     /// </summary>
     protected virtual EnvelopMode NameEnvelopMode { get { return EnvelopMode.Quotation; } }
 
     /// <summary>
     /// Форматирование имени таблицы.
-    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства NameEnvelopMode
+    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства <see cref="NameEnvelopMode"/>.
     /// </summary>
     /// <param name="buffer">Буфер для формирования SQL-запроса</param>
     /// <param name="tableName">Имя таблицы</param>
@@ -62,7 +62,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование имени поля.
-    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства NameEnvelopMode
+    /// Непереопределенный метод заключает имя в кавычки или скобки, в зависимости от свойства <see cref="NameEnvelopMode"/>.
     /// </summary>
     /// <param name="buffer">Буфер для формирования SQL-запроса</param>
     /// <param name="columnName">Имя столбца</param>
@@ -95,11 +95,10 @@ namespace FreeLibSet.Data
       }
     }
 
-
     /// <summary>
     /// Форматирование имени поля и альяса таблицы для запросов SELECT c конструкцией JOIN.
-    /// Непереопределенный метод вызывает OnFormatTableName() для форматирования альяса, добавляет точку и 
-    /// форматирует имя поля вызовом OnFormatColumnName()
+    /// Непереопределенный метод вызывает <see cref="OnFormatTableName(DBxSqlBuffer, string)"/> для форматирования альяса, добавляет точку и 
+    /// форматирует имя поля вызовом <see cref="OnFormatColumnName(DBxSqlBuffer, string)"/>.
     /// </summary>
     /// <param name="buffer">Буфер для формирования SQL-запроса</param>
     /// <param name="tableAlias">Альяс таблицы (до точки)</param>
@@ -225,7 +224,8 @@ namespace FreeLibSet.Data
     /// Форматирование части выражения, возвращающего значение столбца.
     /// Если столбец поддерживает значения NULL и установлено свойство <see cref="DBxFormatExpressionInfo.NullAsDefaultValue"/>,
     /// то выполняется форматирование функции COALESCE().
-    /// Иначе в запрос добавляется имя поля с помощью OnFormatColumnName(). Перед этим выполняется поиск альяса таблицы в списке DBxSqlBuffer.ColumnTableAliases.
+    /// Иначе в запрос добавляется имя поля с помощью <see cref="OnFormatColumnName(DBxSqlBuffer, string, string)"/>. 
+    /// Перед этим выполняется поиск альяса таблицы в списке <see cref="DBxSqlBuffer.ColumnTableAliases"/>.
     /// При необходимости, перед именем столбца выводится альяс таблицы.
     /// </summary>
     /// <param name="buffer">Буфер для создания SQL-запроса</param>
@@ -279,7 +279,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование выражения-функции или математической операции.
-    /// Для форматирования аргументов используется рекурсивный вызов FormatExpression()
+    /// Для форматирования аргументов используется рекурсивный вызов <see cref="DBxSqlFormatter.FormatExpression(DBxSqlBuffer, DBxExpression, DBxFormatExpressionInfo)"/>.
     /// </summary>
     /// <param name="buffer">Буфер для создания SQL-запроса</param>
     /// <param name="function">Выражение - функция</param>
@@ -541,7 +541,7 @@ namespace FreeLibSet.Data
     /// Возвращает имя функции.
     /// Для некоторых провайдеров функции называются нестандартным образом.
     /// Например, для MS SQL Server и DataView, функция COALSECE() называется ISNULL(), хотя делает то же самое.
-    /// Если СУБД реализует функцию с другими аргументами, то требуется переопределение метода OnFormatFunction()
+    /// Если СУБД реализует функцию с другими аргументами, то требуется переопределение метода <see cref="OnFormatFunction(DBxSqlBuffer, DBxFunction, DBxFormatExpressionInfo)"/>.
     /// </summary>
     /// <param name="function">Функция</param>
     protected virtual string GetFunctionName(DBxFunctionKind function)
@@ -562,7 +562,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование выражения-функции или математической операции.
-    /// Для форматирования аргументов используется рекурсивный вызов FormatExpression()
+    /// Для форматирования аргументов используется рекурсивный вызов <see cref="DBxSqlFormatter.FormatExpression(DBxSqlBuffer, DBxExpression, DBxFormatExpressionInfo)"/>.
     /// </summary>
     /// <param name="buffer">Буфер для создания SQL-запроса</param>
     /// <param name="function">Выражение - функция</param>
@@ -815,7 +815,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Преобразование значения даты и/или времени.
-    /// Этот метод вызывается из OnFormatValue().
+    /// Этот метод вызывается из <see cref="OnFormatValue(DBxSqlBuffer, object, DBxColumnType)"/>.
     /// Даты задаются в формате "#M/D/YYYY#"
     /// Дата и время задается в формате "#M/D/YYYY H:M:S#"
     /// </summary>
@@ -851,8 +851,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование значения типа GUID.
     /// Записывает в <paramref name="buffer"/>.SB значение <paramref name="value"/>.
-    /// Вызывает метод Guid.ToString("D") для получения строки длиной 36 символов (без скобок, но с разделителями "-").
-    /// Затем вызывает OnFormatStringValue() для записи строки.
+    /// Вызывает метод <see cref="Guid"/>.ToString("D") для получения строки длиной 36 символов (без скобок, но с разделителями "-").
+    /// Затем вызывает <see cref="OnFormatStringValue(DBxSqlBuffer, string)"/> для записи строки.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="value">Записываемое значение</param>

@@ -10,7 +10,7 @@ namespace FreeLibSet.UICore
   #region Делегат EFPSelRCValidatingEventHandler
 
   /// <summary>
-  /// Аргументы события UISelRCColumn.Validating
+  /// Аргументы события <see cref="UISelRCColumn.Validating"/>
   /// </summary>
   public class UISelRCValidatingEventArgs : EventArgs, IUIValidableObject
   {
@@ -51,26 +51,26 @@ namespace FreeLibSet.UICore
     private UISelRCGridData _Data;
 
     /// <summary>
-    /// Строка матрицы UISelRCGridData.SourceData, для которой выполняется проверка
+    /// Строка матрицы <see cref="UISelRCGridData.SourceData"/>, для которой выполняется проверка
     /// </summary>
     public int RowIndex { get { return _RowIndex; } }
     private int _RowIndex;
 
     /// <summary>
-    /// Столбец матрицы UISelRCGridData.SourceData, для которого выполняется проверка
+    /// Столбец матрицы <see cref="UISelRCGridData.SourceData"/>, для которого выполняется проверка
     /// </summary>
     public int ColumnIndex { get { return _ColumnIndex; } }
     private int _ColumnIndex;
 
     /// <summary>
     /// Исходные данные из буфера обмена (строка), которые нужно проверить и преобразовать в значение.
-    /// Может быть пустая строка
+    /// Может быть пустая строка.
     /// </summary>
     public string SourceText { get { return _Data.SourceData[_RowIndex, _ColumnIndex]; } }
 
     /// <summary>
-    /// Результат преобразования. По умолчанию, значение совпадает со строкой SourceData
-    /// Обработчик может установить собственное значение, не обязательно строковое
+    /// Результат преобразования. По умолчанию, значение совпадает со строкой <see cref="SourceText"/>.
+    /// Обработчик может установить собственное значение, не обязательно строковое.
     /// </summary>
     public object ResultValue { get { return _ResultValue; } set { _ResultValue = value; } }
     private object _ResultValue;
@@ -80,19 +80,23 @@ namespace FreeLibSet.UICore
     #region Результаты проверки
 
     /// <summary>
-    /// Результат вызова события Validating
+    /// Результат вызова события <see cref="UISelRCColumn.Validating"/>.
+    /// По умолчанию - <see cref="UIValidateState.Ok"/>. Для установки признака ошибки или прдупреждения используйте методы
+    /// <see cref="SetError(string)"/> и <see cref="SetWarning(string)"/> соответственно
     /// </summary>
     public UIValidateState ValidateState { get { return _ValidateState; } }
     private UIValidateState _ValidateState;
 
     /// <summary>
-    /// Сообщение об ошибке или предупреждении
+    /// Сообщение об ошибке или предупреждении, установленное вызовом <see cref="SetError(string)"/> и <see cref="SetWarning(string)"/>.
     /// </summary>
     public string ErrorText { get { return _ErrorText; } }
     private string _ErrorText;
 
     /// <summary>
-    /// Установить признак ошибочного значения
+    /// Установить признак ошибочного значения.
+    /// Если уже было установлено состояние ошибки, то никаких действий не выполняется.
+    /// Если было установлено предупреждение, то установка выполняется.
     /// </summary>
     /// <param name="message">Текст сообщения об ошибке</param>
     public void SetError(string message)
@@ -105,7 +109,8 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Задать предупреждение
+    /// Задать предупреждение.
+    /// Если уже было установлено состояние ошибки или предупреждения, то никаких действий не выполняется.
     /// </summary>
     /// <param name="message">Текст сообщения</param>
     public void SetWarning(string message)
@@ -118,7 +123,9 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Вспомогательный метод, вызывающий SetError() или SetWarning()
+    /// Вспомогательный метод, вызывающий <see cref="SetError(string)"/> или <see cref="SetWarning(string)"/>.
+    /// Вызов с <paramref name="state"/>==<see cref="UIValidateState.Ok"/> не выполняет никаких действий,
+    /// текущее значение <see cref="ValidateState"/> не меняется.
     /// </summary>
     /// <param name="state">Состояние</param>
     /// <param name="message">Сообщение</param>
@@ -143,16 +150,18 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Делегат события UISelRCColumn.Validating
+  /// Делегат события <see cref="UISelRCColumn.Validating"/>.
   /// </summary>
-  /// <param name="sender">Ссылка на UISelRCColumn</param>
+  /// <param name="sender">Ссылка на <see cref="UISelRCColumn"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void UISelRCValidatingEventHandler(object sender, UISelRCValidatingEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Описание для одного столбца для модели UISelRCGridData
+  /// Описание для одного столбца для модели <see cref="UISelRCGridData"/>.
+  /// Этот класс является базовым и используется для ввода текстовых значений.
+  /// Для ввода типизированных значений удобнее использовать производные классы.
   /// </summary>
   public class UISelRCColumn: IObjectWithCode
   {
@@ -200,15 +209,15 @@ namespace FreeLibSet.UICore
     #region Свойства
 
     /// <summary>
-    /// Код столбца, является чувствительным к регистру
-    /// Обязательное свойство, устанавливается в конструкторе
+    /// Код столбца, является чувствительным к региструю
+    /// Обязательное свойство, устанавливается в конструкторе.
     /// </summary>
     public string Code { get { return _Code; } }
-    private string _Code;
+    private readonly string _Code;
 
     /// <summary>
     /// Имя, отображаемое в выпадающем списке выбора назначения столбца.
-    /// Если свойство не задано в явном виде, возвращает значение свойства Code
+    /// Если свойство не задано в явном виде, возвращает значение свойства <see cref="Code"/>.
     /// </summary>
     public string DisplayName
     {
@@ -239,15 +248,15 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Если true (по умолчанию), то ячейки столбца могут содержать пустые значения.
     /// Если свойство равно false, то для пустой ячейки устанавливается ошибка, а пользовательский обработчик
-    /// не устанавливается
+    /// не устанавливается.
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
     private bool _CanBeEmpty;
 
     /// <summary>
     /// Вспомогательный метод.
-    /// Устанавливает CanBeEmpty=false и возвращает текущий объект.
-    /// Удобно использовать при инициализации массива описаний
+    /// Устанавливает <see cref="CanBeEmpty"/>=false и возвращает текущий объект.
+    /// Удобно использовать при инициализации массива описаний.
     /// </summary>
     /// <returns>Указатель this</returns>
     public UISelRCColumn SetRequired()
@@ -257,17 +266,17 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Событие вызывается для проверки корректности строкового значения и, возможно, для преобразования значения
+    /// Событие вызывается для проверки корректности строкового значения и, возможно, для преобразования значения.
     /// Если обработчик события не установлен, столбец допускает любые строковые значения, включая пустую строку ""
-    /// Обработчик вызывается в том числе и для пустых строк, если свойство CanBeEmpty=true.
+    /// Обработчик вызывается в том числе и для пустых строк, если свойство <see cref="CanBeEmpty"/>=true.
     /// </summary>
     public event UISelRCValidatingEventHandler Validating;
 
     /// <summary>
     /// Проверка корректности данных.
-    /// Непереопределенный метод, после проверки наличия данных вызывает обработчик события Validating.
+    /// Непереопределенный метод, после проверки наличия данных вызывает обработчик события <see cref="Validating"/>.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Аргументы события</param>
     public virtual void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText) && (!CanBeEmpty))
@@ -286,9 +295,9 @@ namespace FreeLibSet.UICore
   #region Расширенные реализации столбцов
 
   /// <summary>
-  /// Столбец для вставки значения типа "Дата"
-  /// Значение ResultValue имеет тип Nullable DateTime.
-  /// Пустая строка трактуется как null (при CanBeEmpty=true).
+  /// Столбец для вставки значения типа "Дата".
+  /// Значение <see cref="UISelRCValidatingEventArgs.ResultValue"/> имеет тип <see cref="Nullable{DateTime}"/>.
+  /// Пустая строка трактуется как null (при <see cref="UISelRCColumn.CanBeEmpty"/>=true).
   /// </summary>
   public class UISelRCDateColumn : UISelRCColumn
   {
@@ -315,12 +324,12 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
+    /// Альтернативно, можно реализовать производный класс и переопределить метод <see cref="ValidateValue(UISelRCValidatingEventArgs, DateTime)"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
     /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
+    /// Обработчик должен сначала проверить текущее значение <see cref="UISelRCValidatingEventArgs.ValidateState"/>, и не выполнять проверку, если есть ошибки</param>
     public UISelRCDateColumn(string code, string displayName, UISelRCValidatingEventHandler validateHandler)
       : base(code, displayName, validateHandler)
     {
@@ -332,9 +341,9 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполняет преобразование строки в дату.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating
+    /// В случае успеха вызывается метод <see cref="ValidateValue(UISelRCValidatingEventArgs, DateTime)"/>, а затем - метод базового класса для вызова пользовательского обработчика события <see cref="UISelRCColumn.Validating"/>.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Аргументы события</param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText))
@@ -359,10 +368,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в дату.
+    /// Вызывается из <see cref="PerformValidating(UISelRCValidatingEventArgs)"/> после успешного преобразования строки в дату.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     /// <param name="value">Проверяемое значение после преобразования из строки</param>
     protected virtual void ValidateValue(UISelRCValidatingEventArgs args, DateTime value)
     {
@@ -372,9 +381,9 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Int32.
-  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
+  /// Столбец для вставки числового значения.
+  /// Значение <see cref="UISelRCValidatingEventArgs.ResultValue"/> имеет тип <see cref="Int32"/>.
+  /// Пустая строка трактуется как 0 (при <see cref="UISelRCColumn.CanBeEmpty"/>=true).
   /// </summary>
   public class UISelRCIntColumn : UISelRCColumn
   {
@@ -401,12 +410,12 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
+    /// Альтернативно, можно реализовать производный класс и переопределить метод <see cref="ValidateValue(UISelRCValidatingEventArgs, int)"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
     /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
+    /// Обработчик должен сначала проверить текущее значение <see cref="UISelRCValidatingEventArgs.ValidateState"/>, и не выполнять проверку, если есть ошибок</param>
     public UISelRCIntColumn(string code, string displayName, UISelRCValidatingEventHandler validateHandler)
       : base(code, displayName, validateHandler)
     {
@@ -418,9 +427,9 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
+    /// В случае успеха вызывается метод <see cref="ValidateValue(UISelRCValidatingEventArgs, int)"/>, а затем - метод базового класса для вызова пользовательского обработчика события <see cref="UISelRCColumn.Validating"/>.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText))
@@ -443,10 +452,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
+    /// Вызывается из <see cref="PerformValidating(UISelRCValidatingEventArgs)"/> после успешного преобразования строки в число.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     /// <param name="value">Проверяемое значение после преобразования из строки</param>
     protected virtual void ValidateValue(UISelRCValidatingEventArgs args, int value)
     {
@@ -456,9 +465,9 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Single.
-  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
+  /// Столбец для вставки числового значения.
+  /// Значение <see cref="UISelRCValidatingEventArgs.ResultValue"/> имеет тип <see cref="Single"/>.
+  /// Пустая строка трактуется как 0 (при <see cref="UISelRCColumn.CanBeEmpty"/>=true).
   /// </summary>
   public class UISelRCSingleColumn : UISelRCColumn
   {
@@ -485,12 +494,12 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
+    /// Альтернативно, можно реализовать производный класс и переопределить метод <see cref="ValidateValue(UISelRCValidatingEventArgs, float)"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
     /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
+    /// Обработчик должен сначала проверить текущее значение <see cref="UISelRCValidatingEventArgs.ValidateState"/>, и не выполнять проверку, если есть ошибок</param>
     public UISelRCSingleColumn(string code, string displayName, UISelRCValidatingEventHandler validateHandler)
       : base(code, displayName, validateHandler)
     {
@@ -502,9 +511,9 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
+    /// В случае успеха вызывается метод <see cref="ValidateValue(UISelRCValidatingEventArgs, float)"/>, а затем - метод базового класса для вызова пользовательского обработчика события <see cref="UISelRCColumn.Validating"/>.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText))
@@ -527,10 +536,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
+    /// Вызывается из <see cref="PerformValidating(UISelRCValidatingEventArgs)"/> после успешного преобразования строки в число.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     /// <param name="value">Проверяемое значение после преобразования из строки</param>
     protected virtual void ValidateValue(UISelRCValidatingEventArgs args, float value)
     {
@@ -540,9 +549,9 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип Double.
-  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
+  /// Столбец для вставки числового значения.
+  /// Значение <see cref="UISelRCValidatingEventArgs.ResultValue"/> имеет тип <see cref="Double"/>.
+  /// Пустая строка трактуется как 0 (при <see cref="UISelRCColumn.CanBeEmpty"/>=true).
   /// </summary>
   public class UISelRCDoubleColumn : UISelRCColumn
   {
@@ -569,12 +578,12 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
+    /// Альтернативно, можно реализовать производный класс и переопределить метод <see cref="ValidateValue(UISelRCValidatingEventArgs, double)"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
     /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
+    /// Обработчик должен сначала проверить текущее значение <see cref="UISelRCValidatingEventArgs.ValidateState"/>, и не выполнять проверку, если есть ошибок</param>
     public UISelRCDoubleColumn(string code, string displayName, UISelRCValidatingEventHandler validateHandler)
       : base(code, displayName, validateHandler)
     {
@@ -586,9 +595,9 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
+    /// В случае успеха вызывается метод <see cref="ValidateValue(UISelRCValidatingEventArgs, double)"/>, а затем - метод базового класса для вызова пользовательского обработчика события <see cref="UISelRCColumn.Validating"/>.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText))
@@ -611,10 +620,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
+    /// Вызывается из <see cref="PerformValidating(UISelRCValidatingEventArgs)"/> после успешного преобразования строки в число.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     /// <param name="value">Проверяемое значение после преобразования из строки</param>
     protected virtual void ValidateValue(UISelRCValidatingEventArgs args, double value)
     {
@@ -624,9 +633,9 @@ namespace FreeLibSet.UICore
   }
 
   /// <summary>
-  /// Столбец для вставки числового значения
-  /// Значение ResultValue имеет тип decimal. 
-  /// Пустая строка трактуется как 0 (при CanBeEmpty=true).
+  /// Столбец для вставки числового значения.
+  /// Значение <see cref="UISelRCValidatingEventArgs.ResultValue"/> имеет тип <see cref="Decimal"/>.
+  /// Пустая строка трактуется как 0 (при <see cref="UISelRCColumn.CanBeEmpty"/>=true).
   /// </summary>
   public class UISelRCDecimalColumn : UISelRCColumn
   {
@@ -653,12 +662,12 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
+    /// Альтернативно, можно реализовать производный класс и переопределить метод <see cref="ValidateValue(UISelRCValidatingEventArgs, decimal)"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
     /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
+    /// Обработчик должен сначала проверить текущее значение <see cref="UISelRCValidatingEventArgs.ValidateState"/>, и не выполнять проверку, если есть ошибок</param>
     public UISelRCDecimalColumn(string code, string displayName, UISelRCValidatingEventHandler validateHandler)
       : base(code, displayName, validateHandler)
     {
@@ -670,9 +679,9 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполняет преобразование строки в число.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
+    /// В случае успеха вызывается метод <see cref="ValidateValue(UISelRCValidatingEventArgs, decimal)"/>, а затем - метод базового класса для вызова пользовательского обработчика события <see cref="UISelRCColumn.Validating"/>.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText))
@@ -695,10 +704,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в число.
+    /// Вызывается из <see cref="PerformValidating(UISelRCValidatingEventArgs)"/> после успешного преобразования строки в число.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     /// <param name="value">Проверяемое значение после преобразования из строки</param>
     protected virtual void ValidateValue(UISelRCValidatingEventArgs args, decimal value)
     {
@@ -709,12 +718,12 @@ namespace FreeLibSet.UICore
 
   /// <summary>
   /// Столбец для вставки значения перечислимого типа <typeparamref name="T"/>
-  /// Значение ResultValue имеет перечислимый тип.
+  /// Значение <see cref="UISelRCValidatingEventArgs.ResultValue"/> имеет перечислимый тип.
   /// Использует список строковых значений, соответствующих элементам перечисления.
-  /// Пустая строка трактуется как null (при CanBeEmpty=true).
+  /// Пустая строка трактуется как null (при <see cref="UISelRCColumn.CanBeEmpty"/>=true).
   /// </summary>
   /// <typeparam name="T">Тип перечисления. Поддерживаются только простые перечисления,
-  /// имеющие значения 0,1,2, ...</typeparam>
+  /// имеющие значения 0,1,2, ... Для нерегулярных перечислений используйте класс <see cref="UISelRCEnumColumnWithDict{T}"/>.</typeparam>
   public class UISelRCEnumColumn<T> : UISelRCColumn
   {
     #region Конструкторы
@@ -733,13 +742,13 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает столбец с заданным списком значений.
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Альтернативно, можно реализовать производный класс и переопределить метод ValidateValue()
+    /// Альтернативно, можно реализовать производный класс и переопределить метод <see cref="ValidateValue(UISelRCValidatingEventArgs, T)"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
     /// <param name="textValues">Список текстовых значений</param>
     /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
+    /// Обработчик должен сначала проверить текущее значение <see cref="UISelRCValidatingEventArgs.ValidateState"/>, и не выполнять проверку, если есть ошибки</param>
     public UISelRCEnumColumn(string code, string displayName, string[] textValues, UISelRCValidatingEventHandler validateHandler)
       : base(code, displayName, validateHandler)
     {
@@ -761,9 +770,9 @@ namespace FreeLibSet.UICore
     /// Список создается в конструкторе.
     /// </summary>
     public string[] TextValues { get { return _TextValues; } }
-    private string[] _TextValues;
+    private readonly string[] _TextValues;
 
-    private StringArrayIndexer _TextValueIndexer;
+    private readonly StringArrayIndexer _TextValueIndexer;
 
     #endregion
 
@@ -771,9 +780,9 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполняет преобразование строки в перечисление.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
+    /// В случае успеха вызывается метод <see cref="ValidateValue(UISelRCValidatingEventArgs, T)"/>, а затем - метод базового класса для вызова пользовательского обработчика события <see cref="UISelRCColumn.Validating"/>.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText))
@@ -800,10 +809,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в перечислимое значение.
+    /// Вызывается из <see cref="PerformValidating(UISelRCValidatingEventArgs)"/> после успешного преобразования строки в перечислимое значение.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     /// <param name="value">Проверяемое значение после преобразования из строки</param>
     protected virtual void ValidateValue(UISelRCValidatingEventArgs args, T value)
     {
@@ -819,6 +828,7 @@ namespace FreeLibSet.UICore
   /// Использует словарь строковых значений, соответствующих элементам перечисления.
   /// В словаре несколько строк могут соответствовать одному значению.
   /// Пустая строка трактуется как null (при CanBeEmpty=true).
+  /// Для простых перечислений, у которых используются числовые значения 0,1,2,... удобнее использовать <see cref="UISelRCEnumColumn{T}"/>.
   /// </summary>
   /// <typeparam name="T">Тип перечисления</typeparam>
   public class UISelRCEnumColumnWithDict<T> : UISelRCColumn
@@ -827,7 +837,7 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Создает столбец с заданным словарем значений.
-    /// Учет регистра символов определяется коллекцией TextValues.
+    /// Учет регистра символов определяется коллекцией <paramref name="textValues"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
@@ -840,13 +850,13 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Создает столбец с заданным словарем значений.
     /// Эта версия конструктора позволяет установить дополнительную проверку значения.
-    /// Учет регистра символов определяется коллекцией TextValues.
+    /// Учет регистра символов определяется коллекцией <paramref name="textValues"/>.
     /// </summary>
     /// <param name="code">Код</param>
     /// <param name="displayName">Отображаемое наименование</param>
     /// <param name="textValues">Список текстовых значений и соответствующих им элементов перечисления</param>
     /// <param name="validateHandler">Дополнительный обработчик проверки. 
-    /// Обработчик должен сначала проверить текущее значение ValidateState, и не выполнять проверку, если есть ошибок</param>
+    /// Обработчик должен сначала проверить текущее значение <see cref="UISelRCValidatingEventArgs.ValidateState"/>, и не выполнять проверку, если есть ошибки</param>
     public UISelRCEnumColumnWithDict(string code, string displayName, TypedStringDictionary<T> textValues, UISelRCValidatingEventHandler validateHandler)
       : base(code, displayName, validateHandler)
     {
@@ -874,9 +884,9 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Выполняет преобразование строки в перечисление.
-    /// В случае успеха вызывается метод ValidateValue(), а затем - метод базового класса для вызова пользовательского обработчика события Validating.
+    /// В случае успеха вызывается метод <see cref="ValidateValue(UISelRCValidatingEventArgs, T)"/>, а затем - метод базового класса для вызова пользовательского обработчика события <see cref="UISelRCColumn.Validating"/>.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     public override void PerformValidating(UISelRCValidatingEventArgs args)
     {
       if (String.IsNullOrEmpty(args.SourceText))
@@ -900,10 +910,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Проверка преобразованного значения.
-    /// Вызывается из PerformValidating() после успешного преобразования строки в перечислимое значение.
+    /// Вызывается из <see cref="PerformValidating(UISelRCValidatingEventArgs)"/> после успешного преобразования строки в перечислимое значение.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
-    /// <param name="args">Аргументы события Validating</param>
+    /// <param name="args">Аргументы события <see cref="UISelRCColumn.Validating"/></param>
     /// <param name="value">Проверяемое значение после преобразования из строки</param>
     protected virtual void ValidateValue(UISelRCValidatingEventArgs args, T value)
     {
@@ -917,7 +927,7 @@ namespace FreeLibSet.UICore
   /// <summary>
   /// Данные для табличного просмотра текстовой матрицы (свойство EFPSelRCDataGridView.Data).
   /// Содержит исходный двумерный массив строк и список столбцов, из которых можно делать выбор.
-  /// Свойства-коллекции SelRows и SelColumns содержат текущие результаты выбора, сделанные пользователем.
+  /// Свойства-коллекции <see cref="UISelRCGridData.SelRows"/> и <see cref="UISelRCGridData.SelColumns"/> содержат текущие результаты выбора, сделанные пользователем.
   /// Класс не является потокобезопасным.
   /// 
   /// Имеется неоднозначность с термином "столбец". Он означает как столбец в матрице исходных данных, так и описание
@@ -932,7 +942,7 @@ namespace FreeLibSet.UICore
     /// </summary>
     /// <param name="sourceData">Матрица текстовых строк (обычно вставляемая из буфера обмена). Не может быть null.</param>
     /// <param name="availableColumns">Список описателей столбцов, доступных для выбора пользователем. Не может быть null или содержать элементы null.
-    /// Все объекты UISelRCColumn должны иметь разные значения свойства Code.</param>
+    /// Все столбцы должны иметь разные значения свойства <see cref="UISelRCColumn.Code"/>.</param>
     public UISelRCGridData(string[,] sourceData, IEnumerable<UISelRCColumn> availableColumns)
     {
       if (sourceData == null)
@@ -954,18 +964,18 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Двумерный массив строк исходных данных.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public string[,] SourceData { get { return _SourceData; } }
-    private string[,] _SourceData;
+    private readonly string[,] _SourceData;
 
     /// <summary>
-    /// Возвращает количество исходных строк в SourceData.
+    /// Возвращает количество исходных строк в <see cref="SourceData"/>.
     /// </summary>
     public int RowCount { get { return _SourceData.GetLength(0); } }
 
     /// <summary>
-    /// Возвращает количество исходных столбцов в SourceData.
+    /// Возвращает количество исходных столбцов в <see cref="SourceData"/>.
     /// </summary>
     public int ColumnCount { get { return _SourceData.GetLength(1); } }
 
@@ -975,18 +985,18 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Полный список описаний возможных столбцов, из которых можно осуществлять выбор.
-    /// Список доступен только для просмотра
+    /// Список доступен только для просмотра.
     /// Задается в конструкторе.
     /// </summary>
     public NamedList<UISelRCColumn> AvailableColumns { get { return _AvailableColumns; } }
-    private NamedList<UISelRCColumn> _AvailableColumns;
+    private readonly NamedList<UISelRCColumn> _AvailableColumns;
 
     #endregion
 
     #region SelRows и SelColumns
 
     /// <summary>
-    /// Реализация свойства SelRows
+    /// Реализация свойства <see cref="SelRows"/>
     /// </summary>
     public sealed class SelRowCollection
     {
@@ -1106,7 +1116,7 @@ namespace FreeLibSet.UICore
       }
 
       /// <summary>
-      /// Устанавливает отметки (свойство SelRows) для всех непустых строк.
+      /// Устанавливает отметки для всех непустых строк.
       /// </summary>
       public void Init()
       {
@@ -1136,10 +1146,10 @@ namespace FreeLibSet.UICore
     /// Флажки для выбранных строк.
     /// </summary>
     public SelRowCollection SelRows { get { return _SelRows; } }
-    private SelRowCollection _SelRows;
+    private readonly SelRowCollection _SelRows;
 
     /// <summary>
-    /// Реализация свойства SelColumns
+    /// Реализация свойства <see cref="SelColumns"/>
     /// </summary>
     public sealed class SelColumnCollection
     {
@@ -1164,8 +1174,8 @@ namespace FreeLibSet.UICore
       /// Возвращает или назначает выбранное описание для столбца.
       /// Свойство индексируется по столбцам матрицы исходных данных.
       /// </summary>
-      /// <param name="index">Индекс столбца в матрице SourceData</param>
-      /// <returns>Один из элементов в AvailableColumns или null, если столбец не используется</returns>
+      /// <param name="index">Индекс столбца в матрице <see cref="SourceData"/></param>
+      /// <returns>Один из элементов в <see cref="AvailableColumns"/> или null, если столбец не используется</returns>
       public UISelRCColumn this[int index]
       {
         get { return _Items[index]; }
@@ -1182,7 +1192,7 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Возвращает true, если нет ни одного назначенного описания столбца,
-      /// то есть все элементы SelColumns возвращают значения null.
+      /// то есть все элементы возвращают значения null.
       /// </summary>
       public bool IsEmpty
       {
@@ -1195,8 +1205,8 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Возвращает true, если всем столбцам назначены описания, 
-      /// то есть все элементы SelColumns возвращают значения, не равные null.
-      /// Корректность не проверяется, то есть одно описание может быть назначено несколько раз
+      /// то есть все элементы возвращают значения, не равные null.
+      /// Корректность не проверяется, то есть одно описание может быть назначено несколько раз.
       /// </summary>
       public bool IsFull 
       {
@@ -1210,11 +1220,11 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Коды описаний выбранных столбцов. 
-      /// Свойство возвращает массив, длина которого равна количеству столбцов исходной матрицы ColumnCount.
-      /// Для столбцов с назначенным описанием возвращается свойство UISelRCColumn.Code.
+      /// Свойство возвращает массив, длина которого равна количеству столбцов исходной матрицы <see cref="ColumnCount"/>.
+      /// Для столбцов с назначенным описанием возвращается свойство <see cref="UISelRCColumn.Code"/>.
       /// Для невыбранных столбцов элементы возвращаемого массива содержат пустую строку.
       /// При установке свойства для ненайденных кодов, как и для пустых строк/null, устанавливается значение соответствующего элемента SelColumns равным null.
-      /// Присваиваемый массив может быть короче или длиннее массива SelColumns. Лишние элементы игнорируются,
+      /// Присваиваемый массив может быть короче или длиннее массива <see cref="SelColumns"/>. Лишние элементы игнорируются,
       /// недостающие принимают значение null.
       /// Так как одно и то же описание может быть назначено сразу нескольким столбцам (что является ошибкой
       /// и не позволит закрыть диалог с табличным просмотром), коды в массиве могут повторяться.
@@ -1269,10 +1279,10 @@ namespace FreeLibSet.UICore
 
       /// <summary>
       /// Получение и установка списка кодов выбранных столбцов в виде строки CSV.
-      /// Количество запятых в возвращаемой строке равно ColumnCount-1.
-      /// Дублирует свойство Codes и может использоваться для хранения настроек просмотра.
-      /// Как и для Codes, в строке могут быть повторяющиеся элементы.
-      /// При установке свойства, количество элементов может не совпадать с ColumnCount.
+      /// Количество запятых в возвращаемой строке равно (<see cref="ColumnCount"/>-1).
+      /// Дублирует свойство <see cref="Codes"/> и может использоваться для хранения настроек просмотра.
+      /// Как и для <see cref="Codes"/>, в строке могут быть повторяющиеся элементы.
+      /// При установке свойства, количество элементов может не совпадать с <see cref="ColumnCount"/>.
       /// </summary>
       public string AsString
       {
@@ -1424,7 +1434,7 @@ namespace FreeLibSet.UICore
       /// Если данное описание столбца не выбрано, возвращается (-1).
       /// Если описание (ошибочно) назначено больше, чем для одного столбца, возвращается индекс первого столбца.
       /// </summary>
-      /// <param name="column">Столбец из массива AvailableColumns. 
+      /// <param name="column">Столбец из массива <see cref="AvailableColumns"/>. 
       /// Для null возвращает индекс первого столбца, для которого не назначено описание.</param>
       /// <returns>Индекс выбранного столбца</returns>
       public int IndexOf(UISelRCColumn column)
@@ -1456,7 +1466,7 @@ namespace FreeLibSet.UICore
       /// Возвращает индекс столбца, для которого выбрано описание с заданным кодом.
       /// Если описание не выбрано, возвращается (-1).
       /// </summary>
-      /// <param name="code">Код столбца из массива AvailableColumns. 
+      /// <param name="code">Код столбца из массива <see cref="AvailableColumns"/>. 
       /// Для пустой строки возвращает индекс первого столбца, для которого не назначено описание.</param>
       /// <returns>Индекс выбранного столбца</returns>
       public int IndexOf(string code)
@@ -1476,7 +1486,7 @@ namespace FreeLibSet.UICore
       /// Возвращает индекс первого выбранного столбца с любым из заданных кодов описаний.
       /// Не может использоваться для поиска невыбранных столбцов.
       /// </summary>
-      /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
+      /// <param name="codes">Список кодов описаний из массива <see cref="AvailableColumns"/>, разделенных запятыми</param>
       /// <returns>Индекс </returns>
       public int IndexOfAny(string codes)
       {
@@ -1499,9 +1509,9 @@ namespace FreeLibSet.UICore
       }
 
       /// <summary>
-      /// Возвращает true, если в SelColumns выбрано описание с заданным кодом.
+      /// Возвращает true, если в <see cref="SelColumns"/> выбрано описание с заданным кодом.
       /// </summary>
-      /// <param name="code">Код описания столбца из массива AvailableColumns.
+      /// <param name="code">Код описания столбца из массива <see cref="AvailableColumns"/>.
       /// Если null или пустая строка, то определяет наличие столбцов, у которых не назначено описание.</param>
       /// <returns>Наличие выбранного столбца</returns>
       public bool Contains(string code)
@@ -1513,7 +1523,7 @@ namespace FreeLibSet.UICore
       /// Возвращает true, если столбцам назначено хотя бы одно из описаний с заданными кодами.
       /// Не может использоваться для поиска невыбранных столбцов.
       /// </summary>
-      /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
+      /// <param name="codes">Список кодов описаний из массива <see cref="AvailableColumns"/>, разделенных запятыми</param>
       /// <returns>Наличие выбранных описаний</returns>
       public bool ContainsAny(string codes)
       {
@@ -1532,7 +1542,7 @@ namespace FreeLibSet.UICore
       /// Возвращает true, если столбцам назначены все описания с заданными кодами.
       /// Не может использоваться для поиска невыбранных столбцов.
       /// </summary>
-      /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
+      /// <param name="codes">Список кодов описаний из массива <see cref="AvailableColumns"/>, разделенных запятыми</param>
       /// <returns>Наличие выбранных описаний</returns>
       public bool ContainsAll(string codes)
       {
@@ -1551,7 +1561,7 @@ namespace FreeLibSet.UICore
       /// Определяет количество указанных описаний столбцов из списка, которые назначены столбцам.
       /// Если одно описание (ошибочно) назначено нескольким столбцам, то описание учитывается только один раз
       /// </summary>
-      /// <param name="codes">Список кодов описаний из массива AvailableColumns, разделенных запятыми</param>
+      /// <param name="codes">Список кодов описаний из массива <see cref="AvailableColumns"/>, разделенных запятыми</param>
       /// <returns>Количество назначенных описаний в диапазоне от 0 до количества кодов в строке <paramref name="codes"/> включительно.</returns>
       public int ContainCount(string codes)
       {
@@ -1581,13 +1591,13 @@ namespace FreeLibSet.UICore
       }
 
       /// <summary>
-      /// Начальная инициализация назначений столбцов подходящими описаниями из списка AvailableColumns.
+      /// Начальная инициализация назначений столбцов подходящими описаниями из списка <see cref="AvailableColumns"/>.
       /// Уже назначенные столбцы сохраняются.
-      /// Также должны быть отмечены строки SelRows, иначе подходящие столбцы не могут быть назначены.
+      /// Также должны быть отмечены строки <see cref="SelRows"/>, иначе подходящие столбцы не могут быть назначены.
       /// При назначении проверяются условия:
-      /// - столбцу в SourceData еще не назначено описание;
-      /// - в SourceData для выбранных строк SelRows есть непустые текстовые значения; пустые столбцы пропускаются;
-      /// - кандидат из AvailableColumns еще не назначен другому столбцу;
+      /// - столбцу в <see cref="SourceData"/> еще не назначено описание;
+      /// - в <see cref="SourceData"/> для выбранных строк <see cref="SelRows"/> есть непустые текстовые значения; пустые столбцы пропускаются;
+      /// - кандидат из <see cref="AvailableColumns"/> еще не назначен другому столбцу;
       /// - при проверке значения для всех отмеченных строк не возникает ошибки или предупреждения.
       /// </summary>
       public void Init()
@@ -1658,7 +1668,7 @@ namespace FreeLibSet.UICore
       }
 
       /// <summary>
-      /// Возвращает массив индексов столбцов в SourceData, которым назначено описание с заданным кодом.
+      /// Возвращает массив индексов столбцов в <see cref="SourceData"/>, которым назначено описание с заданным кодом.
       /// Обычно возвращается массив из одного элемента. 
       /// Если описание не назначено, возвращается пустой элемент.
       /// В случае ошибки может быть возвращен массив из нескольких индексов.
@@ -1811,19 +1821,19 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Выбранные описания столбцов из списка AvailableColumns.
-    /// Длина массива равна числу столбцов в SourceData (свойство ColumnCount).
+    /// Выбранные описания столбцов из списка <see cref="AvailableColumns"/>.
+    /// Длина массива равна числу столбцов в <see cref="SourceData"/> (свойство <see cref="ColumnCount"/>).
     /// Для столбцов, у которых описание не назначено, содержится значение null.
     /// </summary>
     public SelColumnCollection SelColumns { get { return _SelColumns; } }
-    private SelColumnCollection _SelColumns;
+    private readonly SelColumnCollection _SelColumns;
 
     #endregion
 
     #region Событие Changed
 
     /// <summary>
-    /// Событие вызывается при изменениях в выбранных строках или столбцах (свойства SelRows и SelColumns).
+    /// Событие вызывается при изменениях в выбранных строках или столбцах (свойства <see cref="SelRows"/> и <see cref="SelColumns"/>).
     /// </summary>
     public event EventHandler Changed;
 
@@ -1843,7 +1853,7 @@ namespace FreeLibSet.UICore
     private int _UpdateCount;
 
     /// <summary>
-    /// Приостанавливает отправку события Changed.
+    /// Приостанавливает отправку события <see cref="Changed"/>.
     /// </summary>
     public void BeginUpdate()
     {
@@ -1853,7 +1863,7 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Восстанавливает отправку события Changed.
+    /// Восстанавливает отправку события <see cref="Changed"/>.
     /// </summary>
     public void EndUpdate()
     {
@@ -1882,10 +1892,10 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Выполнить проверку значения.
     /// Если указанная строка не отмечена (SelRows[<paramref name="rowIndex"/>]=false) или столбцу не назначено описание
-    /// (SelColumns[<paramref name="columnIndex"/>]=null), событие UISelRCColumn.Validating не вызывается и возвращается Ok.
+    /// (SelColumns[<paramref name="columnIndex"/>]=null), событие <see cref="UISelRCColumn.Validating "/> не вызывается и возвращается Ok.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnIndex">Индекс столбца в массиве SourceData</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnIndex">Индекс столбца в массиве <see cref="SourceData"/></param>
     /// <param name="errorText">Сюда помещается сообщение об ошибке или предупреждение</param>
     /// <returns>Результат проверки</returns>
     public UIValidateState Validate(int rowIndex, int columnIndex, out string errorText)
@@ -1919,10 +1929,10 @@ namespace FreeLibSet.UICore
 
     /// <summary>
     /// Получить результирующее значение ячейки после преобразования.
-    /// Если указанная строка или столбец не выбраны, событие UISelRCColumn.Validating не вызывается, а возвращается значение null.
+    /// Если указанная строка или столбец не выбраны, событие <see cref="UISelRCColumn.Validating"/> не вызывается, а возвращается значение null.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnIndex">Индекс столбца в массиве SelColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnIndex">Индекс столбца в массиве <see cref="SelColumns"/></param>
     /// <returns>Преобразованное значение</returns>
     public object this[int rowIndex, int columnIndex]
     {
@@ -1952,8 +1962,8 @@ namespace FreeLibSet.UICore
     /// Если для нескольких столбцов матрицы ошибочно выбран один и тот же столбец, 
     /// возвращается значение для первого по счету столбца.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код описания столбца в массиве AvailableColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Значение ячейки</returns>
     public object this[int rowIndex, string columnCode]
     {
@@ -1975,8 +1985,8 @@ namespace FreeLibSet.UICore
     /// Получить результирующее строковое значение ячейки для столбца с заданным кодом
     /// Если столбец с заданным кодом не выбран, возвращается пустая строка
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AvailableColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
     public string GetString(int rowIndex, string columnCode)
     {
@@ -1987,8 +1997,8 @@ namespace FreeLibSet.UICore
     /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
     /// Если столбец с заданным кодом не выбран, возвращается 0
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AvailableColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
     public int GetInt(int rowIndex, string columnCode)
     {
@@ -1999,8 +2009,8 @@ namespace FreeLibSet.UICore
     /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
     /// Если столбец с заданным кодом не выбран, возвращается 0
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AvailableColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
     public float GetSingle(int rowIndex, string columnCode)
     {
@@ -2008,11 +2018,11 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается 0
+    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом.
+    /// Если столбец с заданным кодом не выбран, возвращается 0.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AvailableColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
     public double GetDouble(int rowIndex, string columnCode)
     {
@@ -2020,23 +2030,22 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается 0
+    /// Получить результирующее числовое значение ячейки для столбца с заданным кодом.
+    /// Если столбец с заданным кодом не выбран, возвращается 0.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AvailableColumns</param>
-    /// <returns>Типизированное значение ячейки</returns>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     public decimal GetDecimal(int rowIndex, string columnCode)
     {
       return DataTools.GetDecimal(this[rowIndex, columnCode]);
     }
 
     /// <summary>
-    /// Получить результирующее значение дата/время ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается null
+    /// Получить результирующее значение дата/время ячейки для столбца с заданным кодом.
+    /// Если столбец с заданным кодом не выбран, возвращается null.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AvailableColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
     public DateTime? GetNullableDateTime(int rowIndex, string columnCode)
     {
@@ -2044,11 +2053,11 @@ namespace FreeLibSet.UICore
     }
 
     /// <summary>
-    /// Получить результирующее логическое значение ячейки для столбца с заданным кодом
-    /// Если столбец с заданным кодом не выбран, возвращается false
+    /// Получить результирующее логическое значение ячейки для столбца с заданным кодом.
+    /// Если столбец с заданным кодом не выбран, возвращается false.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки в массиве SourceData</param>
-    /// <param name="columnCode">Код столбца в массиве AvailableColumns</param>
+    /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
+    /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
     public bool GetBool(int rowIndex, string columnCode)
     {

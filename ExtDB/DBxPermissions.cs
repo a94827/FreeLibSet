@@ -12,7 +12,7 @@ namespace FreeLibSet.Data
   #region Перечисление DBxAccessMode
 
   /// <summary>
-  /// Режимы доступа (значения в порядке убывани)
+  /// Режимы доступа (значения в порядке убывания разрешенных действий)
   /// </summary>
   [Serializable]
   public enum DBxAccessMode
@@ -36,8 +36,8 @@ namespace FreeLibSet.Data
   #endregion
 
   /// <summary>
-  /// Коллекция действующих разрешений для базы данных
-  /// Класс является потокобезопасным после перевода в режим "только чтение"
+  /// Коллекция действующих разрешений для базы данных.
+  /// Класс является потокобезопасным после перевода в режим "только чтение".
   /// </summary>
   [Serializable]
   public sealed class DBxPermissions : IReadOnlyObject, ICloneable
@@ -83,7 +83,7 @@ namespace FreeLibSet.Data
     #region Таблицы
 
     /// <summary>
-    /// Реализация свойства TableModes
+    /// Реализация свойства <see cref="TableModes"/>
     /// </summary>
     [Serializable]
     public class TableList
@@ -98,7 +98,7 @@ namespace FreeLibSet.Data
       /// <summary>
       /// Разрешение на доступ к таблице.
       /// Если свойство не установлено в явном виде, возвращает общее разрешение для базы данных.
-      /// Установка свойства должна идти до установки индивидуальных рарешений на поля таблицы
+      /// Установка свойства должна идти до установки индивидуальных рарешений на поля таблицы.
       /// </summary>
       /// <param name="tableName">Имя таблицы</param>
       /// <returns>Разрешение</returns>
@@ -146,7 +146,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Этот список не содержит реальных данных. Данные хранятся в поле _TableDefs.
     /// </summary>
-    private TableList _TableModes;
+    private readonly TableList _TableModes;
 
     /// <summary>
     /// Метод возвращает true, если хотя бы для одной таблицы есть режим, отличающийся от <see cref="DBMode"/>.
@@ -269,7 +269,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Этот список не содержит реальных данных. Данные хранятся в списке _TableDefs
     /// </summary>
-    private ColumnList _ColumnModes;
+    private readonly ColumnList _ColumnModes;
 
     /// <summary>
     /// Метод возвращает true, если для заданной таблицы есть хотя бы одно поле, режим которого отличается

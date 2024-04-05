@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DisposableDictionaryTests.cs" />
+    <Compile Include="DBF\DbfFieldTypeDetectorTests.cs" />
+    <Compile Include="DBF\DbfFieldTypePreliminaryInfoTests.cs" />
     <Compile Include="Formatting\EditableDateTimeFormattersTests.cs" />
     <Compile Include="Formatting\EditableDateTimeFormatterTests.cs" />
     <Compile Include="Formatting\FormatStringToolsTests.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />
     <Compile Include="UICore\DataTableReorderHelperTests.cs" />
     <Compile Include="UICore\NumArrayUpDownHandlerTests.cs" />
+    <Compile Include="UICore\UIInputGridDataTests.cs" />
     <Compile Include="UICore\UIPathInputHandlerTests.cs" />
     <Compile Include="UICore\UISelRCColumnTests.cs" />
     <Compile Include="UICore\UISelRCGridDataTests.cs" />

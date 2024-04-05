@@ -10,7 +10,7 @@ namespace FreeLibSet.Data
 {
 
   /// <summary>
-  /// Базовый класс для WholeDBPermission и TablePermission 
+  /// Базовый класс для <see cref="WholeDBPermission"/> и <see cref="TablePermission"/>.
   /// </summary>
   public abstract class DBUserPermission : UserPermission
   {
@@ -18,7 +18,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает разрешение с заданным кодом.
-    /// Свойство Mode получает значение Full (полный доступ)
+    /// Свойство <see cref="Mode"/> получает значение Full (полный доступ).
     /// </summary>
     /// <param name="classCode">Класс разрешения</param>
     protected DBUserPermission(string classCode)
@@ -116,12 +116,12 @@ namespace FreeLibSet.Data
     #region Статические методы для DBxAccessMode
 
     /// <summary>
-    /// Коды, соответствующие перечислению DBxAccessMode
+    /// Коды, соответствующие перечислению <see cref="DBxAccessMode"/>
     /// </summary>
     public static readonly string[] ValueCodes = new string[] { "FULL", "READONLY", "NONE" };
 
     /// <summary>
-    /// Отображаемые значения, соответствующие перечислению DBxAccessMode
+    /// Отображаемые значения, соответствующие перечислению <see cref="DBxAccessMode"/>
     /// </summary>
     public static readonly string[] ValueNames = new string[] { "Полный", "Чтение", "Запрет" };
 
@@ -129,7 +129,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получить текстовое представление, соответствующее коду
     /// </summary>
-    /// <param name="code">Код из списка ValueCodes</param>
+    /// <param name="code">Код из списка <see cref="ValueCodes"/></param>
     /// <returns>текстовое представление</returns>
     public static string GetValueName(string code)
     {
@@ -141,9 +141,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить текстовое представление для перечисления DBxAccessMode.
+    /// Получить текстовое представление для перечисления <see cref="DBxAccessMode"/>.
     /// </summary>
-    /// <param name="mode">Режим DBxAccessMode</param>
+    /// <param name="mode">Режим <see cref="DBxAccessMode"/></param>
     /// <returns>Текстовое представление</returns>
     public static string GetValueName(DBxAccessMode mode)
     {
@@ -154,9 +154,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить код из списка ValueCodes для перечисления DBxAccessMode.
+    /// Получить код из списка <see cref="ValueCodes"/> для перечисления <see cref="DBxAccessMode"/>.
     /// </summary>
-    /// <param name="mode">Режим DBxAccessMode</param>
+    /// <param name="mode">Режим <see cref="DBxAccessMode"/></param>
     /// <returns>"Код</returns>
     public static string GetValueCode(DBxAccessMode mode)
     {
@@ -167,11 +167,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить элемент перечисления DBxAccessMode, соответствующий коду из списка ValueCodes.
-    /// Если задан недопустимый код, выбрасывается исключение
+    /// Получить элемент перечисления <see cref="DBxAccessMode"/>, соответствующий коду из списка <see cref="ValueCodes"/>.
+    /// Если задан недопустимый код, выбрасывается исключение.
     /// </summary>
     /// <param name="code">Код</param>
-    /// <returns>Перечисление DBxAccessMode</returns>
+    /// <returns>Перечисление <see cref="DBxAccessMode"/></returns>
     public static DBxAccessMode GetAccessMode(string code)
     {
       int p = Array.IndexOf<string>(ValueCodes, code);
@@ -182,7 +182,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если указанный код есть в списке ValueCodes
+    /// Возвращает true, если указанный код есть в списке <see cref="ValueCodes"/>
     /// </summary>
     /// <param name="code">Код</param>
     /// <returns>Наличие в списке</returns>
@@ -197,14 +197,14 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Разрешение на доступ к базе данных в-целом.
-  /// Код класса "DB"
+  /// Код класса "DB".
   /// </summary>
   public class WholeDBPermission : DBUserPermission
   {
     #region Creator
 
     /// <summary>
-    /// Реализация интерфейса IUserPermissionCreator
+    /// Реализация интерфейса <see cref="IUserPermissionCreator"/>
     /// </summary>
     public sealed class Creator : IUserPermissionCreator
     {
@@ -216,7 +216,7 @@ namespace FreeLibSet.Data
       public string Code { get { return "DB"; } }
 
       /// <summary>
-      /// Создает WholeDBPermission
+      /// Создает <see cref="WholeDBPermission"/>.
       /// </summary>
       /// <returns></returns>
       public UserPermission CreateUserPermission()
@@ -254,7 +254,7 @@ namespace FreeLibSet.Data
     #region Переопределенные методы
 
     /// <summary>
-    /// Устанавливает свойство DBxPermissions.DBMode.
+    /// Устанавливает свойство <see cref="DBxPermissions.DBMode"/>.
     /// </summary>
     /// <param name="dbPermissions">Заполняемый объект разрешений базы данных</param>
     public override void ApplyDbPermissions(DBxPermissions dbPermissions)
@@ -279,7 +279,7 @@ namespace FreeLibSet.Data
     #region Creator
 
     /// <summary>
-    /// Реализация интерфейса IUserPermissionCreator
+    /// Реализация интерфейса <see cref="IUserPermissionCreator"/>
     /// </summary>
     public sealed class Creator : IUserPermissionCreator
     {
@@ -291,7 +291,7 @@ namespace FreeLibSet.Data
       public string Code { get { return "Table"; } }
 
       /// <summary>
-      /// Создает TablePermission
+      /// Создает <see cref="TablePermission"/>
       /// </summary>
       /// <returns></returns>
       public UserPermission CreateUserPermission()
@@ -308,8 +308,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает разрешение.
-    /// Свойства TableNames и Mode должны быть установлены явно.
-    /// Свойство Mode получает значение Full.
+    /// Свойства <see cref="TableNames"/> и <see cref="DBUserPermission.Mode"/> должны быть установлены явно.
+    /// Свойство <see cref="DBUserPermission.Mode"/> получает значение <see cref="DBxAccessMode.Full"/>.
     /// </summary>
     public TablePermission()
       :base("Table")
@@ -363,7 +363,7 @@ namespace FreeLibSet.Data
     #region Переопределенные методы
 
     /// <summary>
-    /// Записать разрешения в объект DBxPermissions 
+    /// Записать разрешения в объект <see cref="DBxPermissions"/> 
     /// </summary>
     /// <param name="dbPermissions">Разрешения на доступ к объектам базы данных</param>
     public override void ApplyDbPermissions(DBxPermissions dbPermissions)
@@ -420,7 +420,7 @@ namespace FreeLibSet.Data
     /// Возвращает разрешение на таблицу документов.
     /// В списке пользовательских разрешений <paramref name="permissions"/> выполняется поиск подходящего разрешения TablePermission или WholeDBPermission.
     /// Поиск выполняется от конца к началу списка.
-    /// Если разрешение не найдено, возвращается DBxAccessMode.Full
+    /// Если разрешение не найдено, возвращается <see cref="DBxAccessMode.Full"/>
     /// </summary>
     /// <param name="permissions">Пользовательские разрешения</param>
     /// <param name="tableName">Имя таблицы</param>

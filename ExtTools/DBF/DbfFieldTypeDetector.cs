@@ -171,7 +171,7 @@ namespace FreeLibSet.DBF
           sb.Append('+');
         if (Type != 'C')
         {
-          sb.Append(',');
+          sb.Append('.');
           sb.Append(Precision);
           if (!PrecisionIsDefined)
             sb.Append('+');
@@ -486,9 +486,11 @@ namespace FreeLibSet.DBF
         case ' ':
           _Type = 'C';
           _Length = len;
+          _IsCompleted = (len == MaxLengthC);
           break;
         case 'C':
           _Length = Math.Max(_Length, len);
+          _IsCompleted = (len == MaxLengthC);
           break;
         case 'M':
           _IsCompleted = true;
@@ -572,6 +574,7 @@ namespace FreeLibSet.DBF
       switch (_Type)
       {
         case ' ':
+        case 'D':
           if (hasTime)
           {
             _Type = 'C';
@@ -583,9 +586,6 @@ namespace FreeLibSet.DBF
             _Type = 'D';
             _IsCompleted = true;
           }
-          break;
-        case 'D':
-          _IsCompleted = true;
           break;
         case 'C':
           _Length = Math.Max(_Length, GetDateTimeLength(hasTime));

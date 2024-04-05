@@ -100,7 +100,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает объект DBxColumns, если список полей не пустой, иначе возвращает null
+    /// Создает объект <see cref="DBxColumns"/>, если список полей не пустой, иначе возвращает null
     /// </summary>
     /// <param name="columnNames">Имена полей</param>
     /// <returns></returns>
@@ -120,7 +120,7 @@ namespace FreeLibSet.Data
     /// Если false, то будет использован оригинальный массив без копирования.
     /// Еспользуйте false, только если передаваемый массив <paramref name="columnNames"/>
     /// больше нигде не используется в вызывающем коде</param>
-    /// <returns>Объект DBxColumns или null</returns>
+    /// <returns>Объект <see cref="DBxColumns"/> или null</returns>
     public static DBxColumns FromNames(string[] columnNames, bool copyArray)
     {
       if (columnNames == null || columnNames.Length == 0)
@@ -133,7 +133,7 @@ namespace FreeLibSet.Data
     /// Создает список на основании массива имен полей
     /// </summary>
     /// <param name="columnNames">Имена столбцов</param>
-    /// <returns>Объект DBxColumns или null</returns>
+    /// <returns>Объект <see cref="DBxColumns"/> или null</returns>
     public static DBxColumns FromNames(string[] columnNames)
     {
       return FromNames(columnNames, true);
@@ -144,7 +144,7 @@ namespace FreeLibSet.Data
     /// Если таблица не содержит ни одного столбца или <paramref name="columns"/>==null, возвращается null.
     /// </summary>
     /// <param name="columns">Список столбцов или null</param>
-    /// <returns>Объект DBxColumns или null</returns>
+    /// <returns>Объект <see cref="DBxColumns"/> или null</returns>
     public static DBxColumns FromColumns(DataColumnCollection columns)
     {
       if (columns == null || columns.Count == 0 /* 01.05.2023 */)
@@ -164,7 +164,7 @@ namespace FreeLibSet.Data
     /// <param name="columns">Коллекция столбцов DataTable.Columns</param>
     /// <param name="prefix">Префикс имен столбцов. Регистр символов учитывается</param>
     /// <param name="stripPrefix">Удалить префикс из списка имен</param>
-    /// <returns>Объект DBxColumns или null</returns>
+    /// <returns>Объект <see cref="DBxColumns"/> или null</returns>
     public static DBxColumns FromColumns(DataColumnCollection columns, string prefix, bool stripPrefix)
     {
       if (columns == null)
@@ -193,14 +193,14 @@ namespace FreeLibSet.Data
     private static readonly CharArrayIndexer _DataViewSortBadChars = new CharArrayIndexer("()+*/");
 
     /// <summary>
-    /// Извлечь имена столбцов из свойства DataView.Sort.
+    /// Извлечь имена столбцов из свойства <see cref="DataView.Sort"/>.
     /// Строка может содержать пробелы и суффиксы ASC и DESC (игнорируются).
     /// Если строка пустая, возвращается null.
-    /// Используется метод DataTools.GetDataViewSortColumnNames().
-    /// Если задан неправильный порядок сортировки, в котором одно и то же поле встречается дважды (например, "F1,F2,F1 DESC"), выбрасывается исключение
+    /// Используется метод <see cref="DataTools.GetDataViewSortColumnNames(string)"/>.
+    /// Если задан неправильный порядок сортировки, в котором одно и то же поле встречается дважды (например, "F1,F2,F1 DESC"), выбрасывается исключение.
     /// </summary>
-    /// <param name="sort">Свойство DataView.Sort</param>
-    /// <returns></returns>
+    /// <param name="sort">Свойство <see cref="DataView.Sort"/></param>
+    /// <returns>Список столбцов</returns>
     public static DBxColumns FromDataViewSort(string sort)
     {
       //if (String.IsNullOrEmpty(sort))
@@ -235,7 +235,7 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Извлечь имена столбцов из объекта DbDataReader
+    /// Извлечь имена столбцов из объекта <see cref="System.Data.Common.DbDataReader"/>
     /// </summary>
     /// <param name="reader">Объект для извлечения полей</param>
     /// <returns>Список</returns>
@@ -379,7 +379,7 @@ namespace FreeLibSet.Data
     #region Методы
 
     /// <summary>
-    /// Возвращает true, если поле есть в списке
+    /// Возвращает true, если поле есть в списке.
     /// Имя поля может содержать запятые. В этом случае возвращается true, если
     /// существуют ВСЕ перечисленные поля.
     /// Если <paramref name="columnNames"/> - пустая строка или null, возвращается true.
@@ -619,7 +619,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Найти позицию имени поля. 
-    /// Поиск нескольких полей не допускается
+    /// Поиск нескольких полей не допускается.
     /// </summary>
     /// <param name="columnName">Искомое имя поля</param>
     /// <returns>Номер позиции или (-1), если поля нет</returns>
@@ -696,7 +696,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает копию списка, задав префикс перед именами всех полей.
     /// Если префикс не задан, копирование не выполняется, возвращается ссылка на текущий список.
-    /// Если метод вызывается для создания ссылочных полей, не забудьте включить точку в префикс
+    /// Если метод вызывается для создания ссылочных полей, не забудьте включить точку в префикс.
     /// </summary>
     /// <param name="prefix">Префикс</param>
     /// <returns>Список полей с префиксом</returns>
@@ -738,7 +738,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnNames">Имена большего набора полей</param>
     /// <param name="values">Значения большего набора полей</param>
-    /// <returns>Массив значений длиной Count элементов или null, если какого-нибудь поля не хватает в ColumnNames</returns>
+    /// <returns>Массив значений длиной <see cref="Count"/> элементов или null, если какого-нибудь поля не хватает в <paramref name="columnNames"/></returns>
     public object[] ExtractColumnValues(DBxColumns columnNames, object[] values)
     {
       if (columnNames == null)
@@ -765,10 +765,10 @@ namespace FreeLibSet.Data
     #region Манипуляции с DataTable
 
     /// <summary>
-    /// Добавить к коллекции столбцов DataTable все поля в объекте.
-    /// Поля будут иметь одинаковый тип
+    /// Добавить к коллекции столбцов <see cref="DataTable"/> все поля в объекте.
+    /// Поля будут иметь одинаковый тип.
     /// </summary>
-    /// <param name="columns">Коллекция столбцов в DataTable, куда добавляются столбцы</param>
+    /// <param name="columns">Коллекция столбцов в <see cref="DataTable"/>, куда добавляются столбцы</param>
     /// <param name="dataType">Тип значений, хранящихся в столбцах</param>
     public void AddColumns(DataColumnCollection columns, Type dataType)
     {
@@ -777,11 +777,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавить к столбцам таблицы DataTable столбцы с указанными именами, если они
+    /// Добавить к столбцам таблицы <see cref="DataTable"/> столбцы с указанными именами, если они
     /// имеются в текущем списке полей.
     /// Не проверяется наличие уже существующих столбцов в <paramref name="columns"/>.
     /// </summary>
-    /// <param name="columns">Столбцы DataTable.Columns, куда выполняется добавление</param>
+    /// <param name="columns">Столбцы <see cref="DataTable.Columns"/>, куда выполняется добавление</param>
     /// <param name="columnNames">Список имен добавляемых столбцов, разделенных запятыми</param>
     /// <param name="dataType">Тип значений, хранящихся в добавляемых столбцах</param>
     /// <exception cref="System.Data.DuplicateNameException">Если в таблице <paramref name="columns"/> уже есть столбец с именем добавляемого столбца</exception>
@@ -793,11 +793,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавить к столбцам таблицы DataTable столбцы с указанными именами, если они
+    /// Добавить к столбцам таблицы <see cref="DataTable"/> столбцы с указанными именами, если они
     /// имеются в текущем списке полей.
     /// Не проверяется наличие уже существующих столбцов в <paramref name="columns"/>.
     /// </summary>
-    /// <param name="columns">Столбцы DataTable.Columns, куда выполняется добавление</param>
+    /// <param name="columns">Столбцы <see cref="DataTable.Columns"/>, куда выполняется добавление</param>
     /// <param name="columnNames">Массив имен добавляемых столбцов</param>
     /// <param name="dataType">Тип добавляемых столбцов</param>
     /// <exception cref="System.Data.DuplicateNameException">Если в таблице <paramref name="columns"/> уже есть столбец с именем добавляемого столбца</exception>
@@ -814,15 +814,15 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Добавить к столбцам таблицы DataTable столбцы из текущего списка, используя типы данных и другие свойства из
+    /// Добавить к столбцам таблицы <see cref="DataTable"/> столбцы из текущего списка, используя типы данных и другие свойства из
     /// столбцов исходной таблицы <paramref name="sourceColumns"/>. Если в структуре исходной таблицы нет
     /// какого-либо столбца, генерируется исключение.
-    /// Для создания столбца используется метод DataTools.CloneDataColumn().
+    /// Для создания столбца используется метод <see cref="DataTools.CloneDataColumn(DataColumn)"/>.
     /// Порядок добавления столбцов соответствует текущему объекту, а не столбцов в <paramref name="sourceColumns"/>.
     /// При поиске столбцов игнорируется регистр символов.
     /// Не проверяется наличие уже существующих столбцов в <paramref name="columns"/>.
     /// </summary>
-    /// <param name="columns">Столбцы DataTable.Columns, куда выполняется добавление</param>
+    /// <param name="columns">Столбцы <see cref="DataTable.Columns"/>, куда выполняется добавление</param>
     /// <param name="sourceColumns">Структура таблицы, откуда берутся типы столбцов</param>
     /// <exception cref="System.Data.DuplicateNameException">Если в таблице <paramref name="columns"/> уже есть столбец с именем добавляемого столбца</exception>
     public void AddContainedColumns(DataColumnCollection columns, DataColumnCollection sourceColumns)
@@ -841,7 +841,7 @@ namespace FreeLibSet.Data
     /// Если таблица <paramref name="sourceTable"/> имеет список столбцов, совпадающий с текущим,
     /// она возвращается без изменений. Иначе возвращается копия таблицы со столбцами из текущего объекта
     /// Если <paramref name="sourceTable"/> не содержит какого-либо столбца из текущего списка, 
-    /// генерируется исключение
+    /// генерируется исключение.
     /// </summary>
     /// <param name="sourceTable">Исходная таблица</param>
     /// <returns>Копия таблицы или исходная таблица без изменений</returns>
@@ -865,7 +865,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает копию таблицы, содержащую поля из текущего списка.
     /// Если <paramref name="sourceTable"/> не содержит какого-либо столбца из текущего списка, 
-    /// генерируется исключение
+    /// генерируется исключение.
     /// </summary>
     /// <param name="sourceTable">Исходная таблица</param>
     /// <returns>Копия таблицы</returns>
@@ -894,7 +894,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Извлечь из строки значения полей. Если строка не содержит каких-либо полей,
-    /// то они получают значение null. Длина выходного массива равна Count.
+    /// то они получают значение null. Длина выходного массива равна <see cref="Count"/>.
     /// </summary>
     /// <param name="row">Строка, откуда будут браться значения</param>
     /// <returns>Массив полученных значений</returns>
@@ -905,7 +905,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Извлечь из строки значения полей. Если строка не содержит каких-либо полей,
     /// то они получают значение null, либо генерируется исключение, в зависимости 
-    /// от параметра ThrowIfNoColumn. Длина выходного массива равна Count.
+    /// от параметра <paramref name="throwIfNoColumn"/>. Длина выходного массива равна <see cref="Count"/>.
     /// </summary>
     /// <param name="row">Строка, откуда будут браться значения</param>
     /// <param name="throwIfNoColumn">Если true, то при отсутствии в строке <paramref name="row"/>
@@ -1144,7 +1144,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращает перечислитель по именам столбцов.
     /// 
-    /// Тип возвращаемого значения (ArrayEnumerator) может измениться в будущем, 
+    /// Тип возвращаемого значения (<see cref="ArrayEnumerable{String}"/>) может измениться в будущем, 
     /// гарантируется только реализация интерфейса перечислителя.
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
@@ -1373,7 +1373,6 @@ namespace FreeLibSet.Data
       return true;
     }
 
-
     /// <summary>
     /// Возвращает true, если все поля из <paramref name="columnNames"/> есть в текущем массиве.
     /// Имена полей разделяются запятыми.
@@ -1489,10 +1488,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если в текущем списке полей есть поля, которых нет в OtherColumns
+    /// Возвращает true, если в текущем списке полей есть поля, которых нет в <paramref name="otherColumns"/>.
     /// </summary>
     /// <param name="otherColumns">Список проверяемых полей (может быть null)</param>
-    /// <returns>true, если есть поля, отсутствующие в OtherColumns</returns>
+    /// <returns>true, если есть поля, отсутствующие в <paramref name="otherColumns"/></returns>
     public bool HasMoreThan(DBxColumns otherColumns)
     {
       if (otherColumns == null)
@@ -1507,10 +1506,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если в текущем списке полей есть поля, которых нет в OtherColumns
+    /// Возвращает true, если в текущем списке полей есть поля, которых нет в <paramref name="otherColumns"/>.
     /// </summary>
     /// <param name="otherColumns">Список проверяемых полей (может быть null)</param>
-    /// <returns>true, если есть поля, отсутствующие в OtherColumns</returns>
+    /// <returns>true, если есть поля, отсутствующие в <paramref name="otherColumns"/></returns>
     public bool HasMoreThan(DBxColumnList otherColumns)
     {
       if (otherColumns == null)
@@ -1525,12 +1524,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если в списке полей ThisColumns есть поля, которых нет в OtherColumns
-    /// Статическая версия метода позволяет не проверять на null оба аргумента
+    /// Возвращает true, если в списке полей <paramref name="thisColumns"/> есть поля, которых нет в <paramref name="otherColumns"/>.
+    /// Статическая версия метода позволяет не проверять на null оба аргумента.
     /// </summary>
     /// <param name="thisColumns">Текущий список полей (может быть null)</param>
     /// <param name="otherColumns">Список проверяемых полей (может быть null)</param>
-    /// <returns>true, если есть поля, отсутствующие в OtherColumns</returns>
+    /// <returns>true, если есть поля, отсутствующие в <paramref name="otherColumns"/></returns>
     public static bool HasMoreThan(DBxColumnList thisColumns, DBxColumnList otherColumns)
     {
       if (thisColumns == null)
@@ -1572,7 +1571,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Переводит список в режим "только чтение".
-    /// Повторные вызовы методы игнорируются
+    /// Повторные вызовы методы игнорируются.
     /// </summary>
     public new void SetReadOnly()
     {
@@ -1584,7 +1583,7 @@ namespace FreeLibSet.Data
     #region ICloneable Members
 
     /// <summary>
-    /// Создает копию списка со сброшенным свойством IsReadOnly
+    /// Создает копию списка со сброшенным свойством <see cref="SingleScopeList{String}.IsReadOnly"/>.
     /// </summary>
     /// <returns></returns>
     public DBxColumnList Clone()
@@ -1599,8 +1598,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию списка, задав префикс перед именами всех полей.
-    /// У копии списка сброшено свойство IsReadOnly
-    /// Если префикс не задан, выполняется обычное клоинрование.
+    /// У копии списка сброшено свойство <see cref="SingleScopeList{String}.IsReadOnly"/>.
+    /// Если префикс не задан, выполняется обычное клонирование.
     /// Если метод вызывается для создания ссылочных полей, не забудьте включить точку в префикс.
     /// </summary>
     /// <param name="prefix">Префикс</param>
@@ -1618,7 +1617,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию списка, задав суффикс после имен всех полей.
-    /// У копии списка сброшено свойство IsReadOnly
+    /// У копии списка сброшено свойство <see cref="SingleScopeList{String}.IsReadOnly"/>.
     /// Если суффикс не задан, выполняется обычное клоинрование.
     /// </summary>
     /// <param name="suffix">Суффикс</param>
@@ -1639,7 +1638,7 @@ namespace FreeLibSet.Data
     #region Статический список
 
     /// <summary>
-    /// Пустой список полей
+    /// Пустой список полей. Список доступен только для чтения.
     /// </summary>
     public static readonly DBxColumnList Empty = CreateEmpty();
 
@@ -1685,13 +1684,13 @@ namespace FreeLibSet.Data
     /// Имя таблицы
     /// </summary>
     public string TableName { get { return _TableName; } }
-    private string _TableName;
+    private readonly string _TableName;
 
     /// <summary>
     /// Имя столбца
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает текстовое представление
@@ -1785,10 +1784,10 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Список имен таблиц и полей.
-  /// Пары входят в список однократно. Порядок объектов учитывается
-  /// Предоставляет доступ как в виде структур DBxTableColumnName, так и виде коллекции таблиц,
-  /// для каждой из которых имеется список DBxColumnList.
-  /// Класс становится потокобезопасным после вызова SetReadOnly().
+  /// Пары входят в список однократно. Порядок объектов учитывается.
+  /// Предоставляет доступ как в виде структур <see cref="DBxTableColumnName"/>, так и виде коллекции таблиц,
+  /// для каждой из которых имеется список <see cref="DBxColumnList"/>.
+  /// Класс становится потокобезопасным после вызова <see cref="DBxTableColumnList.SetReadOnly()"/>.
   /// </summary>
   [Serializable]
   public class DBxTableColumnList : ICollection<DBxTableColumnName>, IReadOnlyObject, ICloneable
@@ -1833,14 +1832,14 @@ namespace FreeLibSet.Data
       #endregion
     }
 
-    private NamedList<TableItem> _List;
+    private readonly NamedList<TableItem> _List;
 
     #endregion
 
     #region Список таблиц
 
     /// <summary>
-    /// Реализация свойства Tables
+    /// Реализация свойства <see cref="Tables"/>
     /// </summary>
     [Serializable]
     public sealed class TableCollection : IDictionary<string, DBxColumnList>
@@ -1854,7 +1853,7 @@ namespace FreeLibSet.Data
         _Owner = owner;
       }
 
-      private DBxTableColumnList _Owner;
+      private readonly DBxTableColumnList _Owner;
 
       #endregion
 
@@ -1906,7 +1905,7 @@ namespace FreeLibSet.Data
       /// Удаляет все поля для указанной таблицы
       /// </summary>
       /// <param name="tableName">Имя таблицы</param>
-      /// <returns></returns>
+      /// <returns>True, если таблица была в списке</returns>
       public bool Remove(string tableName)
       {
         _Owner.CheckNotReadOnly();
@@ -1915,8 +1914,8 @@ namespace FreeLibSet.Data
 
       /// <summary>
       /// Возвращает список полей для указанной таблицы.
-      /// Если в списке нет такой таблицы, то результат зависит от свойство DBxTableColumnList.IsReadOnly.
-      /// Если список находится в режиме "Только чтение", то возвращается DBxColumnList.Empty.
+      /// Если в списке нет такой таблицы, то результат зависит от свойства <see cref="DBxTableColumnList.IsReadOnly"/>.
+      /// Если список находится в режиме "Только чтение", то возвращается <see cref="DBxColumnList.Empty"/>.
       /// Иначе создается запись для таблицы с пустым списком.
       /// Метод никогда не возвращает false и всегда предоставляет список.
       /// </summary>
@@ -1946,13 +1945,13 @@ namespace FreeLibSet.Data
 
       /// <summary>
       /// Возвращает список полей для указанной таблицы.
-      /// Если в списке нет такой таблицы, то результат зависит от свойство DBxTableColumnList.IsReadOnly.
-      /// Если список находится в режиме "Только чтение", то возвращается DBxColumnList.Empty.
+      /// Если в списке нет такой таблицы, то результат зависит от свойства <see cref="DBxTableColumnList.IsReadOnly"/>.
+      /// Если список находится в режиме "Только чтение", то возвращается <see cref="DBxColumnList.Empty"/>.
       /// Иначе создается запись для таблицы с пустым списком.
       /// Метод никогда не возвращает null.
       /// 
-      /// Установка значения разрешается только при DBxTableColumnList.IsReadOnly=false.
-      /// Текущие поля таблицы, если есть, очищаются и заменяются на переданные
+      /// Установка значения разрешается только при <see cref="DBxTableColumnList.IsReadOnly"/>=false.
+      /// Текущие поля таблицы, если есть, очищаются и заменяются на переданные.
       /// </summary>
       /// <param name="tableName">Имя таблицы</param>
       /// <returns>Список полей</returns>
@@ -2034,8 +2033,8 @@ namespace FreeLibSet.Data
 
       /// <summary>
       /// Возврашает количество таблиц (не полей!) в списке.
-      /// Пока DBxTableColumnList.IsReadOnly=false, список может содержать таблицы без полей.
-      /// Вызов SetReadOnly() убирает из списка пустые таблицы, при этом значение свойства Count может уменьшиться.
+      /// Пока <see cref="DBxTableColumnList.IsReadOnly"/>=false, список может содержать таблицы без полей.
+      /// Вызов <see cref="SetReadOnly()"/> убирает из списка пустые таблицы, при этом значение свойства <see cref="Count"/> может уменьшиться.
       /// </summary>
       public int Count
       {
@@ -2161,10 +2160,10 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Доступ к отдельным таблицам, для каждой из которых доступен список DBxColumnList
+    /// Доступ к отдельным таблицам, для каждой из которых доступен список <see cref="DBxColumnList"/>
     /// </summary>
     public TableCollection Tables { get { return _Tables; } }
-    private TableCollection _Tables;
+    private readonly TableCollection _Tables;
 
     #endregion
 
@@ -2357,8 +2356,8 @@ namespace FreeLibSet.Data
     #region Доступ как к логическому значению
 
     /// <summary>
-    /// Возвращает true, если в списке есть указанное поле. Эквивалентно вызову Contains().
-    /// Установка свойства в true эквивалентна вызову Add(), а в false - Remove()
+    /// Возвращает true, если в списке есть указанное поле. Эквивалентно вызову <see cref="Contains(DBxTableColumnName)"/>.
+    /// Установка свойства в true эквивалентна вызову <see cref="Add(DBxTableColumnName)"/>, а в false - <see cref="Remove(DBxTableColumnName)"/>.
     /// </summary>
     /// <param name="item">Имя таблицы и поля</param>
     /// <returns>Наличие в списке</returns>
@@ -2382,8 +2381,8 @@ namespace FreeLibSet.Data
     #region Доступ без структуры DBxTableColumnName
 
     /// <summary>
-    /// Возвращает true, если в списке есть указанное поле. Эквивалентно вызову Contains().
-    /// Установка свойства в true эквивалентна вызову Add(), а в false - Remove()
+    /// Возвращает true, если в списке есть указанное поле. Эквивалентно вызову <see cref="Contains(DBxTableColumnName)"/>.
+    /// Установка свойства в true эквивалентна вызову <see cref="Add(DBxTableColumnName)"/>, а в false - <see cref="Remove(DBxTableColumnName)"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля</param>
@@ -2411,7 +2410,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию списка.
-    /// У созданной копии свойство IsReadOnly не установлено
+    /// У созданной копии свойство <see cref="IsReadOnly"/> не установлено
     /// </summary>
     /// <returns></returns>
     public DBxTableColumnList Clone()
@@ -2435,7 +2434,7 @@ namespace FreeLibSet.Data
     #region Статический список
 
     /// <summary>
-    /// Пустой список полей
+    /// Пустой список полей. Список доступен только для чтения.
     /// </summary>
     public static readonly DBxTableColumnList Empty = CreateEmpty();
 
@@ -2451,7 +2450,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Хранилище для массива значений полей, связанное с заданным списком столбцов <see cref="DBxColumns"/>.
-  /// Однократно созданному объекту можно многократно присваивать значения (свойство Values).
+  /// Однократно созданному объекту можно многократно присваивать значения (свойство <see cref="DBxColumnValueArray.Values"/>).
   /// Используется при проверке фильтров.
   /// </summary>
   [Serializable]
@@ -2494,7 +2493,7 @@ namespace FreeLibSet.Data
     /// Список столбцов. Задается в конструкторе
     /// </summary>
     public DBxColumns Columns { get { return _Columns; } }
-    private DBxColumns _Columns;
+    private readonly DBxColumns _Columns;
 
     /// <summary>
     /// Массив значений.

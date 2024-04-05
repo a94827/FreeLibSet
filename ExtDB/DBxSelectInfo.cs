@@ -255,6 +255,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Данные для запросов SELECT (методы <see cref="IDBxConReadOnlyBase.FillSelect(DBxSelectInfo)"/> и <see cref="IDBxCon.ReaderSelect(DBxSelectInfo)"/>.
+  /// Поддерживает выражения FROM, WHERE, ORDER BY, HAVING, GROUP BY, LIMIT/TOP (количество отобржаемых строк, но не "окно").
   /// </summary>
   [Serializable]
   public sealed class DBxSelectInfo : ICloneable
@@ -278,7 +279,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Имя основной таблицы, относительно которой задаются поля.
-    /// Свойство должно быть установлено
+    /// Свойство должно быть установлено.
     /// </summary>
     public string TableName
     {
@@ -290,7 +291,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Список выражений (обычно, имен полей), которые требуется выбрать.
     /// Если список пустой, то будут выбраны все поля таблицы, к которым у пользователя есть доступ.
-    /// Если ограничений на доступ к полям нет, то список будет эквивалентен "SELECT * FROM"
+    /// Если ограничений на доступ к полям нет, то список будет эквивалентен "SELECT * FROM".
     /// </summary>
     public DBxNamedExpressionList Expressions { get { return _Expressions; } }
     private readonly DBxNamedExpressionList _Expressions;

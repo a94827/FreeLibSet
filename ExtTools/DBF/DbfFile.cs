@@ -203,6 +203,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     public bool IsEmpty { get { return String.IsNullOrEmpty(_Name); } }
 
+#if XXX
     /// <summary>
     /// Возвращает читаемое представление для типа поля
     /// </summary>
@@ -231,25 +232,26 @@ namespace FreeLibSet.DBF
         }
       }
     }
+#endif
 
     /// <summary>
-    /// Возвращает читаемое представление для типа поля и его длины
+    /// Возвращает читаемое представление для типа поля и его длины, например, "C10", "N3.0", "N12.2", "D".
+    /// Если <see cref="IsEmpty"/>=true, возвращается пустая строка.
     /// </summary>
     public string TypeSizeText
     {
       get
       {
-        string s = TypeText;
+        if (_Type == '\0')
+          return String.Empty;
+        string s = new string(_Type, 1);
         switch (_Type)
         {
           case 'C':
-            return s + " (" + _Length.ToString() + ")";
+            return s + StdConvert.ToString(_Length);
           case 'N':
           case 'F':
-            if (_Precision == 0)
-              return s + " (" + _Length.ToString() + ")";
-            else
-              return s + " (" + _Length.ToString() + "," + _Precision.ToString() + ")";
+            return s + StdConvert.ToString(_Length) + "." + StdConvert.ToString(_Precision);
           default:
             return s;
         }
@@ -278,7 +280,7 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Возвращает тип для столбца, совместимый с DataColumn.DataType
+    /// Возвращает тип для столбца, совместимый с <see cref="System.Data.DataColumn.DataType"/>
     /// </summary>
     public Type DataType
     {
@@ -312,14 +314,16 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Возвращает текстовое представление для отладки
+    /// Возвращает текстовое представление в формате "Name (TypeSizeText)", например "FIELD1 (N10.1)".
+    /// В скобках выводится тип и размер поля как свойство <see cref="TypeSizeText"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       if (IsEmpty)
-        return "[пусто]";
-      return Name + " (" + TypeSizeText + ")";
+        return String.Empty;
+      else
+        return Name + " (" + TypeSizeText + ")";
     }
 
     #endregion
@@ -446,7 +450,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Возвращает описание поля по имени.
-    /// Если в списке нет поля с таким именем, возвращается неинициализированная структура
+    /// Если в списке нет поля с таким именем, возвращается неинициализированная структура.
     /// </summary>
     /// <param name="name">Имя поля</param>
     /// <returns>Описание поля</returns>
@@ -468,7 +472,7 @@ namespace FreeLibSet.DBF
     public int Count { get { return _Items.Count; } }
 
     /// <summary>
-    /// Возвращает размер записи DBF-файла. Равно суммарной длине всех полей плюс один символ - маркер удаленной строки
+    /// Возвращает размер записи DBF-файла. Равно суммарной длине всех полей плюс один символ - маркер удаленной строки.
     /// </summary>
     public int RecordSize
     {
@@ -604,10 +608,10 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Создает новую таблицу DataTable с заполненным списком Columns.
+    /// Создает новую таблицу <see cref="System.Data.DataTable"/> с заполненным списком <see cref="DataTable.Columns"/>.
     /// Таблица не содержит строк.
     /// </summary>
-    /// <returns>Новый объект DataTable</returns>
+    /// <returns>Новый объект <see cref="DataTable"/></returns>
     public DataTable CreateTable()
     {
       DataTable table = new DataTable();
@@ -697,7 +701,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Переводит список полей в режим "только чтение".
-    /// Список блокируется при использовании в DbfFile.
+    /// Список блокируется при использовании в <see cref="DbfFile"/>.
     /// </summary>
     public void SetReadOnly()
     {
@@ -705,7 +709,7 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -783,13 +787,13 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Простой DBT-файл формата dBase-III/Clipper. Размер страницы 512 байт.
-    /// Может хранить только текстовые данные, заканчивающиеся символом 0x1а
+    /// Может хранить только текстовые данные, заканчивающиеся символом 0x1а.
     /// </summary>
     dBase3,
 
     /// <summary>
     /// DBT-файл dBase4. Может хранить двоичные данные. Размер текста задается в явном виде.
-    /// Пока не поддерживается FreeLibSet
+    /// Пока не поддерживается FreeLibSet.
     /// </summary>
     dBase4
   }
@@ -957,7 +961,7 @@ namespace FreeLibSet.DBF
       sb.Append(", поле \"");
       sb.Append(fieldInfo.Name);
       sb.Append("\" содержит недопустимое значение для типа \"");
-      sb.Append(fieldInfo.TypeText);
+      sb.Append(fieldInfo.Type);
       sb.Append("\"");
       if (innerException != null)
       {
@@ -1055,7 +1059,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Открывает существующий файл только для чтения.
-    /// Используется кодировка по умолчанию DefaultEncoding.
+    /// Используется кодировка по умолчанию <see cref="DefaultEncoding"/>.
     /// Если в файле есть мемо-поля, одновременно открывается и DBT-файл.
     /// </summary>
     /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
@@ -1066,7 +1070,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Открывает существующий файл.
-    /// Используется кодировка по умолчанию DefaultEncoding.
+    /// Используется кодировка по умолчанию <see cref="DefaultEncoding"/>.
     /// Если в файле есть мемо-поля, одновременно открывается и DBT-файл.
     /// </summary>
     /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
@@ -1154,7 +1158,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Открывает DBF-файл в потоке только для чтения.
     /// Файл не может содержать MEMO-полей.
-    /// Используется кодировка по умолчанию DefaultEncoding.
+    /// Используется кодировка по умолчанию <see cref="DefaultEncoding"/>.
     /// </summary>
     /// <param name="dbfStream">Открытый на чтение поток для DBF-файла</param>
     public DbfFile(Stream dbfStream)
@@ -1165,7 +1169,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Открывает DBF-файл в потоке только для чтения.
     /// Если файл содержит MEMO-поля, должен быть предоставлен поток для DBT-файла
-    /// Используется кодировка по умолчанию DefaultEncoding.
+    /// Используется кодировка по умолчанию <see cref="DefaultEncoding"/>.
     /// </summary>
     /// <param name="dbfStream">Открытый на чтение поток для DBF-файла</param>
     /// <param name="dbtStream">Открытый на чтение поток для DBT-файла или null</param>
@@ -1176,7 +1180,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Открывает DBF-файл в потоке только для чтения.
-    /// Если файл содержит MEMO-поля, должен быть предоставлен поток для DBT-файла
+    /// Если файл содержит MEMO-поля, должен быть предоставлен поток для DBT-файла.
     /// </summary>
     /// <param name="dbfStream">Открытый на чтение поток для DBF-файла</param>
     /// <param name="dbtStream">Открытый на чтение поток для DBT-файла или null</param>
@@ -1188,7 +1192,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Открывает DBF-файл в потоке.
-    /// Если файл содержит MEMO-поля, должен быть предоставлен поток для DBT-файла
+    /// Если файл содержит MEMO-поля, должен быть предоставлен поток для DBT-файла.
     /// </summary>
     /// <param name="dbfStream">Открытый поток для DBF-файла</param>
     /// <param name="dbtStream">Открытый поток для DBT-файла или null</param>
@@ -1496,11 +1500,11 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Создает на диске новый DBF-файл заданной структуры.
-    /// Если в структуре есть мемо-поля, также создается DBT-файл
+    /// Если в структуре есть мемо-поля, также создается DBT-файл.
     /// Если файл(ы) существует, он удаляется.
     /// Используется формат файла dBase3. Если в списке полей есть типы, отличные от "C", "N", "L", "D" и "M",
     /// используется формат dBase4.
-    /// Используется кодировка по умолчанию DefaultEncoding.
+    /// Используется кодировка по умолчанию <see cref="DefaultEncoding"/>.
     /// Список <paramref name="dbStruct"/> переводится в состояние "только чтение".
     /// </summary>
     /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
@@ -1512,7 +1516,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Создает на диске новый DBF-файл заданной структуры.
-    /// Если в структуре есть мемо-поля, также создается DBT-файл
+    /// Если в структуре есть мемо-поля, также создается DBT-файл.
     /// Если файл(ы) существует, он удаляется.
     /// Используется формат файла dBase3. Если в списке полей есть типы, отличные от "C", "N", "L", "D" и "M",
     /// используется формат dBase4.
@@ -1528,14 +1532,14 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Создает на диске новый DBF-файл заданной структуры.
-    /// Если в структуре есть мемо-поля, также создается DBT-файл
+    /// Если в структуре есть мемо-поля, также создается DBT-файл.
     /// Если файл(ы) существует, он удаляется.
     /// Список <paramref name="dbStruct"/> переводится в состояние "только чтение".
     /// </summary>
     /// <param name="dbfPath">Путь к DBF-файлу на диске.</param>
     /// <param name="dbStruct">Заполненный список описаний полей</param>
     /// <param name="encoding">Используемая кодировка</param>
-    /// <param name="fileFormat">Формат файла. Если задано значение Undefined,
+    /// <param name="fileFormat">Формат файла. Если задано значение <see cref="DbfFileFormat.Undefined"/>,
     /// используется формат файла dBase3. Если в списке полей есть типы, отличные от "C", "N", "L", "D" и "M",
     /// используется формат dBase4.
     /// Если формат задан, но в списке полей есть несовместимые с ним типы, генерируется исключение.
@@ -1587,7 +1591,7 @@ namespace FreeLibSet.DBF
     /// Если в структуре есть мемо-поля, генерируется исключение.
     /// Используется формат файла dBase3. Если в списке полей есть типы, отличные от "C", "N", "L", "D" и "M",
     /// используется формат dBase4.
-    /// Используется кодировка по умолчанию DefaultEncoding.
+    /// Используется кодировка по умолчанию <see cref="DefaultEncoding"/>.
     /// Список <paramref name="dbStruct"/> переводится в состояние "только чтение".
     /// </summary>
     /// <param name="dbfStream">Поток для записи DBF-файла</param>
@@ -1602,7 +1606,7 @@ namespace FreeLibSet.DBF
     /// Наличие потока DBT-файла должно определяться наличием в структуре мемо-полей.
     /// Используется формат файла dBase3. Если в списке полей есть типы, отличные от "C", "N", "L", "D" и "M",
     /// используется формат dBase4.
-    /// Используется кодировка по умолчанию DefaultEncoding.
+    /// Используется кодировка по умолчанию <see cref="DefaultEncoding"/>.
     /// Список <paramref name="dbStruct"/> переводится в состояние "только чтение".
     /// </summary>
     /// <param name="dbfStream">Поток для записи DBF-файла</param>
@@ -1653,7 +1657,7 @@ namespace FreeLibSet.DBF
     /// <param name="dbtStream">Поток для записи DBT-файла или null, если мемо-полей нет</param>
     /// <param name="dbStruct">Заполненный список описаний полей</param>
     /// <param name="encoding">Кодировка файла</param>
-    /// <param name="fileFormat">Формат файла. Если задано значение Undefined,
+    /// <param name="fileFormat">Формат файла. Если задано значение <see cref="DbfFileFormat.Undefined"/>,
     /// используется формат файла dBase3. Если в списке полей есть типы, отличные от "C", "N", "L", "D" и "M",
     /// используется формат dBase4.
     /// Если формат задан, но в списке полей есть несовместимые с ним типы, генерируется исключение.
@@ -1679,7 +1683,6 @@ namespace FreeLibSet.DBF
 
       InitNew();
     }
-
 
     private void InitNew()
     {
@@ -1929,7 +1932,7 @@ namespace FreeLibSet.DBF
     private bool _ShouldDisposeStreams;
 
     /// <summary>
-    /// Выполняет сброс на диск незаписанных данных, вызывая Stream.Flush()
+    /// Выполняет сброс на диск незаписанных данных, вызывая <see cref="System.IO.Stream.Flush()"/>
     /// </summary>
     public void Flush()
     {
@@ -1974,7 +1977,7 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Версия формата файла
+    /// Версия формата файла.
     /// Определяется автоматически при открытии существующего файла.
     /// Может быть задана в конструкторе при создании нового файла.
     /// </summary>
@@ -2001,11 +2004,11 @@ namespace FreeLibSet.DBF
     uint _MemoBlockCount;
 
     /// <summary>
-    /// Получить максимальную длину полей
-    /// Возвращает массив, размер которого равен DBStruct.Count.
-    /// Для всех полей, кроме 'C' и 'M' возвращается стандартная длина из DbfFieldInfo.Length.
+    /// Получить максимальную длину полей.
+    /// Возвращает массив, размер которого равен <see cref="DbfStruct.Count"/>.
+    /// Для всех полей, кроме 'C' и 'M' возвращается стандартная длина из <see cref="DbfFieldInfo.Length"/>.
     /// Для строковых и MEMO-полей возвращается максимальная длина поля, возможно - 0.
-    /// Для больших таблиц рекомендуется использовать перегрузку с аргументом Splash,
+    /// Для больших таблиц рекомендуется использовать перегрузку <see cref="GetMaxLengths(ISplash)"/>,
     /// чтобы пользователь мош прервать процесс.
     /// </summary>
     /// <returns>Массив длин</returns>
@@ -2015,11 +2018,11 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить максимальную длину полей
-    /// Возвращает массив, размер которого равен DBStruct.Count.
-    /// Для всех полей, кроме 'C' и 'M' возвращается стандартная длина из DbfFieldInfo.Length.
+    /// Получить максимальную длину полей.
+    /// Возвращает массив, размер которого равен <see cref="DbfStruct.Count"/>.
+    /// Для всех полей, кроме 'C' и 'M' возвращается стандартная длина из <see cref="DbfFieldInfo.Length"/>.
     /// Для строковых и MEMO-полей возвращается максимальная длина поля, возможно - 0.
-    /// Если пользователь прерывает процесс, выбрасывается исключение UserCancelException.
+    /// Если пользователь прерывает процесс, выбрасывается исключение <see cref="UserCancelException"/>.
     /// </summary>
     /// <param name="splash">Управляемая splash-заставка для индикации процесса и возможности прерывания.
     /// Если null, то процесс нельзя прервать</param>
@@ -2030,9 +2033,9 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить максимальную длину полей
-    /// Возвращает массив, размер которого равен DBStruct.Count.
-    /// Для всех полей, кроме 'C' и 'M' возвращается стандартная длина из DbfFieldInfo.Length.
+    /// Получить максимальную длину полей.
+    /// Возвращает массив, размер которого равен <see cref="DbfStruct.Count"/>.
+    /// Для всех полей, кроме 'C' и 'M' возвращается стандартная длина из <see cref="DbfFieldInfo.Length"/>.
     /// Для строковых и MEMO-полей возвращается максимальная длина поля, возможно - 0.
     /// Эта версия позволяет получить результаты для части таблицы
     /// </summary>
@@ -2113,13 +2116,13 @@ namespace FreeLibSet.DBF
     #region Кодировка
 
     /// <summary>
-    /// Используемая кодировка. Задается в конструкторе. Если не задана в явном виде, возвращает DefaultEncoding
+    /// Используемая кодировка. Задается в конструкторе. Если не задана в явном виде, возвращает <see cref="DefaultEncoding"/>
     /// </summary>
     public Encoding Encoding { get { return _Encoding; } }
     private Encoding _Encoding;
 
     /// <summary>
-    /// Возвращает кодировку по умолчанию
+    /// Возвращает кодировку по умолчанию <see cref="System.Globalization.TextInfo.OEMCodePage"/>.
     /// </summary>
     public static Encoding DefaultEncoding
     {
@@ -2155,7 +2158,7 @@ namespace FreeLibSet.DBF
     #region Перебор записей
 
     /// <summary>
-    /// Номер текущей записи, начиная с 1
+    /// Номер текущей записи, начиная с 1.
     /// При инициализации устанавливается равным 0.
     /// Установка нулевого значения допускается, если требуется запуск цикла Read() после выполнения других операций.
     /// </summary>
@@ -2185,14 +2188,14 @@ namespace FreeLibSet.DBF
     private int _RecNo;
 
     /// <summary>
-    /// Необходимость пропуска удаленных записей методом Read().
-    /// По умолчанию - true - записи пропускаются
+    /// Необходимость пропуска удаленных записей методом <see cref="Read()"/>.
+    /// По умолчанию - true - записи пропускаются.
     /// </summary>
     public bool SkipDeleted { get { return _SkipDeleted; } set { _SkipDeleted = value; } }
     private bool _SkipDeleted;
 
     /// <summary>
-    /// Метод для перебора записей в стиле DbReader.
+    /// Метод для перебора записей в стиле <see cref="System.Data.Common.DbDataReader"/>.
     /// Строки, помеченные на удаление, пропускаются, если <see cref="SkipDeleted"/>=false.
     /// Если требуется выполнить цикл повторно, или до этого выполнялись другие действия, устанавливающие текущую позицию,
     /// установите перед выполнением цикла свойство <see cref="RecNo"/>=0.
@@ -2217,7 +2220,7 @@ namespace FreeLibSet.DBF
     /// Буфер строки таблицы размером <see cref="DbfStruct.RecordSize"/>.
     /// Обычно нет смысла использовать это свойство из прикладного поля.
     /// Прямая модификация буфера может привести к порче файла, особенно при наличии memo-файла.
-    /// При модификации буфера также должно устанавливаться свойство RecordModified=true
+    /// При модификации буфера также должно устанавливаться свойство <see cref="RecordModified"/>=true.
     /// </summary>
     public byte[] RecordBuffer { get { return _RecordBuffer; } }
     private byte[] _RecordBuffer;
@@ -2229,9 +2232,9 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// true - если текущая запись помечена на удаление
-    /// При обычном переборе методом Read(), если свойство SkipDeleted не сброшено в false, удаленные записи
-    /// пропускаются
+    /// true - если текущая запись помечена на удаление.
+    /// При обычном переборе методом <see cref="Read()"/>, если свойство <see cref="SkipDeleted"/> не сброшено в false, удаленные записи
+    /// пропускаются.
     /// </summary>
     public bool RecordDeleted
     {
@@ -2266,7 +2269,7 @@ namespace FreeLibSet.DBF
     /// Для поля типа 'F' возвращает значение типа <see cref="System.Double"/>.
     /// Для поля типа 'L' возвращает true или false.
     /// Для поля типа 'D' возвращает <see cref="System.DateTime"/>.
-    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод GetInt() возвращает числовое значение в том числе и для пустого поля.
+    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод <see cref="GetInt(string)"/> возвращает числовое значение в том числе и для пустого поля.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2284,9 +2287,9 @@ namespace FreeLibSet.DBF
     /// Для поля типа 'F' возвращает значение типа <see cref="System.Double"/>.
     /// Для поля типа 'L' возвращает true или false.
     /// Для поля типа 'D' возвращает <see cref="System.DateTime"/>.
-    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод GetInt() возвращает числовое значение в том числе и для пустого поля.
+    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод <see cref="GetInt(int)"/> возвращает числовое значение в том числе и для пустого поля.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns>Значение</returns>
     public object GetValue(int fieldIndex)
     {
@@ -2330,8 +2333,8 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить строковое значение поля
-    /// Для пустых значений возвращается DBNull
+    /// Получить строковое значение поля.
+    /// Для пустых значений возвращается <see cref="String.Empty"/>.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2341,9 +2344,10 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить строковое значение поля с заданным индексом
+    /// Получить строковое значение поля с заданным индексом.
+    /// Для пустых значений возвращается <see cref="String.Empty"/>.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns>Значение</returns>
     public string GetString(int fieldIndex)
     {
@@ -2394,7 +2398,7 @@ namespace FreeLibSet.DBF
     /// Используется для полей 'N', 'L', 'D', 'F'.
     /// Для них не нужно использовать кодировку, заданную свойством <see cref="Encoding"/>.
     /// </summary>
-    /// <param name="fieldIndex"></param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns></returns>
     private string GetAsciiString(int fieldIndex)
     {
@@ -2407,7 +2411,9 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля
+    /// Получить числовое значение поля.
+    /// Если есть дробная часть числа, то она отбрасывается.
+    /// Для пустых значений возвращается 0.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2417,10 +2423,11 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить строковое значение поля с заданным индексом.
-    /// Если есть дробная часть числа, то она отбрасывается
+    /// Получить числовое значение поля с заданным индексом.
+    /// Если есть дробная часть числа, то она отбрасывается.
+    /// Для пустых значений возвращается 0.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns></returns>
     public int GetInt(int fieldIndex)
     {
@@ -2460,7 +2467,9 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля
+    /// Получить числовое значение поля.
+    /// Если есть дробная часть числа, то она отбрасывается.
+    /// Для пустых значений возвращается 0.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2470,9 +2479,11 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить строковое значение поля с заданным индексом
+    /// Получить строковое значение поля с заданным индексом.
+    /// Если есть дробная часть числа, то она отбрасывается.
+    /// Для пустых значений возвращается 0.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns></returns>
     public long GetInt64(int fieldIndex)
     {
@@ -2513,7 +2524,8 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля
+    /// Получить числовое значение поля.
+    /// Для пустых значений возвращается 0.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2523,10 +2535,11 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля с заданным индексом
+    /// Получить числовое значение поля с заданным индексом.
+    /// Для пустых значений возвращается 0.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
-    /// <returns></returns>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
+    /// <returns>Значение</returns>
     public float GetSingle(int fieldIndex)
     {
 #if DEBUG
@@ -2565,7 +2578,8 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля
+    /// Получить числовое значение поля.
+    /// Для пустых значений возвращается 0.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2575,9 +2589,10 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля с заданным индексом
+    /// Получить числовое значение поля с заданным индексом.
+    /// Для пустых значений возвращается 0.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns></returns>
     public double GetDouble(int fieldIndex)
     {
@@ -2615,7 +2630,8 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля
+    /// Получить числовое значение поля.
+    /// Для пустых значений возвращается 0.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2625,10 +2641,11 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить числовое значение поля с заданным индексом
+    /// Получить числовое значение поля с заданным индексом.
+    /// Для пустых значений возвращается 0.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
-    /// <returns></returns>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
+    /// <returns>Значение</returns>
     public decimal GetDecimal(int fieldIndex)
     {
 #if DEBUG
@@ -2665,7 +2682,8 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить логическое значение поля
+    /// Получить логическое значение поля.
+    /// Для пустых значений возвращается false.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2675,9 +2693,10 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить логическое значение поля
+    /// Получить логическое значение поля.
+    /// Для пустых значений возвращается false.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns>Значение</returns>
     public bool GetBool(int fieldIndex)
     {
@@ -2751,7 +2770,8 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить значение поля даты
+    /// Получить значение поля даты.
+    /// Для пустых значений возвращается null.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2761,10 +2781,11 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Получить значение поля типа даты с заданным индексом
+    /// Получить значение поля типа даты с заданным индексом.
+    /// Для пустых значений возвращается null.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
-    /// <returns></returns>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
+    /// <returns>Значение</returns>
     public DateTime? GetNullableDate(int fieldIndex)
     {
 #if DEBUG
@@ -2796,7 +2817,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Получить значение поля даты.
-    /// Пустая дата возвращается как DateTime.MinValue.
+    /// Для пустого значения возвращается <see cref="DateTime.MinValue"/>.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2807,10 +2828,10 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Получить значение поля типа даты с заданным индексом.
-    /// Пустая дата возвращается как DateTime.MinValue.
+    /// Для пустого значения возвращается <see cref="DateTime.MinValue"/>.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля от 0 до DBStruct.Count-1</param>
-    /// <returns></returns>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
+    /// <returns>Значение</returns>
     public DateTime GetDate(int fieldIndex)
     {
 #if DEBUG
@@ -2911,7 +2932,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Возвращает true, если поле содержит значение NULL.
-    /// Внутренняя структура DBF-файла позволяет отличать значения NULL от 0 и false, но нет от пустой строки.
+    /// Внутренняя структура DBF-файла позволяет отличать значения NULL от 0 и false, но не от пустой строки.
     /// Однако СУБД, например, Clipper, могут не различать значения NULL.
     /// Обычно не следует использовать этот метод в прикладном коде.
     /// Возвращает true, если все позиции поля в строке содержат символы "пробел" (0x20)
@@ -2925,12 +2946,12 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Возвращает true, если поле содержит значение NULL.
-    /// Внутренняя структура DBF-файла позволяет отличать значения NULL от 0 и false, но нет от пустой строки.
+    /// Внутренняя структура DBF-файла позволяет отличать значения NULL от 0 и false, но не от пустой строки.
     /// Однако СУБД, например, Clipper, могут не различать значения NULL.
     /// Обычно не следует использовать этот метод в прикладном коде.
     /// Возвращает true, если все позиции поля в строке содержат символы "пробел" (0x20)
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns>true, если поле не содержит значения</returns>
     public bool IsDBNull(int fieldIndex)
     {
@@ -2956,10 +2977,11 @@ namespace FreeLibSet.DBF
 
 
     /// <summary>
-    /// Возвращает длину заданного поля
-    /// Для полей типа 'C' возвращает длину заполненной части строки (от 0 до DbfFieldInfo.Length)
-    /// Для полей типа 'M' возвращает длину значения MEMO-поля
-    /// Для остальных полей возвращает DbfFieldInfo.Length, если поле заполнено и 0, если DBNull
+    /// Возвращает длину заданного поля.
+    /// Для полей типа 'C' возвращает длину заполненной части строки (от 0 до <see cref="DbfFieldInfo.Length"/>).
+    /// Для полей типа 'M' возвращает длину значения MEMO-поля.
+    /// Возвращается длина в байтах с учетом используемой кодировки <see cref="Encoding"/>, а не длина строки.
+    /// Для остальных полей возвращает <see cref="DbfFieldInfo.Length"/>, если поле заполнено и 0, если поле пустое.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Длина</returns>
@@ -2969,12 +2991,13 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Возвращает длину заданного поля
-    /// Для полей типа 'C' возвращает длину заполненной части строки (от 0 до DbfFieldInfo.Length)
-    /// Для полей типа 'M' возвращает длину значения MEMO-поля
-    /// Для остальных полей возвращает DbfFieldInfo.Length, если поле заполнено и 0, если DBNull
+    /// Возвращает длину заданного поля.
+    /// Для полей типа 'C' возвращает длину заполненной части строки (от 0 до <see cref="DbfFieldInfo.Length"/>).
+    /// Для полей типа 'M' возвращает длину значения MEMO-поля.
+    /// Возвращается длина в байтах с учетом используемой кодировки <see cref="Encoding"/>, а не длина строки.
+    /// Для остальных полей возвращает <see cref="DbfFieldInfo.Length"/>, если поле заполнено и 0, если поле пустое.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns>Длина</returns>
     public int GetLength(int fieldIndex)
     {
@@ -3041,8 +3064,8 @@ namespace FreeLibSet.DBF
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
-    /// Вызывается пишущими методами
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
+    /// Вызывается пишущими методами.
     /// </summary>
     protected void CheckNotReadOnly()
     {
@@ -3052,7 +3075,8 @@ namespace FreeLibSet.DBF
 
     void IReadOnlyObject.CheckNotReadOnly()
     {
-      throw new NotSupportedException("Свойство DbfFile.IsReadOnly устанавливается только в конструкторе и не может быть изменено в дальнейшем");
+      //throw new NotSupportedException("Свойство DbfFile.IsReadOnly устанавливается только в конструкторе и не может быть изменено в дальнейшем");
+      CheckNotReadOnly();
     }
 
 
@@ -3095,7 +3119,7 @@ namespace FreeLibSet.DBF
     /// Устанавливает значение поля для текущей строки.
     /// Выполняет вызов SetNull(), SetString(), SetInt(),..., в зависимости от переданного значения.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetValue(int fieldIndex, object value)
     {
@@ -3170,7 +3194,7 @@ namespace FreeLibSet.DBF
     /// Устанавливает значение поля для текущей строки.
     /// Если значение превышает размер поля, то конец строки обрезается.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetString(int fieldIndex, string value)
     {
@@ -3356,7 +3380,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetInt(int fieldIndex, int value)
     {
@@ -3397,7 +3421,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetInt64(int fieldIndex, long value)
     {
@@ -3438,7 +3462,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetSingle(int fieldIndex, float value)
     {
@@ -3480,7 +3504,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetDouble(int fieldIndex, double value)
     {
@@ -3522,7 +3546,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetDecimal(int fieldIndex, decimal value)
     {
@@ -3564,7 +3588,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetBool(int fieldIndex, bool value)
     {
@@ -3601,7 +3625,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetNullableDate(int fieldIndex, DateTime? value)
     {
@@ -3642,7 +3666,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
     public void SetDate(int fieldIndex, DateTime value)
     {
@@ -3660,7 +3684,7 @@ namespace FreeLibSet.DBF
           break;
         case 'C':
         case 'M':
-          string s2 = value.ToString(value.TimeOfDay.Ticks==0L? @"yyyyMMdd": @"yyyyMMdd\-hhMMss", CultureInfo.InvariantCulture);
+          string s2 = value.ToString(value.TimeOfDay.Ticks == 0L ? @"yyyyMMdd" : @"yyyyMMdd\-hhMMss", CultureInfo.InvariantCulture);
           System.Text.Encoding.ASCII.GetBytes(s2, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
         default:
@@ -3683,7 +3707,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Устанавливает значение поля равным NULL для текущей строки.
     /// </summary>
-    /// <param name="fieldIndex">Индекс поля. Нумерация начинается с 0.</param>
+    /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     public void SetNull(int fieldIndex)
     {
       CheckNotReadOnly();
@@ -3705,7 +3729,7 @@ namespace FreeLibSet.DBF
     #region Добавление записи
 
     /// <summary>
-    /// Возвращает true, если был вызов AppendRecord()
+    /// Возвращает true, если был вызов <see cref="AppendRecord()"/>
     /// </summary>
     public bool IsNewRecord { get { return _IsNewRecord; } }
     private bool _IsNewRecord;
@@ -3809,9 +3833,9 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Возвращает заполненную таблицу данных.
     /// Таблица будет содержать все поля DBF-файла.
-    /// Для больших DBF-файлов можно использовать метод GetBlockedTable() для загрузки таблицы по частям.
+    /// Для больших DBF-файлов можно использовать метод <see cref="CreateBlockedTable(int, ErrorMessageList, out DataTable)"/> для загрузки таблицы по частям.
     /// </summary>
-    /// <returns>Заполненный объект DataTable</returns>
+    /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
     public DataTable CreateTable()
     {
       return CreateTable(new DummySplash(), null);
@@ -3819,11 +3843,11 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Возвращает заполненную таблицу данных.
-    /// Таблица будет содержать все поля DBF-файла
+    /// Таблица будет содержать все поля DBF-файла.
     /// </summary>
     /// <param name="splash">Интерфейс управления процентным инидкатором.
-    /// Если свойство AllowCancel установлено в true, пользователь сможет прервать процесс загрузки</param>
-    /// <returns>Заполненный объект DataTable</returns>
+    /// Если свойство <see cref="ISimpleSplash.AllowCancel"/> установлено в true, пользователь сможет прервать процесс загрузки</param>
+    /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
     public DataTable CreateTable(ISplash splash)
     {
       return CreateTable(splash, null);
@@ -3833,13 +3857,13 @@ namespace FreeLibSet.DBF
     /// Возвращает заполненную таблицу данных.
     /// Таблица будет содержать все поля DBF-файла.
     /// Эта версия позволяет пропускать ошибочные значения полей, которые не соответствуют типу данных.
-    /// Для больших DBF-файлов можно использовать метод GetBlockedTable() для загрузки таблицы по частям.
+    /// Для больших DBF-файлов можно использовать метод <see cref="CreateBlockedTable(int, ErrorMessageList, out DataTable)"/> для загрузки таблицы по частям.
     /// </summary>
     /// <param name="splash">Интерфейс управления процентным инидкатором.
-    /// Если свойство AllowCancel установлено в true, пользователь сможет прервать процесс загрузки</param>
+    /// Если свойство <see cref="ISimpleSplash.AllowCancel"/> установлено в true, пользователь сможет прервать процесс загрузки</param>
     /// <param name="errors">Если аргумент передан, то при невозможности прочитать значение поля, будет добавлено сообщение об ошибке и чтение будет продолжено.
     /// Если null, то будет выброшено исключение</param>
-    /// <returns>Заполненный объект DataTable</returns>
+    /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
     public DataTable CreateTable(ISplash splash, ErrorMessageList errors)
     {
       if (splash == null)
@@ -3893,11 +3917,11 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Возвращает заполненную таблицу данных.
     /// Таблица будет содержать указанные поля DBF-файла.
-    /// Для больших DBF-файлов можно использовать метод GetBlockedTable() для загрузки таблицы по частям.
+    /// Для больших DBF-файлов можно использовать метод <see cref="CreateBlockedTable(int, string, ErrorMessageList, out DataTable)"/> для загрузки таблицы по частям.
     /// </summary>
     /// <param name="columnNames">Список имен полей DBF-файла через запятую.
     /// Если файл не содержит какого-либо поля, будет сгенерировано исключение</param>
-    /// <returns>Заполненный объект DataTable</returns>
+    /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
     public DataTable CreateTable(string columnNames)
     {
       return CreateTable(columnNames, new DummySplash(), null);
@@ -3909,9 +3933,9 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="columnNames">Список имен полей DBF-файла через запятую.
     /// Если файл не содержит какого-либо поля, будет сгенерировано исключение</param>
-    /// <param name="splash">Интерфейс управления процентным инидкатором
-    /// Если свойство AllowCancel установлено в true, пользователь сможет прервать процесс загрузки</param>
-    /// <returns>Заполненный объект DataTable</returns>
+    /// <param name="splash">Интерфейс управления процентным инидкатором.
+    /// Если свойство <see cref="ISimpleSplash.AllowCancel"/> установлено в true, пользователь сможет прервать процесс загрузки</param>
+    /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
     public DataTable CreateTable(string columnNames, ISplash splash)
     {
       return CreateTable(columnNames, splash, null);
@@ -3921,15 +3945,15 @@ namespace FreeLibSet.DBF
     /// Возвращает заполненную таблицу данных.
     /// Таблица будет содержать указанные поля DBF-файла.
     /// Эта версия позволяет пропускать ошибочные значения полей, которые не соответствуют типу данных.
-    /// Для больших DBF-файлов можно использовать метод GetBlockedTable() для загрузки таблицы по частям.
+    /// Для больших DBF-файлов можно использовать метод <see cref="CreateBlockedTable(int, string, ErrorMessageList, out DataTable)"/> для загрузки таблицы по частям.
     /// </summary>
     /// <param name="columnNames">Список имен полей DBF-файла через запятую.
     /// Если файл не содержит какого-либо поля, будет сгенерировано исключение</param>
-    /// <param name="splash">Интерфейс управления процентным инидкатором
-    /// Если свойство AllowCancel установлено в true, пользователь сможет прервать процесс загрузки</param>
+    /// <param name="splash">Интерфейс управления процентным инидкатором.
+    /// Если свойство <see cref="ISimpleSplash.AllowCancel"/> установлено в true, пользователь сможет прервать процесс загрузки</param>
     /// <param name="errors">Если аргумент передан, то при невозможности прочитать значение поля, будет добавлено сообщение об ошибке и чтение будет продолжено.
     /// Если null, то будет выброшено исключение</param>
-    /// <returns>Заполненный объект DataTable</returns>
+    /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
     public DataTable CreateTable(string columnNames, ISplash splash, ErrorMessageList errors)
     {
       if (String.IsNullOrEmpty(columnNames))
@@ -3986,10 +4010,10 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Добавление значений из таблицы
-    /// Идентификация полей выполняется по именам. Лишние поля пропускаются
+    /// Добавление значений из таблицы <see cref="System.Data.DataTable"/>.
+    /// Идентификация полей выполняется по именам без учета регистра. Лишние поля пропускаются.
     /// </summary>
-    /// <param name="table"></param>
+    /// <param name="table">Таблица - источник данных</param>
     public void Append(DataTable table)
     {
       CheckNotReadOnly();
@@ -4014,18 +4038,18 @@ namespace FreeLibSet.DBF
 
 
     /// <summary>
-    /// Возвращает часть таблицы в виде DataTable.
+    /// Возвращает часть таблицы в виде <see cref="System.Data.DataTable"/>.
     /// Таблица будет содержать все поля DBF-файла.
-    /// В таблицу входят строки, начиная с очередного вызова Read() и до достижения конца таблицы,
+    /// В таблицу входят строки, начиная с очередного вызова <see cref="Read()"/> и до достижения конца таблицы,
     /// но не более <paramref name="maxRowCount"/> строк.
     /// Метод возвращает false, если в DBF-файле больше нет строк.
-    /// Обычно перед вызовом следует установить RecNo=0, а затем вызывать метод в цикле, 
+    /// Обычно перед вызовом следует установить <see cref="RecNo"/>=0, а затем вызывать метод в цикле, 
     /// пока возвращается true.
     /// </summary>
     /// <param name="maxRowCount">Максимальное количество строк в возвращаемой таблице (размер блока)</param>
     /// <param name="errors">Если аргумент передан, то при невозможности прочитать значение поля, будет добавлено сообщение об ошибке и чтение будет продолжено.
     /// Если null, то будет выброшено исключение</param>
-    /// <param name="table">Сюда помещается заполненная таблица DataTable, содержащая от 1
+    /// <param name="table">Сюда помещается заполненная таблица <see cref="DataTable"/>, содержащая от 1
     /// до <paramref name="maxRowCount"/> строк</param>
     /// <returns>true, если данные прочитаны и false, если DBF-файл не содержит непрочитанных строк</returns>
     public bool CreateBlockedTable(int maxRowCount, ErrorMessageList errors, out DataTable table)
@@ -4048,12 +4072,12 @@ namespace FreeLibSet.DBF
     }
 
     /// <summary>
-    /// Возвращает часть таблицы в виде DataTable.
-    /// Таблица будет содержать указанные поля DBF-файла
-    /// В таблицу входят строки, начиная с очередного вызова Read() и до достижения конца таблицы,
+    /// Возвращает часть таблицы в виде <see cref="System.Data.DataTable"/>.
+    /// Таблица будет содержать указанные поля DBF-файла.
+    /// В таблицу входят строки, начиная с очередного вызова <see cref="Read()"/> и до достижения конца таблицы,
     /// но не более <paramref name="maxRowCount"/> строк.
     /// Метод возвращает false, если в DBF-файле больше нет строк.
-    /// Обычно перед вызовом следует установить RecNo=0, а затем вызывать метод в цикле, 
+    /// Обычно перед вызовом следует установить <see cref="RecNo"/>=0, а затем вызывать метод в цикле, 
     /// пока возвращается true.
     /// </summary>
     /// <param name="maxRowCount">Максимальное количество строк в возвращаемой таблице (размер блока)</param>
@@ -4061,7 +4085,7 @@ namespace FreeLibSet.DBF
     /// Если файл не содержит какого-либо поля, будет сгенерировано исключение</param>
     /// <param name="errors">Если аргумент передан, то при невозможности прочитать значение поля, будет добавлено сообщение об ошибке и чтение будет продолжено.
     /// Если null, то будет выброшено исключение</param>
-    /// <param name="table">Сюда помещается заполненная таблица DataTable, содержащая от 1
+    /// <param name="table">Сюда помещается заполненная таблица <see cref="DataTable"/>, содержащая от 1
     /// до <paramref name="maxRowCount"/> строк</param>
     /// <returns>true, если данные прочитаны и false, если DBF-файл не содержит непрочитанных строк</returns>
     public bool CreateBlockedTable(int maxRowCount, string columnNames, ErrorMessageList errors, out DataTable table)
@@ -4161,8 +4185,8 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Добавить правило для копирования.
     /// </summary>
-    /// <param name="srcFieldIndex">Индекс столбца в исходной таблице</param>
-    /// <param name="resFieldIndex">Индекс столбца в заполняемой таблице</param>
+    /// <param name="srcFieldIndex">Индекс столбца в исходной таблице <see cref="SrcFile"/></param>
+    /// <param name="resFieldIndex">Индекс столбца в заполняемой таблице <see cref="ResFile"/></param>
     public void AddField(int srcFieldIndex, int resFieldIndex)
     {
       CheckNotReadOnly();
@@ -4181,8 +4205,8 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Добавить правило для копирования.
     /// </summary>
-    /// <param name="srcFieldName">Имя столбца в исходной таблице</param>
-    /// <param name="resFieldName">Имя столбца в заполняемой таблице</param>
+    /// <param name="srcFieldName">Имя столбца в исходной таблице <see cref="SrcFile"/></param>
+    /// <param name="resFieldName">Имя столбца в заполняемой таблице <see cref="ResFile"/></param>
     public void AddField(string srcFieldName, string resFieldName)
     {
       int srcFieldIndex = SrcFile.DBStruct.IndexOf(srcFieldName);
@@ -4307,7 +4331,6 @@ namespace FreeLibSet.DBF
     /// Список блоков, которые можно копировать напрямую без преобразования значений
     /// </summary>
     private List<DirectCopyItem> _DirectCopyList;
-
 
     private struct SpaceFillItem : IComparable<SpaceFillItem>
     {
@@ -4558,8 +4581,8 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Основной метод копирования.
-    /// Перебирает все записи в исходной таблицы и вызывает AppendRecord в конечной из них для каждой строки.
-    /// Для больших таблиц рекомендуется использовать перегрузку с аргументом Splash, чтобы пользователь мог прервать процесс.
+    /// Перебирает все записи в исходной таблицы <see cref="SrcFile"/> и вызывает <see cref="DbfFile.AppendRecord()"/> в конечной таблице <see cref="ResFile"/> для каждой строки.
+    /// Для больших таблиц рекомендуется использовать перегрузку <see cref="AppendRecords(ISplash)"/>, чтобы пользователь мог прервать процесс.
     /// </summary>
     public void AppendRecords()
     {
@@ -4568,7 +4591,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Основной метод копирования.
-    /// Перебирает все записи в исходной таблицы и вызывает AppendRecord в конечной из них для каждой строки.
+    /// Перебирает все записи в исходной таблицы <see cref="SrcFile"/> и вызывает <see cref="DbfFile.AppendRecord()"/> в конечной таблице <see cref="ResFile"/> для каждой строки.
     /// </summary>
     /// <param name="splash">Управляемая splash-заставка. Если null, то пользователь не может прервать процесс.</param>
     public void AppendRecords(ISplash splash)

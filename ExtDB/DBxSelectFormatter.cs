@@ -12,9 +12,9 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Генератор SQL-выражения для FillSelect().
-  /// Используется в методах DBxConBase.FillSelect() и подобных.
-  /// Объект является "одноразовым"
+  /// Генератор SQL-выражения для оператора SELECT.
+  /// Используется в методах <see cref="DBxConBase.FillSelect(DBxSelectInfo)"/> и <see cref="DBxConBase.ReaderSelect(DBxSelectInfo)"/>
+  /// Объект является "одноразовым".
   /// Использование:
   /// 1. Создать DBxSelectFormatter.
   /// 2. Вызвать Format()

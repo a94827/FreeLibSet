@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Форматизатор для объекта System.Data.DataView
+  /// Форматизатор для объекта <see cref="System.Data.DataView"/>
   /// </summary>
   public sealed class DataViewDBxSqlFormatter : BaseDBxSqlFormatter
   {
@@ -37,8 +38,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Для DataView не используются ссылочные поля.
     /// Поля с точками трактуются как обычные, а не ссылочные поля.
-    /// Если свойство DBxFormatExpressionInfo.NullAsDefaultValue установлено, то форматируется функция COALESCE(),
-    /// иначе вызывается OnFormatColumnName()
+    /// Если свойство <see cref="DBxFormatExpressionInfo.NullAsDefaultValue"/> установлено, то форматируется функция COALESCE(),
+    /// иначе вызывается <see cref="DBxSqlFormatter.OnFormatColumnName(DBxSqlBuffer, string)"/>.
     /// </summary>
     /// <param name="buffer">Буфер для создания SQL-запроса</param>
     /// <param name="column">Выражение - имя поля</param>
@@ -156,7 +157,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Выбрасывает исключения
+    /// Выбрасывает исключение, так как <see cref="System.Data.DataView"/> не поддерживает агрегатные функции.
     /// </summary>
     /// <param name="buffer"></param>
     /// <param name="function"></param>
@@ -173,9 +174,9 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Генерирует исключение
     /// </summary>
-    /// <param name="Buffer">Не используется</param>
-    /// <param name="Column">Не используется</param>
-    protected override void OnFormatValueType(DBxSqlBuffer Buffer, DBxColumnStruct Column)
+    /// <param name="buffer">Не используется</param>
+    /// <param name="column">Не используется</param>
+    protected override void OnFormatValueType(DBxSqlBuffer buffer, DBxColumnStruct column)
     {
       throw new NotImplementedException("DataView не имеет реализации DDL");
     }
@@ -193,7 +194,7 @@ namespace FreeLibSet.Data
     #region Прочие фильтры
 
     /// <summary>
-    /// Специальная обработка для TimeSpan
+    /// Специальная обработка для <see cref="TimeSpan"/>
     /// </summary>
     /// <param name="buffer"></param>
     /// <param name="filter"></param>
@@ -254,7 +255,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Запись фильтра CompareFilter в режиме сравнения значения с NULL.
+    /// Запись фильтра <see cref="CompareFilter"/> в режиме сравнения значения с NULL.
     /// Добавляет "NOT ISNULL(Выражение, Значение-по-Умолчанию)=Значение-по-Умолчанию"
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
@@ -344,8 +345,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование фильтра.
-    /// DataView игнорирует или учитывает регистр, в зависимости от настроек DataTable.
-    /// Поэтому, здесь нельзя учитывать свойство Filter.IgnoreCase
+    /// DataView игнорирует или учитывает регистр, в зависимости от настроек <see cref="System.Data.DataTable.CaseSensitive"/>.
+    /// Поэтому, здесь нельзя учитывать свойство <see cref="StringValueFilter.IgnoreCase"/>.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
@@ -364,7 +365,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование фильтра.
-    /// Автономная версия этого метода есть в ExtTools.dll. Метод DataTools.GetDataViewLikeExpressionString()
+    /// Автономная версия этого метода есть в ExtTools.dll. Метод <see cref="DataTools.GetDataViewLikeExpressionString(string)"/>.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>

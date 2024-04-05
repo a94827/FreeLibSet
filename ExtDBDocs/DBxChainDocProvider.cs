@@ -14,7 +14,7 @@ using System.Diagnostics;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Аргументы события для восстановления подключения к серверу
+  /// Аргументы события <see cref="DBxChainDocProvider.ExceptionCaught"/> для восстановления подключения к серверу.
   /// </summary>
   public class DBxRetriableExceptionEventArgs : EventArgs
   {
@@ -40,10 +40,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возникшее исключение.
-    /// Пользовательский обработчик обязательно должен проверить, что исключение связано с подключением к серверу
+    /// Пользовательский обработчик обязательно должен проверить, что исключение связано с подключением к серверу.
     /// </summary>
     public Exception Exception { get { return _Exception; } }
-    private Exception _Exception;
+    private readonly Exception _Exception;
 
     /// <summary>
     /// Счетчик повторных вызовов.
@@ -54,11 +54,11 @@ namespace FreeLibSet.Data.Docs
     /// Счетчик относится к конкретному вызову метода, а не к соединению вообще.
     /// </summary>
     public int RepeatCount { get { return _RepeatCount; } }
-    private int _RepeatCount;
+    private readonly int _RepeatCount;
 
     /// <summary>
     /// Это свойство должно быть установлено в true, если соединение с сервером восстановлено и следует
-    /// повторить попытку вызвать метод сервера
+    /// повторить попытку вызвать метод сервера.
     /// </summary>
     public bool Retry { get { return _Retry; } set { _Retry = value; } }
     private bool _Retry;
@@ -67,18 +67,18 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Тип события DBxDocProvider.ExceptionCaught
+  /// Делегаь события <see cref="DBxChainDocProvider.ExceptionCaught"/>
   /// </summary>
-  /// <param name="sender">Ссылка на DBxChainDocProvider.</param>
+  /// <param name="sender">Ссылка на <see cref="DBxChainDocProvider"/>.</param>
   /// <param name="args">Аргументы события</param>
   public delegate void DBxRetriableExceptionEventHandler(object sender, DBxRetriableExceptionEventArgs args);
 
   /// <summary>
   /// Данные, необходимые для организации цепочки провайдеров.
-  /// Требуется конструктору DBxChainDocProvider. Для получения прокси требуется вызов DBxDocProvider.CreateProxy().
+  /// Требуется конструктору <see cref="DBxChainDocProvider"/>. Для получения прокси требуется вызов <see cref="DBxDocProvider.CreateProxy()"/>.
   /// Передается по сети как сериализуемый объект.
-  /// Содержит ссылку родительский провайдер (производный от MasterByRefObject) и фиксированные данные.
-  /// Не содержит общедоступных свойств и методов
+  /// Содержит ссылку родительский провайдер (производный от <see cref="MarshalByRefObject"/>) и фиксированные данные.
+  /// Не содержит полезных для прикладного кода свойств и методов.
   /// </summary>
   [Serializable]
   public sealed class DBxDocProviderProxy
@@ -96,23 +96,23 @@ namespace FreeLibSet.Data.Docs
     #region Свойства
 
     /// <summary>
-    /// Провайдер-источник, для которого был вызван метод CreateProxy()
+    /// Провайдер-источник, для которого был вызван метод <see cref="DBxDocProvider.CreateProxy()"/>
     /// </summary>
     public DBxDocProvider Source { get { return _Source; } }
-    private DBxDocProvider _Source;
+    private readonly DBxDocProvider _Source;
 
     internal NamedValues FixedInfo { get { return _FixedInfo; } }
-    private NamedValues _FixedInfo;
+    private readonly NamedValues _FixedInfo;
 
     #endregion
   }
 
   /// <summary>
   /// Базовый класс для реализации цепочек провайдеров.
-  /// Присоединяется к провайдеру-источнику. Источник может быть в текущем AppDomain или доступным через Remoting.
-  /// Реализует хранение кэша DBxCache и кэша двоичных данных, если источник данных является удаленным.
-  /// Класс DBxChainDocProvider сам по себе является потокобезопасным, но использование объекта может быть искусственно
-  /// огранчиено одним потоком, если задан флаг в конструкторе.
+  /// Присоединяется к провайдеру-источнику. Источник может быть в текущем <see cref="AppDomain"/> или доступным через Remoting.
+  /// Реализует хранение кэша <see cref="DBxCache"/> и кэша двоичных данных, если источник данных является удаленным.
+  /// Класс <see cref="DBxChainDocProvider"/> сам по себе является потокобезопасным, но использование объекта может быть искусственно
+  /// ограничено одним потоком, если задан флаг в конструкторе.
   /// </summary>
   public class DBxChainDocProvider : DBxDocProvider
   {
@@ -121,7 +121,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Создает цепочечный провайдер
     /// </summary>
-    /// <param name="sourceProxy">Результат вызова DBxDocProvider.CreateProxy() для предыдущего провайдера в цепочке</param>
+    /// <param name="sourceProxy">Результат вызова <see cref="DBxDocProvider.CreateProxy()"/> для предыдущего провайдера в цепочке</param>
     /// <param name="currentThreadOnly">Если true, то вызовы нового провайдера будут разрешены только из текущего потока</param>
     public DBxChainDocProvider(DBxDocProviderProxy sourceProxy, bool currentThreadOnly)
       : base(sourceProxy.FixedInfo, currentThreadOnly)
@@ -140,14 +140,14 @@ namespace FreeLibSet.Data.Docs
     /// Исходный провайдер, выполняющий основной объем действий
     /// </summary>
     protected DBxDocProvider Source { get { return _Source; } }
-    private DBxDocProvider _Source;
+    private readonly DBxDocProvider _Source;
 
     /// <summary>
     /// Возвращает true, если провайдер-источник является удаленным объектом (TransparentProxy).
-    /// В этом случае DBxChainDocProvider использует собственную копию DBxCache
+    /// В этом случае <see cref="DBxChainDocProvider"/> использует собственную копию <see cref="DBxCache"/>
     /// </summary>
     public bool SourceIsRemote { get { return _SourceIsRemote; } }
-    private bool _SourceIsRemote;
+    private readonly bool _SourceIsRemote;
 
     #endregion
 
@@ -229,7 +229,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Применение изменений.
-    /// Выполняется создание, изменение и удаление документов и поддокументов
+    /// Выполняется создание, изменение и удаление документов и поддокументов.
     /// </summary>
     /// <param name="dataSet">Набор данных</param>
     /// <param name="reloadData">Если true, то будет возвращен тот же набор данных.
@@ -247,7 +247,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить таблицу версий строк документа.
-    /// Возвращает таблицу с одной строкой
+    /// Возвращает таблицу с одной строкой.
     /// </summary>
     /// <param name="docTypeName">Имя таблицы документа</param>
     /// <param name="docId">Идентификатор документа</param>
@@ -299,10 +299,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает все таблицы данных по документу. Возвращает таблицы документов (с одной строкой) и поддокументов,
-    /// включая удаленные записи. В набор добавляются строки из таблиц UserActions и DocActions.
+    /// включая удаленные записи. В набор добавляются строки из таблиц "UserActions" и "DocActions".
     /// В набор добавляются таблицы документов из базы данных истории. Чтобы отличить их от основных
     /// документов, перед именами таблиц добавляется префикс "Undo_".
-    /// Метод предназначен для отладочных целей
+    /// Метод предназначен для отладочных целей.
     /// </summary>
     /// <param name="docTypeName">Имя таблицы документа</param>
     /// <param name="docId">Идентификатор документа</param>
@@ -407,7 +407,7 @@ namespace FreeLibSet.Data.Docs
     /// Получение значения для одного поля. Имя поля может содержать точки для
     /// извлечения значения из зависимой таблицы. Расширенная версия возвращает
     /// значение поля по ссылке, а как результат возвращается признак того, что
-    /// строка найдена
+    /// строка найдена.
     /// </summary>
     /// <param name="tableName">Имя таблицы, в которой выполняется поиск</param>
     /// <param name="id">Идентификатор строки. Может быть 0, тогда возвращается Value=null</param>
@@ -435,7 +435,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значения для заданного списка полей для одной записи.
     /// Если не найдена строка с заданным идентификатором <paramref name="id"/>, 
-    /// то возвращается массив, содержазий одни значения null.
+    /// то возвращается массив, содержащий одни значения null.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор строки</param>
@@ -461,7 +461,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить список идентификаторов в таблице для строк, соответствующих заданному фильтру.
-    /// Фильтры по полю Deleted должны быть заданы в явном виде
+    /// Фильтры по полю "Deleted" должны быть заданы в явном виде.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтры</param>
@@ -512,7 +512,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить максимальное значение числового поля
+    /// Получить максимальное значение числового поля.
     /// Строки таблицы, содержащие значения NULL, игнорируются.
     /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
     /// </summary>
@@ -603,8 +603,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить суммарное значение числового поля для выбранных записей
-    /// Строки таблицы, содержащие значения NULL, игнорируются
+    /// Получить суммарное значение числового поля для выбранных записей.
+    /// Строки таблицы, содержащие значения NULL, игнорируются.
     /// Если нет ни одной строки, удовлетворяющей условию <paramref name="where"/>, возвращается null.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
@@ -630,8 +630,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получение списка уникальных значений поля SELECT DISTINCT
-    /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю
+    /// Получение списка уникальных значений поля SELECT DISTINCT.
+    /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля</param>
@@ -1018,8 +1018,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает время последнего действия пользователя (включая компонент времени).
-    /// Время возвращается в формате DataSetDateTime.Unspecified.
-    /// Если для пользователя нет ни одной записи в таблице UserActions, возвращается null
+    /// Время возвращается в формате <see cref="DataSetDateTime.Unspecified"/>.
+    /// Если для пользователя нет ни одной записи в таблице "UserActions", возвращается null.
     /// </summary>
     /// <param name="userId">Идентификатор пользователя, для которого надо получить данные</param>
     /// <returns>Время или null</returns>
@@ -1042,8 +1042,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Установить длительную блокировку
-    /// Если какой-либо из документов уже заблокирован, выбрасывается исключение DBxLockDocsException
+    /// Установить длительную блокировку.
+    /// Если какой-либо из документов уже заблокирован, выбрасывается исключение <see cref="DBxDocsLockException"/>.
     /// </summary>
     /// <param name="docSel">Выборка документов, которую требуется заблокировать</param>
     /// <returns>Идентификатор установленной блокировки</returns>
@@ -1247,10 +1247,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Система кэширования данных.
-    /// Если данный экземпляр объекта DBxDocProvider является прокси для серверного объекта, то
-    /// он содержит собственную копию DBxCache.
-    /// Если же текущий DBxDocProvider ссылается на другой провайдер в цепочке без использования
-    /// Remoting, то используется Source.DBCache.
+    /// Если <see cref="Source"/> является прокси для серверного объекта, то
+    /// текущий <see cref="DBxChainDocProvider"/> содержит собственную копию <see cref="DBxCache"/>.
+    /// Если же текущий <see cref="DBxDocProvider"/> ссылается на другой провайдер в цепочке без использования
+    /// Remoting, то используется <see cref="Source"/>.DBCache.
     /// </summary>
     protected override DBxCache DoGetDBCache()
     {
@@ -1286,7 +1286,7 @@ namespace FreeLibSet.Data.Docs
     #region Доступ к двоичным данным и файлам
 
     /// <summary>
-    /// Метод получения двоичных данных, реализуемый в DBxRealDocProvider.
+    /// Метод получения двоичных данных, реализуемый в <see cref="DBxRealDocProvider"/>.
     /// Этот метод не должен использоваться в прикладном коде.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
@@ -1302,7 +1302,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Внутренний метод получения хранимого файла
+    /// Внутренний метод получения хранимого файла.
     /// Этот метод не должен использоваться в прикладном коде.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
@@ -1322,10 +1322,10 @@ namespace FreeLibSet.Data.Docs
     #region Прочие методы
 
     /// <summary>
-    /// Создает копию провайдера-источника, а затем - копию DBxChainDocProvider
-    /// Этот метод является потокобезопасным
+    /// Создает копию провайдера-источника, а затем - копию текушего <see cref="DBxChainDocProvider"/>.
+    /// Этот метод является потокобезопасным.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый <see cref="DBxChainDocProvider"/></returns>
     protected override DBxDocProvider DoClone()
     {
       DBxDocProvider source2 = Source.Clone();
@@ -1346,8 +1346,8 @@ namespace FreeLibSet.Data.Docs
     #region Права пользователя
 
     /// <summary>
-    /// Коллекция объектов, предназначенная для создания объектов UserPermission
-    /// Если свойство установлено, то свойства UserPermissions и DocPermissions возвращают
+    /// Коллекция объектов, предназначенная для создания объектов <see cref="UserPermission"/>.
+    /// Если свойство установлено, то свойства <see cref="DBxDocProvider.UserPermissions"/> и <see cref="DBxDocProvider.DocPermissions"/> возвращают
     /// локальные копии воссозданных разрешений.
     /// </summary>
     public UserPermissionCreators UserPermissionCreators
@@ -1411,7 +1411,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Права, назначенные пользователю (включая классы, определенные в программе).
-    /// Объект DBxChainDocProvider содержит собственную копию разрешений
+    /// Объект <see cref="DBxChainDocProvider"/> содержит собственную копию разрешений.
     /// </summary>
     protected override UserPermissions DoGetUserPermissions()
     {
@@ -1465,14 +1465,14 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Событие вызывается при возникновении исключения при вызове метода в базовом провайдере (Source).
+    /// Событие вызывается при возникновении исключения при вызове метода в базовом провайдере (<see cref="Source"/>).
     /// Пользовательский обработчик может проверить исключение и, если оно связано с сетью, попробовать
-    /// восстановить соединение с сервером. После этого следует установить свойство Retry в аргументе события.
+    /// восстановить соединение с сервером. После этого следует установить свойство <see cref="DBxRetriableExceptionEventArgs.Retry"/> в аргументе события.
     /// При использовании ExtDBDocForms.dll следует добавлять обработчик события к DBUI, а не здесь.
     /// </summary>
     /// <remarks>
     /// Предупреждение.
-    /// Если есть цепочка DBxChainDocProvider и устанавливается обработчик события на стороне клиента,
+    /// Если есть цепочка <see cref="DBxChainDocProvider"/> и устанавливается обработчик события на стороне клиента,
     /// то этот обработчик на самом деле присоединяется к последнему провайдеру в цепочке, после которого
     /// используется Net Remoting для соединения со следующим провайдером.
     /// </remarks>
@@ -1501,7 +1501,7 @@ namespace FreeLibSet.Data.Docs
     private event DBxRetriableExceptionEventHandler _ExceptionCaught;
 
     /// <summary>
-    /// Метод вызывается, если при вызове метода в Source возникло исключение.
+    /// Метод вызывается, если при вызове метода в <see cref="Source"/> возникло исключение.
     /// Если исключения связано с сетью, метод должен попытаться восстановить подключение к серверу
     /// и вернуть true, чтобы выполнить полытку запроса еще раз.
     /// Тип исключения должен быть проверен, т.к. метод вызывается при любом исключении, не обязательно

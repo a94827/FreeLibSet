@@ -13,8 +13,9 @@ namespace FreeLibSet.Data.Docs
 {
 
   /// <summary>
-  /// Доступ к значениям одной строки DataRow.
-  /// Не может иметь "серых" значений
+  /// Доступ к значениям одной строки <see cref="DataRow"/>.
+  /// Не может иметь "серых" значений (реализация <see cref="IDBxDocValues.GetGrayed(int)"/> всегда возвращает false).
+  /// Если предполагается обработка множества строк таблицы, используйте <see cref="DataTableDocValues"/>.
   /// </summary>
   public struct DataRowDocValues : IDBxDocValues
   {
@@ -64,9 +65,9 @@ namespace FreeLibSet.Data.Docs
     private bool _IsReadOnly;
 
     /// <summary>
-    /// См. описание в DataTableDocValues.
+    /// См. описание в <see cref="DataTableDocValues"/>.
     /// </summary>
-    private StringArrayIndexer _ColumnNameIndexer;
+    private /*readonly*/ StringArrayIndexer _ColumnNameIndexer;
 
     /// <summary>
     /// Для отладки
@@ -83,7 +84,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Доступ к значению по имени поля.
-    /// Если запрошено имя поля, которого нет в таблице, генерируется исключение
+    /// Если запрошено имя поля, которого нет в таблице, генерируется исключение.
     /// </summary>
     /// <param name="name">Имя поля</param>
     /// <returns>Доступ к значению поля</returns>
@@ -99,9 +100,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает имя поля DataColumn.ColumnName по индексу поля
+    /// Возвращает имя поля <see cref="DataColumn.ColumnName"/> по индексу поля
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
     /// <returns>Имя поля</returns>
     public string GetName(int index)
     {
@@ -109,7 +110,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает отображаемое имя поля DataColumn.Caption по индексу поля
+    /// Возвращает отображаемое имя поля <see cref="DataColumn.Caption"/> по индексу поля.
+    /// Если заголовок не задан, возвращается <see cref="DataColumn.ColumnName"/>.
     /// </summary>
     /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
     /// <returns>Отображаемое имя поля</returns>
@@ -138,9 +140,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Доступ к значению по индексу поля
+    /// Доступ к значению по индексу поля.
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
     /// <returns>Объект доступа к значениям</returns>
     public DBxDocValue this[int index]
     {
@@ -148,7 +150,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает количество столбцов в таблице Row.Table.Columns.Count.
+    /// Возвращает количество столбцов в таблице <see cref="Row"/>.Table.Columns.Count.
     /// </summary>
     public int Count
     {
@@ -160,7 +162,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение поля
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
     /// <param name="preferredType">Не используется</param>
     /// <returns>Значение</returns>
     public object GetValue(int index, DBxDocValuePreferredType preferredType)
@@ -182,8 +184,8 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Установить значение поля
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
-    /// <param name="value">Значение поля. Null заменяется на DBNull</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
+    /// <param name="value">Значение поля. Null заменяется на <see cref="DBNull"/></param>
     public void SetValue(int index, object value)
     {
       CheckNotReadOnly();
@@ -194,9 +196,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает DataRow.IsNull()
+    /// Возвращает <see cref="DataRow.IsNull(int)"/>.
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
     /// <returns>True, если значение поля пустое</returns>
     public bool IsNull(int index)
     {
@@ -204,9 +206,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает DataColumn.AllowDBNull
+    /// Возвращает <see cref="DataColumn.AllowDBNull"/>.
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
     /// <returns>Допустимость пустых значений</returns>
     public bool AllowDBNull(int index)
     {
@@ -214,9 +216,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает DataColumn.MaxLength
+    /// Возвращает <see cref="DataColumn.MaxLength"/>.
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
     /// <returns>Маскимальная длина текстового поля</returns>
     public int MaxLength(int index)
     {
@@ -224,10 +226,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если столбец предназначен только для просмотра (свойство DataColumn.ReadOnly).
-    /// Если IsReadOnly=true, то возвращается true.
+    /// Возвращает true, если столбец предназначен только для просмотра (свойство <see cref="DataColumn.ReadOnly"/>).
+    /// Если для текущего объкекта свойство <see cref="IsReadOnly"/>=true, то возвращается true независимо от значений для столбца.
     /// </summary>
-    /// <param name="index">Индекс столбца в диапазоне от 0 до (Row.Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца в диапазоне от 0 до (<see cref="Row"/>.Table.Columns.Count-1)</param>
     /// <returns>Признак "только чтение"</returns>
     public bool GetValueReadOnly(int index)
     {
@@ -276,10 +278,10 @@ namespace FreeLibSet.Data.Docs
     #region IEnumerable<DBxDocValue> Members
 
     /// <summary>
-    /// Возвращает перечислитель по объектам DBxDocValue.
-    /// Перебираются все столбцы таблицы
+    /// Возвращает перечислитель по объектам <see cref="DBxDocValue"/>.
+    /// Перебираются все столбцы таблицы.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечислитель</returns>
     public DBxDocValueEnumerator GetEnumerator()
     {
       return new DBxDocValueEnumerator(this);
@@ -300,7 +302,8 @@ namespace FreeLibSet.Data.Docs
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
+    /// Значения свойства для столбцов <see cref="DataColumn.ReadOnly"/> не влияют на этот метод.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -312,10 +315,11 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Доступ к значениям полей таблицы в-целом, с поддержкой "серых" значений
-  /// Используется буферизация. При изменении значений полей отдельных строк (кроме установки значения с помощью SetRowValue())или добавлении/удалении строк, 
-  /// должен быть вызван метод ResetBuffer().
+  /// Доступ к значениям полей таблицы в-целом, с поддержкой "серых" значений.
+  /// Используется буферизация. При изменении значений полей отдельных строк (кроме установки значения с помощью <see cref="DataTableDocValues.SetRowValue(int, int, object)"/>)или добавлении/удалении строк, 
+  /// должен быть вызван метод <see cref="DataTableDocValues.ResetBuffer()"/>.
   /// Доступ к значениям возможен, даже если таблица не содержит ни одной строки.
+  /// Возможна последовательная обработка нескольких однотипных таблиц установкой свойства <see cref="DataTableDocValues.Table"/>.
   /// </summary>
   public class DataTableDocValues : IDBxDocValues
   {
@@ -324,7 +328,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Создает объект доступа к таблице.
     /// У таблицы уже должны быть добавлены столбцы, дальнейшее изменение структуры таблицы не допускается.
-    /// Строки могут добавляться или удаляться после вызова конструктора, с вызовом метода ResetBuffer().
+    /// Строки могут добавляться или удаляться после вызова конструктора, с вызовом метода <see cref="ResetBuffer()"/>.
     /// </summary>
     /// <param name="table">Таблица</param>
     public DataTableDocValues(DataTable table)
@@ -335,7 +339,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Создает объект доступа к таблице.
     /// У таблицы уже должны быть добавлены столбцы, дальнейшее изменение структуры таблицы не допускается.
-    /// Строки могут добавляться или удаляться после вызова конструктора, с вызовом метода ResetBuffer().
+    /// Строки могут добавляться или удаляться после вызова конструктора, с вызовом метода <see cref="ResetBuffer()"/>.
     /// Эта перегрузка с индексатором столбцов предназначена, в основном, для внутреннего использования в библиотеке.
     /// </summary>
     /// <param name="table">Таблица</param>
@@ -414,7 +418,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Индексатор столбцов по именам. 
     /// Создается автоматически при необходимости, или задается в конструкторе.
-    /// Реализация в NetFramework метода DataColumnCollection.IndexOf(columnName) является медленной.
+    /// Реализация в NetFramework метода <see cref="DataColumnCollection.IndexOf(string)"/> является медленной.
     /// Несмотря на наличие внутреннего словаря DataColumnCollection.columnFromName, после проверки факта наличия
     /// столбца выполняется обычный перебор столбцов в цикле. Перебор выполняется, даже если имя поля задано в правильном регистре.
     /// Индексатор обычно должен быть нерегистрочувствительным.
@@ -526,9 +530,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить имя столбца по индексу (свойство DataColumn.ColumnName)
+    /// Получить имя столбца по индексу (свойство <see cref="DataColumn.ColumnName"/>)
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>Имя столбца</returns>
     public string GetName(int index)
     {
@@ -536,9 +540,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает отображаемое имя столбца (свойство DataColumn.Caption)
+    /// Возвращает отображаемое имя столбца (свойство <see cref="DataColumn.Caption"/>).
+    /// Если свойство не установлено, возвращается <see cref="DataColumn.ColumnName"/>.
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>Заголовок столбца</returns>
     public string GetDisplayName(int index)
     {
@@ -567,7 +572,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает объект доступа к значениям поля.
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>Объект доступа</returns>
     public DBxDocValue this[int index]
     {
@@ -575,7 +580,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает DataTable.Columns.Count
+    /// Возвращает <see cref="Table"/>.Columns.Count
     /// </summary>
     public int Count
     {
@@ -583,7 +588,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает количество строк в таблице
+    /// Возвращает количество строк в таблице <see cref="Table"/>.Rows.Count.
     /// </summary>
     public int RowCount
     {
@@ -603,11 +608,11 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение.
     /// Если во всех строках таблицы находится одинаковое значение, оно возвращается.
-    /// Если в таблице во всех строках находится пустое значение, возвращается DBNull.
+    /// Если в таблице во всех строках находится пустое значение, возвращается <see cref="DBNull"/>.
     /// Если в таблице в строках находятся разные значения ("серое" значение, Grayed=true), возвращается null.
-    /// Если таблица не содержит ни одной строки, возвращается DBNull.
+    /// Если таблица не содержит ни одной строки, возвращается <see cref="DBNull"/>.
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <param name="preferredType">Игнорируется</param>
     /// <returns>Значение поля.</returns>
     public object GetValue(int index, DBxDocValuePreferredType preferredType)
@@ -617,10 +622,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Установить значение
+    /// Установить одинаковое значение поля во все строки таблицы.
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
-    /// <param name="value">Новое значение. Значение null заменяется на DBNull.</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
+    /// <param name="value">Новое значение. Значение null заменяется на <see cref="DBNull"/>.</param>
     public void SetValue(int index, object value)
     {
       CheckNotReadOnly(); // 28.02.2022
@@ -641,10 +646,11 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если значения поля во всех строках равны DBNull.
+    /// Возвращает true, если значения поля во всех строках равны <see cref="DBNull"/>.
     /// Если значение поля "серое", возвращается true.
+    /// Если таблица не содержит строк, возвращается true.
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>Наличие Null</returns>
     public bool IsNull(int index)
     {
@@ -656,19 +662,19 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает свойство DataColumn.AllowDBNull
+    /// Возвращает свойство <see cref="DataColumn.AllowDBNull"/>
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
-    /// <returns>Разрешение значения DBNull для поля</returns>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
+    /// <returns>Разрешение значения <see cref="DBNull"/> для поля</returns>
     public bool AllowDBNull(int index)
     {
       return _Table.Columns[index].AllowDBNull;
     }
 
     /// <summary>
-    /// Возвращает свойство DataColumn.MaxLength
+    /// Возвращает свойство <see cref="DataColumn.MaxLength"/>
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>Максимальная длина текстового поля в символах</returns>
     public int MaxLength(int index)
     {
@@ -676,9 +682,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает свойство DataColumn.ReadOnly
+    /// Возвращает свойство <see cref="DataColumn.ReadOnly"/>
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>true, если столбец доступен только для чтения</returns>
     public bool GetValueReadOnly(int index)
     {
@@ -689,7 +695,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает true, если в разных строках значения поля не совпадают
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>True, если значение "серое"</returns>
     public bool GetGrayed(int index)
     {
@@ -702,9 +708,10 @@ namespace FreeLibSet.Data.Docs
     #region Данные для отдельных строк
 
     /// <summary>
-    /// Получение массива всех значений
+    /// Получение массива всех значений.
+    /// Количество элементов равно количеству строк в таблице, независимо от наличия повторяющихся значений
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <returns>Массив</returns>
     public object[] GetValueArray(int index)
     {
@@ -715,9 +722,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Присвоение значения для всех строк
+    /// Присвоение значения для всех строк.
+    /// Длина массива должна быть равна количеству строк
     /// </summary>
-    /// <param name="index">Индекс столбца от 0 до (Table.Columns.Count-1)</param>
+    /// <param name="index">Индекс столбца от 0 до (<see cref="Table"/>.Columns.Count-1)</param>
     /// <param name="values">Массив значений</param>
     public void SetValueArray(int index, object[] values)
     {
@@ -738,7 +746,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение для одной из строк. Значение не может быть "серым".
-    /// Так как свойство RowCount может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
+    /// Так как свойство <see cref="RowCount"/> может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
     /// </summary>
     /// <param name="valueIndex">Индекс поля в списке</param>
     /// <param name="rowIndex">Индекс строки в диапазоне от 0 до RowCount</param>
@@ -754,10 +762,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Установить значение для одной из строк.
-    /// Так как свойство RowCount может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
+    /// Так как свойство <see cref="RowCount"/> может возвращать 0, этот метод может оказаться неприменимым для конкретного набора данных.
     /// </summary>
     /// <param name="valueIndex">Индекс поля в списке</param>
-    /// <param name="rowIndex">Индекс строки в диапазоне от 0 до RowCount</param>
+    /// <param name="rowIndex">Индекс строки в диапазоне от 0 до (<see cref="RowCount"/>-1)</param>
     /// <param name="value">Значение</param>
     public void SetRowValue(int valueIndex, int rowIndex, object value)
     {
@@ -772,14 +780,13 @@ namespace FreeLibSet.Data.Docs
       ResetBuffer(valueIndex);
     }
 
-
     #endregion
 
     #region IEnumerable<DBxDocValue> Members
 
     /// <summary>
     /// Возвращает перечислитель по столбцам таблицы.
-    /// Перечислитель получает объекты доступа DBxDocValue к значениям поля.
+    /// Перечислитель получает объекты доступа <see cref="DBxDocValue"/> к значениям поля.
     /// </summary>
     /// <returns>Перечислитель</returns>
     public DBxDocValueEnumerator GetEnumerator()
@@ -802,7 +809,8 @@ namespace FreeLibSet.Data.Docs
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
+    /// Свойства столбцов <see cref="DataColumn.ReadOnly"/> не влияют на этот метод.
     /// </summary>
     public void CheckNotReadOnly()
     {

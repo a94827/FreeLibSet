@@ -18,7 +18,7 @@ using FreeLibSet.Data;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Методы для работы с транзакциями, реализованные в DBxCon и DBxConBase
+  /// Методы для работы с транзакциями, реализованные в <see cref="DBxCon"/> и <see cref="DBxConBase"/>
   /// </summary>
   public interface IDBxConTransactions
   {
@@ -49,7 +49,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Базовый интерфейс только для запросов SELECT.
-  /// Запросы, связанные с идентификаторами записи типа Int32 выделены в интерфейс IDBxConReadOnlyPKInt32
+  /// Запросы, связанные с идентификаторами записи типа <see cref="Int32"/> выделены в интерфейс <see cref="IDBxConReadOnlyPKInt32"/>.
   /// </summary>
   public interface IDBxConReadOnlyBase
   {
@@ -60,7 +60,7 @@ namespace FreeLibSet.Data
     /// Загружаются все поля SELECT * FROM [TableName] 
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Заполненная таблица DataTable</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     DataTable FillSelect(string tableName);
 
     /// <summary>
@@ -70,7 +70,7 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Список имен полей. 
     /// Список может содержать поля с точками (например, "Человек.Фамилия") для выполнения LEFT JOIN.
     /// Если список не задан, будут возвращены все поля таблицы</param>
-    /// <returns>Заполненная таблица DataTable</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     DataTable FillSelect(string tableName, DBxColumns columnNames);
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace FreeLibSet.Data
     /// Если список не задан, будут возвращены все поля таблицы</param>
     /// <param name="where">Условие фильтрации</param>
     /// <param name="orderBy">Порядок сортировки</param>
-    /// <returns>Заполненная таблица DataTable</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     DataTable FillSelect(string tableName, DBxColumns columnNames, DBxFilter where, DBxOrder orderBy);
 
     /// <summary>
@@ -166,7 +166,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает true, если в таблице нет ни одной строки.
-    /// Тоже самое, что GetRecordCount()==0, но может быть оптимизировано.
+    /// Тоже самое, что <see cref="GetRecordCount(string)"/>==0, но может быть оптимизировано.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Отсутствие записей</returns>
@@ -335,7 +335,7 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Расширение интерфейса IDBxConReadOnlyBase на запросы, принимающие целочисленные идентификаторы первичного ключа.
+  /// Расширение интерфейса <see cref="IDBxConReadOnlyBase"/> на запросы, принимающие целочисленные идентификаторы первичного ключа.
   /// Этот интерфейс реализуется также классом DBxDocProvider в ExtDBDocs.dll
   /// </summary>
   public interface IDBxConReadOnlyPKInt32 : IDBxConReadOnlyBase
@@ -343,8 +343,8 @@ namespace FreeLibSet.Data
     #region FindRecord
 
     /// <summary>
-    /// Найти строку с заданным значением поля
-    /// Возвращается идентификатор первой попавшейся строки
+    /// Найти строку с заданным значением поля.
+    /// Возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля условия</param>
@@ -353,8 +353,8 @@ namespace FreeLibSet.Data
     Int32 FindRecord(string tableName, string columnName, object value);
 
     /// <summary>
-    /// Найти строку с заданными значениями полей
-    /// Возвращается идентификатор первой попавшейся строки
+    /// Найти строку с заданными значениями полей.
+    /// Возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
@@ -362,8 +362,8 @@ namespace FreeLibSet.Data
     Int32 FindRecord(string tableName, IDictionary columnNamesAndValues);
 
     /// <summary>
-    /// Найти строку с заданными значениями полей
-    /// Возвращается идентификатор первой попавшейся строки
+    /// Найти строку с заданными значениями полей.
+    /// Возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
@@ -374,8 +374,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Найти строку с заданными значениями полей. 
     /// Если задан порядок сортировки, то отыскиваются все строки с заданными значениями, 
-    /// они упорядочиваются и возвращается идентификатор первой строки. Если OrderBy=null,
-    /// то возвращается идентификатор первой попавшейся строки
+    /// они упорядочиваются и возвращается идентификатор первой строки. Если <paramref name="orderBy"/>=null,
+    /// то возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
@@ -392,10 +392,10 @@ namespace FreeLibSet.Data
     //Int32 FindRecord(string tableName);
 
     /// <summary>
-    /// Поиск первой строки, удовлетворяющей условию при заданном порядке строк
+    /// Поиск первой строки, удовлетворяющей условию при заданном порядке строк.
     /// Если задан порядок сортировки, то отыскиваются все строки с заданными значениями, 
-    /// они упорядочиваются и возвращается идентификатор первой строки. Если OrderBy=null,
-    /// то возвращается идентификатор первой попавшейся строки
+    /// они упорядочиваются и возвращается идентификатор первой строки. Если <paramref name="orderBy"/>=null,
+    /// то возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
@@ -405,7 +405,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Поиск первой строки, удовлетворяющей условию.
-    /// Если есть несколько подходящих строк, то возвращается идентификатор первой попавшейся строки
+    /// Если есть несколько подходящих строк, то возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
@@ -528,7 +528,7 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Общий интерфейс для DBxConBase и DBxCon
+  /// Общий интерфейс для <see cref="DBxConBase"/> и <see cref="DBxCon"/>
   /// </summary>
   public interface IDBxCon : IDBxConTransactions, IDBxConReadOnlyPKInt32
   {
@@ -574,55 +574,60 @@ namespace FreeLibSet.Data
     #region SELECT (DbDataReader)
 
     /// <summary>
-    /// Загрузка всей таблицы
+    /// Загрузка всей таблицы.
+    /// Для полученного объекта должен быть вызван метод <see cref="DbDataReader.Dispose()"/> по окончании использования.
+    /// В это время нельзя выполнять другие запросы на текущем соединении.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <returns></returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     DbDataReader ReaderSelect(string tableName);
 
     /// <summary>
-    /// Загрузка выбранных полей всей таблицы
+    /// Загрузка выбранных полей всей таблицы.
+    /// Для полученного объекта должен быть вызван метод <see cref="DbDataReader.Dispose()"/> по окончании использования.
+    /// В это время нельзя выполнять другие запросы на текущем соединении.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список имен полей. 
     /// Список может содержать поля с точками (например, "Человек.Фамилия") для выполнения LEFT JOIN.
     /// Если список не задан, будут возвращены все поля таблицы</param>
-    /// <returns>Объект DbDataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     DbDataReader ReaderSelect(string tableName, DBxColumns columnNames);
 
     /// <summary>
     /// Загрузка выбранных полей для строк таблицы, отобранных по условию.
-    /// Объект DataReader должен быть закрыт по окончании чтения.
-    /// На время чтения текущее соединение занято и не должно использоваться для других запросов.
+    /// Для полученного объекта должен быть вызван метод <see cref="DbDataReader.Dispose()"/> по окончании использования.
+    /// В это время нельзя выполнять другие запросы на текущем соединении.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список имен полей. 
     /// Список может содержать поля с точками (например, "Человек.Фамилия") для выполнения LEFT JOIN.
     /// Если список не задан, будут возвращены все поля таблицы</param>
     /// <param name="where">Условие фильтрации</param>
-    /// <returns>Объект DbDataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     DbDataReader ReaderSelect(string tableName, DBxColumns columnNames, DBxFilter where);
 
     /// <summary>
     /// Загрузка выбранных полей для строк таблицы, отобранных по условию.
-    /// Объект DataReader должен быть закрыт по окончании чтения.
-    /// На время чтения текущее соединение занято и не должно использоваться для других запросов.
+    /// Для полученного объекта должен быть вызван метод <see cref="DbDataReader.Dispose()"/> по окончании использования.
+    /// В это время нельзя выполнять другие запросы на текущем соединении.
     /// </summary>
     /// <param name="TableName">Имя таблицы</param>
     /// <param name="ColumnNames">Список имен полей, разделенных запятыми</param>
     /// <param name="Where">Условие фильтрации</param>
     /// <param name="OrderBy">Порядок сортировки</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     DbDataReader ReaderSelect(string TableName, DBxColumns ColumnNames, DBxFilter Where, DBxOrder OrderBy);
 
     /// <summary>
     /// Вызов оператора SELECT с заполнением таблицы в через DbDataReader
-    /// Объект DataReader должен быть закрыт после чтения данных
+    /// Для полученного объекта должен быть вызван метод <see cref="DbDataReader.Dispose()"/> по окончании использования.
+    /// В это время нельзя выполнять другие запросы на текущем соединении.
     /// !!! В текущей реализации имена полей в выходном наборе могут отличаться от
     /// !!! исходных при наличии ссылочных полей
     /// </summary>
     /// <param name="info">Параметры запроса</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     DbDataReader ReaderSelect(DBxSelectInfo info);
 
     #endregion
@@ -631,7 +636,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Установить значения одного поля для одной строки.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// Если задан идентификатор <paramref name="id"/>=0 или недействительный идентификатор записи, выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
@@ -698,7 +703,7 @@ namespace FreeLibSet.Data
     /// Добавляет новую строку в таблицу и возвращает ее идентификатор (поле Id).
     /// В строку записывается значение только одного поля (не считая автоинкрементного), поэтому, обычно следует использовать 
     /// другие перегрузки.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя устанавливаемого столбца</param>
@@ -708,7 +713,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавляет новую строку в таблицу и возвращает ее идентификатор (поле Id).
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена устанавливаемых полей и значения</param>
@@ -717,7 +722,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Добавляет новую строку в таблицу и возвращает ее идентификатор (поле Id).
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена устанавливаемых столбцов</param>
@@ -764,7 +769,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Начать групповое добавление и/или изменение строк таблицы.
-    /// После вызова метода и до вызова DBxDataWriter.Dispose() нельзя вызывать другие методы для текущего соединения.
+    /// После вызова метода и до вызова <see cref="DBxDataWriter"/>.Dispose() нельзя вызывать другие методы для текущего соединения.
     /// </summary>
     /// <param name="writerInfo">Параметры обработки</param>
     /// <returns>Объект для записи</returns>
@@ -800,7 +805,7 @@ namespace FreeLibSet.Data
     /// Пары можгут содержать, а могут и не содержать ключевое поле. Если ключевого поля нет, то значение присваивается автоматически.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnNamesAndValuesArray">Массив хэш-таблиц, по одной таблице в массмвк для каждой записи.
+    /// <param name="columnNamesAndValuesArray">Массив хэш-таблиц, по одной таблице в массиве для каждой записи.
     /// Каждая хэш таблица содержит пары "ИмяПоля"-"Значение" для одной записи</param>
     void AddRecords(string tableName, IDictionary[] columnNamesAndValuesArray);
 
@@ -816,7 +821,7 @@ namespace FreeLibSet.Data
     void AddRecords(DataSet ds);
 
     /// <summary>
-    /// Групповое добавление записей (Bulk Copy) из открытого объекта DbDataReader.
+    /// Групповое добавление записей (Bulk Copy) из открытого объекта <see cref="DbDataReader"/>.
     /// Если для базы данных не предусмотрена такая возможность, выполняется поштучное добавление записей
     /// Таблица может содержать, а может и не содержать
     /// ключевое поле. Если ключевого поля нет, то значение присваивается автоматически
@@ -832,20 +837,20 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Обновление множества записей из таблицы данных.
     /// Имя таблицы, в которую выполняется добавление строк, извлекается из свойства <see cref="System.Data.DataTable.TableName"/>
-    /// Таблица <paramref name="table"/> должна содержать поле (или поля), соответствующее первичному ключу таблицы в базе данных (свойство DBxTableStruct.PrimaryKey).
+    /// Таблица <paramref name="table"/> должна содержать поле (или поля), соответствующее первичному ключу таблицы в базе данных (свойство <see cref="DBxTableStruct.PrimaryKey"/>).
     /// Также должно быть, как минимум, одно поле, не входящее в первичный ключ.
     /// Поддерживаются таблицы с первичным ключом любого типа, включая составной. Для таблиц без первичного ключа обновление невозможно.
-    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство DataTable.PrimaryKey) не имеет значения.
+    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство <see cref="DataTable.PrimaryKey"/>) не имеет значения.
     /// </summary>
     /// <param name="table">Таблица исходных данных</param>
     void UpdateRecords(DataTable table);
 
     /// <summary>
     /// Групповое обновление записей из таблицы данных.
-    /// Таблица <paramref name="table"/> должна содержать поле (или поля), соответствующее первичному ключу таблицы в базе данных (свойство DBxTableStruct.PrimaryKey).
+    /// Таблица <paramref name="table"/> должна содержать поле (или поля), соответствующее первичному ключу таблицы в базе данных (свойство <see cref="DBxTableStruct.PrimaryKey"/>).
     /// Также должно быть, как минимум, одно поле, не входящее в первичный ключ.
     /// Поддерживаются таблицы с первичным ключом любого типа, включая составной. Для таблиц без первичного ключа обновление невозможно.
-    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство DataTable.PrimaryKey) не имеет значения.
+    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство <see cref="DataTable.PrimaryKey"/>) не имеет значения.
     /// </summary>
     /// <param name="tableName">Имя таблицы базы данных, в которую добавляются записи</param>
     /// <param name="table">Таблица исходных данных</param>
@@ -854,10 +859,10 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Групповое обновление записей из нескольких таблиц данных.
     /// Имена таблиц, для которых выполняется обновление строк, извлекаются из свойства <see cref="System.Data.DataTable.TableName"/>.
-    /// Таблицы должны содержать поле (или поля), соответствующие первичному ключу таблиц в базе данных (свойство DBxTableStruct.PrimaryKey).
+    /// Таблицы должны содержать поле (или поля), соответствующие первичному ключу таблиц в базе данных (свойство <see cref="DBxTableStruct.PrimaryKey"/>).
     /// Также должно быть, как минимум, одно поле, не входящее в первичный ключ.
     /// Поддерживаются таблицы с первичным ключом любого типа, включая составной. Для таблиц без первичного ключа обновление невозможно.
-    /// Наличие первичного ключа в таблицах <paramref name="ds"/> (свойство DataTable.PrimaryKey) не имеет значения.
+    /// Наличие первичного ключа в таблицах <paramref name="ds"/> (свойство <see cref="DataTable.PrimaryKey"/>) не имеет значения.
     /// </summary>
     /// <param name="ds">Набор данных</param>
     void UpdateRecords(DataSet ds);
@@ -865,10 +870,10 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Обновление множества записей из таблицы данных и добавление недостающих.
     /// Имя таблицы, в которую выполняется добавление строк, извлекается из свойства <see cref="System.Data.DataTable.TableName"/>
-    /// Таблица должна содержать поле (или поля), соответствующие первичному ключу таблицы в базе данных (свойство DBxTableStruct.PrimaryKey).
+    /// Таблица должна содержать поле (или поля), соответствующие первичному ключу таблицы в базе данных (свойство <see cref="DBxTableStruct.PrimaryKey"/>).
     /// Также должно быть, как минимум, одно поле, не входящее в первичный ключ.
     /// Поддерживаются таблицы с первичным ключом любого типа, включая составной. Для таблиц без первичного ключа обновление невозможно.
-    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство DataTable.PrimaryKey) не имеет значения.
+    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство <see cref="DataTable.PrimaryKey"/>) не имеет значения.
     /// </summary>
     /// <param name="table">Таблица исходных данных</param>
     void AddOrUpdateRecords(DataTable table);
@@ -876,10 +881,10 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Обновление множества записей из таблицы данных и добавление недостающих.
     /// Имя таблицы, в которую выполняется добавление строк, извлекается из свойства <see cref="System.Data.DataTable.TableName"/>
-    /// Таблица должна содержать поле (или поля), соответствующие первичному ключу таблицы в базе данных (свойство DBxTableStruct.PrimaryKey).
+    /// Таблица должна содержать поле (или поля), соответствующие первичному ключу таблицы в базе данных (свойство <see cref="DBxTableStruct.PrimaryKey"/>).
     /// Также должно быть, как минимум, одно поле, не входящее в первичный ключ.
     /// Поддерживаются таблицы с первичным ключом любого типа, включая составной. Для таблиц без первичного ключа обновление невозможно.
-    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство DataTable.PrimaryKey) не имеет значения.
+    /// Наличие первичного ключа в таблице <paramref name="table"/> (свойство <see cref="DataTable.PrimaryKey"/>) не имеет значения.
     /// </summary>
     /// <param name="tableName">Имя таблицы в базе данных, в которую добавляются записи</param>
     /// <param name="table">Таблица исходных данных</param>
@@ -888,10 +893,10 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Обновление множества записей из нескольких таблиц данных и добавление недостающих.
     /// Имена таблиц, для которых выполняется обновление строк, извлекаются из свойства <see cref="System.Data.DataTable.TableName"/>
-    /// Таблицы должны содержать поле (или поля), соответствующие первичному ключу таблиц в базе данных (свойство DBxTableStruct.PrimaryKey).
+    /// Таблицы должны содержать поле (или поля), соответствующие первичному ключу таблиц в базе данных (свойство <see cref="DBxTableStruct.PrimaryKey"/>).
     /// Также должно быть, как минимум, одно поле, не входящее в первичный ключ.
     /// Поддерживаются таблицы с первичным ключом любого типа, включая составной. Для таблиц без первичного ключа обновление невозможно.
-    /// Наличие первичного ключа в таблицах <paramref name="ds"/> (свойство DataTable.PrimaryKey) не имеет значения.
+    /// Наличие первичного ключа в таблицах <paramref name="ds"/> (свойство <see cref="DataTable.PrimaryKey"/>) не имеет значения.
     /// </summary>
     /// <param name="ds">Набор таблиц</param>
     void AddOrUpdateRecords(DataSet ds);
@@ -902,10 +907,10 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Поиск строки по значениям полей, заданным в виде списка пар. Если запись
-    /// с подходящими значениями не найдена, то добавляется новая запись
+    /// с подходящими значениями не найдена, то добавляется новая запись.
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="TableName">Имя таблицы</param>
     /// <param name="ColumnNamesAndValues">Имена и значения полей</param>
@@ -918,7 +923,7 @@ namespace FreeLibSet.Data
     /// с подходящими значениями не найдена, то добавляется новая запись
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="TableName">Имя таблицы</param>
     /// <param name="ColumnNames">Имена полей</param>
@@ -932,7 +937,7 @@ namespace FreeLibSet.Data
     /// с подходящими значениями не найдена, то добавляется новая запись
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="TableName">Имя таблицы</param>
     /// <param name="ColumnNamesAndValues">Имена и значения полей</param>
@@ -941,10 +946,10 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Поиск строки по значениям полей. Если запись
-    /// с подходящими значениями не найдена, то добавляется новая запись
+    /// с подходящими значениями не найдена, то добавляется новая запись.
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей</param>
@@ -957,7 +962,7 @@ namespace FreeLibSet.Data
     /// Искомые строки передаются в таблице DataTable. В таблице должно быть одно или несколько полей, на основании
     /// которых выполняется поиск. Эта таблица НЕ ДОЛЖНА иметь поля идентификатора.
     /// Имя таблицы, в которую выполняется добавление строк, извлекается из свойства <see cref="System.Data.DataTable.TableName"/>
-    /// Таблица в базе данных должна иметь первичный ключ типа Int32.
+    /// Таблица в базе данных должна иметь первичный ключ типа <see cref="Int32"/>.
     /// Предполагается, что в базе данных имеется индекс по полям, по которым выполняется поиск, иначе будет медленно.
     /// Должно быть разрешение на запись таблицы.
     /// Возвращает массив идентификаторов найденных или созданных строк. Длина массива и порядок элемента совпадает
@@ -969,9 +974,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Групповой поиск или добавление множества записей в таблицу базы данных.
-    /// Искомые строки передаются в таблице DataTable. В таблице должно быть одно или несколько полей, на основании
+    /// Искомые строки передаются в таблице <see cref="DataTable"/>. В таблице должно быть одно или несколько полей, на основании
     /// которых выполняется поиск. Эта таблица НЕ ДОЛЖНА иметь поля идентификатора.
-    /// Таблица в базе данных должна иметь первичный ключ типа Int32.
+    /// Таблица в базе данных должна иметь первичный ключ типа <see cref="Int32"/>.
     /// Предполагается, что в базе данных имеется индекс по полям, по которым выполняется поиск, иначе будет медленно.
     /// Должно быть разрешение на запись таблицы.
     /// Возвращает массив идентификаторов найденных или созданных строк. Длина массива и порядок элемента совпадает
@@ -990,7 +995,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Удаление одной строки таблицы.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
@@ -1004,7 +1009,7 @@ namespace FreeLibSet.Data
     void Delete(string tableName, DBxFilter where);
 
     /// <summary>
-    /// Удалить все строки таблицы. Сама таблица не удаляется
+    /// Удалить все строки таблицы. Сама таблица не удаляется.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     void DeleteAll(string tableName);
@@ -1033,7 +1038,7 @@ namespace FreeLibSet.Data
     /// Ссылочные поля (с точками) не поддерживаются.
     /// Для очистки содержимого поля используйте <paramref name="value"/>=null. 
     /// Значение null и пустой массив различаются.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор записи. Не может быть 0</param>
@@ -1043,9 +1048,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить значение BLOB-поля как байтового массива.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
     /// Если <paramref name="id"/>=0, возвращает null.
-    /// Выбрасывает исключение DBxRecordNotFoundException, если задан идентификатор несуществующей записи.
+    /// Выбрасывает исключение <see cref="DBxRecordNotFoundException"/>, если задан идентификатор несуществующей записи.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор записи. Не может быть 0</param>
@@ -1062,7 +1067,7 @@ namespace FreeLibSet.Data
     /// 
     /// Если нет ни одной строки, удовлетворяющей условию фильтра, то возвращается null.
     /// Null также возвращается, если в найденной строке поле имеет значение NULL.
-    /// Используйте перегрузку, возвращающую значение Value по ссылке, чтобы различить эти ситуации.
+    /// Используйте перегрузку, возвращающую значение поля по ссылке, чтобы различить эти ситуации.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр по строкам. Не может быть null</param>
@@ -1096,9 +1101,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает пустую таблицу с заданными столбцами.
-    /// Всегда создается новый объект DataTable.
+    /// Всегда создается новый объект <see cref="DataTable"/>.
     /// Можно использовать ссылочные столбцы, содержащие ".".
-    /// Вызывает DBxStruct.CreateDataTable().
+    /// Вызывает <see cref="DBxStruct.CreateDataTable(string, DBxColumns)"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список столбцов. Если null, то возвращаются все столбцы, определенные для таблицы</param>
@@ -1110,7 +1115,7 @@ namespace FreeLibSet.Data
 
 
   /// <summary>
-  /// Информация о текущем выполняющемся запросе, возвращаемая свойством DBxConBase.CurrentQuery и DBxCon.CurrentQuery
+  /// Информация о текущем выполняющемся запросе, возвращаемая свойством <see cref="DBxConBase.CurrentQuery"/> и <see cref="DBxCon.CurrentQuery"/>.
   /// </summary>
   public sealed class DBxConQueryInfo
   {
@@ -1136,12 +1141,12 @@ namespace FreeLibSet.Data
     /// Выполняемый запрос
     /// </summary>
     public string CmdText { get { return _CmdText; } }
-    private string _CmdText;
+    private readonly string _CmdText;
 
     /// <summary>
     /// Время начала выполнения SQL-запроса
     /// </summary>
-    private long _StartTicks;
+    private readonly long _StartTicks;
 
     /// <summary>
     /// Время выполнения запроса (для отладки)
@@ -1160,23 +1165,23 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Признак трассировки.
-    /// Определяется в начале выполнения запроса, а нужен после выполнения
+    /// Определяется в начале выполнения запроса, а нужен после выполнения.
     /// </summary>
     internal bool TraceEnabled { get { return _TraceEnabled; } }
-    private bool _TraceEnabled;
+    private readonly bool _TraceEnabled;
 
     /// <summary>
     /// Построение связанного списка запросов
     /// </summary>
     internal DBxConQueryInfo PrevInfo { get { return _PrevInfo; } }
-    private DBxConQueryInfo _PrevInfo;
+    private readonly DBxConQueryInfo _PrevInfo;
 
     #endregion
 
     #region Вспомогательные методы
 
     /// <summary>
-    /// Возвращает свойство CmdText (для отладки)
+    /// Возвращает свойство <see cref="CmdText"/> (для отладки)
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -1191,8 +1196,9 @@ namespace FreeLibSet.Data
   /// <summary>
   /// Клиентское соединение с базой данных.
   /// Объект может создаваться на стороне клиента или сервера. По окончании использования объект должен
-  /// быть сразу освобожден вызовом метода Dispose() (или, в C#, находиться в блоке using)
+  /// быть сразу освобожден вызовом метода Dispose() (или, в C#, находиться в блоке using).
   /// </summary>
+  /// <inheritdoc cref="IDBxCon"></inheritdoc>
   public class DBxCon : MarshalByRefDisposableObject, IDBxCon, ICloneable, IDBxCacheSource
   {
     #region Конструктор и Dispose
@@ -1212,9 +1218,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Версия конструктора с настраиваемым DBxConBase (например, можно отключить проверку имен).
-    /// DBxConBase должен быть создан и настроен до вызова конструктора. DBxConBase является "персональным"
-    /// для этого соединения, т.к. DBxCon.Dispose() разрушит DBxConBase
+    /// Версия конструктора с настраиваемым <see cref="DBxConBase"/> (например, можно отключить проверку имен).
+    /// <see cref="DBxConBase"/> должен быть создан и настроен до вызова конструктора. <see cref="DBxConBase"/> является "персональным"
+    /// для этого соединения, т.к. <see cref="MarshalByRefDisposableObject.Dispose()">DBxCon.Dispose()</see> разрушит <see cref="DBxConBase"/>
     /// </summary>
     /// <param name="source">Внутренний объект соединения</param>
     public DBxCon(DBxConBase source)
@@ -1325,11 +1331,10 @@ namespace FreeLibSet.Data
     #region SELECT (DataTable)
 
     /// <summary>
-    /// Загрузка всей таблицы.
-    /// Загружаются все поля SELECT * FROM [TableName] 
+    /// Загрузка всей таблицы
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Заполненная таблица DataTable</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     public DataTable FillSelect(string tableName)
     {
       return FillSelect(tableName, null, null, null);
@@ -3048,9 +3053,9 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Массив объектов DBxCon
+  /// Массив объектов <see cref="DBxCon"/>
   /// Используется, когда требуется одновременный доступ к нескольким соединениям с базами данных, чтобы не
-  /// использовать большое количество вложенных блоков using
+  /// использовать большое количество вложенных блоков using.
   /// </summary>
   public class DBxConArray : SimpleDisposableObject, IEnumerable<DBxCon>
   {
@@ -3084,7 +3089,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Закрывает все соединения в массиве
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose()</param>
+    /// <param name="disposing">true, если вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -3120,14 +3125,14 @@ namespace FreeLibSet.Data
     /// Порядок элементов в массиве соответствует аргументам конструктора.
     /// Некоторые элементы могут иметь значение null, если соответствующий параметр конструктора имел значение null.
     /// </summary>
-    /// <param name="index">Индекс соединения от 0 до Count-1</param>
+    /// <param name="index">Индекс соединения от 0 до (<see cref="Count"/>-1)</param>
     /// <returns>Соединение</returns>
     public DBxCon this[int index]
     {
       get { return _Items[index]; }
     }
 
-    private DBxCon[] _Items;
+    private readonly DBxCon[] _Items;
 
     /// <summary>
     /// Возвращает количество параметров переданных конструктору.
@@ -3143,7 +3148,7 @@ namespace FreeLibSet.Data
     /// Возвращает перечислитель по соединениям.
     /// Следует учитывать, что при перечислении могут появляться значения null.
     /// 
-    /// Тип возвращаемого значения (ArrayEnumerator) может измениться в будущем, 
+    /// Тип возвращаемого значения (<see cref="ArrayEnumerable{DBxCon}"/>) может измениться в будущем, 
     /// гарантируется только реализация интерфейса перечислителя.
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
@@ -3168,8 +3173,8 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Небезопасное соединение, реализующее передачу по ссылке.
-  /// Добавляет в DBxCon возможность выполнять любые SQL-запросы без проверок.
-  /// Объект следует передавать только в AppDomain, созданные на сервере.
+  /// Добавляет в <see cref="DBxCon"/> возможность выполнять любые SQL-запросы без проверок.
+  /// Объект следует передавать только в <see cref="AppDomain"/>, созданные на сервере.
   /// </summary>
   public class DBxUnsafeCon : DBxCon, ICloneable
   {
@@ -3185,9 +3190,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Версия конструктора с настраиваемым DBxConBase (например, можно отключить проверку имен).
-    /// DBxConBase должен быть создан и настроен до вызова конструктора. DBxConBase является "персональным"
-    /// для этого соединения, т.к. DBxCon.Dispose() разрушит DBxConBase
+    /// Версия конструктора с настраиваемым <see cref="DBxConBase"/> (например, можно отключить проверку имен).
+    /// <see cref="DBxConBase"/> должен быть создан и настроен до вызова конструктора. <see cref="DBxConBase"/> является "персональным"
+    /// для этого соединения, т.к. DBxUnsafeCon.Dispose() разрушит <see cref="DBxConBase"/>.
     /// </summary>
     /// <param name="source">Внутренний объект соединения</param>
     public DBxUnsafeCon(DBxConBase source)
@@ -3242,7 +3247,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат записывается в
-    /// объект DataTable без имени.
+    /// объект <see cref="DataTable"/> без имени.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <returns>Набор данных</returns>
@@ -3253,7 +3258,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат записывается в
-    /// объект DataTable с указанным именем.
+    /// объект <see cref="DataTable"/> с указанным именем.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="tableName">Имя создаваемой таблицы</param>
@@ -3265,7 +3270,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат записывается в
-    /// объект DataTable с указанным именем.
+    /// объект <see cref="DataTable"/> с указанным именем.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="tableName">Имя создаваемой таблицы</param>
@@ -3278,14 +3283,14 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат не извлекается,
-    /// а возвращается DataReader. По окончании работы должен быть вызван метод
-    /// Close(). До этого не разрешается выполнять другие запросы.
-    /// Использование DbDataReader через границу домена не рекомендуется, т.к. многократные 
+    /// а возвращается <see cref="DbDataReader"/>. По окончании работы должен быть вызван метод
+    /// <see cref="DbDataReader.Close()"/>. До этого не разрешается выполнять другие запросы.
+    /// Использование <see cref="DbDataReader"/> через границу домена не рекомендуется, т.к. многократные 
     /// вызовы методов и свойств этого объекта будут неэффективными. 
-    /// Следует использовать SQLExecuteDataTable(), который возвращает набор данных за один раз
+    /// Следует использовать <see cref="SQLExecuteDataTable(string)"/>, который возвращает набор данных за один раз.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader SQLExecuteReader(string cmdText)
     {
       return Source.SQLExecuteReader(cmdText);
@@ -3293,15 +3298,15 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнение запроса, возвращающего набор строк. Результат не извлекается,
-    /// а возвращается DataReader. По окончании работы должен быть вызван метод
-    /// Close(). До этого не разрешается выполнять другие запросы.
-    /// Использование DbDataReader через границу домена не рекомендуется, т.к. многократные 
+    /// а возвращается <see cref="DbDataReader"/>. По окончании работы должен быть вызван метод
+    /// <see cref="DbDataReader.Close()"/>. До этого не разрешается выполнять другие запросы.
+    /// Использование <see cref="DbDataReader"/> через границу домена не рекомендуется, т.к. многократные 
     /// вызовы методов и свойств этого объекта будут неэффективными. 
-    /// Следует использовать SQLExecuteDataTable(), который возвращает набор данных за один раз
+    /// Следует использовать <see cref="SQLExecuteDataTable(string, string)"/>, который возвращает набор данных за один раз.
     /// </summary>
     /// <param name="cmdText">SQL-оператор</param>
     /// <param name="paramValues">Значения параметров запроса</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader SQLExecuteReader(string cmdText, object[] paramValues)
     {
       return Source.SQLExecuteReader(cmdText, paramValues);
@@ -3315,7 +3320,7 @@ namespace FreeLibSet.Data
     /// Создать копию соединения, которую можно использовать в отдельном потоке.
     /// Для полученной копии должен быть обязательно вызван метод Dispose()
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый экземпляр <see cref="DBxUnsafeCon"/></returns>
     public new DBxUnsafeCon Clone()
     {
       DBxConBase con2 = Source.Entry.CreateCon();
@@ -3332,9 +3337,9 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Организация транзакций для нескольких соединений
-  /// Объект System.Transactions.TransactionScope работает не на всех компьютерах
-  /// В отличие от TransactionScope, сначала создаются соединения, а затем - объект DBxTransactionArray 
+  /// Организация транзакций для нескольких соединений.
+  /// Объект System.Transactions.TransactionScope работает не на всех компьютерах.
+  /// В отличие от TransactionScope, сначала создаются соединения, а затем - объект <see cref="DBxTransactionArray"/>.
   /// Это не замена TransactionScope, т.к. двухтактное подтверждение не используется. Если первая транзакция
   /// завершилась успешно, а вторая - нет, то первая транзакция не откатывается.
   /// Объект предназначен исключительно для упрощения исходного кода программы, чтобы уменьшить количество
@@ -3345,7 +3350,7 @@ namespace FreeLibSet.Data
   /// действий не выполняется. Предполагается, что подтверждением или откатом транзации занимается тот объект,
   /// который начал транзакцию.
   /// 
-  /// Вызывайте конструктор объекта в инструкции using. Последним оператором в блоке using должен быть вызов метода Commit().
+  /// Вызывайте конструктор объекта в инструкции using. Последним оператором в блоке using должен быть вызов метода <see cref="DBxTransactionArray.Commit()"/>.
   /// </summary>
   public class DBxTransactionArray : SimpleDisposableObject
   {
@@ -3403,10 +3408,10 @@ namespace FreeLibSet.Data
     /// Массив соединений с незакрытыми транзакциями.
     /// Если для соединения тразакция выполнена или уже завершена, элемент содержит null
     /// </summary>
-    private IDBxConTransactions[] _Cons;
+    private readonly IDBxConTransactions[] _Cons;
 
     /// <summary>
-    /// Вызов TransactionCommit() для всех соединений
+    /// Вызов <see cref="IDBxConTransactions.TransactionCommit()"/> для всех соединений
     /// Транзакции завершаются в порядке объявления соединений ([0], [1], ...)
     /// </summary>
     public void Commit()

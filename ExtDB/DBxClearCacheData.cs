@@ -13,7 +13,7 @@ namespace FreeLibSet.Data
 {
   /// <summary>
   /// Хранилище идентификаторов первых строк страниц таблиц, которые должны быть очищены в результате изменения или удаления строк
-  /// Этот класс НЕ ЯВЛЯЕТСЯ потокобезопасным в режиме записи (пока IsReadOnly=false).
+  /// Этот класс НЕ ЯВЛЯЕТСЯ потокобезопасным в режиме записи (пока <see cref="DBxClearCacheData.IsReadOnly"/>=false).
   /// </summary>
   [Serializable]
   public sealed class DBxClearCacheData : IReadOnlyObject, IEnumerable<KeyValuePair<string, IdList>>
@@ -108,7 +108,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Помечает таблицу целиком на обновление
     /// </summary>
-    /// <param name="tableName"></param>
+    /// <param name="tableName">Имя обновляемой таблицы</param>
     public void Add(string tableName)
     {
       CheckNotReadOnly();
@@ -144,7 +144,7 @@ namespace FreeLibSet.Data
 
     #region Свойства
 
-    private Dictionary<string, IdList> _Items;
+    private readonly Dictionary<string, IdList> _Items;
 
     /// <summary>
     /// Возвращает true, ели был вызов AddAllTables()
@@ -221,10 +221,10 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает true, если есть данные по сбросу для этой таблицы.
-    /// Также возвращает true, если требуется полный сброс 
+    /// Также возвращает true, если требуется полный сброс. 
     /// </summary>
-    /// <param name="tableName">Имя таблциы</param>
-    /// <returns></returns>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Наличие</returns>
     public bool ContainsTable(string tableName)
     {
       if (AreAllTables)
@@ -236,9 +236,9 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращает список идентификаторов первых строк страниц для данной таблицы.
     /// Возвращает null, если требуется полный сброс таблицы.
-    /// Возвращает пустой список, если таблицы нет в списке, или для таблицы было только создание новых документов
+    /// Возвращает пустой список, если таблицы нет в списке, или для таблицы было только создание новых документов.
     /// </summary>
-    /// <param name="tableName">Имя таблциы</param>
+    /// <param name="tableName">Имя таблицы</param>
     /// <returns>Cписок идентификаторов или null</returns>
     public IdList this[string tableName]
     {
@@ -255,9 +255,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает true, если указанный идентификатор строки таблицы есть в списке на обновление.
-    /// Учитывается, что в списке хранятся только идентификаторы первых страниц
+    /// Учитывается, что в списке хранятся только идентификаторы первых страниц.
     /// </summary>
-    /// <param name="tableName">Имя таблциы</param>
+    /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор</param>
     /// <returns>Наличие идентификатора</returns>
     public bool this[string tableName, Int32 id]
@@ -353,7 +353,7 @@ namespace FreeLibSet.Data
     public DBxClearCacheHolder()
     {
       _Current = new DBxClearCacheData();
-      SyncRoot = new object();
+      _SyncRoot = new object();
     }
 
     #endregion
@@ -368,7 +368,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Объект синхронизации
     /// </summary>
-    private object SyncRoot;
+    private readonly object _SyncRoot;
 
     #endregion
 
@@ -381,7 +381,7 @@ namespace FreeLibSet.Data
     /// <param name="ids">Массив идентификаторов</param>
     public void Add(string tableName, Int32[] ids)
     {
-      lock (SyncRoot)
+      lock (_SyncRoot)
       {
         _Current.Add(tableName, ids);
       }
@@ -394,7 +394,7 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор</param>
     public void Add(string tableName, Int32 id)
     {
-      lock (SyncRoot)
+      lock (_SyncRoot)
       {
         _Current.Add(tableName, id);
       }
@@ -406,7 +406,7 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     public void Add(string tableName)
     {
-      lock (SyncRoot)
+      lock (_SyncRoot)
       {
         _Current.Add(tableName);
       }
@@ -417,7 +417,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public void AddAllTables()
     {
-      lock (SyncRoot)
+      lock (_SyncRoot)
       {
         _Current.AddAllTables();
       }
@@ -430,13 +430,13 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Переключается на новый список изменений.
     /// Возвращает предыдущий список.
-    /// Метод не выполняет переключение и возвращает null, если в текущем списке не зарегистрировано изменений
+    /// Метод не выполняет переключение и возвращает null, если в текущем списке не зарегистрировано изменений.
     /// </summary>
     /// <returns>Предыдуший список</returns>
     public DBxClearCacheData Swap()
     {
       DBxClearCacheData prev;
-      lock (SyncRoot)
+      lock (_SyncRoot)
       {
         if (_Current.IsEmpty)
           prev = null;
@@ -454,8 +454,8 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Хранит несколько последних DBxClearCacheData. Также содержит объект DBxClearCacheHolder.
-  /// Класс является потокобезопасным
+  /// Хранит несколько последних <see cref="DBxClearCacheData"/>. Также содержит объект <see cref="DBxClearCacheHolder"/>.
+  /// Класс является потокобезопасным.
   /// </summary>
   public sealed class DBxClearCacheBuffer
   {
@@ -484,7 +484,7 @@ namespace FreeLibSet.Data
     /// Для регистрации запроса очистки данных должны вызываться его методы Add()
     /// </summary>
     public DBxClearCacheHolder Holder { get { return _Holder; } }
-    private DBxClearCacheHolder _Holder;
+    private readonly DBxClearCacheHolder _Holder;
 
     /// <summary>
     /// Элемент кольцевого буфера
@@ -510,7 +510,7 @@ namespace FreeLibSet.Data
     /// Кольцевой буфер для хранения списков.
     /// Этот объект используется также как SycnRoot
     /// </summary>
-    private RingBuffer<BufferItem> _Items;
+    private readonly RingBuffer<BufferItem> _Items;
 
     #endregion
 
@@ -531,9 +531,9 @@ namespace FreeLibSet.Data
     /// Переключает на новый набор.
     /// Предыдущий элемент помещается в кольцевой буфер.
     /// Если в текущем наборе не зарегистрировано изменений, никаких действий не выполняется.
-    /// Этот метод вызывается на стороне сервера по таймеру, например, 1 раз в минуту
+    /// Этот метод вызывается на стороне сервера по таймеру, например, 1 раз в минуту.
     /// </summary>
-    /// <returns>True, если с момента предыдущего вызова метода Swap() были изменения и переключение было выполнено.
+    /// <returns>True, если с момента предыдущего вызова метода <see cref="Swap()"/> были изменения и переключение было выполнено.
     /// Возвращает false, если метод не выполнил никаких действий</returns>
     public bool Swap()
     {
@@ -596,13 +596,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить информацию о необходимой очистке буферизации.
-    /// Если с момента последнего вызова не было никаких сигналов на очистку буфера, или метод Swap() не
+    /// Если с момента последнего вызова не было никаких сигналов на очистку буфера, или метод <see cref="Swap()"/> не
     /// вызывался, возвращается пустой массив.
-    /// Если, наоборот, очень долго не было вызова GetData() и буфер "убежал", возвращается объект, требующий
-    /// полной очистки буфера
+    /// Если, наоборот, очень долго не было вызова <see cref="GetData(ref int)"/> и буфер "убежал", возвращается объект, требующий
+    /// полной очистки буфера.
     /// </summary>
     /// <param name="version">На входе задает номер последней версии, с которой был вызван этот метод.
-    /// На выходе содержит значение LastVersion, которое должно быть использовано при следующем вызове</param>
+    /// На выходе содержит значение <see cref="LastVersion"/>, которое должно быть использовано при следующем вызове</param>
     /// <returns>Массив объектов из кольцевого буфера, содержащих информацию о необходимой очистке</returns>
     public DBxClearCacheData[] GetData(ref int version)
     {

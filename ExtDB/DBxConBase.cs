@@ -17,8 +17,8 @@ namespace FreeLibSet.Data
 {
 
   /// <summary>
-  /// Абстрактный класс соединения с базой данных
-  /// Для каждого типа базы данных определяется производный класс, реализующий выполнение запросов
+  /// Абстрактный класс соединения с базой данных.
+  /// Для каждого типа базы данных определяется производный класс, реализующий выполнение запросов.
   /// </summary>
   public abstract class DBxConBase : DisposableObject, IDBxCon
   {
@@ -55,9 +55,9 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Удаляет соединение из точки входа, к которой оно было присоединено в конструкторе
+    /// Удаляет соединение из точки входа, к которой оно было присоединено в конструкторе.
     /// </summary>
-    /// <param name="disposing">True, если был вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">True, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -115,7 +115,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Нужно ли выполнять обрезку значений текстовых полей по размеру поля перед выполнением изменяющих запросов.
-    /// По умолчанию - false
+    /// По умолчанию - false.
     /// </summary>
     public bool TrimValues
     {
@@ -127,9 +127,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Время выполнения команд в секундах. 0-бесконечное время ожидания.
-    /// При создании объекта соединения, свойство имеет значение равное заданному в DBx.CommandTimeout (обычно, 30 секунд).
+    /// При создании объекта соединения, свойство имеет значение равное заданному в <see cref="DBx.CommandTimeout"/> (обычно, 30 секунд).
     /// Установка этого свойства влияет только на текущее соединение.
-    /// Это свойство не дублируется в основном соединении DBxCon. Следовательно, проверка может быть отключена
+    /// Это свойство не дублируется в основном соединении <see cref="DBxCon"/>. Следовательно, проверка может быть отключена
     /// только на стороне сервера (безопасность).
     /// </summary>
     public int CommandTimeout
@@ -169,7 +169,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Загрузка всей таблицы.
-    /// Загружаются все поля SELECT * FROM [TableName] 
+    /// Загружаются все поля SELECT * FROM [TableName]. 
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Заполненная таблица DataTable</returns>
@@ -179,13 +179,13 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Загрузка выбранных полей всей таблицы
+    /// Загрузка выбранных полей всей таблицы.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список имен полей. 
     /// Список может содержать поля с точками (например, "Человек.Фамилия") для выполнения LEFT JOIN.
     /// Если список не задан, будут возвращены все поля таблицы</param>
-    /// <returns>Заполненная таблица DataTable</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     public DataTable FillSelect(string tableName, DBxColumns columnNames)
     {
       return FillSelect(tableName, columnNames, null, null);
@@ -199,7 +199,7 @@ namespace FreeLibSet.Data
     /// Список может содержать поля с точками (например, "Человек.Фамилия") для выполнения LEFT JOIN.
     /// Если список не задан, будут возвращены все поля таблицы</param>
     /// <param name="where">Условие фильтрации</param>
-    /// <returns>Заполненная таблица DataTable</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     public DataTable FillSelect(string tableName, DBxColumns columnNames, DBxFilter where)
     {
       return FillSelect(tableName, columnNames, where, null);
@@ -214,7 +214,7 @@ namespace FreeLibSet.Data
     /// Если список не задан, будут возвращены все поля таблицы</param>
     /// <param name="where">Условие фильтрации</param>
     /// <param name="orderBy">Порядок сортировки</param>
-    /// <returns>Заполненная таблица DataTable</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     public DataTable FillSelect(string tableName, DBxColumns columnNames, DBxFilter where, DBxOrder orderBy)
     {
       DBxSelectInfo info = new DBxSelectInfo();
@@ -229,7 +229,7 @@ namespace FreeLibSet.Data
     /// Вызов оператора SELECT с заданием всех возможных параметров
     /// </summary>
     /// <param name="info">Параметры запроса</param>
-    /// <returns>Заполненная таблица с результатами запроса</returns>
+    /// <returns>Заполненная таблица <see cref="DataTable"/></returns>
     public DataTable FillSelect(DBxSelectInfo info)
     {
       DBxSelectFormatter fsf = new DBxSelectFormatter(info, Validator);
@@ -262,8 +262,8 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Получение списка уникальных значений поля SELECT DISTINCT
-    /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю
+    /// Получение списка уникальных значений поля SELECT DISTINCT.
+    /// В полученной таблице будет одно поле. Таблица будет упорядочена по этому полю.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля</param>
@@ -282,10 +282,12 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Загрузка всей таблицы
+    /// Загрузка всей таблицы.
+    /// Объект <see cref="DbDataReader"/> должен быть закрыт по окончании чтения.
+    /// На время чтения текущее соединение занято и не должно использоваться для других запросов.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader ReaderSelect(string tableName)
     {
       return ReaderSelect(tableName, null, null, null);
@@ -293,12 +295,14 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Загрузка выбранных полей всей таблицы
+    /// Объект <see cref="DbDataReader"/> должен быть закрыт по окончании чтения.
+    /// На время чтения текущее соединение занято и не должно использоваться для других запросов.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список имен полей. 
     /// Список может содержать поля с точками (например, "Человек.Фамилия") для выполнения LEFT JOIN.
     /// Если список не задан, будут возвращены все поля таблицы</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader ReaderSelect(string tableName, DBxColumns columnNames)
     {
       return ReaderSelect(tableName, columnNames, null, null);
@@ -306,7 +310,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Загрузка выбранных полей для строк таблицы, отобранных по условию.
-    /// Объект DataReader должен быть закрыт по окончании чтения.
+    /// Объект <see cref="DbDataReader"/> должен быть закрыт по окончании чтения.
     /// На время чтения текущее соединение занято и не должно использоваться для других запросов.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
@@ -314,7 +318,7 @@ namespace FreeLibSet.Data
     /// Список может содержать поля с точками (например, "Человек.Фамилия") для выполнения LEFT JOIN.
     /// Если список не задан, будут возвращены все поля таблицы</param>
     /// <param name="where">Условие фильтрации</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader ReaderSelect(string tableName, DBxColumns columnNames, DBxFilter where)
     {
       return ReaderSelect(tableName, columnNames, where, null);
@@ -322,7 +326,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Загрузка выбранных полей для строк таблицы, отобранных по условию.
-    /// Объект DataReader должен быть закрыт по окончании чтения.
+    /// Объект <see cref="DbDataReader"/> должен быть закрыт по окончании чтения.
     /// На время чтения текущее соединение занято и не должно использоваться для других запросов.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
@@ -331,7 +335,7 @@ namespace FreeLibSet.Data
     /// Если список не задан, будут возвращены все поля таблицы</param>
     /// <param name="where">Условие фильтрации</param>
     /// <param name="orderBy">Порядок сортировки</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader ReaderSelect(string tableName, DBxColumns columnNames, DBxFilter where, DBxOrder orderBy)
     {
       DBxSelectInfo info = new DBxSelectInfo();
@@ -344,9 +348,11 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Универсальный метод выполнения запроса SELECT.
+    /// Объект <see cref="DbDataReader"/> должен быть закрыт по окончании чтения.
+    /// На время чтения текущее соединение занято и не должно использоваться для других запросов.
     /// </summary>
     /// <param name="info">Параметры запроса</param>
-    /// <returns>Объект DataReader</returns>
+    /// <returns>Объект <see cref="DbDataReader"/></returns>
     public DbDataReader ReaderSelect(DBxSelectInfo info)
     {
       DBxSelectFormatter fsf = new DBxSelectFormatter(info, Validator);
@@ -389,8 +395,8 @@ namespace FreeLibSet.Data
     #region FindRecord
 
     /// <summary>
-    /// Найти строку с заданным значением поля
-    /// Возвращается идентификатор первой попавшейся строки
+    /// Найти строку с заданным значением поля.
+    /// Возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля условия</param>
@@ -406,8 +412,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Найти строку с заданными значениями полей
-    /// Возвращается идентификатор первой попавшейся строки
+    /// Найти строку с заданными значениями полей.
+    /// Возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
@@ -421,8 +427,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Найти строку с заданными значениями полей
-    /// Возвращается идентификатор первой попавшейся строки
+    /// Найти строку с заданными значениями полей.
+    /// Возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
@@ -436,8 +442,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Найти строку с заданными значениями полей. 
     /// Если задан порядок сортировки, то отыскиваются все строки с заданными значениями, 
-    /// они упорядочиваются и возвращается идентификатор первой строки. Если OrderBy=null,
-    /// то возвращается идентификатор первой попавшейся строки
+    /// они упорядочиваются и возвращается идентификатор первой строки. Если <paramref name="orderBy"/>=null,
+    /// то возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
@@ -458,7 +464,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Поиск первой строки, удовлетворяющей условию.
-    /// Если есть несколько подходящих строк, то возвращается идентификатор первой попавшейся строки
+    /// Если есть несколько подходящих строк, то возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
@@ -3875,7 +3881,7 @@ namespace FreeLibSet.Data
      */
 
     /// <summary>
-    /// Текущая транзакция, если был вызов метода TransactionBegin(), или null, если нет активной транзакции
+    /// Текущая транзакция, если был вызов метода <see cref="TransactionBegin()"/>, или null, если нет активной транзакции
     /// </summary>
     public IDbTransaction CurrentTransaction { get { return _CurrentTransaction; } }
     private IDbTransaction _CurrentTransaction;
@@ -4009,7 +4015,7 @@ namespace FreeLibSet.Data
     private bool? _TraceEnabled;
 
     /// <summary>
-    /// Восстановление значения по умолчанию для TraceEnabled
+    /// Восстановление значения по умолчанию для <see cref="TraceEnabled"/>
     /// </summary>
     public void ResetTraceEnabled()
     {
@@ -4020,7 +4026,7 @@ namespace FreeLibSet.Data
     /// Возможность временной приостановки трассировки.
     /// Например, в SQL Server надо выполнять оператор "USE [БазаДанных]" при создании соединения.
     /// Оно может надоедать при трассировке.
-    /// После выполнения оператора, следуеть вызывать ResumeTrace()
+    /// После выполнения оператора, следует вызывать <see cref="ResumeTrace()"/>.
     /// </summary>
     protected void SuspendTrace()
     {
@@ -4125,7 +4131,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает команду, привязанную к соединению
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект <see cref="DbCommand"/></returns>
     public DbCommand CreateDbCommand()
     {
       DbCommand cmd = DB.ProviderFactory.CreateCommand();
@@ -4133,16 +4139,15 @@ namespace FreeLibSet.Data
       return cmd;
     }
 
-
     #endregion
 
     #region Вспомогательные методы
 
     /// <summary>
     /// Возвращает пустую таблицу с заданными столбцами.
-    /// Всегда создается новый объект DataTable.
+    /// Всегда создается новый объект <see cref="DataTable"/>.
     /// Можно использовать ссылочные столбцы, содержащие ".".
-    /// Вызывает DBxStruct.CreateDataTable().
+    /// Вызывает <see cref="DBxStruct.CreateDataTable(string, DBxColumns)"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список столбцов. Если null, то возвращаются все столбцы, определенные для таблицы</param>

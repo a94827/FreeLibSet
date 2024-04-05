@@ -19,7 +19,7 @@ namespace FreeLibSet.Data
     #region Вложенные классы
 
     /// <summary>
-    /// Список столбцов для свойства DBxTableStruct.Columns
+    /// Список столбцов для свойства <see cref="Columns"/>
     /// </summary>
     [Serializable]
     public class ColumnCollection : NamedList<DBxColumnStruct>
@@ -69,7 +69,7 @@ namespace FreeLibSet.Data
       }
 
       /// <summary>
-      /// Возвращает список имен столбцов в виде объекта DBxColumns.
+      /// Возвращает список имен столбцов в виде объекта <see cref="DBxColumns"/>.
       /// Каждый раз создается новый объект.
       /// </summary>
       public DBxColumns Columns
@@ -256,8 +256,8 @@ namespace FreeLibSet.Data
       /// <summary>
       /// Добавить целочисленное поле для хранения значений в заданном диапазоне (подбирается подходящий тип поля)
       /// Поле может содержать значение NULL.
-      /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию DataTools.GetEnumRange()
-      /// для получения диапазона
+      /// Если поле предназначено для хранения перечислимого значения, можно использовать функцию <see cref="DataTools.GetEnumRange(Type)"/>
+      /// для получения диапазона.
       /// </summary>
       /// <param name="columnName">Имя поля</param>
       /// <param name="range">Диапазон значений, которые должны храниться в поле</param>
@@ -622,7 +622,7 @@ namespace FreeLibSet.Data
 
       /// <summary>
       /// Возвращает описание последнего добавленного столбца.
-      /// Удобно, например, для установки свойства Comment после вызова AddXXX().
+      /// Удобно, например, для установки свойства <see cref="DBxColumnStruct.Comment"/> после вызова AddXXX().
       /// </summary>
       public DBxColumnStruct LastAdded
       {
@@ -660,7 +660,7 @@ namespace FreeLibSet.Data
 
 
     /// <summary>
-    /// Список столбцов для свойства DBxTableStruct.Columns
+    /// Список столбцов для свойства <see cref="Indexes"/>
     /// </summary>
     [Serializable]
     public class IndexCollection : NamedList<DBxIndexStruct>
@@ -888,8 +888,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Первичный ключ в виде списка объектов DBxColumnStruct.
-    /// По возможности, следует использовать свойство PrimaryKey
+    /// Первичный ключ в виде списка объектов <see cref="DBxColumnStruct"/>.
+    /// По возможности, следует использовать свойство <see cref="PrimaryKey"/>.
     /// </summary>
     public DBxColumnStruct[] PrimaryKeyColumns
     {
@@ -928,7 +928,7 @@ namespace FreeLibSet.Data
     /// Если свойство установлено в true (по умолчанию), то при добавлении поля первичного ключа
     /// будет установлен признак автоинкремента.
     /// При создании/обновлении структуры таблицы возникнет ошибка, если первичным ключом
-    /// является поле, отличное от целочисленного, а AutoPrimaryKey=true.
+    /// является поле, отличное от целочисленного, а <see cref="AutoPrimaryKey"/>=true.
     /// Если для таблицы задано отстутсвие первичного ключа, свойство игнорируется.
     /// </summary>
     public bool AutoPrimaryKey
@@ -943,8 +943,8 @@ namespace FreeLibSet.Data
     private bool _AutoPrimaryKey;
 
     /// <summary>
-    /// Список описаний индексов
-    /// Первичный ключ не входит в индексы
+    /// Список описаний индексов.
+    /// Первичный ключ не входит в индексы.
     /// </summary>
     public IndexCollection Indexes { get { return _Indexes; } }
     private readonly IndexCollection _Indexes;
@@ -964,7 +964,7 @@ namespace FreeLibSet.Data
     private string _Comment;
 
     /// <summary>
-    /// Возвращает true, если есть комментарий к таблице, или хотя бы к одному из столбцов или индексов
+    /// Возвращает true, если есть комментарий к таблице, или хотя бы к одному из столбцов или индексов.
     /// </summary>
     public bool HasComments
     {
@@ -987,11 +987,11 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Если true (по умолчанию), то метод DBx.UpdateStruct() будет создавать таблицу с помощью CREATE TABLE, если ее не существует, или
+    /// Если true (по умолчанию), то метод <see cref="DBx.UpdateStruct()"/> будет создавать таблицу с помощью CREATE TABLE, если ее не существует, или
     /// проверять ее структуру.
     /// В базе данных могут быть таблицы, которые должны создаваться из пользовательского кода, но при этом в других таблицах могут быть ссылки
     /// на них, а также могут выполняться запросы к этим таблицам.
-    /// Например, в SQLite могут создаваться виртуальные таблицы для полнотекстного поиска. Для такой таблицы следует установить DBxTableStruct.AutoCreate=false,
+    /// Например, в SQLite могут создаваться виртуальные таблицы для полнотекстного поиска. Для такой таблицы следует установить <see cref="DBxTableStruct.AutoCreate"/>=false,
     /// и выполнять SQL-запрос "CREATE VIRTUAL TABLE"
     /// </summary>
     public bool AutoCreate
@@ -1036,7 +1036,7 @@ namespace FreeLibSet.Data
     public bool IsReadOnly { get { return _Columns.IsReadOnly; } }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1063,7 +1063,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает копию описания таблицы, доступную для редактирования (<see cref="IsReadOnly"/>=false)
     /// </summary>
-    /// <returns>Новый объект DBxTableStruct</returns>
+    /// <returns>Новый объект <see cref="DBxTableStruct"/></returns>
     public DBxTableStruct Clone()
     {
       return Clone(this.TableName);
@@ -1071,10 +1071,10 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию описания таблицы, доступную для редактирования (<see cref="IsReadOnly"/>=false).
-    /// Эта перегрузка позволяет заменить имя таблицы
+    /// Эта перегрузка позволяет заменить имя таблицы.
     /// </summary>
+    /// <param name="tableName">Имя таблицы для новой структуры <see cref="DBxTableStruct.TableName"/></param>
     /// <returns>Новый объект <see cref="DBxTableStruct"/></returns>
-    /// <param name="tableName">Имя таблицы для новой структурой <see cref="DBxTableStruct.TableName"/></param>
     public DBxTableStruct Clone(string tableName)
     {
       if (String.IsNullOrEmpty(tableName))
@@ -1127,7 +1127,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверяет, что первичным ключом таблицы является единственное целочисленное поле.
-    /// Если это не так, генерируется DBxPrimaryKeyException.
+    /// Если это не так, генерируется <see cref="DBxPrimaryKeyException"/>.
     /// </summary>
     /// <returns>Имя поля первичного ключа</returns>
     public string CheckTablePrimaryKeyInt32()
@@ -1467,7 +1467,7 @@ namespace FreeLibSet.Data
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение при IsReadOnly=true
+    /// Генерирует исключение при <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1487,7 +1487,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает копию описания столбца.
     /// Копия не привязана к описанию таблицы и имеет <see cref="IsReadOnly"/>=false.
-    /// Созданный столбец имеет то же имя, что и текущий объект
+    /// Созданный столбец имеет то же имя, что и текущий объект.
     /// </summary>
     /// <returns>Копия описания столбца</returns>
     public DBxColumnStruct Clone()

@@ -30,7 +30,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Основной вариант конструктора.
-    /// Используется ClientDocType.PerformEditing()
+    /// Используется <see cref="DocTypeUI.PerformEditing(int, bool)"/>.
+    /// Не создается напрямую в прикладном коде.
     /// </summary>
     /// <param name="ui">Доступ к пользовательскому интерфейсу</param>
     /// <param name="docTypeName">Имя типа документа</param>
@@ -139,7 +140,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вариант конструктора с предварительно загруженными данными.
-    /// При использовании этого конструктора выставляется свойство DocumentsAreExternal
+    /// При использовании этого конструктора выставляется свойство <see cref="DocumentsAreExternal"/>
     /// </summary>
     /// <param name="ui">Доступ к пользовательскому интерфейсу</param>
     /// <param name="documents">Загруженные документы</param>
@@ -185,7 +186,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация свойства DBxDocSet.ActionInfo
+    /// Инициализация свойства <see cref="DBxDocSet.ActionInfo"/>
     /// </summary>
     private void InitActionInfo()
     {
@@ -255,13 +256,13 @@ namespace FreeLibSet.Forms.Docs
     /// Объекты редактируемых документов
     /// </summary>
     public DBxDocSet Documents { get { return _Documents; } }
-    private DBxDocSet _Documents;
+    private readonly DBxDocSet _Documents;
 
     /// <summary>
     /// Обработчики пользовательского интерфейса
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Имя типа главного редактируемого документа
@@ -274,14 +275,14 @@ namespace FreeLibSet.Forms.Docs
     public DocTypeUI DocTypeUI { get { return UI.DocTypes[DocTypeName]; } }
 
     /// <summary>
-    /// Возвращает true, если использовался вариант конструктора, использующий
-    /// предварительно загруженные документы, то есть свойство Documents было
+    /// Возвращает true, если вызывался вариант конструктора, использующий
+    /// предварительно загруженные документы, то есть свойство <see cref="Documents"/> было
     /// инициализировано снаружи редактора. 
     /// Возвращает false, если использовался основной вариант конструктора с 
     /// указанием типа документа, режима и идентификаторов.
     /// </summary>
     public bool DocumentsAreExternal { get { return _DocumentsAreExternal; } }
-    private bool _DocumentsAreExternal;
+    private readonly bool _DocumentsAreExternal;
 
     /// <summary>
     /// Режим: Редактирование, добавление, удаление или просмотр документа
@@ -298,6 +299,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// True, если редактируется, просматривается или удаляется сразу
     /// несколько документов. 
+    /// Прикладной код может анализировать это свойство и отключать редактирование некоторых полей или не добавлять вкладки поддокументов,
+    /// если это не совместимо с групповым редактированием.
     /// </summary>
     public bool MultiDocMode
     { get { return Documents[0].DocCount != 1; } }
@@ -305,7 +308,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Доступ к значениям документов.
     /// Если в редакторе открыты документы нескольких видов, значения относятся к "основным" документам
-    /// (Documents[0].Values).
+    /// (<see cref="Documents"/>[0].Values).
     /// Если одновременно открыто несколько документов, то могут быть "серые" значения.
     /// </summary>
     public IDBxDocValues MainValues
@@ -336,8 +339,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Внешний инициализатор полей для нового документа (для основного типа,
-    /// заданного в конструкторе, который используется в Documents[0])
-    /// Вызывается после обработки значений в ClientFields
+    /// заданного в конструкторе, который используется в <see cref="Documents"/>[0]).
+    /// Вызывается после обработки значений в <see cref="DocTypeUIBase.Columns"/>.
     /// </summary>
     public DocumentViewHandler Caller
     {
@@ -353,7 +356,7 @@ namespace FreeLibSet.Forms.Docs
     /// звездочка в заголовке.
     /// Предупреждение. Редактор может запускаться в режиме несохраненных изменений
     /// даже, если это свойство не установлено, в случае, когда одна из процедур
-    /// инициализации изменила загруженные данные
+    /// инициализации изменила загруженные данные.
     /// </summary>
     public bool StartWithChanges
     {
@@ -395,20 +398,23 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Устанавливается после закрытия редактора в true, если данные
     /// были изменены (форма закрыта нажатием "ОК" или было нажатие "Apply")
-    /// В режиме ValidateState=Delete показывает, что данные были удалены
+    /// В режиме <see cref="State"/>=<see cref="EFPDataGridViewState.Delete"/> показывает, что данные были удалены.
     /// </summary>
     public bool DataChanged { get { return _DataChanged; } }
     private bool _DataChanged;
 
     /// <summary>
-    /// Отслеживание изменений для рисования звездочки в заголовке формы
+    /// Отслеживание изменений для рисования звездочки в заголовке формы.
+    /// В него входят объекты <see cref="DepChangeInfoItem"/> для управляющих элементов, привязанных к полям документа,
+    /// а также <see cref="SubDocsChangeInfo"/> и <see cref="ExternalChangeInfo"/>.
     /// Объект существует только в процессе работы редактора.
     /// </summary>
     public DepChangeInfoList ChangeInfo { get { return _Form.ChangeInfoList; } }
 
     /// <summary>
     /// Объект для отслеживания изменений в поддокументах. Установка свойства
-    /// Changed в True означает наличие изменений.
+    /// <see cref="DepChangeInfoItem.Changed"/> в True означает наличие изменений.
+    /// Имеется только один объект для всех поддокументов, в том числе разнотипных.
     /// Объект существует только в процессе работы редактора.
     /// </summary>
     public DepChangeInfoItem SubDocsChangeInfo { get { return _SubDocsChangeInfo; } }
@@ -418,7 +424,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний флаг наличия изменений.
     /// Объект существует только в процессе работы редактора.
-    /// Исходное состояние признака изменений определяется свойством StartWithChanges
+    /// Исходное состояние признака изменений определяется свойством <see cref="StartWithChanges"/>
     /// </summary>
     public DepChangeInfoItem ExternalChangeInfo { get { return _ExternalChangeInfo; } }
     private DepChangeInfoItem _ExternalChangeInfo;
@@ -450,9 +456,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Свойство возвращает true, если была нажат кнопка "ОК" или "Запись"
     /// и в данный момент выполняется запись значений.
-    /// Обработчик события "BeforeWrite", "AfterWrite" (или другой в ClientDocType)
+    /// Обработчик события <see cref="BeforeWrite"/>, <see cref="AfterWrite"/>"" или другой в <see cref="FreeLibSet.Forms.Docs.DocTypeUI"/>
     /// может проверить свойство, чтобы определить, выполняется ли нажатие кнопки
-    /// записи или был программный вызов ValidateData().
+    /// записи или был программный вызов метода <see cref="ValidateData()"/>.
     /// </summary>
     public bool IsInsideWriting { get { return _IsInsideWriting; } }
     private bool _IsInsideWriting;
@@ -461,7 +467,7 @@ namespace FreeLibSet.Forms.Docs
     /// Пользовательские данные
     /// </summary>
     public NamedValues Properties { get { return _Properties; } }
-    private NamedValues _Properties;
+    private readonly NamedValues _Properties;
 
     /// <summary>
     /// Идентификатор длительной блокировки, если она была установлена
@@ -474,14 +480,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается сразу после того, как форма редактора выведена на экран.
-    /// Объекты синхронизации связаны в группы
+    /// Объекты синхронизации связаны в группы.
     /// </summary>
     public event DocEditEventHandler EditorShown;
 
     /// <summary>
     /// Вызывается после того, как были установлены значения всех полей перед началом
     /// редактирования. На момент вызова форма еще не выведена на экран и объекты
-    /// синхронизации не связаны в группы
+    /// синхронизации не связаны в группы.
     /// </summary>
     public event DocEditEventHandler AfterReadValues;
 
@@ -489,11 +495,11 @@ namespace FreeLibSet.Forms.Docs
     /// Вызывается при нажатии кнопок "ОК" или "Запись" перед посылкой данных
     /// серверу. 
     /// Вызывается в режимах Edit, Insert и InsertCopy
-    /// Установка Args.Cancel=true предотвращает запись данных и закрытие редактора
+    /// Установка Args.Cancel=true предотвращает запись данных и закрытие редактора.
     /// Программа должна вывести сообщение пользователю о причинах отмены.
     /// На момент вызова данные формы еще не перенесены в документы.
-    /// Если требуется обработка значений в DocumentEditor.Documents, используйте
-    /// событие ClientDocType.Writing
+    /// Если требуется обработка значений в <see cref="DocumentEditor.Documents"/>, используйте
+    /// событие <see cref="DocTypeUI.Writing"/>.
     /// </summary>
     public event DocEditCancelEventHandler BeforeWrite;
 
@@ -514,7 +520,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Открытие редактора.
-    /// Если форма открывается в модальном режиме, то ожидается завершение работы с формой
+    /// Если форма открывается в модальном режиме, то ожидается завершение работы с формой.
     /// </summary>
     public void Run()
     {
@@ -911,9 +917,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Повторная загрузка значений в редактор.
     /// Метод может вызываться только в процессе редактирования.
-    /// Сначала должен вызываться ValidateData(), затем выполняются манипуляции
-    /// с Documents, затем вызывается ReloadData().
-    /// Вызывает событие AfterReadValues
+    /// Сначала должен вызываться <see cref="ValidateData()"/>, затем выполняются манипуляции
+    /// с <see cref="Documents"/>, затем вызывается <see cref="ReloadData()"/>.
+    /// 
+    /// Вызывает события чтения для элементов в <see cref="DocEditItems"/>, а также событие <see cref="AfterReadValues"/>.
     /// </summary>
     public void ReloadData()
     {
@@ -954,7 +961,8 @@ namespace FreeLibSet.Forms.Docs
     /// Статическое управление заголовком окна редактора.
     /// Если свойство установлено, то заголовок редактора будет иметь вид "Вид документа: DocumentTextValue (Редактирование)".
     /// Эту возможность следует использовать, если текстовое представление документа является слишком длинным.
-    /// Обычно используется свойство DocumentTextValueEx (см. описание) для динамического управления.
+    /// Обычно используется свойство <see cref="DocumentTextValueEx"/> (см. описание) для динамического управления заголовком.
+    /// В заголовок не входит описание операции и признак наличия изменений (звездочка). Эти части присоединяются к заголовку автоматически.
     /// </summary>
     public string DocumentTextValue
     {
@@ -978,13 +986,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Динамическое управление заголовком окна редактора.
-    /// Если, например, есть поле для ввода наименования документа EFPTextBox, то можно присоединить свойство
+    /// Если, например, есть поле для ввода наименования документа <see cref="EFPTextBox"/>, то можно присоединить свойство
     /// Editor.DocumentTextValueEx=efpName.TextEx. При этом заголовок окна будет меняться синхронно с вводом пользователя.
     /// Можно использовать вычисляемые функции, если требуется собрать наименование из нескольких полей или, если "идентифицирующее" поле не является текстовым.
     /// Если свойство не установлено, то будет использоваться текстовое представление документа, но заголовок окна
     /// будет меняться только при нажатии кнопки "Запись".
-    /// Если текстовое представление документа тоже не определено, используется DBxDocType.SingularTutle.
+    /// Если текстовое представление документа тоже не определено, используется <see cref="DBxDocTypeBase.SingularTitle"/>.
     /// Свойство игнорируется, если выполняется групповое редактирование.
+    /// В заголовок не входит описание операции и признак наличия изменений (звездочка). Эти части присоединяются к заголовку автоматически.
     /// </summary>
     public DepValue<string> DocumentTextValueEx
     {
@@ -1275,19 +1284,21 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверка корректности введенных данных и копирование их из полей ввода
-    /// редактора в редактируемый документ (Documents)
+    /// редактора в редактируемый документ (<see cref="Documents"/>)
     /// Выполняемые действия:
-    /// 1. Событие DocumentEditor.BeforeWrite
-    /// 2. Проверка корректности значений полей EFPFormProvider.ValidateForm()
-    /// 3. Запись полей в документ IDocEditItem.WriteValues()
-    /// 4. Событие ClientDocType.Writing
+    /// <list type="bullet">
+    /// <item><description>1. Событие <see cref="DocumentEditor.BeforeWrite"/></description></item>
+    /// <item><description>2. Проверка корректности значений полей <see cref="EFPFormProvider.ValidateForm()"/></description></item>
+    /// <item><description>3. Запись полей в документ <see cref="IDocEditItem.WriteValues()"/></description></item>
+    /// <item><description>4. Событие <see cref="DocTypeUI.Writing"/></description></item>
+    /// </list>
     /// На шаге 1, 2 и 4 могут быть обнаружены ошибки. В этом случае дальнейшие
     /// действия не выполняются и возвращается false
-    /// Обработчики событий DocumentEditor.BeforeWrite и ClientDocType.Writing не
-    /// должны вызывать метод ValidateData()
+    /// Обработчики событий <see cref="DocumentEditor.BeforeWrite"/> и <see cref="DocTypeUI.Writing"/> не
+    /// должны вызывать метод <see cref="ValidateData()"/>.
     /// Если редактор документа находится в режиме просмотра или удаления
-    /// (DocumentEditor.DataReadOnly=true), то никакие действия не выполняются и
-    /// возвращается true
+    /// (<see cref="DocumentEditor.IsReadOnly"/>=true), то никакие действия не выполняются и
+    /// возвращается true.
     /// </summary>
     /// <returns>true, если форма содержит корректные значения и обработчики не
     /// установили свойство Cancel</returns>
@@ -1297,12 +1308,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Копирование данных из полей ввода в редактируемый документ (Documents)
-    /// без проверки корректности данных
-    /// Выполняет те же действия, что и ValudateData():
-    /// 1. Событие DocumentEditor.BeforeWrite
-    /// 2. Запись полей в документ IDocEditItem.WriteValues()
-    /// 3. Событие ClientDocType.Writing
+    /// Копирование данных из полей ввода в редактируемый документ (<see cref="Documents"/>)
+    /// без проверки корректности данных.
+    /// Выполняет те же действия, что и <see cref="ValidateData()"/>:
+    /// 1. Событие <see cref="DocumentEditor.BeforeWrite"/>
+    /// 2. Запись полей в документ <see cref="IDocEditItem.WriteValues()"/>
+    /// 3. Событие <see cref="DocTypeUI.Writing"/>
     /// Проверка значений полей не выполняется, ошибки, возникающие на шаге 1 и 3
     /// игнорируются
     /// </summary>
@@ -1450,8 +1461,8 @@ namespace FreeLibSet.Forms.Docs
     /// Выполняем запись значений из управляющих элементов в документ,
     /// проверяем корректность данных и выполняем запись документа
     /// Возвращаем true, если значения полей корректные и запись успешно
-    /// выполнена
-    /// ApplyClicked=true при нажатии кнопки "Apply" и false при нажатии "ОК"
+    /// выполнена.
+    /// applyClicked=true при нажатии кнопки "Apply" и false при нажатии "ОК"
     /// </summary>
     /// <returns></returns>
     private bool DoWrite(bool applyClicked)
@@ -1744,7 +1755,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Закрыть окно редактора.
-    /// На момент вызова окно редактора должно быть открыто
+    /// На момент вызова окно редактора должно быть открыто.
     /// Возвращает true, если форма успешно закрыта.
     /// Возврает false, если окно закрыть не удалось (например, не выполнены условия корректности введенных данных)
     /// </summary>
@@ -1771,7 +1782,8 @@ namespace FreeLibSet.Forms.Docs
     #region Кнопка "Еще"
 
     /// <summary>
-    /// Сюда можно добавить команды меню, которые будут доступны при нажатии кнопки "Еще"
+    /// Сюда можно добавить команды меню, которые будут доступны при нажатии кнопки "Ещё".
+    /// Кроме команд, объявленных в прикладном коде, меню содержит команды "Информация о документе" и "Копировать ссылку на документ".
     /// </summary>
     public EFPCommandItems MoreCommandItems { get { return Form.MoreButtonProvider.CommandItems; } }
 
@@ -2060,7 +2072,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если true, то выполняется просмотр или удаление документа, поля
-    /// документа не могут редактироваться
+    /// документа не могут редактироваться.
+    /// Возвращаемое значения зависит исключительно от свойства <see cref="State"/> и определяется в конструкторе.
     /// </summary>
     public bool IsReadOnly
     {
@@ -2072,7 +2085,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -2088,7 +2101,7 @@ namespace FreeLibSet.Forms.Docs
     /// Поиск уже открытого окна редактора документов.
     /// Достаточно совпадения одного идентификатора документов.
     /// Фиктивные идентификаторы для несохраненных документов не учитываются.
-    /// Никаких действий над найденным редактором не выполняется
+    /// Никаких действий над найденным редактором не выполняется.
     /// </summary>
     /// <param name="ui">Интерфейс доступа к документам</param>
     /// <param name="docTypeName">Имя вида документов</param>
@@ -2109,7 +2122,7 @@ namespace FreeLibSet.Forms.Docs
     /// Поиск уже открытого окна редактора документов.
     /// Достаточно совпадения одного идентификатора документов в выборке.
     /// Фиктивные идентификаторы для несохраненных документов не учитываются.
-    /// Никаких действий над найденным редактором не выполняется
+    /// Никаких действий над найденным редактором не выполняется.
     /// </summary>
     /// <param name="docSel">Выборка документов</param>
     /// <returns>Найденный редактор или null, если редактор еще не открыт.</returns>

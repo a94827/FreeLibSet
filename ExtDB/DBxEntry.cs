@@ -8,7 +8,8 @@ using System.Text;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Точка входа в базу данных
+  /// Точка входа в базу данных.
+  /// Абстрактный класс. Для каждого провайдера реализуется собстенный класс-наследник
   /// </summary>
   public abstract class DBxEntry
   {
@@ -19,7 +20,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="db">База данных</param>
     /// <param name="permissions">Разрешения на доступ к базе данных</param>
-    /// <param name="isMainEntry">Если true, то свойство DBx.MainEntry будет ссылаться на этот объект.</param>
+    /// <param name="isMainEntry">Если true, то свойство <see cref="DBx.MainEntry"/> будет ссылаться на этот объект.</param>
     public DBxEntry(DBx db, DBxPermissions permissions, bool isMainEntry)
     {
       if (db == null)
@@ -48,13 +49,13 @@ namespace FreeLibSet.Data
     /// База данных, к которой относится точка подключения. Не может быть null
     /// </summary>
     public DBx DB { get { return _DB; } }
-    private DBx _DB;
+    private readonly DBx _DB;
 
     /// <summary>
     /// Разрешения на доступ к таблицам. Не может быть null
     /// </summary>
     public DBxPermissions Permissions { get { return _Permissions; } }
-    private DBxPermissions _Permissions;
+    private readonly DBxPermissions _Permissions;
 
     /// <summary>
     /// Отображаемое имя (для отладки).
@@ -98,8 +99,8 @@ namespace FreeLibSet.Data
     #region Список соединений
 
     /// <summary>
-    /// Создать новое соединение
-    /// Этот метод может вызываться асинхронно
+    /// Создать новое соединение.
+    /// Этот метод может вызываться асинхронно.
     /// </summary>
     /// <returns>Соединение с базовй данных</returns>
     public abstract DBxConBase CreateCon();
@@ -110,7 +111,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает копию точки входа с другим набором прав.
-    /// Свойство DisplayName не копируется.
+    /// Свойство <see cref="DisplayName"/> не копируется.
     /// </summary>
     /// <param name="newPermissions">Требуемые разрешения на доступ к объектам базы данных</param>
     /// <returns>Новая точка входа</returns>

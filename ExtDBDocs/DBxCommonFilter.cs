@@ -15,14 +15,14 @@ namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Базовый класс для реализации устанавливаемых фильтров.
-  /// Фильтры используются в табличных просмотрах и параметрах отчетов
+  /// Фильтры используются в табличных просмотрах и параметрах отчетов.
   /// </summary>
   public abstract class DBxCommonFilter : IObjectWithCode
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает фильтр, установив свойство UseSqlFilter = true.
+    /// Создает фильтр, установив свойство <see cref="UseSqlFilter"/> = true.
     /// </summary>
     public DBxCommonFilter()
     {
@@ -35,21 +35,30 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Код фильтра. Используется при чтении / записи фильтра как имя секции конфигурации.
-    /// Свойство должно быть установлено в конструкторе производного класса или в пользовательском коде до присоединения к коллекции DBxCommonFilters
+    /// Свойство должно быть установлено в конструкторе производного класса или в пользовательском коде до присоединения к коллекции <see cref="DBxCommonFilters"/>.
     /// </summary>
     public string Code
     {
       get { return _Code; }
       set
       {
-        // Не проверяем пустое значение, так как код трьбуется только когда фильтр присоединяется к коллекции
+        // Не проверяем пустое значение, так как код требуется только когда фильтр присоединяется к коллекции
 
-        if (_Owner != null)
-          throw new InvalidOperationException("Установка свойства Code допускается только до присоединения фильтра к коллекции");
+        CheckNoOwner();
         _Code = value;
       }
     }
     private string _Code;
+
+    /// <summary>
+    /// Проверяет, что фильтр еще не был присоединен к коллекции <see cref="DBxCommonFilters"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Если фильтр уже присоединен</exception>
+    protected void CheckNoOwner()
+    {
+      if (_Owner != null)
+        throw new InvalidOperationException("Выполнение действия допускается только до присоединения фильтра к коллекции");
+    }
 
     #endregion
 
@@ -57,7 +66,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Коллекция - владелец.
-    /// Свойство возвращает null до присоединения фильтра к коллекции
+    /// Свойство возвращает null до присоединения фильтра к коллекции.
     /// </summary>
     public DBxCommonFilters Owner
     {
@@ -90,8 +99,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Этот метод вызывается классами-наследниками при изменении значения фильтра.
-    /// Вызывает событие Changed для этого объекта и событие Changed коллекции DBxCommonFilters.
-    /// До присоединения фильтра к коллекции метод не выполняет никаких действий, в том числе, не вызывает события Changed.
+    /// Вызывает событие <see cref="Changed"/> для этого объекта и событие коллекции <see cref="DBxCommonFilters.Changed"/>.
+    /// До присоединения фильтра к коллекции метод не выполняет никаких действий, в том числе, не вызывает события <see cref="Changed"/>.
     /// </summary>
     protected virtual void OnChanged()
     {
@@ -110,7 +119,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Имя фильтра, которое появляется в левой части диалога фильтра.
-    /// Если свойство не установлено в явном виде, возвращается Code.
+    /// Если свойство не установлено в явном виде, возвращается <see cref="Code"/>.
     /// </summary>
     public string DisplayName
     {
@@ -130,7 +139,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Идентификатор базы данных.
-    /// Переопределено для RefDocGridFilter.
+    /// Переопределено для <see cref="RefGroupDocCommonFilter"/>.
     /// Непереопределенный метод возвращает пустую строку.
     /// </summary>
     public virtual string DBIdentity { get { return String.Empty; } }
@@ -139,7 +148,7 @@ namespace FreeLibSet.Data.Docs
     /// Возвращает true, если фильтр используется при формировании SQL-запроса.
     /// По умолчанию возвращает true. Для фильтра табличного просмотра обязан возвращать true.
     /// Свойство может быть сброшено в false для фильтра отчета, если фильтрация выполняется по значению, вычисляемому вручную.
-    /// В этом случае имя поля явуляется фиктивным
+    /// В этом случае имя поля является фиктивным.
     /// </summary>
     public bool UseSqlFilter
     {
@@ -160,7 +169,7 @@ namespace FreeLibSet.Data.Docs
     private object _Tag;
 
     /// <summary>
-    /// Возвращает свойство DisplayName.
+    /// Возвращает свойство <see cref="DisplayName"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -199,9 +208,9 @@ namespace FreeLibSet.Data.Docs
     public abstract DBxFilter GetSqlFilter();
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
     /// Имена полей и значений должны содержать необходимые поля, иначе будет сгенерирована ошибка.
-    /// Вызывает виртуальный метод OnTestValues(), если фильтр установлен и свойство UseSqlFilter равно true
+    /// Вызывает виртуальный метод <see cref="OnTestValues(INamedValuesAccess)"/>, если фильтр установлен и свойство <see cref="UseSqlFilter"/> равно true.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -215,10 +224,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
     /// Имена полей и значений должны содержать необходимые поля, иначе будет сгенерирована ошибка.
-    /// Метод не вызывается, если фильтр не установлен, следовательно, проверка IsEmpty не нужна.
-    /// Также метод не вызывается при UseSqlFilter=false
+    /// Метод не вызывается, если фильтр не установлен, следовательно, дополнительная проверка свойства <see cref="IsEmpty"/> не нужна.
+    /// Также метод не вызывается при <see cref="UseSqlFilter"/>=false.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -235,7 +244,7 @@ namespace FreeLibSet.Data.Docs
     public abstract void ReadConfig(CfgPart cfg);
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public abstract void WriteConfig(CfgPart cfg);
@@ -273,7 +282,7 @@ namespace FreeLibSet.Data.Docs
     /// Если фильтр реализует установку значения фильтра "по строке", то 
     /// переопределенный метод должен извлечь значения "своих" полей из строки и
     /// вернуть true, если установка возможна. Сама установка выполняется методом
-    /// SetAsCurrRow().
+    /// <see cref="SetAsCurrRow(DataRow)"/>.
     /// Непереопределенный метод возвращает false.
     /// </summary>
     /// <param name="row">Строка, откуда берутся значения</param>
@@ -367,8 +376,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Переопределенный метод может вернуть текстовые представления тестируемых
-    /// значений для отображения в сообщении
-    /// Оригинальный метод возвращает null, что означает отказ от вывода значений
+    /// значений для отображения в сообщении.
+    /// Оригинальный метод возвращает null, что означает отказ от вывода значений.
     /// </summary>
     /// <param name="columnValues">Значения полей</param>
     /// <returns>Текстовые представления значений</returns>
@@ -381,7 +390,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Набор из нескольких фильтров, которые можно вместе добавить в коллекцию DBxCommonFiltes
+  /// Набор из нескольких фильтров, которые можно вместе добавить в коллекцию <see cref="DBxCommonFilters"/>.
   /// </summary>
   public class DBxCommonFilterSet : NamedList<DBxCommonFilter>
   {
@@ -414,7 +423,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получение списка имен полей, которые необходимы для выполнения фильтрации.
     /// Неактивные фильтры не добавляются.
-    /// Фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// Каждое поле в список входит один раз.
     /// </summary>
     /// <param name="list">Список для добавления полей</param>
@@ -431,11 +440,11 @@ namespace FreeLibSet.Data.Docs
     }
     /// <summary>
     /// Тестирование фильтра.
-    /// Опрашиваются фильтры в списке, вызывая метод DBxCommonFilter.TestrValues() пока один из фильтров не вернет false.
+    /// Опрашиваются фильтры в списке, вызывая метод <see cref="DBxCommonFilter.TestValues(INamedValuesAccess)"/> пока один из фильтров не вернет false.
     /// Неактивные фильтры не добавляются.
-    /// Фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// </summary>
-    /// <param name="rowValues">Доступ к значениям полей. В списке должны быть все поля, полученные вызовом GetColumnNames</param>
+    /// <param name="rowValues">Доступ к значениям полей. В списке должны быть все поля, полученные вызовом <see cref="GetColumnNames(DBxColumnList)"/></param>
     /// <param name="badFilter">Сюда помещается ссылка на фильтр, который вернул false. Если строка проходит условия всех фильтров, сюда записывается null.</param>
     /// <returns>True, если строка проходит все фильтры</returns>
     public bool TestValues(INamedValuesAccess rowValues, out DBxCommonFilter badFilter)
@@ -462,7 +471,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка попадания в фильтр.
-    /// Если предполагается проверка значений для нескольких строк, используйте объект DBxColumnValueArray и перегрузку метода, принимающую INamedValuesAccess.
+    /// Если предполагается проверка значений для нескольких строк, используйте объект <see cref="DBxColumnValueArray"/> и перегрузку метода, принимающую <see cref="INamedValuesAccess"/>.
     /// </summary>
     /// <param name="columnNames">Имена полей</param>
     /// <param name="values">Значения полей</param>
@@ -489,10 +498,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получение SQL-фильтра для фильтрации набора данных.
-    /// Пустые фильтры и фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Пустые фильтры и фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// </summary>
-    /// <returns>Объект DatatFilter, соответствующий активным фильтрам. Если фильтров 
-    /// несколько, то будет возвращаен AndDBxFilter</returns>
+    /// <returns>Объект <see cref="DBxFilter"/>, соответствующий активным фильтрам. Если фильтров 
+    /// несколько, то будет возвращен <see cref="AndFilter"/>.</returns>
     public DBxFilter GetSqlFilter()
     {
       List<DBxFilter> filters = new List<DBxFilter>();
@@ -506,9 +515,9 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Очистка всех фильтров. Вызывает DBxCommonFilters.Clear() для каждого фильтра.
-    /// Список фильтров не меняется. Метод работает независимо от свойства IsReadOnly.
-    /// Не путать этот метод с Clear(), который очищает сам список фильтров.
+    /// Очистка всех фильтров. Вызывает <see cref="DBxCommonFilters.ClearFilter(string)"/> для каждого фильтра.
+    /// Список фильтров не меняется. Вызов не зависит от свойства <see cref="NamedList{DBxCommonFilter}.IsReadOnly"/>.
+    /// Не путать этот метод с <see cref="NamedList{DBxCommonFilter}.Clear()"/>, который очищает сам список фильтров.
     /// </summary>
     public void ClearAllFilters()
     {
@@ -533,7 +542,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если нет ни одного активного фильтра, для которого UseSqlFilter=true
+    /// Возвращает true, если нет ни одного активного фильтра, для которого <see cref="DBxCommonFilter.UseSqlFilter"/>=true
     /// </summary>
     public bool IsSqlEmpty
     {
@@ -552,7 +561,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если нет ни одного активного фильтра, для которого UseSqlFilter=false
+    /// Возвращает true, если нет ни одного активного фильтра, для которого <see cref="DBxCommonFilter.UseSqlFilter"/>=false
     /// </summary>
     public bool IsNonSqlEmpty
     {
@@ -574,7 +583,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Коллекция фильтров
+  /// Коллекция фильтров <see cref="DBxCommonFilter"/>
   /// </summary>
   public class DBxCommonFilters : NamedListWithNotifications<DBxCommonFilter>
   {
@@ -608,7 +617,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Устанавливает свойство DBxCommonFilter.Owner
+    /// Устанавливает свойство <see cref="DBxCommonFilter.Owner"/>.
     /// </summary>
     /// <param name="item">Добавленный фильтр</param>
     protected override void OnAfterAdd(DBxCommonFilter item)
@@ -618,7 +627,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Очищает свойство DBxCommonFilter.Owner
+    /// Очищает свойство <see cref="DBxCommonFilter.Owner"/>
     /// </summary>
     /// <param name="item">Удаленный фильтр</param>
     protected override void OnAfterRemove(DBxCommonFilter item)
@@ -660,16 +669,17 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается, когда изменяется текущая установка в одном из фильтров.
-    /// Событие фильтра DBxCommonFilter.Changed вызывается до этого события.
+    /// Событие фильтра <see cref="DBxCommonFilter.Changed"/> вызывается до этого события.
     /// Если обработчик события вызывает установку какого-либо фильтра, то посылка
-    /// вложенного извещения не выполняется
+    /// вложенного извещения не выполняется.
     /// </summary>
     public event EventHandler Changed;
 
     private bool _InsideChanged = false;
 
     /// <summary>
-    /// Внутренний метод для вызова события Changed
+    /// Внутренний метод для вызова события <see cref="Changed"/>.
+    /// Предотвращает реентрантный вызов.
     /// </summary>
     /// <param name="filter">Фильтр, который вызвал событие, или null</param>
     internal protected virtual void OnChanged(DBxCommonFilter filter)
@@ -715,8 +725,8 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает true, если среди запрашиваемых фильтров хотя бы один установлен.
     /// Если в списке <paramref name="codes"/> присутствуют несуществующие коды фильтров, то они пропускаются,
-    /// как будто для них IsEmpty=true, без выдачи сообщения об ошибке.
-    /// Чтобы проверить наличие установки любого фильтра, используйте свойство IsEmpty.
+    /// как будто для них <see cref="DBxCommonFilter.IsEmpty"/>=true, без выдачи сообщения об ошибке.
+    /// Чтобы проверить наличие установки любого фильтра, используйте свойство <see cref="DBxCommonFilter.IsEmpty"/>.
     /// </summary>
     /// <param name="codes">Список кодов проверяемых </param>
     /// <returns>Наличие установленных фильтров</returns>
@@ -752,7 +762,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Поиск фильтра по пользовательскому имени фильтра (свойству GridFilter.DisplayName)
+    /// Поиск фильтра по пользовательскому имени фильтра (свойству <see cref="DBxCommonFilter.DisplayName"/>).
     /// </summary>
     /// <param name="displayName">Имя фильтра для поиска</param>
     /// <returns>Найденный фильтр или null, если фильтр не найден</returns>
@@ -771,7 +781,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получение списка имен полей, которые необходимы для выполнения фильтрации.
     /// Неактивные фильтры не добавляются.
-    /// Фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// Каждое поле в список входит один раз.
     /// </summary>
     /// <param name="list">Список для добавления полей</param>
@@ -790,7 +800,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получение списка имен полей, которые необходимы для выполнения фильтрации.
     /// Неактивные фильтры не добавляются.
-    /// Фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// Если нет установленных фильтров, возвращается null.
     /// </summary>
     public DBxColumns GetColumnNames()
@@ -805,11 +815,11 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Тестирование фильтра.
-    /// Опрашиваются фильтры в списке, вызывая метод DBxCommonFilter.TestrValues() пока один из фильтров не вернет false.
+    /// Опрашиваются фильтры в списке, вызывая метод <see cref="DBxCommonFilter.TestValues(INamedValuesAccess)"/> пока один из фильтров не вернет false.
     /// Неактивные фильтры не добавляются.
-    /// Фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// </summary>
-    /// <param name="rowValues">Доступ к значениям полей. В списке должны быть все поля, полученные вызовом GetColumnNames</param>
+    /// <param name="rowValues">Доступ к значениям полей. В списке должны быть все поля, полученные вызовом <see cref="GetColumnNames(DBxColumnList)"/></param>
     /// <param name="badFilter">Сюда помещается ссылка на фильтр, который вернул false. Если строка проходит условия всех фильтров, сюда записывается null.</param>
     /// <returns>True, если строка проходит все фильтры</returns>
     public bool TestValues(INamedValuesAccess rowValues, out DBxCommonFilter badFilter)
@@ -833,11 +843,11 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Тестирование фильтра.
-    /// Опрашиваются фильтры в списке, вызывая метод DBxCommonFilter.TestrValues() пока один из фильтров не вернет false.
+    /// Опрашиваются фильтры в списке, вызывая метод <see cref="DBxCommonFilter.TestValues(INamedValuesAccess)"/> пока один из фильтров не вернет false.
     /// Неактивные фильтры не добавляются.
-    /// Фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// </summary>
-    /// <param name="rowValues">Доступ к значениям полей. В списке должны быть все поля, полученные вызовом GetColumnNames</param>
+    /// <param name="rowValues">Доступ к значениям полей. В списке должны быть все поля, полученные вызовом <see cref="GetColumnNames(DBxColumnList)"/></param>
     /// <returns>True, если строка проходит все фильтры</returns>
     public bool TestValues(INamedValuesAccess rowValues)
     {
@@ -847,7 +857,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка попадания в фильтр.
-    /// Если предполагается проверка значений для нескольких строк, используйте объект DBxColumnValueArray и перегрузку метода, принимающую INamedValuesAccess.
+    /// Если предполагается проверка значений для нескольких строк, используйте объект <see cref="DBxColumnValueArray"/> и перегрузку метода, принимающую <see cref="INamedValuesAccess"/>.
     /// </summary>
     /// <param name="columns">Имена полей</param>
     /// <param name="values">Значения полей</param>
@@ -862,7 +872,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка попадания в фильтр.
-    /// Если предполагается проверка значений для нескольких строк, используйте объект DBxColumnValueArray и перегрузку метода, принимающую INamedValuesAccess.
+    /// Если предполагается проверка значений для нескольких строк, используйте объект <see cref="DBxColumnValueArray"/> и перегрузку метода, принимающую <see cref="INamedValuesAccess"/>.
     /// </summary>
     /// <param name="columns">Имена полей</param>
     /// <param name="values">Значения полей</param>
@@ -888,10 +898,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получение SQL-фильтра для фильтрации набора данных.
-    /// Пустые фильтры и фильтры со сброшенным свойством UseSqlFilter пропускаются.
+    /// Пустые фильтры и фильтры со сброшенным свойством <see cref="DBxCommonFilter.UseSqlFilter"/> пропускаются.
     /// </summary>
-    /// <returns>Объект DatatFilter, соответствующий активным фильтрам. Если фильтров 
-    /// несколько, то будет возвращаен AndDBxFilter</returns>
+    /// <returns>Объект <see cref="DBxFilter"/>, соответствующий активным фильтрам. Если фильтров 
+    /// несколько, то будет возвращаен <see cref="AndFilter"/></returns>
     public DBxFilter GetSqlFilter()
     {
       List<DBxFilter> filters = new List<DBxFilter>();
@@ -906,7 +916,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Выполняет очистку фильтра, если он существует.
     /// Если нет фильтра с кодом <paramref name="code"/>, никаких действий не выполняется.
-    /// Удобно использовать в обработчике OnChanged() для реализации взаимных блокировок фильтров, когда список фильтров не является постоянным.
+    /// Удобно использовать в обработчике <see cref="OnChanged(DBxCommonFilter)"/> для реализации взаимных блокировок фильтров, когда список фильтров не является постоянным.
     /// </summary>
     /// <param name="code">Код фильтра</param>
     public void ClearFilter(string code)
@@ -919,7 +929,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Выполняет очистку фильтров с заданными кодами.
     /// Если в списке <paramref name="codes"/> указаны фильтра с несуществующими кодами, то они пропускаются.
-    /// Удобно использовать в обработчике OnChanged() для реализации взаимных блокировок фильтров, когда список фильтров не является постоянным.
+    /// Удобно использовать в обработчике <see cref="OnChanged(DBxCommonFilter)"/> для реализации взаимных блокировок фильтров, когда список фильтров не является постоянным.
     /// </summary>
     /// <param name="codes">Список кодов фильтров, разделенных запятыми</param>
     public void ClearFilters(string codes)
@@ -937,9 +947,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Очистка всех фильтров. Вызывает DBxCommonFilters.Clear() для каждого фильтра.
-    /// Список фильтров не меняется. Метод работает независимо от свойства IsReadOnly.
-    /// Не путать этот метод с Clear(), который очищает сам список фильтров.
+    /// Очистка всех фильтров. Вызывает <see cref="DBxCommonFilter.Clear()"/> для каждого фильтра.
+    /// Список фильтров не меняется. Метод работает независимо от свойства <see cref="NamedList{DBxCommonFilter}.IsReadOnly"/>.
+    /// Не путать этот метод с <see cref="NamedList{DBxCommonFilter}.Clear()"/>, который очищает сам список фильтров.
     /// </summary>
     public void ClearAllFilters()
     {
@@ -950,11 +960,11 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Идентификатор базы данных.
-    /// Возвращается значение GridFilter.DBIdentity для первого фильтра в списке,
+    /// Возвращается значение <see cref="DBxCommonFilter.DBIdentity"/> для первого фильтра в списке,
     /// вернувшего непустое значение.
     /// Если ни один из фильтров не вернул значение, возвращается пустая строка.
     /// Это означает, что в списке нет ссылочных фильтров и фильтры можно копировать/вставлять
-    /// через буфер обмена между любыми программами
+    /// через буфер обмена между любыми программами.
     /// </summary>
     public string DBIdentity
     {
@@ -986,7 +996,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true, если нет ни одного активного фильтра.
-    /// Чтобы определить наличие установленного фильра среди определенного подмножества, используйте метод IsAnuNotEmpty()
+    /// Чтобы определить наличие установленного фильтра среди определенного подмножества, используйте <see cref="IsAnyNotEmpty(string)"/>.
     /// </summary>
     public bool IsEmpty
     {
@@ -1002,7 +1012,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если нет ни одного активного фильтра, для которого UseSqlFilter=true
+    /// Возвращает true, если нет ни одного активного фильтра, для которого <see cref="DBxCommonFilter.UseSqlFilter"/>=true
     /// </summary>
     public bool IsSqlEmpty
     {
@@ -1021,7 +1031,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если нет ни одного активного фильтра, для которого UseSqlFilter=false
+    /// Возвращает true, если нет ни одного активного фильтра, для которого <see cref="DBxCommonFilter.UseSqlFilter"/>=false
     /// </summary>
     public bool IsNonSqlEmpty
     {
@@ -1044,11 +1054,11 @@ namespace FreeLibSet.Data.Docs
     #region Чтение / запись секций конфигурации
 
     /// <summary>
-    /// Инициализация текущих значений фильтров на основании сохраненных ранее настроек
+    /// Инициализация текущих значений фильтров на основании сохраненных ранее настроек.
     /// Для каждого фильтра предусмотрена отдельная часть, которая всегда
     /// существует после записи фильтров (включая пустые).
     /// Если для какого-либо фильтра (или всех фильтров) нет части, значит пользователь
-    /// еще не настраивал фильтр. В этом случае сохраняется значение по умолчанию
+    /// еще не настраивал фильтр. В этом случае сохраняется значение по умолчанию.
     /// </summary>
     /// <param name="config">Секция конфигурации, откуда будут прочитаны настройки.
     /// Если null, то чтение не будет выполнено и текущие настройки останутся без изменений</param>
@@ -1087,7 +1097,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Вызывается при возникновении ошибки чтении конфигурации в DBxCommonFilter.ReadConfig().
+    /// Вызывается при возникновении ошибки чтении конфигурации в <see cref="DBxCommonFilter.ReadConfig(CfgPart)"/>.
     /// Непереопределенный метод повторно выбрасывает исключение.
     /// </summary>
     /// <param name="exception">Возникшее исключение</param>
@@ -1121,8 +1131,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Текущие значения фильтров в виде строки текста.
-    /// Чтение свойства вызывает WriteConfig(), а запись - ReadConfig(). При этом используется TempCfg и преобразование в XML-формат.
-    /// Это свойство удобно использовать в отчетах для передачи данных от клиента к серверу
+    /// Чтение свойства вызывает <see cref="WriteConfig(CfgPart)"/>, а запись - <see cref="ReadConfig(CfgPart)"/>. При этом используется <see cref="TempCfg"/> и преобразование в XML-формат.
+    /// Это свойство удобно использовать в отчетах для передачи данных от клиента к серверу.
     /// </summary>
     public string ConfigAsXmlText
     {
@@ -1145,7 +1155,7 @@ namespace FreeLibSet.Data.Docs
     #region IInitNewDocValues Members
 
     /// <summary>
-    /// Вызывается из ClientDocType.PerformEditing
+    /// Вызывается из DocTypeUI.PerformEditing (ExtDBDocsForms.dll)
     /// </summary>
     /// <param name="newDoc"></param>
     public void InitNewDocValues(DBxSingleDoc newDoc)
@@ -1156,7 +1166,7 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Вызывает GridFilter.ValidateDocValues для всех фильтров в списке
+    /// Вызывает <see cref="DBxCommonFilter.ValidateDocValues(DBxSingleDoc, ErrorMessageList)"/> для всех фильтров в списке
     /// </summary>
     /// <param name="savingDoc"></param>
     /// <param name="errorMessages"></param>
@@ -1172,8 +1182,8 @@ namespace FreeLibSet.Data.Docs
   #region Фильтры для одного поля
 
   /// <summary>
-  /// Базовый класс для фильтров по одному полю.
-  /// Определяет свойство ColumnName
+  /// Базовый класс для фильтров по одному полю (большинство фильтров).
+  /// Определяет свойство <see cref="SingleColumnCommonFilter.ColumnName"/>.
   /// </summary>
   public abstract class SingleColumnCommonFilter : DBxCommonFilter
   {
@@ -1181,7 +1191,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создает объект фильтра.
-    /// Устанавливает свойства DBxCommonFilter.Code и DisplayName равными <paramref name="columnName"/>.
+    /// Устанавливает свойства <see cref="ColumnName"/>, <see cref="DBxCommonFilter.Code"/> и <see cref="DBxCommonFilter.DisplayName"/> равными <paramref name="columnName"/>.
     /// </summary>
     /// <param name="columnName">Имя поля. Должно быть задано</param>
     public SingleColumnCommonFilter(string columnName)
@@ -1204,12 +1214,12 @@ namespace FreeLibSet.Data.Docs
     /// Задается в конструкторе и не может быть изменено
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Получить список имен полей, которые необходимы для вычисления фильтра.
     /// Поля добавляются в список независимо от того, активен сейчас фильтр или нет.
-    /// Добавляет в список поле ColumnName.
+    /// Добавляет в список поле <see cref="ColumnName"/>.
     /// </summary>
     /// <param name="list">Список для добавления полей</param>
     public override /*sealed */ void GetColumnNames(DBxColumnList list)
@@ -1219,7 +1229,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается при создании нового документа из просмотра.
-    /// Проверяет наличие в документе поля ColumnName и вызывает метод OnInitNewDocValue() для значения поля
+    /// Проверяет наличие в документе поля <see cref="ColumnName"/> и вызывает метод <see cref="DBxCommonFilter.OnInitNewDocValues(DBxSingleDoc)"/> для значения поля.
     /// </summary>
     /// <param name="newDoc">Созданный документ, в котором можно установить поля</param>
     protected override /*sealed*/ void OnInitNewDocValues(DBxSingleDoc newDoc)
@@ -1233,7 +1243,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Инициализация значения поля при создании нового документа.
-    /// Метод вызывается, только когда фильтр установлен
+    /// Метод вызывается, только когда фильтр установлен.
     /// </summary>
     /// <param name="docValue">Значение поля, которое можно установить</param>
     protected virtual void OnInitNewDocValue(DBxDocValue docValue)
@@ -1247,21 +1257,43 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Простой фильтр по значению текстового поля (проверка поля на равенство 
-  /// определенному значению)
+  /// определенному значению).
+  /// Использует SQL-фильтр <see cref="StringValueFilter"/>.
   /// </summary>
   public class StringValueCommonFilter : SingleColumnCommonFilter
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
-    /// Создает фильтр
+    /// Создает фильтр.
+    /// По умолчанию фильтр является чувствительным к регистру
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     public StringValueCommonFilter(string columnName)
       : base(columnName)
     {
+      _IgnoreCase = false;
       _Value = String.Empty;
     }
+
+    #endregion
+
+    #region Управляющее свойство
+
+    /// <summary>
+    /// Если true, то сравнение будет выполняться без учета регистра.
+    /// По умолчанию false - регистр не учитывается.
+    /// </summary>
+    public bool IgnoreCase
+    {
+      get { return _IgnoreCase; }
+      set
+      {
+        CheckNoOwner();
+        _IgnoreCase = value;
+      }
+    }
+    private bool _IgnoreCase;
 
     #endregion
 
@@ -1309,15 +1341,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      return DataTools.GetString(rowValues.GetValue(ColumnName)) == Value;
+      string v = DataTools.GetString(rowValues.GetValue(ColumnName));
+      return String.Equals(v, Value, IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -1325,12 +1357,12 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override DBxFilter GetSqlFilter()
     {
-      return new ValueFilter(ColumnName, Value);
+      return new StringValueFilter(ColumnName, Value, IgnoreCase);
     }
 
     /// <summary>
     /// Инициализация значения поля при создании нового документа.
-    /// Метод вызывается, только когда фильтр установлен
+    /// Метод вызывается, только когда фильтр установлен.
     /// </summary>
     /// <param name="docValue">Значение поля, которое можно установить</param>
     protected override void OnInitNewDocValue(DBxDocValue docValue)
@@ -1348,7 +1380,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -1362,7 +1394,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
+    /// Если фильтр не установлен (<see cref="IsEmpty"/>=true), возвращается true
     /// </summary>
     /// <param name="rowValue">Проверяемое значение</param>
     /// <returns>true, если значение проходит условие фильтра</returns>
@@ -1370,14 +1402,14 @@ namespace FreeLibSet.Data.Docs
     {
       if (IsEmpty)
         return true;
-      return rowValue == Value;
+      return String.Equals(rowValue, Value, IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Фильтр для StartsWithFilter
+  /// Фильтр по совпадению начала строки (SQL-фильтр <see cref="StartsWithFilter"/>)
   /// </summary>
   public class StartsWithCommonFilter : StringValueCommonFilter
   {
@@ -1396,26 +1428,27 @@ namespace FreeLibSet.Data.Docs
 
     #region Переопределенные методы
 
-    // При изменениях не забыть продублировать их в классе StartsWuthGridFilter в ExtDbDocForms.dll
+    // При изменениях не забыть продублировать их в классе StartsWithGridFilter в ExtDbDocForms.dll
 
     /// <summary>
-    /// Создает StartsWithFilter
+    /// Создает <see cref="StartsWithFilter"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект SQL-фильтра</returns>
     public override DBxFilter GetSqlFilter()
     {
-      return new StartsWithFilter(ColumnName, Value);
+      return new StartsWithFilter(ColumnName, Value, IgnoreCase);
     }
 
     /// <summary>
-    /// Проверка значения
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Доступ к значениям полей</param>
     /// <returns>True, если условие фильтра выполняется</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
       object v = rowValues.GetValue(ColumnName);
-      return DataTools.GetString(v).StartsWith(Value, StringComparison.Ordinal);
+      return DataTools.GetString(v).StartsWith(Value, IgnoreCase?StringComparison.OrdinalIgnoreCase: StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -1432,7 +1465,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
+    /// Если фильтр не установлен (<see cref="DBxCommonFilter.IsEmpty"/>=true), возвращается true
     /// </summary>
     /// <param name="rowValue">Проверяемое значение</param>
     /// <returns>true, если значение проходит условие фильтра</returns>
@@ -1440,7 +1473,7 @@ namespace FreeLibSet.Data.Docs
     {
       if (IsEmpty)
         return true;
-      return rowValue.StartsWith(Value, StringComparison.Ordinal);
+      return rowValue.StartsWith(Value, IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
     }
 
     #endregion
@@ -1449,7 +1482,7 @@ namespace FreeLibSet.Data.Docs
   #region Перечисление CodesFilterMode
 
   /// <summary>
-  /// Возможные значения свойства CodeGridFilter.Mode
+  /// Возможные значения свойства <see cref="CodeCommonFilter.Mode"/>
   /// </summary>
   public enum CodeFilterMode
   {
@@ -1475,7 +1508,6 @@ namespace FreeLibSet.Data.Docs
   /// Класс для реализации фильтров по кодам.
   /// Поддерживает режим включения или исключения нескольких кодов. Возможна 
   /// поддержка пустых кодов. 
-  /// Является базой для класса RefBookGridFilter для фильтрации по кодам "Код-значение"
   /// </summary>
   public class CodeCommonFilter : SingleColumnCommonFilter
   {
@@ -1500,20 +1532,23 @@ namespace FreeLibSet.Data.Docs
     #region Текущее состояние фильтра
 
     /// <summary>
-    /// Текущий режим фильтра
+    /// Текущий режим фильтра.
+    /// Устанавливается методом <see cref="SetFilter(CodeFilterMode, string[], bool)"/>.
     /// </summary>
     public CodeFilterMode Mode { get { return _Mode; } }
     private CodeFilterMode _Mode;
 
     /// <summary>
     /// Список включаемых или исключаемых кодов.
+    /// Устанавливается методом <see cref="SetFilter(CodeFilterMode, string[], bool)"/>.
     /// </summary>
     public string[] Codes { get { return _Codes; } }
     private string[] _Codes;
 
     /// <summary>
     /// Включить ли в фильтр строки без кода.
-    /// Свойство действительно только при CanBeEmpty=true
+    /// Свойство действительно только при <see cref="CanBeEmpty"/>=true.
+    /// Устанавливается методом <see cref="SetFilter(CodeFilterMode, string[], bool)"/>.
     /// </summary>
     public bool EmptyCode { get { return _EmptyCode; } }
     private bool _EmptyCode;
@@ -1553,11 +1588,11 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// true, если поддерживаются пустые коды. Если false, то предполагается, что 
-    /// поле всегда имеет установленное значение, а флажок "Код не установлен" недоступен
-    /// Свойство устанавливается в конструкторе
+    /// поле всегда имеет установленное значение, а флажок "Код не установлен" недоступен.
+    /// Свойство устанавливается в конструкторе.
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } }
-    private bool _CanBeEmpty;
+    private readonly bool _CanBeEmpty;
 
     #endregion
 
@@ -1603,7 +1638,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Значения полей</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -1628,7 +1664,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -1661,7 +1697,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
+    /// Если фильтр не установлен (<see cref="DBxCommonFilter.IsEmpty"/>=true), возвращается true
     /// </summary>
     /// <param name="rowValue">Проверяемое значение</param>
     /// <returns>true, если значение проходит условие фильтра</returns>
@@ -1689,10 +1725,11 @@ namespace FreeLibSet.Data.Docs
   #region Фильтры ValueFilter
 
   /// <summary>
-  /// Базовый класс для построения фильтров по значению поля
-  /// Активность фильтра устанавливается с помощью шаблона Nullable
+  /// Базовый класс для построения фильтров по значению поля (SQL-фильтр <see cref="ValueFilter"/>).
+  /// Активность фильтра устанавливается с помощью шаблона <see cref="Nullable{T}"/>.
+  /// Поддерживается только проверка на равенство <see cref="CompareKind.Equal"/>.
   /// </summary>
-  /// <typeparam name="T">Тип значения поля</typeparam>
+  /// <typeparam name="T">Тип значения поля (должен быть структурой, а не классом)</typeparam>
   public abstract class ValueCommonFilterBase<T> : SingleColumnCommonFilter
     where T : struct
   {
@@ -1712,7 +1749,8 @@ namespace FreeLibSet.Data.Docs
     #region Свойства
 
     /// <summary>
-    /// Текущее значение фильтра
+    /// Текущее значение фильтра.
+    /// Содержит null, если фильтр не установлен.
     /// </summary>
     public Nullable<T> Value
     {
@@ -1751,9 +1789,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -1789,7 +1826,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается при создании нового документа из просмотра.
-    /// Устанавливает начальное значение поля ColumnName, если в фильтре выбрано единственное значение.
+    /// Устанавливает начальное значение поля <see cref="SingleColumnCommonFilter.ColumnName"/>, если в фильтре выбрано единственное значение.
     /// </summary>
     /// <param name="docValue">Значение поля, которое можно установить</param>
     protected override void OnInitNewDocValue(DBxDocValue docValue)
@@ -1811,14 +1848,14 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Абстрактный метод, который должен прочитать параметр "Value" из секции конфигурации.
-    /// Например, с помощью вызова return Part.GetInt("Value").
+    /// Например, с помощью вызова return cfg.GetInt("Value").
     /// </summary>
     /// <param name="cfg">Секция конфигурации для чтения фильтра</param>
     /// <returns>Прочитанное значение</returns>
     protected abstract T DoReadConfigValue(CfgPart cfg);
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -1831,7 +1868,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Абстрактный метод, который должен записывать параметр "Value" в секцию конфигурации.
-    /// Например, с помощью вызова Part.SetInt("Value", Value).
+    /// Например, с помощью вызова cfg.SetInt("Value", Value).
     /// </summary>
     /// <param name="cfg">Секция конфигурации для записи фильтра</param>
     /// <param name="value">Записываемое значение</param>
@@ -1843,7 +1880,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
+    /// Если фильтр не установлен (<see cref="DBxCommonFilter.IsEmpty"/>=true), возвращается true.
     /// </summary>
     /// <param name="rowValue">Проверяемое значение</param>
     /// <returns>true, если значение проходит условие фильтра</returns>
@@ -1862,7 +1899,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Простой фильтр по логическому полю
+  /// Простой фильтр по логическому полю (SQL-фильтр <see cref="ValueFilter"/>).
   /// </summary>
   public class BoolValueCommonFilter : ValueCommonFilterBase<bool>
   {
@@ -1882,7 +1919,7 @@ namespace FreeLibSet.Data.Docs
     #region Переопределяемые методы
 
     /// <summary>
-    /// Вызывает CfgPart.GetBool()
+    /// Вызывает <see cref="CfgPart.GetBool(string)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <returns>Значение</returns>
@@ -1892,7 +1929,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Вызывает CfgPart.SetBool()
+    /// Вызывает <see cref="CfgPart.SetBool(string, bool)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <param name="value">Значение</param>
@@ -1916,11 +1953,11 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Простой фильтр по полю типа Integer с фильтрацией по единственному значению
+  /// Простой фильтр по полю типа <see cref="Int32"/> с фильтрацией по единственному значению (SQL-фильтр <see cref="ValueFilter"/>).
   /// Если поле может принимать фиксированный набор значений, то следует использовать
-  /// фильтр EnumGridFilter
+  /// фильтр <see cref="EnumCommonFilter"/>.
   /// </summary>
-  public class IntValueCommonFilter : ValueCommonFilterBase<int>
+  public class IntValueCommonFilter : ValueCommonFilterBase<Int32>
   {
     #region Конструктор
 
@@ -1938,7 +1975,7 @@ namespace FreeLibSet.Data.Docs
     #region Переопределяемые свойства
 
     /// <summary>
-    /// Вызывает CfgPart.GetInt()
+    /// Вызывает <see cref="CfgPart.GetInt(string)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <returns>Значение</returns>
@@ -1948,7 +1985,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Вызывает CfgPart.SetBool()
+    /// Вызывает <see cref="CfgPart.SetBool(string, bool)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <param name="value">Значение</param>
@@ -1973,7 +2010,7 @@ namespace FreeLibSet.Data.Docs
 
 
   /// <summary>
-  /// Фильтр по году для числового поля или поля типа "Дата"
+  /// Фильтр по году для числового поля или поля типа "Дата" (SQL-фильтр <see cref="ValueFilter"/>)
   /// </summary>
   public class YearCommonFilter : IntValueCommonFilter
   {
@@ -2009,7 +2046,7 @@ namespace FreeLibSet.Data.Docs
     /// Если false, то поле является числовым.
     /// </summary>
     public bool IsDateColumn { get { return _IsDateColumn; } }
-    private bool _IsDateColumn;
+    private readonly bool _IsDateColumn;
 
     #endregion
 
@@ -2036,7 +2073,9 @@ namespace FreeLibSet.Data.Docs
   #region Фильтры по диапазонам значений
 
   /// <summary>
-  /// Фильтр по диапазону дат для одного поля
+  /// Фильтр по диапазону дат для одного поля (SQL-фильтр <see cref="DateRangeFilter"/>).
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Если фильтр установлен, то пустые значения поля не проходят фильтр.
   /// </summary>
   public class DateRangeCommonFilter : SingleColumnCommonFilter
   {
@@ -2112,9 +2151,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2149,7 +2187,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -2159,7 +2197,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Использует DateRangeFormatter для преобразования в строку значения поля
+    /// Использует <see cref="DateRangeFormatter.Default"/> для преобразования в строку значения поля
     /// </summary>
     /// <param name="columnValues">Значения полей</param>
     /// <returns>Текстовые представления значений</returns>
@@ -2172,10 +2210,10 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Фильтр табличного просмотра для одного поля, содержащего целочисленное значение.
+  /// Фильтр табличного просмотра для одного поля, содержащего целочисленное значение (SQL-фильтр <see cref="NumRangeFilter"/>).
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
-  /// Базовый класс для IntRangeCommonFilter, SingleRangeCommonFilter, DoubleRangeCommonFilter и DecimalRangeCommonFilter
+  /// Базовый класс для <see cref="IntRangeCommonFilter"/>, <see cref="SingleRangeCommonFilter"/>, <see cref="DoubleRangeCommonFilter"/> и <see cref="DecimalRangeCommonFilter"/>.
   /// </summary>
   public abstract class NumRangeCommonFilter<T> : SingleColumnCommonFilter
     where T : struct
@@ -2248,7 +2286,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если фильтр не установлен
+    /// Возвращает true, если фильтр не установлен (свойства <see cref="FirstValue"/> и <see cref="LastValue"/> вместе равны null).
     /// </summary>
     public override bool IsEmpty
     {
@@ -2259,7 +2297,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Если FirstValue и LastValue установлены в одно и то же значение, отличное от null, то значение поля документа инициализируется выбранным значением.
+    /// Если <see cref="FirstValue"/> и <see cref="LastValue"/> установлены в одно и то же значение, отличное от null, то значение поля документа инициализируется выбранным значением.
     /// </summary>
     /// <param name="docValue"></param>
     protected override void OnInitNewDocValue(DBxDocValue docValue)
@@ -2277,7 +2315,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Фильтр табличного просмотра для одного поля, содержащего целочисленное значение.
+  /// Фильтр табличного просмотра для одного поля, содержащего целочисленное значение (SQL-фильтр <see cref="NumRangeFilter"/>).
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
@@ -2299,9 +2337,8 @@ namespace FreeLibSet.Data.Docs
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2345,7 +2382,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -2358,7 +2395,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Фильтр табличного просмотра для одного поля, содержащего числовое значение с плавающей точкой.
+  /// Фильтр табличного просмотра для одного поля, содержащего числовое значение с плавающей точкой  (SQL-фильтр <see cref="NumRangeFilter"/>).
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
@@ -2380,9 +2417,8 @@ namespace FreeLibSet.Data.Docs
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2426,7 +2462,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -2439,7 +2475,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Фильтр табличного просмотра для одного поля, содержащего числовое значение с плавающей точкой.
+  /// Фильтр табличного просмотра для одного поля, содержащего числовое значение с плавающей точкой  (SQL-фильтр <see cref="NumRangeFilter"/>).
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
@@ -2461,9 +2497,8 @@ namespace FreeLibSet.Data.Docs
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2507,7 +2542,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -2520,7 +2555,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Фильтр табличного просмотра для одного поля, содержащего числовое значение с плавающей точкой.
+  /// Фильтр табличного просмотра для одного поля, содержащего числовое значение с плавающей точкой (SQL-фильтр <see cref="NumRangeFilter"/>).
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
@@ -2542,9 +2577,8 @@ namespace FreeLibSet.Data.Docs
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2588,7 +2622,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
@@ -2606,7 +2640,10 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Фильтр по одному или нескольким значениям числового поля, каждому из
-  /// которых соответствует текстовое представление
+  /// которых соответствует текстовое представление. Используется SQL-фильтр <see cref="ValuesFilter"/> (фильтр "IN ()").
+  /// Предполагается, что элементы перечисления имеют последовательные значения 0,1,2,...
+  /// Каждое значение проходит или не проходит фильтр, что определяется массивом флагов <see cref="EnumCommonFilter.FilterFlags"/>.
+  /// Если фильтр установлен, то значения поля, выходящие за диапазон значений, считаются не проходящими фильтр.
   /// </summary>
   public class EnumCommonFilter : SingleColumnCommonFilter
   {
@@ -2616,7 +2653,7 @@ namespace FreeLibSet.Data.Docs
     /// Конструктор фильтра
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
-    /// <param name="itemCount">Количество элементов в перечислении. Поле может принимать значения от 0 до (ItemCount-1). 
+    /// <param name="itemCount">Количество элементов в перечислении. 
     /// Должно быть не меньше 1</param>
     public EnumCommonFilter(string columnName, int itemCount)
       : base(columnName)
@@ -2639,8 +2676,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Текущее значение фильтра. Содержит массив флагов, соответствующих числовым
-    /// значениям поля 0,1,2,...,(TextValues.Lenght-1).
-    /// Если фильтр не установлен, то свойство содержит null
+    /// значениям поля 0,1,2, ... (<see cref="ItemCount"/>-1).
+    /// Если фильтр не установлен, то свойство содержит null.
     /// </summary>
     public bool[] FilterFlags
     {
@@ -2654,9 +2691,9 @@ namespace FreeLibSet.Data.Docs
     private bool[] _FilterFlags;
 
     /// <summary>
-    /// Альтернативная установка фильтра
+    /// Альтернативная установка фильтра.
     /// Выбор единственного выбранного значения.
-    /// Значение (-1) соответствует пестому фильтру (FilterFlags=null)
+    /// Значение (-1) соответствует пустому фильтру (<see cref="FilterFlags"/>=null)
     /// </summary>
     public int SingleFilterItemIndex
     {
@@ -2705,7 +2742,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если фильтр не установлен
+    /// Возвращает true, если фильтр не установлен (<see cref="FilterFlags"/>=null).
     /// </summary>
     public override bool IsEmpty
     {
@@ -2735,9 +2772,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2771,7 +2807,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
@@ -2792,7 +2828,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается при создании нового документа из просмотра.
-    /// Устанавливает начальное значение поля ColumnName, если в фильтре выбрано единственное значение.
+    /// Устанавливает начальное значение поля <see cref="SingleColumnCommonFilter.ColumnName"/>, если в фильтре выбрано единственное значение.
     /// </summary>
     /// <param name="docValue">Значение поля, которое можно установить поля</param>
     protected override void OnInitNewDocValue(DBxDocValue docValue)
@@ -2807,7 +2843,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
+    /// Если фильтр не установлен (<see cref="IsEmpty"/>=true), возвращается true.
     /// </summary>
     /// <param name="rowValue">Проверяемое значение</param>
     /// <returns>true, если значение проходит условие фильтра</returns>
@@ -2824,6 +2860,8 @@ namespace FreeLibSet.Data.Docs
 
     #endregion
   }
+
+  // !!!!!!!!!!!!!!
 
   #region Перечисление NullNotNullGridFilterValue
 
@@ -2938,9 +2976,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -3250,9 +3287,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -3667,9 +3703,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -3822,9 +3857,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
-    /// Имена полей и значений должны содержать необходимые поля (которые можно
-    /// получить методом GetColumnNames()), иначе будет сгенерирована ошибка.
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -4099,7 +4133,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Значения полей</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -4241,7 +4276,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Значения полей</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -4368,7 +4404,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Значения полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>

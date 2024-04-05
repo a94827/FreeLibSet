@@ -173,7 +173,7 @@ namespace FreeLibSet.Data
     private IndividualColumnFlagList _IndividualColumnFlags;
 
     /// <summary>
-    /// Возвращает TableStruct.TableName.
+    /// Возвращает <see cref="TableStruct"/>.TableName.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -374,7 +374,7 @@ namespace FreeLibSet.Data
     /// свойство Source общедоступным
     /// При обращении к полю выполняется блокировка объекта _Tables
     /// </summary>
-    private IDBxCacheSource _Source;
+    private readonly IDBxCacheSource _Source;
 
 
     /// <summary>
@@ -382,7 +382,7 @@ namespace FreeLibSet.Data
     /// Попытки вызовов методов из других потоков вызывают исключения
     /// </summary>
     public Thread SingleThread { get { return _SingleThread; } }
-    private Thread _SingleThread;
+    private readonly Thread _SingleThread;
 
     /// <summary>
     /// Генеририрует <see cref="DifferentThreadException"/>, если метод вызван не из подходящего потока
@@ -450,7 +450,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Интервал времени в миллисекундах между отправками запроса, когда <see cref="RepeatCount"/> больше 1.
-    /// По умолчанию - 200мс
+    /// По умолчанию - 200мс.
     /// </summary>
     public int RepeatDelay
     {
@@ -465,9 +465,9 @@ namespace FreeLibSet.Data
     private int _RepeatDelay;
 
     /// <summary>
-    /// Возвращает Guid
+    /// Возвращает <see cref="Guid"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Тектовое представление</returns>
     public override string ToString()
     {
       return Guid.ToString();
@@ -711,7 +711,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Пытается извлечь из <see cref="Cache"/> существующие страницы.
     /// Если чего-то не хватает, выполняет обращение к источнику страниц.
-    /// При этом попутно догружаются страницы, для которых был вызыван DBxTableCache.AddPreloadId()
+    /// При этом попутно догружаются страницы, для которых был вызыван <see cref="DBxTableCache.AddPreloadId(int)"/>
     /// </summary>
     /// <param name="request">Список требуемых страниц</param>
     /// <returns>Загруженные страницы</returns>
@@ -915,7 +915,7 @@ namespace FreeLibSet.Data
     /// которые скоро понадобятся.
     /// Клиент определяет, какие документы будут нужны и передает <see cref="TableAndIdList"/> на сервер в составе какого-либо запроса,
     /// который все равно требуется выполнить. 
-    /// Сервер вызывает метод LoadCachePages для списка идентификаторов и возвращает полученный <see cref="DBxCacheLoadResponse"/> клиенту.
+    /// Сервер вызывает метод <see cref="LoadCachePages(TableAndIdList)"/> для списка идентификаторов и возвращает полученный <see cref="DBxCacheLoadResponse"/> клиенту.
     /// Клиент вызывает <see cref="DBxCacheLoadResponse.ToCache()"/>.
     /// </summary>
     /// <param name="ids">Идентификаторы документов с таблицами</param>
@@ -958,7 +958,7 @@ namespace FreeLibSet.Data
     #region Трассировка
 
     /// <summary>
-    /// Управляет трассировкой вызовов Swap
+    /// Управляет трассировкой вызовов <see cref="DBxClearCacheBuffer.Swap()"/>
     /// </summary>
     public static readonly BooleanSwitch TraceSwitch = new BooleanSwitch("TraceDBxCache",
       "Трассировка кэша базы данных DBxCache");
@@ -972,8 +972,8 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Буферизация для одной таблицы
-  /// Класс является потокобезопасным
+  /// Буферизация для одной таблицы.
+  /// Класс является потокобезопасным.
   /// </summary>
   public class DBxTableCache : IObjectWithCode
   {
@@ -1029,13 +1029,13 @@ namespace FreeLibSet.Data
     /// Объект-владелец
     /// </summary>
     public DBxCache Owner { get { return _Owner; } }
-    private DBxCache _Owner;
+    private readonly DBxCache _Owner;
 
     /// <summary>
     /// Информация о буферизации отдельных полей таблицы. Не может быть null.
     /// </summary>
     public DBxTableCacheInfo CacheInfo { get { return _CacheInfo; } }
-    private DBxTableCacheInfo _CacheInfo;
+    private readonly DBxTableCacheInfo _CacheInfo;
 
     /// <summary>
     /// Структура таблицы. Содержит все поля, включая буферизуемые отдельно
@@ -1047,7 +1047,7 @@ namespace FreeLibSet.Data
     /// Сюда НЕ входят столбцы, буферизуемые в индивидуальном порядке
     /// </summary>
     public DBxColumns ColumnNames { get { return _ColumnNames; } }
-    private DBxColumns _ColumnNames;
+    private readonly DBxColumns _ColumnNames;
 
     /// <summary>
     /// Имя таблицы
@@ -1057,7 +1057,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Четвертый элемент ключа для поиска
     /// </summary>
-    private string _ColumnsMD5;
+    private readonly string _ColumnsMD5;
 
     #endregion
 
@@ -1155,7 +1155,7 @@ namespace FreeLibSet.Data
     /// Получить значение для ссылочного поля 
     /// (например, значение поля "Человек.ФИО" для таблицы "Сотрудники")
     /// </summary>
-    /// <param name="refColumnName">Имя поля в виде ИмяСсылочногоПоля.ИмяТребуемогоПоля (например, "Человек.ФИО")</param>
+    /// <param name="refColumnName">Имя поля в виде "ИмяСсылочногоПоля.ИмяТребуемогоПоля" (например, "Человек.ФИО")</param>
     /// <param name="refId">Значение ссылочного поля (то есть поля "Человек" в таблице "Сотрудники")</param>
     /// <returns>Значение требуемого поля</returns>
     public object GetRefValue(string refColumnName, Int32 refId)
@@ -1202,7 +1202,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnNames">Имена полей, которые требуется извлечь</param>
-    /// <returns>Значение поля</returns>
+    /// <returns>Значения полей</returns>
     public object[] GetValues(Int32 id, DBxColumns columnNames)
     {
       object[] a = new object[columnNames.Count];
@@ -1216,13 +1216,13 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольных полей строки таблицы
-    /// Поля могут быть ссылочными, то есть содержать точки
+    /// Получить значение произвольных полей строки таблицы.
+    /// Поля могут быть ссылочными, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnNames">Имена полей, которые требуется извлечь</param>
     /// <param name="primaryDS">Необязательный первичный набор данных</param>
-    /// <returns>Значение поля</returns>
+    /// <returns>Значения полей</returns>
     public object[] GetValues(Int32 id, DBxColumns columnNames, DataSet primaryDS)
     {
       object[] a = new object[columnNames.Count];
@@ -1236,25 +1236,25 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Получить значение произвольных полей строки таблицы
-    /// Поля могут быть ссылочными, то есть содержать точки
+    /// Получить значение произвольных полей строки таблицы.
+    /// Поля могут быть ссылочными, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnNames">Имена полей, которые требуется извлечь, разделенные запятыми</param>
-    /// <returns>Значение поля</returns>
+    /// <returns>Значения полей</returns>
     public object[] GetValues(Int32 id, string columnNames)
     {
       return GetValues(id, new DBxColumns(columnNames), null);
     }
 
     /// <summary>
-    /// Получить значение произвольных полей строки таблицы
-    /// Поля могут быть ссылочными, то есть содержать точки
+    /// Получить значение произвольных полей строки таблицы.
+    /// Поля могут быть ссылочными, то есть содержать точки.
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnNames">Имена полей, которые требуется извлечь, разделенные запятыми</param>
     /// <param name="primaryDS">Необязательный первичный набор данных</param>
-    /// <returns>Значение поля</returns>
+    /// <returns>Значения полей</returns>
     public object[] GetValues(Int32 id, string columnNames, DataSet primaryDS)
     {
       return GetValues(id, new DBxColumns(columnNames), primaryDS);
@@ -1266,7 +1266,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnNames">Имена полей, которые требуется извлечь</param>
-    /// <returns>Значение поля</returns>
+    /// <returns>Значения полей</returns>
     public object[] GetValues(Int32 id, string[] columnNames)
     {
       object[] a = new object[columnNames.Length];
@@ -1286,7 +1286,7 @@ namespace FreeLibSet.Data
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnNames">Имена полей, которые требуется извлечь</param>
     /// <param name="primaryDS">Необязательный первичный набор данных</param>
-    /// <returns>Значение поля</returns>
+    /// <returns>Значения полей</returns>
     public object[] GetValues(Int32 id, string[] columnNames, DataSet primaryDS)
     {
       object[] a = new object[columnNames.Length];
@@ -1558,7 +1558,7 @@ namespace FreeLibSet.Data
     /// Получить описание столбца по имени.
     /// Имя может содержать точки для задания ссылочных столбцов.
     /// Если задано несуществующее имя столбца, возвращает null.
-    /// Для простых имен столбца без точек возвращает TableStruct.Columns[ColumnName].
+    /// Для простых имен столбца без точек возвращает <see cref="TableStruct"/>.Columns[ColumnName].
     /// 
     /// Предупреждение. Имя возвращаемого столбца <see cref="DBxColumnStruct.ColumnName"/> может не совпадать с <paramref name="columnName"/>,
     /// если столбец является ссылочным. Если далее вызывается <see cref="DBxColumnStruct.CreateDataColumn()"/>, то обычно следует также
@@ -1697,7 +1697,7 @@ namespace FreeLibSet.Data
     /// Идентификаторы страниц, которые стоит загрузить.
     /// На время обращения выполняется блокировка объекта _SyncRoot.
     /// Объект не создается до первого обращения, т.к. для большинства
-    /// таблиц предзагрузка не выполняется
+    /// таблиц предзагрузка не выполняется.
     /// </summary>
     private IdList _PreloadPageIds;
 
@@ -1759,7 +1759,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Добавляет указанный идентификатор строки в список для предзагрузки страниц.
     /// Этот метод не выполняет реальную загрузку, а всего лишь учитывает пожелание.
-    /// Используйте AddPreloadIds(), если есть несколько идентификаторов
+    /// Используйте <see cref="AddPreloadIds(int[])"/>, если есть несколько идентификаторов.
     /// </summary>
     /// <param name="id">Идентификатор записей для загрузки</param>
     public void AddPreloadId(Int32 id)
@@ -1777,7 +1777,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает список идентификаторов страниц для предварительной загрузки.
-    /// При этом текущий список очищается
+    /// При этом текущий список очищается.
     /// </summary>
     /// <returns></returns>
     internal Int32[] GetPreloadIds()
@@ -2015,7 +2015,7 @@ namespace FreeLibSet.Data
     /// В таблице должно быть поле "Id". Остальные поля являются произвольными. Берутся значения только
     /// тех полей, которые есть в таблице кэша. 
     /// </summary>
-    /// <param name="rows">Массив строк для обновления. Не может содержать значения null</param>
+    /// <param name="rows">Массив строк для обновления. Не может содержать значения null.</param>
     public void UpdateRows(DataRow[] rows)
     {
 #if DEBUG
@@ -2735,7 +2735,7 @@ Exception rethrown at [0]:
 
     /// <summary>
     /// Создает словарь запросов, разбивая их по отдельным таблицам.
-    /// В словаре ключом является имя таблицы, значением - части запроса, относящиеся к таблицам
+    /// В словаре ключом является имя таблицы, значением - части запроса, относящиеся к таблицам.
     /// </summary>
     /// <returns>Словарь запросов</returns>
     public Dictionary<string, DBxCacheLoadRequest> SplitByTables()
@@ -2777,7 +2777,7 @@ Exception rethrown at [0]:
   /// <summary>
   /// Загруженные по запросу страницы кэша.
   /// Доступ к индивидуальным страницам невозможен из пользовательского кода.
-  /// Метод ToCache() помещает страницы из этого объекта в локальный кэш
+  /// Метод <see cref="DBxCacheLoadResponse.ToCache()"/> помещает страницы из этого объекта в локальный кэш.
   /// </summary>
   [Serializable]
   public sealed class DBxCacheLoadResponse
@@ -2854,7 +2854,7 @@ Exception rethrown at [0]:
     }
 
     /// <summary>
-    /// Вызывает Cache.SetItem() для всех страниц
+    /// Вызывает <see cref="Cache.SetItem{DBxCacheTablePage}(string[], CachePersistance, DBxCacheTablePage)"/> для всех страниц
     /// </summary>
     public void ToCache()
     {
@@ -2988,14 +2988,14 @@ Exception rethrown at [0]:
 
   /// <summary>
   /// Расширяет класс <see cref="DataRowValueArray"/>.
-  /// Если таблица не содержит запрашиваемого ссылочного поля с точкой, то извлекается значение из кэша
+  /// Если таблица не содержит запрашиваемого ссылочного поля с точкой, то извлекается значение из кэша.
   /// </summary>
   public class DBxDataRowValueArrayWithCache : DataRowValueArray, IDataRowNamedValuesAccess
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает объект для длоступа к данным
+    /// Создает объект для доступа к данным
     /// </summary>
     /// <param name="tableCache">Кэш таблицы</param>
     public DBxDataRowValueArrayWithCache(DBxTableCache tableCache)
@@ -3013,7 +3013,7 @@ Exception rethrown at [0]:
     /// Кэш таблицы
     /// </summary>
     public DBxTableCache tableCache { get { return _TableCache; } }
-    private DBxTableCache _TableCache;
+    private readonly DBxTableCache _TableCache;
 
     #endregion
 
@@ -3123,10 +3123,10 @@ Exception rethrown at [0]:
     #region OnValueNeeded()
 
     /// <summary>
-    /// Для полей с точкой вызывает DBxTableCache.GetRefValue().
-    /// Затем вызывается обработчик события ValueNeeded.
+    /// Для полей с точкой вызывает <see cref="DBxTableCache.GetRefValue(string, int)"/>.
+    /// Затем вызывается обработчик события <see cref="DataTableRepeater.ValueNeeded"/>.
     /// </summary>
-    /// <param name="args">Аргументы события ValueNeeded</param>
+    /// <param name="args">Аргументы события <see cref="DataTableRepeater.ValueNeeded"/></param>
     protected override void OnValueNeeded(DataTableRepeaterValueNeededEventArgs args)
     {
       int p = args.ColumnName.IndexOf('.');

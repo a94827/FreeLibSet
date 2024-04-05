@@ -21,7 +21,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Если true, то при извлечении значения поля, которое может принимать значение NULL, требуется заменять значения NULL 
     /// на значение поля по умолчанию с помощью функции COALESCE() или ISNULL().
-    /// Используется фильтрами CompareFilter(), IdsFilter(), ValuesFilter()
+    /// Используется фильтрами <see cref="CompareFilter"/>, <see cref="IdsFilter"/>, <see cref="ValuesFilter"/>.
     /// </summary>
     public bool NullAsDefaultValue
     {
@@ -33,17 +33,17 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Тип данных, который желательно получить.
     /// Параметр применяется при использовании функции COALESCE(), когда форматировщик не имеет информации о типе поля, например,
-    /// в DataViewSqlDbxFormatter
+    /// в <see cref="DataViewDBxSqlFormatter"/>
     /// </summary>
     public DBxColumnType WantedColumnType { get { return _WantedColumnType; } set { _WantedColumnType = value; } }
     private DBxColumnType _WantedColumnType;
 
     /// <summary>
     /// Если false, то выражение будет заключено в круглые скобки, если это необходимо.
-    /// Если выражение является DBxFunction, которое реализуется как оператор (Add, Substract, Multiply, Divide),
+    /// Если выражение является <see cref="DBxFunction"/>, которое реализуется как оператор (Add, Substract, Multiply, Divide),
     /// то оно заключается в скобки. Остальные выражения (поля, константы, вызовы функций) в скобки не заключаются, независимо от значения свойства.
-    /// Для определения необходимости использования скобок используется метод DBxSqlFormatter.AreParenthesesRequired().
-    /// Если флаг установлен в true, то скобки применяться не будут. Используется, например, при задании аргументов функции
+    /// Для определения необходимости использования скобок используется метод <see cref="DBxSqlFormatter.AreParenthesesRequired(DBxExpression)"/>.
+    /// Если флаг установлен в true, то скобки применяться не будут. Используется, например, при задании аргументов функции.
     /// </summary>
     public bool NoParentheses { get { return _NoParentheses; } set { _NoParentheses = value; } }
     private bool _NoParentheses;
@@ -77,17 +77,17 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Форматизатор частей SQL-запроса
-  /// Методы данного класса не являются потокобезопасными
-  /// Содержит StringBuilder
+  /// Форматизатор частей SQL-запроса.
+  /// Методы данного класса не являются потокобезопасными.
+  /// Содержит <see cref="StringBuilder"/>.
   /// </summary>
   public sealed class DBxSqlBuffer
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает буфер форматирования по умолчанию (для объекта DataView).
-    /// Используется форматизатор DBxSqlFormatter.Default.
+    /// Создает буфер форматирования по умолчанию (для объекта <see cref="DataView"/>).
+    /// Используется форматизатор <see cref="DBxSqlFormatter.Default"/>.
     /// </summary>
     public DBxSqlBuffer()
       : this(DBxSqlFormatter.Default)
@@ -114,10 +114,10 @@ namespace FreeLibSet.Data
     #region StringBuilder
 
     /// <summary>
-    /// Основной объект буфера для заполнения
+    /// Основной объект буфера для заполнения.
     /// </summary>
     public StringBuilder SB { get { return _SB; } }
-    private StringBuilder _SB;
+    private readonly StringBuilder _SB;
 
     #endregion
 
@@ -125,10 +125,10 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматизатор.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public DBxSqlFormatter Formatter { get { return _Formatter; } }
-    private DBxSqlFormatter _Formatter;
+    private readonly DBxSqlFormatter _Formatter;
 
     #endregion
 
@@ -136,7 +136,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Альясы таблиц для имен полей.
-    /// Используются при форматировании выражений DBxColumn.
+    /// Используются при форматировании выражений <see cref="DBxColumn"/>.
     /// Ключ - имя поля. Могут быть как составные поля с точками, так и простые поля.
     /// Значение - альяс таблицы.
     /// </summary>
@@ -146,8 +146,8 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Описания столбцов, используемых в запросе.
     /// Нужны для определения необходимости проверки значений на NULL и определения типа данных при вызове COALESCE()
-    /// Ключ - имя поля (простого или с точками)
-    /// Значение - Описание поля из структуры DBxStruct.
+    /// Ключ - имя поля (простого или с точками).
+    /// Значение - Описание поля из структуры <see cref="DBxStruct"/>.
     /// </summary>
     public IDictionary<string, DBxColumnStruct> ColumnStructs { get { return _ColumnStructs; } }
     private Dictionary<string, DBxColumnStruct> _ColumnStructs;
@@ -157,7 +157,7 @@ namespace FreeLibSet.Data
     #region Вызываемые методы
 
     /// <summary>
-    /// Очищает буфер SB и списки ColumnTableAliases, ColumnStructs.
+    /// Очищает буфер <see cref="SB"/> и списки <see cref="ColumnTableAliases"/>, <see cref="ColumnStructs"/>.
     /// </summary>
     public void Clear()
     {
@@ -167,7 +167,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Отформатировать имя таблицы. Обычно имя заключается в кавычки или квадратные скобки
+    /// Отформатировать имя таблицы. Обычно имя заключается в кавычки или квадратные скобки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     public void FormatTableName(string tableName)
@@ -176,7 +176,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Отформатировать имя столбца. Обычно имя заключается в кавычки или квадратные скобки
+    /// Отформатировать имя столбца. Обычно имя заключается в кавычки или квадратные скобки.
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
     public void FormatColumnName(string columnName)
@@ -196,7 +196,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматировать тип значения для заданного описания столбца.
-    /// Выражение NULL/NOT NULL не добавляется
+    /// Выражение NULL/NOT NULL не добавляется.
     /// </summary>
     /// <param name="column">Описание структуры столбца</param>
     public void FormatValueType(DBxColumnStruct column)
@@ -332,10 +332,10 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование оператора SELECT.
     /// Этот метод не предназначен для использования в пользовательском коде.
-    /// Имена и типы столбцов в создаваемой таблице могут не совпадать с запрошенными
+    /// Имена и типы столбцов в создаваемой таблице могут не совпадать с запрошенными.
     /// </summary>
     /// <param name="info">Заполненные параметры оператора SELECT</param>
-    /// <param name="validator">Объект для проверки имен (свойство DBxConBase.)</param>
+    /// <param name="validator">Объект для проверки имен (свойство <see cref="DBxConBase.Validator"/>)</param>
     public void FormatSelect(DBxSelectInfo info, DBxNameValidator validator)
     {
       DBxSelectFormatter fsf = new DBxSelectFormatter(info, validator);
@@ -412,7 +412,7 @@ namespace FreeLibSet.Data
   //public enum DBxNameKind { Table, Index, Column}
 
   /// <summary>
-  /// Базовый класс форматизатора частей SQL-запроса
+  /// Базовый класс форматизатора частей SQL-запроса.
   /// Все реализации производных классов должны быть потокобезопасными!
   /// </summary>
   public abstract class DBxSqlFormatter
@@ -426,8 +426,8 @@ namespace FreeLibSet.Data
     #region Имя таблицы и имя поля
 
     // Проверка имен таблиц и столбцов не выполняется в форматизаторе.
-    // Единственная проверка - что имя задано
-    // За это отвечает класс DBxConBase
+    // Единственная проверка - что имя задано.
+    // За это отвечает класс DBxConBase.
 
     internal void FormatTableName(DBxSqlBuffer buffer, string tableName)
     {
@@ -439,7 +439,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование имени таблицы.
     /// Записывает в <paramref name="buffer"/>.SB имя таблицы <paramref name="tableName"/>,
-    /// заключенное в кавычки или квадратные скобки
+    /// заключенное в кавычки или квадратные скобки.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="tableName">Имя таблицы</param>
@@ -455,7 +455,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование имени столбца.
     /// Записывает в <paramref name="buffer"/>.SB имя столбца <paramref name="columnName"/>,
-    /// заключенное в кавычки или квадратные скобки
+    /// заключенное в кавычки или квадратные скобки.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="columnName">Имя столбца</param>
@@ -473,9 +473,10 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование имени столбца c префиксом имени таблицы.
-    /// Используется в запросах SELECT с инструкцией JOIN
+    /// Используется в запросах SELECT с инструкцией JOIN.
     /// Записывает в <paramref name="buffer"/>.SB имя таблицы и столбца,
-    /// заключенное в кавычки или квадратные скобки. Таблица и поле разделяются точкой
+    /// заключенное в кавычки или квадратные скобки. 
+    /// Таблица и поле разделяются точкой.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="tableAlias">Альяс таблицы</param>
@@ -557,7 +558,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование фильтра.
     /// Вызывает виртуальный метод для фильтра нужного типа.
-    /// Обычно нет необходимости переопределять этот метод
+    /// Обычно нет необходимости переопределять этот метод.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
@@ -747,7 +748,7 @@ namespace FreeLibSet.Data
     /// Форматирование порядка сортировки.
     /// Вызывает <paramref name="buffer"/>.FormatOrderItem() для каждого элемента и
     /// добавляет суффикс "DESC" по необходимости.
-    /// Нет необходимости переопределять этот метод
+    /// Нет необходимости переопределять этот метод.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="order">Порядок сортировки</param>
@@ -786,7 +787,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Форматирование выражения.
-    /// Обычно этот метод не переопределяется
+    /// Обычно этот метод не переопределяется.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="expression">Элемент порядка сортировки. Не может быть null</param>
@@ -813,7 +814,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование выражения, возвращающего значение столбца.
     /// Для запросов к базе данных выполняется подстановка для ссылочных полей и указанием альяса таблицы, если задано.
-    /// Для <see cref="DataViewDBxSqlFormatter"/> вызывается OnFormatColumnName.
+    /// Для <see cref="DataViewDBxSqlFormatter"/> вызывается <see cref="OnFormatColumnName(DBxSqlBuffer, string)"/>.
     /// Если задано свойство <see cref="DBxFormatExpressionInfo.NullAsDefaultValue"/>, то добавляется неявный вызов функции COALESCE()
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
@@ -826,7 +827,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="function">Объект фунцкии</param>
-    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове Buffer.FormatExpression</param>
+    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове <see cref="DBxSqlBuffer.FormatExpression(DBxExpression, DBxFormatExpressionInfo)"/></param>
     protected abstract void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo);
 
     /// <summary>
@@ -834,7 +835,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="function">Объект фунцкии</param>
-    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове Buffer.FormatExpression</param>
+    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове <see cref="DBxSqlBuffer.FormatExpression(DBxExpression, DBxFormatExpressionInfo)"/></param>
     protected abstract void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo);
 
     /// <summary>
@@ -862,7 +863,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Способ задания ограничения MaxRecordCount в SELECT.
-    /// По умолчанию используется форма SELECT TOP x
+    /// По умолчанию используется форма SELECT TOP x.
     /// </summary>
     public virtual DBxSelectMaxRecordCountMode SelectMaxRecordCountMode { get { return DBxSelectMaxRecordCountMode.Top; } }
 
@@ -895,7 +896,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Подготовка значения, передаваемого в качестве параметра запроса.
     /// Значение <see cref="DBNull"/> заменяется на null.
-    /// Затем вызывается виртуальный метод OnPrepareParamValue()
+    /// Затем вызывается виртуальный метод <see cref="OnPrepareParamValue(object, DBxColumnType)"/>.
     /// </summary>
     /// <param name="value">Значение</param>
     /// <param name="columnType">Тип данных</param>
@@ -929,8 +930,8 @@ namespace FreeLibSet.Data
     public virtual int MaxSqlLength { get { return Int16.MaxValue; } }
 
     /// <summary>
-    /// Максимальное количество строк данных в запросе INSERT INTO таблица (столбцы) VALUES (значения) [, (значения), ...]
-    /// По умолчанию возвращает 1 - многострочная вставка не поддерживается
+    /// Максимальное количество строк данных в запросе INSERT INTO таблица (столбцы) VALUES (значения) [, (значения), ...].
+    /// По умолчанию возвращает 1 - многострочная вставка не поддерживается.
     /// </summary>
     public virtual int MaxInsertIntoValueRowCount { get { return 1; } }
 
@@ -940,7 +941,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Статический экземпляр форматизатора SQL-запросов для объекта <see cref="DataView"/>.
-    /// Используется для получения текстового представления
+    /// Используется для получения текстового представления.
     /// </summary>
     public static readonly DBxSqlFormatter Default = new FreeLibSet.Data.DataViewDBxSqlFormatter();
 
@@ -977,7 +978,7 @@ namespace FreeLibSet.Data
     /// метод не переопределен
     /// </summary>
     public DBxSqlFormatter Source { get { return _Source; } }
-    private DBxSqlFormatter _Source;
+    private readonly DBxSqlFormatter _Source;
 
     #endregion
 
@@ -1010,7 +1011,7 @@ namespace FreeLibSet.Data
     /// Форматирование имени столбца c префиксом имени таблицы.
     /// Используется в запросах SELECT с инструкцией JOIN
     /// Записывает в <paramref name="buffer"/>.SB имя таблицы и столбца,
-    /// заключенное в кавычки или квадратные скобки. Таблица и поле разделяются точкой
+    /// заключенное в кавычки или квадратные скобки. Таблица и поле разделяются точкой.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="tableAlias">Альяс таблицы</param>
@@ -1212,7 +1213,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Форматирование выражения, возвращающего значение столбца.
     /// Для запросов к базе данных выполняется подстановка для ссылочных полей и указанием альяса таблицы, если задано.
-    /// Для DataView вызывается OnFormatColumnName.
+    /// Для <see cref="DataView"/> вызывается <see cref="OnFormatColumnName(DBxSqlBuffer, string)"/>.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="column">Выражение-столбец. Не может быть null</param>
@@ -1227,7 +1228,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="function">Объект фунцкии</param>
-    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове Buffer.FormatExpression</param>
+    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове <see cref="DBxSqlBuffer.FormatExpression(DBxExpression, DBxFormatExpressionInfo)"/></param>
     protected override void OnFormatFunction(DBxSqlBuffer buffer, DBxFunction function, DBxFormatExpressionInfo formatInfo)
     {
       _Source.FormatExpression(buffer, function, formatInfo);
@@ -1238,7 +1239,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="function">Объект фунцкии</param>
-    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове Buffer.FormatExpression</param>
+    /// <param name="formatInfo">Сведения для форматирования имен полей. Используется при рекурсивном вызове <see cref="DBxSqlBuffer.FormatExpression(DBxExpression, DBxFormatExpressionInfo)"/></param>
     protected override void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo)
     {
       _Source.FormatExpression(buffer, function, formatInfo);
@@ -1255,7 +1256,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Форматирование параметра. Вызывает Source.FormatParamPlaceholder()
+    /// Форматирование параметра. Вызывает <see cref="Source"/>.FormatParamPlaceholder().
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="paramIndex">Индекс параметра (0,1, ...)</param>
@@ -1266,13 +1267,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Способ задания ограничения MaxRecordCount в SELECT.
-    /// По умолчанию используется форма SELECT TOP x
+    /// По умолчанию используется форма SELECT TOP x.
     /// </summary>
     public override DBxSelectMaxRecordCountMode SelectMaxRecordCountMode
     { get { return _Source.SelectMaxRecordCountMode; } }
 
     /// <summary>
-    /// Нужно ли корректировать типы данных в наборе, возвращаемом оператором SELECT
+    /// Нужно ли корректировать типы данных в наборе, возвращаемом оператором SELECT.
     /// Используется только в SQLite.
     /// </summary>
     public override bool UseTypeCorrectionInSelectResult

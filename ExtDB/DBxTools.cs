@@ -12,15 +12,15 @@ namespace FreeLibSet.Data
 {
   /// <summary>
   /// Статические методы для работы с базами данных.
-  /// Не предназначены для использования в прикладном коде
+  /// Не предназначены для использования в прикладном коде.
   /// </summary>
   public static class DBxTools
   {
     #region Типы данных
 
     /// <summary>
-    /// Преобразует тип данных Net Framework в тип столбца
-    /// Если имеется значение, а не только тип Type, следует использовать метод ValueToColumnType().
+    /// Преобразует тип данных Net Framework в тип столбца.
+    /// Если имеется значение, а не только тип <see cref="Type"/>, следует использовать метод <see cref="ValueToColumnType(object)"/>.
     /// </summary>
     /// <param name="t">Тип данных</param>
     /// <returns>Тип столбца</returns>
@@ -82,7 +82,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить тип данных для столбца, исходя из значения.
-    /// В отличие от DataTypeToColumnType(), отличает Date и DateTime
+    /// В отличие от <see cref="DataTypeToColumnType(Type)"/>, отличает Date и DateTime
     /// </summary>
     /// <param name="value">Проверяемое значение</param>
     /// <returns>Тип столбца</returns>
@@ -205,7 +205,7 @@ namespace FreeLibSet.Data
     #region Прочие методы
 
     /// <summary>
-    /// Создает массив объектов DBxColumn для списка имен полей
+    /// Создает массив объектов <see cref="DBxColumn"/> для списка имен полей
     /// </summary>
     /// <param name="columnNames">Массив имен полей</param>
     /// <returns>Массив выражений</returns>
@@ -240,9 +240,9 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Инициализация улучшенной отладки объектов из ExtDB.
-    /// Для сервера вызывается автоматически при создании объекта DBx.
+    /// Для сервера вызывается автоматически при создании объекта <see cref="DBx"/>.
     /// При использовании библиотеки ExtDBDocs вызывается автоматически при создании DBxDocProvider.
-    /// Повторные вызовы отбрасываются
+    /// Повторные вызовы отбрасываются.
     /// </summary>
     public static void InitLogout()
     {
@@ -274,7 +274,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Предотвращаем вывод строк подключения, т.к. они могут содержать секретную информацию о пароле.
-    /// Также не выводим информацию о структуре БД, т.к. она может быть очень большой
+    /// Также не выводим информацию о структуре БД, т.к. она может быть очень большой.
     /// </summary>
     private static void LogoutTools_LogoutProp(object sender, LogoutPropEventArgs args)
     {

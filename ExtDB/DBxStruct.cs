@@ -64,7 +64,8 @@ namespace FreeLibSet.Data
    */
 
   /// <summary>
-  /// Базовый класс для DBxRealStructSource и DBxRemoteStructSource 
+  /// Базовый интерфейс для <see cref="DBxRealStructSource"/> и <see cref="DBxRemoteStructSource"/>.
+  /// Используется в <see cref="DBxStruct"/>.
   /// </summary>
   public interface IDBxStructSource
   {
@@ -157,7 +158,7 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Переходник для передачи описаний структуры таблиц от сервера к клиенту
+  /// Переходник для передачи описаний структуры таблиц от сервера к клиенту.
   /// Экземпляр объекта, присоедиенный к объекту, возвращаемому <see cref="DBx.Struct"/>, передается по ссылке
   /// клиенту. На стороне клиента создается собственный объект <see cref="DBxStruct"/>, присоединенный к этому объекту.
   /// </summary>
@@ -215,7 +216,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Описание структуры базы данных.
-  /// Используется для получения реальной структуры существующей базы данных (при заданном свойстве <see cref="Source"/>)
+  /// Используется для получения реальной структуры существующей базы данных (при заданном свойстве <see cref="DBxStruct.Source"/>)
   /// и для задания необходимой структуры базы данных.
   /// Все обращения к присоединенной к базе данных структуре являются потокобезопасными. 
   /// В процессе ручного заполнения обращения не являются потокобезопасными.
@@ -223,7 +224,6 @@ namespace FreeLibSet.Data
   public sealed class DBxStruct : IReadOnlyObject, ICloneable
   {
     #region Вложенный класс
-
 
     /// <summary>
     /// Список описаний структуры таблиц для реализации свойства <see cref="DBxStruct.Tables"/>
@@ -272,7 +272,7 @@ namespace FreeLibSet.Data
 
       private readonly NamedList<DBxTableStruct> _List;
 
-      private string[] _AllTableNames;
+      private string[] _AllTableNames; // not readonly
 
       private StringArrayIndexer _AllTableNamesIndexer;
 
@@ -600,7 +600,6 @@ namespace FreeLibSet.Data
       }
 
       /// <summary>
-      /// Реализация интерфейса ICollection
       /// Удаление описания таблицы.
       /// Таблица из базы данных не удаляется.
       /// </summary>
@@ -883,7 +882,7 @@ namespace FreeLibSet.Data
     /// Создает копию структуры базы данных, если текущий объект предназначен только для чтения.
     /// Если свойство <see cref="IsReadOnly"/>=false, возвращается ссылка на текущий объект.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый или текущий объект</returns>
     public DBxStruct CloneIfReadOnly()
     {
       if (IsReadOnly)

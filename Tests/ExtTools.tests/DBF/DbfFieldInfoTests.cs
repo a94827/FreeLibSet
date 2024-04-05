@@ -78,6 +78,7 @@ namespace ExtTools_tests.DBF
     {
       DbfFieldInfo sut = new DbfFieldInfo();
       Assert.IsTrue(sut.IsEmpty, "IsEmpty");
+      Assert.AreEqual(String.Empty, sut.TypeSizeText, "TypeSizeText");
     }
 
     [Test]
@@ -184,6 +185,22 @@ namespace ExtTools_tests.DBF
     {
       DbfFieldInfo sut = new DbfFieldInfo("F1", type, length, precision);
       Assert.AreEqual(wantedRes, sut.DataType);
+    }
+
+    #endregion
+
+    #region TypeSizeText
+
+    [TestCase('C', 100, 0, "C100")]
+    [TestCase('N', 10, 0, "N10.0")]
+    [TestCase('N', 12, 2, "N12.2")]
+    [TestCase('D', 8, 0, "D")]
+    [TestCase('L', 1, 0, "L")]
+    [TestCase('M', 10, 0, "M")]
+    public void TypeSizeText(char type, int length, int precision, string wantedRes)
+    {
+      DbfFieldInfo sut = new DbfFieldInfo("FIELD1", type, length, precision);
+      Assert.AreEqual(wantedRes, sut.TypeSizeText);
     }
 
     #endregion

@@ -123,7 +123,7 @@ namespace FreeLibSet.Data
     /// Создает исключение с заданными параметрами и сообщением
     /// </summary>
     /// <param name="tableName">Имя таблицы, в которой выполнялся поиск</param>
-    /// <param name="id">Идентификатор не найденной записи, приведенный к типу String</param>
+    /// <param name="id">Идентификатор не найденной записи, приведенный к типу <see cref="String"/></param>
     /// <param name="message">Текст сообщения</param>
     /// <param name="innerException">Вложенное сообщение</param>
     public DBxRecordNotFoundException(string tableName, string id, string message, Exception innerException)
@@ -137,7 +137,7 @@ namespace FreeLibSet.Data
     /// Создает исключение с заданными параметрами и сообщением
     /// </summary>
     /// <param name="tableName">Имя таблицы, в которой выполнялся поиск</param>
-    /// <param name="id">Идентификатор не найденной записи, приведенный к типу String</param>
+    /// <param name="id">Идентификатор не найденной записи, приведенный к типу <see cref="String"/></param>
     /// <param name="message">Текст сообщения</param>
     public DBxRecordNotFoundException(string tableName, string id, string message)
       : base(message)
@@ -151,7 +151,7 @@ namespace FreeLibSet.Data
     /// Текст сообщения
     /// </summary>
     /// <param name="tableName">Имя таблицы, в которой выполнялся поиск</param>
-    /// <param name="id">Идентификатор не найденной записи, приведенный к типу String</param>
+    /// <param name="id">Идентификатор не найденной записи, приведенный к типу <see cref="String"/></param>
     public DBxRecordNotFoundException(string tableName, string id)
       : base(CreateMessage(tableName, id))
     {
@@ -217,7 +217,7 @@ namespace FreeLibSet.Data
 
 
   /// <summary>
-  /// Исключение выбрасывается, если задан нулевой идентификатор
+  /// Исключение выбрасывается, если задан нулевой идентификатор строки
   /// </summary>
   [Serializable]
   public class DBxNoIdArgumentException : ArgumentException
